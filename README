@@ -1,0 +1,21 @@
+The vjasssdk is a collection of useful tools which help working more efficient with Blizzard's Warcraft 3 scripting
+language Jass and its extension vJass.
+It has been assembled by Baradé and usually runs on UNIX, Win32 and Mac OS platforms.
+Here you can see a list of all provided tools and their description:
+- vjasside
+	The vjasside is an integrated development GUI environment written in Trolltechs C++ framework Qt.
+	It makes you easier to handle your code and your projects. Also it integrates all of the other tools,
+	so you do not have to use every tool as stand-alone application.
+
+- vjassdoc:
+	vjassdoc is an API documentation tool which generates an API documentation by parsing your Jass and vJass files.
+	The documentation can be a simple HTML file which lists all of the code which is nessacary for other devlopers who
+	want to use it or/and a SQLite3 database for extern programs.
+	It is clearly written in C++ code using the STDL, gettext and SQLite3.
+
+- PJass:
+	PJass is a Jass parser written in C by Rudi Cilibrasi. It is able to parse Jass code files and check them for syntax errors.
+
+- JassHelper:
+	The JassHelper is a vJass parser written in Pascal by Vexorian. It is able to parse vJass code files and check them for syntax
+	errors. Afterwards it generates a Jass map script and adds it to a map file.
