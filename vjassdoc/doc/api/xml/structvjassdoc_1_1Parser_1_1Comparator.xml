@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="structvjassdoc_1_1Parser_1_1Comparator" kind="struct" prot="public">
+    <compoundname>vjassdoc::Parser::Comparator</compoundname>
+    <derivedcompoundref refid="structvjassdoc_1_1Object_1_1IsInContainer" prot="public" virt="non-virtual">vjassdoc::Object::IsInContainer</derivedcompoundref>
+    <derivedcompoundref refid="structvjassdoc_1_1Object_1_1IsInLibrary" prot="public" virt="non-virtual">vjassdoc::Object::IsInLibrary</derivedcompoundref>
+    <derivedcompoundref refid="structvjassdoc_1_1Object_1_1IsInScope" prot="public" virt="non-virtual">vjassdoc::Object::IsInScope</derivedcompoundref>
+    <derivedcompoundref refid="structvjassdoc_1_1Struct_1_1HasExtension" prot="public" virt="non-virtual">vjassdoc::Struct::HasExtension</derivedcompoundref>
+    <includes refid="parser_8h" local="no">parser.h</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structvjassdoc_1_1Parser_1_1Comparator_1c27d6790182d87751bcf134a0d01481a" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool vjassdoc::Parser::Comparator::operator()</definition>
+        <argsstring>(const class Object *thisObject, const class Object *otherObject) const </argsstring>
+        <name>operator()</name>
+        <reimplementedby refid="structvjassdoc_1_1Struct_1_1HasExtension_19e08804f805e2ba8616088ec0bfe84e2">operator()</reimplementedby>
+        <reimplementedby refid="structvjassdoc_1_1Object_1_1IsInLibrary_1a1a041f942f665e8f62e30fa2ad3b260">operator()</reimplementedby>
+        <reimplementedby refid="structvjassdoc_1_1Object_1_1IsInScope_1319d4736b3b35681570cc5be477dc5c9">operator()</reimplementedby>
+        <reimplementedby refid="structvjassdoc_1_1Object_1_1IsInContainer_1390275d3950a824ad1a9ac025964ef64">operator()</reimplementedby>
+        <param>
+          <type>const class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+          <declname>thisObject</declname>
+        </param>
+        <param>
+          <type>const class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+          <declname>otherObject</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.h" line="62" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp" bodystart="97" bodyend="100"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="168">
+        <label>vjassdoc::Object::IsInLibrary</label>
+        <link refid="structvjassdoc_1_1Object_1_1IsInLibrary"/>
+        <childnode refid="166" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="170">
+        <label>vjassdoc::Struct::HasExtension</label>
+        <link refid="structvjassdoc_1_1Struct_1_1HasExtension"/>
+        <childnode refid="166" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="166">
+        <label>vjassdoc::Parser::Comparator</label>
+        <link refid="structvjassdoc_1_1Parser_1_1Comparator"/>
+      </node>
+      <node id="169">
+        <label>vjassdoc::Object::IsInScope</label>
+        <link refid="structvjassdoc_1_1Object_1_1IsInScope"/>
+        <childnode refid="166" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="167">
+        <label>vjassdoc::Object::IsInContainer</label>
+        <link refid="structvjassdoc_1_1Object_1_1IsInContainer"/>
+        <childnode refid="166" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.h" line="61" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.h" bodystart="60" bodyend="63"/>
+    <listofallmembers>
+      <member refid="structvjassdoc_1_1Parser_1_1Comparator_1c27d6790182d87751bcf134a0d01481a" prot="public" virt="virtual"><scope>vjassdoc::Parser::Comparator</scope><name>operator()</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

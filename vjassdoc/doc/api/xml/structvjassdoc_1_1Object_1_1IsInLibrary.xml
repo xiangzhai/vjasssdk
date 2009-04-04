@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="structvjassdoc_1_1Object_1_1IsInLibrary" kind="struct" prot="public">
+    <compoundname>vjassdoc::Object::IsInLibrary</compoundname>
+    <basecompoundref refid="structvjassdoc_1_1Parser_1_1Comparator" prot="public" virt="non-virtual">vjassdoc::Parser::Comparator</basecompoundref>
+    <includes refid="object_8h" local="no">object.h</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structvjassdoc_1_1Object_1_1IsInLibrary_1a1a041f942f665e8f62e30fa2ad3b260" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool vjassdoc::Object::IsInLibrary::operator()</definition>
+        <argsstring>(const class Object *thisObject, const class Object *library) const </argsstring>
+        <name>operator()</name>
+        <reimplements refid="structvjassdoc_1_1Parser_1_1Comparator_1c27d6790182d87751bcf134a0d01481a">operator()</reimplements>
+        <param>
+          <type>const class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+          <declname>thisObject</declname>
+        </param>
+        <param>
+          <type>const class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+          <declname>library</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h" line="91" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.cpp" bodystart="135" bodyend="138"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="148">
+        <label>vjassdoc::Object::IsInLibrary</label>
+        <link refid="structvjassdoc_1_1Object_1_1IsInLibrary"/>
+        <childnode refid="149" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="149">
+        <label>vjassdoc::Parser::Comparator</label>
+        <link refid="structvjassdoc_1_1Parser_1_1Comparator"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="150">
+        <label>vjassdoc::Object::IsInLibrary</label>
+        <link refid="structvjassdoc_1_1Object_1_1IsInLibrary"/>
+        <childnode refid="151" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="151">
+        <label>vjassdoc::Parser::Comparator</label>
+        <link refid="structvjassdoc_1_1Parser_1_1Comparator"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h" line="90" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h" bodystart="89" bodyend="92"/>
+    <listofallmembers>
+      <member refid="structvjassdoc_1_1Object_1_1IsInLibrary_1a1a041f942f665e8f62e30fa2ad3b260" prot="public" virt="virtual"><scope>vjassdoc::Object::IsInLibrary</scope><name>operator()</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

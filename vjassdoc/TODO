@@ -1,0 +1,60 @@
+Old todo list Tamino Dauth <tamino@cdauth.de>:
+* Das Schlüsselwort keyword muss noch richtig unterstützt werden.
+* Die alphabetische Sortierung erkennt die Operatormethode, sortiert aber nur ab und zu.
+* Wenn das Zeilenende eines Dokuments das Zeilenende eines anderen Betriebssystems hat wie zum Beispiel von Mac oder Windows, wird das Ende der Zeile nicht erkannt.
+* Manche Textmakroinstanzen haben keine Argumente.
+* public-Funktionen in Bibliotheken werden eventuell nicht als solche erkannt.
+* Die Ausdrücke der File-Klasse sollten so sortiert werden, dass die Ausdrücke, die am Anfang der Zeile stehen können zuerst überprüft werden. Dabei muss gewährleistet bleiben, dass man zwischen Jass- und vJass-Code trennen kann.
+* Das delegate-Schlüsselwort muss unterstützt werden. Es entspricht einer Eigenschaft einer Struktur.
+* Strukturen können nun auch als globales Array definiert werden (mit Hilfe des Ausdrucks "extends array"). Hier gilt es außerdem zu beachten, dass z.B. Werte wie variablenName[0] nicht unbedingt Eigenschaften oder globale Variablen, sondern eben auch solche Strukturen sein können.
+* In Unions können Return-Methoden nicht einfach überladen werden.
+* In Unions können sich keine Eigenschaften mit eigenem Konstruktor befinden.
+
+New todo list Tamino Dauth <tamino@cdauth.de>:
+* FIXED: currentSourceFile should be a property of the Parser class instead of the File class.
+* FIXED: Add an expression postfix to all local variables which are representing a start property identifier.
+* FIXED: In some cases the file class handles source code as a syntax checker. Remove all of these code parts whenever it is possible. You should try to disable them first by using a preprocessor for testing if there will be caused new bugs by removing them.
+* FIXED: Fix the help output formatting.
+* DONE: Implement option combination ability (-avxdf).
+* DONE: Link the gettext library (libintl.so)
+* FIXED: The add method of the Parser class crashes the program (insertations into lists).
+* FIXED: DocComment list won't be written into the file.
+* FIXED: Shown time is too high!
+* DONE: Check the parsed globals!
+* Parser::List should be able to be combined (0x02 etc.) that the search algorithm could get more than one list in each call.
+* DONE: Each class should handle its searchings and output.
+* DONE: Do not use the class get methods in class methods.
+* FIXED: First and second lines do not differ.
+* FIXED: Documentation comments have to wrong titles (title is shown at twice).
+* Revise the Makefile.
+* FIXED: Parameterauflistung (siehe Methoden).
+* FIXED: DocComments can not be in the same line as it text macro instance (crashes the program).
+* FIXED: Public constant members do not have the right interface or struct.
+* FIXED: Use UTF-8 encoding.
+* DONE: Parser's search object method should make more comparisons if there can be more than one object with the searched identifier (for example methods).
+* Verbose mode needs enormous memory!!!
+* DONE: Check scopes.
+* FIXED: There always is used the type of the last parameter for all other parameters, too.
+* FIXED: If the identifier of some object contains a " char there will be a syntax error when creating the database.
+* FIXED: public static constant members won't be parsed as constant.
+* FIXED: The value of a global can be a function or method call with literal arguments.
+* DONE: Support for the stub keyword is required.
+* Values should be checked if they contain a . character because values could look like this: structorinterfacename.methodname/structorinterfacename.membername/functioninterfacename.structorinterface.functionormethod
+* DONE: Add documentation comment keyword @state.
+* DONE: Documentation keywords should be usable in whole phrases like this: /// This function has the parameters: @param paramname1, @param paramname2.
+* Add documentation comment keywords for all kinds of objects and link them to their pages: @functioninterface functioninterfacename etc.
+* FIXED: Program crashes when extension interface of a struct is linked on its page.
+* HTML file output language should be selectable.
+* . separator should by detected by findValue().
+* Text macros and text macro instances won't be listed on library and probably not on scope pages, too.
+* Add support for compiler flag DATABASE.
+* Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
+
+Notes:
+* Parser is not created while parsing all files (note that you have to separate the parsing process into a single method).
+* Do not use 0 for string arguments! Probably it will crash the program.
+
+0.3:
+* DONE: Object lines should link to created code files and their lines.
+* There should be an inheritance tree of all interfaces and structs.
+* There should be a dependencies tree of all libraries.

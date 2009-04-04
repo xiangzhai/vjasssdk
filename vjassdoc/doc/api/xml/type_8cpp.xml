@@ -1,0 +1,361 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="type_8cpp" kind="file">
+    <compoundname>type.cpp</compoundname>
+    <includes local="no">cctype</includes>
+    <includes local="no">sstream</includes>
+    <includes refid="objects_8h" local="yes">objects.h</includes>
+    <includes refid="internationalisation_8h" local="yes">internationalisation.h</includes>
+    <incdepgraph>
+      <node id="1352">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1351">
+        <label>list</label>
+      </node>
+      <node id="1349">
+        <label>functional</label>
+      </node>
+      <node id="1365">
+        <label>function.h</label>
+        <link refid="function_8h"/>
+        <childnode refid="1364" relation="include">
+        </childnode>
+      </node>
+      <node id="1354">
+        <label>libintl.h</label>
+      </node>
+      <node id="1356">
+        <label>vjassdoc.h</label>
+        <link refid="vjassdoc_8h"/>
+        <childnode refid="1346" relation="include">
+        </childnode>
+        <childnode refid="1351" relation="include">
+        </childnode>
+        <childnode refid="1350" relation="include">
+        </childnode>
+      </node>
+      <node id="1353">
+        <label>internationalisation.h</label>
+        <link refid="internationalisation_8h"/>
+        <childnode refid="1354" relation="include">
+        </childnode>
+        <childnode refid="1355" relation="include">
+        </childnode>
+      </node>
+      <node id="1345">
+        <label>object.h</label>
+        <link refid="object_8h"/>
+        <childnode refid="1346" relation="include">
+        </childnode>
+        <childnode refid="1347" relation="include">
+        </childnode>
+        <childnode refid="1348" relation="include">
+        </childnode>
+        <childnode refid="1349" relation="include">
+        </childnode>
+        <childnode refid="1350" relation="include">
+        </childnode>
+        <childnode refid="1353" relation="include">
+        </childnode>
+        <childnode refid="1356" relation="include">
+        </childnode>
+      </node>
+      <node id="1346">
+        <label>string</label>
+      </node>
+      <node id="1361">
+        <label>type.h</label>
+        <link refid="type_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1348">
+        <label>fstream</label>
+      </node>
+      <node id="1360">
+        <label>textmacroinstance.h</label>
+        <link refid="textmacroinstance_8h"/>
+        <childnode refid="1359" relation="include">
+        </childnode>
+      </node>
+      <node id="1364">
+        <label>functioninterface.h</label>
+        <link refid="functioninterface_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1341">
+        <label>src/type.cpp</label>
+        <link refid="type.cpp"/>
+        <childnode refid="1342" relation="include">
+        </childnode>
+        <childnode refid="1343" relation="include">
+        </childnode>
+        <childnode refid="1344" relation="include">
+        </childnode>
+        <childnode refid="1353" relation="include">
+        </childnode>
+      </node>
+      <node id="1370">
+        <label>library.h</label>
+        <link refid="library_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1357">
+        <label>comment.h</label>
+        <link refid="comment_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1347">
+        <label>vector</label>
+      </node>
+      <node id="1369">
+        <label>scope.h</label>
+        <link refid="scope_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1343">
+        <label>sstream</label>
+      </node>
+      <node id="1368">
+        <label>struct.h</label>
+        <link refid="struct_8h"/>
+        <childnode refid="1367" relation="include">
+        </childnode>
+      </node>
+      <node id="1350">
+        <label>parser.h</label>
+        <link refid="parser_8h"/>
+        <childnode refid="1349" relation="include">
+        </childnode>
+        <childnode refid="1351" relation="include">
+        </childnode>
+        <childnode refid="1346" relation="include">
+        </childnode>
+        <childnode refid="1352" relation="include">
+        </childnode>
+        <childnode refid="1343" relation="include">
+        </childnode>
+        <childnode refid="1347" relation="include">
+        </childnode>
+      </node>
+      <node id="1358">
+        <label>keyword.h</label>
+        <link refid="keyword_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1363">
+        <label>member.h</label>
+        <link refid="member_8h"/>
+        <childnode refid="1362" relation="include">
+        </childnode>
+      </node>
+      <node id="1344">
+        <label>objects.h</label>
+        <link refid="objects_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+        <childnode refid="1357" relation="include">
+        </childnode>
+        <childnode refid="1358" relation="include">
+        </childnode>
+        <childnode refid="1359" relation="include">
+        </childnode>
+        <childnode refid="1360" relation="include">
+        </childnode>
+        <childnode refid="1361" relation="include">
+        </childnode>
+        <childnode refid="1362" relation="include">
+        </childnode>
+        <childnode refid="1363" relation="include">
+        </childnode>
+        <childnode refid="1364" relation="include">
+        </childnode>
+        <childnode refid="1365" relation="include">
+        </childnode>
+        <childnode refid="1366" relation="include">
+        </childnode>
+        <childnode refid="1367" relation="include">
+        </childnode>
+        <childnode refid="1368" relation="include">
+        </childnode>
+        <childnode refid="1369" relation="include">
+        </childnode>
+        <childnode refid="1370" relation="include">
+        </childnode>
+        <childnode refid="1371" relation="include">
+        </childnode>
+        <childnode refid="1372" relation="include">
+        </childnode>
+      </node>
+      <node id="1342">
+        <label>cctype</label>
+      </node>
+      <node id="1362">
+        <label>global.h</label>
+        <link refid="global_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1367">
+        <label>interface.h</label>
+        <link refid="interface_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1372">
+        <label>doccomment.h</label>
+        <link refid="doccomment_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+        <childnode refid="1350" relation="include">
+        </childnode>
+      </node>
+      <node id="1359">
+        <label>textmacro.h</label>
+        <link refid="textmacro_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+      <node id="1355">
+        <label>locale.h</label>
+      </node>
+      <node id="1366">
+        <label>method.h</label>
+        <link refid="method_8h"/>
+        <childnode refid="1365" relation="include">
+        </childnode>
+      </node>
+      <node id="1371">
+        <label>sourcefile.h</label>
+        <link refid="sourcefile_8h"/>
+        <childnode refid="1345" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacevjassdoc">vjassdoc</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/***************************************************************************</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Copyright<sp/>(C)<sp/>2008,<sp/>2009<sp/>by<sp/>Tamino<sp/>Dauth<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/><sp/><sp/>tamino@cdauth.de<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/><sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify<sp/><sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by<sp/><sp/>*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/><sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either<sp/>version<sp/>2<sp/>of<sp/>the<sp/>License,<sp/>or<sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/><sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>along<sp/>with<sp/>this<sp/>program;<sp/>if<sp/>not,<sp/>write<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Free<sp/>Software<sp/>Foundation,<sp/>Inc.,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/>59<sp/>Temple<sp/>Place<sp/>-<sp/>Suite<sp/>330,<sp/>Boston,<sp/>MA<sp/><sp/>02111-1307,<sp/>USA.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>***************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cctype&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="objects_8h" kindref="compound">objects.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="internationalisation_8h" kindref="compound">internationalisation.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">vjassdoc</highlight></codeline>
+<codeline lineno="28"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><ref refid="classvjassdoc_1_1Type_136d55cd487a11696b179790a299d5e09" kindref="member">Type::Type</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;identifier,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>SourceFile<sp/>*sourceFile,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>line,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>DocComment<sp/>*docComment,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;typeExpression,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;sizeExpression)<sp/>:<sp/>typeExpression(typeExpression),<sp/>sizeExpression(sizeExpression),<sp/>m_type(0),<sp/>m_size(0),<sp/>Object(identifier,<sp/>sourceFile,<sp/>line,<sp/>docComment)</highlight></codeline>
+<codeline lineno="31"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal">Type::Type(std::vector&lt;const<sp/>unsigned<sp/>char*&gt;<sp/>&amp;columnVector)<sp/>:<sp/>Object(columnVector)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Type_1d4cadc76713790490c55be0bd0af1a1d" kindref="member">Type::init</ref>()</highlight></codeline>
+<codeline lineno="39"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!this-&gt;typeExpression.empty())</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;m_type<sp/>=<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="normal">Type*</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(this-&gt;<ref refid="classvjassdoc_1_1Object_17ec73267fcaaa923333318c63de594da" kindref="member">searchObjectInList</ref>(this-&gt;typeExpression,<sp/><ref refid="classvjassdoc_1_1Parser_14ef39527519272daf05a22b5276062adf3b9448ea647fc1e6298c99fa0c6f383" kindref="member">Parser::Types</ref>));</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(this-&gt;m_type<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;typeExpression.clear();</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;typeExpression<sp/>=<sp/></highlight><highlight class="charliteral">&apos;-&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(this-&gt;sizeExpression.empty())</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;sizeExpression<sp/>=<sp/></highlight><highlight class="charliteral">&apos;-&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(isdigit(this-&gt;sizeExpression[0]))<sp/></highlight><highlight class="comment">//expression<sp/>can<sp/>be<sp/>an<sp/>integer<sp/>like<sp/>43</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;m_size<sp/>=<sp/>this-&gt;<ref refid="classvjassdoc_1_1Object_17ec73267fcaaa923333318c63de594da" kindref="member">searchObjectInList</ref>(this-&gt;sizeExpression,<sp/><ref refid="classvjassdoc_1_1Parser_14ef39527519272daf05a22b5276062ad3159e03f1ca44fc548716dd4ecfddfa8" kindref="member">Parser::Globals</ref>);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(this-&gt;m_size<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;m_size<sp/>=<sp/>this-&gt;<ref refid="classvjassdoc_1_1Object_17ec73267fcaaa923333318c63de594da" kindref="member">searchObjectInList</ref>(this-&gt;sizeExpression,<sp/><ref refid="classvjassdoc_1_1Parser_14ef39527519272daf05a22b5276062ad7a2e832cfc5290372e202fc5a1251b16" kindref="member">Parser::Members</ref>);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(this-&gt;m_size<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;m_size<sp/>=<sp/>this-&gt;<ref refid="classvjassdoc_1_1Object_17ec73267fcaaa923333318c63de594da" kindref="member">searchObjectInList</ref>(this-&gt;sizeExpression,<sp/><ref refid="classvjassdoc_1_1Parser_14ef39527519272daf05a22b5276062ad759eba0d2eb4743cf0e2d1352a9e8e7b" kindref="member">Parser::Functions</ref>);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(this-&gt;m_size<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;m_size<sp/>=<sp/>this-&gt;<ref refid="classvjassdoc_1_1Object_17ec73267fcaaa923333318c63de594da" kindref="member">searchObjectInList</ref>(this-&gt;sizeExpression,<sp/><ref refid="classvjassdoc_1_1Parser_14ef39527519272daf05a22b5276062adacced66c17428de42e0a10b20199b78f" kindref="member">Parser::Methods</ref>);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(this-&gt;m_size<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;sizeExpression.clear();</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Type_1bc514be419f91658df10d742c6999e47" kindref="member">Type::pageNavigation</ref>(std::ofstream<sp/>&amp;file)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="75"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>file</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t\t&lt;li&gt;&lt;a<sp/>href=\&quot;#Description\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Description&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/li&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t\t&lt;li&gt;&lt;a<sp/>href=\&quot;#Source<sp/>file\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Source<sp/>file&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/li&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t\t&lt;li&gt;&lt;a<sp/>href=\&quot;#Inherited<sp/>type\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Inherited<sp/>type&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/li&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t\t&lt;li&gt;&lt;a<sp/>href=\&quot;#Size\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Size&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/li&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Type_1aa7a3044fc74587aa8800b1d67b18930" kindref="member">Type::page</ref>(std::ofstream<sp/>&amp;file)</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="85"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>file</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&lt;h2&gt;&lt;a<sp/>name=\&quot;Description\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Description&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/h2&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&lt;p&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="classvjassdoc_1_1Object_11e7cc8e9b75c8555f996ecd9af27e446" kindref="member">Object::objectPageLink</ref>(this-&gt;docComment())<sp/>&lt;&lt;<sp/></highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&lt;/p&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&lt;h2&gt;&lt;a<sp/>name=\&quot;Source<sp/>file\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Source<sp/>file&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/h2&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="classvjassdoc_1_1SourceFile_15442b71bdf46f52e3aec90257e6a3dcb" kindref="member">SourceFile::sourceFileLineLink</ref>(</highlight><highlight class="keyword">this</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&lt;h2&gt;&lt;a<sp/>name=\&quot;Inherited<sp/>type\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Inherited<sp/>type&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/h2&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="classvjassdoc_1_1Object_11e7cc8e9b75c8555f996ecd9af27e446" kindref="member">Object::objectPageLink</ref>(this-&gt;type(),<sp/>this-&gt;typeExpression)<sp/>&lt;&lt;<sp/></highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&lt;h2&gt;&lt;a<sp/>name=\&quot;Size\&quot;&gt;&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" kindref="member">_</ref>(</highlight><highlight class="stringliteral">&quot;Size&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;&lt;/a&gt;&lt;/h2&gt;\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\t\t&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="classvjassdoc_1_1Object_11e7cc8e9b75c8555f996ecd9af27e446" kindref="member">Object::objectPageLink</ref>(this-&gt;size(),<sp/>this-&gt;sizeExpression)<sp/>&lt;&lt;<sp/></highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal">std::string<sp/><ref refid="classvjassdoc_1_1Type_122741189ccde7fa7bc63abdeaf256c92" kindref="member">Type::sqlStatement</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="101"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::ostringstream<sp/>sstream;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sstream</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/><ref refid="classvjassdoc_1_1Object_14e8ebbb0ce5b0bf91ec847b1e4a9f8fc" kindref="member">Object::sqlStatement</ref>()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;,<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Type=&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="classvjassdoc_1_1Object_17da4025933552d2e896a8ea2534b3324" kindref="member">Object::objectId</ref>(this-&gt;type())<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;,<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Size=&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="classvjassdoc_1_1Object_17da4025933552d2e896a8ea2534b3324" kindref="member">Object::objectId</ref>(this-&gt;size());</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sstream.str();</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/type.cpp"/>
+  </compounddef>
+</doxygen>

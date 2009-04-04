@@ -1,0 +1,886 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: vjassdoc 0.2.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-09 17:42+0100\n"
+"PO-Revision-Date: 2009-03-09 17:46+0100\n"
+"Last-Translator: Tamino Dauth <tamino.dauth@web.de>\n"
+"Language-Team: Tamino Dauth <tamino@cdauth.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src\n"
+"X-Poedit-SearchPath-0: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/vjassdoc.cpp:97
+msgid "UNIX mode was detected."
+msgstr "UNIX mode was detected."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/vjassdoc.cpp:100
+msgid "Win32 mode was detected."
+msgstr "Win32 mode was detected."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/vjassdoc.cpp:114
+#, c-format
+msgid ""
+"Duration:\n"
+"%f seconds\n"
+"CPU duration:\n"
+"%f seconds\n"
+msgstr ""
+"Duration:\n"
+"%f seconds\n"
+"CPU duration:\n"
+"%f seconds\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/vjassdoc.cpp:126
+#, c-format
+msgid "Finished (%d lines, %d files).\n"
+msgstr "Finished (%d lines, %d files).\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:68
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:79
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:76
+msgid "Container"
+msgstr "Container"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:69
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:81
+msgid "Static"
+msgstr "Static"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:70
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:83
+msgid "Stub"
+msgstr "Stub"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:71
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp:85
+msgid "Default return value"
+msgstr "Default return value"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/comment.cpp:48
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/comment.cpp:57
+msgid "Text"
+msgstr "Text"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/comment.cpp:49
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/comment.cpp:61
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:85
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:103
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:44
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:55
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:56
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:60
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:76
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:45
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:58
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacro.cpp:44
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacro.cpp:54
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:100
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:113
+msgid "Description"
+msgstr "Description"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/comment.cpp:50
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/comment.cpp:65
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:86
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:107
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:45
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:59
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:57
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:78
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:61
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:80
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:46
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:62
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacro.cpp:45
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacro.cpp:58
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:101
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:117
+msgid "Source file"
+msgstr "Source file"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:39
+msgid "Comments"
+msgstr "Comments"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:40
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:87
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:109
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:61
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:86
+msgid "Keywords"
+msgstr "Keywords"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:41
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:88
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:127
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:62
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:104
+msgid "Text macros"
+msgstr "Text macros"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:42
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:89
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:145
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:63
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:122
+msgid "Text macro instances"
+msgstr "Text macro instances"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:43
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:90
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:163
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:64
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:140
+msgid "Types"
+msgstr "Types"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:44
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:91
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:181
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:65
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:158
+msgid "Globals"
+msgstr "Globals"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:45
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:50
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:70
+msgid "Members"
+msgstr "Members"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:46
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:92
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:199
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:66
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:176
+msgid "Function interfaces"
+msgstr "Function interfaces"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:47
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:93
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:217
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:67
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:194
+msgid "Functions"
+msgstr "Functions"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:48
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:51
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:76
+msgid "Methods"
+msgstr "Methods"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:49
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:94
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:235
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:68
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:212
+msgid "Interfaces"
+msgstr "Interfaces"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:50
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:95
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:253
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:69
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:230
+msgid "Structs"
+msgstr "Structs"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:51
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:96
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.cpp:271
+msgid "Scopes"
+msgstr "Scopes"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:52
+msgid "Libraries"
+msgstr "Libraries"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:53
+msgid "Source files"
+msgstr "Source files"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:54
+msgid "Documentation comments"
+msgstr "Documentation comments"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:190
+msgid "Creating HTML file."
+msgstr "Creating HTML file."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:198
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:301
+msgid "en"
+msgstr "en"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:209
+#, c-format
+msgid "Generated by vjassdoc %s."
+msgstr "Generated by vjassdoc %s."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:228
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:249
+msgid "Undocumented objects"
+msgstr "Undocumented objects"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:309
+msgid "Return to start page"
+msgstr "Return to start page"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:329
+#, c-format
+msgid ""
+"Creating database.\n"
+"Using SQLite version %s.\n"
+msgstr ""
+"Creating database.\n"
+"Using SQLite version %s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:335
+#, c-format
+msgid "Database \"%s\" does already exist. Do you want to replace it by the newer one? (y/n)\n"
+msgstr "UNIX mode was detected."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:343
+msgid "y"
+msgstr "y"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:343
+msgid "yes"
+msgstr "yes"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:347
+msgid "Was unable to replace old database."
+msgstr "Was unable to replace old database."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:353
+msgid "n"
+msgstr "n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:353
+msgid "no"
+msgstr "no"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:355
+msgid "Canceled database creation."
+msgstr "Canceled database creation."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:359
+msgid "Unknown answer."
+msgstr "Unknown answer."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:374
+#, c-format
+msgid ""
+"Was unable to begin transaction.\n"
+"State: %d.\n"
+"Message: %s\n"
+msgstr ""
+"Was unable to begin transaction.\n"
+"State: %d.\n"
+"Message: %s\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:387
+#, c-format
+msgid ""
+"Was unable to create table \"%s\" from list %d.\n"
+"State: %d.\n"
+"Message: %s\n"
+msgstr ""
+"Was unable to create table \"%s\" from list %d.\n"
+"State: %d.\n"
+"Message: %s\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:402
+#, c-format
+msgid ""
+"Was unable to insert id of list %d into table \"%s\".\n"
+"State: %d.\n"
+"Message: %s\n"
+msgstr ""
+"Was unable to insert id of list %d into table \"%s\".\n"
+"State: %d.\n"
+"Message: %s\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:424
+#, c-format
+msgid ""
+"Was unable to run execution of table \"%s\" from list %d.\n"
+"State: %d.\n"
+"Message: %s\n"
+msgstr ""
+"Was unable to run execution of table \"%s\" from list %d.\n"
+"State: %d.\n"
+"Message: %s\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:434
+#, c-format
+msgid ""
+"Was unable to commit.\n"
+"State: %d.\n"
+"Message: %s\n"
+msgstr ""
+"Was unable to commit.\n"
+"State: %d.\n"
+"Message: %s\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:439
+#, c-format
+msgid "Was unable to create database. State %d.\n"
+msgstr "Was unable to create database. State %d.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:448
+#, c-format
+msgid "Load database %s."
+msgstr "Load database %s."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:477
+#, c-format
+msgid ""
+"Was unable to prepare SQL statement of table %s.\n"
+"State %d.\n"
+msgstr ""
+"Was unable to prepare SQL statement of table %s.\n"
+"State %d.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:481
+#, c-format
+msgid "SQL statement of table %s is NULL.\n"
+msgstr "SQL statement of table %s is NULL.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:503
+#, c-format
+msgid ""
+"Was unable to finalize prepared SQL statement of table %s.\n"
+"State %d.\n"
+msgstr ""
+"Was unable to finalize prepared SQL statement of table %s.\n"
+"State %d.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:507
+#, c-format
+msgid ""
+"Was unable to create database.\n"
+"State %d.\n"
+msgstr ""
+"Was unable to create database.\n"
+"State %d.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.cpp:525
+#, c-format
+msgid "Remove database %d."
+msgstr "Remove database %d."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:46
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:61
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:58
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:80
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:62
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:82
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:47
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:64
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:102
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:119
+msgid "Library"
+msgstr "Library"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:47
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:63
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:63
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:84
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:48
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:66
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:103
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:121
+msgid "Scope"
+msgstr "Scope"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:48
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.cpp:65
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:59
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:82
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:64
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:86
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:49
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.cpp:68
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:104
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:123
+msgid "Private"
+msgstr "Private"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:138
+#, c-format
+msgid "Unable to open file %s.\n"
+msgstr "Unable to open file %s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:152
+#, c-format
+msgid "Read line %d of file %s.\n"
+msgstr "Read line %d of file %s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:160
+msgid "Empty line."
+msgstr "Empty line."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:172
+msgid "Debug statement, ignoring line."
+msgstr "Debug statement, ignoring line."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:190
+#, c-format
+msgid "Not required space. Reason: %d.\n"
+msgstr "Not required space. Reason: %d.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:230
+msgid "Unknown expression."
+msgstr "Unknown expression."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:306
+#, c-format
+msgid "Unable to import file %s.\n"
+msgstr "Unable to import file %s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:314
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:322
+#, c-format
+msgid "Import file %s.\n"
+msgstr "Import file %s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:458
+#, c-format
+msgid "Starting with not required space. Reason: %d.\n"
+msgstr "Starting with not required space. Reason: %d.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:564
+#, c-format
+msgid "Parsed file %s successfully (number %d, %d lines).\n"
+msgstr "Parsed file %s successfully (number %d, %d lines).\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:582
+msgid "Detected \" character. Ignoring // and /// expressions."
+msgstr "Detected \" character. Ignoring // and /// expressions."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:584
+msgid "Detected \" character. Do not ignore // and /// expressions anymore."
+msgstr "Detected \" character. Do not ignore // and /// expressions anymore."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:621
+msgid "Detected empty comment."
+msgstr "Detected empty comment."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:660
+msgid "<strong>Author:</strong>"
+msgstr "<strong>Author:</strong>"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:664
+msgid "<strong>Todo:</strong>"
+msgstr "<strong>Todo:</strong>"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:668
+msgid "<strong>Parameter:</strong>"
+msgstr "<strong>Parameter:</strong>"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:672
+msgid "<strong>Return:</strong>"
+msgstr "<strong>Return:</strong>"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:676
+msgid "<strong>State:</strong>"
+msgstr "<strong>State:</strong>"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:680
+msgid "<strong>Source:</strong>"
+msgstr "<strong>Source:</strong>"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:713
+msgid "Detected empty documentation comment."
+msgstr "Detected empty documentation comment."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.cpp:1110
+msgid "Missing default return value expression."
+msgstr "Missing default return value expression."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/function.cpp:46
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/function.cpp:56
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:65
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:88
+msgid "Public"
+msgstr "Public"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/function.cpp:47
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/function.cpp:58
+msgid "Native"
+msgstr "Native"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/function.cpp:48
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/function.cpp:60
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:66
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:90
+msgid "Constant"
+msgstr "Constant"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:60
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/scope.cpp:84
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:73
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:107
+msgid "Initializer"
+msgstr "Initializer"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:67
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:92
+msgid "Type"
+msgstr "Type"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:68
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:94
+msgid "Value"
+msgstr "Value"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:69
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/global.cpp:109
+msgid "Size"
+msgstr "Size"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacro.cpp:46
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacro.cpp:60
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:105
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:125
+msgid "Parameters"
+msgstr "Parameters"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:69
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:83
+msgid "Extension"
+msgstr "Extension"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:70
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:85
+msgid "Child structs"
+msgstr "Child structs"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:71
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:103
+msgid "Constructor"
+msgstr "Constructor"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:72
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:105
+msgid "Destructor"
+msgstr "Destructor"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:74
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:109
+msgid "Inherited members"
+msgstr "Inherited members"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:75
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:127
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.cpp:146
+msgid "Inherited methods"
+msgstr "Inherited methods"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/sourcefile.cpp:44
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/sourcefile.cpp:52
+msgid "Full path"
+msgstr "Full path"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/sourcefile.cpp:45
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/sourcefile.cpp:54
+msgid "Code"
+msgstr "Code"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:106
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.cpp:149
+msgid "Return type"
+msgstr "Return type"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/member.cpp:48
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/member.cpp:60
+msgid "Delegate"
+msgstr "Delegate"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/type.cpp:79
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/type.cpp:93
+msgid "Inherited type"
+msgstr "Inherited type"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:63
+msgid ""
+"Copyright © 2008, 2009 Tamino Dauth\n"
+"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
+"This is free software: you are free to change and redistribute it.\n"
+"There is NO WARRANTY, to the extent permitted by law."
+msgstr ""
+"Copyright © 2008, 2009 Tamino Dauth\n"
+"License GPLv2: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
+"This is free software: you are free to change and redistribute it.\n"
+"There is NO WARRANTY, to the extent permitted by law."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:74
+msgid "vjassdoc options:\n"
+msgstr "vjassdoc options:\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:75
+msgid "--version            Shows the current version of vjassdoc.\n"
+msgstr "--version            Shows the current version of vjassdoc.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:76
+msgid "-j --jass            vJass code will be ignored.\n"
+msgstr "-j --jass            vJass code will be ignored.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:77
+msgid "-d --debug           Lines starting with the vJass keyword 'debug' won't be ignored.\n"
+msgstr "-d --debug           Lines starting with the vJass keyword 'debug' won't be ignored.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:78
+msgid "--private            Private objects will be parsed.\n"
+msgstr "--private            Private objects will be parsed.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:79
+msgid "-m --textmacros      Code between text macro statements will be parsed.\n"
+msgstr "-m --textmacros      Code between text macro statements will be parsed.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:80
+msgid "-h --html            Program creates a simple HTML API documentation.\n"
+msgstr "-h --html            Program creates a simple HTML API documentation.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:81
+msgid "-p --pages           Program creates an HTML file for each parsed object.\n"
+msgstr "-p --pages           Program creates an HTML file for each parsed object.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:82
+msgid "-s --specialpages    Program creates additional HTML files containing more information about all parsed objects.\n"
+msgstr "-s --specialpages    Program creates additional HTML files containing more information about all parsed objects.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:83
+msgid "-b --database        Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n"
+msgstr "-b --database        Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:84
+msgid "-v --verbose         Program shows more information about the process.\n"
+msgstr "-v --verbose         Program shows more information about the process.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:85
+msgid "-t --time            Detects the remaining time and shows it at the end of the process.\n"
+msgstr "-t --time            Detects the remaining time and shows it at the end of the process.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:86
+msgid "-a --alphabetical    All objects will be aranged in an alphabetical order.\n"
+msgstr "-a --alphabetical    All objects will be aranged in an alphabetical order.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:87
+msgid "--title <arg>        <arg> has to be replaced by the title which is used for the API documentation.\n"
+msgstr "--title <arg>        <arg> has to be replaced by the title which is used for the API documentation.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:88
+msgid "--importdirs <args>  <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n"
+msgstr "--importdirs <args>  <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:89
+msgid "--files <args>       <args> has to be replaced by the files which should be parsed.\n"
+msgstr "--files <args>       <args> has to be replaced by the files which should be parsed.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:90
+msgid "--dir <arg>          <arg> has to be replaced by the output directory path.\n"
+msgstr "--dir <arg>          <arg> has to be replaced by the output directory path.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:91
+msgid ""
+"\n"
+"Report bugs to tamino@cdauth.de"
+msgstr ""
+"\n"
+"Report bugs to tamino@cdauth.de"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:99
+msgid ""
+"Missing arguments.\n"
+"Use --help to get some information about all available options."
+msgstr ""
+"Missing arguments.\n"
+"Use --help to get some information about all available options."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:213
+#, c-format
+msgid "Unknown option: %c.\n"
+msgstr "Unknown option: %c.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:271
+msgid "Missing title argument."
+msgstr "Missing title argument."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:292
+msgid "Missing directory argument."
+msgstr "Missing directory argument."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:320
+#, c-format
+msgid "Objects of list %d already won't be parsed.\n"
+msgstr "Objects of list %d already won't be parsed.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:325
+#, c-format
+msgid "Unknown argument: %s.\n"
+msgstr "Unknown argument: %s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:333
+msgid "Missing file arguments."
+msgstr "Missing file arguments."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:338
+msgid "Warning: Although there won't be created any HTML files you have used the --pages option."
+msgstr "Warning: Although there won't be created any HTML files you have used the --pages option."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/main.cpp:341
+msgid "vJass API Documentation"
+msgstr "vJass API Documentation"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/doccomment.cpp:131
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/doccomment.cpp:144
+msgid "Object"
+msgstr "Object"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp:49
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp:57
+msgid "Text macro"
+msgstr "Text macro"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h:211
+msgid "Yes"
+msgstr "Yes"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h:213
+msgid "No"
+msgstr "No"
+
+#~ msgid ""
+#~ "JASS integer values take 32 bits.<br><br><b>Representations</"
+#~ "b><br><br><b>Decimal.</b>- Any number, negative , positive or 0 that does "
+#~ "not have a fractionary part: ex: 12 , -199930 , 999999<br><br><b>Octal.</"
+#~ "b>- If a number starts with 0 it is considered an octal value, ex: 07 == "
+#~ "7 , 08 causes a syntax error, 012 equals to 10.<br><br><b>Hexadecimal.</"
+#~ "b>- If a number starts with 0x it is considered a hex value, ex: 0x2==2, "
+#~ "0xA == 10 , 0x10 == 16 , 0xFF == 255 .<br><br><b>Character.</b>- An asc "
+#~ "ii character between '' represents its correspondant number from 0 to "
+#~ "255, ex: 'A'==65 , '<'==60 . Note that certains bytes inside the script "
+#~ "file will cause major errors.<br><br><b>4 Characters.</b>- A "
+#~ "representation in ASCII of the 4 bytes used by the integer, this "
+#~ "representation is mostly used for Unit/ability/tile /upgrade/etc/ ids. "
+#~ "Example: 'Aloc' , 'B000'<br><br>"
+#~ msgstr ""
+#~ "JASS integer values take 32 bits.<br><br><b>Representations</"
+#~ "b><br><br><b>Decimal.</b>- Any number, negative , positive or 0 that does "
+#~ "not have a fractionary part: ex: 12 , -199930 , 999999<br><br><b>Octal.</"
+#~ "b>- If a number starts with 0 it is considered an octal value, ex: 07 == "
+#~ "7 , 08 causes a syntax error, 012 equals to 10.<br><br><b>Hexadecimal.</"
+#~ "b>- If a number starts with 0x it is considered a hex value, ex: 0x2==2, "
+#~ "0xA == 10 , 0x10 == 16 , 0xFF == 255 .<br><br><b>Character.</b>- An asc "
+#~ "ii character between '' represents its correspondant number from 0 to "
+#~ "255, ex: 'A'==65 , '<'==60 . Note that certains bytes inside the script "
+#~ "file will cause major errors.<br><br><b>4 Characters.</b>- A "
+#~ "representation in ASCII of the 4 bytes used by the integer, this "
+#~ "representation is mostly used for Unit/ability/tile /upgrade/etc/ ids. "
+#~ "Example: 'Aloc' , 'B000'<br><br>"
+#~ msgid "File"
+#~ msgstr "File"
+#~ msgid "Line"
+#~ msgstr "Line"
+#~ msgid "Documentation comment"
+#~ msgstr "Documentation comment"
+#~ msgid "Name"
+#~ msgstr "Name"
+#~ msgid "Arguments"
+#~ msgstr "Arguments"
+#~ msgid "Interface/struct"
+#~ msgstr "Interface/struct"
+#~ msgid "Parameter types"
+#~ msgstr "Parameter types"
+#~ msgid "Parameter names"
+#~ msgstr "Parameter names"
+#~ msgid "Inherited interface/struct"
+#~ msgstr "Inherited interface/struct"
+#~ msgid "Once"
+#~ msgstr "Once"
+#~ msgid "Requirement"
+#~ msgstr "Requirement"
+#~ msgid "Value globals"
+#~ msgstr "Value globals"
+#~ msgid "Value members"
+#~ msgstr "Value members"
+
+#, fuzzy
+#~ msgid ""
+#~ "vjassdoc options:\n"
+#~ "--version\t\t\t\tShows the current version of vjassdoc.\n"
+#~ "-j --jass\t\t\t\tvJass will be ignored.\n"
+#~ "-d --debug\t\t\t\tLines starting with the vJass keyword 'debug' will be "
+#~ "parsed.\n"
+#~ "-h --html\t\t\t\tProgram creates a simple HTML API reference.\n"
+#~ "-p --pages\t\t\t\tProgram creates an HTML file for each parsed object.\n"
+#~ "-b --database\t\t\t\tParsed objects will be saved in a database which "
+#~ "could be read by other programs.\n"
+#~ "-v --verbose\t\t\t\tProgram shows more information about the process.\n"
+#~ "-t --time\t\t\t\tDetects used time and shows it on the screen\n"
+#~ "-a --alphabetical\t\t\t\tAll objects will be aranged in alphabetical "
+#~ "order.\n"
+#~ "--title <arg>\t\t\t\t<arg> has to be replaced by the title which is used "
+#~ "by the API documentation.\n"
+#~ "--importdirs <args>\t\t\t\t<args> has to be replaced by some import "
+#~ "directories (Used for the //! import macro in vJass).\n"
+#~ "--files <args>\t\t\t\t<args> has to be replaced by the files which will "
+#~ "be parsed.\n"
+#~ "--dir <arg>\t\t\t\t<arg> has to be replaced by the output directory "
+#~ "path.\n"
+#~ "\n"
+#~ "Report bugs to tamino@web.de"
+#~ msgstr ""
+#~ "vjassdoc options:\n"
+#~ "--version\t\t\t\tShows the current version of vjassdoc.\n"
+#~ "-j --jass\t\t\t\tvJass will be ignored.\n"
+#~ "-d --debug\t\t\t\tLines starting with the vJass keyword 'debug' will be "
+#~ "parsed.\n"
+#~ "-h --html\t\t\t\tProgram creates a simple HTML API reference.\n"
+#~ "-p --pages\t\t\t\tProgram creates an HTML file for each parsed object.\n"
+#~ "-b --database\t\t\t\tParsed objects will be saved in a database which "
+#~ "could be read by other programs.\n"
+#~ "-v --verbose\t\t\t\tProgram shows more information about the process.\n"
+#~ "-t --time\t\t\t\tDetects used time and shows it on the screen\n"
+#~ "-a --alphabetical\t\t\t\tAll objects will be aranged in alphabetical "
+#~ "order.\n"
+#~ "--title <arg>\t\t\t\t<arg> has to be replaced by the title which is used "
+#~ "by the API documentation.\n"
+#~ "--importdirs <args>\t\t\t\t<args> has to be replaced by some import "
+#~ "directories (Used for the //! import macro in vJass).\n"
+#~ "--files <args>\t\t\t\t<args> has to be replaced by the files which will "
+#~ "be parsed.\n"
+#~ "--dir <arg>\t\t\t\t<arg> has to be replaced by the output directory path."
+#~ msgid "Function Interfaces"
+#~ msgstr "Function Interfaces"
+#~ msgid "Import file %s%s.\n"
+#~ msgstr "Importiere Datei %s%s.\n"
+
+#, fuzzy
+#~ msgid "Database mode is not implemented yet."
+#~ msgstr "Binärer Speichermodus ist noch nicht implementiert worden."
+#~ msgid "Missing output argument."
+#~ msgstr "Ausgabe-Argument fehlt."
+#~ msgid "Text Macro"
+#~ msgstr "Textmakro"
+#~ msgid "Unknown preprocessor."
+#~ msgstr "Unbekannter Präprozessor."
+#~ msgid "The \"Library_once\" keyword was not tested, yet."
+#~ msgstr "Das \"Library_once\"-Schlüsselwort wurde noch nicht getestet."
+#~ msgid "The \"delegate\" keyword was not tested yet."
+#~ msgstr "Das \"delegate\"-Schlüsselwort wurde noch nicht getestet."
+#~ msgid "Member was declared as static at twice."
+#~ msgstr "Element wurde zweimal als statisch deklariert."
+#~ msgid "Constant members must be static."
+#~ msgstr "Konstante Elemente müssen statisch sein."
+#~ msgid "Delegates can not be constant."
+#~ msgstr "Delegierte können nicht konstant sein."
+

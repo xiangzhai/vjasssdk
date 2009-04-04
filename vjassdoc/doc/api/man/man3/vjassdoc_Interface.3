@@ -1,0 +1,96 @@
+.TH "vjassdoc::Interface" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::Interface \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <interface.h>\fP
+.PP
+Inherits \fBvjassdoc::Object\fP.
+.PP
+Inherited by \fBvjassdoc::Struct\fP.
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBInterface\fP (const std::string &identifier, class \fBSourceFile\fP *sourceFile, unsigned int line, class \fBDocComment\fP *docComment, class \fBLibrary\fP *library, class \fBScope\fP *scope, bool isPrivate)"
+.br
+.ti -1c
+.RI "\fBInterface\fP (std::vector< const unsigned char * > &columnVector)"
+.br
+.ti -1c
+.RI "virtual void \fBinit\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpageNavigation\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual void \fBpage\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual std::string \fBsqlStatement\fP () const "
+.br
+.ti -1c
+.RI "virtual class \fBLibrary\fP * \fBlibrary\fP () const "
+.br
+.ti -1c
+.RI "virtual class \fBScope\fP * \fBscope\fP () const "
+.br
+.ti -1c
+.RI "bool \fBisPrivate\fP () const "
+.br
+.ti -1c
+.RI "void \fBgetMemberList\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "void \fBgetMethodList\fP (std::ofstream &file) const "
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::Interface::Interface (const std::string & identifier, class \fBSourceFile\fP * sourceFile, unsigned int line, class \fBDocComment\fP * docComment, class \fBLibrary\fP * library, class \fBScope\fP * scope, bool isPrivate)"
+.PP
+.SS "vjassdoc::Interface::Interface (std::vector< const unsigned char * > & columnVector)"
+.PP
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::Interface::init ()\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::Struct\fP.
+.SS "void vjassdoc::Interface::pageNavigation (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::Struct\fP.
+.SS "void vjassdoc::Interface::page (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::Struct\fP.
+.SS "std::string vjassdoc::Interface::sqlStatement () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::Struct\fP.
+.SS "class \fBLibrary\fP * vjassdoc::Interface::library () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.SS "class \fBScope\fP * vjassdoc::Interface::scope () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.SS "bool vjassdoc::Interface::isPrivate () const\fC [inline]\fP"
+.PP
+.SS "void vjassdoc::Interface::getMemberList (std::ofstream & file) const"
+.PP
+.SS "void vjassdoc::Interface::getMethodList (std::ofstream & file) const"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

@@ -1,0 +1,410 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="internationalisation_8h" kind="file">
+    <compoundname>internationalisation.h</compoundname>
+    <includes local="no">libintl.h</includes>
+    <includes local="no">locale.h</includes>
+    <includedby refid="object_8h" local="yes">src/object.h</includedby>
+    <includedby refid="comment_8cpp" local="yes">src/comment.cpp</includedby>
+    <includedby refid="doccomment_8cpp" local="yes">src/doccomment.cpp</includedby>
+    <includedby refid="file_8cpp" local="yes">src/file.cpp</includedby>
+    <includedby refid="function_8cpp" local="yes">src/function.cpp</includedby>
+    <includedby refid="functioninterface_8cpp" local="yes">src/functioninterface.cpp</includedby>
+    <includedby refid="global_8cpp" local="yes">src/global.cpp</includedby>
+    <includedby refid="interface_8cpp" local="yes">src/interface.cpp</includedby>
+    <includedby refid="keyword_8cpp" local="yes">src/keyword.cpp</includedby>
+    <includedby refid="library_8cpp" local="yes">src/library.cpp</includedby>
+    <includedby refid="main_8cpp" local="yes">src/main.cpp</includedby>
+    <includedby refid="member_8cpp" local="yes">src/member.cpp</includedby>
+    <includedby refid="method_8cpp" local="yes">src/method.cpp</includedby>
+    <includedby refid="object_8cpp" local="yes">src/object.cpp</includedby>
+    <includedby refid="parser_8cpp" local="yes">src/parser.cpp</includedby>
+    <includedby refid="scope_8cpp" local="yes">src/scope.cpp</includedby>
+    <includedby refid="sourcefile_8cpp" local="yes">src/sourcefile.cpp</includedby>
+    <includedby refid="struct_8cpp" local="yes">src/struct.cpp</includedby>
+    <includedby refid="textmacro_8cpp" local="yes">src/textmacro.cpp</includedby>
+    <includedby refid="textmacroinstance_8cpp" local="yes">src/textmacroinstance.cpp</includedby>
+    <includedby refid="type_8cpp" local="yes">src/type.cpp</includedby>
+    <includedby refid="vjassdoc_8cpp" local="yes">src/vjassdoc.cpp</includedby>
+    <incdepgraph>
+      <node id="456">
+        <label>libintl.h</label>
+      </node>
+      <node id="455">
+        <label>src/internationalisation.h</label>
+        <link refid="internationalisation.h"/>
+        <childnode refid="456" relation="include">
+        </childnode>
+        <childnode refid="457" relation="include">
+        </childnode>
+      </node>
+      <node id="457">
+        <label>locale.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="462">
+        <label>src/doccomment.cpp</label>
+        <link refid="doccomment_8cpp"/>
+      </node>
+      <node id="465">
+        <label>src/functioninterface.cpp</label>
+        <link refid="functioninterface_8cpp"/>
+      </node>
+      <node id="477">
+        <label>src/textmacro.cpp</label>
+        <link refid="textmacro_8cpp"/>
+      </node>
+      <node id="488">
+        <label>src/function.h</label>
+        <link refid="function_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="489" relation="include">
+        </childnode>
+      </node>
+      <node id="496">
+        <label>src/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+      <node id="497">
+        <label>src/vjassdoc.cpp</label>
+        <link refid="vjassdoc_8cpp"/>
+      </node>
+      <node id="458">
+        <label>src/internationalisation.h</label>
+        <link refid="internationalisation.h"/>
+        <childnode refid="459" relation="include">
+        </childnode>
+        <childnode refid="461" relation="include">
+        </childnode>
+        <childnode refid="462" relation="include">
+        </childnode>
+        <childnode refid="463" relation="include">
+        </childnode>
+        <childnode refid="464" relation="include">
+        </childnode>
+        <childnode refid="465" relation="include">
+        </childnode>
+        <childnode refid="466" relation="include">
+        </childnode>
+        <childnode refid="467" relation="include">
+        </childnode>
+        <childnode refid="468" relation="include">
+        </childnode>
+        <childnode refid="469" relation="include">
+        </childnode>
+        <childnode refid="496" relation="include">
+        </childnode>
+        <childnode refid="470" relation="include">
+        </childnode>
+        <childnode refid="471" relation="include">
+        </childnode>
+        <childnode refid="472" relation="include">
+        </childnode>
+        <childnode refid="473" relation="include">
+        </childnode>
+        <childnode refid="474" relation="include">
+        </childnode>
+        <childnode refid="475" relation="include">
+        </childnode>
+        <childnode refid="476" relation="include">
+        </childnode>
+        <childnode refid="477" relation="include">
+        </childnode>
+        <childnode refid="478" relation="include">
+        </childnode>
+        <childnode refid="479" relation="include">
+        </childnode>
+        <childnode refid="497" relation="include">
+        </childnode>
+      </node>
+      <node id="464">
+        <label>src/function.cpp</label>
+        <link refid="function_8cpp"/>
+      </node>
+      <node id="472">
+        <label>src/object.cpp</label>
+        <link refid="object_8cpp"/>
+      </node>
+      <node id="459">
+        <label>src/object.h</label>
+        <link refid="object_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="480" relation="include">
+        </childnode>
+        <childnode refid="481" relation="include">
+        </childnode>
+        <childnode refid="482" relation="include">
+        </childnode>
+        <childnode refid="484" relation="include">
+        </childnode>
+        <childnode refid="485" relation="include">
+        </childnode>
+        <childnode refid="487" relation="include">
+        </childnode>
+        <childnode refid="490" relation="include">
+        </childnode>
+        <childnode refid="492" relation="include">
+        </childnode>
+        <childnode refid="493" relation="include">
+        </childnode>
+        <childnode refid="494" relation="include">
+        </childnode>
+        <childnode refid="495" relation="include">
+        </childnode>
+      </node>
+      <node id="484">
+        <label>src/type.h</label>
+        <link refid="type_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="473">
+        <label>src/parser.cpp</label>
+        <link refid="parser_8cpp"/>
+      </node>
+      <node id="463">
+        <label>src/file.cpp</label>
+        <link refid="file_8cpp"/>
+      </node>
+      <node id="468">
+        <label>src/keyword.cpp</label>
+        <link refid="keyword_8cpp"/>
+      </node>
+      <node id="478">
+        <label>src/textmacroinstance.cpp</label>
+        <link refid="textmacroinstance_8cpp"/>
+      </node>
+      <node id="483">
+        <label>src/textmacroinstance.h</label>
+        <link refid="textmacroinstance_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="487">
+        <label>src/functioninterface.h</label>
+        <link refid="functioninterface_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="488" relation="include">
+        </childnode>
+      </node>
+      <node id="479">
+        <label>src/type.cpp</label>
+        <link refid="type_8cpp"/>
+      </node>
+      <node id="474">
+        <label>src/scope.cpp</label>
+        <link refid="scope_8cpp"/>
+      </node>
+      <node id="493">
+        <label>src/library.h</label>
+        <link refid="library_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="480">
+        <label>src/comment.h</label>
+        <link refid="comment_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="475">
+        <label>src/sourcefile.cpp</label>
+        <link refid="sourcefile_8cpp"/>
+      </node>
+      <node id="492">
+        <label>src/scope.h</label>
+        <link refid="scope_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="467">
+        <label>src/interface.cpp</label>
+        <link refid="interface_8cpp"/>
+      </node>
+      <node id="469">
+        <label>src/library.cpp</label>
+        <link refid="library_8cpp"/>
+      </node>
+      <node id="461">
+        <label>src/comment.cpp</label>
+        <link refid="comment_8cpp"/>
+      </node>
+      <node id="476">
+        <label>src/struct.cpp</label>
+        <link refid="struct_8cpp"/>
+      </node>
+      <node id="491">
+        <label>src/struct.h</label>
+        <link refid="struct_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="481">
+        <label>src/keyword.h</label>
+        <link refid="keyword_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="486">
+        <label>src/member.h</label>
+        <link refid="member_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="460">
+        <label>src/objects.h</label>
+        <link refid="objects_8h"/>
+        <childnode refid="461" relation="include">
+        </childnode>
+        <childnode refid="462" relation="include">
+        </childnode>
+        <childnode refid="463" relation="include">
+        </childnode>
+        <childnode refid="464" relation="include">
+        </childnode>
+        <childnode refid="465" relation="include">
+        </childnode>
+        <childnode refid="466" relation="include">
+        </childnode>
+        <childnode refid="467" relation="include">
+        </childnode>
+        <childnode refid="468" relation="include">
+        </childnode>
+        <childnode refid="469" relation="include">
+        </childnode>
+        <childnode refid="470" relation="include">
+        </childnode>
+        <childnode refid="471" relation="include">
+        </childnode>
+        <childnode refid="472" relation="include">
+        </childnode>
+        <childnode refid="473" relation="include">
+        </childnode>
+        <childnode refid="474" relation="include">
+        </childnode>
+        <childnode refid="475" relation="include">
+        </childnode>
+        <childnode refid="476" relation="include">
+        </childnode>
+        <childnode refid="477" relation="include">
+        </childnode>
+        <childnode refid="478" relation="include">
+        </childnode>
+        <childnode refid="479" relation="include">
+        </childnode>
+      </node>
+      <node id="485">
+        <label>src/global.h</label>
+        <link refid="global_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="486" relation="include">
+        </childnode>
+      </node>
+      <node id="470">
+        <label>src/member.cpp</label>
+        <link refid="member_8cpp"/>
+      </node>
+      <node id="490">
+        <label>src/interface.h</label>
+        <link refid="interface_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="491" relation="include">
+        </childnode>
+      </node>
+      <node id="495">
+        <label>src/doccomment.h</label>
+        <link refid="doccomment_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="472" relation="include">
+        </childnode>
+      </node>
+      <node id="482">
+        <label>src/textmacro.h</label>
+        <link refid="textmacro_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="483" relation="include">
+        </childnode>
+      </node>
+      <node id="489">
+        <label>src/method.h</label>
+        <link refid="method_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+      </node>
+      <node id="471">
+        <label>src/method.cpp</label>
+        <link refid="method_8cpp"/>
+      </node>
+      <node id="494">
+        <label>src/sourcefile.h</label>
+        <link refid="sourcefile_8h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="472" relation="include">
+        </childnode>
+      </node>
+      <node id="466">
+        <label>src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" prot="public" static="no">
+        <name>_</name>
+        <param><defname>string</defname></param>
+        <initializer>gettext(string)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/internationalisation.h" line="27" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/internationalisation.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/***************************************************************************</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Copyright<sp/>(C)<sp/>2008<sp/>by<sp/>Tamino<sp/>Dauth<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/><sp/><sp/>tamino@cdauth.de<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/><sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify<sp/><sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by<sp/><sp/>*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/><sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either<sp/>version<sp/>2<sp/>of<sp/>the<sp/>License,<sp/>or<sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/><sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>along<sp/>with<sp/>this<sp/>program;<sp/>if<sp/>not,<sp/>write<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Free<sp/>Software<sp/>Foundation,<sp/>Inc.,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/>59<sp/>Temple<sp/>Place<sp/>-<sp/>Suite<sp/>330,<sp/>Boston,<sp/>MA<sp/><sp/>02111-1307,<sp/>USA.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>***************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>VJASSDOC_INTERNATIONALISATION</highlight></codeline>
+<codeline lineno="22"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>VJASSDOC_INTERNATIONALISATION</highlight></codeline>
+<codeline lineno="23"><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">//preparation<sp/>for<sp/>gettext</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;libintl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;locale.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="internationalisation_8h_1a9bd4034a10d8f6a33b6c8e6416eac00" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_(string)<sp/>gettext(string)</highlight></codeline>
+<codeline lineno="28"><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/internationalisation.h"/>
+  </compounddef>
+</doxygen>

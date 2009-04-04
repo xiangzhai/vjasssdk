@@ -1,0 +1,137 @@
+.TH "vjassdoc::Vjassdoc" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::Vjassdoc \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <vjassdoc.h>\fP
+.PP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBrun\fP (bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list< std::string > *importDirs, std::list< std::string > *filePaths)"
+.br
+.ti -1c
+.RI "static class \fBParser\fP * \fBgetParser\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBjassOnly\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBuseDebugMode\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBparsePrivateSpace\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBparseTextMacroSpace\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBsaveAsHtml\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBcreatePages\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBcreateSpecialPages\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBcreateDatabase\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBshowVerbose\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBsortAlphabetically\fP ()"
+.br
+.ti -1c
+.RI "static bool \fBshouldParseObjectsOfList\fP (const enum \fBParser::List\fP &list)"
+.br
+.ti -1c
+.RI "static std::string \fBgetTitle\fP ()"
+.br
+.ti -1c
+.RI "static std::string \fBgetDir\fP ()"
+.br
+.ti -1c
+.RI "static std::list< std::string > * \fBgetImportDirs\fP ()"
+.br
+.ti -1c
+.RI "static std::list< std::string > * \fBgetFilePaths\fP ()"
+.br
+.ti -1c
+.RI "static void \fBaddLines\fP (const unsigned int &addedLines)"
+.br
+.ti -1c
+.RI "static void \fBaddFile\fP ()"
+.br
+.ti -1c
+.RI "static unsigned int \fBgetFiles\fP ()"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static const char * \fBversion\fP = '0.2.3'"
+.br
+.ti -1c
+.RI "static const char * \fBdirSeparator\fP"
+.br
+.in -1c
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::Vjassdoc::run (bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string & title, const std::string & dir, std::list< std::string > * importDirs, std::list< std::string > * filePaths)\fC [static]\fP"
+.PP
+.SS "\fBParser\fP * vjassdoc::Vjassdoc::getParser ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::jassOnly ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::useDebugMode ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::parsePrivateSpace ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::parseTextMacroSpace ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::saveAsHtml ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::createPages ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::createSpecialPages ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::createDatabase ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::showVerbose ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::sortAlphabetically ()\fC [inline, static]\fP"
+.PP
+.SS "bool vjassdoc::Vjassdoc::shouldParseObjectsOfList (const enum \fBParser::List\fP & list)\fC [inline, static]\fP"
+.PP
+.SS "std::string vjassdoc::Vjassdoc::getTitle ()\fC [inline, static]\fP"
+.PP
+.SS "std::string vjassdoc::Vjassdoc::getDir ()\fC [inline, static]\fP"
+.PP
+.SS "std::list< std::string > * vjassdoc::Vjassdoc::getImportDirs ()\fC [inline, static]\fP"
+.PP
+.SS "std::list< std::string > * vjassdoc::Vjassdoc::getFilePaths ()\fC [inline, static]\fP"
+.PP
+.SS "void vjassdoc::Vjassdoc::addLines (const unsigned int & addedLines)\fC [inline, static]\fP"
+.PP
+.SS "void vjassdoc::Vjassdoc::addFile ()\fC [inline, static]\fP"
+.PP
+.SS "unsigned int vjassdoc::Vjassdoc::getFiles ()\fC [inline, static]\fP"
+.PP
+.SH "Member Data Documentation"
+.PP 
+.SS "const char * \fBvjassdoc::Vjassdoc::version\fP = '0.2.3'\fC [static]\fP"
+.PP
+.SS "const char* \fBvjassdoc::Vjassdoc::dirSeparator\fP\fC [static]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

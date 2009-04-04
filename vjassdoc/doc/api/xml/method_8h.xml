@@ -1,0 +1,318 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="method_8h" kind="file">
+    <compoundname>method.h</compoundname>
+    <includes refid="function_8h" local="yes">function.h</includes>
+    <includedby refid="objects_8h" local="yes">src/objects.h</includedby>
+    <incdepgraph>
+      <node id="757">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="756">
+        <label>list</label>
+      </node>
+      <node id="754">
+        <label>functional</label>
+      </node>
+      <node id="748">
+        <label>function.h</label>
+        <link refid="function_8h"/>
+        <childnode refid="749" relation="include">
+        </childnode>
+      </node>
+      <node id="760">
+        <label>libintl.h</label>
+      </node>
+      <node id="762">
+        <label>vjassdoc.h</label>
+        <link refid="vjassdoc_8h"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="756" relation="include">
+        </childnode>
+        <childnode refid="755" relation="include">
+        </childnode>
+      </node>
+      <node id="759">
+        <label>internationalisation.h</label>
+        <link refid="internationalisation_8h"/>
+        <childnode refid="760" relation="include">
+        </childnode>
+        <childnode refid="761" relation="include">
+        </childnode>
+      </node>
+      <node id="750">
+        <label>object.h</label>
+        <link refid="object_8h"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="752" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+        <childnode refid="754" relation="include">
+        </childnode>
+        <childnode refid="755" relation="include">
+        </childnode>
+        <childnode refid="759" relation="include">
+        </childnode>
+        <childnode refid="762" relation="include">
+        </childnode>
+      </node>
+      <node id="751">
+        <label>string</label>
+      </node>
+      <node id="753">
+        <label>fstream</label>
+      </node>
+      <node id="749">
+        <label>functioninterface.h</label>
+        <link refid="functioninterface_8h"/>
+        <childnode refid="750" relation="include">
+        </childnode>
+      </node>
+      <node id="752">
+        <label>vector</label>
+      </node>
+      <node id="758">
+        <label>sstream</label>
+      </node>
+      <node id="755">
+        <label>parser.h</label>
+        <link refid="parser_8h"/>
+        <childnode refid="754" relation="include">
+        </childnode>
+        <childnode refid="756" relation="include">
+        </childnode>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="757" relation="include">
+        </childnode>
+        <childnode refid="758" relation="include">
+        </childnode>
+        <childnode refid="752" relation="include">
+        </childnode>
+      </node>
+      <node id="761">
+        <label>locale.h</label>
+      </node>
+      <node id="747">
+        <label>src/method.h</label>
+        <link refid="method.h"/>
+        <childnode refid="748" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="766">
+        <label>src/doccomment.cpp</label>
+        <link refid="doccomment_8cpp"/>
+      </node>
+      <node id="769">
+        <label>src/functioninterface.cpp</label>
+        <link refid="functioninterface_8cpp"/>
+      </node>
+      <node id="781">
+        <label>src/textmacro.cpp</label>
+        <link refid="textmacro_8cpp"/>
+      </node>
+      <node id="768">
+        <label>src/function.cpp</label>
+        <link refid="function_8cpp"/>
+      </node>
+      <node id="776">
+        <label>src/object.cpp</label>
+        <link refid="object_8cpp"/>
+      </node>
+      <node id="777">
+        <label>src/parser.cpp</label>
+        <link refid="parser_8cpp"/>
+      </node>
+      <node id="767">
+        <label>src/file.cpp</label>
+        <link refid="file_8cpp"/>
+      </node>
+      <node id="772">
+        <label>src/keyword.cpp</label>
+        <link refid="keyword_8cpp"/>
+      </node>
+      <node id="782">
+        <label>src/textmacroinstance.cpp</label>
+        <link refid="textmacroinstance_8cpp"/>
+      </node>
+      <node id="783">
+        <label>src/type.cpp</label>
+        <link refid="type_8cpp"/>
+      </node>
+      <node id="778">
+        <label>src/scope.cpp</label>
+        <link refid="scope_8cpp"/>
+      </node>
+      <node id="779">
+        <label>src/sourcefile.cpp</label>
+        <link refid="sourcefile_8cpp"/>
+      </node>
+      <node id="771">
+        <label>src/interface.cpp</label>
+        <link refid="interface_8cpp"/>
+      </node>
+      <node id="773">
+        <label>src/library.cpp</label>
+        <link refid="library_8cpp"/>
+      </node>
+      <node id="765">
+        <label>src/comment.cpp</label>
+        <link refid="comment_8cpp"/>
+      </node>
+      <node id="780">
+        <label>src/struct.cpp</label>
+        <link refid="struct_8cpp"/>
+      </node>
+      <node id="764">
+        <label>src/objects.h</label>
+        <link refid="objects_8h"/>
+        <childnode refid="765" relation="include">
+        </childnode>
+        <childnode refid="766" relation="include">
+        </childnode>
+        <childnode refid="767" relation="include">
+        </childnode>
+        <childnode refid="768" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="773" relation="include">
+        </childnode>
+        <childnode refid="774" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+        <childnode refid="776" relation="include">
+        </childnode>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+        <childnode refid="781" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+      </node>
+      <node id="774">
+        <label>src/member.cpp</label>
+        <link refid="member_8cpp"/>
+      </node>
+      <node id="775">
+        <label>src/method.cpp</label>
+        <link refid="method_8cpp"/>
+      </node>
+      <node id="763">
+        <label>src/method.h</label>
+        <link refid="method.h"/>
+        <childnode refid="764" relation="include">
+        </childnode>
+      </node>
+      <node id="770">
+        <label>src/global.cpp</label>
+        <link refid="global_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classvjassdoc_1_1Method" prot="public">vjassdoc::Method</innerclass>
+    <innernamespace refid="namespacevjassdoc">vjassdoc</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/***************************************************************************</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Copyright<sp/>(C)<sp/>2008,<sp/>2009<sp/>by<sp/>Tamino<sp/>Dauth<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/><sp/><sp/>tamino@cdauth.de<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/><sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify<sp/><sp/>*</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by<sp/><sp/>*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/><sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either<sp/>version<sp/>2<sp/>of<sp/>the<sp/>License,<sp/>or<sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/><sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,<sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/><sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/><sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/><sp/>along<sp/>with<sp/>this<sp/>program;<sp/>if<sp/>not,<sp/>write<sp/>to<sp/>the<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Free<sp/>Software<sp/>Foundation,<sp/>Inc.,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/>59<sp/>Temple<sp/>Place<sp/>-<sp/>Suite<sp/>330,<sp/>Boston,<sp/>MA<sp/><sp/>02111-1307,<sp/>USA.<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>***************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>VJASSDOC_METHOD_H</highlight></codeline>
+<codeline lineno="22"><highlight class="preprocessor"></highlight><highlight class="preprocessor">#define<sp/>VJASSDOC_METHOD_H</highlight></codeline>
+<codeline lineno="23"><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="function_8h" kindref="compound">function.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">vjassdoc</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="classvjassdoc_1_1Method" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classvjassdoc_1_1Method" kindref="compound">Method</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Function" kindref="compound">Function</ref></highlight></codeline>
+<codeline lineno="30"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classvjassdoc_1_1Method_1b8d4ae00da196848f84771240386414a" kindref="member" tooltip="isNative always is false.">Method</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<ref refid="classvjassdoc_1_1Object_1c2927d3fd29e7b9ba25a481f6c0bcd75" kindref="member">identifier</ref>,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1SourceFile" kindref="compound">SourceFile</ref><sp/>*<ref refid="classvjassdoc_1_1Object_1c09bed4bd1d246d9aa8b96b9317a2b4a" kindref="member">sourceFile</ref>,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Object_1e0124e6b7fd1642276274c058b280abf" kindref="member">line</ref>,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1DocComment" kindref="compound">DocComment</ref><sp/>*<ref refid="classvjassdoc_1_1Object_157a2a1b81c481ee49738df29f1f63b2b" kindref="member">docComment</ref>,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Library" kindref="compound">Library</ref><sp/>*<ref refid="classvjassdoc_1_1FunctionInterface_1c9519495c94b07101fa5e0739775759e" kindref="member">library</ref>,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Scope" kindref="compound">Scope</ref><sp/>*<ref refid="classvjassdoc_1_1FunctionInterface_13d298257fab6e122f44f07225ee3ab63" kindref="member">scope</ref>,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1FunctionInterface_18b81d3aee374ba63043fcc06ec2eec1e" kindref="member">isPrivate</ref>,<sp/>std::list&lt;std::string&gt;<sp/>*<ref refid="classvjassdoc_1_1FunctionInterface_15a4199aa5d1aae02b27bb41d76e2dc70" kindref="member">parameterTypeExpressions</ref>,<sp/>std::list&lt;std::string&gt;<sp/>*<ref refid="classvjassdoc_1_1FunctionInterface_193f6d443529b9f3bb2f9ed679b4dc97a" kindref="member">parameters</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<ref refid="classvjassdoc_1_1FunctionInterface_1951b692881136d487bb89b1dce203f08" kindref="member">returnTypeExpression</ref>,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Function_1a8a4c34f800506e7803f875a831014b9" kindref="member">isPublic</ref>,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Function_1d94c62d16b874437ed1bb59958f79063" kindref="member">isConstant</ref>,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref><sp/>*<ref refid="classvjassdoc_1_1Method_1647eb53622d1ef78100a97ef9eac9fe3" kindref="member">container</ref>,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_12e54844815dda9eef31bbe4e6fc4c67b" kindref="member">isStatic</ref>,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_157b35b4da03b3004ce983ea3e19a121e" kindref="member">isStub</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<ref refid="classvjassdoc_1_1Method_12601819a6deea5970da2cac5b83bb8b0" kindref="member">defaultReturnValueExpression</ref>);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classvjassdoc_1_1Method_1b8d4ae00da196848f84771240386414a" kindref="member" tooltip="isNative always is false.">Method</ref>(std::vector&lt;const<sp/>unsigned<sp/>char*&gt;<sp/>&amp;columnVector);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_1cd115b1b9a459752e6613925be8e9daf" kindref="member">init</ref>();</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_1d5d61124a7d28d7e4680cc0df6cc5deb" kindref="member">pageNavigation</ref>(std::ofstream<sp/>&amp;file)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_1564b24f8b05185ac9399dd36a9b0ad1a" kindref="member">page</ref>(std::ofstream<sp/>&amp;file)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="classvjassdoc_1_1Method_10a9c4b3b9cb2043eb1454ae72bbfe04f" kindref="member">sqlStatement</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref>*<sp/><ref refid="classvjassdoc_1_1Method_1647eb53622d1ef78100a97ef9eac9fe3" kindref="member">container</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//Interface,<sp/>Struct</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_12e54844815dda9eef31bbe4e6fc4c67b" kindref="member">isStatic</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_157b35b4da03b3004ce983ea3e19a121e" kindref="member">isStub</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref>*<sp/><ref refid="classvjassdoc_1_1Method_190730e7a0393fd3a7936c3b181f5a4c0" kindref="member">defaultReturnValue</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//Type,<sp/>Function<sp/>Interface,<sp/>Interface,<sp/>Struct,<sp/>Literal</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><ref refid="classvjassdoc_1_1Method_12601819a6deea5970da2cac5b83bb8b0" kindref="member">defaultReturnValueExpression</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isNative()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;<sp/></highlight><highlight class="comment">//do<sp/>not<sp/>use</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref><sp/>*m_container;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>m_isStatic;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>m_isStub;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref><sp/>*m_defaultReturnValue;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>m_defaultReturnValueExpression;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="classvjassdoc_1_1Method_12e54844815dda9eef31bbe4e6fc4c67b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classvjassdoc_1_1Method_12e54844815dda9eef31bbe4e6fc4c67b" kindref="member">Method::isStatic</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="56"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;m_isStatic;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="classvjassdoc_1_1Method_157b35b4da03b3004ce983ea3e19a121e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>Method::isStub()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="61"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;m_isStub;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="classvjassdoc_1_1Method_190730e7a0393fd3a7936c3b181f5a4c0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref>*<sp/><ref refid="classvjassdoc_1_1Method_190730e7a0393fd3a7936c3b181f5a4c0" kindref="member">Method::defaultReturnValue</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="66"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;m_defaultReturnValue;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="classvjassdoc_1_1Method_12601819a6deea5970da2cac5b83bb8b0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="classvjassdoc_1_1Method_12601819a6deea5970da2cac5b83bb8b0" kindref="member">Method::defaultReturnValueExpression</ref>()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="71"><highlight class="keyword"></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;m_defaultReturnValueExpression;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h"/>
+  </compounddef>
+</doxygen>

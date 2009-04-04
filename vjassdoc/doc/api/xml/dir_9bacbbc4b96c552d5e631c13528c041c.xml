@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.5">
+  <compounddef id="dir_9bacbbc4b96c552d5e631c13528c041c" kind="dir">
+    <compoundname>Dokumente/Projekte/Informatik/C++/</compoundname>
+    <innerdir refid="dir_2b74bcd2f0060b165af6516ab3e93533">Dokumente/Projekte/Informatik/C++/vjasssdk/</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/"/>
+  </compounddef>
+</doxygen>

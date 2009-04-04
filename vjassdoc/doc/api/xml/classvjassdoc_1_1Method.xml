@@ -1,0 +1,491 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="classvjassdoc_1_1Method" kind="class" prot="public">
+    <compoundname>vjassdoc::Method</compoundname>
+    <basecompoundref refid="classvjassdoc_1_1Function" prot="public" virt="non-virtual">vjassdoc::Function</basecompoundref>
+    <includes refid="method_8h" local="no">method.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classvjassdoc_1_1Method_12c2e994f229d7e5381ed9d5d2a381bb1" prot="private" static="no" mutable="no">
+        <type>class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+        <definition>class Object* vjassdoc::Method::m_container</definition>
+        <argsstring></argsstring>
+        <name>m_container</name>
+        <reimplements refid="classvjassdoc_1_1Object_1c14bc17d0da694e343812eed35883859">m_container</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="48" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classvjassdoc_1_1Method_111bf20f3837f6824c72129f2ac923a5d" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool vjassdoc::Method::m_isStatic</definition>
+        <argsstring></argsstring>
+        <name>m_isStatic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="49" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classvjassdoc_1_1Method_1e38e772bdb7d93fcb3e5d1d1269c94a4" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool vjassdoc::Method::m_isStub</definition>
+        <argsstring></argsstring>
+        <name>m_isStub</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="50" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classvjassdoc_1_1Method_1742154182679c533b2d3057cffb76446" prot="private" static="no" mutable="no">
+        <type>class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+        <definition>class Object* vjassdoc::Method::m_defaultReturnValue</definition>
+        <argsstring></argsstring>
+        <name>m_defaultReturnValue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="51" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classvjassdoc_1_1Method_1fc050ddce2dd0ebdab08eb792b9bf0c8" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string vjassdoc::Method::m_defaultReturnValueExpression</definition>
+        <argsstring></argsstring>
+        <name>m_defaultReturnValueExpression</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="52" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classvjassdoc_1_1Method_1b8d4ae00da196848f84771240386414a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>vjassdoc::Method::Method</definition>
+        <argsstring>(const std::string &amp;identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list&lt; std::string &gt; *parameterTypeExpressions, std::list&lt; std::string &gt; *parameters, const std::string &amp;returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, const std::string &amp;defaultReturnValueExpression)</argsstring>
+        <name>Method</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>identifier</declname>
+        </param>
+        <param>
+          <type>class <ref refid="classvjassdoc_1_1SourceFile" kindref="compound">SourceFile</ref> *</type>
+          <declname>sourceFile</declname>
+        </param>
+        <param>
+          <type>unsigned int</type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type>class <ref refid="classvjassdoc_1_1DocComment" kindref="compound">DocComment</ref> *</type>
+          <declname>docComment</declname>
+        </param>
+        <param>
+          <type>class <ref refid="classvjassdoc_1_1Library" kindref="compound">Library</ref> *</type>
+          <declname>library</declname>
+        </param>
+        <param>
+          <type>class <ref refid="classvjassdoc_1_1Scope" kindref="compound">Scope</ref> *</type>
+          <declname>scope</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isPrivate</declname>
+        </param>
+        <param>
+          <type>std::list&lt; std::string &gt; *</type>
+          <declname>parameterTypeExpressions</declname>
+        </param>
+        <param>
+          <type>std::list&lt; std::string &gt; *</type>
+          <declname>parameters</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>returnTypeExpression</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isPublic</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isConstant</declname>
+        </param>
+        <param>
+          <type>class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+          <declname>container</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isStatic</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isStub</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>defaultReturnValueExpression</declname>
+        </param>
+        <briefdescription>
+<para>isNative always is false. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="33" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp" bodystart="29" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_1f2fa55c203e4bcf6ef1c421f9a824993" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>vjassdoc::Method::Method</definition>
+        <argsstring>(std::vector&lt; const unsigned char * &gt; &amp;columnVector)</argsstring>
+        <name>Method</name>
+        <param>
+          <type>std::vector&lt; const unsigned char * &gt; &amp;</type>
+          <declname>columnVector</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="34" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp" bodystart="33" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_1cd115b1b9a459752e6613925be8e9daf" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void vjassdoc::Method::init</definition>
+        <argsstring>()</argsstring>
+        <name>init</name>
+        <reimplements refid="classvjassdoc_1_1Function_1031d74f7df7c29afb36626fd335b2037">init</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="35" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp" bodystart="37" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_1d5d61124a7d28d7e4680cc0df6cc5deb" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void vjassdoc::Method::pageNavigation</definition>
+        <argsstring>(std::ofstream &amp;file) const </argsstring>
+        <name>pageNavigation</name>
+        <reimplements refid="classvjassdoc_1_1Function_1b0776a1e111d7fcefbbcecd92f210a48">pageNavigation</reimplements>
+        <param>
+          <type>std::ofstream &amp;</type>
+          <declname>file</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="36" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp" bodystart="64" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_1564b24f8b05185ac9399dd36a9b0ad1a" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void vjassdoc::Method::page</definition>
+        <argsstring>(std::ofstream &amp;file) const </argsstring>
+        <name>page</name>
+        <reimplements refid="classvjassdoc_1_1Function_17f32865b4c3f9f4c4e6379a437f5bdfe">page</reimplements>
+        <param>
+          <type>std::ofstream &amp;</type>
+          <declname>file</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="37" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp" bodystart="75" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_10a9c4b3b9cb2043eb1454ae72bbfe04f" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>std::string</type>
+        <definition>std::string vjassdoc::Method::sqlStatement</definition>
+        <argsstring>() const </argsstring>
+        <name>sqlStatement</name>
+        <reimplements refid="classvjassdoc_1_1Function_17e4a84e1bb86ade42e6a95d81d8092a7">sqlStatement</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="38" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp" bodystart="90" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_1647eb53622d1ef78100a97ef9eac9fe3" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+        <definition>class Object * vjassdoc::Method::container</definition>
+        <argsstring>() const </argsstring>
+        <name>container</name>
+        <reimplements refid="classvjassdoc_1_1Object_1b3729c3b063682f94b43a42546c90e96">container</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="39" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.cpp" bodystart="103" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_12e54844815dda9eef31bbe4e6fc4c67b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool vjassdoc::Method::isStatic</definition>
+        <argsstring>() const </argsstring>
+        <name>isStatic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="40" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="55" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_157b35b4da03b3004ce983ea3e19a121e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool vjassdoc::Method::isStub</definition>
+        <argsstring>() const </argsstring>
+        <name>isStub</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="41" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="60" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_190730e7a0393fd3a7936c3b181f5a4c0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+        <definition>class Object * vjassdoc::Method::defaultReturnValue</definition>
+        <argsstring>() const </argsstring>
+        <name>defaultReturnValue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="42" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="65" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1Method_12601819a6deea5970da2cac5b83bb8b0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string vjassdoc::Method::defaultReturnValueExpression</definition>
+        <argsstring>() const </argsstring>
+        <name>defaultReturnValueExpression</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="43" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="70" bodyend="73"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classvjassdoc_1_1Method_14355f25a42e6f6f1584f6f669771e1ea" prot="private" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool vjassdoc::Method::isNative</definition>
+        <argsstring>() const </argsstring>
+        <name>isNative</name>
+        <reimplements refid="classvjassdoc_1_1Function_1a4100d5c17d58de39de87648566f5d8b">isNative</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="46"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="109">
+        <label>vjassdoc::Object</label>
+        <link refid="classvjassdoc_1_1Object"/>
+      </node>
+      <node id="106">
+        <label>vjassdoc::Method</label>
+        <link refid="classvjassdoc_1_1Method"/>
+        <childnode refid="107" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="107">
+        <label>vjassdoc::Function</label>
+        <link refid="classvjassdoc_1_1Function"/>
+        <childnode refid="108" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="108">
+        <label>vjassdoc::FunctionInterface</label>
+        <link refid="classvjassdoc_1_1FunctionInterface"/>
+        <childnode refid="109" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="113">
+        <label>vjassdoc::Object</label>
+        <link refid="classvjassdoc_1_1Object"/>
+        <childnode refid="114" relation="usage">
+          <edgelabel>m_docComment</edgelabel>
+        </childnode>
+        <childnode refid="115" relation="usage">
+          <edgelabel>m_library</edgelabel>
+        </childnode>
+        <childnode refid="116" relation="usage">
+          <edgelabel>m_sourceFile</edgelabel>
+        </childnode>
+        <childnode refid="117" relation="usage">
+          <edgelabel>m_scope</edgelabel>
+        </childnode>
+        <childnode refid="113" relation="usage">
+          <edgelabel>m_container</edgelabel>
+        </childnode>
+      </node>
+      <node id="114">
+        <label>vjassdoc::DocComment</label>
+        <link refid="classvjassdoc_1_1DocComment"/>
+        <childnode refid="113" relation="public-inheritance">
+        </childnode>
+        <childnode refid="113" relation="usage">
+          <edgelabel>m_object</edgelabel>
+        </childnode>
+      </node>
+      <node id="110">
+        <label>vjassdoc::Method</label>
+        <link refid="classvjassdoc_1_1Method"/>
+        <childnode refid="111" relation="public-inheritance">
+        </childnode>
+        <childnode refid="113" relation="usage">
+          <edgelabel>m_defaultReturnValue
+m_container</edgelabel>
+        </childnode>
+      </node>
+      <node id="111">
+        <label>vjassdoc::Function</label>
+        <link refid="classvjassdoc_1_1Function"/>
+        <childnode refid="112" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="112">
+        <label>vjassdoc::FunctionInterface</label>
+        <link refid="classvjassdoc_1_1FunctionInterface"/>
+        <childnode refid="113" relation="public-inheritance">
+        </childnode>
+        <childnode refid="115" relation="usage">
+          <edgelabel>m_library</edgelabel>
+        </childnode>
+        <childnode refid="113" relation="usage">
+          <edgelabel>m_returnType</edgelabel>
+        </childnode>
+        <childnode refid="117" relation="usage">
+          <edgelabel>m_scope</edgelabel>
+        </childnode>
+      </node>
+      <node id="115">
+        <label>vjassdoc::Library</label>
+        <link refid="classvjassdoc_1_1Library"/>
+        <childnode refid="113" relation="public-inheritance">
+        </childnode>
+        <childnode refid="111" relation="usage">
+          <edgelabel>m_initializer</edgelabel>
+        </childnode>
+      </node>
+      <node id="116">
+        <label>vjassdoc::SourceFile</label>
+        <link refid="classvjassdoc_1_1SourceFile"/>
+        <childnode refid="113" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="117">
+        <label>vjassdoc::Scope</label>
+        <link refid="classvjassdoc_1_1Scope"/>
+        <childnode refid="113" relation="public-inheritance">
+        </childnode>
+        <childnode refid="115" relation="usage">
+          <edgelabel>m_library</edgelabel>
+        </childnode>
+        <childnode refid="111" relation="usage">
+          <edgelabel>m_initializer</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" line="30" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h" bodystart="29" bodyend="53"/>
+    <listofallmembers>
+      <member refid="classvjassdoc_1_1Object_164ce402e1f66de46106dcaaa7f7423f5" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>addIdentifier</name></member>
+      <member refid="classvjassdoc_1_1Object_16ccc2dac8089947b3ad04b306ea700e8" prot="protected" virt="non-virtual"><scope>vjassdoc::Method</scope><name>anchor</name></member>
+      <member refid="classvjassdoc_1_1Method_1647eb53622d1ef78100a97ef9eac9fe3" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>container</name></member>
+      <member refid="classvjassdoc_1_1Method_190730e7a0393fd3a7936c3b181f5a4c0" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>defaultReturnValue</name></member>
+      <member refid="classvjassdoc_1_1Method_12601819a6deea5970da2cac5b83bb8b0" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>defaultReturnValueExpression</name></member>
+      <member refid="classvjassdoc_1_1Object_157a2a1b81c481ee49738df29f1f63b2b" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>docComment</name></member>
+      <member refid="classvjassdoc_1_1Object_14204a70565df779213ae78612560d42e" prot="protected" virt="non-virtual"><scope>vjassdoc::Method</scope><name>findValue</name></member>
+      <member refid="classvjassdoc_1_1Function_13505663616782b94aa01a36b789a101b" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>Function</name></member>
+      <member refid="classvjassdoc_1_1Function_13afaafa500bcad415988b9882528b0a7" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>Function</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_10cfa512a726b2d035b42f783d02d6b63" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>FunctionInterface</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_10eae365567f49506b31b3f8c860550f2" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>FunctionInterface</name></member>
+      <member refid="classvjassdoc_1_1Object_1e9ed6f9d16334a979405a9f2efab2239" prot="protected" virt="non-virtual"><scope>vjassdoc::Method</scope><name>hasToSearchValueObject</name></member>
+      <member refid="classvjassdoc_1_1Object_10eaa0868e7e182a8de1fc4061cd21327" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>id</name></member>
+      <member refid="classvjassdoc_1_1Object_1c2927d3fd29e7b9ba25a481f6c0bcd75" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>identifier</name></member>
+      <member refid="classvjassdoc_1_1Method_1cd115b1b9a459752e6613925be8e9daf" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>init</name></member>
+      <member refid="classvjassdoc_1_1Function_1d94c62d16b874437ed1bb59958f79063" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>isConstant</name></member>
+      <member refid="classvjassdoc_1_1Method_14355f25a42e6f6f1584f6f669771e1ea" prot="private" virt="non-virtual"><scope>vjassdoc::Method</scope><name>isNative</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_18b81d3aee374ba63043fcc06ec2eec1e" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>isPrivate</name></member>
+      <member refid="classvjassdoc_1_1Function_1a8a4c34f800506e7803f875a831014b9" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>isPublic</name></member>
+      <member refid="classvjassdoc_1_1Method_12e54844815dda9eef31bbe4e6fc4c67b" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>isStatic</name></member>
+      <member refid="classvjassdoc_1_1Method_157b35b4da03b3004ce983ea3e19a121e" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>isStub</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_1c9519495c94b07101fa5e0739775759e" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>library</name></member>
+      <member refid="classvjassdoc_1_1Object_1e0124e6b7fd1642276274c058b280abf" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>line</name></member>
+      <member refid="classvjassdoc_1_1Method_12c2e994f229d7e5381ed9d5d2a381bb1" prot="private" virt="non-virtual"><scope>vjassdoc::Method</scope><name>m_container</name></member>
+      <member refid="classvjassdoc_1_1Method_1742154182679c533b2d3057cffb76446" prot="private" virt="non-virtual"><scope>vjassdoc::Method</scope><name>m_defaultReturnValue</name></member>
+      <member refid="classvjassdoc_1_1Method_1fc050ddce2dd0ebdab08eb792b9bf0c8" prot="private" virt="non-virtual"><scope>vjassdoc::Method</scope><name>m_defaultReturnValueExpression</name></member>
+      <member refid="classvjassdoc_1_1Method_111bf20f3837f6824c72129f2ac923a5d" prot="private" virt="non-virtual"><scope>vjassdoc::Method</scope><name>m_isStatic</name></member>
+      <member refid="classvjassdoc_1_1Method_1e38e772bdb7d93fcb3e5d1d1269c94a4" prot="private" virt="non-virtual"><scope>vjassdoc::Method</scope><name>m_isStub</name></member>
+      <member refid="classvjassdoc_1_1Method_1b8d4ae00da196848f84771240386414a" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>Method</name></member>
+      <member refid="classvjassdoc_1_1Method_1f2fa55c203e4bcf6ef1c421f9a824993" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>Method</name></member>
+      <member refid="classvjassdoc_1_1Object_1253d645fca4eb52e3d10226fab1d3673" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>Object</name></member>
+      <member refid="classvjassdoc_1_1Object_12e185664aec8264f2fe55500768dc77f" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>Object</name></member>
+      <member refid="classvjassdoc_1_1Object_17da4025933552d2e896a8ea2534b3324" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>objectId</name></member>
+      <member refid="classvjassdoc_1_1Object_10f115e83ce406e04b8ff20bacfb4acab" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>objectLink</name></member>
+      <member refid="classvjassdoc_1_1Object_11e7cc8e9b75c8555f996ecd9af27e446" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>objectPageLink</name></member>
+      <member refid="classvjassdoc_1_1Method_1564b24f8b05185ac9399dd36a9b0ad1a" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>page</name></member>
+      <member refid="classvjassdoc_1_1Object_16007f5c1d887da284a5dffd878ff67d6" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>pageLink</name></member>
+      <member refid="classvjassdoc_1_1Method_1d5d61124a7d28d7e4680cc0df6cc5deb" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>pageNavigation</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_193f6d443529b9f3bb2f9ed679b4dc97a" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>parameters</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_15a4199aa5d1aae02b27bb41d76e2dc70" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>parameterTypeExpressions</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_1fee3dfa7efa4bf0d40b27155cdfa3089" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>parameterTypes</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_15ad6508146fcb9e7c8accf22a0e4d563" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>returnType</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_1951b692881136d487bb89b1dce203f08" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>returnTypeExpression</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_13d298257fab6e122f44f07225ee3ab63" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>scope</name></member>
+      <member refid="classvjassdoc_1_1Object_17ec73267fcaaa923333318c63de594da" prot="protected" virt="non-virtual"><scope>vjassdoc::Method</scope><name>searchObjectInList</name></member>
+      <member refid="classvjassdoc_1_1Object_13b69e9dd345029eef00edd37b4b171df" prot="protected" virt="non-virtual"><scope>vjassdoc::Method</scope><name>setIdentifier</name></member>
+      <member refid="classvjassdoc_1_1Object_18edf943aa716a2da74d4f9f2c13e001b" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>setMaxIds</name></member>
+      <member refid="classvjassdoc_1_1Object_16715790d5be823157b8cf21d181b3450" prot="protected" virt="non-virtual"><scope>vjassdoc::Method</scope><name>showBooleanProperty</name></member>
+      <member refid="classvjassdoc_1_1Object_1c09bed4bd1d246d9aa8b96b9317a2b4a" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>sourceFile</name></member>
+      <member refid="classvjassdoc_1_1Object_1402f48ed33d2c82c1bccda774767ded3" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>sqlFilteredString</name></member>
+      <member refid="classvjassdoc_1_1Method_10a9c4b3b9cb2043eb1454ae72bbfe04f" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>sqlStatement</name></member>
+      <member refid="classvjassdoc_1_1Object_1b229c2eb3c0c7d1e86d789986bffe3f1" prot="public" virt="non-virtual"><scope>vjassdoc::Method</scope><name>sqlTableHeader</name></member>
+      <member refid="classvjassdoc_1_1FunctionInterface_135cab1ce58b14423de2f6c183f1ba9d8" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>~FunctionInterface</name></member>
+      <member refid="classvjassdoc_1_1Object_1ee368858fe1d3723b95600c12a474b38" prot="public" virt="virtual"><scope>vjassdoc::Method</scope><name>~Object</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

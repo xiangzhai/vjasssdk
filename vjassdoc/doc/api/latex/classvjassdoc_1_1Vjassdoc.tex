@@ -1,0 +1,222 @@
+\hypertarget{classvjassdoc_1_1Vjassdoc}{
+\section{vjassdoc::Vjassdoc Class Reference}
+\label{classvjassdoc_1_1Vjassdoc}\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+}
+{\tt \#include $<$vjassdoc.h$>$}
+
+\subsection*{Static Public Member Functions}
+\begin{CompactItemize}
+\item 
+static void \hyperlink{classvjassdoc_1_1Vjassdoc_73090a0eeffae1af73d153b881fd5d03}{run} (bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList\mbox{[}Parser::MaxLists\mbox{]}, const std::string \&title, const std::string \&dir, std::list$<$ std::string $>$ $\ast$importDirs, std::list$<$ std::string $>$ $\ast$filePaths)
+\item 
+static class \hyperlink{classvjassdoc_1_1Parser}{Parser} $\ast$ \hyperlink{classvjassdoc_1_1Vjassdoc_b8697267d6b9ad377e05fba7132ca804}{getParser} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_1fe1b4e1b45efef8687def4cb833f70f}{jassOnly} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_25d13d1e5ffe741f3f457cce5101739e}{useDebugMode} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_e4a75f16d2c7258ee5d9ac3c8e049d69}{parsePrivateSpace} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_3400f429e29c73d57175b5f4f46d3af2}{parseTextMacroSpace} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_57da4b736dceace2c0db1aafaf6aa315}{saveAsHtml} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_6b0ac828b1d3214995b915d81fb3f8dd}{createPages} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_6356b84d6992625cd9100448f90957e0}{createSpecialPages} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_31b8f8e1823617f4bdbe49ca4dca1f35}{createDatabase} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_def212f6d705e55cab5211271e63a6a0}{showVerbose} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_6c9c4ca961a2c19801261be4c6f1922c}{sortAlphabetically} ()
+\item 
+static bool \hyperlink{classvjassdoc_1_1Vjassdoc_d4502ac69ac8bd526d813606a7081d41}{shouldParseObjectsOfList} (const enum \hyperlink{classvjassdoc_1_1Parser_4ef39527519272daf05a22b5276062ad}{Parser::List} \&list)
+\item 
+static std::string \hyperlink{classvjassdoc_1_1Vjassdoc_7ba3ab042719acc2ca719ea6936345bc}{getTitle} ()
+\item 
+static std::string \hyperlink{classvjassdoc_1_1Vjassdoc_212f33c8cf9c9be734cfbf9cfb040025}{getDir} ()
+\item 
+static std::list$<$ std::string $>$ $\ast$ \hyperlink{classvjassdoc_1_1Vjassdoc_556e1fe15a58becec3da4e281bf73f09}{getImportDirs} ()
+\item 
+static std::list$<$ std::string $>$ $\ast$ \hyperlink{classvjassdoc_1_1Vjassdoc_6b27e1cf9a3a03f9d8d2157e4b831a29}{getFilePaths} ()
+\item 
+static void \hyperlink{classvjassdoc_1_1Vjassdoc_af08606e734200e4c99860a6867216e5}{addLines} (const unsigned int \&addedLines)
+\item 
+static void \hyperlink{classvjassdoc_1_1Vjassdoc_7aa83fb64697927220f66616cf30e982}{addFile} ()
+\item 
+static unsigned int \hyperlink{classvjassdoc_1_1Vjassdoc_c0b832c86853f4f65c4eb28150808658}{getFiles} ()
+\end{CompactItemize}
+\subsection*{Static Public Attributes}
+\begin{CompactItemize}
+\item 
+static const char $\ast$ \hyperlink{classvjassdoc_1_1Vjassdoc_229bee6b4735e83a9a28b98eb4650eef}{version} = \char`\"{}0.2.3\char`\"{}
+\item 
+static const char $\ast$ \hyperlink{classvjassdoc_1_1Vjassdoc_f3b3e3dfe26a57385265f8ba0d4fef16}{dirSeparator}
+\end{CompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classvjassdoc_1_1Vjassdoc_73090a0eeffae1af73d153b881fd5d03}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!run@{run}}
+\index{run@{run}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void vjassdoc::Vjassdoc::run (bool {\em jass}, bool {\em debug}, bool {\em privateSpace}, bool {\em textmacros}, bool {\em html}, bool {\em pages}, bool {\em specialPages}, bool {\em database}, bool {\em verbose}, bool {\em time}, bool {\em alphabetical}, bool {\em parseObjectsOfList}\mbox{[}Parser::MaxLists\mbox{]}, const std::string \& {\em title}, const std::string \& {\em dir}, std::list$<$ std::string $>$ $\ast$ {\em importDirs}, std::list$<$ std::string $>$ $\ast$ {\em filePaths})\hspace{0.3cm}{\tt  \mbox{[}static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_73090a0eeffae1af73d153b881fd5d03}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_b8697267d6b9ad377e05fba7132ca804}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!getParser@{getParser}}
+\index{getParser@{getParser}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Parser} $\ast$ vjassdoc::Vjassdoc::getParser ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_b8697267d6b9ad377e05fba7132ca804}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_1fe1b4e1b45efef8687def4cb833f70f}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!jassOnly@{jassOnly}}
+\index{jassOnly@{jassOnly}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::jassOnly ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_1fe1b4e1b45efef8687def4cb833f70f}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_25d13d1e5ffe741f3f457cce5101739e}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!useDebugMode@{useDebugMode}}
+\index{useDebugMode@{useDebugMode}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::useDebugMode ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_25d13d1e5ffe741f3f457cce5101739e}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_e4a75f16d2c7258ee5d9ac3c8e049d69}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!parsePrivateSpace@{parsePrivateSpace}}
+\index{parsePrivateSpace@{parsePrivateSpace}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::parsePrivateSpace ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_e4a75f16d2c7258ee5d9ac3c8e049d69}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_3400f429e29c73d57175b5f4f46d3af2}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!parseTextMacroSpace@{parseTextMacroSpace}}
+\index{parseTextMacroSpace@{parseTextMacroSpace}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::parseTextMacroSpace ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_3400f429e29c73d57175b5f4f46d3af2}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_57da4b736dceace2c0db1aafaf6aa315}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!saveAsHtml@{saveAsHtml}}
+\index{saveAsHtml@{saveAsHtml}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::saveAsHtml ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_57da4b736dceace2c0db1aafaf6aa315}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_6b0ac828b1d3214995b915d81fb3f8dd}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!createPages@{createPages}}
+\index{createPages@{createPages}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::createPages ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_6b0ac828b1d3214995b915d81fb3f8dd}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_6356b84d6992625cd9100448f90957e0}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!createSpecialPages@{createSpecialPages}}
+\index{createSpecialPages@{createSpecialPages}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::createSpecialPages ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_6356b84d6992625cd9100448f90957e0}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_31b8f8e1823617f4bdbe49ca4dca1f35}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!createDatabase@{createDatabase}}
+\index{createDatabase@{createDatabase}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::createDatabase ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_31b8f8e1823617f4bdbe49ca4dca1f35}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_def212f6d705e55cab5211271e63a6a0}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!showVerbose@{showVerbose}}
+\index{showVerbose@{showVerbose}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::showVerbose ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_def212f6d705e55cab5211271e63a6a0}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_6c9c4ca961a2c19801261be4c6f1922c}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!sortAlphabetically@{sortAlphabetically}}
+\index{sortAlphabetically@{sortAlphabetically}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::sortAlphabetically ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_6c9c4ca961a2c19801261be4c6f1922c}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_d4502ac69ac8bd526d813606a7081d41}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!shouldParseObjectsOfList@{shouldParseObjectsOfList}}
+\index{shouldParseObjectsOfList@{shouldParseObjectsOfList}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Vjassdoc::shouldParseObjectsOfList (const enum {\bf Parser::List} \& {\em list})\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_d4502ac69ac8bd526d813606a7081d41}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_7ba3ab042719acc2ca719ea6936345bc}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!getTitle@{getTitle}}
+\index{getTitle@{getTitle}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string vjassdoc::Vjassdoc::getTitle ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_7ba3ab042719acc2ca719ea6936345bc}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_212f33c8cf9c9be734cfbf9cfb040025}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!getDir@{getDir}}
+\index{getDir@{getDir}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string vjassdoc::Vjassdoc::getDir ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_212f33c8cf9c9be734cfbf9cfb040025}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_556e1fe15a58becec3da4e281bf73f09}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!getImportDirs@{getImportDirs}}
+\index{getImportDirs@{getImportDirs}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::list$<$ std::string $>$ $\ast$ vjassdoc::Vjassdoc::getImportDirs ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_556e1fe15a58becec3da4e281bf73f09}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_6b27e1cf9a3a03f9d8d2157e4b831a29}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!getFilePaths@{getFilePaths}}
+\index{getFilePaths@{getFilePaths}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::list$<$ std::string $>$ $\ast$ vjassdoc::Vjassdoc::getFilePaths ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_6b27e1cf9a3a03f9d8d2157e4b831a29}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_af08606e734200e4c99860a6867216e5}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!addLines@{addLines}}
+\index{addLines@{addLines}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void vjassdoc::Vjassdoc::addLines (const unsigned int \& {\em addedLines})\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_af08606e734200e4c99860a6867216e5}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_7aa83fb64697927220f66616cf30e982}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!addFile@{addFile}}
+\index{addFile@{addFile}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void vjassdoc::Vjassdoc::addFile ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_7aa83fb64697927220f66616cf30e982}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_c0b832c86853f4f65c4eb28150808658}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!getFiles@{getFiles}}
+\index{getFiles@{getFiles}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned int vjassdoc::Vjassdoc::getFiles ()\hspace{0.3cm}{\tt  \mbox{[}inline, static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_c0b832c86853f4f65c4eb28150808658}
+
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classvjassdoc_1_1Vjassdoc_229bee6b4735e83a9a28b98eb4650eef}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!version@{version}}
+\index{version@{version}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ {\bf vjassdoc::Vjassdoc::version} = \char`\"{}0.2.3\char`\"{}\hspace{0.3cm}{\tt  \mbox{[}static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_229bee6b4735e83a9a28b98eb4650eef}
+
+
+\hypertarget{classvjassdoc_1_1Vjassdoc_f3b3e3dfe26a57385265f8ba0d4fef16}{
+\index{vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}!dirSeparator@{dirSeparator}}
+\index{dirSeparator@{dirSeparator}!vjassdoc::Vjassdoc@{vjassdoc::Vjassdoc}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ {\bf vjassdoc::Vjassdoc::dirSeparator}\hspace{0.3cm}{\tt  \mbox{[}static\mbox{]}}}}
+\label{classvjassdoc_1_1Vjassdoc_f3b3e3dfe26a57385265f8ba0d4fef16}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/\hyperlink{vjassdoc_8h}{vjassdoc.h}\item 
+src/\hyperlink{vjassdoc_8cpp}{vjassdoc.cpp}\end{CompactItemize}

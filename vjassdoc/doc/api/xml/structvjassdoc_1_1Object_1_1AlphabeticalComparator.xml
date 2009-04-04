@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="structvjassdoc_1_1Object_1_1AlphabeticalComparator" kind="struct" prot="public">
+    <compoundname>vjassdoc::Object::AlphabeticalComparator</compoundname>
+    <includes refid="object_8h" local="no">object.h</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structvjassdoc_1_1Object_1_1AlphabeticalComparator_17bb1d713406baf20c381d24a52ce6445" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool vjassdoc::Object::AlphabeticalComparator::operator()</definition>
+        <argsstring>(const class Object *first, const class Object *second) const </argsstring>
+        <name>operator()</name>
+        <param>
+          <type>const class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+          <declname>first</declname>
+        </param>
+        <param>
+          <type>const class <ref refid="classvjassdoc_1_1Object" kindref="compound">Object</ref> *</type>
+          <declname>second</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h" line="76" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h" bodystart="203" bodyend="206"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h" line="75" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h" bodystart="74" bodyend="77"/>
+    <listofallmembers>
+      <member refid="structvjassdoc_1_1Object_1_1AlphabeticalComparator_17bb1d713406baf20c381d24a52ce6445" prot="public" virt="non-virtual"><scope>vjassdoc::Object::AlphabeticalComparator</scope><name>operator()</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

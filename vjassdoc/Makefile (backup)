@@ -1,0 +1,8 @@
+COMPILER = g++
+LEVEL = -O2
+H_FILES = src/vjassdoc.h src/objects.h src/file.h src/parser.h
+CPP_FILES = src/main.cpp src/objects.cpp src/file.cpp src/parser.cpp src/vjassdoc.cpp
+OUTPUT = bin/vjassdoc
+
+vjassdoc: $(CPP_FILES) $(H_FILES)
+	$(COMPILER) $(LEVEL) -lsqlite3 -o $(OUTPUT) $(CPP_FILES)

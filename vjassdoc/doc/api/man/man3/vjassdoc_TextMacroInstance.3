@@ -1,0 +1,64 @@
+.TH "vjassdoc::TextMacroInstance" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::TextMacroInstance \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <textmacroinstance.h>\fP
+.PP
+Inherits \fBvjassdoc::TextMacro\fP.
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTextMacroInstance\fP (const std::string &identifier, class \fBSourceFile\fP *sourceFile, unsigned int line, class \fBDocComment\fP *docComment, const std::string &arguments)"
+.br
+.ti -1c
+.RI "\fBTextMacroInstance\fP (std::vector< const unsigned char * > &columnVector)"
+.br
+.ti -1c
+.RI "virtual void \fBinit\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpageNavigation\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual void \fBpage\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual std::string \fBsqlStatement\fP () const "
+.br
+.ti -1c
+.RI "class \fBTextMacro\fP * \fBtextMacro\fP () const "
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::TextMacroInstance::TextMacroInstance (const std::string & identifier, class \fBSourceFile\fP * sourceFile, unsigned int line, class \fBDocComment\fP * docComment, const std::string & arguments)"
+.PP
+.SS "vjassdoc::TextMacroInstance::TextMacroInstance (std::vector< const unsigned char * > & columnVector)"
+.PP
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::TextMacroInstance::init ()\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::TextMacro\fP.
+.SS "void vjassdoc::TextMacroInstance::pageNavigation (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::TextMacro\fP.
+.SS "void vjassdoc::TextMacroInstance::page (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::TextMacro\fP.
+.SS "std::string vjassdoc::TextMacroInstance::sqlStatement () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::TextMacro\fP.
+.SS "class \fBTextMacro\fP * vjassdoc::TextMacroInstance::textMacro () const\fC [inline]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

@@ -1,0 +1,74 @@
+.TH "vjassdoc::TextMacro" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::TextMacro \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <textmacro.h>\fP
+.PP
+Inherits \fBvjassdoc::Object\fP.
+.PP
+Inherited by \fBvjassdoc::TextMacroInstance\fP.
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTextMacro\fP (const std::string &identifier, class \fBSourceFile\fP *sourceFile, unsigned int line, class \fBDocComment\fP *docComment, const std::string &parameters)"
+.br
+.ti -1c
+.RI "\fBTextMacro\fP (std::vector< const unsigned char * > &columnVector)"
+.br
+.ti -1c
+.RI "virtual void \fBinit\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpageNavigation\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual void \fBpage\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual std::string \fBsqlStatement\fP () const "
+.br
+.ti -1c
+.RI "std::string \fBparameters\fP () const "
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::TextMacro::TextMacro (const std::string & identifier, class \fBSourceFile\fP * sourceFile, unsigned int line, class \fBDocComment\fP * docComment, const std::string & parameters)"
+.PP
+.SS "vjassdoc::TextMacro::TextMacro (std::vector< const unsigned char * > & columnVector)"
+.PP
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::TextMacro::init ()\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::TextMacroInstance\fP.
+.SS "void vjassdoc::TextMacro::pageNavigation (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::TextMacroInstance\fP.
+.SS "void vjassdoc::TextMacro::page (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::TextMacroInstance\fP.
+.SS "std::string vjassdoc::TextMacro::sqlStatement () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.PP
+Reimplemented in \fBvjassdoc::TextMacroInstance\fP.
+.SS "std::string vjassdoc::TextMacro::parameters () const\fC [inline]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="classvjassdoc_1_1TextMacroInstance" kind="class" prot="public">
+    <compoundname>vjassdoc::TextMacroInstance</compoundname>
+    <basecompoundref refid="classvjassdoc_1_1TextMacro" prot="public" virt="non-virtual">vjassdoc::TextMacro</basecompoundref>
+    <includes refid="textmacroinstance_8h" local="no">textmacroinstance.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classvjassdoc_1_1TextMacroInstance_1c41ad875e1585736a5d31d4102ff9925" prot="private" static="no" mutable="no">
+        <type>class <ref refid="classvjassdoc_1_1TextMacro" kindref="compound">TextMacro</ref> *</type>
+        <definition>class TextMacro* vjassdoc::TextMacroInstance::m_textMacro</definition>
+        <argsstring></argsstring>
+        <name>m_textMacro</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="41" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classvjassdoc_1_1TextMacroInstance_1e6f4e775e305ef77a1952b6ff909193d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>vjassdoc::TextMacroInstance::TextMacroInstance</definition>
+        <argsstring>(const std::string &amp;identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &amp;arguments)</argsstring>
+        <name>TextMacroInstance</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>identifier</declname>
+        </param>
+        <param>
+          <type>class <ref refid="classvjassdoc_1_1SourceFile" kindref="compound">SourceFile</ref> *</type>
+          <declname>sourceFile</declname>
+        </param>
+        <param>
+          <type>unsigned int</type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type>class <ref refid="classvjassdoc_1_1DocComment" kindref="compound">DocComment</ref> *</type>
+          <declname>docComment</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>arguments</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="32" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp" bodystart="29" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1TextMacroInstance_17bd68ef5afcd884b1802e5b4dbaf829d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>vjassdoc::TextMacroInstance::TextMacroInstance</definition>
+        <argsstring>(std::vector&lt; const unsigned char * &gt; &amp;columnVector)</argsstring>
+        <name>TextMacroInstance</name>
+        <param>
+          <type>std::vector&lt; const unsigned char * &gt; &amp;</type>
+          <declname>columnVector</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="33" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp" bodystart="33" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1TextMacroInstance_1e60b03ce172f8eefde2cdcc31533ee2d" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void vjassdoc::TextMacroInstance::init</definition>
+        <argsstring>()</argsstring>
+        <name>init</name>
+        <reimplements refid="classvjassdoc_1_1TextMacro_1816bdd2b838a4f1148ea17e5723e8577">init</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="34" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp" bodystart="37" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1TextMacroInstance_12bc8e5c94f5a74795d0c2d8137522d89" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void vjassdoc::TextMacroInstance::pageNavigation</definition>
+        <argsstring>(std::ofstream &amp;file) const </argsstring>
+        <name>pageNavigation</name>
+        <reimplements refid="classvjassdoc_1_1TextMacro_1d3ad5fe5300492db3d1aaf250d9b2a4b">pageNavigation</reimplements>
+        <param>
+          <type>std::ofstream &amp;</type>
+          <declname>file</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="35" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp" bodystart="45" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1TextMacroInstance_14785937fa62c12f3586276a2d5dcbe52" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void vjassdoc::TextMacroInstance::page</definition>
+        <argsstring>(std::ofstream &amp;file) const </argsstring>
+        <name>page</name>
+        <reimplements refid="classvjassdoc_1_1TextMacro_13336cdf9ad953dbd44b38fb14a2f73fa">page</reimplements>
+        <param>
+          <type>std::ofstream &amp;</type>
+          <declname>file</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="36" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp" bodystart="53" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1TextMacroInstance_17659e7ac5ff7547dfc526a4a7ff152b5" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>std::string</type>
+        <definition>std::string vjassdoc::TextMacroInstance::sqlStatement</definition>
+        <argsstring>() const </argsstring>
+        <name>sqlStatement</name>
+        <reimplements refid="classvjassdoc_1_1TextMacro_1e46c88feedc6197fbbae48de17f07366">sqlStatement</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="37" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.cpp" bodystart="62" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="function" id="classvjassdoc_1_1TextMacroInstance_12ad0f2fc0c5d03502e91899f6621edfc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>class <ref refid="classvjassdoc_1_1TextMacro" kindref="compound">TextMacro</ref> *</type>
+        <definition>class TextMacro * vjassdoc::TextMacroInstance::textMacro</definition>
+        <argsstring>() const </argsstring>
+        <name>textMacro</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="38" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" bodystart="44" bodyend="47"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="222">
+        <label>vjassdoc::Object</label>
+        <link refid="classvjassdoc_1_1Object"/>
+      </node>
+      <node id="220">
+        <label>vjassdoc::TextMacroInstance</label>
+        <link refid="classvjassdoc_1_1TextMacroInstance"/>
+        <childnode refid="221" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="221">
+        <label>vjassdoc::TextMacro</label>
+        <link refid="classvjassdoc_1_1TextMacro"/>
+        <childnode refid="222" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="225">
+        <label>vjassdoc::Object</label>
+        <link refid="classvjassdoc_1_1Object"/>
+        <childnode refid="226" relation="usage">
+          <edgelabel>m_docComment</edgelabel>
+        </childnode>
+        <childnode refid="227" relation="usage">
+          <edgelabel>m_library</edgelabel>
+        </childnode>
+        <childnode refid="231" relation="usage">
+          <edgelabel>m_sourceFile</edgelabel>
+        </childnode>
+        <childnode refid="230" relation="usage">
+          <edgelabel>m_scope</edgelabel>
+        </childnode>
+        <childnode refid="225" relation="usage">
+          <edgelabel>m_container</edgelabel>
+        </childnode>
+      </node>
+      <node id="223">
+        <label>vjassdoc::TextMacroInstance</label>
+        <link refid="classvjassdoc_1_1TextMacroInstance"/>
+        <childnode refid="224" relation="public-inheritance">
+        </childnode>
+        <childnode refid="224" relation="usage">
+          <edgelabel>m_textMacro</edgelabel>
+        </childnode>
+      </node>
+      <node id="226">
+        <label>vjassdoc::DocComment</label>
+        <link refid="classvjassdoc_1_1DocComment"/>
+        <childnode refid="225" relation="public-inheritance">
+        </childnode>
+        <childnode refid="225" relation="usage">
+          <edgelabel>m_object</edgelabel>
+        </childnode>
+      </node>
+      <node id="228">
+        <label>vjassdoc::Function</label>
+        <link refid="classvjassdoc_1_1Function"/>
+        <childnode refid="229" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="229">
+        <label>vjassdoc::FunctionInterface</label>
+        <link refid="classvjassdoc_1_1FunctionInterface"/>
+        <childnode refid="225" relation="public-inheritance">
+        </childnode>
+        <childnode refid="227" relation="usage">
+          <edgelabel>m_library</edgelabel>
+        </childnode>
+        <childnode refid="225" relation="usage">
+          <edgelabel>m_returnType</edgelabel>
+        </childnode>
+        <childnode refid="230" relation="usage">
+          <edgelabel>m_scope</edgelabel>
+        </childnode>
+      </node>
+      <node id="224">
+        <label>vjassdoc::TextMacro</label>
+        <link refid="classvjassdoc_1_1TextMacro"/>
+        <childnode refid="225" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="227">
+        <label>vjassdoc::Library</label>
+        <link refid="classvjassdoc_1_1Library"/>
+        <childnode refid="225" relation="public-inheritance">
+        </childnode>
+        <childnode refid="228" relation="usage">
+          <edgelabel>m_initializer</edgelabel>
+        </childnode>
+      </node>
+      <node id="231">
+        <label>vjassdoc::SourceFile</label>
+        <link refid="classvjassdoc_1_1SourceFile"/>
+        <childnode refid="225" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="230">
+        <label>vjassdoc::Scope</label>
+        <link refid="classvjassdoc_1_1Scope"/>
+        <childnode refid="225" relation="public-inheritance">
+        </childnode>
+        <childnode refid="227" relation="usage">
+          <edgelabel>m_library</edgelabel>
+        </childnode>
+        <childnode refid="228" relation="usage">
+          <edgelabel>m_initializer</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" line="30" bodyfile="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h" bodystart="29" bodyend="42"/>
+    <listofallmembers>
+      <member refid="classvjassdoc_1_1Object_164ce402e1f66de46106dcaaa7f7423f5" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>addIdentifier</name></member>
+      <member refid="classvjassdoc_1_1Object_16ccc2dac8089947b3ad04b306ea700e8" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>anchor</name></member>
+      <member refid="classvjassdoc_1_1Object_1b3729c3b063682f94b43a42546c90e96" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>container</name></member>
+      <member refid="classvjassdoc_1_1Object_157a2a1b81c481ee49738df29f1f63b2b" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>docComment</name></member>
+      <member refid="classvjassdoc_1_1Object_14204a70565df779213ae78612560d42e" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>findValue</name></member>
+      <member refid="classvjassdoc_1_1Object_1e9ed6f9d16334a979405a9f2efab2239" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>hasToSearchValueObject</name></member>
+      <member refid="classvjassdoc_1_1Object_10eaa0868e7e182a8de1fc4061cd21327" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>id</name></member>
+      <member refid="classvjassdoc_1_1Object_1c2927d3fd29e7b9ba25a481f6c0bcd75" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>identifier</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_1e60b03ce172f8eefde2cdcc31533ee2d" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>init</name></member>
+      <member refid="classvjassdoc_1_1Object_1cc4241505c5bcdd0bbcb08a1b665b3fd" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>library</name></member>
+      <member refid="classvjassdoc_1_1Object_1e0124e6b7fd1642276274c058b280abf" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>line</name></member>
+      <member refid="classvjassdoc_1_1Object_1c14bc17d0da694e343812eed35883859" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>m_container</name></member>
+      <member refid="classvjassdoc_1_1Object_190d88574b7a542deb45e65a9242b345a" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>m_library</name></member>
+      <member refid="classvjassdoc_1_1Object_1e807f9d1a84a2708976d07b21a17cf81" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>m_scope</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_1c41ad875e1585736a5d31d4102ff9925" prot="private" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>m_textMacro</name></member>
+      <member refid="classvjassdoc_1_1Object_1253d645fca4eb52e3d10226fab1d3673" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>Object</name></member>
+      <member refid="classvjassdoc_1_1Object_12e185664aec8264f2fe55500768dc77f" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>Object</name></member>
+      <member refid="classvjassdoc_1_1Object_17da4025933552d2e896a8ea2534b3324" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>objectId</name></member>
+      <member refid="classvjassdoc_1_1Object_10f115e83ce406e04b8ff20bacfb4acab" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>objectLink</name></member>
+      <member refid="classvjassdoc_1_1Object_11e7cc8e9b75c8555f996ecd9af27e446" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>objectPageLink</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_14785937fa62c12f3586276a2d5dcbe52" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>page</name></member>
+      <member refid="classvjassdoc_1_1Object_16007f5c1d887da284a5dffd878ff67d6" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>pageLink</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_12bc8e5c94f5a74795d0c2d8137522d89" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>pageNavigation</name></member>
+      <member refid="classvjassdoc_1_1TextMacro_133859a2be0f2da7633863fd06185f040" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>parameters</name></member>
+      <member refid="classvjassdoc_1_1Object_10738d05b196cc8b9e89d62839d81fc20" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>scope</name></member>
+      <member refid="classvjassdoc_1_1Object_17ec73267fcaaa923333318c63de594da" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>searchObjectInList</name></member>
+      <member refid="classvjassdoc_1_1Object_13b69e9dd345029eef00edd37b4b171df" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>setIdentifier</name></member>
+      <member refid="classvjassdoc_1_1Object_18edf943aa716a2da74d4f9f2c13e001b" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>setMaxIds</name></member>
+      <member refid="classvjassdoc_1_1Object_16715790d5be823157b8cf21d181b3450" prot="protected" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>showBooleanProperty</name></member>
+      <member refid="classvjassdoc_1_1Object_1c09bed4bd1d246d9aa8b96b9317a2b4a" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>sourceFile</name></member>
+      <member refid="classvjassdoc_1_1Object_1402f48ed33d2c82c1bccda774767ded3" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>sqlFilteredString</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_17659e7ac5ff7547dfc526a4a7ff152b5" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>sqlStatement</name></member>
+      <member refid="classvjassdoc_1_1Object_1b229c2eb3c0c7d1e86d789986bffe3f1" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>sqlTableHeader</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_12ad0f2fc0c5d03502e91899f6621edfc" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>textMacro</name></member>
+      <member refid="classvjassdoc_1_1TextMacro_17354fb20a513ca489afe554896f039ef" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>TextMacro</name></member>
+      <member refid="classvjassdoc_1_1TextMacro_1c82712ca934e5a59bff730add064ec78" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>TextMacro</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_1e6f4e775e305ef77a1952b6ff909193d" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>TextMacroInstance</name></member>
+      <member refid="classvjassdoc_1_1TextMacroInstance_17bd68ef5afcd884b1802e5b4dbaf829d" prot="public" virt="non-virtual"><scope>vjassdoc::TextMacroInstance</scope><name>TextMacroInstance</name></member>
+      <member refid="classvjassdoc_1_1Object_1ee368858fe1d3723b95600c12a474b38" prot="public" virt="virtual"><scope>vjassdoc::TextMacroInstance</scope><name>~Object</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

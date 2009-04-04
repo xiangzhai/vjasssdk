@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.5">
+  <compounddef id="dir_822464a087b1e543c1e74db35749c256" kind="dir">
+    <compoundname>Dokumente/Projekte/</compoundname>
+    <innerdir refid="dir_c6d216737424ed09e39ed46678b25c0e">Dokumente/Projekte/Informatik/</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/tamino/Dokumente/Projekte/"/>
+  </compounddef>
+</doxygen>

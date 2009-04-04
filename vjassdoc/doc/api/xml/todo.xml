@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="todo" kind="page">
+    <compoundname>todo</compoundname>
+    <title>Todo List</title>
+    <detaileddescription>
+<para><anchor id="todo_1_todo000001"/> <variablelist>
+<varlistentry><term>Member <ref refid="classvjassdoc_1_1DocComment_146ada773166611c9be898f74e0eb2315" kindref="member">vjassdoc::DocComment::init</ref> () </term></varlistentry>
+<listitem><para>FIXME </para></listitem>
+</variablelist>
+</para><para><anchor id="todo_1_todo000002"/> <variablelist>
+<varlistentry><term>Member <ref refid="classvjassdoc_1_1File_1d35f0f273a4e7ecc96e4315edb842151" kindref="member">vjassdoc::File::File</ref> (const std::string &amp;filePath) </term></varlistentry>
+<listitem><para>Truncate the //! prefix </para></listitem>
+</variablelist>
+</para><para><anchor id="todo_1_todo000002"/> <variablelist>
+<varlistentry><term>Member <ref refid="classvjassdoc_1_1File_1d35f0f273a4e7ecc96e4315edb842151" kindref="member">vjassdoc::File::File</ref> (const std::string &amp;filePath) </term></varlistentry>
+<listitem><para>Just close if good? </para></listitem>
+</variablelist>
+</para><para><anchor id="todo_1_todo000005"/> <variablelist>
+<varlistentry><term>Member <ref refid="classvjassdoc_1_1Object_1b229c2eb3c0c7d1e86d789986bffe3f1" kindref="member">vjassdoc::Object::sqlTableHeader</ref> (const std::string &amp;tableName, const std::string &amp;entries) </term></varlistentry>
+<listitem><para>This function should be used to distribute all table header creations to their classes. </para></listitem>
+</variablelist>
+</para><para><anchor id="todo_1_todo000004"/> <variablelist>
+<varlistentry><term>Member <ref refid="classvjassdoc_1_1Object_1e9ed6f9d16334a979405a9f2efab2239" kindref="member">vjassdoc::Object::hasToSearchValueObject</ref> (class Object *type, const std::string &amp;expression) </term></varlistentry>
+<listitem><para>Code type == null?! </para></listitem>
+</variablelist>
+</para><para><anchor id="todo_1_todo000006"/> <variablelist>
+<varlistentry><term>Member <ref refid="classvjassdoc_1_1Parser_125594f25b429a8ff7a4ed426ee0f3184" kindref="member">vjassdoc::Parser::parse</ref> () </term></varlistentry>
+<listitem><para>Test. </para></listitem>
+</variablelist>
+</para>    </detaileddescription>
+  </compounddef>
+</doxygen>

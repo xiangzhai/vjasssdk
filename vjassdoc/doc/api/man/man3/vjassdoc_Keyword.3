@@ -1,0 +1,76 @@
+.TH "vjassdoc::Keyword" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::Keyword \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <keyword.h>\fP
+.PP
+Inherits \fBvjassdoc::Object\fP.
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBKeyword\fP (const std::string &identifier, class \fBSourceFile\fP *sourceFile, unsigned int line, class \fBDocComment\fP *docComment, class \fBLibrary\fP *library, class \fBScope\fP *scope, bool isPrivate)"
+.br
+.ti -1c
+.RI "\fBKeyword\fP (std::vector< const unsigned char * > &columnVector)"
+.br
+.ti -1c
+.RI "virtual void \fBinit\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpageNavigation\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual void \fBpage\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual std::string \fBsqlStatement\fP () const "
+.br
+.ti -1c
+.RI "virtual class \fBLibrary\fP * \fBlibrary\fP () const "
+.br
+.ti -1c
+.RI "virtual class \fBScope\fP * \fBscope\fP () const "
+.br
+.ti -1c
+.RI "bool \fBisPrivate\fP () const "
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::Keyword::Keyword (const std::string & identifier, class \fBSourceFile\fP * sourceFile, unsigned int line, class \fBDocComment\fP * docComment, class \fBLibrary\fP * library, class \fBScope\fP * scope, bool isPrivate)"
+.PP
+.SS "vjassdoc::Keyword::Keyword (std::vector< const unsigned char * > & columnVector)"
+.PP
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::Keyword::init ()\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "void vjassdoc::Keyword::pageNavigation (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "void vjassdoc::Keyword::page (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "std::string vjassdoc::Keyword::sqlStatement () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.SS "class \fBLibrary\fP * vjassdoc::Keyword::library () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.SS "class \fBScope\fP * vjassdoc::Keyword::scope () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.SS "bool vjassdoc::Keyword::isPrivate () const\fC [inline]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

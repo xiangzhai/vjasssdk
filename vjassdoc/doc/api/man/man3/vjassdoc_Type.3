@@ -1,0 +1,81 @@
+.TH "vjassdoc::Type" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::Type \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <type.h>\fP
+.PP
+Inherits \fBvjassdoc::Object\fP.
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBType\fP (const std::string &identifier, class \fBSourceFile\fP *sourceFile, unsigned int line, class \fBDocComment\fP *docComment, const std::string &typeExpression, const std::string &sizeExpression)"
+.br
+.ti -1c
+.RI "\fBType\fP (std::vector< const unsigned char * > &columnVector)"
+.br
+.ti -1c
+.RI "virtual void \fBinit\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpageNavigation\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual void \fBpage\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual std::string \fBsqlStatement\fP () const "
+.br
+.ti -1c
+.RI "class \fBType\fP * \fBtype\fP () const "
+.br
+.ti -1c
+.RI "class \fBObject\fP * \fBsize\fP () const "
+.br
+.ti -1c
+.RI "int \fBsizeLiteral\fP () const "
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::Type::Type (const std::string & identifier, class \fBSourceFile\fP * sourceFile, unsigned int line, class \fBDocComment\fP * docComment, const std::string & typeExpression, const std::string & sizeExpression)"
+.PP
+.SS "vjassdoc::Type::Type (std::vector< const unsigned char * > & columnVector)"
+.PP
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::Type::init ()\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "void vjassdoc::Type::pageNavigation (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "void vjassdoc::Type::page (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "std::string vjassdoc::Type::sqlStatement () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.SS "class \fBType\fP * vjassdoc::Type::type () const\fC [inline]\fP"
+.PP
+.SS "class \fBObject\fP * vjassdoc::Type::size () const\fC [inline]\fP"
+.PP
+.SS "int vjassdoc::Type::sizeLiteral () const\fC [inline]\fP"
+.PP
+If the size is not an object it may be an integer value. 
+.PP
+\fBReturns:\fP
+.RS 4
+Returns the size. If the type has no size this value will be -1. 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

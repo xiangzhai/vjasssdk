@@ -1,0 +1,76 @@
+.TH "vjassdoc::DocComment" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::DocComment \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <doccomment.h>\fP
+.PP
+Inherits \fBvjassdoc::Object\fP.
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDocComment\fP (const std::string &identifier, class \fBSourceFile\fP *sourceFile, unsigned int line)"
+.br
+.ti -1c
+.RI "\fBDocComment\fP (std::vector< const unsigned char * > &columnVector)"
+.br
+.ti -1c
+.RI "virtual void \fBinit\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpageNavigation\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual void \fBpage\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual std::string \fBsqlStatement\fP () const "
+.br
+.ti -1c
+.RI "void \fBsetObject\fP (class \fBObject\fP *object)"
+.br
+.ti -1c
+.RI "class \fBObject\fP * \fBobject\fP () const "
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::DocComment::DocComment (const std::string & identifier, class \fBSourceFile\fP * sourceFile, unsigned int line)"
+.PP
+.SS "vjassdoc::DocComment::DocComment (std::vector< const unsigned char * > & columnVector)"
+.PP
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::DocComment::init ()\fC [virtual]\fP"
+.PP
+\fBTodo\fP
+.RS 4
+FIXME 
+.RE
+.PP
+
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "void vjassdoc::DocComment::pageNavigation (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "void vjassdoc::DocComment::page (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Implements \fBvjassdoc::Object\fP.
+.SS "std::string vjassdoc::DocComment::sqlStatement () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::Object\fP.
+.SS "void vjassdoc::DocComment::setObject (class \fBObject\fP * object)\fC [inline]\fP"
+.PP
+.SS "class \fBObject\fP * vjassdoc::DocComment::object () const\fC [inline]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

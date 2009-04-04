@@ -1,0 +1,84 @@
+.TH "vjassdoc::Function" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::Function \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <function.h>\fP
+.PP
+Inherits \fBvjassdoc::FunctionInterface\fP.
+.PP
+Inherited by \fBvjassdoc::Method\fP.
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFunction\fP (const std::string &identifier, class \fBSourceFile\fP *sourceFile, unsigned int line, class \fBDocComment\fP *docComment, class \fBLibrary\fP *library, class \fBScope\fP *scope, bool isPrivate, std::list< std::string > *parameterTypeExpressions, std::list< std::string > *parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, bool isNative)"
+.br
+.ti -1c
+.RI "\fBFunction\fP (std::vector< const unsigned char * > &columnVector)"
+.br
+.ti -1c
+.RI "virtual void \fBinit\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpageNavigation\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual void \fBpage\fP (std::ofstream &file) const "
+.br
+.ti -1c
+.RI "virtual std::string \fBsqlStatement\fP () const "
+.br
+.ti -1c
+.RI "bool \fBisPublic\fP () const "
+.br
+.ti -1c
+.RI "bool \fBisConstant\fP () const "
+.br
+.ti -1c
+.RI "bool \fBisNative\fP () const "
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::Function::Function (const std::string & identifier, class \fBSourceFile\fP * sourceFile, unsigned int line, class \fBDocComment\fP * docComment, class \fBLibrary\fP * library, class \fBScope\fP * scope, bool isPrivate, std::list< std::string > * parameterTypeExpressions, std::list< std::string > * parameters, const std::string & returnTypeExpression, bool isPublic, bool isConstant, bool isNative)"
+.PP
+.SS "vjassdoc::Function::Function (std::vector< const unsigned char * > & columnVector)"
+.PP
+.SH "Member Function Documentation"
+.PP 
+.SS "void vjassdoc::Function::init ()\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::FunctionInterface\fP.
+.PP
+Reimplemented in \fBvjassdoc::Method\fP.
+.SS "void vjassdoc::Function::pageNavigation (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::FunctionInterface\fP.
+.PP
+Reimplemented in \fBvjassdoc::Method\fP.
+.SS "void vjassdoc::Function::page (std::ofstream & file) const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::FunctionInterface\fP.
+.PP
+Reimplemented in \fBvjassdoc::Method\fP.
+.SS "std::string vjassdoc::Function::sqlStatement () const\fC [virtual]\fP"
+.PP
+Reimplemented from \fBvjassdoc::FunctionInterface\fP.
+.PP
+Reimplemented in \fBvjassdoc::Method\fP.
+.SS "bool vjassdoc::Function::isPublic () const\fC [inline]\fP"
+.PP
+.SS "bool vjassdoc::Function::isConstant () const\fC [inline]\fP"
+.PP
+.SS "bool vjassdoc::Function::isNative () const\fC [inline]\fP"
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.

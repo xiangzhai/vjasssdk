@@ -1,0 +1,3 @@
+This program is a simple Jass and vJass documentation generation tool.
+It was made by Tamino Dauth <tamino@cdauth.de>.
+For compilation you'll have to use cmake.

@@ -1,0 +1,118 @@
+\hypertarget{classvjassdoc_1_1Scope}{
+\section{vjassdoc::Scope Class Reference}
+\label{classvjassdoc_1_1Scope}\index{vjassdoc::Scope@{vjassdoc::Scope}}
+}
+{\tt \#include $<$scope.h$>$}
+
+Inheritance diagram for vjassdoc::Scope::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classvjassdoc_1_1Scope}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+\hyperlink{classvjassdoc_1_1Scope_93e1a8c864401dcb118123b8c1c862d8}{Scope} (const std::string \&identifier, class \hyperlink{classvjassdoc_1_1SourceFile}{SourceFile} $\ast$sourceFile, unsigned int line, class \hyperlink{classvjassdoc_1_1DocComment}{DocComment} $\ast$docComment, class \hyperlink{classvjassdoc_1_1Library}{Library} $\ast$library, bool isPrivate, const std::string initializerExpression)
+\item 
+\hyperlink{classvjassdoc_1_1Scope_08fa49b1daca27363032265465005dc0}{Scope} (std::vector$<$ const unsigned char $\ast$ $>$ \&columnVector)
+\item 
+virtual void \hyperlink{classvjassdoc_1_1Scope_fb5915ecd0cabc72508e7b7a09f0ef5c}{init} ()
+\item 
+virtual void \hyperlink{classvjassdoc_1_1Scope_3fac1b4e0201e20463acfc5f0f0e93b8}{pageNavigation} (std::ofstream \&file) const 
+\item 
+virtual void \hyperlink{classvjassdoc_1_1Scope_2a37c9d88da6a8c7c95d4f0e5b88ccbb}{page} (std::ofstream \&file) const 
+\item 
+virtual std::string \hyperlink{classvjassdoc_1_1Scope_634ae4bc06389b21ef8612795d4a910f}{sqlStatement} () const 
+\item 
+virtual class \hyperlink{classvjassdoc_1_1Library}{Library} $\ast$ \hyperlink{classvjassdoc_1_1Scope_4d9d486897a1960cff057ab88a43fb15}{library} () const 
+\item 
+bool \hyperlink{classvjassdoc_1_1Scope_c2b7a4d2f0a0e248194d9e96c3d00f10}{isPrivate} () const 
+\item 
+class \hyperlink{classvjassdoc_1_1Function}{Function} $\ast$ \hyperlink{classvjassdoc_1_1Scope_33866d7c3eac290c01e57e1919b26cda}{initializer} () const 
+\end{CompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classvjassdoc_1_1Scope_93e1a8c864401dcb118123b8c1c862d8}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!Scope@{Scope}}
+\index{Scope@{Scope}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vjassdoc::Scope::Scope (const std::string \& {\em identifier}, class {\bf SourceFile} $\ast$ {\em sourceFile}, unsigned int {\em line}, class {\bf DocComment} $\ast$ {\em docComment}, class {\bf Library} $\ast$ {\em library}, bool {\em isPrivate}, const std::string {\em initializerExpression})}}
+\label{classvjassdoc_1_1Scope_93e1a8c864401dcb118123b8c1c862d8}
+
+
+\hypertarget{classvjassdoc_1_1Scope_08fa49b1daca27363032265465005dc0}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!Scope@{Scope}}
+\index{Scope@{Scope}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}vjassdoc::Scope::Scope (std::vector$<$ const unsigned char $\ast$ $>$ \& {\em columnVector})}}
+\label{classvjassdoc_1_1Scope_08fa49b1daca27363032265465005dc0}
+
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classvjassdoc_1_1Scope_fb5915ecd0cabc72508e7b7a09f0ef5c}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!init@{init}}
+\index{init@{init}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void vjassdoc::Scope::init ()\hspace{0.3cm}{\tt  \mbox{[}virtual\mbox{]}}}}
+\label{classvjassdoc_1_1Scope_fb5915ecd0cabc72508e7b7a09f0ef5c}
+
+
+
+
+Implements \hyperlink{classvjassdoc_1_1Object_bd43e77dbe80055f5adda67661dfaca4}{vjassdoc::Object}.\hypertarget{classvjassdoc_1_1Scope_3fac1b4e0201e20463acfc5f0f0e93b8}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!pageNavigation@{pageNavigation}}
+\index{pageNavigation@{pageNavigation}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void vjassdoc::Scope::pageNavigation (std::ofstream \& {\em file}) const\hspace{0.3cm}{\tt  \mbox{[}virtual\mbox{]}}}}
+\label{classvjassdoc_1_1Scope_3fac1b4e0201e20463acfc5f0f0e93b8}
+
+
+
+
+Implements \hyperlink{classvjassdoc_1_1Object_736bbb6719edd8070d8f56c364a2764c}{vjassdoc::Object}.\hypertarget{classvjassdoc_1_1Scope_2a37c9d88da6a8c7c95d4f0e5b88ccbb}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!page@{page}}
+\index{page@{page}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void vjassdoc::Scope::page (std::ofstream \& {\em file}) const\hspace{0.3cm}{\tt  \mbox{[}virtual\mbox{]}}}}
+\label{classvjassdoc_1_1Scope_2a37c9d88da6a8c7c95d4f0e5b88ccbb}
+
+
+
+
+Implements \hyperlink{classvjassdoc_1_1Object_a0489e38956f3507566b1bc6e3e2c8af}{vjassdoc::Object}.\hypertarget{classvjassdoc_1_1Scope_634ae4bc06389b21ef8612795d4a910f}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!sqlStatement@{sqlStatement}}
+\index{sqlStatement@{sqlStatement}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string vjassdoc::Scope::sqlStatement () const\hspace{0.3cm}{\tt  \mbox{[}virtual\mbox{]}}}}
+\label{classvjassdoc_1_1Scope_634ae4bc06389b21ef8612795d4a910f}
+
+
+
+
+Reimplemented from \hyperlink{classvjassdoc_1_1Object_4e8ebbb0ce5b0bf91ec847b1e4a9f8fc}{vjassdoc::Object}.\hypertarget{classvjassdoc_1_1Scope_4d9d486897a1960cff057ab88a43fb15}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!library@{library}}
+\index{library@{library}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}class {\bf Library} $\ast$ vjassdoc::Scope::library () const\hspace{0.3cm}{\tt  \mbox{[}virtual\mbox{]}}}}
+\label{classvjassdoc_1_1Scope_4d9d486897a1960cff057ab88a43fb15}
+
+
+
+
+Reimplemented from \hyperlink{classvjassdoc_1_1Object_cc4241505c5bcdd0bbcb08a1b665b3fd}{vjassdoc::Object}.\hypertarget{classvjassdoc_1_1Scope_c2b7a4d2f0a0e248194d9e96c3d00f10}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!isPrivate@{isPrivate}}
+\index{isPrivate@{isPrivate}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool vjassdoc::Scope::isPrivate () const\hspace{0.3cm}{\tt  \mbox{[}inline\mbox{]}}}}
+\label{classvjassdoc_1_1Scope_c2b7a4d2f0a0e248194d9e96c3d00f10}
+
+
+\hypertarget{classvjassdoc_1_1Scope_33866d7c3eac290c01e57e1919b26cda}{
+\index{vjassdoc::Scope@{vjassdoc::Scope}!initializer@{initializer}}
+\index{initializer@{initializer}!vjassdoc::Scope@{vjassdoc::Scope}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}class {\bf Function} $\ast$ vjassdoc::Scope::initializer () const\hspace{0.3cm}{\tt  \mbox{[}inline\mbox{]}}}}
+\label{classvjassdoc_1_1Scope_33866d7c3eac290c01e57e1919b26cda}
+
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+src/\hyperlink{scope_8h}{scope.h}\item 
+src/\hyperlink{scope_8cpp}{scope.cpp}\end{CompactItemize}

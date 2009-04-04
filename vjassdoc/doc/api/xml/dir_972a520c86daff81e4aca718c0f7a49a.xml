@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.5.4">
+  <compounddef id="dir_972a520c86daff81e4aca718c0f7a49a" kind="dir">
+    <compoundname>src/</compoundname>
+    <innerfile refid="comment_8cpp">comment.cpp</innerfile>
+    <innerfile refid="comment_8h">comment.h</innerfile>
+    <innerfile refid="doccomment_8cpp">doccomment.cpp</innerfile>
+    <innerfile refid="doccomment_8h">doccomment.h</innerfile>
+    <innerfile refid="file_8cpp">file.cpp</innerfile>
+    <innerfile refid="file_8h">file.h</innerfile>
+    <innerfile refid="function_8cpp">function.cpp</innerfile>
+    <innerfile refid="function_8h">function.h</innerfile>
+    <innerfile refid="functioninterface_8cpp">functioninterface.cpp</innerfile>
+    <innerfile refid="functioninterface_8h">functioninterface.h</innerfile>
+    <innerfile refid="global_8cpp">global.cpp</innerfile>
+    <innerfile refid="global_8h">global.h</innerfile>
+    <innerfile refid="interface_8cpp">interface.cpp</innerfile>
+    <innerfile refid="interface_8h">interface.h</innerfile>
+    <innerfile refid="internationalisation_8h">internationalisation.h</innerfile>
+    <innerfile refid="keyword_8cpp">keyword.cpp</innerfile>
+    <innerfile refid="keyword_8h">keyword.h</innerfile>
+    <innerfile refid="library_8cpp">library.cpp</innerfile>
+    <innerfile refid="library_8h">library.h</innerfile>
+    <innerfile refid="main_8cpp">main.cpp</innerfile>
+    <innerfile refid="member_8cpp">member.cpp</innerfile>
+    <innerfile refid="member_8h">member.h</innerfile>
+    <innerfile refid="method_8cpp">method.cpp</innerfile>
+    <innerfile refid="method_8h">method.h</innerfile>
+    <innerfile refid="object_8cpp">object.cpp</innerfile>
+    <innerfile refid="object_8h">object.h</innerfile>
+    <innerfile refid="objects_8h">objects.h</innerfile>
+    <innerfile refid="parser_8cpp">parser.cpp</innerfile>
+    <innerfile refid="parser_8h">parser.h</innerfile>
+    <innerfile refid="scope_8cpp">scope.cpp</innerfile>
+    <innerfile refid="scope_8h">scope.h</innerfile>
+    <innerfile refid="sourcefile_8cpp">sourcefile.cpp</innerfile>
+    <innerfile refid="sourcefile_8h">sourcefile.h</innerfile>
+    <innerfile refid="struct_8cpp">struct.cpp</innerfile>
+    <innerfile refid="struct_8h">struct.h</innerfile>
+    <innerfile refid="textmacro_8cpp">textmacro.cpp</innerfile>
+    <innerfile refid="textmacro_8h">textmacro.h</innerfile>
+    <innerfile refid="textmacroinstance_8cpp">textmacroinstance.cpp</innerfile>
+    <innerfile refid="textmacroinstance_8h">textmacroinstance.h</innerfile>
+    <innerfile refid="type_8cpp">type.cpp</innerfile>
+    <innerfile refid="type_8h">type.h</innerfile>
+    <innerfile refid="vjassdoc_8cpp">vjassdoc.cpp</innerfile>
+    <innerfile refid="vjassdoc_8h">vjassdoc.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/"/>
+  </compounddef>
+</doxygen>

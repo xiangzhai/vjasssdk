@@ -1,0 +1,216 @@
+.TH "vjassdoc::File" 3 "9 Mar 2009" "Version 0.2.3" "vjassdoc" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+vjassdoc::File \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <file.h>\fP
+.PP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBExpression\fP { \fBPreprocessorExpression\fP, \fBDocCommentExpression\fP, \fBCommentExpression\fP, \fBTypeExpression\fP, \fBConstantExpression\fP, \fBExtendsExpression\fP, \fBNativeExpression\fP, \fBNothingExpression\fP, \fBFunctionExpression\fP, \fBEndfunctionExpression\fP, \fBTakesExpression\fP, \fBReturnsExpression\fP, \fBGlobalsExpression\fP, \fBEndglobalsExpression\fP, \fBImportExpression\fP, \fBDovjassinitExpression\fP, \fBInjectExpression\fP, \fBEndinjectExpression\fP, \fBNovjassExpression\fP, \fBEndnovjassExpression\fP, \fBLoaddataExpression\fP, \fBExternalExpression\fP, \fBTextmacroExpression\fP, \fBEndtextmacroExpression\fP, \fBRuntextmacroExpression\fP, \fBRequiresExpression\fP, \fBNeedsExpression\fP, \fBUsesExpression\fP, \fBInitializerExpression\fP, \fBDefaultsExpression\fP, \fBMethodExpression\fP, \fBEndmethodExpression\fP, \fBPrivateExpression\fP, \fBPublicExpression\fP, \fBStaticExpression\fP, \fBDebugExpression\fP, \fBKeywordExpression\fP, \fBLibraryExpression\fP, \fBLibrary_onceExpression\fP, \fBEndlibraryExpression\fP, \fBScopeExpression\fP, \fBEndscopeExpression\fP, \fBStructExpression\fP, \fBEndstructExpression\fP, \fBInterfaceExpression\fP, \fBEndinterfaceExpression\fP, \fBDelegateExpression\fP, \fBStubExpression\fP, \fBArrayExpression\fP, \fBMaxExpressions\fP }"
+.br
+.ti -1c
+.RI "enum \fBDocExpression\fP { \fBAuthor\fP, \fBToDo\fP, \fBParameter\fP, \fBReturn\fP, \fBState\fP, \fBSource\fP, \fBMaxDocExpressions\fP }"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFile\fP (const std::string &filePath)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static std::string \fBgetToken\fP (const std::string &line, unsigned int &index, bool endOfLine=false)"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static const char * \fBexpressionText\fP [File::MaxExpressions]"
+.br
+.ti -1c
+.RI "static const char * \fBdocExpressionText\fP [File::MaxDocExpressions]"
+.br
+.in -1c
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBvjassdoc::File::Expression\fP"
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIPreprocessorExpression \fP\fP
+.TP
+\fB\fIDocCommentExpression \fP\fP
+.TP
+\fB\fICommentExpression \fP\fP
+.TP
+\fB\fITypeExpression \fP\fP
+.TP
+\fB\fIConstantExpression \fP\fP
+.TP
+\fB\fIExtendsExpression \fP\fP
+.TP
+\fB\fINativeExpression \fP\fP
+.TP
+\fB\fINothingExpression \fP\fP
+.TP
+\fB\fIFunctionExpression \fP\fP
+.TP
+\fB\fIEndfunctionExpression \fP\fP
+.TP
+\fB\fITakesExpression \fP\fP
+.TP
+\fB\fIReturnsExpression \fP\fP
+.TP
+\fB\fIGlobalsExpression \fP\fP
+.TP
+\fB\fIEndglobalsExpression \fP\fP
+.TP
+\fB\fIImportExpression \fP\fP
+.TP
+\fB\fIDovjassinitExpression \fP\fP
+.TP
+\fB\fIInjectExpression \fP\fP
+.TP
+\fB\fIEndinjectExpression \fP\fP
+.TP
+\fB\fINovjassExpression \fP\fP
+.TP
+\fB\fIEndnovjassExpression \fP\fP
+.TP
+\fB\fILoaddataExpression \fP\fP
+.TP
+\fB\fIExternalExpression \fP\fP
+.TP
+\fB\fITextmacroExpression \fP\fP
+.TP
+\fB\fIEndtextmacroExpression \fP\fP
+.TP
+\fB\fIRuntextmacroExpression \fP\fP
+.TP
+\fB\fIRequiresExpression \fP\fP
+.TP
+\fB\fINeedsExpression \fP\fP
+.TP
+\fB\fIUsesExpression \fP\fP
+.TP
+\fB\fIInitializerExpression \fP\fP
+.TP
+\fB\fIDefaultsExpression \fP\fP
+.TP
+\fB\fIMethodExpression \fP\fP
+.TP
+\fB\fIEndmethodExpression \fP\fP
+.TP
+\fB\fIPrivateExpression \fP\fP
+.TP
+\fB\fIPublicExpression \fP\fP
+.TP
+\fB\fIStaticExpression \fP\fP
+.TP
+\fB\fIDebugExpression \fP\fP
+.TP
+\fB\fIKeywordExpression \fP\fP
+.TP
+\fB\fILibraryExpression \fP\fP
+.TP
+\fB\fILibrary_onceExpression \fP\fP
+.TP
+\fB\fIEndlibraryExpression \fP\fP
+.TP
+\fB\fIScopeExpression \fP\fP
+.TP
+\fB\fIEndscopeExpression \fP\fP
+.TP
+\fB\fIStructExpression \fP\fP
+.TP
+\fB\fIEndstructExpression \fP\fP
+.TP
+\fB\fIInterfaceExpression \fP\fP
+.TP
+\fB\fIEndinterfaceExpression \fP\fP
+.TP
+\fB\fIDelegateExpression \fP\fP
+.TP
+\fB\fIStubExpression \fP\fP
+.TP
+\fB\fIArrayExpression \fP\fP
+.TP
+\fB\fIMaxExpressions \fP\fP
+
+.SS "enum \fBvjassdoc::File::DocExpression\fP"
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIAuthor \fP\fP
+.TP
+\fB\fIToDo \fP\fP
+.TP
+\fB\fIParameter \fP\fP
+.TP
+\fB\fIReturn \fP\fP
+.TP
+\fB\fIState \fP\fP
+.TP
+\fB\fISource \fP\fP
+.TP
+\fB\fIMaxDocExpressions \fP\fP
+
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "vjassdoc::File::File (const std::string & filePath)"
+.PP
+
+.PP
+\fBTodo\fP
+.RS 4
+Truncate the //! prefix 
+.RE
+.PP
+.PP
+\fBTodo\fP
+.RS 4
+Just close if good? 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "std::string vjassdoc::File::getToken (const std::string & line, unsigned int & index, bool endOfLine = \fCfalse\fP)\fC [static]\fP"
+.PP
+.SH "Member Data Documentation"
+.PP 
+.SS "const char * \fBvjassdoc::File::expressionText\fP\fC [static]\fP"
+.PP
+.SS "const char * \fBvjassdoc::File::docExpressionText\fP\fC [static]\fP"
+.PP
+\fBInitial value:\fP
+.PP
+.nf
+
+{
+        'author',
+        'todo',
+        'param',
+        'return',
+        'source',
+        'state'
+}
+.fi
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for vjassdoc from the source code.
