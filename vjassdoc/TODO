@@ -50,6 +50,15 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * Add support for compiler flag DATABASE.
 * Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-04-17 Tamino Dauth <tamino@cdauth.de>
+* DONE: Improve operator support for expressions like method operator bla (thanks to Vexorian who discovered and reported this bug).
+* DONE: Add maybe <pre> and <code> tags to source files (thanks to Vexorian who made the <pre> suggestion).
+
+2009-04-15 Tamino Dauth <tamino@cdauth.de>
+* DONE: Add module support.
+* Add thistype and super support when searching for members or methods.
+* Show implemented modules on struct or interface pages.
+
 Notes:
 * Parser is not created while parsing all files (note that you have to separate the parsing process into a single method).
 * Do not use 0 for string arguments! Probably it will crash the program.

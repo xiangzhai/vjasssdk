@@ -114,7 +114,7 @@ class Object
 		*/
 		class Object* findValue(class Object *type, std::string &valueExpression);
 		
-		class Object *m_container;
+		class Object *m_container; /// @todo Interface?
 		class Scope *m_scope;
 		class Library *m_library;
 

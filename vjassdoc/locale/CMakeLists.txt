@@ -1,0 +1,14 @@
+#install
+
+install(FILES
+de/LC_MESSAGES/vjassdoc.mo
+DESTINATION "${LOCALE_INSTALL_DIR}/de/LC_MESSAGES/"
+)
+install(FILES
+en/LC_MESSAGES/vjassdoc.mo
+DESTINATION "${LOCALE_INSTALL_DIR}/en/LC_MESSAGES/"
+)
+install(FILES
+mk/LC_MESSAGES/vjassdoc.mo
+DESTINATION "${LOCALE_INSTALL_DIR}/mk/LC_MESSAGES/"
+)

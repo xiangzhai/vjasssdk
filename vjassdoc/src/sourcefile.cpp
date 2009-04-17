@@ -52,7 +52,8 @@ void SourceFile::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Full path\">" << _("Full path") << "</a></h2>\n"
 	<< "\t\t" << this->path() << '\n'
 	<< "\t\t<h2><a name=\"Code\">" << _("Code") << "</a></h2>\n"
-	<< "\t\t<p>\n"
+	<< "\t\t<pre>\n"
+	<< "\t\t<code>\n"
 	;
 	
 	std::ifstream sourceFile(this->path().c_str());
@@ -62,13 +63,14 @@ void SourceFile::page(std::ofstream &file) const
 	{
 		std::string line;
 		std::getline(sourceFile, line);
-		file << "\t\t\t" << i << " - " << "<a name=\"" << i << "\" class=\"sourcefilecode\">" << line << "</a><br>\n";
+		file << i << "\t\t\t<a name=\"" << i << "\" class=\"sourcefilecode\">" << line << "</a><br>\n";
 		++i;
 	}
 
 	sourceFile.close();
 	file
-	<< "\t\t</p>\n"
+	<< "\t\t</code>\n"
+	<< "\t\t</pre>\n"
 	;
 
 }

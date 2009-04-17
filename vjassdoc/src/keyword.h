@@ -39,7 +39,7 @@ class Keyword : public Object
 		virtual class Scope* scope() const;
 		bool isPrivate() const;
 
-	private:
+	protected:
 		class Library *m_library;
 		class Scope *m_scope;
 		bool m_isPrivate;

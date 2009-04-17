@@ -42,7 +42,7 @@ class Interface : public Object
 		void getMemberList(std::ofstream &file) const;
 		void getMethodList(std::ofstream &file) const;
 
-	private:
+	protected:
 		class Library *m_library;
 		class Scope *m_scope;
 		bool m_isPrivate;

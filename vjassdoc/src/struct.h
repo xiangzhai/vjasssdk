@@ -45,7 +45,7 @@ class Struct : public Interface
 		class Method* destructor() const;
 		class Method *initializer() const;
 		
-	private:
+	protected:
 		std::string extensionExpression;
 
 		class Interface *m_extension; //Interface, Struct

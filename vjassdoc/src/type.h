@@ -44,7 +44,7 @@ class Type : public Object
 		*/
 		int sizeLiteral() const;
 
-	private:
+	protected:
 		std::string typeExpression;
 		std::string sizeExpression;
 

@@ -18,34 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_TEXTMACRO_H
-#define VJASSDOC_TEXTMACRO_H
+#include <sstream>
 
-#include "object.h"
+#include "objects.h"
+#include "internationalisation.h"
 
 namespace vjassdoc
 {
 
-class TextMacro : public Object
+Module::Module(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
 {
-	public:
-		TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &parameters);
-		TextMacro(std::vector<const unsigned char*> &columnVector);
-		virtual void init();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
-		virtual std::string sqlStatement() const;
-		std::string parameters() const;
+}
 
-	protected:
-		std::string m_parameters;
-};
-
-inline std::string TextMacro::parameters() const
+void Module::pageNavigation(std::ofstream &file) const
 {
-	return this->m_parameters;
+	Interface::pageNavigation(file);
+	file
+	<< "\t\t\t<li><a href=\"#Usages\">"	<< _("Usages") << "</a></li>\n"
+	;
+}
+
+void Module::page(std::ofstream &file) const
+{
+	Interface::page(file);
+	file
+	<< "\t\t<h2><a name=\"Usages\">" << _("Usages") << "</a></h2>\n"
+	/// @todo Add usages list.
+	;
 }
 
 }
-
-#endif

@@ -19,8 +19,10 @@
  ***************************************************************************/
 
 #include <sstream>
+#include <iostream> //debug
 
 #include "objects.h"
+#include "file.h"
 #include "internationalisation.h"
 
 namespace vjassdoc
@@ -36,6 +38,15 @@ Member::Member(std::vector<const unsigned char*> &columnVector) : Global(columnV
 
 void Member::init()
 {
+	if (this->typeExpression() == File::expressionText[File::ThistypeExpression]) //is not as fast as direct set
+		this->m_typeExpression = this->container()->identifier();
+	else if (this->typeExpression() == File::expressionText[File::SuperExpression])
+	{
+		//FIXME Error!
+		//this->m_typeExpression = static_cast<class Struct*>(this->container())->extension()->identifier();
+		//std::cout << "Identifier " << static_cast<class Struct*>(this->container())->identifier() << std::endl;
+	}
+	
 	Global::init();
 }
 

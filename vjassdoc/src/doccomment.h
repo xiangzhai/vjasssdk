@@ -39,7 +39,7 @@ class DocComment : public Object
 		void setObject(class Object *object); //Just used by the Object class.
 		class Object *object() const;
 
-	private:
+	protected:
 		static const char *keyword[Parser::MaxLists];
 	
 		class DocComment* docComment() const; //Do not use

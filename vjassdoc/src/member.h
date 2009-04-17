@@ -39,7 +39,7 @@ class Member : public Global
 		bool isStatic() const;
 		bool isDelegate() const;
 
-	private:
+	protected:
 		class Object *m_container;
 		bool m_isStatic;
 		bool m_isDelegate;

@@ -110,3 +110,56 @@ endlibrary
 struct ArrayStruct //extends array[10]
 	delegate integer delegateMember = 0
 endstruct
+
+module MyModule
+	public static method Bla takes nothing returns nothing
+		local integer i = 0
+		loop
+			exitwhen (i == bj_MAX_PLAYERS)
+			call DisplayTimedTextToPlayer(Player(i), 0.0, 0.0, 20.0, "Peter und ein Huhn, die hatten viel zu tun.")
+			set i = i + 1
+		endloop
+	endmethod
+endmodule
+
+module AndTheOtherModule
+	implement optional MyModule
+endmodule
+
+library ModuleLibrary
+
+	private scope ModuleScope
+
+		private module PrivateModule
+		endmodule
+
+	endscope
+
+endlibrary
+
+struct ModuleImplementingStruct
+	implement AndTheOtherModule
+endstruct
+
+struct TestStruct1
+	public static integer peter = 10
+	public static integer hans = thistype.peter
+endstruct
+
+struct TestStruct2 extends TestStruct1
+	public static integer herbert = super.peter + super.hans
+	public static thistype aValue
+	public static super bValue
+endstruct
+
+struct OperatorStruct
+	private real m_test
+
+	method operator test takes nothing returns real
+		return this.m_test
+	endmethod
+
+	method operator test= takes real test returns nothing
+		set this.m_test=v
+	endmethod
+endstruct

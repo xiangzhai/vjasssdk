@@ -1,3 +1,33 @@
+2009-04-17 Tamino Dauth <tamino@cdauth.de>
+* Fixed memory access error which was caused by wrong argument count usage.
+* Added <pre> tag into source file output.
+* Added --help option information about --no<expression> options.
+* Added module and implementation sections in HTML output.
+* Added method getModule() to class File.
+* Added member currentModule to class File.
+* Added method getCurrentContainer() to class File.
+* Added member isInModule to class File.
+* Line numbers on source file pages will be displayed correctly now.
+* Modules will be parsed correctly now.
+* Operator methods will be parsed correctly now.
+
+2009-04-16 Tamino Dauth <tamino@cdauth.de>
+* Added class Implementation.
+* Added class Module.
+* Added private method getImplementation() to class File.
+
+2009-04-15 Tamino Dauth <tamino@cdauth.de>
+* Added members ModuleExpression, EndmoduleExpression, OptionalExpression, SuperExpression and ThistypeExpression to enum Expression of class File.
+* Revised the order of members of enum Expression of class File.
+* Added method getFirstLineExpression() to class File.
+* Moved some code of the constructor of class File to method getFirstLineExpression().
+* Unnecessary expressions will be skipped now when searching for the first line expression.
+* Added static method searchObjectInCustomList() to class Parser.
+* Added thistype detection for member types.
+* Added super detection for member types.
+* Improved findValue() method of class Parser.
+* Converted all private members of Object child classes to protected members.
+
 2009-03-21 Tamino Dauth <tamino@cdauth.de>
 * Added SQLITE flag implementation.
 * Revised main function.

@@ -21,12 +21,14 @@
 #include <sstream>
 #include <cstdlib>
 #include <cctype>
+#include <iostream> //debug
 
 #include "objects.h"
 #include "sourcefile.h"
 #include "doccomment.h"
 #include "vjassdoc.h"
 #include "internationalisation.h"
+#include "file.h"
 
 namespace vjassdoc
 {
@@ -206,13 +208,35 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 		//FIXME The value can be a function or method call with literal arguments.
 		if (Object::hasToSearchValueObject(type, valueExpression))
 		{
-			/*
-			FIXME Detect . separators correctly.
-			int separatorPosition = valueExpression.find('.');
+			//FIXME Detect . separators correctly.
+			class Object *valueContainer = 0;
+			std::string::size_type separatorPosition = valueExpression.find('.');
 			
 			if (separatorPosition != std::string::npos)
-				valueExpression = valueExpression.substr(0, separatorPosition);
-			*/
+			{
+				std::cout << "Found . in value expression at position " << separatorPosition << std::endl;
+				std::string containerIdentifier = valueExpression.substr(0, separatorPosition);
+				std::cout << "Container identifier: " << containerIdentifier << std::endl;
+				
+				if (containerIdentifier == File::expressionText[File::ThistypeExpression])
+				{
+					valueContainer = this->container();
+					std::cout << "thistype" << std::endl;
+				}
+				else if (containerIdentifier == File::expressionText[File::SuperExpression])
+				{
+					//FIXME Error? Test it!
+					//valueContainer = static_cast<class Struct*>(this->container())->extension();
+					std::cout << "super" << std::endl;
+				}
+				
+				//FIXME, does not work
+				valueExpression.erase(separatorPosition);
+				std::cout << "New value expression " << valueExpression << std::endl;
+				std::cout << "New position " << separatorPosition << std::endl;
+			}
+			
+			//FIXME Detect _ separators correctly?!
 			
 			bool functionCall = false;
 			int position = valueExpression.find('(');
@@ -241,17 +265,45 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 			
 			if (functionCall)
 			{
-				value = this->searchObjectInList(newExpression, Parser::Functions);
+				if (valueContainer != 0)
+				{
+					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Functions, Object::IsInContainer());
+					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Functions, Parser::Unspecified);
+					
+					if (value == 0)
+					{
+						list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Methods, Object::IsInContainer());
+						value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Methods, Parser::Unspecified);
+					}
+				}
+				else
+				{
+					value = this->searchObjectInList(newExpression, Parser::Functions);
 			
-				if (value == 0)
-					value = this->searchObjectInList(newExpression, Parser::Methods);
+					if (value == 0)
+						value = this->searchObjectInList(newExpression, Parser::Methods);
+				}
 			}
 			else
 			{
-				value = this->searchObjectInList(newExpression, Parser::Globals);
-			
-				if (value == 0)
-					value = this->searchObjectInList(newExpression, Parser::Members);
+				if (valueContainer != 0)
+				{
+					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Globals, Object::IsInContainer());
+					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Globals, Parser::Unspecified);
+					
+					if (value == 0)
+					{
+						std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Members, Object::IsInContainer());
+						value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Members, Parser::Unspecified);
+					}
+				}
+				else
+				{
+					value = this->searchObjectInList(newExpression, Parser::Globals);
+					
+					if (value == 0)
+						value = this->searchObjectInList(newExpression, Parser::Members);
+				}
 			}
 			
 			if (position == std::string::npos && value == 0)

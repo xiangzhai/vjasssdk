@@ -37,7 +37,7 @@ class TextMacroInstance : public TextMacro
 		virtual std::string sqlStatement() const;
 		class TextMacro* textMacro() const;
 		
-	private:
+	protected:
 		class TextMacro *m_textMacro;
 };
 

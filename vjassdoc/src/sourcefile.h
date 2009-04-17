@@ -43,7 +43,7 @@ class SourceFile : public Object
 		*/
 		static std::string sourceFileLineLink(const class Object *object, const bool &sourceFileName = true, const std::string &identifier = "-");
 
-	private:
+	protected:
 		//Do not use
 		class SourceFile* sourceFile() const;
 		unsigned int line() const;

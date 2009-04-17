@@ -39,7 +39,7 @@ class Scope : public Object
 		bool isPrivate() const;
 		class Function* initializer() const; //Function, Method (static)
 
-	private:
+	protected:
 		std::string initializerExpression;
 
 		class Library *m_library;

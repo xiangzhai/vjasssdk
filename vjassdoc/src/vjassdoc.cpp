@@ -29,7 +29,7 @@
 namespace vjassdoc
 {
 
-const char *Vjassdoc::version = "0.2.3";
+const char *Vjassdoc::version = "0.2.4";
 #ifdef UNIX
 const char *Vjassdoc::dirSeparator = "/";
 #elif defined WIN32

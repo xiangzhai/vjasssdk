@@ -52,7 +52,7 @@ TODO set LOCALE_DIR by cmake
 	textdomain("vjassdoc");
 #endif
 */
-	if (argc >= 1)
+	if (argc > 1)
 	{
 		if (strcmp(argv[1], "--version") == 0)
 		{
@@ -70,24 +70,44 @@ TODO set LOCALE_DIR by cmake
 		{
 			std::cout <<
 			_("vjassdoc options:\n") <<
-			_("--version            Shows the current version of vjassdoc.\n") <<
-			_("-j --jass            vJass code will be ignored.\n") <<
-			_("-d --debug           Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
-			_("--private            Private objects will be parsed.\n") <<
-			_("-m --textmacros      Code between text macro statements will be parsed.\n") <<
-			_("-h --html            Program creates a simple HTML API documentation.\n") <<
-			_("-p --pages           Program creates an HTML file for each parsed object.\n") <<
-			_("-s --specialpages    Program creates additional HTML files containing more information about all parsed objects.\n") <<
+			_("--version                   Shows the current version of vjassdoc.\n") <<
+			_("-j --jass                   vJass code will be ignored.\n") <<
+			_("-d --debug                  Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
+			_("--private                   Private objects will be parsed.\n") <<
+			_("-m --textmacros             Code between text macro statements will be parsed.\n") <<
+			_("--no<object type name>      Objects of type <object type name> won't added to the output files.\n") <<
+			_("                            The following object type names are available:\n") <<
+			_("                            comments\n") <<
+			_("                            keywords\n") <<
+			_("                            textmacros\n") <<
+			_("                            textmacroinstances\n") <<
+			_("                            types\n") <<
+			_("                            globals\n") <<
+			_("                            members\n") <<
+			_("                            functioninterfaces\n") <<
+			_("                            functions\n") <<
+			_("                            methods\n") <<
+			_("                            implementations\n") <<
+			_("                            interfaces\n") <<
+			_("                            structs\n") <<
+			_("                            modules\n") <<
+			_("                            scopes\n") <<
+			_("                            libraries\n") <<
+			_("                            sourcefiles\n") <<
+			_("                            doccomments\n") <<
+			_("-h --html                   Program creates a simple HTML API documentation.\n") <<
+			_("-p --pages                  Program creates an HTML file for each parsed object.\n") <<
+			_("-s --specialpages           Program creates additional HTML files containing more information about all parsed objects.\n") <<
 #ifdef SQLITE
-			_("-b --database        Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
+			_("-b --database               Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
 #endif
-			_("-v --verbose         Program shows more information about the process.\n") <<
-			_("-t --time            Detects the remaining time and shows it at the end of the process.\n") <<
-			_("-a --alphabetical    All objects will be aranged in an alphabetical order.\n") <<
-			_("--title <arg>        <arg> has to be replaced by the title which is used for the API documentation.\n") <<
-			_("--importdirs <args>  <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
-			_("--files <args>       <args> has to be replaced by the files which should be parsed.\n") <<
-			_("--dir <arg>          <arg> has to be replaced by the output directory path.\n") <<
+			_("-v --verbose                Program shows more information about the process.\n") <<
+			_("-t --time                   Detects the remaining time and shows it at the end of the process.\n") <<
+			_("-a --alphabetical           All objects will be aranged in alphabetical order.\n") <<
+			_("--title <arg>               <arg> has to be replaced by the title which is used for the API documentation.\n") <<
+			_("--importdirs <args>         <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
+			_("--files <args>              <args> has to be replaced by the files which should be parsed.\n") <<
+			_("--dir <arg>                 <arg> has to be replaced by the output directory path.\n") <<
 			_("\nReport bugs to tamino@cdauth.de") <<
 			std::endl;
 
@@ -124,8 +144,10 @@ TODO set LOCALE_DIR by cmake
 		"--nofunctioninterfaces",
 		"--nofunctions",
 		"--nomethods",
+		"--noimplementations",
 		"--nointerfaces",
 		"--nostructs",
+		"--nomodules",
 		"--noscopes",
 		"--nolibraries",
 		"--nosourcefiles",
@@ -133,6 +155,8 @@ TODO set LOCALE_DIR by cmake
 	};
 	bool parseObjectsOfList[Parser::MaxLists] =
 	{
+		true,
+		true,
 		true,
 		true,
 		true,
@@ -157,7 +181,7 @@ TODO set LOCALE_DIR by cmake
 	std::list<std::string> *importDirs = new std::list<std::string>;
 	std::list<std::string> *filePaths = new std::list<std::string>;
 
-	for (int i = 0; i < argc; ++i)
+	for (int i = 1; i < argc; ++i)
 	{
 		if (argv[i][0] == '-' && argv[i][1] != '-')
 		{

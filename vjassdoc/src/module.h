@@ -18,33 +18,21 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_TEXTMACRO_H
-#define VJASSDOC_TEXTMACRO_H
+#ifndef VJASSDOC_MODULE_H
+#define VJASSDOC_MODULE_H
 
-#include "object.h"
+#include "interface.h"
 
 namespace vjassdoc
 {
 
-class TextMacro : public Object
+class Module : public Interface
 {
 	public:
-		TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &parameters);
-		TextMacro(std::vector<const unsigned char*> &columnVector);
-		virtual void init();
+		Module(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate);
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
-		virtual std::string sqlStatement() const;
-		std::string parameters() const;
-
-	protected:
-		std::string m_parameters;
 };
-
-inline std::string TextMacro::parameters() const
-{
-	return this->m_parameters;
-}
 
 }
 

@@ -40,7 +40,7 @@ class Library : public Object
 		class Function* initializer() const; //Function, Method (static)
 		std::list<class Library*>* requirement() const;
 	
-	private:
+	protected:
 		bool m_isOnce;
 		std::string initializerExpression;
 		std::list<std::string> *requirementExpressions;

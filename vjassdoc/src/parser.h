@@ -42,8 +42,10 @@ class Member;
 class FunctionInterface;
 class Function;
 class Method;
+class Implementation;
 class Interface;
 class Struct;
+class Module;
 class Scope;
 class Library;
 class SourceFile;
@@ -74,8 +76,10 @@ class Parser
 			FunctionInterfaces,
 			Functions,
 			Methods,
+			Implementations,
 			Interfaces,
 			Structs,
+			Modules,
 			Scopes,
 			Libraries,
 			SourceFiles,
@@ -90,6 +94,9 @@ class Parser
 			CheckScope = 0x04,
 			CheckLibrary = 0x06
 		};
+
+		
+		static class Object* searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::List &list, const enum Parser::SearchMode &searchMode);
 
 		Parser();
 		~Parser();
@@ -109,22 +116,24 @@ class Parser
 		/// Finds the nearest object in the same line or ABOVE the line.
 		//Object* searchObjectByLine(const Object *object, List list);
 		
-		 void add(class Comment *comment);
-		 void add(class Keyword *keyword);
-		 void add(class TextMacro *textMacro);
-		 void add(class TextMacroInstance *textMacroInstance);
-		 void add(class Type *type);
-		 void add(class Global *global);
-		 void add(class Member *member);
-		 void add(class FunctionInterface *functionInterface);
-		 void add(class Function *function);
-		 void add(class Method *method);
-		 void add(class Interface *interface);
-		 void add(class Struct *usedStruct);
-		 void add(class Scope *scope);
-		 void add(class Library *library);
-		 void add(class SourceFile *sourceFile);
-		 void add(class DocComment *docComment);
+		void add(class Comment *comment);
+		void add(class Keyword *keyword);
+		void add(class TextMacro *textMacro);
+		void add(class TextMacroInstance *textMacroInstance);
+		void add(class Type *type);
+		void add(class Global *global);
+		void add(class Member *member);
+		void add(class FunctionInterface *functionInterface);
+		void add(class Function *function);
+		void add(class Method *method);
+		void add(class Implementation *implementation);
+		void add(class Interface *interface);
+		void add(class Struct *usedStruct);
+		void add(class Module *module);
+		void add(class Scope *scope);
+		void add(class Library *library);
+		void add(class SourceFile *sourceFile);
+		void add(class DocComment *docComment);
 		class Type* integerType() const;
 		class Type* realType() const;
 		class Type* stringType() const;
@@ -173,8 +182,10 @@ class Parser
 		std::list<class FunctionInterface*> functionInterfaceList;
 		std::list<class Function*> functionList;
 		std::list<class Method*> methodList;
+		std::list<class Implementation*> implementationList;
 		std::list<class Interface*> interfaceList;
 		std::list<class Struct*> structList;
+		std::list<class Module*> moduleList;
 		std::list<class Scope*> scopeList;
 		std::list<class Library*> libraryList;
 		std::list<class SourceFile*> sourceFileList;
@@ -235,6 +246,11 @@ inline void Parser::add(class Method *method)
 	this->methodList.push_back(method);
 }
 
+inline void Parser::add(class Implementation *implementation)
+{
+	this->implementationList.push_back(implementation);
+}
+
 inline void Parser::add(class Interface *interface)
 {
 	this->interfaceList.push_back(interface);
@@ -243,6 +259,11 @@ inline void Parser::add(class Interface *interface)
 inline void Parser::add(class Struct *usedStruct)
 {
 	this->structList.push_back(usedStruct);
+}
+
+inline void Parser::add(class Module *module)
+{
+	this->moduleList.push_back(module);
 }
 
 inline void Parser::add(class Scope *scope)

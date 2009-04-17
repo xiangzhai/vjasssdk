@@ -276,6 +276,24 @@ global.s:
 .PHONY : global.s
 
 # target to build an object file
+implementation.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/implementation.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/implementation.o
+.PHONY : implementation.o
+
+# target to preprocess a source file
+implementation.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/implementation.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/implementation.i
+.PHONY : implementation.i
+
+# target to generate assembly for a file
+implementation.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/implementation.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/implementation.s
+.PHONY : implementation.s
+
+# target to build an object file
 interface.o:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/interface.o
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/interface.o
@@ -379,6 +397,24 @@ method.s:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/method.s
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/method.s
 .PHONY : method.s
+
+# target to build an object file
+module.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/module.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/module.o
+.PHONY : module.o
+
+# target to preprocess a source file
+module.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/module.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/module.i
+.PHONY : module.i
+
+# target to generate assembly for a file
+module.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/module.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/module.s
+.PHONY : module.s
 
 # target to build an object file
 object.o:
@@ -574,6 +610,9 @@ help:
 	@echo "... global.o"
 	@echo "... global.i"
 	@echo "... global.s"
+	@echo "... implementation.o"
+	@echo "... implementation.i"
+	@echo "... implementation.s"
 	@echo "... interface.o"
 	@echo "... interface.i"
 	@echo "... interface.s"
@@ -592,6 +631,9 @@ help:
 	@echo "... method.o"
 	@echo "... method.i"
 	@echo "... method.s"
+	@echo "... module.o"
+	@echo "... module.i"
+	@echo "... module.s"
 	@echo "... object.o"
 	@echo "... object.i"
 	@echo "... object.s"

@@ -48,8 +48,10 @@ const char *Parser::title[Parser::MaxLists] =
 	_("Function interfaces"),
 	_("Functions"),
 	_("Methods"),
+	_("Implementations"),
 	_("Interfaces"),
 	_("Structs"),
+	_("Modules"),
 	_("Scopes"),
 	_("Libraries"),
 	_("Source files"),
@@ -67,8 +69,10 @@ const unsigned short int Parser::columns[Parser::MaxLists] =
 	13,
 	9,
 	12,
-	13,
-	6,
+	14,
+	7,
+	7,
+	8,
 	7,
 	6,
 	7,
@@ -88,8 +92,10 @@ const char *Parser::tableName[Parser::MaxLists] =
 	"FunctionInterfaces",
 	"Functions",
 	"Methods",
+	"Implementations",
 	"Interfaces",
 	"Structs",
+	"Modules",
 	"Scopes",
 	"Libraries",
 	"SourceFiles",
@@ -99,6 +105,97 @@ const char *Parser::tableName[Parser::MaxLists] =
 bool Parser::Comparator::operator()(const class Object *thisObject, const class Object *otherObject) const
 {
 	return false;
+}
+
+class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::List &list, const enum Parser::SearchMode &searchMode)
+{
+	if (objectList.size() == 0)
+		return 0;
+
+	class Object *resultObject = 0;
+	bool checkContainer = false;
+	bool checkScope = false;
+	bool checkLibrary = false;
+	
+	if (object->container() != 0 || searchMode & CheckContainer)
+		checkContainer = true;
+	
+	if (object->scope() != 0 || searchMode & CheckScope)
+		checkScope = true;
+	
+	if (object->library() != 0 || searchMode & checkLibrary)
+		checkLibrary = true;
+
+	for (std::list<class Object*>::const_iterator iterator = objectList.begin(); iterator != objectList.end(); ++iterator)
+	{
+		if ((*iterator)->identifier() == identifier)
+		{
+			if (resultObject == 0 && searchMode == Unspecified)
+			{
+				resultObject = *iterator;
+				
+				if (checkContainer)
+				{
+					if (resultObject->container() == object->container())
+						checkContainer = false;
+				}
+				
+				if (checkScope)
+				{
+					if (resultObject->scope() == object->scope())
+						checkScope = false;
+				}
+				
+				if (checkLibrary)
+				{
+					if (resultObject->library() == object->library())
+						checkLibrary = false;
+				}
+				
+				//found the object
+				if (!checkContainer && !checkScope && !checkLibrary)
+					break;
+				
+				continue;
+			}
+			
+			
+			if (checkContainer)
+			{
+				if ((*iterator)->container() == object->container())
+				{
+					checkContainer = false;
+					resultObject = *iterator;
+					
+					continue;
+				}
+			}
+			
+			if (checkScope)
+			{
+				if ((*iterator)->scope() == object->container())
+				{
+					checkScope = false;
+					resultObject = *iterator;
+					
+					continue;
+				}
+			}
+			
+			if (checkLibrary)
+			{
+				if ((*iterator)->library() == object->library())
+				{
+					checkLibrary = false;
+					resultObject = *iterator;
+					
+					continue;
+				}
+			}
+		}
+	}
+
+	return resultObject;
 }
 
 Parser::Parser() :
@@ -549,93 +646,7 @@ class Object* Parser::searchObjectInList(const class Object *object, const std::
 
 	std::list<class Object*> objectList = this->getList(list);
 
-	if (objectList.size() == 0)
-		return 0;
-
-	class Object *resultObject = 0;
-	bool checkContainer = false;
-	bool checkScope = false;
-	bool checkLibrary = false;
-	
-	if (object->container() != 0 || searchMode & CheckContainer)
-		checkContainer = true;
-	
-	if (object->scope() != 0 || searchMode & CheckScope)
-		checkScope = true;
-	
-	if (object->library() != 0 || searchMode & checkLibrary)
-		checkLibrary = true;
-
-	for (std::list<class Object*>::iterator iterator = objectList.begin(); iterator != objectList.end(); ++iterator)
-	{
-		if ((*iterator)->identifier() == identifier)
-		{
-			if (resultObject == 0 && searchMode == Unspecified)
-			{
-				resultObject = *iterator;
-				
-				if (checkContainer)
-				{
-					if (resultObject->container() == object->container())
-						checkContainer = false;
-				}
-				
-				if (checkScope)
-				{
-					if (resultObject->scope() == object->scope())
-						checkScope = false;
-				}
-				
-				if (checkLibrary)
-				{
-					if (resultObject->library() == object->library())
-						checkLibrary = false;
-				}
-				
-				//found the object
-				if (!checkContainer && !checkScope && !checkLibrary)
-					break;
-				
-				continue;
-			}
-			
-			
-			if (checkContainer)
-			{
-				if ((*iterator)->container() == object->container())
-				{
-					checkContainer = false;
-					resultObject = *iterator;
-					
-					continue;
-				}
-			}
-			
-			if (checkScope)
-			{
-				if ((*iterator)->scope() == object->container())
-				{
-					checkScope = false;
-					resultObject = *iterator;
-					
-					continue;
-				}
-			}
-			
-			if (checkLibrary)
-			{
-				if ((*iterator)->library() == object->library())
-				{
-					checkLibrary = false;
-					resultObject = *iterator;
-					
-					continue;
-				}
-			}
-		}
-	}
-
-	return resultObject;
+	return Parser::searchObjectInCustomList(objectList, object, identifier, list, searchMode);
 }
 
 std::list<class Object*> Parser::getSpecificList(const class Object *object, const enum List &list, const struct Comparator &comparator)
@@ -703,11 +714,17 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 		case Parser::Methods:
 			return reinterpret_cast<std::list<class Object*>& >(this->methodList);
 
+		case Parser::Implementations:
+			return reinterpret_cast<std::list<class Object*>& >(this->implementationList);
+
 		case Parser::Interfaces:
 			return reinterpret_cast<std::list<class Object*>& >(this->interfaceList);
 
 		case Parser::Structs:
 			return reinterpret_cast<std::list<class Object*>& >(this->structList);
+
+		case Parser::Modules:
+			return reinterpret_cast<std::list<class Object*>& >(this->moduleList);
 
 		case Parser::Scopes:
 			return reinterpret_cast<std::list<class Object*>& >(this->scopeList);
@@ -886,7 +903,19 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 			"Container INT,"
 			"IsStatic BOOL,"
 			"IsStub BOOL,"
+			"IsOperator BOOL,"
 			"DefaultReturnValue INT";
+			break;
+
+		case Parser::Implementations:
+			result +=
+			"Identifier VARCHAR(50),"
+			"SourceFile INT,"
+			"Line INT,"
+			"DocComment INT,"
+			"Container INT,"
+			"Module INT,"
+			"IsOptional BOOLEAN";
 			break;
 
 		case Parser::Interfaces:
@@ -896,8 +925,8 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 			"Line INT,"
 			"DocComment INT,"
 			"Library INT,"
-			"IsPrivate BOOLEAN,"
-			"Scope INT";
+			"Scope INT,"
+			"IsPrivate BOOLEAN";
 			break;
 
 		case Parser::Structs:
@@ -913,6 +942,17 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 			"Constructor INT,"
 			"Destructor INT,"
 			"Initializer INT";
+			break;
+
+		case Parser::Modules:
+			result +=
+			"Identifier VARCHAR(50),"
+			"SourceFile INT,"
+			"Line INT,"
+			"DocComment INT,"
+			"Library INT,"
+			"Scope INT,"
+			"IsPrivate BOOLEAN";
 			break;
 
 		case Parser::Scopes:
@@ -1001,12 +1041,20 @@ class Object* Parser::addObjectByColumnVector(const enum Parser::List &list, std
 			this->add(new Method(columnVector));
 			break;
 
+		case Parser::Implementations:
+			this->add(new Implementation(columnVector));
+			break;
+
 		case Parser::Interfaces:
 			this->add(new Interface(columnVector));
 			break;
 
 		case Parser::Structs:
 			this->add(new Struct(columnVector));
+			break;
+
+		case Parser::Modules:
+			this->add(new Interface(columnVector)); /// @todo Module
 			break;
 
 		case Parser::Scopes:

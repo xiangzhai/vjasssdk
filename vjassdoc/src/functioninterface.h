@@ -45,7 +45,7 @@ class FunctionInterface : public Object
 		class Object* returnType() const; //Type, Function Interface, Interface, Struct
 		std::string returnTypeExpression() const;
 
-	private:
+	protected:
 		class Library *m_library;
 		class Scope *m_scope;
 		bool m_isPrivate;

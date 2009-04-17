@@ -41,36 +41,17 @@ class File
 	public:
 		enum Expression
 		{
-			PreprocessorExpression, //has to stay before comment expression!
 			DocCommentExpression, //This tool
 			CommentExpression,
 			TypeExpression,
 			ConstantExpression,
-			ExtendsExpression,
 			NativeExpression,
-			NothingExpression,
 			FunctionExpression,
 			EndfunctionExpression,
-			TakesExpression,
-			ReturnsExpression,
 			GlobalsExpression,
 			EndglobalsExpression,
-			ImportExpression,
-			DovjassinitExpression,
-			InjectExpression,
-			EndinjectExpression,
-			NovjassExpression,
-			EndnovjassExpression,
-			LoaddataExpression,
-			ExternalExpression,
-			TextmacroExpression,
-			EndtextmacroExpression,
-			RuntextmacroExpression, //An instance of the macro
-			RequiresExpression,
-			NeedsExpression,
-			UsesExpression,
-			InitializerExpression,
-			DefaultsExpression,
+			//vJass stand-alone expressions
+			PreprocessorExpression,
 			MethodExpression, //Operator is not required because the syntax is "method operator..."
 			EndmethodExpression, //Required for function blocks, there can not be custom types
 			PrivateExpression,
@@ -87,10 +68,41 @@ class File
 			EndstructExpression,
 			InterfaceExpression,
 			EndinterfaceExpression,
-			DelegateExpression, //new
-			StubExpression, //new
-			ArrayExpression, //could not be the first expression in line (Not required in Jass code)
-			MaxExpressions
+			DelegateExpression,
+			StubExpression,
+			ModuleExpression,
+			EndmoduleExpression,
+			ImplementExpression,
+			//Jass none-start-line expressions
+			NothingExpression,
+			TakesExpression,
+			ReturnsExpression,
+			ExtendsExpression,
+			ArrayExpression,
+			//vJass none-start-line expressions
+			ImportExpression,
+			DovjassinitExpression,
+			InjectExpression,
+			EndInjectExpression,
+			NovjassExpression,
+			EndnovjassExpression,
+			LoaddataExpression,
+			ExternaExpression,
+			TextmacroExpression,
+			EndtextmacroExpression,
+			RuntextmacroExpression, //An instance of the macro
+			RequiresExpression,
+			NeedsExpression,
+			UsesExpression,
+			InitializerExpression,
+			DefaultsExpression,
+			OptionalExpression,
+			SuperExpression,
+			ThistypeExpression,
+			OperatorExpression,
+			MaxExpressions,
+			NoExpression,
+			InvalidExpression
 		};
 
 		enum DocExpression
@@ -112,6 +124,7 @@ class File
 		File(const std::string &filePath);
 		
 	private:
+		File::Expression getFirstLineExpression(std::string &line, unsigned int &index);
 		/// @return Returns true if a documentation comment was found.
 		void truncateComments(std::string &line, unsigned int index);
 		void getDocComment(const std::string &line, unsigned int index);
@@ -119,14 +132,17 @@ class File
 		void getKeyword(const std::string &line, unsigned int &index, bool isPrivate);
 		bool getGlobal(const std::string &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isStatic, bool isDelegate);
 		bool getFunction(const std::string  &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isNative, bool isStatic, bool isStub);
+		void getImplementation(const std::string &line, unsigned int &index);
 		void getLibrary(const std::string &line, unsigned int &index, bool isOnce);
 		void getScope(const std::string &line, unsigned int &index, bool isPrivate);
 		void getInterface(const std::string &line, unsigned int &index, bool isPrivate);
 		void getStruct(const std::string &line, unsigned int &index, bool isPrivate);
+		void getModule(const std::string &line, unsigned int &index, bool isPrivate);
 		std::string removeFirstSpace(const std::string &line, unsigned int index) const;
 		std::string getTextMacroArguments(const std::string &line, unsigned int &index) const;
 		std::list<std::string>* getLibraryRequirement(const std::string &line, unsigned int &index) const;
 		bool isInVjassBlock() const;
+		class Object* getCurrentContainer() const;
 
 		const std::string filePath;
 
@@ -136,13 +152,16 @@ class File
 		bool isInScope;
 		bool isInInterface;
 		bool isInStruct;
+		bool isInModule;
 
 		unsigned int currentLine;
-		DocComment *currentDocComment;
-		Library *currentLibrary;
-		Scope *currentScope;
-		Interface *currentInterface;
-		Struct *currentStruct;
+		class DocComment *currentDocComment;
+		class Library *currentLibrary;
+		class Scope *currentScope;
+		//containers
+		class Interface *currentInterface;
+		class Struct *currentStruct;
+		class Module *currentModule;
 
 		bool gotDocComment;
 

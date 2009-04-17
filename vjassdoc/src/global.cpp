@@ -36,6 +36,7 @@ Global::Global(std::vector<const unsigned char*> &columnVector) : Object(columnV
 {
 }
 
+/// @todo Value expressions can be calculations etc..
 void Global::init()
 {
 	//Must not be empty.

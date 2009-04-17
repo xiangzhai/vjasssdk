@@ -47,7 +47,7 @@ class Global : public Object
 		class Object* size() const; //Global (constant), Member (static, constant), Function (constant), Method (static, constant)
 		int sizeLiteral() const;
 
-	private:
+	protected:
 		std::string m_typeExpression;
 		std::string valueExpression;
 		std::string sizeExpression;

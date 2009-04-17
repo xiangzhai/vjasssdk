@@ -39,7 +39,7 @@ class Function : public FunctionInterface
 		bool isConstant() const;
 		bool isNative() const;
 
-	private:
+	protected:
 		bool m_isPublic;
 		bool m_isConstant;
 		bool m_isNative;

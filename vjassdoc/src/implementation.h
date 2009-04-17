@@ -18,65 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_METHOD_H
-#define VJASSDOC_METHOD_H
+#ifndef VJASSDOC_IMPLEMENTATION_H
+#define VJASSDOC_IMPLEMENTATION_H
 
-#include "function.h"
+#include "object.h"
 
 namespace vjassdoc
 {
 
-class Method : public Function
+class Module;
+
+class Implementation : public Object
 {
 	public:
-		/// isNative always is false.
-		Method(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<std::string> *parameterTypeExpressions, std::list<std::string> *parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, bool isOperator, const std::string &defaultReturnValueExpression);
-		Method(std::vector<const unsigned char*> &columnVector);
+		Implementation(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Object *container, const std::string &moduleExpression, bool isOptional);
+		Implementation(std::vector<const unsigned char*> &columnVector);
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
 		virtual std::string sqlStatement() const;
-		virtual class Object* container() const; //Interface, Struct
-		bool isStatic() const;
-		bool isStub() const;
-		bool isOperator() const;
-		class Object* defaultReturnValue() const; //Type, Function Interface, Interface, Struct, Literal
-		std::string defaultReturnValueExpression() const;
+		virtual class Object* container() const;
+		class Module* module() const;
+		bool isOptional() const;
 
 	protected:
-		bool isNative() const; //do not use
-
 		class Object *m_container;
-		bool m_isStatic;
-		bool m_isStub;
-		bool m_isOperator;
-		class Object *m_defaultReturnValue;
-		std::string m_defaultReturnValueExpression;
+		std::string moduleExpression;
+		class Module *m_module;
+		bool m_isOptional;
 };
 
-inline bool Method::isStatic() const
+inline class Module* Implementation::module() const
 {
-	return this->m_isStatic;
+	return this->m_module;
 }
 
-inline bool Method::isStub() const
+inline bool Implementation::isOptional() const
 {
-	return this->m_isStub;
-}
-
-inline bool Method::isOperator() const
-{
-	return this->m_isOperator;
-}
-
-inline class Object* Method::defaultReturnValue() const
-{
-	return this->m_defaultReturnValue;
-}
-
-inline std::string Method::defaultReturnValueExpression() const
-{
-	return this->m_defaultReturnValueExpression;
+	return this->m_isOptional;
 }
 
 }

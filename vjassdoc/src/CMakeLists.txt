@@ -11,8 +11,10 @@ set(LIB_SRC
 	functioninterface.cpp
 	function.cpp
 	method.cpp
+	implementation.cpp
 	interface.cpp
 	struct.cpp
+	module.cpp
 	scope.cpp
 	library.cpp
 	sourcefile.cpp
@@ -35,8 +37,10 @@ set(HEADERS
 	functioninterface.h
 	function.h
 	method.h
+	implementation.h
 	interface.h
 	struct.h
+	module.h
 	scope.h
 	library.h
 	sourcefile.h
