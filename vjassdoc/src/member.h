@@ -29,6 +29,11 @@ namespace vjassdoc
 class Member : public Global
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		Member(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, bool isPublic, bool isConstant, const std::string &typeExpression, const std::string &valueExpression, const std::string &sizeExpression, class Object *container, bool isStatic, bool isDelegate);
 		Member(std::vector<const unsigned char*> &columnVector);
 		virtual void init();

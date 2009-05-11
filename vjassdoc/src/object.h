@@ -42,6 +42,11 @@ class Type;
 class Object
 {
 	public:
+		//static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		static std::string objectPageLink(const class Object *object, const std::string &identifier = "-");
 		static std::string objectLink(const class Object *object, const std::string &identifier = "-"); //should use the id
 		static int objectId(const class Object *object);
@@ -230,7 +235,7 @@ inline std::string Object::anchor() const
 
 inline class Object* Object::searchObjectInList(const std::string &identifier, const enum Parser::List &list, enum Parser::SearchMode searchMode)
 {
-	Vjassdoc::getParser()->searchObjectInList(this, identifier, list, searchMode);
+	return Vjassdoc::getParser()->searchObjectInList(this, identifier, list, searchMode);
 }
 
 }

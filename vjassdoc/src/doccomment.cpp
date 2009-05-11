@@ -28,6 +28,9 @@
 namespace vjassdoc
 {
 
+const char *DocComment::sqlTableName = "DocComments";
+unsigned int DocComment::sqlColumns;
+std::string DocComment::sqlColumnStatement;
 const char *DocComment::keyword[Parser::MaxLists] =
 {
 	"comment",
@@ -40,13 +43,25 @@ const char *DocComment::keyword[Parser::MaxLists] =
 	"functioninterface",
 	"function",
 	"method",
+	"implementation",
 	"interface",
 	"struct",
+	"module",
 	"scope",
 	"library",
 	"sourcefile",
 	"doccomment"
 };
+
+void DocComment::initClass()
+{
+	DocComment::sqlColumns = 4;
+	DocComment::sqlColumnStatement =
+	"Text VARCHAR(50),"
+	"SourceFile INT,"
+	"Line INT,"
+	"Object INT";
+}
 
 DocComment::DocComment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line) : m_object(0), Object(identifier, sourceFile, line, 0)
 {
@@ -59,7 +74,6 @@ DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : Object
 /// @todo FIXME
 void DocComment::init()
 {
-/*
 	std::string result;
 	unsigned int oldIndex = 0;
 	unsigned int newIndex = this->identifier().find('@');
@@ -80,7 +94,7 @@ void DocComment::init()
 		{
 			if (token == DocComment::keyword[i])
 			{
-				//std::cout << "Found keyword: " << DocComment::keyword[i] << " and has index " << index << std::endl;
+				std::cout << "Found keyword: " << DocComment::keyword[i] << " and has index " << newIndex << std::endl;
 				found = true;
 				token = File::getToken(this->identifier(), newIndex); //FIXME
 				std::cout << "New token: " << token << std::endl;
@@ -120,15 +134,14 @@ void DocComment::init()
 	}
 	
 	this->setIdentifier(result);
-*/
 }
 
 void DocComment::pageNavigation(std::ofstream &file) const
 {
 	file
-	<< "\t\t\t<li><a href=\"#Text\">"			<< _("Text") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Object\">"			<< _("Object") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Text\">"		<< _("Text") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Object\">"		<< _("Object") << "</a></li>\n"
 	;
 }
 
@@ -139,7 +152,7 @@ void DocComment::page(std::ofstream &file) const
 	<< "\t\t<p>\n"
 	<< "\t\t" << this->identifier() << "\n"
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Object\">" << _("Object") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->object()) << '\n'

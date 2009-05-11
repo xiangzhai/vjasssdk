@@ -26,6 +26,19 @@
 namespace vjassdoc
 {
 
+const char *Keyword::sqlTableName = "Keywords";
+unsigned int Keyword::sqlColumns;
+std::string Keyword::sqlColumnStatement;
+
+void Keyword::initClass()
+{
+	Keyword::sqlColumns = Object::sqlColumns + 3;
+	Keyword::sqlColumnStatement = Object::sqlColumnStatement +
+	",Library INT,"
+	"Scope INT, "
+	"IsPrivate BOOLEAN";
+}
+
 Keyword::Keyword(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), Object(identifier, sourceFile, line, docComment)
 {
 }
@@ -42,9 +55,9 @@ void Keyword::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Library\">"		<< _("Library") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Scope\">"			<< _("Scope") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Scope\">"		<< _("Scope") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Private\">"		<< _("Private") << "</a></li>\n"
 	;
 }
@@ -54,9 +67,9 @@ void Keyword::page(std::ofstream &file) const
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
 	<< "\t\t<p>\n"
-	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->docComment()) << '\n'
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Library\">" << _("Library") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->library()) << "\n"
@@ -69,7 +82,7 @@ void Keyword::page(std::ofstream &file) const
 
 std::string Keyword::sqlStatement() const
 {
-	std::ostringstream sstream;
+	std::stringstream sstream;
 	sstream
 	<< Object::sqlStatement() << ", "
 	<< "Library=" << Object::objectId(this->library()) << ", "

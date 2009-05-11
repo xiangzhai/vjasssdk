@@ -21,6 +21,8 @@
 #ifndef VJASSDOC_STRUCT_H
 #define VJASSDOC_STRUCT_H
 
+#include <list>
+
 #include "interface.h"
 
 namespace vjassdoc
@@ -33,7 +35,12 @@ class Struct : public Interface
 		{
 			virtual bool operator()(const class Object *thisObject, const class Object *extension) const;
 		};
+
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
 	
+		static void initClass();
 		Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, Scope *scope, bool isPrivate, const std::string &extensionExpression);
 		Struct(std::vector<const unsigned char*> &columnVector);
 		virtual void init();
@@ -44,6 +51,8 @@ class Struct : public Interface
 		class Method* constructor() const;
 		class Method* destructor() const;
 		class Method *initializer() const;
+		
+		std::list<class Interface*> extensions() const;
 		
 	protected:
 		std::string extensionExpression;

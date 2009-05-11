@@ -435,6 +435,24 @@ object.s:
 .PHONY : object.s
 
 # target to build an object file
+parameter.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/parameter.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/parameter.o
+.PHONY : parameter.o
+
+# target to preprocess a source file
+parameter.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/parameter.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/parameter.i
+.PHONY : parameter.i
+
+# target to generate assembly for a file
+parameter.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/parameter.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/parameter.s
+.PHONY : parameter.s
+
+# target to build an object file
 parser.o:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/parser.o
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/parser.o
@@ -637,6 +655,9 @@ help:
 	@echo "... object.o"
 	@echo "... object.i"
 	@echo "... object.s"
+	@echo "... parameter.o"
+	@echo "... parameter.i"
+	@echo "... parameter.s"
 	@echo "... parser.o"
 	@echo "... parser.i"
 	@echo "... parser.s"

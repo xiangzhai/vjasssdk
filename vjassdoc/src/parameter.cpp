@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <sstream>
+#include <iostream> /// @todo Debug
 
 #include "objects.h"
 #include "internationalisation.h"
@@ -26,47 +27,55 @@
 namespace vjassdoc
 {
 
-const char *TextMacroInstance::sqlTableName = "TextMacroInstances";
-unsigned int TextMacroInstance::sqlColumns;
-std::string TextMacroInstance::sqlColumnStatement;
+const char *Parameter::sqlTableName = "Parameters";
+unsigned int Parameter::sqlColumns;
+std::string Parameter::sqlColumnStatement;
 
-void TextMacroInstance::initClass()
+void Parameter::initClass()
 {
-	TextMacroInstance::sqlColumns = TextMacro::sqlColumns + 1;
-	TextMacroInstance::sqlColumnStatement = TextMacro::sqlColumnStatement +
-	",TextMacro INT";
+	Parameter::sqlColumns = Object::sqlColumns + 3;
+	Parameter::sqlColumnStatement = Object::sqlColumnStatement +
+	",FunctionInterface INT,"
+	"TypeExpression VARCHAR(50),"
+	"Type INT";
 }
 
-TextMacroInstance::TextMacroInstance(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &arguments) : m_textMacro(0), TextMacro(identifier, sourceFile, line, docComment, arguments)
+Parameter::Parameter(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class FunctionInterface *functionInterface, const std::string &typeExpression) : Object(identifier, sourceFile, line, docComment), m_functionInterface(functionInterface), m_typeExpression(typeExpression), m_type(0)
 {
 }
 
-TextMacroInstance::TextMacroInstance(std::vector<const unsigned char*> &columnVector) : TextMacro(columnVector)
+Parameter::Parameter(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
 {
 }
 
-void TextMacroInstance::init()
+void Parameter::init()
 {
-	TextMacro::init();
+	//Must not be empty.
+	this->m_type = this->searchObjectInList(this->typeExpression(), Parser::Types);
 	
-	//mustn't be empty
-	this->m_textMacro = static_cast<class TextMacro*>(this->searchObjectInList(this->identifier(), Parser::TextMacros));
+	if (this->m_type == 0)
+		this->m_type = this->searchObjectInList(this->typeExpression(), Parser::Interfaces);
+	
+	if (this->m_type == 0)
+		this->m_type = this->searchObjectInList(this->typeExpression(), Parser::Structs);
+	
+	if (this->m_type != 0)
+		this->m_typeExpression.clear();
 }
 
-void TextMacroInstance::pageNavigation(std::ofstream &file) const
+void Parameter::pageNavigation(std::ofstream &file) const
 {
-	//do not use TextMacro::pageNavigation() because there are listed all instances.
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Arguments\">"		<< _("Arguments") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Text Macro\">"		<< _("Text Macro") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Function Interface\">"	<< _("Function Interface") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Type\">"		<< _("Type") << "</a></li>\n"
 	;
 }
 
-void TextMacroInstance::page(std::ofstream &file) const
+void Parameter::page(std::ofstream &file) const
 {
-	//do not use TextMacro::page() because there are listed all instances.
+	std::cout << "Create parameter page!!!!!!" << std::endl;
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
 	<< "\t\t<p>\n"
@@ -74,20 +83,22 @@ void TextMacroInstance::page(std::ofstream &file) const
 	<< "\t\t</p>\n"
 	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
-	<< "\t\t<h2><a name=\"Arguments\">" << _("Arguments") << "</a></h2>\n"
-	<< "\t\t" << this->parameters() << '\n'
-	<< "\t\t<h2><a name=\"Text Macro\">" << _("Text Macro") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->textMacro(), this->identifier()) << '\n'
+	<< "\t\t<h2><a name=\"Function Interface\">" << _("Function Interface") << "</a></h2>\n"
+	<< "\t\t" << Object::objectPageLink(this->functionInterface()) << "\n"
+	<< "\t\t<h2><a name=\"Type\">" << _("Type") << "</a></h2>\n"
+	<< "\t\t" << Object::objectPageLink(this->type(), this->typeExpression()) << "\n"
 	;
 }
 
-std::string TextMacroInstance::sqlStatement() const
+std::string Parameter::sqlStatement() const
 {
 	std::ostringstream sstream;
 	sstream
-	<< TextMacro::sqlStatement() << ", "
-	<< "TextMacro=" << Object::objectId(this->textMacro());
-
+	<< Object::sqlStatement() << ", "
+	<< "FunctionInterface=" << Object::objectId(this->functionInterface()) << ", "
+	<< "TypeExpression=" << this->typeExpression() << ", "
+	<< "Type=" << Object::objectId(this->type());
+	
 	return sstream.str();
 }
 

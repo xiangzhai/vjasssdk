@@ -39,6 +39,7 @@ class TextMacroInstance;
 class Type;
 class Global;
 class Member;
+class Parameter;
 class FunctionInterface;
 class Function;
 class Method;
@@ -73,6 +74,7 @@ class Parser
 			Types,
 			Globals,
 			Members,
+			Parameters,
 			FunctionInterfaces,
 			Functions,
 			Methods,
@@ -96,10 +98,11 @@ class Parser
 		};
 
 		
-		static class Object* searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::List &list, const enum Parser::SearchMode &searchMode);
+		static class Object* searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::SearchMode &searchMode);
 
 		Parser();
 		~Parser();
+		void createInheritanceListPage();
 		void parse();
 
 #ifdef SQLITE
@@ -123,6 +126,7 @@ class Parser
 		void add(class Type *type);
 		void add(class Global *global);
 		void add(class Member *member);
+		void add(class Parameter *parameter);
 		void add(class FunctionInterface *functionInterface);
 		void add(class Function *function);
 		void add(class Method *method);
@@ -154,18 +158,21 @@ class Parser
 #endif	
 
 		static const char *title[Parser::MaxLists];
-		static const unsigned short int columns[Parser::MaxLists];
-		static const char *tableName[Parser::MaxLists];
-	
+		
 		std::list<class Object*>& getList(const enum List &list);
 		
 		//HTML
 		std::stringstream& addObjectList(std::stringstream &output, const enum Parser::List &list);
 		
 		//SQLite
-		std::string getTableCreationStatement(const enum Parser::List &list);
+#ifdef SQLITE
+		static std::string getTableName(const enum Parser::List &list);
+		static unsigned int getTableColumns(const enum Parser::List &list);
+		static std::string getTableCreationStatement(const enum Parser::List &list);
 		class Object* addObjectByColumnVector(const enum Parser::List &list, std::vector<const unsigned char*> &columnVector);
-		
+#endif
+
+		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::stringstream &sstream);
 		class Type *m_integerType;
 		class Type *m_realType;
 		class Type *m_stringType;
@@ -179,6 +186,7 @@ class Parser
 		std::list<class Type*> typeList;
 		std::list<class Global*> globalList;
 		std::list<class Member*> memberList;
+		std::list<class Parameter*> parameterList;
 		std::list<class FunctionInterface*> functionInterfaceList;
 		std::list<class Function*> functionList;
 		std::list<class Method*> methodList;
@@ -229,6 +237,11 @@ inline void Parser::add(class Global *global)
 inline void Parser::add(class Member *member)
 {
 	this->memberList.push_back(member);
+}
+
+inline void Parser::add(class Parameter *parameter)
+{
+	this->parameterList.push_back(parameter);
 }
 
 inline void Parser::add(class FunctionInterface *functionInterface)

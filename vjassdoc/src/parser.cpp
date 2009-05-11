@@ -40,12 +40,13 @@ const char *Parser::title[Parser::MaxLists] =
 {
 	_("Comments"),
 	_("Keywords"),
-	_("Text macros"),
-	_("Text macro instances"),
+	_("Text Macros"),
+	_("Text Macro Instances"),
 	_("Types"),
 	_("Globals"),
 	_("Members"),
-	_("Function interfaces"),
+	_("Parameters"),
+	_("Function Interfaces"),
 	_("Functions"),
 	_("Methods"),
 	_("Implementations"),
@@ -54,52 +55,8 @@ const char *Parser::title[Parser::MaxLists] =
 	_("Modules"),
 	_("Scopes"),
 	_("Libraries"),
-	_("Source files"),
-	_("Documentation comments")
-};
-
-const unsigned short int Parser::columns[Parser::MaxLists] = 
-{
-	4,
-	6,
-	5,
-	5,
-	6,
-	11,
-	13,
-	9,
-	12,
-	14,
-	7,
-	7,
-	8,
-	7,
-	6,
-	7,
-	2,
-	4
-};
-
-const char *Parser::tableName[Parser::MaxLists] =
-{
-	"Comments",
-	"Keywords",
-	"TextMacros",
-	"TextMacroInstances",
-	"Types",
-	"Globals",
-	"Members",
-	"FunctionInterfaces",
-	"Functions",
-	"Methods",
-	"Implementations",
-	"Interfaces",
-	"Structs",
-	"Modules",
-	"Scopes",
-	"Libraries",
-	"SourceFiles",
-	"DocumentationComments"
+	_("Source Files"),
+	_("Documentation Comments")
 };
 
 bool Parser::Comparator::operator()(const class Object *thisObject, const class Object *otherObject) const
@@ -107,7 +64,7 @@ bool Parser::Comparator::operator()(const class Object *thisObject, const class 
 	return false;
 }
 
-class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::List &list, const enum Parser::SearchMode &searchMode)
+class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::SearchMode &searchMode)
 {
 	if (objectList.size() == 0)
 		return 0;
@@ -208,15 +165,21 @@ Parser::Parser() :
 {
 	//add default types
 	this->add(m_integerType);
+
+	std::cout << "Type name " << this->m_integerType->identifier() << std::endl;
+
 	this->add(m_realType);
 	this->add(m_stringType);
 	this->add(m_booleanType);
 	this->add(m_handleType);
 	this->add(m_codeType);
 
-	for (std::list<std::string>::const_iterator iterator = Vjassdoc::getFilePaths()->begin(); iterator != Vjassdoc::getFilePaths()->end(); ++iterator)
+	std::list<std::string> list = Vjassdoc::getFilePaths();
+
+	for (std::list<std::string>::const_iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 	{
 		std::string identifier = *iterator;
+		std::cout << "File path " << identifier << std::endl;
 		int position;
 		
 		position = identifier.find_last_of(Vjassdoc::dirSeparator);
@@ -224,8 +187,12 @@ Parser::Parser() :
 		if (position != std::string::npos)
 			identifier = identifier.substr(position + 1);
 
+		std::cout << "New identifier " << identifier << std::endl;
+
 		this->add(new SourceFile(identifier, *iterator));
 	}
+
+	std::cout << "After construction." << std::endl;
 }
 
 Parser::~Parser()
@@ -239,15 +206,63 @@ Parser::~Parser()
 	this->typeList.clear();
 	this->globalList.clear();
 	this->memberList.clear();
+	this->parameterList.clear();
 	this->functionInterfaceList.clear();
 	this->functionList.clear();
 	this->methodList.clear();
+	this->implementationList.clear();
 	this->interfaceList.clear();
 	this->structList.clear();
 	this->scopeList.clear();
 	this->libraryList.clear();
 	this->sourceFileList.clear();
 	this->docCommentList.clear();
+}
+
+/// @todo FIXME
+void Parser::createInheritanceListPage()
+{
+	//inheritance list
+	std::stringstream sstream;
+	sstream
+	<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	<< "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n"
+	<< "\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
+	<< "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" << _("en") << "\">\n"
+	<< "<html>\n"
+	<< "\t<head>\n"
+	<< "\t\t<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"/>\n"
+	<< "\t\t<title>" << _("Inheritance List") << "</title>\n"
+	<< "\t\t<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>\n"
+	<< "\t</head>\n"
+	<< "\t<body>\n"
+	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
+	<< "\t\t<h1>" << _("Inheritance List") << "</h1>\n"
+	<< "\t\t<ul>\n"
+	;
+
+	for (std::list<class Interface*>::iterator iterator = this->interfaceList.begin(); iterator != this->interfaceList.end(); ++iterator)
+	{
+		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << "<li>\n";
+		this->getStructInheritanceList(*iterator, "\t\t\t", sstream);
+	}
+
+	sstream
+	<< "\t\t</ul>\n"
+	<< "\t</body>\n"
+	<< "</html>\n"
+	;
+	std::ofstream fout((Vjassdoc::getDir() + Vjassdoc::dirSeparator + "inheritancelist.html").c_str());
+
+	if (!fout.good())
+	{
+		fout.close();
+		std::cerr << _("Was unable to create file \"inheritancelist.html\".") << std::endl;
+		return;
+	}
+
+	fout << sstream.str();
+	fout.close();
 }
 
 void Parser::parse()
@@ -257,22 +272,33 @@ void Parser::parse()
 		this->m_currentSourceFile = *iterator;
 		File file((*iterator)->path());
 	}
-	
+
+	std::cout << "1" << std::endl;
+
 	//objects should be initialized before using them
 	for (int i = 0; i < Parser::MaxLists; ++i)
 	{
 		if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
 			continue;
 
+		std::cout << "2 with list " << i << std::endl;
+
 		std::list<class Object*> list = this->getList(Parser::List(i));
 	
 		for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 			(*iterator)->init();
+
+		std::cout << "finished" << std::endl;
 	}
+
+	std::cout << "2" << std::endl;
 
 	//alphabetical sort
 	if (Vjassdoc::sortAlphabetically())
 	{
+		if (Vjassdoc::showVerbose())
+			std::cout << _("Sorting alphabetically.") << std::endl;
+
 		for (int i = 0; i < MaxLists; ++i)
 		{
 			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
@@ -281,6 +307,8 @@ void Parser::parse()
 			this->getList(Parser::List(i)).sort(Object::AlphabeticalComparator());
 		}
 	}
+
+	std::cout << "3" << std::endl;
 
 	//create HTML file
 	if (Vjassdoc::saveAsHtml())
@@ -324,7 +352,12 @@ void Parser::parse()
 		if (Vjassdoc::createSpecialPages())
 		{
 			sout
-			<< "\t\t\t<li>" << "<a href=\"#Undocumented objects\">" << _("Undocumented objects") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"inheritancelist.html\">" << _("Inheritance List") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Undocumented Objects\">" << _("Undocumented Objects") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#States\">" << _("States") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Sources\">" << _("Sources") << "</a></li>\n"
 			;
 		}
 		
@@ -344,8 +377,10 @@ void Parser::parse()
 		/// @todo Test.
 		if (Vjassdoc::createSpecialPages())
 		{
+			this->createInheritanceListPage();
+
 			sout
-			<< "\t\t<h2><a name=\"Undocumented objects\">" << _("Undocumented objects") << "</h2>\n"
+			<< "\t\t<h2><a name=\"Undocumented Objects\">" << _("Undocumented Objects") << "</h2>\n"
 			<< "\t\t<ul>\n"
 			;
 		
@@ -366,11 +401,22 @@ void Parser::parse()
 			sout
 			<< "\t\t</ul>\n"
 			;
+			/// @todo Implement these special pages:
+/*
+			<< "\t\t\t<li>" << "<a href=\"#Inheritance Tree\">" << _("Inheritance Tree") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Undocumented Objects\">" << _("Undocumented Objects") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#States\">" << _("States") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"#Sources\">" << _("Sources") << "</a></li>\n"
+*/
 		}
 		
 		sout
 		<< "\t</body>" << std::endl
 		<< "</html>";
+
+		std::cout << "4" << std::endl;
 	
 		//write output
 		std::ofstream fout((Vjassdoc::getDir() + Vjassdoc::dirSeparator + "index.html").c_str());
@@ -389,6 +435,7 @@ void Parser::parse()
 				
 				for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 				{
+					std::cout << "Create page for object in list " << i << std::endl;
 					std::ostringstream sstream;
 					sstream << Vjassdoc::getDir() << '/' << (*iterator)->id() << ".html";
 					std::ofstream fout(sstream.str().c_str());
@@ -432,7 +479,8 @@ void Parser::parse()
 		
 		if (Parser::fileExists(fileName))
 		{
-			printf(_("Database \"%s\" does already exist. Do you want to replace it by the newer one? (y/n)\n"), fileName.c_str());
+			printf(_("Database \"%s\" does already exist. Do you want to replace it by the newer one?\n"), fileName.c_str());
+			std::cout << _("Answer possiblities: y, yes, n, no.\n");
 			
 			std::string answer;
 			
@@ -482,9 +530,11 @@ void Parser::parse()
 
 				state = sqlite3_exec(database, this->getTableCreationStatement(Parser::List(i)).c_str(), 0, 0, &message);
 
+				std::cout << "Table creation statement: " << this->getTableCreationStatement(Parser::List(i)).c_str() << std::endl;
+
 				if (state != SQLITE_OK)
 				{
-					fprintf(stderr, _("Was unable to create table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), tableName[i], i, state, message);
+					fprintf(stderr, _("Was unable to create table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), Parser::getTableName(Parser::List(i)).c_str(), i, state, message);
 					sqlite3_free(message);
 				}
 
@@ -493,20 +543,22 @@ void Parser::parse()
 				for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 				{
 					std::ostringstream sstream;
-					sstream << "INSERT INTO " << tableName[i] << " (Id) VALUES (" << (*iterator)->id() << ')';
+					sstream << "INSERT INTO " << Parser::getTableName(Parser::List(i)) << " (Id) VALUES (" << (*iterator)->id() << ')';
 					
 					state = sqlite3_exec(database, sstream.str().c_str(), 0, 0, &message);
 
+					std::cerr << "Execution " << sstream.str().c_str() << std::endl;
+
 					if (state != SQLITE_OK)
 					{
-						fprintf(stderr, _("Was unable to insert id of list %d into table \"%s\".\nState: %d.\nMessage: %s\n"), i, tableName[i], state, message);
+						fprintf(stderr, _("Was unable to insert id of list %d into table \"%s\".\nState: %d.\nMessage: %s\n"), i, Parser::getTableName(Parser::List(i)).c_str(), state, message);
 						sqlite3_free(message);
 					}
 			
 					sstream.str("");
 					sstream.clear();
 
-					sstream << "UPDATE " << tableName[i] << " SET " << (*iterator)->sqlStatement() << " WHERE Id=" << (*iterator)->id();
+					sstream << "UPDATE " << Parser::getTableName(Parser::List(i)).c_str() << " SET " << (*iterator)->sqlStatement() << " WHERE Id=" << (*iterator)->id();
 					
 					//std::cout << "Execution command: " << sstream.str().c_str() << std::endl; //NOTE debug
 
@@ -521,7 +573,7 @@ void Parser::parse()
 					
 					if (state != SQLITE_OK)
 					{
-						fprintf(stderr, _("Was unable to run execution of table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), tableName[i], i, state, message);
+						fprintf(stderr, _("Was unable to run execution of table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), Parser::getTableName(Parser::List(i)).c_str(), i, state, message);
 						sqlite3_free(message);
 					}
 				}
@@ -565,7 +617,7 @@ int Parser::addDatabase(const char *filePath)
 				continue;
 
 			std::ostringstream sstream;
-			sstream << "SELECT * FROM " << tableName[i];
+			sstream << "SELECT * FROM " << Parser::getTableName(Parser::List(i));
 			sqlite3_stmt *statement;
 			
 			state = sqlite3_prepare_v2(
@@ -576,11 +628,11 @@ int Parser::addDatabase(const char *filePath)
 				0);     /* OUT: Pointer to unused portion of zSql */
 
 			if (state != SQLITE_OK)
-				fprintf(stderr, _("Was unable to prepare SQL statement of table %s.\nState %d.\n"),  tableName[i], state);
+				fprintf(stderr, _("Was unable to prepare SQL statement of table %s.\nState %d.\n"),  Parser::getTableName(Parser::List(i)).c_str(), state);
 
 			if (statement == NULL)
 			{
-				fprintf(stderr, _("SQL statement of table %s is NULL.\n"), tableName[i]);
+				fprintf(stderr, _("SQL statement of table %s is NULL.\n"), Parser::getTableName(Parser::List(i)).c_str());
 				continue;
 			}
 			
@@ -602,7 +654,7 @@ int Parser::addDatabase(const char *filePath)
 			state = sqlite3_finalize(statement);
 			
 			if (state != SQLITE_OK)
-				fprintf(stderr, _("Was unable to finalize prepared SQL statement of table %s.\nState %d.\n"),  tableName[i], state);
+				fprintf(stderr, _("Was unable to finalize prepared SQL statement of table %s.\nState %d.\n"),  Parser::getTableName(Parser::List(i)).c_str(), state);
 		}
 	}
 	else
@@ -646,7 +698,7 @@ class Object* Parser::searchObjectInList(const class Object *object, const std::
 
 	std::list<class Object*> objectList = this->getList(list);
 
-	return Parser::searchObjectInCustomList(objectList, object, identifier, list, searchMode);
+	return Parser::searchObjectInCustomList(objectList, object, identifier, searchMode);
 }
 
 std::list<class Object*> Parser::getSpecificList(const class Object *object, const enum List &list, const struct Comparator &comparator)
@@ -705,6 +757,9 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 		case Parser::Members:
 			return reinterpret_cast<std::list<class Object*>& >(this->memberList);
 
+		case Parser::Parameters:
+			return reinterpret_cast<std::list<class Object*>& >(this->parameterList);
+
 		case Parser::FunctionInterfaces:
 			return reinterpret_cast<std::list<class Object*>& >(this->functionInterfaceList);
 
@@ -739,6 +794,8 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 			return reinterpret_cast<std::list<class Object*>& >(this->docCommentList);
 	}
 	
+	std::cerr << "Unknown list." << list << std::endl;
+
 	return reinterpret_cast<std::list<class Object*>& >(this->commentList);
 }
 
@@ -761,234 +818,243 @@ std::stringstream& Parser::addObjectList(std::stringstream &output, const enum P
 	return output;
 }
 
+#ifdef SQLITE
+std::string Parser::getTableName(const enum Parser::List &list)
+{
+	switch (list)
+	{
+		case Parser::Comments:
+			return Comment::sqlTableName;
+
+		case Parser::Keywords:
+			return Keyword::sqlTableName;
+
+		case Parser::TextMacros:
+			return TextMacro::sqlTableName;
+
+		case Parser::TextMacroInstances:
+			return TextMacroInstance::sqlTableName;
+
+		case Parser::Types:
+			return Type::sqlTableName;
+
+		case Parser::Globals:
+			return Global::sqlTableName;
+
+		case Parser::Members:
+			return Member::sqlTableName;
+
+		case Parser::Parameters:
+			return Parameter::sqlTableName;
+
+		case Parser::FunctionInterfaces:
+			return FunctionInterface::sqlTableName;
+
+		case Parser::Functions:
+			return Function::sqlTableName;
+
+		case Parser::Methods:
+			return Method::sqlTableName;
+
+		case Parser::Implementations:
+			return Implementation::sqlTableName;
+
+		case Parser::Interfaces:
+			return Interface::sqlTableName;
+
+		case Parser::Structs:
+			return Struct::sqlTableName;
+
+		case Parser::Modules:
+			return Module::sqlTableName;
+
+		case Parser::Scopes:
+			return Scope::sqlTableName;
+
+		case Parser::Libraries:
+			return Library::sqlTableName;
+
+		case Parser::SourceFiles:
+			return SourceFile::sqlTableName;
+
+		case Parser::DocComments:
+			return DocComment::sqlTableName;
+	}
+
+	std::cerr << "Unknown list " << list << std::endl;
+
+	return std::string();
+}
+
+unsigned int Parser::getTableColumns(const enum Parser::List &list)
+{
+	switch (list)
+	{
+		case Parser::Comments:
+			return Comment::sqlColumns;
+
+		case Parser::Keywords:
+			return Keyword::sqlColumns;
+
+		case Parser::TextMacros:
+			return TextMacro::sqlColumns;
+
+		case Parser::TextMacroInstances:
+			return TextMacroInstance::sqlColumns;
+
+		case Parser::Types:
+			return Type::sqlColumns;
+
+		case Parser::Globals:
+			return Global::sqlColumns;
+
+		case Parser::Members:
+			return Member::sqlColumns;
+
+		case Parser::Parameters:
+			return Parameter::sqlColumns;
+
+		case Parser::FunctionInterfaces:
+			return FunctionInterface::sqlColumns;
+
+		case Parser::Functions:
+			return Function::sqlColumns;
+
+		case Parser::Methods:
+			return Method::sqlColumns;
+
+		case Parser::Implementations:
+			return Implementation::sqlColumns;
+
+		case Parser::Interfaces:
+			return Interface::sqlColumns;
+
+		case Parser::Structs:
+			return Struct::sqlColumns;
+
+		case Parser::Modules:
+			return Module::sqlColumns;
+
+		case Parser::Scopes:
+			return Scope::sqlColumns;
+
+		case Parser::Libraries:
+			return Library::sqlColumns;
+
+		case Parser::SourceFiles:
+			return SourceFile::sqlColumns;
+
+		case Parser::DocComments:
+			return DocComment::sqlColumns;
+	}
+
+	std::cerr << "Unknown list " << list << std::endl;
+
+	return 0;
+}
+
 std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 {
-	std::string result = std::string("CREATE TABLE ") + tableName[list] + "(Id INT PRIMARY KEY,";
+	std::string result = std::string("CREATE TABLE ") + Parser::getTableName(list) + "(Id INT PRIMARY KEY,";
 
 	switch (list)
 	{
 		case Parser::Comments:
 			result +=
-			"Identifier VARCHAR(255),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT";
+			Comment::sqlColumnStatement;
 			break;
 
 		case Parser::Keywords:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT, "
-			"IsPrivate BOOLEAN";
+			Keyword::sqlColumnStatement;
 			break;
 
 		case Parser::TextMacros:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Parameters VARCHAR(255)";
+			TextMacro::sqlColumnStatement;
 			break;
 
 		case Parser::TextMacroInstances:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Parameters VARCHAR(255),"
-			"TextMacro INT";
+			TextMacroInstance::sqlColumnStatement;
 			break;
 
 		case Parser::Types:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Type INT,"
-			"Size INT";
+			Type::sqlColumnStatement;
 			break;
 
 		case Parser::Globals:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN,"
-			"IsPublic BOOLEAN,"
-			"IsConstant BOOLEAN,"
-			"Type INT,"
-			"Value INT,"
-			"ValueLiteral VARCHAR(50),"
-			"Size INT,"
-			"SizeLiteral INT";
+			Global::sqlColumnStatement;
 			break;
 
 		case Parser::Members:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN,"
-			"IsPublic BOOLEAN,"
-			"IsConstant BOOLEAN,"
-			"Type INT,"
-			"Value INT,"
-			"ValueLiteral VARCHAR(50),"
-			"Size INT,"
-			"SizeLiteral INT,"
-			"Container INT,"
-			"IsStatic BOOLEAN,"
-			"IsDelegate BOOLEAN";
+			Member::sqlColumnStatement;
+			break;
+
+		case Parser::Parameters:
+			result += Parameter::sqlColumnStatement;
 			break;
 
 		case Parser::FunctionInterfaces:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN,"
-			"ParameterTypes INT," //Array
-			"Parameters VARCHAR(255)," //Array
-			"ReturnType INT";
+			FunctionInterface::sqlColumnStatement;
 			break;
 
 		case Parser::Functions:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN,"
-			"ParameterTypes INT," //Array
-			"Parameters VARCHAR(255)," //Array
-			"ReturnType INT,"
-			"IsPublic BOOL,"
-			"IsConstant BOOL,"
-			"IsNative BOOL";
+			Function::sqlColumnStatement;
 			break;
 
 		case Parser::Methods:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN,"
-			"ParameterTypes INT," //Array
-			"Parameters VARCHAR(255)," //Array
-			"ReturnType INT,"
-			"IsPublic BOOL,"
-			"IsConstant BOOL,"
-			"IsNative BOOL," //Not used, but still required
-			"Container INT,"
-			"IsStatic BOOL,"
-			"IsStub BOOL,"
-			"IsOperator BOOL,"
-			"DefaultReturnValue INT";
+			Method::sqlColumnStatement;
 			break;
 
 		case Parser::Implementations:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Container INT,"
-			"Module INT,"
-			"IsOptional BOOLEAN";
+			Implementation::sqlColumnStatement;
 			break;
 
 		case Parser::Interfaces:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN";
+			Interface::sqlColumnStatement;
 			break;
 
 		case Parser::Structs:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN,"
-			"Extension INT,"
-			"Constructor INT,"
-			"Destructor INT,"
-			"Initializer INT";
+			Struct::sqlColumnStatement;
 			break;
 
 		case Parser::Modules:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"Scope INT,"
-			"IsPrivate BOOLEAN";
+			Module::sqlColumnStatement;
 			break;
 
 		case Parser::Scopes:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"Library INT,"
-			"IsPrivate BOOLEAN,"
-			"Initializer INT";
+			Scope::sqlColumnStatement;
 			break;
 
 		case Parser::Libraries:
 			result +=
-			"Identifier VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"DocComment INT,"
-			"IsOnce BOOL,"
-			"Initializer INT,"
-			"Requirement INT"; //Array
+			Library::sqlColumnStatement;
 			break;
 
 		case Parser::SourceFiles:
 			result +=
-			"Identifier VARCHAR(50),"
-			"Path VARCHAR(50)";
+			SourceFile::sqlColumnStatement;
 			break;
 
 		case Parser::DocComments:
 			result +=
-			"Text VARCHAR(50),"
-			"SourceFile INT,"
-			"Line INT,"
-			"Object INT";
+			DocComment::sqlColumnStatement;
+			break;
+
+		default:
+			std::cerr << "Unknown list " << list << std::endl;
 			break;
 	}
 	
@@ -1027,6 +1093,10 @@ class Object* Parser::addObjectByColumnVector(const enum Parser::List &list, std
 
 		case Parser::Members:
 			this->add(new Member(columnVector));
+			break;
+
+		case Parser::Parameters:
+			this->add(new Parameter(columnVector));
 			break;
 
 		case Parser::FunctionInterfaces:
@@ -1075,6 +1145,25 @@ class Object* Parser::addObjectByColumnVector(const enum Parser::List &list, std
 	}
 	
 	return this->getList(list).back();
+}
+#endif
+
+void Parser::getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::stringstream &sstream)
+{
+	std::list<class Object*> structList = this->getSpecificList(extension, Parser::Structs, Struct::HasExtension());
+
+	if (structList.empty())
+		return;
+
+	sstream << prefix << "<ul>\n";
+
+	for (std::list<class Object*>::iterator iterator = structList.begin(); iterator != structList.end(); ++iterator)
+	{
+		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << "</li>\n";
+		this->getStructInheritanceList(static_cast<class Interface*>(*iterator), prefix + '\t', sstream);
+	}
+
+	sstream << prefix << "</ul>\n";
 }
 
 }

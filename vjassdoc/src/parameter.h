@@ -18,17 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_FUNCTIONINTERFACE_H
-#define VJASSDOC_FUNCTIONINTERFACE_H
+
+#ifndef VJASSDOC_PARAMETER_H
+#define VJASSDOC_PARAMETER_H
 
 #include "object.h"
 
 namespace vjassdoc
 {
 
-class Parameter;
-
-class FunctionInterface : public Object
+class Parameter : public Object
 {
 	public:
 		static const char *sqlTableName;
@@ -36,47 +35,42 @@ class FunctionInterface : public Object
 		static std::string sqlColumnStatement;
 
 		static void initClass();
-		FunctionInterface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression);
-		FunctionInterface(std::vector<const unsigned char*> &columnVector);
-		virtual ~FunctionInterface();
+		Parameter(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class FunctionInterface *functionInterface, const std::string &typeExpression);
+		Parameter(std::vector<const unsigned char*> &columnVector);
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
 		virtual std::string sqlStatement() const;
-		virtual class Library* library() const;
-		virtual class Scope* scope() const;
-		bool isPrivate() const;
-		std::list<class Parameter*> parameters() const;
-		class Object* returnType() const; //Type, Function Interface, Interface, Struct
-		std::string returnTypeExpression() const;
+		/// Used by class @class FunctionInterface.
+		void setFunctionInterface(class FunctionInterface *functionInterface);
+		class FunctionInterface* functionInterface() const;
+		std::string typeExpression() const;
+		class Object* type() const; //Type, Function Interface, Interface, Struct
 
-	protected:
-		class Library *m_library;
-		class Scope *m_scope;
-		bool m_isPrivate;
-		std::list<class Parameter*> m_parameters;
-		class Object *m_returnType;
-		std::string m_returnTypeExpression;
+	private:
+		class FunctionInterface *m_functionInterface;
+		std::string m_typeExpression;
+		class Object *m_type;
 };
 
-inline bool FunctionInterface::isPrivate() const
+inline void Parameter::setFunctionInterface(class FunctionInterface *functionInterface)
 {
-	return this->m_isPrivate;
+	this->m_functionInterface = functionInterface;
 }
 
-inline std::list<class Parameter*> FunctionInterface::parameters() const
+inline class FunctionInterface* Parameter::functionInterface() const
 {
-	return this->m_parameters;
+	return this->m_functionInterface;
 }
 
-inline class Object* FunctionInterface::returnType() const
+inline std::string Parameter::typeExpression() const
 {
-	return this->m_returnType;
+	return this->m_typeExpression;
 }
 
-inline std::string FunctionInterface::returnTypeExpression() const
+inline class Object* Parameter::type() const
 {
-	return this->m_returnTypeExpression;
+	return this->m_type;
 }
 
 }

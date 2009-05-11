@@ -160,6 +160,24 @@ struct OperatorStruct
 	endmethod
 
 	method operator test= takes real test returns nothing
-		set this.m_test=v
+		set this.m_test = test
 	endmethod
+endstruct
+
+
+globals
+	integer randomInteger = GetRandomInt(0, 10) + GetRandomInt(11, 100)
+endglobals
+
+
+interface ExtensionInterface
+endinterface
+
+struct ExtensionStruct1 extends ExtensionInterface
+endstruct
+
+struct ExtensionStruct2 extends ExtensionStruct1
+endstruct
+
+struct ExtensionStruct3 extends ExtensionStruct2
 endstruct

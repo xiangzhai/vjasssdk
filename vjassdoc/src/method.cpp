@@ -26,7 +26,22 @@
 namespace vjassdoc
 {
 
-Method::Method(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<std::string> *parameterTypeExpressions, std::list<std::string> *parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, bool isOperator, const std::string &defaultReturnValueExpression) : m_container(container), m_isStatic(isStatic), m_isStub(isStub), m_isOperator(isOperator), m_defaultReturnValueExpression(defaultReturnValueExpression), m_defaultReturnValue(0), Function(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameterTypeExpressions, parameters, returnTypeExpression, isPublic, isConstant, false)
+const char *Method::sqlTableName = "Methods";
+unsigned int Method::sqlColumns;
+std::string Method::sqlColumnStatement;
+
+void Method::initClass()
+{
+	Method::sqlColumns = Function::sqlColumns + 5;
+	Method::sqlColumnStatement = Function::sqlColumnStatement +
+	",Container INT,"
+	"IsStatic BOOL,"
+	"IsStub BOOL,"
+	"IsOperator BOOL,"
+	"DefaultReturnValue INT";
+}
+
+Method::Method(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, bool isOperator, const std::string &defaultReturnValueExpression) : Function(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression, isPublic, isConstant, false), m_container(container), m_isStatic(isStatic), m_isStub(isStub), m_isOperator(isOperator), m_defaultReturnValueExpression(defaultReturnValueExpression), m_defaultReturnValue(0)
 {
 }
 
@@ -69,7 +84,7 @@ void Method::pageNavigation(std::ofstream &file) const
 	<< "\t\t\t<li><a href=\"#Static\">"			<< _("Static") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Stub\">"			<< _("Stub") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Operator\">"			<< _("Operator") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Default return value\">"	<< _("Default return value") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Default Return Value\">"	<< _("Default Return Value") << "</a></li>\n"
 	;
 }
 
@@ -85,7 +100,7 @@ void Method::page(std::ofstream &file) const
 	<< "\t\t" << Object::showBooleanProperty(this->isStub()) << "\n"
 	<< "\t\t<h2><a name=\"Operator\">" << _("Operator") << "</a></h2>\n"
 	<< "\t\t" << Object::showBooleanProperty(this->isOperator()) << "\n"
-	<< "\t\t<h2><a name=\"Default return value\">" << _("Default return value") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Default Return Value\">" << _("Default Return Value") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->defaultReturnValue(), this->defaultReturnValueExpression()) << "\n"
 	;
 }

@@ -26,6 +26,19 @@
 namespace vjassdoc
 {
 
+const char *Scope::sqlTableName = "Scopes";
+unsigned int Scope::sqlColumns;
+std::string Scope::sqlColumnStatement;
+
+void Scope::initClass()
+{
+	Scope::sqlColumns = Object::sqlColumns + 3;
+	Scope::sqlColumnStatement = Object::sqlColumnStatement +
+	",Library INT,"
+	"IsPrivate BOOLEAN,"
+	"Initializer INT";
+}
+
 Scope::Scope(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, bool isPrivate, const std::string initializerExpression) : m_library(library), m_isPrivate(isPrivate), initializerExpression(initializerExpression), m_initializer(0), Object(identifier, sourceFile, line, docComment)
 {
 }
@@ -54,16 +67,16 @@ void Scope::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"			<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"			<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"			<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Library\">"				<< _("Library") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Private\">"				<< _("Private") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Initializer\">"			<< _("Initializer") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Keywords\">"				<< _("Keywords") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Text macros\">"			<< _("Text macros") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Text macro instances\">"	<< _("Text macro instances") << "</a></li>"
-	<< "\t\t\t<li><a href=\"#Types\">"					<< _("Types") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Text Macros\">"			<< _("Text Macros") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Text Macro Instances\">"		<< _("Text Macro Instances") << "</a></li>"
+	<< "\t\t\t<li><a href=\"#Types\">"				<< _("Types") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Globals\">"				<< _("Globals") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Function interfaces\">"	<< _("Function interfaces") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Function Interfaces\">"		<< _("Function Interfaces") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Functions\">"				<< _("Functions") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Interfaces\">"				<< _("Interfaces") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Structs\">"				<< _("Structs") << "</a></li>\n"
@@ -74,15 +87,15 @@ void Scope::page(std::ofstream &file) const
 {
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Container") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t" << Object::objectPageLink(this->docComment()) << '\n'
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Library\">" << _("Library") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->library()) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->library()) << '\n'
 	<< "\t\t<h2><a name=\"Private\">" << _("Private") << "</a></h2>\n"
-	<< "\t\t" << Object::showBooleanProperty(this->isPrivate()) << "\n"
+	<< "\t\t" << Object::showBooleanProperty(this->isPrivate()) << '\n'
 	<< "\t\t<h2><a name=\"Initializer\">" << _("Initializer") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->initializer(), this->initializerExpression) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->initializer(), this->initializerExpression) << '\n'
 	<< "\t\t<h2><a name=\"Keywords\">" << _("Keywords") << "</a></h2>\n"
 	;
 	
@@ -101,7 +114,7 @@ void Scope::page(std::ofstream &file) const
 		file << "\t\t-\n";
 	
 	file
-	<< "\t\t<h2><a name=\"Text macros\">" << _("Text macros") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Text Macros\">" << _("Text Macros") << "</a></h2>\n"
 	;
 	
 	list = Vjassdoc::getParser()->getSpecificList(this, Parser::TextMacros, Object::IsInScope());
@@ -119,7 +132,7 @@ void Scope::page(std::ofstream &file) const
 		file << "\t\t-\n";
 	
 	file
-	<< "\t\t<h2><a name=\"Text macro instances\">" << _("Text macro instances") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Text Macro Instances\">" << _("Text Macro Instances") << "</a></h2>\n"
 	;
 	
 	list = Vjassdoc::getParser()->getSpecificList(this, Parser::TextMacroInstances, Object::IsInScope());
@@ -173,7 +186,7 @@ void Scope::page(std::ofstream &file) const
 		file << "\t\t-\n";
 	
 	file
-	<< "\t\t<h2><a name=\"Function interfaces\">" << _("Function interfaces") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Function Interfaces\">" << _("Function Interfaces") << "</a></h2>\n"
 	;
 	
 	list = Vjassdoc::getParser()->getSpecificList(this, Parser::FunctionInterfaces, Object::IsInScope());

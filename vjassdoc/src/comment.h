@@ -29,6 +29,11 @@ namespace vjassdoc
 class Comment : public Object
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		Comment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment);
 		Comment(std::vector<const unsigned char*> &columnVector);
 		virtual ~Comment();

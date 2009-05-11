@@ -12,7 +12,7 @@ IF(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
     STRING(REGEX REPLACE "^[^A-Za-z0-9_]+" ""
            CMAKE_INSTALL_CONFIG_NAME "${BUILD_TYPE}")
   ELSE(BUILD_TYPE)
-    SET(CMAKE_INSTALL_CONFIG_NAME "")
+    SET(CMAKE_INSTALL_CONFIG_NAME "Release")
   ENDIF(BUILD_TYPE)
   MESSAGE(STATUS "Install configuration: \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 ENDIF(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
@@ -45,6 +45,7 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" MATCHES "^(Unspec
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/functioninterface.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/function.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/method.h"
+    "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/paramter.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/implementation.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/interface.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/struct.h"

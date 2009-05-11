@@ -29,6 +29,20 @@
 namespace vjassdoc
 {
 
+const char *Library::sqlTableName = "Libraries";
+unsigned int Library::sqlColumns;
+std::string Library::sqlColumnStatement;
+
+void Library::initClass()
+{
+	Library::sqlColumns = Object::sqlColumns + 3;
+	/// @todo Add class Requirement.
+	Library::sqlColumnStatement = Object::sqlColumnStatement +
+	",IsOnce BOOL,"
+	"Initializer INT,"
+	"Requirement INT";
+}
+
 Library::Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions) : m_isOnce(isOnce), initializerExpression(initializerExpression), requirementExpressions(requirementExpressions), m_initializer(0), m_requirement(0), Object(identifier, sourceFile, line, docComment)
 {
 }
@@ -85,15 +99,15 @@ void Library::pageNavigation(std::ofstream &file) const
 	<< "\t\t\t<li><a href=\"#Description\">"			<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source file\">"			<< _("Source file") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Keywords\">"				<< _("Keywords") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Text macros\">"			<< _("Text macros") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Text macro instances\">"	<< _("Text macro instances") << "</a></li>"
-	<< "\t\t\t<li><a href=\"#Types\">"					<< _("Types") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Text Macros\">"			<< _("Text Macros") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Text Macro Instances\">"		<< _("Text Macro Instances") << "</a></li>"
+	<< "\t\t\t<li><a href=\"#Types\">"				<< _("Types") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Globals\">"				<< _("Globals") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Function interfaces\">"	<< _("Function interfaces") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Function Interfaces\">"		<< _("Function Interfaces") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Functions\">"				<< _("Functions") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Interfaces\">"				<< _("Interfaces") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Structs\">"				<< _("Structs") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Scopes\">"					<< _("Scopes") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Scopes\">"				<< _("Scopes") << "</a></li>\n"
 	;
 }
 
@@ -104,7 +118,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<p>\n"
 	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Keywords\">" << _("Keywords") << "</a></h2>\n"
 	;
@@ -124,7 +138,7 @@ void Library::page(std::ofstream &file) const
 		file << "\t\t-\n";
 	
 	file
-	<< "\t\t<h2><a name=\"Text macros\">" << _("Text macros") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Text Macros\">" << _("Text Macros") << "</a></h2>\n"
 	;
 	
 	list = Vjassdoc::getParser()->getSpecificList(this, Parser::TextMacros, Object::IsInLibrary());
@@ -142,7 +156,7 @@ void Library::page(std::ofstream &file) const
 		file << "\t\t-\n";
 	
 	file
-	<< "\t\t<h2><a name=\"Text macro instances\">" << _("Text macro instances") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Text Macro Instances\">" << _("Text Macro Instances") << "</a></h2>\n"
 	;
 	
 	list = Vjassdoc::getParser()->getSpecificList(this, Parser::TextMacroInstances, Object::IsInLibrary());
@@ -196,7 +210,7 @@ void Library::page(std::ofstream &file) const
 		file << "\t\t-\n";
 	
 	file
-	<< "\t\t<h2><a name=\"Function interfaces\">" << _("Function interfaces") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Function Interfaces\">" << _("Function Interfaces") << "</a></h2>\n"
 	;
 	
 	list = Vjassdoc::getParser()->getSpecificList(this, Parser::FunctionInterfaces, Object::IsInLibrary());
@@ -299,7 +313,7 @@ void Library::page(std::ofstream &file) const
 
 std::string Library::sqlStatement() const
 {
-	std::ostringstream sstream;
+	std::stringstream sstream;
 	sstream
 	<< Object::sqlStatement() << ", "
 	<< "IsOnce=" << this->isOnce() << ", "

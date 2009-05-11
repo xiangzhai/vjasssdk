@@ -28,6 +28,19 @@
 namespace vjassdoc
 {
 
+const char *Member::sqlTableName = "Members";
+unsigned int Member::sqlColumns;
+std::string Member::sqlColumnStatement;
+
+void Member::initClass()
+{
+	Member::sqlColumns = Global::sqlColumns + 3;
+	Member::sqlColumnStatement = Global::sqlColumnStatement +
+	",Container INT,"
+	"IsStatic BOOLEAN,"
+	"IsDelegate BOOLEAN";
+}
+
 Member::Member(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, bool isPublic, bool isConstant, const std::string &typeExpression, const std::string &valueExpression, const std::string &sizeExpression, class Object *container, bool isStatic, bool isDelegate) : m_container(container), m_isStatic(isStatic), m_isDelegate(isDelegate), Global(identifier, sourceFile, line, docComment, library, scope, isPrivate, isPublic, isConstant, typeExpression, valueExpression, sizeExpression)
 {
 }

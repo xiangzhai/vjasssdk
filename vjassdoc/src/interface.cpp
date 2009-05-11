@@ -27,6 +27,19 @@
 namespace vjassdoc
 {
 
+const char *Interface::sqlTableName = "Interfaces";
+unsigned int Interface::sqlColumns;
+std::string Interface::sqlColumnStatement;
+
+void Interface::initClass()
+{
+	Interface::sqlColumns = Object::sqlColumns + 3;
+	Interface::sqlColumnStatement = Object::sqlColumnStatement +
+	",Library INT,"
+	"Scope INT,"
+	"IsPrivate BOOLEAN";
+}
+
 Interface::Interface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), Object(identifier, sourceFile, line, docComment)
 {
 }
@@ -43,11 +56,12 @@ void Interface::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Library\">"		<< _("Library") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Scope\">"			<< _("Scope") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Scope\">"		<< _("Scope") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Private\">"		<< _("Private") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Members\">"		<< _("Members") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Implementations\">"	<< _("Implementations") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Methods\">"		<< _("Methods") << "</a></li>\n"
 	;
 }
@@ -59,7 +73,7 @@ void Interface::page(std::ofstream &file) const
 	<< "\t\t<p>\n"
 	<< "\t\t" << Object::objectPageLink(this->docComment()) << '\n'
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Library\">" << _("Library") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->library()) << '\n'
@@ -71,6 +85,12 @@ void Interface::page(std::ofstream &file) const
 	;
 	
 	this->getMemberList(file);
+	
+	file
+	<< "\t\t<h2><a name=\"Implementations\">" << _("Implementations") << "</a></h2>\n"
+	;
+	
+	this->getImplementationList(file);
 	
 	file
 	<< "\t\t<h2><a name=\"Methods\">" << _("Methods") << "</a></h2>\n"
@@ -142,6 +162,35 @@ void Interface::getMemberList(std::ofstream &file) const
 				file << " = " << member->valueLiteral();
 			
 			file << "</li>\n";
+		}
+		
+		file << "\t\t</ul>\n";
+	}
+	else
+		file << "\t\t-\n";
+}
+
+void Interface::getImplementationList(std::ofstream &file) const
+{
+	std::list<class Object*> implementationList = Vjassdoc::getParser()->getSpecificList(this, Parser::Implementations, Object::IsInContainer());
+	
+	if (!implementationList.empty())
+	{
+		file << "\t\t<ul>\n";
+	
+		for (std::list<class Object*>::iterator iterator = implementationList.begin(); iterator != implementationList.end(); ++iterator)
+		{
+			class Implementation *implementation = static_cast<class Implementation*>(*iterator);
+		
+			file << "\t\t\t<li>";
+			
+			if (implementation->isOptional())
+				file << "optional ";
+			
+			file
+			<< Object::objectPageLink(implementation)
+			<< "</li>\n"
+			;
 		}
 		
 		file << "\t\t</ul>\n";

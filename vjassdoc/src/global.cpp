@@ -28,6 +28,26 @@
 namespace vjassdoc
 {
 
+const char *Global::sqlTableName = "Globals";
+unsigned int Global::sqlColumns;
+std::string Global::sqlColumnStatement;
+
+void Global::initClass()
+{
+	Global::sqlColumns = Object::sqlColumns + 10;
+	Global::sqlColumnStatement = Object::sqlColumnStatement +
+	",Library INT,"
+	"Scope INT,"
+	"IsPrivate BOOLEAN,"
+	"IsPublic BOOLEAN,"
+	"IsConstant BOOLEAN,"
+	"Type INT,"
+	"Value INT,"
+	"ValueLiteral VARCHAR(50),"
+	"Size INT,"
+	"SizeLiteral INT";
+}
+
 Global::Global(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, bool isPublic, bool isConstant, const std::string &typeExpression, const std::string &valueExpression, const std::string &sizeExpression) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_isPublic(isPublic), m_isConstant(isConstant), m_typeExpression(typeExpression), valueExpression(valueExpression), sizeExpression(sizeExpression), m_type(0), m_value(0), m_size(0), Object(identifier, sourceFile, line, docComment)
 {
 }
@@ -41,6 +61,8 @@ void Global::init()
 {
 	//Must not be empty.
 	this->m_type = this->searchObjectInList(this->typeExpression(), Parser::Types);
+	
+	//std::cout << "1 ALTA with type identifier " << this->m_type->identifier() << std::endl;
 	
 	if (this->m_type == 0)
 		this->m_type = this->searchObjectInList(this->typeExpression(), Parser::Interfaces);
@@ -59,15 +81,15 @@ void Global::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Library\">"		<< _("Library") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Scope\">"			<< _("Scope") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Scope\">"		<< _("Scope") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Private\">"		<< _("Private") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Public\">"			<< _("Public") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Public\">"		<< _("Public") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Constant\">"		<< _("Constant") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Type\">"			<< _("Type") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Value\">"			<< _("Value") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Size\">"			<< _("Size") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Type\">"		<< _("Type") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Value\">"		<< _("Value") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Size\">"		<< _("Size") << "</a></li>\n"
 	;
 }
 
@@ -76,22 +98,22 @@ void Global::page(std::ofstream &file) const
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
 	<< "\t\t<p>\n"
-	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->docComment()) << '\n'
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Library\">" << _("Library") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->library()) << "\n"
 	<< "\t\t<h2><a name=\"Scope\">" << _("Scope") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->scope()) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->scope()) << '\n'
 	<< "\t\t<h2><a name=\"Private\">" << _("Private") << "</a></h2>\n"
-	<< "\t\t" << Object::showBooleanProperty(this->isPrivate()) << "\n"
+	<< "\t\t" << Object::showBooleanProperty(this->isPrivate()) << '\n'
 	<< "\t\t<h2><a name=\"Public\">" << _("Public") << "</a></h2>\n"
-	<< "\t\t" << Object::showBooleanProperty(this->isPublic()) << "\n"
+	<< "\t\t" << Object::showBooleanProperty(this->isPublic()) << '\n'
 	<< "\t\t<h2><a name=\"Constant\">" << _("Constant") << "</a></h2>\n"
-	<< "\t\t" << Object::showBooleanProperty(this->isConstant()) << "\n"
+	<< "\t\t" << Object::showBooleanProperty(this->isConstant()) << '\n'
 	<< "\t\t<h2><a name=\"Type\">" << _("Type") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->type(), this->typeExpression()) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->type(), this->typeExpression()) << '\n'
 	<< "\t\t<h2><a name=\"Value\">" << _("Value") << "</a></h2>\n"
 	;
 	
@@ -110,7 +132,7 @@ void Global::page(std::ofstream &file) const
 	file << "\t\t<h2><a name=\"Size\">" << _("Size") << "</a></h2>\n";
 	
 	if (this->sizeExpression.empty() || this->sizeExpression == "-")
-		file << "\t\t" << Object::objectPageLink(this->size(), this->sizeExpression) << "\n";
+		file << "\t\t" << Object::objectPageLink(this->size(), this->sizeExpression) << '\n';
 	else
 	{
 		file << "\t\t";

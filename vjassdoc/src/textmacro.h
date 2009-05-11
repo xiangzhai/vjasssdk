@@ -29,6 +29,11 @@ namespace vjassdoc
 class TextMacro : public Object
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &parameters);
 		TextMacro(std::vector<const unsigned char*> &columnVector);
 		virtual void init();

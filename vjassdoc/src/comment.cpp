@@ -26,6 +26,16 @@
 namespace vjassdoc
 {
 
+const char *Comment::sqlTableName = "Comments";
+unsigned int Comment::sqlColumns;
+std::string Comment::sqlColumnStatement;
+
+void Comment::initClass()
+{
+	Comment::sqlColumns = Object::sqlColumns;
+	Comment::sqlColumnStatement = Object::sqlColumnStatement;
+}
+
 Comment::Comment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : Object(identifier, sourceFile, line, docComment)
 {
 }
@@ -45,9 +55,9 @@ void Comment::init()
 void Comment::pageNavigation(std::ofstream &file) const
 {
 	file
-	<< "\t\t\t<li><a href=\"#Text\">"			<< _("Text") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Text\">"		<< _("Text") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	;
 }
 
@@ -62,7 +72,7 @@ void Comment::page(std::ofstream &file) const
 	<< "\t\t<p>\n"
 	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source file\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	;
 }

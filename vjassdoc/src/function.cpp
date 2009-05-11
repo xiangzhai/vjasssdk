@@ -26,7 +26,20 @@
 namespace vjassdoc
 {
 
-Function::Function(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<std::string> *parameterTypeExpressions, std::list<std::string> *parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, bool isNative) : m_isPublic(isPublic), m_isConstant(isConstant), m_isNative(isNative), FunctionInterface(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameterTypeExpressions, parameters, returnTypeExpression)
+const char *Function::sqlTableName = "Functions";
+unsigned int Function::sqlColumns;
+std::string Function::sqlColumnStatement;
+
+void Function::initClass()
+{
+	Function::sqlColumns = FunctionInterface::sqlColumns + 3;
+	Function::sqlColumnStatement = FunctionInterface::sqlColumnStatement +
+	",IsPublic BOOL,"
+	"IsConstant BOOL,"
+	"IsNative BOOL";
+}
+
+Function::Function(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, bool isNative) : m_isPublic(isPublic), m_isConstant(isConstant), m_isNative(isNative), FunctionInterface(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression)
 {
 }
 
@@ -43,8 +56,8 @@ void Function::pageNavigation(std::ofstream &file) const
 {
 	FunctionInterface::pageNavigation(file);
 	file
-	<< "\t\t\t<li><a href=\"#Public\">"		<< _("Public") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Native\">"		<< _("Native") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Public\">"	<< _("Public") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Native\">"	<< _("Native") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Constant\">"	<< _("Constant") << "</a></li>\n"
 	;
 }

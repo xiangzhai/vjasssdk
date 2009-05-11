@@ -29,6 +29,11 @@ namespace vjassdoc
 class Interface : public Object
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		Interface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate);
 		Interface(std::vector<const unsigned char*> &columnVector);
 		virtual void init();
@@ -39,13 +44,14 @@ class Interface : public Object
 		virtual class Scope* scope() const;
 		bool isPrivate() const;
 
-		void getMemberList(std::ofstream &file) const;
-		void getMethodList(std::ofstream &file) const;
-
 	protected:
 		class Library *m_library;
 		class Scope *m_scope;
 		bool m_isPrivate;
+		
+		void getMemberList(std::ofstream &file) const;
+		void getImplementationList(std::ofstream &file) const;
+		void getMethodList(std::ofstream &file) const;
 };
 
 inline bool Interface::isPrivate() const

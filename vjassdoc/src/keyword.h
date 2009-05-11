@@ -29,6 +29,11 @@ namespace vjassdoc
 class Keyword : public Object
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		Keyword(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate);
 		Keyword(std::vector<const unsigned char*> &columnVector);
 		virtual void init();

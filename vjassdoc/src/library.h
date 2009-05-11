@@ -29,6 +29,11 @@ namespace vjassdoc
 class Library : public Object
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions);
 		Library(std::vector<const unsigned char*> &columnVector);
 		virtual ~Library();

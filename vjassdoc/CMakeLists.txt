@@ -7,9 +7,7 @@ project(vjassdoc)
 #)
 
 #if (FOUND_SQLITE)
-	set (SQLITE 
-	1
-	)
+	add_definitions(-DSQLITE=1)
 #endif (FOUND_SQLITE)
 
 if (UNIX)

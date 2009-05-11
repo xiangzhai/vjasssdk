@@ -26,7 +26,19 @@
 namespace vjassdoc
 {
 
-SourceFile::SourceFile(const std::string &identifier, const std::string &path) : m_path(path), Object(identifier, 0, 0, 0)
+const char *SourceFile::sqlTableName = "SourceFiles";
+unsigned int SourceFile::sqlColumns;
+std::string SourceFile::sqlColumnStatement;
+
+void SourceFile::initClass()
+{
+	SourceFile::sqlColumns = 2;
+	SourceFile::sqlColumnStatement = Object::sqlColumnStatement +
+	"Identifier VARCHAR(255),"
+	"Path VARCHAR(255)";
+}
+
+SourceFile::SourceFile(const std::string &identifier, const std::string &path) : Object(identifier, 0, 0, 0), m_path(path)
 {
 }
 
@@ -41,16 +53,13 @@ void SourceFile::init()
 void SourceFile::pageNavigation(std::ofstream &file) const
 {
 	file
-	<< "\t\t\t<li><a href=\"#Full path\">" << _("Full path") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Code\">" << _("Code") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Code\">"	<< _("Code") << "</a></li>\n"
 	;
 }
 
 void SourceFile::page(std::ofstream &file) const
 {
 	file
-	<< "\t\t<h2><a name=\"Full path\">" << _("Full path") << "</a></h2>\n"
-	<< "\t\t" << this->path() << '\n'
 	<< "\t\t<h2><a name=\"Code\">" << _("Code") << "</a></h2>\n"
 	<< "\t\t<pre>\n"
 	<< "\t\t<code>\n"
@@ -79,8 +88,8 @@ std::string SourceFile::sqlStatement() const
 {
 	std::ostringstream sstream;
 	sstream
-	<< "Identifier=\"" << Object::sqlFilteredString(this->identifier()) << "\", "
-	<< "Path=\"" << Object::sqlFilteredString(this->path()) << '\"';
+	<< "Identifier=\"" << Object::sqlFilteredString(this->identifier()) << '\"'
+	<< "Path=\"" << this->path() << '\"';
 
 	return sstream.str();
 }

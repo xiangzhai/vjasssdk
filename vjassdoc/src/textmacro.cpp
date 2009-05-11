@@ -26,6 +26,17 @@
 namespace vjassdoc
 {
 
+const char *TextMacro::sqlTableName = "TextMacros";
+unsigned int TextMacro::sqlColumns;
+std::string TextMacro::sqlColumnStatement;
+
+void TextMacro::initClass()
+{
+	TextMacro::sqlColumns = Object::sqlColumns + 1;
+	TextMacro::sqlColumnStatement = Object::sqlColumnStatement +
+	",Parameters VARCHAR(255)";
+}
+
 TextMacro::TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &parameters) : m_parameters(parameters), Object(identifier, sourceFile, line, docComment)
 {
 }
@@ -42,9 +53,9 @@ void TextMacro::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Parameters\">"		<< _("Parameters") << "</a></li>\n"
-	//Instances
+	<< "\t\t\t<li><a href=\"#Instances\">"		<< _("Instances") << "</a></li>\n"
 	;
 }
 
@@ -55,11 +66,31 @@ void TextMacro::page(std::ofstream &file) const
 	<< "\t\t<p>\n"
 	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Parameters\">" << _("Parameters") << "</a></h2>\n"
 	<< "\t\t" << this->parameters() << '\n'
+	<< "\t\t<h2><a name=\"Instances\">" << _("Instances") << "</a></h2>\n"
 	;
+	std::list<class Object*> instanceList = Vjassdoc::getParser()->getSpecificList(this, Parser::TextMacroInstances, TextMacroInstance::UsesTextMacro());
+	
+	if (!instanceList.empty())
+	{
+		file << "\t\t<ul>\n";
+	
+		for (std::list<class Object*>::iterator iterator = instanceList.begin(); iterator != instanceList.end(); ++iterator)
+		{
+			class TextMacroInstance *instance = static_cast<class TextMacroInstance*>(*iterator);
+		
+			file << "\t\t\t<li>";
+			file << Object::objectPageLink(instance->sourceFile()) << " - " << Object::objectPageLink(instance);
+			file << "</li>\n";
+		}
+		
+		file << "\t\t</ul>\n";
+	}
+	else
+		file << "\t\t-\n";
 }
 
 std::string TextMacro::sqlStatement() const

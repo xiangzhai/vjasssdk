@@ -36,8 +36,9 @@ class Vjassdoc
 	public:
 		static const char *version;
 		static const char *dirSeparator;
+		static bool supportsDatabaseCreation;
 
-		static void run(bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> *importDirs, std::list<std::string> *filePaths);
+		static void run(bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases);
 		static class Parser* getParser();
 		static bool jassOnly();
 		static bool useDebugMode();
@@ -52,8 +53,9 @@ class Vjassdoc
 		static bool shouldParseObjectsOfList(const enum Parser::List &list);
 		static std::string getTitle();
 		static std::string getDir();
-		static std::list<std::string>* getImportDirs();
-		static std::list<std::string>* getFilePaths();
+		static std::list<std::string> getImportDirs();
+		static std::list<std::string> getFilePaths();
+		static std::list<std::string> getDatabases();
 		
 		static void addLines(const unsigned int &addedLines);
 		static void addFile();
@@ -78,8 +80,9 @@ class Vjassdoc
 		static bool parseObjectsOfList[Parser::MaxLists];
 		static std::string title;
 		static std::string dir;
-		static std::list<std::string> *importDirs;
-		static std::list<std::string> *filePaths;
+		static std::list<std::string> importDirs;
+		static std::list<std::string> filePaths;
+		static std::list<std::string> databases;
 		
 		static unsigned int lines;
 		static unsigned int files;
@@ -158,14 +161,19 @@ inline std::string Vjassdoc::getDir()
 	return Vjassdoc::dir;
 }
 
-inline std::list<std::string>* Vjassdoc::getImportDirs()
+inline std::list<std::string> Vjassdoc::getImportDirs()
 {
 	return Vjassdoc::importDirs;
 }
 
-inline std::list<std::string>* Vjassdoc::getFilePaths()
+inline std::list<std::string> Vjassdoc::getFilePaths()
 {
 	return Vjassdoc::filePaths;
+}
+
+inline std::list<std::string> Vjassdoc::getDatabases()
+{
+	return Vjassdoc::databases;
 }
 
 inline void Vjassdoc::addLines(const unsigned int &addedLines)

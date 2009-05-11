@@ -33,6 +33,20 @@ bool Struct::HasExtension::operator()(const class Object *thisObject, const clas
 	return static_cast<const class Struct*>(thisObject)->extension() == static_cast<const class Interface*>(extension);
 }
 
+const char *Struct::sqlTableName = "Structs";
+unsigned int Struct::sqlColumns;
+std::string Struct::sqlColumnStatement;
+
+void Struct::initClass()
+{
+	Struct::sqlColumns = Interface::sqlColumns + 4;
+	Struct::sqlColumnStatement = Interface::sqlColumnStatement +
+	",Extension INT,"
+	"Constructor INT,"
+	"Destructor INT,"
+	"Initializer INT";
+}
+
 Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &extensionExpression) : extensionExpression(extensionExpression), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
 {
 }
@@ -66,13 +80,13 @@ void Struct::pageNavigation(std::ofstream &file) const
 {
 	Interface::pageNavigation(file);
 	file
-	<< "\t\t\t<li><a href=\"#Extension\">"			<< _("Extension") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Child structs\">"		<< _("Child structs") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Extensions\">"			<< _("Extensions") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Child Structs\">"		<< _("Child Structs") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Constructor\">"		<< _("Constructor") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Destructor\">"			<< _("Destructor") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Initializer\">"		<< _("Initializer") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Inherited members\">"	<< _("Inherited members") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Inherited methods\">"	<< _("Inherited methods") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Inherited Members\">"		<< _("Inherited Members") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Inherited Methods\">"		<< _("Inherited Methods") << "</a></li>\n"
 	;
 }
 
@@ -80,9 +94,29 @@ void Struct::page(std::ofstream &file) const
 {
 	Interface::page(file);
 	file
-	<< "\t\t<h2><a name=\"Extension\">" << _("Extension") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->extension()) << '\n'
-	<< "\t\t<h2><a name=\"Child structs\">" << _("Child structs") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Extensions\">" << _("Extensions") << "</a></h2>\n"
+	;
+	std::list<class Interface*> extensions = this->extensions();
+	
+	if (!extensions.empty())
+	{
+		file << "\t\t<ul>\n";
+		
+		for (std::list<class Interface*>::iterator iterator = extensions.begin(); iterator != extensions.end(); ++iterator)
+		{
+			file << "\t\t\t<li>" << Object::objectPageLink(*iterator) << "</li>\n";
+			
+			if (iterator != --extensions.end())
+				file << "\t\t\t<li>^</li>\n";
+		}
+			
+		file << "\t\t</ul>\n";
+	}
+	else
+		file << "\t\t-\n";
+	
+	file
+	<< "\t\t<h2><a name=\"Child Structs\">" << _("Child Structs") << "</a></h2>\n"
 	;
 	
 	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(this, Parser::Structs, Struct::HasExtension());
@@ -106,7 +140,7 @@ void Struct::page(std::ofstream &file) const
 	<< "\t\t" << Object::objectPageLink(this->destructor()) << '\n'
 	<< "\t\t<h2><a name=\"Initializer\">" << _("Initializer") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->initializer()) << '\n'
-	<< "\t\t<h2><a name=\"Inherited members\">" << _("Inherited members") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Inherited Members\">" << _("Inherited Members") << "</a></h2>\n"
 	;
 	
 	if (this->extension() != 0 &&  dynamic_cast<class Struct*>(this->extension()) != 0)
@@ -124,7 +158,7 @@ void Struct::page(std::ofstream &file) const
 		}
 		while (true);
 		
-		file << "\t\t<h2><a name=\"Inherited methods\">" << _("Inherited methods") << "</a></h2>\n";
+		file << "\t\t<h2><a name=\"Inherited Methods\">" << _("Inherited Methods") << "</a></h2>\n";
 		
 		extension = static_cast<class Struct*>(this->extension()); //do not check at twice
 		
@@ -143,7 +177,7 @@ void Struct::page(std::ofstream &file) const
 	{
 		file
 		<< "\t\t-\n"
-		<< "\t\t<h2><a name=\"Inherited methods\">" << _("Inherited methods") << "</a></h2>\n"
+		<< "\t\t<h2><a name=\"Inherited Methods\">" << _("Inherited Methods") << "</a></h2>\n"
 		<< "\t\t-\n"
 		;
 	}
@@ -160,6 +194,21 @@ std::string Struct::sqlStatement() const
 	<< "Initializer=" << Object::objectId(this->initializer());
 
 	return sstream.str();
+}
+
+std::list<class Interface*> Struct::extensions() const
+{
+	std::list<class Interface*> extensions;
+	
+	for (class Interface *extension = this->extension(); extension != 0; extension = static_cast<class Struct*>(extension)->extension())
+	{
+		extensions.push_front(extension);
+		
+		if (dynamic_cast<class Struct*>(extension) == 0)
+			break;
+	}
+	
+	return extensions;
 }
 
 }

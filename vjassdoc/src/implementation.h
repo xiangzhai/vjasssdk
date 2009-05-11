@@ -22,6 +22,7 @@
 #define VJASSDOC_IMPLEMENTATION_H
 
 #include "object.h"
+#include "parser.h"
 
 namespace vjassdoc
 {
@@ -31,6 +32,16 @@ class Module;
 class Implementation : public Object
 {
 	public:
+		struct UsesModule : public Parser::Comparator
+		{
+			virtual bool operator()(const class Implementation *thisImplementation, const class Module *module) const;
+		};
+
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		Implementation(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Object *container, const std::string &moduleExpression, bool isOptional);
 		Implementation(std::vector<const unsigned char*> &columnVector);
 		virtual void init();
@@ -38,15 +49,26 @@ class Implementation : public Object
 		virtual void page(std::ofstream &file) const;
 		virtual std::string sqlStatement() const;
 		virtual class Object* container() const;
+		std::string moduleExpression() const;
 		class Module* module() const;
 		bool isOptional() const;
 
 	protected:
 		class Object *m_container;
-		std::string moduleExpression;
+		std::string m_moduleExpression;
 		class Module *m_module;
 		bool m_isOptional;
 };
+
+inline bool Implementation::UsesModule::operator()(const class Implementation *thisImplementation, const class Module *module) const
+{
+	return thisImplementation->module() == module;
+}
+
+inline std::string Implementation::moduleExpression() const
+{
+	return this->m_moduleExpression;
+}
 
 inline class Module* Implementation::module() const
 {

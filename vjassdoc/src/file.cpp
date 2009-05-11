@@ -145,7 +145,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 	if (!fin.good())
 	{
 		fin.close();
-		fprintf(stderr, _("Unable to open file %s.\n"), filePath.c_str());
+		fprintf(stderr, _("Was unable to open file %s.\n"), filePath.c_str());
 		
 		return;
 	}
@@ -160,7 +160,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 		++this->currentLine;
 		
 		if (Vjassdoc::showVerbose())
-			printf(_("Read line %d of file %s.\n"), this->currentLine, filePath.c_str());
+			printf(_("Reading line %d of file %s.\n"), this->currentLine, filePath.c_str());
 
 		index = 0; //reset index!
 		expression = this->getFirstLineExpression(line, index);
@@ -205,9 +205,10 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					std::string openPath;
 					std::ifstream fin;
 					bool result = false;
-					std::list<std::string>::const_iterator iterator = Vjassdoc::getImportDirs()->begin();
+					std::list<std::string> list = Vjassdoc::getImportDirs();
+					std::list<std::string>::const_iterator iterator = list.begin();
 					
-					while (iterator != Vjassdoc::getImportDirs()->end())
+					while (iterator != list.end())
 					{
 						openPath = *iterator;
 						std::size_t length = strlen(Vjassdoc::dirSeparator);
@@ -236,7 +237,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 							fin.close(); /// @todo Just close if good?
 						else
 						{
-							fprintf(stderr, _("Unable to import file %s.\n"), filePath.c_str());
+							fprintf(stderr, _("Was unable to import file %s.\n"), filePath.c_str());
 							continue;
 						}
 					}
@@ -244,7 +245,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					if (result)
 					{
 						if (Vjassdoc::showVerbose())
-							printf(_("Import file %s.\n"), openPath.c_str());
+							printf(_("Importing file %s.\n"), openPath.c_str());
 						
 						Vjassdoc::getParser()->add(new SourceFile(filePath, openPath));
 						this->clearDocComment();
@@ -252,7 +253,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					else
 					{
 						if (Vjassdoc::showVerbose())
-							printf(_("Import file %s.\n"), filePath.c_str());
+							printf(_("Importing file %s.\n"), filePath.c_str());
 						
 						Vjassdoc::getParser()->add(new SourceFile(filePath, filePath));
 						this->clearDocComment();
@@ -518,7 +519,7 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 	if (token.empty())
 	{
 		if (Vjassdoc::showVerbose())
-			std::cout << _("Empty line.") << std::endl;
+			std::cout << _("Empty line, ignoring line.") << std::endl;
 			
 		return File::NoExpression;
 	}
@@ -1070,22 +1071,18 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 	if (File::getToken(line, index) != expressionText[TakesExpression])
 		return false;
 
-	std::list<std::string> *argTypes = 0;
-	std::list<std::string> *args = 0;
+	std::list<class Parameter*> parameters;
 	std::string argToken = File::getToken(line, index);
 	
 	if (argToken != expressionText[NothingExpression])
 	{
-		argTypes = new std::list<std::string>();
-		args = new std::list<std::string>();
-		
 		do
 		{
-			argTypes->push_back(argToken);
+			std::string typeExpression = argToken;
 			argToken = File::getToken(line, index);
 			
-			int position = argToken.find(',');
-			int lastPosition = argToken.length() - 1;
+			std::string::size_type position = argToken.find(',');
+			std::string::size_type lastPosition = argToken.length() - 1;
 			std::string oldArgToken;
 			
 			if (position != std::string::npos) //takes integer x, ...
@@ -1094,8 +1091,11 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 				argToken = argToken.substr(0, position);
 			}
 			
-			args->push_back(argToken);
-			
+			std::string identifier = argToken;
+			class vjassdoc::Parameter *parameter = new class vjassdoc::Parameter(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, 0, typeExpression);
+			parameters.push_back(parameter);
+			std::cout << "Created parameter with identifier " << identifier << " and type " << typeExpression << std::endl;
+
 			if (position != std::string::npos && position != lastPosition)
 				argToken = oldArgToken.substr(position + 1);
 			else
@@ -1131,7 +1131,7 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 			if (!isNative)
 				this->notRequiredSpace = FunctionExpression;
 
-			Vjassdoc::getParser()->add(new Function(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, argTypes, args, type, isPublic, isConstant, isNative));
+			Vjassdoc::getParser()->add(new Function(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type, isPublic, isConstant, isNative));
 		}
 		else
 		{
@@ -1151,12 +1151,12 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 					std::cerr << _("Missing default return value expression.") << std::endl;
 			}
 
-			Vjassdoc::getParser()->add(new Method(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, argTypes, args, type, isPublic, isConstant, this->getCurrentContainer(), isStatic, isStub, isOperator, defaultReturnValueExpression));
+			Vjassdoc::getParser()->add(new Method(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type, isPublic, isConstant, this->getCurrentContainer(), isStatic, isStub, isOperator, defaultReturnValueExpression));
 	
 		}
 	}
 	else
-		Vjassdoc::getParser()->add(new FunctionInterface(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, argTypes, args, type));
+		Vjassdoc::getParser()->add(new FunctionInterface(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type));
 
 	this->clearDocComment();
 	

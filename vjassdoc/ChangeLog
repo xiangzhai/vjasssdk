@@ -1,3 +1,40 @@
+2009-05-08 Tamino Dauth <tamino@cdauth.de>
+* Added member supportsDatabaseCreation to class Vjassdoc.
+* Added method getImplementationList to class Interface.
+* Added method moduleExpression to class Implementation.
+* Methods getMemberList, getImplementationList and getMethodList of class Interface are protected now.
+* Implementations will be listed on interface and struct pages now.
+* Improved inheritance list page.
+* Improved SQLite support.
+* Updatet translation .po files.
+
+2009-05-07 Tamino Dauth <tamino@cdauth.de>
+* Added method extensions() to class Struct.
+* Renamed section "Extension" on struct pages to "Extensions".
+* A simple extension tree will be listed on struct pages now.
+* Added method createInheritanceListPage() to struct Parser.
+
+2009-05-03 Tamino Dauth <tamino@cdauth.de>
+* Added method initClass() to class Object and all of its child classes.
+* Added option --databases.
+* Fixed several memory access errors.
+
+2009-04-23 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/parameter.h".
+* Added file "src/parameter.cpp".
+* Added first implementation of class Parameter.
+* Method getTableCreationStatement() of class Parser is static now.
+* Added method getTableColumns() to class Parser.
+* Added member sqlColumns to class Object and all child classes.
+* Added member sqlColumnStatement to class Object and all child classes.
+* Added method getTableName() to class Parser.
+* Added member sqlTableName to class Object and all child classes.
+
+2009-04-18 Tamino Dauth <tamino@cdauth.de>
+* Improved text macro instance pages.
+* Revised some output strings.
+* Member path won't be shown on source file pages anymore.
+
 2009-04-17 Tamino Dauth <tamino@cdauth.de>
 * Fixed memory access error which was caused by wrong argument count usage.
 * Added <pre> tag into source file output.
@@ -10,6 +47,10 @@
 * Line numbers on source file pages will be displayed correctly now.
 * Modules will be parsed correctly now.
 * Operator methods will be parsed correctly now.
+* Added struct UsesModule to class Implementation.
+* Added struct UsesTextMacro to class TextMacro.
+* Added functionality to show implementations on module pages.
+* Added functionality to show instances on text macro pages.
 
 2009-04-16 Tamino Dauth <tamino@cdauth.de>
 * Added class Implementation.

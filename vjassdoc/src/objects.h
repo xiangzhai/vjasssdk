@@ -30,6 +30,7 @@
 #include "type.h"
 #include "global.h"
 #include "member.h"
+#include "parameter.h"
 #include "functioninterface.h"
 #include "function.h"
 #include "method.h"

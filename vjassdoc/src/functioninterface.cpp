@@ -26,8 +26,35 @@
 namespace vjassdoc
 {
 
-FunctionInterface::FunctionInterface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<std::string> *parameterTypeExpressions, std::list<std::string> *parameters, const std::string &returnTypeExpression) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_parameterTypeExpressions(parameterTypeExpressions), m_parameters(parameters), m_returnTypeExpression(returnTypeExpression), m_parameterTypes(0), m_returnType(0), Object(identifier, sourceFile, line, docComment)
+const char *FunctionInterface::sqlTableName = "FunctionInterfaces";
+unsigned int FunctionInterface::sqlColumns;
+std::string FunctionInterface::sqlColumnStatement;
+
+void FunctionInterface::initClass()
 {
+	FunctionInterface::sqlColumns = Object::sqlColumns + 14;
+	/// @todo Maybe you shouldn't use a fixed parameter count. SQL doesn't provide any kinds of arrays but you could use a string list by separating all parameter object id's with a char (for example ;).
+	FunctionInterface::sqlColumnStatement = Object::sqlColumnStatement +
+	",Library INT,"
+	"Scope INT,"
+	"IsPrivate BOOLEAN,"
+	"Parameter0 INT,"
+	"Parameter1 INT,"
+	"Parameter2 INT,"
+	"Parameter3 INT,"
+	"Parameter4 INT,"
+	"Parameter5 INT,"
+	"Parameter6 INT,"
+	"Parameter7 INT,"
+	"Parameter8 INT,"
+	"Parameter9 INT,"
+	"ReturnType INT";
+}
+
+FunctionInterface::FunctionInterface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_parameters(parameters), m_returnTypeExpression(returnTypeExpression), m_returnType(0)
+{
+	for (std::list<class Parameter*>::const_iterator iterator = parameters.begin(); iterator != parameters.end(); ++iterator)
+	      (*iterator)->setFunctionInterface(this);
 }
 
 FunctionInterface::FunctionInterface(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
@@ -36,44 +63,10 @@ FunctionInterface::FunctionInterface(std::vector<const unsigned char*> &columnVe
 
 FunctionInterface::~FunctionInterface()
 {
-	if (this->m_parameterTypeExpressions != 0)
-		delete this->m_parameterTypeExpressions;
-	
-	if (this->m_parameterTypes != 0)
-		delete this->m_parameterTypes;
-	
-	if (this->m_parameters != 0) //TODO Can be 0?
-		delete this->m_parameters;
 }
 
 void FunctionInterface::init()
 {
-	if (this->parameterTypeExpressions() != 0)
-	{
-		this->m_parameterTypes = new std::list<Object*>;
-		std::list<std::string>::iterator expressionIterator = this->parameterTypeExpressions()->begin();
-		
-		while (expressionIterator != this->parameterTypeExpressions()->end())
-		{
-			class Object *object = this->searchObjectInList(*expressionIterator, Parser::FunctionInterfaces);
-			
-			if (object == 0)
-				object = this->searchObjectInList(*expressionIterator, Parser::Types);
-			
-			if (object == 0)
-				object = this->searchObjectInList(*expressionIterator, Parser::Interfaces);
-			
-			if (object == 0)
-				object = this->searchObjectInList(*expressionIterator, Parser::Structs);
-			
-			if (object != 0)
-				(*expressionIterator).clear();
-			
-			this->m_parameterTypes->push_back(object);
-			++expressionIterator;
-		}
-	}
-	
 	if (!this->m_returnTypeExpression.empty())
 	{
 		this->m_returnType = this->searchObjectInList(this->m_returnTypeExpression, Parser::FunctionInterfaces);
@@ -98,12 +91,12 @@ void FunctionInterface::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Library\">"		<< _("Library") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Scope\">"			<< _("Scope") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Scope\">"		<< _("Scope") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Private\">"		<< _("Private") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Parameters\">"		<< _("Parameters") << "</a></li>"
-	<< "\t\t\t<li><a href=\"#Return type\">"	<< _("Return type") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Return Type\">"	<< _("Return Type") << "</a></li>\n"
 	;
 }
 
@@ -112,9 +105,9 @@ void FunctionInterface::page(std::ofstream &file) const
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
 	<< "\t\t<p>\n"
-	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->docComment()) << '\n'
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	<< "\t\t<h2><a name=\"Library\">" << _("Library") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->library()) << "\n"
@@ -125,20 +118,13 @@ void FunctionInterface::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Parameters\">" << _("Parameters") << "</a></h2>\n"
 	;
 
-	if (this->parameterTypeExpressions() != 0)
+	if (!this->parameters().empty())
 	{
 		file << "\t\t<ul>\n";
-		std::list<class Object*>::iterator typeIterator = this->parameterTypes()->begin();
-		std::list<std::string>::const_iterator expressionIterator = this->parameterTypeExpressions()->begin();
-		std::list<std::string>::const_iterator nameIterator = this->parameters()->begin();
-	
-		while (expressionIterator != this->parameterTypeExpressions()->end())
-		{
-			file << "\t\t\t<li>" << Object::objectPageLink(*typeIterator, *expressionIterator) << " - " << *nameIterator << "</li>\n";
-			++typeIterator;
-			++expressionIterator;
-			++nameIterator;
-		}
+
+		/// @todo Memory access error.
+		//for (std::list<class Parameter*>::iterator iterator = this->parameters().begin(); iterator != this->parameters().end(); ++iterator)
+			//;//file << "\t\t\t<li>" << Object::objectPageLink((*iterator)->type(), (*iterator)->typeExpression()) << " - " << Object::objectPageLink(*iterator) << "</li>\n";
 		
 		file << "\t\t</ul>\n";
 	}
@@ -146,7 +132,7 @@ void FunctionInterface::page(std::ofstream &file) const
 		file << "\t\t-\n";
 	
 	file
-	<< "\t\t<h2><a name=\"Return type\">" << _("Return type") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Return Type\">" << _("Return Type") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->returnType()) << "\n"
 	;
 }
@@ -159,19 +145,16 @@ std::string FunctionInterface::sqlStatement() const
 	<< "Library=" << Object::objectId(this->library()) << ", "
 	<< "Scope=" << Object::objectId(this->scope()) << ", "
 	<< "IsPrivate=" << this->isPrivate() << ", ";
+	int i = 0;
+
+	for (std::list<class Parameter*>::iterator iterator = this->parameters().begin(); iterator != this->parameters().end(); ++iterator)
+	{
+	      sstream << "Parameter" << i << "=" << Object::objectId((*iterator)) << ", ";
+	      ++i;
+	}
 	
-	if (this->parameterTypes() != 0)
-	{
-		sstream
-		<< "ParameterTypes=" << Object::objectId(this->parameterTypes()->front()) << ", " //Array
-		<< "Parameters=\"" << this->parameters()->front() << "\", "; //Array
-	}
-	else
-	{
-		sstream
-		<< "ParameterTypes=-1, " //Array
-		<< "Parameters=NULL, "; //Array
-	}
+	for ( ; i < 10; ++i)
+		sstream << "Parameter" << i << "=-1, ";
 	
 	sstream << "ReturnType=" << Object::objectId(this->returnType());
 	

@@ -29,7 +29,11 @@ namespace vjassdoc
 class Type : public Object
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
 
+		static void initClass();
 		Type(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &typeExpression, const std::string &sizeExpression);
 		Type(std::vector<const unsigned char*> &columnVector);
 		virtual void init(); //the size object can be defined afterwards

@@ -22,6 +22,7 @@
 #define VJASSDOC_TEXTMACROINSTANCE_H
 
 #include "textmacro.h"
+#include "parser.h"
 
 namespace vjassdoc
 {
@@ -29,17 +30,33 @@ namespace vjassdoc
 class TextMacroInstance : public TextMacro
 {
 	public:
+		struct UsesTextMacro : public Parser::Comparator
+		{
+			virtual bool operator()(const class TextMacroInstance *thisTextMacroInstance, const class TextMacro *textMacro) const;
+		};
+
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		TextMacroInstance(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &arguments);
 		TextMacroInstance(std::vector<const unsigned char*> &columnVector);
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
 		virtual std::string sqlStatement() const;
-		class TextMacro* textMacro() const;
+		virtual class TextMacro* textMacro() const;
 		
 	protected:
 		class TextMacro *m_textMacro;
 };
+
+inline bool TextMacroInstance::UsesTextMacro::operator()(const class TextMacroInstance *thisTextMacroInstance, const class TextMacro *textMacro) const
+{
+	return thisTextMacroInstance->textMacro() == textMacro;
+}
+
 
 inline class TextMacro* TextMacroInstance::textMacro() const
 {

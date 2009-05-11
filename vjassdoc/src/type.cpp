@@ -20,6 +20,7 @@
 
 #include <cctype>
 #include <sstream>
+#include <iostream> //debug
 
 #include "objects.h"
 #include "internationalisation.h"
@@ -27,8 +28,21 @@
 namespace vjassdoc
 {
 
+const char *Type::sqlTableName = "Types";
+unsigned int Type::sqlColumns;
+std::string Type::sqlColumnStatement;
+
+void Type::initClass()
+{
+	Type::sqlColumns = Object::sqlColumns + 2;
+	Type::sqlColumnStatement = Object::sqlColumnStatement +
+	",Type INT,"
+	"Size INT";
+}
+
 Type::Type(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &typeExpression, const std::string &sizeExpression) : typeExpression(typeExpression), sizeExpression(sizeExpression), m_type(0), m_size(0), Object(identifier, sourceFile, line, docComment)
 {
+	std::cout << "Type name " << identifier << std::endl;
 }
 
 Type::Type(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
@@ -75,9 +89,9 @@ void Type::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Source file\">"	<< _("Source file") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Inherited type\">"	<< _("Inherited type") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Size\">"			<< _("Size") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Inherited Type\">"	<< _("Inherited Type") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Size\">"		<< _("Size") << "</a></li>\n"
 	;
 }
 
@@ -88,9 +102,9 @@ void Type::page(std::ofstream &file) const
 	<< "\t\t<p>\n"
 	<< "\t\t" << Object::objectPageLink(this->docComment()) << '\n'
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source file") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
-	<< "\t\t<h2><a name=\"Inherited type\">" << _("Inherited type") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Inherited Type\">" << _("Inherited Type") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->type(), this->typeExpression) << '\n'
 	<< "\t\t<h2><a name=\"Size\">" << _("Size") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->size(), this->sizeExpression) << '\n'

@@ -25,17 +25,23 @@
 
 #include "vjassdoc.h"
 #include "internationalisation.h"
+#include "objects.h"
 
 namespace vjassdoc
 {
 
-const char *Vjassdoc::version = "0.2.4";
+const char *Vjassdoc::version = "0.3";
 #ifdef UNIX
 const char *Vjassdoc::dirSeparator = "/";
 #elif defined WIN32
 const char *Vjassdoc::dirSeparator = "\\\\";
 #else
 #error You have to define UNIX or WIN32.
+#endif
+#ifdef SQLITE
+bool Vjassdoc::supportsDatabaseCreation = true;
+#else
+bool Vjassdoc::supportsDatabaseCreation = false;
 #endif
 Parser *Vjassdoc::parser = 0;
 bool Vjassdoc::jass;
@@ -52,12 +58,13 @@ bool Vjassdoc::alphabetical;
 bool Vjassdoc::parseObjectsOfList[Parser::MaxLists];
 std::string Vjassdoc::title;
 std::string Vjassdoc::dir;
-std::list<std::string> *Vjassdoc::importDirs = 0;
-std::list<std::string> *Vjassdoc::filePaths = 0;
+std::list<std::string> Vjassdoc::importDirs = std::list<std::string>();
+std::list<std::string> Vjassdoc::filePaths = std::list<std::string>();
+std::list<std::string> Vjassdoc::databases = std::list<std::string>();
 unsigned int Vjassdoc::lines = 0;
 unsigned int Vjassdoc::files = 0;
 
-void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> *importDirs, std::list<std::string> *filePaths)
+void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
 {
 	Vjassdoc::jass = jass;
 	Vjassdoc::debug = debug;
@@ -77,6 +84,7 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	Vjassdoc::dir = dir;
 	Vjassdoc::importDirs = importDirs;
 	Vjassdoc::filePaths = filePaths;
+	Vjassdoc::databases = databases;
 
 	Vjassdoc::lines = 0;
 	Vjassdoc::files = 0;
@@ -94,12 +102,40 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	
 #ifdef UNIX
 		if (verbose)
-			std::cout << _("UNIX mode was detected.") << std::endl;
+			std::cout << _("UNIX mode has been detected.") << std::endl;
 #elif defined WIN32
 		if (verbose)
-			std::cout << _("Win32 mode was detected.") << std::endl;
+			std::cout << _("Win32 mode has been detected.") << std::endl;
 #else
 #error You have to define UNIX or WIN32.
+#endif
+
+	std::cout << "Before initialization." << std::endl;
+	Object::initClass();
+	Comment::initClass();
+	Keyword::initClass();
+	TextMacro::initClass();
+	TextMacroInstance::initClass();
+	Type::initClass();
+	Global::initClass();
+	Member::initClass();
+	Parameter::initClass();
+	FunctionInterface::initClass();
+	Function::initClass();
+	Method::initClass();
+	Implementation::initClass();
+	Interface::initClass();
+	Struct::initClass();
+	Module::initClass();
+	Scope::initClass();
+	Library::initClass();
+	SourceFile::initClass();
+	DocComment::initClass();
+	std::cout << "After initialization." << std::endl;
+
+#ifdef SQLITE
+	for (std::list<std::string>::const_iterator iterator = databases.begin();  iterator != databases.end(); ++iterator)
+		Vjassdoc::getParser()->addDatabase((*iterator).c_str());
 #endif
 	
 	Vjassdoc::getParser()->parse();
@@ -118,10 +154,6 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	Vjassdoc::parser = 0;
 	Vjassdoc::title.clear();
 	Vjassdoc::dir.clear();
-	delete Vjassdoc::importDirs;
-	Vjassdoc::importDirs = 0;
-	delete Vjassdoc::filePaths;
-	Vjassdoc::filePaths = 0;
 	
 	printf(_("Finished (%d lines, %d files).\n"), lines, files);
 

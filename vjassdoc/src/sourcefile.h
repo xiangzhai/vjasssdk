@@ -29,6 +29,11 @@ namespace vjassdoc
 class SourceFile : public Object
 {
 	public:
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
 		SourceFile(const std::string &identifier, const std::string &path);
 		SourceFile(std::vector<const unsigned char*> &columnVector);
 		virtual void init();

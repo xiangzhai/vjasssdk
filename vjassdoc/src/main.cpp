@@ -108,6 +108,9 @@ TODO set LOCALE_DIR by cmake
 			_("--importdirs <args>         <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
 			_("--files <args>              <args> has to be replaced by the files which should be parsed.\n") <<
 			_("--dir <arg>                 <arg> has to be replaced by the output directory path.\n") <<
+#ifdef SQLITE			
+			_("--databases <args>          <args> has to be replaced by the SQLite databases which should be added to the output.\n") <<
+#endif
 			_("\nReport bugs to tamino@cdauth.de") <<
 			std::endl;
 
@@ -141,6 +144,7 @@ TODO set LOCALE_DIR by cmake
 		"--notypes",
 		"--noglobals",
 		"--nomembers",
+		"--noparameters",
 		"--nofunctioninterfaces",
 		"--nofunctions",
 		"--nomethods",
@@ -172,14 +176,17 @@ TODO set LOCALE_DIR by cmake
 		true,
 		true,
 		true,
+		true,
 		true
 	};
 	std::string title;
 	std::string dir;
 	bool needImportDirs = false;
-	bool needFileDirs = false;
-	std::list<std::string> *importDirs = new std::list<std::string>;
-	std::list<std::string> *filePaths = new std::list<std::string>;
+	bool needFilePaths = false;
+	bool needDatabases = false;
+	std::list<std::string> importDirs;
+	std::list<std::string> filePaths;
+	std::list<std::string> databases;
 
 	for (int i = 1; i < argc; ++i)
 	{
@@ -304,14 +311,24 @@ TODO set LOCALE_DIR by cmake
 		}
 		else if (strcmp(argv[i], "--importdirs") == 0)
 		{
-			needFileDirs = false;
+			needFilePaths = false;
+			needDatabases = false;
 			needImportDirs = true;
 		}
 		else if (strcmp(argv[i], "--files") == 0)
 		{
 			needImportDirs = false;
-			needFileDirs = true;
+			needDatabases = false;
+			needFilePaths = true;
 		}
+#ifdef SQLITE
+		else if (strcmp(argv[i], "--databases") == 0)
+		{
+			needImportDirs = false;
+			needFilePaths = false;
+			needDatabases = true;
+		}
+#endif
 		else if (strcmp(argv[i], "--dir") == 0)
 		{
 			if (i == argc - 1)
@@ -325,11 +342,43 @@ TODO set LOCALE_DIR by cmake
 		}
 		else if (needImportDirs)
 		{
-			importDirs->push_back(argv[i]);
+			for (std::list<std::string>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
+			{
+				if (*iterator == argv[i])
+				{
+					fprintf(stderr, _("Import directory path \"%s\" has already been added to list.\n"), argv[i]);
+					continue;
+				}
+			}
+
+			importDirs.push_back(argv[i]);
 		}
-		else if (needFileDirs)
+		else if (needFilePaths)
 		{
-			filePaths->push_back(argv[i]);
+			for (std::list<std::string>::const_iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
+			{
+				if (*iterator == argv[i])
+				{
+					fprintf(stderr, _("File path \"%s\" has already been added to list.\n"), argv[i]);
+					continue;
+				}
+			}
+
+			std::cout << "Add file path " << argv[i] << std::endl;
+			filePaths.push_back(argv[i]);
+		}
+		else if (needDatabases)
+		{
+			for (std::list<std::string>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
+			{
+				if (*iterator == argv[i])
+				{
+					fprintf(stderr, _("Database \"%s\" has already been added to list.\n"), argv[i]);
+					continue;
+				}
+			}
+
+			databases.push_back(argv[i]);
 		}
 		else
 		{
@@ -353,7 +402,7 @@ TODO set LOCALE_DIR by cmake
 		}
 	}
 
-	if (filePaths->size() == 0)
+	if (filePaths.size() == 0)
 	{
 		std::cerr << _("Missing file arguments.") << std::endl;
 		return EXIT_FAILURE;
@@ -365,7 +414,7 @@ TODO set LOCALE_DIR by cmake
 	if (title.empty())
 		title = _("vJass API Documentation");
 	
-	Vjassdoc::run(jass, debug, parsePrivate, textmacros, html, pages, specialPages, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths);
+	Vjassdoc::run(jass, debug, parsePrivate, textmacros, html, pages, specialPages, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
 
 	return EXIT_SUCCESS;
 }

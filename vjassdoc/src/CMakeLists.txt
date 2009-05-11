@@ -8,6 +8,7 @@ set(LIB_SRC
 	type.cpp
 	global.cpp
 	member.cpp
+	parameter.cpp
 	functioninterface.cpp
 	function.cpp
 	method.cpp
@@ -37,6 +38,7 @@ set(HEADERS
 	functioninterface.h
 	function.h
 	method.h
+	paramter.h
 	implementation.h
 	interface.h
 	struct.h

@@ -47,8 +47,18 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * HTML file output language should be selectable.
 * . separator should by detected by findValue().
 * Text macros and text macro instances won't be listed on library and probably not on scope pages, too.
-* Add support for compiler flag DATABASE.
-* Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
+* DONE: Add support for compiler flag DATABASE.
+* DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
+
+2009-05-03 Tamino Dauth <tamino@cdauth.de>
+* Check out the Parameter class!
+
+2009-05-01 Tamino Dauth <tamino@cdauth.de>
+* DONE: Add static init methods to all Object child classes which connecting the static string members.
+* DISCARDED: Add class Requirement which represents a single library requirement.
+
+2009-04-29 Tamino Dauth <tamino@cdauth.de>
+* Output language should be selectable.
 
 2009-04-17 Tamino Dauth <tamino@cdauth.de>
 * DONE: Improve operator support for expressions like method operator bla (thanks to Vexorian who discovered and reported this bug).
@@ -57,7 +67,7 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 2009-04-15 Tamino Dauth <tamino@cdauth.de>
 * DONE: Add module support.
 * Add thistype and super support when searching for members or methods.
-* Show implemented modules on struct or interface pages.
+* DONE: Show implemented modules on struct or interface pages.
 
 Notes:
 * Parser is not created while parsing all files (note that you have to separate the parsing process into a single method).

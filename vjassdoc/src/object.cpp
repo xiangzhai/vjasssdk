@@ -33,7 +33,19 @@
 namespace vjassdoc
 {
 
+unsigned int Object::sqlColumns;
+std::string Object::sqlColumnStatement;
 int Object::maxIds = 0;
+
+void Object::initClass()
+{
+	Object::sqlColumns = 4;
+	Object::sqlColumnStatement =
+	"Identifier VARCHAR(255),"
+	"SourceFile INT,"
+	"Line INT,"
+	"DocComment INT";
+}
 
 std::string Object::sqlFilteredString(const std::string &usedString)
 {
@@ -141,8 +153,12 @@ bool Object::IsInLibrary::operator()(const class Object *thisObject, const class
 
 bool Object::hasToSearchValueObject(class Object *type, const std::string &expression)
 {
+	std::cout << "Has to search with expression " << expression << " and type " << type << std::endl;
+
 	if (type == 0)
 		return false;
+
+	std::cout << "type name " << type->identifier() << std::endl;
 
 	if (dynamic_cast<class Type*>(type) != 0)
 	{
@@ -205,9 +221,12 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 
 	if (!valueExpression.empty())
 	{
+		std::cout << "Before has to search." << std::endl;
+		
 		//FIXME The value can be a function or method call with literal arguments.
 		if (Object::hasToSearchValueObject(type, valueExpression))
 		{
+			std::cout << "Has to search!" << std::endl;
 			//FIXME Detect . separators correctly.
 			class Object *valueContainer = 0;
 			std::string::size_type separatorPosition = valueExpression.find('.');
@@ -265,50 +284,42 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 			
 			if (functionCall)
 			{
+				std::cout << "Is function call " << std::endl;
+				
+				//methods only
 				if (valueContainer != 0)
 				{
-					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Functions, Object::IsInContainer());
-					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Functions, Parser::Unspecified);
-					
-					if (value == 0)
-					{
-						list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Methods, Object::IsInContainer());
-						value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Methods, Parser::Unspecified);
-					}
+					std::cout << "with value container." << std::endl;
+					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Methods, Object::IsInContainer());
+					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Unspecified);
 				}
+				//functions only
 				else
 				{
+					std::cout << "Has no container " << std::endl;
 					value = this->searchObjectInList(newExpression, Parser::Functions);
-			
-					if (value == 0)
-						value = this->searchObjectInList(newExpression, Parser::Methods);
+					//std::cout << "Value = " << value << std::endl;
 				}
 			}
 			else
 			{
+				//members only
 				if (valueContainer != 0)
 				{
-					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Globals, Object::IsInContainer());
-					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Globals, Parser::Unspecified);
-					
-					if (value == 0)
-					{
-						std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Members, Object::IsInContainer());
-						value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Members, Parser::Unspecified);
-					}
+
+					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Members, Object::IsInContainer());
+					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Unspecified);
 				}
+				//globals only
 				else
-				{
 					value = this->searchObjectInList(newExpression, Parser::Globals);
-					
-					if (value == 0)
-						value = this->searchObjectInList(newExpression, Parser::Members);
-				}
 			}
 			
 			if (position == std::string::npos && value == 0)
 				valueExpression.clear();
 		}
+		else
+			std::cout << "has not to search" << std::endl;
 	}
 	else
 		valueExpression = '-';
