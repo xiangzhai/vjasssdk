@@ -1,0 +1,23 @@
+Current script version is not stable yet!
+
+This is the Jass and vJass script part of the vjasssdk
+consisting of many useful files.
+It's called "Advanced Script Library" or ASL.
+It contains some useful systems which can be used for creating your own cool project.
+Help me to find bugs and give me suggestions on http://www.inwarcraft.de/ or by e-mail:
+tamino.dauth@web.de
+
+I moved the scripts into extern text files because I'm working on a Linux system and the trigger
+editor is very bugged if you use it by wine.
+Use the "Import Asl.j" file to import the scripts.
+Usually you have to change the lookup folder entry in the "jasshelper.conf" file of your JassHelper
+program before.
+The JassHelper has to lookup this folder.
+Aside from you have to use the fpscommon.j file since the ASL is able to support the FPS mod
+(http://www.hiveworkshop.com/forums/f567/).
+For using the object data you have to make an entry in the "jasshelper.conf" file for
+the object merger tool.
+It should be named OBJMERGE.
+Note that many parts of the ASL are not finished yet.
+
+Tamino Dauth <tamino@cdauth.de>, 2009-04-25

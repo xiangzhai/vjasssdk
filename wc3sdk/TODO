@@ -1,0 +1,56 @@
+2009-05-11 Tamino Dauth <tamino@cdauth.de>
+* Added static method channelCondition to struct ASpell.
+
+2009-05-08 Tamino Dauth <tamino@cdauth.de>
+* Missing functions SetTerrainFogForPlayer and SetTerrainFogExForPlayer?
+
+2009-04-09 Tamino Dauth <tamino@cdauth.de>
+* AInventory: Unit orders for moving items aren't received.
+* AInventory: Equipment is not placed in rucksack if you've already equip an item of the same equipment type.
+* FIXED: AInventory: Attributes should always be the same (if you open your rucksack).
+* AInventory: Change rucksack page items aren't usable.
+* ACharacterScheme: Add a separator field between hit points and mana bar.
+* ASpell: Cast actions will stop when user calls TriggerSleepAction().
+
+2009-04-08 Tamino Dauth <tamino@cdauth.de>
+* Add member m_ prefix and rename get methods.
+* Main window is not created correctly.
+
+2009-04-05 Tamino Dauth <tamino@cdauth.de>
+* Add log functionality to talk system for AInfo instances.
+* Fix revival timer function call.
+* Fix talk trigger sleep function.
+* Fix name display in character scheme.
+* Maybe add preloadMusic() function since music loading often laggs in game.
+* Quest pings should be displayed at the same time (maybe use only one ping trigger for all).
+
+Tamino Dauth <tamino@cdauth.de>
+* Abstract quest id won't be attached correctly on its state trigger.
+* First speech of talks will be displayed but the wait time will be ignored (Executions are right)!
+* Rucksack page items can not be equipped.
+* bj_MAX_PLAYERS an manchen Stellen durch eine Funktion ersetzen, die die maximale Spieleranzahl der jeweiligen Karte zurückgibt.
+* Test the important talk speech and the normal talk speech (There are several problems with using TriggerSleepActions in action executions).
+* Videos should be stopped immediatly (stop execution if it is possible).
+* Character selection select action should be called (probably it is causing many bugs).
+* InsertLineBreaks is bugged! When it is debugged use it in Gui.showInfoDialog()!
+* Since there is gexxo's FirstOfGroupSave() function you have to replace all FirstOfGroup() calls which are used on groups which contain units which can be removed during the game.
+* Rename all model files into English.
+* Check size member of AContainer struct.
+* FIXED: Missing many grassland model files?!
+
+Notes:
+* When you use a talk button, the action of the button won't be runned and it does not wait for finishing the transmission.
+* The save bug (Undefined type nothinng) was caused by the fpscommon.j.
+* Man muss jedes Mal MultiboardGetItem erneut aufrufen, dann etwas ändern (Es gehen auch mehrere Dinge) und dann MultiboardReleaseItem aufrufen.
+* The TriggerSleepAction function does not work in executions. That's the reason for some bugs in ATalk and AVideo.
+* Der Video wurde automatisch übersprungen, da die Bedingung dem Auslöser nicht hinzugefügt wurde.
+* %s or something similar could crash Warcraft if you placed it in the custom script section.
+* Methods are often called by TriggerEvaluate:
+Methods are different to normal functions in that they can be called from any place (except global declarations)
+and that you are not necessarily able to use waits, sync natives or GetTriggeringTrigger() inside them
+(but you may use any other event response), you might be able to use them but it depends on various factors,
+it is not recommended to use them at all. In next versions the compiler might even raise a syntax error when
+it finds them.
+I should probably extend stuff, if you call a method from above its declaration,
+it is called with TriggerEvaluate, also if you make a method virtual
+(that is, the method comes from an interface or is a stub method)
