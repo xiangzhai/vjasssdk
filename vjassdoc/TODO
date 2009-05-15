@@ -50,6 +50,9 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add support for compiler flag DATABASE.
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-05-14 Tamino Dauth <tamino@cdauth.de>
+* Check out text macro space parsing! Program seems to crash.
+
 2009-05-03 Tamino Dauth <tamino@cdauth.de>
 * Check out the Parameter class!
 

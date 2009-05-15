@@ -43,14 +43,16 @@ bool Vjassdoc::supportsDatabaseCreation = true;
 #else
 bool Vjassdoc::supportsDatabaseCreation = false;
 #endif
-Parser *Vjassdoc::parser = 0;
+class Parser *Vjassdoc::parser = 0;
 bool Vjassdoc::jass;
 bool Vjassdoc::debug;
 bool Vjassdoc::privateSpace;
+bool Vjassdoc::functions;
 bool Vjassdoc::textmacros;
 bool Vjassdoc::html;
 bool Vjassdoc::pages;
 bool Vjassdoc::specialPages;
+bool Vjassdoc::syntax;
 bool Vjassdoc::database;
 bool Vjassdoc::verbose;
 bool Vjassdoc::time;
@@ -64,15 +66,17 @@ std::list<std::string> Vjassdoc::databases = std::list<std::string>();
 unsigned int Vjassdoc::lines = 0;
 unsigned int Vjassdoc::files = 0;
 
-void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
+void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
 {
 	Vjassdoc::jass = jass;
 	Vjassdoc::debug = debug;
 	Vjassdoc::privateSpace = privateSpace;
 	Vjassdoc::textmacros = textmacros;
+	Vjassdoc::functions = functions;
 	Vjassdoc::html = html;
 	Vjassdoc::pages = pages;
 	Vjassdoc::specialPages = specialPages;
+	Vjassdoc::syntax = syntax;
 	Vjassdoc::database = database;
 	Vjassdoc::verbose = verbose;
 	Vjassdoc::alphabetical = alphabetical;
@@ -117,6 +121,7 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	TextMacro::initClass();
 	TextMacroInstance::initClass();
 	Type::initClass();
+	Local::initClass();
 	Global::initClass();
 	Member::initClass();
 	Parameter::initClass();

@@ -21,33 +21,37 @@
 #include <sstream>
 
 #include "objects.h"
+#include "vjassdoc.h"
 #include "internationalisation.h"
 
 namespace vjassdoc
 {
 
-const char *Parameter::sqlTableName = "Parameters";
-unsigned int Parameter::sqlColumns;
-std::string Parameter::sqlColumnStatement;
+const char *Local::sqlTableName = "Locals";
+unsigned int Local::sqlColumns;
+std::string Local::sqlColumnStatement;
 
-void Parameter::initClass()
+void Local::initClass()
 {
-	Parameter::sqlColumns = Object::sqlColumns + 3;
-	Parameter::sqlColumnStatement = Object::sqlColumnStatement +
-	",FunctionInterface INT,"
-	"TypeExpression VARCHAR(50),"
-	"Type INT";
+	Local::sqlColumns = Object::sqlColumns + 4;
+	Local::sqlColumnStatement = Object::sqlColumnStatement +
+	",Function INT,"
+	"Type INT,"
+	"Value INT,"
+	"ValueExpression VARCHAR(50)"
+	;
 }
 
-Parameter::Parameter(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class FunctionInterface *functionInterface, const std::string &typeExpression) : Object(identifier, sourceFile, line, docComment), m_functionInterface(functionInterface), m_typeExpression(typeExpression), m_type(0)
-{
-}
-
-Parameter::Parameter(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Local::Local(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Function *function, const std::string &typeExpression, const std::string &valueExpression) : Object(identifier, sourceFile, line, docComment), m_function(function), m_type(0), m_typeExpression(typeExpression), m_value(0), m_valueExpression(valueExpression)
 {
 }
 
-void Parameter::init()
+Local::Local(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+{
+}
+
+/// @todo Value expressions can be calculations etc..
+void Local::init()
 {
 	//Must not be empty.
 	this->m_type = this->searchObjectInList(this->typeExpression(), Parser::Types);
@@ -60,19 +64,22 @@ void Parameter::init()
 	
 	if (this->m_type != 0)
 		this->m_typeExpression.clear();
+	
+	this->m_value = this->findValue(this->type(), this->m_valueExpression);
 }
 
-void Parameter::pageNavigation(std::ofstream &file) const
+void Local::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Function Interface\">"	<< _("Function Interface") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Function\">"		<< _("Function") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Type\">"		<< _("Type") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Value\">"		<< _("Value") << "</a></li>\n"
 	;
 }
 
-void Parameter::page(std::ofstream &file) const
+void Local::page(std::ofstream &file) const
 {
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
@@ -81,21 +88,36 @@ void Parameter::page(std::ofstream &file) const
 	<< "\t\t</p>\n"
 	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
-	<< "\t\t<h2><a name=\"Function Interface\">" << _("Function Interface") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->functionInterface()) << "\n"
+	<< "\t\t<h2><a name=\"Function\">" << _("Function") << "</a></h2>\n"
+	<< "\t\t" << Object::objectPageLink(this->function()) << "\n"
 	<< "\t\t<h2><a name=\"Type\">" << _("Type") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->type(), this->typeExpression()) << "\n"
+	<< "\t\t" << Object::objectPageLink(this->type(), this->typeExpression()) << '\n'
+	<< "\t\t<h2><a name=\"Value\">" << _("Value") << "</a></h2>\n"
 	;
+	
+	if (this->valueExpression().empty() || this->valueExpression() == "-")
+		file << "\t\t" << Object::objectPageLink(this->value(), this->valueExpression()) << '\n';
+	else
+	{
+		file << "\t\t";
+		
+		if (this->value() != 0)
+			file << Object::objectPageLink(this->value());
+		
+		file << "\t\t" << this->valueExpression() << '\n';
+	}
 }
 
-std::string Parameter::sqlStatement() const
+std::string Local::sqlStatement() const
 {
 	std::ostringstream sstream;
 	sstream
 	<< Object::sqlStatement() << ", "
-	<< "FunctionInterface=" << Object::objectId(this->functionInterface()) << ", "
-	<< "TypeExpression=" << this->typeExpression() << ", "
-	<< "Type=" << Object::objectId(this->type());
+	<< "Function=" << Object::objectId(this->function()) << ", "
+	<< "Type=" << Object::objectId(this->type()) << ", "
+	<< "Value=" << Object::objectId(this->value()) << ", "
+	<< "ValueExpression=\"" << Object::sqlFilteredString(this->valueExpression()) << "\""
+	;
 	
 	return sstream.str();
 }

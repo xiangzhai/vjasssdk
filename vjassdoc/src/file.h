@@ -35,6 +35,8 @@ class Library;
 class Scope;
 class Interface;
 class Struct;
+class Module;
+class Function;
 
 class File
 {
@@ -50,6 +52,17 @@ class File
 			EndfunctionExpression,
 			GlobalsExpression,
 			EndglobalsExpression,
+			LocalExpression,
+			SetExpression,
+			CallExpression,
+			IfExpression,
+			ElseExpression,
+			ElseifExpression,
+			EndifExpression,
+			ReturnExpression,
+			LoopExpression,
+			EndloopExpression,
+			ExitwhenExpression,
 			//vJass stand-alone expressions
 			PreprocessorExpression,
 			MethodExpression, //Operator is not required because the syntax is "method operator..."
@@ -138,6 +151,7 @@ class File
 		void getInterface(const std::string &line, unsigned int &index, bool isPrivate);
 		void getStruct(const std::string &line, unsigned int &index, bool isPrivate);
 		void getModule(const std::string &line, unsigned int &index, bool isPrivate);
+		void getLocal(const std::string &line, unsigned int &index);
 		std::string removeFirstSpace(const std::string &line, unsigned int index) const;
 		std::string getTextMacroArguments(const std::string &line, unsigned int &index) const;
 		std::list<std::string>* getLibraryRequirement(const std::string &line, unsigned int &index) const;
@@ -146,7 +160,7 @@ class File
 
 		const std::string filePath;
 
-		Expression notRequiredSpace;
+		File::Expression notRequiredSpace;
 		bool isInGlobals;
 		bool isInLibrary;
 		bool isInScope;
@@ -162,6 +176,7 @@ class File
 		class Interface *currentInterface;
 		class Struct *currentStruct;
 		class Module *currentModule;
+		class Function *currentFunction;
 
 		bool gotDocComment;
 

@@ -75,6 +75,7 @@ TODO set LOCALE_DIR by cmake
 			_("-d --debug                  Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
 			_("--private                   Private objects will be parsed.\n") <<
 			_("-m --textmacros             Code between text macro statements will be parsed.\n") <<
+			_("--functions                 Code between function/method statements will be parsed.\n") <<
 			_("--no<object type name>      Objects of type <object type name> won't added to the output files.\n") <<
 			_("                            The following object type names are available:\n") <<
 			_("                            comments\n") <<
@@ -82,6 +83,7 @@ TODO set LOCALE_DIR by cmake
 			_("                            textmacros\n") <<
 			_("                            textmacroinstances\n") <<
 			_("                            types\n") <<
+			_("                            locals\n") <<
 			_("                            globals\n") <<
 			_("                            members\n") <<
 			_("                            functioninterfaces\n") <<
@@ -98,6 +100,7 @@ TODO set LOCALE_DIR by cmake
 			_("-h --html                   Program creates a simple HTML API documentation.\n") <<
 			_("-p --pages                  Program creates an HTML file for each parsed object.\n") <<
 			_("-s --specialpages           Program creates additional HTML files containing more information about all parsed objects.\n") <<
+			_("--syntax                    Program checks syntax. Not implemented yet!\n") <<
 #ifdef SQLITE
 			_("-b --database               Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
 #endif
@@ -128,9 +131,11 @@ TODO set LOCALE_DIR by cmake
 	bool debug = false;
 	bool parsePrivate = false;
 	bool textmacros = false;
+	bool functions = false;
 	bool html = false;
 	bool pages = false;
 	bool specialPages = false;
+	bool syntax = false;
 	bool database = false;
 	bool verbose = false;
 	bool time = false;
@@ -142,6 +147,7 @@ TODO set LOCALE_DIR by cmake
 		"--notextmacros",
 		"--notextmacroinstances",
 		"--notypes",
+		"--nolocals",
 		"--noglobals",
 		"--nomembers",
 		"--noparameters",
@@ -159,6 +165,7 @@ TODO set LOCALE_DIR by cmake
 	};
 	bool parseObjectsOfList[Parser::MaxLists] =
 	{
+		true,
 		true,
 		true,
 		true,
@@ -268,6 +275,10 @@ TODO set LOCALE_DIR by cmake
 		{
 			textmacros = true;
 		}
+		else if (strcmp(argv[i], "--functions") == 0)
+		{
+			functions = true;
+		}
 		else if (strcmp(argv[i], "--html") == 0)
 		{
 			html = true;
@@ -279,6 +290,10 @@ TODO set LOCALE_DIR by cmake
 		else if (strcmp(argv[i], "--specialpages") == 0)
 		{
 			specialPages = true;
+		}
+		else if (strcmp(argv[i], "--syntax") == 0)
+		{
+			syntax = true;
 		}
 #ifdef SQLITE
 		else if (strcmp(argv[i], "--database") == 0)
@@ -413,8 +428,8 @@ TODO set LOCALE_DIR by cmake
 
 	if (title.empty())
 		title = _("vJass API Documentation");
-	
-	Vjassdoc::run(jass, debug, parsePrivate, textmacros, html, pages, specialPages, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
+
+	Vjassdoc::run(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
 
 	return EXIT_SUCCESS;
 }

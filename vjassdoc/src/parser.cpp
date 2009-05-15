@@ -43,6 +43,7 @@ const char *Parser::title[Parser::MaxLists] =
 	_("Text Macros"),
 	_("Text Macro Instances"),
 	_("Types"),
+	_("Locals"),
 	_("Globals"),
 	_("Members"),
 	_("Parameters"),
@@ -751,6 +752,9 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 		case Parser::Types:
 			return reinterpret_cast<std::list<class Object*>& >(this->typeList);
 
+		case Parser::Locals:
+			return reinterpret_cast<std::list<class Object*>& >(this->localList);
+
 		case Parser::Globals:
 			return reinterpret_cast<std::list<class Object*>& >(this->globalList);
 
@@ -838,6 +842,9 @@ std::string Parser::getTableName(const enum Parser::List &list)
 		case Parser::Types:
 			return Type::sqlTableName;
 
+		case Parser::Locals:
+			return Local::sqlTableName;
+
 		case Parser::Globals:
 			return Global::sqlTableName;
 
@@ -904,6 +911,9 @@ unsigned int Parser::getTableColumns(const enum Parser::List &list)
 
 		case Parser::Types:
 			return Type::sqlColumns;
+
+		case Parser::Locals:
+			return Local::sqlColumns;
 
 		case Parser::Globals:
 			return Global::sqlColumns;
@@ -982,6 +992,11 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 		case Parser::Types:
 			result +=
 			Type::sqlColumnStatement;
+			break;
+
+		case Parser::Locals:
+			result +=
+			Local::sqlColumnStatement;
 			break;
 
 		case Parser::Globals:
@@ -1085,6 +1100,10 @@ class Object* Parser::addObjectByColumnVector(const enum Parser::List &list, std
 
 		case Parser::Types:
 			this->add(new Type(columnVector));
+			break;
+
+		case Parser::Locals:
+			this->add(new Local(columnVector));
 			break;
 
 		case Parser::Globals:

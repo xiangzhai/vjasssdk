@@ -37,6 +37,7 @@ class Keyword;
 class TextMacro;
 class TextMacroInstance;
 class Type;
+class Local;
 class Global;
 class Member;
 class Parameter;
@@ -72,6 +73,7 @@ class Parser
 			TextMacros,
 			TextMacroInstances,
 			Types,
+			Locals,
 			Globals,
 			Members,
 			Parameters,
@@ -124,6 +126,7 @@ class Parser
 		void add(class TextMacro *textMacro);
 		void add(class TextMacroInstance *textMacroInstance);
 		void add(class Type *type);
+		void add(class Local *local);
 		void add(class Global *global);
 		void add(class Member *member);
 		void add(class Parameter *parameter);
@@ -184,6 +187,7 @@ class Parser
 		std::list<class TextMacro*> textMacroList;
 		std::list<class TextMacroInstance*> textMacroInstanceList;
 		std::list<class Type*> typeList;
+		std::list<class Local*> localList;
 		std::list<class Global*> globalList;
 		std::list<class Member*> memberList;
 		std::list<class Parameter*> parameterList;
@@ -227,6 +231,11 @@ inline void Parser::add(class TextMacroInstance *textMacroInstance)
 inline void Parser::add(class Type *type)
 {
 	this->typeList.push_back(type);
+}
+
+inline void Parser::add(class Local *local)
+{
+	this->localList.push_back(local);
 }
 
 inline void Parser::add(class Global *global)

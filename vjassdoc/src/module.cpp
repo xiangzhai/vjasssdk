@@ -43,39 +43,11 @@ Module::Module(const std::string &identifier, class SourceFile *sourceFile, unsi
 void Module::pageNavigation(std::ofstream &file) const
 {
 	Interface::pageNavigation(file);
-	file
-	<< "\t\t\t<li><a href=\"#Implementations\">"	<< _("Implementations") << "</a></li>\n"
-	;
 }
 
 void Module::page(std::ofstream &file) const
 {
 	Interface::page(file);
-	file
-	<< "\t\t<h2><a name=\"Implementations\">" << _("Implementations") << "</a></h2>\n";
-	std::list<class Object*> implementationList = Vjassdoc::getParser()->getSpecificList(this, Parser::Implementations, Implementation::UsesModule());
-	
-	if (!implementationList.empty())
-	{
-		file << "\t\t<ul>\n";
-	
-		for (std::list<class Object*>::iterator iterator = implementationList.begin(); iterator != implementationList.end(); ++iterator)
-		{
-			class Implementation *implementation = static_cast<class Implementation*>(*iterator);
-		
-			file << "\t\t\t<li>";
-			
-			if (implementation->isOptional())
-				file << "optional ";
-			
-			file <<  Object::objectPageLink(implementation->container()) << " - " << Object::objectPageLink(implementation);
-			file << "</li>\n";
-		}
-		
-		file << "\t\t</ul>\n";
-	}
-	else
-		file << "\t\t-\n";
 }
 
 }

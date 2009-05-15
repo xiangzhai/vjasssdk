@@ -38,15 +38,17 @@ class Vjassdoc
 		static const char *dirSeparator;
 		static bool supportsDatabaseCreation;
 
-		static void run(bool jass, bool debug, bool privateSpace, bool textmacros, bool html, bool pages, bool specialPages, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases);
+		static void run(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases);
 		static class Parser* getParser();
 		static bool jassOnly();
 		static bool useDebugMode();
 		static bool parsePrivateSpace();
 		static bool parseTextMacroSpace();
+		static bool parseFunctionSpace();
 		static bool saveAsHtml();
 		static bool createPages();
 		static bool createSpecialPages();
+		static bool checkSyntax();
 		static bool createDatabase();
 		static bool showVerbose();
 		static bool sortAlphabetically();
@@ -70,9 +72,11 @@ class Vjassdoc
 		static bool debug;
 		static bool privateSpace;
 		static bool textmacros;
+		static bool functions;
 		static bool html;
 		static bool pages;
 		static bool specialPages;
+		static bool syntax;
 		static bool database;
 		static bool verbose;
 		static bool time;
@@ -116,6 +120,11 @@ inline bool Vjassdoc::parseTextMacroSpace()
 	return Vjassdoc::textmacros;
 }
 
+inline bool Vjassdoc::parseFunctionSpace()
+{
+	return Vjassdoc::functions;
+}
+
 inline bool Vjassdoc::saveAsHtml()
 {
 	return Vjassdoc::html;
@@ -129,6 +138,11 @@ inline bool Vjassdoc::createPages()
 inline bool Vjassdoc::createSpecialPages()
 {
 	return Vjassdoc::specialPages;
+}
+
+inline bool Vjassdoc::checkSyntax()
+{
+	return Vjassdoc::syntax;
 }
 
 inline bool Vjassdoc::createDatabase()

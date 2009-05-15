@@ -348,6 +348,24 @@ library.s:
 .PHONY : library.s
 
 # target to build an object file
+local.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/local.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/local.o
+.PHONY : local.o
+
+# target to preprocess a source file
+local.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/local.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/local.i
+.PHONY : local.i
+
+# target to generate assembly for a file
+local.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/local.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/local.s
+.PHONY : local.s
+
+# target to build an object file
 main.o:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/main.o
 .PHONY : main.o
@@ -640,6 +658,9 @@ help:
 	@echo "... library.o"
 	@echo "... library.i"
 	@echo "... library.s"
+	@echo "... local.o"
+	@echo "... local.i"
+	@echo "... local.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

@@ -28,6 +28,7 @@
 #include "textmacro.h"
 #include "textmacroinstance.h"
 #include "type.h"
+#include "local.h"
 #include "global.h"
 #include "member.h"
 #include "parameter.h"

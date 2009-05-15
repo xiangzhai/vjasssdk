@@ -7,6 +7,7 @@ set(LIB_SRC
 	textmacroinstance.cpp
 	type.cpp
 	global.cpp
+	local.cpp
 	member.cpp
 	parameter.cpp
 	functioninterface.cpp
@@ -33,6 +34,7 @@ set(HEADERS
 	textmacro.h
 	textmacroinstance.h
 	type.h
+	local.h
 	global.h
 	member.h
 	functioninterface.h
