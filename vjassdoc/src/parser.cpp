@@ -240,12 +240,34 @@ void Parser::createInheritanceListPage()
 	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
 	<< "\t\t<h1>" << _("Inheritance List") << "</h1>\n"
 	<< "\t\t<ul>\n"
+	<< "\t\t\t<li><a href=\"#Interfaces\">"	<< _("Interfaces") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Structs\">"	<< _("Structs") << "</a></li>\n"
+	<< "\t\t</ul>\n"
+	<< "\t\t<h2><a name=\"Interfaces\">" << _("Interfaces") << "</a></h2>\n"
+	<< "\t\t<ul>\n"
 	;
 
 	for (std::list<class Interface*>::iterator iterator = this->interfaceList.begin(); iterator != this->interfaceList.end(); ++iterator)
 	{
-		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << "<li>\n";
-		this->getStructInheritanceList(*iterator, "\t\t\t", sstream);
+		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
+		this->getStructInheritanceList(*iterator, "\t\t\t\t", sstream);
+		sstream << "\t\t\t</li>\n";
+	}
+
+	sstream
+	<< "\t\t</ul>\n"
+	<< "\t\t<h2><a name=\"Structs\">" << _("Structs") << "</a></h2>\n"
+	<< "\t\t<ul>\n"
+	;
+
+	for (std::list<class Struct*>::iterator iterator = this->structList.begin(); iterator != this->structList.end(); ++iterator)
+	{
+		if ((*iterator)->extension() == 0)
+		{
+			sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
+			this->getStructInheritanceList(*iterator, "\t\t\t\t", sstream);
+			sstream << "\t\t\t</li>\n";
+		}
 	}
 
 	sstream
@@ -274,25 +296,17 @@ void Parser::parse()
 		File file((*iterator)->path());
 	}
 
-	std::cout << "1" << std::endl;
-
 	//objects should be initialized before using them
 	for (int i = 0; i < Parser::MaxLists; ++i)
 	{
 		if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
 			continue;
 
-		std::cout << "2 with list " << i << std::endl;
-
 		std::list<class Object*> list = this->getList(Parser::List(i));
 	
 		for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 			(*iterator)->init();
-
-		std::cout << "finished" << std::endl;
 	}
-
-	std::cout << "2" << std::endl;
 
 	//alphabetical sort
 	if (Vjassdoc::sortAlphabetically())
@@ -308,8 +322,6 @@ void Parser::parse()
 			this->getList(Parser::List(i)).sort(Object::AlphabeticalComparator());
 		}
 	}
-
-	std::cout << "3" << std::endl;
 
 	//create HTML file
 	if (Vjassdoc::saveAsHtml())
@@ -355,10 +367,10 @@ void Parser::parse()
 			sout
 			<< "\t\t\t<li>" << "<a href=\"inheritancelist.html\">" << _("Inheritance List") << "</a></li>\n"
 			<< "\t\t\t<li>" << "<a href=\"#Undocumented Objects\">" << _("Undocumented Objects") << "</a></li>\n"
-			<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
-			<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
-			<< "\t\t\t<li>" << "<a href=\"#States\">" << _("States") << "</a></li>\n"
-			<< "\t\t\t<li>" << "<a href=\"#Sources\">" << _("Sources") << "</a></li>\n"
+			//<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
+			//<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
+			//<< "\t\t\t<li>" << "<a href=\"#States\">" << _("States") << "</a></li>\n"
+			//<< "\t\t\t<li>" << "<a href=\"#Sources\">" << _("Sources") << "</a></li>\n"
 			;
 		}
 		
@@ -375,7 +387,6 @@ void Parser::parse()
 			this->addObjectList(sout, List(i));
 		}
 		
-		/// @todo Test.
 		if (Vjassdoc::createSpecialPages())
 		{
 			this->createInheritanceListPage();
@@ -404,8 +415,6 @@ void Parser::parse()
 			;
 			/// @todo Implement these special pages:
 /*
-			<< "\t\t\t<li>" << "<a href=\"#Inheritance Tree\">" << _("Inheritance Tree") << "</a></li>\n"
-			<< "\t\t\t<li>" << "<a href=\"#Undocumented Objects\">" << _("Undocumented Objects") << "</a></li>\n"
 			<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
 			<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
 			<< "\t\t\t<li>" << "<a href=\"#States\">" << _("States") << "</a></li>\n"
@@ -416,8 +425,6 @@ void Parser::parse()
 		sout
 		<< "\t</body>" << std::endl
 		<< "</html>";
-
-		std::cout << "4" << std::endl;
 	
 		//write output
 		std::ofstream fout((Vjassdoc::getDir() + Vjassdoc::dirSeparator + "index.html").c_str());
@@ -436,7 +443,6 @@ void Parser::parse()
 				
 				for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 				{
-					std::cout << "Create page for object in list " << i << std::endl;
 					std::ostringstream sstream;
 					sstream << Vjassdoc::getDir() << '/' << (*iterator)->id() << ".html";
 					std::ofstream fout(sstream.str().c_str());
@@ -1178,8 +1184,9 @@ void Parser::getStructInheritanceList(const class Interface *extension, const st
 
 	for (std::list<class Object*>::iterator iterator = structList.begin(); iterator != structList.end(); ++iterator)
 	{
-		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << "</li>\n";
-		this->getStructInheritanceList(static_cast<class Interface*>(*iterator), prefix + '\t', sstream);
+		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
+		this->getStructInheritanceList(static_cast<class Interface*>(*iterator), prefix + "\t\t", sstream);
+		sstream << prefix << "\t</li>\n";
 	}
 
 	sstream << prefix << "</ul>\n";

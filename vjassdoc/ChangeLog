@@ -3,6 +3,7 @@
 * Added options --functions and --syntax.
 * Jass keywords local, set, call, if, else, elseif, endif, return, loop, endloop and exitwhen will be detected correctly now.
 * Module methods will pe parsed correctly now.
+* Improved inheritance list page.
 
 2009-05-08 Tamino Dauth <tamino@cdauth.de>
 * Added member supportsDatabaseCreation to class Vjassdoc.
