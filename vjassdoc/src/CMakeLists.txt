@@ -40,7 +40,7 @@ set(HEADERS
 	functioninterface.h
 	function.h
 	method.h
-	paramter.h
+	parameter.h
 	implementation.h
 	interface.h
 	struct.h

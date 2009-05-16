@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> //debug
 #include <sstream>
 
 #include "objects.h"
@@ -33,10 +34,11 @@ std::string Local::sqlColumnStatement;
 
 void Local::initClass()
 {
-	Local::sqlColumns = Object::sqlColumns + 4;
+	Local::sqlColumns = Object::sqlColumns + 5;
 	Local::sqlColumnStatement = Object::sqlColumnStatement +
 	",Function INT,"
 	"Type INT,"
+	"TypeExpression VARCHAR(50),"
 	"Value INT,"
 	"ValueExpression VARCHAR(50)"
 	;
@@ -115,9 +117,12 @@ std::string Local::sqlStatement() const
 	<< Object::sqlStatement() << ", "
 	<< "Function=" << Object::objectId(this->function()) << ", "
 	<< "Type=" << Object::objectId(this->type()) << ", "
+	<< "TypeExpression=\"" << Object::sqlFilteredString(this->typeExpression()) << "\", "
 	<< "Value=" << Object::objectId(this->value()) << ", "
 	<< "ValueExpression=\"" << Object::sqlFilteredString(this->valueExpression()) << "\""
 	;
+	
+	std::cout << "statement: " << sstream.str() << std::endl;
 	
 	return sstream.str();
 }

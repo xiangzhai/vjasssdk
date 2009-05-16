@@ -50,12 +50,10 @@ void Object::initClass()
 std::string Object::sqlFilteredString(const std::string &usedString)
 {
 	std::string result;
-	char character;
-	int i = 0;
 	
-	do
+	for (int i = 0; i < usedString.length(); ++i)
 	{
-		character = usedString[i];
+		char character = usedString[i];
 		
 		switch (character)
 		{
@@ -74,7 +72,6 @@ std::string Object::sqlFilteredString(const std::string &usedString)
 		
 		++i;
 	}
-	while (i != usedString.length());
 
 	return result;
 }
@@ -92,16 +89,29 @@ Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsi
 		docComment->setObject(this);
 }
 
-Object::Object(std::vector<const unsigned char*> &columnVector) : m_container(0), m_scope(0), m_library(0)
+Object::Object(std::vector<const unsigned char*> &columnVector) : m_sourceFile(0), m_docComment(0), m_container(0), m_scope(0), m_library(0)
 {
-	m_id = atoi((const char*)columnVector[0]);
-	m_identifier = (const char*)(columnVector[1]);
+	std::cout << "Test 1 vector size " << columnVector.size() << std::endl;
+
+	this->m_id = atoi((const char*)columnVector[0]);
+	
+	std::cout << "Test 2" << std::endl;
+	
+	if (maxIds <= m_id)
+		maxIds = m_id + 1;
+	
+	this->m_identifier = (const char*)(columnVector[1]);
+	
+	std::cout << "Test 3" << std::endl;
+	
 	//m_sourceFile = columnVector[2]; //TODO By id
-	m_line = atoi((const char*)columnVector[3]);
+	this->m_line = atoi((const char*)columnVector[3]);
 	//m_docComment = columnVector[4]; //TODO By id
 	
+	std::cout << "Test 4" << std::endl;
+	
 	if (m_docComment != 0)
-		m_docComment->setObject(this);
+		this->m_docComment->setObject(this);
 }
 
 Object::~Object()

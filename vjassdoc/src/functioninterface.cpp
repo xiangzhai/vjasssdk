@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> //debug
 #include <sstream>
 
 #include "objects.h"
@@ -53,7 +54,9 @@ void FunctionInterface::initClass()
 
 FunctionInterface::FunctionInterface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_parameters(parameters), m_returnTypeExpression(returnTypeExpression), m_returnType(0)
 {
-	for (std::list<class Parameter*>::const_iterator iterator = parameters.begin(); iterator != parameters.end(); ++iterator)
+	std::cout << "Parameter count = " << parameters.size() << std::endl;
+
+	for (std::list<class Parameter*>::iterator iterator = this->m_parameters.begin(); iterator != this->m_parameters.end(); ++iterator)
 	      (*iterator)->setFunctionInterface(this);
 }
 
@@ -121,10 +124,10 @@ void FunctionInterface::page(std::ofstream &file) const
 	if (!this->parameters().empty())
 	{
 		file << "\t\t<ul>\n";
+		std::list<class Parameter*> list = this->m_parameters;
 
-		/// @todo Memory access error.
-		//for (std::list<class Parameter*>::iterator iterator = this->parameters().begin(); iterator != this->parameters().end(); ++iterator)
-			//;//file << "\t\t\t<li>" << Object::objectPageLink((*iterator)->type(), (*iterator)->typeExpression()) << " - " << Object::objectPageLink(*iterator) << "</li>\n";
+		for (std::list<class Parameter*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
+			file << "\t\t\t<li>" << Object::objectPageLink((*iterator)->type(), (*iterator)->typeExpression()) << " - " << Object::objectPageLink(*iterator) << "</li>\n";
 		
 		file << "\t\t</ul>\n";
 	}
@@ -146,15 +149,22 @@ std::string FunctionInterface::sqlStatement() const
 	<< "Scope=" << Object::objectId(this->scope()) << ", "
 	<< "IsPrivate=" << this->isPrivate() << ", ";
 	int i = 0;
-
-	for (std::list<class Parameter*>::iterator iterator = this->parameters().begin(); iterator != this->parameters().end(); ++iterator)
+	std::list<class Parameter*> list = this->m_parameters;
+	
+	for (std::list<class Parameter*>::iterator iterator = list.begin(); iterator != list.end() && i < 10; ++iterator)
 	{
-	      sstream << "Parameter" << i << "=" << Object::objectId((*iterator)) << ", ";
-	      ++i;
+		std::cout << "Number " << i << std::endl;
+		std::cout << "Adding parameter " << (*iterator)->id() << " with index " << i << std::endl;
+		sstream << "Parameter" << i << "=" << Object::objectId((*iterator)) << ", ";
+		std::cout << "After adding" << std::endl;
+		++i;
 	}
 	
 	for ( ; i < 10; ++i)
+	{
+		std::cout << "Parameter " << i << " is free." << std::endl;
 		sstream << "Parameter" << i << "=-1, ";
+	}
 	
 	sstream << "ReturnType=" << Object::objectId(this->returnType());
 	

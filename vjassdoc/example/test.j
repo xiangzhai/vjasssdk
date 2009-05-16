@@ -70,7 +70,7 @@ endlibrary
 /// @todo Nothing
 library MyLibrary requires AnotherLibrary /// another comment
 	//! textmacro A_MACRO takes TYPE, TYPENAME
-		function A$TYPENAME$Function takes $TYPE$ $TYPENAME$ returns $TYPE
+		function A$TYPENAME$Function takes $TYPE$ $TYPENAME$ returns $TYPE$
 			return $TYPE$
 		endfunction
 	//! endtextmacro

@@ -33,7 +33,7 @@ std::string SourceFile::sqlColumnStatement;
 void SourceFile::initClass()
 {
 	SourceFile::sqlColumns = 2;
-	SourceFile::sqlColumnStatement = Object::sqlColumnStatement +
+	SourceFile::sqlColumnStatement =
 	"Identifier VARCHAR(255),"
 	"Path VARCHAR(255)";
 }
@@ -88,7 +88,7 @@ std::string SourceFile::sqlStatement() const
 {
 	std::ostringstream sstream;
 	sstream
-	<< "Identifier=\"" << Object::sqlFilteredString(this->identifier()) << '\"'
+	<< "Identifier=\"" << Object::sqlFilteredString(this->identifier()) << "\", "
 	<< "Path=\"" << this->path() << '\"';
 
 	return sstream.str();

@@ -164,17 +164,34 @@ Parser::Parser() :
 		m_handleType(new Type("handle", 0, 0, 0, "", "")),
 		m_codeType(new Type("code", 0, 0, 0, "", ""))
 {
+#ifdef SQLITE
+	if (!Vjassdoc::getDatabases().empty())
+	{
+		if (Vjassdoc::showVerbose())
+			std::cout << _("You've selected one or several databases. Default Jass types won't be added automatically.") << std::endl;
+
+		for (std::list<std::string>::iterator iterator = Vjassdoc::getDatabases().begin(); iterator != Vjassdoc::getDatabases().end(); ++iterator)
+		{
+			std::cout << "Database path " << *iterator << std::endl;
+			this->addDatabase((*iterator).c_str());
+		}
+	}
+	else
+	{
+#endif
 	//add default types
+	if (Vjassdoc::showVerbose())
+		std::cout << _("Adding default Jass types.") << std::endl;
+
 	this->add(m_integerType);
-
-	std::cout << "Type name " << this->m_integerType->identifier() << std::endl;
-
 	this->add(m_realType);
 	this->add(m_stringType);
 	this->add(m_booleanType);
 	this->add(m_handleType);
 	this->add(m_codeType);
-
+#ifdef SQLITE
+	}
+#endif
 	std::list<std::string> list = Vjassdoc::getFilePaths();
 
 	for (std::list<std::string>::const_iterator iterator = list.begin(); iterator != list.end(); ++iterator)
@@ -475,7 +492,7 @@ void Parser::parse()
 		}
 	}
 
-#ifdef SQLITE	
+#ifdef SQLITE
 	//create SQL database for search functions
 	if (Vjassdoc::createDatabase())
 	{
@@ -535,9 +552,10 @@ void Parser::parse()
 				if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
 					continue;
 
-				state = sqlite3_exec(database, this->getTableCreationStatement(Parser::List(i)).c_str(), 0, 0, &message);
-
+				std::cout << "Table list " << i << std::endl;
 				std::cout << "Table creation statement: " << this->getTableCreationStatement(Parser::List(i)).c_str() << std::endl;
+				state = sqlite3_exec(database, this->getTableCreationStatement(Parser::List(i)).c_str(), 0, 0, &message);
+				std::cout << "After table creation" << std::endl;
 
 				if (state != SQLITE_OK)
 				{
@@ -565,8 +583,9 @@ void Parser::parse()
 					sstream.str("");
 					sstream.clear();
 
+					std::cout << "Before update of object " << (*iterator)->identifier() << std::endl;
 					sstream << "UPDATE " << Parser::getTableName(Parser::List(i)).c_str() << " SET " << (*iterator)->sqlStatement() << " WHERE Id=" << (*iterator)->id();
-					
+					std::cout << "After update" << std::endl;
 					//std::cout << "Execution command: " << sstream.str().c_str() << std::endl; //NOTE debug
 
 
@@ -605,13 +624,16 @@ void Parser::parse()
 #ifdef SQLITE
 int Parser::addDatabase(const char *filePath)
 {
+	std::cout << "bla" << std::endl;
 	if (Vjassdoc::showVerbose())
-		printf(_("Load database %s."), filePath);
+		printf(_("Load database %s.\n"), filePath);
 
 	int result = -1;
 	sqlite3 *database;
-	int state = SQLITE_ERROR; //= sqlite3_open_v2(filePath, &database, SQLITE_OPEN_READONLY, NULL);
-	
+	std::cout << "Before open" << std::endl;
+	int state = sqlite3_open_v2(filePath, &database, SQLITE_OPEN_READONLY, NULL);
+	std::cout << "After open" << std::endl;
+
 	if (state == SQLITE_OK)
 	{
 		Parser::Database *databaseStruct = new Parser::Database;
@@ -626,13 +648,15 @@ int Parser::addDatabase(const char *filePath)
 			std::ostringstream sstream;
 			sstream << "SELECT * FROM " << Parser::getTableName(Parser::List(i));
 			sqlite3_stmt *statement;
-			
+			std::cout << "Before statement " << sstream.str() << std::endl;
 			state = sqlite3_prepare_v2(
 				database,            /* Database handle */
 				sstream.str().c_str(),       /* SQL statement, UTF-8 encoded */
 				-1,              /* Maximum length of zSql in bytes. */
 				&statement,  /* OUT: Statement handle */
 				0);     /* OUT: Pointer to unused portion of zSql */
+
+			std::cout << "After statement " << sstream.str() << std::endl;
 
 			if (state != SQLITE_OK)
 				fprintf(stderr, _("Was unable to prepare SQL statement of table %s.\nState %d.\n"),  Parser::getTableName(Parser::List(i)).c_str(), state);
@@ -643,20 +667,23 @@ int Parser::addDatabase(const char *filePath)
 				continue;
 			}
 			
-			do
+			for (state = sqlite3_step(statement); state == SQLITE_ROW; state = sqlite3_step(statement))
 			{
-				state = sqlite3_step(statement);
-				
 				int columns = sqlite3_data_count(statement);
 				std::vector<const unsigned char*> columnVector;
 				
 				for (int j = 0; j < columns; ++j)
+				{
 					columnVector.push_back(sqlite3_column_text(statement, j));
+					std::cout << "Vector data " << columnVector[j] << std::endl;
+				}
 				
 				databaseStruct->listList.push_back(Parser::List(i));
-				databaseStruct->objectList.push_back(this->addObjectByColumnVector(Parser::List(i), columnVector));
+				std::cout << "List " << i << std::endl;
+				class Object *object = this->addObjectByColumnVector(Parser::List(i), columnVector);
+				//std::cout << "Created object with identifier " << object->identifier() << std::endl;
+				databaseStruct->objectList.push_back(object);
 			}
-			while (state == SQLITE_ROW);
 			
 			state = sqlite3_finalize(statement);
 			
@@ -665,7 +692,7 @@ int Parser::addDatabase(const char *filePath)
 		}
 	}
 	else
-		fprintf(stderr, _("Was unable to create database.\nState %d.\n"), state);
+		fprintf(stderr, _("Was unable to open database.\nState %d.\n"), state);
 		
 	sqlite3_close(database);
 	

@@ -1163,7 +1163,8 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 			}
 			
 			std::string identifier = argToken;
-			class vjassdoc::Parameter *parameter = new class vjassdoc::Parameter(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, 0, typeExpression);
+			std::cout << "Parameter name " << identifier << std::endl;
+			class Parameter *parameter = new class Parameter(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, 0, typeExpression);
 			parameters.push_back(parameter);
 
 			if (position != std::string::npos && position != lastPosition)

@@ -50,6 +50,12 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add support for compiler flag DATABASE.
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-05-16 Tamino Dauth <tamino@cdauth.de>
+* Why are iterators in for loops which are using the list m_parameters of class FunctionInterface constant?!
+* Parameter pages aren't created.
+* Wrong database object identifiers.
+* Fix id handling (column vectors) when loading databases.
+
 2009-05-14 Tamino Dauth <tamino@cdauth.de>
 * Check out text macro space parsing! Program seems to crash.
 
