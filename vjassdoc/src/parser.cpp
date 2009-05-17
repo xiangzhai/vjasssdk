@@ -164,11 +164,10 @@ Parser::Parser() :
 		m_handleType(new Type("handle", 0, 0, 0, "", "")),
 		m_codeType(new Type("code", 0, 0, 0, "", ""))
 {
-#ifdef SQLITE
 	if (!Vjassdoc::getDatabases().empty())
 	{
 		if (Vjassdoc::showVerbose())
-			std::cout << _("You've selected one or several databases. Default Jass types won't be added automatically.") << std::endl;
+			std::cout << _("You've selected one or several databases..") << std::endl;
 
 		for (std::list<std::string>::iterator iterator = Vjassdoc::getDatabases().begin(); iterator != Vjassdoc::getDatabases().end(); ++iterator)
 		{
@@ -176,9 +175,7 @@ Parser::Parser() :
 			this->addDatabase((*iterator).c_str());
 		}
 	}
-	else
-	{
-#endif
+	
 	//add default types
 	if (Vjassdoc::showVerbose())
 		std::cout << _("Adding default Jass types.") << std::endl;
@@ -189,9 +186,6 @@ Parser::Parser() :
 	this->add(m_booleanType);
 	this->add(m_handleType);
 	this->add(m_codeType);
-#ifdef SQLITE
-	}
-#endif
 	std::list<std::string> list = Vjassdoc::getFilePaths();
 
 	for (std::list<std::string>::const_iterator iterator = list.begin(); iterator != list.end(); ++iterator)
@@ -213,28 +207,104 @@ Parser::Parser() :
 	std::cout << "After construction." << std::endl;
 }
 
+//Default Jass types are in lists!
 Parser::~Parser()
 {
-	//TODO Will be cleared autmoatically?
-	//TODO Program has to delete all objects!
+
+	for (std::list<class Comment*>::iterator iterator = this->commentList.begin(); iterator != this->commentList.end(); ++iterator)
+		delete *iterator;
+
 	this->commentList.clear();
+
+	for (std::list<class Keyword*>::iterator iterator = this->keywordList.begin(); iterator != this->keywordList.end(); ++iterator)
+		delete *iterator;
+
 	this->keywordList.clear();
+
+	for (std::list<class TextMacro*>::iterator iterator = this->textMacroList.begin(); iterator != this->textMacroList.end(); ++iterator)
+		delete *iterator;
+
 	this->textMacroList.clear();
+
+	for (std::list<class TextMacroInstance*>::iterator iterator = this->textMacroInstanceList.begin(); iterator != this->textMacroInstanceList.end(); ++iterator)
+		delete *iterator;
+
 	this->textMacroInstanceList.clear();
+
+	for (std::list<class Type*>::iterator iterator = this->typeList.begin(); iterator != this->typeList.end(); ++iterator)
+		delete *iterator;
+
 	this->typeList.clear();
+
+	for (std::list<class Global*>::iterator iterator = this->globalList.begin(); iterator != this->globalList.end(); ++iterator)
+		delete *iterator;
+
 	this->globalList.clear();
+
+	for (std::list<class Member*>::iterator iterator = this->memberList.begin(); iterator != this->memberList.end(); ++iterator)
+		delete *iterator;
+
 	this->memberList.clear();
+
+	for (std::list<class Parameter*>::iterator iterator = this->parameterList.begin(); iterator != this->parameterList.end(); ++iterator)
+		delete *iterator;
+
 	this->parameterList.clear();
+
+	for (std::list<class FunctionInterface*>::iterator iterator = this->functionInterfaceList.begin(); iterator != this->functionInterfaceList.end(); ++iterator)
+		delete *iterator;
+
 	this->functionInterfaceList.clear();
+
+	for (std::list<class Function*>::iterator iterator = this->functionList.begin(); iterator != this->functionList.end(); ++iterator)
+		delete *iterator;
+
 	this->functionList.clear();
+
+	for (std::list<class Method*>::iterator iterator = this->methodList.begin(); iterator != this->methodList.end(); ++iterator)
+		delete *iterator;
+
 	this->methodList.clear();
+
+	for (std::list<class Implementation*>::iterator iterator = this->implementationList.begin(); iterator != this->implementationList.end(); ++iterator)
+		delete *iterator;
+
 	this->implementationList.clear();
+
+	for (std::list<class Interface*>::iterator iterator = this->interfaceList.begin(); iterator != this->interfaceList.end(); ++iterator)
+		delete *iterator;
+
 	this->interfaceList.clear();
+
+	for (std::list<class Struct*>::iterator iterator = this->structList.begin(); iterator != this->structList.end(); ++iterator)
+		delete *iterator;
+
 	this->structList.clear();
+
+	for (std::list<class Scope*>::iterator iterator = this->scopeList.begin(); iterator != this->scopeList.end(); ++iterator)
+		delete *iterator;
+
 	this->scopeList.clear();
+
+	for (std::list<class Library*>::iterator iterator = this->libraryList.begin(); iterator != this->libraryList.end(); ++iterator)
+		delete *iterator;
+
 	this->libraryList.clear();
+
+	for (std::list<class SourceFile*>::iterator iterator = this->sourceFileList.begin(); iterator != this->sourceFileList.end(); ++iterator)
+		delete *iterator;
+
 	this->sourceFileList.clear();
+
+	for (std::list<class DocComment*>::iterator iterator = this->docCommentList.begin(); iterator != this->docCommentList.end(); ++iterator)
+		delete *iterator;
+
 	this->docCommentList.clear();
+	
+	for (std::vector<struct Database*>::iterator iterator = this->databaseVector.begin(); iterator != this->databaseVector.end(); ++iterator)
+		delete *iterator;
+
+	this->databaseVector.clear();
 }
 
 /// @todo FIXME

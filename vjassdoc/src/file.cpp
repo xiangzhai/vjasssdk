@@ -176,7 +176,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 		index = 0; //reset index!
 		expression = this->getFirstLineExpression(line, index);
 
-		if (expression == File::NoExpression || expression == File::InvalidExpression) /// @todo If it's a debug expression, line should be skipped. Therefore you could add File::DebugExpression.
+		if (expression == File::NoExpression || expression == File::InvalidExpression || expression == File::DebugExpression)
 			continue;
 	
 		switch (expression)
@@ -1143,51 +1143,38 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 		return false;
 
 	std::list<class Parameter*> parameters;
-	std::string argToken = File::getToken(line, index);
-	
-	if (argToken != expressionText[NothingExpression])
+	std::string typeExpression = File::getToken(line, index);
+
+	if (typeExpression != expressionText[NothingExpression])
 	{
-		do
+		while (typeExpression != expressionText[ReturnsExpression])
 		{
-			std::string typeExpression = argToken;
-			argToken = File::getToken(line, index);
+			std::string identifier = File::getToken(line, index);
+
+			/// @todo Text macros are uncheckable :-/
+			if (typeExpression[0] == '$' && identifier == expressionText[ReturnsExpression]) //takes $BLA$ returns integer
+				break;
+
+			std::string oldIdentifier = identifier;
+			std::string::size_type position = identifier.find(',');
 			
-			std::string::size_type position = argToken.find(',');
-			std::string::size_type lastPosition = argToken.length() - 1;
-			std::string oldArgToken;
-			
-			if (position != std::string::npos) //takes integer x, ...
-			{
-				oldArgToken = argToken;
-				argToken = argToken.substr(0, position);
-			}
-			
-			std::string identifier = argToken;
-			std::cout << "Parameter name " << identifier << std::endl;
+			if (position != std::string::npos) //takes integer x,integer ... or takes integer x, integer ...
+				identifier.erase(position);
+
 			class Parameter *parameter = new class Parameter(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, 0, typeExpression);
 			parameters.push_back(parameter);
+			Vjassdoc::getParser()->add(parameter);
 
-			if (position != std::string::npos && position != lastPosition)
-				argToken = oldArgToken.substr(position + 1);
-			else
+			if (position == std::string::npos || position == oldIdentifier.length() - 1)
 			{
-				argToken = File::getToken(line, index);
-				
-				if (argToken == ",") //takes integer x , real y ...
-					argToken = File::getToken(line, index);
-				else if (argToken[0] == ',') //takes integer x ,real y ...
-					argToken = argToken.substr(1);
+				typeExpression = File::getToken(line, index);
+
+				if (typeExpression == ",") //takes integer x , real y ...
+					typeExpression = File::getToken(line, index);
 			}
+			else
+				typeExpression = oldIdentifier.substr(position + 1);
 		}
-		while (argToken != expressionText[ReturnsExpression]);
-	}
-	else
-	{
-		argToken = File::getToken(line, index);
-		
-		//NOTE Syntax checker
-		//if (argToken != expressionText[ReturnsExpression])
-			//return false;
 	}
 
 	std::string type = File::getToken(line, index);

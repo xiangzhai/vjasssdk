@@ -137,11 +137,6 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	SourceFile::initClass();
 	DocComment::initClass();
 	std::cout << "After initialization." << std::endl;
-
-#ifdef SQLITE
-	for (std::list<std::string>::const_iterator iterator = databases.begin();  iterator != databases.end(); ++iterator)
-		Vjassdoc::getParser()->addDatabase((*iterator).c_str());
-#endif
 	
 	Vjassdoc::getParser()->parse();
 	

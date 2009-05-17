@@ -181,3 +181,9 @@ endstruct
 
 struct ExtensionStruct3 extends ExtensionStruct2
 endstruct
+
+//Parameter check
+native Bla takes integer x returns nothing
+native Bla2 takes integer x , integer y returns nothing
+native Bla3 takes integer x, integer y returns nothing
+native Bla4 takes integer x,integer y returns nothing 

@@ -54,7 +54,6 @@ void FunctionInterface::initClass()
 
 FunctionInterface::FunctionInterface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_parameters(parameters), m_returnTypeExpression(returnTypeExpression), m_returnType(0)
 {
-	std::cout << "Parameter count = " << parameters.size() << std::endl;
 
 	for (std::list<class Parameter*>::iterator iterator = this->m_parameters.begin(); iterator != this->m_parameters.end(); ++iterator)
 	      (*iterator)->setFunctionInterface(this);
@@ -121,7 +120,7 @@ void FunctionInterface::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Parameters\">" << _("Parameters") << "</a></h2>\n"
 	;
 
-	if (!this->parameters().empty())
+	if (!this->m_parameters.empty())
 	{
 		file << "\t\t<ul>\n";
 		std::list<class Parameter*> list = this->m_parameters;

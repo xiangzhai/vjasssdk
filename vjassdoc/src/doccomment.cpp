@@ -74,6 +74,7 @@ DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : Object
 /// @todo FIXME
 void DocComment::init()
 {
+/*
 	std::string result;
 	unsigned int oldIndex = 0;
 	unsigned int newIndex = this->identifier().find('@');
@@ -134,6 +135,7 @@ void DocComment::init()
 	}
 	
 	this->setIdentifier(result);
+*/
 }
 
 void DocComment::pageNavigation(std::ofstream &file) const

@@ -1,3 +1,10 @@
+2009-05-17 Tamino Dauth <tamino@cdauth.de>
+* Debug lines will be ignored correctly now when debug option is not selected.
+* Fixed memory leaks of lists of class Parser.
+* Fixed parameter detection in method getFunction of class File.
+* Parameters will be added to list of class Parser now.
+* Added text macro argument detection for parameters.
+
 2009-05-16 Tamino Dauth <tamino@cdauth.de>
 * Fixed method sqlFilteredString of class Object.
 * Fixed several database bugs.

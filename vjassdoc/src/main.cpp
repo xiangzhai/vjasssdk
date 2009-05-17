@@ -74,7 +74,7 @@ TODO set LOCALE_DIR by cmake
 			_("-j --jass                   vJass code will be ignored.\n") <<
 			_("-d --debug                  Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
 			_("--private                   Private objects will be parsed.\n") <<
-			_("-m --textmacros             Code between text macro statements will be parsed.\n") <<
+			_("-m --textmacros             Code between text macro statements will be parsed (Warning: There can be many parsing errors!).\n") <<
 			_("--functions                 Code between function/method statements will be parsed.\n") <<
 			_("--no<object type name>      Objects of type <object type name> won't added to the output files.\n") <<
 			_("                            The following object type names are available:\n") <<
