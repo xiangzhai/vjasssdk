@@ -96,11 +96,11 @@ class File
 			ImportExpression,
 			DovjassinitExpression,
 			InjectExpression,
-			EndInjectExpression,
+			EndinjectExpression,
 			NovjassExpression,
 			EndnovjassExpression,
 			LoaddataExpression,
-			ExternaExpression,
+			ExternalExpression,
 			TextmacroExpression,
 			EndtextmacroExpression,
 			RuntextmacroExpression, //An instance of the macro
@@ -115,7 +115,8 @@ class File
 			OperatorExpression,
 			MaxExpressions,
 			NoExpression,
-			InvalidExpression
+			InvalidExpression,
+			CustomExpression
 		};
 
 		enum DocExpression

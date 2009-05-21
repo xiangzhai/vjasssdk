@@ -55,6 +55,7 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" MATCHES "^(Unspec
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/library.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/sourcefile.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/doccomment.h"
+    "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/syntaxerror.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/vjassdoc.h"

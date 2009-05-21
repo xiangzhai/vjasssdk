@@ -52,6 +52,7 @@ class Scope;
 class Library;
 class SourceFile;
 class DocComment;
+class SyntaxError;
 
 /**
 * Provides methods for parsing Jass and vJass files. The Parser class has the ability to create a simple HTML
@@ -105,6 +106,7 @@ class Parser
 		Parser();
 		~Parser();
 		void createInheritanceListPage();
+		void createRequirementListPage();
 		void parse();
 
 #ifdef SQLITE
@@ -149,6 +151,7 @@ class Parser
 		class Type* codeType() const;
 		class SourceFile* currentSourceFile() const;
 
+		void add(class SyntaxError *syntaxError);
 	private:
 #ifdef SQLITE
 		struct Database
@@ -161,21 +164,6 @@ class Parser
 #endif	
 
 		static const char *title[Parser::MaxLists];
-		
-		std::list<class Object*>& getList(const enum List &list);
-		
-		//HTML
-		std::stringstream& addObjectList(std::stringstream &output, const enum Parser::List &list);
-		
-		//SQLite
-#ifdef SQLITE
-		static std::string getTableName(const enum Parser::List &list);
-		static unsigned int getTableColumns(const enum Parser::List &list);
-		static std::string getTableCreationStatement(const enum Parser::List &list);
-		class Object* addObjectByColumnVector(const enum Parser::List &list, std::vector<const unsigned char*> &columnVector);
-#endif
-
-		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::stringstream &sstream);
 		class Type *m_integerType;
 		class Type *m_realType;
 		class Type *m_stringType;
@@ -203,9 +191,26 @@ class Parser
 		std::list<class SourceFile*> sourceFileList;
 		std::list<class DocComment*> docCommentList;
 		class SourceFile *m_currentSourceFile;
+		std::list<class SyntaxError*> syntaxErrorList;
 #ifdef SQLITE
 		std::vector<struct Database*> databaseVector;
 #endif
+
+		std::list<class Object*>& getList(const enum List &list);
+		
+		//HTML
+		std::stringstream& addObjectList(std::stringstream &output, const enum Parser::List &list);
+		
+		//SQLite
+#ifdef SQLITE
+		static std::string getTableName(const enum Parser::List &list);
+		static unsigned int getTableColumns(const enum Parser::List &list);
+		static std::string getTableCreationStatement(const enum Parser::List &list);
+		class Object* addObjectByColumnVector(const enum Parser::List &list, std::vector<const unsigned char*> &columnVector);
+#endif
+
+		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::stringstream &sstream);
+		void getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::stringstream &sstream);
 };
 
 inline void Parser::add(class Comment *comment)
@@ -341,6 +346,11 @@ inline class Type* Parser::codeType() const
 inline class SourceFile* Parser::currentSourceFile() const
 {
 	return this->m_currentSourceFile;
+}
+
+inline void Parser::add(class SyntaxError *syntaxError)
+{
+	this->syntaxErrorList.push_back(syntaxError);
 }
 
 }

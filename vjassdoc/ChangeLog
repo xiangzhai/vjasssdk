@@ -1,3 +1,7 @@
+2009-05-20 Tamino Dauth <tamino@cdauth.de>
+* Improved syntax checker mode.
+* Added requirement list page support.
+
 2009-05-17 Tamino Dauth <tamino@cdauth.de>
 * Debug lines will be ignored correctly now when debug option is not selected.
 * Fixed memory leaks of lists of class Parser.

@@ -30,6 +30,7 @@
 #include "objects.h"
 #include "parser.h"
 #include "internationalisation.h"
+#include "syntaxerror.h"
 
 namespace vjassdoc
 {
@@ -176,7 +177,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 		index = 0; //reset index!
 		expression = this->getFirstLineExpression(line, index);
 
-		if (expression == File::NoExpression || expression == File::InvalidExpression || expression == File::DebugExpression)
+		if (expression == File::NoExpression || expression == File::InvalidExpression || expression == File::DebugExpression || expression == File::CustomExpression)
 			continue;
 	
 		switch (expression)
@@ -301,33 +302,78 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					this->clearDocComment();
 				}
 				//NOTE Syntax checker!
-				//else if (Vjassdoc::showVerbose() && preprocessor != expressionText[DovjassinitExpression] && preprocessor != expressionText[InjectExpression] && preprocessor != expressionText[EndinjectExpression] && preprocessor != expressionText[NovjassExpression] && preprocessor != expressionText[EndnovjassExpression] && preprocessor != expressionText[LoaddataExpression] && preprocessor != expressionText[ExternalExpression])
-						//std::cerr << _("Unknown preprocessor.") << std::endl;
+				else if (Vjassdoc::checkSyntax() && preprocessor != expressionText[DovjassinitExpression] && preprocessor != expressionText[InjectExpression] && preprocessor != expressionText[EndinjectExpression] && preprocessor != expressionText[NovjassExpression] && preprocessor != expressionText[EndnovjassExpression] && preprocessor != expressionText[LoaddataExpression] && preprocessor != expressionText[ExternalExpression])
+				{
+					char message[255];
+
+					if (!preprocessor.empty())
+						sprintf(message, _("Unknown preprocessor statement: \"%s\"."), preprocessor.c_str());
+					else
+						sprintf(message, _("Missing preprocessor statement."));
+
+					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+				}
 				
 				break;
 			}
 
 			//Example: type MyType extends integer array[10]
-			//Output: Typ: MyType - Enthaltener Typ: integer - Gr��e: array[10]
+			//Output: Typ: MyType - Enthaltener Typ: integer - Größe: array[10]
 			case TypeExpression:
 			{
 				this->truncateComments(line, index);
 				std::string identifier = File::getToken(line, index);
+
+				if (Vjassdoc::checkSyntax() && identifier.empty())
+				{
+					char message[255];
+					sprintf(message, _("Missing type identifier."));
+					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+				}
+
 				std::string parentTypeIdentifier;
+				parentTypeIdentifier = File::getToken(line, index);
 				
-				if (File::getToken(line, index) == expressionText[ExtendsExpression])
+				if (parentTypeIdentifier == expressionText[ExtendsExpression])
 					parentTypeIdentifier = File::getToken(line, index);
+				else if (Vjassdoc::checkSyntax() && !parentTypeIdentifier.empty())
+				{
+					char message[255];
+					sprintf(message, _("Unknown expression: \"%s\". Expected \"extends\"."), parentTypeIdentifier.c_str());
+					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+				}
 				
 				std::string size = File::getToken(line, index);
 				
 				if (!size.empty())
 				{
+					bool getSize = true;
+
 					if (size == File::expressionText[File::ArrayExpression]) //expression: type TypeName extends array [10]
 						size = File::getToken(line, index);
 	
-					int start = size.find('[') + 1;
-					int length = size.find(']') - start;
-					size = size.substr(start, length);
+					std::string::size_type start = size.find('[') + 1;
+
+					if (Vjassdoc::checkSyntax() && start == std::string::npos)
+					{
+						char message[255];
+						sprintf(message, _("Missing \"[\" expression."));
+						Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+						getSize = false;
+					}
+
+					std::string::size_type length = size.find(']') - start;
+
+					if (Vjassdoc::checkSyntax() && length == std::string::npos)
+					{
+						char message[255];
+						sprintf(message, _("Missing \"]\" expression."));
+						Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+						getSize = false;
+					}
+
+					if (getSize) //can only be false when syntax checker is enabled
+						size = size.substr(start, length);
 				}
 
 				Vjassdoc::getParser()->add(new Type(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, parentTypeIdentifier, size));
@@ -396,6 +442,13 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 			{
 				unsigned int lastIndex = index;
 				token = File::getToken(line, index);
+
+				if (Vjassdoc::checkSyntax() && token.empty())
+				{
+					char message[255];
+					sprintf(message, _("Missing expression after \"private\" keyword."));
+					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+				}
 
 				if (!Vjassdoc::parsePrivateSpace())
 				{
@@ -657,17 +710,22 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 	this->truncateComments(line, index);
 	index = 0; //Restart, the getGlobal method searches for the type
 
-	if (!this->getGlobal(line, index, false, false, false, false, false) && Vjassdoc::showVerbose())
+	if (this->getGlobal(line, index, false, false, false, false, false))
 	{
-		std::cerr << _("Unknown expression.") << std::endl;
-		return File::NoExpression; //stop parsing
-	}
-	else
 		this->clearDocComment();
+		return File::CustomExpression;
+	}
 
+	char message[255];
+	sprintf(message, _("Unknown expression: \"%s\"."), line.substr(index).c_str());
 
 	if (Vjassdoc::showVerbose())
-		std::cout << _("No valid expression has been found.") << std::endl;
+		std::cerr << message << std::endl;
+
+	if (Vjassdoc::checkSyntax())
+	{
+		Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+	}
 
 	return File::InvalidExpression;
 }

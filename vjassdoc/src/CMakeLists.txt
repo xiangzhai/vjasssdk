@@ -22,6 +22,7 @@ set(LIB_SRC
 	sourcefile.cpp
 	doccomment.cpp
 	#program
+	syntaxerror.cpp
 	file.cpp
 	parser.cpp
 	vjassdoc.cpp
@@ -49,6 +50,7 @@ set(HEADERS
 	library.h
 	sourcefile.h
 	doccomment.h
+	syntaxerror.h
 	file.h
 	parser.h
 	vjassdoc.h

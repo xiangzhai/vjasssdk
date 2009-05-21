@@ -51,11 +51,11 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
 2009-05-17 Tamino Dauth <tamino@cdauth.de>
-* Text macro space is not parsable, arguments can be everywhere.
+* FIXED: Text macro space is not parsable, arguments can be everywhere.
 
 2009-05-16 Tamino Dauth <tamino@cdauth.de>
 * Why are iterators in for loops which are using the list m_parameters of class FunctionInterface constant?!
-* Parameter pages aren't created.
+* FIXED: Parameter pages aren't created.
 * Wrong database object identifiers.
 * Fix id handling (column vectors) when loading databases.
 

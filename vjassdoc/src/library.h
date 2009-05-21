@@ -29,6 +29,11 @@ namespace vjassdoc
 class Library : public Object
 {
 	public:
+		struct HasRequirement : public Parser::Comparator
+		{
+			virtual bool operator()(class Object *thisObject, const class Object *library) const;
+		};
+	
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
@@ -53,6 +58,19 @@ class Library : public Object
 		class Function *m_initializer; //Function is the parent class of Method, so it can be a method, too.
 		std::list<class Library*> *m_requirement;
 };
+
+inline bool Library::HasRequirement::operator()(class Object *thisObject, const class Object *library) const
+{
+	class Library *thisLibrary = static_cast<class Library*>(thisObject);
+
+	for (std::list<class Library*>::iterator iterator = thisLibrary->requirement()->begin(); iterator != thisLibrary->requirement()->end(); ++iterator)
+	{
+		if (*iterator == library)
+			return true;
+	}
+	
+	return false;
+}
 
 inline bool Library::isOnce() const
 {

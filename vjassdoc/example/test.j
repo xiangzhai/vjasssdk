@@ -186,4 +186,13 @@ endstruct
 native Bla takes integer x returns nothing
 native Bla2 takes integer x , integer y returns nothing
 native Bla3 takes integer x, integer y returns nothing
-native Bla4 takes integer x,integer y returns nothing 
+native Bla4 takes integer x,integer y returns nothing
+
+
+asdasfasf Syntax error sdsad
+
+//!
+//!sdsadasd
+//! sadsadasd
+
+type P extends

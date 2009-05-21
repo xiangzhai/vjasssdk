@@ -32,6 +32,7 @@
 #include "objects.h"
 #include "vjassdoc.h"
 #include "file.h"
+#include "syntaxerror.h"
 
 namespace vjassdoc
 {
@@ -375,6 +376,55 @@ void Parser::createInheritanceListPage()
 	fout.close();
 }
 
+void Parser::createRequirementListPage()
+{
+	//requirement list
+	std::stringstream sstream;
+	sstream
+	<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	<< "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n"
+	<< "\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
+	<< "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" << _("en") << "\">\n"
+	<< "<html>\n"
+	<< "\t<head>\n"
+	<< "\t\t<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"/>\n"
+	<< "\t\t<title>" << _("Requirement List") << "</title>\n"
+	<< "\t\t<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>\n"
+	<< "\t</head>\n"
+	<< "\t<body>\n"
+	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
+	<< "\t\t<h1>" << _("Requirement List") << "</h1>\n"
+	<< "\t\t<ul>\n"
+	;
+
+	for (std::list<class Library*>::iterator iterator = this->libraryList.begin(); iterator != this->libraryList.end(); ++iterator)
+	{
+		if ((*iterator)->requirement() == 0)
+			continue;
+
+		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
+		this->getLibraryRequirementList(*iterator, "\t\t\t\t", sstream);
+		sstream << "\t\t\t</li>\n";
+	}
+
+	sstream
+	<< "\t\t</ul>\n"
+	<< "\t</body>\n"
+	<< "</html>\n"
+	;
+	std::ofstream fout((Vjassdoc::getDir() + Vjassdoc::dirSeparator + "requirementlist.html").c_str());
+
+	if (!fout.good())
+	{
+		fout.close();
+		std::cerr << _("Was unable to create file \"requirementlist.html\".") << std::endl;
+		return;
+	}
+
+	fout << sstream.str();
+	fout.close();
+}
+
 void Parser::parse()
 {
 	for (std::list<class SourceFile*>::const_iterator iterator = this->sourceFileList.begin(); iterator != this->sourceFileList.end(); ++iterator)
@@ -453,6 +503,7 @@ void Parser::parse()
 		{
 			sout
 			<< "\t\t\t<li>" << "<a href=\"inheritancelist.html\">" << _("Inheritance List") << "</a></li>\n"
+			<< "\t\t\t<li>" << "<a href=\"requirementlist.html\">" << _("Requirement List") << "</a></li>\n"
 			<< "\t\t\t<li>" << "<a href=\"#Undocumented Objects\">" << _("Undocumented Objects") << "</a></li>\n"
 			//<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
 			//<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
@@ -477,6 +528,7 @@ void Parser::parse()
 		if (Vjassdoc::createSpecialPages())
 		{
 			this->createInheritanceListPage();
+			this->createRequirementListPage();
 
 			sout
 			<< "\t\t<h2><a name=\"Undocumented Objects\">" << _("Undocumented Objects") << "</h2>\n"
@@ -559,6 +611,19 @@ void Parser::parse()
 					fout.close();
 				}
 			}
+		}
+	}
+
+	if (Vjassdoc::checkSyntax())
+	{
+		/// @todo compare all object identifiers with Jass and vJass keywords.
+
+		fprintf(stdout, _("%d syntax errors.\n"), this->syntaxErrorList.size());
+		this->syntaxErrorList.sort(SyntaxError::Comparator);
+		
+		for (std::list<class SyntaxError*>::iterator iterator = this->syntaxErrorList.begin(); iterator != this->syntaxErrorList.end(); ++iterator)
+		{
+			fprintf(stdout, _("File %s, line %d: %s\n"), (*iterator)->sourceFile()->identifier().c_str(), (*iterator)->line(), (*iterator)->message().c_str());
 		}
 	}
 
@@ -1283,6 +1348,28 @@ void Parser::getStructInheritanceList(const class Interface *extension, const st
 	{
 		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
 		this->getStructInheritanceList(static_cast<class Interface*>(*iterator), prefix + "\t\t", sstream);
+		sstream << prefix << "\t</li>\n";
+	}
+
+	sstream << prefix << "</ul>\n";
+}
+
+void Parser::getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::stringstream &sstream)
+{
+	std::list<class Object*> libraryList = this->getSpecificList(requirement, Parser::Libraries, Library::HasRequirement());
+
+	if (structList.empty())
+		return;
+
+	sstream << prefix << "<ul>\n";
+
+	for (std::list<class Object*>::iterator iterator = libraryList.begin(); iterator != libraryList.end(); ++iterator)
+	{
+		if ((*iterator)->requirement() == 0)
+			continue;
+
+		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
+		this->getLibraryRequirementList(static_cast<class Library*>(*iterator), prefix + "\t\t", sstream);
 		sstream << prefix << "\t</li>\n";
 	}
 
