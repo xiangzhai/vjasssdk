@@ -143,7 +143,7 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 				return ARMOR_INVULNERABLE
 			elseif (redc < 0.0) then
 				//Negative Armor
-				return -Log(redc + 1.0) / NATLOG_094
+				return -Log(redc + 1.0, 20) / NATLOG_094
 			else
 				//Positive Armor
 				return redc / (ARMOR_REDUCTION_MULTIPLIER * (1.0 - redc))

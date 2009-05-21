@@ -2315,13 +2315,4 @@ native PreloadGenStart  takes nothing returns nothing
 native PreloadGenEnd    takes string filename returns nothing
 native Preloader        takes string filename returns nothing
 
-//============================================================================
-// common.ai imports
-//Self explanatory
-native GetUnitGoldCost	takes integer unitid returns integer
-native GetUnitWoodCost 	takes integer unitid returns integer
-native GetUnitBuildTime takes integer unitid returns integer
-native StartThread takes code func returns nothing
-
-//use this if you want to use the FPS modification.
 //! import "fps.j"

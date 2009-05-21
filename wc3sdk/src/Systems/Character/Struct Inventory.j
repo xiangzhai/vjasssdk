@@ -601,7 +601,7 @@ library AStructSystemsCharacterInventory requires AStructSystemsCharacterCharact
 			local triggeraction triggerAction
 			set this.orderTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.orderTrigger, this.getUnit(), EVENT_UNIT_ISSUED_ORDER)
-			set conditionFunction = Condition(function thistype.triggerConditionOrder)
+			set conditionFunction = Condition(function AInventory.triggerConditionOrder)
 			set triggerCondition = TriggerAddCondition(this.orderTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.orderTrigger, function AInventory.triggerActionOrder)
 			call AGetCharacterHashTable().storeHandleInteger(this.orderTrigger, "this", this)

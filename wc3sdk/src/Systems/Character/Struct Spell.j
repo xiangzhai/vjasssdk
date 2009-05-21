@@ -165,6 +165,11 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 		public static method allyTargetLoopCondition takes unit target returns boolean
 			return IsUnitDeadBJ(target)
 		endmethod
+		
+		/// @todo Add IsUnitStunned
+		public static method allyChannelLoopCondition takes unit target returns boolean
+			return IsUnitDeadBJ(target)// or 
+		endmethod
 	endstruct
 
 endlibrary

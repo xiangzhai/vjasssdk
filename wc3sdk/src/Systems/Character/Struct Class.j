@@ -4,7 +4,7 @@ library AStructSystemsCharacterClass
 	struct AClass
 		//static constant members
 		public static constant integer maxAbilities = 12 //For class selection
-		public static constant integer maxDescriptionLines = 5 //For class selection
+		public static constant integer maxDescriptionLines = 8 //For class selection
 		//static start members
 		private static integer startLevel
 		private static integer startSkillPoints

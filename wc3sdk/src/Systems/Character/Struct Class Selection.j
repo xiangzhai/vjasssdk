@@ -8,7 +8,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AL
 
 	struct AClassSelection
 		//static constant members
-		private static constant integer maxInfoSheetItems = 4 + 12 + 1 + 5 //4 + AClass.maxAbilities + 1 + AClass.maxDescriptionLines
+		private static constant integer maxInfoSheetItems = 4 + 12 + 1 + 8 //4 + AClass.maxAbilities + 1 + AClass.maxDescriptionLines
 		private static constant integer maxInfoSheetIconItems = 4 + 12 //4 + AClass.maxAbilities
 		//static start members
 		private static camerasetup cameraSetup

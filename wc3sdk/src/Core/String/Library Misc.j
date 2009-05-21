@@ -168,5 +168,120 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		endloop
 		return result
 	endfunction
+	
+	/// Basic case (in)sensitive pattern matching.
+	/// Supported wildcard characters:
+	/// * - matches 0 or more any characters
+	/// ? - matches exactly 1 any character
+	/// # - matches any digit, 0-9
+	/// [list] - matches any character in <list> (l, i, s and t in this example)
+	/// [!list] - matches any character that isn't in the list
+	/// Use \\* or \\? or \\[ to match a * or ? or [ respectively.
+	/// To get a ] in a list, put it as first character of the list.
+	/// To get a ! in a list, don't put it first.
+	/// By common convention, special characters *, ? and # have no meaning when used in a list.
+	/// If "case" is true, the matching is case sensitive.
+	/// @author AceHart
+	/// @source http://www.wc3c.net/showthread.php?t=102026
+	function StringMatch takes string text, string mask, boolean case returns boolean
+		local string a
+		local string b
+		local string x
+		local string y
+		local integer i = 0
+		local integer j = 0
+		local boolean m
+
+		if case then
+			set a = text
+			set b = mask
+		else
+			set a = StringCase(text, true)
+			set b = StringCase(mask, true)
+		endif
+
+		set x = SubString(a, 0, 1)
+		set y = SubString(b, 0, 1)
+		if x == null and y == null then
+			return false
+		endif
+
+		loop
+			if y == null then
+				return x == null
+			elseif y == "#" then
+				exitwhen not (x == "0" or x == "1" or x == "2" or x == "3" or x == "4" or x == "5" or x == "6" or x == "7" or x == "8" or x == "9")
+			elseif y == "\\" then
+				set j = j + 1
+				set y = SubString(b, j, j + 1)
+				exitwhen x != y
+			elseif y == "?" then
+				// nothing to do
+			elseif y == "[" then
+				set j = j + 1
+				set y = SubString(b, j, j + 1)
+				exitwhen y == null
+				set m = false
+				if y == "!" then
+					loop
+						set j = j + 1
+						set y = SubString(b, j, j + 1)
+						if y == null then
+							return false
+						endif
+						exitwhen y == "]"
+						if x == y then
+							set m = true
+						endif
+					endloop
+					exitwhen y != "]"
+					exitwhen m == true
+				else
+					loop
+						if y == null then
+							return false
+						endif
+						if x == y then
+							set m = true
+						endif
+						set j = j + 1
+						set y = SubString(b, j, j + 1)
+						exitwhen y == "]"
+					endloop
+					exitwhen y != "]"
+					exitwhen m == false
+				endif
+			elseif y == "*" then
+				loop
+					set j = j + 1
+					set y = SubString(b, j, j + 1)
+					exitwhen y != "*"
+				endloop
+		//			if y == null then
+				if StringLength(y) < 1 then
+					return true
+				endif
+				set a = SubString(a, i, StringLength(a))
+				set b = SubString(b, j, StringLength(b))
+				loop
+					exitwhen a == null
+					if StringMatch(a, b, case) then
+					return true
+					endif
+					set i = i + 1
+					set a = SubString(a, 1, StringLength(a))
+				endloop
+				return false
+			else
+				exitwhen x != y
+			endif
+
+			set i = i + 1
+			set j = j + 1
+			set x = SubString(a, i, i + 1)
+			set y = SubString(b, j, j + 1)
+		endloop
+		return false
+	endfunction
 
 endlibrary

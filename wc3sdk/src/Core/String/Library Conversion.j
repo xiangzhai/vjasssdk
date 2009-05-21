@@ -189,8 +189,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		endif
 	endfunction
 
-	/// Makes sure that the string @param source will be saved in the map string file.
-	/// It is also possible to search in the string files of the mpq directory "ui/FrameDef".
+	/// It is possible to search in the string files of the mpq directory "ui/FrameDef".
 	/// There are some general string files.
 	/// tr means translation.
 	/// native GetLocalizedString takes string source returns string

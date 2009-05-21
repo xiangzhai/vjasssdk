@@ -1,4 +1,4 @@
-library ALibraryCoreInterfaceMisc requires ALibraryCoreStringConversion
+library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringConversion
 
 	globals
 		//Keys
@@ -127,6 +127,28 @@ library ALibraryCoreInterfaceMisc requires ALibraryCoreStringConversion
 			call SetUnitVertexColorBJ(usedUnit, red, green, blue, transparency)
 		endif
 		set localPlayer = null
+	endfunction
+	
+	globals
+		private sound error
+	endglobals
+
+	/// @author Vexorian
+	/// @source http://www.wc3c.net/showthread.php?t=101260
+	function SimError takes player ForPlayer, string msg returns nothing
+		local player localPlayer = GetLocalPlayer()
+		set msg="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n|cffffcc00"+msg+"|r"
+		if (localPlayer == ForPlayer) then
+			call ClearTextMessages()
+			call DisplayTimedTextToPlayer(ForPlayer, 0.52, 0.96, 2.00, msg)
+			call StartSound(error)
+		endif
+	endfunction
+
+	private function init takes nothing returns nothing
+		set error = CreateSoundFromLabel("InterfaceError",false,false,false,10,10)
+		//call StartSound( error ) //apparently the bug in which you play a sound for the first time
+                //and it doesn't work is not there anymore in patch 1.22
 	endfunction
 
 endlibrary

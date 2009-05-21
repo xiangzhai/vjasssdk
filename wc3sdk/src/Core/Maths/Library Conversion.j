@@ -31,6 +31,82 @@ library ALibraryCoreMathsConversion requires ALibraryCoreDebugMisc, ALibraryCore
 		endloop
 		return value
 	endfunction
+	
+	/// @author Vexorian
+	/// @source http://www.wc3c.net/showthread.php?t=101407
+	function I2Roman takes integer n returns string
+		local string r=""
+		if n > 3999 or n < 1 then
+			return I2S(n)
+		endif
+		loop
+			exitwhen n<1000
+			set r=r+"M"
+			set n=n-1000
+		endloop
+		loop
+			exitwhen n < 900
+			set r=r+"CM"
+			set n=n-900
+		endloop
+		loop
+			exitwhen n<500
+			set r=r+"D"
+			set n=n-500
+		endloop
+		loop
+			exitwhen n < 400
+			set r=r+"CD"
+			set n=n-400
+		endloop
+		loop
+			exitwhen n<100
+			set r=r+"C"
+			set n=n-100
+		endloop
+		loop
+			exitwhen n < 90
+			set r=r+"XC"
+			set n=n-90
+		endloop
+		loop
+			exitwhen n<50
+			set r=r+"L"
+			set n=n-50
+		endloop
+		loop
+			exitwhen n < 40
+			set r=r+"XL"
+			set n=n-40
+		endloop
+		loop
+			exitwhen n<10
+			set r=r+"X"
+			set n=n-10
+		endloop
+		loop
+			exitwhen n < 9
+			set r=r+"IX"
+			set n=n-9
+		endloop
+		loop
+			exitwhen n<5
+			set r=r+"V"
+			set n=n-5
+		endloop
+		loop
+			exitwhen n < 4
+			set r=r+"IV"
+			set n=n-4
+		endloop
+		loop
+			exitwhen n<1
+			set r=r+"I"
+			set n=n-1
+		endloop
+		return r
+	endfunction
+
 
 	//! textmacro AMathsConversionMacro takes TYPENAME, CHARS
 		/// @state untested
