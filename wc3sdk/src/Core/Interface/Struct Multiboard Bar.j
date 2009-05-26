@@ -176,7 +176,7 @@ library AStructCoreInterfaceMultiboardBar requires ALibraryCoreDebugMisc, AStruc
 					set multiboardItem = MultiboardGetItem(this.usedMultiboard, this.row + i, this.column)
 				endif
 				call MultiboardSetItemStyle(multiboardItem, false, true)
-				call MultiboardSetItemWidth(multiboardItem, 0.01) //Einzeln einstellen, um nicht das ganze Multiboard zu verndern
+				call MultiboardSetItemWidth(multiboardItem, 0.01) //Einzeln einstellen, um nicht das ganze Multiboard zu verändern
 				call MultiboardReleaseItem(multiboardItem)
 				set multiboardItem = null
 				set i = i + 1

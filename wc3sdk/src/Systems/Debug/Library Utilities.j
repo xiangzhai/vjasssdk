@@ -3,11 +3,24 @@
 /// @param info Shows some information about the selected unit of the cheating player.
 /// @param setlevel Sets the level of the selected unit of the cheating player.
 /// @param kill Kills the selected unit of the cheating player.
-/// @param giveall Resets hit points and mana of the selected unit of the cheating player.
+/// @param giveall Resets hit points, mana and all ability cooldowns of the selected unit of the cheating player.
 /// @param container Runs the container debug.
 /// @param string Runs the string debug.
 /// @param interface Runs the interface debug.
 library ALibrarySystemsDebugUtilities initializer init requires AStructCoreDebugCheat, ALibraryCoreDebugMisc, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
+
+	private function help takes nothing returns nothing
+		debug local player triggerPlayer = GetTriggerPlayer()
+		debug call Print("clear")
+		debug call Print("info")
+		debug call Print("setlevel")
+		debug call Print("kill")
+		debug call Print("giveall")
+		debug call Print("container")
+		debug call Print("string")
+		debug call Print("interface")
+		debug set triggerPlayer = null
+	endfunction
 
 	private function clear takes nothing returns nothing
 		debug local player triggerPlayer = GetTriggerPlayer()
@@ -65,12 +78,14 @@ library ALibrarySystemsDebugUtilities initializer init requires AStructCoreDebug
 		debug if (selectedUnit != null) then
 			debug call SetUnitLifePercentBJ(selectedUnit, 100.0)
 			debug call SetUnitManaPercentBJ(selectedUnit, 100.0)
+			debug call UnitResetCooldown(selectedUnit)
 			debug set selectedUnit = null
 		debug endif
 		debug set triggerPlayer = null
 	endfunction
 	
 	private function init takes nothing returns nothing
+		debug call ACheat.create("help", true, help)
 		debug call ACheat.create("clear", true, clear)
 		debug call ACheat.create("info", true, info)
 		debug call ACheat.create("setlevel", false, setlevel)

@@ -42,7 +42,7 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, ALibraryCo
 			if (ACharacter.getPlayerCharacter(user).getShrine() != 0) then
 				call ACharacter.getPlayerCharacter(user).getShrine().disableForCharacter(ACharacter.getPlayerCharacter(user)) //disable old
 			endif
-			call character.setShrine(this) //AClassCharacterCharacter
+			call character.setShrine(this)
 			call character.getRevival().setX(GetRandomReal(GetRectMinX(this.revivalRect), GetRectMaxX(this.revivalRect)))
 			call character.getRevival().setY(GetRandomReal(GetRectMinY(this.revivalRect), GetRectMaxY(this.revivalRect)))
 			call character.getRevival().setFacing(this.m_facing)
@@ -77,12 +77,14 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, ALibraryCo
 			local trigger triggeringTrigger
 			local unit triggerUnit = GetTriggerUnit()
 			local player owner = GetOwningPlayer(triggerUnit)
-			local AShrine shrine
+			local AShrine this
 			local boolean result = false
+			debug call Print("Shrine Condition")
 			if (triggerUnit == ACharacter.getPlayerCharacter(owner).getUsedUnit()) then
 				set triggeringTrigger = GetTriggeringTrigger()
-				set shrine = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
-				if (ACharacter.getPlayerCharacter(owner).getShrine() != shrine) then
+				set this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
+				debug call this.print("Shrine is already enabled?")
+				if (ACharacter.getPlayerCharacter(owner).getShrine() != this) then
 					set result = ACharacter.getPlayerCharacter(owner).getMovable()
 				endif
 				set triggeringTrigger = null
@@ -96,8 +98,8 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, ALibraryCo
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local unit triggerUnit = GetTriggerUnit()
 			local player owner = GetOwningPlayer(triggerUnit)
-			local AShrine shrine = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
-			call shrine.enableForCharacter(ACharacter.getPlayerCharacter(owner))
+			local AShrine this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
+			call this.enableForCharacter(ACharacter.getPlayerCharacter(owner))
 			set triggeringTrigger = null
 			set triggerUnit = null
 			set owner = null
@@ -129,7 +131,9 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, ALibraryCo
 			set this.m_facing = facing
 
 			call this.createDiscoverRegion()
+			debug call this.print("After created discover region")
 			call this.createShrineTrigger()
+			debug call this.print("After created trigger")
 			return this
 		endmethod
 
@@ -158,6 +162,7 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, ALibraryCo
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
+			debug call this.print("Destroy shrine")
 			//start members
 			set this.usedDestructable = null
 

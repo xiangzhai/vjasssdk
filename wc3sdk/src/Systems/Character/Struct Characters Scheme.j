@@ -23,7 +23,8 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 		private method onDestroy takes nothing returns nothing
 		endmethod
 
-		/// Call this method before you use this class!
+		/// Call this method before you use this struct!
+		/// Call this after a trigger sleep action, multiboard is created!
 		/// @param refreshRate Should be bigger than 0.0.
 		public static method init takes real refreshRate, integer barLength, string textTitle, string textLevel, string textLeftGame returns nothing
 			//static start members
@@ -36,15 +37,11 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 			set ACharactersScheme.textLevel = textLevel
 			set ACharactersScheme.textLeftGame = textLeftGame
 			//static members
-			set ACharactersScheme.usedMultiboard = null
-			set ACharactersScheme.maxPlayers = 0
+			call ACharactersScheme.createRefreshTrigger()
+			call ACharactersScheme.createMultiboard()
 		endmethod
 
 		public static method show takes nothing returns nothing
-			if (ACharactersScheme.usedMultiboard == null) then
-				call ACharactersScheme.createMultiboard()
-				call ACharactersScheme.createRefreshTrigger()
-			endif
 			call EnableTrigger(ACharactersScheme.refreshTrigger)
 			call MultiboardDisplay(ACharactersScheme.usedMultiboard, true)
 		endmethod
@@ -63,43 +60,7 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 			call MultiboardMinimize(ACharactersScheme.usedMultiboard, true)
 			call DisableTrigger(ACharactersScheme.refreshTrigger)
 		endmethod
-
-		private static method createMultiboard takes nothing returns nothing
-			local integer i
-			local player user
-			local multiboarditem multiboardItem
-
-			set ACharactersScheme.usedMultiboard = CreateMultiboard()
-			call MultiboardSetTitleText(ACharactersScheme.usedMultiboard, ACharactersScheme.textTitle)
-			call MultiboardSetColumnCount(ACharactersScheme.usedMultiboard, 3)
-
-			set i = 0
-			loop
-				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					set multiboardItem = MultiboardGetItem(ACharactersScheme.usedMultiboard, i, 0)
-					call MultiboardSetItemWidth(multiboardItem, 50.0) /// @todo check it
-					call MultiboardReleaseItem(multiboardItem) // added second release call
-					call MultiboardSetItemStyle(multiboardItem, true, false)
-					call MultiboardReleaseItem(multiboardItem)
-					set multiboardItem = null
-
-					set ACharactersScheme.hitPointsBar[i] = AMultiboardBar.create(ACharactersScheme.usedMultiboard, 1, i, 10, 0.0, true, GetUnitState(ACharacter.getPlayerCharacter(user).getUsedUnit(), UNIT_STATE_LIFE), GetUnitState(ACharacter.getPlayerCharacter(user).getUsedUnit(), UNIT_STATE_MAX_LIFE), 0, 0)
-					call ACharactersScheme.hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-					call ACharactersScheme.hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\Green.blp", true)
-
-
-					set ACharactersScheme.manaBar[i] = AMultiboardBar.create(ACharactersScheme.usedMultiboard, ACharactersScheme.hitPointsBar[i].getFirstFreeField(), i, 10, 0.0, true, GetUnitState(ACharacter.getPlayerCharacter(user).getUsedUnit(), UNIT_STATE_MANA), GetUnitState(ACharacter.getPlayerCharacter(user).getUsedUnit(), UNIT_STATE_MAX_MANA), 0, 0)
-					call ACharactersScheme.manaBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-					call ACharactersScheme.manaBar[i].setAllIcons("Icons\\Interface\\Bars\\Blue.blp", true)
-					
-					set ACharactersScheme.maxPlayers = i + 1
-				endif
-				set i = i + 1
-			endloop
-		endmethod
-
+		
 		private static method triggerActionRefresh takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
@@ -145,11 +106,68 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 		private static method createRefreshTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
+			debug call ACharactersScheme.staticPrint("TRIGGER 1")
 			set ACharactersScheme.refreshTrigger = CreateTrigger()
+			debug call ACharactersScheme.staticPrint("TRIGGER 2")
 			set triggerEvent = TriggerRegisterTimerEvent(ACharactersScheme.refreshTrigger, ACharactersScheme.refreshRate, true)
+			debug call ACharactersScheme.staticPrint("TRIGGER 3")
 			set triggerAction = TriggerAddAction(ACharactersScheme.refreshTrigger, function ACharactersScheme.triggerActionRefresh)
+			debug call ACharactersScheme.staticPrint("TRIGGER 4")
+			call DisableTrigger(ACharactersScheme.refreshTrigger)
 			set triggerEvent = null
 			set triggerAction = null
+		endmethod
+
+		private static method createMultiboard takes nothing returns nothing
+			local integer i
+			local player user
+			local multiboarditem multiboardItem
+
+			set ACharactersScheme.usedMultiboard = CreateMultiboard()
+			debug call ACharactersScheme.staticPrint("1")
+			call MultiboardSetTitleText(ACharactersScheme.usedMultiboard, ACharactersScheme.textTitle)
+			debug call ACharactersScheme.staticPrint("2")
+			call MultiboardSetColumnCount(ACharactersScheme.usedMultiboard, 12)
+			debug call ACharactersScheme.staticPrint("3")
+
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (IsPlayerPlayingUser(user)) then
+					call MultiboardSetRowCount(ACharactersScheme.usedMultiboard, MultiboardGetRowCount(ACharactersScheme.usedMultiboard) + 1)
+					set multiboardItem = MultiboardGetItem(ACharactersScheme.usedMultiboard, i, 0)
+					call MultiboardSetItemWidth(multiboardItem, 0.35) /// @todo check it
+					debug call ACharactersScheme.staticPrint("4")
+					call MultiboardReleaseItem(multiboardItem) // added second release call
+					call MultiboardSetItemStyle(multiboardItem, true, false)
+					call MultiboardReleaseItem(multiboardItem)
+					debug call ACharactersScheme.staticPrint("5")
+					set multiboardItem = null
+
+					set ACharactersScheme.hitPointsBar[i] = AMultiboardBar.create(ACharactersScheme.usedMultiboard, 1, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
+					call ACharactersScheme.hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
+					call ACharactersScheme.hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\Green.blp", true)
+					debug call ACharactersScheme.staticPrint("6")
+					
+					set multiboardItem = MultiboardGetItem(ACharactersScheme.usedMultiboard, i, ACharactersScheme.hitPointsBar[i].getFirstFreeField())
+					call MultiboardSetItemWidth(multiboardItem, 0.03) /// @todo check it
+					call MultiboardReleaseItem(multiboardItem)
+					call MultiboardSetItemStyle(multiboardItem, true, false)
+					call MultiboardReleaseItem(multiboardItem)
+					call MultiboardSetItemValue(multiboardItem, "|||")
+					call MultiboardReleaseItem(multiboardItem)
+					set multiboardItem = null
+
+					set ACharactersScheme.manaBar[i] = AMultiboardBar.create(ACharactersScheme.usedMultiboard, ACharactersScheme.hitPointsBar[i].getFirstFreeField() + 1, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
+					call ACharactersScheme.manaBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
+					call ACharactersScheme.manaBar[i].setAllIcons("Icons\\Interface\\Bars\\Blue.blp", true)
+					debug call ACharactersScheme.staticPrint("7")
+					set ACharactersScheme.maxPlayers = i + 1
+				endif
+				set i = i + 1
+			endloop
+			debug call ACharactersScheme.staticPrint("8")
 		endmethod
 	endstruct
 

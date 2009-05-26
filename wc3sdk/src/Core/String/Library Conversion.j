@@ -174,6 +174,17 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	//! runtextmacro AStringArgumentMacro("integer", "Integer", "i", "I2S")
 	//! runtextmacro AStringArgumentMacro("real", "Real", "r", "R2S")
 	//! runtextmacro AStringArgumentMacro("string", "String", "s", "")
+	
+	/// @param width Width of argument string in characters (if it is too short there will be inserted space characters).
+	function RealArgW takes string usedString, real value, integer width, integer precision returns string
+			local string result = usedString
+			local integer charPosition = FindString(result, "%r")
+			if (charPosition != -1) then
+				set result = RemoveSubString(result, charPosition, 2)
+				set result = InsertString(result, charPosition, R2SW(value, width, precision))
+			endif
+			return result
+	endfunction
 
 	/// @author Extrarius
 	/// @source http://www.wc3jass.com/

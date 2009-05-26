@@ -38,7 +38,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 		private AFight fight
 		private ARevival revival
 		private AInventory inventory
-		private integer spellCount
+		private integer m_spellCount
 		private ASpell array spells[ACharacter.maxSpells]
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"ACharacter\"")
@@ -118,6 +118,10 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 		
 		public method getInventory takes nothing returns AInventory
 			return this.inventory
+		endmethod
+		
+		public method spellCount takes nothing returns integer
+			return this.m_spellCount
 		endmethod
 		
 		//convenience methods
@@ -251,12 +255,32 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 		
 		/// Friend relation to ASpell, don't use.
 		public method addSpell takes ASpell spell returns nothing
-			debug if (this.spellCount == ACharacter.maxSpells) then
+			debug if (this.m_spellCount == ACharacter.maxSpells) then
 				debug call this.print("Spell maximum has been reached. Tried to add spell " + I2S(spell) + ".")
 				debug return
 			debug endif
-			set this.spells[this.spellCount] = spell
-			set this.spellCount = this.spellCount + 1
+			set this.spells[this.m_spellCount] = spell
+			set this.m_spellCount = this.m_spellCount + 1
+		endmethod
+		
+		public method spell takes integer index returns ASpell
+			debug if (index > this.m_spellCount or index < 0) then
+				debug call this.print("Wrong spell index: " + I2S(index) + ".")
+				debug return 0
+			debug endif
+			return this.spells[index]
+		endmethod
+		
+		public method spellByAbilityId takes integer abilityId returns ASpell
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_spellCount)
+				if (this.spells[i].ability() == abilityId) then
+					return this.spells[i]
+				endif
+				set i = i + 1
+			endloop
+			return 0
 		endmethod
 
 		private method enableSystems takes nothing returns nothing
@@ -311,7 +335,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 		private static method triggerActionSetUnmovable takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ACharacter character = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "character")
-			call character.setMovable(false)
+			//call character.setMovable(false) /// TEST!!!
 			set triggeringTrigger = null
 		endmethod
 
@@ -330,19 +354,18 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 			set triggerAction = null
 		endmethod
 
+		/// DON'T MAKE HIM UNMOVABLE, disables all systems!
 		private method createDeathTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.deathTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.deathTrigger, this.usedUnit, EVENT_UNIT_DEATH)
 			if (ACharacter.destroyOnDeath) then
+				set this.deathTrigger = CreateTrigger()
+				set triggerEvent = TriggerRegisterUnitEvent(this.deathTrigger, this.usedUnit, EVENT_UNIT_DEATH)
 				set triggerAction = TriggerAddAction(this.deathTrigger, function ACharacter.triggerActionDestroyCharacter)
-			else
-				set triggerAction = TriggerAddAction(this.deathTrigger, function ACharacter.triggerActionSetUnmovable)
+				call AGetCharacterHashTable().storeHandleInteger(this.deathTrigger, "character", this) //AClassCharacterCharacterHashTable
+				set triggerEvent = null
+				set triggerAction = null
 			endif
-			call AGetCharacterHashTable().storeHandleInteger(this.deathTrigger, "character", this) //AClassCharacterCharacterHashTable
-			set triggerEvent = null
-			set triggerAction = null
 		endmethod
 
 		private method createSystems takes nothing returns nothing
@@ -370,13 +393,14 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 		//Private, every player only can have one character
 		private static method create takes player user, unit usedUnit returns ACharacter
 			local ACharacter this = ACharacter.allocate()
+			debug call this.print("Create character")
 			//start members
 			set this.user = user
 			set this.usedUnit = usedUnit
 			//dynamic members
 			set this.movable = true
 			//members
-			set this.spellCount = 0
+			set this.m_spellCount = 0
 
 			call this.createLeaveTrigger()
 			call this.createDeathTrigger()
@@ -397,14 +421,16 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 		endmethod
 
 		private method destroyDeathTrigger takes nothing returns nothing
-			call AGetCharacterHashTable().destroyTrigger(this.deathTrigger)
-			set this.deathTrigger = null
+			if (ACharacter.destroyOnDeath) then
+				call AGetCharacterHashTable().destroyTrigger(this.deathTrigger)
+				set this.deathTrigger = null
+			endif
 		endmethod
 		
 		private method destroySpells takes nothing returns nothing
 			local integer i = 0
 			loop
-				exitwhen (i == this.spellCount)
+				exitwhen (i == this.m_spellCount)
 				call this.spells[i].destroy()
 				set i = i + 1
 			endloop
@@ -464,6 +490,10 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 			set ACharacter.useFightSystem = useFightSystem
 			set ACharacter.useRevivalSystem = useRevivalSystem
 			set ACharacter.useInventorySystem = useInventorySystem
+			
+			debug if (ACharacter.destroyOnDeath and ACharacter.useRevivalSystem) then
+				debug call ACharacter.staticPrint("You're using destroy on death and use revival system options at the same time.")
+			debug endif
 		endmethod
 
 		/// Each player can own exactly one character.
@@ -489,7 +519,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc, ALibrar
 			call ACharacter.destroy(ACharacter.playerCharacter[GetPlayerId(user)])
 		endmethod
 		
-		//static comfort methods
+		//static convenience methods
 		
 		/// @todo You could also check it by only comparing with the units owner character unit.
 		public static method getCharacterByUnit takes unit usedUnit returns ACharacter

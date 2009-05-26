@@ -65,11 +65,19 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 		private trigger array stateTrigger[AAbstractQuest.maxStates]
 
 		//! runtextmacro A_STRUCT_DEBUG("\"AAbstractQuest\"")
+		
+		debug private method checkState takes integer state returns boolean
+			debug if ((state < AAbstractQuest.stateNotUsed) or (state >= AAbstractQuest.maxStates)) then
+				debug call this.print("Wrong state: " + I2S(state) + ".")
+				debug return false
+			debug endif
+			debug return true
+		debug endmethod
 
 		//dynamic members
 
 		public stub method setState takes integer state returns nothing
-			debug if ((state >= AAbstractQuest.stateNotUsed) and (state < AAbstractQuest.maxStates)) then
+			debug if (this.checkState(state)) then
 				if (this.stateTrigger[state] == null) then
 					if (this.stateCondition[state] != 0 and not this.stateCondition[state].evaluate(this)) then
 						return
@@ -95,8 +103,6 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 					call this.displayMessage()
 					call this.disable() //disable
 				endif
-			debug else
-				debug call Print("Invalid quest state in quest " + I2S(this) + ".") //ALibraryGeneralDebug
 			debug endif
 		endmethod
 
@@ -106,44 +112,43 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 
 		//call first setStateEvent then setStateCondition and at least setStateAction
 		public method setStateEvent takes integer state, AAbstractQuestStateEvent stateEvent returns nothing
+			local conditionfunc conditionFunction
+			local triggercondition triggerCondition
+			local triggeraction triggerAction
+			debug if (not this.checkState(state)) then
+				debug return
+			debug endif
 			if (this.stateTrigger[state] == null) then
 				set this.stateTrigger[state] = CreateTrigger()
-				call AGetCharacterHashTable().storeHandleInteger(this.stateTrigger[state], "this", this) //AClassCharacterCharacterHashTable
-				call AGetCharacterHashTable().storeHandleInteger(this.stateTrigger[state], "state", state) //AClassCharacterCharacterHashTable
+				call stateEvent.execute(this, this.stateTrigger[state])
+				set conditionFunction = Condition(function AAbstractQuest.triggerConditionRunQuestState)
+				set triggerCondition = TriggerAddCondition(this.stateTrigger[state], conditionFunction)
+				set triggerAction = TriggerAddAction(this.stateTrigger[state], function AAbstractQuest.triggerActionRunQuestState)
+				call AGetCharacterHashTable().storeHandleInteger(this.stateTrigger[state], "this", this)
+				debug call this.print("SAVE IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				call AGetCharacterHashTable().storeHandleInteger(this.stateTrigger[state], "state", state)
 				call DisableTrigger(this.stateTrigger[state])
-				debug call Print("Create state trigger for state " + I2S(state))
-				debug call Print("Saved id is " + I2S(AGetCharacterHashTable().getHandleInteger(this.stateTrigger[state], "this")) + " (has to be " + I2S(this) + " and state is " + I2S(AGetCharacterHashTable().getHandleInteger(this.stateTrigger[state], "state")))
-				debug call Print("Handle id: " + I2S(H2I(this.stateTrigger[state])))
+				set conditionFunction = null
+				set triggerCondition = null
+				set triggerAction = null
+			else
+				call stateEvent.execute(this, this.stateTrigger[state])
 			endif
-			call stateEvent.execute(this, this.stateTrigger[state]) //evaluate - returns the trigger event
-			debug call Print("After state execution with id " + I2S(this))
+			//call stateEvent.execute(this, this.stateTrigger[state])
 		endmethod
 
 		public method setStateCondition takes integer state, AAbstractQuestStateCondition stateCondition returns nothing
-			local conditionfunc conditionFunction
-			local triggercondition triggerCondition
+			debug if (not this.checkState(state)) then
+				debug return
+			debug endif
 			set this.stateCondition[state] = stateCondition
-			debug call Print("After adding condition to state trigger: " + I2S(H2I(this.stateTrigger[state])) + " and state " + I2S(state))
-			if (this.stateTrigger[state] != null) then
-				set conditionFunction = Condition(function AAbstractQuest.triggerConditionRunQuestState)
-				set triggerCondition = TriggerAddCondition(this.stateTrigger[state], conditionFunction)
-				set conditionFunction = null
-				set triggerCondition = null
-			endif
-			debug call Print("After adding condition with id " + I2S(this) + " and state " + I2S(state))
 		endmethod
 
 		public method setStateAction takes integer state, AAbstractQuestStateAction stateAction returns nothing
-			local triggeraction triggerAction
-			debug call Print("After adding action with state " + I2S(state))
+			debug if (not this.checkState(state)) then
+				debug return
+			debug endif
 			set this.stateAction[state] = stateAction
-			if (this.stateTrigger[state] != null) then
-				set triggerAction = TriggerAddAction(this.stateTrigger[state], function AAbstractQuest.triggerActionRunQuestState)
-				set triggerAction = null
-			debug else
-				debug call this.print("TRIGGER IS NULL")
-			endif
-			debug call Print("After adding action with id " + I2S(this))
 		endmethod
 
 		public method setReward takes integer reward, integer value returns nothing
@@ -270,11 +275,11 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 		
 		public method getModifiedTitle takes nothing returns string
 			if (this.state == AAbstractQuest.stateNew) then
-				return StringArg(AAbstractQuest.textStateNew, this.title) //ALibraryStringConversion
+				return StringArg(AAbstractQuest.textStateNew, this.title)
 			elseif (this.state == AAbstractQuest.stateCompleted) then
-				return StringArg(AAbstractQuest.textStateCompleted, this.title) //ALibraryStringConversion
+				return StringArg(AAbstractQuest.textStateCompleted, this.title)
 			elseif (this.state == AAbstractQuest.stateFailed) then
-				return StringArg(AAbstractQuest.textStateFailed, this.title) //ALibraryStringConversion
+				return StringArg(AAbstractQuest.textStateFailed, this.title)
 			debug else
 				debug call this.print("Unknown state (in getModifiedTitle()): " + I2S(this.state))
 			endif
@@ -325,10 +330,10 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 
 		private method displayMessage takes nothing returns nothing
 			if (this.character != 0) then
-				call this.character.displayMessage(ACharacter.messageTypeInfo, this.getModifiedTitle()) //AClassCharacterCharacter
-				call PlaySoundPathForPlayer(this.character.getUser(), this.getSoundPath()) //ALibraryEnvironmentSound
+				call this.character.displayMessage(ACharacter.messageTypeInfo, this.getModifiedTitle())
+				call PlaySoundPathForPlayer(this.character.getUser(), this.getSoundPath())
 			else
-				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.getModifiedTitle()) //AClassCharacterCharacter
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.getModifiedTitle())
 				call PlaySound(this.getSoundPath())
 			endif
 		endmethod
@@ -429,23 +434,22 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 
 		private static method triggerConditionRunQuestState takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AAbstractQuest this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this") //AClassCharacterCharacterHashTable
-			local integer state = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "state") //AClassCharacterCharacterHashTable
-			local boolean result = this.stateCondition[state].evaluate(this) /// @todotest
-			debug call Print("Handle id: " + I2S(H2I(triggeringTrigger)))
-			set triggeringTrigger = null
-			debug call Print("QUEST CONDITION for abstract quest " + I2S(this) + " with state " + I2S(state))
-			if (this.stateCondition[state] == 0) then
-				debug call Print("Condition is 0.")
+			local AAbstractQuest this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
+			local integer state = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "state")
+			local boolean result = true
+			debug call this.print("Condition")
+			if (this.stateCondition[state] != 0) then
+				set result = this.stateCondition[state].evaluate(this)
 			endif
-			return this.stateCondition[state].evaluate(this)
+			set triggeringTrigger = null
+			return result
 		endmethod
 	
 		private static method triggerActionRunQuestState takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local AAbstractQuest this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
 			local integer state = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "state")
-			debug call Print("ACTION for abstract quest " + I2S(this) + " with state " + I2S(state))
+			debug call this.print("Action")
 			call this.setState(state) //custom function will be called in this method
 			set triggeringTrigger = null
 		endmethod

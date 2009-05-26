@@ -16,18 +16,38 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 	/// @param Hello
 	struct ASpell extends AAbstractCharacterSystem
 		//start members
-		private integer usedAbility
-		private ASpellUpgradeAction upgradeAction
-		private ASpellCastCondition castCondition
-		private ASpellCastAction castAction
+		private integer m_ability
+		private ASpellUpgradeAction m_upgradeAction
+		private ASpellCastCondition m_castCondition
+		private ASpellCastAction m_castAction
 		//members
 		private trigger upgradeTrigger
 		private trigger castTrigger
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"ASpell\"")
 
+		//start members
+		
+		public method ability takes nothing returns integer
+			return this.m_ability
+		endmethod
+		
+		public method upgradeAction takes nothing returns ASpellUpgradeAction
+			return this.m_upgradeAction
+		endmethod
+		
+		public method castCondition takes nothing returns ASpellCastCondition
+			return this.m_castCondition
+		endmethod
+		
+		public method castAction takes nothing returns ASpellCastAction
+			return this.m_castAction
+		endmethod
+		
+		//methods
+		
 		public method level takes nothing returns integer
-			return GetUnitAbilityLevel(this.getUnit(), this.usedAbility)
+			return GetUnitAbilityLevel(this.getUnit(), this.m_ability)
 		endmethod
 		
 		//Make it available
@@ -40,7 +60,7 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 		private static method triggerConditionRightAbility takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ASpell this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
-			local boolean result = (GetSpellAbilityId() == this.usedAbility)
+			local boolean result = (GetSpellAbilityId() == this.m_ability)
 			set triggeringTrigger = null
 			return result
 		endmethod
@@ -49,7 +69,7 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ASpell this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
 			debug call this.print("Upgrade.")
-			call this.upgradeAction.execute(this, this.level())
+			call this.m_upgradeAction.execute(this, this.level())
 			set triggeringTrigger = null
 		endmethod
 
@@ -74,12 +94,15 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 		private static method triggerConditionCast takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ASpell this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
-			local boolean result = (this.castCondition == 0 or this.castCondition.evaluate(this))
-			if (not result) then
-				//taken from wc3jass.com
-				call PauseUnit(this.getUnit(), true)
-				call IssueImmediateOrder(this.getUnit(), "stop")
-				call PauseUnit(this.getUnit(), false)
+			local boolean result = (GetSpellAbilityId() == this.m_ability)
+			if (result) then
+				set result = (this.m_castCondition == 0 or this.m_castCondition.evaluate(this))
+				if (not result) then
+					//taken from wc3jass.com
+					call PauseUnit(this.getUnit(), true)
+					call IssueImmediateOrder(this.getUnit(), "stop")
+					call PauseUnit(this.getUnit(), false)
+				endif
 			endif
 			set triggeringTrigger = null
 			return result
@@ -88,7 +111,7 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 		private static method triggerActionCast takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ASpell this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
-			call this.castAction.execute(this)
+			call this.m_castAction.execute(this)
 			set triggeringTrigger = null
 		endmethod
 
@@ -99,10 +122,6 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 			local triggeraction triggerAction
 			set this.castTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.castTrigger, this.getUnit(), EVENT_UNIT_SPELL_CAST)
-			set conditionFunction = Condition(function ASpell.triggerConditionRightAbility)
-			set triggerCondition = TriggerAddCondition(this.castTrigger, conditionFunction)
-			set conditionFunction = null
-			set triggerCondition = null
 			set conditionFunction = Condition(function ASpell.triggerConditionCast)
 			set triggerCondition = TriggerAddCondition(this.castTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.castTrigger, function ASpell.triggerActionCast)
@@ -118,10 +137,10 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 		public static method create takes ACharacter character, integer usedAbility, ASpellUpgradeAction upgradeAction, ASpellCastCondition castCondition, ASpellCastAction castAction returns ASpell
 			local ASpell this = ASpell.allocate(character)
 			//start members
-			set this.usedAbility = usedAbility
-			set this.upgradeAction = upgradeAction
-			set this.castCondition = castCondition
-			set this.castAction = castAction
+			set this.m_ability = usedAbility
+			set this.m_upgradeAction = upgradeAction
+			set this.m_castCondition = castCondition
+			set this.m_castAction = castAction
 			
 			call character.addSpell(this)
 
@@ -146,10 +165,10 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, ALibraryCor
 
 		public method onDestroy takes nothing returns nothing
 
-			if (this.upgradeAction != 0) then
+			if (this.m_upgradeAction != 0) then
 				call this.destroyUpgradeTrigger()
 			endif
-			if (this.castAction != 0) then
+			if (this.m_castAction != 0) then
 				call this.destroyCastTrigger()
 			endif
 		endmethod

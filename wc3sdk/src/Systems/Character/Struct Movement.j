@@ -156,6 +156,14 @@ library AStructSystemsCharacterMovement requires ALibraryCoreInterfaceMisc, AStr
 		private method stop takes nothing returns nothing
 			call IssueImmediateOrder(this.getUnit(), "holdposition")
 		endmethod
+		
+		private static method triggerConditionIsAlive takes nothing returns boolean
+			local trigger triggeringTrigger = GetTriggeringTrigger()
+			local AMovement movement = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "movement") //AClassCharacterCharacterHashTable
+			local boolean result = not IsUnitDeadBJ(movement.getUnit())
+			set triggeringTrigger = null
+			return result
+		endmethod
 
 		private static method triggerActionMovement takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
@@ -248,13 +256,19 @@ library AStructSystemsCharacterMovement requires ALibraryCoreInterfaceMisc, AStr
 
 		private method createMovementTriggers takes nothing returns nothing
 			local event triggerEvent
+			local conditionfunc conditionFunction
+			local triggercondition triggerCondition
 			local triggeraction triggerAction
 
 			set this.movementTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(this.movementTrigger, AMovement.refreshRate, true)
+			set conditionFunction = Condition(function AMovement.triggerConditionIsAlive)
+			set triggerCondition = TriggerAddCondition(this.movementTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.movementTrigger, function AMovement.triggerActionMovement)
 			call AGetCharacterHashTable().storeHandleInteger(this.movementTrigger, "movement", this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
+			set conditionFunction = null
+			set triggerCondition = null
 			set triggerAction = null
 
 			if (not AMovement.useFps) then

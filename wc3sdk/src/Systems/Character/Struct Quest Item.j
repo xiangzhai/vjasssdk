@@ -2,19 +2,25 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 
 	struct AQuestItem extends AAbstractQuest
 		//start members
-		private AQuest usedQuest
+		private AQuest m_quest
 		//members
 		private questitem questLogQuestItem
 
 		//! runtextmacro A_STRUCT_DEBUG("\"AQuestItem\"")
+		
+		//start members
+		
+		public method quest takes nothing returns AQuest
+			return this.m_quest
+		endmethod
 
 		public stub method setState takes integer state returns nothing
 			local boolean result
-			call super.setState(state) //AClassCharacterAbstractQuest
-			set result = not this.usedQuest.checkQuestItemsForState(state) //AClassCharacterQuest
-			if (AQuest.isQuestLogUsed()) then //AClassCharacterQuest
-				//call QuestItemSetDescription(this.questLogQuestItem, this.getTitle()) //AClassCharacterAbstractQuest
-				call QuestItemSetCompleted(this.questLogQuestItem, state == AAbstractQuest.stateCompleted) //AClassCharacterAbstractQuest
+			call super.setState(state)
+			set result = not this.m_quest.checkQuestItemsForState(state)
+			if (AQuest.isQuestLogUsed()) then
+				//call QuestItemSetDescription(this.questLogQuestItem, this.getTitle())
+				call QuestItemSetCompleted(this.questLogQuestItem, state == AAbstractQuest.stateCompleted)
 				if (result) then
 					call FlashQuestDialogButton()
 					call ForceQuestDialogUpdate() //required?
@@ -23,8 +29,8 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 		endmethod
 
 		private method createQuestLogQuestItem takes nothing returns nothing
-			if (AQuest.isQuestLogUsed()) then //AClassCharacterQuest
-				set this.questLogQuestItem = QuestCreateItem(this.usedQuest.getQuestLogQuest())
+			if (AQuest.isQuestLogUsed()) then
+				set this.questLogQuestItem = QuestCreateItem(this.m_quest.getQuestLogQuest())
 				call QuestItemSetDescription(this.questLogQuestItem, this.getTitle())
 			endif
 		endmethod
@@ -34,8 +40,9 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 			debug if (usedQuest == 0) then
 				debug call this.print("usedQuest is 0.")
 			debug endif
+			debug call Print("THISSSSSS: " + I2S(this))
 			//start members
-			set this.usedQuest = usedQuest
+			set this.m_quest = usedQuest
 
 			call this.createQuestLogQuestItem()
 			call usedQuest.addQuestItem(this)

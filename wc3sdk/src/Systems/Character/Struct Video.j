@@ -37,8 +37,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, ALibraryCor
 				debug call this.print("Another Video is already running.")
 			debug endif
 
-			call CinematicFilterGenericBJ(AVideo.filterDuration, BLEND_MODE_BLEND, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.0, 100.0, 100.0, 0.0, 100.0, 100.0, 100.0, 100.0)
-			//call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUTIN, AVideo.filterDuration, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0, 0, 0, 0)
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, AVideo.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(AVideo.waitTime)
 			call ClearSelection()
 			call ACharacter.setAllMovable(false)
@@ -51,6 +50,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, ALibraryCor
 			endif
 			debug call Print("Before video")
 
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, AVideo.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(AVideo.waitTime)
 
 			call EnableTrigger(AVideo.skipTrigger)
@@ -67,17 +67,20 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, ALibraryCor
 		public method stop takes nothing returns nothing
 			local force playersAll
 			call DisableTrigger(AVideo.skipTrigger) 
-			call CinematicFilterGenericBJ(AVideo.filterDuration, BLEND_MODE_BLEND, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.0, 100.0, 100.0, 0.0, 100.0, 100.0, 100.0, 100.0)
-			//call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUTIN, AVideo.filterDuration, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 0, 0, 0, 0)
+			call EnableUserControl(false)
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, AVideo.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(AVideo.waitTime)
 			set playersAll = GetPlayersAll()
 			call CinematicModeExBJ(false, playersAll, 0.0)
+			call EnableUserControl(false)
 			set playersAll = null
 			call ResetToGameCamera(0.0)
 			if (this.stopAction != 0) then
 				call this.stopAction.execute(this)
 			endif
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, AVideo.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(AVideo.waitTime)
+			call EnableUserControl(true)
 
 			call ACharacter.setAllMovable(true)
 			set AVideo.runningVideo = 0
