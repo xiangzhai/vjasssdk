@@ -22,6 +22,7 @@
 #define VJASSDOC_LIBRARY_H
 
 #include "object.h"
+#include <iostream> //debug
 
 namespace vjassdoc
 {
@@ -31,7 +32,7 @@ class Library : public Object
 	public:
 		struct HasRequirement : public Parser::Comparator
 		{
-			virtual bool operator()(class Object *thisObject, const class Object *library) const;
+			virtual bool operator()(class Object *thisObject, class Object *library) const;
 		};
 	
 		static const char *sqlTableName;
@@ -59,14 +60,18 @@ class Library : public Object
 		std::list<class Library*> *m_requirement;
 };
 
-inline bool Library::HasRequirement::operator()(class Object *thisObject, const class Object *library) const
+inline bool Library::HasRequirement::operator()(class Object *thisObject, class Object *library) const
 {
+	std::cout << "Test" << std::endl;
 	class Library *thisLibrary = static_cast<class Library*>(thisObject);
 
-	for (std::list<class Library*>::iterator iterator = thisLibrary->requirement()->begin(); iterator != thisLibrary->requirement()->end(); ++iterator)
+	if (thisLibrary->requirement() != 0)
 	{
-		if (*iterator == library)
-			return true;
+		for (std::list<class Library*>::iterator iterator = thisLibrary->requirement()->begin(); iterator != thisLibrary->requirement()->end(); ++iterator)
+		{
+			if (*iterator == static_cast<class Library*>(library))
+				return true;
+		}
 	}
 	
 	return false;

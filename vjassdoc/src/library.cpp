@@ -98,6 +98,9 @@ void Library::pageNavigation(std::ofstream &file) const
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"			<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source file\">"			<< _("Source file") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Once\">"				<< _("Once") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Initializer\">"			<< _("Initializer") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Requirement\">"			<< _("Requirement") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Keywords\">"				<< _("Keywords") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Text Macros\">"			<< _("Text Macros") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Text Macro Instances\">"		<< _("Text Macro Instances") << "</a></li>"
@@ -120,6 +123,29 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t</p>\n"
 	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
+	<< "\t\t<h2><a name=\"Once\">" << _("Once") << "</a></h2>\n"
+	<< "\t\t" << Object::showBooleanProperty(this->isOnce()) << '\n'
+	<< "\t\t<h2><a name=\"Initializer\">" << _("Initializer") << "</a></h2>\n"
+	<< "\t\t" << Object::objectPageLink(this->initializer(), this->initializerExpression) << '\n'
+	<< "\t\t<h2><a name=\"Requirement\">" << _("Requirement") << "</a></h2>\n"
+	;
+	
+	if (this->requirement() != 0)
+	{
+		file << "\t\t<ul>\n";
+		std::list<std::string>::iterator expressionIterator = this->requirementExpressions->begin();
+	
+		for (std::list<class Library*>::iterator iterator = this->requirement()->begin(); iterator != this->requirement()->end(); ++iterator, ++expressionIterator)
+		{
+			file << "\t\t\t<li>" << Object::objectPageLink(*iterator, *expressionIterator) << "</li>\n";
+		}
+		
+		file << "\t\t</ul>\n";
+	}
+	else
+		file << "\t\t<p>-</p>\n";
+	
+	file
 	<< "\t\t<h2><a name=\"Keywords\">" << _("Keywords") << "</a></h2>\n"
 	;
 	

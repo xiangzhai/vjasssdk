@@ -1,3 +1,9 @@
+2009-06-03 Tamino Dauth <tamino@cdauth.de>
+* Fixed documentation comment parsing.
+* Fixed locale directory detection.
+* Improved inheritance list page.
+* Improved library pages.
+
 2009-05-20 Tamino Dauth <tamino@cdauth.de>
 * Improved syntax checker mode.
 * Added requirement list page support.

@@ -2,6 +2,7 @@
 /// Peter.
 /// Hans.
 /// In this phrase interface @interface MyStructInterface
+/// Another test with documentation domments and characters at @interface MyStructInterface!
 // TEST
 library AnotherLibrary initializer init
 	private keyword Jesus

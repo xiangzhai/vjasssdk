@@ -33,25 +33,12 @@ using namespace vjassdoc;
 
 int main(int argc, char *argv[])
 {
-
-#ifdef UNIX
-	//bindtextdomain("vjassdoc", "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/locale");
-	bindtextdomain("vjassdoc", "/usr/share/locale");
-	textdomain("vjassdoc.mo");
-#elif defined WIN32
-	bindtextdomain("vjassdoc", ""); //NOTE Change this value
-#endif
-
-
-/*
-TODO set LOCALE_DIR by cmake
-#ifndef LOCALE_DIR
-#error You have to define LOCALE_DIR.
-#else
-	bindtextdomain("vjassdoc", "LOCALE_DIR");
+	// Set the current locale.
+	setlocale(LC_ALL, "");
+	// Set the text message domain.
+	bindtextdomain("vjassdoc", LOCALE_DIR);
 	textdomain("vjassdoc");
-#endif
-*/
+
 	if (argc > 1)
 	{
 		if (strcmp(argv[1], "--version") == 0)
@@ -75,7 +62,7 @@ TODO set LOCALE_DIR by cmake
 			_("-d --debug                  Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
 			_("--private                   Private objects will be parsed.\n") <<
 			_("-m --textmacros             Code between text macro statements will be parsed (Warning: There can be many parsing errors!).\n") <<
-			_("--functions                 Code between function/method statements will be parsed.\n") <<
+			_("-f --functions              Code between function/method statements will be parsed.\n") <<
 			_("--no<object type name>      Objects of type <object type name> won't added to the output files.\n") <<
 			_("                            The following object type names are available:\n") <<
 			_("                            comments\n") <<
@@ -86,6 +73,7 @@ TODO set LOCALE_DIR by cmake
 			_("                            locals\n") <<
 			_("                            globals\n") <<
 			_("                            members\n") <<
+			_("                            parameters\n") <<
 			_("                            functioninterfaces\n") <<
 			_("                            functions\n") <<
 			_("                            methods\n") <<
@@ -105,7 +93,7 @@ TODO set LOCALE_DIR by cmake
 			_("-b --database               Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
 #endif
 			_("-v --verbose                Program shows more information about the process.\n") <<
-			_("-t --time                   Detects the remaining time and shows it at the end of the process.\n") <<
+			_("-t --time                   Detects the elapsed time and shows it at the end of the process.\n") <<
 			_("-a --alphabetical           All objects will be aranged in alphabetical order.\n") <<
 			_("--title <arg>               <arg> has to be replaced by the title which is used for the API documentation.\n") <<
 			_("--importdirs <args>         <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
@@ -216,6 +204,10 @@ TODO set LOCALE_DIR by cmake
 					
 					case 'm':
 						textmacros = true;
+						break;
+					
+					case 'f':
+						functions = true;
 						break;
 					
 					case 'h':

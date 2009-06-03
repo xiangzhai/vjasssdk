@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
+//#include <iostream> //debug
 #include <sstream>
 
 #include "objects.h"
@@ -38,8 +38,10 @@ const char *DocComment::keyword[Parser::MaxLists] =
 	"textmacro",
 	"textmacroinstance",
 	"type",
+	"local",
 	"global",
 	"member",
+	"parameter",
 	"functioninterface",
 	"function",
 	"method",
@@ -74,7 +76,9 @@ DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : Object
 /// @todo FIXME
 void DocComment::init()
 {
-/*
+	//std::cout << "Init doc comment -----------------------------" << std::endl;
+	//std::cout << "Identifier " << this->identifier() << std::endl;
+
 	std::string result;
 	unsigned int oldIndex = 0;
 	unsigned int newIndex = this->identifier().find('@');
@@ -88,26 +92,39 @@ void DocComment::init()
 			break;
 		
 		std::string token = File::getToken(this->identifier(), newIndex);
-		std::cout << "Token: " << token << " and index " << newIndex << std::endl;
+		//std::cout << "Token: " << token << " and index " << newIndex << std::endl;
 		bool found = false;
 		
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
 			if (token == DocComment::keyword[i])
 			{
-				std::cout << "Found keyword: " << DocComment::keyword[i] << " and has index " << newIndex << std::endl;
+				//std::cout << "Found keyword: " << DocComment::keyword[i] << " and has index " << newIndex << std::endl;
 				found = true;
 				token = File::getToken(this->identifier(), newIndex); //FIXME
-				std::cout << "New token: " << token << std::endl;
+				//std::cout << "New token: " << token << std::endl;
 				
 				if (token.empty())
 					break;
 				
+				/// @todo Cut . , ? ! etc: This is @functioninterface Peter!
+				int lastIndex = token.length() - 1;
+				char lastChar = token[lastIndex];
+				
+				if (lastChar == '.' || lastChar == ',' || lastChar == '!' || lastChar == '?')
+					token = token.substr(0, lastIndex);
+				else
+					lastChar = 0;
+				
+				//std::cout << "Searching in list " << i << " for token " << token << std::endl;
 				class Object *object = this->searchObjectInList(token, Parser::List(i));
 				result += Object::objectPageLink(object, token);
 				
-				if (object != 0)
-					std::cout << "Object " << object->identifier() << " is not null." << std::endl;
+				if (lastChar != 0)
+					result += lastChar;
+				
+				//if (object != 0)
+					//std::cout << "Object " << object->identifier() << " is not null." << std::endl;
 
 				break;
 			}
@@ -124,18 +141,16 @@ void DocComment::init()
 		
 		newIndex = this->identifier().find('@', newIndex);
 	}
-	while (newIndex != std::string::npos);
 	
-	std::cout << "Old index " << oldIndex << std::endl;
+	//std::cout << "Old index " << oldIndex << std::endl;
 	
 	if (oldIndex <  this->identifier().length() - 1)
 	{
-		std::cout << "Old index " << oldIndex << std::endl;
+		//std::cout << "Old index " << oldIndex << std::endl;
 		result += this->identifier().substr(oldIndex);
 	}
 	
 	this->setIdentifier(result);
-*/
 }
 
 void DocComment::pageNavigation(std::ofstream &file) const

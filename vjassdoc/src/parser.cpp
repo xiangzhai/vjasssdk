@@ -168,7 +168,7 @@ Parser::Parser() :
 	if (!Vjassdoc::getDatabases().empty())
 	{
 		if (Vjassdoc::showVerbose())
-			std::cout << _("You've selected one or several databases..") << std::endl;
+			std::cout << _("You've selected one or several databases.") << std::endl;
 
 		for (std::list<std::string>::iterator iterator = Vjassdoc::getDatabases().begin(); iterator != Vjassdoc::getDatabases().end(); ++iterator)
 		{
@@ -308,7 +308,6 @@ Parser::~Parser()
 	this->databaseVector.clear();
 }
 
-/// @todo FIXME
 void Parser::createInheritanceListPage()
 {
 	//inheritance list
@@ -332,34 +331,47 @@ void Parser::createInheritanceListPage()
 	<< "\t\t\t<li><a href=\"#Structs\">"	<< _("Structs") << "</a></li>\n"
 	<< "\t\t</ul>\n"
 	<< "\t\t<h2><a name=\"Interfaces\">" << _("Interfaces") << "</a></h2>\n"
-	<< "\t\t<ul>\n"
 	;
 
-	for (std::list<class Interface*>::iterator iterator = this->interfaceList.begin(); iterator != this->interfaceList.end(); ++iterator)
+	if (!this->interfaceList.empty())
 	{
-		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
-		this->getStructInheritanceList(*iterator, "\t\t\t\t", sstream);
-		sstream << "\t\t\t</li>\n";
-	}
+		sstream << "\t\t<ul>\n";
 
-	sstream
-	<< "\t\t</ul>\n"
-	<< "\t\t<h2><a name=\"Structs\">" << _("Structs") << "</a></h2>\n"
-	<< "\t\t<ul>\n"
-	;
-
-	for (std::list<class Struct*>::iterator iterator = this->structList.begin(); iterator != this->structList.end(); ++iterator)
-	{
-		if ((*iterator)->extension() == 0)
+		for (std::list<class Interface*>::iterator iterator = this->interfaceList.begin(); iterator != this->interfaceList.end(); ++iterator)
 		{
 			sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
 			this->getStructInheritanceList(*iterator, "\t\t\t\t", sstream);
 			sstream << "\t\t\t</li>\n";
 		}
+
+		sstream << "\t\t</ul>\n";
 	}
+	else
+		sstream << "\t\t<p>-</p>\n";
 
 	sstream
-	<< "\t\t</ul>\n"
+	<< "\t\t<h2><a name=\"Structs\">" << _("Structs") << "</a></h2>\n";
+
+	if (!this->structList.empty())
+	{
+		sstream << "\t\t<ul>\n";
+
+		for (std::list<class Struct*>::iterator iterator = this->structList.begin(); iterator != this->structList.end(); ++iterator)
+		{
+			if ((*iterator)->extension() == 0)
+			{
+				sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
+				this->getStructInheritanceList(*iterator, "\t\t\t\t", sstream);
+				sstream << "\t\t\t</li>\n";
+			}
+		}
+
+		sstream << "\t\t</ul>\n";
+	}
+	else
+		sstream << "\t\t<p>-</p>\n";
+
+	sstream
 	<< "\t</body>\n"
 	<< "</html>\n"
 	;
@@ -399,7 +411,8 @@ void Parser::createRequirementListPage()
 
 	for (std::list<class Library*>::iterator iterator = this->libraryList.begin(); iterator != this->libraryList.end(); ++iterator)
 	{
-		if ((*iterator)->requirement() == 0)
+		//requirement has to be 0
+		if ((*iterator)->requirement() != 0)
 			continue;
 
 		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
@@ -1354,20 +1367,21 @@ void Parser::getStructInheritanceList(const class Interface *extension, const st
 	sstream << prefix << "</ul>\n";
 }
 
+/// @todo FIXME
 void Parser::getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::stringstream &sstream)
 {
 	std::list<class Object*> libraryList = this->getSpecificList(requirement, Parser::Libraries, Library::HasRequirement());
 
-	if (structList.empty())
+	if (libraryList.empty())
+	{
+		//std::cout << "Requirement list is empty." << std::endl;
 		return;
+	}
 
 	sstream << prefix << "<ul>\n";
 
 	for (std::list<class Object*>::iterator iterator = libraryList.begin(); iterator != libraryList.end(); ++iterator)
 	{
-		if ((*iterator)->requirement() == 0)
-			continue;
-
 		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
 		this->getLibraryRequirementList(static_cast<class Library*>(*iterator), prefix + "\t\t", sstream);
 		sstream << prefix << "\t</li>\n";

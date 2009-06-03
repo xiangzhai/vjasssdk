@@ -116,8 +116,8 @@ const char *File::docExpressionText[] =
 	"todo",
 	"param",
 	"return",
-	"source",
-	"state"
+	"state",
+	"source"
 };
 
 std::string File::getToken(const std::string &line, unsigned int &index, bool endOfLine)
@@ -851,7 +851,7 @@ void File::getDocComment(const std::string &line, unsigned int index)
 		}
 		
 		if (!found)
-			result += token;
+			result += '@' + token;
 		
 		if (newIndex >= docCommentItem.length() - 1)
 			break;
