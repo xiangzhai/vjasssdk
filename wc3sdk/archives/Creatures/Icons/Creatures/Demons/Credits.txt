@@ -1,0 +1,6 @@
+Name				Author		From
+BTNBestie.blp			Werewulf	http://www.wc3campaigns.net/
+BTNBestienhaeputling.blp	bboy-tiger-	http://www.wc3campaigns.net/
+BTNSchattenefreet.blp		TDR		http://www.wc3campaigns.net/
+DISBTNBestie.blp		Werewulf	http://www.wc3campaigns.net/
+DISBTNBestienhaeputling.blp	bboy-tiger-	http://www.wc3campaigns.net/
