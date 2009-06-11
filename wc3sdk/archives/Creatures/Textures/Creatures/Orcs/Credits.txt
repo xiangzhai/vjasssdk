@@ -1,0 +1,4 @@
+File			Authors			Source
+Hexer.blp		levigeorge1617		http://www.hiveworkshop.com/
+Maennlich.blp		Blizzard Entertainment	http://xgm.ru/
+Ramme.blp		Sung Bum, Lee		http://www.hiveworkshop.com/
