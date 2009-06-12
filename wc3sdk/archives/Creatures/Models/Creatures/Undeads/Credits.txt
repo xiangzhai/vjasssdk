@@ -1,0 +1,17 @@
+Name					Author			From
+BewaffneterZombie.mdx		Blizzard Entertainment	http://xgm.ru/
+Drache.mdx				Blizzard Entertainment	http://xgm.ru/
+Ghul.mdx				Blizzard Entertainment	http://xgm.ru/
+NiederesSkelett.mdx		Blizzard Entertainment	http://xgm.ru/
+Pferd.mdx				Blizzard Entertainment	http://xgm.ru/
+Skelettmagier.mdx			xXm0rpH3usXx		http://www.wc3campaigns.net/
+Skelettmagier_Portrait.mdx	xXm0rpH3usXx		http://www.wc3campaigns.net/
+Spinnenbestie.mdx			Blizzard Entertainment	http://xgm.ru/
+Spinnenmagier.mdx			jigrael			http://www.wc3campaigns.net/
+Spinnenmagier_Portrait.mdx	jigrael			http://www.wc3campaigns.net/
+Todesengel.mdx			Blizzard Entertainment	http://xgm.ru/
+Vampir.mdx				Blizzard Entertainment	http://xgm.ru/
+Vampir_Portrait.mdx		Blizzard Entertainment	http://xgm.ru/
+Vampirgebieter.mdx		Blizzard Entertainment	http://xgm.ru/
+Vampirgebieter_Portrait.mdx	Blizzard Entertainment	http://xgm.ru/
+Zombie.mdx				Blizzard Entertainment	http://xgm.ru/

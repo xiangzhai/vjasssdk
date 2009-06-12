@@ -1,0 +1,19 @@
+Name				Author				From
+Baer.mdx			Blizzard Entertainment		http://xgm.ru/
+Baerenform.mdx		Blizzard Entertainment		http://xgm.ru/
+Drache.mdx			-					http://xgm.ru/
+Giraffe.mdx			Blizzard Entertainment		http://xgm.ru/
+Gorilla.mdx			Blizzard Entertainment		http://xgm.ru/
+Katze.mdx			Blizzard Entertainment		http://xgm.ru/
+Krabbe.mdx			Blizzard Entertainment		http://xgm.ru/
+Kraehe.mdx			Blizzard Entertainment		http://xgm.ru/
+Kuh.mdx			Blizzard Entertainment		http://xgm.ru/
+Ratte.mdx			Blizzard Entertainment		http://xgm.ru/
+Spinne.mdx			Blizzard Entertainment		http://xgm.ru/
+Spinne_Portrait.mdx	Blizzard Entertainment		http://xgm.ru/
+Tiger.mdx			Blizzard Entertainment		http://xgm.ru/
+Vogelspinne.mdx		Blizzard Entertainment		http://xgm.ru/
+Widder.mdx			Blizzard Entertainment		http://xgm.ru/
+Wildschwein.mdx		Blizzard Entertainment		http://xgm.ru/
+Wolfsform.mdx		-					http://xgm.ru/
+Wolfsform_Portrait.mdx	-					http://xgm.ru/

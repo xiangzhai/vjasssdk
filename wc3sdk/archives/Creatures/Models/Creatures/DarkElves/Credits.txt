@@ -1,0 +1,5 @@
+Name				Author				Source
+Dunkelelf.mdx			Tenebrae			http://www.hiveworkshop.com/
+Dunkelelf_Portrait.mdx		Tenebrae			http://www.hiveworkshop.com/
+MaennlicherWaldgeist.mdx	Blizzard Entertainment		http://xgm.ru/
+WeiblicherWaldgeist.mdx		Blizzard Entertainment		http://xgm.ru/
