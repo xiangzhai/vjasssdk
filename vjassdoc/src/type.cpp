@@ -20,7 +20,6 @@
 
 #include <cctype>
 #include <sstream>
-#include <iostream> //debug
 
 #include "objects.h"
 #include "internationalisation.h"
@@ -42,7 +41,6 @@ void Type::initClass()
 
 Type::Type(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &typeExpression, const std::string &sizeExpression) : typeExpression(typeExpression), sizeExpression(sizeExpression), m_type(0), m_size(0), Object(identifier, sourceFile, line, docComment)
 {
-	std::cout << "Type name " << identifier << std::endl;
 }
 
 Type::Type(std::vector<const unsigned char*> &columnVector) : Object(columnVector)

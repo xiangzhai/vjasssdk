@@ -186,6 +186,24 @@ comment.s:
 .PHONY : comment.s
 
 # target to build an object file
+compiler.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/compiler.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/compiler.o
+.PHONY : compiler.o
+
+# target to preprocess a source file
+compiler.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/compiler.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/compiler.i
+.PHONY : compiler.i
+
+# target to generate assembly for a file
+compiler.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/compiler.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/compiler.s
+.PHONY : compiler.s
+
+# target to build an object file
 doccomment.o:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/doccomment.o
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/doccomment.o
@@ -310,6 +328,24 @@ interface.s:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/interface.s
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/interface.s
 .PHONY : interface.s
+
+# target to build an object file
+key.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/key.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/key.o
+.PHONY : key.o
+
+# target to preprocess a source file
+key.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/key.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/key.i
+.PHONY : key.i
+
+# target to generate assembly for a file
+key.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/key.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/key.s
+.PHONY : key.s
 
 # target to build an object file
 keyword.o:
@@ -615,6 +651,24 @@ type.s:
 .PHONY : type.s
 
 # target to build an object file
+utilities.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/utilities.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/utilities.o
+.PHONY : utilities.o
+
+# target to preprocess a source file
+utilities.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/utilities.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/utilities.i
+.PHONY : utilities.i
+
+# target to generate assembly for a file
+utilities.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/utilities.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/utilities.s
+.PHONY : utilities.s
+
+# target to build an object file
 vjassdoc.o:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/vjassdoc.o
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/vjassdoc.o
@@ -649,6 +703,9 @@ help:
 	@echo "... comment.o"
 	@echo "... comment.i"
 	@echo "... comment.s"
+	@echo "... compiler.o"
+	@echo "... compiler.i"
+	@echo "... compiler.s"
 	@echo "... doccomment.o"
 	@echo "... doccomment.i"
 	@echo "... doccomment.s"
@@ -670,6 +727,9 @@ help:
 	@echo "... interface.o"
 	@echo "... interface.i"
 	@echo "... interface.s"
+	@echo "... key.o"
+	@echo "... key.i"
+	@echo "... key.s"
 	@echo "... keyword.o"
 	@echo "... keyword.i"
 	@echo "... keyword.s"
@@ -721,6 +781,9 @@ help:
 	@echo "... type.o"
 	@echo "... type.i"
 	@echo "... type.s"
+	@echo "... utilities.o"
+	@echo "... utilities.i"
+	@echo "... utilities.s"
 	@echo "... vjassdoc.o"
 	@echo "... vjassdoc.i"
 	@echo "... vjassdoc.s"

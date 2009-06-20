@@ -22,7 +22,6 @@
 #define VJASSDOC_LIBRARY_H
 
 #include "object.h"
-#include <iostream> //debug
 
 namespace vjassdoc
 {
@@ -59,23 +58,6 @@ class Library : public Object
 		class Function *m_initializer; //Function is the parent class of Method, so it can be a method, too.
 		std::list<class Library*> *m_requirement;
 };
-
-inline bool Library::HasRequirement::operator()(class Object *thisObject, class Object *library) const
-{
-	std::cout << "Test" << std::endl;
-	class Library *thisLibrary = static_cast<class Library*>(thisObject);
-
-	if (thisLibrary->requirement() != 0)
-	{
-		for (std::list<class Library*>::iterator iterator = thisLibrary->requirement()->begin(); iterator != thisLibrary->requirement()->end(); ++iterator)
-		{
-			if (*iterator == static_cast<class Library*>(library))
-				return true;
-		}
-	}
-	
-	return false;
-}
 
 inline bool Library::isOnce() const
 {

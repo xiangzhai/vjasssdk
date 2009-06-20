@@ -44,6 +44,7 @@ bool Vjassdoc::supportsDatabaseCreation = true;
 bool Vjassdoc::supportsDatabaseCreation = false;
 #endif
 class Parser *Vjassdoc::parser = 0;
+class Compiler *Vjassdoc::compiler = 0;
 bool Vjassdoc::jass;
 bool Vjassdoc::debug;
 bool Vjassdoc::privateSpace;
@@ -53,6 +54,7 @@ bool Vjassdoc::html;
 bool Vjassdoc::pages;
 bool Vjassdoc::specialPages;
 bool Vjassdoc::syntax;
+std::string Vjassdoc::m_compileFilePath;
 bool Vjassdoc::database;
 bool Vjassdoc::verbose;
 bool Vjassdoc::time;
@@ -66,7 +68,7 @@ std::list<std::string> Vjassdoc::databases = std::list<std::string>();
 unsigned int Vjassdoc::lines = 0;
 unsigned int Vjassdoc::files = 0;
 
-void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
+void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, const std::string &compileFilePath, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
 {
 	Vjassdoc::jass = jass;
 	Vjassdoc::debug = debug;
@@ -77,6 +79,7 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	Vjassdoc::pages = pages;
 	Vjassdoc::specialPages = specialPages;
 	Vjassdoc::syntax = syntax;
+	Vjassdoc::m_compileFilePath = compileFilePath;
 	Vjassdoc::database = database;
 	Vjassdoc::verbose = verbose;
 	Vjassdoc::alphabetical = alphabetical;
@@ -118,6 +121,7 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	Object::initClass();
 	Comment::initClass();
 	Keyword::initClass();
+	Key::initClass();
 	TextMacro::initClass();
 	TextMacroInstance::initClass();
 	Type::initClass();
@@ -139,6 +143,9 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	std::cout << "After initialization." << std::endl;
 	
 	Vjassdoc::getParser()->parse();
+
+	if (!Vjassdoc::compileFilePath().empty())
+		Vjassdoc::getCompiler()->compile();
 	
 	if (time)
 	{

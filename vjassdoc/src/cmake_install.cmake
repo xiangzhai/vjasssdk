@@ -37,6 +37,7 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" MATCHES "^(Unspec
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/object.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/comment.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/keyword.h"
+    "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/key.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacro.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/textmacroinstance.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/type.h"
@@ -58,7 +59,9 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" MATCHES "^(Unspec
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/syntaxerror.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/file.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/parser.h"
+    "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/compiler.h"
     "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/vjassdoc.h"
+    "/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/utilities.h"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" MATCHES "^(Unspecified)$")
 

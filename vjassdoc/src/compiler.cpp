@@ -18,57 +18,70 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_DOCCOMMENT_H
-#define VJASSDOC_DOCCOMMENT_H
+#include <boost/tokenizer.hpp>
 
-#include "object.h"
+#include "vjassdoc.h"
+#include "utilities.h"
+#include "internationalisation.h"
 #include "parser.h"
+#include "objects.h"
 
 namespace vjassdoc
 {
 
-class DocComment : public Object
+void Compiler::compile()
 {
-	public:
-		static const char *sqlTableName;
-		static unsigned int sqlColumns;
-		static std::string sqlColumnStatement;
-
-		static void initClass();
-		DocComment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line);
-		DocComment(std::vector<const unsigned char*> &columnVector);
-		virtual void init();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
-		virtual std::string sqlStatement() const;
-		void setObject(class Object *object); //Just used by the Object class.
-		std::string formattedText() const;
-		class Object *object() const;
-
-	protected:
-		static const char *keyword[Parser::MaxLists];
+	if (!fileExists(Vjassdoc::compileFilePath()))
+	{
+		fprintf(stderr, _("File \"%s\" does not exist."), Vjassdoc::compileFilePath().c_str());
+		return;
+	}
 	
-		class DocComment* docComment() const; //Do not use
+	std::fstream fin(Vjassdoc::compileFilePath().c_str());
+	
+	//globals block
+	while (fin.good())
+	{
+		std::string line;
+		std::getline(fin, line);
+		boost::tokenizer<> tok(line);
 		
-		std::string m_formattedText;
-		class Object *m_object;
-};
+		if (tok.begin() != tok.end() && *tok.begin() == "globals")
+		{
+			std::getline(fin, line);
+			
+			if (fin.good())
+				this->writeGlobals(fin);
+		}
+	}
 
-inline void DocComment::setObject(class Object *object)
+}
+
+void Compiler::writeGlobals(std::fstream &fstream)
 {
-	this->m_object = object;
+	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(0, Parser::Globals, Parser::Comparator());
+	/*
+	for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
+	{
+		class Global *global = static_cast<class Object*>(*iterator);
+	
+		if (global->type() != 0)
+			fstream << global->type()->identifier();
+		else
+			fstream << global->typeExpression();
+		
+		if (global->size() != 0 || global->sizeLiteral() != 0)
+			fstream << " array ";
+		
+		if (global->library() != 0)
+			fstream << global->library()->identifier() << "__";
+		
+		if (global->scope() != 0)
+			fstream << global->scope()->identifier() << "__";
+		
+		fstream << global->identifier();
+	}
+	*/
 }
 
-inline std::string DocComment::formattedText() const
-{
-	return this->m_formattedText;
 }
-
-inline class Object* DocComment::object() const
-{
-	return this->m_object;
-}
-
-}
-
-#endif

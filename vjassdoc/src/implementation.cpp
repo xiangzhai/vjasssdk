@@ -50,8 +50,9 @@ Implementation::Implementation(std::vector<const unsigned char*> &columnVector) 
 
 void Implementation::init()
 {
+	//std::cout << "Before search of " << this->moduleExpression() << std::endl;
 	this->m_module = static_cast<class Module*>(this->searchObjectInList(this->moduleExpression(), Parser::Modules));
-	std::cout << "Searching for module " << this->moduleExpression() << std::endl;
+	//std::cout << "Searching for module " << this->moduleExpression() << std::endl;
 
 	if (this->m_module != 0)
 		this->m_moduleExpression.clear();

@@ -163,13 +163,9 @@ bool Object::IsInLibrary::operator()(const class Object *thisObject, const class
 
 bool Object::hasToSearchValueObject(class Object *type, const std::string &expression)
 {
-	std::cout << "Has to search with expression " << expression << " and type " << type << std::endl;
-
 	if (type == 0)
 		return false;
-
-	std::cout << "type name " << type->identifier() << std::endl;
-
+	
 	if (dynamic_cast<class Type*>(type) != 0)
 	{
 		do
@@ -231,26 +227,26 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 
 	if (!valueExpression.empty())
 	{
-		std::cout << "Before has to search." << std::endl;
+		//std::cout << "Before has to search." << std::endl;
 		
 		//FIXME The value can be a function or method call with literal arguments.
 		if (Object::hasToSearchValueObject(type, valueExpression))
 		{
-			std::cout << "Has to search!" << std::endl;
+			//std::cout << "Has to search!" << std::endl;
 			//FIXME Detect . separators correctly.
 			class Object *valueContainer = 0;
 			std::string::size_type separatorPosition = valueExpression.find('.');
 			
 			if (separatorPosition != std::string::npos)
 			{
-				std::cout << "Found . in value expression at position " << separatorPosition << std::endl;
+				//std::cout << "Found . in value expression at position " << separatorPosition << std::endl;
 				std::string containerIdentifier = valueExpression.substr(0, separatorPosition);
-				std::cout << "Container identifier: " << containerIdentifier << std::endl;
+				//std::cout << "Container identifier: " << containerIdentifier << std::endl;
 				
 				if (containerIdentifier == File::expressionText[File::ThistypeExpression])
 				{
 					valueContainer = this->container();
-					std::cout << "thistype" << std::endl;
+					//std::cout << "thistype" << std::endl;
 				}
 				else if (containerIdentifier == File::expressionText[File::SuperExpression])
 				{
@@ -261,8 +257,8 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 				
 				//FIXME, does not work
 				valueExpression.erase(separatorPosition);
-				std::cout << "New value expression " << valueExpression << std::endl;
-				std::cout << "New position " << separatorPosition << std::endl;
+				//std::cout << "New value expression " << valueExpression << std::endl;
+				//std::cout << "New position " << separatorPosition << std::endl;
 			}
 			
 			//FIXME Detect _ separators correctly?!
@@ -294,19 +290,19 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 			
 			if (functionCall)
 			{
-				std::cout << "Is function call " << std::endl;
+				//std::cout << "Is function call " << std::endl;
 				
 				//methods only
 				if (valueContainer != 0)
 				{
-					std::cout << "with value container." << std::endl;
+					//std::cout << "with value container." << std::endl;
 					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Methods, Object::IsInContainer());
 					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Unspecified);
 				}
 				//functions only
 				else
 				{
-					std::cout << "Has no container " << std::endl;
+					//std::cout << "Has no container " << std::endl;
 					value = this->searchObjectInList(newExpression, Parser::Functions);
 					//std::cout << "Value = " << value << std::endl;
 				}
@@ -328,8 +324,8 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 			if (position == std::string::npos && value == 0)
 				valueExpression.clear();
 		}
-		else
-			std::cout << "has not to search" << std::endl;
+		//else
+			//std::cout << "has not to search" << std::endl;
 	}
 	else
 		valueExpression = '-';

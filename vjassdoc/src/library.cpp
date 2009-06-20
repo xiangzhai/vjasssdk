@@ -20,6 +20,7 @@
 
 #include <sstream>
 #include <list>
+#include <iostream> //debug
 
 #include "objects.h"
 #include "internationalisation.h"
@@ -32,6 +33,23 @@ namespace vjassdoc
 const char *Library::sqlTableName = "Libraries";
 unsigned int Library::sqlColumns;
 std::string Library::sqlColumnStatement;
+
+bool Library::HasRequirement::operator()(class Object *thisObject, class Object *library) const
+{
+	std::cout << "Test" << std::endl;
+	class Library *thisLibrary = static_cast<class Library*>(thisObject);
+
+	if (thisLibrary->requirement() != 0)
+	{
+		for (std::list<class Library*>::iterator iterator = thisLibrary->requirement()->begin(); iterator != thisLibrary->requirement()->end(); ++iterator)
+		{
+			if (*iterator == static_cast<class Library*>(library))
+				return true;
+		}
+	}
+	
+	return false;
+}
 
 void Library::initClass()
 {

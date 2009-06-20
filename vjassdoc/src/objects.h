@@ -25,6 +25,7 @@
 #include "object.h"
 #include "comment.h"
 #include "keyword.h"
+#include "key.h"
 #include "textmacro.h"
 #include "textmacroinstance.h"
 #include "type.h"

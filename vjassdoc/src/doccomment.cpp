@@ -57,11 +57,12 @@ const char *DocComment::keyword[Parser::MaxLists] =
 
 void DocComment::initClass()
 {
-	DocComment::sqlColumns = 4;
+	DocComment::sqlColumns = 5;
 	DocComment::sqlColumnStatement =
-	"Text VARCHAR(50),"
+	"Text VARCHAR(255),"
 	"SourceFile INT,"
 	"Line INT,"
+	"FormattedText VARCHAR(255),"
 	"Object INT";
 }
 
@@ -150,7 +151,7 @@ void DocComment::init()
 		result += this->identifier().substr(oldIndex);
 	}
 	
-	this->setIdentifier(result);
+	m_formattedText = result;
 }
 
 void DocComment::pageNavigation(std::ofstream &file) const
@@ -167,7 +168,7 @@ void DocComment::page(std::ofstream &file) const
 	file
 	<< "\t\t<h2><a name=\"Text\">" << _("Text") << "</a></h2>\n"
 	<< "\t\t<p>\n"
-	<< "\t\t" << this->identifier() << "\n"
+	<< "\t\t" << this->m_formattedText << "\n"
 	<< "\t\t</p>\n"
 	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'

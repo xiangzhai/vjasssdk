@@ -1,3 +1,8 @@
+2009-06-20 Tamino Dauth <tamino@cdauth.de>
+* Added first implementation of block comment support.
+* Structs with more index space are supported now.
+* Keys are supported now.
+
 2009-06-03 Tamino Dauth <tamino@cdauth.de>
 * Fixed documentation comment parsing.
 * Fixed locale directory detection.

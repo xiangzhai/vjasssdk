@@ -86,6 +86,9 @@ class File
 			ModuleExpression,
 			EndmoduleExpression,
 			ImplementExpression,
+			BlockCommentExpression,
+			EndBlockCommentExpression,
+			KeyExpression,
 			//Jass none-start-line expressions
 			NothingExpression,
 			TakesExpression,
@@ -144,6 +147,7 @@ class File
 		void getDocComment(const std::string &line, unsigned int index);
 		void clearDocComment();
 		void getKeyword(const std::string &line, unsigned int &index, bool isPrivate);
+		void getKey(const std::string &line, unsigned int &index, bool isPrivate);
 		bool getGlobal(const std::string &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isStatic, bool isDelegate);
 		bool getFunction(const std::string  &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isNative, bool isStatic, bool isStub);
 		void getImplementation(const std::string &line, unsigned int &index);
@@ -168,6 +172,7 @@ class File
 		bool isInInterface;
 		bool isInStruct;
 		bool isInModule;
+		bool isInBlockComment;
 
 		unsigned int currentLine;
 		class DocComment *currentDocComment;
@@ -178,6 +183,7 @@ class File
 		class Struct *currentStruct;
 		class Module *currentModule;
 		class Function *currentFunction;
+		std::string currentBlockComment;
 
 		bool gotDocComment;
 

@@ -39,15 +39,16 @@ std::string Struct::sqlColumnStatement;
 
 void Struct::initClass()
 {
-	Struct::sqlColumns = Interface::sqlColumns + 4;
+	Struct::sqlColumns = Interface::sqlColumns + 5;
 	Struct::sqlColumnStatement = Interface::sqlColumnStatement +
-	",Extension INT,"
+	",Size INT,"
+	"Extension INT,"
 	"Constructor INT,"
 	"Destructor INT,"
 	"Initializer INT";
 }
 
-Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &extensionExpression) : extensionExpression(extensionExpression), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
+Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : m_sizeExpression(sizeExpression), extensionExpression(extensionExpression), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
 {
 }
 
@@ -58,6 +59,16 @@ Struct::Struct(std::vector<const unsigned char*> &columnVector) : Interface(colu
 void Struct::init()
 {
 	Interface::init();
+	
+	if (!this->sizeExpression().empty())
+	{
+		this->m_size = this->findValue(static_cast<class Object*>(Vjassdoc::getParser()->integerType()), this->m_sizeExpression);
+	
+		if (this->m_size != 0)
+			this->m_sizeExpression.clear();
+	}
+	else
+		this->m_sizeExpression = '-';
 	
 	if (!this->extensionExpression.empty() && this->extensionExpression.find(File::expressionText[File::ArrayExpression]) != 0)
 	{
@@ -80,6 +91,7 @@ void Struct::pageNavigation(std::ofstream &file) const
 {
 	Interface::pageNavigation(file);
 	file
+	<< "\t\t\t<li><a href=\"#Size\">"			<< _("Size") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Extensions\">"			<< _("Extensions") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Child Structs\">"		<< _("Child Structs") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Constructor\">"		<< _("Constructor") << "</a></li>\n"
@@ -94,6 +106,8 @@ void Struct::page(std::ofstream &file) const
 {
 	Interface::page(file);
 	file
+	<< "\t\t<h2><a name=\"Size\">" << _("Size") << "</a></h2>\n"
+	<< "\t\t" << Object::objectPageLink(this->size(), this->sizeExpression()) << '\n'
 	<< "\t\t<h2><a name=\"Extensions\">" << _("Extensions") << "</a></h2>\n"
 	;
 	std::list<class Interface*> extensions = this->extensions();

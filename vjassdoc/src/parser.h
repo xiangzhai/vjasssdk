@@ -24,7 +24,6 @@
 #include <functional>
 #include <list>
 #include <string>
-#include <sys/stat.h>
 #include <sstream>
 #include <vector>
 
@@ -71,6 +70,7 @@ class Parser
 		{
 			Comments,
 			Keywords,
+			Keys,
 			TextMacros,
 			TextMacroInstances,
 			Types,
@@ -82,7 +82,7 @@ class Parser
 			Functions,
 			Methods,
 			Implementations,
-			Interfaces,
+			Interfaces, //13
 			Structs,
 			Modules,
 			Scopes,
@@ -125,6 +125,7 @@ class Parser
 		
 		void add(class Comment *comment);
 		void add(class Keyword *keyword);
+		void add(class Key *key);
 		void add(class TextMacro *textMacro);
 		void add(class TextMacroInstance *textMacroInstance);
 		void add(class Type *type);
@@ -159,8 +160,6 @@ class Parser
 			std::list<enum List> listList;
 			std::list<class Object*> objectList;
 		};
-	
-		static bool fileExists(const std::string &fileName);
 #endif	
 
 		static const char *title[Parser::MaxLists];
@@ -172,6 +171,7 @@ class Parser
 		class Type *m_codeType;
 		std::list<class Comment*> commentList;
 		std::list<class Keyword*> keywordList;
+		std::list<class Key*> keyList;
 		std::list<class TextMacro*> textMacroList;
 		std::list<class TextMacroInstance*> textMacroInstanceList;
 		std::list<class Type*> typeList;
@@ -216,6 +216,11 @@ class Parser
 inline void Parser::add(class Comment *comment)
 {
 	this->commentList.push_back(comment);
+}
+
+inline void Parser::add(class Key *key)
+{
+	this->keyList.push_back(key);
 }
 
 inline void Parser::add(class Keyword *keyword)

@@ -3,6 +3,7 @@ set(LIB_SRC
 	object.cpp
 	comment.cpp
 	keyword.cpp
+	key.cpp
 	textmacro.cpp
 	textmacroinstance.cpp
 	type.cpp
@@ -25,13 +26,16 @@ set(LIB_SRC
 	syntaxerror.cpp
 	file.cpp
 	parser.cpp
+	compiler.cpp
 	vjassdoc.cpp
+	utilities.cpp
 )
 
 set(HEADERS
 	object.h
 	comment.h
 	keyword.h
+	key.h
 	textmacro.h
 	textmacroinstance.h
 	type.h
@@ -53,7 +57,9 @@ set(HEADERS
 	syntaxerror.h
 	file.h
 	parser.h
+	compiler.h
 	vjassdoc.h
+	utilities.h
 )
 
 add_library(vjassdoclib SHARED ${LIB_SRC})

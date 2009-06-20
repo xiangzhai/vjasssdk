@@ -41,12 +41,14 @@ class Struct : public Interface
 		static std::string sqlColumnStatement;
 	
 		static void initClass();
-		Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, Scope *scope, bool isPrivate, const std::string &extensionExpression);
+		Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression);
 		Struct(std::vector<const unsigned char*> &columnVector);
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
 		virtual std::string sqlStatement() const;
+		class Object* size() const;
+		std::string sizeExpression() const;
 		class Interface* extension() const;
 		class Method* constructor() const;
 		class Method* destructor() const;
@@ -55,13 +57,25 @@ class Struct : public Interface
 		std::list<class Interface*> extensions() const;
 		
 	protected:
+		std::string m_sizeExpression;
 		std::string extensionExpression;
 
+		class Object *m_size;
 		class Interface *m_extension; //Interface, Struct
 		class Method *m_constructor;
 		class Method *m_destructor;
 		class Method *m_initializer;
 };
+
+inline class Object* Struct::size() const
+{
+	return this->m_size;
+}
+
+inline std::string Struct::sizeExpression() const
+{
+	return this->m_sizeExpression;
+}
 
 inline class Interface* Struct::extension() const
 {

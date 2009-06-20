@@ -197,3 +197,22 @@ asdasfasf Syntax error sdsad
 //! sadsadasd
 
 type P extends
+
+/*
+My test comment
+*/
+
+function PeterGeht/*Ein anderer Testkommentar*/NachHause takes nothing returns nothing
+endfunction
+
+function VaterUndMutterSindSchwul/**/ takes nothing returns nothing
+endfunction
+
+struct MySizedStruct[1000]
+endstruct
+
+globals
+	key peter
+	private key peter2
+	public key peter3
+endglobals

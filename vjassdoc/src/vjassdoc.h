@@ -25,6 +25,7 @@
 #include <list>
 
 #include "parser.h"
+#include "compiler.h"
 
 namespace vjassdoc
 {
@@ -38,8 +39,9 @@ class Vjassdoc
 		static const char *dirSeparator;
 		static bool supportsDatabaseCreation;
 
-		static void run(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases);
+		static void run(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, const std::string &compilePath, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases);
 		static class Parser* getParser();
+		static class Compiler* getCompiler();
 		static bool jassOnly();
 		static bool useDebugMode();
 		static bool parsePrivateSpace();
@@ -49,6 +51,7 @@ class Vjassdoc
 		static bool createPages();
 		static bool createSpecialPages();
 		static bool checkSyntax();
+		static std::string compileFilePath();
 		static bool createDatabase();
 		static bool showVerbose();
 		static bool sortAlphabetically();
@@ -68,6 +71,7 @@ class Vjassdoc
 		~Vjassdoc();
 
 		static class Parser *parser;
+		static class Compiler *compiler;
 		static bool jass;
 		static bool debug;
 		static bool privateSpace;
@@ -77,6 +81,7 @@ class Vjassdoc
 		static bool pages;
 		static bool specialPages;
 		static bool syntax;
+		static std::string m_compileFilePath;
 		static bool database;
 		static bool verbose;
 		static bool time;
@@ -99,6 +104,15 @@ inline Parser* Vjassdoc::getParser()
 
 	return Vjassdoc::parser;
 }
+
+inline Compiler* Vjassdoc::getCompiler()
+{
+	if (Vjassdoc::compiler == 0)
+		Vjassdoc::compiler = new Compiler();
+
+	return Vjassdoc::compiler;
+}
+
 
 inline bool Vjassdoc::jassOnly()
 {
@@ -143,6 +157,11 @@ inline bool Vjassdoc::createSpecialPages()
 inline bool Vjassdoc::checkSyntax()
 {
 	return Vjassdoc::syntax;
+}
+
+inline std::string Vjassdoc::compileFilePath()
+{
+	return Vjassdoc::m_compileFilePath;
 }
 
 inline bool Vjassdoc::createDatabase()

@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
 			_("-p --pages                  Program creates an HTML file for each parsed object.\n") <<
 			_("-s --specialpages           Program creates additional HTML files containing more information about all parsed objects.\n") <<
 			_("--syntax                    Program checks syntax. Not implemented yet!\n") <<
+			_("--compile <arg>             Program uses file <arg> to create a map Jass script.\n") <<
 #ifdef SQLITE
 			_("-b --database               Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
 #endif
@@ -124,6 +125,7 @@ int main(int argc, char *argv[])
 	bool pages = false;
 	bool specialPages = false;
 	bool syntax = false;
+	std::string compileFilePath;
 	bool database = false;
 	bool verbose = false;
 	bool time = false;
@@ -132,6 +134,7 @@ int main(int argc, char *argv[])
 	{
 		"--nocomments",
 		"--nokeywords",
+		"--nokeys",
 		"--notextmacros",
 		"--notextmacroinstances",
 		"--notypes",
@@ -287,6 +290,16 @@ int main(int argc, char *argv[])
 		{
 			syntax = true;
 		}
+		else if (strcmp(argv[i], "--compile") == 0)
+		{
+			if (++i == argc)
+			{
+				std::cerr << _("Missing --compile argument.") << std::endl;
+				return EXIT_FAILURE;
+			}
+
+			compileFilePath = argv[i];
+		}
 #ifdef SQLITE
 		else if (strcmp(argv[i], "--database") == 0)
 		{
@@ -421,7 +434,7 @@ int main(int argc, char *argv[])
 	if (title.empty())
 		title = _("vJass API Documentation");
 
-	Vjassdoc::run(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
+	Vjassdoc::run(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, compileFilePath, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
 
 	return EXIT_SUCCESS;
 }

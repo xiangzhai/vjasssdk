@@ -50,6 +50,14 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add support for compiler flag DATABASE.
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-06-20 Tamino Dauth <tamino@cdauth.de>
+* Fix special page creation of requirement page.
+
+2009-06-17 Tamino Dauth <tamino@cdauth.de>
+* DONE: Support enhanced struct space (struct structname[space]).
+* Check array struct support (struct structname extends array [ 20000] supported?).
+* DONE: Add block comment support /* */.
+
 2009-05-17 Tamino Dauth <tamino@cdauth.de>
 * FIXED: Text macro space is not parsable, arguments can be everywhere.
 

@@ -24,6 +24,7 @@
 #include <fstream>
 #ifdef SQLITE
 #include <sqlite3.h>
+#include "utilities.h"
 #endif
 #include <sstream>
 
@@ -41,6 +42,7 @@ const char *Parser::title[Parser::MaxLists] =
 {
 	_("Comments"),
 	_("Keywords"),
+	_("Keys"),
 	_("Text Macros"),
 	_("Text Macro Instances"),
 	_("Types"),
@@ -63,7 +65,7 @@ const char *Parser::title[Parser::MaxLists] =
 
 bool Parser::Comparator::operator()(const class Object *thisObject, const class Object *otherObject) const
 {
-	return false;
+	return true;
 }
 
 class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::SearchMode &searchMode)
@@ -412,8 +414,8 @@ void Parser::createRequirementListPage()
 	for (std::list<class Library*>::iterator iterator = this->libraryList.begin(); iterator != this->libraryList.end(); ++iterator)
 	{
 		//requirement has to be 0
-		if ((*iterator)->requirement() != 0)
-			continue;
+		//if ((*iterator)->requirement() != 0)
+			//continue;
 
 		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
 		this->getLibraryRequirementList(*iterator, "\t\t\t\t", sstream);
@@ -537,11 +539,11 @@ void Parser::parse()
 			<< "\t\t<h2><a name=\"" <<  Parser::title[i] << "\">" << Parser::title[i] << " (" << this->getList(Parser::List(i)).size() << ")</a></h2>" << std::endl;
 			this->addObjectList(sout, List(i));
 		}
-		
+
 		if (Vjassdoc::createSpecialPages())
 		{
 			this->createInheritanceListPage();
-			this->createRequirementListPage();
+			//this->createRequirementListPage();
 
 			sout
 			<< "\t\t<h2><a name=\"Undocumented Objects\">" << _("Undocumented Objects") << "</h2>\n"
@@ -649,7 +651,7 @@ void Parser::parse()
 
 		std::string fileName = Vjassdoc::getDir() + Vjassdoc::dirSeparator + "database.db";
 		
-		if (Parser::fileExists(fileName))
+		if (fileExists(fileName))
 		{
 			printf(_("Database \"%s\" does already exist. Do you want to replace it by the newer one?\n"), fileName.c_str());
 			std::cout << _("Answer possiblities: y, yes, n, no.\n");
@@ -900,20 +902,6 @@ std::list<class Object*> Parser::getSpecificList(const class Object *object, con
 	return result;
 }
 
-#ifdef SQLITE
-bool Parser::fileExists(const std::string &fileName)
-{
-	struct stat fileInfo; 
-	int state;
-	state = stat(fileName.c_str(), &fileInfo);
-	
-	if (state == 0)
-		return true;
-	
-	return false;
-}
-#endif
-
 std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 {
 	switch (list)
@@ -923,6 +911,9 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 
 		case Parser::Keywords:
 			return reinterpret_cast<std::list<class Object*>& >(this->keywordList);
+
+		case Parser::Keys:
+			return reinterpret_cast<std::list<class Object*>& >(this->keyList);
 
 		case Parser::TextMacros:
 			return reinterpret_cast<std::list<class Object*>& >(this->textMacroList);
@@ -1014,6 +1005,9 @@ std::string Parser::getTableName(const enum Parser::List &list)
 		case Parser::Keywords:
 			return Keyword::sqlTableName;
 
+		case Parser::Keys:
+			return Key::sqlTableName;
+
 		case Parser::TextMacros:
 			return TextMacro::sqlTableName;
 
@@ -1083,6 +1077,9 @@ unsigned int Parser::getTableColumns(const enum Parser::List &list)
 
 		case Parser::Keywords:
 			return Keyword::sqlColumns;
+
+		case Parser::Keys:
+			return Key::sqlColumns;
 
 		case Parser::TextMacros:
 			return TextMacro::sqlColumns;
@@ -1158,6 +1155,11 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 		case Parser::Keywords:
 			result +=
 			Keyword::sqlColumnStatement;
+			break;
+
+		case Parser::Keys:
+			result +=
+			Key::sqlColumnStatement;
 			break;
 
 		case Parser::TextMacros:
@@ -1271,6 +1273,10 @@ class Object* Parser::addObjectByColumnVector(const enum Parser::List &list, std
 			this->add(new Keyword(columnVector));
 			break;
 
+		case Parser::Keys:
+			this->add(new Key(columnVector));
+			break;
+
 		case Parser::TextMacros:
 			this->add(new TextMacro(columnVector));
 			break;
@@ -1370,9 +1376,11 @@ void Parser::getStructInheritanceList(const class Interface *extension, const st
 /// @todo FIXME
 void Parser::getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::stringstream &sstream)
 {
-	std::list<class Object*> libraryList = this->getSpecificList(requirement, Parser::Libraries, Library::HasRequirement());
+	std::cout << "Running with library " << requirement->identifier() << std::endl;
 
-	if (libraryList.empty())
+	std::list<class Object*> specifiedList = this->getSpecificList(requirement, Parser::Libraries, Library::HasRequirement());
+
+	if (specifiedList.empty())
 	{
 		//std::cout << "Requirement list is empty." << std::endl;
 		return;
@@ -1380,7 +1388,7 @@ void Parser::getLibraryRequirementList(const class Library *requirement, const s
 
 	sstream << prefix << "<ul>\n";
 
-	for (std::list<class Object*>::iterator iterator = libraryList.begin(); iterator != libraryList.end(); ++iterator)
+	for (std::list<class Object*>::iterator iterator = specifiedList.begin(); iterator != specifiedList.end(); ++iterator)
 	{
 		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
 		this->getLibraryRequirementList(static_cast<class Library*>(*iterator), prefix + "\t\t", sstream);
