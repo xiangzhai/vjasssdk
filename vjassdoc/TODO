@@ -50,6 +50,10 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add support for compiler flag DATABASE.
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-06-21 Tamino Dauth <tamino@cdauth.de>
+* Structs and parameters aren't written correctly into databases.
+* Database loading vector of each object should be saved for special database initialization.
+
 2009-06-20 Tamino Dauth <tamino@cdauth.de>
 * Fix special page creation of requirement page.
 

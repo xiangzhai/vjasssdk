@@ -69,8 +69,6 @@ std::string Object::sqlFilteredString(const std::string &usedString)
 				result += character;
 				break;
 		}
-		
-		++i;
 	}
 
 	return result;

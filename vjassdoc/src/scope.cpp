@@ -43,7 +43,7 @@ Scope::Scope(const std::string &identifier, class SourceFile *sourceFile, unsign
 {
 }
 
-Scope::Scope(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Scope::Scope(std::vector<const unsigned char*> &columnVector) : m_library(0), m_initializer(0), Object(columnVector)
 {
 }
 

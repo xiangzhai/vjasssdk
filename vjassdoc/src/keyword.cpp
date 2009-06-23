@@ -43,7 +43,7 @@ Keyword::Keyword(const std::string &identifier, class SourceFile *sourceFile, un
 {
 }
 
-Keyword::Keyword(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Keyword::Keyword(std::vector<const unsigned char*> &columnVector) : m_library(0), Object(columnVector)
 {
 }
 

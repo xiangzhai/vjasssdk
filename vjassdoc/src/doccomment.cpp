@@ -70,7 +70,7 @@ DocComment::DocComment(const std::string &identifier, class SourceFile *sourceFi
 {
 }
 
-DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : m_object(0), Object(columnVector)
 {
 }
 

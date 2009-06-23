@@ -39,20 +39,21 @@ std::string Struct::sqlColumnStatement;
 
 void Struct::initClass()
 {
-	Struct::sqlColumns = Interface::sqlColumns + 5;
+	Struct::sqlColumns = Interface::sqlColumns + 6;
 	Struct::sqlColumnStatement = Interface::sqlColumnStatement +
 	",Size INT,"
+	"SizeExpression VARCHAR(255),"
 	"Extension INT,"
 	"Constructor INT,"
 	"Destructor INT,"
 	"Initializer INT";
 }
 
-Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : m_sizeExpression(sizeExpression), extensionExpression(extensionExpression), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
+Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : m_sizeExpression(sizeExpression), extensionExpression(extensionExpression), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
 {
 }
 
-Struct::Struct(std::vector<const unsigned char*> &columnVector) : Interface(columnVector)
+Struct::Struct(std::vector<const unsigned char*> &columnVector) : m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(columnVector)
 {
 }
 
@@ -202,6 +203,8 @@ std::string Struct::sqlStatement() const
 	std::ostringstream sstream;
 	sstream
 	<< Interface::sqlStatement() << ", "
+	<< "Size=" << Object::objectId(this->size()) << ", "
+	<< "SizeExpression=" << this->sizeExpression() << ", "
 	<< "Extension=" << Object::objectId(this->extension()) << ", "
 	<< "Constructor=" << Object::objectId(this->constructor()) << ", "
 	<< "Destructor=" << Object::objectId(this->destructor()) << ", "

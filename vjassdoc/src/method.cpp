@@ -45,7 +45,7 @@ Method::Method(const std::string &identifier, class SourceFile *sourceFile, unsi
 {
 }
 
-Method::Method(std::vector<const unsigned char*> &columnVector) : Function(columnVector)
+Method::Method(std::vector<const unsigned char*> &columnVector) : m_container(0), m_defaultReturnValue(0), Function(columnVector)
 {
 }
 

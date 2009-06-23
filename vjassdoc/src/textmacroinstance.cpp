@@ -41,7 +41,7 @@ TextMacroInstance::TextMacroInstance(const std::string &identifier, class Source
 {
 }
 
-TextMacroInstance::TextMacroInstance(std::vector<const unsigned char*> &columnVector) : TextMacro(columnVector)
+TextMacroInstance::TextMacroInstance(std::vector<const unsigned char*> &columnVector) : m_textMacro(0), TextMacro(columnVector)
 {
 }
 

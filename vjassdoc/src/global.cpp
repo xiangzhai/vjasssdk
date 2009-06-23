@@ -52,7 +52,7 @@ Global::Global(const std::string &identifier, class SourceFile *sourceFile, unsi
 {
 }
 
-Global::Global(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Global::Global(std::vector<const unsigned char*> &columnVector) : m_type(0), m_value(0), m_size(0), Object(columnVector)
 {
 }
 

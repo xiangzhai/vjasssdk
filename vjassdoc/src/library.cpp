@@ -65,7 +65,7 @@ Library::Library(const std::string &identifier, class SourceFile *sourceFile, un
 {
 }
 
-Library::Library(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Library::Library(std::vector<const unsigned char*> &columnVector) : requirementExpressions(0), m_initializer(0), m_requirement(0), Object(columnVector)
 {
 }
 
@@ -80,8 +80,12 @@ Library::~Library()
 
 void Library::init()
 {
+	std::cout << "Init" << std::endl;
+
 	if (!this->initializerExpression.empty())
 	{
+		std::cout << "Initializer expression " << this->initializerExpression << std::endl;
+	
 		this->m_initializer = static_cast<Function*>(this->searchObjectInList(this->initializerExpression, Parser::Functions));
 		
 		if (this->m_initializer == 0)
@@ -93,10 +97,19 @@ void Library::init()
 	else
 		this->initializerExpression = '-';
 	
+	std::cout << "After initializer" << std::endl;
+	
 	if (this->requirementExpressions != 0)
 	{
+		std::cout << "1" << std::endl;
+		
 		this->m_requirement = new std::list<Library*>;
+		
+		std::cout << "2" << std::endl;
+		
 		std::list<std::string>::iterator expressionIterator = this->requirementExpressions->begin();
+		
+		std::cout << "3" << std::endl;
 		
 		while (expressionIterator != this->requirementExpressions->end())
 		{
@@ -109,6 +122,8 @@ void Library::init()
 			++expressionIterator;
 		}
 	}
+	
+	std::cout << "After requirement" << std::endl;
 }
 
 void Library::pageNavigation(std::ofstream &file) const

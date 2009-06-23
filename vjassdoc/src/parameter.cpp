@@ -43,7 +43,7 @@ Parameter::Parameter(const std::string &identifier, class SourceFile *sourceFile
 {
 }
 
-Parameter::Parameter(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Parameter::Parameter(std::vector<const unsigned char*> &columnVector) : m_functionInterface(0), m_type(0), Object(columnVector)
 {
 }
 

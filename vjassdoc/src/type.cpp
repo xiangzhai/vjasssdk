@@ -43,7 +43,7 @@ Type::Type(const std::string &identifier, class SourceFile *sourceFile, unsigned
 {
 }
 
-Type::Type(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Type::Type(std::vector<const unsigned char*> &columnVector) : m_type(0), m_size(0), Object(columnVector)
 {
 }
 

@@ -44,7 +44,7 @@ Interface::Interface(const std::string &identifier, class SourceFile *sourceFile
 {
 }
 
-Interface::Interface(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Interface::Interface(std::vector<const unsigned char*> &columnVector) : m_library(0), m_scope(0), Object(columnVector)
 {
 }
 

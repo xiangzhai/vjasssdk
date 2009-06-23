@@ -1,3 +1,7 @@
+2009-06-23 Tamino Dauth <tamino@cdauth.de>
+* Fixed database identifier bug.
+* Fixed several database bugs.
+
 2009-06-20 Tamino Dauth <tamino@cdauth.de>
 * Added first implementation of block comment support.
 * Structs with more index space are supported now.
