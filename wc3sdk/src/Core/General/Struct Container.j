@@ -2,34 +2,35 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 
 	/// Creates a new AContainer class with type @param ELEMENTTYPE, type name @param ELEMENTTYPENAME and maximum size @param MAXSIZE.
 	/// Containers can hold several members of one specified data type like @type unit or @type integer.
-	//! textmacro A_CONTAINER takes ELEMENTTYPE, ELEMENTTYPENAME, MAXSIZE
+	/// Attention: This text macro will be replaced by @textmacro A_VECTOR. Use @textmacro A_VECTOR instead of this!
+	//! textmacro A_CONTAINER takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, MAXSIZE
 
 		/// @state untested
 		/// An operation function interface with two elements.
 		/// The return value is the result of the operation.
 		/// Examples are addition and subtraction etc.
-		function interface A$ELEMENTTYPENAME$ContainerOperation takes $ELEMENTTYPE$ element0, $ELEMENTTYPE$ element1 returns $ELEMENTTYPE$
+		$STRUCTPREFIX$ function interface $NAME$Operation takes $ELEMENTTYPE$ element0, $ELEMENTTYPE$ element1 returns $ELEMENTTYPE$
 
 		/// @state untested
 		/// Unary predicate.
 		/// A comparision function interface for one element.
-		function interface A$ELEMENTTYPENAME$ContainerUnaryPredicate takes $ELEMENTTYPE$ element returns boolean
+		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ element returns boolean
 
 		/// @state untested
 		/// Binary predicate.
 		/// A comparisan function interface for two elements.
-		function interface A$ELEMENTTYPENAME$ContainerBinaryPredicate takes $ELEMENTTYPE$ element0, $ELEMENTTYPE$ element1 returns boolean
+		$STRUCTPREFIX$ function interface $NAME$BinaryPredicate takes $ELEMENTTYPE$ element0, $ELEMENTTYPE$ element1 returns boolean
 
 		/// @state works
 		/// Unary function.
 		/// Allows the call of an user-definied function for each element.
-		function interface A$ELEMENTTYPENAME$ContainerUnaryFunction takes $ELEMENTTYPE$ element returns nothing //Rückgabewert wurde vorerst rausgenommen, bis ich weiß, was er bringt
+		$STRUCTPREFIX$ function interface $NAME$UnaryFunction takes $ELEMENTTYPE$ element returns nothing //Rückgabewert wurde vorerst rausgenommen, bis ich weiß, was er bringt
 
 		/// Generator.
 		/// Allows filling some elements with the return value.
-		function interface A$ELEMENTTYPENAME$ContainerGenerator takes nothing returns $ELEMENTTYPE$
+		$STRUCTPREFIX$ function interface $NAME$Generator takes nothing returns $ELEMENTTYPE$
 
-		struct A$ELEMENTTYPENAME$Container
+		$STRUCTPREFIX$ struct $NAME$
 			//dynamic members
 			private $ELEMENTTYPE$ array element[$MAXSIZE$]
 			//Quicksort statics
@@ -94,7 +95,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			debug endmethod
 
 			/// Common quick sort algorithm.
-			private method quickSort takes integer left, integer right, A$ELEMENTTYPENAME$ContainerBinaryPredicate binaryPredicate returns nothing
+			private method quickSort takes integer left, integer right, $NAME$BinaryPredicate binaryPredicate returns nothing
 				local integer i
 				local $ELEMENTTYPE$ temp
 				if (right > left) then
@@ -131,7 +132,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param start Index of first element.
 			/// @param number Number of elements.
 			/// @param binaryPredicate Binary comparison function.
-			public method sort takes integer start, integer number, A$ELEMENTTYPENAME$ContainerBinaryPredicate binaryPredicate returns nothing
+			public method sort takes integer start, integer number, $NAME$BinaryPredicate binaryPredicate returns nothing
 				debug call this.debugCheckStartAndNumber(start, number)
 				call this.quickSort(start, start + number - 1, binaryPredicate)
 			endmethod
@@ -167,7 +168,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param value Der Startwert des Ergebnis
 			/// @param operation Operationsfunktion
 			/// @return Ergebnis aller Operationen
-			public method operation takes integer start, integer number, $ELEMENTTYPE$ value, A$ELEMENTTYPENAME$ContainerOperation operation returns $ELEMENTTYPE$
+			public method operation takes integer start, integer number, $ELEMENTTYPE$ value, $NAME$Operation operation returns $ELEMENTTYPE$
 				local integer i = start
 				local integer exitValue = start + number
 				local $ELEMENTTYPE$ result = value
@@ -205,7 +206,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param number Anzahl der Elemente
 			/// @param binaryPredicate Vergleichsfunktion
 			/// @return Index des ersten Treffers oder -1
-			public method adjacentFindIf takes integer start, integer number, A$ELEMENTTYPENAME$ContainerBinaryPredicate binaryPredicate returns integer
+			public method adjacentFindIf takes integer start, integer number, $NAME$BinaryPredicate binaryPredicate returns integer
 				local integer i = start
 				local integer exitValue = start + number - 1 //-1 da beim Vergleich + 1 angewendet wird
 				debug call this.debugCheckStartAndNumber(start, number)
@@ -233,7 +234,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param number0 Number of elements.
 			/// @param start1 Index of first element in container @param desitination.
 			/// @param destination Container where elements are copied to.
-			public method copy takes integer start0, integer number0, integer start1, A$ELEMENTTYPENAME$Container destination returns nothing
+			public method copy takes integer start0, integer number0, integer start1, $NAME$ destination returns nothing
 				local integer i = start0
 				local integer j = start1
 				local integer exitValue = start0 + number0
@@ -254,7 +255,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param number0 Anzahl der Elemente
 			/// @param start1 Startposition im Ziel-Container
 			/// @param destination Ziel-Container
-			public method copyBackward takes integer start0, integer number0, integer start1, A$ELEMENTTYPENAME$Container destination returns nothing
+			public method copyBackward takes integer start0, integer number0, integer start1, $NAME$ destination returns nothing
 				local integer i = start0 + number0 - 1
 				local integer j = start1 + number0 - 1
 				local integer exitValue = start0 - 1
@@ -302,7 +303,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param number Anzahl der Elemente
 			/// @param unaryPredicate Vergleichsfunktion
 			/// @return Anzahl der Treffer
-			public method countIf takes integer start, integer number, A$ELEMENTTYPENAME$ContainerUnaryPredicate unaryPredicate returns integer
+			public method countIf takes integer start, integer number, $NAME$UnaryPredicate unaryPredicate returns integer
 				local integer i = start
 				local integer exitValue = start + number
 				local integer result = 0
@@ -325,7 +326,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param start2 Startposition im Vergleichs-Container
 			/// @param destination Vergleichs-Container
 			/// @return Übereinstimmung aller Elemente
-			public method equal takes integer start1, integer number1, integer start2, A$ELEMENTTYPENAME$Container destination returns boolean
+			public method equal takes integer start1, integer number1, integer start2, $NAME$ destination returns boolean
 				local integer i = start1
 				local integer j = start2
 				local integer exitValue = start1 + number1
@@ -350,7 +351,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param destination Vergleichs-Container
 			/// @param binaryPredicate Vergleichsfunktion
 			/// @return Übereinstimmung aller Elemente
-			public method equalIf takes integer start0, integer number0, integer start1, A$ELEMENTTYPENAME$Container destination, A$ELEMENTTYPENAME$ContainerBinaryPredicate binaryPredicate returns boolean
+			public method equalIf takes integer start0, integer number0, integer start1, $NAME$ destination, $NAME$BinaryPredicate binaryPredicate returns boolean
 				local integer i = start0
 				local integer j = start1
 				local integer exitValue = start0 + number0
@@ -426,7 +427,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param number Anzahl der Elemente
 			/// @param unaryPredicate Vergleichsfunktion
 			/// @return Index des ersten Treffers oder -1
-			public method findIf takes integer start, integer number, A$ELEMENTTYPENAME$ContainerUnaryPredicate unaryPredicate returns integer
+			public method findIf takes integer start, integer number, $NAME$UnaryPredicate unaryPredicate returns integer
 				local integer i = start
 				local integer exitValue = start + number
 				debug call this.debugCheckStartAndNumber(start, number)
@@ -445,7 +446,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param start Startposition
 			/// @param number Anzahl der Elemente
 			/// @param unaryFunction Benutzerdefinierte Funktion
-			public method forEach takes integer start, integer number, A$ELEMENTTYPENAME$ContainerUnaryFunction unaryFunction returns nothing
+			public method forEach takes integer start, integer number, $NAME$UnaryFunction unaryFunction returns nothing
 				local integer i = start
 				local integer exitValue = start + number
 				debug call this.debugCheckStartAndNumber(start, number)
@@ -463,7 +464,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param start Startposition
 			/// @param number Anzahl der Elemente
 			/// @param generator Benutzerdefinierte Funktion
-			public method generate takes integer start, integer number, A$ELEMENTTYPENAME$ContainerGenerator generator returns nothing
+			public method generate takes integer start, integer number, $NAME$Generator generator returns nothing
 				local integer i = start
 				local integer exitValue = start + number
 				debug call this.debugCheckStartAndNumber(start, number)
@@ -509,7 +510,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param number Anzahl der Elemente
 			/// @param binaryPredicate Benutzerdefinierte Vergleichsfunktion
 			/// @return Index des größten Elements
-			public method maxElement takes integer start, integer number, A$ELEMENTTYPENAME$ContainerBinaryPredicate binaryPredicate returns $ELEMENTTYPE$
+			public method maxElement takes integer start, integer number, $NAME$BinaryPredicate binaryPredicate returns $ELEMENTTYPE$
 				local integer i = start + 1
 				local integer exitValue = start + number
 				local integer result = start
@@ -533,7 +534,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// @param number Anzahl der Elemente
 			/// @param binaryPredicate Benutzerdefinierte Vergleichsfunktion
 			/// @return Index des kleinsten Elements
-			public method minElement takes integer start, integer number, A$ELEMENTTYPENAME$ContainerBinaryPredicate binaryPredicate returns $ELEMENTTYPE$
+			public method minElement takes integer start, integer number, $NAME$BinaryPredicate binaryPredicate returns $ELEMENTTYPE$
 				local integer i = start + 1
 				local integer exitValue = start + number
 				local integer result = start
@@ -547,6 +548,15 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 					set i = i + 1
 				endloop
 				return result
+			endmethod
+			
+			public stub method clear takes nothing returns nothing
+				local integer i = 0
+				loop
+					exitwhen (i == $MAXSIZE$)
+					set this.element[i] = $NULLVALUE$
+					set i = i + 1
+				endloop
 			endmethod
 
 			/// Mit dem []-Operator kann man auf ein Element des Containers zugreifen.
@@ -566,7 +576,7 @@ library AStructCoreGeneralContainer requires ALibraryCoreDebugMisc
 			/// Mit dem <-Operator kann man prüfen, ob der Container eine kleinere Größe als ein anderer hat.
 			/// @param destination Vergleichs-Container
 			/// @return Gibt wahr zurück, wenn der Container eine kleinere Größe als der Ziel-Container hat.
-			public method operator< takes A$ELEMENTTYPENAME$Container destination returns boolean
+			public method operator< takes $NAME$ destination returns boolean
 				return this.element.size < destination.element.size
 			endmethod
 

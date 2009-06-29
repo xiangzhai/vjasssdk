@@ -1,3 +1,21 @@
+2009-06-21 Tamino Dauth <tamino@cdauth.de>
+* Note: Never create add conditions or actions to a trigger which are defined as static methods below the trigger creation.
+
+2009-06-05 Tamino Dauth <tamino@cdauth.de>
+* Not necessary: Implement a vector for player characters.
+* DONE: Finish function CopyUnit.
+* DONE: Finish ATalk and AInfo revision.
+
+2009-05-25 Tamino Dauth <tamino@cdauth.de>
+* FIXED: Revival timer does only appear when the character dies with "Reincarnation".
+* Note: Don't make a character unmovable when he dies since this will disable all systems (like revival). Specify everything for each single system!
+
+2009-05-22 Tamino Dauth <tamino@cdauth.de>
+* DONE: We need lists like in C++ for structs like ALightningChain!
+
+2009-05-21 Tamino Dauth <tamino@cdauth.de>
+* FIXED: File "archives/Creatures/Models/Creatures/Undeads/Zombie.mdx" doesn't work?!
+
 2009-05-11 Tamino Dauth <tamino@cdauth.de>
 * Added static method channelCondition to struct ASpell.
 
@@ -5,37 +23,37 @@
 * Missing functions SetTerrainFogForPlayer and SetTerrainFogExForPlayer?
 
 2009-04-09 Tamino Dauth <tamino@cdauth.de>
-* AInventory: Unit orders for moving items aren't received.
-* AInventory: Equipment is not placed in rucksack if you've already equip an item of the same equipment type.
+* FIXED: AInventory: Unit orders for moving items aren't received.
+* FIXED: AInventory: Equipment is not placed in rucksack if you've already equipped an item of the same equipment type.
 * FIXED: AInventory: Attributes should always be the same (if you open your rucksack).
-* AInventory: Change rucksack page items aren't usable.
-* ACharacterScheme: Add a separator field between hit points and mana bar.
-* ASpell: Cast actions will stop when user calls TriggerSleepAction().
+* FIXED: AInventory: Change rucksack page items aren't usable.
+* DONE: ACharacterScheme: Add a separator field between hit points and mana bar.
+* FIXED: ASpell: Cast actions will stop when user calls TriggerSleepAction().
 
 2009-04-08 Tamino Dauth <tamino@cdauth.de>
 * Add member m_ prefix and rename get methods.
-* Main window is not created correctly.
+* FIXED: Main window is not created correctly.
 
 2009-04-05 Tamino Dauth <tamino@cdauth.de>
 * Add log functionality to talk system for AInfo instances.
-* Fix revival timer function call.
-* Fix talk trigger sleep function.
-* Fix name display in character scheme.
+* DONE: Fix revival timer function call.
+* DONE: Fix talk trigger sleep function.
+* DONE: Fix name display in character scheme.
 * Maybe add preloadMusic() function since music loading often laggs in game.
-* Quest pings should be displayed at the same time (maybe use only one ping trigger for all).
+* DONE: Quest pings should be displayed at the same time (maybe use only one ping trigger for all).
 
 Tamino Dauth <tamino@cdauth.de>
-* Abstract quest id won't be attached correctly on its state trigger.
-* First speech of talks will be displayed but the wait time will be ignored (Executions are right)!
-* Rucksack page items can not be equipped.
+* FIXED: Abstract quest id won't be attached correctly on its state trigger.
+* FIXED: First speech of talks will be displayed but the wait time will be ignored (Executions are right)!
+* FIXED: Rucksack page items can not be equipped.
 * bj_MAX_PLAYERS an manchen Stellen durch eine Funktion ersetzen, die die maximale Spieleranzahl der jeweiligen Karte zurückgibt.
-* Test the important talk speech and the normal talk speech (There are several problems with using TriggerSleepActions in action executions).
-* Videos should be stopped immediatly (stop execution if it is possible).
+* FIXED: Test the important talk speech and the normal talk speech (There are several problems with using TriggerSleepActions in action executions).
+* FIXED: Videos should be stopped immediatly (stop execution if it is possible).
 * Character selection select action should be called (probably it is causing many bugs).
 * InsertLineBreaks is bugged! When it is debugged use it in Gui.showInfoDialog()!
 * Since there is gexxo's FirstOfGroupSave() function you have to replace all FirstOfGroup() calls which are used on groups which contain units which can be removed during the game.
 * Rename all model files into English.
-* Check size member of AContainer struct.
+* DONE: Check size member of AContainer struct.
 * FIXED: Missing many grassland model files?!
 
 Notes:

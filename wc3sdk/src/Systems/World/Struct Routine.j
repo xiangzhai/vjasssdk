@@ -1,5 +1,4 @@
-/// @todo Untestet!
-library AStructSystemsWorldRoutine requires AStructSystemsWorldWorldHashTable
+library AStructSystemsWorldRoutine requires AStructCoreGeneralHashTable
 
 	/// @todo Should be a part of @struct ARoutine, vJass bug.
 	function interface ARoutineAction takes ARoutine routine returns nothing
@@ -10,66 +9,85 @@ library AStructSystemsWorldRoutine requires AStructSystemsWorldWorldHashTable
 	/// If the assigned unit is paused, routine won't be runned until unit gets unpaused.
 	struct ARoutine
 		//start members
-		private unit usedUnit
-		private real startTimeOfDay
-		private real endTimeOfDay
-		private real runRate
-		private ARoutineAction routineAction
+		private unit m_unit
+		private real m_startTimeOfDay
+		private real m_endTimeOfDay
+		private real m_runRate
+		private ARoutineAction m_action
 		//members
-		private trigger runTrigger
-		private trigger enableTrigger
-		private trigger disableTrigger
+		private trigger m_runTrigger
+		private trigger m_enableTrigger
+		private trigger m_disableTrigger
 
 		//start members
 
 		//You will need this in the routine action
-		public method getUsedUnit takes nothing returns unit
-			return this.usedUnit
+		public method unit takes nothing returns unit
+			return this.m_unit
+		endmethod
+		
+		public method startTimeOfDay takes nothing returns real
+			return this.m_startTimeOfDay
+		endmethod
+		
+		public method endTimeOfDay takes nothing returns real
+			return this.m_endTimeOfDay
+		endmethod
+		
+		public method runRate takes nothing returns real
+			return this.m_runRate
+		endmethod
+		
+		public method action takes nothing returns ARoutineAction
+			return this.m_action
 		endmethod
 
 		//methods
 
 		public method enable takes nothing returns nothing
-			if (this.runRate > 0.0) then
-				call EnableTrigger(this.runTrigger)
-				call EnableTrigger(this.disableTrigger)
+			if (this.m_runRate > 0.0) then
+				call EnableTrigger(this.m_runTrigger)
+				call EnableTrigger(this.m_disableTrigger)
 			endif
-			call EnableTrigger(this.enableTrigger)
+			call EnableTrigger(this.m_enableTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
-			if (this.runRate > 0.0) then
-				call DisableTrigger(this.runTrigger)
-				call DisableTrigger(this.disableTrigger)
+			if (this.m_runRate > 0.0) then
+				call DisableTrigger(this.m_runTrigger)
+				call DisableTrigger(this.m_disableTrigger)
 			endif
-			call DisableTrigger(this.enableTrigger)
+			call DisableTrigger(this.m_enableTrigger)
 		endmethod
 
 		public method isInTime takes nothing returns boolean
-			return GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.endTimeOfDay //n�chsten Tag eintragen, wenn Endzeit kleiner oder gleich der Startzeit ist
+			if (this.m_endTimeOfDay < this.m_startTimeOfDay) then //next day
+				return GetFloatGameState(GAME_STATE_TIME_OF_DAY) >= this.m_startTimeOfDay or GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.m_startTimeOfDay
+			endif
+			return GetFloatGameState(GAME_STATE_TIME_OF_DAY) >= this.m_startTimeOfDay and GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.m_endTimeOfDay
 		endmethod
 
 		//Call PauseUnit if you want to stop the routine.
 		public method isAbleToMove takes nothing returns boolean
-			return not IsUnitPaused(this.usedUnit)
+			return not IsUnitPaused(this.m_unit)
 		endmethod
 
 		private method run takes nothing returns nothing
-			call this.routineAction.execute(this)
+			call this.m_action.execute(this)
 		endmethod
 		
 		private static method runCondition takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ARoutine routine = AGetWorldHashTable().getHandleInteger(triggeringTrigger, "routine") //AStructWorldWorldHashTable
-			local boolean result = routine.isAbleToMove()
+			local ARoutine this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local boolean result = this.isAbleToMove()
 			set triggeringTrigger = null
 			return result
 		endmethod
 
 		private static method runAction takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ARoutine routine = AGetWorldHashTable().getHandleInteger(triggeringTrigger, "routine") //AStructWorldWorldHashTable
-			call routine.run()
+			local ARoutine this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			call this.run()
 			set triggeringTrigger = null
 		endmethod
 
@@ -78,13 +96,13 @@ library AStructSystemsWorldRoutine requires AStructSystemsWorldWorldHashTable
 			local conditionfunc conditionFunction
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
-			if (this.runRate > 0.0) then
-				set this.runTrigger = CreateTrigger()
-				set triggerEvent = TriggerRegisterTimerEvent(this.runTrigger, this.runRate, true)
+			if (this.m_runRate > 0.0) then
+				set this.m_runTrigger = CreateTrigger()
+				set triggerEvent = TriggerRegisterTimerEvent(this.m_runTrigger, this.m_runRate, true)
 				set conditionFunction = Condition(function ARoutine.runCondition)
-				set triggerCondition = TriggerAddCondition(this.runTrigger, conditionFunction)
-				set triggerAction = TriggerAddAction(this.runTrigger, function ARoutine.runAction)
-				call AGetWorldHashTable().storeHandleInteger(this.runTrigger, "routine", this) //AStructWorldWorldHashTable
+				set triggerCondition = TriggerAddCondition(this.m_runTrigger, conditionFunction)
+				set triggerAction = TriggerAddAction(this.m_runTrigger, function ARoutine.runAction)
+				call AHashTable.global().storeHandleInteger(this.m_runTrigger, "this", this)
 				set triggerEvent = null
 				set conditionFunction = null
 				set triggerCondition = null
@@ -94,11 +112,11 @@ library AStructSystemsWorldRoutine requires AStructSystemsWorldWorldHashTable
 
 		private static method triggerActionEnable takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ARoutine routine = AGetWorldHashTable().getHandleInteger(triggeringTrigger, "routine") //AStructWorldWorldHashTable
-			if (routine.runRate > 0.0) then
-				call EnableTrigger(routine.runTrigger)
+			local ARoutine this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			if (this.m_runRate > 0.0) then
+				call EnableTrigger(this.m_runTrigger)
 			else
-				call routine.run()
+				call this.run()
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -106,29 +124,29 @@ library AStructSystemsWorldRoutine requires AStructSystemsWorldWorldHashTable
 		private method createEnableTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.enableTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterGameStateEvent(this.enableTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.startTimeOfDay)
-			set triggerAction = TriggerAddAction(this.enableTrigger, function ARoutine.triggerActionEnable)
-			call AGetWorldHashTable().storeHandleInteger(this.enableTrigger, "routine", this) //AStructWorldWorldHashTable
+			set this.m_enableTrigger = CreateTrigger()
+			set triggerEvent = TriggerRegisterGameStateEvent(this.m_enableTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.m_startTimeOfDay)
+			set triggerAction = TriggerAddAction(this.m_enableTrigger, function ARoutine.triggerActionEnable)
+			call AHashTable.global().storeHandleInteger(this.m_enableTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
 		private static method triggerActionDisable takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ARoutine routine = AGetWorldHashTable().getHandleInteger(triggeringTrigger, "routine") //AStructWorldWorldHashTable
-			call DisableTrigger(routine.runTrigger)
+			local ARoutine this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			call DisableTrigger(this.m_runTrigger)
 			set triggeringTrigger = null
 		endmethod
 
 		private method createDisableTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			if (this.runRate > 0.0) then
-				set this.disableTrigger = CreateTrigger()
-				set triggerEvent = TriggerRegisterGameStateEvent(this.disableTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.endTimeOfDay)
-				set triggerAction = TriggerAddAction(this.disableTrigger, function ARoutine.triggerActionDisable)
-				call AGetWorldHashTable().storeHandleInteger(this.disableTrigger, "routine", this) //AStructWorldWorldHashTable
+			if (this.m_runRate > 0.0) then
+				set this.m_disableTrigger = CreateTrigger()
+				set triggerEvent = TriggerRegisterGameStateEvent(this.m_disableTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.m_endTimeOfDay)
+				set triggerAction = TriggerAddAction(this.m_disableTrigger, function ARoutine.triggerActionDisable)
+				call AHashTable.global().storeHandleInteger(this.m_disableTrigger, "this", this)
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -136,14 +154,14 @@ library AStructSystemsWorldRoutine requires AStructSystemsWorldWorldHashTable
 
 		/// Usually it will be runned when the assigned time of day is reached.
 		/// @param runRate If runRate is <= 0.0 action won't be runned at an interval.
-		public static method create takes unit usedUnit, real startTimeOfDay, real endTimeOfDay, real runRate, ARoutineAction routineAction returns ARoutine
+		public static method create takes unit usedUnit, real startTimeOfDay, real endTimeOfDay, real runRate, ARoutineAction action returns ARoutine
 			local ARoutine this = ARoutine.allocate()
 			//start members
-			set this.usedUnit = usedUnit
-			set this.startTimeOfDay = startTimeOfDay
-			set this.endTimeOfDay = endTimeOfDay
-			set this.runRate = runRate
-			set this.routineAction = routineAction
+			set this.m_unit = usedUnit
+			set this.m_startTimeOfDay = startTimeOfDay
+			set this.m_endTimeOfDay = endTimeOfDay
+			set this.m_runRate = runRate
+			set this.m_action = action
 
 			call this.createRunTrigger()
 			call this.createEnableTrigger()
@@ -152,27 +170,27 @@ library AStructSystemsWorldRoutine requires AStructSystemsWorldWorldHashTable
 		endmethod
 
 		private method destroyRunTrigger takes nothing returns nothing
-			if (this.runRate > 0.0) then
-				call AGetWorldHashTable().destroyTrigger(this.runTrigger) //AStructWorldWorldHashTable
-				set this.runTrigger = null
+			if (this.m_runRate > 0.0) then
+				call AHashTable.global().destroyTrigger(this.m_runTrigger)
+				set this.m_runTrigger = null
 			endif
 		endmethod
 
 		private method destroyEnableTrigger takes nothing returns nothing
-			call AGetWorldHashTable().destroyTrigger(this.enableTrigger) //AStructWorldWorldHashTable
-			set this.enableTrigger = null
+			call AHashTable.global().destroyTrigger(this.m_enableTrigger)
+			set this.m_enableTrigger = null
 		endmethod
 
 		private method destroyDisableTrigger takes nothing returns nothing
-			if (this.runRate > 0.0) then
-				call AGetWorldHashTable().destroyTrigger(this.disableTrigger) //AStructWorldWorldHashTable
-				set this.disableTrigger = null
+			if (this.m_runRate > 0.0) then
+				call AHashTable.global().destroyTrigger(this.m_disableTrigger)
+				set this.m_disableTrigger = null
 			endif
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
 			//start members
-			set this.usedUnit = null
+			set this.m_unit = null
 
 			call this.destroyRunTrigger()
 			call this.destroyEnableTrigger()

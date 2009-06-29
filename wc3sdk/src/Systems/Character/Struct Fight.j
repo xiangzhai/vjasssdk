@@ -1,6 +1,6 @@
 /// The fps common.j file is required.
 /// Do not use this library, it is unfinished!
-library AStructSystemsCharacterFight requires AStructSystemsCharacterCharacterHashTable, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterFight requires AStructCoreGeneralHashTable, AStructSystemsCharacterAbstractCharacterSystem
 
 	struct AFight extends AAbstractCharacterSystem
 		//static start members
@@ -33,14 +33,14 @@ library AStructSystemsCharacterFight requires AStructSystemsCharacterCharacterHa
 			set this.hasOrdered = false
 			set this.canOrder = false
 
-			//call UnitDamagePoint(this.getUnit(), 0.0, GetUnitPolarProjectionX(this.getUnit(), (GetUnitFacing(this.getUnit()) + AFight.angle), AFocus.range)
+			//call UnitDamagePoint(this.unit(), 0.0, unitPolarProjectionX(this.unit(), (GetUnitFacing(this.unit()) + AFight.angle), AFocus.range)
 
 			set this.canOrder = true
 		endmethod
 
 		private static method timerFunctionReset takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
-			local AFight fight = AGetCharacterHashTable().getHandleInteger(expiredTimer, "fight")
+			local AFight fight = AHashTable.global().getHandleInteger(expiredTimer, "fight")
 			set fight.hasOrdered = false
 			set expiredTimer = null
 		endmethod
@@ -48,7 +48,7 @@ library AStructSystemsCharacterFight requires AStructSystemsCharacterCharacterHa
 		private method startTimer takes nothing returns nothing
 			set this.hasOrdered = true
 			call TimerStart(this.usedTimer, AFight.time, false, function AFight.timerFunctionReset)
-			call AGetCharacterHashTable().storeHandleInteger(this.usedTimer, "fight", this)
+			call AHashTable.global().storeHandleInteger(this.usedTimer, "fight", this)
 		endmethod
 
 		private static method triggerConditionOrder takes nothing returns boolean
@@ -57,7 +57,7 @@ library AStructSystemsCharacterFight requires AStructSystemsCharacterCharacterHa
 
 		private static method triggerActionOrder takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AFight fight = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "fight")
+			local AFight fight = AHashTable.global().getHandleInteger(triggeringTrigger, "fight")
 			if (fight.canOrder) then
 				if (fight.hasOrdered) then
 					call fight.hit()
@@ -74,7 +74,7 @@ library AStructSystemsCharacterFight requires AStructSystemsCharacterCharacterHa
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			if (not AFight.useFps) then
-				set triggerEvent = TriggerRegisterUnitEvent(this.fightTrigger, this.getUnit(), EVENT_UNIT_ISSUED_ORDER) //Return nothing
+				set triggerEvent = TriggerRegisterUnitEvent(this.fightTrigger, this.unit(), EVENT_UNIT_ISSUED_ORDER) //Return nothing
 				set conditionFunction = Condition(function AFight.triggerConditionOrder)
 				set triggerCondition = TriggerAddCondition(this.fightTrigger, conditionFunction)
 				set triggerEvent = null
@@ -82,7 +82,7 @@ library AStructSystemsCharacterFight requires AStructSystemsCharacterCharacterHa
 				//call TriggerRegisterMouseEvent(this.fightTrigger, EVENT_LMOUSEDOWN) //fpscommon.j
 			endif
 			set triggerAction = TriggerAddAction(this.fightTrigger, function AFight.triggerActionOrder)
-			call AGetCharacterHashTable().storeHandleInteger(this.fightTrigger, "fight", this) //AClassCharacterCharacterHashTable
+			call AHashTable.global().storeHandleInteger(this.fightTrigger, "fight", this) //AClassCharacterCharacterHashTable
 			set conditionFunction = null
 			set triggerCondition = null
 			set triggerAction = null
@@ -98,12 +98,12 @@ library AStructSystemsCharacterFight requires AStructSystemsCharacterCharacterHa
 		endmethod
 
 		private method destroyUsedTimer takes nothing returns nothing
-			call AGetCharacterHashTable().destroyTimer(this.usedTimer)
+			call AHashTable.global().destroyTimer(this.usedTimer)
 			set this.usedTimer = null
 		endmethod
 
 		private method destroyFightTrigger takes nothing returns nothing
-			call AGetCharacterHashTable().destroyTrigger(this.fightTrigger)
+			call AHashTable.global().destroyTrigger(this.fightTrigger)
 			set this.fightTrigger = null
 		endmethod
 

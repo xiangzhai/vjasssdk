@@ -5,7 +5,7 @@
 /// Revised test.
 library ALibraryCoreDebugContainer requires ALibraryCoreDebugMisc
 
-	//! runtextmacro A_CONTAINER("integer", "Integer", "1000")
+	//! runtextmacro A_CONTAINER("private", "AIntegerContainer", "integer", "0", "1000")
 
 	private function Compare takes integer element, integer comparedElement returns boolean
 		return (element < comparedElement)
@@ -28,7 +28,7 @@ library ALibraryCoreDebugContainer requires ALibraryCoreDebugMisc
 	endfunction
 
 	/// @todo Add tests for all container methods.
-	function GetContainerDebug takes nothing returns nothing
+	function AContainerDebug takes nothing returns nothing
 		local integer i
 		local AIntegerContainer Container1 = AIntegerContainer.create()
 		local AIntegerContainer Container2 = AIntegerContainer.create()

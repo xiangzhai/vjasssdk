@@ -1,5 +1,5 @@
 /// @author Tamino Dauth
-library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, AStructCoreDebugDebugHashTable
+library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreGeneralPlayer
 
 	/// @todo Should be a part of @struct ACheat, vJass bug.
 	function interface ACheatOnCheatAction takes nothing returns nothing
@@ -17,9 +17,22 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, ALibraryCoreGenera
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"ACheat\"")
 		
+		//start members
+		
+		public method cheat takes nothing returns string
+			return this.m_cheat
+		endmethod
+		
+		public method exactMatch takes nothing returns boolean
+			return this.m_exactMatch
+		endmethod
+		
+		//methods
+		
 		private static method triggerActionCheat takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ACheat this = AGetDebugHashTable().getHandleInteger(triggeringTrigger, "this")
+			local ACheat this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			debug call this.print("Cheat action")
 			call this.m_action.execute()
 			set triggeringTrigger = null
 		endmethod
@@ -36,13 +49,14 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, ALibraryCoreGenera
 					set user = Player(i)
 					if (IsPlayerPlayingUser(user)) then
 						set triggerEvent = TriggerRegisterPlayerChatEvent(this.cheatTrigger, user, this.m_cheat, this.m_exactMatch)
+						set triggerEvent = null
 					endif
 					set user = null
 					set i = i + 1
 			endloop
 			set triggerAction = TriggerAddAction(this.cheatTrigger, function ACheat.triggerActionCheat)
 			set triggerAction = null
-			call AGetDebugHashTable().storeHandleInteger(this.cheatTrigger, "this", this)
+			call AHashTable.global().storeHandleInteger(this.cheatTrigger, "this", this)
 		endmethod
 		
 		/// @param cheat The string the player has to enter into the chat.
@@ -66,7 +80,7 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, ALibraryCoreGenera
 		endmethod
 		
 		public method onDestroy takes nothing returns nothing
-			call AGetDebugHashTable().destroyTrigger(this.cheatTrigger)
+			call AHashTable.global().destroyTrigger(this.cheatTrigger)
 			set this.cheatTrigger = null
 		endmethod
 	endstruct

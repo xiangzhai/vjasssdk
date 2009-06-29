@@ -2,46 +2,46 @@ library AStructCoreMathsPoint requires ALibraryCoreMathsPoint
 
 	struct APoint
 		//dynamic members
-		private real x //should be protected
-		private real y
+		private real m_x //should be protected
+		private real m_y
 
 		//dynamic members
 
 		public method setX takes real x returns nothing
-			set this.x = x
+			set this.m_x = x
 		endmethod
 
-		public method getX takes nothing returns real
-			return this.x
+		public method x takes nothing returns real
+			return this.m_x
 		endmethod
 
 		public method setY takes real y returns nothing
-			set this.y = y
+			set this.m_y = y
 		endmethod
 
-		public method getY takes nothing returns real
-			return this.y
+		public method y takes nothing returns real
+			return this.m_y
 		endmethod
 
 		//methods
 
-		public method getPolarProjectionX takes real angle, real distance returns real
-			return GetPolarProjectionX(this.x, angle, distance)
+		public method polarProjectionX takes real angle, real distance returns real
+			return GetPolarProjectionX(this.m_x, angle, distance)
 		endmethod
 
-		public method getPolarProjectionY takes real angle, real distance returns real
-			return GetPolarProjectionY(this.y, angle, distance)
+		public method polarProjectionY takes real angle, real distance returns real
+			return GetPolarProjectionY(this.m_y, angle, distance)
 		endmethod
 
-		public method getLocation takes real angle, real distance returns location
-			return GetPolarProjectionOfPoint(this.getX(), this.getY(), angle, distance)
+		public method location takes real angle, real distance returns location
+			return GetPolarProjectionOfPoint(this.m_x, this.m_y, angle, distance)
 		endmethod
 
 		public static method create takes real x, real y returns APoint
 			local APoint this = APoint.allocate()
 			//dynamic members
-			set this.x = x
-			set this.y = y
+			set this.m_x = x
+			set this.m_y = y
 
 			return this
 		endmethod

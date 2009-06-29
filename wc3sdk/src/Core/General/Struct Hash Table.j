@@ -1,13 +1,17 @@
 library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc, ALibraryCoreGeneralConversion
 
 	/// Provides access to a single game cache instance.
+	/// The game cache will be replaced by the new data type hashtable which comes with the next patch.
 	/// @author Tamino Dauth
 	struct AHashTable
 		//static members
-		debug private static integer hashTables = 0 //There is a limit of 256 game caches
+		private static AHashTable m_global
+		debug private static integer hashTables //There is a limit of 256 game caches
 		//start members
 		private gamecache gameCache
 		debug private string name
+		//member
+		//private hashtable m_hashTable
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"AHashTable\"")
 
@@ -26,34 +30,42 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc, ALibraryCore
 		//! textmacro AHashTableOperationMacro takes TYPE, TYPENAME
 			public method store$TYPENAME$ takes string key, string label, $TYPE$ value returns nothing
 				call Store$TYPENAME$(this.gameCache, key, label, value)
+				//return Save$TYPENAME$(this.m_hashTable, parentKey, childKey, value)
 			endmethod
 
 			public method hasStored$TYPENAME$ takes string key, string label returns boolean
 				return HaveStored$TYPENAME$(this.gameCache, key, label)
+				//return HaveSaved$TYPENAME$(this.m_hashTable, parentKey, childKey)
 			endmethod
 
 			public method flushStored$TYPENAME$ takes string key, string label returns nothing
 				call FlushStored$TYPENAME$(this.gameCache, key, label)
+				//RemoveSaved$TYPENAME$(this.m_hashTable, parentKey, childKey)
 			endmethod
 
 			public method getStored$TYPENAME$ takes string key, string label returns $TYPE$
 				return GetStored$TYPENAME$(this.gameCache, key, label)
+				//return Load$TYPENAME$(this.m_hashTable, parentKey, childKey)
 			endmethod
 
 			public method storeHandle$TYPENAME$ takes handle usedHandle, string label, $TYPE$ value returns nothing
 				call this.store$TYPENAME$(I2S(H2I(usedHandle)), label, value) //ALibraryGeneralConversion
+				//call this.store$TYPENAME$(GetHandleId(usedHandle), key, value)
 			endmethod
 
 			public method handle$TYPENAME$Exists takes handle usedHandle, string label returns boolean
 				return this.hasStored$TYPENAME$(I2S(H2I(usedHandle)), label) //ALibraryGeneralConversion
+				//return this.hasStored$TYPENAME$(GetHandle(usedHandle), key)
 			endmethod
 
 			public method flushHandle$TYPENAME$ takes handle usedHandle, string label returns nothing
 				call this.flushStored$TYPENAME$(I2S(H2I(usedHandle)), label) //ALibraryGeneralConversion
+				//call this.flushedStored(GetHandleId(usedHandle), key)
 			endmethod
 
 			public method getHandle$TYPENAME$ takes handle usedHandle, string label returns $TYPE$
 				return this.getStored$TYPENAME$(I2S(H2I(usedHandle)), label) //ALibraryGeneralConversion
+				//return this.getStored$TYPENAME$(GetHandleId(usedHandle), key)
 			endmethod
 		//! endtextmacro
 
@@ -81,6 +93,7 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc, ALibraryCore
 		/// Löscht alle Daten der Tabelle.
 		public method flush takes nothing returns nothing
 			call FlushGameCache(this.gameCache)
+			//call FlushParentHashtable(this.m_hashTable)
 		endmethod
 
 		/// Speichert die Tabelle auf der Festplatte. Nur im Einzelspielermodus möglich.
@@ -90,10 +103,12 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc, ALibraryCore
 
 		public method flushKey takes string key returns nothing
 			call FlushStoredMission(this.gameCache, key)
+			//call FlushChildHashtable(this.m_hashTable, key)
 		endmethod
 
 		public method flushHandleValues takes handle usedHandle returns nothing
 			call this.flushKey(I2S(H2I(usedHandle))) //ALibraryGeneralConversion
+			//call this.flushKey(GetHandleId(usedHandle))
 		endmethod
 
 		//! textmacro AHashTableDestructionMacro takes TYPE, TYPENAME, DESTRUCTIONNAME
@@ -127,6 +142,8 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc, ALibraryCore
 			//start members
 			set this.gameCache = InitGameCache(name)
 			debug set this.name = name
+			//members
+			//set this.m_hashTable = InitHashtable()
 
 			return this
 		endmethod
@@ -135,6 +152,22 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc, ALibraryCore
 			//start members
 			call FlushGameCache(this.gameCache)
 			set this.gameCache = null
+			//members
+			//call FlushParentHashtable(this.m_hashTable)
+			//set this.m_hashTable = null
+		endmethod
+		
+		private static method onInit takes nothing returns nothing
+			//static members
+			set AHashTable.m_global = 0
+			debug set AHashTable.hashTables = 0 //There is a limit of 256 game caches
+		endmethod
+		
+		public static method global takes nothing returns AHashTable
+			if (AHashTable.m_global == 0) then
+				set AHashTable.m_global = AHashTable.create("ASL")
+			endif
+			return AHashTable.m_global
 		endmethod
 	endstruct
 

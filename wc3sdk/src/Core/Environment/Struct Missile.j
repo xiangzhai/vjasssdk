@@ -1,7 +1,7 @@
-library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint, ALibraryCoreInterfaceSelection
+library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint, ALibraryCoreInterfaceSelection
 
-	/// Required by static convenience methods.
-	//! runtextmacro A_CONTAINER("AMissile", "Missile", "100") /// @todo FIXME - size
+	/// not private! Public static methods return AMissileVectors.
+	//! runtextmacro A_VECTOR("", "AMissileVector", "AMissile", "0", "100") /// @todo FIXME - size
 
 	/// OnCollisionFunction functions can be set by method @method setOnCollisionFunction and will be called when missile collides.
 	function interface AMissileOnCollisionFunction takes AMissile missile returns nothing
@@ -22,8 +22,7 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCo
 		private static boolean enableCollisions
 		//static members
 		private static trigger refreshTrigger
-		private static AMissile array missiles[100] /// @todo FIXME - size
-		private static integer missileCount
+		private static AMissileVector missiles
 		//dynamic members
 		private player m_owner
 		private integer m_unitType
@@ -318,8 +317,7 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCo
 			set this.usedUnit = null
 			set this.paused = true
 
-			set AMissile.missiles[AMissile.missileCount] = this
-			set AMissile.missileCount = AMissile.missileCount + 1
+			call AMissile.missiles.pushBack(this)
 			return this
 		endmethod
 
@@ -334,12 +332,14 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCo
 				call RemoveUnit(this.usedUnit)
 			endif
 			set this.usedUnit = null
+			
+			call AMissile.missiles.remove(this)
 		endmethod
 
 		private static method refreshTriggerAction takes nothing returns nothing
 			local integer i = 0
 			loop
-				exitwhen (i == AMissile.missileCount)
+				exitwhen (i == AMissile.missiles.size())
 				if (not AMissile.missiles[i].paused) then
 					call AMissile.missiles[i].move()
 				endif
@@ -363,7 +363,7 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCo
 			debug endif
 			set AMissile.refreshTime = refreshTime
 			set AMissile.enableCollisions = enableCollisions
-			set AMissile.missileCount = 0
+			set AMissile.missiles = AMissileVector.create()
 			call AMissile.createRefreshTrigger()
 		endmethod
 
@@ -373,10 +373,11 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCo
 			set AMissile.refreshTrigger = null
 			//remove all missiles
 			loop
-				exitwhen (i == AMissile.missileCount)
+				exitwhen (i == AMissile.missiles.size())
 				call AMissile.missiles[i].destroy()
 				set i = i + 1
 			endloop
+			call AMissile.missiles.destroy()
 		endmethod
 
 		public static method enable takes nothing returns nothing
@@ -389,8 +390,8 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCo
 		
 		//convenience methods
 		
-		public static method createCircle takes real x, real y, real z, real distance, integer count, boolean start, player owner, integer unitType, real speed, real damage, real damageRange, unit damageSource, attacktype attackType, damagetype damageType, weapontype weaponType, boolean collides, string deathEffectPath, string deathSoundPath returns AMissileContainer
-			local AMissileContainer container = AMissileContainer.create()
+		public static method createCircle takes real x, real y, real z, real distance, integer count, boolean start, player owner, integer unitType, real speed, real damage, real damageRange, unit damageSource, attacktype attackType, damagetype damageType, weapontype weaponType, boolean collides, string deathEffectPath, string deathSoundPath returns AMissileVector
+			local AMissileVector vector = AMissileVector.create()
 			local AMissile missile
 			local real angle = 0.0
 			local real angleValue = 360.0 / count
@@ -412,17 +413,17 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, ALibraryCo
 				call missile.setTargetY(GetPolarProjectionY(y, angle, distance))
 				call missile.setDeathEffectPath(deathEffectPath)
 				call missile.setDeathSoundPath(deathSoundPath)
-				set container[i] = missile
+				call vector.pushBack(missile)
 				if (start) then
 					call missile.start(x, y, z, angle)
 				endif
 				set angle = angle + angleValue
 				set i = i + 1
 			endloop
-			return container
+			return missile
 		endmethod
 		
-		public static method createCircleFromUnit takes unit usedUnit, real distance, integer count, boolean start, player owner, integer unitType, real speed, real damage, real damageRange, unit damageSource, attacktype attackType, damagetype damageType, weapontype weaponType, boolean collides, string deathEffectPath, string deathSoundPath returns AMissileContainer
+		public static method createCircleFromUnit takes unit usedUnit, real distance, integer count, boolean start, player owner, integer unitType, real speed, real damage, real damageRange, unit damageSource, attacktype attackType, damagetype damageType, weapontype weaponType, boolean collides, string deathEffectPath, string deathSoundPath returns AMissileVector
 			return AMissile.createCircle(GetUnitX(usedUnit), GetUnitY(usedUnit), GetUnitZ(usedUnit), distance, count, start, owner, unitType, speed, damage, damageRange, damageSource, attackType, damageType, weaponType, collides, deathEffectPath, deathSoundPath)
 		endmethod
 	endstruct

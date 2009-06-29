@@ -1,4 +1,8 @@
-library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructSystemsCharacterCharacterHashTable, AStructSystemsCharacterClass, AStructSystemsCharacterCharacter
+library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreMathsConversion, AStructSystemsCharacterClass, AStructSystemsCharacterCharacter
+
+	/// @todo AItemType.maxAbilities should be the max size value
+	//! runtextmacro A_VECTOR("private", "AAbilityVector", "integer", "0", "10")
+	//! runtextmacro A_VECTOR("private", "ABooleanVector", "boolean", "false", "10")
 
 	/// Represents an item type, not an item object!
 	struct AItemType
@@ -7,7 +11,8 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructS
 		public static constant integer equipmentTypeArmour = 1
 		public static constant integer equipmentTypePrimaryWeapon = 2
 		public static constant integer equipmentTypeSecondaryWeapon = 3
-		public static constant integer maxEquipmentTypes = 4
+		public static constant integer equipmentTypeAmulet = 4
+		public static constant integer maxEquipmentTypes = 5
 		private static constant integer maxAbilities = 10
 		//static start members
 		private static string textLevel
@@ -16,102 +21,171 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructS
 		private static string textIntelligence
 		private static string textClass
 		//start members
-		private integer itemType
-		private integer equipmentType
-		private integer requiredLevel
-		private integer requiredStrength
-		private integer requiredAgility
-		private integer requiredIntelligence
-		private AClass requiredClass
-		private integer m_damage
-		private integer m_armor
-		private integer m_hp
-		private integer m_mana
+		private integer m_itemType
+		private integer m_equipmentType
+		private integer m_requiredLevel
+		private integer m_requiredStrength
+		private integer m_requiredAgility
+		private integer m_requiredIntelligence
+		private AClass m_requiredClass
 		//members
-		private integer m_abilityCount
-		private integer array m_abilities[10] /// @todo vJass bug, thistype.maxAbilities
+		private AAbilityVector m_abilities
+		private ABooleanVector m_permanent
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"AItemType\"")
 
 		//start members
+		
+		public method itemType takes nothing returns integer
+			return this.m_itemType
+		endmethod
 
-		/// Friend relation to AInventory, don't use
-		public method getEquipmentType takes nothing returns integer
-			return this.equipmentType
+		public method equipmentType takes nothing returns integer
+			return this.m_equipmentType
+		endmethod
+		
+		public method requiredLevel takes nothing returns integer
+			return this.m_requiredLevel
+		endmethod
+		
+		public method requiredStrength takes nothing returns integer
+			return this.m_requiredStrength
+		endmethod
+		
+		public method requiredAgility takes nothing returns integer
+			return this.m_requiredAgility
+		endmethod
+		
+		public method requiredIntelligence takes nothing returns integer
+			return this.m_requiredIntelligence
+		endmethod
+		
+		public method requiredClass takes nothing returns AClass
+			return this.m_requiredClass
 		endmethod
 
 		//methods
 		
-		public method addAbility takes integer abilityId returns integer
-			local integer id = this.m_abilityCount
-			if (id < AItemType.maxAbilities) then
-				set this.m_abilities[id] = abilityId
-				set this.m_abilityCount = id + 1
-				return id
-			endif
-			return -1
+		public method addAbility takes integer abilityId, boolean permanent returns integer
+			call this.m_abilities.pushBack(abilityId)
+			call this.m_permanent.pushBack(permanent)
+			return this.m_abilities.backIndex()
 		endmethod
 
 		public method checkRequirement takes ACharacter character returns boolean
-			if (GetHeroLevel(character.getUsedUnit()) < this.requiredLevel) then
+			if (GetHeroLevel(character.unit()) < this.m_requiredLevel) then
 				call character.displayMessage(ACharacter.messageTypeError, AItemType.textLevel)
 				return false
-			elseif (GetHeroStr(character.getUsedUnit(), true) < this.requiredStrength) then
+			elseif (GetHeroStr(character.unit(), true) < this.m_requiredStrength) then
 				call character.displayMessage(ACharacter.messageTypeError, AItemType.textStrength)
 				return false
-			elseif (GetHeroAgi(character.getUsedUnit(), true) < this.requiredAgility) then
+			elseif (GetHeroAgi(character.unit(), true) < this.m_requiredAgility) then
 				call character.displayMessage(ACharacter.messageTypeError, AItemType.textAgility) 
 				return false
-			elseif (GetHeroInt(character.getUsedUnit(), true) < this.requiredIntelligence) then
+			elseif (GetHeroInt(character.unit(), true) < this.m_requiredIntelligence) then
 				call character.displayMessage(ACharacter.messageTypeError, AItemType.textIntelligence)
 				return false
-			elseif (this.requiredClass != 0 and character.getClass() != this.requiredClass) then
+			elseif (this.m_requiredClass != 0 and character.class() != this.m_requiredClass) then
 				call character.displayMessage(ACharacter.messageTypeError, AItemType.textClass)
 				return false
 			endif
 			return true
 		endmethod
 		
-		public method addAbilities takes unit who returns nothing
+		public method addAllAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
-				exitwhen (i == this.m_abilityCount)
+				exitwhen (i == this.m_abilities.size())
 				call UnitAddAbility(who, this.m_abilities[i])
+				call UnitMakeAbilityPermanent(who, this.m_permanent[i], this.m_abilities[i]) //stay when unit morphs
 				set i = i + 1
 			endloop
 		endmethod
 		
-		public method removeAbilities takes unit who returns nothing
+		public method removeAllAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
-				exitwhen (i == this.m_abilityCount)
+				exitwhen (i == this.m_abilities.size())
 				call UnitRemoveAbility(who, this.m_abilities[i])
 				set i = i + 1
 			endloop
 		endmethod
+		
+		public method addPermanentAbilities takes unit who returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_abilities.size())
+				if (this.m_permanent[i]) then
+					debug call this.print("Adding permanent ability " + GetObjectName(this.m_abilities[i]) + " to unit " + GetUnitName(who))
+					call UnitAddAbility(who, this.m_abilities[i])
+				endif
+				set i = i + 1
+			endloop
+		endmethod
+		
+		public method removePermanentAbilities takes unit who returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_abilities.size())
+				if (this.m_permanent[i]) then
+					debug call this.print("Removing permanent ability " + GetObjectName(this.m_abilities[i]) + " from unit " + GetUnitName(who))
+					call UnitRemoveAbility(who, this.m_abilities[i])
+				endif
+				set i = i + 1
+			endloop
+		endmethod
+		
+		public method addUsableAbilities takes unit who returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_abilities.size())
+				if (not this.m_permanent[i]) then
+					call UnitAddAbility(who, this.m_abilities[i])
+				endif
+				set i = i + 1
+			endloop
+		endmethod
+		
+		public method removeUsableAbilities takes unit who returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_abilities.size())
+				if (not this.m_permanent[i]) then
+					call UnitRemoveAbility(who, this.m_abilities[i])
+				endif
+				set i = i + 1
+			endloop
+		endmethod
 
+		/// @param equipmentType If this value is -1 it will always be added to rucksack.
 		public static method create takes integer itemType, integer equipmentType, integer requiredLevel, integer requiredStrength, integer requiredAgility, integer requiredIntelligence, AClass requiredClass returns AItemType
 			local AItemType this = AItemType.allocate()
 			//start members
-			set this.itemType = itemType
-			set this.equipmentType = equipmentType
-			set this.requiredLevel = requiredLevel
-			set this.requiredStrength = requiredStrength
-			set this.requiredAgility = requiredAgility
-			set this.requiredIntelligence = requiredIntelligence
-			set this.requiredClass = requiredClass
+			set this.m_itemType = itemType
+			set this.m_equipmentType = equipmentType
+			set this.m_requiredLevel = requiredLevel
+			set this.m_requiredStrength = requiredStrength
+			set this.m_requiredAgility = requiredAgility
+			set this.m_requiredIntelligence = requiredIntelligence
+			set this.m_requiredClass = requiredClass
 			//members
-			set this.m_abilityCount = 0
+			set this.m_abilities = AAbilityVector.create()
+			set this.m_permanent = ABooleanVector.create()
 
-			debug if (AGetCharacterHashTable().getStoredInteger("AItemTypes", I2S(this.itemType)) != 0) then
-				debug call this.print("Item type " + I2S(this.itemType) + " already has an item type.")
+			debug if (AHashTable.global().getStoredInteger("AItemTypes", I2S(itemType)) != 0) then
+				debug call this.print("Item type " + I2S(itemType) + " already has an item type.")
 			debug endif
-			call AGetCharacterHashTable().storeInteger("AItemTypes", I2S(this.itemType), this)
+			call AHashTable.global().storeInteger("AItemTypes", I2S(itemType), this)
+			debug call this.print("Storing item type " + I2S(itemType))
 			return this
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			call AGetCharacterHashTable().flushStoredInteger("AItemTypes", I2S(this.itemType))
+			//members
+			call this.m_abilities.destroy()
+			call this.m_permanent.destroy()
+			
+			call AHashTable.global().flushStoredInteger("AItemTypes", I2Hexadecimal(this.m_itemType))
 		endmethod
 
 		public static method init takes string textLevel, string textStrength, string textAgility, string textIntelligence, string textClass returns nothing
@@ -124,7 +198,8 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructS
 		endmethod
 
 		public static method getItemTypeOfItemTypeId takes integer itemTypeId returns AItemType
-			return AGetCharacterHashTable().getStoredInteger("AItemTypes", I2S(itemTypeId))
+			debug call thistype.staticPrint("Getting item type of item type id " + I2S(itemTypeId))
+			return AHashTable.global().getStoredInteger("AItemTypes", I2S(itemTypeId))
 		endmethod
 
 		/// @author Tamino Dauth

@@ -1,4 +1,4 @@
-library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceMisc, AStructSystemsCharacterCharacter, AStructSystemsCharacterCharacterHashTable, AStructSystemsGuiGui
+library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceMisc, AStructSystemsCharacterCharacter, AStructSystemsGuiGui
 
 	struct ANeratiaFightArea
 		//dynamic members
@@ -77,15 +77,15 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, ALib
 	function interface ANeratiaFightEventAction takes ANeratiaFight neratiaFight returns nothing
 	
 	/// @todo vJass bug, should be a part of @struct ANeratiaFight.
-	private function dialogButtonActionSlash takes AGui gui, integer index returns nothing
+	private function dialogButtonActionSlash takes ADialogButton dialogButton returns nothing
 	endfunction
 	
 	/// @todo vJass bug, should be a part of @struct ANeratiaFight.
-	private function dialogButtonActionPass takes AGui gui, integer index returns nothing
+	private function dialogButtonActionPass takes ADialogButton dialogButton returns nothing
 	endfunction
 	
 	/// @todo vJass bug, should be a part of @struct ANeratiaFight.
-	private function dialogButtonActionStroke takes AGui gui, integer index returns nothing
+	private function dialogButtonActionStroke takes ADialogButton dialogButton returns nothing
 	endfunction
 
 	/// The character fight system especially for Corexx's project Neratia.
@@ -164,7 +164,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, ALib
 				exitwhen (i == ANeratiaFight.maxUsers)
 				set user = Player(i)
 				if (IsPlayerPlayingUser(user) and ((toSelectingUser and user != this.m_users[this.m_userIndex]) or not toSelectingUser)) then
-					call ACharacter.getPlayerCharacter(user).displayMessage(messageType, text)
+					call ACharacter.playerCharacter(user).displayMessage(messageType, text)
 				endif
 				set user = null
 				set i = i + 1
@@ -241,12 +241,12 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, ALib
 		endmethod
 		
 		private method showMeeleAttackTypeDialog takes nothing returns nothing
-			call AGui.getPlayerGui(this.m_users[this.m_userIndex]).clearDialog()
-			call AGui.getPlayerGui(this.m_users[this.m_userIndex]).setDialogTitle(tr("Nahkampfattacke"))
-			call AGui.getPlayerGui(this.m_users[this.m_userIndex]).addDialogButton(tr("Hieb"), 'H', dialogButtonActionSlash)
-			call AGui.getPlayerGui(this.m_users[this.m_userIndex]).addDialogButton(tr("Stich"), 'S', dialogButtonActionPass)
-			call AGui.getPlayerGui(this.m_users[this.m_userIndex]).addDialogButton(tr("Streich"), 'T', dialogButtonActionStroke)
-			call AGui.getPlayerGui(this.m_users[this.m_userIndex]).showDialog()
+			call AGui.playerGui(this.m_users[this.m_userIndex]).dialog().clear()
+			call AGui.playerGui(this.m_users[this.m_userIndex]).dialog().setMessage(tr("Nahkampfattacke"))
+			call AGui.playerGui(this.m_users[this.m_userIndex]).dialog().addDialogButton(tr("Hieb"), 'H', dialogButtonActionSlash)
+			call AGui.playerGui(this.m_users[this.m_userIndex]).dialog().addDialogButton(tr("Stich"), 'S', dialogButtonActionPass)
+			call AGui.playerGui(this.m_users[this.m_userIndex]).dialog().addDialogButton(tr("Streich"), 'T', dialogButtonActionStroke)
+			call AGui.playerGui(this.m_users[this.m_userIndex]).dialog().show()
 		endmethod
 		
 		private method showRangeAttackTypeDialog takes nothing returns nothing
@@ -381,7 +381,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, ALib
 		private static method triggerConditionSelect takes nothing returns boolean
 			local player user = GetTriggerPlayer()
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ANeratiaFight this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
+			local ANeratiaFight this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			local boolean result = user == this.m_users[this.m_userIndex]
 			set user = null
 			set triggeringTrigger = null
@@ -391,7 +391,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, ALib
 		private static method triggerActionSelect takes nothing returns nothing
 			local player user = GetTriggerPlayer()
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ANeratiaFight this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
+			local ANeratiaFight this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			local eventid eventId = GetTriggerEventId()
 			if (eventId == EVENT_PLAYER_ARROW_UP_DOWN) then
 				call this.playerSelectsNextUnit()
@@ -461,7 +461,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, ALib
 		endmethod
 		
 		private method destroySelectionTrigger takes nothing returns nothing
-			call AGetCharacterHashTable().destroyTrigger(this.selectionTrigger)
+			call AHashTable.global().destroyTrigger(this.selectionTrigger)
 			set this.selectionTrigger = null
 		endmethod
 

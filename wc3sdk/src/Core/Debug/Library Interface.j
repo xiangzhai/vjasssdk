@@ -27,7 +27,7 @@ library ALibraryCoreDebugInterface requires ALibraryCoreDebugMisc
 		endif
 	endfunction
 
-	function GetInterfaceDebug takes nothing returns nothing
+	function AInterfaceDebug takes nothing returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		call GetMultiboardBarDebug(triggerPlayer)
 		set triggerPlayer = null

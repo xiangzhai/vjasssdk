@@ -25,7 +25,7 @@ library ALibraryCoreDebugMisc requires ALibraryCoreGeneralPlayer
 	/// Displays the string @param message in the following schema: "<structname> - <instanceid>: <message>"
 	/// @author Tamino Dauth
 	//! textmacro A_STRUCT_DEBUG takes STRUCTNAME
-		debug private method print takes string message returns nothing
+		debug public method print takes string message returns nothing //stub
 			debug call Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message)
 		debug endmethod
 

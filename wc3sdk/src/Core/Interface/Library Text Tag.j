@@ -44,7 +44,9 @@ library ALibraryCoreInterfaceTextTag
 	/// We do not want to use player forces ftw!!!
 	function ShowTextTagForPlayer takes player user, texttag textTag, boolean show returns nothing
 		local player localPlayer = GetLocalPlayer()
-		call SetTextTagVisibility(textTag, user == localPlayer)
+		if (user == localPlayer) then
+			call SetTextTagVisibility(textTag, show)
+		endif
 		set localPlayer = null
 	endfunction
 

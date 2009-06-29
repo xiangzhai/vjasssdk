@@ -1,4 +1,4 @@
-library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, AStructCoreEnvironmentEnvironmentHashTable
+library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
 
 	/// @todo Should be a part of struct @struct ADamageRecorder, vJass bug.
 	function interface ADamageRecorderOnDamageAction takes ADamageRecorder damageRecorder returns nothing
@@ -90,7 +90,7 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 		
 		private static method triggerActionDamaged takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ADamageRecorder this = AGetEnvironmentHashTable().getHandleInteger(triggeringTrigger, "this")
+			local ADamageRecorder this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			debug if (this.m_damageCount >= ADamageRecorder.maxDamageSources) then
 				debug call this.print("Damage source maximum has already been reached.")
 			debug endif
@@ -109,7 +109,7 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 			set this.damageTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.damageTrigger, this.m_target, EVENT_UNIT_DAMAGED)
 			set triggerAction = TriggerAddAction(this.damageTrigger, function ADamageRecorder.triggerActionDamaged)
-			call AGetEnvironmentHashTable().storeHandleInteger(this.damageTrigger, "this", this)
+			call AHashTable.global().storeHandleInteger(this.damageTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
@@ -131,7 +131,7 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 		endmethod
 		
 		private method destroyDamageTrigger takes nothing returns nothing
-			call AGetEnvironmentHashTable().destroyTrigger(this.damageTrigger)
+			call AHashTable.global().destroyTrigger(this.damageTrigger)
 			set this.damageTrigger = null
 		endmethod
 		

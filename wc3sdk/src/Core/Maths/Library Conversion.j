@@ -108,7 +108,7 @@ library ALibraryCoreMathsConversion requires ALibraryCoreDebugMisc, ALibraryCore
 	endfunction
 
 
-	//! textmacro AMathsConversionMacro takes TYPENAME, CHARS
+	//! textmacro ALibraryCoreMathsConversionMacro takes TYPENAME, CHARS
 		/// @state untested
 		function I2$TYPENAME$ takes integer Integer returns string
 			return I2A(Integer, "$CHARS$")
@@ -120,8 +120,8 @@ library ALibraryCoreMathsConversion requires ALibraryCoreDebugMisc, ALibraryCore
 		endfunction
 	//! endtextmacro
 
-	//! runtextmacro AMathsConversionMacro("Binary", "01")
-	//! runtextmacro AMathsConversionMacro("Octal", "01234567")
-	//! runtextmacro AMathsConversionMacro("Hexadecimal", "0123456789ABCDEF")
+	//! runtextmacro ALibraryCoreMathsConversionMacro("Binary", "01")
+	//! runtextmacro ALibraryCoreMathsConversionMacro("Octal", "01234567")
+	//! runtextmacro ALibraryCoreMathsConversionMacro("Hexadecimal", "0123456789ABCDEF")
 
 endlibrary

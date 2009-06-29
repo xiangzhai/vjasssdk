@@ -1,4 +1,7 @@
-library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreGeneralContainer, AStructCoreInterfaceInterfaceHashTable, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceMisc, ALibraryCoreEnvironmentSound, AStructSystemsGuiWidget
+library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceMisc, ALibraryCoreEnvironmentSound, ALibraryCoreMathsRect, AStructSystemsGuiWidget
+
+	/// @todo Use @member AMainWindow.maxWidgets instead of 100.
+	//! runtextmacro A_VECTOR("private", "AWidgetVector", "AWidget", "0", "100")
 
 	/// @todo Should be a static function interface of @struct AMainWindow, vJass bug.
 	function interface AMainWindowOnShowCondition takes AMainWindow mainWindow returns boolean
@@ -11,9 +14,6 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 
 	/// @todo Should be a static function interface of @struct AMainWindow, vJass bug.
 	function interface AMainWindowOnHideAction takes AMainWindow mainWindow returns nothing
-	
-	/// @todo Use @member AMainWindow.maxWidgets instead of 100.
-	//! runtextmacro A_CONTAINER("AWidget", "Widget", "100")
 
 	/// @todo Should be a static method of @struct AMainWindow, vJass bug.
 	private function unaryFunctionShowWidget takes AWidget element returns nothing
@@ -57,9 +57,12 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		//members
 		private integer m_guiIndex
 		private boolean m_isShown
-		private AWidgetContainer container
+		private AWidgetVector widgetVector
 		private texttag tooltip
 		private trigger shortcutTrigger
+		private rect m_fogModifierRect
+		private fogmodifier m_visibilityModifier
+		private fogmodifier m_blackMaskModifier
 
 		//! runtextmacro A_STRUCT_DEBUG("\"AMainWindow\"")
 		
@@ -150,7 +153,7 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		//convenience methods
 		
 		public method user takes nothing returns player
-			return this.m_gui.getUser()
+			return this.m_gui.user()
 		endmethod
 
 		//methods
@@ -160,12 +163,13 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		endmethod
 
 		public method getY takes real y returns real
-			return (this.m_y + y)
+			return (this.m_y - y)
 		endmethod
 		
 		public method enableShortcut takes nothing returns nothing
 			debug if (this.m_shortcut == -1) then
 				debug call this.print("Main window does not use a shortcut.")
+				debug return
 			debug endif
 			call EnableTrigger(this.shortcutTrigger)
 		endmethod
@@ -173,6 +177,7 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		public method disableShortcut takes nothing returns nothing
 			debug if (this.m_shortcut == -1) then
 				debug call this.print("Main window does not use a shortcut.")
+				debug return
 			debug endif
 			call DisableTrigger(this.shortcutTrigger)
 		endmethod
@@ -180,8 +185,9 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		public method showTooltip takes AWidget usedWidget returns nothing
 			if (this.tooltip == null) then
 				set this.tooltip = CreateTextTag()
+				call SetTextTagVisibility(this.tooltip, false)
 			endif
-			call SetTextTagTextBJ(this.tooltip, usedWidget.getTooltip(), usedWidget.getTooltipSize())
+			call SetTextTagTextBJ(this.tooltip, usedWidget.tooltip(), usedWidget.tooltipSize())
 			call SetTextTagPos(this.tooltip, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 0.0)
 			call ShowTextTagForPlayer(this.user(), this.tooltip, true)
 			if (AMainWindow.tooltipSoundPath != null) then
@@ -194,30 +200,12 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		endmethod
 
 		public method dockWidget takes AWidget usedWidget returns integer
-			local integer i = 0
-			loop
-				exitwhen (i == AMainWindow.maxWidgets)
-				if (this.container[i] == 0) then
-					set this.container[i] = usedWidget
-					return i
-				endif
-				set i = i + 1
-			endloop
-			debug call this.print("Could not dock widget. Maximum reached.")
-			return -1
+			call this.widgetVector.pushBack(usedWidget)
+			return this.widgetVector.backIndex()
 		endmethod
 
 		public method undockWidget takes AWidget usedWidget returns nothing
-			local integer i = 0
-			loop
-				exitwhen (i == AMainWindow.maxWidgets)
-				if (this.container[i] == usedWidget) then
-					set this.container[i] = 0
-					return
-				endif
-				set i = i + 1
-			endloop
-			debug call this.print("Could not undock widget. Widget was not found.")
+			call this.widgetVector.remove(usedWidget)
 		endmethod
 
 		public method show takes nothing returns nothing
@@ -228,14 +216,16 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 				return
 			endif
 			set x = this.m_x + (this.m_sizeX / 2.0)
-			set y = this.m_y + (this.m_sizeY / 2.0)
+			set y = this.m_y - (this.m_sizeY / 2.0)
 			call this.m_gui.savePlayerData()
-			call ClearScreenMessagesForPlayer(this.user()) //ALibraryInterfaceCinematic
-			call PanCameraToForPlayer(this.user(), x, y)
-			call SetCameraBoundsToPointForPlayer(this.user(), x, y) //ALibraryInterfaceCamera
-			call CameraSetupApplyForPlayer(true, AMainWindow.cameraSetup, this.user(), 0.0)
+			call FogModifierStop(this.m_blackMaskModifier)
+			call FogModifierStart(this.m_visibilityModifier)
+			call ClearScreenMessagesForPlayer(this.user())
+			call CameraSetupApplyForPlayer(false, AMainWindow.cameraSetup, this.user(), 0.0)
+			call PanCameraToTimedForPlayer(this.user(), x, y, 0.0)
+			call SetCameraBoundsToPointForPlayer(this.user(), x, y) /// @todo DEBUG
 			//widgets
-			call this.container.forEach(0, AMainWindow.maxWidgets, AWidgetContainerUnaryFunction.unaryFunctionShowWidget)
+			call this.widgetVector.forEach(unaryFunctionShowWidget)
 
 			if (this.m_useShortcuts) then
 				call this.m_gui.enableShortcuts()
@@ -255,10 +245,12 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 			
 			call ResetCameraBoundsToMapRectForPlayer(this.user())
 			call ResetToGameCameraForPlayer(this.user(), 0.0)
+			call FogModifierStop(this.m_visibilityModifier)
+			call FogModifierStart(this.m_blackMaskModifier)
 			call this.m_gui.loadPlayerData()
 			call this.hideTooltip()
 			//widgets
-			call this.container.forEach(0, AMainWindow.maxWidgets, AWidgetContainerUnaryFunction.unaryFunctionHideWidget)
+			call this.widgetVector.forEach(unaryFunctionHideWidget)
 
 			if (this.m_useShortcuts) then
 				call this.m_gui.disableShortcuts()
@@ -272,7 +264,7 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		
 		private static method triggerActionPressShortcut takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AMainWindow this = AGetInterfaceHashTable().getHandleInteger(triggeringTrigger, "this")
+			local AMainWindow this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			debug call this.print("Press shortcut")
 			if (not this.m_isShown) then
 				call this.show()
@@ -288,7 +280,7 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 			set this.shortcutTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.shortcutTrigger, this.m_shortcut, true)
 			set triggerAction = TriggerAddAction(this.shortcutTrigger, function AMainWindow.triggerActionPressShortcut)
-			call AGetInterfaceHashTable().storeHandleInteger(this.shortcutTrigger, "this", this)
+			call AHashTable.global().storeHandleInteger(this.shortcutTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
@@ -312,9 +304,13 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 			set this.m_useShortcuts = useShortcuts
 			set this.m_shortcut = shortcut
 			//members
-			set this.container = AWidgetContainer.create()
+			set this.widgetVector = AWidgetVector.create()
 			set this.m_isShown = false
-
+			set this.m_fogModifierRect = RectFromPointSize(this.m_x + this.m_sizeX / 2.0, this.m_y - this.m_sizeY / 2.0, this.m_sizeX, this.m_sizeY)
+			set this.m_visibilityModifier = CreateFogModifierRect(this.user(), FOG_OF_WAR_VISIBLE, this.m_fogModifierRect, true, false)
+			set this.m_blackMaskModifier = CreateFogModifierRect(this.user(), FOG_OF_WAR_MASKED, this.m_fogModifierRect, true, false)
+			call FogModifierStart(this.m_blackMaskModifier)
+			
 			if (gui != 0) then
 				set this.m_guiIndex = gui.dockMainWindow(this)
 			else
@@ -329,25 +325,36 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 			endif
 			return this
 		endmethod
-
+		
+		public static method createByRect takes AGui gui, rect usedRect, boolean useShortcuts, integer shortcut returns AMainWindow
+			return AMainWindow.create(gui, GetRectMinX(usedRect), GetRectMaxY(usedRect), GetRectWidthBJ(usedRect), GetRectHeightBJ(usedRect), useShortcuts, shortcut)
+		endmethod
+			
 		private method destroyDockedWidgets takes nothing returns nothing
-			call this.container.forEach(0, AMainWindow.maxWidgets, AWidgetContainerUnaryFunction.unaryFunctionDestroyWidget)
+			call this.widgetVector.forEach(unaryFunctionDestroyWidget)
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
 			//members
 			call DestroyTextTag(this.tooltip)
 			set this.tooltip = null
+			call RemoveRect(this.m_fogModifierRect)
+			set this.m_fogModifierRect = null
+			call DestroyFogModifier(this.m_visibilityModifier)
+			set this.m_visibilityModifier = null
+			call DestroyFogModifier(this.m_blackMaskModifier)
+			set this.m_blackMaskModifier = null
+			
 			if (this.m_shortcut != -1) then
-				call AGetInterfaceHashTable().destroyTrigger(this.shortcutTrigger) 
+				call AHashTable.global().destroyTrigger(this.shortcutTrigger) 
 				set this.shortcutTrigger = null
 			endif
 
 			call this.destroyDockedWidgets()
-			call AWidgetContainer.destroy(this.container)
+			call this.widgetVector.destroy()
 
 			if (this.m_gui != 0) then
-				call this.m_gui.undockMainWindow(this)
+				call this.m_gui.undockMainWindowByIndex(this.m_guiIndex)
 			endif
 		endmethod
 

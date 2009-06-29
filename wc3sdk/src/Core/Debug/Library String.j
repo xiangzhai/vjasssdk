@@ -104,7 +104,7 @@ library ALibraryCoreDebugString requires ALibraryCoreDebugMisc, ACoreString
 	function GetStringMiscFunctionsDebug takes nothing returns nothing
 	endfunction
 
-	function GetStringDebug takes nothing returns nothing
+	function AStringDebug takes nothing returns nothing
 		call GetStringConversionDebug()
 		call GetStringPoolFunctionsDebug()
 		call GetStringMiscFunctionsDebug()

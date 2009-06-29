@@ -143,12 +143,13 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 			call DisplayTimedTextToPlayer(ForPlayer, 0.52, 0.96, 2.00, msg)
 			call StartSound(error)
 		endif
+		set localPlayer = null
 	endfunction
 
 	private function init takes nothing returns nothing
 		set error = CreateSoundFromLabel("InterfaceError",false,false,false,10,10)
 		//call StartSound( error ) //apparently the bug in which you play a sound for the first time
-                //and it doesn't work is not there anymore in patch 1.22
+        //and it doesn't work is not there anymore in patch 1.22
 	endfunction
 
 endlibrary

@@ -14,8 +14,7 @@ library ALibraryCoreInterfaceCinematic
 	
 	/// @author Tamino Dauth
 	/// @state untested
-	function TransmissionFromUnit takes unit usedUnit, string text, sound playedSound returns nothing
-		local player owner = GetOwningPlayer(usedUnit)
+	function TransmissionFromUnitType takes integer unitType, player owner, string name, string text, sound playedSound returns nothing
 		local playercolor playerColor = GetPlayerColor(owner)
 		local real time
 		if (playedSound != null) then
@@ -24,9 +23,16 @@ library ALibraryCoreInterfaceCinematic
 		else
 			set time = bj_NOTHING_SOUND_DURATION
 		endif
-		call SetCinematicScene(GetUnitTypeId(usedUnit), playerColor, GetUnitName(usedUnit) + ":", text, time, time)
-		set owner = null
+		call SetCinematicScene(unitType, playerColor, name, text, time, time)
 		set playerColor = null
+	endfunction
+	
+	/// @author Tamino Dauth
+	/// @state untested
+	function TransmissionFromUnit takes unit usedUnit, string text, sound playedSound returns nothing
+		local player owner = GetOwningPlayer(usedUnit)
+		call TransmissionFromUnitType(GetUnitTypeId(usedUnit), owner, GetUnitName(usedUnit), text, playedSound)
+		set owner = null
 	endfunction
 	
 	/// @author Tamino Dauth
@@ -45,7 +51,7 @@ library ALibraryCoreInterfaceCinematic
 			if (playedSound != null) then
 				call StartSound(playedSound)
 			endif
-			call SetCinematicScene(GetUnitTypeId(usedUnit), playerColor, GetUnitName(usedUnit) + ":", text, time, time)
+			call SetCinematicScene(GetUnitTypeId(usedUnit), playerColor, GetUnitName(usedUnit), text, time, time)
 		endif
 		set localPlayer = null
 		set owner = null
@@ -76,10 +82,11 @@ library ALibraryCoreInterfaceCinematic
 		local player localPlayer = GetLocalPlayer()
 		if (user == localPlayer) then
 			call ShowInterface(show, 0.0)
+			call EnableUserControl(control)
 		endif
-		if (user == localPlayer) then
-			call EnableUserControl(control) //test
-		endif
+		//if (user == localPlayer) then
+			//call EnableUserControl(control) //test
+		//endif
 		set localPlayer = null		
 	endfunction
 

@@ -85,6 +85,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		call SetCameraBoundsForPlayer(user, minX, minY, minX, maxY, maxX, maxY, maxX, minY)
 	endfunction
 
+	/// @todo Desynchronization!
 	function GetCameraTargetPositionOfPlayer takes player user returns location
 		local player localPlayer = GetLocalPlayer()
 		local location cameraTargetPosition
@@ -95,6 +96,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		return cameraTargetPosition
 	endfunction
 
+	/// @todo Desynchronization!
 	function GetCameraTargetPositionXOfPlayer takes player user returns real
 		local player localPlayer = GetLocalPlayer()
 		local real value
@@ -105,6 +107,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		return value
 	endfunction
 
+	/// @todo Desynchronization!
 	function GetCameraTargetPositionYOfPlayer takes player user returns real
 		local player localPlayer = GetLocalPlayer()
 		local real value
@@ -115,6 +118,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		return value
 	endfunction
 
+	/// @todo Desynchronization!
 	function GetCameraTargetPositionZOfPlayer takes player user returns real
 		local player localPlayer = GetLocalPlayer()
 		local real value
@@ -125,6 +129,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		return value
 	endfunction
 
+	/// @todo Desynchronization!
 	function GetCameraFieldOfPlayer takes player user, camerafield cameraField returns real
 		local player localPlayer = GetLocalPlayer()
 		local real cameraFieldValue

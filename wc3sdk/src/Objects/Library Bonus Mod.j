@@ -1,47 +1,51 @@
 /// @author weaaddar
-library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable
+library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCoreDebugMisc //misc for debuggings
 
-	//! external ObjectMerger w3a AItg AZZ1 DataA1 1 1 anam "Damage +1"
-	//! external ObjectMerger w3a AItg AZZ2 DataA1 1 2 anam "Damage +2"
-	//! external ObjectMerger w3a AItg AZZ3 DataA1 1 4 anam "Damage +4"
-	//! external ObjectMerger w3a AItg AZZ4 DataA1 1 8 anam "Damage +8"
-	//! external ObjectMerger w3a AItg AZZ5 DataA1 1 16 anam "Damage +16"
-	//! external ObjectMerger w3a AItg AZZ6 DataA1 1 32 anam "Damage +32"
-	//! external ObjectMerger w3a AItg AZZ7 DataA1 1 64 anam "Damage +64"
-	//! external ObjectMerger w3a AItg AZZ8 DataA1 1 128 anam "Damage +128"
-	//! external ObjectMerger w3a AItg AZZ9 DataA1 1 256 anam "Damage +256"
-	//! external ObjectMerger w3a AItg AZZA DataA1 1 -512 anam "Damage -512"
-	//! external ObjectMerger w3a Ald1 AZY1 DataA1 1 1 anam "Armour +1"
-	//! external ObjectMerger w3a Ald1 AZY2 DataA1 1 2 anam "Armour +2"
-	//! external ObjectMerger w3a Ald1 AZY3 DataA1 1 4 anam "Armour +4"
-	//! external ObjectMerger w3a Ald1 AZY4 DataA1 1 8 anam "Armour +8"
-	//! external ObjectMerger w3a Ald1 AZY5 DataA1 1 16 anam "Armour +16"
-	//! external ObjectMerger w3a Ald1 AZY6 DataA1 1 32 anam "Armour +32"
-	//! external ObjectMerger w3a Ald1 AZY7 DataA1 1 64 anam "Armour +64"
-	//! external ObjectMerger w3a Ald1 AZY8 DataA1 1 128 anam "Armour +128"
-	//! external ObjectMerger w3a Ald1 AZY9 DataA1 1 256 anam "Armour +256"
-	//! external ObjectMerger w3a Ald1 AZYA DataA1 1 -512 anam "Armour -512"
-	//! external ObjectMerger w3a All2 AZX1 DataA1 1 10 anam "HP +10"
-	//! external ObjectMerger w3a All2 AZX2 DataA1 1 20 anam "HP +20"
-	//! external ObjectMerger w3a All2 AZX3 DataA1 1 40 anam "HP +40"
-	//! external ObjectMerger w3a All2 AZX4 DataA1 1 80 anam "HP +80"
-	//! external ObjectMerger w3a All2 AZX5 DataA1 1 160 anam "HP +160"
-	//! external ObjectMerger w3a All2 AZX6 DataA1 1 320 anam "HP +320"
-	//! external ObjectMerger w3a All2 AZX7 DataA1 1 640 anam "HP +640"
-	//! external ObjectMerger w3a All2 AZX8 DataA1 1 1280 anam "HP +1280"
-	//! external ObjectMerger w3a All2 AZX9 DataA1 1 2560 anam "HP +2560"
-	//! external ObjectMerger w3a All2 AZXA DataA1 1 -5120 anam "HP -5120"
-	//! external ObjectMerger w3a Almb AZW1 DataA1 1 10 anam "Mana +10"
-	//! external ObjectMerger w3a Almb AZW2 DataA1 1 20 anam "Mana +20"
-	//! external ObjectMerger w3a Almb AZW3 DataA1 1 40 anam "Mana +40"
-	//! external ObjectMerger w3a Almb AZW4 DataA1 1 80 anam "Mana +80"
-	//! external ObjectMerger w3a Almb AZW5 DataA1 1 160 anam "Mana +160"
-	//! external ObjectMerger w3a Almb AZW6 DataA1 1 320 anam "Mana +320"
-	//! external ObjectMerger w3a Almb AZW7 DataA1 1 640 anam "Mana +640"
-	//! external ObjectMerger w3a Almb AZW8 DataA1 1 1280 anam "Mana +1280"
-	//! external ObjectMerger w3a Almb AZW9 DataA1 1 2560 anam "Mana +2560"
-	//! external ObjectMerger w3a Almb AZWA DataA1 1 -5120 anam "Mana -5120"
-	
+/*
+	Uncomment this to use Bonus Mod.
+	//A1
+	//! external ObjectMerger w3a AItg AZZ1 Iatt 1 1 anam "Damage +1" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ2 Iatt 1 2 anam "Damage +2" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ3 Iatt 1 4 anam "Damage +4" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ4 Iatt 1 8 anam "Damage +8" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ5 Iatt 1 16 anam "Damage +16" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ6 Iatt 1 32 anam "Damage +32" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ7 Iatt 1 64 anam "Damage +64" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ8 Iatt 1 128 anam "Damage +128" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZ9 Iatt 1 256 anam "Damage +256" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AItg AZZA Iatt 1 -512 anam "Damage -512" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY1 Idef 1 1 anam "Armour +1" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY2 Idef 1 2 anam "Armour +2" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY3 Idef 1 4 anam "Armour +4" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY4 Idef 1 8 anam "Armour +8" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY5 Idef 1 16 anam "Armour +16" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY6 Idef 1 32 anam "Armour +32" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY7 Idef 1 64 anam "Armour +64" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY8 Idef 1 128 anam "Armour +128" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZY9 Idef 1 256 anam "Armour +256" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AId1 AZYA Idef 1 -512 anam "Armour -512" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX1 Ilif 1 10 anam "HP +10" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX2 Ilif 1 20 anam "HP +20" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX3 Ilif 1 40 anam "HP +40" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX4 Ilif 1 80 anam "HP +80" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX5 Ilif 1 160 anam "HP +160" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX6 Ilif 1 320 anam "HP +320" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX7 Ilif 1 640 anam "HP +640" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX8 Ilif 1 1280 anam "HP +1280" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZX9 Ilif 1 2560 anam "HP +2560" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AIl2 AZXA Ilif 1 -5120 anam "HP -5120" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW1 Iman 1 10 anam "Mana +10" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW2 Iman 1 20 anam "Mana +20" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW3 Iman 1 40 anam "Mana +40" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW4 Iman 1 80 anam "Mana +80" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW5 Iman 1 160 anam "Mana +160" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW6 Iman 1 320 anam "Mana +320" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW7 Iman 1 640 anam "Mana +640" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW8 Iman 1 1280 anam "Mana +1280" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZW9 Iman 1 2560 anam "Mana +2560" EditorSuffix "ASL" Art ""
+	//! external ObjectMerger w3a AImb AZWA Iman 1 -5120 anam "Mana -5120" EditorSuffix "ASL" Art ""
+*/
+
 	globals
 		constant integer A_BONUS_TYPE_DAMAGE = 0
 		constant integer A_BONUS_TYPE_ARMOR = 1
@@ -59,7 +63,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable
 	endglobals
 		
 	private function Ix takes integer x, integer y returns integer
-		return(x * IxLimit +y)
+		return (x * IxLimit + y)
 	endfunction
 
 	private function BonusMax takes nothing returns integer
@@ -103,6 +107,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable
 			if (amount >= bit) then
 				set x = abilityId[Ix(t, i)]
 				call UnitAddAbility(who, x)
+				debug call Print("Adding ability " + GetObjectName(x))
 				call UnitMakeAbilityPermanent(who, true, x)
 				set amount = amount - bit
 			else
@@ -110,7 +115,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable
 			endif
 		endloop
 		if (bol) then
-			set x= abilityId[Ix(t,Ix(1, -1))]
+			set x = abilityId[Ix(t,Ix(1, -1))]
 			call UnitAddAbility(who, x)
 			call UnitMakeAbilityPermanent(who, true, x)
 		endif

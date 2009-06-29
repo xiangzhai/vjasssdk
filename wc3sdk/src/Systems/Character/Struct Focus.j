@@ -1,5 +1,5 @@
 /// Do not use this library, it is unfinished!
-library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterCharacterHashTable, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterAbstractCharacterSystem
 
 	struct AFocus extends AAbstractCharacterSystem
 		//static start members
@@ -22,22 +22,22 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 
 		public method enable takes nothing returns nothing
 			call EnableTrigger(this.focusTrigger)
-			call ShowTextTagForPlayer(this.getUser(), this.textTag, true)
+			call ShowTextTagForPlayer(this.user(), this.textTag, true)
 			call EnableTrigger(this.workerTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
 			call DisableTrigger(this.focusTrigger)
-			call ShowTextTagForPlayer(this.getUser(), this.textTag, false)
+			call ShowTextTagForPlayer(this.user(), this.textTag, false)
 			call DisableTrigger(this.workerTrigger)
 		endmethod
 
 		private method isTargetInFocus takes nothing returns boolean
-			if (GetDistanceBetweenUnits(this.getUnit(), this.target, 0.0, 0.0) > AFocus.range) then
+			if (GetDistanceBetweenUnits(this.unit(), this.target, 0.0, 0.0) > AFocus.range) then
 			//Optional kann man auch mit Z-Wert (Extrafunktion) überprfen lassen, würde aber mehr Speicher ziehen
 				return false
 			//Erst überprfen
-			elseif (GetAngleBetweenUnits(this.getUnit(), this.target) > AFocus.angle) then
+			elseif (GetAngleBetweenUnits(this.unit(), this.target) > AFocus.angle) then
 				return false
 			endif
 			return true
@@ -50,8 +50,8 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 			loop
 				set first = FirstOfGroup(usedGroup)
 				exitwhen (first == null)
-				if (this.getUnit() != first) then //Darf sich nicht selbst anvisieren
-					if ((nearest == null) or (GetDistanceBetweenUnits(this.getUnit(), first, 0.0, 0.0) < GetDistanceBetweenUnits(this.getUnit(), nearest, 0.0, 0.0))) then //ALibraryMathsHandle
+				if (this.unit() != first) then //Darf sich nicht selbst anvisieren
+					if ((nearest == null) or (GetDistanceBetweenUnits(this.unit(), first, 0.0, 0.0) < GetDistanceBetweenUnits(this.unit(), nearest, 0.0, 0.0))) then //ALibraryMathsHandle
 						set nearest = first
 					endif
 				endif
@@ -62,7 +62,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 		endmethod
 
 		private method getTargetName takes nothing returns string
-			local integer state = GetUnitAllianceStateToUnit(this.getUnit(), this.target)
+			local integer state = GetUnitAllianceStateToUnit(this.unit(), this.target)
 			local string colour
 			if (state == bj_ALLIANCE_UNALLIED) then
 				set colour = "|c00ff0000"
@@ -78,23 +78,23 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 			if (AFocus.showText) then
 				call SetTextTagTextBJ(this.textTag, this.getTargetName(), 12.0)
 				call SetTextTagPos(this.textTag, GetUnitX(this.target), GetUnitY(this.target), (GetUnitFlyHeight(this.target) + 70.0))
-				call ShowTextTagForPlayer(this.getUser(), this.textTag, true)
+				call ShowTextTagForPlayer(this.user(), this.textTag, true)
 			endif
 		endmethod
 
 		private method indicateTheTarget takes real red, real green, real blue, real alpha returns nothing
 			if (AFocus.indicateTarget) then
-				call SetUnitVertexColourForPlayer(this.getUser(), this.target, red, green, blue, alpha)
+				call SetUnitVertexColourForPlayer(this.user(), this.target, red, green, blue, alpha)
 			endif
 		endmethod
 
 		private method getNewTarget takes nothing returns nothing
-			local real x1 = GetUnitX(this.getUnit())
-			local real y1 = GetUnitY(this.getUnit())
-			local real x3 = GetUnitPolarProjectionX(this.getUnit(), (GetUnitFacing(this.getUnit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real y3 = GetUnitPolarProjectionY(this.getUnit(), (GetUnitFacing(this.getUnit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real x4 = GetUnitPolarProjectionX(this.getUnit(), (GetUnitFacing(this.getUnit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real y4 = GetUnitPolarProjectionY(this.getUnit(), (GetUnitFacing(this.getUnit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real x1 = GetUnitX(this.unit())
+			local real y1 = GetUnitY(this.unit())
+			local real x3 = GetUnitPolarProjectionX(this.unit(), (GetUnitFacing(this.unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real y3 = GetUnitPolarProjectionY(this.unit(), (GetUnitFacing(this.unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real x4 = GetUnitPolarProjectionX(this.unit(), (GetUnitFacing(this.unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real y4 = GetUnitPolarProjectionY(this.unit(), (GetUnitFacing(this.unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
 			local group targetGroup = GetGroupInRectByCoordinates(x1, y1, x1, y1, x3, y3, x4, y4)
 			debug if (IsUnitGroupEmptyBJ(targetGroup)) then
 				debug call Print("Group is empty")
@@ -105,7 +105,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 			call DestroyGroup(targetGroup)
 			set targetGroup = null
 			if (this.target == null) then
-				call ShowTextTagForPlayer(this.getUser(), this.textTag, false)
+				call ShowTextTagForPlayer(this.user(), this.textTag, false)
 				return
 			endif
 			call this.showTargetText()
@@ -114,7 +114,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 
 		private static method triggerActionFocus takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AFocus this = AGetCharacterHashTable().getHandleInteger(triggeringTrigger, "this")
+			local AFocus this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			//Hat bereits ein Ziel
 			if (this.target != null) then
 				//Altes Objekt ist außer Reichweite - Bentige neues Ziel
@@ -135,7 +135,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 			set this.focusTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(this.focusTrigger, AFocus.refreshRate, true)
 			set triggerAction = TriggerAddAction(this.focusTrigger, function AFocus.triggerActionFocus)
-			call AGetCharacterHashTable().storeHandleInteger(this.focusTrigger, "this", this)
+			call AHashTable.global().storeHandleInteger(this.focusTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
@@ -148,7 +148,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 		private method createWorkerTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			//set this.worker = CreateUnit(this.getCharacter().getUser(), AFocus.workerUnitType, 
+			//set this.worker = CreateUnit(this.getCharacter().user(), AFocus.workerUnitType, 
 
 			set this.workerTrigger = CreateTrigger()
 			//Noch ausarbeiten
@@ -166,7 +166,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 		endmethod
 
 		private method destroyFocusTrigger takes nothing returns nothing
-			call AGetCharacterHashTable().destroyTrigger(this.focusTrigger)
+			call AHashTable.global().destroyTrigger(this.focusTrigger)
 			set this.focusTrigger = null
 		endmethod
 
@@ -178,7 +178,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, ALibraryCor
 		private method destroyWorkerTrigger takes nothing returns nothing
 			call RemoveUnit(this.worker)
 			set this.worker = null
-			call AGetCharacterHashTable().destroyTrigger(this.workerTrigger)
+			call AHashTable.global().destroyTrigger(this.workerTrigger)
 			set this.workerTrigger = null
 		endmethod
 

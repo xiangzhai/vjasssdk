@@ -1,6 +1,6 @@
 library ALibraryCoreMathsHandle requires ALibraryCoreMathsPoint, ALibraryCoreMathsRect
 
-	//! textmacro ALibraryMathsHandleMacro takes TYPE, TYPENAME
+	//! textmacro ALibraryCoreMathsHandleHandleMacro takes TYPE, TYPENAME
 		function Get$TYPENAME$Z takes $TYPE$ $TYPENAME$ returns real
 			return GetTerrainZ(Get$TYPENAME$X($TYPENAME$), Get$TYPENAME$Y($TYPENAME$))
 		endfunction
@@ -37,9 +37,9 @@ library ALibraryCoreMathsHandle requires ALibraryCoreMathsPoint, ALibraryCoreMat
 		endfunction
 	//! endtextmacro
 
-	//! runtextmacro ALibraryMathsHandleMacro("widget", "Widget")
-	//! runtextmacro ALibraryMathsHandleMacro("unit", "Unit")
-	//! runtextmacro ALibraryMathsHandleMacro("destructable", "Destructable")
-	//! runtextmacro ALibraryMathsHandleMacro("item", "Item")
+	//! runtextmacro ALibraryCoreMathsHandleHandleMacro("widget", "Widget")
+	//! runtextmacro ALibraryCoreMathsHandleHandleMacro("unit", "Unit")
+	//! runtextmacro ALibraryCoreMathsHandleHandleMacro("destructable", "Destructable")
+	//! runtextmacro ALibraryCoreMathsHandleHandleMacro("item", "Item")
 
 endlibrary

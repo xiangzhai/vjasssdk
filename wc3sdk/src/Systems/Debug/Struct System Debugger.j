@@ -1,23 +1,23 @@
-library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, ASystemsCharacter, ASystemsGui, ASystemsWorld
+library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreInterfaceMisc, ASystemsCharacter, ASystemsGui, ASystemsWorld
 
 	/// @todo Should be a method of @struct ASystemDebugger, vJass bug.
 	private function onHitActionShowInfo takes AWidget usedWidget returns nothing
-		call usedWidget.getGui().showInfoDialog("Advanced Script Library")
+		call usedWidget.gui().showInfoDialog("Advanced Script Library")
 	endfunction
 
 	/// @todo Should be a method of @struct ASystemDebugger, vJass bug.
 	private function onHitActionShowGuiSystemMainWindow takes AWidget usedWidget returns nothing
-		call usedWidget.getGui().showMainWindowByIndex(0)
+		call usedWidget.gui().showMainWindowByIndex(0)
 	endfunction
 
 	/// @todo Should be a method of @struct ASystemDebugger, vJass bug.
 	private function onHitActionShowCharacterSystemMainWindow takes AWidget usedWidget returns nothing
-		call usedWidget.getGui().showMainWindowByIndex(1)
+		call usedWidget.gui().showMainWindowByIndex(1)
 	endfunction
 
 	/// @todo Should be a method of @struct ASystemDebugger, vJass bug.
 	private function onHitActionShowWorldSystemMainWindow takes AWidget usedWidget returns nothing
-		call usedWidget.getGui().showMainWindowByIndex(2)
+		call usedWidget.gui().showMainWindowByIndex(2)
 	endfunction
 	
 	/// @todo Should be a method of @struct ASystemDebugger, vJass bug.
@@ -70,7 +70,7 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, ASyste
 		endmethod
 
 		private method createGuiSystemWindow takes nothing returns nothing
-			set this.guiSystemWindow = AMainWindow.create(AGui.getPlayerGui(this.user), 0.0, 0.0, 1000.0, 1000.0, true, 0)
+			set this.guiSystemWindow = AMainWindow.create(AGui.playerGui(this.user), 0.0, 0.0, 1000.0, 1000.0, true, 0)
 		
 			set this.guiSystemHeadLineText = AText.create(this.mainWindow, 400.0, 200.0, 0.0, 0.0, 0, onTrackActionShowTooltip)
 			call this.guiSystemHeadLineText.setTextAndSize("GUI-System", 15.0)
@@ -81,7 +81,7 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, ASyste
 		endmethod
 		
 		private method createCharacterSystemWindow takes nothing returns nothing
-			set this.characterSystemWindow = AMainWindow.create(AGui.getPlayerGui(this.user), 0.0, 0.0, 1000.0, 1000.0, true, 0)
+			set this.characterSystemWindow = AMainWindow.create(AGui.playerGui(this.user), 0.0, 0.0, 1000.0, 1000.0, true, 0)
 
 			set this.initCharacterSystemButton = AButton.create(this.characterSystemWindow, 0.0, 0.0, 80.0, 80.0, onHitActionInitCharacterSystem, onTrackActionShowTooltip)
 			call this.initCharacterSystemButton.setTooltip("Initialisiert das Charaktersystem. Diese Aktion kann nur einmal im Spiel durchgeführt werden.")
@@ -103,7 +103,7 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, ASyste
 		endmethod
 	
 		private method createGui takes nothing returns nothing
-			set this.mainWindow = AMainWindow.create(AGui.getPlayerGui(this.user), 0.0, 0.0, 1000.0, 1000.0, true, KEY_ESCAPE)
+			set this.mainWindow = AMainWindow.create(AGui.playerGui(this.user), 0.0, 0.0, 1000.0, 1000.0, true, KEY_ESCAPE)
 		
 			set this.headLineText = AText.create(this.mainWindow, 400.0, 200.0, 0.0, 0.0, onHitActionShowInfo, onTrackActionShowTooltip)
 			call this.headLineText.setTextAndSize("Advanced Script Library", 15.0)
@@ -132,7 +132,7 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, ASyste
 		
 		private static method triggerActionShow takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ASystemDebugger systemDebugger = AGetDebugHashTable().getHandleInteger(triggeringTrigger, "this")
+			local ASystemDebugger systemDebugger = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			call systemDebugger.show()
 			set triggeringTrigger = null
 		endmethod
@@ -141,9 +141,9 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, ASyste
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.menuTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user, this.menuTrigger, ASystemDebugger.menuKey, true) //ALibraryInterfaceMisc
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user, this.menuTrigger, ASystemDebugger.menuKey, true)
 			set triggerAction = TriggerAddAction(this.menuTrigger, function ASystemDebugger.triggerActionShow)
-			call AGetDebugHashTable().storeHandleInteger(this.menuTrigger, "this", this)
+			call AHashTable.global().storeHandleInteger(this.menuTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
@@ -160,7 +160,7 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, ASyste
 		endmethod
 		
 		private method destroyMenuTrigger takes nothing returns nothing
-			call AGetDebugHashTable().destroyTrigger(this.menuTrigger)
+			call AHashTable.global().destroyTrigger(this.menuTrigger)
 			set this.menuTrigger = null
 		endmethod
 		

@@ -1,4 +1,4 @@
-library ALibraryCoreGeneralUnit
+library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
 
 	/// Sicheres iterieren per FirstOfGroup
 	///
@@ -97,9 +97,33 @@ library ALibraryCoreGeneralUnit
 	endfunction
 	
 	/// @author Tamino Dauth
+	/// @todo Probably bugged, do not use.
+	function MoveItemToSlot takes unit usedUnit, item usedItem, integer slot returns boolean
+		return IssueTargetOrderById(usedUnit, 852002 + slot, usedItem)
+	endfunction
+	
+	/// @author Tamino Dauth
+	/// @todo Probably bugged, do not use.
+	function UseItemOfSlot takes unit usedUnit, integer slot returns boolean
+		return IssueImmediateOrderById(usedUnit, 852008 + slot)
+	endfunction
+	
+	/// @author Tamino Dauth
+	/// @todo Probably bugged, do not use.
+	function UseItemOfSlotOnTarget takes unit usedUnit, integer slot, widget target returns boolean
+		return IssueTargetOrderById(usedUnit, 852008 + slot, target)
+	endfunction
+	
+	/// @author Tamino Dauth
+	/// @todo Probably bugged, do not use.
+	function UseItemOfSlotOnPoint takes unit usedUnit, integer slot, real x, real y returns boolean
+		return IssuePointOrderById(usedUnit, 852008 + slot, x, y)
+	endfunction
+	
+	/// @author Tamino Dauth
 	/// @return Missing life of unit @param usedUnit.
 	function GetUnitMissingLife takes unit usedUnit returns real
-		return GetUnitState(usedUnit, UNIT_STATE_MAX_LIFE) -  GetUnitState(usedUnit, UNIT_STATE_LIFE)
+		return GetUnitState(usedUnit, UNIT_STATE_MAX_LIFE) - GetUnitState(usedUnit, UNIT_STATE_LIFE)
 	endfunction
 	
 	/// @author Tamino Dauth
@@ -111,13 +135,84 @@ library ALibraryCoreGeneralUnit
 	/// @author Tamino Dauth
 	/// @return Missing mana of unit @param usedUnit.
 	function GetUnitMissingMana takes unit usedUnit returns real
-		return GetUnitState(usedUnit, UNIT_STATE_MAX_MANA) -  GetUnitState(usedUnit, UNIT_STATE_MANA)
+		return GetUnitState(usedUnit, UNIT_STATE_MAX_MANA) - GetUnitState(usedUnit, UNIT_STATE_MANA)
 	endfunction
 	
 	/// @author Tamino Dauth
 	/// @return Missing mana of unit @param usedUnit in percent.
 	function GetUnitMissingManaPercent takes unit usedUnit returns real
 		return 100.0 - GetUnitStatePercent(usedUnit, UNIT_STATE_MANA, UNIT_STATE_MAX_MANA)
+	endfunction
+	
+	/// @author Tamino Dauth
+	/// @todo Finish
+	function CopyUnit takes unit usedUnit, real x, real y, real facing, integer stateMethod returns unit
+		local player owner = GetOwningPlayer(usedUnit)
+		local unit result = CreateUnit(owner, GetUnitTypeId(usedUnit), x, y, facing)
+		local real oldRatio
+		local player user
+		local integer i
+		local item oldSlotItem
+		local item newSlotItem
+		call ShowUnit(result, IsUnitHidden(usedUnit))
+		call PauseUnit(result, IsUnitPaused(usedUnit))
+		call SetResourceAmount(result, GetResourceAmount(usedUnit))
+		call SetUnitUserData(result, GetUnitUserData(usedUnit))
+		// Set the unit's life and mana according to the requested method.
+		if (stateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+			// Set the replacement's current/max life ratio to that of the old unit.
+			// If both units have mana, do the same for mana.
+			if (GetUnitState(usedUnit, UNIT_STATE_MAX_LIFE) > 0) then
+				set oldRatio = GetUnitState(usedUnit, UNIT_STATE_LIFE) / GetUnitState(usedUnit, UNIT_STATE_MAX_LIFE)
+				call SetUnitState(result, UNIT_STATE_LIFE, oldRatio * GetUnitState(result, UNIT_STATE_MAX_LIFE))
+			endif
+			if (GetUnitState(usedUnit, UNIT_STATE_MAX_MANA) > 0) and (GetUnitState(result, UNIT_STATE_MAX_MANA) > 0) then
+				set oldRatio = GetUnitState(usedUnit, UNIT_STATE_MANA) / GetUnitState(usedUnit, UNIT_STATE_MAX_MANA)
+				call SetUnitState(result, UNIT_STATE_MANA, oldRatio * GetUnitState(result, UNIT_STATE_MAX_MANA))
+			endif
+		elseif (stateMethod == bj_UNIT_STATE_METHOD_ABSOLUTE) then
+			// Set the replacement's current life to that of the old unit.
+			// If the new unit has mana, do the same for mana.
+			call SetUnitState(result, UNIT_STATE_LIFE, GetUnitState(usedUnit, UNIT_STATE_LIFE))
+			if (GetUnitState(result, UNIT_STATE_MAX_MANA) > 0) then
+				call SetUnitState(result, UNIT_STATE_MANA, GetUnitState(usedUnit, UNIT_STATE_MANA))
+			endif
+		elseif (stateMethod == bj_UNIT_STATE_METHOD_DEFAULTS) then
+			// The newly created unit should already have default life and mana.
+		elseif (stateMethod == bj_UNIT_STATE_METHOD_MAXIMUM) then
+			// Use max life and mana.
+			call SetUnitState(result, UNIT_STATE_LIFE, GetUnitState(result, UNIT_STATE_MAX_LIFE))
+			call SetUnitState(result, UNIT_STATE_MANA, GetUnitState(result, UNIT_STATE_MAX_MANA))
+		endif
+		
+		set i = 0
+		loop
+			exitwhen (i == bj_MAX_PLAYERS)
+			set user = Player(i)
+			if (IsUnitSelected(usedUnit, user)) then
+				call SelectUnitAddForPlayer(result, user)
+			endif
+			set user = null
+			set i = i + 1
+		endloop
+		
+		set i = 0
+		loop
+			exitwhen (i == bj_MAX_INVENTORY)
+			set oldSlotItem = UnitItemInSlot(usedUnit, i)
+			if (oldSlotItem != null) then
+				set newSlotItem = CopyItem(oldSlotItem, GetUnitX(result), GetUnitY(result))
+				call UnitAddItem(result, newSlotItem) /// @todo add to old slot
+				set oldSlotItem = null
+			endif
+			set i = i + 1
+		endloop
+		
+		if (IsUnitType(usedUnit, UNIT_TYPE_HERO) and IsUnitType(result, UNIT_TYPE_HERO)) then
+			call SetHeroXP(result, GetHeroXP(usedUnit), false)
+		endif
+		
+		return result
 	endfunction
 
 endlibrary

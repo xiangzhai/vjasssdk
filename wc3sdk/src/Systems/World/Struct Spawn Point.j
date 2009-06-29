@@ -1,4 +1,4 @@
-library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCoreMathsPoint, AStructSystemsWorldWorldHashTable
+library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, ALibraryCoreMathsPoint, ALibraryCoreStringConversion, AStructCoreGeneralHashTable
 
 	/// @struct ASpawnPoint provides the functionality of common creep spawn points, mostly used in RPG maps.
 	struct ASpawnPoint
@@ -6,7 +6,11 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 		private static real time
 		private static string effectPath
 		private static integer dropChance
+		private static boolean distributeItems
 		private static player owner
+		private static string textDistributeItem
+		//static member
+		private static integer dropOwnerId
 		//dynamic members
 		private integer m_count
 		//start members
@@ -34,17 +38,19 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 
 		//convenience methods
 		
-		/// Note that after unit @param existingUnit has died there will be spawned a new RANDOM unit from unit pool.
-		/// @param addType If this value is true unit type of unit @param existingUnit will be added to unit pool.
-		/// @param weight Weight of added unit type. This value has no effects if @param addType is false.
-		/// @return Returns the number of the added unit in the unit group.
-		public method addExistingUnit takes unit existingUnit, boolean addType, real weight returns integer
+		public method addExistingUnit takes unit existingUnit returns integer
 			local integer id = this.m_count
 			call GroupAddUnit(this.unitGroup, existingUnit)
 			set this.m_count = id + 1
-			if (addType) then
-				call UnitPoolAddUnitType(this.unitPool, GetUnitTypeId(existingUnit), weight)
-			endif
+			return id
+		endmethod
+		
+		/// Note that after unit @param existingUnit has died there will be spawned a new RANDOM unit from unit pool.
+		/// @param weight Weight of added unit type. This value has no effects if @param addType is false.
+		/// @return Returns the number of the added unit in the unit group.
+		public method addExistingUnitWithType takes unit existingUnit, real weight returns integer
+			local integer id = this.addExistingUnit(existingUnit)
+			call UnitPoolAddUnitType(this.unitPool, GetUnitTypeId(existingUnit), weight)
 			return id
 		endmethod
 		
@@ -122,12 +128,18 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 
 		private method dropItem takes unit diedUnit returns nothing
 			local integer change
-			local unit triggerUnit
 			local item droppedItem
+			local player itemOwner
+			local integer i
+			local player user
 			if (this.itemPool != null) then
 				set change = GetRandomInt(0, 100)
 				if (change <= ASpawnPoint.dropChance) then
 					set droppedItem = PlaceRandomItem(this.itemPool, GetUnitX(diedUnit), GetUnitY(diedUnit))
+					call SetItemDropID(droppedItem, GetUnitTypeId(diedUnit))
+					if (ASpawnPoint.distributeItems) then
+						call ASpawnPoint.distributeDroppedItem(droppedItem)
+					endif
 					set droppedItem = null
 				endif
 			endif
@@ -135,7 +147,7 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 
 		private static method timerFunctionSpawn takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
-			local ASpawnPoint this = AGetWorldHashTable().getHandleInteger(expiredTimer, "this") //AClassWorldWorldHashTable
+			local ASpawnPoint this = AHashTable.global().getHandleInteger(expiredTimer, "this") //AClassWorldWorldHashTable
 			call this.spawn()
 			set expiredTimer = null
 		endmethod
@@ -151,7 +163,7 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 		private static method triggerConditionDeath takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local unit triggerUnit = GetTriggerUnit()
-			local ASpawnPoint this = AGetWorldHashTable().getHandleInteger(triggeringTrigger, "this")
+			local ASpawnPoint this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			local boolean result = IsUnitInGroup(triggerUnit, this.unitGroup)
 			set triggeringTrigger = null
 			set triggerUnit = null
@@ -161,7 +173,7 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 		private static method triggerActionDeath takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local unit triggerUnit = GetTriggerUnit()
-			local ASpawnPoint this = AGetWorldHashTable().getHandleInteger(triggeringTrigger, "this")
+			local ASpawnPoint this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			call this.dropItem(triggerUnit)
 			if (IsUnitGroupDeadBJ(this.unitGroup)) then /// @todo maybe you should check it without ForGroup or this bj fucntion
 				call this.startTimer()
@@ -183,7 +195,7 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 			set conditionFunction = Condition(function ASpawnPoint.triggerConditionDeath)
 			set triggerCondition = TriggerAddCondition(this.deathTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.deathTrigger, function ASpawnPoint.triggerActionDeath)
-			call AGetWorldHashTable().storeHandleInteger(this.deathTrigger, "this", this) //AClassWorldWorldHashTable
+			call AHashTable.global().storeHandleInteger(this.deathTrigger, "this", this) //AClassWorldWorldHashTable
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -192,7 +204,7 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 
 		private method createSpawnTimer takes nothing returns nothing
 			set this.spawnTimer = CreateTimer()
-			call AGetWorldHashTable().storeHandleInteger(this.spawnTimer, "this", this) //AClassWorldWorldHashTable
+			call AHashTable.global().storeHandleInteger(this.spawnTimer, "this", this) //AClassWorldWorldHashTable
 		endmethod
 
 		public static method create takes real x, real y, real range returns ASpawnPoint
@@ -210,14 +222,26 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 			call this.createSpawnTimer()
 			return this
 		endmethod
+		
+		public static method createByExistingUnitWithType takes unit usedUnit, real weight, real x, real y, real range returns ASpawnPoint
+			local ASpawnPoint this = ASpawnPoint.create(x, y, range)
+			call this.addExistingUnitWithType(usedUnit, weight)
+			return this
+		endmethod
+		
+		public static method createByExistingUnitWithTypeAndPosition takes unit usedUnit, real weight, real range returns ASpawnPoint
+			local ASpawnPoint this = ASpawnPoint.create(GetUnitX(usedUnit), GetUnitY(usedUnit), range)
+			call this.addExistingUnitWithType(usedUnit, weight)
+			return this
+		endmethod
 
 		private method destroyDeathTrigger takes nothing returns nothing
-			call AGetWorldHashTable().destroyTrigger(this.deathTrigger) //AClassWorldWorldHashTable
+			call AHashTable.global().destroyTrigger(this.deathTrigger) //AClassWorldWorldHashTable
 			set this.deathTrigger = null
 		endmethod
 
 		private method destroySpawnTimer takes nothing returns nothing
-			call AGetWorldHashTable().destroyTimer(this.spawnTimer) //AClassWorldWorldHashTable
+			call AHashTable.global().destroyTimer(this.spawnTimer) //AClassWorldWorldHashTable
 			set this.spawnTimer = null
 		endmethod
 		
@@ -247,18 +271,51 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 		/// @param effectPath The path of the effect which is shown when the unit respawns. If this value is null there won't be shown any effect.
 		/// @param dropChance The chance (percentaged) for dropping items.
 		/// @param owner The player who owns all spawn point units.
-		public static method init takes real time, string effectPath, integer dropChance, player owner returns nothing
+		public static method init takes real time, string effectPath, integer dropChance, boolean distributeItems, player owner, string textDistributeItem returns nothing
 			//static start members
 			set ASpawnPoint.time = time
 			set ASpawnPoint.effectPath = effectPath
 			set ASpawnPoint.dropChance = dropChance
+			set ASpawnPoint.distributeItems = distributeItems
 			set ASpawnPoint.owner = owner
+			set ASpawnPoint.textDistributeItem = textDistributeItem
+			//static members
+			set ASpawnPoint.dropOwnerId = 0
 		endmethod
 		
-		public static method createByExistingUnit takes unit usedUnit, real range, real weight returns ASpawnPoint
-			local ASpawnPoint spawnPoint = ASpawnPoint.create(GetUnitX(usedUnit), GetUnitY(usedUnit), range)
-			call spawnPoint.addExistingUnit(usedUnit, true, weight)
-			return spawnPoint
+		public static method distributeDroppedItem takes item usedItem returns nothing
+			local player itemOwner = ASpawnPoint.getRandomItemOwner()
+			local player user
+			local integer i = 0
+			call SetItemPlayer(usedItem, itemOwner, true)
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (IsPlayerPlayingUser(user)) then
+					call DisplayTimedTextToPlayer(user, 0.0, 0.0, 6.0, StringArg(StringArg(ASpawnPoint.textDistributeItem, GetItemName(usedItem)), GetPlayerName(itemOwner)))
+				endif
+				set user = null
+				set i = i + 1
+			endloop
+			set itemOwner = null
+		endmethod
+		
+		private static method getRandomItemOwner takes nothing returns player
+			local player user
+			local integer oldDropId = ASpawnPoint.dropOwnerId
+			set ASpawnPoint.dropOwnerId = ASpawnPoint.dropOwnerId + 1
+			loop
+				if (ASpawnPoint.dropOwnerId == bj_MAX_PLAYERS) then
+					set ASpawnPoint.dropOwnerId = 0
+				endif
+				set user = Player(ASpawnPoint.dropOwnerId)
+				if (IsPlayerPlayingUser(user) or ASpawnPoint.dropOwnerId == oldDropId) then
+					return user
+				endif
+				set user = null
+				set ASpawnPoint.dropOwnerId = ASpawnPoint.dropOwnerId + 1
+			endloop
+			return user
 		endmethod
 	endstruct
 

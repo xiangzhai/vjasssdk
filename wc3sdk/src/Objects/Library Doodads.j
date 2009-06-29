@@ -41,5 +41,11 @@ library ALibraryObjectsDoodads
 	//Special - Extra
 	
 	//Swamp
+	
+	function APreloadGraslandModels takes nothing returns nothing
+	endfunction
+	
+	function APreloadGraslandTextures takes nothing returns nothing
+	endfunction
 
 endlibrary

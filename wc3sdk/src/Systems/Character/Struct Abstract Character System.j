@@ -3,41 +3,47 @@ library AStructSystemsCharacterAbstractCharacterSystem
 	private interface AAbstractCharacterSystemInterface
 		public method enable takes nothing returns nothing
 		public method disable takes nothing returns nothing
+		public method changedUnit takes nothing returns nothing
 		//static method create takes ACharacter character returns ACharacterSystemInterface
 	endinterface
 
 	struct AAbstractCharacterSystem extends AAbstractCharacterSystemInterface
 		//start members
-		private ACharacter character
+		private ACharacter m_character
 
 		//start members
 
-		public method getCharacter takes nothing returns ACharacter
-			return this.character
+		public method character takes nothing returns ACharacter
+			return this.m_character
 		endmethod
 
 		//convenience methods
 
-		public method getUser takes nothing returns player
-			return this.character.getUser()
+		public method user takes nothing returns player
+			return this.m_character.user()
 		endmethod
 
-		public method getUnit takes nothing returns unit
-			return this.character.getUsedUnit()
+		public method unit takes nothing returns unit
+			return this.m_character.unit()
 		endmethod
 
 		//methods
 
-		public method enable takes nothing returns nothing
+		public stub method enable takes nothing returns nothing
 		endmethod
 
-		public method disable takes nothing returns nothing
+		public stub method disable takes nothing returns nothing
+		endmethod
+		
+		/// @todo Friend relation to @struct ACharacter, do not use!
+		/// Is called when character unit is changed. Change all registered specific unit events.
+		public stub method changedUnit takes nothing returns nothing
 		endmethod
 
 		public static method create takes ACharacter character returns AAbstractCharacterSystem
 			local AAbstractCharacterSystem this = AAbstractCharacterSystem.allocate()
 			//start members
-			set this.character = character
+			set this.m_character = character
 
 			return this
 		endmethod

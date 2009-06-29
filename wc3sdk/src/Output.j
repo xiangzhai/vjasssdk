@@ -12737,7 +12737,7 @@ endfunction
 
   function s__AIndicator_triggerActionIndicateObject takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer indicator= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "indicator") //AClassInterfaceInterfaceHashTable
+   local integer indicator= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "indicator") //AClassInterfaceInterfaceHashTable
 			if ( s__AIndicator_object[indicator] != null ) then
 				call s__AIndicator_indicateObject(indicator)
 				call s__AIndicator_inrcreaseElapsedTime(indicator)
@@ -12763,7 +12763,7 @@ endfunction
 			set s__AIndicator_refreshTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(s__AIndicator_refreshTrigger[this] , s__AIndicator_rate[this] , true)
 			set triggerAction = TriggerAddAction(s__AIndicator_refreshTrigger[this] , function s__AIndicator_triggerActionIndicateObject)
-			call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s__AIndicator_refreshTrigger[this] , "indicator" , this) //AClassInterfaceInterfaceHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AIndicator_refreshTrigger[this] , "indicator" , this) //AClassInterfaceInterfaceHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -12788,7 +12788,7 @@ endfunction
   endfunction
 
   function s__AIndicator_destroyRefreshTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s__AIndicator_refreshTrigger[this]) //AClassInterfaceInterfaceHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AIndicator_refreshTrigger[this]) //AClassInterfaceInterfaceHashTable
 			set s__AIndicator_refreshTrigger[this]=null
   endfunction
 
@@ -12983,7 +12983,7 @@ endfunction
 
   function s__AMultiboardBar_triggerActionRefresh takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer multiboardBar= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "multiboardBar") //AClassInterfaceInterfaceHashTable
+   local integer multiboardBar= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "multiboardBar") //AClassInterfaceInterfaceHashTable
 			set s__AMultiboardBar_value[multiboardBar]=sc___prototype830_evaluate(s__AMultiboardBar_valueFunction[multiboardBar],multiboardBar) //Man braucht evaluate, da die Funktion einen Wert zurckliefert.
 			set s__AMultiboardBar_maxValue[multiboardBar]=sc___prototype830_evaluate(s__AMultiboardBar_maxValueFunction[multiboardBar],multiboardBar)
 			call s__AMultiboardBar_refresh(multiboardBar) //Das false ist egal, da Horizontal nur beim ersten Erschaffen gesetzt wird
@@ -12997,7 +12997,7 @@ endfunction
 				set s__AMultiboardBar_refreshTrigger[this]=CreateTrigger()
 				set triggerEvent = TriggerRegisterTimerEvent(s__AMultiboardBar_refreshTrigger[this] , s__AMultiboardBar_refreshRate[this] , true)
 				set triggerAction = TriggerAddAction(s__AMultiboardBar_refreshTrigger[this] , function s__AMultiboardBar_triggerActionRefresh)
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s__AMultiboardBar_refreshTrigger[this] , "multiboardBar" , this) //ALibraryInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AMultiboardBar_refreshTrigger[this] , "multiboardBar" , this) //ALibraryInterfaceHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -13031,7 +13031,7 @@ endfunction
 
   function s__AMultiboardBar_destroyRefreshTrigger takes integer this returns nothing
 			if ( s__AMultiboardBar_refreshRate[this] > 0.0 ) then
-				call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s__AMultiboardBar_refreshTrigger[this]) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AMultiboardBar_refreshTrigger[this]) //AClassInterfaceInterfaceHashTable
 				set s__AMultiboardBar_refreshTrigger[this]=null
 			endif
   endfunction
@@ -13273,14 +13273,14 @@ endfunction
 
   function s__ACharacter_triggerActionDestroyCharacter takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer character= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "character")
+   local integer character= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "character")
 			call sc__ACharacter_destroy(character)
 			set triggeringTrigger = null
   endfunction
 
   function s__ACharacter_triggerActionSetUnmovable takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer character= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "character")
+   local integer character= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "character")
 			call s__ACharacter_setMovable(character,false)
 			set triggeringTrigger = null
   endfunction
@@ -13295,7 +13295,7 @@ endfunction
 			else
 				set triggerAction = TriggerAddAction(s__ACharacter_leaveTrigger[this] , function s__ACharacter_triggerActionSetUnmovable)
 			endif
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__ACharacter_leaveTrigger[this] , "character" , this)
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ACharacter_leaveTrigger[this] , "character" , this)
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -13310,7 +13310,7 @@ endfunction
 			else
 				set triggerAction = TriggerAddAction(s__ACharacter_deathTrigger[this] , function s__ACharacter_triggerActionSetUnmovable)
 			endif
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__ACharacter_deathTrigger[this] , "character" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ACharacter_deathTrigger[this] , "character" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -13360,12 +13360,12 @@ endfunction
   endfunction
 
   function s__ACharacter_destroyLeaveTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__ACharacter_leaveTrigger[this])
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__ACharacter_leaveTrigger[this])
 			set s__ACharacter_leaveTrigger[this]=null
   endfunction
 
   function s__ACharacter_destroyDeathTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__ACharacter_deathTrigger[this])
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__ACharacter_deathTrigger[this])
 			set s__ACharacter_deathTrigger[this]=null
   endfunction
 
@@ -13682,7 +13682,7 @@ endfunction
 
   function s__AFight_timerFunctionReset takes nothing returns nothing
    local timer expiredTimer= GetExpiredTimer()
-   local integer fight= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),expiredTimer , "fight") //AClassCharacterCharacterHashTable
+   local integer fight= s__AHashTable_getHandleInteger(AHashTable.global(),expiredTimer , "fight") //AClassCharacterCharacterHashTable
 			set s__AFight_hasOrdered[fight]=false
 			set expiredTimer = null
   endfunction
@@ -13690,7 +13690,7 @@ endfunction
   function s__AFight_startTimer takes integer this returns nothing
 			set s__AFight_hasOrdered[this]=true
 			call TimerStart(s__AFight_usedTimer[this] , s__AFight_time , false , function s__AFight_timerFunctionReset)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AFight_usedTimer[this] , "fight" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AFight_usedTimer[this] , "fight" , this) //AClassCharacterCharacterHashTable
   endfunction
 
   function s__AFight_triggerConditionOrder takes nothing returns boolean
@@ -13699,7 +13699,7 @@ endfunction
 
   function s__AFight_triggerActionOrder takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer fight= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "fight") //AClassCharacterCharacterHashTable
+   local integer fight= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "fight") //AClassCharacterCharacterHashTable
 			if ( s__AFight_canOrder[fight] ) then
 				if ( s__AFight_hasOrdered[fight] ) then
 					call s__AFight_hit(fight)
@@ -13724,7 +13724,7 @@ endfunction
 				//call TriggerRegisterMouseEvent(this.fightTrigger, EVENT_LMOUSEDOWN) //fpscommon.j
 			endif
 			set triggerAction = TriggerAddAction(s__AFight_fightTrigger[this] , function s__AFight_triggerActionOrder)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AFight_fightTrigger[this] , "fight" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AFight_fightTrigger[this] , "fight" , this) //AClassCharacterCharacterHashTable
 			set conditionFunction = null
 			set triggerCondition = null
 			set triggerAction = null
@@ -13740,12 +13740,12 @@ endfunction
   endfunction
 
   function s__AFight_destroyUsedTimer takes integer this returns nothing
-			call s__AHashTable_destroyTimer(AGetCharacterHashTable(),s__AFight_usedTimer[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTimer(AHashTable.global(),s__AFight_usedTimer[this]) //AClassCharacterCharacterHashTable
 			set s__AFight_usedTimer[this]=null
   endfunction
 
   function s__AFight_destroyFightTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AFight_fightTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AFight_fightTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AFight_fightTrigger[this]=null
   endfunction
 
@@ -13791,7 +13791,7 @@ endfunction
 
   function s__ASpell_triggerConditionCast takes nothing returns boolean
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer spell= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "spell") //AClassCharacterCharacterHashTable
+   local integer spell= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "spell") //AClassCharacterCharacterHashTable
    local boolean result= ( GetSpellAbilityId() == s__ASpell_usedAbility[spell] )
 			set triggeringTrigger = null
 			return result
@@ -13799,7 +13799,7 @@ endfunction
 
   function s__ASpell_triggerActionCast takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer spell= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "spell") //AClassCharacterCharacterHashTable
+   local integer spell= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "spell") //AClassCharacterCharacterHashTable
 			call sc___prototype831_execute(s__ASpell_castAction[spell],s__AAbstractCharacterSystem_getCharacter(spell))
 			set triggeringTrigger = null
   endfunction
@@ -13815,7 +13815,7 @@ endfunction
 				set conditionFunction = Condition(function s__ASpell_triggerConditionCast)
 				set triggerCondition = TriggerAddCondition(s__ASpell_castTrigger[this] , conditionFunction)
 				set triggerAction = TriggerAddAction(s__ASpell_castTrigger[this] , function s__ASpell_triggerActionCast)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__ASpell_castTrigger[this] , "spell" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ASpell_castTrigger[this] , "spell" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set conditionFunction = null
 				set triggerCondition = null
@@ -13837,7 +13837,7 @@ endfunction
 
   function s__ASpell_destroyCastTrigger takes integer this returns nothing
 			if ( s__ASpell_castAction[this] != 0 ) then
-				call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__ASpell_castTrigger[this]) //AClassCharacterCharacterHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__ASpell_castTrigger[this]) //AClassCharacterCharacterHashTable
 				set s__ASpell_castTrigger[this]=null
 			endif
   endfunction
@@ -13875,7 +13875,7 @@ endfunction
 
   function s__AView_triggerActionRefreshView takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer view= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "view") //AClassCharacterCharacterHashTable
+   local integer view= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "view") //AClassCharacterCharacterHashTable
 			call s__AView_refreshView(view)
 			set triggeringTrigger = null
   endfunction
@@ -13886,7 +13886,7 @@ endfunction
 			set s__AView_viewTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(s__AView_viewTrigger[this] , s__AView_viewRefreshRate , true)
 			set triggerAction = TriggerAddAction(s__AView_viewTrigger[this] , function s__AView_triggerActionRefreshView)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AView_viewTrigger[this] , "view" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AView_viewTrigger[this] , "view" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -13899,7 +13899,7 @@ endfunction
   endfunction
 
   function s__AView_destroyViewTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AView_viewTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AView_viewTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AView_viewTrigger[this]=null
   endfunction
 
@@ -14774,7 +14774,7 @@ endfunction
 				if ( abilityId == s__s__AGui_shortcutAbility[i] ) then
       call Print("EXIT!!!! " + I2S(i))
 					set triggeringTrigger = GetTriggeringTrigger()
-					set gui = s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "gui") //AClassInterfaceInterfaceHashTable
+					set gui = s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "gui") //AClassInterfaceInterfaceHashTable
       if ( s___AGui_onPressShortcutAction[s__AGui_onPressShortcutAction[gui]+i] != 0 ) then
        call Print("Action exists")
       endif
@@ -14792,15 +14792,15 @@ endfunction
 			set s__AGui_shortcutHandleTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(s__AGui_shortcutHandleTrigger[this] , s__AGui_shortcutHandler[this] , EVENT_UNIT_SPELL_CAST)
 			set triggerAction = TriggerAddAction(s__AGui_shortcutHandleTrigger[this] , function s__AGui_triggerActionOnPressShortcut)
-			call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s__AGui_shortcutHandleTrigger[this] , "gui" , this) //AClassInterfaceInterfaceHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AGui_shortcutHandleTrigger[this] , "gui" , this) //AClassInterfaceInterfaceHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
 
   function s__AGui_triggerActionOnPressSpecialShortcut takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer gui= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "gui")
-   local integer shortcut= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "shortcut")
+   local integer gui= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "gui")
+   local integer shortcut= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "shortcut")
     call Print("SHORTCUT " + I2S(shortcut))
 			call sc___prototype789_execute(s___AGui_onPressShortcutAction[s__AGui_onPressShortcutAction[gui]+shortcut],gui)
 			set triggeringTrigger = null
@@ -14835,8 +14835,8 @@ endfunction
 					set triggerEvent = TriggerRegisterPlayerEvent(s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , s__AGui_user[this] , EVENT_PLAYER_END_CINEMATIC)
 				endif
 				set triggerAction = TriggerAddAction(s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , function s__AGui_triggerActionOnPressSpecialShortcut)
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "gui" , this) //AClassInterfaceInterfaceHashTable
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "shortcut" , shortcut) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "gui" , this) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "shortcut" , shortcut) //AClassInterfaceInterfaceHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -14844,8 +14844,8 @@ endfunction
 
   function s__AGui_triggerActionRunDialogButtonAction takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer gui= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "gui") //AClassInterfaceInterfaceHashTable
-   local integer index= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "index") //AClassInterfaceInterfaceHashTable
+   local integer gui= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "gui") //AClassInterfaceInterfaceHashTable
+   local integer index= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "index") //AClassInterfaceInterfaceHashTable
 			call sc___prototype838_execute(s___AGui_dialogButtonAction[s__AGui_dialogButtonAction[gui]+index],gui , index)
 			set triggeringTrigger = null
   endfunction
@@ -14857,8 +14857,8 @@ endfunction
 				set s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index]=CreateTrigger()
 				set triggerEvent = TriggerRegisterDialogButtonEvent(s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , s___AGui_dialogButton[s__AGui_dialogButton[this]+index])
 				set triggerAction = TriggerAddAction(s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , function s__AGui_triggerActionRunDialogButtonAction)
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "gui" , this) //AClassInterfaceInterfaceHashTable
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "index" , index) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "gui" , this) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "index" , index) //AClassInterfaceInterfaceHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -14908,7 +14908,7 @@ endfunction
   endfunction
 
   function s__AGui_destroyShortcutHandleTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s__AGui_shortcutHandleTrigger[this])
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AGui_shortcutHandleTrigger[this])
 			set s__AGui_shortcutHandleTrigger[this]=null
   endfunction
 
@@ -14917,7 +14917,7 @@ endfunction
 			loop
 				exitwhen ( i == s__AGui_maxSpecialShortcuts )
 					if ( s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+i] != null ) then
-						call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+i])
+						call s__AHashTable_destroyTrigger(AHashTable.global(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+i])
 						set s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+i]=null
 					endif
 				set i = i + 1
@@ -14929,7 +14929,7 @@ endfunction
 			loop
 				exitwhen ( i == s__AGui_maxDialogButtons )
 				if ( s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+i] != null ) then
-					call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+i])
+					call s__AHashTable_destroyTrigger(AHashTable.global(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+i])
 					set s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+i]=null
 				endif
 				set i = i + 1
@@ -15086,7 +15086,7 @@ endfunction
 		
   function s__ARoutine_runCondition takes nothing returns boolean
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer routine= s__AHashTable_getHandleInteger(AGetWorldHashTable(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
+   local integer routine= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
    local boolean result= s__ARoutine_isAbleToMove(routine)
 			set triggeringTrigger = null
 			return result
@@ -15094,7 +15094,7 @@ endfunction
 
   function s__ARoutine_runAction takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer routine= s__AHashTable_getHandleInteger(AGetWorldHashTable(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
+   local integer routine= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
 			call s__ARoutine_run(routine)
 			set triggeringTrigger = null
   endfunction
@@ -15110,7 +15110,7 @@ endfunction
 				set conditionFunction = Condition(function s__ARoutine_runCondition)
 				set triggerCondition = TriggerAddCondition(s__ARoutine_runTrigger[this] , conditionFunction)
 				set triggerAction = TriggerAddAction(s__ARoutine_runTrigger[this] , function s__ARoutine_runAction)
-				call s__AHashTable_storeHandleInteger(AGetWorldHashTable(),s__ARoutine_runTrigger[this] , "routine" , this) //AStructWorldWorldHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ARoutine_runTrigger[this] , "routine" , this) //AStructWorldWorldHashTable
 				set triggerEvent = null
 				set conditionFunction = null
 				set triggerCondition = null
@@ -15120,7 +15120,7 @@ endfunction
 
   function s__ARoutine_triggerActionEnable takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer routine= s__AHashTable_getHandleInteger(AGetWorldHashTable(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
+   local integer routine= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
 			if ( s__ARoutine_runRate[routine] > 0.0 ) then
 				call EnableTrigger(s__ARoutine_runTrigger[routine])
 			else
@@ -15135,14 +15135,14 @@ endfunction
 			set s__ARoutine_enableTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterGameStateEvent(s__ARoutine_enableTrigger[this] , GAME_STATE_TIME_OF_DAY , EQUAL , s__ARoutine_startTimeOfDay[this])
 			set triggerAction = TriggerAddAction(s__ARoutine_enableTrigger[this] , function s__ARoutine_triggerActionEnable)
-			call s__AHashTable_storeHandleInteger(AGetWorldHashTable(),s__ARoutine_enableTrigger[this] , "routine" , this) //AStructWorldWorldHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ARoutine_enableTrigger[this] , "routine" , this) //AStructWorldWorldHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
 
   function s__ARoutine_triggerActionDisable takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer routine= s__AHashTable_getHandleInteger(AGetWorldHashTable(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
+   local integer routine= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "routine") //AStructWorldWorldHashTable
 			call DisableTrigger(s__ARoutine_runTrigger[routine])
 			set triggeringTrigger = null
   endfunction
@@ -15154,7 +15154,7 @@ endfunction
 				set s__ARoutine_disableTrigger[this]=CreateTrigger()
 				set triggerEvent = TriggerRegisterGameStateEvent(s__ARoutine_disableTrigger[this] , GAME_STATE_TIME_OF_DAY , EQUAL , s__ARoutine_endTimeOfDay[this])
 				set triggerAction = TriggerAddAction(s__ARoutine_disableTrigger[this] , function s__ARoutine_triggerActionDisable)
-				call s__AHashTable_storeHandleInteger(AGetWorldHashTable(),s__ARoutine_disableTrigger[this] , "routine" , this) //AStructWorldWorldHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ARoutine_disableTrigger[this] , "routine" , this) //AStructWorldWorldHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -15179,19 +15179,19 @@ endfunction
 
   function s__ARoutine_destroyRunTrigger takes integer this returns nothing
 			if ( s__ARoutine_runRate[this] > 0.0 ) then
-				call s__AHashTable_destroyTrigger(AGetWorldHashTable(),s__ARoutine_runTrigger[this]) //AStructWorldWorldHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__ARoutine_runTrigger[this]) //AStructWorldWorldHashTable
 				set s__ARoutine_runTrigger[this]=null
 			endif
   endfunction
 
   function s__ARoutine_destroyEnableTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetWorldHashTable(),s__ARoutine_enableTrigger[this]) //AStructWorldWorldHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__ARoutine_enableTrigger[this]) //AStructWorldWorldHashTable
 			set s__ARoutine_enableTrigger[this]=null
   endfunction
 
   function s__ARoutine_destroyDisableTrigger takes integer this returns nothing
 			if ( s__ARoutine_runRate[this] > 0.0 ) then
-				call s__AHashTable_destroyTrigger(AGetWorldHashTable(),s__ARoutine_disableTrigger[this]) //AStructWorldWorldHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__ARoutine_disableTrigger[this]) //AStructWorldWorldHashTable
 				set s__ARoutine_disableTrigger[this]=null
 			endif
   endfunction
@@ -15305,7 +15305,7 @@ endfunction
 
   function s__ASpawnPoint_timerFunctionSpawn takes nothing returns nothing
    local timer expiredTimer= GetExpiredTimer()
-   local integer spawnPoint= s__AHashTable_getHandleInteger(AGetWorldHashTable(),expiredTimer , "spawnPoint") //AClassWorldWorldHashTable
+   local integer spawnPoint= s__AHashTable_getHandleInteger(AHashTable.global(),expiredTimer , "spawnPoint") //AClassWorldWorldHashTable
 			call s__ASpawnPoint_spawn(spawnPoint)
 			set expiredTimer = null
   endfunction
@@ -15321,7 +15321,7 @@ endfunction
   function s__ASpawnPoint_triggerConditionDeath takes nothing returns boolean
    local trigger triggeringTrigger= GetTriggeringTrigger()
    local unit triggerUnit= GetTriggerUnit()
-   local integer spawnPoint= s__AHashTable_getHandleInteger(AGetWorldHashTable(),triggeringTrigger , "spawnPoint") //AClassWorldWorldHashTable
+   local integer spawnPoint= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "spawnPoint") //AClassWorldWorldHashTable
    local boolean result= ( triggerUnit == s__ASpawnPoint_spawnedUnit[spawnPoint] )
 			set triggeringTrigger = null
 			set triggerUnit = null
@@ -15330,7 +15330,7 @@ endfunction
 
   function s__ASpawnPoint_triggerActionDeath takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer spawnPoint= s__AHashTable_getHandleInteger(AGetWorldHashTable(),triggeringTrigger , "spawnPoint") //AClassWorldWorldHashTable
+   local integer spawnPoint= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "spawnPoint") //AClassWorldWorldHashTable
 			call s__ASpawnPoint_dropItem(spawnPoint)
 			call s__ASpawnPoint_startTimer(spawnPoint)
 			set triggeringTrigger = null
@@ -15349,7 +15349,7 @@ endfunction
 			set conditionFunction = Condition(function s__ASpawnPoint_triggerConditionDeath)
 			set triggerCondition = TriggerAddCondition(s__ASpawnPoint_deathTrigger[this] , conditionFunction)
 			set triggerAction = TriggerAddAction(s__ASpawnPoint_deathTrigger[this] , function s__ASpawnPoint_triggerActionDeath)
-			call s__AHashTable_storeHandleInteger(AGetWorldHashTable(),s__ASpawnPoint_deathTrigger[this] , "spawnPoint" , this) //AClassWorldWorldHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ASpawnPoint_deathTrigger[this] , "spawnPoint" , this) //AClassWorldWorldHashTable
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -15358,7 +15358,7 @@ endfunction
 
   function s__ASpawnPoint_createSpawnTimer takes integer this returns nothing
 			set s__ASpawnPoint_spawnTimer[this]=CreateTimer()
-			call s__AHashTable_storeHandleInteger(AGetWorldHashTable(),s__ASpawnPoint_spawnTimer[this] , "spawnPoint" , this) //AClassWorldWorldHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ASpawnPoint_spawnTimer[this] , "spawnPoint" , this) //AClassWorldWorldHashTable
   endfunction
 
   function s__ASpawnPoint_create takes real x,real y,real range,unitpool unitPool,itempool itemPool returns integer
@@ -15378,12 +15378,12 @@ endfunction
   endfunction
 
   function s__ASpawnPoint_destroyDeathTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetWorldHashTable(),s__ASpawnPoint_deathTrigger[this]) //AClassWorldWorldHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__ASpawnPoint_deathTrigger[this]) //AClassWorldWorldHashTable
 			set s__ASpawnPoint_deathTrigger[this]=null
   endfunction
 
   function s__ASpawnPoint_destroySpawnTimer takes integer this returns nothing
-			call s__AHashTable_destroyTimer(AGetWorldHashTable(),s__ASpawnPoint_spawnTimer[this]) //AClassWorldWorldHashTable
+			call s__AHashTable_destroyTimer(AHashTable.global(),s__ASpawnPoint_spawnTimer[this]) //AClassWorldWorldHashTable
 			set s__ASpawnPoint_spawnTimer[this]=null
   endfunction
 
@@ -15605,11 +15605,11 @@ endfunction
   function s__AAbstractQuest_setStateEvent takes integer this,integer state,integer stateEvent returns nothing
 			if ( s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] == null ) then
 				set s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state]=CreateTrigger()
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "abstractQuest" , this) //AClassCharacterCharacterHashTable
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "state" , state) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "abstractQuest" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "state" , state) //AClassCharacterCharacterHashTable
 				call DisableTrigger(s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state])
      call Print("Create state trigger for state " + I2S(state))
-     call Print("Saved id is " + I2S(s__AHashTable_getHandleInteger(AGetCharacterHashTable(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "abstractQuest")) + " (has to be " + I2S(this) + " and state is " + I2S(s__AHashTable_getHandleInteger(AGetCharacterHashTable(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "state")))
+     call Print("Saved id is " + I2S(s__AHashTable_getHandleInteger(AHashTable.global(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "abstractQuest")) + " (has to be " + I2S(this) + " and state is " + I2S(s__AHashTable_getHandleInteger(AHashTable.global(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state] , "state")))
      call Print("Handle id: " + I2S(H2I(s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state])))
 			endif
 			call sc___prototype840_execute(stateEvent,this , s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+state]) //evaluate - returns the trigger event
@@ -15930,8 +15930,8 @@ endfunction
 
   function s__AAbstractQuest_triggerConditionRunQuestState takes nothing returns boolean
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer abstractQuest= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "abstractQuest") //AClassCharacterCharacterHashTable
-   local integer state= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "state") //AClassCharacterCharacterHashTable
+   local integer abstractQuest= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "abstractQuest") //AClassCharacterCharacterHashTable
+   local integer state= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "state") //AClassCharacterCharacterHashTable
     call Print("Handle id: " + I2S(H2I(triggeringTrigger)))
 			set triggeringTrigger = null
     call Print("QUEST CONDITION for abstract quest " + I2S(abstractQuest) + " with state " + I2S(state))
@@ -15940,8 +15940,8 @@ endfunction
 	
   function s__AAbstractQuest_triggerActionRunQuestState takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer abstractQuest= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "abstractQuest")
-   local integer state= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "state")
+   local integer abstractQuest= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "abstractQuest")
+   local integer state= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "state")
     call Print("ACTION for abstract quest " + I2S(abstractQuest) + " with state " + I2S(state))
 			call sc__AAbstractQuest_setState(abstractQuest,state) //custom function will be called in this method
 			set triggeringTrigger = null
@@ -15958,7 +15958,7 @@ endfunction
 		
   function s__AAbstractQuest_triggerActionPingMinimap takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer abstractQuest= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "abstractQuest") //AClassCharacterCharacterHashTable
+   local integer abstractQuest= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "abstractQuest") //AClassCharacterCharacterHashTable
 			if ( s__AAbstractQuest_character[abstractQuest] != 0 ) then
 				call PingMinimapExForPlayer(s__ACharacter_getUser(s__AAbstractQuest_character[abstractQuest]) , s__AAbstractQuest_pingX[abstractQuest] , s__AAbstractQuest_pingY[abstractQuest] , s__AAbstractQuest_pingDuration[abstractQuest] , s__AAbstractQuest_pingRed[abstractQuest] , s__AAbstractQuest_pingGreen[abstractQuest] , s__AAbstractQuest_pingBlue[abstractQuest] , true) //ALibraryInterfaceMinimap
 			else
@@ -15974,7 +15974,7 @@ endfunction
 				set s__AAbstractQuest_pingTrigger[this]=CreateTrigger()
 				set triggerEvent = TriggerRegisterTimerEvent(s__AAbstractQuest_pingTrigger[this] , s__AAbstractQuest_pingRate[this] , true)
 				set triggerAction = TriggerAddAction(s__AAbstractQuest_pingTrigger[this] , function s__AAbstractQuest_triggerActionPingMinimap)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AAbstractQuest_pingTrigger[this] , "abstractQuest" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AAbstractQuest_pingTrigger[this] , "abstractQuest" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 				call DisableTrigger(s__AAbstractQuest_pingTrigger[this])
@@ -16000,7 +16000,7 @@ endfunction
 			loop
 				exitwhen ( i == s__AAbstractQuest_maxStates )
 				if ( s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+i] != null ) then
-					call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+i])
+					call s__AHashTable_destroyTrigger(AHashTable.global(),s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+i])
 					set s___AAbstractQuest_stateTrigger[s__AAbstractQuest_stateTrigger[this]+i]=null
 				endif
 				set i = i + 1
@@ -16009,7 +16009,7 @@ endfunction
 
   function s__AAbstractQuest_destroyPingTrigger takes integer this returns nothing
 			if ( s__AAbstractQuest_pingRate[this] != 0.0 ) then
-				call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AAbstractQuest_pingTrigger[this])
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AAbstractQuest_pingTrigger[this])
 				set s__AAbstractQuest_pingTrigger[this]=null
 			endif
   endfunction
@@ -16308,7 +16308,7 @@ endfunction
 
   function s__AClassSelection_triggerActionRefresh takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer classSelection= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "classSelection") //AClassCharacterCharacterHashTable
+   local integer classSelection= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "classSelection") //AClassCharacterCharacterHashTable
     if ( s__AClassSelection_cameraSetup != null ) then
 				call CameraSetupApplyForPlayer(true , s__AClassSelection_cameraSetup , s__AClassSelection_user[classSelection] , 0.0)
     else
@@ -16325,7 +16325,7 @@ endfunction
 				set s__AClassSelection_refreshTrigger[this]=CreateTrigger()
 				set triggerEvent = TriggerRegisterTimerEvent(s__AClassSelection_refreshTrigger[this] , s__AClassSelection_refreshRate , true)
 				set triggerAction = TriggerAddAction(s__AClassSelection_refreshTrigger[this] , function s__AClassSelection_triggerActionRefresh)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AClassSelection_refreshTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AClassSelection_refreshTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -16333,7 +16333,7 @@ endfunction
 
   function s__AClassSelection_triggerActionChangeToPrevious takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer classSelection= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "classSelection") //AClassCharacterCharacterHashTable
+   local integer classSelection= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "classSelection") //AClassCharacterCharacterHashTable
 			if ( s__AClassSelection_class[classSelection] == s__AClassSelection_firstClass ) then
 				set s__AClassSelection_class[classSelection]=s__AClassSelection_lastClass
 			else
@@ -16349,14 +16349,14 @@ endfunction
 			set s__AClassSelection_changePreviousTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AClassSelection_user[this] , s__AClassSelection_changePreviousTrigger[this] , KEY_LEFT , true) //ALibraryInterfaceMisc
 			set triggerAction = TriggerAddAction(s__AClassSelection_changePreviousTrigger[this] , function s__AClassSelection_triggerActionChangeToPrevious)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AClassSelection_changePreviousTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AClassSelection_changePreviousTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
 
   function s__AClassSelection_triggerActionChangeToNext takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer classSelection= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "classSelection") //AClassCharacterCharacterHashTable
+   local integer classSelection= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "classSelection") //AClassCharacterCharacterHashTable
 			if ( s__AClassSelection_class[classSelection] == s__AClassSelection_lastClass ) then
 				set s__AClassSelection_class[classSelection]=s__AClassSelection_firstClass
 			else
@@ -16372,14 +16372,14 @@ endfunction
 			set s__AClassSelection_changeNextTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AClassSelection_user[this] , s__AClassSelection_changeNextTrigger[this] , KEY_RIGHT , true) //ALibraryInterfaceMisc
 			set triggerAction = TriggerAddAction(s__AClassSelection_changeNextTrigger[this] , function s__AClassSelection_triggerActionChangeToNext)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AClassSelection_changeNextTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AClassSelection_changeNextTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
 
   function s__AClassSelection_triggerActionSelectClass takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer classSelection= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "classSelection")
+   local integer classSelection= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "classSelection")
 			call s__AClassSelection_selectClass(classSelection)
 			set triggeringTrigger = null
   endfunction
@@ -16390,7 +16390,7 @@ endfunction
 			set s__AClassSelection_selectTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AClassSelection_user[this] , s__AClassSelection_selectTrigger[this] , KEY_ESCAPE , true) //ALibraryInterfaceMisc
 			set triggerAction = TriggerAddAction(s__AClassSelection_selectTrigger[this] , function s__AClassSelection_triggerActionSelectClass)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AClassSelection_selectTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AClassSelection_selectTrigger[this] , "classSelection" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -16475,22 +16475,22 @@ endfunction
   endfunction
 
   function s__AClassSelection_destroyRefreshTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AClassSelection_refreshTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AClassSelection_refreshTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AClassSelection_refreshTrigger[this]=null
   endfunction
 
   function s__AClassSelection_destroyChangePreviousTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AClassSelection_changePreviousTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AClassSelection_changePreviousTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AClassSelection_changePreviousTrigger[this]=null
   endfunction
 
   function s__AClassSelection_destroyChangeNextTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AClassSelection_changeNextTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AClassSelection_changeNextTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AClassSelection_changeNextTrigger[this]=null
   endfunction
 
   function s__AClassSelection_destroySelectTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AClassSelection_selectTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AClassSelection_selectTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AClassSelection_selectTrigger[this]=null
   endfunction
 
@@ -16656,7 +16656,7 @@ endfunction
 
   function s__AFocus_triggerActionFocus takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer focus= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "focus") //AClassCharacterCharacterHashTable
+   local integer focus= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "focus") //AClassCharacterCharacterHashTable
 			//Hat bereits ein Ziel
 			if ( s__AFocus_target[focus] != null ) then
 				//Altes Objekt ist auer Reichweite - Bentige neues Ziel
@@ -16677,7 +16677,7 @@ endfunction
 			set s__AFocus_focusTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(s__AFocus_focusTrigger[this] , s__AFocus_refreshRate , true)
 			set triggerAction = TriggerAddAction(s__AFocus_focusTrigger[this] , function s__AFocus_triggerActionFocus)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AFocus_focusTrigger[this] , "focus" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AFocus_focusTrigger[this] , "focus" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -16708,7 +16708,7 @@ endfunction
   endfunction
 
   function s__AFocus_destroyFocusTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AFocus_focusTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AFocus_focusTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AFocus_focusTrigger[this]=null
   endfunction
 
@@ -16720,7 +16720,7 @@ endfunction
   function s__AFocus_destroyWorkerTrigger takes integer this returns nothing
 			call RemoveUnit(s__AFocus_worker[this])
 			set s__AFocus_worker[this]=null
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AFocus_workerTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AFocus_workerTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AFocus_workerTrigger[this]=null
   endfunction
 
@@ -16798,15 +16798,15 @@ endfunction
 			set s__AItemType_requiredIntelligence[this]=requiredIntelligence
 			set s__AItemType_requiredClass[this]=requiredClass
 
-    if ( s__AHashTable_getStoredInteger(AGetCharacterHashTable(),"AItemTypes" , I2S(s__AItemType_itemType[this])) != 0 ) then
+    if ( s__AHashTable_getStoredInteger(AHashTable.global(),"AItemTypes" , I2S(s__AItemType_itemType[this])) != 0 ) then
      call Print("Item type " + I2S(this) + " already has an item type.")
     endif
-			call s__AHashTable_storeInteger(AGetCharacterHashTable(),"AItemTypes" , I2S(s__AItemType_itemType[this]) , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeInteger(AHashTable.global(),"AItemTypes" , I2S(s__AItemType_itemType[this]) , this) //AClassCharacterCharacterHashTable
 			return this
   endfunction
 
   function s__AItemType_onDestroy takes integer this returns nothing
-			call s__AHashTable_flushStoredInteger(AGetCharacterHashTable(),"AItemTypes" , I2S(s__AItemType_itemType[this])) //AClassCharacterCharacterHashTable
+			call s__AHashTable_flushStoredInteger(AHashTable.global(),"AItemTypes" , I2S(s__AItemType_itemType[this])) //AClassCharacterCharacterHashTable
   endfunction
 
 //Generated destructor of AItemType
@@ -16833,7 +16833,7 @@ endfunction
   endfunction
 
   function s__AItemType_getItemTypeOfItemType takes integer itemType returns integer
-			return s__AHashTable_getStoredInteger(AGetCharacterHashTable(),"AItemTypes" , I2S(itemType)) //AClassCharacterCharacterHashTable
+			return s__AHashTable_getStoredInteger(AHashTable.global(),"AItemTypes" , I2S(itemType)) //AClassCharacterCharacterHashTable
   endfunction
 
 		/// @author Tamino Dauth
@@ -16980,7 +16980,7 @@ endfunction
 
   function s__AMovement_triggerActionMovement takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			if ( s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveForward] ) then
 				if ( s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateTurnRight] ) then
 					call s__AMovement_moveRightForward(movement)
@@ -17009,7 +17009,7 @@ endfunction
 
   function s__AMovement_triggerActionMoveForward takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveBackward]=false
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveForward]=true
 			set triggeringTrigger = null
@@ -17017,14 +17017,14 @@ endfunction
 
   function s__AMovement_triggerActionStopMovingForward takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveForward]=false
 			set triggeringTrigger = null
   endfunction
 
   function s__AMovement_triggerActionMoveBackward takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveForward]=false
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveBackward]=true
 			set triggeringTrigger = null
@@ -17032,14 +17032,14 @@ endfunction
 
   function s__AMovement_triggerActionStopMovingBackward takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveBackward]=false
 			set triggeringTrigger = null
   endfunction
 
   function s__AMovement_triggerActionTurnRight takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateTurnLeft]=false
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateTurnRight]=true
 			set triggeringTrigger = null
@@ -17047,14 +17047,14 @@ endfunction
 
   function s__AMovement_triggerActionStopTurningRight takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateTurnRight]=false
 			set triggeringTrigger = null
   endfunction
 
   function s__AMovement_triggerActionTurnLeft takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateTurnRight]=false
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateTurnLeft]=true
 			set triggeringTrigger = null
@@ -17062,7 +17062,7 @@ endfunction
 
   function s__AMovement_triggerActionStopTurningLeft takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
 			set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateTurnLeft]=false
 			set triggeringTrigger = null
   endfunction
@@ -17074,7 +17074,7 @@ endfunction
 			set s__AMovement_movementTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(s__AMovement_movementTrigger[this] , s__AMovement_refreshRate , true)
 			set triggerAction = TriggerAddAction(s__AMovement_movementTrigger[this] , function s__AMovement_triggerActionMovement)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AMovement_movementTrigger[this] , "movement" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AMovement_movementTrigger[this] , "movement" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
 
@@ -17083,7 +17083,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]] , KEY_UP , true) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]] , function s__AMovement_triggerActionMoveForward)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 	
@@ -17091,7 +17091,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+1]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+1] , KEY_UP , false) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+1] , function s__AMovement_triggerActionStopMovingForward)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+1] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+1] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 	
@@ -17099,7 +17099,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+2]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+2] , KEY_DOWN , true) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+2] , function s__AMovement_triggerActionMoveBackward)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+2] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+2] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 	
@@ -17107,7 +17107,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+3]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+3] , KEY_DOWN , false) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+3] , function s__AMovement_triggerActionStopMovingBackward)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+3] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+3] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 	
@@ -17115,7 +17115,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+4]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+4] , KEY_RIGHT , true) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+4] , function s__AMovement_triggerActionTurnRight)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+4] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+4] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 	
@@ -17123,7 +17123,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+5]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+5] , KEY_RIGHT , false) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+5] , function s__AMovement_triggerActionStopTurningRight)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+5] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+5] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 				
@@ -17131,7 +17131,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+6]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+6] , KEY_LEFT , true) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+6] , function s__AMovement_triggerActionTurnLeft)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+6] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+6] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 	
@@ -17139,7 +17139,7 @@ endfunction
 				set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+7]=CreateTrigger()
 				set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AAbstractCharacterSystem_getUser(this) , s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+7] , KEY_LEFT , false) //ALibraryInterfaceMisc
 				set triggerAction = TriggerAddAction(s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+7] , function s__AMovement_triggerActionStopTurningLeft)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+7] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+7] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -17147,7 +17147,7 @@ endfunction
 
   function s__AMovement_triggerActionFpsUp takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
    local integer triggerKey
 			if ( triggerKey == s__AMovement_fpsKeyMoveForward ) then
 				set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveForward]=false
@@ -17170,14 +17170,14 @@ endfunction
 				set s__AMovement_fpsTriggerUp[this]=CreateTrigger()
 				//call TriggerRegisterKeyEvent(this.fpsTriggerUp, 0) //fpscommon.j
 				set triggerAction = TriggerAddAction(s__AMovement_fpsTriggerUp[this] , function s__AMovement_triggerActionFpsUp)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AMovement_fpsTriggerUp[this] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AMovement_fpsTriggerUp[this] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerAction = null
 			endif
   endfunction
 
   function s__AMovement_triggerActionFpsDown takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer movement= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
+   local integer movement= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "movement") //AClassCharacterCharacterHashTable
    local integer triggerKey
 			if ( triggerKey == s__AMovement_fpsKeyMoveForward ) then
 				set s___AMovement_state[s__AMovement_state[movement]+s__AMovement_stateMoveForward]=true
@@ -17200,7 +17200,7 @@ endfunction
 				set s__AMovement_fpsTriggerDown[this]=CreateTrigger()
 				//call TriggerRegisterKeyEvent(this.fpsTriggerDown, 1) //fpscommon.j
 				set triggerAction = TriggerAddAction(s__AMovement_fpsTriggerDown[this] , function s__AMovement_triggerActionFpsDown)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AMovement_fpsTriggerDown[this] , "movement" , this) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AMovement_fpsTriggerDown[this] , "movement" , this) //AClassCharacterCharacterHashTable
 				set triggerAction = null
 			endif
   endfunction
@@ -17216,13 +17216,13 @@ endfunction
 
   function s__AMovement_destroyKeyMovementTriggers takes integer this returns nothing
    local integer i
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AMovement_movementTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AMovement_movementTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AMovement_movementTrigger[this]=null
 			if ( not s__AMovement_useFps ) then
 				set i = 0
 				loop
 					exitwhen ( i == s__AMovement_maxMovementTriggers )
-					call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+i]) //AClassCharacterCharacterHashTable
+					call s__AHashTable_destroyTrigger(AHashTable.global(),s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+i]) //AClassCharacterCharacterHashTable
 					set s___AMovement_startMovementTrigger[s__AMovement_startMovementTrigger[this]+i]=null
 					set i = i + 1
 				endloop
@@ -17231,14 +17231,14 @@ endfunction
 
   function s__AMovement_destroyFpsTriggerUp takes integer this returns nothing
 			if ( s__AMovement_useFps ) then
-				call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AMovement_fpsTriggerUp[this]) //AClassCharacterCharacterHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AMovement_fpsTriggerUp[this]) //AClassCharacterCharacterHashTable
 				set s__AMovement_fpsTriggerUp[this]=null
 			endif
   endfunction
 
   function s__AMovement_destroyFpsTriggerDown takes integer this returns nothing
 			if ( s__AMovement_useFps ) then
-				call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AMovement_fpsTriggerDown[this]) //AClassCharacterCharacterHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AMovement_fpsTriggerDown[this]) //AClassCharacterCharacterHashTable
 				set s__AMovement_fpsTriggerDown[this]=null
 			endif
   endfunction
@@ -17353,7 +17353,7 @@ endfunction
 
   function s__ARevival_timerFunctionRevival takes nothing returns nothing
    local timer expiredTimer= GetExpiredTimer()
-   local integer revival= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),expiredTimer , "revival") //AClassCharacterCharacterHashTable
+   local integer revival= s__AHashTable_getHandleInteger(AHashTable.global(),expiredTimer , "revival") //AClassCharacterCharacterHashTable
     call s__ARevival_print(revival,"Finished.")
 			call s__ARevival_revive(revival)
 			call sc__ARevival_end(revival)
@@ -17385,7 +17385,7 @@ endfunction
 
   function s__ARevival_createTimer takes integer this returns nothing
 			set s__ARevival_usedTimer[this]=CreateTimer()
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__ARevival_usedTimer[this] , "revival" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ARevival_usedTimer[this] , "revival" , this) //AClassCharacterCharacterHashTable
 			if ( s__ARevival_showDialog ) then
 				set s__ARevival_timerDialog[this]=CreateTimerDialog(s__ARevival_usedTimer[this])
 				call TimerDialogSetTitle(s__ARevival_timerDialog[this] , "test") //GetModifiedPlayerName(this.getUser()) //ALibraryInterfaceMisc
@@ -17395,7 +17395,7 @@ endfunction
 
   function s__ARevival_triggerActionRevival takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer revival= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "revival") //AClassCharacterCharacterHashTable
+   local integer revival= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "revival") //AClassCharacterCharacterHashTable
     call s__ARevival_print(revival,"Character " + I2S(s__AAbstractCharacterSystem_getCharacter(revival)) + " died and will be revived.")
 			if ( s__ARevival_time[revival] > 0.0 ) then
      call s__ARevival_print(revival,"Start revival")
@@ -17413,7 +17413,7 @@ endfunction
 			set s__ARevival_revivalTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterDeathEvent(s__ARevival_revivalTrigger[this] , s__AAbstractCharacterSystem_getUnit(this))
 			set triggerAction = TriggerAddAction(s__ARevival_revivalTrigger[this] , function s__ARevival_triggerActionRevival)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__ARevival_revivalTrigger[this] , "revival" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ARevival_revivalTrigger[this] , "revival" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -17427,7 +17427,7 @@ endfunction
   endfunction
 
   function s__ARevival_destroyTimer takes integer this returns nothing
-			call s__AHashTable_destroyTimer(AGetCharacterHashTable(),s__ARevival_usedTimer[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTimer(AHashTable.global(),s__ARevival_usedTimer[this]) //AClassCharacterCharacterHashTable
 			set s__ARevival_usedTimer[this]=null
 			if ( s__ARevival_showDialog ) then
 				call DestroyTimerDialog(s__ARevival_timerDialog[this])
@@ -17436,7 +17436,7 @@ endfunction
   endfunction
 
   function s__ARevival_destroyRevivalTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__ARevival_revivalTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__ARevival_revivalTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__ARevival_revivalTrigger[this]=null
   endfunction
 
@@ -17812,7 +17812,7 @@ endfunction
 				//Is character
 				if ( triggerUnit == s__ACharacter_getUsedUnit(s__ACharacter_getPlayerCharacter(owner)) ) then //AClassCharacterCharacter
 					set triggeringTrigger = GetTriggeringTrigger()
-					set talk = s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "talk") //ACharacterClassClassHashTable
+					set talk = s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "talk") //ACharacterClassClassHashTable
 					set orderTargetUnit = GetOrderTargetUnit()
 					if ( orderTargetUnit == s__ATalk_usedUnit[talk] ) then
 						if ( GetDistanceBetweenUnits(triggerUnit , orderTargetUnit , 0.0 , 0.0) <= s__ATalk_maxDistance ) then //ALibraryMathsHandle, Z-Wert wird nicht �berpr�ft
@@ -17837,7 +17837,7 @@ endfunction
   function s__ATalk_triggerActionEnable takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
    local player triggerPlayer= GetTriggerPlayer()
-   local integer talk= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "talk") //AClassCharacterCharacterHashTable
+   local integer talk= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "talk") //AClassCharacterCharacterHashTable
 			call IssueImmediateOrder(s__ACharacter_getUsedUnit(s__ACharacter_getPlayerCharacter(triggerPlayer)) , "stop") //AClassCharacterCharacter
 			call s__ATalk_enable(talk,s__ACharacter_getPlayerCharacter(triggerPlayer)) //AClassCharacterCharacter
     call Print("Enable talk for player " + GetPlayerName(triggerPlayer))
@@ -17854,7 +17854,7 @@ endfunction
 			set conditionFunction = Condition(function s__ATalk_triggerConditionEnable)
 			set triggerCondition = TriggerAddCondition(s__ATalk_orderTrigger[this] , conditionFunction)
 			set triggerAction = TriggerAddAction(s__ATalk_orderTrigger[this] , function s__ATalk_triggerActionEnable)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__ATalk_orderTrigger[this] , "talk" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__ATalk_orderTrigger[this] , "talk" , this) //AClassCharacterCharacterHashTable
 			set conditionFunction = null
 			set triggerCondition = null
 			set triggerAction = null
@@ -17878,7 +17878,7 @@ endfunction
   endfunction
 
   function s__ATalk_destroyOrderTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__ATalk_orderTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__ATalk_orderTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__ATalk_orderTrigger[this]=null
   endfunction
 
@@ -18327,7 +18327,7 @@ endfunction
 
   function s__AWidget_triggerActionOnHit takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer usedWidget= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "widget") //AClassInterfaceInterfaceHashTable
+   local integer usedWidget= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "widget") //AClassInterfaceInterfaceHashTable
 			call sc___prototype846_execute(s__AWidget_onHitAction[usedWidget],usedWidget)
 			if ( s__AWidget_onHitSoundPath != null ) then
 				call PlaySoundPathForPlayer(s__AGui_getUser(sc__AMainWindow_getGui(s__AWidget_mainWindow[usedWidget])) , s__AWidget_onHitSoundPath) //ALibraryEnvironmentSound
@@ -18342,7 +18342,7 @@ endfunction
 				set s__AWidget_onHitTrigger[this]=CreateTrigger()
 				set triggerEvent = TriggerRegisterTrackableHitEvent(s__AWidget_onHitTrigger[this] , s__AWidget_usedTrackable[this])
 				set triggerAction = TriggerAddAction(s__AWidget_onHitTrigger[this] , function s__AWidget_triggerActionOnHit)
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s__AWidget_onHitTrigger[this] , "widget" , this) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AWidget_onHitTrigger[this] , "widget" , this) //AClassInterfaceInterfaceHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -18350,7 +18350,7 @@ endfunction
 
   function s__AWidget_triggerActionOnTrack takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer usedWidget= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "widget") //AClassInterfaceInterfaceHashTable
+   local integer usedWidget= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "widget") //AClassInterfaceInterfaceHashTable
 			call sc___prototype846_execute(s__AWidget_onTrackAction[usedWidget],usedWidget)
 			if ( s__AWidget_onTrackSoundPath != null ) then
 				call PlaySoundPathForPlayer(s__AGui_getUser(sc__AMainWindow_getGui(s__AWidget_mainWindow[usedWidget])) , s__AWidget_onTrackSoundPath) //ALibraryEnvironmentSound
@@ -18365,7 +18365,7 @@ endfunction
 				set s__AWidget_onTrackTrigger[this]=CreateTrigger()
 				set triggerEvent = TriggerRegisterTrackableTrackEvent(s__AWidget_onTrackTrigger[this] , s__AWidget_usedTrackable[this])
 				set triggerAction = TriggerAddAction(s__AWidget_onTrackTrigger[this] , function s__AWidget_triggerActionOnTrack)
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s__AWidget_onTrackTrigger[this] , "widget" , this) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AWidget_onTrackTrigger[this] , "widget" , this) //AClassInterfaceInterfaceHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -18404,14 +18404,14 @@ endfunction
 
   function s__AWidget_destroyOnHitTrigger takes integer this returns nothing
 			if ( s__AWidget_onHitAction[this] != 0 ) then
-				call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s__AWidget_onHitTrigger[this]) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AWidget_onHitTrigger[this]) //AClassInterfaceInterfaceHashTable
 				set s__AWidget_onHitTrigger[this]=null
 			endif
   endfunction
 
   function s__AWidget_destroyOnTrackTrigger takes integer this returns nothing
 			if ( s__AWidget_onTrackAction[this] != 0 ) then
-				call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s__AWidget_onTrackTrigger[this]) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AWidget_onTrackTrigger[this]) //AClassInterfaceInterfaceHashTable
 				set s__AWidget_onTrackTrigger[this]=null
 			endif
   endfunction
@@ -18695,7 +18695,7 @@ endfunction
 
 		/// Just required for the move order and for item dropping.
   function s__AInventory_getItemIndex takes integer this,item usedItem returns integer
-			return s__AHashTable_getHandleInteger(AGetCharacterHashTable(),usedItem , "AInventory_index") //AClassCharacterCharacterHashTable
+			return s__AHashTable_getHandleInteger(AHashTable.global(),usedItem , "AInventory_index") //AClassCharacterCharacterHashTable
   endfunction
 
   function s__AInventory_setEquipmentItem takes integer this,item usedItem,integer equipmentType,boolean add returns nothing
@@ -18704,7 +18704,7 @@ endfunction
      call Print("Add equipment item, rucksack is not enabled.")
 				call UnitAddItemToSlotById(s__AAbstractCharacterSystem_getUnit(this) , GetItemTypeId(usedItem) , equipmentType)
 				set slotItem = UnitItemInSlot(s__AAbstractCharacterSystem_getUnit(this) , equipmentType)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),slotItem , "AInventory_index" , equipmentType) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),slotItem , "AInventory_index" , equipmentType) //AClassCharacterCharacterHashTable
 				//Setting charges is not required.
 				set slotItem = null
 			endif
@@ -18714,7 +18714,7 @@ endfunction
 
   function s__AInventory_clearEquipmentItem takes integer this,integer equipmentType,boolean drop returns nothing
    local item slotItem= UnitItemInSlot(s__AAbstractCharacterSystem_getUnit(this) , equipmentType)
-			call s__AHashTable_flushHandleInteger(AGetCharacterHashTable(),slotItem , "AInventory_index") //AClassCharacterCharacterHashTable
+			call s__AHashTable_flushHandleInteger(AHashTable.global(),slotItem , "AInventory_index") //AClassCharacterCharacterHashTable
 			set s___AInventory_equipmentItemType[s__AInventory_equipmentItemType[this]+equipmentType]=0
 			if ( drop ) then
 				call UnitDropItemPoint(s__AAbstractCharacterSystem_getUnit(this) , slotItem , GetUnitX(s__AAbstractCharacterSystem_getUnit(this)) , GetUnitY(s__AAbstractCharacterSystem_getUnit(this)))
@@ -18729,7 +18729,7 @@ endfunction
    local item slotItem
 			call UnitAddItemToSlotById(s__AAbstractCharacterSystem_getUnit(this) , s___AInventory_equipmentItemType[s__AInventory_equipmentItemType[this]+equipmentType] , equipmentType)
 			set slotItem = UnitItemInSlot(s__AAbstractCharacterSystem_getUnit(this) , equipmentType)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),slotItem , "AInventory_index" , equipmentType) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),slotItem , "AInventory_index" , equipmentType) //AClassCharacterCharacterHashTable
 			set slotItem = null
   endfunction
 
@@ -18767,7 +18767,7 @@ endfunction
 				set slot = s__AInventory_getRucksackItemSlot(this,index)
 				call UnitAddItemToSlotById(s__AAbstractCharacterSystem_getUnit(this) , GetItemTypeId(usedItem) , slot)
 				set slotItem = UnitItemInSlot(s__AAbstractCharacterSystem_getUnit(this) , slot)
-				call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),slotItem , "AInventory_index" , index) //AClassCharacterCharacterHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),slotItem , "AInventory_index" , index) //AClassCharacterCharacterHashTable
 				call SetItemCharges(slotItem , GetItemCharges(usedItem))
 				set slotItem = null
 			endif
@@ -18778,7 +18778,7 @@ endfunction
 
   function s__AInventory_clearRucksackItem takes integer this,integer index,boolean drop returns nothing
    local item slotItem= UnitItemInSlot(s__AAbstractCharacterSystem_getUnit(this) , s__AInventory_getRucksackItemSlot(this,index))
-			call s__AHashTable_flushHandleInteger(AGetCharacterHashTable(),slotItem , "AInventory_index") //AClassCharacterCharacterHashTable
+			call s__AHashTable_flushHandleInteger(AHashTable.global(),slotItem , "AInventory_index") //AClassCharacterCharacterHashTable
 			set s___AInventory_rucksackItemType[s__AInventory_rucksackItemType[this]+index]=0
 			set s___AInventory_rucksackItemCharges[s__AInventory_rucksackItemCharges[this]+index]=0
 			if ( drop ) then
@@ -18795,7 +18795,7 @@ endfunction
 			call UnitAddItemToSlotById(s__AAbstractCharacterSystem_getUnit(this) , s___AInventory_rucksackItemType[s__AInventory_rucksackItemType[this]+index] , slot)
 			set slotItem = UnitItemInSlot(s__AAbstractCharacterSystem_getUnit(this) , slot)
 			call SetItemCharges(slotItem , s___AInventory_rucksackItemCharges[s__AInventory_rucksackItemCharges[this]+index])
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),slotItem , "AInventory_index" , index) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),slotItem , "AInventory_index" , index) //AClassCharacterCharacterHashTable
 			set slotItem = null
   endfunction
 
@@ -18943,7 +18943,7 @@ endfunction
 
   function s__AInventory_triggerActionOpen takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer inventory= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
+   local integer inventory= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
 			if ( s__AInventory_rucksackIsEnabled[inventory] ) then
 				call s__AInventory_disableRucksack(inventory)
 				call s__AInventory_enableEquipment(inventory)
@@ -18964,7 +18964,7 @@ endfunction
 			set conditionFunction = Condition(function s__AInventory_triggerConditionOpen)
 			set triggerCondition = TriggerAddCondition(s__AInventory_openTrigger[this] , conditionFunction)
 			set triggerAction = TriggerAddAction(s__AInventory_openTrigger[this] , function s__AInventory_triggerActionOpen)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AInventory_openTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AInventory_openTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -18973,7 +18973,7 @@ endfunction
 
   function s__AInventory_triggerActionOrder takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer inventory= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
+   local integer inventory= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
    local integer order= GetIssuedOrderId()
    local item usedItem= GetManipulatedItem()
 
@@ -19004,7 +19004,7 @@ endfunction
 			set s__AInventory_orderTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(s__AInventory_orderTrigger[this] , s__AAbstractCharacterSystem_getUnit(this) , EVENT_UNIT_ISSUED_ORDER)
 			set triggerAction = TriggerAddAction(s__AInventory_orderTrigger[this] , function s__AInventory_triggerActionOrder)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AInventory_orderTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AInventory_orderTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
 			//add, drop, move item next, move item previous, stack items
@@ -19012,7 +19012,7 @@ endfunction
 
   function s__AInventory_triggerActionPickup takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer inventory= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
+   local integer inventory= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
    local item usedItem= GetManipulatedItem()
     call Print("Pickup")
 			if ( s__AInventory_rucksackIsEnabled[inventory] ) then
@@ -19030,14 +19030,14 @@ endfunction
 			set s__AInventory_pickupTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(s__AInventory_pickupTrigger[this] , s__AAbstractCharacterSystem_getUnit(this) , EVENT_UNIT_PICKUP_ITEM) //pawn?
 			set triggerAction = TriggerAddAction(s__AInventory_pickupTrigger[this] , function s__AInventory_triggerActionPickup)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AInventory_pickupTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AInventory_pickupTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
 
   function s__AInventory_triggerActionDrop takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer inventory= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
+   local integer inventory= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
    local item usedItem= GetManipulatedItem()
 			if ( s__AInventory_rucksackIsEnabled[inventory] ) then
 				call s__AInventory_clearRucksackItem(inventory,s__AInventory_getItemIndex(inventory,usedItem) , true)
@@ -19054,14 +19054,14 @@ endfunction
 			set s__AInventory_useTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(s__AInventory_useTrigger[this] , s__AAbstractCharacterSystem_getUnit(this) , EVENT_UNIT_DROP_ITEM)
 			set triggerAction = TriggerAddAction(s__AInventory_useTrigger[this] , function s__AInventory_triggerActionDrop)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AInventory_useTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AInventory_useTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
 
   function s__AInventory_triggerActionUse takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer inventory= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
+   local integer inventory= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "inventory") //AClassCharacterCharacterHashTable
    local item usedItem= GetManipulatedItem()
    local integer itemTypeId= GetItemTypeId(usedItem)
 			//if (inventory.rucksackIsEnabled) then
@@ -19083,7 +19083,7 @@ endfunction
 			set s__AInventory_useTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(s__AInventory_useTrigger[this] , s__AAbstractCharacterSystem_getUnit(this) , EVENT_UNIT_USE_ITEM)
 			set triggerAction = TriggerAddAction(s__AInventory_useTrigger[this] , function s__AInventory_triggerActionUse)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AInventory_useTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AInventory_useTrigger[this] , "inventory" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -19105,27 +19105,27 @@ endfunction
   endfunction
 
   function s__AInventory_destroyOpenTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AInventory_openTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AInventory_openTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AInventory_openTrigger[this]=null
   endfunction
 
   function s__AInventory_destroyOrderTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AInventory_orderTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AInventory_orderTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AInventory_orderTrigger[this]=null
   endfunction
 
   function s__AInventory_destroyPickupTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AInventory_pickupTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AInventory_pickupTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AInventory_pickupTrigger[this]=null
   endfunction
 
   function s__AInventory_destroyDropTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AInventory_dropTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AInventory_dropTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AInventory_dropTrigger[this]=null
   endfunction
 
   function s__AInventory_destroyUseTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AInventory_useTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AInventory_useTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AInventory_useTrigger[this]=null
   endfunction
 
@@ -19398,7 +19398,7 @@ endfunction
    local boolean result= false
 			if ( triggerUnit == s__ACharacter_getUsedUnit(s__ACharacter_getPlayerCharacter(owner)) ) then
 				set triggeringTrigger = GetTriggeringTrigger()
-				set shrine = s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "shrine")
+				set shrine = s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "shrine")
 				if ( s__ACharacter_getShrine(s__ACharacter_getPlayerCharacter(owner)) != shrine ) then
 					set result = s__ACharacter_getMovable(s__ACharacter_getPlayerCharacter(owner))
 				endif
@@ -19413,7 +19413,7 @@ endfunction
    local trigger triggeringTrigger= GetTriggeringTrigger()
    local unit triggerUnit= GetTriggerUnit()
    local player owner= GetOwningPlayer(triggerUnit)
-   local integer shrine= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "shrine") //AClassCharacterCharacterHashTable
+   local integer shrine= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "shrine") //AClassCharacterCharacterHashTable
 			call s__AShrine_disableForCharacter(s__ACharacter_getShrine(s__ACharacter_getPlayerCharacter(owner)),s__ACharacter_getPlayerCharacter(owner)) //AClassCharacterCharacter, disable old
 			call s__AShrine_enableForCharacter(shrine,s__ACharacter_getPlayerCharacter(owner)) //AClassCharacterCharacter
 			set triggeringTrigger = null
@@ -19431,7 +19431,7 @@ endfunction
 			set conditionFunction = Condition(function s__AShrine_triggerConditionEnable)
 			set triggerCondition = TriggerAddCondition(s__AShrine_shrineTrigger[this] , conditionFunction)
 			set triggerAction = TriggerAddAction(s__AShrine_shrineTrigger[this] , function s__AShrine_triggerActionEnable)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),s__AShrine_shrineTrigger[this] , "shrine" , this) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AShrine_shrineTrigger[this] , "shrine" , this) //AClassCharacterCharacterHashTable
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -19456,7 +19456,7 @@ endfunction
   endfunction
 
   function s__AShrine_destroyShrineTrigger takes integer this returns nothing
-			call s__AHashTable_destroyTrigger(AGetCharacterHashTable(),s__AShrine_shrineTrigger[this]) //AClassCharacterCharacterHashTable
+			call s__AHashTable_destroyTrigger(AHashTable.global(),s__AShrine_shrineTrigger[this]) //AClassCharacterCharacterHashTable
 			set s__AShrine_shrineTrigger[this]=null
   endfunction
 
@@ -20319,7 +20319,7 @@ endfunction
 		
   function s__AMainWindow_triggerActionPressShortcut takes nothing returns nothing
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer mainWindow= s__AHashTable_getHandleInteger(AGetInterfaceHashTable(),triggeringTrigger , "mainWindow") //AClassInterfaceInterfaceHashTable
+   local integer mainWindow= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "mainWindow") //AClassInterfaceInterfaceHashTable
 			if ( not s__AMainWindow_isShown[mainWindow] ) then
 				call s__AMainWindow_show(mainWindow)
 			else
@@ -20334,7 +20334,7 @@ endfunction
 			set s__AMainWindow_shortcutTrigger[this]=CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(s__AGui_getUser(s__AMainWindow_gui[this]) , s__AMainWindow_shortcutTrigger[this] , s__AMainWindow_shortcut[this] , true) //ALibraryInterfaceMisc
 			set triggerAction = TriggerAddAction(s__AMainWindow_shortcutTrigger[this] , function s__AMainWindow_triggerActionPressShortcut)
-			call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s__AMainWindow_shortcutTrigger[this] , "mainWindow" , this) //AClassInterfaceInterfaceHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),s__AMainWindow_shortcutTrigger[this] , "mainWindow" , this) //AClassInterfaceInterfaceHashTable
 			set triggerEvent = null
 			set triggerAction = null
   endfunction
@@ -20373,7 +20373,7 @@ endfunction
 			call DestroyTextTag(s__AMainWindow_tooltip[this])
 			set s__AMainWindow_tooltip[this]=null
 			if ( s__AMainWindow_shortcut[this] != 0 ) then
-				call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s__AMainWindow_shortcutTrigger[this]) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AMainWindow_shortcutTrigger[this]) //AClassInterfaceInterfaceHashTable
 				set s__AMainWindow_shortcutTrigger[this]=null
 			endif
 
@@ -22035,7 +22035,7 @@ local integer this=f__arg_this
 			call DestroyTextTag(s__AMainWindow_tooltip[this])
 			set s__AMainWindow_tooltip[this]=null
 			if ( s__AMainWindow_shortcut[this] != 0 ) then
-				call s__AHashTable_destroyTrigger(AGetInterfaceHashTable(),s__AMainWindow_shortcutTrigger[this]) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_destroyTrigger(AHashTable.global(),s__AMainWindow_shortcutTrigger[this]) //AClassInterfaceInterfaceHashTable
 				set s__AMainWindow_shortcutTrigger[this]=null
 			endif
 			call s__AMainWindow_destroyDockedWidgets(this)
@@ -22200,7 +22200,7 @@ local integer equipmentType=f__arg_integer1
    local item slotItem
 			call UnitAddItemToSlotById(s__AAbstractCharacterSystem_getUnit(this) , s___AInventory_equipmentItemType[s__AInventory_equipmentItemType[this]+equipmentType] , equipmentType)
 			set slotItem = UnitItemInSlot(s__AAbstractCharacterSystem_getUnit(this) , equipmentType)
-			call s__AHashTable_storeHandleInteger(AGetCharacterHashTable(),slotItem , "AInventory_index" , equipmentType) //AClassCharacterCharacterHashTable
+			call s__AHashTable_storeHandleInteger(AHashTable.global(),slotItem , "AInventory_index" , equipmentType) //AClassCharacterCharacterHashTable
 			set slotItem = null
    return true
 endfunction
@@ -22656,7 +22656,7 @@ local integer this=f__arg_this
 endfunction
 function sa__AItemType_onDestroy takes nothing returns boolean
 local integer this=f__arg_this
-			call s__AHashTable_flushStoredInteger(AGetCharacterHashTable(),"AItemTypes" , I2S(s__AItemType_itemType[this])) //AClassCharacterCharacterHashTable
+			call s__AHashTable_flushStoredInteger(AHashTable.global(),"AItemTypes" , I2S(s__AItemType_itemType[this])) //AClassCharacterCharacterHashTable
    return true
 endfunction
 function sa__AFocus_enable takes nothing returns boolean
@@ -22922,8 +22922,8 @@ endfunction
 function sa__AAbstractQuest_triggerConditionRunQuestState takes nothing returns boolean
 
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer abstractQuest= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "abstractQuest") //AClassCharacterCharacterHashTable
-   local integer state= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "state") //AClassCharacterCharacterHashTable
+   local integer abstractQuest= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "abstractQuest") //AClassCharacterCharacterHashTable
+   local integer state= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "state") //AClassCharacterCharacterHashTable
     call Print("Handle id: " + I2S(H2I(triggeringTrigger)))
 			set triggeringTrigger = null
     call Print("QUEST CONDITION for abstract quest " + I2S(abstractQuest) + " with state " + I2S(state))
@@ -22933,8 +22933,8 @@ endfunction
 function sa__AAbstractQuest_triggerActionRunQuestState takes nothing returns boolean
 
    local trigger triggeringTrigger= GetTriggeringTrigger()
-   local integer abstractQuest= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "abstractQuest")
-   local integer state= s__AHashTable_getHandleInteger(AGetCharacterHashTable(),triggeringTrigger , "state")
+   local integer abstractQuest= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "abstractQuest")
+   local integer state= s__AHashTable_getHandleInteger(AHashTable.global(),triggeringTrigger , "state")
     call Print("ACTION for abstract quest " + I2S(abstractQuest) + " with state " + I2S(state))
 			call sc__AAbstractQuest_setState(abstractQuest,state) //custom function will be called in this method
 			set triggeringTrigger = null
@@ -23029,8 +23029,8 @@ local integer shortcut=f__arg_integer1
 					set triggerEvent = TriggerRegisterPlayerEvent(s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , s__AGui_user[this] , EVENT_PLAYER_END_CINEMATIC)
 				endif
 				set triggerAction = TriggerAddAction(s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , function s__AGui_triggerActionOnPressSpecialShortcut)
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "gui" , this) //AClassInterfaceInterfaceHashTable
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "shortcut" , shortcut) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "gui" , this) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_specialShortcutHandleTrigger[s__AGui_specialShortcutHandleTrigger[this]+shortcut] , "shortcut" , shortcut) //AClassInterfaceInterfaceHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -23045,8 +23045,8 @@ local integer index=f__arg_integer1
 				set s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index]=CreateTrigger()
 				set triggerEvent = TriggerRegisterDialogButtonEvent(s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , s___AGui_dialogButton[s__AGui_dialogButton[this]+index])
 				set triggerAction = TriggerAddAction(s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , function s__AGui_triggerActionRunDialogButtonAction)
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "gui" , this) //AClassInterfaceInterfaceHashTable
-				call s__AHashTable_storeHandleInteger(AGetInterfaceHashTable(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "index" , index) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "gui" , this) //AClassInterfaceInterfaceHashTable
+				call s__AHashTable_storeHandleInteger(AHashTable.global(),s___AGui_dialogButtonTrigger[s__AGui_dialogButtonTrigger[this]+index] , "index" , index) //AClassInterfaceInterfaceHashTable
 				set triggerEvent = null
 				set triggerAction = null
 			endif
