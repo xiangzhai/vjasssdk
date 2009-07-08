@@ -21,6 +21,8 @@
 #ifndef VJASSDOC_GLOBAL_H
 #define VJASSDOC_GLOBAL_H
 
+#include <cstdlib>
+
 #include "object.h"
 
 namespace vjassdoc

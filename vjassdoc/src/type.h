@@ -21,6 +21,8 @@
 #ifndef VJASSDOC_TYPE_H
 #define VJASSDOC_TYPE_H
 
+#include <cstdlib>
+
 #include "object.h"
 
 namespace vjassdoc

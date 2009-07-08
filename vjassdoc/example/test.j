@@ -216,3 +216,10 @@ globals
 	private key peter2
 	public key peter3
 endglobals
+
+/**
+This is a block documentation comment.
+*/
+
+function MyFunction /** This block documentation comment describes this function */ takes nothing returns nothing
+endfunction

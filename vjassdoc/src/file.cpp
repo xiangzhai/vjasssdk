@@ -21,6 +21,7 @@
 #include <string>
 #include <fstream>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <list>
@@ -40,6 +41,8 @@ const char *File::expressionText[] =
 	//Jass stand-alone expressions
 	"///", //This tool
 	"//",
+	"/**",
+	"*/",
 	"type",
 	"constant",
 	"native",
@@ -153,7 +156,7 @@ std::string File::getToken(const std::string &line, unsigned int &index, bool en
 	return line.substr(position, length);
 }
 
-File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(File::InvalidExpression), isInGlobals(false), isInLibrary(false), isInScope(false), isInInterface(false), isInStruct(false), isInModule(false), isInBlockComment(false), currentLine(0), currentDocComment(0), currentLibrary(0), currentScope(0), currentInterface(0), currentStruct(0), currentModule(0), currentFunction(0), gotDocComment(false)
+File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(File::InvalidExpression), isInGlobals(false), isInLibrary(false), isInScope(false), isInInterface(false), isInStruct(false), isInModule(false), isInBlockComment(false), isInBlockDocComment(false), currentLine(0), currentDocComment(0), currentLibrary(0), currentScope(0), currentInterface(0), currentStruct(0), currentModule(0), currentFunction(0), gotDocComment(false)
 {
 	fin.open(filePath.c_str());
 
@@ -219,6 +222,35 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				{
 					Vjassdoc::getParser()->add(new class Comment(line.substr(index), Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment));
 					this->clearDocComment();
+				}
+
+				break;
+			}
+
+			case BlockDocCommentExpression:
+			{
+				std::string::size_type position = std::string::npos; 
+
+				if (index < line.length())
+					line.find(expressionText[EndBlockDocCommentExpression], index);
+
+				if (position == std::string::npos)
+				{
+					this->isInBlockDocComment = true;
+					
+					if (index < line.length())
+						this->currentBlockDocComment = line.substr(index);
+				}
+				else
+				{
+					if (this->currentDocComment == 0)
+					{
+						this->gotDocComment = true;
+						this->currentDocComment = new class DocComment(line.substr(index), Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
+						Vjassdoc::getParser()->add(this->currentDocComment);
+					}
+					else
+						this->currentDocComment->addIdentifier(line.substr(index));
 				}
 
 				break;
@@ -694,6 +726,31 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 		this->isInBlockComment = false;
 		index = position + 2;
 	}
+	else if (this->isInBlockDocComment)
+	{
+		std::string::size_type position = line.find(expressionText[EndBlockDocCommentExpression]);
+
+		if (position == std::string::npos)
+		{
+			this->currentBlockDocComment += line;
+			return File::NoExpression; //stop parsing
+		}
+
+		this->currentBlockDocComment += line.substr(0, position);
+
+		if (this->currentDocComment == 0)
+		{
+			this->gotDocComment = true;
+			this->currentDocComment = new class DocComment(this->currentBlockDocComment, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
+			Vjassdoc::getParser()->add(this->currentDocComment);
+		}
+		else
+			this->currentDocComment->addIdentifier(line.substr(index));
+
+		this->currentBlockDocComment.clear();
+		this->isInBlockDocComment = false;
+		index = position + 2;
+	}
 
 	std::string token = File::getToken(line, index);
 
@@ -844,6 +901,46 @@ void File::truncateComments(std::string &line, unsigned int index)
 				
 				break;
 			}
+			else if (index < line.length() - 3 && line.substr(index, 3) == expressionText[BlockDocCommentExpression] && !(index < line.length() - 4 && line[index + 3] == '/')) //exception: /**/
+			{
+				bool result = false;
+				int i;
+
+				for (i = index + 2; i < line.length() - 1; ++i)
+				{
+					if (line.substr(i, 2) == expressionText[EndBlockDocCommentExpression])
+					{
+						result = true;
+						break;
+					}
+				}
+
+				if (!result)
+				{
+					this->currentBlockDocComment = line.substr(index + 3);
+					this->isInBlockDocComment = true;
+					break;
+				}
+				else
+				{
+					std::string identifier = line.substr(index + 3, i - index - 3);
+					
+					if (!identifier.empty())
+					{
+						if (this->currentDocComment == 0)
+						{
+							this->gotDocComment = true;
+							this->currentDocComment = new class DocComment(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
+							Vjassdoc::getParser()->add(this->currentDocComment);
+						}
+						else
+							this->currentDocComment->addIdentifier(identifier);
+					}
+					
+					line.erase(index, i - index + 3);
+					index = i - identifier.length() + 3; //-2
+				}
+			}
 			else if (index < line.length() - 2 && line.substr(index, 2) == expressionText[BlockCommentExpression])
 			{
 				bool result = false;
@@ -884,6 +981,7 @@ void File::truncateComments(std::string &line, unsigned int index)
 	}
 }
 
+/// @todo @ filter should be processed during in initialization.
 void File::getDocComment(const std::string &line, unsigned int index)
 {
 	std::string docCommentItem = File::getToken(line, index, true);

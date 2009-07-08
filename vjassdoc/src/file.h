@@ -45,6 +45,8 @@ class File
 		{
 			DocCommentExpression, //This tool
 			CommentExpression,
+			BlockDocCommentExpression, //has to be checked before block comment expression!
+			EndBlockDocCommentExpression,
 			TypeExpression,
 			ConstantExpression,
 			NativeExpression,
@@ -141,8 +143,35 @@ class File
 		File(const std::string &filePath);
 		
 	private:
+		const std::string filePath;
+
+		File::Expression notRequiredSpace;
+		bool isInGlobals;
+		bool isInLibrary;
+		bool isInScope;
+		bool isInInterface;
+		bool isInStruct;
+		bool isInModule;
+		bool isInBlockComment;
+		bool isInBlockDocComment;
+
+		unsigned int currentLine;
+		class DocComment *currentDocComment;
+		class Library *currentLibrary;
+		class Scope *currentScope;
+		//containers
+		class Interface *currentInterface;
+		class Struct *currentStruct;
+		class Module *currentModule;
+		class Function *currentFunction;
+		std::string currentBlockComment;
+		std::string currentBlockDocComment;
+
+		bool gotDocComment;
+
+		std::ifstream fin;
+
 		File::Expression getFirstLineExpression(std::string &line, unsigned int &index);
-		/// @return Returns true if a documentation comment was found.
 		void truncateComments(std::string &line, unsigned int index);
 		void getDocComment(const std::string &line, unsigned int index);
 		void clearDocComment();
@@ -162,32 +191,6 @@ class File
 		std::list<std::string>* getLibraryRequirement(const std::string &line, unsigned int &index) const;
 		bool isInVjassBlock() const;
 		class Object* getCurrentContainer() const;
-
-		const std::string filePath;
-
-		File::Expression notRequiredSpace;
-		bool isInGlobals;
-		bool isInLibrary;
-		bool isInScope;
-		bool isInInterface;
-		bool isInStruct;
-		bool isInModule;
-		bool isInBlockComment;
-
-		unsigned int currentLine;
-		class DocComment *currentDocComment;
-		class Library *currentLibrary;
-		class Scope *currentScope;
-		//containers
-		class Interface *currentInterface;
-		class Struct *currentStruct;
-		class Module *currentModule;
-		class Function *currentFunction;
-		std::string currentBlockComment;
-
-		bool gotDocComment;
-
-		std::ifstream fin;
 };
 
 }

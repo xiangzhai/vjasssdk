@@ -20,8 +20,9 @@
 
 #include <iostream>
 #include <string>
-//#include <stdlib>
+#include <cstdlib>
 #include <cstdio>
+#include <cstring>
 #include <vector>
 #include <list>
 
@@ -156,6 +157,7 @@ int main(int argc, char *argv[])
 	};
 	bool parseObjectsOfList[Parser::MaxLists] =
 	{
+		true,
 		true,
 		true,
 		true,
