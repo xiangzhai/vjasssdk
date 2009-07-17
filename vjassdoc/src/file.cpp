@@ -116,16 +116,6 @@ const char *File::expressionText[] =
 	"operator"
 };
 
-const char *File::docExpressionText[] =
-{
-	"author",
-	"todo",
-	"param",
-	"return",
-	"state",
-	"source"
-};
-
 std::string File::getToken(const std::string &line, unsigned int &index, bool endOfLine)
 {
 	if (index >= line.length() || line.empty()) //important
@@ -985,6 +975,7 @@ void File::truncateComments(std::string &line, unsigned int index)
 void File::getDocComment(const std::string &line, unsigned int index)
 {
 	std::string docCommentItem = File::getToken(line, index, true);
+/*
 	std::string result;
 	unsigned int oldIndex = 0;
 	unsigned int newIndex = docCommentItem.find('@');
@@ -1051,115 +1042,20 @@ void File::getDocComment(const std::string &line, unsigned int index)
 	
 	if (oldIndex <  docCommentItem.length() - 1)
 		result += docCommentItem.substr(oldIndex);
-	
-	if (!result.empty())
+*/
+	if (!docCommentItem.empty())
 	{
 		if (this->currentDocComment == 0)
 		{
-			this->currentDocComment = new DocComment(result, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
+			this->currentDocComment = new DocComment(docCommentItem, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
 			Vjassdoc::getParser()->add(this->currentDocComment);
 			this->gotDocComment = true;
 		}
 		else
-			this->currentDocComment->addIdentifier(" <br> " + result); //parse before and modify, space characters are important!
+			this->currentDocComment->addIdentifier('\n' + docCommentItem); //parse before and modify, space characters are important!
 	}
 	else if (Vjassdoc::showVerbose())
 		std::cout << _("Detected empty documentation comment.") << std::endl;
-/*
-
-
-
-
-
-
-
-
-
-
-
-
-	std::string docCommentItem = File::getToken(line, index, true);
-	std::string result;
-	//parse the item
-	unsigned int oldIndex = 0;
-	unsigned int newIndex = 0;
-	
-	do
-	{
-		oldIndex = newIndex;
-		std::string token = File::getToken(docCommentItem, newIndex);
-		std::cout << "Token " << token << " with index " << newIndex << std::endl;
-		
-		if (token.empty())
-			break;
-		
-		if (token[0] != '@')
-		{
-			result += docCommentItem.substr(oldIndex, newIndex);
-			continue;
-		}
-		
-		token = token.substr(1);
-		
-		std::cout << "Substring " << token << std::endl;
-		
-		int expression;
-		
-		for (expression = 0; expression < MaxDocExpressions; ++expression)
-		{
-			if (docExpressionText[expression] == token)
-			{
-				std::cout << "Found doc comment expression " << docExpressionText[expression] << " with index " << expression << std::endl;
-				break;
-			}
-		}
-		
-		if (expression == MaxDocExpressions) //no error message! Can be @struct, @comment etc.
-			continue;
-
-		switch (expression)
-		{
-			case Author:
-				result += _("<strong>Author:</strong>");
-				break;
-		
-			case ToDo:
-				result += _("<strong>Todo:</strong>");
-				break;
-		
-			case Parameter:
-				result += _("<strong>Parameter:</strong>");
-				break;
-		
-			case Return:
-				result += _("<strong>Return:</strong>");
-				break;
-			
-			case State:
-				result += _("<strong>State:</strong>");
-				break;
-			
-			case Source:
-				result += _("<strong>Source:</strong>"); // TODO Link to website
-				break;
-		}
-	}
-	while(true);
-	
-	if (!result.empty())
-	{
-		if (this->currentDocComment == 0)
-		{
-			this->currentDocComment = new DocComment(result, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
-			Vjassdoc::getParser()->add(this->currentDocComment);
-			this->gotDocComment = true;
-		}
-		else
-			this->currentDocComment->addIdentifier("<br>" + result); //parse before and modify
-	}
-	else if (Vjassdoc::showVerbose())
-		std::cout << _("Detected empty documentation comment.") << std::endl;
-		*/
 }
 
 void File::clearDocComment()

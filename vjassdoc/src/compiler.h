@@ -35,6 +35,9 @@ class Compiler
 	
 	private:
 		void writeGlobals(std::fstream &fstream);
+		void writeMembers(std::fstream &fstream);
+		/// Write triggers of methods for TriggerEvaluate().
+		void writeMethodGlobals(std::fstream &fstream);
 };
 
 }

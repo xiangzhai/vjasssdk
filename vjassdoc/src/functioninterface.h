@@ -51,6 +51,7 @@ class FunctionInterface : public Object
 		std::string returnTypeExpression() const;
 
 	protected:
+		static const int maxParameters;
 		class Library *m_library;
 		class Scope *m_scope;
 		bool m_isPrivate;

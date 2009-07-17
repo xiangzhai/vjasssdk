@@ -42,34 +42,43 @@ class Type;
 class Object
 {
 	public:
+		typedef unsigned int IdType;
+		typedef unsigned int LineType;
+		typedef const unsigned char* VectorDataType;
+	
 		//static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
+		static Object::IdType maxIds();
 		static void initClass();
 		static std::string objectPageLink(const class Object *object, const std::string &identifier = "-");
 		static std::string objectLink(const class Object *object, const std::string &identifier = "-"); //should use the id
-		static int objectId(const class Object *object);
-		static void setMaxIds(int maxIds); //only used by loading objects from database
+		static Object::IdType objectId(const class Object *object);
+		static void setMaxIds(Object::IdType maxIds); //only used by loading objects from database
 		static std::string sqlFilteredString(const std::string &usedString);
 		/// @todo This function should be used to distribute all table header creations to their classes.
 		static std::string sqlTableHeader(const std::string &tableName, const std::string &entries);
 	
 		Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment);
-		Object(std::vector<const unsigned char*> &columnVector);
+		Object(std::vector<Object::VectorDataType> &columnVector);
 		virtual ~Object();
 
-		virtual void init() = 0; //Some Objects has to be initialized after finding all objects of all files.
-		virtual void pageNavigation(std::ofstream &file) const = 0;
-		virtual void page(std::ofstream &file) const = 0;
+		virtual void init(); //Some Objects has to be initialized after finding all objects of all files.
+		virtual void initByVector();
+		void clearVector();
+		virtual void pageNavigation(std::ofstream &file) const;
+		virtual void page(std::ofstream &file) const;
 		std::string pageLink() const;
 		virtual std::string sqlStatement() const;
-		unsigned int id() const;
+		void setId(Object::IdType id); /// @todo Friend relation to @class Parser.
+		Object::IdType id() const;
 		void addIdentifier(const std::string &identifier); //required by doc comments
 		std::string identifier() const;
 		class SourceFile* sourceFile() const;
-		unsigned int line() const;
+		Object::LineType line() const;
 		class DocComment* docComment() const;
+		std::vector<Object::VectorDataType> columnVector() const;
 		
 		//empty condition methods, used by the search algorithm's comparison
 		virtual class Object* container() const;
@@ -125,16 +134,23 @@ class Object
 
 	private:
 		//static std::string getAnotherLink(const Object *object);
-		static int maxIds;
+		static Object::IdType m_maxIds;
 
 		//Object(Object&);
 
-		unsigned int m_id;
+		Object::IdType m_id;
 		std::string m_identifier;
 		class SourceFile *m_sourceFile;
-		unsigned int m_line;
+		Object::LineType m_line;
 		class DocComment *m_docComment;
+		
+		std::vector<Object::VectorDataType> m_columnVector;
 };
+
+inline Object::IdType Object::maxIds()
+{
+	return Object::m_maxIds;
+}
 
 inline std::string Object::objectPageLink(const class Object *object, const std::string &identifier)
 {
@@ -155,7 +171,7 @@ inline std::string Object::objectLink(const class Object *object, const std::str
 	return sstream.str();
 }
 
-inline int Object::objectId(const class Object *object)
+inline Object::IdType Object::objectId(const class Object *object)
 {
 	if (object == 0)
 		return -1;
@@ -163,19 +179,31 @@ inline int Object::objectId(const class Object *object)
 	return object->m_id;
 }
 
-inline void Object::setMaxIds(int maxIds)
+inline void Object::setMaxIds(Object::IdType maxIds)
 {
-	Object::maxIds = maxIds;
+	Object::m_maxIds = maxIds;
 }
 
 inline std::string Object::pageLink() const
 {
 	std::ostringstream sstream;
-	sstream << "<a href=\"" << this->m_id << ".html\">" << this->m_identifier << "</a>";
+	sstream << "<a href=\"" << this->m_id << ".html\">";
+	
+	if (this->m_identifier.empty())
+		sstream << this->m_id;
+	else
+		sstream << this->m_identifier;
+	
+	sstream << "</a>"; //if empty show id
 	return sstream.str();
 }
 
-inline unsigned int Object::id() const
+inline void Object::setId(Object::IdType id)
+{
+	this->m_id = id;
+}
+
+inline Object::IdType Object::id() const
 {
 	return this->m_id;
 }
@@ -195,7 +223,7 @@ inline class SourceFile* Object::sourceFile() const
 	return this->m_sourceFile;
 }
 
-inline unsigned int Object::line() const
+inline Object::LineType Object::line() const
 {
 	return this->m_line;
 }
@@ -203,6 +231,11 @@ inline unsigned int Object::line() const
 inline class DocComment* Object::docComment() const
 {
 	return this->m_docComment;
+}
+
+inline std::vector<Object::VectorDataType> Object::columnVector() const
+{
+	return this->m_columnVector;
 }
 
 inline bool Object::AlphabeticalComparator::operator()(const class Object *first, const class Object *second) const
@@ -235,7 +268,7 @@ inline std::string Object::anchor() const
 
 inline class Object* Object::searchObjectInList(const std::string &identifier, const enum Parser::List &list, enum Parser::SearchMode searchMode)
 {
-	return Vjassdoc::getParser()->searchObjectInList(this, identifier, list, searchMode);
+	return Vjassdoc::getParser()->searchObjectInList(identifier, list, searchMode, this);
 }
 
 }

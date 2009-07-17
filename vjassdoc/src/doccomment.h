@@ -21,8 +21,9 @@
 #ifndef VJASSDOC_DOCCOMMENT_H
 #define VJASSDOC_DOCCOMMENT_H
 
+#include <vector>
+
 #include "object.h"
-#include "parser.h"
 
 namespace vjassdoc
 {
@@ -42,16 +43,152 @@ class DocComment : public Object
 		virtual void page(std::ofstream &file) const;
 		virtual std::string sqlStatement() const;
 		void setObject(class Object *object); //Just used by the Object class.
-		std::string formattedText() const;
+		std::string briefDescription() const;
 		class Object *object() const;
+		std::vector<std::string> authors() const;
+		std::vector<class Object*> seeObjects() const;
 
 	protected:
-		static const char *keyword[Parser::MaxLists];
+		enum Keyword
+		{
+			CommentKeyword,
+			KeywordKeyword,
+			TextMacroKeyword,
+			TextMacroInstanceKeyword,
+			TypeKeyword,
+			LocalKeyword,
+			GlobalKeyword,
+			MemberKeyword,
+			ParameterKeyword,
+			FunctionInterfaceKeyword,
+			FunctionKeyword,
+			MethodKeyword,
+			ImplementationKeyword,
+			InterfaceKeyword,
+			StructKeyword,
+			ModuleKeyword,
+			ScopeKeyword,
+			LibraryKeyword,
+			SourceFileKeyword,
+			DocCommentKeyword,
+			ArgKeyword,
+			AttentionKeyword,
+			AuthorKeyword,
+			CallgraphKeyword,
+			CodeKeyword,
+			DotKeyword,
+			ElseKeyword,
+			EndcodeKeyword,
+			EndcondKeyword,
+			EnddotKeyword,
+			EndhtmlonlyKeyword,
+			EndifKeyword,
+			EndlatexonlyKeyword,
+			EndlinkKeyword,
+			EndmanonlyKeyword,
+			EndverbatimKeyword,
+			EndxmlonlyKeyword,
+			FBracket0Keyword, //[
+			FBracket1Keyword, //]
+			F$Keyword,
+			HideinitializerKeyword,
+			HtmlonlyKeyword,
+			InternalKeyword,
+			InvariantKeyword,
+			TildKeyword, //~
+			AtKeyword,
+			$Keyword,
+			BackslashKeyword,
+			SharpKeyword,
+			LatexonlyKeyword,
+			LiKeyword,
+			ManonlyKeyword,
+			NKeyword,
+			NosubgroupingKeyword,
+			NoteKeyword,
+			OnlyKeyword,
+			PostKeyword,
+			PreKeyword,
+			RemarksKeyword,
+			ReturnKeyword,
+			ReturnsKeyword,
+			SaKeyword,
+			SeeKeyword,
+			ShowinitializerKeyword,
+			SinceKeyword,
+			TestKeyword,
+			TodoKeyword,
+			VerbatimKeyword,
+			WarningKeyword,
+			XmlonlyKeyword,
+			AddtogroupKeyword,
+			AKeyword,
+			AnchorKeyword,
+			BKeyword,
+			CKeyword,
+			CondKeyword,
+			CopydocKeyword,
+			DefKeyword,
+			DontincludeKeyword,
+			DotfileKeyword,
+			EKeyword,
+			ElseifKeyword,
+			EmKeyword,
+			ExampleKeyword,
+			FileKeyword,
+			HtmlincludeKeyword,
+			IfKeyword,
+			IfnotKeyword,
+			IncludeKeyword,
+			LinkKeyword,
+			PKeyword,
+			PackageKeyword,
+			RefKeyword,
+			RelatesalsoKeyword,
+			RelatesKeyword,
+			RetvalKeyword,
+			VerbincludeKeyword,
+			VersionKeyword,
+			XrefitemKeyword,
+			ParamKeyword,
+			ImageKeyword,
+			DefgroupKeyword,
+			PageKeyword,
+			ParagraphKeyword,
+			SectionKeyword,
+			SubsectionKeyword,
+			SubsubsectionKeyword,
+			WeakgroupKeyword,
+			AddindexKeyword,
+			BriefKeyword,
+			BugKeyword,
+			DateKeyword,
+			DeprecatedKeyword,
+			FnKeyword,
+			IngroupKeyword,
+			LineKeyword,
+			MainpageKeyword,
+			NameKeyword,
+			OverloadKeyword,
+			ParKeyword,
+			ShortKeyword,
+			SkipKeyword,
+			SkiplineKeyword,
+			UntilKeyword,
+			VarKeyword,
+			MaxKeywords
+		};
+	
+		static const int maxAuthors;
+		static const int maxSeeObjects;
+		static const char *keyword[DocComment::MaxKeywords];
+	
+		std::string m_briefDescription;
+		class Object *m_object;
+		std::vector<std::string> m_authors;
+		std::vector<class Object*> m_seeObjects;
 	
 		class DocComment* docComment() const; //Do not use
-		
-		std::string m_formattedText;
-		class Object *m_object;
 };
 
 inline void DocComment::setObject(class Object *object)
@@ -59,14 +196,24 @@ inline void DocComment::setObject(class Object *object)
 	this->m_object = object;
 }
 
-inline std::string DocComment::formattedText() const
+inline std::string DocComment::briefDescription() const
 {
-	return this->m_formattedText;
+	return this->m_briefDescription;
 }
 
 inline class Object* DocComment::object() const
 {
 	return this->m_object;
+}
+
+inline std::vector<std::string> DocComment::authors() const
+{
+	return this->m_authors;
+}
+
+inline std::vector<class Object*> DocComment::seeObjects() const
+{
+	return this->m_seeObjects;
 }
 
 }

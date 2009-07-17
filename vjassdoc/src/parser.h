@@ -30,7 +30,6 @@
 namespace vjassdoc
 {
 
-class Object;
 class Comment;
 class Keyword;
 class TextMacro;
@@ -57,6 +56,10 @@ class SyntaxError;
 * Provides methods for parsing Jass and vJass files. The Parser class has the ability to create a simple HTML
 * API documentation and/or a SQLite3 database.
 * It contains a list for each Object child class.
+* @class File is the class which handles real specific Jass and vJass parsing. Parser does create one or several File instances by getting all file paths from class @class Vjassdoc.
+* After parsing all of those files it is able to create an HTML documentation and an SQLite3 database.
+* Besides it provides several search functions which are required for object initialization which usually is runned after parsing for each parsed object.
+* @see Vjassdoc, File
 */
 class Parser
 {
@@ -101,7 +104,16 @@ class Parser
 		};
 
 		
-		static class Object* searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::SearchMode &searchMode);
+		/**
+		* Sometimes it can be really useful to create your own small object list. In that case you'll probably want to be able to search in your custom list.
+		* @param objectList User-defined custom list where the method has to search.
+		* @param identifier Object identifier which is searched for.
+		* @param searchMode Used search mode. Check out @enum Parser::SearchMode.
+		* @param object Object instance used for comparisons. If searchMode is @enum Parser::SearchMode::Unspecified this value can be 0.
+		* @return If no object was found it will return 0.
+		* @see Parser::getSpecificList, Parser::searchObjectInLastDatabase, Parser::searchObjectInList
+		*/
+		static class Object* searchObjectInCustomList(const std::list<class Object*> &objectList, const std::string &identifier, const enum Parser::SearchMode &searchMode = Unspecified, const class Object *object = 0);
 
 		Parser();
 		~Parser();
@@ -112,16 +124,32 @@ class Parser
 #ifdef SQLITE
 		int addDatabase(const char *filePath);
 		void removeDatabase(const int &index);
-#endif
 		/**
-		* Searchs for an object with the identifier @param identifier in the list @param list by the seach mode @param searchMode. If the search mode is unequal to @enum SearchMode::Unspecified the three members container, scope and library will be compared with the instance @param object.
+		* Searches for an object with id @param id in last added database. Each id has to be unique so there only can be one hit.
+		* @return If no object was found it will return 0.
 		*/
-		class Object* searchObjectInList(const class Object *object, const std::string &identifier, const enum Parser::List &list, const enum Parser::SearchMode &searchMode);
-		
-		std::list<class Object*> getSpecificList(const class Object *object, const enum List &list, const struct Comparator &comparator);
-		
-		/// Finds the nearest object in the same line or ABOVE the line.
-		//Object* searchObjectByLine(const Object *object, List list);
+		class Object* searchObjectInLastDatabase(const unsigned int &id);
+#endif
+
+		/**
+		* Searches for an object in one of the parsers lists.
+		* @param identifier Object identifier which is searched for.
+		* @param list Parser list which is searched in. Check out @enum Parser::List.
+		* @param searchMode Used search mode. Check out @enum Parser::SearchMode.
+		* @param object Object instance used for comparisons. If searchMode is @enum Parser::SearchMode::Unspecified this value can be 0.
+		* @return If no object was found it will return 0.
+		*/
+		class Object* searchObjectInList(const std::string &identifier, const enum Parser::List &list,  const enum Parser::SearchMode &searchMode = Unspecified, const class Object *object = 0);
+
+		/**
+		* Returns a user-specific list by iterating one of the parsers lists and calling a comparator.
+		* @param list List which is iterated.
+		* @param comparator Comparator which is used for comparisions. If it returns true object will be added to user-specific list.
+		* @param object Comparators allows to compare two objects. If you don't have to compare two objects this value can be 0.
+		* @return Returns the user-specific list.
+		* @see Parser::searchObjectInCustomList
+		*/
+		std::list<class Object*> getSpecificList(const enum List &list, const struct Comparator &comparator, const class Object *object = 0);
 		
 		void add(class Comment *comment);
 		void add(class Keyword *keyword);

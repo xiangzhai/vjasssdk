@@ -38,6 +38,11 @@ class Struct;
 class Module;
 class Function;
 
+/**
+* A Jass or vJass code file which is treated by a @class Parser instance.
+* This class knows the whole Jass and vJass syntax and is able to parse it.
+* Parsing runs automatically after creation of an instance in constructor.
+*/
 class File
 {
 	public:
@@ -123,22 +128,10 @@ class File
 			InvalidExpression,
 			CustomExpression
 		};
-
-		enum DocExpression
-		{
-			Author,
-			ToDo,
-			Parameter,
-			Return,
-			State,
-			Source,
-			MaxDocExpressions
-		};
 		
 		static std::string getToken(const std::string &line, unsigned int &index, bool endOfLine = false);
 		
 		static const char *expressionText[File::MaxExpressions];
-		static const char *docExpressionText[File::MaxDocExpressions];
 		
 		File(const std::string &filePath);
 		

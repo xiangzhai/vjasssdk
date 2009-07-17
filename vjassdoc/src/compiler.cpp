@@ -59,11 +59,12 @@ void Compiler::compile()
 
 void Compiler::writeGlobals(std::fstream &fstream)
 {
-	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(0, Parser::Globals, Parser::Comparator());
-	/*
+	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Globals, Parser::Comparator());
+	
 	for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 	{
-		class Global *global = static_cast<class Object*>(*iterator);
+		//FIXME
+		class Global *global = 0;//static_cast<class Object*>(*iterator);
 	
 		if (global->type() != 0)
 			fstream << global->type()->identifier();
@@ -81,7 +82,14 @@ void Compiler::writeGlobals(std::fstream &fstream)
 		
 		fstream << global->identifier();
 	}
-	*/
+}
+
+void Compiler::writeMembers(std::fstream &fstream)
+{
+}
+
+void Compiler::writeMethodGlobals(std::fstream &fstream)
+{
 }
 
 }

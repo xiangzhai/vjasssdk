@@ -134,7 +134,7 @@ void Struct::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Child Structs\">" << _("Child Structs") << "</a></h2>\n"
 	;
 	
-	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(this, Parser::Structs, Struct::HasExtension());
+	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Structs, Struct::HasExtension(), this);
 	
 	if (!list.empty())
 	{

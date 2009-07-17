@@ -35,7 +35,7 @@ namespace vjassdoc
 
 unsigned int Object::sqlColumns;
 std::string Object::sqlColumnStatement;
-int Object::maxIds = 0;
+Object::IdType Object::m_maxIds = 0;
 
 void Object::initClass()
 {
@@ -79,40 +79,55 @@ std::string Object::sqlTableHeader(const std::string &tableName, const std::stri
 	return "CREATE TABLE " + tableName + "(Id INT PRIMARY KEY," + entries + ')';
 }
 
-Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : m_id(maxIds), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line), m_docComment(docComment), m_container(0), m_scope(0), m_library(0)
+Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : m_id(m_maxIds), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line), m_docComment(docComment), m_container(0), m_scope(0), m_library(0)
 {
-	++maxIds;
+	++m_maxIds;
 	
 	if (docComment != 0)
 		docComment->setObject(this);
 }
 
-Object::Object(std::vector<const unsigned char*> &columnVector) : m_sourceFile(0), m_docComment(0), m_container(0), m_scope(0), m_library(0)
+Object::Object(std::vector<Object::VectorDataType> &columnVector) : m_sourceFile(0), m_docComment(0), m_container(0), m_scope(0), m_library(0), m_columnVector(columnVector)
 {
-	std::cout << "Test 1 vector size " << columnVector.size() << std::endl;
-
-	this->m_id = atoi((const char*)columnVector[0]);
+	this->m_id = atoi((const char*)this->m_columnVector.front());
+	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
 	
-	std::cout << "Test 2" << std::endl;
+	this->m_identifier = (const char*)(this->m_columnVector.front());
+	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
 	
-	if (maxIds <= m_id)
-		maxIds = m_id + 1;
-	
-	this->m_identifier = (const char*)(columnVector[1]);
-	
-	std::cout << "Test 3" << std::endl;
-	
-	//m_sourceFile = columnVector[2]; //TODO By id
-	this->m_line = atoi((const char*)columnVector[3]);
-	//m_docComment = columnVector[4]; //TODO By id
-	
-	std::cout << "Test 4" << std::endl;
-	
-	if (m_docComment != 0)
-		this->m_docComment->setObject(this);
+	this->m_line = atoi((const char*)this->m_columnVector[1]);
+	this->m_columnVector.erase(this->m_columnVector.begin() + 1); //drop element
 }
 
 Object::~Object()
+{
+}
+
+void Object::init()
+{
+}
+
+void Object::initByVector()
+{
+	this->m_sourceFile = static_cast<class SourceFile*>(Vjassdoc::getParser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[0])));
+	this->m_docComment = static_cast<class DocComment*>(Vjassdoc::getParser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[1])));
+	
+	//drop elements
+	
+	if (this->m_docComment != 0)
+		this->m_docComment->setObject(this);
+}
+
+void Object::clearVector()
+{
+	this->m_columnVector.clear();
+}
+
+void Object::pageNavigation(std::ofstream &file) const
+{
+}
+
+void Object::page(std::ofstream &file) const
 {
 }
 
@@ -294,8 +309,8 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 				if (valueContainer != 0)
 				{
 					//std::cout << "with value container." << std::endl;
-					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Methods, Object::IsInContainer());
-					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Unspecified);
+					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Methods, Object::IsInContainer(), valueContainer);
+					value = Parser::searchObjectInCustomList(list, newExpression);
 				}
 				//functions only
 				else
@@ -311,8 +326,8 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 				if (valueContainer != 0)
 				{
 
-					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(valueContainer, Parser::Members, Object::IsInContainer());
-					value = Parser::searchObjectInCustomList(list, this, newExpression, Parser::Unspecified);
+					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Members, Object::IsInContainer(), valueContainer);
+					value = Parser::searchObjectInCustomList(list, newExpression);
 				}
 				//globals only
 				else

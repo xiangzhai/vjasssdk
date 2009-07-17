@@ -68,7 +68,7 @@ bool Parser::Comparator::operator()(const class Object *thisObject, const class 
 	return true;
 }
 
-class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &objectList, const class Object *object, const std::string &identifier, const enum Parser::SearchMode &searchMode)
+class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &objectList, const std::string &identifier, const enum Parser::SearchMode &searchMode, const class Object *object)
 {
 	if (objectList.size() == 0)
 		return 0;
@@ -78,13 +78,13 @@ class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &o
 	bool checkScope = false;
 	bool checkLibrary = false;
 	
-	if (object->container() != 0 || searchMode & CheckContainer)
+	if ((object != 0 && object->container() != 0) || searchMode & CheckContainer)
 		checkContainer = true;
 	
-	if (object->scope() != 0 || searchMode & CheckScope)
+	if ((object != 0 && object->scope() != 0) || searchMode & CheckScope)
 		checkScope = true;
 	
-	if (object->library() != 0 || searchMode & checkLibrary)
+	if ((object != 0 && object->library() != 0) || searchMode & checkLibrary)
 		checkLibrary = true;
 
 	for (std::list<class Object*>::const_iterator iterator = objectList.begin(); iterator != objectList.end(); ++iterator)
@@ -863,7 +863,7 @@ int Parser::addDatabase(const char *filePath)
 			for (state = sqlite3_step(statement); state == SQLITE_ROW; state = sqlite3_step(statement), ++row)
 			{
 				int columns = sqlite3_data_count(statement);
-				std::vector<const unsigned char*> columnVector;
+				std::vector<Object::VectorDataType> columnVector;
 				
 				for (int column = 0; column < columns; ++column)
 				{
@@ -879,7 +879,7 @@ int Parser::addDatabase(const char *filePath)
 				
 				databaseStruct->listList.push_back(Parser::List(i));
 				std::cout << "List " << i << std::endl;
-				class Object *object = this->addObjectByColumnVector(Parser::List(i), columnVector);
+				class Object *object = new Object(columnVector); /// @todo Don't use the @class Object constructor. Use the specific list class constructor (virtual methods).
 				//std::cout << "Created object with identifier " << object->identifier() << std::endl;
 				databaseStruct->objectList.push_back(object);
 			}
@@ -889,6 +889,29 @@ int Parser::addDatabase(const char *filePath)
 			if (state != SQLITE_OK)
 				fprintf(stderr, _("Was unable to finalize prepared SQL statement of table %s.\nState %d.\n"),  Parser::getTableName(Parser::List(i)).c_str(), state);
 		}
+
+		/// @todo Initialize all database objects by initVector.
+		std::list<class Object*>::iterator objectIterator = databaseStruct->objectList.begin();
+
+		while (objectIterator != databaseStruct->objectList.end())
+		{
+			(*objectIterator)->initByVector();
+			++objectIterator;
+		}
+
+		/// @todo Add database objects into usual lists and increase ids.
+		std::list<enum List>::iterator listIterator = databaseStruct->listList.begin();
+		objectIterator = databaseStruct->objectList.begin();
+		
+		while (listIterator != databaseStruct->listList.end())
+		{
+			this->getList(*listIterator).push_back(*objectIterator);
+			(*objectIterator)->setId((*objectIterator)->id() + Object::maxIds());
+			++listIterator;
+			++objectIterator;
+		}
+
+		Object::setMaxIds(Object::maxIds() + databaseStruct->listList.size());
 	}
 	else
 		fprintf(stderr, _("Was unable to open database.\nState %d.\n"), state);
@@ -918,23 +941,46 @@ void Parser::removeDatabase(const int &index)
 	while (iterator0 != database->listList.end())
 	{
 		this->getList(*iterator0).remove(*iterator1);
+		delete *iterator1;
 		++iterator0;
 		++iterator1;
 	}
+
+	database->listList.clear();
+	database->objectList.clear();
+	this->databaseVector.erase(this->databaseVector.begin() + index - 1);
+	delete database;
+}
+
+
+class Object* Parser::searchObjectInLastDatabase(const Object::IdType &id)
+{
+	if (databaseVector.empty())
+		return 0;
+
+	std::list<class Object*> objectList = databaseVector.back()->objectList;
+
+	for (std::list<class Object*>::iterator iterator = objectList.begin(); iterator != objectList.end(); ++iterator)
+	{
+		if ((*iterator)->id() == id)
+			return *iterator;
+	}
+
+	return 0;
 }
 #endif
 
-class Object* Parser::searchObjectInList(const class Object *object, const std::string &identifier, const enum List &list, const enum SearchMode &searchMode)
+class Object* Parser::searchObjectInList(const std::string &identifier, const enum List &list, const enum SearchMode &searchMode, const class Object *object)
 {
 	if (!Vjassdoc::shouldParseObjectsOfList(list))
 		return 0;
 
 	std::list<class Object*> objectList = this->getList(list);
 
-	return Parser::searchObjectInCustomList(objectList, object, identifier, searchMode);
+	return Parser::searchObjectInCustomList(objectList, identifier, searchMode, object);
 }
 
-std::list<class Object*> Parser::getSpecificList(const class Object *object, const enum List &list, const struct Comparator &comparator)
+std::list<class Object*> Parser::getSpecificList(const enum List &list, const struct Comparator &comparator, const class Object *object)
 {
 	if (!Vjassdoc::shouldParseObjectsOfList(list))
 		return std::list<class Object*>();
@@ -1309,103 +1355,11 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 	
 	return result;
 }
-
-class Object* Parser::addObjectByColumnVector(const enum Parser::List &list, std::vector<const unsigned char*> &columnVector)
-{
-	switch (list)
-	{
-		case Parser::Comments:
-			this->add(new Comment(columnVector));
-			break;
-
-		case Parser::Keywords:
-			this->add(new Keyword(columnVector));
-			break;
-
-		case Parser::Keys:
-			this->add(new Key(columnVector));
-			break;
-
-		case Parser::TextMacros:
-			this->add(new TextMacro(columnVector));
-			break;
-
-		case Parser::TextMacroInstances:
-			this->add(new TextMacroInstance(columnVector));
-			break;
-
-		case Parser::Types:
-			this->add(new Type(columnVector));
-			break;
-
-		case Parser::Locals:
-			this->add(new Local(columnVector));
-			break;
-
-		case Parser::Globals:
-			this->add(new Global(columnVector));
-			break;
-
-		case Parser::Members:
-			this->add(new Member(columnVector));
-			break;
-
-		case Parser::Parameters:
-			this->add(new Parameter(columnVector));
-			break;
-
-		case Parser::FunctionInterfaces:
-			this->add(new FunctionInterface(columnVector));
-			break;
-
-		case Parser::Functions:
-			this->add(new Function(columnVector));
-			break;
-
-		case Parser::Methods:
-			this->add(new Method(columnVector));
-			break;
-
-		case Parser::Implementations:
-			this->add(new Implementation(columnVector));
-			break;
-
-		case Parser::Interfaces:
-			this->add(new Interface(columnVector));
-			break;
-
-		case Parser::Structs:
-			this->add(new Struct(columnVector));
-			break;
-
-		case Parser::Modules:
-			this->add(new Interface(columnVector)); /// @todo Module
-			break;
-
-		case Parser::Scopes:
-			this->add(new Scope(columnVector));
-			break;
-
-		case Parser::Libraries:
-			this->add(new Library(columnVector));
-			break;
-
-		case Parser::SourceFiles:
-			this->add(new SourceFile(columnVector));
-			break;
-
-		case Parser::DocComments:
-			this->add(new DocComment(columnVector));
-			break;
-	}
-	
-	return this->getList(list).back();
-}
 #endif
 
 void Parser::getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::stringstream &sstream)
 {
-	std::list<class Object*> structList = this->getSpecificList(extension, Parser::Structs, Struct::HasExtension());
+	std::list<class Object*> structList = this->getSpecificList(Parser::Structs, Struct::HasExtension(), extension);
 
 	if (structList.empty())
 		return;
@@ -1427,7 +1381,7 @@ void Parser::getLibraryRequirementList(const class Library *requirement, const s
 {
 	std::cout << "Running with library " << requirement->identifier() << std::endl;
 
-	std::list<class Object*> specifiedList = this->getSpecificList(requirement, Parser::Libraries, Library::HasRequirement());
+	std::list<class Object*> specifiedList = this->getSpecificList(Parser::Libraries, Library::HasRequirement(), requirement);
 
 	if (specifiedList.empty())
 	{

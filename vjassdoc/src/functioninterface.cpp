@@ -30,26 +30,23 @@ namespace vjassdoc
 const char *FunctionInterface::sqlTableName = "FunctionInterfaces";
 unsigned int FunctionInterface::sqlColumns;
 std::string FunctionInterface::sqlColumnStatement;
+const int FunctionInterface::maxParameters = 10;
 
 void FunctionInterface::initClass()
 {
-	FunctionInterface::sqlColumns = Object::sqlColumns + 14;
+	FunctionInterface::sqlColumns = Object::sqlColumns + 3 + FunctionInterface::maxParameters + 2;
 	/// @todo Maybe you shouldn't use a fixed parameter count. SQL doesn't provide any kinds of arrays but you could use a string list by separating all parameter object id's with a char (for example ;).
 	FunctionInterface::sqlColumnStatement = Object::sqlColumnStatement +
 	",Library INT,"
 	"Scope INT,"
-	"IsPrivate BOOLEAN,"
-	"Parameter0 INT,"
-	"Parameter1 INT,"
-	"Parameter2 INT,"
-	"Parameter3 INT,"
-	"Parameter4 INT,"
-	"Parameter5 INT,"
-	"Parameter6 INT,"
-	"Parameter7 INT,"
-	"Parameter8 INT,"
-	"Parameter9 INT,"
-	"ReturnType INT";
+	"IsPrivate BOOLEAN,";
+	std::ostringstream sstream;
+	
+	for (int i = 0; i < FunctionInterface::maxParameters; ++i)
+		sstream << "Parameter" << i << " INT,";
+	
+	DocComment::sqlColumnStatement += sstream.str();
+	DocComment::sqlColumnStatement += "ReturnType INT";
 }
 
 FunctionInterface::FunctionInterface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_parameters(parameters), m_returnTypeExpression(returnTypeExpression), m_returnType(0)
@@ -150,7 +147,7 @@ std::string FunctionInterface::sqlStatement() const
 	int i = 0;
 	std::list<class Parameter*> list = this->m_parameters;
 	
-	for (std::list<class Parameter*>::iterator iterator = list.begin(); iterator != list.end() && i < 10; ++iterator)
+	for (std::list<class Parameter*>::iterator iterator = list.begin(); iterator != list.end() && i < FunctionInterface::maxParameters; ++iterator)
 	{
 		std::cout << "Number " << i << std::endl;
 		std::cout << "Adding parameter " << (*iterator)->id() << " with index " << i << std::endl;
@@ -159,7 +156,7 @@ std::string FunctionInterface::sqlStatement() const
 		++i;
 	}
 	
-	for ( ; i < 10; ++i)
+	for ( ; i < FunctionInterface::maxParameters; ++i)
 	{
 		std::cout << "Parameter " << i << " is free." << std::endl;
 		sstream << "Parameter" << i << "=-1, ";

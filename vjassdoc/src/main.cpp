@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 #ifdef SQLITE			
 			_("--databases <args>          <args> has to be replaced by the SQLite databases which should be added to the output.\n") <<
 #endif
-			_("\nReport bugs to tamino@cdauth.de") <<
+			_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 			std::endl;
 
 			return EXIT_SUCCESS;

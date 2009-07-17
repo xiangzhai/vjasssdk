@@ -72,7 +72,7 @@ void TextMacro::page(std::ofstream &file) const
 	<< "\t\t" << this->parameters() << '\n'
 	<< "\t\t<h2><a name=\"Instances\">" << _("Instances") << "</a></h2>\n"
 	;
-	std::list<class Object*> instanceList = Vjassdoc::getParser()->getSpecificList(this, Parser::TextMacroInstances, TextMacroInstance::UsesTextMacro());
+	std::list<class Object*> instanceList = Vjassdoc::getParser()->getSpecificList(Parser::TextMacroInstances, TextMacroInstance::UsesTextMacro(), this);
 	
 	if (!instanceList.empty())
 	{

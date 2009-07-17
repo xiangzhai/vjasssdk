@@ -123,7 +123,7 @@ class Scope* Interface::scope() const
 
 void Interface::getMemberList(std::ofstream &file) const
 {
-	std::list<class Object*> memberList = Vjassdoc::getParser()->getSpecificList(this, Parser::Members, Object::IsInContainer());
+	std::list<class Object*> memberList = Vjassdoc::getParser()->getSpecificList(Parser::Members, Object::IsInContainer(), this);
 	
 	if (!memberList.empty())
 	{
@@ -172,7 +172,7 @@ void Interface::getMemberList(std::ofstream &file) const
 
 void Interface::getImplementationList(std::ofstream &file) const
 {
-	std::list<class Object*> implementationList = Vjassdoc::getParser()->getSpecificList(this, Parser::Implementations, Object::IsInContainer());
+	std::list<class Object*> implementationList = Vjassdoc::getParser()->getSpecificList(Parser::Implementations, Object::IsInContainer(), this);
 	
 	if (!implementationList.empty())
 	{
@@ -201,7 +201,7 @@ void Interface::getImplementationList(std::ofstream &file) const
 
 void Interface::getMethodList(std::ofstream &file) const
 {
-	std::list<class Object*> methodList = Vjassdoc::getParser()->getSpecificList(this, Parser::Methods, Object::IsInContainer());
+	std::list<class Object*> methodList = Vjassdoc::getParser()->getSpecificList(Parser::Methods, Object::IsInContainer(), this);
 	
 	if (!methodList.empty())
 	{
