@@ -89,21 +89,9 @@ Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsi
 
 Object::Object(std::vector<Object::VectorDataType> &columnVector) : m_sourceFile(0), m_docComment(0), m_container(0), m_scope(0), m_library(0), m_columnVector(columnVector)
 {
-	this->m_id = atoi((const char*)this->m_columnVector.front());
-	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
-	
-	this->m_identifier = (const char*)(this->m_columnVector.front());
-	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
-	
-	this->m_line = atoi((const char*)this->m_columnVector[1]);
-	this->m_columnVector.erase(this->m_columnVector.begin() + 1); //drop element
 }
 
 Object::~Object()
-{
-}
-
-void Object::init()
 {
 }
 
@@ -121,14 +109,6 @@ void Object::initByVector()
 void Object::clearVector()
 {
 	this->m_columnVector.clear();
-}
-
-void Object::pageNavigation(std::ofstream &file) const
-{
-}
-
-void Object::page(std::ofstream &file) const
-{
 }
 
 std::string Object::sqlStatement() const
@@ -344,6 +324,19 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 		valueExpression = '-';
 	
 	return value;
+}
+
+
+void Object::prepareVector()
+{
+	this->m_id = atoi((const char*)this->m_columnVector.front());
+	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
+	
+	this->m_identifier = (const char*)(this->m_columnVector.front());
+	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
+	
+	this->m_line = atoi((const char*)this->m_columnVector[1]);
+	this->m_columnVector.erase(this->m_columnVector.begin() + 1); //drop element
 }
 
 }

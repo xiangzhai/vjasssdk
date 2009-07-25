@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <cstdio>
+#include <iostream>
 #include <boost/tokenizer.hpp>
 
 #include "vjassdoc.h"
@@ -39,6 +41,9 @@ void Compiler::compile()
 	
 	std::fstream fin(Vjassdoc::compileFilePath().c_str());
 	
+	bool globals = false;
+	bool functions = false;
+	
 	//globals block
 	while (fin.good())
 	{
@@ -46,12 +51,23 @@ void Compiler::compile()
 		std::getline(fin, line);
 		boost::tokenizer<> tok(line);
 		
-		if (tok.begin() != tok.end() && *tok.begin() == "globals")
+		if (!globals && tok.begin() != tok.end() && *tok.begin() == "globals")
 		{
 			std::getline(fin, line);
 			
 			if (fin.good())
 				this->writeGlobals(fin);
+			
+			if (fin.good())
+				this->writeMembers(fin);
+			
+			if (fin.good())
+				this->writeMethodGlobals(fin);
+			
+			globals = true;
+		}
+		else if (!functions)
+		{
 		}
 	}
 
@@ -59,12 +75,14 @@ void Compiler::compile()
 
 void Compiler::writeGlobals(std::fstream &fstream)
 {
+	if (Vjassdoc::showVerbose())
+		std::cout << _("Writing globals.") << std::endl;
+
 	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Globals, Parser::Comparator());
 	
 	for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 	{
-		//FIXME
-		class Global *global = 0;//static_cast<class Object*>(*iterator);
+		class Global *global = static_cast<class Global*>(*iterator);
 	
 		if (global->type() != 0)
 			fstream << global->type()->identifier();
@@ -80,16 +98,48 @@ void Compiler::writeGlobals(std::fstream &fstream)
 		if (global->scope() != 0)
 			fstream << global->scope()->identifier() << "__";
 		
-		fstream << global->identifier();
+		fstream << global->identifier() << '\n';
 	}
 }
 
 void Compiler::writeMembers(std::fstream &fstream)
 {
+	if (Vjassdoc::showVerbose())
+		std::cout << _("Writing members.") << std::endl;
+
+	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Members, Parser::Comparator());
+	
+	for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
+	{
+		class Member *member = static_cast<class Member*>(*iterator);
+	
+		if (member->isDelegate())
+			continue;
+	
+		if (member->type() != 0)
+			fstream << member->type()->identifier();
+		else
+			fstream << member->typeExpression();
+		
+		if (member->size() != 0 || member->sizeLiteral() != 0 || !member->isStatic())
+			fstream << " array ";
+		
+		if (member->library() != 0)
+			fstream << member->library()->identifier() << "__";
+		
+		if (member->scope() != 0)
+			fstream << member->scope()->identifier() << "__";
+		
+		fstream << member->container()->identifier() << "__";
+		
+		fstream << member->identifier() << '\n';
+	}
 }
 
 void Compiler::writeMethodGlobals(std::fstream &fstream)
 {
+	if (Vjassdoc::showVerbose())
+		std::cout << _("Writing method globals.") << std::endl;
 }
 
 }

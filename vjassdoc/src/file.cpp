@@ -84,6 +84,7 @@ const char *File::expressionText[] =
 	"module",
 	"endmodule",
 	"implement",
+	"hook",
 	"/*",
 	"*/",
 	"key",
@@ -684,11 +685,14 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				this->getFunction(line, index, false, false, false, false, false, true);
 				break;
 
-			//new
 			case ImplementExpression:
 				this->truncateComments(line, index);
 				this->getImplementation(line, index);
 				break;
+
+			case HookExpression:
+				this->truncateComments(line, index),
+				this->getHook(line, index);
 		}
 	}
 
@@ -1397,6 +1401,14 @@ void File::getImplementation(const std::string &line, unsigned int &index)
 	}
 
 	Vjassdoc::getParser()->add(new Implementation(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->getCurrentContainer(), identifier, isOptional));
+}
+
+void File::getHook(const std::string &line, unsigned int &index)
+{
+	std::string functionExpression = File::getToken(line, index);
+	std::string hookFunctionExpression = File::getToken(line, index);
+
+	Vjassdoc::getParser()->add(new Hook(functionExpression, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, functionExpression, hookFunctionExpression));
 }
 
 void File::getLibrary(const std::string &line, unsigned int &index, bool isOnce)

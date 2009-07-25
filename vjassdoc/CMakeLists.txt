@@ -30,6 +30,9 @@ if (UNIX)
 	set(LOCALE_INSTALL_DIR
 	/usr/share/locale
 	)
+	set(KATEXMLDIR
+	/usr/kde/4.2/share/apps/katepart/syntax
+	)
 	add_definitions(-DUNIX=1)
 elseif (WIN32)
 	set(LIB_NAME
@@ -49,6 +52,9 @@ elseif (WIN32)
 	)
 	set(LOCALE_INSTALL_DIR
 	./locale
+	)
+	set(KATEXMLDIR
+	.
 	)
 	add_definitions(-DWIN32=1)
 else (UNIX)

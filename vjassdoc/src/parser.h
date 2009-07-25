@@ -85,7 +85,8 @@ class Parser
 			Functions,
 			Methods,
 			Implementations,
-			Interfaces, //13
+			Hooks,
+			Interfaces,
 			Structs,
 			Modules,
 			Scopes,
@@ -165,6 +166,7 @@ class Parser
 		void add(class Function *function);
 		void add(class Method *method);
 		void add(class Implementation *implementation);
+		void add(class Hook *hook);
 		void add(class Interface *interface);
 		void add(class Struct *usedStruct);
 		void add(class Module *module);
@@ -211,6 +213,7 @@ class Parser
 		std::list<class Function*> functionList;
 		std::list<class Method*> methodList;
 		std::list<class Implementation*> implementationList;
+		std::list<class Hook*> hookList;
 		std::list<class Interface*> interfaceList;
 		std::list<class Struct*> structList;
 		std::list<class Module*> moduleList;
@@ -234,7 +237,7 @@ class Parser
 		static std::string getTableName(const enum Parser::List &list);
 		static unsigned int getTableColumns(const enum Parser::List &list);
 		static std::string getTableCreationStatement(const enum Parser::List &list);
-		class Object* addObjectByColumnVector(const enum Parser::List &list, std::vector<const unsigned char*> &columnVector);
+		static class Object* createObjectByVector(std::vector<const unsigned char*> &columnVector, const enum Parser::List &list);
 #endif
 
 		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::stringstream &sstream);
@@ -309,6 +312,11 @@ inline void Parser::add(class Method *method)
 inline void Parser::add(class Implementation *implementation)
 {
 	this->implementationList.push_back(implementation);
+}
+
+inline void Parser::add(class Hook *hook)
+{
+	this->hookList.push_back(hook);
 }
 
 inline void Parser::add(class Interface *interface)

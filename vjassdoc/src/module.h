@@ -35,6 +35,7 @@ class Module : public Interface
 
 		static void initClass();
 		Module(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate);
+		Module(std::vector<const unsigned char*> &columnVector);
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
 };

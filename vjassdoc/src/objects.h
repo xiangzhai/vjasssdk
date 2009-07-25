@@ -37,6 +37,7 @@
 #include "function.h"
 #include "method.h"
 #include "implementation.h"
+#include "hook.h"
 #include "interface.h"
 #include "struct.h"
 #include "module.h"

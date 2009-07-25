@@ -147,6 +147,7 @@ int main(int argc, char *argv[])
 		"--nofunctions",
 		"--nomethods",
 		"--noimplementations",
+		"--nohooks",
 		"--nointerfaces",
 		"--nostructs",
 		"--nomodules",
@@ -157,6 +158,7 @@ int main(int argc, char *argv[])
 	};
 	bool parseObjectsOfList[Parser::MaxLists] =
 	{
+		true,
 		true,
 		true,
 		true,
@@ -436,7 +438,10 @@ int main(int argc, char *argv[])
 	if (title.empty())
 		title = _("vJass API Documentation");
 
-	Vjassdoc::run(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, compileFilePath, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
+	Vjassdoc::configure(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, compileFilePath, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
+	Vjassdoc::initClasses();
+	Vjassdoc::run();
+	Vjassdoc::clear();
 
 	return EXIT_SUCCESS;
 }

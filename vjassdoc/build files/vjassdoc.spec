@@ -3,7 +3,7 @@
 # Thanks to Matthias Saou for his explanations on http://freshrpms.net/docs/fight.html
 
 Name: vjassdoc
-Version: 0.2.3
+Version: 0.3
 Release: 1
 Vendor: Tamino Dauth <tamino@cdauth.de>
 License: GPLv2
@@ -14,7 +14,7 @@ BuildRoot: %{_tmppath}/%{name}-root
 Source: http://cdauth.de/~tamino/vjasssdk/vjassdoc/releases/vjassdoc-0.2.3.tar.bz2
 #Icon: images/vjassdoc.xpm
 URL: http://cdauth.de/~tamino/vjasssdk/vjassdoc/
-Requires: sqlite = 3.6.10
+Requires: sqlite >= 3.6.13
 
 %description
 A simple Jass and vJass documentation generation tool written in C++.

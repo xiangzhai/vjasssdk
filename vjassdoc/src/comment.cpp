@@ -42,6 +42,7 @@ Comment::Comment(const std::string &identifier, class SourceFile *sourceFile, un
 
 Comment::Comment(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
 {
+	this->prepareVector();
 }
 
 Comment::~Comment()
@@ -72,7 +73,7 @@ void Comment::page(std::ofstream &file) const
 	<< "\t\t<p>\n"
 	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
 	<< "\t\t</p>\n"
-	<< "\t\t<h2><a name=\"Source file\">" << _("Source File") << "</a></h2>\n"
+	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	;
 }

@@ -186,9 +186,13 @@ void DocComment::initClass()
 		sstream << "Author" << i << " VARCHAR(255),";
 	
 	for (int i = 0; i < DocComment::maxSeeObjects; ++i)
-		sstream << "SeeObject" << i << " INT,";
+	{
+		sstream << "SeeObject" << i << " INT";
+		
+		if (i != DocComment::maxSeeObjects - 1)
+			sstream << ',';
+	}
 	
-	/// @todo Remove last ,.
 	DocComment::sqlColumnStatement += sstream.str();
 }
 
@@ -198,6 +202,7 @@ DocComment::DocComment(const std::string &identifier, class SourceFile *sourceFi
 
 DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : m_object(0), Object(columnVector)
 {
+	this->prepareVector();
 }
 
 /// @todo FIXME
@@ -418,6 +423,7 @@ void DocComment::page(std::ofstream &file) const
 	
 		file << "\t\t<ul>\n";
 	
+		/// @todo Memory access error.
 		//for (std::vector<std::string>::iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end(); ++iterator)
 			//file << "\t\t\t<li>" << *iterator << "</li>\n";
 		
@@ -455,26 +461,33 @@ std::string DocComment::sqlStatement() const
 	<< "Text=\"" << Object::sqlFilteredString(this->identifier()) << "\", "
 	<< "SourceFile=" << Object::objectId(this->sourceFile()) << ", "
 	<< "Line=" << this->line() << ", "
-	<< "BriefDescription=" << this->briefDescription() << ", "
+	<< "BriefDescription=\"" << this->briefDescription() << "\", "
 	<< "Object=" << Object::objectId(this->object()) << ", ";
 	
 	int i = 0;
 	
-	for (std::vector<std::string>::iterator iterator = this->authors().begin(); iterator != this->authors().end() && i < DocComment::maxAuthors; ++iterator, ++i)
-		sstream << "Author" << i << "=\"" << Object::sqlFilteredString(*iterator) << "\", ";
+	/// @todo Memory access error.
+	//for (std::vector<std::string>::iterator iterator = this->authors().begin(); iterator != this->authors().end() && i < DocComment::maxAuthors; ++iterator, ++i)
+		//sstream << "Author" << i << "=\"" << Object::sqlFilteredString(*iterator) << "\", ";
 	
 	for ( ; i < DocComment::maxAuthors; ++i)
 		sstream << "Author" << i << "=NULL, ";
 
 	i = 0;
 	
-	for (std::vector<class Object*>::iterator iterator = this->seeObjects().begin(); iterator != this->seeObjects().end() && i < DocComment::maxSeeObjects; ++iterator, ++i)
-		sstream << "SeeObject" << i << "=" << Object::objectId(*iterator) << ", ";
+	/// @todo Memory access error.
+	//for (std::vector<class Object*>::iterator iterator = this->seeObjects().begin(); iterator != this->seeObjects().end() && i < DocComment::maxSeeObjects; ++iterator, ++i)
+		//sstream << "SeeObject" << i << "=" << Object::objectId(*iterator) << ", ";
 	
 	for ( ; i < DocComment::maxSeeObjects; ++i)
-		sstream << "SeeObject" << i << "=-1, ";
+	{
+		sstream << "SeeObject" << i << "=-1";
+		
+		if (i != DocComment::maxSeeObjects - 1)
+			sstream << ", ";
+	}
 	
-	/// @todo Remove last , character.
+	std::cout << "Statement " << sstream.str() << std::endl;
 	
 	return sstream.str();
 }

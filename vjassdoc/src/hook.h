@@ -18,27 +18,60 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_COMPILER_H
-#define VJASSDOC_COMPILER_H
+#ifndef VJASSDOC_HOOK_H
+#define VJASSDOC_HOOK_H
 
-#include <fstream>
+#include "object.h"
 
 namespace vjassdoc
 {
 
-class Parser;
-
-class Compiler
+class Hook : public Object
 {
 	public:
-		void compile();
-	
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
+
+		static void initClass();
+		Hook(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &functionExpression, const std::string &hookFunctionExpression);
+		Hook(std::vector<const unsigned char*> &columnVector);
+		virtual ~Hook();
+		virtual void init();
+		virtual void pageNavigation(std::ofstream &file) const;
+		virtual void page(std::ofstream &file) const;
+		virtual std::string sqlStatement() const;
+		class Function* function() const;
+		std::string functionExpression() const;
+		class Function* hookFunction() const;
+		std::string hookFunctionExpression() const;
+
 	private:
-		void writeGlobals(std::fstream &fstream);
-		void writeMembers(std::fstream &fstream);
-		/// Writes triggers of methods for TriggerEvaluate().
-		void writeMethodGlobals(std::fstream &fstream);
+		class Function *m_function;
+		std::string m_functionExpression;
+		class Function *m_hookFunction;
+		std::string m_hookFunctionExpression;
 };
+
+inline class Function* Hook::function() const
+{
+	return this->m_function;
+}
+
+inline std::string Hook::functionExpression() const
+{
+	return this->m_functionExpression;
+}
+
+inline class Function* Hook::hookFunction() const
+{
+	return this->m_hookFunction;
+}
+
+inline std::string Hook::hookFunctionExpression() const
+{
+	return this->m_hookFunctionExpression;
+}
 
 }
 

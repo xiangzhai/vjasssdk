@@ -223,3 +223,15 @@ This is a block documentation comment.
 
 function MyFunction /** This block documentation comment describes this function */ takes nothing returns nothing
 endfunction
+
+function PetersFunction takes nothing returns nothing
+endfunction
+
+hook DestroyTrigger PetersFunction
+
+struct HookStruct
+	public static method staticMethod takes nothing returns nothing
+	endmethod
+endstruct
+
+hook DestroyTrigger staticMethod

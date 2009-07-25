@@ -64,11 +64,11 @@ class Object
 		Object(std::vector<Object::VectorDataType> &columnVector);
 		virtual ~Object();
 
-		virtual void init(); //Some Objects has to be initialized after finding all objects of all files.
+		virtual void init() = 0; //Some Objects has to be initialized after finding all objects of all files.
 		virtual void initByVector();
 		void clearVector();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
+		virtual void pageNavigation(std::ofstream &file) const = 0;
+		virtual void page(std::ofstream &file) const = 0;
 		std::string pageLink() const;
 		virtual std::string sqlStatement() const;
 		void setId(Object::IdType id); /// @todo Friend relation to @class Parser.
@@ -127,6 +127,8 @@ class Object
 		* Checks if @param valueExpression is a literal or an object. If it's an object (like a global or function call) it will be searched in parser lists.
 		*/
 		class Object* findValue(class Object *type, std::string &valueExpression);
+		
+		void prepareVector();
 		
 		class Object *m_container; /// @todo Interface?
 		class Scope *m_scope;

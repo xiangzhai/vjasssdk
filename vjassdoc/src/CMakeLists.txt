@@ -15,6 +15,7 @@ set(LIB_SRC
 	function.cpp
 	method.cpp
 	implementation.cpp
+	hook.cpp
 	interface.cpp
 	struct.cpp
 	module.cpp
@@ -47,6 +48,7 @@ set(HEADERS
 	method.h
 	parameter.h
 	implementation.h
+	hook.h
 	interface.h
 	struct.h
 	module.h

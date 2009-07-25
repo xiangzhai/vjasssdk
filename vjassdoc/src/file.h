@@ -93,6 +93,7 @@ class File
 			ModuleExpression,
 			EndmoduleExpression,
 			ImplementExpression,
+			HookExpression,
 			BlockCommentExpression,
 			EndBlockCommentExpression,
 			KeyExpression,
@@ -173,6 +174,7 @@ class File
 		bool getGlobal(const std::string &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isStatic, bool isDelegate);
 		bool getFunction(const std::string  &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isNative, bool isStatic, bool isStub);
 		void getImplementation(const std::string &line, unsigned int &index);
+		void getHook(const std::string &line, unsigned int &index);
 		void getLibrary(const std::string &line, unsigned int &index, bool isOnce);
 		void getScope(const std::string &line, unsigned int &index, bool isPrivate);
 		void getInterface(const std::string &line, unsigned int &index, bool isPrivate);

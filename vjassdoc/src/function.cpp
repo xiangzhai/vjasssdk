@@ -45,6 +45,7 @@ Function::Function(const std::string &identifier, class SourceFile *sourceFile, 
 
 Function::Function(std::vector<const unsigned char*> &columnVector) : FunctionInterface(columnVector)
 {
+	this->prepareVector();
 }
 
 void Function::init()

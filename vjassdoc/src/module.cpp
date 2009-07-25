@@ -40,6 +40,10 @@ Module::Module(const std::string &identifier, class SourceFile *sourceFile, unsi
 {
 }
 
+Module::Module(std::vector<const unsigned char*> &columnVector) : Interface(columnVector)
+{
+}
+
 void Module::pageNavigation(std::ofstream &file) const
 {
 	Interface::pageNavigation(file);

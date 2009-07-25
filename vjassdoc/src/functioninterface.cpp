@@ -58,6 +58,7 @@ FunctionInterface::FunctionInterface(const std::string &identifier, class Source
 
 FunctionInterface::FunctionInterface(std::vector<const unsigned char*> &columnVector) : m_library(0), m_scope(0), m_returnType(0), Object(columnVector)
 {
+	this->prepareVector();
 }
 
 FunctionInterface::~FunctionInterface()

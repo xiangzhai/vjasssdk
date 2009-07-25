@@ -46,6 +46,7 @@ Implementation::Implementation(const std::string &identifier, class SourceFile *
 
 Implementation::Implementation(std::vector<const unsigned char*> &columnVector) : m_container(0), Object(columnVector)
 {
+	this->prepareVector();
 }
 
 void Implementation::init()

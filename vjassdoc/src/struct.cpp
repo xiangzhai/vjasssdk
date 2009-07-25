@@ -204,7 +204,7 @@ std::string Struct::sqlStatement() const
 	sstream
 	<< Interface::sqlStatement() << ", "
 	<< "Size=" << Object::objectId(this->size()) << ", "
-	<< "SizeExpression=" << this->sizeExpression() << ", "
+	<< "SizeExpression=\"" << this->sizeExpression() << "\", "
 	<< "Extension=" << Object::objectId(this->extension()) << ", "
 	<< "Constructor=" << Object::objectId(this->constructor()) << ", "
 	<< "Destructor=" << Object::objectId(this->destructor()) << ", "

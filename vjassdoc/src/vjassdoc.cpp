@@ -68,7 +68,7 @@ std::list<std::string> Vjassdoc::databases = std::list<std::string>();
 unsigned int Vjassdoc::lines = 0;
 unsigned int Vjassdoc::files = 0;
 
-void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, const std::string &compileFilePath, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
+void Vjassdoc::configure(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, const std::string &compileFilePath, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
 {
 	Vjassdoc::jass = jass;
 	Vjassdoc::debug = debug;
@@ -92,7 +92,39 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 	Vjassdoc::importDirs = importDirs;
 	Vjassdoc::filePaths = filePaths;
 	Vjassdoc::databases = databases;
+}
 
+void Vjassdoc::initClasses()
+{
+	std::cout << "Before initialization." << std::endl;
+	Object::initClass();
+	Comment::initClass();
+	Keyword::initClass();
+	Key::initClass();
+	TextMacro::initClass();
+	TextMacroInstance::initClass();
+	Type::initClass();
+	Local::initClass();
+	Global::initClass();
+	Member::initClass();
+	Parameter::initClass();
+	FunctionInterface::initClass();
+	Function::initClass();
+	Method::initClass();
+	Implementation::initClass();
+	Hook::initClass();
+	Interface::initClass();
+	Struct::initClass();
+	Module::initClass();
+	Scope::initClass();
+	Library::initClass();
+	SourceFile::initClass();
+	DocComment::initClass();
+	std::cout << "After initialization." << std::endl;
+}
+
+void Vjassdoc::run()
+{
 	Vjassdoc::lines = 0;
 	Vjassdoc::files = 0;
 	
@@ -117,30 +149,6 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 #error You have to define UNIX or WIN32.
 #endif
 
-	std::cout << "Before initialization." << std::endl;
-	Object::initClass();
-	Comment::initClass();
-	Keyword::initClass();
-	Key::initClass();
-	TextMacro::initClass();
-	TextMacroInstance::initClass();
-	Type::initClass();
-	Local::initClass();
-	Global::initClass();
-	Member::initClass();
-	Parameter::initClass();
-	FunctionInterface::initClass();
-	Function::initClass();
-	Method::initClass();
-	Implementation::initClass();
-	Interface::initClass();
-	Struct::initClass();
-	Module::initClass();
-	Scope::initClass();
-	Library::initClass();
-	SourceFile::initClass();
-	DocComment::initClass();
-	std::cout << "After initialization." << std::endl;
 	
 	Vjassdoc::getParser()->parse();
 
@@ -157,13 +165,22 @@ void Vjassdoc::run(bool jass, bool debug, bool privateSpace, bool textmacros, bo
 		printf(_("Duration:\n%f seconds\nCPU duration:\n%f seconds\n"), duration, cpuDuration);
 	}
 	
-	delete Vjassdoc::parser;
-	Vjassdoc::parser = 0;
-	Vjassdoc::title.clear();
-	Vjassdoc::dir.clear();
-	
 	printf(_("Finished (%d lines, %d files).\n"), lines, files);
+}
 
+void Vjassdoc::clear()
+{
+	if (Vjassdoc::parser != 0)
+	{
+		delete Vjassdoc::parser;
+		Vjassdoc::parser = 0;
+	}
+
+	if (Vjassdoc::compiler != 0)
+	{
+		delete Vjassdoc::compiler;
+		Vjassdoc::compiler = 0;
+	}
 }
 
 }

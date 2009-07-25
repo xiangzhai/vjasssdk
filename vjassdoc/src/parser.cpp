@@ -54,6 +54,7 @@ const char *Parser::title[Parser::MaxLists] =
 	_("Functions"),
 	_("Methods"),
 	_("Implementations"),
+	_("Hooks"),
 	_("Interfaces"),
 	_("Structs"),
 	_("Modules"),
@@ -460,7 +461,7 @@ void Parser::parse()
 			continue;
 
 		std::list<class Object*> list = this->getList(Parser::List(i));
-	
+
 		for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 		{
 #ifdef SQLITE
@@ -544,7 +545,7 @@ void Parser::parse()
 
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
-			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
+			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 				continue;
 
 			sout << "\t\t\t<li><a href=\"#" << Parser::title[i] << "\">" << Parser::title[i] << " (" << this->getList(Parser::List(i)).size() << ")</a></li>" << std::endl;
@@ -573,7 +574,7 @@ void Parser::parse()
 		//Für alle Objekte werden Link-Listen erstellt. Dann werden die Objekte in Dateien aufgeteilt, die im Index verlinkt werden.
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
-			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
+			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 				continue;
 
 			sout
@@ -790,7 +791,7 @@ void Parser::parse()
 					
 					if (state != SQLITE_OK)
 					{
-						fprintf(stderr, _("Was unable to run execution of table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), Parser::getTableName(Parser::List(i)).c_str(), i, state, message);
+						fprintf(stderr, _("Was unable to run execution \"%s\" of table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), sstream.str().c_str(), Parser::getTableName(Parser::List(i)).c_str(), i, state, message);
 						sqlite3_free(message);
 					}
 				}
@@ -836,6 +837,7 @@ int Parser::addDatabase(const char *filePath)
 			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
 				continue;
 
+			std::cout << "List " << i << std::endl;
 			std::ostringstream sstream;
 			sstream << "SELECT * FROM " << Parser::getTableName(Parser::List(i));
 			sqlite3_stmt *statement;
@@ -855,35 +857,41 @@ int Parser::addDatabase(const char *filePath)
 			if (statement == NULL)
 			{
 				fprintf(stderr, _("SQL statement of table %s is NULL.\n"), Parser::getTableName(Parser::List(i)).c_str());
-				continue;
+				std::cout << "After fprintf" << std::endl;
 			}
-			
-			int row = 0;
-
-			for (state = sqlite3_step(statement); state == SQLITE_ROW; state = sqlite3_step(statement), ++row)
+			else
 			{
-				int columns = sqlite3_data_count(statement);
-				std::vector<Object::VectorDataType> columnVector;
-				
-				for (int column = 0; column < columns; ++column)
+				int row = 0;
+
+				for (state = sqlite3_step(statement); state == SQLITE_ROW; state = sqlite3_step(statement), ++row)
 				{
-					if (sqlite3_column_type(statement, column) == SQLITE_NULL)
+					int columns = sqlite3_data_count(statement);
+					std::vector<Object::VectorDataType> columnVector;
+					
+					for (int column = 0; column < columns; ++column)
 					{
-						fprintf(stderr, _("SQL database entry of table %s in row %d and column %d is NULL.\n"),  Parser::getTableName(Parser::List(i)).c_str(), row, column);
-						break;
+						const unsigned char *data = 0;
+
+						if (sqlite3_column_type(statement, column) == SQLITE_NULL)
+						{
+							fprintf(stderr, _("SQL database entry of table %s in row %d and column %d is NULL.\n"),  Parser::getTableName(Parser::List(i)).c_str(), row, column);
+						}
+						else
+							data = sqlite3_column_text(statement, column);
+
+						columnVector.push_back(data);
+						std::cout << "Vector data " << columnVector[column] << std::endl;
 					}
 					
-					columnVector.push_back(sqlite3_column_text(statement, column));
-					std::cout << "Vector data " << columnVector[column] << std::endl;
+					databaseStruct->listList.push_back(Parser::List(i));
+					std::cout << "List " << i << std::endl;
+					class Object *object = Parser::createObjectByVector(columnVector, Parser::List(i)); /// @todo Don't use the @class Object constructor. Use the specific list class constructor (virtual methods).
+					std::cout << "Created object with identifier " << object->identifier() << std::endl;
+					databaseStruct->objectList.push_back(object);
 				}
-				
-				databaseStruct->listList.push_back(Parser::List(i));
-				std::cout << "List " << i << std::endl;
-				class Object *object = new Object(columnVector); /// @todo Don't use the @class Object constructor. Use the specific list class constructor (virtual methods).
-				//std::cout << "Created object with identifier " << object->identifier() << std::endl;
-				databaseStruct->objectList.push_back(object);
 			}
 			
+			std::cout << "before finalizing and i is " << i << std::endl;
 			state = sqlite3_finalize(statement);
 			
 			if (state != SQLITE_OK)
@@ -914,8 +922,8 @@ int Parser::addDatabase(const char *filePath)
 		Object::setMaxIds(Object::maxIds() + databaseStruct->listList.size());
 	}
 	else
-		fprintf(stderr, _("Was unable to open database.\nState %d.\n"), state);
-		
+		fprintf(stderr, _("Was unable to open database \"%s\".\nState %d.\n"), filePath, state);
+	
 	sqlite3_close(database);
 	
 	return result;
@@ -1043,6 +1051,9 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 		case Parser::Implementations:
 			return reinterpret_cast<std::list<class Object*>& >(this->implementationList);
 
+		case Parser::Hooks:
+			return reinterpret_cast<std::list<class Object*>& >(this->hookList);
+
 		case Parser::Interfaces:
 			return reinterpret_cast<std::list<class Object*>& >(this->interfaceList);
 
@@ -1136,6 +1147,9 @@ std::string Parser::getTableName(const enum Parser::List &list)
 		case Parser::Implementations:
 			return Implementation::sqlTableName;
 
+		case Parser::Hooks:
+			return Hook::sqlTableName;
+
 		case Parser::Interfaces:
 			return Interface::sqlTableName;
 
@@ -1208,6 +1222,9 @@ unsigned int Parser::getTableColumns(const enum Parser::List &list)
 
 		case Parser::Implementations:
 			return Implementation::sqlColumns;
+
+		case Parser::Hooks:
+			return Hook::sqlColumns;
 
 		case Parser::Interfaces:
 			return Interface::sqlColumns;
@@ -1311,6 +1328,11 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 			Implementation::sqlColumnStatement;
 			break;
 
+		case Parser::Hooks:
+			result +=
+			Hook::sqlColumnStatement;
+			break;
+
 		case Parser::Interfaces:
 			result +=
 			Interface::sqlColumnStatement;
@@ -1354,6 +1376,84 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 	result += ")";
 	
 	return result;
+}
+
+class Object* Parser::createObjectByVector(std::vector<const unsigned char*> &columnVector, const enum Parser::List &list)
+{
+	switch (list)
+	{
+		case Parser::Comments:
+			return static_cast<class Object*>(new Comment(columnVector));
+
+		case Parser::Keywords:
+			return static_cast<class Object*>(new Keyword(columnVector));
+
+		case Parser::Keys:
+			return static_cast<class Object*>(new Key(columnVector));
+
+		case Parser::TextMacros:
+			return static_cast<class Object*>(new TextMacro(columnVector));
+
+		case Parser::TextMacroInstances:
+			return static_cast<class Object*>(new TextMacroInstance(columnVector));
+
+		case Parser::Types:
+			return static_cast<class Object*>(new Type(columnVector));
+
+		case Parser::Locals:
+			return static_cast<class Object*>(new Local(columnVector));
+
+		case Parser::Globals:
+			return static_cast<class Object*>(new Global(columnVector));
+
+		case Parser::Members:
+			return static_cast<class Object*>(new Member(columnVector));
+
+		case Parser::Parameters:
+			return static_cast<class Object*>(new Parameter(columnVector));
+
+		case Parser::FunctionInterfaces:
+			return static_cast<class Object*>(new FunctionInterface(columnVector));
+
+		case Parser::Functions:
+			return static_cast<class Object*>(new Function(columnVector));
+
+		case Parser::Methods:
+			return static_cast<class Object*>(new Method(columnVector));
+
+		case Parser::Implementations:
+			return static_cast<class Object*>(new Implementation(columnVector));
+
+		case Parser::Hooks:
+			return static_cast<class Object*>(new Hook(columnVector));
+
+		case Parser::Interfaces:
+			return static_cast<class Object*>(new Interface(columnVector));
+
+		case Parser::Structs:
+			return static_cast<class Object*>(new Struct(columnVector));
+
+		case Parser::Modules:
+			return static_cast<class Object*>(new Module(columnVector));
+
+		case Parser::Scopes:
+			return static_cast<class Object*>(new Scope(columnVector));
+
+		case Parser::Libraries:
+			return static_cast<class Object*>(new Library(columnVector));
+
+		case Parser::SourceFiles:
+			return static_cast<class Object*>(new SourceFile(columnVector));
+
+		case Parser::DocComments:
+			return static_cast<class Object*>(new DocComment(columnVector));
+
+		default:
+			std::cerr << "Unknown list " << list << std::endl;
+			break;
+	}
+	
+	return 0;
 }
 #endif
 

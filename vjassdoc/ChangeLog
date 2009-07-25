@@ -1,3 +1,19 @@
+2009-07-25 Tamino Dauth <tamino@cdauth.de>
+* Revised build files.
+
+2009-07-24 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/hook.h".
+* Added file "src/hook.cpp".
+* Implemented hook support.
+* Splitted up Vjassdoc's init function.
+* Empty lists won't be written into HTML output anymore.
+* Fixed struct database save bug.
+
+2009-07-18 Tamino Dauth <tamino@cdauth.de>
+* Added file "kate/vjassdoc.xml".
+* Added file "kate/CMakeLists.txt".
+* Fixed several bugs of database creation.
+
 2009-07-17 Tamino Dauth <tamino@cdauth.de>
 * Improved documentation comment database treatment.
 

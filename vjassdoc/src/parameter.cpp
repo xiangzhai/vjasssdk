@@ -94,7 +94,7 @@ std::string Parameter::sqlStatement() const
 	sstream
 	<< Object::sqlStatement() << ", "
 	<< "FunctionInterface=" << Object::objectId(this->functionInterface()) << ", "
-	<< "TypeExpression=" << this->typeExpression() << ", "
+	<< "TypeExpression=\"" << this->typeExpression() << "\", "
 	<< "Type=" << Object::objectId(this->type());
 	
 	return sstream.str();

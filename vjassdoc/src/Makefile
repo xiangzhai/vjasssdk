@@ -294,6 +294,24 @@ global.s:
 .PHONY : global.s
 
 # target to build an object file
+hook.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/hook.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/hook.o
+.PHONY : hook.o
+
+# target to preprocess a source file
+hook.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/hook.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/hook.i
+.PHONY : hook.i
+
+# target to generate assembly for a file
+hook.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/hook.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/hook.s
+.PHONY : hook.s
+
+# target to build an object file
 implementation.o:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoc.dir/build.make src/CMakeFiles/vjassdoc.dir/implementation.o
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc && $(MAKE) -f src/CMakeFiles/vjassdoclib.dir/build.make src/CMakeFiles/vjassdoclib.dir/implementation.o
@@ -721,6 +739,9 @@ help:
 	@echo "... global.o"
 	@echo "... global.i"
 	@echo "... global.s"
+	@echo "... hook.o"
+	@echo "... hook.i"
+	@echo "... hook.s"
 	@echo "... implementation.o"
 	@echo "... implementation.i"
 	@echo "... implementation.s"
