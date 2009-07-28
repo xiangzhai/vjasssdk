@@ -52,19 +52,19 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 
 2009-07-18 Tamino Dauth <tamino@cdauth.de>
 * Globals without documentation comment, library and scope do not have -1 values in database. They have 4294967295. Can't there be negative values? Library requirement can be -1.
-* Structs aren't written correctly into database (all values beside identifier are NULL).
+* FIXED: Structs aren't written correctly into database (all values beside identifier are NULL).
 
 2009-07-17 Tamino Dauth <tamino@cdauth.de>
-* Database object initialization won't work because all objects have type Object and not their custom class types!
-* Method getToken of class File should be moved to file utilities.cpp.
+* FIXED: Database object initialization won't work because all objects have type Object and not their custom class types!
+* DONE: Method getToken of class File should be moved to file utilities.cpp.
 
 2009-07-15 Tamino Dauth <tamino@cdatuh.de>
 * Line breaks should be added to documentation comments.
 
 2009-07-08 Tamino Dauth <tamino@cdauth.de>
-* @keywords search should be moved to documentation intialization.
+* DONE: @keywords search should be moved to documentation intialization.
 * Treat block comment exception /**/ when searching block documentation comments.
-* Add hook support.
+* DONE: Add hook support.
 
 2009-06-21 Tamino Dauth <tamino@cdauth.de>
 * Structs and parameters aren't written correctly into databases.

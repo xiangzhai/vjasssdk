@@ -22,8 +22,8 @@
 #include <sstream>
 
 #include "objects.h"
-#include "file.h"
 #include "internationalisation.h"
+#include "utilities.h"
 
 namespace vjassdoc
 {
@@ -215,7 +215,7 @@ void DocComment::init()
 	for (std::string::size_type index = result.find('@'); index != std::string::npos; index = result.find('@'))
 	{
 		std::string::size_type oldIndex = index; //position of identifier (after erasing): @author Peter, position of P
-		std::string keyword = File::getToken(result, ++index);
+		std::string keyword = getToken(result, ++index);
 		result.erase(oldIndex, index);
 		std::cout << "Keyword " << keyword << std::endl;
 		
@@ -260,7 +260,7 @@ void DocComment::init()
 					
 					case DocComment::SeeKeyword:
 					{
-						std::string identifier = File::getToken(result, oldIndex);
+						std::string identifier = getToken(result, oldIndex);
 						
 						if (identifier.empty())
 							break;
@@ -281,7 +281,7 @@ void DocComment::init()
 						if (i >= DocComment::CommentKeyword && i <= DocCommentKeyword)
 						{
 							std::string::size_type position = oldIndex;
-							std::string identifier = File::getToken(result, oldIndex);
+							std::string identifier = getToken(result, oldIndex);
 							
 							std::cout << "Identifier " << identifier << std::endl;
 							
@@ -320,7 +320,7 @@ void DocComment::init()
 		if (newIndex == this->identifier().length())
 			break;
 		
-		std::string token = File::getToken(this->identifier(), newIndex);
+		std::string token = getToken(this->identifier(), newIndex);
 		//std::cout << "Token: " << token << " and index " << newIndex << std::endl;
 		bool found = false;
 		
@@ -330,7 +330,7 @@ void DocComment::init()
 			{
 				//std::cout << "Found keyword: " << DocComment::keyword[i] << " and has index " << newIndex << std::endl;
 				found = true;
-				token = File::getToken(this->identifier(), newIndex); //FIXME
+				token = getToken(this->identifier(), newIndex); //FIXME
 				//std::cout << "New token: " << token << std::endl;
 				
 				if (token.empty())

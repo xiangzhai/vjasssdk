@@ -50,6 +50,7 @@ class Struct : public Interface
 		class Object* size() const;
 		std::string sizeExpression() const;
 		class Interface* extension() const;
+		std::string extensionExpression() const;
 		class Method* constructor() const;
 		class Method* destructor() const;
 		class Method *initializer() const;
@@ -57,11 +58,10 @@ class Struct : public Interface
 		std::list<class Interface*> extensions() const;
 		
 	protected:
-		std::string m_sizeExpression;
-		std::string extensionExpression;
-
 		class Object *m_size;
+		std::string m_sizeExpression;
 		class Interface *m_extension; //Interface, Struct
+		std::string m_extensionExpression;
 		class Method *m_constructor;
 		class Method *m_destructor;
 		class Method *m_initializer;
@@ -80,6 +80,11 @@ inline std::string Struct::sizeExpression() const
 inline class Interface* Struct::extension() const
 {
 	return this->m_extension;
+}
+
+inline std::string Struct::extensionExpression() const
+{
+	return this->m_extensionExpression;
 }
 
 inline class Method* Struct::constructor() const

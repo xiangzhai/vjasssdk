@@ -130,8 +130,6 @@ class File
 			CustomExpression
 		};
 		
-		static std::string getToken(const std::string &line, unsigned int &index, bool endOfLine = false);
-		
 		static const char *expressionText[File::MaxExpressions];
 		
 		File(const std::string &filePath);
@@ -168,6 +166,7 @@ class File
 		File::Expression getFirstLineExpression(std::string &line, unsigned int &index);
 		void truncateComments(std::string &line, unsigned int index);
 		void getDocComment(const std::string &line, unsigned int index);
+		void getBlockDocComment(const std::string &line);
 		void clearDocComment();
 		void getKeyword(const std::string &line, unsigned int &index, bool isPrivate);
 		void getKey(const std::string &line, unsigned int &index, bool isPrivate);

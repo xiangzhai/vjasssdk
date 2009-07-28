@@ -23,7 +23,6 @@
 #include <boost/tokenizer.hpp>
 
 #include "vjassdoc.h"
-#include "utilities.h"
 #include "internationalisation.h"
 #include "parser.h"
 #include "objects.h"
@@ -33,44 +32,26 @@ namespace vjassdoc
 
 void Compiler::compile()
 {
-	if (!fileExists(Vjassdoc::compileFilePath()))
+	std::fstream fstream(Vjassdoc::compileFilePath().c_str());
+
+	if (!fstream.good())
 	{
-		fprintf(stderr, _("File \"%s\" does not exist."), Vjassdoc::compileFilePath().c_str());
+		if (Vjassdoc::showVerbose())
+			fprintf(stderr, _("Error while opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::compileFilePath().c_str());
+		
 		return;
 	}
 	
-	std::fstream fin(Vjassdoc::compileFilePath().c_str());
+	if (Vjassdoc::showVerbose())
+		fprintf(stderr, _("Opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::compileFilePath().c_str());
 	
-	bool globals = false;
-	bool functions = false;
-	
-	//globals block
-	while (fin.good())
-	{
-		std::string line;
-		std::getline(fin, line);
-		boost::tokenizer<> tok(line);
-		
-		if (!globals && tok.begin() != tok.end() && *tok.begin() == "globals")
-		{
-			std::getline(fin, line);
-			
-			if (fin.good())
-				this->writeGlobals(fin);
-			
-			if (fin.good())
-				this->writeMembers(fin);
-			
-			if (fin.good())
-				this->writeMethodGlobals(fin);
-			
-			globals = true;
-		}
-		else if (!functions)
-		{
-		}
-	}
+	fstream << "globals" << std::endl;
+	this->writeGlobals(fstream);
+	this->writeMembers(fstream);
+	this->writeMethodGlobals(fstream);
+	fstream << "endglobals" << std::endl;
 
+	fstream.close();
 }
 
 void Compiler::writeGlobals(std::fstream &fstream)
@@ -115,7 +96,8 @@ void Compiler::writeMembers(std::fstream &fstream)
 	
 		if (member->isDelegate())
 			continue;
-	
+
+		/// @todo Check if type is an interface or struct and use integers for those types.	
 		if (member->type() != 0)
 			fstream << member->type()->identifier();
 		else

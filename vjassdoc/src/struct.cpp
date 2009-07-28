@@ -39,17 +39,18 @@ std::string Struct::sqlColumnStatement;
 
 void Struct::initClass()
 {
-	Struct::sqlColumns = Interface::sqlColumns + 6;
+	Struct::sqlColumns = Interface::sqlColumns + 7;
 	Struct::sqlColumnStatement = Interface::sqlColumnStatement +
 	",Size INT,"
 	"SizeExpression VARCHAR(255),"
 	"Extension INT,"
+	"ExtensionExpression VARCHAR(255),"
 	"Constructor INT,"
 	"Destructor INT,"
 	"Initializer INT";
 }
 
-Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : m_sizeExpression(sizeExpression), extensionExpression(extensionExpression), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
+Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : m_sizeExpression(sizeExpression), m_extensionExpression(extensionExpression), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
 {
 }
 
@@ -71,15 +72,15 @@ void Struct::init()
 	else
 		this->m_sizeExpression = '-';
 	
-	if (!this->extensionExpression.empty() && this->extensionExpression.find(File::expressionText[File::ArrayExpression]) != 0)
+	if (!this->m_extensionExpression.empty() && this->m_extensionExpression.find(File::expressionText[File::ArrayExpression]) != 0)
 	{
-		this->m_extension = static_cast<class Interface*>(this->searchObjectInList(this->extensionExpression, Parser::Interfaces));
+		this->m_extension = static_cast<class Interface*>(this->searchObjectInList(this->m_extensionExpression, Parser::Interfaces));
 		
 		if (this->m_extension == 0)
-			this->m_extension = static_cast<class Interface*>(this->searchObjectInList(this->extensionExpression, Parser::Structs));
+			this->m_extension = static_cast<class Interface*>(this->searchObjectInList(this->m_extensionExpression, Parser::Structs));
 		
 		if (this->m_extension != 0)
-			this->extensionExpression.clear();
+			this->m_extensionExpression.clear();
 	}
 	
 	m_container = this;
@@ -206,6 +207,7 @@ std::string Struct::sqlStatement() const
 	<< "Size=" << Object::objectId(this->size()) << ", "
 	<< "SizeExpression=\"" << this->sizeExpression() << "\", "
 	<< "Extension=" << Object::objectId(this->extension()) << ", "
+	<< "ExtensionExpression\"" << this->extensionExpression() << "\", "
 	<< "Constructor=" << Object::objectId(this->constructor()) << ", "
 	<< "Destructor=" << Object::objectId(this->destructor()) << ", "
 	<< "Initializer=" << Object::objectId(this->initializer());

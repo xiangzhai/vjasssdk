@@ -21,9 +21,12 @@
 #ifndef VJASSDOC_UTILITIES
 #define VJASSDOC_UTILITIES
 
+#include <string>
+
 namespace vjassdoc
 {
 
+extern std::string getToken(const std::string &line, unsigned int &index, bool endOfLine = false);
 extern bool fileExists(const std::string &fileName);
 
 }

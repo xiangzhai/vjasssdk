@@ -24,6 +24,36 @@
 namespace vjassdoc
 {
 
+std::string getToken(const std::string &line, unsigned int &index, bool endOfLine)
+{
+	if (index >= line.length() || line.empty()) //important
+		return std::string();
+
+	while (index < line.length() && (line[index] == ' ' || line[index] == '\t'))
+		++index;
+
+	int position = index;
+	int length = 1;
+
+	if (!endOfLine)
+	{
+		do
+		{
+			++index;
+		}
+		while (index <= line.length() && line[index] != ' ' && line[index] != '\t');
+
+		length = index - position;
+	}
+	else
+	{
+		index = line.length();
+		length = index;
+	}
+
+	return line.substr(position, length);
+}
+
 bool fileExists(const std::string &fileName)
 {
 	struct stat fileInfo; 

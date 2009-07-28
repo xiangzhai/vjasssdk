@@ -79,6 +79,7 @@ int main(int argc, char *argv[])
 			_("                            functions\n") <<
 			_("                            methods\n") <<
 			_("                            implementations\n") <<
+			_("                            hooks\n") <<
 			_("                            interfaces\n") <<
 			_("                            structs\n") <<
 			_("                            modules\n") <<

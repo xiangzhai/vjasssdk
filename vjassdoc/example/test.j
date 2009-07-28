@@ -224,6 +224,9 @@ This is a block documentation comment.
 function MyFunction /** This block documentation comment describes this function */ takes nothing returns nothing
 endfunction
 
+/**
+* Peters functions is described in this way.
+*/
 function PetersFunction takes nothing returns nothing
 endfunction
 

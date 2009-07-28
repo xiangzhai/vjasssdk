@@ -55,9 +55,9 @@ void Member::init()
 		this->m_typeExpression = this->container()->identifier();
 	else if (this->typeExpression() == File::expressionText[File::SuperExpression])
 	{
-		//FIXME Error!
-		//this->m_typeExpression = static_cast<class Struct*>(this->container())->extension()->identifier();
-		//std::cout << "Identifier " << static_cast<class Struct*>(this->container())->identifier() << std::endl;
+		/// @todo ERROR
+		this->m_typeExpression = static_cast<class Struct*>(this->container())->extensionExpression(); /// use expression since structs are initialized after members.
+		std::cout << "Identifier " << static_cast<class Struct*>(this->container())->extensionExpression() << std::endl;
 	}
 	
 	Global::init();
