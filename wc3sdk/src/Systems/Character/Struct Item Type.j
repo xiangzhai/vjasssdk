@@ -97,7 +97,7 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 			loop
 				exitwhen (i == this.m_abilities.size())
 				call UnitAddAbility(who, this.m_abilities[i])
-				call UnitMakeAbilityPermanent(who, this.m_permanent[i], this.m_abilities[i]) //stay when unit morphs
+				//call UnitMakeAbilityPermanent(who, this.m_permanent[i], this.m_abilities[i]) //stay when unit morphs
 				set i = i + 1
 			endloop
 		endmethod
@@ -176,7 +176,7 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 				debug call this.print("Item type " + I2S(itemType) + " already has an item type.")
 			debug endif
 			call AHashTable.global().storeInteger("AItemTypes", I2S(itemType), this)
-			debug call this.print("Storing item type " + I2S(itemType))
+			//debug call this.print("Storing item type " + I2S(itemType))
 			return this
 		endmethod
 

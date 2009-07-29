@@ -212,7 +212,6 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 			local real x
 			local real y
 			if (this.m_onShowCondition != 0 and not this.m_onShowCondition.evaluate(this)) then
-				debug call this.print("Condition is false.")
 				return
 			endif
 			set x = this.m_x + (this.m_sizeX / 2.0)
@@ -239,7 +238,6 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 
 		public method hide takes nothing returns nothing
 			if (this.m_onHideCondition != 0 and not this.m_onHideCondition.evaluate(this)) then
-				debug call this.print("Condition is false.")
 				return
 			endif
 			
@@ -265,7 +263,6 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		private static method triggerActionPressShortcut takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local AMainWindow this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			debug call this.print("Press shortcut")
 			if (not this.m_isShown) then
 				call this.show()
 			else

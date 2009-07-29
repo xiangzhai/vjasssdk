@@ -24,7 +24,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, ALibraryCore
 		//methods
 
 		public method show takes nothing returns nothing
-			debug if (this.talk.getCharacter() == 0) then
+			debug if (this.talk.character() == 0) then
 				debug call this.print("Talk is not enabled.")
 				debug return
 			debug endif
@@ -174,10 +174,8 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, ALibraryCore
 			else
 				call SetCinematicSceneForPlayer(this.character.user(), GetUnitTypeId(this.character.unit()), GetUnitName(this.character.unit()), text, time, time) //ALibraryInterfaceCinematic
 			endif
-			debug call this.print("Before wait.")
 			//call StopSound(usedSound, true, false) //Eventuell den zweiten Parameter auf false setzen
 			call this.wait(usedSound)
-			debug call this.print("After wait.")
 			call this.resetAnimations()
 		endmethod
 
@@ -276,14 +274,11 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, ALibraryCore
 			else
 				loop
 					exitwhen (time <= 0.0)
-					debug call this.print("Before trigger sleep with time: " + R2S(time))
 					call TriggerSleepAction(ATalk.skipCheckRate)
 					set time = time - ATalk.skipCheckRate
-					debug call this.print("Loop with remaining time: " + R2S(time))
 					if (time <= 0.0) then
 						return
 					elseif (ATalk.playerHasSkipped[GetPlayerId(this.character.user())]) then
-						debug call this.print("Talk " + I2S(this) + " was skipped.")
 						if (ATalk.skipKey != KEY_ESCAPE) then
 							call ClearScreenMessagesForPlayer(this.character.user())
 						endif
@@ -298,12 +293,6 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, ALibraryCore
 
 		//Normally you do not need this method
 		private method enable takes ACharacter character returns nothing
-			debug if (this.character != 0) then
-				debug call this.print("Character is not 0 in talk " + I2S(this) + ".")
-			debug else
-				debug call this.print("Character is 0. Important!")
-			debug endif
-			debug call this.print("Enable talk for character " + I2S(character) + ".")
 			set ATalk.playerHasSkipped[GetPlayerId(character.user())] = false //saver!
 			call PauseUnit(this.usedUnit, true) //Disables routines or something else
 			set this.character = character
@@ -314,14 +303,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, ALibraryCore
 			call this.refreshFacings()
 			call this.clear()
 			
-			debug if (this.startAction == 0) then
-				debug call this.print("Start action is 0")
-			debug else
-				debug call this.print("Start action is NOT 0")
-			debug endif
-			
 			call this.startAction.execute(this) /// @todo execute? //create buttons
-			debug call this.print("After start action")
 			//call this.show() //don't call this beacause the start action is often called by button actions
 		endmethod
 

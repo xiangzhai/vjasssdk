@@ -1,4 +1,4 @@
-library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle
+library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsPoint
 
 
 	/// methods are often called in their own threads! TriggerSleepAction problem.
@@ -31,19 +31,22 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		endif
 		call CameraSetupApplyForPlayer(false, AInfo.cameraSetup, user, 0.0)
 		call SetCameraFieldForPlayer(user, CAMERA_FIELD_ROTATION, GetUnitFacing(speaker) - 180.0, 0.0)
-		call SetCameraFieldForPlayer(user, CAMERA_FIELD_ZOFFSET, CameraSetupGetField(AInfo.cameraSetup, CAMERA_FIELD_ZOFFSET) + GetUnitZ(speaker), 0.0)
+		//call SetCameraFieldForPlayer(user, CAMERA_FIELD_ZOFFSET, CameraSetupGetField(AInfo.cameraSetup, CAMERA_FIELD_ZOFFSET) + GetTerrainZ(GetUnitX(speaker), GetUnitY(speaker)), 0.0) //GetUnitZ
 		call SetCameraTargetControllerNoZForPlayer(user, speaker, 0.0, 0.0, false)
 		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), GetUnitName(speaker), text, duration, duration)
+		if (info.talk().character().talkLog() != 0) then
+			call info.talk().character().talkLog().addMessage(info.talk(), text) //log message
+		endif
 		if (AInfo.skipKey == -1) then
-				call TriggerSleepAction(duration)
+			call TriggerSleepAction(duration)
 		else
 			set AInfo.playerHasSkipped[GetPlayerId(user)] = false
 			loop
 				exitwhen (duration <= 0.0)
 				if (AInfo.playerHasSkipped[GetPlayerId(user)]) then
-					if (AInfo.skipKey != KEY_ESCAPE) then
-						call ClearScreenMessagesForPlayer(user)
-					endif
+					//if (AInfo.skipKey != KEY_ESCAPE) then
+						//call ClearScreenMessagesForPlayer(user) /// @todo Does not do anything.
+					//endif
 					set AInfo.playerHasSkipped[GetPlayerId(user)] = false
 					return
 				endif
@@ -207,7 +210,9 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 
 		private static method triggerActionSkip takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
+			//call ClearScreenMessagesForPlayer(triggerPlayer) //does not do anything
 			set AInfo.playerHasSkipped[GetPlayerId(triggerPlayer)] = true
+			/// @todo Stop sound immediatly
 			set triggerPlayer = null
 		endmethod
 

@@ -1,5 +1,6 @@
 library AStructSystemsGuiImage requires ALibraryCoreInterfaceImage, AStructSystemsGuiWidget
 
+	/// Uses the default Jass type @type image to treat images in GUIs.
 	struct AImage extends AWidget
 		//dynamic members
 		private string m_file

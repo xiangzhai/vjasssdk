@@ -9,9 +9,9 @@ library AStructSystemsCharacterClass
 		private static integer m_startLevel
 		private static integer m_startSkillPoints
 		//dynamic members
-		private string array m_abilityIconPath[AClass.maxAbilities] //for character class selection
-		private integer array m_ability[AClass.maxAbilities] //for character class selection
-		private string array m_descriptionLine[AClass.maxDescriptionLines] //for character class selection
+		private string array m_abilityIconPath[thistype.maxAbilities] //for character class selection
+		private integer array m_ability[thistype.maxAbilities] //for character class selection
+		private string array m_descriptionLine[thistype.maxDescriptionLines] //for character class selection
 		//start members
 		private integer m_unitType
 		private string m_animation
@@ -65,7 +65,7 @@ library AStructSystemsCharacterClass
 		public method containsAbility takes integer usedAbility returns boolean
 			local integer i = 0
 			loop
-				exitwhen (i == AClass.maxAbilities)
+				exitwhen (i == thistype.maxAbilities)
 				if (this.m_ability[i] == usedAbility) then
 					return true
 				endif
@@ -76,14 +76,14 @@ library AStructSystemsCharacterClass
 
 		public method generateUnit takes player user, real x, real y, real facing returns unit
 			local unit usedUnit = CreateUnit(user, this.m_unitType, x, y, facing)
-			call SetHeroLevelBJ(usedUnit, AClass.m_startLevel, false)
-			call UnitModifySkillPoints(usedUnit, (AClass.m_startSkillPoints - GetHeroSkillPoints(usedUnit))) //Setzt die Fähigkeiten-Punkte
+			call SetHeroLevelBJ(usedUnit, thistype.m_startLevel, false)
+			call UnitModifySkillPoints(usedUnit, (thistype.m_startSkillPoints - GetHeroSkillPoints(usedUnit))) //Setzt die Fähigkeiten-Punkte
 			return usedUnit
 		endmethod
 
 		/// @param unitType Should be the type of a hero
-		public static method create takes integer unitType, string animation, string soundPath returns AClass
-			local AClass this = AClass.allocate()
+		public static method create takes integer unitType, string animation, string soundPath returns thistype
+			local thistype this = thistype.allocate()
 			//start members
 			set this.m_unitType = unitType
 			set this.m_animation = animation
@@ -94,8 +94,8 @@ library AStructSystemsCharacterClass
 
 		public static method init takes integer startLevel, integer startSkillPoints returns nothing
 			//static start members
-			set AClass.m_startLevel = startLevel
-			set AClass.m_startSkillPoints = startSkillPoints
+			set thistype.m_startLevel = startLevel
+			set thistype.m_startSkillPoints = startSkillPoints
 		endmethod
 	endstruct
 

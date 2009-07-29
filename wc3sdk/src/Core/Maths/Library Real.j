@@ -43,9 +43,12 @@ library ALibraryCoreMathsReal
 		return (4 * maxHeight / distance) * (distance - x) * (x / distance)
 	endfunction
 
-	/// @author Vexorian
-	/// @source http://www.wc3campaigns.net/
-	function Log takes real x, integer iterations returns real
+	/**
+	Called ALog since RtC has its own Log function.
+	@author Vexorian
+	@source http://www.wc3campaigns.net/
+	*/
+	function ALog takes real x, integer iterations returns real
 		local real min = -88.0
 		local real max = 88.0
 		local real mid

@@ -121,6 +121,14 @@ library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
 	endfunction
 	
 	/// @author Tamino Dauth
+	function UnitDropSlot takes unit usedUnit, integer slot0, integer slot1 returns boolean
+		local item slotItem = UnitItemInSlot(usedUnit, slot0)
+		local boolean result = UnitDropItemSlot(usedUnit, slotItem, slot1)
+		set slotItem = null
+		return result
+	endfunction
+	
+	/// @author Tamino Dauth
 	/// @return Missing life of unit @param usedUnit.
 	function GetUnitMissingLife takes unit usedUnit returns real
 		return GetUnitState(usedUnit, UNIT_STATE_MAX_LIFE) - GetUnitState(usedUnit, UNIT_STATE_LIFE)

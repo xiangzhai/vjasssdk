@@ -63,26 +63,26 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 		private method refreshInfoSheet takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
-			call MultiboardSetTitleText(this.m_infoSheet, IntegerArg(IntegerArg(StringArg(AClassSelection.m_textTitle, GetUnitName(this.m_classUnit)), this.m_class), AClassSelection.m_lastClass - AClassSelection.m_firstClass + 1))
+			call MultiboardSetTitleText(this.m_infoSheet, IntegerArg(IntegerArg(StringArg(thistype.m_textTitle, GetUnitName(this.m_classUnit)), this.m_class), thistype.m_lastClass - thistype.m_firstClass + 1))
 			//strength
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
-			call MultiboardSetItemValue(multiboardItem, AClassSelection.m_textStrength + ": " + I2S(GetHeroStr(this.m_classUnit, false)))
+			call MultiboardSetItemValue(multiboardItem, thistype.m_textStrength + ": " + I2S(GetHeroStr(this.m_classUnit, false)))
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//agility
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 1, 0)
-			call MultiboardSetItemValue(multiboardItem, AClassSelection.m_textAgility + ": " + I2S(GetHeroAgi(this.m_classUnit, false)))
+			call MultiboardSetItemValue(multiboardItem, thistype.m_textAgility + ": " + I2S(GetHeroAgi(this.m_classUnit, false)))
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//intelligence
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 2, 0)
-			call MultiboardSetItemValue(multiboardItem, AClassSelection.m_textIntelligence + ": " + I2S(GetHeroInt(this.m_classUnit, false)))
+			call MultiboardSetItemValue(multiboardItem, thistype.m_textIntelligence + ": " + I2S(GetHeroInt(this.m_classUnit, false)))
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//abilities
 			set i = 4
 			loop
-				exitwhen(i == AClassSelection.maxInfoSheetIconItems)
+				exitwhen(i == thistype.maxInfoSheetIconItems)
 				set multiboardItem = MultiboardGetItem(this.m_infoSheet, i, 0)
 				if (this.m_class.ability(i - 4) != 0) then
 					call MultiboardSetItemIcon(multiboardItem, this.m_class.abilityIconPath(i - 4))
@@ -96,12 +96,12 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 				set i = i + 1
 			endloop
 			//description
-			set i = AClassSelection.maxInfoSheetIconItems + 1
+			set i = thistype.maxInfoSheetIconItems + 1
 			loop
-				exitwhen(i == AClassSelection.maxInfoSheetItems)
+				exitwhen(i == thistype.maxInfoSheetItems)
 				set multiboardItem = MultiboardGetItem(this.m_infoSheet, i, 0)
-				if (StringLength(this.m_class.descriptionLine(i - AClassSelection.maxInfoSheetIconItems + 1)) > 0) then
-					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i - AClassSelection.maxInfoSheetIconItems + 1))
+				if (StringLength(this.m_class.descriptionLine(i - thistype.maxInfoSheetIconItems + 1)) > 0) then
+					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i - thistype.maxInfoSheetIconItems + 1))
 					call MultiboardSetItemStyle(multiboardItem, true, false)
 				else
 					call MultiboardSetItemStyle(multiboardItem, false, false)
@@ -119,13 +119,13 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 				call RemoveUnit(this.m_classUnit)
 				set this.m_classUnit = null
 			endif
-			set this.m_classUnit = CreateUnit(this.m_user, this.m_class.unitType(), AClassSelection.m_x, AClassSelection.m_y, AClassSelection.m_facing)
+			set this.m_classUnit = CreateUnit(this.m_user, this.m_class.unitType(), thistype.m_x, thistype.m_y, thistype.m_facing)
 			call SetUnitInvulnerable(this.m_classUnit, true)
 			call PauseUnit(this.m_classUnit, true)
 			call SetUnitPathing(this.m_classUnit, false)
 			//refresh position
-			call SetUnitX(this.m_classUnit, AClassSelection.m_x)
-			call SetUnitY(this.m_classUnit, AClassSelection.m_y)
+			call SetUnitX(this.m_classUnit, thistype.m_x)
+			call SetUnitY(this.m_classUnit, thistype.m_y)
 			//Für andere Spieler unsichtbar machen
 			set i = 0
 			loop
@@ -151,14 +151,12 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			//call PanCameraToForPlayer(this.m_user, this.m_startX, this.m_startY) ///WAAAAA
 			call character.setClass(this.m_class)
 			call this.m_selectClassAction.execute(character, this.m_class)
-			debug call this.print("AFTER EXECUTION")
-			call this.destroy() //call AClassSelection.destroy(this) //call this.destroy()
+			call this.destroy()
 		endmethod
 		
 		private static method triggerActionPlayerLeaves takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AClassSelection this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			debug call this.print("Player " + GetPlayerName(GetTriggerPlayer()) + " has left the game. His class selection will be destroyed.")
+			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			call this.destroy()
 			set triggeringTrigger = null
 		endmethod
@@ -168,7 +166,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			local triggeraction triggerAction
 			set this.m_leaveTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterPlayerEvent(this.m_leaveTrigger, this.m_user, EVENT_PLAYER_LEAVE)
-			set triggerAction = TriggerAddAction(this.m_leaveTrigger, function AClassSelection.triggerActionPlayerLeaves)
+			set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionPlayerLeaves)
 			call AHashTable.global().storeHandleInteger(this.m_leaveTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
@@ -176,23 +174,23 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 
 		private static method triggerActionRefresh takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AClassSelection this = AHashTable.global().getHandleInteger(triggeringTrigger, "this") 
-			debug if (AClassSelection.m_cameraSetup != null) then
-				call CameraSetupApplyForPlayer(true, AClassSelection.m_cameraSetup, this.m_user, 0.0)
+			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this") 
+			debug if (thistype.m_cameraSetup != null) then
+				call CameraSetupApplyForPlayer(true, thistype.m_cameraSetup, this.m_user, 0.0)
 			debug else
 				debug call this.print("No camera object.")
 			debug endif
-			call SetUnitFacingTimed(this.m_classUnit, GetUnitFacing(this.m_classUnit)  + AClassSelection.m_rotationAngle, AClassSelection.m_refreshRate)
+			call SetUnitFacingTimed(this.m_classUnit, GetUnitFacing(this.m_classUnit) + thistype.m_rotationAngle, thistype.m_refreshRate)
 			set triggeringTrigger = null
 		endmethod
 
 		private method createRefreshTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			if (AClassSelection.m_refreshRate > 0.0) then
+			if (thistype.m_refreshRate > 0.0) then
 				set this.m_refreshTrigger = CreateTrigger()
-				set triggerEvent = TriggerRegisterTimerEvent(this.m_refreshTrigger, AClassSelection.m_refreshRate, true)
-				set triggerAction = TriggerAddAction(this.m_refreshTrigger, function AClassSelection.triggerActionRefresh)
+				set triggerEvent = TriggerRegisterTimerEvent(this.m_refreshTrigger, thistype.m_refreshRate, true)
+				set triggerAction = TriggerAddAction(this.m_refreshTrigger, function thistype.triggerActionRefresh)
 				call AHashTable.global().storeHandleInteger(this.m_refreshTrigger, "this", this)
 				set triggerEvent = null
 				set triggerAction = null
@@ -201,9 +199,9 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 
 		private static method triggerActionChangeToPrevious takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AClassSelection this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			if (this.m_class == AClassSelection.m_firstClass) then
-				set this.m_class = AClassSelection.m_lastClass
+			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			if (this.m_class == thistype.m_firstClass) then
+				set this.m_class = thistype.m_lastClass
 			else
 				set this.m_class = this.m_class - 1
 			endif
@@ -216,7 +214,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			local triggeraction triggerAction
 			set this.m_changePreviousTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changePreviousTrigger, KEY_LEFT, true)
-			set triggerAction = TriggerAddAction(this.m_changePreviousTrigger, function AClassSelection.triggerActionChangeToPrevious)
+			set triggerAction = TriggerAddAction(this.m_changePreviousTrigger, function thistype.triggerActionChangeToPrevious)
 			call AHashTable.global().storeHandleInteger(this.m_changePreviousTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
@@ -224,9 +222,9 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 
 		private static method triggerActionChangeToNext takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AClassSelection this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			if (this.m_class == AClassSelection.m_lastClass) then
-				set this.m_class = AClassSelection.m_firstClass
+			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			if (this.m_class == thistype.m_lastClass) then
+				set this.m_class = thistype.m_firstClass
 			else
 				set this.m_class = this.m_class + 1
 			endif
@@ -239,7 +237,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			local triggeraction triggerAction
 			set this.m_changeNextTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changeNextTrigger, KEY_RIGHT, true)
-			set triggerAction = TriggerAddAction(this.m_changeNextTrigger, function AClassSelection.triggerActionChangeToNext)
+			set triggerAction = TriggerAddAction(this.m_changeNextTrigger, function thistype.triggerActionChangeToNext)
 			call AHashTable.global().storeHandleInteger(this.m_changeNextTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
@@ -247,7 +245,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 
 		private static method triggerActionSelectClass takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AClassSelection this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			call this.selectClass()
 			set triggeringTrigger = null
 		endmethod
@@ -257,7 +255,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			local triggeraction triggerAction
 			set this.m_selectTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_selectTrigger, KEY_ESCAPE, true)
-			set triggerAction = TriggerAddAction(this.m_selectTrigger, function AClassSelection.triggerActionSelectClass)
+			set triggerAction = TriggerAddAction(this.m_selectTrigger, function thistype.triggerActionSelectClass)
 			call AHashTable.global().storeHandleInteger(this.m_selectTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
@@ -269,12 +267,12 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			local multiboarditem multiboardItem
 			set this.m_infoSheet = CreateMultiboard()
 			call MultiboardSetColumnCount(this.m_infoSheet, 1)
-			call MultiboardSetRowCount(this.m_infoSheet, AClassSelection.maxInfoSheetItems)
+			call MultiboardSetRowCount(this.m_infoSheet, thistype.maxInfoSheetItems)
 			set i = 0
 			loop
-				exitwhen (i == AClassSelection.maxInfoSheetItems)
+				exitwhen (i == thistype.maxInfoSheetItems)
 				set multiboardItem = MultiboardGetItem(this.m_infoSheet, i, 0)
-				if (i < AClassSelection.maxInfoSheetIconItems) then
+				if (i < thistype.maxInfoSheetIconItems) then
 					call MultiboardSetItemStyle(multiboardItem, true, true)
 				else
 					call MultiboardSetItemStyle(multiboardItem, true, false)
@@ -287,33 +285,33 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 
 			//strength
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
-			call MultiboardSetItemIcon(multiboardItem, AClassSelection.m_strengthIconPath)
+			call MultiboardSetItemIcon(multiboardItem, thistype.m_strengthIconPath)
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//agility
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 1, 0)
-			call MultiboardSetItemIcon(multiboardItem, AClassSelection.m_agilityIconPath)
+			call MultiboardSetItemIcon(multiboardItem, thistype.m_agilityIconPath)
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//intelligence
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 2, 0)
-			call MultiboardSetItemIcon(multiboardItem, AClassSelection.m_intelligenceIconPath)
+			call MultiboardSetItemIcon(multiboardItem, thistype.m_intelligenceIconPath)
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//abilities
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3, 0)
-			call MultiboardSetItemValue(multiboardItem, AClassSelection.m_textAbilities + ": ")
+			call MultiboardSetItemValue(multiboardItem, thistype.m_textAbilities + ": ")
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//description
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, AClassSelection.maxInfoSheetIconItems, 0)
-			call MultiboardSetItemValue(multiboardItem, AClassSelection.m_textDescription + ": ")
+			set multiboardItem = MultiboardGetItem(this.m_infoSheet, thistype.maxInfoSheetIconItems, 0)
+			call MultiboardSetItemValue(multiboardItem, thistype.m_textDescription + ": ")
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 		endmethod
 
-		public static method create takes player user, real startX, real startY, real startFacing, AClassSelectionSelectClassAction selectClassAction returns AClassSelection
-			local AClassSelection this = AClassSelection.allocate()
+		public static method create takes player user, real startX, real startY, real startFacing, AClassSelectionSelectClassAction selectClassAction returns thistype
+			local thistype this = thistype.allocate()
 			//start members
 			set this.m_user = user
 			set this.m_startFacing = startFacing
@@ -321,9 +319,9 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			set this.m_startY = startY
 			set this.m_selectClassAction = selectClassAction
 			//members
-			set this.m_class = AClassSelection.m_firstClass
+			set this.m_class = thistype.m_firstClass
 			//static members
-			set AClassSelection.m_stack = AClassSelection.m_stack + 1
+			set thistype.m_stack = thistype.m_stack + 1
 
 			call this.createLeaveTrigger()
 			call this.createRefreshTrigger()
@@ -370,55 +368,46 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 		endmethod
 
 		private method onDestroy takes nothing returns nothing
-			debug call this.print("Destroy class selection--------------------------------------------")
 			//start members
 			set this.m_user = null
 			//static members
-			set AClassSelection.m_stack = AClassSelection.m_stack - 1
+			set thistype.m_stack = thistype.m_stack - 1
 			
 			call this.destroyLeaveTrigger()
-			debug call this.print("1")
 			call this.destroyRefreshTrigger()
-			debug call this.print("2")
 			call this.destroyChangePreviousTrigger()
-			debug call this.print("3")
 			call this.destroyChangeNextTrigger()
-			debug call this.print("4")
 			call this.destroySelectTrigger()
-			debug call this.print("5")
 			call this.destroyInfoSheet()
-			debug call this.print("6")
 			call this.removeClassUnit()
-			debug call this.print("7")
-			debug call this.print("New stack is " + I2S(AClassSelection.m_stack))
 			
-			if (AClassSelection.m_stack == 0) then
-				call AClassSelection.m_startGameAction.execute()
+			if (thistype.m_stack == 0) then
+				call thistype.m_startGameAction.execute()
 			endif
 		endmethod
 		
 		public static method init takes camerasetup cameraSetup, real x, real y, real facing, real refreshRate, real rotationAngle, AClass firstClass, AClass lastClass, AClassSelectionStartGameAction startGameAction, string strengthIconPath, string agilityIconPath, string intelligenceIconPath, string textTitle, string textStrength, string textAgility, string textIntelligence, string textAbilities, string textDescription returns nothing
 			//static start members
-			set AClassSelection.m_cameraSetup = cameraSetup
-			set AClassSelection.m_x = x
-			set AClassSelection.m_y = y
-			set AClassSelection.m_facing = facing
-			set AClassSelection.m_refreshRate = refreshRate
-			set AClassSelection.m_rotationAngle = rotationAngle
-			set AClassSelection.m_firstClass = firstClass
-			set AClassSelection.m_lastClass = lastClass
-			set AClassSelection.m_startGameAction = startGameAction
-			set AClassSelection.m_strengthIconPath = strengthIconPath
-			set AClassSelection.m_agilityIconPath = agilityIconPath
-			set AClassSelection.m_intelligenceIconPath = intelligenceIconPath
-			set AClassSelection.m_textTitle = textTitle
-			set AClassSelection.m_textStrength = textStrength
-			set AClassSelection.m_textAgility = textAgility
-			set AClassSelection.m_textIntelligence = textIntelligence
-			set AClassSelection.m_textAbilities = textAbilities
-			set AClassSelection.m_textDescription = textDescription
+			set thistype.m_cameraSetup = cameraSetup
+			set thistype.m_x = x
+			set thistype.m_y = y
+			set thistype.m_facing = facing
+			set thistype.m_refreshRate = refreshRate
+			set thistype.m_rotationAngle = rotationAngle
+			set thistype.m_firstClass = firstClass
+			set thistype.m_lastClass = lastClass
+			set thistype.m_startGameAction = startGameAction
+			set thistype.m_strengthIconPath = strengthIconPath
+			set thistype.m_agilityIconPath = agilityIconPath
+			set thistype.m_intelligenceIconPath = intelligenceIconPath
+			set thistype.m_textTitle = textTitle
+			set thistype.m_textStrength = textStrength
+			set thistype.m_textAgility = textAgility
+			set thistype.m_textIntelligence = textIntelligence
+			set thistype.m_textAbilities = textAbilities
+			set thistype.m_textDescription = textDescription
 			//static members
-			set AClassSelection.m_stack = 0
+			set thistype.m_stack = 0
 		endmethod
 	endstruct
 

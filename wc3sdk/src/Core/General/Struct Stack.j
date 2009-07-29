@@ -4,7 +4,7 @@ library AStructCoreGeneralStack requires ALibraryCoreDebugMisc
 		$STRUCTPREFIX$ struct $NAME$DataNode
 			//start members
 			private $TYPE$ m_data
-			private $NAME$DataNode m_next
+			private thistype m_next
 
 			//start members
 
@@ -12,14 +12,14 @@ library AStructCoreGeneralStack requires ALibraryCoreDebugMisc
 				return this.m_data
 			endmethod
 
-			public method next takes nothing returns $NAME$DataNode
+			public method next takes nothing returns thistype
 				return this.m_next
 			endmethod
 
 			//methods
 
-			public static method create takes $TYPE$ data, $NAME$DataNode next returns $NAME$DataNode
-				local $NAME$DataNode this = $NAME$DataNode.allocate()
+			public static method create takes $TYPE$ data, thistype next returns thistype
+				local thistype this = thistype.allocate()
 				//start members
 				set this.m_data = data
 				set this.m_next = next
@@ -48,7 +48,7 @@ library AStructCoreGeneralStack requires ALibraryCoreDebugMisc
 			//methods
 
 			/// Adds a new elment to stack.
-			public method push takes $TYPE$ data returns nothing
+			public method push takes thistype data returns nothing
 				local $NAME$DataNode dataNode
 				if (this.m_objects < this.m_maxSize) then
 					set dataNode = $NAME$DataNode.create(data, this.m_dataNode)
@@ -79,8 +79,8 @@ library AStructCoreGeneralStack requires ALibraryCoreDebugMisc
 				return nodeData
 			endmethod
 
-			public static method create takes integer maxSize returns $NAME$
-				local $NAME$ this = $NAME$.allocate()
+			public static method create takes integer maxSize returns thistype
+				local thistype this = thistype.allocate()
 				//dynamic members
 				set this.m_maxSize = maxSize
 				//members

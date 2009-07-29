@@ -7,8 +7,9 @@
 ////! import "Systems/Gui/Struct Gui Layout.j"
 //! import "Systems/Gui/Struct Main Window.j"
 //! import "Systems/Gui/Struct Text.j"
+//! import "Systems/Gui/Struct Vote.j"
 //! import "Systems/Gui/Struct Widget.j"
 
-library ASystemsGui requires AStructSystemsGuiButton, AStructSystemsGuiCheckBox, AStructSystemsGuiDialog, AStructSystemsGuiDialogButton, AStructSystemsGuiGui, AStructSystemsGuiImage, AStructSystemsGuiMainWindow, AStructSystemsGuiText, AStructSystemsGuiWidget
+library ASystemsGui requires AStructSystemsGuiButton, AStructSystemsGuiCheckBox, AStructSystemsGuiDialog, AStructSystemsGuiDialogButton, AStructSystemsGuiGui, AStructSystemsGuiImage, AStructSystemsGuiMainWindow, AStructSystemsGuiText, AStructSystemsGuiVote, AStructSystemsGuiWidget
 //AStructSystemsGuiLayout, 
 endlibrary

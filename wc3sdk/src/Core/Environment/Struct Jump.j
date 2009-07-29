@@ -29,12 +29,12 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		private method refreshPosition takes nothing returns boolean
 			set this.m_x = this.m_x + this.m_distance / 100.0
-			debug call this.print("Refresh. Distance is " + R2S(this.m_distance) + " refresh rate is " + R2S(thistype.m_refreshRate))
+			//debug call this.print("Refresh. Distance is " + R2S(this.m_distance) + " refresh rate is " + R2S(thistype.m_refreshRate))
 			call SetUnitX(this.m_unit, GetPolarProjectionX(this.m_startX, GetUnitFacing(this.m_unit), this.m_x))
 			call SetUnitY(this.m_unit, GetPolarProjectionY(this.m_startY, GetUnitFacing(this.m_unit), this.m_x))
 			call SetUnitZ(this.m_unit, ParabolaZ(this.m_maxHeight, this.m_distance, this.m_x))
-			debug call this.print("X is " + R2S(this.m_x))
-			debug call this.print("New x is " + R2S(this.m_x))
+			//debug call this.print("X is " + R2S(this.m_x))
+			//debug call this.print("New x is " + R2S(this.m_x))
 			return this.m_x >= this.m_distance
 		endmethod
 		
@@ -65,10 +65,12 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 		endmethod
 		
 		public method onDestroy takes nothing returns nothing
-			call PauseUnit(this.m_unit, false)
-			
-			if (thistype.m_jumpAnimation != null) then
-				call ResetUnitAnimation(this.m_unit)
+			if (not IsUnitDeadBJ(this.m_unit) and this.m_unit != null) then //could be removed by user function
+				call PauseUnit(this.m_unit, false)
+				
+				if (thistype.m_jumpAnimation != null) then
+					call ResetUnitAnimation(this.m_unit)
+				endif
 			endif
 			
 			//start members
@@ -77,10 +79,11 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 			call thistype.m_jumps.erase(this.m_index)
 		endmethod
 		
+		/// @todo fast creation can cause crashes. behaviour is not change if vector members are erased in this method and not in destructor.
 		private static method timerFunction takes nothing returns nothing
-			local integer i = 0
+			local integer i = thistype.m_jumps.backIndex()
 			loop
-				exitwhen (i == thistype.m_jumps.size())
+				exitwhen (i < 0)
 				if (thistype.m_jumps[i].refreshPosition()) then
 					if (thistype.m_jumps[i].m_alightAction != 0) then
 						call thistype.m_jumps[i].m_alightAction.execute(thistype.m_jumps[i].m_unit)
@@ -91,9 +94,8 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 					call thistype.m_jumps[i].destroy()
 					//do not increase i, jump was removed from vector
 					debug call thistype.staticPrint("Is Dead!")
-				else
-					set i = i + 1
 				endif
+				set i = i - 1
 			endloop
 		endmethod
 		

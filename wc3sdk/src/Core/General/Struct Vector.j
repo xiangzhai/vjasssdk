@@ -126,8 +126,8 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				debug elseif (number <= 0 or position + number > this.m_size) then
 					debug call Print("Wrong number: " + I2S(number) + ".")
 					debug return
-				debug elseif (this.m_size + number > $NAME$.maxSize()) then
-					debug call Print("Size would be too high: " + I2S(this.m_size + number) + ". Maximum size is: " + I2S($NAME$.maxSize()) + ".")
+				debug elseif (this.m_size + number > thistype.maxSize()) then
+					debug call Print("Size would be too high: " + I2S(this.m_size + number) + ". Maximum size is: " + I2S(thistype.maxSize()) + ".")
 					debug return
 				debug endif
 				loop
@@ -172,25 +172,25 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				call this.eraseNumber(position, 1)
 			endmethod
 			
-			/// Exchanges the content of the list by the content of @param list, which is another list object containing elements of the same type. Sizes may differ.
-			/// After the call to this member function, the elements in this container are those which were in @param list before the call, and the elements of @param list are those which were in this.
-			public method swap takes $NAME$ list returns nothing
+			/// Exchanges the content of the vector by the content of @param vector, which is another vector object containing elements of the same type. Sizes may differ.
+			/// After the call to this member function, the elements in this container are those which were in @param vector before the call, and the elements of @param vector are those which were in this.
+			public method swap takes thistype vector returns nothing
 				local $ELEMENTTYPE$ tempValue
 				local integer i = 0
-				debug if (this == list) then
-					debug call Print("Same list.")
+				debug if (this == vector) then
+					debug call Print("Same vector.")
 					debug return
 				debug endif
 				loop
-					exitwhen (i == this.m_size or i == list.m_size)
+					exitwhen (i == this.m_size or i == vector.m_size)
 					set tempValue = this.m_element[i]
-					set this.m_element[i] = list.m_element[i]
-					set list.m_element[i] = tempValue
+					set this.m_element[i] = vector.m_element[i]
+					set vector.m_element[i] = tempValue
 					set i = i + 1
 				endloop
 			endmethod
 			
-			/// All the elements in the list container are dropped: they are removed from the list container, leaving it with a size of 0.
+			/// All the elements in the vector container are dropped: they are removed from the vector container, leaving it with a size of 0.
 			public method clear takes nothing returns nothing
 				local integer i = 0
 				loop
@@ -201,36 +201,36 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				set this.m_size = 0
 			endmethod
 			
-			/// Moves @param listNumber elements from list @param list at position @param listPosition into the list container at the specified position @param position, effectively inserting the specified elements into the container and removing them from @param list.
-			/// This increases the container size by the amount of elements inserted, and reduces the size of @param list by the same amount.
-			public method splice takes integer position, $NAME$ list, integer listPosition, integer listNumber returns nothing
-				local integer i = listPosition
-				local integer exitValue = listPosition + listNumber
+			/// Moves @param vectorNumber elements from vector @param vector at position @param vectorPosition into the vector container at the specified position @param position, effectively inserting the specified elements into the container and removing them from @param vector.
+			/// This increases the container size by the amount of elements inserted, and reduces the size of @param vector by the same amount.
+			public method splice takes integer position, thistype vector, integer vectorPosition, integer vectorNumber returns nothing
+				local integer i = vectorPosition
+				local integer exitValue = vectorPosition + vectorNumber
 				local integer secondIndex
 				debug if (position < 0 or position >= this.m_size) then
 					debug call Print("Wrong position: " + I2S(position) + ".")
 					debug return
-				debug elseif (this == list) then
-					debug call Print("Same list.")
+				debug elseif (this == vector) then
+					debug call Print("Same vector.")
 					debug return
-				debug elseif (listPosition < 0 or listPosition >= list.m_size) then
-					debug call Print("Wrong list position: " + I2S(listPosition) + ".")
+				debug elseif (vectorPosition < 0 or vectorPosition >= vector.m_size) then
+					debug call Print("Wrong vector position: " + I2S(vectorPosition) + ".")
 					debug return
-				debug elseif (listNumber <= 0 or listNumber + listPosition > list.m_size) then
-					debug call Print("Wrong list number: " + I2S(listNumber) + ".")
+				debug elseif (vectorNumber <= 0 or vectorNumber + vectorPosition > vector.m_size) then
+					debug call Print("Wrong vector number: " + I2S(vectorNumber) + ".")
 					debug return
 				debug endif
 				loop
 					exitwhen (i == exitValue)
 					set secondIndex = i + position
 					if (secondIndex >= this.m_size) then
-						call this.pushBack(list.m_element[i])
+						call this.pushBack(vector.m_element[i])
 					else
-						call this.insert(secondIndex, list.m_element[i])
+						call this.insert(secondIndex, vector.m_element[i])
 					endif
 					set i = i + 1
 				endloop
-				call list.eraseNumber(listPosition, listNumber)
+				call vector.eraseNumber(vectorPosition, vectorNumber)
 			endmethod
 			
 			/// Removes from the list all the elements with the specific value @param value. This reduces the list size by the amount of elements removed.
@@ -267,8 +267,8 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				endloop
 			endmethod
 			
-			/// The first version, with no parameters, removes all but the first element from every consecutive group of equal elements in the list container.
-			/// Notice that an element is only removed from the list if it is equal to the element immediately preceding it. Thus, this function is specially useful for sorted lists.
+			/// The first version, with no parameters, removes all but the first element from every consecutive group of equal elements in the vector container.
+			/// Notice that an element is only removed from the vector if it is equal to the element immediately preceding it. Thus, this function is specially useful for sorted lists.
 			public method unique takes nothing returns nothing
 				//backwards should be faster
 				local integer i = this.m_size - 2
@@ -298,21 +298,21 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				endloop
 			endmethod
 			
-			/// Merges @param list into the list, inserting all the elements of @param list into the list object at their respective ordered positions. This empties @param list and increases the list size.
+			/// Merges @param vector into the vector, inserting all the elements of @param vector into the vector object at their respective ordered positions. This empties @param vector and increases the vector size.
 			/// @todo insert sorted?!
-			public method merge takes $NAME$ list returns nothing
+			public method merge takes thistype vector returns nothing
 				local integer i = 0
-				call this.insertNumber(0, list.m_size, $NULLVALUE$)
+				call this.insertNumber(0, vector.m_size, $NULLVALUE$)
 				loop
-					exitwhen (i == list.m_size)
-					set this.m_element[i] = list.m_element[i]
+					exitwhen (i == vector.m_size)
+					set this.m_element[i] = vector.m_element[i]
 					set i = i + 1
 				endloop
-				call list.clear()
+				call vector.clear()
 			endmethod
 			
 			/// The second version (template function), has the same behavior, but takes a specific function to perform the comparison operation in charge of determining the insertion points. The comparison function has to perform weak strict ordering (which basically means the comparison operation has to be transitive and irreflexive).
-			/// The merging is performed using two iterators: one to iterate through x and another one to keep the insertion point in the list object; During the iteration of x, if the current element in x compares less than the element at the current insertion point in the list object, the element is removed from x and inserted into that location, otherwise the insertion point is advanced. This operation is repeated until either end is reached, in which moment the remaining elements of x (if any) are moved to the end of the list object and the function returns (this last operation is performed in constant time).
+			/// The merging is performed using two iterators: one to iterate through x and another one to keep the insertion point in the vector object; During the iteration of x, if the current element in x compares less than the element at the current insertion point in the list object, the element is removed from x and inserted into that location, otherwise the insertion point is advanced. This operation is repeated until either end is reached, in which moment the remaining elements of x (if any) are moved to the end of the list object and the function returns (this last operation is performed in constant time).
 			/// @todo implement mergeIf pls.
 			/// template <class Compare>
 			/// void merge ( list<T,Allocator>& x, Compare comp );
@@ -520,11 +520,11 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				set this.m_element[index] = value
 			endmethod
 
-			public method operator< takes $NAME$ list returns boolean
-				debug if (this == list) then
-					debug call Print("Same list.")
+			public method operator< takes thistype vector returns boolean
+				debug if (this == vector) then
+					debug call Print("Same vector.")
 				debug endif
-				return this.m_size < list.m_size
+				return this.m_size < vector.m_size
 			endmethod
 			
 			debug private method debugCheckPositionAndNumber takes integer position, integer number returns boolean
@@ -538,21 +538,22 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				debug return true
 			debug endmethod
 			
-			public static method create takes nothing returns $NAME$
-				local $NAME$ this = $NAME$.allocate()
+			public static method create takes nothing returns thistype
+				local thistype this = thistype.allocate()
 				//members
 				set this.m_size = 0
 				return this
 			endmethod
 			
-			public static method createWithSize takes integer size, $ELEMENTTYPE$ content returns $NAME$
-				local $NAME$ this = $NAME$.allocate()
+			public static method createWithSize takes integer size, $ELEMENTTYPE$ content returns thistype
+				local thistype this = thistype.allocate()
 				call this.resize(size, content)
 				return this
 			endmethod
 			
-			public static method createByOther takes $NAME$ other returns $NAME$
-				local $NAME$ this = $NAME$.allocate()
+			/// Creates a vector by filling it with elements of vector @param other.
+			public static method createByOther takes thistype other returns thistype
+				local thistype this = thistype.allocate()
 				local integer i = 0
 				loop
 					exitwhen (i == other.m_size)
@@ -562,6 +563,8 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				return this
 			endmethod
 			
+			
+			/// Vector will be cleared before destruction.
 			public method onDestroy takes nothing returns nothing
 				call this.clear()
 			endmethod
@@ -571,5 +574,11 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 			endmethod
 		endstruct
 	//! endtextmacro
+	
+	///default vectors
+	//! runtextmacro A_VECTOR("", "AIntegerVector", "integer", "0", "8192") /// @todo JASS_MAX_ARRAY_SIZE
+	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "8192") /// @todo JASS_MAX_ARRAY_SIZE
+	//! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "8192") /// @todo JASS_MAX_ARRAY_SIZE
+	//! runtextmacro A_VECTOR("", "ARealVector", "real", "0.0", "8192") /// @todo JASS_MAX_ARRAY_SIZE
 	
 endlibrary

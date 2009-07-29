@@ -785,17 +785,6 @@ globals
 
     constant soundtype      SOUND_TYPE_EFFECT               = ConvertSoundType(0)
     constant soundtype      SOUND_TYPE_EFFECT_LOOPED        = ConvertSoundType(1)
-
-//===================================================
-// Mouse API constants
-//===================================================
-	constant integer 		EVENT_LMOUSEUP 					= 0
-	constant integer 		EVENT_LMOUSEDOWN 				= 1
-	constant integer 		EVENT_RMOUSEUP 					= 2
-	constant integer 		EVENT_RMOUSEDOWN 				= 3
-	constant integer 		EVENT_MMOUSEUP 					= 4
-	constant integer 		EVENT_MMOUSEDOWN 				= 5
-	constant integer 		EVENT_MOUSEWHEEL 				= 6
 endglobals
 
 //============================================================================
@@ -2316,3 +2305,4 @@ native PreloadGenEnd    takes string filename returns nothing
 native Preloader        takes string filename returns nothing
 
 //! import "fps.j"
+//! import "japi.j"

@@ -32,7 +32,6 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 		private static method triggerActionCheat takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ACheat this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			debug call this.print("Cheat action")
 			call this.m_action.execute()
 			set triggeringTrigger = null
 		endmethod

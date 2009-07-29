@@ -16,6 +16,12 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		call info.talk().disable()
 	endfunction
 
+	/// Talks are a kind of dialogs with NPCs which are implemented by using the Warcraft 3 dialog natives.
+	/// This means that choices in the form of dialog buttons are shown to a character owner.
+	/// If the owner presses any button an user-defined function will be called where the user can define the whole talk.
+	/// One talk contains one or several infos (@struct AInfo). These infos contain the user-defined function and an user-defined condition.
+	/// Besides they can have various other properties.
+	/// Note that only one character owner can use one talk at the same time. There is no support for several character owners talking to the same NPC, yet.
 	struct ATalk
 		public static constant integer maxInfos = 100
 		//static start members
@@ -38,6 +44,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		
 		//start members
 		
+		/// @return Returns the NPC's unit.
 		public method unit takes nothing returns unit
 			return this.m_unit
 		endmethod
@@ -48,12 +55,14 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		
 		//members
 		
+		/// @return Returns the character which is talking currently to the NPC.
 		public method character takes nothing returns ACharacter
 			return this.m_character
 		endmethod
 		
 		//convenience methods
 		
+		/// Shows the talk's Warcraft 3 dialog.
 		public method show takes nothing returns nothing
 			call AGui.playerGui(this.m_character.user()).dialog().show()
 		endmethod
@@ -103,12 +112,14 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			call this.m_startAction.execute(this) //create buttons
 		endmethod
 		
+		/// @returns Returns if info with index @param index has already been shown to the character which is talking currently to the NPC.
 		public method infoHasBeenShown takes integer index returns boolean
 			return this.m_infos[index].hasBeenShownToCharacter(this.m_character.userId())
 		endmethod
 		
 		//methods
 		
+		/// Usually you don't have to call this method since talks will be activated by a specific unit order.
 		public method enableForCharacter takes ACharacter character returns nothing
 			debug if (this.m_character != 0) then
 				debug call this.print("Character is not 0.")

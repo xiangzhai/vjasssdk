@@ -6,32 +6,30 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStruc
 		private static camerasetup cameraSetup
 		private static real viewRefreshRate
 		//members
-		private trigger viewTrigger
+		private trigger m_viewTrigger
 
 		//methods
 
 		public method enable takes nothing returns nothing
-			call EnableTrigger(this.viewTrigger)
-			//call SetCameraTargetControllerNoZForPlayer(this.user(), this.unit(), 0.0, 0.0, false)
+			call EnableTrigger(this.m_viewTrigger)
+			call SetCameraTargetControllerNoZForPlayer(this.user(), this.unit(), 0.0, 0.0, false) /// @todo is not called?!
 		endmethod
 
 		public method disable takes nothing returns nothing
-			call DisableTrigger(this.viewTrigger)
+			call DisableTrigger(this.m_viewTrigger)
 			call ResetToGameCameraForPlayer(this.user(), 0.0)
 		endmethod
 
 		private method refreshView takes nothing returns nothing
-			local real z = GetUnitZ(this.unit()) //GetTerrainZ(GetUnitX(this.unit()), GetUnitY(this.unit()))
-			call SetCameraTargetControllerNoZForPlayer(this.user(), this.unit(), 0.0, 0.0, false) //test
-			call CameraSetupApplyForPlayer(false, AView.cameraSetup, this.user(), 0.0)
+			local real z = GetTerrainZ(GetUnitX(this.unit()), GetUnitY(this.unit()))
+			call CameraSetupApplyForPlayer(false, thistype.cameraSetup, this.user(), 0.0)
 			call SetCameraFieldForPlayer(this.user(), CAMERA_FIELD_ROTATION, GetUnitFacing(this.unit()), 0.0)
-			call SetCameraFieldForPlayer(this.user(), CAMERA_FIELD_ZOFFSET, z + GetUnitFlyHeight(this.unit()), 0.0) //Eigentlich perfekter Z-Wert
-			//128.0 +
+			call SetCameraFieldForPlayer(this.user(), CAMERA_FIELD_ZOFFSET, z + GetUnitFlyHeight(this.unit()) + 128.0, 0.0) //Eigentlich perfekter Z-Wert
 		endmethod
 
 		private static method triggerActionRefreshView takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AView this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
 			call this.refreshView()
 			set triggeringTrigger = null
 		endmethod
@@ -39,10 +37,10 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStruc
 		private method createViewTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.viewTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterTimerEvent(this.viewTrigger, this.viewRefreshRate, true)
-			set triggerAction = TriggerAddAction(this.viewTrigger, function AView.triggerActionRefreshView)
-			call AHashTable.global().storeHandleInteger(this.viewTrigger, "this", this)
+			set this.m_viewTrigger = CreateTrigger()
+			set triggerEvent = TriggerRegisterTimerEvent(this.m_viewTrigger, thistype.viewRefreshRate, true)
+			set triggerAction = TriggerAddAction(this.m_viewTrigger, function thistype.triggerActionRefreshView)
+			call AHashTable.global().storeHandleInteger(this.m_viewTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
@@ -56,8 +54,8 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStruc
 		endmethod
 
 		private method destroyViewTrigger takes nothing returns nothing
-			call AHashTable.global().destroyTrigger(this.viewTrigger)
-			set this.viewTrigger = null
+			call AHashTable.global().destroyTrigger(this.m_viewTrigger)
+			set this.m_viewTrigger = null
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
@@ -67,8 +65,8 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStruc
 
 		public static method init takes camerasetup cameraSetup, real viewRefreshRate returns nothing
 			//static start members
-			set AView.cameraSetup = cameraSetup
-			set AView.viewRefreshRate = viewRefreshRate
+			set thistype.cameraSetup = cameraSetup
+			set thistype.viewRefreshRate = viewRefreshRate
 		endmethod
 	endstruct
 

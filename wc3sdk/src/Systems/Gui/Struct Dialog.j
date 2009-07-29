@@ -3,6 +3,10 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 	/// @todo Size should have value @member ADialog.maxDialogButtons.
 	//! runtextmacro A_VECTOR("private", "ADialogButtonVector", "ADialogButton", "0", "100")
 	
+	/// Provides a kind of wrapper struct for common Warcraft 3 dialogs.
+	/// Actually it's not only a wrapper since it's expands the whole functionality of dialogs by using @struct ADialogButton instances.
+	/// Besides it allows user to add more than 12 (or 16? Warcraft 3 limit) buttons by adding next and previous page buttons and splitting
+	/// all 10-button groups into pages.
 	struct ADialog
 		//static constant members
 		public static constant integer maxDialogButtons = 100
@@ -73,6 +77,7 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			call DialogDisplay(this.m_player, this.m_dialog, displayed)
 		endmethod
 		
+		/// @return Returns if the dialog is displayed to player.
 		public method isDisplayed takes nothing returns boolean
 			return this.m_isDisplayed
 		endmethod
@@ -93,6 +98,8 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			return this.m_currentPage
 		endmethod
 		
+		/// @return Returns the number of the last page (starting from 0).
+		/// For example: If there are three pages this method will return 2.
 		public method maxPageNumber takes nothing returns integer
 			return this.m_maxPageNumber
 		endmethod
@@ -125,8 +132,6 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			if (this.m_dialogButtons.size() - this.m_maxPageNumber * ADialog.maxPageButtons == ADialog.maxPageButtons) then
 				debug call this.print("Button size has reached page maximum.")
 				set this.m_maxPageNumber = this.m_maxPageNumber + 1
-				//call ADialogButton.create(this, thistype.textNextPage, thistype.shortcutNextPage, false, false, ADialogButtonActionNextPage)
-				//call ADialogButton.create(this, thistype.textPreviousPage, thistype.shortcutPreviousPage, false, false, ADialogButtonActionPreviousPage)
 			endif
 			call this.m_dialogButtons.pushBack(instance)
 			return this.m_dialogButtons.backIndex()

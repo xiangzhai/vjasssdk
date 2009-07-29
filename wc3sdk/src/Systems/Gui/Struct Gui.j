@@ -20,12 +20,15 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 		endif
 	endfunction
 
-	/// AGui represents the graphical user interface which can be used by every player.
+	/// Represents the graphical user interface which can be used by all playing players.
 	/// Each player can have exactly one GUI.
 	/// A GUI contains main windows which are user-defined areas on the map. That's necessary because
-	/// trackables, textes and images are map-placed objects.
-	/// When you destroy an instance of AGui all docked main windows will be destroy automatically.
-	/// @todo Dialog buttons should be saved in a list struct.
+	/// trackables, textes and images are map-placed objects and trackables aren't removable.
+	/// When you destroy an instance all docked main windows will be destroy automatically.
+	/// Besides user can access a single @struct ADialog instance by using method @method dialog.
+	/// There also is a simple implemention of shortcuts by creating an unit with shortcut abilities.
+	/// Unfortunately a unit can only have 12 different abilities so you can't use all ASCII keys.
+	/// Maybe shortcut abilities will be added dynamically (by checking which shortcuts are really necessary) in future.
 	struct AGui
 		//static constant members
 		public static constant integer shortcutArrowUpDown = 0 //these are the special shortcuts
