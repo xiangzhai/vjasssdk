@@ -1,0 +1,3 @@
+2009-07-27 Tamino Dauth <tamino@cdauth.de> 
+* Add read functionality of fdf files.
+* Function calls after comment definitions should be ignored.
