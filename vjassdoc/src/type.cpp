@@ -27,6 +27,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Type::sqlTableName = "Types";
 unsigned int Type::sqlColumns;
 std::string Type::sqlColumnStatement;
@@ -38,14 +39,17 @@ void Type::initClass()
 	",Type INT,"
 	"Size INT";
 }
+#endif
 
 Type::Type(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &typeExpression, const std::string &sizeExpression) : typeExpression(typeExpression), sizeExpression(sizeExpression), m_type(0), m_size(0), Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 Type::Type(std::vector<const unsigned char*> &columnVector) : m_type(0), m_size(0), Object(columnVector)
 {
 }
+#endif
 
 void Type::init()
 {
@@ -109,6 +113,7 @@ void Type::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Type::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -119,5 +124,6 @@ std::string Type::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 }

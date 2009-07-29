@@ -94,6 +94,7 @@ void Vjassdoc::configure(bool jass, bool debug, bool privateSpace, bool textmacr
 	Vjassdoc::databases = databases;
 }
 
+#ifdef SQLITE
 void Vjassdoc::initClasses()
 {
 	std::cout << "Before initialization." << std::endl;
@@ -122,6 +123,7 @@ void Vjassdoc::initClasses()
 	DocComment::initClass();
 	std::cout << "After initialization." << std::endl;
 }
+#endif
 
 void Vjassdoc::run()
 {

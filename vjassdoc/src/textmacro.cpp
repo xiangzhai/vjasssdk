@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *TextMacro::sqlTableName = "TextMacros";
 unsigned int TextMacro::sqlColumns;
 std::string TextMacro::sqlColumnStatement;
@@ -36,14 +37,17 @@ void TextMacro::initClass()
 	TextMacro::sqlColumnStatement = Object::sqlColumnStatement +
 	",Parameters VARCHAR(255)";
 }
+#endif
 
 TextMacro::TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &parameters) : m_parameters(parameters), Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 TextMacro::TextMacro(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
 {
 }
+#endif
 
 void TextMacro::init()
 {
@@ -93,6 +97,7 @@ void TextMacro::page(std::ofstream &file) const
 		file << "\t\t-\n";
 }
 
+#ifdef SQLITE
 std::string TextMacro::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -102,5 +107,6 @@ std::string TextMacro::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 }

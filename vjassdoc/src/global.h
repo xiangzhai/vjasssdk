@@ -31,17 +31,23 @@ namespace vjassdoc
 class Global : public Object
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Global(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, bool isPublic, bool isConstant, const std::string &typeExpression, const std::string &valueExpression, const std::string &sizeExpression);
+#ifdef SQLITE
 		Global(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		virtual class Library* library() const;
 		virtual class Scope* scope() const;
 		bool isPrivate() const;

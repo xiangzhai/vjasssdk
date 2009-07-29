@@ -440,7 +440,9 @@ int main(int argc, char *argv[])
 		title = _("vJass API Documentation");
 
 	Vjassdoc::configure(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, compileFilePath, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
+#ifdef SQLITE
 	Vjassdoc::initClasses();
+#endif
 	Vjassdoc::run();
 	Vjassdoc::clear();
 

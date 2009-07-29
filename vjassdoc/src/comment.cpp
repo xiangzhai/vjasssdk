@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Comment::sqlTableName = "Comments";
 unsigned int Comment::sqlColumns;
 std::string Comment::sqlColumnStatement;
@@ -35,15 +36,18 @@ void Comment::initClass()
 	Comment::sqlColumns = Object::sqlColumns;
 	Comment::sqlColumnStatement = Object::sqlColumnStatement;
 }
+#endif
 
 Comment::Comment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 Comment::Comment(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
 {
 	this->prepareVector();
 }
+#endif
 
 Comment::~Comment()
 {

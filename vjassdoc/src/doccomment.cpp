@@ -28,9 +28,11 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *DocComment::sqlTableName = "DocComments";
 unsigned int DocComment::sqlColumns;
 std::string DocComment::sqlColumnStatement;
+#endif
 const int DocComment::maxAuthors = 10;
 const int DocComment::maxSeeObjects = 10;
 const char *DocComment::keyword[DocComment::MaxKeywords] =
@@ -171,6 +173,7 @@ const char *DocComment::keyword[DocComment::MaxKeywords] =
 	*/
 };
 
+#ifdef SQLITE
 void DocComment::initClass()
 {
 	DocComment::sqlColumns = 4 + DocComment::maxAuthors + DocComment::maxSeeObjects;
@@ -195,15 +198,18 @@ void DocComment::initClass()
 	
 	DocComment::sqlColumnStatement += sstream.str();
 }
+#endif
 
 DocComment::DocComment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line) : m_object(0), Object(identifier, sourceFile, line, 0)
 {
 }
 
+#ifdef SQLITE
 DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : m_object(0), Object(columnVector)
 {
 	this->prepareVector();
 }
+#endif
 
 /// @todo FIXME
 void DocComment::init()
@@ -454,6 +460,7 @@ void DocComment::page(std::ofstream &file) const
 		file << "\t\t-\n";
 }
 
+#ifdef SQLITE
 std::string DocComment::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -491,5 +498,6 @@ std::string DocComment::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 }

@@ -30,17 +30,23 @@ namespace vjassdoc
 class Parameter : public Object
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Parameter(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class FunctionInterface *functionInterface, const std::string &typeExpression);
+#ifdef SQLITE
 		Parameter(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		/// Used by class @class FunctionInterface.
 		void setFunctionInterface(class FunctionInterface *functionInterface);
 		class FunctionInterface* functionInterface() const;

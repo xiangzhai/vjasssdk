@@ -27,6 +27,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Implementation::sqlTableName = "Implementations";
 unsigned int Implementation::sqlColumns;
 std::string Implementation::sqlColumnStatement;
@@ -39,15 +40,18 @@ void Implementation::initClass()
 	"Module INT,"
 	"IsOptional BOOLEAN";
 }
+#endif
 
 Implementation::Implementation(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Object *container, const std::string &moduleExpression, bool isOptional) : Object(identifier, sourceFile, line, docComment), m_container(container), m_moduleExpression(moduleExpression), m_isOptional(isOptional)
 {
 }
 
+#ifdef SQLITE
 Implementation::Implementation(std::vector<const unsigned char*> &columnVector) : m_container(0), Object(columnVector)
 {
 	this->prepareVector();
 }
+#endif
 
 void Implementation::init()
 {
@@ -88,6 +92,7 @@ void Implementation::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Implementation::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -99,6 +104,7 @@ std::string Implementation::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 class Object* Implementation::container() const
 {

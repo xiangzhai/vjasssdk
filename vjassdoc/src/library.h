@@ -33,19 +33,23 @@ class Library : public Object
 		{
 			virtual bool operator()(class Object *thisObject, class Object *library) const;
 		};
-	
+
+#ifdef SQLITE	
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions);
 		Library(std::vector<const unsigned char*> &columnVector);
 		virtual ~Library();
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		bool isOnce() const;
 		class Function* initializer() const; //Function, Method (static)
 		std::list<class Library*>* requirement() const;

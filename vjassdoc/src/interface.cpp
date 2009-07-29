@@ -27,6 +27,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Interface::sqlTableName = "Interfaces";
 unsigned int Interface::sqlColumns;
 std::string Interface::sqlColumnStatement;
@@ -39,14 +40,17 @@ void Interface::initClass()
 	"Scope INT,"
 	"IsPrivate BOOLEAN";
 }
+#endif
 
 Interface::Interface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 Interface::Interface(std::vector<const unsigned char*> &columnVector) : m_library(0), m_scope(0), Object(columnVector)
 {
 }
+#endif
 
 void Interface::init()
 {
@@ -99,6 +103,7 @@ void Interface::page(std::ofstream &file) const
 	this->getMethodList(file);
 }
 
+#ifdef SQLITE
 std::string Interface::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -110,6 +115,7 @@ std::string Interface::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 class Library* Interface::library() const
 {

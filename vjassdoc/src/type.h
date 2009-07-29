@@ -31,17 +31,23 @@ namespace vjassdoc
 class Type : public Object
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Type(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &typeExpression, const std::string &sizeExpression);
+#ifdef SQLITE
 		Type(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init(); //the size object can be defined afterwards
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		class Type* type() const;
 		class Object* size() const; //Global (constant), Member (static, constant), Function (constant), Method (static, constant), Literal
 		/**

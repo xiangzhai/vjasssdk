@@ -29,18 +29,24 @@ namespace vjassdoc
 class Method : public Function
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		/// isNative is always false.
 		Method(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, bool isOperator, const std::string &defaultReturnValueExpression);
+#ifdef SQLITE
 		Method(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		virtual class Object* container() const; //Interface, Struct
 		bool isStatic() const;
 		bool isStub() const;

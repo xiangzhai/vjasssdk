@@ -33,6 +33,7 @@ bool Struct::HasExtension::operator()(const class Object *thisObject, const clas
 	return static_cast<const class Struct*>(thisObject)->extension() == static_cast<const class Interface*>(extension);
 }
 
+#ifdef SQLITE
 const char *Struct::sqlTableName = "Structs";
 unsigned int Struct::sqlColumns;
 std::string Struct::sqlColumnStatement;
@@ -49,14 +50,17 @@ void Struct::initClass()
 	"Destructor INT,"
 	"Initializer INT";
 }
+#endif
 
 Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : m_sizeExpression(sizeExpression), m_extensionExpression(extensionExpression), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
 {
 }
 
+#ifdef SQLITE
 Struct::Struct(std::vector<const unsigned char*> &columnVector) : m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(columnVector)
 {
 }
+#endif
 
 void Struct::init()
 {
@@ -199,6 +203,7 @@ void Struct::page(std::ofstream &file) const
 	}
 }
 
+#ifdef SQLITE
 std::string Struct::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -214,6 +219,7 @@ std::string Struct::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 std::list<class Interface*> Struct::extensions() const
 {

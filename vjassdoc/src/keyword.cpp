@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Keyword::sqlTableName = "Keywords";
 unsigned int Keyword::sqlColumns;
 std::string Keyword::sqlColumnStatement;
@@ -38,14 +39,17 @@ void Keyword::initClass()
 	"Scope INT, "
 	"IsPrivate BOOLEAN";
 }
+#endif
 
 Keyword::Keyword(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 Keyword::Keyword(std::vector<const unsigned char*> &columnVector) : m_library(0), Object(columnVector)
 {
 }
+#endif
 
 void Keyword::init()
 {
@@ -80,6 +84,7 @@ void Keyword::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Keyword::sqlStatement() const
 {
 	std::stringstream sstream;
@@ -91,6 +96,7 @@ std::string Keyword::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 class Library* Keyword::library() const
 {

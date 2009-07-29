@@ -29,17 +29,23 @@ namespace vjassdoc
 class SourceFile : public Object
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		SourceFile(const std::string &identifier, const std::string &path);
+#ifdef SQLITE
 		SourceFile(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		std::string path() const;
 		std::string lineLink(const unsigned int &line, const std::string &text) const;
 		

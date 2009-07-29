@@ -37,17 +37,23 @@ class Implementation : public Object
 			virtual bool operator()(const class Implementation *thisImplementation, const class Module *module) const;
 		};
 
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Implementation(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Object *container, const std::string &moduleExpression, bool isOptional);
+#ifdef SQLITE
 		Implementation(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		virtual class Object* container() const;
 		std::string moduleExpression() const;
 		class Module* module() const;

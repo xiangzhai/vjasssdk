@@ -47,6 +47,7 @@ void Object::initClass()
 	"DocComment INT";
 }
 
+#ifdef SQLITE
 std::string Object::sqlFilteredString(const std::string &usedString)
 {
 	std::string result;
@@ -78,6 +79,7 @@ std::string Object::sqlTableHeader(const std::string &tableName, const std::stri
 {
 	return "CREATE TABLE " + tableName + "(Id INT PRIMARY KEY," + entries + ')';
 }
+#endif
 
 Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : m_id(m_maxIds), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line), m_docComment(docComment), m_container(0), m_scope(0), m_library(0)
 {
@@ -87,14 +89,17 @@ Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsi
 		docComment->setObject(this);
 }
 
+#ifdef SQLITE
 Object::Object(std::vector<Object::VectorDataType> &columnVector) : m_sourceFile(0), m_docComment(0), m_container(0), m_scope(0), m_library(0), m_columnVector(columnVector)
 {
 }
+#endif
 
 Object::~Object()
 {
 }
 
+#ifdef SQLITE
 void Object::initByVector()
 {
 	this->m_sourceFile = static_cast<class SourceFile*>(Vjassdoc::getParser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[0])));
@@ -122,6 +127,7 @@ std::string Object::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 //empty condition methods
 class Object* Object::container() const
@@ -326,7 +332,7 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 	return value;
 }
 
-
+#ifdef SQLITE
 void Object::prepareVector()
 {
 	this->m_id = atoi((const char*)this->m_columnVector.front());
@@ -338,5 +344,6 @@ void Object::prepareVector()
 	this->m_line = atoi((const char*)this->m_columnVector[1]);
 	this->m_columnVector.erase(this->m_columnVector.begin() + 1); //drop element
 }
+#endif
 
 }

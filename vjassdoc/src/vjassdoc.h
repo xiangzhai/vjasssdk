@@ -41,7 +41,9 @@ class Vjassdoc
 
 
 		static void configure(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, const std::string &compilePath, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases);
+#ifdef SQLITE
 		static void initClasses();
+#endif
 		static void run();
 		static void clear();
 		static class Parser* getParser();

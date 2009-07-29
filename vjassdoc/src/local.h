@@ -31,17 +31,23 @@ class Function;
 class Local : public Object
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Local(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Function *function, const std::string &typeExpression, const std::string &valueExpression);
+#ifdef SQLITE
 		Local(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		class Function* function() const; //Function, Method
 		class Object* type() const; //Type, Interface, Struct
 		std::string typeExpression() const; //Unknown type

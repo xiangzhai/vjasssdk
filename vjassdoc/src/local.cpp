@@ -28,6 +28,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Local::sqlTableName = "Locals";
 unsigned int Local::sqlColumns;
 std::string Local::sqlColumnStatement;
@@ -43,14 +44,17 @@ void Local::initClass()
 	"ValueExpression VARCHAR(50)"
 	;
 }
+#endif
 
 Local::Local(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Function *function, const std::string &typeExpression, const std::string &valueExpression) : Object(identifier, sourceFile, line, docComment), m_function(function), m_type(0), m_typeExpression(typeExpression), m_value(0), m_valueExpression(valueExpression)
 {
 }
 
+#ifdef SQLITE
 Local::Local(std::vector<const unsigned char*> &columnVector) : m_function(0), m_type(0), m_value(0), Object(columnVector)
 {
 }
+#endif
 
 /// @todo Value expressions can be calculations etc..
 void Local::init()
@@ -110,6 +114,7 @@ void Local::page(std::ofstream &file) const
 	}
 }
 
+#ifdef SQLITE
 std::string Local::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -126,5 +131,6 @@ std::string Local::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 }

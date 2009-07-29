@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Module::sqlTableName = "Modules";
 unsigned int Module::sqlColumns;
 std::string Module::sqlColumnStatement;
@@ -35,14 +36,17 @@ void Module::initClass()
 	Module::sqlColumns = Interface::sqlColumns;
 	Module::sqlColumnStatement = Interface::sqlColumnStatement;
 }
+#endif
 
 Module::Module(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
 {
 }
 
+#ifdef SQLITE
 Module::Module(std::vector<const unsigned char*> &columnVector) : Interface(columnVector)
 {
 }
+#endif
 
 void Module::pageNavigation(std::ofstream &file) const
 {

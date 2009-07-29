@@ -29,13 +29,17 @@ namespace vjassdoc
 class Comment : public Object
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Comment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment);
+#ifdef SQLITE
 		Comment(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual ~Comment();
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;

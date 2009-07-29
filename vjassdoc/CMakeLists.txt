@@ -3,13 +3,11 @@ cmake_policy(SET CMP0005 NEW)
 
 project(vjassdoc)
 
-#set(FOUND_SQLITE
-#find_library(sqlite3 REQUIRED)
-#)
+find_library(gettext REQUIRED)
 
-#if (FOUND_SQLITE)
-	add_definitions(-DSQLITE=1)
-#endif (FOUND_SQLITE)
+if (SQLITE)
+	find_library(sqlite3 REQUIRED)
+endif (SQLITE)
 
 if (UNIX)
 	set(LIB_NAME

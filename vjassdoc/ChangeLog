@@ -1,3 +1,6 @@
+2009-07-29 Tamino Dauth <tamino@cdauth.de>
+* Fixed and added SQLITE macro checks which should decrease compile time if you do not use sqlite flag.
+
 2009-07-28 Tamino Dauth <tamino@cdauth.de>
 * Moved method definition getToken of class File into file "src/utilities.cpp".
 * Fixed super detection bug of members.

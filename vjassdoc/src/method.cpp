@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Method::sqlTableName = "Methods";
 unsigned int Method::sqlColumns;
 std::string Method::sqlColumnStatement;
@@ -40,14 +41,17 @@ void Method::initClass()
 	"IsOperator BOOL,"
 	"DefaultReturnValue INT";
 }
+#endif
 
 Method::Method(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, bool isOperator, const std::string &defaultReturnValueExpression) : Function(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression, isPublic, isConstant, false), m_container(container), m_isStatic(isStatic), m_isStub(isStub), m_isOperator(isOperator), m_defaultReturnValueExpression(defaultReturnValueExpression), m_defaultReturnValue(0)
 {
 }
 
+#ifdef SQLITE
 Method::Method(std::vector<const unsigned char*> &columnVector) : m_container(0), m_defaultReturnValue(0), Function(columnVector)
 {
 }
+#endif
 
 void Method::init()
 {
@@ -105,6 +109,7 @@ void Method::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Method::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -118,6 +123,7 @@ std::string Method::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 class Object* Method::container() const
 {

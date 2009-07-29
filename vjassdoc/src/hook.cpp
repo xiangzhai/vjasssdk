@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Hook::sqlTableName = "Hooks";
 unsigned int Hook::sqlColumns;
 std::string Hook::sqlColumnStatement;
@@ -39,15 +40,18 @@ void Hook::initClass()
 	"HookFunction INT,"
 	"HookFunctionExpression VARCHAR(255),";
 }
+#endif
 
 Hook::Hook(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &functionExpression, const std::string &hookFunctionExpression) : Object(identifier, sourceFile, line, docComment), m_function(0), m_functionExpression(functionExpression), m_hookFunction(0), m_hookFunctionExpression(hookFunctionExpression)
 {
 }
 
+#ifdef SQLITE
 Hook::Hook(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_function(0), m_hookFunction(0)
 {
 	this->prepareVector();
 }
+#endif
 
 Hook::~Hook()
 {
@@ -92,6 +96,7 @@ void Hook::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Hook::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -104,5 +109,6 @@ std::string Hook::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 }

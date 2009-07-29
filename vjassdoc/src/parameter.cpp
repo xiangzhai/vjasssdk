@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Parameter::sqlTableName = "Parameters";
 unsigned int Parameter::sqlColumns;
 std::string Parameter::sqlColumnStatement;
@@ -38,14 +39,17 @@ void Parameter::initClass()
 	"TypeExpression VARCHAR(50),"
 	"Type INT";
 }
+#endif
 
 Parameter::Parameter(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class FunctionInterface *functionInterface, const std::string &typeExpression) : Object(identifier, sourceFile, line, docComment), m_functionInterface(functionInterface), m_typeExpression(typeExpression), m_type(0)
 {
 }
 
+#ifdef SQLITE
 Parameter::Parameter(std::vector<const unsigned char*> &columnVector) : m_functionInterface(0), m_type(0), Object(columnVector)
 {
 }
+#endif
 
 void Parameter::init()
 {
@@ -88,6 +92,7 @@ void Parameter::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Parameter::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -99,5 +104,6 @@ std::string Parameter::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 }

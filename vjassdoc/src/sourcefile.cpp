@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *SourceFile::sqlTableName = "SourceFiles";
 unsigned int SourceFile::sqlColumns;
 std::string SourceFile::sqlColumnStatement;
@@ -37,14 +38,17 @@ void SourceFile::initClass()
 	"Identifier VARCHAR(255),"
 	"Path VARCHAR(255)";
 }
+#endif
 
 SourceFile::SourceFile(const std::string &identifier, const std::string &path) : Object(identifier, 0, 0, 0), m_path(path)
 {
 }
 
+#ifdef SQLITE
 SourceFile::SourceFile(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
 {
 }
+#endif
 
 void SourceFile::init()
 {
@@ -84,6 +88,7 @@ void SourceFile::page(std::ofstream &file) const
 
 }
 
+#ifdef SQLITE
 std::string SourceFile::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -93,5 +98,6 @@ std::string SourceFile::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 }

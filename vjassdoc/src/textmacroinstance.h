@@ -35,17 +35,23 @@ class TextMacroInstance : public TextMacro
 			virtual bool operator()(const class TextMacroInstance *thisTextMacroInstance, const class TextMacro *textMacro) const;
 		};
 
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		TextMacroInstance(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &arguments);
+#ifdef SQLITE
 		TextMacroInstance(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		virtual class TextMacro* textMacro() const;
 		
 	protected:

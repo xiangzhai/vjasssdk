@@ -28,6 +28,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Global::sqlTableName = "Globals";
 unsigned int Global::sqlColumns;
 std::string Global::sqlColumnStatement;
@@ -47,15 +48,18 @@ void Global::initClass()
 	"Size INT,"
 	"SizeLiteral INT";
 }
+#endif
 
 Global::Global(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, bool isPublic, bool isConstant, const std::string &typeExpression, const std::string &valueExpression, const std::string &sizeExpression) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_isPublic(isPublic), m_isConstant(isConstant), m_typeExpression(typeExpression), valueExpression(valueExpression), sizeExpression(sizeExpression), m_type(0), m_value(0), m_size(0), Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 Global::Global(std::vector<const unsigned char*> &columnVector) : m_type(0), m_value(0), m_size(0), Object(columnVector)
 {
 	this->prepareVector();
 }
+#endif
 
 /// @todo Value expressions can be calculations etc..
 void Global::init()
@@ -145,6 +149,7 @@ void Global::page(std::ofstream &file) const
 	}
 }
 
+#ifdef SQLITE
 std::string Global::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -164,6 +169,7 @@ std::string Global::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 class Library* Global::library() const
 {

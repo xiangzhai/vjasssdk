@@ -30,9 +30,11 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Library::sqlTableName = "Libraries";
 unsigned int Library::sqlColumns;
 std::string Library::sqlColumnStatement;
+#endif
 
 bool Library::HasRequirement::operator()(class Object *thisObject, class Object *library) const
 {
@@ -51,6 +53,7 @@ bool Library::HasRequirement::operator()(class Object *thisObject, class Object 
 	return false;
 }
 
+#ifdef SQLITE
 void Library::initClass()
 {
 	Library::sqlColumns = Object::sqlColumns + 3;
@@ -60,14 +63,17 @@ void Library::initClass()
 	"Initializer INT,"
 	"Requirement INT";
 }
+#endif
 
 Library::Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions) : m_isOnce(isOnce), initializerExpression(initializerExpression), requirementExpressions(requirementExpressions), m_initializer(0), m_requirement(0), Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 Library::Library(std::vector<const unsigned char*> &columnVector) : requirementExpressions(0), m_initializer(0), m_requirement(0), Object(columnVector)
 {
 }
+#endif
 
 Library::~Library()
 {
@@ -370,6 +376,7 @@ void Library::page(std::ofstream &file) const
 	//contained scopes
 }
 
+#ifdef SQLITE
 std::string Library::sqlStatement() const
 {
 	std::stringstream sstream;
@@ -385,5 +392,6 @@ std::string Library::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 }

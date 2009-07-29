@@ -29,18 +29,24 @@ namespace vjassdoc
 class Hook : public Object
 {
 	public:
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
+#endif
 		Hook(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &functionExpression, const std::string &hookFunctionExpression);
+#ifdef SQLITE
 		Hook(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual ~Hook();
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		class Function* function() const;
 		std::string functionExpression() const;
 		class Function* hookFunction() const;

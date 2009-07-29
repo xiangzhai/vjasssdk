@@ -44,7 +44,9 @@ class Object
 	public:
 		typedef unsigned int IdType;
 		typedef unsigned int LineType;
+#ifdef SQLITE
 		typedef const unsigned char* VectorDataType;
+#endif
 	
 		//static const char *sqlTableName;
 		static unsigned int sqlColumns;
@@ -56,21 +58,27 @@ class Object
 		static std::string objectLink(const class Object *object, const std::string &identifier = "-"); //should use the id
 		static Object::IdType objectId(const class Object *object);
 		static void setMaxIds(Object::IdType maxIds); //only used by loading objects from database
+#ifdef SQLITE
 		static std::string sqlFilteredString(const std::string &usedString);
 		/// @todo This function should be used to distribute all table header creations to their classes.
 		static std::string sqlTableHeader(const std::string &tableName, const std::string &entries);
+#endif
 	
 		Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment);
+#ifdef SQLITE		
 		Object(std::vector<Object::VectorDataType> &columnVector);
+#endif
 		virtual ~Object();
 
 		virtual void init() = 0; //Some Objects has to be initialized after finding all objects of all files.
+#ifdef SQLITE
 		virtual void initByVector();
 		void clearVector();
+		virtual std::string sqlStatement() const;
+#endif
 		virtual void pageNavigation(std::ofstream &file) const = 0;
 		virtual void page(std::ofstream &file) const = 0;
 		std::string pageLink() const;
-		virtual std::string sqlStatement() const;
 		void setId(Object::IdType id); /// @todo Friend relation to @class Parser.
 		Object::IdType id() const;
 		void addIdentifier(const std::string &identifier); //required by doc comments
@@ -78,7 +86,9 @@ class Object
 		class SourceFile* sourceFile() const;
 		Object::LineType line() const;
 		class DocComment* docComment() const;
+#ifdef SQLITE
 		std::vector<Object::VectorDataType> columnVector() const;
+#endif
 		
 		//empty condition methods, used by the search algorithm's comparison
 		virtual class Object* container() const;
@@ -127,8 +137,9 @@ class Object
 		* Checks if @param valueExpression is a literal or an object. If it's an object (like a global or function call) it will be searched in parser lists.
 		*/
 		class Object* findValue(class Object *type, std::string &valueExpression);
-		
+#ifdef SQLITE
 		void prepareVector();
+#endif
 		
 		class Object *m_container; /// @todo Interface?
 		class Scope *m_scope;
@@ -145,8 +156,9 @@ class Object
 		class SourceFile *m_sourceFile;
 		Object::LineType m_line;
 		class DocComment *m_docComment;
-		
+#ifdef SQLITE
 		std::vector<Object::VectorDataType> m_columnVector;
+#endif
 };
 
 inline Object::IdType Object::maxIds()
@@ -235,10 +247,12 @@ inline class DocComment* Object::docComment() const
 	return this->m_docComment;
 }
 
+#ifdef SQLITE
 inline std::vector<Object::VectorDataType> Object::columnVector() const
 {
 	return this->m_columnVector;
 }
+#endif
 
 inline bool Object::AlphabeticalComparator::operator()(const class Object *first, const class Object *second) const
 {

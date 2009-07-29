@@ -168,6 +168,7 @@ Parser::Parser() :
 		m_handleType(new Type("handle", 0, 0, 0, "", "")),
 		m_codeType(new Type("code", 0, 0, 0, "", ""))
 {
+#ifdef SQLITE
 	if (!Vjassdoc::getDatabases().empty())
 	{
 		if (Vjassdoc::showVerbose())
@@ -181,6 +182,7 @@ Parser::Parser() :
 			this->addDatabase((*iterator).c_str());
 		}
 	}
+#endif
 	
 	//add default types
 	if (Vjassdoc::showVerbose())
@@ -307,10 +309,12 @@ Parser::~Parser()
 
 	this->docCommentList.clear();
 	
+#ifdef SQLITE
 	for (std::vector<struct Database*>::iterator iterator = this->databaseVector.begin(); iterator != this->databaseVector.end(); ++iterator)
 		delete *iterator;
 
 	this->databaseVector.clear();
+#endif
 }
 
 void Parser::createInheritanceListPage()

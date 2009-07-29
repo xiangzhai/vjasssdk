@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Scope::sqlTableName = "Scopes";
 unsigned int Scope::sqlColumns;
 std::string Scope::sqlColumnStatement;
@@ -38,14 +39,17 @@ void Scope::initClass()
 	"IsPrivate BOOLEAN,"
 	"Initializer INT";
 }
+#endif
 
 Scope::Scope(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, bool isPrivate, const std::string initializerExpression) : m_library(library), m_isPrivate(isPrivate), initializerExpression(initializerExpression), m_initializer(0), Object(identifier, sourceFile, line, docComment)
 {
 }
 
+#ifdef SQLITE
 Scope::Scope(std::vector<const unsigned char*> &columnVector) : m_library(0), m_initializer(0), Object(columnVector)
 {
 }
+#endif
 
 void Scope::init()
 {
@@ -258,6 +262,7 @@ void Scope::page(std::ofstream &file) const
 		file << "\t\t-\n";
 }
 
+#ifdef SQLITE
 std::string Scope::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -269,6 +274,7 @@ std::string Scope::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 
 class Library* Scope::library() const

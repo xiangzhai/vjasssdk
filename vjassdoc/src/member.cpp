@@ -28,6 +28,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Member::sqlTableName = "Members";
 unsigned int Member::sqlColumns;
 std::string Member::sqlColumnStatement;
@@ -40,14 +41,17 @@ void Member::initClass()
 	"IsStatic BOOLEAN,"
 	"IsDelegate BOOLEAN";
 }
+#endif
 
 Member::Member(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, bool isPublic, bool isConstant, const std::string &typeExpression, const std::string &valueExpression, const std::string &sizeExpression, class Object *container, bool isStatic, bool isDelegate) : m_container(container), m_isStatic(isStatic), m_isDelegate(isDelegate), Global(identifier, sourceFile, line, docComment, library, scope, isPrivate, isPublic, isConstant, typeExpression, valueExpression, sizeExpression)
 {
 }
 
+#ifdef SQLITE
 Member::Member(std::vector<const unsigned char*> &columnVector) : m_container(0), Global(columnVector)
 {
 }
+#endif
 
 void Member::init()
 {
@@ -86,6 +90,7 @@ void Member::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Member::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -97,6 +102,7 @@ std::string Member::sqlStatement() const
 
 	return sstream.str();
 }
+#endif
 
 class Object* Member::container() const
 {

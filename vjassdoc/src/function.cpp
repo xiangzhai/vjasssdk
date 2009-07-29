@@ -26,6 +26,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *Function::sqlTableName = "Functions";
 unsigned int Function::sqlColumns;
 std::string Function::sqlColumnStatement;
@@ -38,15 +39,18 @@ void Function::initClass()
 	"IsConstant BOOL,"
 	"IsNative BOOL";
 }
+#endif
 
 Function::Function(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, bool isNative) : m_isPublic(isPublic), m_isConstant(isConstant), m_isNative(isNative), FunctionInterface(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression)
 {
 }
 
+#ifdef SQLITE
 Function::Function(std::vector<const unsigned char*> &columnVector) : FunctionInterface(columnVector)
 {
 	this->prepareVector();
 }
+#endif
 
 void Function::init()
 {
@@ -76,6 +80,7 @@ void Function::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string Function::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -87,5 +92,6 @@ std::string Function::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 }

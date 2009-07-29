@@ -27,6 +27,7 @@
 namespace vjassdoc
 {
 
+#ifdef SQLITE
 const char *FunctionInterface::sqlTableName = "FunctionInterfaces";
 unsigned int FunctionInterface::sqlColumns;
 std::string FunctionInterface::sqlColumnStatement;
@@ -48,6 +49,7 @@ void FunctionInterface::initClass()
 	DocComment::sqlColumnStatement += sstream.str();
 	DocComment::sqlColumnStatement += "ReturnType INT";
 }
+#endif
 
 FunctionInterface::FunctionInterface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate), m_parameters(parameters), m_returnTypeExpression(returnTypeExpression), m_returnType(0)
 {
@@ -56,10 +58,12 @@ FunctionInterface::FunctionInterface(const std::string &identifier, class Source
 	      (*iterator)->setFunctionInterface(this);
 }
 
+#ifdef SQLITE
 FunctionInterface::FunctionInterface(std::vector<const unsigned char*> &columnVector) : m_library(0), m_scope(0), m_returnType(0), Object(columnVector)
 {
 	this->prepareVector();
 }
+#endif
 
 FunctionInterface::~FunctionInterface()
 {
@@ -137,6 +141,7 @@ void FunctionInterface::page(std::ofstream &file) const
 	;
 }
 
+#ifdef SQLITE
 std::string FunctionInterface::sqlStatement() const
 {
 	std::ostringstream sstream;
@@ -167,6 +172,7 @@ std::string FunctionInterface::sqlStatement() const
 	
 	return sstream.str();
 }
+#endif
 
 class Library* FunctionInterface::library() const
 {

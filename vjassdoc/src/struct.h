@@ -36,17 +36,23 @@ class Struct : public Interface
 			virtual bool operator()(const class Object *thisObject, const class Object *extension) const;
 		};
 
+#ifdef SQLITE
 		static const char *sqlTableName;
 		static unsigned int sqlColumns;
 		static std::string sqlColumnStatement;
 	
 		static void initClass();
+#endif
 		Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression);
+#ifdef SQLITE
 		Struct(std::vector<const unsigned char*> &columnVector);
+#endif
 		virtual void init();
 		virtual void pageNavigation(std::ofstream &file) const;
 		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
 		virtual std::string sqlStatement() const;
+#endif
 		class Object* size() const;
 		std::string sizeExpression() const;
 		class Interface* extension() const;
