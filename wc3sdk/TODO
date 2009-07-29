@@ -1,3 +1,16 @@
+2009-07-23 Tamino Dauth <tamino@cdauth.de>
+* Note: Do not destroy triggers in their own actions if there are some TriggerSleepAction calls after destruction.
+
+2009-07-18 Tamino Dauth <tamino@cdauth.de>
+* Native declarations in map file don't work.
+
+2009-07-11 Tamino Dauth <tamino@cdauth.de>
+* Maybe we should use function UnitDropItemSlot instead of all those item removals in the inventory system.
+
+2009-07-07 Tamino Dauth <tamino@cdauth.de>
+* Perhaps you should add various characters schema pages/views like statistics (deaths, kills etc.).
+* Add button models for system debugger (by using Blender).
+
 2009-06-21 Tamino Dauth <tamino@cdauth.de>
 * Note: Never create add conditions or actions to a trigger which are defined as static methods below the trigger creation.
 

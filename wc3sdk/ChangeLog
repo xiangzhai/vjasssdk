@@ -1,3 +1,47 @@
+2009-07-29 Tamino Dauth <tamino@cdauth.de>
+* Added file "archives/Creatures/Models/Creatures/Humans/Wizard.mdx".
+* Added file "archives/Creatures/Textures/Creatures/Humans/Wizard.blp".
+
+2009-07-27 Tamino Dauth <tamino@cdauth.de>
+* Improved struct APvp.
+
+2009-07-25 Tamino Dauth <tamino@cdauth.de>
+* Added default vector structs.
+
+2009-07-25 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/Systems/Gui/Struct Vote.j".
+
+2009-07-20 Tamino Dauth <tamino@cdauth.de>
+* Improved talk skip treatment.
+
+2009-07-11 Tamino Dauth <tamino@cdauth.de>
+* Added function UnitDropSlot.
+* Added file "src/Core/Net/Struct Host.j".
+* Added file "src/Core/Net/Import.j".
+
+2009-07-10 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/Systems/Character/Struct Talk Log.j".
+* Improved text macro A_VECTOR.
+* Implemented talk log functionality.
+
+2009-07-08 Tamino Dauth <tamino@cdauth.de>
+* Revised struct ACharacter.
+* Revised struct AShrine.
+* Revised struct ACharactersScheme.
+* Revised struct AClassSelection.
+* Revised struct AClass.
+* Revised struct AFight.
+* Added file "src/japi.j".
+* Renamed file "src/fps.j" to "src/rtc.j".
+* Those two files will be imported automatically by file "src/Import Asl.j" now.
+* Added file "src/Core/Debug/Struct Benchmark.j".
+
+2009-07-07 Tamino Dauth <tamino@cdauth.de>
+* Revised struct ASystemDebugger.
+* Added file "src/Core/General/Struct Asl.j".
+* Revised structs AMovement and AFight.
+* Improved several documentation comments.
+
 2009-06-29 Tamino Dauth <tamino@cdauth.de>
 * Added method diameter to struct ACircle.
 
