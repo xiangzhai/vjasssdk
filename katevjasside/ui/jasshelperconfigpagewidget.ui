@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>JasshelperConfigPageWidget</class>
+ <widget class="QWidget" name="JasshelperConfigPageWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>822</width>
+    <height>527</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_4">
+   <item row="0" column="0">
+    <widget class="KEditListBox" name="lookupFoldersKEditListBox">
+     <property name="locale">
+      <locale language="C" country="AnyCountry"/>
+     </property>
+     <property name="title">
+      <string>Lookup Folders</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="KEditListBox" name="externalToolsKEditListBox">
+     <property name="title">
+      <string>External Tools</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Map Mode</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="KUrlRequester" name="mapScriptKUrlRequester"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="KUrlRequester" name="mapKUrlRequester"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1" rowspan="2">
+    <widget class="QGroupBox" name="optionsGroupBox">
+     <property name="title">
+      <string>Optionen</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="KUrlRequester" name="selectJasshelperKUrlRequester"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="KUrlRequester" name="selectConfigFileKUrlRequester"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="KUrlRequester" name="selectJassCompilerKUrlRequester_2"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="KUrlRequester" name="selectWewarlockKUrlRequester_3"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="debugCheckBox">
+        <property name="text">
+         <string>Debug Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="nopreprocessorCheckBox">
+        <property name="text">
+         <string>No Preprocessors</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="nooptimizeCheckBox">
+        <property name="text">
+         <string>No Optimize</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QCheckBox" name="scriptonlyCheckBox">
+        <property name="text">
+         <string>Scripts Only</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QCheckBox" name="warcityCheckBox">
+        <property name="text">
+         <string>Use Warcity</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QCheckBox" name="showerrorsCheckBox">
+        <property name="text">
+         <string>Show Previous Errors</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="scriptModeGroupBox">
+     <property name="title">
+      <string>Script Mode</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="KUrlRequester" name="inputFiletKUrlRequester"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="KUrlRequester" name="outputFileKUrlRequester"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KEditListBox</class>
+   <extends>QGroupBox</extends>
+   <header>keditlistbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>scriptonlyCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>groupBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>495</x>
+     <y>449</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>325</x>
+     <y>220</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scriptonlyCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>scriptModeGroupBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>453</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scriptonlyCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>warcityCheckBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>448</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>470</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
