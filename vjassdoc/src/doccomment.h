@@ -53,6 +53,7 @@ class DocComment : public Object
 		class Object *object() const;
 		std::vector<std::string> authors() const;
 		std::vector<class Object*> seeObjects() const;
+		std::vector<std::string> todos() const;
 
 	protected:
 		enum Keyword
@@ -193,6 +194,7 @@ class DocComment : public Object
 		class Object *m_object;
 		std::vector<std::string> m_authors;
 		std::vector<class Object*> m_seeObjects;
+		std::vector<std::string> m_todos;
 	
 		class DocComment* docComment() const; //Do not use
 };
@@ -220,6 +222,11 @@ inline std::vector<std::string> DocComment::authors() const
 inline std::vector<class Object*> DocComment::seeObjects() const
 {
 	return this->m_seeObjects;
+}
+
+inline std::vector<std::string> DocComment::todos() const
+{
+	return this->m_todos;
 }
 
 }

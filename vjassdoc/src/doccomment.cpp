@@ -211,10 +211,8 @@ DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : m_obje
 }
 #endif
 
-/// @todo FIXME
 void DocComment::init()
 {
-	std::cout << "Documentation comment initialization" << std::endl;
 	std::string result = this->identifier();
 
 	// ab index suchen
@@ -222,8 +220,7 @@ void DocComment::init()
 	{
 		std::string::size_type oldIndex = index; //position of identifier (after erasing): @author Peter, position of P
 		std::string keyword = getToken(result, ++index);
-		result.erase(oldIndex, index);
-		std::cout << "Keyword " << keyword << std::endl;
+		result.erase(oldIndex, index - oldIndex);
 		
 		if (keyword.empty()) //@ only
 			continue;
@@ -237,7 +234,7 @@ void DocComment::init()
 					case DocComment::AuthorKeyword:
 					{
 						std::string::size_type start = oldIndex;
-						std::string::size_type length = result.find(oldIndex, '\n');
+						std::string::size_type length = result.find('\n', oldIndex); /// @todo maybe search for @ character, too. Read doxygen specification.
 						
 						if (length == std::string::npos)
 							length = result.length() - oldIndex;
@@ -249,7 +246,6 @@ void DocComment::init()
 						
 						std::string author = result.substr(start, length);
 						result.erase(start, length); /// @todo get the whole line or until next @ character.
-						
 						this->m_authors.push_back(author);
 						break;
 					}
@@ -258,7 +254,6 @@ void DocComment::init()
 					{
 						std::string::size_type end = result.find('\n', oldIndex);
 						std::string::size_type length = end != std::string::npos ? end - oldIndex : result.length() - oldIndex;
-						
 						this->m_briefDescription = result.substr(oldIndex, length); // get the line
 						result.erase(oldIndex, length);
 						break;
@@ -282,20 +277,33 @@ void DocComment::init()
 						break;
 					}
 					
+					case DocComment::TodoKeyword:
+					{
+						std::string::size_type start = oldIndex;
+						std::string::size_type length = result.find('\n', oldIndex); /// @todo maybe search for @ character, too. Read doxygen specification.
+						
+						if (length == std::string::npos)
+							length = result.length() - oldIndex;
+						else
+							length -= oldIndex;
+						
+						if (length == 0)
+							break;
+						
+						std::string todo = result.substr(start, length);
+						result.erase(start, length); /// @todo get the whole line or until next @ character.
+						this->m_todos.push_back(todo);
+						break;
+					}
+					
 					default:
 					{
 						if (i >= DocComment::CommentKeyword && i <= DocCommentKeyword)
 						{
 							std::string::size_type position = oldIndex;
 							std::string identifier = getToken(result, oldIndex);
-							
-							std::cout << "Identifier " << identifier << std::endl;
-							
 							class Object *object = this->searchObjectInList(identifier, Parser::List(i), Parser::Unspecified);
-							std::cout << "object " << object << std::endl;
 							std::string link = Object::objectPageLink(object, identifier);
-							std::cout << "link " << link << std::endl;
-							
 							result.replace(position, oldIndex - position, link);
 						}
 					}
@@ -307,86 +315,7 @@ void DocComment::init()
 		
 	}
 	
-	std::cout << "After initialization" << std::endl;
 	this->setIdentifier(result);
-
-/*
-	//std::cout << "Init doc comment -----------------------------" << std::endl;
-	//std::cout << "Identifier " << this->identifier() << std::endl;
-
-	std::string result;
-	unsigned int oldIndex = 0;
-	unsigned int newIndex = this->identifier().find('@');
-
-	while (newIndex != std::string::npos)
-	{
-		result += this->identifier().substr(oldIndex, newIndex - oldIndex);
-		++newIndex;
-		
-		if (newIndex == this->identifier().length())
-			break;
-		
-		std::string token = getToken(this->identifier(), newIndex);
-		//std::cout << "Token: " << token << " and index " << newIndex << std::endl;
-		bool found = false;
-		
-		for (int i = 0; i < DoComment::Author; ++i)
-		{
-			if (token == DocComment::keyword[i])
-			{
-				//std::cout << "Found keyword: " << DocComment::keyword[i] << " and has index " << newIndex << std::endl;
-				found = true;
-				token = getToken(this->identifier(), newIndex); //FIXME
-				//std::cout << "New token: " << token << std::endl;
-				
-				if (token.empty())
-					break;
-				
-				/// @todo Cut . , ? ! etc: This is @functioninterface Peter!
-				int lastIndex = token.length() - 1;
-				char lastChar = token[lastIndex];
-				
-				if (lastChar == '.' || lastChar == ',' || lastChar == '!' || lastChar == '?')
-					token = token.substr(0, lastIndex);
-				else
-					lastChar = 0;
-				
-				//std::cout << "Searching in list " << i << " for token " << token << std::endl;
-				class Object *object = this->searchObjectInList(token, Parser::List(i));
-				result += Object::objectPageLink(object, token);
-				
-				if (lastChar != 0)
-					result += lastChar;
-				
-				//if (object != 0)
-					//std::cout << "Object " << object->identifier() << " is not null." << std::endl;
-
-				break;
-			}
-		}
-		
-		
-		if (!found)
-			result += token;
-		
-		oldIndex = newIndex;
-		
-		if (newIndex >= this->identifier().length() - 1)
-			break;
-		
-		newIndex = this->identifier().find('@', newIndex);
-	}
-	
-	//std::cout << "Old index " << oldIndex << std::endl;
-	
-	if (oldIndex <  this->identifier().length() - 1)
-	{
-		//std::cout << "Old index " << oldIndex << std::endl;
-		result += this->identifier().substr(oldIndex);
-	}
-	
-	m_formattedText = result;
-*/
 }
 
 void DocComment::pageNavigation(std::ofstream &file) const
@@ -397,6 +326,7 @@ void DocComment::pageNavigation(std::ofstream &file) const
 	<< "\t\t\t<li><a href=\"#Object\">"		<< _("Object") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Authors\">"		<< _("Authors") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#See Objects\">"	<< _("See Objects") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Todos\">"		<< _("Todos") << "</a></li>\n"
 	;
 }
 
@@ -420,39 +350,45 @@ void DocComment::page(std::ofstream &file) const
 	<< "\t\t" << Object::objectPageLink(this->object()) << '\n'
 	<< "\t\t<h2><a name=\"Authors\">" << _("Authors") << "</a></h2>\n"
 	;
-	
-	std::cout << "Bla 1" << std::endl;
-	
+
 	if (!this->m_authors.empty())
 	{
-		std::cout << "Not empty" << std::endl;
-	
 		file << "\t\t<ul>\n";
 	
-		/// @todo Memory access error.
-		//for (std::vector<std::string>::iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end(); ++iterator)
-			//file << "\t\t\t<li>" << *iterator << "</li>\n";
+		for (std::vector<std::string>::const_iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end(); ++iterator)
+			file << "\t\t\t<li>" << *iterator << "</li>\n";
 		
 		file << "\t\t</ul>\n";
 	}
 	else
 		file << "\t\t-\n";
 	
-	
-	std::cout << "Bla 2" << std::endl;
-	
 	file
 	<< "\t\t<h2><a name=\"See Objects\">" << _("See Objects") << "</a></h2>\n"
 	;
-	
-	std::cout << "Bla 3" << std::endl;
-	
+
 	if (!this->m_seeObjects.empty())
 	{
 		file << "\t\t<ul>\n";
 	
-		//for (std::vector<class Object*>::iterator iterator = this->m_seeObjects.begin(); iterator != this->m_seeObjects.end(); ++iterator)
-			//file << "\t\t\t<li>" << *iterator << "</li>\n";
+		for (std::vector<class Object*>::const_iterator iterator = this->m_seeObjects.begin(); iterator != this->m_seeObjects.end(); ++iterator)
+			file << "\t\t\t<li>" << *iterator << "</li>\n";
+		
+		file << "\t\t</ul>\n";
+	}
+	else
+		file << "\t\t-\n";
+	
+	file
+	<< "\t\t<h2><a name=\"Todos\">" << _("Todos") << "</a></h2>\n"
+	;
+	
+	if (!this->m_todos.empty())
+	{
+		file << "\t\t<ul>\n";
+	
+		for (std::vector<std::string>::const_iterator iterator = this->m_todos.begin(); iterator != this->m_todos.end(); ++iterator)
+			file << "\t\t\t<li>" << *iterator << "</li>\n";
 		
 		file << "\t\t</ul>\n";
 	}
@@ -474,8 +410,8 @@ std::string DocComment::sqlStatement() const
 	int i = 0;
 	
 	/// @todo Memory access error.
-	//for (std::vector<std::string>::iterator iterator = this->authors().begin(); iterator != this->authors().end() && i < DocComment::maxAuthors; ++iterator, ++i)
-		//sstream << "Author" << i << "=\"" << Object::sqlFilteredString(*iterator) << "\", ";
+	for (std::vector<std::string>::const_iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end() && i < DocComment::maxAuthors; ++iterator, ++i)
+		sstream << "Author" << i << "=\"" << Object::sqlFilteredString(*iterator) << "\", ";
 	
 	for ( ; i < DocComment::maxAuthors; ++i)
 		sstream << "Author" << i << "=NULL, ";
@@ -483,8 +419,8 @@ std::string DocComment::sqlStatement() const
 	i = 0;
 	
 	/// @todo Memory access error.
-	//for (std::vector<class Object*>::iterator iterator = this->seeObjects().begin(); iterator != this->seeObjects().end() && i < DocComment::maxSeeObjects; ++iterator, ++i)
-		//sstream << "SeeObject" << i << "=" << Object::objectId(*iterator) << ", ";
+	for (std::vector<class Object*>::const_iterator iterator = this->m_seeObjects.begin(); iterator != this->m_seeObjects.end() && i < DocComment::maxSeeObjects; ++iterator, ++i)
+		sstream << "SeeObject" << i << "=" << Object::objectId(*iterator) << ", ";
 	
 	for ( ; i < DocComment::maxSeeObjects; ++i)
 	{
@@ -493,9 +429,7 @@ std::string DocComment::sqlStatement() const
 		if (i != DocComment::maxSeeObjects - 1)
 			sstream << ", ";
 	}
-	
-	std::cout << "Statement " << sstream.str() << std::endl;
-	
+
 	return sstream.str();
 }
 #endif

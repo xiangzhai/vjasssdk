@@ -1,5 +1,9 @@
+2009-07-30 Tamino Dauth <tamino@cdauth.de>
+* Fixed several memory access errors.
+
 2009-07-29 Tamino Dauth <tamino@cdauth.de>
 * Fixed and added SQLITE macro checks which should decrease compile time if you do not use sqlite flag.
+* Improved documentation comment initialization.
 
 2009-07-28 Tamino Dauth <tamino@cdauth.de>
 * Moved method definition getToken of class File into file "src/utilities.cpp".

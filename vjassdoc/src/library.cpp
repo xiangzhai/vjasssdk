@@ -20,7 +20,6 @@
 
 #include <sstream>
 #include <list>
-#include <iostream> //debug
 
 #include "objects.h"
 #include "internationalisation.h"
@@ -38,7 +37,6 @@ std::string Library::sqlColumnStatement;
 
 bool Library::HasRequirement::operator()(class Object *thisObject, class Object *library) const
 {
-	std::cout << "Test" << std::endl;
 	class Library *thisLibrary = static_cast<class Library*>(thisObject);
 
 	if (thisLibrary->requirement() != 0)
@@ -86,12 +84,8 @@ Library::~Library()
 
 void Library::init()
 {
-	std::cout << "Init" << std::endl;
-
 	if (!this->initializerExpression.empty())
 	{
-		std::cout << "Initializer expression " << this->initializerExpression << std::endl;
-	
 		this->m_initializer = static_cast<Function*>(this->searchObjectInList(this->initializerExpression, Parser::Functions));
 		
 		if (this->m_initializer == 0)
@@ -103,19 +97,10 @@ void Library::init()
 	else
 		this->initializerExpression = '-';
 	
-	std::cout << "After initializer" << std::endl;
-	
 	if (this->requirementExpressions != 0)
 	{
-		std::cout << "1" << std::endl;
-		
 		this->m_requirement = new std::list<Library*>;
-		
-		std::cout << "2" << std::endl;
-		
 		std::list<std::string>::iterator expressionIterator = this->requirementExpressions->begin();
-		
-		std::cout << "3" << std::endl;
 		
 		while (expressionIterator != this->requirementExpressions->end())
 		{
@@ -128,8 +113,6 @@ void Library::init()
 			++expressionIterator;
 		}
 	}
-	
-	std::cout << "After requirement" << std::endl;
 }
 
 void Library::pageNavigation(std::ofstream &file) const

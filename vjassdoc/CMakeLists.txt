@@ -5,6 +5,8 @@ project(vjassdoc)
 
 find_library(gettext REQUIRED)
 
+add_definitions(-DSQLITE) #test, remove if you want to 
+
 if (SQLITE)
 	find_library(sqlite3 REQUIRED)
 endif (SQLITE)
