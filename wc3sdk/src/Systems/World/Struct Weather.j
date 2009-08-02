@@ -32,7 +32,7 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		//dynamic members
 		private real m_minimumChangeTime
 		private real m_maximumChangeTime
-		private boolean array m_isWeatherTypeAllowed[22] /// @todo AWeather.maxWeatherTypes, vJass bug
+		private boolean array m_isWeatherTypeAllowed[22] /// @todo thistype.maxWeatherTypes, vJass bug
 		//members
 		private region m_region
 		private timer m_changeTimer
@@ -96,7 +96,7 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		public method setAllWeatherTypesAllowed takes boolean allowed returns nothing
 			local integer i = 0
 			loop
-				exitwhen (i == AWeather.maxWeatherTypes)
+				exitwhen (i == thistype.maxWeatherTypes)
 				set this.m_isWeatherTypeAllowed[i] = allowed
 				set i = i + 1
 			endloop
@@ -127,8 +127,8 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 					call RemoveWeatherEffect(this.m_weatherEffects[i])
 					set this.m_weatherEffects[i] = null
 				endif
-				if (AWeather.m_weatherTypeEffectId[weatherType] != 0) then
-					set this.m_weatherEffects[i] = AddWeatherEffect(this.m_rects[i], AWeather.m_weatherTypeEffectId[weatherType])
+				if (thistype.m_weatherTypeEffectId[weatherType] != 0) then
+					set this.m_weatherEffects[i] = AddWeatherEffect(this.m_rects[i], thistype.m_weatherTypeEffectId[weatherType])
 					call EnableWeatherEffect(this.m_weatherEffects[i], true)
 				endif
 				set i = i + 1
@@ -137,13 +137,13 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		private static method timerFunctionChangeWeather takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
-			local AWeather this = AHashTable.global().getHandleInteger(expiredTimer, "this")
+			local thistype this = AHashTable.global().handleInteger(expiredTimer, "this")
 			local integer array possibleWeatherTypes
 			local integer maxPossibleWeatherTypes = 0
 			local integer i = 0
 			debug call thistype.staticPrint("Weather changes!")
 			loop
-				exitwhen (i == AWeather.maxWeatherTypes)
+				exitwhen (i == thistype.maxWeatherTypes)
 				if (this.m_isWeatherTypeAllowed[i]) then
 					set possibleWeatherTypes[maxPossibleWeatherTypes] = i
 					set maxPossibleWeatherTypes = maxPossibleWeatherTypes + 1
@@ -157,15 +157,15 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		/// Make sure that you've set minimum and maximum change time before!
 		public method start takes nothing returns nothing
-			call TimerStart(this.m_changeTimer, GetRandomReal(this.m_minimumChangeTime, this.m_maximumChangeTime), false, function AWeather.timerFunctionChangeWeather)
+			call TimerStart(this.m_changeTimer, GetRandomReal(this.m_minimumChangeTime, this.m_maximumChangeTime), false, function thistype.timerFunctionChangeWeather)
 		endmethod
 		
-		public static method create takes nothing returns AWeather
-			local AWeather this = AWeather.allocate()
+		public static method create takes nothing returns thistype
+			local thistype this = thistype.allocate()
 			//members
 			set this.m_region = CreateRegion()
 			set this.m_changeTimer = CreateTimer()
-			call AHashTable.global().storeHandleInteger(this.m_changeTimer, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_changeTimer, "this", this)
 			set this.m_rects = ARectVector.create()
 			set this.m_weatherEffects = AWeatherEffectVector.create()
 
@@ -197,28 +197,28 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		public static method init takes nothing returns nothing
 			//static start members
-			set AWeather.m_weatherTypeEffectId[0] = 'RAhr'
-			set AWeather.m_weatherTypeEffectId[1] = 'RAlr'
-			set AWeather.m_weatherTypeEffectId[2] = 'MEds'
-			set AWeather.m_weatherTypeEffectId[3] = 'FDbh'
-			set AWeather.m_weatherTypeEffectId[4] = 'FDbl'
-			set AWeather.m_weatherTypeEffectId[5] = 'FDgh'
-			set AWeather.m_weatherTypeEffectId[6] = 'FDgl'
-			set AWeather.m_weatherTypeEffectId[7] = 'FDrh'
-			set AWeather.m_weatherTypeEffectId[8] = 'FDrl'
-			set AWeather.m_weatherTypeEffectId[9] = 'FDwh'
-			set AWeather.m_weatherTypeEffectId[10] = 'FDwl'
-			set AWeather.m_weatherTypeEffectId[11] = 'RLhr'
-			set AWeather.m_weatherTypeEffectId[12] = 'RLlr'
-			set AWeather.m_weatherTypeEffectId[13] = 'SNbs'
-			set AWeather.m_weatherTypeEffectId[14] = 'SNhs'
-			set AWeather.m_weatherTypeEffectId[15] = 'SNls'
-			set AWeather.m_weatherTypeEffectId[16] = 'WOcw'
-			set AWeather.m_weatherTypeEffectId[17] = 'WOlw'
-			set AWeather.m_weatherTypeEffectId[19] = 'LRaa'
-			set AWeather.m_weatherTypeEffectId[19] = 'LRma'
-			set AWeather.m_weatherTypeEffectId[20] = 'WNcw'
-			set AWeather.m_weatherTypeEffectId[thistype.weatherTypeNoWeather] = 0
+			set thistype.m_weatherTypeEffectId[0] = 'RAhr'
+			set thistype.m_weatherTypeEffectId[1] = 'RAlr'
+			set thistype.m_weatherTypeEffectId[2] = 'MEds'
+			set thistype.m_weatherTypeEffectId[3] = 'FDbh'
+			set thistype.m_weatherTypeEffectId[4] = 'FDbl'
+			set thistype.m_weatherTypeEffectId[5] = 'FDgh'
+			set thistype.m_weatherTypeEffectId[6] = 'FDgl'
+			set thistype.m_weatherTypeEffectId[7] = 'FDrh'
+			set thistype.m_weatherTypeEffectId[8] = 'FDrl'
+			set thistype.m_weatherTypeEffectId[9] = 'FDwh'
+			set thistype.m_weatherTypeEffectId[10] = 'FDwl'
+			set thistype.m_weatherTypeEffectId[11] = 'RLhr'
+			set thistype.m_weatherTypeEffectId[12] = 'RLlr'
+			set thistype.m_weatherTypeEffectId[13] = 'SNbs'
+			set thistype.m_weatherTypeEffectId[14] = 'SNhs'
+			set thistype.m_weatherTypeEffectId[15] = 'SNls'
+			set thistype.m_weatherTypeEffectId[16] = 'WOcw'
+			set thistype.m_weatherTypeEffectId[17] = 'WOlw'
+			set thistype.m_weatherTypeEffectId[19] = 'LRaa'
+			set thistype.m_weatherTypeEffectId[19] = 'LRma'
+			set thistype.m_weatherTypeEffectId[20] = 'WNcw'
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeNoWeather] = 0
 		endmethod
 	endstruct
 

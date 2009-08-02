@@ -92,7 +92,7 @@ library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStruct
 		
 		private static method triggerActionKill takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local unit killedUnit
 			local unit killingUnit = GetKillingUnit()
 			local integer killerIndex = this.m_units.find(killingUnit)
@@ -102,7 +102,7 @@ library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStruct
 					set this.m_unitScores[killerIndex] = this.m_unitScores[killerIndex] + 1
 					call LeaderboardSetItemValue(this.m_leaderboard, killerIndex, this.m_unitScores[killerIndex])
 					call LeaderboardSortItemsByValue(this.m_leaderboard, true)
-					call this.showMessage(StringArg(StringArg(tr("%s hat %s getötet."), GetUnitName(killingUnit)), GetUnitName(killedUnit)))
+					call this.showMessage(StringArg(StringArg(tr("%s hat %s getÃ¶tet."), GetUnitName(killingUnit)), GetUnitName(killedUnit)))
 				endif
 				set killedUnit = null
 			endif
@@ -115,7 +115,7 @@ library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStruct
 			set this.m_killTrigger = CreateTrigger()
 			call TriggerRegisterAnyUnitEventBJ(this.m_killTrigger, EVENT_PLAYER_UNIT_DEATH)
 			set triggerAction = TriggerAddAction(this.m_killTrigger, function thistype.triggerActionKill)
-			call AHashTable.global().storeHandleInteger(this.m_killTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_killTrigger, "this", this)
 			set triggerAction = null
 		endmethod
 		

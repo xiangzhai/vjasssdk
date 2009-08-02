@@ -31,7 +31,7 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 		
 		private static method triggerActionCheat takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ACheat this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local ACheat this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_action.execute()
 			set triggeringTrigger = null
 		endmethod
@@ -55,7 +55,7 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 			endloop
 			set triggerAction = TriggerAddAction(this.cheatTrigger, function ACheat.triggerActionCheat)
 			set triggerAction = null
-			call AHashTable.global().storeHandleInteger(this.cheatTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.cheatTrigger, "this", this)
 		endmethod
 		
 		/// @param cheat The string the player has to enter into the chat.

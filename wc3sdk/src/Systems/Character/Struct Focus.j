@@ -114,7 +114,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, AStructCore
 
 		private static method triggerActionFocus takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AFocus this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local AFocus this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			//Hat bereits ein Ziel
 			if (this.target != null) then
 				//Altes Objekt ist außer Reichweite - Bentige neues Ziel
@@ -135,7 +135,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, AStructCore
 			set this.focusTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(this.focusTrigger, AFocus.refreshRate, true)
 			set triggerAction = TriggerAddAction(this.focusTrigger, function AFocus.triggerActionFocus)
-			call AHashTable.global().storeHandleInteger(this.focusTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.focusTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
@@ -189,13 +189,15 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, AStructCore
 			call this.destroyWorkerTrigger()
 		endmethod
 
-		/// @param refreshRate 1.0 //If this value is 0.0 there is no text
-		/// @param range 500.0
-		/// @param angle 30.0 //Grad 0-360
-		/// @param workerUnitType 'HPEA'
-		/// @param showText true
-		/// @param indicateTarget true
-		/// @param textLevel Stufe
+		/**
+		* @param refreshRate 1.0 //If this value is 0.0 there is no text
+		* @param range 500.0
+		* @param angle 30.0 //Grad 0-360
+		* @param workerUnitType 'HPEA'
+		* @param showText true
+		* @param indicateTarget true
+		* @param textLevel Stufe
+		*/
 		public static method init takes real refreshRate, real range, real angle, integer workerUnitType, boolean showText, boolean indicateTarget, string textLevel returns nothing
 			//static start members
 			set AFocus.refreshRate = refreshRate

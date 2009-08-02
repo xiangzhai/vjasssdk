@@ -29,7 +29,7 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStruc
 
 		private static method triggerActionRefreshView takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.refreshView()
 			set triggeringTrigger = null
 		endmethod
@@ -40,7 +40,7 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStruc
 			set this.m_viewTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(this.m_viewTrigger, thistype.viewRefreshRate, true)
 			set triggerAction = TriggerAddAction(this.m_viewTrigger, function thistype.triggerActionRefreshView)
-			call AHashTable.global().storeHandleInteger(this.m_viewTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_viewTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod

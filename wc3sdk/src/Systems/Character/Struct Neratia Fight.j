@@ -93,14 +93,14 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		public static constant integer maxGroups = 3
 		private static constant integer maxEvents = 3
 		private static constant integer maxUsers = bj_MAX_PLAYERS
-		private ANeratiaFightEventCondition array m_eventCondition[ANeratiaFight.maxEvents]
-		private ANeratiaFightEventAction array m_eventAction[ANeratiaFight.maxEvents]
+		private ANeratiaFightEventCondition array m_eventCondition[thistype.maxEvents]
+		private ANeratiaFightEventAction array m_eventAction[thistype.maxEvents]
 		//members
 		private ANeratiaFightArea m_area
-		private group array m_unitGroup[ANeratiaFight.maxGroups]
+		private group array m_unitGroup[thistype.maxGroups]
 		private integer m_userCount
-		private player array m_users[12] /// @todo vJass bug, ANeratiaFight.maxUsers
-		private integer array m_userGroups[12] /// @todo vJass bug, ANeratiaFight.maxUsers
+		private player array m_users[12] /// @todo vJass bug, thistype.maxUsers
+		private integer array m_userGroups[12] /// @todo vJass bug, thistype.maxUsers
 		private integer m_userIndex
 		private unit m_selectedUnit
 		private unit m_selectedEnemy
@@ -113,7 +113,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		//dynamic members
 		
 		public method setEventCondition takes integer index, ANeratiaFightEventCondition eventCondition returns nothing
-			debug if ((index < 0) or (index >= ANeratiaFight.maxEvents)) then
+			debug if ((index < 0) or (index >= thistype.maxEvents)) then
 				debug call this.print("Invalid group index: " + I2S(index) + ".")
 				debug return
 			debug endif
@@ -121,7 +121,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		endmethod
 		
 		public method eventCondition takes integer index returns ANeratiaFightEventCondition
-			debug if ((index < 0) or (index >= ANeratiaFight.maxEvents)) then
+			debug if ((index < 0) or (index >= thistype.maxEvents)) then
 				debug call this.print("Invalid group index: " + I2S(index) + ".")
 				debug return 0
 			debug endif
@@ -129,7 +129,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		endmethod
 		
 		public method setEventAction takes integer index, ANeratiaFightEventAction eventAction returns nothing
-			debug if ((index < 0) or (index >= ANeratiaFight.maxEvents)) then
+			debug if ((index < 0) or (index >= thistype.maxEvents)) then
 				debug call this.print("Invalid group index: " + I2S(index) + ".")
 				debug return
 			debug endif
@@ -137,7 +137,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		endmethod
 		
 		public method eventAction takes integer index returns ANeratiaFightEventAction
-			debug if ((index < 0) or (index >= ANeratiaFight.maxEvents)) then
+			debug if ((index < 0) or (index >= thistype.maxEvents)) then
 				debug call this.print("Invalid group index: " + I2S(index) + ".")
 				debug return 0
 			debug endif
@@ -150,9 +150,9 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 			return this.m_area
 		endmethod
 		
-		//private group array m_unitGroup[ANeratiaFight.maxGroups]
+		//private group array m_unitGroup[thistype.maxGroups]
 		//private integer m_userCount
-		//private player array m_users[12] /// @todo vJass bug, ANeratiaFight.maxUsers
+		//private player array m_users[12] /// @todo vJass bug, thistype.maxUsers
 		//private integer array m_userGroups[12]
 		
 		////methods
@@ -161,7 +161,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 			local player user
 			local integer i = 0
 			loop
-				exitwhen (i == ANeratiaFight.maxUsers)
+				exitwhen (i == thistype.maxUsers)
 				set user = Player(i)
 				if (IsPlayerPlayingUser(user) and ((toSelectingUser and user != this.m_users[this.m_userIndex]) or not toSelectingUser)) then
 					call ACharacter.playerCharacter(user).displayMessage(messageType, text)
@@ -176,7 +176,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		public method addUser takes player user, integer groupIndex returns nothing
-			debug if (this.m_userCount == ANeratiaFight.maxUsers) then
+			debug if (this.m_userCount == thistype.maxUsers) then
 				debug call this.print("Unable to add user " + GetPlayerName(user) + " to group " + I2S(groupIndex) + ". User maximum has been reached.")
 				debug return
 			debug endif
@@ -203,7 +203,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 			endloop
 			set i = 0
 			loop
-				exitwhen (i == ANeratiaFight.maxGroups)
+				exitwhen (i == thistype.maxGroups)
 				call this.initUnitsOfGroup(i)
 				set i = i + 1
 			endloop
@@ -340,13 +340,13 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		
 		private method playerSelectsNextGroup takes nothing returns nothing
 			local integer i
-			if (this.m_selectedEnemyGroupIndex < ANeratiaFight.maxGroups - 1) then
+			if (this.m_selectedEnemyGroupIndex < thistype.maxGroups - 1) then
 				set i = i + 1
 			else
 				set i = 0
 			endif
 			loop
-				exitwhen (i == ANeratiaFight.maxGroups)
+				exitwhen (i == thistype.maxGroups)
 				if (not IsUnitGroupEmptyBJ(this.m_unitGroup[i])) then
 					if (this.m_selectedEnemyGroupIndex != i) then
 						call this.selectGroup(i)
@@ -363,7 +363,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 			if (this.m_selectedEnemyGroupIndex > 0) then
 				set i = i - 1
 			else
-				set i = ANeratiaFight.maxGroups - 1
+				set i = thistype.maxGroups - 1
 			endif
 			loop
 				exitwhen (i < 0)
@@ -381,7 +381,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		private static method triggerConditionSelect takes nothing returns boolean
 			local player user = GetTriggerPlayer()
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ANeratiaFight this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local boolean result = user == this.m_users[this.m_userIndex]
 			set user = null
 			set triggeringTrigger = null
@@ -391,7 +391,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		private static method triggerActionSelect takes nothing returns nothing
 			local player user = GetTriggerPlayer()
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ANeratiaFight this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local eventid eventId = GetTriggerEventId()
 			if (eventId == EVENT_PLAYER_ARROW_UP_DOWN) then
 				call this.playerSelectsNextUnit()
@@ -432,9 +432,10 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 				set user = null
 				set i = i + 1
 			endloop
-			set conditionFunction = Condition(function ANeratiaFight.triggerConditionSelect)
+			set conditionFunction = Condition(function thistype.triggerConditionSelect)
 			set triggerCondition = TriggerAddCondition(this.selectionTrigger, conditionFunction)
-			set triggerAction = TriggerAddAction(this.selectionTrigger, function ANeratiaFight.triggerActionSelect)
+			set triggerAction = TriggerAddAction(this.selectionTrigger, function thistype.triggerActionSelect)
+			call AHashTable.global().setHandleInteger(this.selectionTrigger, "this", this)
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -442,13 +443,13 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		/// Was ACharacterSystem
-		public static method create takes nothing returns ANeratiaFight
-			local ANeratiaFight this = ANeratiaFight.allocate()
+		public static method create takes nothing returns thistype
+			local thistype this = thistype.allocate()
 			local integer i = 0
 			//members
 			set this.m_area = 0
 			loop
-				exitwhen (i == ANeratiaFight.maxGroups)
+				exitwhen (i == thistype.maxGroups)
 				set this.m_unitGroup[i] = CreateGroup()
 				set i = i + 1
 			endloop
@@ -468,7 +469,7 @@ library AStructSystemsCharacterNeratiaFight requires ALibraryCoreDebugMisc, AStr
 		public method onDestroy takes nothing returns nothing
 			local integer i = 0
 			loop
-				exitwhen (i == ANeratiaFight.maxGroups)
+				exitwhen (i == thistype.maxGroups)
 				call DestroyGroup(this.m_unitGroup[i])
 				set this.m_unitGroup[i] = null
 				set i = i + 1

@@ -1,3 +1,14 @@
+2009-08-02 Tamino Dauth <tamino@cdauth.de>
+* Added more default vectors.
+* Added methods isEnabled and setEnabled to struct ADamageRecorder.
+
+2009-08-01 Tamino Dauth <tamino@cdauth.de>
+* Improved struct AHashTable.
+* Added all new natives of Warcraft version 1.24 to file "src/common.j".
+
+2009-07-31 Tamino Dauth <tamino@cdauth.de>
+* Revised struct AHashTable.
+
 2009-07-29 Tamino Dauth <tamino@cdauth.de>
 * Added file "archives/Creatures/Models/Creatures/Humans/Wizard.mdx".
 * Added file "archives/Creatures/Textures/Creatures/Humans/Wizard.blp".

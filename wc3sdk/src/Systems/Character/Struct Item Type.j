@@ -74,19 +74,19 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 
 		public method checkRequirement takes ACharacter character returns boolean
 			if (GetHeroLevel(character.unit()) < this.m_requiredLevel) then
-				call character.displayMessage(ACharacter.messageTypeError, AItemType.textLevel)
+				call character.displayMessage(ACharacter.messageTypeError, thistype.textLevel)
 				return false
 			elseif (GetHeroStr(character.unit(), true) < this.m_requiredStrength) then
-				call character.displayMessage(ACharacter.messageTypeError, AItemType.textStrength)
+				call character.displayMessage(ACharacter.messageTypeError, thistype.textStrength)
 				return false
 			elseif (GetHeroAgi(character.unit(), true) < this.m_requiredAgility) then
-				call character.displayMessage(ACharacter.messageTypeError, AItemType.textAgility) 
+				call character.displayMessage(ACharacter.messageTypeError, thistype.textAgility) 
 				return false
 			elseif (GetHeroInt(character.unit(), true) < this.m_requiredIntelligence) then
-				call character.displayMessage(ACharacter.messageTypeError, AItemType.textIntelligence)
+				call character.displayMessage(ACharacter.messageTypeError, thistype.textIntelligence)
 				return false
 			elseif (this.m_requiredClass != 0 and character.class() != this.m_requiredClass) then
-				call character.displayMessage(ACharacter.messageTypeError, AItemType.textClass)
+				call character.displayMessage(ACharacter.messageTypeError, thistype.textClass)
 				return false
 			endif
 			return true
@@ -158,8 +158,8 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 		endmethod
 
 		/// @param equipmentType If this value is -1 it will always be added to rucksack.
-		public static method create takes integer itemType, integer equipmentType, integer requiredLevel, integer requiredStrength, integer requiredAgility, integer requiredIntelligence, AClass requiredClass returns AItemType
-			local AItemType this = AItemType.allocate()
+		public static method create takes integer itemType, integer equipmentType, integer requiredLevel, integer requiredStrength, integer requiredAgility, integer requiredIntelligence, AClass requiredClass returns thistype
+			local thistype this = thistype.allocate()
 			//start members
 			set this.m_itemType = itemType
 			set this.m_equipmentType = equipmentType
@@ -172,10 +172,10 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 			set this.m_abilities = AAbilityVector.create()
 			set this.m_permanent = ABooleanVector.create()
 
-			debug if (AHashTable.global().getStoredInteger("AItemTypes", I2S(itemType)) != 0) then
+			debug if (AHashTable.global().integer("AItemTypes", I2S(itemType)) != 0) then
 				debug call this.print("Item type " + I2S(itemType) + " already has an item type.")
 			debug endif
-			call AHashTable.global().storeInteger("AItemTypes", I2S(itemType), this)
+			call AHashTable.global().setInteger("AItemTypes", I2S(itemType), this)
 			//debug call this.print("Storing item type " + I2S(itemType))
 			return this
 		endmethod
@@ -185,26 +185,26 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 			call this.m_abilities.destroy()
 			call this.m_permanent.destroy()
 			
-			call AHashTable.global().flushStoredInteger("AItemTypes", I2Hexadecimal(this.m_itemType))
+			call AHashTable.global().removeInteger("AItemTypes", I2Hexadecimal(this.m_itemType))
 		endmethod
 
 		public static method init takes string textLevel, string textStrength, string textAgility, string textIntelligence, string textClass returns nothing
 			//static start members
-			set AItemType.textLevel = textLevel
-			set AItemType.textStrength = textStrength
-			set AItemType.textAgility = textAgility
-			set AItemType.textIntelligence = textIntelligence
-			set AItemType.textClass = textClass
+			set thistype.textLevel = textLevel
+			set thistype.textStrength = textStrength
+			set thistype.textAgility = textAgility
+			set thistype.textIntelligence = textIntelligence
+			set thistype.textClass = textClass
 		endmethod
 
-		public static method getItemTypeOfItemTypeId takes integer itemTypeId returns AItemType
+		public static method getItemTypeOfItemTypeId takes integer itemTypeId returns thistype
 			debug call thistype.staticPrint("Getting item type of item type id " + I2S(itemTypeId))
-			return AHashTable.global().getStoredInteger("AItemTypes", I2S(itemTypeId))
+			return AHashTable.global().integer("AItemTypes", I2S(itemTypeId))
 		endmethod
 
 		/// @author Tamino Dauth
-		public static method getItemTypeOfItem takes item usedItem returns AItemType
-			return AItemType.getItemTypeOfItemTypeId(GetItemTypeId(usedItem))
+		public static method getItemTypeOfItem takes item usedItem returns thistype
+			return thistype.getItemTypeOfItemTypeId(GetItemTypeId(usedItem))
 		endmethod
 	endstruct
 

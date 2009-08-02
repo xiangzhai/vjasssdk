@@ -434,8 +434,8 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 
 		private static method triggerConditionRunQuestState takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AAbstractQuest this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			local integer state = AHashTable.global().getHandleInteger(triggeringTrigger, "state")
+			local AAbstractQuest this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			local integer state = AHashTable.global().handleInteger(triggeringTrigger, "state")
 			local boolean result = true
 			if (this.m_stateCondition[state] != 0) then
 				set result = this.m_stateCondition[state].evaluate(this)
@@ -446,8 +446,8 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 	
 		private static method triggerActionRunQuestState takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AAbstractQuest this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			local integer state = AHashTable.global().getHandleInteger(triggeringTrigger, "state")
+			local AAbstractQuest this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			local integer state = AHashTable.global().handleInteger(triggeringTrigger, "state")
 			//if (this.getType() == AQuest.typeid) then
 			//	debug call this.print("Is quest")
 			//	call AQuest(this).setState(state)
@@ -470,8 +470,8 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 			set conditionFunction = Condition(function AAbstractQuest.triggerConditionRunQuestState)
 			set triggerCondition = TriggerAddCondition(this.m_stateTrigger[state], conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_stateTrigger[state], function AAbstractQuest.triggerActionRunQuestState)
-			call AHashTable.global().storeHandleInteger(this.m_stateTrigger[state], "this", this)
-			call AHashTable.global().storeHandleInteger(this.m_stateTrigger[state], "state", state)
+			call AHashTable.global().setHandleInteger(this.m_stateTrigger[state], "this", this)
+			call AHashTable.global().setHandleInteger(this.m_stateTrigger[state], "state", state)
 			if ((this.m_state != AAbstractQuest.stateNew and state != AAbstractQuest.stateNew) or (this.m_state == AAbstractQuest.stateFailed or this.m_state == AAbstractQuest.stateCompleted)) then /// new should be enable by default
 				call DisableTrigger(this.m_stateTrigger[state])
 			endif

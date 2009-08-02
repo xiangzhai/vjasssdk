@@ -164,16 +164,16 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 
 		private method createTrackable takes nothing returns nothing
 			if ((this.m_onHitAction != 0) or (this.m_onTrackAction != 0)) then
-				set this.m_trackable = CreateTrackableForPlayer(this.user(), AWidget.getTrackablePathBySize(this.m_sizeX, this.m_sizeY), this.m_mainWindow.getX(this.m_x), this.m_mainWindow.getY(this.m_y), 0.0)
+				set this.m_trackable = CreateTrackableForPlayer(this.user(), thistype.getTrackablePathBySize(this.m_sizeX, this.m_sizeY), this.m_mainWindow.getX(this.m_x), this.m_mainWindow.getY(this.m_y), 0.0)
 			endif
 		endmethod
 
 		private static method triggerActionOnHit takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AWidget this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_onHitAction.execute(this)
-			if (AWidget.onHitSoundPath != null) then
-				call PlaySoundPathForPlayer(this.user(), AWidget.onHitSoundPath)
+			if (thistype.onHitSoundPath != null) then
+				call PlaySoundPathForPlayer(this.user(), thistype.onHitSoundPath)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -184,8 +184,8 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			if (this.m_onHitAction != 0) then
 				set this.m_onHitTrigger = CreateTrigger()
 				set triggerEvent = TriggerRegisterTrackableHitEvent(this.m_onHitTrigger, this.m_trackable)
-				set triggerAction = TriggerAddAction(this.m_onHitTrigger, function AWidget.triggerActionOnHit)
-				call AHashTable.global().storeHandleInteger(this.m_onHitTrigger, "this", this)
+				set triggerAction = TriggerAddAction(this.m_onHitTrigger, function thistype.triggerActionOnHit)
+				call AHashTable.global().setHandleInteger(this.m_onHitTrigger, "this", this)
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -193,10 +193,10 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 
 		private static method triggerActionOnTrack takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AWidget this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_onTrackAction.execute(this)
-			if (AWidget.onTrackSoundPath != null) then
-				call PlaySoundPathForPlayer(this.user(), AWidget.onTrackSoundPath)
+			if (thistype.onTrackSoundPath != null) then
+				call PlaySoundPathForPlayer(this.user(), thistype.onTrackSoundPath)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -207,15 +207,15 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			if (this.m_onTrackAction != 0) then
 				set this.m_onTrackTrigger = CreateTrigger()
 				set triggerEvent = TriggerRegisterTrackableTrackEvent(this.m_onTrackTrigger, this.m_trackable)
-				set triggerAction = TriggerAddAction(this.m_onTrackTrigger, function AWidget.triggerActionOnTrack)
-				call AHashTable.global().storeHandleInteger(this.m_onTrackTrigger, "this", this)
+				set triggerAction = TriggerAddAction(this.m_onTrackTrigger, function thistype.triggerActionOnTrack)
+				call AHashTable.global().setHandleInteger(this.m_onTrackTrigger, "this", this)
 				set triggerEvent = null
 				set triggerAction = null
 			endif
 		endmethod
 
-		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AWidget
-			local AWidget this = AWidget.allocate()
+		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns thistype
+			local thistype this = thistype.allocate()
 			//dynamic members
 			set this.m_shown = false
 			//start members
@@ -271,8 +271,8 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		endmethod
 
 		public static method init takes string onHitSoundPath, string onTrackSoundPath returns nothing
-			set AWidget.onHitSoundPath = onHitSoundPath
-			set AWidget.onTrackSoundPath = onTrackSoundPath
+			set thistype.onHitSoundPath = onHitSoundPath
+			set thistype.onTrackSoundPath = onTrackSoundPath
 
 			if (onHitSoundPath != null) then
 				call PreloadSoundPath(onHitSoundPath)

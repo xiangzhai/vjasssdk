@@ -84,7 +84,7 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, AStructCor
 			debug call Print("Shrine Condition")
 			if (triggerUnit == ACharacter.playerCharacter(owner).unit()) then
 				set triggeringTrigger = GetTriggeringTrigger()
-				set this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+				set this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 				set result = ACharacter.playerCharacter(owner).shrine() != this
 				//if (ACharacter.playerCharacter(owner).shrine() != this) then
 					//set result = ACharacter.playerCharacter(owner).isMovable()
@@ -100,7 +100,7 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, AStructCor
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local unit triggerUnit = GetTriggerUnit()
 			local player owner = GetOwningPlayer(triggerUnit)
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.enableForCharacter(ACharacter.playerCharacter(owner), true)
 			set triggeringTrigger = null
 			set triggerUnit = null
@@ -117,7 +117,7 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, AStructCor
 			set conditionFunction = Condition(function thistype.triggerConditionEnable)
 			set triggerCondition = TriggerAddCondition(this.m_shrineTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_shrineTrigger, function thistype.triggerActionEnable)
-			call AHashTable.global().storeHandleInteger(this.m_shrineTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_shrineTrigger, "this", this)
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null

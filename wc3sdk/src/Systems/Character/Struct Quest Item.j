@@ -34,8 +34,8 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 			endif
 		endmethod
 
-		public static method create takes AQuest usedQuest, string description returns AQuestItem
-			local AQuestItem this = AQuestItem.allocate(usedQuest.character(), description)
+		public static method create takes AQuest usedQuest, string description returns thistype
+			local thistype this = thistype.allocate(usedQuest.character(), description)
 			debug if (usedQuest <= 0) then
 				debug call this.print("Invalid used quest.")
 			debug endif

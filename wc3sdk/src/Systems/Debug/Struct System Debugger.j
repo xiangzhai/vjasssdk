@@ -111,7 +111,7 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, AStruc
 		
 		private static method triggerActionShow takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype systemDebugger = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype systemDebugger = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call systemDebugger.showMenu()
 			set triggeringTrigger = null
 		endmethod
@@ -122,7 +122,7 @@ library AStructSystemsDebugSystemDebugger requires ALibraryCoreDebugMisc, AStruc
 			set this.m_menuTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_menuTrigger, thistype.menuKey, true)
 			set triggerAction = TriggerAddAction(this.m_menuTrigger, function thistype.triggerActionShow)
-			call AHashTable.global().storeHandleInteger(this.m_menuTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_menuTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod

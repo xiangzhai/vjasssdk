@@ -19,9 +19,9 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private static string textAddItemToRucksack
 		private static string textUnableToMoveRucksackItem
 		//members
-		private integer array m_equipmentItemType[5] /// @todo vJass bug AInventory.maxEquipmentTypes
-		private integer array m_rucksackItemType[AInventory.maxRucksackItems]
-		private integer array m_rucksackItemCharges[AInventory.maxRucksackItems]
+		private integer array m_equipmentItemType[5] /// @todo vJass bug thistype.maxEquipmentTypes
+		private integer array m_rucksackItemType[thistype.maxRucksackItems]
+		private integer array m_rucksackItemCharges[thistype.maxRucksackItems]
 		private trigger m_openTrigger
 		private trigger m_orderTrigger
 		private trigger m_useTrigger //show next page, show previous page, disable in equipment
@@ -35,7 +35,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		//members
 
 		public method equipmentItemType takes integer equipmentType returns integer
-			debug if (equipmentType >= AInventory.maxEquipmentTypes or equipmentType < 0) then
+			debug if (equipmentType >= thistype.maxEquipmentTypes or equipmentType < 0) then
 				debug call this.print("Wrong equipment type: " + I2S(equipmentType) + ".")
 				debug return 0
 			debug endif
@@ -43,7 +43,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		public method rucksackItemType takes integer index returns integer
-			debug if (index >= AInventory.maxRucksackItems or index < 0) then
+			debug if (index >= thistype.maxRucksackItems or index < 0) then
 				debug call this.print("Wrong rucksack index: " + I2S(index) + ".")
 				debug return 0
 			debug endif
@@ -51,7 +51,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		public method rucksackItemCharges takes integer index returns integer
-			debug if (index >= AInventory.maxRucksackItems or index < 0) then
+			debug if (index >= thistype.maxRucksackItems or index < 0) then
 				debug call this.print("Wrong rucksack index: " + I2S(index) + ".")
 				debug return 0
 			debug endif
@@ -64,7 +64,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer result = 0
 			local integer i = 0
 			loop
-				exitwhen (i == AInventory.maxEquipmentTypes)
+				exitwhen (i == thistype.maxEquipmentTypes)
 				if (this.m_equipmentItemType[i] != 0) then
 					set result = result + 1
 				endif
@@ -77,7 +77,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer result = 0
 			local integer i = 0
 			loop
-				exitwhen (i == AInventory.maxRucksackItems)
+				exitwhen (i == thistype.maxRucksackItems)
 				if (this.m_rucksackItemType[i] != 0) then
 					set result = result + 1
 				endif
@@ -90,7 +90,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer result = 0
 			local integer i = 0
 			loop
-				exitwhen (i == AInventory.maxRucksackItems)
+				exitwhen (i == thistype.maxRucksackItems)
 				if (this.m_rucksackItemType[i] != 0) then
 					set result = result + this.m_rucksackItemCharges[i]
 				endif
@@ -103,7 +103,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		
 		/// @return Returns the Warcraft inventory slot number by a rucksack item index.
 		public method rucksackItemSlot takes integer index returns integer
-			debug if (index >= AInventory.maxRucksackItems or index < 0) then
+			debug if (index >= thistype.maxRucksackItems or index < 0) then
 				debug call this.print("Wrong rucksack index: " + I2S(index) + ".")
 				debug return 0
 			debug endif
@@ -112,11 +112,11 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		/// @return Returns the rucksack item index by a Warcraft inventory slot number.
 		public method slotRucksackIndex takes integer slot returns integer
-			debug if (slot >= AInventory.maxRucksackItemsPerPage or slot < 0) then
+			debug if (slot >= thistype.maxRucksackItemsPerPage or slot < 0) then
 				debug call this.print("Wrong inventory slot: " + I2S(slot) + ".")
 				debug return 0
 			debug endif
-			return this.m_rucksackPage * AInventory.maxRucksackItemsPerPage + slot
+			return this.m_rucksackPage * thistype.maxRucksackItemsPerPage + slot
 		endmethod
 
 		/// Shows the current page in the inventory of the character's unit
@@ -152,7 +152,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		public method hasItemEquipped takes integer itemType returns integer
 			local integer i = 0
 			loop
-				exitwhen (i == AInventory.maxEquipmentTypes)
+				exitwhen (i == thistype.maxEquipmentTypes)
 				if (this.m_equipmentItemType[i] == itemType) then
 					return i
 				endif
@@ -165,7 +165,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		public method hasItemTypeInRucksack takes integer itemType returns integer
 			local integer i = 0
 			loop
-				exitwhen (i == AInventory.maxRucksackItems)
+				exitwhen (i == thistype.maxRucksackItems)
 				if (this.m_rucksackItemType[i] == itemType) then
 					return i
 				endif
@@ -176,13 +176,13 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		
 		/// Stacks everything in rucksack which is stackable.
 		public method cleanUpRucksack takes nothing returns nothing
-			local integer i = AInventory.maxRucksackItems - 1
+			local integer i = thistype.maxRucksackItems - 1
 			local integer j
 			loop
 				exitwhen (i < 0)
 				set j = 0
 				loop
-					exitwhen (j == AInventory.maxRucksackItems)
+					exitwhen (j == thistype.maxRucksackItems)
 					if (i != j and this.m_rucksackItemType[i] != 0 and this.m_rucksackItemType[i] == this.m_rucksackItemType[j]) then
 						set this.m_rucksackItemCharges[i] = this.m_rucksackItemCharges[i] + this.m_rucksackItemCharges[j]
 						call this.clearRucksackItem(j, false)
@@ -198,7 +198,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer i
 			set i = 0
 			loop
-				exitwhen (i == AInventory.maxEquipmentTypes)
+				exitwhen (i == thistype.maxEquipmentTypes)
 				if (this.m_equipmentItemType[i] != 0) then
 					call this.showEquipmentItem(i)
 				endif
@@ -210,7 +210,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer i
 			set i = 0
 			loop
-				exitwhen (i == AInventory.maxEquipmentTypes)
+				exitwhen (i == thistype.maxEquipmentTypes)
 				if (this.m_equipmentItemType[i] != 0) then
 					call this.hideEquipmentItem(i)
 				endif
@@ -225,11 +225,11 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set this.m_rucksackIsEnabled = true
 			call this.showRucksackPage(this.m_rucksackPage, true)
 			call DisableTrigger(this.m_pickupTrigger)
-			call UnitAddItemToSlotById(characterUnit, AInventory.leftArrowItemType, AInventory.maxRucksackItemsPerPage)
-			call UnitAddItemToSlotById(characterUnit, AInventory.rightArrowItemType, AInventory.maxRucksackItemsPerPage + 1)
+			call UnitAddItemToSlotById(characterUnit, thistype.leftArrowItemType, AInventory.maxRucksackItemsPerPage)
+			call UnitAddItemToSlotById(characterUnit, thistype.rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
 			call EnableTrigger(this.m_pickupTrigger)
-			set leftArrowItem = UnitItemInSlot(characterUnit, AInventory.maxRucksackItemsPerPage)
-			set rightArrowItem = UnitItemInSlot(characterUnit, AInventory.maxRucksackItemsPerPage + 1)
+			set leftArrowItem = UnitItemInSlot(characterUnit, thistype.maxRucksackItemsPerPage)
+			set rightArrowItem = UnitItemInSlot(characterUnit, thistype.maxRucksackItemsPerPage + 1)
 			call SetItemDroppable(leftArrowItem, true) //for moving items to next or previous pages
 			call SetItemDroppable(rightArrowItem, true)
 			call SetItemCharges(rightArrowItem, this.m_rucksackPage)
@@ -243,8 +243,8 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local item leftArrowItem
 			local item rightArrowItem
 			set this.m_rucksackIsEnabled = false
-			set leftArrowItem = UnitItemInSlot(characterUnit, AInventory.maxRucksackItemsPerPage)
-			set rightArrowItem = UnitItemInSlot(characterUnit, AInventory.maxRucksackItemsPerPage + 1)
+			set leftArrowItem = UnitItemInSlot(characterUnit, thistype.maxRucksackItemsPerPage)
+			set rightArrowItem = UnitItemInSlot(characterUnit, thistype.maxRucksackItemsPerPage + 1)
 			call DisableTrigger(this.m_dropTrigger)
 			call RemoveItem(leftArrowItem)
 			call RemoveItem(rightArrowItem)
@@ -290,7 +290,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 						endif
 						call this.setEquipmentItemByItem(equipmentType, usedItem, not this.m_rucksackIsEnabled)
 						if (showEquipMessage) then
-							call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(AInventory.textEquipItem, GetItemName(usedItem)))
+							call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(thistype.textEquipItem, GetItemName(usedItem)))
 						endif
 						set characterUnit = null
 						return
@@ -305,7 +305,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			if (not dontMoveToRucksack) then
 				call this.addItemToRucksack(usedItem, true, true) //if item type is 0 it will be placed in rucksack, too
 			else
-				call this.character().displayMessage(ACharacter.messageTypeError, AInventory.textUnableToEquipItem)
+				call this.character().displayMessage(ACharacter.messageTypeError, thistype.textUnableToEquipItem)
 			endif
 			set characterUnit = null
 		endmethod
@@ -331,12 +331,12 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			
 			set i = 0
 			loop
-				exitwhen (i == AInventory.maxRucksackItems)
+				exitwhen (i == thistype.maxRucksackItems)
 				if (this.m_rucksackItemType[i] == 0 or  this.m_rucksackItemType[i] == GetItemTypeId(usedItem)) then
 					debug call this.print("Rucksack slot " + I2S(i) + " is free or has the same item type and will be used.")
 					call this.setRucksackItemByItem(i, usedItem, this.m_rucksackIsEnabled and this.itemRucksackPage(i) == this.m_rucksackPage)
 					if (showAddMessage) then
-						call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(AInventory.textAddItemToRucksack, GetItemName(usedItem)))
+						call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(thistype.textAddItemToRucksack, GetItemName(usedItem)))
 					endif
 					return
 				endif
@@ -348,7 +348,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				debug call this.print("Item is not from equipment and will be equipped.")
 				call this.equipItem(usedItem, true, false, true)
 			else
-				call this.character().displayMessage(ACharacter.messageTypeError, AInventory.textUnableToAddRucksackItem)
+				call this.character().displayMessage(ACharacter.messageTypeError, thistype.textUnableToAddRucksackItem)
 			endif
 		endmethod
 		
@@ -376,7 +376,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			if (not this.m_rucksackIsEnabled) then
 				set slotItem = UnitItemInSlot(characterUnit, equipmentType)
 				if (slotItem != null) then
-					call AInventory.clearItemIndex(slotItem)
+					call thistype.clearItemIndex(slotItem)
 					call DisableTrigger(this.m_dropTrigger)
 					if (drop) then
 						call UnitDropItemPoint(characterUnit, slotItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
@@ -405,7 +405,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call EnableTrigger(this.m_pickupTrigger)
 			set slotItem = UnitItemInSlot(characterUnit, equipmentType)
 			call SetItemDropOnDeath(slotItem, false)
-			call AInventory.setItemIndex(slotItem, equipmentType)
+			call thistype.setItemIndex(slotItem, equipmentType)
 			set characterUnit = null
 			set slotItem = null
 		endmethod
@@ -414,7 +414,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local unit characterUnit = this.unit()
 			local item slotItem = UnitItemInSlot(characterUnit, equipmentType)
 			local AItemType itemType = AItemType.getItemTypeOfItem(slotItem)
-			call AInventory.clearItemIndex(slotItem)
+			call thistype.clearItemIndex(slotItem)
 			call DisableTrigger(this.m_dropTrigger)
 			call RemoveItem(slotItem)
 			call EnableTrigger(this.m_dropTrigger)
@@ -430,7 +430,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local AItemType itemType
 			local integer i = 0
 			loop
-				exitwhen (i == AInventory.maxEquipmentTypes)
+				exitwhen (i == thistype.maxEquipmentTypes)
 				if (this.m_equipmentItemType[i] != 0) then
 					set slotItem = UnitItemInSlot(this.unit(), i)
 					set itemType = AItemType.getItemTypeOfItem(slotItem)
@@ -478,7 +478,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set characterUnit = this.unit()
 				set slotItem = UnitItemInSlot(characterUnit, this.rucksackItemSlot(index))
 				if (slotItem != null) then
-					call AInventory.clearItemIndex(slotItem)
+					call thistype.clearItemIndex(slotItem)
 					call DisableTrigger(this.m_dropTrigger)
 					if (drop) then
 						call UnitDropItemPoint(characterUnit, slotItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
@@ -506,7 +506,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call SetItemDropOnDeath(slotItem, false)
 			call SetItemCharges(slotItem, this.m_rucksackItemCharges[index])
 			call itemType.removeAllAbilities(characterUnit) /// @todo Permanent
-			call AInventory.setItemIndex(slotItem, index)
+			call thistype.setItemIndex(slotItem, index)
 			set characterUnit = null
 			set slotItem = null
 		endmethod
@@ -530,7 +530,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local unit characterUnit = this.unit()
 			local integer slot = this.rucksackItemSlot(index)
 			local item slotItem = UnitItemInSlot(characterUnit, slot)
-			call AInventory.clearItemIndex(slotItem)
+			call thistype.clearItemIndex(slotItem)
 			call DisableTrigger(this.m_dropTrigger)
 			call RemoveItem(slotItem)
 			call EnableTrigger(this.m_dropTrigger)
@@ -542,7 +542,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer i
 			local integer exitValue
 			local item rightArrowItem
-			debug if (page > AInventory.maxRucksackPages) then
+			debug if (page > thistype.maxRucksackPages) then
 				debug call this.print("Page value is too big.")
 				debug return
 			debug endif
@@ -553,8 +553,8 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			
 			set this.m_rucksackPage = page
 			//add inventory items
-			set i = page * AInventory.maxRucksackItemsPerPage
-			set exitValue = i + AInventory.maxRucksackItemsPerPage
+			set i = page * thistype.maxRucksackItemsPerPage
+			set exitValue = i + thistype.maxRucksackItemsPerPage
 			loop
 				exitwhen (i == exitValue)
 				if (this.m_rucksackItemType[i] != 0) then
@@ -563,14 +563,14 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set i = i + 1
 			endloop
 			
-			set rightArrowItem = UnitItemInSlot(this.unit(), AInventory.maxRucksackItemsPerPage + 1)
+			set rightArrowItem = UnitItemInSlot(this.unit(), thistype.maxRucksackItemsPerPage + 1)
 			call SetItemCharges(rightArrowItem, page)
 			set rightArrowItem = null
 		endmethod
 
 		private method hideCurrentRucksackPage takes nothing returns nothing
-			local integer i = this.m_rucksackPage * AInventory.maxRucksackItemsPerPage
-			local integer exitValue = i + AInventory.maxRucksackItemsPerPage
+			local integer i = this.m_rucksackPage * thistype.maxRucksackItemsPerPage
+			local integer exitValue = i + thistype.maxRucksackItemsPerPage
 			loop
 				exitwhen (i == exitValue)
 				if (this.m_rucksackItemType[i] != 0) then
@@ -581,7 +581,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method showNextRucksackPage takes nothing returns nothing
-			if (this.m_rucksackPage == AInventory.maxRucksackPages - 1) then
+			if (this.m_rucksackPage == thistype.maxRucksackPages - 1) then
 				call this.showRucksackPage(0, false)
 			else
 				call this.showRucksackPage(this.m_rucksackPage + 1, false)
@@ -590,7 +590,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		private method showPreviousRucksackPage takes nothing returns nothing
 			if (this.m_rucksackPage == 0) then
-				call this.showRucksackPage(AInventory.maxRucksackPages - 1, false)
+				call this.showRucksackPage(thistype.maxRucksackPages - 1, false)
 			else
 				call this.showRucksackPage(this.m_rucksackPage - 1, false)
 			endif
@@ -623,7 +623,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				call UnitAddItemToSlotById(characterUnit, currentItemTypeId, oldSlot)
 				set currentItem = UnitItemInSlot(characterUnit, oldSlot)
 				call SetItemCharges(currentItem, currentItemCharges)
-				if (currentItemTypeId != AInventory.leftArrowItemType and currentItemTypeId != AInventory.rightArrowItemType) then
+				if (currentItemTypeId != thistype.leftArrowItemType and currentItemTypeId != thistype.rightArrowItemType) then
 					if (this.m_rucksackIsEnabled) then
 						call this.setItemIndex(currentItem, this.slotRucksackIndex(oldSlot))
 					else
@@ -636,7 +636,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				call UnitAddItemToSlotById(characterUnit, otherItemTypeId, currentSlot)
 				set otherItem = UnitItemInSlot(characterUnit, oldSlot)
 				call SetItemCharges(otherItem, otherItemCharges)
-				if (otherItemTypeId != AInventory.leftArrowItemType and otherItemTypeId != AInventory.rightArrowItemType) then
+				if (otherItemTypeId != thistype.leftArrowItemType and otherItemTypeId != thistype.rightArrowItemType) then
 					if (this.m_rucksackIsEnabled) then
 						call this.setItemIndex(otherItem, this.slotRucksackIndex(currentSlot))
 					else
@@ -674,21 +674,21 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call EnableTrigger(this.m_dropTrigger)
 			
 			if (next) then
-				call this.resetItemSlots(oldSlot, AInventory.maxRucksackItemsPerPage + 1)
-				set i = oldIndex + AInventory.maxRucksackItemsPerPage - oldSlot
-				set exitValue = AInventory.maxRucksackItems
+				call this.resetItemSlots(oldSlot, thistype.maxRucksackItemsPerPage + 1)
+				set i = oldIndex + thistype.maxRucksackItemsPerPage - oldSlot
+				set exitValue = thistype.maxRucksackItems
 				
-				if (i == AInventory.maxRucksackItems) then
+				if (i == thistype.maxRucksackItems) then
 					set i = 0
 				endif
 			else
-				call this.resetItemSlots(oldSlot, AInventory.maxRucksackItemsPerPage)
-				set i = oldIndex - AInventory.maxRucksackItemsPerPage + AInventory.maxRucksackItemsPerPage - oldSlot - 1 //test - 1
+				call this.resetItemSlots(oldSlot, thistype.maxRucksackItemsPerPage)
+				set i = oldIndex - thistype.maxRucksackItemsPerPage + thistype.maxRucksackItemsPerPage - oldSlot - 1 //test - 1
 				set exitValue = 0
 				
 				if (i < 0) then
-					set i = AInventory.maxRucksackItems - 1
-					call BJDebugMsg("i is smaller than 0 " + I2S(i))
+					set i = thistype.maxRucksackItems - 1
+					debug call Print("i is smaller than 0 " + I2S(i))
 				endif
 			endif
 			
@@ -700,7 +700,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					call BJDebugMsg("Is on old index again")
 					//call RemoveItem(slotItem) //do not disable drop triggers, item is dropped
 					call this.showRucksackItem(oldIndex)
-					call this.character().displayMessage(ACharacter.messageTypeError, AInventory.textUnableToMoveRucksackItem)
+					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textUnableToMoveRucksackItem)
 					exitwhen (true)
 				//found a free place
 				elseif (this.m_rucksackItemType[i] == 0) then
@@ -717,7 +717,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				else
 					set i = i - 1
 					if (i == exitValue) then
-						set i = AInventory.maxRucksackItems - 1
+						set i = thistype.maxRucksackItems - 1
 					endif
 				endif
 			endloop
@@ -731,10 +731,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer itemCharges = this.m_rucksackItemCharges[firstIndex]
 			set this.m_rucksackItemType[firstIndex] = this.m_rucksackItemType[secondIndex]
 			set this.m_rucksackItemCharges[firstIndex] = this.m_rucksackItemCharges[secondIndex]
-			call AInventory.setItemIndex(firstItem, secondIndex)
+			call thistype.setItemIndex(firstItem, secondIndex)
 			set this.m_rucksackItemType[secondIndex] = itemType
 			set this.m_rucksackItemCharges[secondIndex] = itemCharges
-			call AInventory.setItemIndex(secondItem, firstIndex)
+			call thistype.setItemIndex(secondItem, firstIndex)
 		endmethod
 
 		private method moveRucksackItem takes item movedItem, integer slot returns nothing
@@ -765,7 +765,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			//move
 			if (targetItem == null) then
 				set this.m_rucksackItemType[newIndex] = this.m_rucksackItemType[oldIndex]
-				call AInventory.setItemIndex(movedItem, newIndex)
+				call thistype.setItemIndex(movedItem, newIndex)
 				set targetItem = CreateItem(this.m_rucksackItemType[oldIndex], GetUnitX(characterUnit), GetUnitY(characterUnit)) //temporary item for getting item type
 				//destack
 				if ((this.m_rucksackItemCharges[oldIndex] > 1 and GetItemType(movedItem) == ITEM_TYPE_CHARGED) or (this.m_rucksackItemCharges[oldIndex] > 0 and GetItemType(movedItem) != ITEM_TYPE_CHARGED)) then
@@ -806,12 +806,12 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 		
 		private static method triggerConditionOpen takes nothing returns boolean
-			return GetSpellAbilityId() == AInventory.openRucksackAbilityId
+			return GetSpellAbilityId() == thistype.openRucksackAbilityId
 		endmethod
 
 		private static method triggerActionOpen takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AInventory this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call BJDebugMsg("Open")
 			if (this.m_rucksackIsEnabled) then
 				call this.disableRucksack()
@@ -830,10 +830,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggeraction triggerAction
 			set this.m_openTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.m_openTrigger, this.unit(), EVENT_UNIT_SPELL_CAST)
-			set conditionFunction = Condition(function AInventory.triggerConditionOpen)
+			set conditionFunction = Condition(function thistype.triggerConditionOpen)
 			set triggerCondition = TriggerAddCondition(this.m_openTrigger, conditionFunction)
-			set triggerAction = TriggerAddAction(this.m_openTrigger, function AInventory.triggerActionOpen)
-			call AHashTable.global().storeHandleInteger(this.m_openTrigger, "this", this)
+			set triggerAction = TriggerAddAction(this.m_openTrigger, function thistype.triggerActionOpen)
+			call AHashTable.global().setHandleInteger(this.m_openTrigger, "this", this)
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -846,7 +846,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		private static method triggerActionOrder takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AInventory this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local integer newSlot = GetIssuedOrderId() - 852002
 			local item usedItem = GetOrderTargetItem()
 			local integer oldSlot
@@ -854,29 +854,29 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer itemTypeId
 			local integer targetItemTypeId
 			call TriggerSleepAction(0.0) //wait until order is done, important!
-			call BJDebugMsg("Order with new slot " + I2S(newSlot) + " left item type " + I2S(AInventory.leftArrowItemType) + " and right item type " + I2S(AInventory.rightArrowItemType) + " and used item type " + I2S(GetItemTypeId(usedItem)))
+			call BJDebugMsg("Order with new slot " + I2S(newSlot) + " left item type " + I2S(thistype.leftArrowItemType) + " and right item type " + I2S(thistype.rightArrowItemType) + " and used item type " + I2S(GetItemTypeId(usedItem)))
 			if (this.m_rucksackIsEnabled) then
 				call BJDebugMsg("Rucksack is enabled.")
-				if (GetItemTypeId(usedItem) == AInventory.leftArrowItemType and newSlot != AInventory.maxRucksackItemsPerPage) then
+				if (GetItemTypeId(usedItem) == thistype.leftArrowItemType and newSlot != thistype.maxRucksackItemsPerPage) then
 					call BJDebugMsg("Reset left.")
 					call this.resetItemSlots(newSlot, AInventory.maxRucksackItemsPerPage)
-				elseif (GetItemTypeId(usedItem) == AInventory.rightArrowItemType and newSlot != AInventory.maxRucksackItemsPerPage + 1) then
+				elseif (GetItemTypeId(usedItem) == thistype.rightArrowItemType and newSlot != thistype.maxRucksackItemsPerPage + 1) then
 					call BJDebugMsg("Reset right.")
-					call this.resetItemSlots(newSlot, AInventory.maxRucksackItemsPerPage + 1)
+					call this.resetItemSlots(newSlot, thistype.maxRucksackItemsPerPage + 1)
 				//move item previous - player drops an item on the next page item
-				elseif (GetItemTypeId(usedItem) != AInventory.leftArrowItemType and newSlot == AInventory.maxRucksackItemsPerPage) then
+				elseif (GetItemTypeId(usedItem) != thistype.leftArrowItemType and newSlot == thistype.maxRucksackItemsPerPage) then
 					call BJDebugMsg("Move to previous page.")
 					call this.moveRucksackItemToPage(newSlot, false)
 				//move item next - player drops an item on the previous page item
-				elseif (GetItemTypeId(usedItem) != AInventory.rightArrowItemType and newSlot == AInventory.maxRucksackItemsPerPage + 1) then
+				elseif (GetItemTypeId(usedItem) != thistype.rightArrowItemType and newSlot == thistype.maxRucksackItemsPerPage + 1) then
 					call this.moveRucksackItemToPage(newSlot, true)
 				//equip item/stack items/swap items
-				elseif (newSlot >= 0 and newSlot < AInventory.maxRucksackItemsPerPage) then
+				elseif (newSlot >= 0 and newSlot < thistype.maxRucksackItemsPerPage) then
 					call BJDebugMsg("Move item to slot " + I2S(newSlot))
 					call this.moveRucksackItem(usedItem, newSlot)
 				endif
 			else
-				set oldSlot = AInventory.itemIndex(usedItem)
+				set oldSlot = thistype.itemIndex(usedItem)
 				//reset moved equipped items to their positions
 				if (newSlot != oldSlot) then
 					call BJDebugMsg("Moving equipment items is not possible :-) Item index/slot " + I2S(oldSlot))
@@ -904,10 +904,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggeraction triggerAction
 			set this.m_orderTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.m_orderTrigger, this.unit(), EVENT_UNIT_ISSUED_TARGET_ORDER)
-			set conditionFunction = Condition(function AInventory.triggerConditionOrder)
+			set conditionFunction = Condition(function thistype.triggerConditionOrder)
 			set triggerCondition = TriggerAddCondition(this.m_orderTrigger, conditionFunction)
-			set triggerAction = TriggerAddAction(this.m_orderTrigger, function AInventory.triggerActionOrder)
-			call AHashTable.global().storeHandleInteger(this.m_orderTrigger, "this", this)
+			set triggerAction = TriggerAddAction(this.m_orderTrigger, function thistype.triggerActionOrder)
+			call AHashTable.global().setHandleInteger(this.m_orderTrigger, "this", this)
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -923,7 +923,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		private static method triggerActionPickup takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AInventory this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local item usedItem = GetManipulatedItem()
 			call this.equipItem(usedItem, false, false, true) //try always equipment first!
 			set triggeringTrigger = null
@@ -937,10 +937,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggeraction triggerAction
 			set this.m_pickupTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.m_pickupTrigger, this.unit(), EVENT_UNIT_PICKUP_ITEM) //pawn?
-			set conditionFunction = Condition(function AInventory.triggerConditionIsNoPowerup)
+			set conditionFunction = Condition(function thistype.triggerConditionIsNoPowerup)
 			set triggerCondition = TriggerAddCondition(this.m_pickupTrigger, conditionFunction)
-			set triggerAction = TriggerAddAction(this.m_pickupTrigger, function AInventory.triggerActionPickup)
-			call AHashTable.global().storeHandleInteger(this.m_pickupTrigger, "this", this)
+			set triggerAction = TriggerAddAction(this.m_pickupTrigger, function thistype.triggerActionPickup)
+			call AHashTable.global().setHandleInteger(this.m_pickupTrigger, "this", this)
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -949,7 +949,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		private static method triggerActionDrop takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AInventory this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local item usedItem = GetManipulatedItem()
 			local integer index = this.itemIndex(usedItem)
 			local unit triggerUnit = GetTriggerUnit()
@@ -986,10 +986,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggeraction triggerAction
 			set this.m_dropTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.m_dropTrigger, this.unit(), EVENT_UNIT_DROP_ITEM)
-			set conditionFunction = Condition(function AInventory.triggerConditionIsNoPowerup)
+			set conditionFunction = Condition(function thistype.triggerConditionIsNoPowerup)
 			set triggerCondition = TriggerAddCondition(this.m_dropTrigger, conditionFunction)
-			set triggerAction = TriggerAddAction(this.m_dropTrigger, function AInventory.triggerActionDrop)
-			call AHashTable.global().storeHandleInteger(this.m_dropTrigger, "this", this)
+			set triggerAction = TriggerAddAction(this.m_dropTrigger, function thistype.triggerActionDrop)
+			call AHashTable.global().setHandleInteger(this.m_dropTrigger, "this", this)
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -998,7 +998,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		private static method triggerActionUse takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AInventory this = AHashTable.global().getHandleInteger(triggeringTrigger, "this") 
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this") 
 			local item usedItem = GetManipulatedItem()
 			local integer itemTypeId = GetItemTypeId(usedItem)
 			local integer index
@@ -1007,14 +1007,14 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set usedItem = GetManipulatedItem()
 				set itemTypeId = GetItemTypeId(usedItem)
 				//show next page
-				if (itemTypeId == AInventory.rightArrowItemType) then
+				if (itemTypeId == thistype.rightArrowItemType) then
 					call this.showNextRucksackPage()
 				//show previous page
-				elseif (itemTypeId == AInventory.leftArrowItemType) then
+				elseif (itemTypeId == thistype.leftArrowItemType) then
 					call this.showPreviousRucksackPage()
 				//if an item is used by decreasing its number of charges (not to 0!) we have to decrease our number, too
 				else
-					set index = AInventory.itemIndex(usedItem)
+					set index = thistype.itemIndex(usedItem)
 					if (this.m_rucksackItemCharges[index] > 1) then
 						set this.m_rucksackItemCharges[index] = this.m_rucksackItemCharges[index] - 1
 						call this.refreshRucksackItemCharges(index)
@@ -1030,19 +1030,19 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggeraction triggerAction
 			set this.m_useTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.m_useTrigger, this.unit(), EVENT_UNIT_USE_ITEM)
-			set triggerAction = TriggerAddAction(this.m_useTrigger, function AInventory.triggerActionUse)
-			call AHashTable.global().storeHandleInteger(this.m_useTrigger, "this", this)
+			set triggerAction = TriggerAddAction(this.m_useTrigger, function thistype.triggerActionUse)
+			call AHashTable.global().setHandleInteger(this.m_useTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
-		public static method create takes ACharacter character returns AInventory
-			local AInventory this = AInventory.allocate(character)
+		public static method create takes ACharacter character returns thistype
+			local thistype this = thistype.allocate(character)
 			//members
 			set this.m_rucksackPage = 0
 			set this.m_rucksackIsEnabled = false
 
-			call UnitAddAbility(this.unit(), AInventory.openRucksackAbilityId)
+			call UnitAddAbility(this.unit(), thistype.openRucksackAbilityId)
 
 			call this.createOpenTrigger()
 			call this.createOrderTrigger()
@@ -1078,7 +1078,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			call UnitRemoveAbility(this.unit(), AInventory.openRucksackAbilityId)
+			call UnitRemoveAbility(this.unit(), thistype.openRucksackAbilityId)
 
 			call this.destroyOpenTrigger()
 			call this.destroyOrderTrigger()
@@ -1089,27 +1089,27 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		public static method init takes integer leftArrowItemType, integer rightArrowItemType, integer openRucksackAbilityId, string textUnableToEquipItem, string textEquipItem, string textUnableToAddRucksackItem, string textAddItemToRucksack, string textUnableToMoveRucksackItem returns nothing
 			//static start members
-			set AInventory.leftArrowItemType = leftArrowItemType
-			set AInventory.rightArrowItemType = rightArrowItemType
-			set AInventory.openRucksackAbilityId = openRucksackAbilityId
-			set AInventory.textUnableToEquipItem = textUnableToEquipItem
-			set AInventory.textEquipItem = textEquipItem
-			set AInventory.textUnableToAddRucksackItem = textUnableToAddRucksackItem
-			set AInventory.textAddItemToRucksack = textAddItemToRucksack
-			set AInventory.textUnableToMoveRucksackItem = textUnableToMoveRucksackItem
+			set thistype.leftArrowItemType = leftArrowItemType
+			set thistype.rightArrowItemType = rightArrowItemType
+			set thistype.openRucksackAbilityId = openRucksackAbilityId
+			set thistype.textUnableToEquipItem = textUnableToEquipItem
+			set thistype.textEquipItem = textEquipItem
+			set thistype.textUnableToAddRucksackItem = textUnableToAddRucksackItem
+			set thistype.textAddItemToRucksack = textAddItemToRucksack
+			set thistype.textUnableToMoveRucksackItem = textUnableToMoveRucksackItem
 		endmethod
 		
 		/// @return Returns the page of a rucksack item by index.
 		public static method itemRucksackPage takes integer index returns integer
-			debug if (index >= AInventory.maxRucksackItems or index < 0) then
-				debug call AInventory.staticPrint("Wrong rucksack index: " + I2S(index) + ".")
+			debug if (index >= thistype.maxRucksackItems or index < 0) then
+				debug call thistype.staticPrint("Wrong rucksack index: " + I2S(index) + ".")
 				debug return 0
 			debug endif
-			return index / AInventory.maxRucksackItemsPerPage
+			return index / thistype.maxRucksackItemsPerPage
 			//local integer i = 0
 			//loop
-				//exitwhen (i == AInventory.maxRucksackPages)
-				//if (index < i + AInventory.maxRucksackItemsPerPage) then
+				//exitwhen (i == thistype.maxRucksackPages)
+				//if (index < i + thistype.maxRucksackItemsPerPage) then
 					//return i
 				//endif
 			//	set i = i + 1
@@ -1119,17 +1119,17 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		
 		/// Just required for the move order and for item dropping.
 		private static method setItemIndex takes item usedItem, integer index returns nothing
-			call AHashTable.global().storeHandleInteger(usedItem, "AInventory_index", index)
+			call AHashTable.global().setHandleInteger(usedItem, "AInventory_index", index)
 		endmethod
 		
 		/// Just required for the move order and for item dropping.
 		private static method itemIndex takes item usedItem returns integer
-			return AHashTable.global().getHandleInteger(usedItem, "AInventory_index")
+			return AHashTable.global().handleInteger(usedItem, "AInventory_index")
 		endmethod
 		
 		/// Just required for the move order and for item dropping.
 		private static method clearItemIndex takes item usedItem returns nothing
-			call AHashTable.global().flushHandleInteger(usedItem, "AInventory_index")
+			call AHashTable.global().removeHandleInteger(usedItem, "AInventory_index")
 		endmethod
 	endstruct
 

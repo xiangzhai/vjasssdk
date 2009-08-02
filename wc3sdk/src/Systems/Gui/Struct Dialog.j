@@ -196,7 +196,7 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 		
 		private static method triggerActionPreviousPage takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.changeToPreviousPage()
 			set triggeringTrigger = null
 		endmethod
@@ -208,14 +208,14 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			set this.m_previousPageTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterDialogButtonEvent(this.m_previousPageTrigger, this.m_previousPageButton)
 			set triggerAction = TriggerAddAction(this.m_previousPageTrigger, function thistype.triggerActionPreviousPage)
-			call AHashTable.global().storeHandleInteger(this.m_previousPageTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_previousPageTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 		
 		private static method triggerActionNextPage takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.changeToNextPage()
 			set triggeringTrigger = null
 		endmethod
@@ -233,7 +233,7 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			set this.m_nextPageTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterDialogButtonEvent(this.m_nextPageTrigger, this.m_nextPageButton)
 			set triggerAction = TriggerAddAction(this.m_nextPageTrigger, function thistype.triggerActionNextPage)
-			call AHashTable.global().storeHandleInteger(this.m_nextPageTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_nextPageTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod

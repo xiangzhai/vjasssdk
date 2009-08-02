@@ -243,7 +243,7 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 				exitwhen (i == thistype.m_maxShortcuts)
 				if (abilityId == thistype.m_shortcutAbility[i]) then
 					set triggeringTrigger = GetTriggeringTrigger()
-					set this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+					set this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 					debug if (this.m_onPressShortcutAction[i] != 0) then
 						debug call Print("Action exists")
 					debug endif
@@ -261,15 +261,15 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 			set this.m_shortcutHandleTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.m_shortcutHandleTrigger, this.m_shortcutHandler, EVENT_UNIT_SPELL_CAST)
 			set triggerAction = TriggerAddAction(this.m_shortcutHandleTrigger, function thistype.triggerActionOnPressShortcut)
-			call AHashTable.global().storeHandleInteger(this.m_shortcutHandleTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_shortcutHandleTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
 		private static method triggerActionOnPressSpecialShortcut takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
-			local integer shortcut = AHashTable.global().getHandleInteger(triggeringTrigger, "shortcut")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			local integer shortcut = AHashTable.global().handleInteger(triggeringTrigger, "shortcut")
 			debug call Print("SHORTCUT " + I2S(shortcut))
 			call this.m_onPressShortcutAction[shortcut].execute(this)
 			set triggeringTrigger = null
@@ -304,8 +304,8 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_END_CINEMATIC)
 				endif
 				set triggerAction = TriggerAddAction(this.m_specialShortcutHandleTrigger[shortcut], function thistype.triggerActionOnPressSpecialShortcut)
-				call AHashTable.global().storeHandleInteger(this.m_specialShortcutHandleTrigger[shortcut], "this", this)
-				call AHashTable.global().storeHandleInteger(this.m_specialShortcutHandleTrigger[shortcut], "shortcut", shortcut)
+				call AHashTable.global().setHandleInteger(this.m_specialShortcutHandleTrigger[shortcut], "this", this)
+				call AHashTable.global().setHandleInteger(this.m_specialShortcutHandleTrigger[shortcut], "shortcut", shortcut)
 				set triggerEvent = null
 				set triggerAction = null
 			endif

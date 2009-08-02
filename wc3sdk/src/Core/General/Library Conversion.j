@@ -1,5 +1,6 @@
+/// @brief This library is obsolet! Use @function GetHandleId or other native functions.
 library ALibraryCoreGeneralConversion
-
+/*
 	//! textmacro AGeneralConversionMacro takes TYPE, TYPENAME
 		/// There are already some native conversion functions for the integer type.
 		function I2$TYPENAME$ takes integer Integer returns $TYPE$
@@ -133,5 +134,5 @@ library ALibraryCoreGeneralConversion
 	//! runtextmacro AGeneralConversionMacro("pathingtype", "PathingType")
 	//! runtextmacro AGeneralConversionMacro("image", "Image")
 	//! runtextmacro AGeneralConversionMacro("ubersplat", "Ubersplat")
-
+*/
 endlibrary

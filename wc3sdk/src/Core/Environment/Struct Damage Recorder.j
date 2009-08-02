@@ -82,6 +82,18 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 			call DisableTrigger(this.damageTrigger)
 		endmethod
 		
+		public method isEnabled takes nothing returns boolean
+			return IsTriggerEnabled(this.damageTrigger)
+		endmethod
+		
+		public method setEnabled takes boolean enabled returns nothing
+			if (enabled) then
+				call this.enable()
+			else
+				call this.disable()
+			endif
+		endmethod
+		
 		debug private method checkIndex takes integer index returns nothing
 			debug if (index < 0 or index >= this.m_damageCount) then
 				debug call this.print("Wrong index: " + I2S(index) + ".")
@@ -90,7 +102,7 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 		
 		private static method triggerActionDamaged takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ADamageRecorder this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local ADamageRecorder this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			debug if (this.m_damageCount >= ADamageRecorder.maxDamageSources) then
 				debug call this.print("Damage source maximum has already been reached.")
 			debug endif
@@ -109,7 +121,7 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 			set this.damageTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterUnitEvent(this.damageTrigger, this.m_target, EVENT_UNIT_DAMAGED)
 			set triggerAction = TriggerAddAction(this.damageTrigger, function ADamageRecorder.triggerActionDamaged)
-			call AHashTable.global().storeHandleInteger(this.damageTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.damageTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod

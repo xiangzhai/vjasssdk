@@ -29,7 +29,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		endmethod
 		
 		public method setIconPath takes string iconPath returns nothing
-			debug if (not AQuest.useQuestLog) then
+			debug if (not thistype.useQuestLog) then
 				debug call this.print("setIconPath() was called (quest log is disabled).")
 			debug endif
 			set this.m_iconPath = iconPath
@@ -43,7 +43,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		/// No flash, just when you change the state!
 		/// Description also is not used as start property because you do not always use the quest log.
 		public method setDescription takes string description returns nothing
-			debug if (not AQuest.useQuestLog) then
+			debug if (not thistype.useQuestLog) then
 				debug call this.print("setDescription() was called (quest log is disabled).")
 			debug endif
 			set this.m_description = description
@@ -76,7 +76,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 					set i = i + 1
 				endloop
 			endif
-			if (AQuest.useQuestLog) then
+			if (thistype.useQuestLog) then
 				call QuestSetTitle(this.m_questLogQuest, this.title())
 				//call QuestSetDescription(this.questLogQuest, this.description)
 				if (state == AAbstractQuest.stateNotUsed) then
@@ -101,7 +101,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 			local player user = this.character().user()
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, this.title())
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, message)
-			call PlaySoundPathForPlayer(user, AQuest.updateSoundPath)
+			call PlaySoundPathForPlayer(user, thistype.updateSoundPath)
 			set user = null
 		endmethod
 
@@ -128,15 +128,15 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		endmethod
 
 		private method createQuestLogQuest takes nothing returns nothing
-			if (AQuest.useQuestLog) then
+			if (thistype.useQuestLog) then
 				set this.m_questLogQuest = CreateQuest()
 				call QuestSetDiscovered(this.m_questLogQuest, false) //hide quest before setting state
 				call QuestSetRequired(this.m_questLogQuest, this.character() == 0)
 			endif
 		endmethod
 
-		public static method create takes ACharacter character, string title returns AQuest
-			local AQuest this = AQuest.allocate(character, title)
+		public static method create takes ACharacter character, string title returns thistype
+			local thistype this = thistype.allocate(character, title)
 			//members
 			set this.m_questItems = AQuestItemVector.create()
 
@@ -145,7 +145,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		endmethod
 
 		private method destroyQuestLogQuest takes nothing returns nothing
-			if (AQuest.useQuestLog) then
+			if (thistype.useQuestLog) then
 				call DestroyQuest(this.m_questLogQuest)
 				set this.m_questLogQuest = null
 			endif
@@ -178,7 +178,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 
 		//AQuestItem need access
 		public static method isQuestLogUsed takes nothing returns boolean
-			return AQuest.useQuestLog
+			return thistype.useQuestLog
 		endmethod
 	endstruct
 

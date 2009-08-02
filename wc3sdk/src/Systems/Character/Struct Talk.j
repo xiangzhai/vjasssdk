@@ -198,10 +198,10 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 				//Is character
 				if (triggerUnit == ACharacter.playerCharacter(owner).unit()) then
 					set triggeringTrigger = GetTriggeringTrigger()
-					set this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+					set this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 					set orderTargetUnit = GetOrderTargetUnit() 
 					if (orderTargetUnit == this.m_unit) then
-						if (GetDistanceBetweenUnits(triggerUnit, orderTargetUnit, 0.0, 0.0) <= ATalk.maxDistance) then //Z-Wert wird nicht überprüft
+						if (GetDistanceBetweenUnits(triggerUnit, orderTargetUnit, 0.0, 0.0) <= ATalk.maxDistance) then //Z value is not checked
 							set result = (this.m_character == 0)
 							if (not result) then
 								call ACharacter.playerCharacter(owner).displayMessage(ACharacter.messageTypeError, ATalk.textErrorMessage)
@@ -220,7 +220,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		private static method triggerActionEnable takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local player triggerPlayer = GetTriggerPlayer()
-			local ATalk this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local ATalk this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call IssueImmediateOrder(ACharacter.playerCharacter(triggerPlayer).unit(), "stop")
 			call this.enableForCharacter(ACharacter.playerCharacter(triggerPlayer))
 			set triggeringTrigger = null
@@ -236,7 +236,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			set conditionFunction = Condition(function ATalk.triggerConditionEnable)
 			set triggerCondition = TriggerAddCondition(this.m_orderTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_orderTrigger, function ATalk.triggerActionEnable)
-			call AHashTable.global().storeHandleInteger(this.m_orderTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_orderTrigger, "this", this)
 			set conditionFunction = null
 			set triggerCondition = null
 			set triggerAction = null

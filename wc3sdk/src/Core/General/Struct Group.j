@@ -1,7 +1,5 @@
 library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreGeneralUnit
 
-	//! runtextmacro A_VECTOR("private", "AUnitVector", "unit", "null", "100")
-
 	struct AGroup
 		//members
 		private AUnitVector m_units

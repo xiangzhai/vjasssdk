@@ -1,6 +1,6 @@
 library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentLightning, AStructCoreGeneralVector, ALibraryCoreMathsHandle
 
-	//! runtextmacro A_VECTOR("private", "ADynamicLightningVector", "ADynamicLightning", "0", "100") /// @todo @member ADynamicLightning.maxDynamicLightnings
+	//! runtextmacro A_VECTOR("", "ADynamicLightningVector", "ADynamicLightning", "0", "100") /// @todo @member ADynamicLightning.maxDynamicLightnings
 	
 	private function unaryFunctionDestroy takes ADynamicLightning element returns nothing
 		call element.destroy()
@@ -24,7 +24,7 @@ library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, A
 		private integer index
 		private lightning m_lightning
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ALightningChain\"")
+		//! runtextmacro A_STRUCT_DEBUG("\"ADynamicLightning\"")
 		
 		//start members
 		
@@ -81,15 +81,15 @@ library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, A
 		endmethod
 		
 		private method createLightning takes nothing returns nothing
-				if (this.m_player == null) then
-					set this.m_lightning = AddLightningEx(this.m_code, false, GetUnitX(this.m_firstUnit), GetUnitY(this.m_firstUnit), GetUnitZ(this.m_firstUnit), GetUnitX(this.m_secondUnit), GetUnitY(this.m_secondUnit), GetUnitZ(this.m_secondUnit))
-				else
-					set this.m_lightning = CreateLightningForPlayer(this.m_player, this.m_code, GetUnitX(this.m_firstUnit), GetUnitY(this.m_firstUnit), GetUnitZ(this.m_firstUnit), GetUnitX(this.m_secondUnit), GetUnitY(this.m_secondUnit), GetUnitZ(this.m_secondUnit))
-				endif
+			if (this.m_player == null) then
+				set this.m_lightning = AddLightningEx(this.m_code, false, GetUnitX(this.m_firstUnit), GetUnitY(this.m_firstUnit), GetUnitZ(this.m_firstUnit), GetUnitX(this.m_secondUnit), GetUnitY(this.m_secondUnit), GetUnitZ(this.m_secondUnit))
+			else
+				set this.m_lightning = CreateLightningForPlayer(this.m_player, this.m_code, GetUnitX(this.m_firstUnit), GetUnitY(this.m_firstUnit), GetUnitZ(this.m_firstUnit), GetUnitX(this.m_secondUnit), GetUnitY(this.m_secondUnit), GetUnitZ(this.m_secondUnit))
+			endif
 		endmethod
 		
-		public static method create takes player user, string usedCode, unit firstUnit, unit secondUnit returns ADynamicLightning
-			local ADynamicLightning this = ADynamicLightning.allocate()
+		public static method create takes player user, string usedCode, unit firstUnit, unit secondUnit returns thistype
+			local thistype this = thistype.allocate()
 			//start members
 			set this.m_player = user
 			set this.m_code = usedCode
@@ -98,7 +98,7 @@ library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, A
 			set this.m_secondUnit = secondUnit
 			//members
 			call this.createLightning()
-			set this.index = ADynamicLightning.addDynamicLightning(this)
+			set this.index = thistype.addDynamicLightning(this)
 			
 			return this
 		endmethod
@@ -110,7 +110,7 @@ library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, A
 		
 		public method onDestroy takes nothing returns nothing
 			//move list, drop this
-			call ADynamicLightning.removeDynamicLightning(this.index)
+			call thistype.removeDynamicLightning(this.index)
 			//start members
 			set this.m_player = null
 			//dynamic members
@@ -123,41 +123,41 @@ library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, A
 		private static method timerFunction takes nothing returns nothing
 			local integer i = 0
 			loop
-				exitwhen (i == ADynamicLightning.dynamicLightnings.size())
-				if (ADynamicLightning.removeOnDeath and (IsUnitDeadBJ(ADynamicLightning.dynamicLightnings[i].m_firstUnit) or IsUnitDeadBJ(ADynamicLightning.dynamicLightnings[i].m_secondUnit))) then
-					call ADynamicLightning.dynamicLightnings[i].destroy()
-					exitwhen (i == ADynamicLightning.dynamicLightnings.size())
+				exitwhen (i == thistype.dynamicLightnings.size())
+				if (ADynamicLightning.removeOnDeath and (IsUnitDeadBJ(thistype.dynamicLightnings[i].m_firstUnit) or IsUnitDeadBJ(thistype.dynamicLightnings[i].m_secondUnit))) then
+					call thistype.dynamicLightnings[i].destroy()
+					exitwhen (i == thistype.dynamicLightnings.size())
 				endif
-				call ADynamicLightning.dynamicLightnings[i].refreshPosition()
+				call thistype.dynamicLightnings[i].refreshPosition()
 				set i = i + 1
 			endloop
 		endmethod
 		
 		public static method init takes real refreshRate, boolean removeOnDeath returns nothing
 			//static start members
-			set ADynamicLightning.removeOnDeath = removeOnDeath
+			set thistype.removeOnDeath = removeOnDeath
 			//static members
-			set ADynamicLightning.moveTimer = CreateTimer()
-			call TimerStart(ADynamicLightning.moveTimer, refreshRate, true, function ADynamicLightning.timerFunction)
-			set ADynamicLightning.dynamicLightnings = ADynamicLightningVector.create()
+			set thistype.moveTimer = CreateTimer()
+			call TimerStart(thistype.moveTimer, refreshRate, true, function thistype.timerFunction)
+			set thistype.dynamicLightnings = ADynamicLightningVector.create()
 		endmethod
 		
 		public static method cleanUp takes nothing returns nothing
 			//static members
-			call PauseTimer(ADynamicLightning.moveTimer)
-			call DestroyTimer(ADynamicLightning.moveTimer)
-			set ADynamicLightning.moveTimer = null
-			call ADynamicLightning.dynamicLightnings.forEach(unaryFunctionDestroy)
-			call ADynamicLightning.dynamicLightnings.destroy()
+			call PauseTimer(thistype.moveTimer)
+			call DestroyTimer(thistype.moveTimer)
+			set thistype.moveTimer = null
+			call thistype.dynamicLightnings.forEach(unaryFunctionDestroy)
+			call thistype.dynamicLightnings.destroy()
 		endmethod
 		
-		private static method addDynamicLightning takes ADynamicLightning dynamicLightning returns integer
-			call ADynamicLightning.dynamicLightnings.pushBack(dynamicLightning)
-			return ADynamicLightning.dynamicLightnings.backIndex()
+		private static method addDynamicLightning takes thistype dynamicLightning returns integer
+			call thistype.dynamicLightnings.pushBack(dynamicLightning)
+			return thistype.dynamicLightnings.backIndex()
 		endmethod
 		
 		private static method removeDynamicLightning takes integer index returns nothing
-			call ADynamicLightning.dynamicLightnings.erase(index)
+			call thistype.dynamicLightnings.erase(index)
 		endmethod
 	endstruct
 

@@ -143,7 +143,7 @@ library AStructCoreInterfaceIndicator requires ALibraryCoreDebugMisc, AStructCor
 
 		private static method triggerActionIndicateObject takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AIndicator this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local AIndicator this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			if (this.m_object != null) then
 				call this.indicateObject()
 				call this.inrcreaseElapsedTime()
@@ -169,7 +169,7 @@ library AStructCoreInterfaceIndicator requires ALibraryCoreDebugMisc, AStructCor
 			set this.m_refreshTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(this.m_refreshTrigger, this.m_rate, true)
 			set triggerAction = TriggerAddAction(this.m_refreshTrigger, function AIndicator.triggerActionIndicateObject)
-			call AHashTable.global().storeHandleInteger(this.m_refreshTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_refreshTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod

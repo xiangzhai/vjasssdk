@@ -378,14 +378,14 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 
 		private static method triggerActionDestroyCharacter takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call thistype.destroy(this)
 			set triggeringTrigger = null
 		endmethod
 
 		private static method triggerActionSetUnmovable takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.setMovable(false)
 			set triggeringTrigger = null
 		endmethod
@@ -400,7 +400,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			else
 				set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionSetUnmovable)
 			endif
-			call AHashTable.global().storeHandleInteger(this.m_leaveTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_leaveTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
@@ -413,7 +413,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 				set this.m_deathTrigger = CreateTrigger()
 				set triggerEvent = TriggerRegisterUnitEvent(this.m_deathTrigger, this.m_unit, EVENT_UNIT_DEATH)
 				set triggerAction = TriggerAddAction(this.m_deathTrigger, function thistype.triggerActionDestroyCharacter)
-				call AHashTable.global().storeHandleInteger(this.m_deathTrigger, "this", this) //AClassCharacterCharacterHashTable
+				call AHashTable.global().setHandleInteger(this.m_deathTrigger, "this", this)
 				set triggerEvent = null
 				set triggerAction = null
 			endif

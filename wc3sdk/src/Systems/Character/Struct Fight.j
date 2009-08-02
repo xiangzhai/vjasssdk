@@ -42,7 +42,7 @@ library AStructSystemsCharacterFight requires ALibraryCoreDebugMisc, AStructCore
 
 		private static method timerFunctionReset takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
-			local thistype this = AHashTable.global().getHandleInteger(expiredTimer, "this")
+			local thistype this = AHashTable.global().handleInteger(expiredTimer, "this")
 			set this.m_hasOrdered = false
 			set expiredTimer = null
 		endmethod
@@ -50,7 +50,7 @@ library AStructSystemsCharacterFight requires ALibraryCoreDebugMisc, AStructCore
 		private method startTimer takes nothing returns nothing
 			set this.m_hasOrdered = true
 			call TimerStart(this.m_timer, thistype.m_time, false, function thistype.timerFunctionReset)
-			call AHashTable.global().storeHandleInteger(this.m_timer, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_timer, "this", this)
 		endmethod
 
 		private static method triggerConditionOrder takes nothing returns boolean
@@ -59,7 +59,7 @@ library AStructSystemsCharacterFight requires ALibraryCoreDebugMisc, AStructCore
 
 		private static method triggerActionOrder takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			if (this.m_canOrder) then
 				if (this.m_hasOrdered) then
 					call this.hit()
@@ -84,7 +84,7 @@ library AStructSystemsCharacterFight requires ALibraryCoreDebugMisc, AStructCore
 				//call TriggerRegisterMouseEvent(this.m_fightTrigger, EVENT_LMOUSEDOWN)
 			endif
 			set triggerAction = TriggerAddAction(this.m_fightTrigger, function thistype.triggerActionOrder)
-			call AHashTable.global().storeHandleInteger(this.m_fightTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_fightTrigger, "this", this)
 			set conditionFunction = null
 			set triggerCondition = null
 			set triggerAction = null
@@ -115,11 +115,13 @@ library AStructSystemsCharacterFight requires ALibraryCoreDebugMisc, AStructCore
 			call this.destroyFightTrigger()
 		endmethod
 
-		/// @param useFps false, new implementation, uses the left mouse key
-		/// @param order "move"
-		/// @param time 0.5
-		/// @param hitAnimation "attack"
-		/// @param angle 20.0
+		/**
+		* @param useFps false, new implementation, uses the left mouse key
+		* @param order "move"
+		* @param time 0.5
+		* @param hitAnimation "attack"
+		* @param angle 20.0
+		*/
 		public static method init takes boolean useFps, string order, real time, string hitAnimation, real angle returns nothing
 			debug if (useFps and not Asl.usingRtc()) then
 				debug call thistype.staticPrint("FPS is enabled but RtC isn't.")

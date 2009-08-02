@@ -156,7 +156,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 		
 		private static method triggerActionPlayerLeaves takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.destroy()
 			set triggeringTrigger = null
 		endmethod
@@ -167,14 +167,14 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			set this.m_leaveTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterPlayerEvent(this.m_leaveTrigger, this.m_user, EVENT_PLAYER_LEAVE)
 			set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionPlayerLeaves)
-			call AHashTable.global().storeHandleInteger(this.m_leaveTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_leaveTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
 		private static method triggerActionRefresh takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this") 
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this") 
 			debug if (thistype.m_cameraSetup != null) then
 				call CameraSetupApplyForPlayer(true, thistype.m_cameraSetup, this.m_user, 0.0)
 			debug else
@@ -191,7 +191,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 				set this.m_refreshTrigger = CreateTrigger()
 				set triggerEvent = TriggerRegisterTimerEvent(this.m_refreshTrigger, thistype.m_refreshRate, true)
 				set triggerAction = TriggerAddAction(this.m_refreshTrigger, function thistype.triggerActionRefresh)
-				call AHashTable.global().storeHandleInteger(this.m_refreshTrigger, "this", this)
+				call AHashTable.global().setHandleInteger(this.m_refreshTrigger, "this", this)
 				set triggerEvent = null
 				set triggerAction = null
 			endif
@@ -199,7 +199,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 
 		private static method triggerActionChangeToPrevious takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			if (this.m_class == thistype.m_firstClass) then
 				set this.m_class = thistype.m_lastClass
 			else
@@ -215,14 +215,14 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			set this.m_changePreviousTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changePreviousTrigger, KEY_LEFT, true)
 			set triggerAction = TriggerAddAction(this.m_changePreviousTrigger, function thistype.triggerActionChangeToPrevious)
-			call AHashTable.global().storeHandleInteger(this.m_changePreviousTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_changePreviousTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
 		private static method triggerActionChangeToNext takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			if (this.m_class == thistype.m_lastClass) then
 				set this.m_class = thistype.m_firstClass
 			else
@@ -238,14 +238,14 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			set this.m_changeNextTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changeNextTrigger, KEY_RIGHT, true)
 			set triggerAction = TriggerAddAction(this.m_changeNextTrigger, function thistype.triggerActionChangeToNext)
-			call AHashTable.global().storeHandleInteger(this.m_changeNextTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_changeNextTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
 		private static method triggerActionSelectClass takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().getHandleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.selectClass()
 			set triggeringTrigger = null
 		endmethod
@@ -256,7 +256,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			set this.m_selectTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_selectTrigger, KEY_ESCAPE, true)
 			set triggerAction = TriggerAddAction(this.m_selectTrigger, function thistype.triggerActionSelectClass)
-			call AHashTable.global().storeHandleInteger(this.m_selectTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_selectTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod

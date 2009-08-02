@@ -75,7 +75,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 	endfunction
 	
 	function AUnitGetBonus takes unit who, integer t returns integer
-		return hashTable.getHandleInteger(who, I2S(t))
+		return hashTable.handleInteger(who, I2S(t))
 	endfunction
 
 	function AUnitSetBonus takes unit who, integer t, integer amount returns boolean
@@ -88,9 +88,9 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 			return false
 		elseif (t > 1) then
 			set amount = amount / BonusHPManaFactor
-			call hashTable.storeHandleInteger(who, I2S(t), amount * BonusHPManaFactor)
+			call hashTable.setHandleInteger(who, I2S(t), amount * BonusHPManaFactor)
 		else
-			call hashTable.storeHandleInteger(who, I2S(t), amount)
+			call hashTable.setHandleInteger(who, I2S(t), amount)
 		endif
 		if (t == 3) and (GetUnitState(who,UNIT_STATE_MAX_MANA) <= 0) then
 			set man = true
@@ -140,7 +140,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 			return true
 		endif
 		if (t > 1) then
-			set amount= (amount / BonusHPManaFactor) * BonusHPManaFactor
+			set amount = (amount / BonusHPManaFactor) * BonusHPManaFactor
 		endif
 		if (t >= 2) then
 
@@ -159,13 +159,13 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 				set s= "BonusModLeftMana"
 				set min = 0
 			endif
-			set amount= amount + hashTable.getHandleInteger(who, s)
+			set amount= amount + hashTable.handleInteger(who, s)
 			if (amount < 0) and (l + amount < 1) then
 				set x = R2I(min + mod - l)
 				set b = AUnitSetBonus(who, t, AUnitGetBonus(who, t) + x)
-				call hashTable.storeHandleInteger(who, s, amount - x)
+				call hashTable.setHandleInteger(who, s, amount - x)
 			else
-				call hashTable.storeHandleInteger(who, s, 0)
+				call hashTable.setHandleInteger(who, s, 0)
 				set b = AUnitSetBonus(who, t, AUnitGetBonus(who, t) + amount)
 			endif
 			return b
@@ -175,7 +175,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 	
 	/// @author Tamino Dauth
 	function AFlushBonusUnit takes unit who returns nothing
-		call hashTable.flushHandleValues(who)
+		call hashTable.flushHandle(who)
 	endfunction
 	
 	/// So here you set each of the bonus abilities, 0 is damage, 1 armor, 2 health, and 3 mana
@@ -227,7 +227,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 		set abilityId[Ix(3,8)] = 'AZW9' //+2560
 		set abilityId[Ix(3,9)] = 'AZWA' //-5120
 		
-		set hashTable = AHashTable.create("BonusMod")
+		set hashTable = AHashTable.create()
 	endfunction
 
 endlibrary
