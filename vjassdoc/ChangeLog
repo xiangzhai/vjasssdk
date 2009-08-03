@@ -1,3 +1,8 @@
+2009-08-03 Tamino Dauth <tamino@cdauth.de>
+* Added method autoCompletion to class Parser.
+* Added file "tests/autocompletion.cpp".
+* Flag "debug" should enable test file compilation now.
+
 2009-07-30 Tamino Dauth <tamino@cdauth.de>
 * Fixed several memory access errors.
 

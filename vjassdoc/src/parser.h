@@ -183,6 +183,15 @@ class Parser
 		class SourceFile* currentSourceFile() const;
 
 		void add(class SyntaxError *syntaxError);
+
+		/**
+		* Parses line @param line from index @param index to the end of line and generates a list of possible objects.
+		* This can be useful for IDEs or other editors to create an auto completion for their users.
+		* @param line The code line.
+		* @param index Start index of code line for the parser.
+		* @return A list filled with possible objects.
+		*/
+		std::list<class Object*> autoCompletion(const std::string &line, unsigned int &index);
 	private:
 #ifdef SQLITE
 		struct Database

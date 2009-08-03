@@ -43,7 +43,7 @@ class Struct : public Interface
 	
 		static void initClass();
 #endif
-		Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression);
+		Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression);
 #ifdef SQLITE
 		Struct(std::vector<const unsigned char*> &columnVector);
 #endif

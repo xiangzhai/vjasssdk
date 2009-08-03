@@ -6,6 +6,7 @@ project(vjassdoc)
 find_library(gettext REQUIRED)
 
 add_definitions(-DSQLITE) #test, remove if you want to 
+add_definitions(-DDEBUG) #test, remove if you want to 
 
 if (SQLITE)
 	find_library(sqlite3 REQUIRED)
@@ -66,3 +67,7 @@ add_definitions(-DLOCALE_DIR=\"${LOCALE_INSTALL_DIR}\")
 include_directories(src)
 add_subdirectory(src)
 add_subdirectory(locale)
+
+#if (DEBUG)
+	add_subdirectory(tests)
+#endif (DEBUG)

@@ -36,6 +36,7 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   INCLUDE("/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/src/cmake_install.cmake")
   INCLUDE("/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/locale/cmake_install.cmake")
+  INCLUDE("/home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/vjassdoc/tests/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 

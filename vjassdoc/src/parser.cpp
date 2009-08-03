@@ -982,6 +982,91 @@ std::list<class Object*> Parser::getSpecificList(const enum List &list, const st
 	return result;
 }
 
+std::list<class Object*> Parser::autoCompletion(const std::string &line, unsigned int &index)
+{
+	std::string token = getToken(line, index);
+
+	if (token.empty())
+		return std::list<class Object*>();
+
+	if (token == "private" || token == "public" || token == "//!")
+		token = getToken(line, index);
+
+	enum Keyword
+	{
+		None,
+		Extension,
+		Requirement,
+		Delegate,
+		Hook,
+		ReturnType,
+		Call,
+		ReturnValue
+	};
+
+	Keyword keyword = None;
+	std::list<enum Parser::List> lists;
+
+	if (token == "extends")
+	{
+		std::cout << "Found extends token" << std::endl;
+		lists.push_back(Parser::Structs);
+		lists.push_back(Parser::Interfaces);
+		keyword = Extension;
+	}
+	else if (token == "requires" || token == "needs")
+		lists.push_back(Parser::Libraries);
+	else if (token == "delegate")
+		lists.push_back(Parser::Structs);
+	else if (token == "implement")
+		lists.push_back(Parser::Modules);
+	else if (token == "hook")
+	{
+		lists.push_back(Parser::Functions);
+		lists.push_back(Parser::Methods); //statics
+	}
+	else if (token == "returns")
+	{
+		lists.push_back(Parser::Types);
+		lists.push_back(Parser::FunctionInterfaces);
+		lists.push_back(Parser::Interfaces);
+		lists.push_back(Parser::Structs);
+	}
+	else if (token == "call")
+	{
+		lists.push_back(Parser::FunctionInterfaces);
+		lists.push_back(Parser::Functions);
+		lists.push_back(Parser::Methods);
+		lists.push_back(Parser::Structs); //calling static methods
+	}
+	else if (token == "return")
+	{
+		lists.push_back(Parser::Types); // integer(10)
+		lists.push_back(Parser::Globals); // bj_MAX_PLAYERS
+		lists.push_back(Parser::Locals); // i
+		lists.push_back(Parser::FunctionInterfaces); // FunctionInterface.bla
+		lists.push_back(Parser::Interfaces); // Widget(1)
+		lists.push_back(Parser::Structs); // Widget(1)
+	}
+
+	token = getToken(line, index);
+	std::cout << "Search identifier token " << token << std::endl;
+	std::list<class Object*> results;
+
+	for (std::list<enum Parser::List>::iterator iterator0 = lists.begin(); iterator0 != lists.end(); ++iterator0)
+	{
+		std::list<class Object*> list = this->getList(*iterator0);
+
+		for (std::list<class Object*>::iterator iterator1 = list.begin(); iterator1 != list.end(); ++iterator1)
+		{
+			if (token == (*iterator1)->identifier())
+				results.push_back(*iterator1);
+		}
+	}
+
+	return results;
+}
+
 std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 {
 	switch (list)

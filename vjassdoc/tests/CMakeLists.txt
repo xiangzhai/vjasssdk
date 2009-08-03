@@ -1,0 +1,2 @@
+add_executable(autocompletion autocompletion.cpp)
+target_link_libraries(autocompletion vjassdoclib)
