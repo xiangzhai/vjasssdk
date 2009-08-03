@@ -82,6 +82,7 @@ void Vjassdoc::configure(bool jass, bool debug, bool privateSpace, bool textmacr
 	Vjassdoc::m_compileFilePath = compileFilePath;
 	Vjassdoc::database = database;
 	Vjassdoc::verbose = verbose;
+	Vjassdoc::time = time;
 	Vjassdoc::alphabetical = alphabetical;
 
 	for (int i = 0; i < Parser::MaxLists; ++i)
