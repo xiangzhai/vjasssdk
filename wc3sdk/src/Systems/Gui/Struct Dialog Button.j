@@ -69,7 +69,8 @@ library AStructSystemsGuiDialogButton requires ALibraryCoreDebugMisc, AStructCor
 		private static method triggerActionRunDialogButtonAction takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ADialogButton this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			debug call this.print("Button action!")
+			debug call this.print("Button action! and clear")
+			call this.dialog().clear()
 			call this.m_action.execute(this)
 			set triggeringTrigger = null
 		endmethod
@@ -77,18 +78,19 @@ library AStructSystemsGuiDialogButton requires ALibraryCoreDebugMisc, AStructCor
 		private method createTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			if (this.m_action != 0) then
+			//create always since it sends the dialog that it's hidden again.
+			//if (this.m_action != 0) then
 				set this.m_trigger = CreateTrigger()
 				set triggerEvent = TriggerRegisterDialogButtonEvent(this.m_trigger, this.m_button)
-				set triggerAction = TriggerAddAction(this.m_trigger, function ADialogButton.triggerActionRunDialogButtonAction)
+				set triggerAction = TriggerAddAction(this.m_trigger, function thistype.triggerActionRunDialogButtonAction)
 				call AHashTable.global().setHandleInteger(this.m_trigger, "this", this)
 				set triggerEvent = null
 				set triggerAction = null
-			endif
+			//endif
 		endmethod
 		
-		public static method create takes ADialog usedDialog, string text, integer shortcut, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns ADialogButton
-			local ADialogButton this = ADialogButton.allocate()
+		public static method create takes ADialog usedDialog, string text, integer shortcut, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns thistype
+			local thistype this = thistype.allocate()
 			//start members
 			set this.m_dialog = usedDialog
 			set this.m_text = text
@@ -103,10 +105,10 @@ library AStructSystemsGuiDialogButton requires ALibraryCoreDebugMisc, AStructCor
 		endmethod
 		
 		private method destroyTrigger takes nothing returns nothing
-			if (this.m_action != 0) then
+			//if (this.m_action != 0) then
 				call AHashTable.global().destroyTrigger(this.m_trigger)
 				set this.m_trigger = null
-			endif
+			//endif
 		endmethod
 		
 		public method onDestroy takes nothing returns nothing

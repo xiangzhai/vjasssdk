@@ -96,8 +96,19 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 		
 		//members
 		
+		public method shownMainWindow takes nothing returns AMainWindow
+			return this.m_shownMainWindow
+		endmethod
+		
 		public method dialog takes nothing returns ADialog
 			return this.m_dialog
+		endmethod
+		
+		//convenience methods
+		
+		/// @return Returns if a dialog or main window is shown to the user.
+		public method isShown takes nothing returns boolean
+			return this.m_shownMainWindow != 0 or this.m_dialog.isDisplayed()
 		endmethod
 
 		//methods

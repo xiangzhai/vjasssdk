@@ -1,4 +1,4 @@
-library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsPoint
+library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit
 
 
 	/// methods are often called in their own threads! TriggerSleepAction problem.
@@ -31,7 +31,7 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		endif
 		call CameraSetupApplyForPlayer(false, AInfo.cameraSetup, user, 0.0)
 		call SetCameraFieldForPlayer(user, CAMERA_FIELD_ROTATION, GetUnitFacing(speaker) - 180.0, 0.0)
-		//call SetCameraFieldForPlayer(user, CAMERA_FIELD_ZOFFSET, CameraSetupGetField(AInfo.cameraSetup, CAMERA_FIELD_ZOFFSET) + GetTerrainZ(GetUnitX(speaker), GetUnitY(speaker)), 0.0) //GetUnitZ
+		call SetCameraFieldForPlayer(user, CAMERA_FIELD_ZOFFSET, GetUnitZ(speaker) + 128.0, 0.0)
 		call SetCameraTargetControllerNoZForPlayer(user, speaker, 0.0, 0.0, false)
 		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), GetUnitName(speaker), text, duration, duration)
 		if (info.talk().character().talkLog() != 0) then

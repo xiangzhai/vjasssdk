@@ -1,3 +1,6 @@
+2009-08-03 Tamino Dauth <tamino@cdauth.de>
+* Added methods shownMainWindow and isShown to struct AGui.
+
 2009-08-02 Tamino Dauth <tamino@cdauth.de>
 * Added more default vectors.
 * Added methods isEnabled and setEnabled to struct ADamageRecorder.

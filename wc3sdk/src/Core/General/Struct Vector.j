@@ -578,7 +578,7 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 	///default vectors, Jass data types
 	//! runtextmacro A_VECTOR("", "AIntegerVector", "integer", "0", "8192") /// @todo JASS_MAX_ARRAY_SIZE
 	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "8192") /// @todo JASS_MAX_ARRAY_SIZE
-	//! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "8192") /// @todo JASS_MAX_ARRAY_SIZE
+	///! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "8192") /// @todo JASS_MAX_ARRAY_SIZE
 	//! runtextmacro A_VECTOR("", "ARealVector", "real", "0.0", "8192") /// @todo JASS_MAX_ARRAY_SIZE
 	
 	//! runtextmacro A_VECTOR("", "AEffectVector", "effect", "null", "8192") /// @todo JASS_MAX_ARRAY_SIZE

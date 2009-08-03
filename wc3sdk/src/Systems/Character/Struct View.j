@@ -1,5 +1,5 @@
 /// Do not use this library, it is unfinished!
-library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, ALibraryCoreMathsUnit, AStructSystemsCharacterAbstractCharacterSystem
 
 	struct AView extends AAbstractCharacterSystem
 		//static start members
@@ -21,10 +21,10 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStruc
 		endmethod
 
 		private method refreshView takes nothing returns nothing
-			local real z = GetTerrainZ(GetUnitX(this.unit()), GetUnitY(this.unit()))
+			local real z = GetUnitZ(this.unit())
 			call CameraSetupApplyForPlayer(false, thistype.cameraSetup, this.user(), 0.0)
 			call SetCameraFieldForPlayer(this.user(), CAMERA_FIELD_ROTATION, GetUnitFacing(this.unit()), 0.0)
-			call SetCameraFieldForPlayer(this.user(), CAMERA_FIELD_ZOFFSET, z + GetUnitFlyHeight(this.unit()) + 128.0, 0.0) //Eigentlich perfekter Z-Wert
+			call SetCameraFieldForPlayer(this.user(), CAMERA_FIELD_ZOFFSET, z + 128.0, 0.0) //Eigentlich perfekter Z-Wert
 		endmethod
 
 		private static method triggerActionRefreshView takes nothing returns nothing
