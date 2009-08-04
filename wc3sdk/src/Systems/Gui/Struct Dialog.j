@@ -174,6 +174,11 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			call DialogClear(this.m_dialog)
 		endmethod
 		
+		/// Friend relation to @struct ADialogButton.
+		public method setDisplayedByButton takes boolean displayed returns nothing
+			set this.m_isDisplayed = displayed
+		endmethod
+		
 		private method changeToPreviousPage takes nothing returns nothing
 			call this.setDisplayed(false)
 			if (this.m_currentPage == 0) then

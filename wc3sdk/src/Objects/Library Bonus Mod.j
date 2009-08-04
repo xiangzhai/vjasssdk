@@ -1,4 +1,12 @@
-/// @author weaaddar
+/**
+* The Bonus Mod (originally created by @author weaaddar) is a famous system
+* for modifing specific unit properties where Jass natives are missed and can not be used.
+* It uses a special method by adding and removing property-modifing abilities to a unit.
+* For this reason it allows the user to modify damage, armour, hit points and mana of a unit.
+* Note that you've to call @function AInitBonusMod before using this library.
+* It won't be called by default (using it as initializer) since this would be decrease the performance for users who maybe won't use it at all.
+* @author weaaddar
+*/
 library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCoreDebugMisc //misc for debuggings
 
 /*
@@ -74,10 +82,32 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 	   return -R2I(Pow(2, Ix(1, 0) - 1))
 	endfunction
 	
+	/**
+	* Returns units bonus of a specific property.
+	* @param who The unit which is checked for the bonus.
+	* @param t The property type which is checked for.
+	* Possible values are:
+	* @global A_BONUS_TYPE_DAMAGE
+	* @global A_BONUS_TYPE_ARMOR
+	* @global A_BONUS_TYPE_HP
+	* @global A_BONUS_TYPE_MANA
+	* @return Returns the bonus value.
+	*/
 	function AUnitGetBonus takes unit who, integer t returns integer
 		return hashTable.handleInteger(who, I2S(t))
 	endfunction
 
+	/**
+	* Sets units bonus of a specific property.
+	* @param who The unit which should get the bonus.
+	* @param t The property type which is used for adding the bonus.
+	* Possible values are:
+	* @global A_BONUS_TYPE_DAMAGE
+	* @global A_BONUS_TYPE_ARMOR
+	* @global A_BONUS_TYPE_HP
+	* @global A_BONUS_TYPE_MANA
+	* @return Returns if the bonus was added successfully.
+	*/
 	function AUnitSetBonus takes unit who, integer t, integer amount returns boolean
 		local integer x
 		local integer i = Ix(1, -1)

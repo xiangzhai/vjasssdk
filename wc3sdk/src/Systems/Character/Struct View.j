@@ -1,5 +1,5 @@
 /// Do not use this library, it is unfinished!
-library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, ALibraryCoreMathsUnit, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreMathsUnit, AStructSystemsCharacterAbstractCharacterSystem
 
 	struct AView extends AAbstractCharacterSystem
 		//static start members
@@ -11,13 +11,15 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, ALibra
 		//methods
 
 		public method enable takes nothing returns nothing
-			call EnableTrigger(this.m_viewTrigger)
-			call SetCameraTargetControllerNoZForPlayer(this.user(), this.unit(), 0.0, 0.0, false) /// @todo is not called?!
+			call AThirdPersonCamera.playerThirdPersonCamera(this.character().user()).resume()
+			//call EnableTrigger(this.m_viewTrigger)
+			//call SetCameraTargetControllerNoZForPlayer(this.user(), this.unit(), 0.0, 0.0, false) /// @todo is not called?!
 		endmethod
 
 		public method disable takes nothing returns nothing
-			call DisableTrigger(this.m_viewTrigger)
-			call ResetToGameCameraForPlayer(this.user(), 0.0)
+			call AThirdPersonCamera.playerThirdPersonCamera(this.character().user()).pause()
+			//call DisableTrigger(this.m_viewTrigger)
+			//call ResetToGameCameraForPlayer(this.user(), 0.0)
 		endmethod
 
 		private method refreshView takes nothing returns nothing
@@ -49,7 +51,8 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, ALibra
 			local AView this = AView.allocate(character)
 			//call SetCameraTargetControllerNoZForPlayer(this.user(), this.unit(), 0.0, 0.0, false)
 
-			call this.createViewTrigger()
+			//call this.createViewTrigger()
+			call AThirdPersonCamera.playerThirdPersonCamera(this.character().user()).enable(character.unit(), 0.0)
 			return this
 		endmethod
 
@@ -59,8 +62,8 @@ library AStructSystemsCharacterView requires AStructCoreGeneralHashTable, ALibra
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-
-			call this.destroyViewTrigger()
+			call AThirdPersonCamera.playerThirdPersonCamera(this.character().user()).disable()
+			//call this.destroyViewTrigger()
 		endmethod
 
 		public static method init takes camerasetup cameraSetup, real viewRefreshRate returns nothing

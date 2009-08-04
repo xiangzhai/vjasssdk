@@ -1,7 +1,12 @@
 library ALibraryCoreMathsConversion requires ALibraryCoreDebugMisc, ALibraryCoreStringMisc
 
-	/// Converts an integer into any numeral system
-	/// The A in I2A stands for alpha-numeric.
+	/**
+	* Converts an integer into any numeral system
+	* The A in I2A stands for alpha-numeric.
+	* @param value The integer value which will be converted.
+	* @param chars The character pool of the numeral system.
+	* @return Returns the converted value as string.
+	*/
 	function I2A takes integer value, string chars returns string
 		local string alphanumeric = ""
 		local integer index = 0
@@ -18,8 +23,13 @@ library ALibraryCoreMathsConversion requires ALibraryCoreDebugMisc, ALibraryCore
 		return alphanumeric
 	endfunction
 
-	/// Converts a number from any numeral system into an integer.
-	/// The A in A2I stands for alpha-numeric.
+	/**
+	* Converts a number from any numeral system into an integer.
+	* The A in A2I stands for alpha-numeric.
+	* @param alphanumeric The alpha-numeric string which will be converted.
+	* @param chars The character pool of the numeral system.
+	* @return Returns the converted integer.
+	*/
 	function A2I takes string alphanumeric, string chars returns integer
 		local integer value = 0
 		local integer index = 1

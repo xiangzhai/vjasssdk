@@ -1,8 +1,9 @@
-library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit
+library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit
 
 
-	/// methods are often called in their own threads! TriggerSleepAction problem.
-	/// @todo Implement this method as function.
+	/**
+	* Methods are often called in their own threads -> TriggerSleepAction problem.
+	*/
 	function speech takes AInfo info, boolean toCharacter, string text, sound usedSound returns nothing
 		local real duration
 		local player user = info.talk().character().user()
@@ -29,10 +30,13 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		if (usedSound != null) then
 			call PlaySoundForPlayer(user, usedSound)
 		endif
+		/*
 		call CameraSetupApplyForPlayer(false, AInfo.cameraSetup, user, 0.0)
 		call SetCameraFieldForPlayer(user, CAMERA_FIELD_ROTATION, GetUnitFacing(speaker) - 180.0, 0.0)
 		call SetCameraFieldForPlayer(user, CAMERA_FIELD_ZOFFSET, GetUnitZ(speaker) + 128.0, 0.0)
 		call SetCameraTargetControllerNoZForPlayer(user, speaker, 0.0, 0.0, false)
+		*/
+		call AThirdPersonCamera.playerThirdPersonCamera(user).enable(listener, 0.0)
 		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), GetUnitName(speaker), text, duration, duration)
 		if (info.talk().character().talkLog() != 0) then
 			call info.talk().character().talkLog().addMessage(info.talk(), text) //log message
@@ -57,6 +61,7 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		call StopSound(usedSound, true, false) //stop sound since speech could have been skipped by player
 		call ResetUnitAnimation(speaker)
 		call ResetUnitAnimation(listener)
+		call AThirdPersonCamera.playerThirdPersonCamera(user).disable()
 		set user = null
 		set speaker = null
 		set listener = null
@@ -76,6 +81,15 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		call info.run()
 	endfunction
 
+	/**
+	* Members of talks are called informations or infos. An info is a single object which informs
+	* the user about something like new quests or important things which happened.
+	* Infos can have their own condition, so player do not always get access to them.
+	* This allows the creator to write nice multiple choice dialogs for different classes or players.
+	* Additionally you're able to make infos permanent, so player can always use or get them if the condition is true.
+	* Since there probably will be some longer speeches of an information they're skipable by pressing a specific key.
+	* This must be explicit enabled when calling the struct initializer (@method AInfo.init).
+	*/
 	struct AInfo
 		//static start members
 		public static camerasetup cameraSetup /// Do not use.

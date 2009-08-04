@@ -196,7 +196,9 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		endmethod
 
 		public method hideTooltip takes nothing returns nothing
-			call ShowTextTagForPlayer(this.user(), this.tooltip, false)
+			if (this.tooltip != null) then
+				call ShowTextTagForPlayer(this.user(), this.tooltip, false)
+			endif
 		endmethod
 
 		public method dockWidget takes AWidget usedWidget returns integer
@@ -245,7 +247,7 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 			call ResetToGameCameraForPlayer(this.user(), 0.0)
 			call FogModifierStop(this.m_visibilityModifier)
 			call FogModifierStart(this.m_blackMaskModifier)
-			call this.m_gui.loadPlayerData()
+			call this.m_gui.loadPlayerData() /// @todo DESYNC
 			call this.hideTooltip()
 			//widgets
 			call this.widgetVector.forEach(unaryFunctionHideWidget)

@@ -1,5 +1,4 @@
 //! import "Core/General/Struct Asl.j"
-//! import "Core/General/Struct Container.j"
 //! import "Core/General/Struct Group.j"
 //! import "Core/General/Struct Hash Table.j"
 //! import "Core/General/Struct Signal.j"
@@ -12,5 +11,5 @@
 //! import "Core/General/Library Player.j"
 //! import "Core/General/Library Unit.j"
 
-library ACoreGeneral requires AStructCoreGeneralAsl, AStructCoreGeneralContainer, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralSignal, AStructCoreGeneralSlkTableEntry, AStructCoreGeneralStack, AStructCoreGeneralVector, ALibraryCoreGeneralConversion, ALibraryCoreGeneralGame, ALibraryCoreGeneralItem, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit
+library ACoreGeneral requires AStructCoreGeneralAsl, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralSignal, AStructCoreGeneralSlkTableEntry, AStructCoreGeneralStack, AStructCoreGeneralVector, ALibraryCoreGeneralConversion, ALibraryCoreGeneralGame, ALibraryCoreGeneralItem, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit
 endlibrary

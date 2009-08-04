@@ -271,6 +271,8 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 
 		/// @param divident This value represents the divident which is used for comparing the number of skipping players with the number of requested skipping players for skipping the video.
 		public static method init takes integer divident, real filterDuration, real waitInterval, string textPlayerSkips, string textSkip returns nothing
+			local integer i
+			local player user
 			//static start members
 			set thistype.divident = divident
 			set thistype.filterDuration = filterDuration
@@ -284,6 +286,16 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			set thistype.skippingPlayers = 0
 			set thistype.m_actor = null
 			set thistype.m_actorData = AActorDataVector.create()
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (IsPlayerPlayingUser(user)) then
+					set thistype.m_playerSelection[i] = 0
+				endif
+				set user = null
+				set i = i + 1
+			endloop
 
 			call thistype.createSkipTrigger()
 		endmethod

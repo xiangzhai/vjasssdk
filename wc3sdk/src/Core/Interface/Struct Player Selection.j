@@ -1,10 +1,12 @@
-library AStructCoreInterfacePlayerSelection
+library AStructCoreInterfacePlayerSelection requires ALibraryCoreDebugMisc
 
 	struct APlayerSelection
 		//start members
 		private player m_player
 		//members
 		private group m_group
+		
+		//! runtextmacro A_STRUCT_DEBUG("\"APlayerSelection\"")
 		
 		//start members
 		
@@ -21,19 +23,17 @@ library AStructCoreInterfacePlayerSelection
 		//methods
 		
 		public method save takes nothing returns nothing
-			if (this.m_group != null) then
-				call DestroyGroup(this.m_group)
-				set this.m_group = null
-			endif
-			set this.m_group = GetUnitsSelectedAll(this.m_player)
+			debug call this.print("Saving player selection.")
+			call GroupClear(this.m_group)
+			call SyncSelections()
+			call GroupEnumUnitsSelected(this.m_group, this.m_player, null)
+			debug call this.print("Group size " + I2S(CountUnitsInGroup(this.m_group)))
 		endmethod
 		
+		/// @todo Desync
 		public method restore takes nothing returns nothing
-			if (this.m_group == null) then
-				call ClearSelectionForPlayer(this.m_player)
-			else
-				call SelectGroupForPlayerBJ(this.m_group, this.m_player)
-			endif
+			debug call this.print("Restoring for player " + GetPlayerName(this.m_player))
+			//call SelectGroupForPlayerBJ(this.m_group, this.m_player) /// @todo Desync
 		endmethod
 		
 		public static method create takes player user returns thistype
@@ -41,7 +41,7 @@ library AStructCoreInterfacePlayerSelection
 			//start members
 			set this.m_player = user
 			//members
-			set this.m_group = null
+			set this.m_group = CreateGroup()
 			return this
 		endmethod
 		
@@ -49,10 +49,8 @@ library AStructCoreInterfacePlayerSelection
 			//start members
 			set this.m_player = null
 			//members
-			if (this.m_group != null) then
-				call DestroyGroup(this.m_group)
-				set this.m_group = null
-			endif
+			call DestroyGroup(this.m_group)
+			set this.m_group = null
 		endmethod
 	endstruct
 

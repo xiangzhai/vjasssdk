@@ -4,9 +4,11 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 	/// @todo Should be a part of @struct ACheat, vJass bug.
 	function interface ACheatOnCheatAction takes nothing returns nothing
 
-	/// ACheat provides a simple cheat functionality. Cheats are string which the player has to enter in chat and which can provide everything the user wants them.
-	/// Use the function interface @functioninterface ACheatOnCheatAction to specify your cheat action.
-	/// Note that you can use @function GetEventPlayerChatString() to read the whole entered chat string.
+	/**
+	* ACheat provides a simple cheat functionality. Cheats are string which the player has to enter in chat and which can provide everything the user wants them.
+	* Use the function interface @functioninterface ACheatOnCheatAction to specify your cheat action.
+	* Note that you can use @function GetEventPlayerChatString() to read the whole entered chat string.
+	*/
 	struct ACheat
 		//start members
 		private string m_cheat
@@ -58,9 +60,11 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 			call AHashTable.global().setHandleInteger(this.cheatTrigger, "this", this)
 		endmethod
 		
-		/// @param cheat The string the player has to enter into the chat.
-		/// @param exactMatch If this value is false user does not have to enter the exact string of @param cheat to run the cheat. For example if the cheat string is "setlevel" "setlevel 1000" does also work.
-		/// @param action The function which will be called when player enters cheat string.
+		/**
+		* @param cheat The string the player has to enter into the chat.
+		* @param exactMatch If this value is false user does not have to enter the exact string of @param cheat to run the cheat. For example if the cheat string is "setlevel" "setlevel 1000" does also work.
+		* @param action The function which will be called when player enters cheat string.
+		*/
 		public static method create takes string cheat, boolean exactMatch, ACheatOnCheatAction action returns ACheat
 			local ACheat this = ACheat.allocate()
 			debug if (cheat == null) then

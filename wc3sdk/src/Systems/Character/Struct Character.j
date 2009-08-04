@@ -1,8 +1,5 @@
 library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceCamera, AStructSystemsCharacterAbstractCharacterSystem
 
-	/// @todo ACharacter.maxSpells should be the max size value
-	//! runtextmacro A_VECTOR("private", "ASpellVector", "ASpell", "0", "100")
-
 	/// @todo Should be a static function of @struct ACharacter, vJass bug.
 	private function unaryFunctionDestroySpell takes ASpell element returns nothing
 		call element.destroy()
@@ -16,6 +13,13 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		public static constant integer messageTypeInfo = 0
 		public static constant integer messageTypeError = 1
 		public static constant integer maxSpells = 100
+		public static constant integer systemView = 0
+		public static constant integer systemFocus = 1
+		public static constant integer systemMovement = 2
+		public static constant integer systemFight = 3
+		public static constant integer systemRevival = 4
+		public static constant integer systemInventory = 5
+		public static constant integer systemTalkLog = 6
 		//static start members
 		private static boolean m_removeUnitOnDestruction
 		private static boolean m_destroyOnPlayerLeaves
@@ -48,6 +52,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		private ARevival m_revival
 		private AInventory m_inventory
 		private ATalkLog m_talkLog
+		private boolean array m_reenableSystem[7]
 		private ASpellVector m_spells
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"ACharacter\"")
@@ -137,6 +142,22 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 
 		//members
 
+		public method view takes nothing returns AView
+			return this.m_view
+		endmethod
+		
+		public method focus takes nothing returns AFocus
+			return this.m_focus
+		endmethod
+		
+		public method movement takes nothing returns AMovement
+			return this.m_movement
+		endmethod
+		
+		public method fight takes nothing returns AFight
+			return this.m_fight
+		endmethod
+
 		/// Friend relation to AShrine.
 		/// Use it to setup the time.
 		public method revival takes nothing returns ARevival
@@ -149,6 +170,10 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		
 		public method talkLog takes nothing returns ATalkLog
 			return this.m_talkLog
+		endmethod
+		
+		public method reenableSystem takes integer system returns boolean
+			return this.m_reenableSystem[system]
 		endmethod
 		
 		public method spellCount takes nothing returns integer
@@ -275,6 +300,10 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			call SmartCameraPanWithZForPlayer(this.m_user, GetUnitX(this.m_unit), GetUnitY(this.m_unit), 0.0, 0.0)
 		endmethod
 		
+		public method setCamera takes nothing returns nothing
+			call SetCameraPositionForPlayer(this.m_user, GetUnitX(this.m_unit), GetUnitY(this.m_unit))
+		endmethod
+		
 		public method setCameraBoundsToRect takes rect usedRect returns nothing
 			call SetCameraBoundsToRectForPlayerBJ(this.m_user, usedRect)
 		endmethod
@@ -329,50 +358,85 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		endmethod
 
 		private method enableSystems takes nothing returns nothing
-			if (thistype.m_useViewSystem) then
+			if (thistype.m_useViewSystem and this.m_reenableSystem[thistype.systemView]) then
 				call this.m_view.enable()
 			endif
-			if (thistype.m_useFocusSystem) then
+			if (thistype.m_useFocusSystem and this.m_reenableSystem[thistype.systemFocus]) then
 				call this.m_focus.enable()
 			endif
-			if (thistype.m_useMovementSystem) then
+			if (thistype.m_useMovementSystem and this.m_reenableSystem[thistype.systemMovement]) then
 				call this.m_movement.enable()
 			endif
-			if (thistype.m_useFightSystem) then
+			if (thistype.m_useFightSystem and this.m_reenableSystem[thistype.systemFight]) then
 				call this.m_fight.enable()
 			endif
-			if (thistype.m_useRevivalSystem) then
+			if (thistype.m_useRevivalSystem and this.m_reenableSystem[thistype.systemRevival]) then
 				call this.m_revival.enable()
 			endif
-			if (thistype.m_useInventorySystem) then
+			if (thistype.m_useInventorySystem and this.m_reenableSystem[thistype.systemInventory]) then
 				call this.m_inventory.enable()
 			endif
-			if (thistype.m_useTalkLogSystem) then
+			if (thistype.m_useTalkLogSystem and this.m_reenableSystem[thistype.systemTalkLog]) then
 				call this.m_talkLog.enable()
 			endif
 		endmethod
 
 		private method disableSystems takes nothing returns nothing
 			if (thistype.m_useViewSystem) then
-				call this.m_view.disable()
+				if (this.m_view.isEnabled()) then
+					set this.m_reenableSystem[thistype.systemView] = true
+					call this.m_view.disable()
+				else
+					set this.m_reenableSystem[thistype.systemView] = false
+				endif
 			endif
 			if (thistype.m_useFocusSystem) then
-				call this.m_focus.disable()
+				if (this.m_focus.isEnabled()) then
+					set this.m_reenableSystem[thistype.systemFocus] = true
+					call this.m_focus.disable()
+				else
+					set this.m_reenableSystem[thistype.systemFocus] = false
+				endif
 			endif
 			if (thistype.m_useMovementSystem) then
-				call this.m_movement.disable()
+				if (this.m_movement.isEnabled()) then
+					set this.m_reenableSystem[thistype.systemMovement] = true
+					call this.m_movement.disable()
+				else
+					set this.m_reenableSystem[thistype.systemMovement] = false
+				endif
 			endif
 			if (thistype.m_useFightSystem) then
-				call this.m_fight.disable()
+				if (this.m_fight.isEnabled()) then
+					set this.m_reenableSystem[thistype.systemFight] = true
+					call this.m_fight.disable()
+				else
+					set this.m_reenableSystem[thistype.systemFight] = false
+				endif
 			endif
 			if (thistype.m_useRevivalSystem) then
-				call this.m_revival.disable()
+				if (this.m_revival.isEnabled()) then
+					set this.m_reenableSystem[thistype.systemRevival] = true
+					call this.m_revival.disable()
+				else
+					set this.m_reenableSystem[thistype.systemRevival] = false
+				endif
 			endif
 			if (thistype.m_useInventorySystem) then
-				call this.m_inventory.disable()
+				if (this.m_inventory.isEnabled()) then
+					set this.m_reenableSystem[thistype.systemInventory] = true
+					call this.m_inventory.disable()
+				else
+					set this.m_reenableSystem[thistype.systemInventory] = false
+				endif
 			endif
 			if (thistype.m_useTalkLogSystem) then
-				call this.m_talkLog.disable()
+				if (this.m_talkLog.isEnabled()) then
+					set this.m_reenableSystem[thistype.systemTalkLog] = true
+					call this.m_talkLog.disable()
+				else
+					set this.m_reenableSystem[thistype.systemTalkLog] = false
+				endif
 			endif
 		endmethod
 
@@ -450,6 +514,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			//start members
 			set this.m_user = user
 			set this.m_unit = usedUnit
+			call AHashTable.global().setHandleInteger(usedUnit, "ACharacter", this)
 			//dynamic members
 			set this.m_isMovable = true
 			//members
@@ -467,6 +532,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			if (thistype.m_removeUnitOnDestruction) then
 				call RemoveUnit(this.m_unit)
 			endif
+			call AHashTable.global().flushHandle(this.m_unit)
 			set this.m_unit = null
 		endmethod
 
@@ -557,6 +623,46 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 				debug call thistype.staticPrint("You're using destroy on death and use revival system options at the same time.")
 			debug endif
 		endmethod
+		
+		public static method removeUnitOnDestruction takes nothing returns boolean
+			return thistype.m_removeUnitOnDestruction
+		endmethod
+		
+		public static method destroyOnPlayerLeaves takes nothing returns boolean
+			return thistype.m_destroyOnPlayerLeaves
+		endmethod
+		
+		public static method destroyOnDeath takes nothing returns boolean
+			return thistype.m_destroyOnDeath
+		endmethod
+		
+		public static method useViewSystem takes nothing returns boolean
+			return thistype.m_useViewSystem
+		endmethod
+		
+		public static method useFocusSystem takes nothing returns boolean
+			return thistype.m_useFocusSystem
+		endmethod
+		
+		public static method useMovementSystem takes nothing returns boolean
+			return thistype.m_useMovementSystem
+		endmethod
+		
+		public static method useFightSystem takes nothing returns boolean
+			return thistype.m_useFightSystem
+		endmethod
+		
+		public static method useRevivalSystem takes nothing returns boolean
+			return thistype.m_useRevivalSystem
+		endmethod
+		
+		public static method useInventorySystem takes nothing returns boolean
+			return thistype.m_useInventorySystem
+		endmethod
+		
+		public static method useTalkLogSystem takes nothing returns boolean
+			return thistype.m_useTalkLogSystem
+		endmethod
 
 		/**
 		* Each human playing player can own exact one character.
@@ -587,6 +693,8 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		
 		/// @todo You could also check it by only comparing with the units owner character unit.
 		public static method getCharacterByUnit takes unit usedUnit returns thistype
+			return AHashTable.global().handleInteger(usedUnit, "ACharacter")
+			/*
 			local integer i
 			local player user
 			debug if (usedUnit == null) then
@@ -604,6 +712,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 				set i = i + 1
 			endloop
 			return 0
+			*/
 		endmethod
 		
 		public static method isUnitCharacter takes unit usedUnit returns boolean

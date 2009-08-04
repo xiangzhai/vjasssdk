@@ -448,15 +448,16 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local AAbstractQuest this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local integer state = AHashTable.global().handleInteger(triggeringTrigger, "state")
-			//if (this.getType() == AQuest.typeid) then
-			//	debug call this.print("Is quest")
-			//	call AQuest(this).setState(state)
-			//elseif (this.getType() == AQuestItem.typeid) then
-			//	debug call this.print("Is quest item")
-			//	call AQuestItem(this).setState(state)
-			//else
-			//	debug call this.print("Is neither quest nor quest item.")
+			if (this.getType() == AQuest.typeid) then
+				call AQuest(this).setState(state)
+				debug call this.print("Is AQuest!")
+			elseif (this.getType() == AQuestItem.typeid) then
+				call AQuestItem(this).setState(state)
+				debug call this.print("Is AQuestItem!")
+			else
 				call this.setState(state) //custom function will be called in this method
+				debug call this.print("Is not AQuest and AQuestItem!")
+			endif
 			//endif
 			set triggeringTrigger = null
 		endmethod

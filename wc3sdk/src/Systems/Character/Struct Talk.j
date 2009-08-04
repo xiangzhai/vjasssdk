@@ -16,12 +16,14 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		call info.talk().disable()
 	endfunction
 
-	/// Talks are a kind of dialogs with NPCs which are implemented by using the Warcraft 3 dialog natives.
-	/// This means that choices in the form of dialog buttons are shown to a character owner.
-	/// If the owner presses any button an user-defined function will be called where the user can define the whole talk.
-	/// One talk contains one or several infos (@struct AInfo). These infos contain the user-defined function and an user-defined condition.
-	/// Besides they can have various other properties.
-	/// Note that only one character owner can use one talk at the same time. There is no support for several character owners talking to the same NPC, yet.
+	/**
+	* Talks are a kind of dialogs with NPCs which are implemented by using the Warcraft 3 dialog natives.
+	* This means that choices in the form of dialog buttons are shown to a character owner.
+	* If the owner presses any button an user-defined function will be called where the user can define the whole talk.
+	* One talk contains one or several infos (@struct AInfo). These infos contain the user-defined function and an user-defined condition.
+	* Besides they can have various other properties.
+	* Note that only one character owner can use one talk at the same time. There is no support for several character owners talking to the same NPC, yet.
+	*/
 	struct ATalk
 		public static constant integer maxInfos = 100
 		//static start members
@@ -146,7 +148,9 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			call ResetUnitLookAt(this.m_character.unit())
 			call ResetUnitLookAt(this.m_unit)
 			call SetUserInterfaceForPlayer(characterUser, true, true)
-			call ResetToGameCameraForPlayer(characterUser, 0.0)
+			if (not ACharacter.useViewSystem()) then
+				call ResetToGameCameraForPlayer(characterUser, 0.0)
+			endif
 			call this.m_character.setTalk(0)
 			call this.m_character.setMovable(true)
 			set this.m_character = 0

@@ -812,11 +812,12 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private static method triggerActionOpen takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call BJDebugMsg("Open")
 			if (this.m_rucksackIsEnabled) then
+				call this.print("Open rucksack")
 				call this.disableRucksack()
 				call this.enableEquipment()
 			else
+				call this.print("Close rucksack")
 				call this.disableEquipment()
 				call this.enableRucksack()
 			endif
@@ -854,36 +855,36 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer itemTypeId
 			local integer targetItemTypeId
 			call TriggerSleepAction(0.0) //wait until order is done, important!
-			call BJDebugMsg("Order with new slot " + I2S(newSlot) + " left item type " + I2S(thistype.leftArrowItemType) + " and right item type " + I2S(thistype.rightArrowItemType) + " and used item type " + I2S(GetItemTypeId(usedItem)))
+			debug call this.print("Order with new slot " + I2S(newSlot) + " left item type " + I2S(thistype.leftArrowItemType) + " and right item type " + I2S(thistype.rightArrowItemType) + " and used item type " + I2S(GetItemTypeId(usedItem)))
 			if (this.m_rucksackIsEnabled) then
-				call BJDebugMsg("Rucksack is enabled.")
+				debug call this.print("Rucksack is enabled.")
 				if (GetItemTypeId(usedItem) == thistype.leftArrowItemType and newSlot != thistype.maxRucksackItemsPerPage) then
-					call BJDebugMsg("Reset left.")
+					debug call this.print("Reset left from slot " + I2S(newSlot))
 					call this.resetItemSlots(newSlot, AInventory.maxRucksackItemsPerPage)
 				elseif (GetItemTypeId(usedItem) == thistype.rightArrowItemType and newSlot != thistype.maxRucksackItemsPerPage + 1) then
-					call BJDebugMsg("Reset right.")
+					debug call this.print("Reset right from slot " + I2S(newSlot))
 					call this.resetItemSlots(newSlot, thistype.maxRucksackItemsPerPage + 1)
 				//move item previous - player drops an item on the next page item
 				elseif (GetItemTypeId(usedItem) != thistype.leftArrowItemType and newSlot == thistype.maxRucksackItemsPerPage) then
-					call BJDebugMsg("Move to previous page.")
+					debug call this.print("Move to previous page.")
 					call this.moveRucksackItemToPage(newSlot, false)
 				//move item next - player drops an item on the previous page item
 				elseif (GetItemTypeId(usedItem) != thistype.rightArrowItemType and newSlot == thistype.maxRucksackItemsPerPage + 1) then
 					call this.moveRucksackItemToPage(newSlot, true)
 				//equip item/stack items/swap items
 				elseif (newSlot >= 0 and newSlot < thistype.maxRucksackItemsPerPage) then
-					call BJDebugMsg("Move item to slot " + I2S(newSlot))
+					debug call this.print("Move item to slot " + I2S(newSlot))
 					call this.moveRucksackItem(usedItem, newSlot)
 				endif
 			else
 				set oldSlot = thistype.itemIndex(usedItem)
 				//reset moved equipped items to their positions
 				if (newSlot != oldSlot) then
-					call BJDebugMsg("Moving equipment items is not possible :-) Item index/slot " + I2S(oldSlot))
+					debug call this.print("Moving equipment items is not possible :-) Item index/slot " + I2S(oldSlot))
 					call this.resetItemSlots(newSlot, oldSlot)
 				//old slot, add to rucksack
 				else
-					call BJDebugMsg("Add to rucksack")
+					debug call this.print("Add to rucksack")
 					call this.clearItemIndex(usedItem)
 					call this.clearEquipmentItem(oldSlot, true)
 					call this.addItemToRucksack(usedItem, true, true)
@@ -957,6 +958,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				//destack and drop
 				if (GetItemType(usedItem) == ITEM_TYPE_CHARGED and this.m_rucksackItemCharges[index] > 1 or GetItemType(usedItem) != ITEM_TYPE_CHARGED and this.m_rucksackItemCharges[index] > 0) then
 					call TriggerSleepAction(0.0) //wait until it has been dropped
+					debug call this.print("Destacking rucksack item with index " + I2S(index) + " and dropping one charge.")
 					set this.m_rucksackItemCharges[index] = this.m_rucksackItemCharges[index] - 1
 					call this.showRucksackItem(index)
 					
@@ -967,11 +969,15 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					endif
 				//drop
 				else
+					debug call this.print("Clearing rucksack item with index " + I2S(index) + " and dropping it.")
 					call this.clearRucksackItem(index, true) //before drop
+					/// @todo Stop unit?
 				endif
 			//unequip and drop
 			else
+				debug call this.print("Clearing equipment item with index " + I2S(index) + " and dropping it.")
 				call this.clearEquipmentItem(index, true)
+				/// @todo Stop unit?
 			endif
 			set triggeringTrigger = null
 			set usedItem = null
@@ -1008,14 +1014,18 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set itemTypeId = GetItemTypeId(usedItem)
 				//show next page
 				if (itemTypeId == thistype.rightArrowItemType) then
+					debug call this.print("Showing next rucksack page.")
 					call this.showNextRucksackPage()
 				//show previous page
 				elseif (itemTypeId == thistype.leftArrowItemType) then
+					debug call this.print("Showing previous rucksack page.")
 					call this.showPreviousRucksackPage()
 				//if an item is used by decreasing its number of charges (not to 0!) we have to decrease our number, too
 				else
+					debug call this.print("Using rucksack item with index " + I2S(index))
 					set index = thistype.itemIndex(usedItem)
-					if (this.m_rucksackItemCharges[index] > 1) then
+					if (this.m_rucksackItemCharges[index] > 1 and GetItemType(usedItem) != ITEM_TYPE_CHARGED) then
+						debug call this.print("Item is charged, so charges will be reduced by one.")
 						set this.m_rucksackItemCharges[index] = this.m_rucksackItemCharges[index] - 1
 						call this.refreshRucksackItemCharges(index)
 					endif

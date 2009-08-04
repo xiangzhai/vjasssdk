@@ -1,8 +1,10 @@
 library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 
-	/// Similar to @function RotateCameraAroundLocBJ but does not use location.
-	/// @author Tamino Dauth
-	/// @state untested
+	/**
+	* Similar to @function RotateCameraAroundLocBJ but does not use location.
+	* @author Tamino Dauth
+	* @state untested
+	*/
 	function RotateCameraAroundPointForPlayer takes player user, real x, real y, real degrees, real duration returns nothing
 		local player localPlayer = GetLocalPlayer()
 		if (localPlayer == user) then
@@ -11,10 +13,12 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		set localPlayer = null
 	endfunction
 
-	/// Similar to @function SmartCameraPanBJ but does not use location and uses Z value.
-	/// Does not use z!
-	/// @author Tamino Dauth
-	/// @state untested
+	/**
+	* Similar to @function SmartCameraPanBJ but does not use location and uses Z value.
+	* Does not use z!
+	* @author Tamino Dauth
+	* @state untested
+	*/
 	function SmartCameraPanWithZForPlayer takes player user, real x, real y, real zOffset, real duration returns nothing
 		local player localPlayer = GetLocalPlayer()
 		local real distance
@@ -33,9 +37,11 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		set localPlayer = null
 	endfunction
 
-	/// Similar to @function SmartCameraPanBJ but does not use location.
-	/// @author Tamino Dauth
-	/// @state untested
+	/**
+	* Similar to @function SmartCameraPanBJ but does not use location.
+	* @author Tamino Dauth
+	* @state untested
+	*/
 	function SmartCameraPanForPlayer takes player user, real x, real y, real duration returns nothing
 		local player localPlayer = GetLocalPlayer()
 		local real distance
@@ -54,9 +60,11 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 		set localPlayer = null 
 	endfunction
 
-	/// Similar to @function PanCameraToTimedLocWithZForPlayer but does not use location.
-	/// @author Tamino Dauth
-	/// @state untested
+	/**
+	* Similar to @function PanCameraToTimedLocWithZForPlayer but does not use location.
+	* @author Tamino Dauth
+	* @state untested
+	*/
 	function PanCameraToTimedWithZForPlayer takes player user, real x, real y, real zOffset, real duration returns nothing
 		local player localPlayer = GetLocalPlayer()
 		if (localPlayer == user) then
@@ -79,9 +87,9 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 
 	function ResetCameraBoundsToMapRectForPlayer takes player user returns nothing
 		local real minX = GetRectMinX(bj_mapInitialCameraBounds)
-    	local real minY = GetRectMinY(bj_mapInitialCameraBounds)
-    	local real maxX = GetRectMaxX(bj_mapInitialCameraBounds)
-    	local real maxY = GetRectMaxY(bj_mapInitialCameraBounds)
+		local real minY = GetRectMinY(bj_mapInitialCameraBounds)
+		local real maxX = GetRectMaxX(bj_mapInitialCameraBounds)
+		local real maxY = GetRectMaxY(bj_mapInitialCameraBounds)
 		call SetCameraBoundsForPlayer(user, minX, minY, minX, maxY, maxX, maxY, maxX, minY)
 	endfunction
 

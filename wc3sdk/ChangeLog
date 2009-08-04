@@ -1,3 +1,15 @@
+2009-08-04 Tamino Dauth <tamino@cdauth.de>
+* Disabled restoring player selection of APlayerSelection since it causes a desynchronization.
+* getCharacterByUnit is much faster now, using hash table value.
+* Added file "src/Core/Interface/Struct Third Person Camera.j" with Opossum's system.
+* AView does use this system now.
+* Info speeches use this system now.
+* Added several settings methods to struct ACharacter.
+* Dropped libraries AStructCoreGeneralContainer and ALibraryCoreDebugContainer.
+* Added function IsUnitOnRect to library ALibraryCoreMathsUnit.
+* User-disabled character systems won't be reenabled again anymore.
+* Dialogs won't be cleared automatically anymore when a button is clicked.
+
 2009-08-03 Tamino Dauth <tamino@cdauth.de>
 * Added methods shownMainWindow and isShown to struct AGui.
 

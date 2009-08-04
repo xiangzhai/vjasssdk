@@ -1,10 +1,10 @@
 library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, AStructCoreGeneralVector, AStructSystemsCharacterAbstractQuest
 
 	/// @todo Size should be @member AQuest.maxQuestItems.
-	//! runtextmacro A_VECTOR("private", "AQuestItemVector", "AQuestItem", "0", "5")
+	//! runtextmacro A_VECTOR("private", "AQuestItemVector", "AQuestItem", "0", "100")
 
 	struct AQuest extends AAbstractQuest
-		private static constant integer maxQuestItems = 5
+		private static constant integer maxQuestItems = 100
 		//static start members
 		private static boolean useQuestLog
 		private static string updateSoundPath

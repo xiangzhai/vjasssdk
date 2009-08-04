@@ -12,8 +12,10 @@ library ALibraryCoreInterfaceCinematic
 		set playerColour = null
 	endfunction
 	
-	/// @author Tamino Dauth
-	/// @state untested
+	/**
+	* @author Tamino Dauth
+	* @state untested
+	*/
 	function TransmissionFromUnitType takes integer unitType, player owner, string name, string text, sound playedSound returns nothing
 		local playercolor playerColor = GetPlayerColor(owner)
 		local real time
@@ -27,16 +29,22 @@ library ALibraryCoreInterfaceCinematic
 		set playerColor = null
 	endfunction
 	
-	/// @author Tamino Dauth
-	/// @state untested
+	/**
+	* @author Tamino Dauth
+	* @state untested
+	*/
 	function TransmissionFromUnit takes unit usedUnit, string text, sound playedSound returns nothing
 		local player owner = GetOwningPlayer(usedUnit)
 		call TransmissionFromUnitType(GetUnitTypeId(usedUnit), owner, GetUnitName(usedUnit), text, playedSound)
 		set owner = null
 	endfunction
 	
-	/// @author Tamino Dauth
-	/// @state untested
+	/**
+	* Shows a transmission with text @param text and sound @param playedSound from unit @param usedUnit for player @param usedPlayer.
+	* @param playedSound If this value is null sound duration will be @global bj_NOTHING_SOUND_DURATION.
+	* @author Tamino Dauth
+	* @state untested
+	*/
 	function TransmissionFromUnitForPlayer takes player usedPlayer, unit usedUnit, string text, sound playedSound returns nothing
 		local player localPlayer = GetLocalPlayer()
 		local player owner = GetOwningPlayer(usedUnit)

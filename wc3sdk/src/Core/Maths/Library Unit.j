@@ -135,5 +135,38 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 	function FindClosestUnitByRect takes group usedGroup, rect usedRect returns unit
 		return FindClosestUnit(usedGroup, GetRectCenterX(usedRect), GetRectCenterY(usedRect))
 	endfunction
+	
+	/**
+	* IsUnitOnRect returns true if the unit's collision circle
+	* ------------ interesects with a rect.
+	*              
+	* Useful for example, in a "enter rect" event
+	* it will return true, unlike blizz' RectContainsUnit
+	*
+	* probably slower than RectContainsUnit
+	* @author Vexorian
+	*/
+	function IsUnitOnRect takes unit u, rect r returns boolean
+		local real x =GetUnitX(u)
+		local real y =GetUnitY(u)
+		local real mx = GetRectMaxX(r)
+		local real nx = GetRectMinX(r)
+		local real my = GetRectMaxY(r)
+		local real ny = GetRectMinY(r)
+		if (nx <= x) and (x <= mx) and (ny <= y) and (y <= my) then
+			return true
+		endif
+		if(x>mx) then
+			set x=mx
+		elseif(x<nx) then
+			set x=nx
+		endif
+		if(y>my) then
+			set y=my
+		elseif(y<ny) then
+			set y=ny
+		endif
+		return IsUnitInRangeXY(u,x,y,0.0)
+	endfunction
 
 endlibrary
