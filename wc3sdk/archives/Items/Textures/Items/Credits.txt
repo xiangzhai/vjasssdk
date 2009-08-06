@@ -1,0 +1,10 @@
+File			Authors		Source
+Axt.blp			Rondo		http://www.rondo.eu.tp/
+Breitschild.blp		Sardor		DMdF team
+RicmansSchild.blp	Sardor		DMdF team
+RicmansSpeer.blp	Sardor		DMdF team
+Ring.blp		republicola	http://www.hiveworkshop.com/
+shieldtexture01.blp	xXm0RpH3usXx	http://www.wc3c.net/
+shieldtexture02.blp	xXm0RpH3usXx	http://www.wc3c.net/
+Shield.blp		-		http://www.hiveworkshop.com/
+Stab.blp		Sardor		DMdF team
