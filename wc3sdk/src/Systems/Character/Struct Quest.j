@@ -65,6 +65,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 
 		public stub method setState takes integer state returns nothing
 			local integer i
+			local string title
 			call super.setState(state)
 			if (state == AAbstractQuest.stateCompleted or state == AAbstractQuest.stateFailed) then
 				set i = 0
@@ -77,7 +78,12 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 				endloop
 			endif
 			if (thistype.useQuestLog) then
-				call QuestSetTitle(this.m_questLogQuest, this.title())
+				if (this.character() == 0) then
+					set title = this.title()
+				else
+					set title = this.title() + " - " + this.character().name()
+				endif
+				call QuestSetTitle(this.m_questLogQuest, title)
 				//call QuestSetDescription(this.questLogQuest, this.description)
 				if (state == AAbstractQuest.stateNotUsed) then
 					call QuestSetDiscovered(this.m_questLogQuest, false)
@@ -108,10 +114,9 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		//Wenn alle QuestItems den gleichen State haben, erhält das Quest ebenfalls diesen State
 		public method checkQuestItemsForState takes integer state returns boolean
 			local integer i
-			local boolean result
+			local boolean result = true
 			//Hat noch nicht den State
 			if (this.state() != state) then
-				set result = true
 				set i = 0
 				loop
 					exitwhen(i == this.m_questItems.size())

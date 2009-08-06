@@ -148,7 +148,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			call ResetUnitLookAt(this.m_character.unit())
 			call ResetUnitLookAt(this.m_unit)
 			call SetUserInterfaceForPlayer(characterUser, true, true)
-			if (not ACharacter.useViewSystem()) then
+			if (not ACharacter.useViewSystem() or not this.m_character.view().enableAgain()) then
 				call ResetToGameCameraForPlayer(characterUser, 0.0)
 			endif
 			call this.m_character.setTalk(0)

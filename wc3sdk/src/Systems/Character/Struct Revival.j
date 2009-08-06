@@ -52,6 +52,7 @@ library AStructSystemsCharacterRevival requires ALibraryCoreDebugMisc, AStructCo
 		//methods
 
 		public method enable takes nothing returns nothing
+			call super.enable()
 			call EnableTrigger(this.m_revivalTrigger)
 			if (TimerGetRemaining(this.m_timer) > 0.0) then
 				call PauseTimerBJ(false, this.m_timer)
@@ -62,6 +63,7 @@ library AStructSystemsCharacterRevival requires ALibraryCoreDebugMisc, AStructCo
 		endmethod
 
 		public method disable takes nothing returns nothing
+			call super.disable()
 			call DisableTrigger(this.m_revivalTrigger)
 			if (TimerGetRemaining(this.m_timer) > 0.0) then
 				call PauseTimerBJ(true, this.m_timer)

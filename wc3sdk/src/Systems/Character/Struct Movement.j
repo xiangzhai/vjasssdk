@@ -63,6 +63,7 @@ library AStructSystemsCharacterMovement requires ALibraryCoreDebugMisc, AStructC
 
 		public method enable takes nothing returns nothing
 			local integer i
+			call super.enable()
 			call EnableTrigger(this.movementTrigger)
 			set i = 0
 			loop
@@ -74,6 +75,7 @@ library AStructSystemsCharacterMovement requires ALibraryCoreDebugMisc, AStructC
 
 		public method disable takes nothing returns nothing
 			local integer i
+			call super.disable()
 			call DisableTrigger(this.movementTrigger)
 			set i = 0
 			loop

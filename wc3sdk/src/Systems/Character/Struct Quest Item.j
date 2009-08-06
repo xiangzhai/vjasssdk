@@ -19,9 +19,7 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 			call super.setState(state)
 			set result = not this.m_quest.checkQuestItemsForState(state)
 			if (AQuest.isQuestLogUsed()) then
-				debug call Print("Set state of quest item " + I2S(this))
 				if (this.questLogQuestItem == null) then
-					debug call Print("Creating quest item")
 					set this.questLogQuestItem = QuestCreateItem(this.m_quest.questLogQuest())
 					call QuestItemSetDescription(this.questLogQuestItem, this.title())
 				endif

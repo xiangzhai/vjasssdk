@@ -21,12 +21,14 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, AStructCore
 		//! runtextmacro A_STRUCT_DEBUG("\"AFocus\"")
 
 		public method enable takes nothing returns nothing
+			call super.enable()
 			call EnableTrigger(this.focusTrigger)
 			call ShowTextTagForPlayer(this.user(), this.textTag, true)
 			call EnableTrigger(this.workerTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
+			call super.disable()
 			call DisableTrigger(this.focusTrigger)
 			call ShowTextTagForPlayer(this.user(), this.textTag, false)
 			call DisableTrigger(this.workerTrigger)

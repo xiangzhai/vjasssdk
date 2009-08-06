@@ -1,3 +1,22 @@
+2009-08-06 Tamino Dauth <tamino@cdauth.de>
+* Improved actor treatment of struct AVideo.
+* Improved item stacking and destracking treatment of struct AInventory.
+
+2009-08-05 Tamino Dauth <tamino@cdauth.de>
+* Added file "archives/Spells/Icons/Spells/BTNAbsorbation.blp".
+* Added file "archives/Spells/Icons/Spells/BTNManaShield.blp".
+* Added file "archives/Spells/Icons/Spells/DISBTNAbsorbation.blp".
+* Added file "archives/Spells/Icons/Spells/DISBTNManaShield.blp".
+* Added file "archives/Spells/Icons/Spells/DISPASAbsorbation.blp".
+* Added file "archives/Spells/Icons/Spells/DISPASManaShield.blp".
+* Added file "archives/Spells/Icons/Spells/PASAbsorbation.blp".
+* Added file "archives/Spells/Icons/Spells/PASManaShield.blp".
+* Fixed AAbstractCharacterSystem handling in struct ACharacter.
+* Added methods setEnableAgain and enableAgain to struct AAbstractCharacterSystem.
+* Added function CountPlayingUsers to library ALibraryCoreGeneralPlayer.
+* Fixed bug in method checkQuestItemsForState of AQuest.
+* Added method restoreUnitActors to struct AVideo.
+
 2009-08-04 Tamino Dauth <tamino@cdauth.de>
 * Disabled restoring player selection of APlayerSelection since it causes a desynchronization.
 * getCharacterByUnit is much faster now, using hash table value.

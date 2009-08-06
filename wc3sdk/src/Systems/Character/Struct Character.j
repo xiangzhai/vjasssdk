@@ -13,13 +13,6 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		public static constant integer messageTypeInfo = 0
 		public static constant integer messageTypeError = 1
 		public static constant integer maxSpells = 100
-		public static constant integer systemView = 0
-		public static constant integer systemFocus = 1
-		public static constant integer systemMovement = 2
-		public static constant integer systemFight = 3
-		public static constant integer systemRevival = 4
-		public static constant integer systemInventory = 5
-		public static constant integer systemTalkLog = 6
 		//static start members
 		private static boolean m_removeUnitOnDestruction
 		private static boolean m_destroyOnPlayerLeaves
@@ -52,15 +45,17 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		private ARevival m_revival
 		private AInventory m_inventory
 		private ATalkLog m_talkLog
-		private boolean array m_reenableSystem[7]
 		private ASpellVector m_spells
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"ACharacter\"")
 
 		//dynamic members
 
-		/// If the character is set unmovable he will be stopped immediatly and can not move until he will be set movable.
-		/// This method is used for dialogs or cinematic sequences. It also disables all character systems.
+		/**
+		* If the character is set unmovable he will be stopped immediatly and can not move until he will be set movable.
+		* This method is used for dialogs or cinematic sequences.
+		* Besides it disables all character systems!
+		*/
 		public method setMovable takes boolean movable returns nothing
 			//Don't make him movable if he is already!
 			//If he talks with another NPC he is already unmovable.
@@ -171,11 +166,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		public method talkLog takes nothing returns ATalkLog
 			return this.m_talkLog
 		endmethod
-		
-		public method reenableSystem takes integer system returns boolean
-			return this.m_reenableSystem[system]
-		endmethod
-		
+
 		public method spellCount takes nothing returns integer
 			return this.m_spells.size()
 		endmethod
@@ -241,9 +232,25 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		public method addGold takes integer gold returns nothing
 			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD) + gold)
 		endmethod
+		
+		public method removeGold takes integer gold returns nothing
+			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD) - gold)
+		endmethod
+		
+		public method gold takes nothing returns integer
+			return GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD)
+		endmethod
 
 		public method addLumber takes integer lumber returns nothing
 			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER) + lumber)
+		endmethod
+		
+		public method removeLumber takes integer lumber returns nothing
+			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER) - lumber)
+		endmethod
+		
+		public method lumber takes nothing returns integer
+			return GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER)
 		endmethod
 		
 		public method showCinematicFilter takes real duration, blendmode blendMode, string texture, real red0, real green0, real blue0, real transparency0, real red1, real green1, real blue1, real transparency1 returns nothing
@@ -358,85 +365,50 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		endmethod
 
 		private method enableSystems takes nothing returns nothing
-			if (thistype.m_useViewSystem and this.m_reenableSystem[thistype.systemView]) then
+			if (thistype.m_useViewSystem and this.m_view.enableAgain()) then
 				call this.m_view.enable()
 			endif
-			if (thistype.m_useFocusSystem and this.m_reenableSystem[thistype.systemFocus]) then
+			if (thistype.m_useFocusSystem and this.m_focus.enableAgain()) then
 				call this.m_focus.enable()
 			endif
-			if (thistype.m_useMovementSystem and this.m_reenableSystem[thistype.systemMovement]) then
+			if (thistype.m_useMovementSystem and this.m_movement.enableAgain()) then
 				call this.m_movement.enable()
 			endif
-			if (thistype.m_useFightSystem and this.m_reenableSystem[thistype.systemFight]) then
+			if (thistype.m_useFightSystem and this.m_fight.enableAgain()) then
 				call this.m_fight.enable()
 			endif
-			if (thistype.m_useRevivalSystem and this.m_reenableSystem[thistype.systemRevival]) then
+			if (thistype.m_useRevivalSystem and this.m_revival.enableAgain()) then
 				call this.m_revival.enable()
 			endif
-			if (thistype.m_useInventorySystem and this.m_reenableSystem[thistype.systemInventory]) then
+			if (thistype.m_useInventorySystem and this.m_inventory.enableAgain()) then
 				call this.m_inventory.enable()
 			endif
-			if (thistype.m_useTalkLogSystem and this.m_reenableSystem[thistype.systemTalkLog]) then
+			if (thistype.m_useTalkLogSystem and this.m_talkLog.enableAgain()) then
 				call this.m_talkLog.enable()
 			endif
 		endmethod
 
 		private method disableSystems takes nothing returns nothing
-			if (thistype.m_useViewSystem) then
-				if (this.m_view.isEnabled()) then
-					set this.m_reenableSystem[thistype.systemView] = true
-					call this.m_view.disable()
-				else
-					set this.m_reenableSystem[thistype.systemView] = false
-				endif
+			if (thistype.m_useViewSystem and this.m_view.isEnabled()) then
+				call this.m_view.disable()
 			endif
-			if (thistype.m_useFocusSystem) then
-				if (this.m_focus.isEnabled()) then
-					set this.m_reenableSystem[thistype.systemFocus] = true
-					call this.m_focus.disable()
-				else
-					set this.m_reenableSystem[thistype.systemFocus] = false
-				endif
+			if (thistype.m_useFocusSystem and this.m_focus.isEnabled()) then
+				call this.m_focus.disable()
 			endif
-			if (thistype.m_useMovementSystem) then
-				if (this.m_movement.isEnabled()) then
-					set this.m_reenableSystem[thistype.systemMovement] = true
-					call this.m_movement.disable()
-				else
-					set this.m_reenableSystem[thistype.systemMovement] = false
-				endif
+			if (thistype.m_useMovementSystem and this.m_movement.isEnabled()) then
+				call this.m_movement.disable()
 			endif
-			if (thistype.m_useFightSystem) then
-				if (this.m_fight.isEnabled()) then
-					set this.m_reenableSystem[thistype.systemFight] = true
-					call this.m_fight.disable()
-				else
-					set this.m_reenableSystem[thistype.systemFight] = false
-				endif
+			if (thistype.m_useFightSystem and this.m_fight.isEnabled()) then
+				call this.m_fight.disable()
 			endif
-			if (thistype.m_useRevivalSystem) then
-				if (this.m_revival.isEnabled()) then
-					set this.m_reenableSystem[thistype.systemRevival] = true
-					call this.m_revival.disable()
-				else
-					set this.m_reenableSystem[thistype.systemRevival] = false
-				endif
+			if (thistype.m_useRevivalSystem and this.m_revival.isEnabled()) then
+				call this.m_revival.disable()
 			endif
-			if (thistype.m_useInventorySystem) then
-				if (this.m_inventory.isEnabled()) then
-					set this.m_reenableSystem[thistype.systemInventory] = true
-					call this.m_inventory.disable()
-				else
-					set this.m_reenableSystem[thistype.systemInventory] = false
-				endif
+			if (thistype.m_useInventorySystem and this.m_inventory.isEnabled()) then
+				call this.m_inventory.disable()
 			endif
-			if (thistype.m_useTalkLogSystem) then
-				if (this.m_talkLog.isEnabled()) then
-					set this.m_reenableSystem[thistype.systemTalkLog] = true
-					call this.m_talkLog.disable()
-				else
-					set this.m_reenableSystem[thistype.systemTalkLog] = false
-				endif
+			if (thistype.m_useTalkLogSystem and this.m_talkLog.isEnabled()) then
+				call this.m_talkLog.disable()
 			endif
 		endmethod
 

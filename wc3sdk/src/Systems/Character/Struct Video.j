@@ -28,12 +28,23 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		
 		public static method create takes unit oldUnit returns thistype
 			local thistype this = thistype.allocate()
+			local player newOwner = Player(PLAYER_NEUTRAL_PASSIVE) // set passive owner so unit won't attack or be attacked
 			//start members
 			call ShowUnit(oldUnit, false)
 			set this.m_unit = oldUnit
 			//members
 			set this.m_actor = CopyUnit(oldUnit, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit), bj_UNIT_STATE_METHOD_MAXIMUM)
+			call SetUnitOwner(this.m_actor, newOwner, false)
 			call ShowUnit(this.m_actor, true)
+			if (IsUnitHidden(this.m_actor)) then
+				call ShowUnit(this.m_actor, true)
+			endif
+			if (IsUnitPaused(this.m_actor)) then
+				call PauseUnit(this.m_actor, false)
+			endif
+			call SetUnitInvulnerable(this.m_actor, true)
+			call IssueImmediateOrder(this.m_actor, "stop") //cancel orders.
+			set newOwner = null
 			return this
 		endmethod
 		
@@ -90,7 +101,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		private static boolean skipped
 		private static integer skippingPlayers
 		private static trigger skipTrigger
-		private static unit m_actor //copy of first character
+		private static AActorData m_actor //copy of first character
 		private static APlayerSelection array m_playerSelection[12] /// @todo bj_MAX_PLAYERS
 		private static boolean array m_playerHadDialog[12] /// @todo bj_MAX_PLAYERS
 		private static AActorDataVector m_actorData
@@ -152,9 +163,10 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			call EnableUserControl(false)
 			set playersAll = null
 			call ResetToGameCamera(0.0)
-			if (thistype.m_actor != null) then
-				call RemoveUnit(thistype.m_actor)
-				set thistype.m_actor = null
+			if (thistype.m_actor != 0) then
+				call thistype.m_actor.restore()
+				call thistype.m_actor.destroy()
+				set thistype.m_actor = 0
 			endif
 			call ACharacter.showAll(true)
 			call PauseAllUnitsBJ(false)
@@ -284,7 +296,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			set thistype.runningVideo = 0
 			set thistype.skipped = false
 			set thistype.skippingPlayers = 0
-			set thistype.m_actor = null
+			set thistype.m_actor = 0
 			set thistype.m_actorData = AActorDataVector.create()
 			set i = 0
 			loop
@@ -328,45 +340,39 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		endmethod
 		
 		public static method actor takes nothing returns unit
-			local player user
 			debug if (thistype.runningVideo == 0) then
 				debug call thistype.staticPrint("Running video is 0.")
 			debug endif
-			if (thistype.m_actor == null) then
-				set thistype.m_actor = ACharacter.getFirstCharacter().copy(bj_UNIT_STATE_METHOD_MAXIMUM)
-				call ShowUnit(thistype.m_actor, true)
-				call SetUnitInvulnerable(thistype.m_actor, true)
-				set user = ACharacter.getFirstCharacter().user()
-				call SelectUnitRemoveForPlayer(thistype.m_actor, user)
-				set user = null
+			if (thistype.m_actor == 0) then
+				set thistype.m_actor = AActorData.create(ACharacter.getFirstCharacter().unit())
 			endif
-			return thistype.m_actor
+			return thistype.m_actor.actor()
 		endmethod
 		
-		public static method saveActor takes unit actor returns integer
+		public static method saveUnitActor takes unit actor returns integer
 			local AActorData data = AActorData.create(actor)
 			call thistype.m_actorData.pushBack(data)
 			return thistype.m_actorData.backIndex()
 		endmethod
 		
-		public static method restoreActor takes unit actor returns boolean
-			local integer index = -1
-			local integer i = 0
-			loop
-				exitwhen (i == thistype.m_actorData.size())
-				if (thistype.m_actorData[i].actor() == actor) then
-					set index = i
-					exitwhen (true)
-				endif
-				set i = i + 1
-			endloop
-			if (index == -1) then
-				return false
-			endif
+		public static method unitActor takes integer index returns unit
+			return thistype.m_actorData[index].actor()
+		endmethod
+		
+		public static method restoreUnitActor takes integer index returns boolean
 			call thistype.m_actorData[index].restore()
 			call thistype.m_actorData[index].destroy()
 			call thistype.m_actorData.erase(index)
 			return true
+		endmethod
+		
+		public static method restoreUnitActors takes nothing returns nothing
+			local integer i = thistype.m_actorData.backIndex()
+			loop
+				exitwhen (i < 0)
+				call thistype.restoreUnitActor(i)
+				set i = i - 1
+			endloop
 		endmethod
 		
 		private static method savePlayerData takes nothing returns nothing

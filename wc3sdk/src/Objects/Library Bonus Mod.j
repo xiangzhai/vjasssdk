@@ -59,12 +59,16 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 		constant integer A_BONUS_TYPE_ARMOR = 1
 		constant integer A_BONUS_TYPE_HP = 2
 		constant integer A_BONUS_TYPE_MANA = 3
-		/// Bonus Mod's Number of abilities per bonus, if last power of 2 ability is -512,
-		/// this shall be 10, and the maximum bonus would be 511 while the minimum -512.
+		/**
+		* Bonus Mod's Number of abilities per bonus, if last power of 2 ability is -512,
+		* this shall be 10, and the maximum bonus would be 511 while the minimum -512.
+		*/
 		private constant integer IxLimit = 10
-		/// If it is 10, the  hp, mana abilities will be: 10, 20,40,80,160,...
-		/// If it is 1, they would be : 1,2,4,8,16,...
-		/// If it is 5, they would be: 5,10,20,40,80,..
+		/**
+		* If it is 10, the  hp, mana abilities will be: 10, 20,40,80,160,...
+		* If it is 1, they would be : 1,2,4,8,16,...
+		* If it is 5, they would be: 5,10,20,40,80,..
+		*/
 		private constant integer BonusHPManaFactor = 10
 		private integer array abilityId
 		private AHashTable hashTable

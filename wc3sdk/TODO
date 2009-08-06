@@ -1,5 +1,8 @@
+2009-08-05 Tamino Dauth <tamino@cdauth.de>
+* DONE: Fix custom system enabl- and disabling.
+
 2009-07-31 Tamino Dauth <tamino@cdauth.de>
-* Fix camera height of talk camera.
+* DONE: Fix camera height of talk camera.
 
 2009-07-23 Tamino Dauth <tamino@cdauth.de>
 * Note: Do not destroy triggers in their own actions if there are some TriggerSleepAction calls after destruction.

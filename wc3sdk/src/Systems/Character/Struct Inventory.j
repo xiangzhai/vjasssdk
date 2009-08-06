@@ -122,6 +122,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		/// Shows the current page in the inventory of the character's unit
 		/// In general you do not have to call this method. The system handles itself.
 		public method enable takes nothing returns nothing
+			call super.enable()
 			if (this.m_rucksackIsEnabled) then
 				call this.enableRucksack()
 			else
@@ -136,6 +137,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		/// Usually you do not have to call this method. The system handles itself.
 		public method disable takes nothing returns nothing
+			call super.disable()
 			if (this.m_rucksackIsEnabled) then
 				call this.disableRucksack()
 			else
@@ -178,6 +180,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		public method cleanUpRucksack takes nothing returns nothing
 			local integer i = thistype.maxRucksackItems - 1
 			local integer j
+			debug call this.print("Cleaning up rucksack.")
 			loop
 				exitwhen (i < 0)
 				set j = 0
@@ -284,7 +287,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 						if (swapWithAlreadyEquipped and this.m_equipmentItemType[equipmentType] != 0) then
 							set equippedItem = CreateItem(this.m_equipmentItemType[equipmentType], GetUnitX(characterUnit), GetUnitY(characterUnit))
 							call this.addItemToRucksack(equippedItem, true, false)
-							call BJDebugMsg("Add old equipment to rucksack")
+							debug call this.print("Add old equipment to rucksack")
 							call this.clearEquipmentItem(equipmentType, false)
 							set equippedItem = null
 						endif
@@ -418,13 +421,15 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call DisableTrigger(this.m_dropTrigger)
 			call RemoveItem(slotItem)
 			call EnableTrigger(this.m_dropTrigger)
-			call itemType.addAllAbilities(characterUnit) /// @todo Permanent
+			call itemType.addPermanentAbilities(characterUnit)
 			set characterUnit = null
 			set slotItem = null
 		endmethod
 
-		/// Checks requirements of all equipped items. If some requirements aren't met the checked item is dropped.
-		/// This should be called whenever character units attributes which are used for item type requirement change.
+		/**
+		* Checks requirements of all equipped items. If some requirements aren't met the checked item is dropped.
+		* This should be called whenever character units attributes which are used for item type requirement change.
+		*/
 		private method checkEquipment takes nothing returns nothing
 			local item slotItem
 			local AItemType itemType
@@ -657,13 +662,13 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer i
 			local integer exitValue
 			
-			if (next) then
-				call BJDebugMsg("Move to next page.")
-			else
-				call BJDebugMsg("Move to previous page.")
-			endif
+			debug if (next) then
+				debug call this.print("Move to next page.")
+			debug else
+				debug call this.print("Move to previous page.")
+			debug endif
 			
-			call BJDebugMsg("Move item which is in slot " + I2S(slot) + " now. Its name is " + GetItemName(slotItem))
+			debug call this.print("Move item which is in slot " + I2S(slot) + " now. Its name is " + GetItemName(slotItem))
 			
 			//reset page item (items were swapped) and drop moved item
 			call DisableTrigger(this.m_dropTrigger)
@@ -693,18 +698,23 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			endif
 			
 			loop
-				//exitwhen (i == exitValue)
-				call BJDebugMsg("Checking index " + I2S(i))
+				debug call this.print("Checking index " + I2S(i))
 				//reached old index, remove dropped slot item and show it again. show error message.
 				if (i == oldIndex) then
-					call BJDebugMsg("Is on old index again")
+					debug call this.print("Is on old index again")
 					//call RemoveItem(slotItem) //do not disable drop triggers, item is dropped
 					call this.showRucksackItem(oldIndex)
 					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textUnableToMoveRucksackItem)
 					exitwhen (true)
+				//found stack place
+				elseif (this.m_rucksackItemType[i] == this.m_rucksackItemType[oldIndex]) then
+					debug call this.print("Found stack index " + I2S(i))
+					set this.m_rucksackItemCharges[i] = this.m_rucksackItemCharges[i] + 1
+					call this.clearRucksackItem(oldIndex, false)
+					exitwhen (true)
 				//found a free place
 				elseif (this.m_rucksackItemType[i] == 0) then
-					call BJDebugMsg("Found free index " + I2S(i))
+					debug call this.print("Found free index " + I2S(i))
 					call this.setRucksackItem(i, this.m_rucksackItemType[oldIndex], this.m_rucksackItemCharges[oldIndex], this.m_rucksackIsEnabled and this.itemRucksackPage(i) == this.m_rucksackPage)
 					call this.clearRucksackItem(oldIndex, false)
 					exitwhen (true)
@@ -744,18 +754,24 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer newIndex = this.slotRucksackIndex(slot)
 			local integer itemTypeId
 
+			debug call this.print("Moving rucksack item " + GetItemName(movedItem) + " to slot " + I2S(slot) + ".")
+
 			//equip
 			if (oldIndex == newIndex) then
-				call BJDebugMsg("Equip")
+				debug call this.print("Same index: Equip.")
 				set itemTypeId = this.m_rucksackItemType[oldIndex]
 				if (this.m_rucksackItemCharges[oldIndex] > 0) then
-					debug call this.print("Charges are bigger than 0")
+					debug call this.print("Charges are bigger than 0. Old charges: " + I2S(this.m_rucksackItemCharges[oldIndex]) + ".")
 					set this.m_rucksackItemCharges[oldIndex] = this.m_rucksackItemCharges[oldIndex] - 1
+					debug call this.print("New charges: " + I2S(this.m_rucksackItemCharges[oldIndex]) + ".")
 					call this.refreshRucksackItemCharges(oldIndex)
+					debug call this.print("After refreshing item charges.")
 				else
+					debug call this.print("Charges are 0, clearing rucksack item without dropping.")
 					call this.clearRucksackItem(oldIndex, false)
 				endif
 				set movedItem = null
+				debug call this.print("Creating item at characters position and trying to equip.")
 				set movedItem = CreateItem(itemTypeId, GetUnitX(characterUnit), GetUnitY(characterUnit))
 				call this.equipItem(movedItem, false, true, true) //test
 				set characterUnit = null
@@ -764,25 +780,28 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set targetItem = UnitItemInSlot(this.unit(), this.rucksackItemSlot(oldIndex))
 			//move
 			if (targetItem == null) then
+				debug call this.print("Move item.")
 				set this.m_rucksackItemType[newIndex] = this.m_rucksackItemType[oldIndex]
 				call thistype.setItemIndex(movedItem, newIndex)
 				set targetItem = CreateItem(this.m_rucksackItemType[oldIndex], GetUnitX(characterUnit), GetUnitY(characterUnit)) //temporary item for getting item type
 				//destack
 				if ((this.m_rucksackItemCharges[oldIndex] > 1 and GetItemType(movedItem) == ITEM_TYPE_CHARGED) or (this.m_rucksackItemCharges[oldIndex] > 0 and GetItemType(movedItem) != ITEM_TYPE_CHARGED)) then
-					call BJDebugMsg("Destack")
+					call this.print("Destack.")
 					set this.m_rucksackItemCharges[oldIndex] = this.m_rucksackItemCharges[oldIndex] - 1
 					if (GetItemType(targetItem) == ITEM_TYPE_CHARGED) then
-						call BJDebugMsg("Is charged set to 1, index " + I2S(newIndex))
+						call this.print("Is charged set to 1, index " + I2S(newIndex))
 						set this.m_rucksackItemCharges[newIndex] = 1
 					else
-						call BJDebugMsg("Is not charged")
+						call this.print("Is not charged")
 						set this.m_rucksackItemCharges[newIndex] = 0
 					endif
+					debug call this.print("Show old rucksack item.")
 					call this.showRucksackItem(oldIndex)
+					debug call this.print("Refresh new index charges.")
 					call this.refreshRucksackItemCharges(newIndex)
 				//normal movement
 				else
-					call BJDebugMsg("Move to new index " + I2S(newIndex))
+					call this.print("Move to new index " + I2S(newIndex))
 					set this.m_rucksackItemCharges[newIndex] = this.m_rucksackItemCharges[oldIndex]
 					//clear old
 					set this.m_rucksackItemType[oldIndex] = 0
@@ -792,13 +811,14 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set targetItem = null
 			//stack
 			elseif (GetItemTypeId(movedItem) == GetItemTypeId(targetItem)) then
-				call BJDebugMsg("Stack with target item name " + GetItemName(targetItem))
+				call this.print("Stack with target item name " + GetItemName(targetItem))
+				call thistype.setItemIndex(movedItem, newIndex)
 				set this.m_rucksackItemCharges[newIndex] = this.m_rucksackItemCharges[newIndex] + IMaxBJ(1, this.m_rucksackItemCharges[oldIndex])
 				call this.refreshRucksackItemCharges(newIndex)
 				call this.clearRucksackItem(oldIndex, false)
 			//swap
 			else
-				call BJDebugMsg("Swap")
+				call this.print("Swap")
 				call this.swapRucksackItemData(movedItem, targetItem)
 			endif
 			set characterUnit = null
@@ -813,11 +833,11 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			if (this.m_rucksackIsEnabled) then
-				call this.print("Open rucksack")
+				debug call this.print("Close rucksack")
 				call this.disableRucksack()
 				call this.enableEquipment()
 			else
-				call this.print("Close rucksack")
+				debug call this.print("Open rucksack")
 				call this.disableEquipment()
 				call this.enableRucksack()
 			endif

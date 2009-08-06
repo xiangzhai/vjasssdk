@@ -8,6 +8,8 @@ library AStructSystemsCharacterAbstractCharacterSystem
 	endinterface
 
 	struct AAbstractCharacterSystem extends AAbstractCharacterSystemInterface
+		//dynamic members
+		private boolean m_enableAgain
 		//start members
 		private ACharacter m_character
 		//members
@@ -23,6 +25,14 @@ library AStructSystemsCharacterAbstractCharacterSystem
 		
 		public method isEnabled takes nothing returns boolean
 			return this.m_isEnabled
+		endmethod
+		
+		public method setEnableAgain takes boolean enableAgain returns nothing
+			set this.m_enableAgain = enableAgain
+		endmethod
+		
+		public method enableAgain takes nothing returns boolean
+			return this.m_enableAgain
 		endmethod
 
 		//convenience methods
@@ -50,8 +60,10 @@ library AStructSystemsCharacterAbstractCharacterSystem
 		public stub method changedUnit takes nothing returns nothing
 		endmethod
 
-		public static method create takes ACharacter character returns AAbstractCharacterSystem
-			local AAbstractCharacterSystem this = AAbstractCharacterSystem.allocate()
+		public static method create takes ACharacter character returns thistype
+			local thistype this = thistype.allocate()
+			//dynamic members
+			set this.m_enableAgain = true
 			//start members
 			set this.m_character = character
 			//members
