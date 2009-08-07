@@ -20,106 +20,87 @@
 
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <list>
 #include <cstring>
 #include <cstdlib>
+//POSIX
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
 
-class String
+#include "parser.h"
+#include "string.h"
+
+namespace vjasstrans
 {
-	public:
-		String(const std::string &filePath, unsigned int line, const std::string &idString, const std::string &defaultString) : m_filePath(filePath), m_line(line), m_idString(idString), m_defaultString(defaultString)
-		{
-		};
 
-		std::string filePath() const
-		{
-			return this->m_filePath;
-		};
-		unsigned int line() const
-		{
-			return this->m_line;
-		};
-		std::string idString() const
-		{
-			return this->m_idString;
-		};
-		std::string defaultString() const
-		{
-			return this->m_defaultString;
-		};
+bool optionReplace = false;
+bool optionRecursive = false;
+bool optionFdf = false;
+bool optionWts = false;
 
-	private:
-		std::string m_filePath;
-		unsigned int m_line;
-		std::string m_idString;
-		std::string m_defaultString;
-
-
-};
-
-static std::string translationFunction = "tr";
-static std::list<class String*> strings;
-
-static void run(const char *filePath)
-{
-	std::fstream fstream(filePath, std::ios_base::in);
-	static std::string searchedString = translationFunction + "(\"";
-	std::list<std::string> lines;
-	std::string line;
-
-	for (unsigned int i = 0; std::getline(fstream, line); ++i)
-	{
-		std::string::size_type position = line.find(searchedString);
-
-		if (position != std::string::npos)
-		{
-			std::string::size_type length = line.find("\")", position);
-
-			if (position != std::string::npos)
-			{
-				length = length - position;
-				position += 4;
-				length -= 4;
-				std::stringstream sstream;
-				sstream << "STRING_" << strings.size();
-				strings.push_back(new String(filePath, i, sstream.str(), line.substr(position, length)));
-				line.replace(position, length, sstream.str());
-			}
-		}
-
-		lines.push_back(line);
-	}
-
-	fstream.close();
-	fstream.open(filePath, std::ios_base::out);
-
-	for (std::list<std::string>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
-	{
-		fstream << *iterator << '\n';
-	}
-
-	fstream.close();
 }
 
-static void writeOutputFile()
+using namespace vjasstrans;
+
+static std::list<class String*> strings;
+
+static int select(const struct dirent *dirEntry)
 {
-	std::ofstream fstream("output.fdf");
-	fstream << "StringList {" << std::endl;
-	int i = 0;
+	return 1;
+}
 
-	for (std::list<class String*>::iterator iterator = strings.begin(); iterator != strings.end(); ++iterator, ++i)
+static void addDirectory(const std::string &directoryPath, std::list<std::string> &filePaths)
+{
+	DIR *dir = opendir(directoryPath.c_str());
+	
+	if (dir == NULL)
 	{
-		fstream << "\t" << (*iterator)->idString() << "\t\t\t\"\"";
-		
-		if (i != strings.size() - 1)
-			fstream << ',';
-
-		fstream << "\t/* " << (*iterator)->defaultString() << " */" << std::endl;
+		fprintf(stderr, "Error while opening directory \"%s\".\n", directoryPath.c_str());
+		return;
 	}
+	
+	struct dirent **dirEntries = 0;
+	int entries = scandir(directoryPath.c_str(), &dirEntries,
+              select,
+              0);
+	
+	if (entries == -1)
+	{
+		fprintf(stderr, "Error while reading directory \"%s\".\n", directoryPath.c_str());
+		return;
+	}
+	
+	for (int i = 0; i < entries; ++i)
+	{
+		if (strcmp(dirEntries[i]->d_name, ".") != 0 && strcmp(dirEntries[i]->d_name, "..") != 0)
+		{
+			struct stat fileInfo;
+			std::string path = directoryPath + '/' + dirEntries[i]->d_name;
+			
+			if (stat(path.c_str(), &fileInfo) == -1)
+			{
+				fprintf(stderr, "Error while reading file \"%s\".\n", path.c_str());
+				continue;
+			}
+			
+			if (fileInfo.st_mode & S_IFDIR)
+			{
+				fprintf(stderr, "Is another dir \"%s\".\n", path.c_str());
+			
+				if (optionRecursive)
+					addDirectory(path.c_str(), filePaths);
+			}
+			else
+				filePaths.push_back(path.c_str());
+		}
+	}
+	
+	delete[] dirEntries;
+	
+	if (closedir(dir) == -1)
+		fprintf(stderr, "Error while closing directory \"%s\".\n", directoryPath.c_str());
 
-	fstream << '}' << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -140,10 +121,67 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			for (int i = 0; i < argc; ++i)
-				run(argv[i]);
+			std::list<std::string> filePaths;
+		
+			for (int i = 1; i < argc; ++i)
+			{
+				if (strcmp(argv[i], "--replace") == 0)
+				{
+					optionReplace = true;
+					continue;
+				}
+				else if (strcmp(argv[i], "--recursive") == 0)
+				{
+					optionRecursive = true;
+					continue;
+				}
+				else if (strcmp(argv[i], "--fdf") == 0)
+				{
+					optionFdf = true;
+					continue;
+				}
+				else if (strcmp(argv[i], "--wts") == 0)
+				{
+					optionWts = true;
+					continue;
+				}
+			
+				filePaths.push_back(argv[i]);
+			}
+			
+			// filtering non-existing files and directories
+			for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
+			{
+				struct stat fileInfo;
+				std::cout << "Checking file " << *iterator << std::endl;
+				
+				if (stat((*iterator).c_str(), &fileInfo) != 0)
+				{
+					fprintf(stderr, "File or directory \"%s\" does not exist.\n", (*iterator).c_str());
+					//filePaths.erase(iterator); /// @todo 
+				}
+				// is directory
+				else if (fileInfo.st_mode & S_IFDIR)
+				{
+					std::cout << "Is directory " << *iterator << std::endl;
+				
+					if (optionRecursive)
+						addDirectory(*iterator, filePaths);
+					
+					//filePaths.erase(iterator);
+				}
+			}
+			
+			class Parser parser;
+			
+			for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
+				parser.parse(*iterator, strings, optionReplace);
 
-			writeOutputFile();
+			if (optionFdf)
+				parser.writeFdf("output.fdf", strings);
+			
+			if (optionWts)
+				parser.writeWts("output.wts", "", strings);
 		}
 	}
 	else
