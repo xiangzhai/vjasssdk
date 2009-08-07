@@ -402,7 +402,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local unit characterUnit = this.unit()
 			local item slotItem
 			local AItemType itemType = AItemType.getItemTypeOfItemTypeId(this.m_equipmentItemType[equipmentType])
-			//call itemType.removeAllAbilities(characterUnit) //required? /// @todo Permanent
+			call itemType.removePermanentAbilities(characterUnit)
 			call DisableTrigger(this.m_pickupTrigger)
 			call UnitAddItemToSlotById(characterUnit, this.m_equipmentItemType[equipmentType], equipmentType)
 			call EnableTrigger(this.m_pickupTrigger)
@@ -510,7 +510,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set slotItem = UnitItemInSlot(characterUnit, slot)
 			call SetItemDropOnDeath(slotItem, false)
 			call SetItemCharges(slotItem, this.m_rucksackItemCharges[index])
-			call itemType.removeAllAbilities(characterUnit) /// @todo Permanent
+			call itemType.removePermanentAbilities(characterUnit)
 			call thistype.setItemIndex(slotItem, index)
 			set characterUnit = null
 			set slotItem = null

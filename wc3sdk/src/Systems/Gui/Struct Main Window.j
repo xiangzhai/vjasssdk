@@ -256,6 +256,7 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 				call this.m_gui.disableShortcuts()
 			endif
 			set this.m_isShown = false
+			call this.m_gui.resetShownMainWindow()
 			
 			if (this.m_onHideAction != 0) then
 				call this.m_onHideAction.execute(this)

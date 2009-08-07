@@ -1,6 +1,12 @@
 2009-08-06 Tamino Dauth <tamino@cdauth.de>
+* Improved struct AArrowKeys.
+* Improved ATalk's camera settings.
+* Current dialog page will be resetted now when dialog is cleared.
+
+2009-08-06 Tamino Dauth <tamino@cdauth.de>
 * Improved actor treatment of struct AVideo.
 * Improved item stacking and destracking treatment of struct AInventory.
+* Added Anitarf's arrow key system which is required by Opossum's third person camera system.
 
 2009-08-05 Tamino Dauth <tamino@cdauth.de>
 * Added file "archives/Spells/Icons/Spells/BTNAbsorbation.blp".

@@ -1,5 +1,5 @@
 /// @author Opossum
-library AStructCoreInterfaceThirdPersonCamera
+library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrowKeys
 
 	/**
 	* Adds a dynamic third person camera to the game.
@@ -7,6 +7,7 @@ library AStructCoreInterfaceThirdPersonCamera
 	* limitations of third person cameras. Using this camera you can basically use any kind 
 	* of terrain on your map without caring about the cam falling below the terrain or 
 	* clipping parts of the terrain.
+	* Note that you have to initialize @struct AArrowKeys before initializing this struct.
 	* @author Opossum
 	* @link http://www.wc3c.net/showthread.php?t=104786
 	*/
@@ -29,6 +30,16 @@ library AStructCoreInterfaceThirdPersonCamera
 		private static constant real fieldOfView = 120.0
 		private static constant real farZ = 5000.0
 		private static constant real cliffDistance = 500.0
+		//key settings
+		private static constant boolean inverted = false
+		private static constant real minAoa = -65.0
+		private static constant real maxAoa = 0.0
+		private static constant real maxRot = 105.0
+		private static constant real aoaInterval = 3.0
+		private static constant real rotInterval = 7.5
+		//static start members
+		private static boolean m_useArrowKeys
+		//static members
 		private static thistype array m_playerThirdPersonCamera[12] /// @todo bj_MAX_PLAYERS
 		private static location m_location
 		private static real m_distanceM
@@ -134,6 +145,17 @@ library AStructCoreInterfaceThirdPersonCamera
 			local real dx
 			local real dy
 			
+			if (thistype.m_useArrowKeys) then
+				if (thistype.inverted) then
+					set this.m_camRot = thistype.cappedReal(this.m_camRot + (AArrowKeys.playerArrowKeys(this.m_player).horizontal() + AArrowKeys.playerArrowKeys(this.m_player).horizontalQuickPress()) * thistype.rotInterval, -thistype.maxRot, thistype.maxRot)
+				else
+					set this.m_camRot = thistype.cappedReal(this.m_camRot - (AArrowKeys.playerArrowKeys(this.m_player).horizontal() + AArrowKeys.playerArrowKeys(this.m_player).horizontalQuickPress()) * thistype.rotInterval, -thistype.maxRot, thistype.maxRot)
+				endif
+				call AArrowKeys.playerArrowKeys(this.m_player).setHorizontalQuickPress(0)
+				set this.m_camAoa = thistype.cappedReal(this.m_camAoa - (AArrowKeys.playerArrowKeys(this.m_player).vertical() + AArrowKeys.playerArrowKeys(this.m_player).verticalQuickPress()) * thistype.aoaInterval, thistype.minAoa, thistype.maxAoa)
+				call AArrowKeys.playerArrowKeys(this.m_player).setVerticalQuickPress(0)
+			endif
+			
 			call SetCameraField(CAMERA_FIELD_ROTATION, GetUnitFacing(this.m_unit) + this.m_camRot, duration)
 			call SetCameraField(CAMERA_FIELD_FIELD_OF_VIEW, thistype.fieldOfView, duration)
 			call SetCameraField(CAMERA_FIELD_FARZ, thistype.farZ, duration)
@@ -204,7 +226,10 @@ library AStructCoreInterfaceThirdPersonCamera
 			endif
 		endmethod
 		
-		public static method init takes nothing returns nothing
+		public static method init takes boolean useArrowKeys returns nothing
+			//static start members
+			set thistype.m_useArrowKeys = useArrowKeys
+			//static members
 			set thistype.m_location = Location(0,0)
 			set thistype.m_distanceM = (thistype.distanceDistanceMax-thistype.distanceDistanceMin)/((thistype.distanceAoaMax - thistype.distanceAoaMin)*bj_DEGTORAD)
 			set thistype.m_distanceT = thistype.distanceDistanceMin-thistype.distanceAoaMin*bj_DEGTORAD*thistype.m_distanceM
@@ -247,6 +272,15 @@ library AStructCoreInterfaceThirdPersonCamera
 			endif
 			return thistype.m_offsetM * angleOfAttack + thistype.m_offsetT
 		endmethod
+		
+		 private static method cappedReal takes real r, real lowBound, real highBound returns real
+			if r < lowBound then
+				return lowBound
+			elseif r > highBound then
+				return highBound
+			endif
+			return r
+		endmethod
 	endstruct
-    
+
 endlibrary

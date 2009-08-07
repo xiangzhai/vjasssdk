@@ -171,6 +171,7 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 				exitwhen (this.m_dialogButtons.size() == 0)
 				call this.m_dialogButtons.back().destroy() //removes itself from the vector!
 			endloop
+			set this.m_currentPage = 0
 			call DialogClear(this.m_dialog)
 		endmethod
 		

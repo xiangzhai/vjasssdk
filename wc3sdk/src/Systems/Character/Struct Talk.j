@@ -136,6 +136,10 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			call SetUnitFacing(this.m_unit, GetAngleBetweenUnits(this.m_unit, character.unit()))
 			call SetUnitLookAt(character.unit(), "bone_head", this.m_unit, 0.0, 0.0, GetUnitFlyHeight(this.m_unit) + 90.0)
 			call SetUnitLookAt(this.m_unit, "bone_head", character.unit(), 0.0, 0.0, GetUnitFlyHeight(character.unit()) + 90.0)
+			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).resetCamAoa()
+			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).resetCamRot()
+			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).disable()
+			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).enable(character.unit(), 0.0)
 			call AGui.playerGui(character.user()).dialog().clear()
 			call AGui.playerGui(character.user()).dialog().setMessage(GetUnitName(this.m_unit))
 			//call this.clear()
@@ -149,6 +153,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			call ResetUnitLookAt(this.m_unit)
 			call SetUserInterfaceForPlayer(characterUser, true, true)
 			if (not ACharacter.useViewSystem() or not this.m_character.view().enableAgain()) then
+				call AThirdPersonCamera.playerThirdPersonCamera(characterUser).pause()
 				call ResetToGameCameraForPlayer(characterUser, 0.0)
 			endif
 			call this.m_character.setTalk(0)

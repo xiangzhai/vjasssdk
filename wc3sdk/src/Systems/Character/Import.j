@@ -10,7 +10,7 @@
 //! import "Systems/Character/Struct Inventory.j"
 //! import "Systems/Character/Struct Item Type.j"
 //! import "Systems/Character/Struct Movement.j"
-//! import "Systems/Character/Struct Neratia Fight.j"
+///! import "Systems/Character/Struct Neratia Fight.j"
 //! import "Systems/Character/Struct Spell.j"
 //! import "Systems/Character/Struct Pvp.j"
 //! import "Systems/Character/Struct Quest.j"
@@ -23,5 +23,5 @@
 //! import "Systems/Character/Struct View.j"
 //! import "Systems/Character/Struct Video.j"
 
-library ASystemsCharacter requires AStructSystemsCharacterCharactersScheme, AStructSystemsCharacterAbstractCharacterSystem, AStructSystemsCharacterAbstractQuest, AStructSystemsCharacterCharacter, AStructSystemsCharacterClassSelection, AStructSystemsCharacterClass, AStructSystemsCharacterFight, AStructSystemsCharacterFocus, AStructSystemsCharacterInfo, AStructSystemsCharacterInventory, AStructSystemsCharacterItemType, AStructSystemsCharacterMovement, AStructSystemsCharacterNeratiaFight, AStructSystemsCharacterPvp, AStructSystemsCharacterQuest, AStructSystemsCharacterQuestItem, AStructSystemsCharacterRevival, AStructSystemsCharacterShrine, AStructSystemsCharacterSpell, AStructSystemsCharacterTalk, AStructSystemsCharacterTalkLog, AStructSystemsCharacterView
+library ASystemsCharacter requires AStructSystemsCharacterCharactersScheme, AStructSystemsCharacterAbstractCharacterSystem, AStructSystemsCharacterAbstractQuest, AStructSystemsCharacterCharacter, AStructSystemsCharacterClassSelection, AStructSystemsCharacterClass, AStructSystemsCharacterFight, AStructSystemsCharacterFocus, AStructSystemsCharacterInfo, AStructSystemsCharacterInventory, AStructSystemsCharacterItemType, AStructSystemsCharacterMovement, AStructSystemsCharacterPvp, AStructSystemsCharacterQuest, AStructSystemsCharacterQuestItem, AStructSystemsCharacterRevival, AStructSystemsCharacterShrine, AStructSystemsCharacterSpell, AStructSystemsCharacterTalk, AStructSystemsCharacterTalkLog, AStructSystemsCharacterView
 endlibrary

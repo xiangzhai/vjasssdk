@@ -20,15 +20,17 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 		endif
 	endfunction
 
-	/// Represents the graphical user interface which can be used by all playing players.
-	/// Each player can have exactly one GUI.
-	/// A GUI contains main windows which are user-defined areas on the map. That's necessary because
-	/// trackables, textes and images are map-placed objects and trackables aren't removable.
-	/// When you destroy an instance all docked main windows will be destroy automatically.
-	/// Besides user can access a single @struct ADialog instance by using method @method dialog.
-	/// There also is a simple implemention of shortcuts by creating an unit with shortcut abilities.
-	/// Unfortunately a unit can only have 12 different abilities so you can't use all ASCII keys.
-	/// Maybe shortcut abilities will be added dynamically (by checking which shortcuts are really necessary) in future.
+	/**
+	* Represents the graphical user interface which can be used by all playing players.
+	* Each player can have exactly one GUI.
+	* A GUI contains main windows which are user-defined areas on the map. That's necessary because
+	* trackables, textes and images are map-placed objects and trackables aren't removable.
+	* When you destroy an instance all docked main windows will be destroy automatically.
+	* Besides user can access a single @struct ADialog instance by using method @method dialog.
+	* There also is a simple implemention of shortcuts by creating an unit with shortcut abilities.
+	* Unfortunately a unit can only have 12 different abilities so you can't use all ASCII keys.
+	* Maybe shortcut abilities will be added dynamically (by checking which shortcuts are really necessary) in future.
+	*/
 	struct AGui
 		//static constant members
 		public static constant integer shortcutArrowUpDown = 0 //these are the special shortcuts
@@ -123,20 +125,28 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 			call this.m_playerSelection.restore()
 		endmethod
 
-		/// If you dock a main window it will be destroyed when the GUI will be destroyed.
-		/// Friend relation to AMainWindow. In general you do not need to use this method.
-		/// @return Container index.
+		/**
+		* If you dock a main window it will be destroyed when the GUI will be destroyed.
+		* @return Container index.
+		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
+		*/
 		public method dockMainWindow takes AMainWindow mainWindow returns integer
 			call this.m_mainWindows.pushBack(mainWindow)
 			return this.m_mainWindows.backIndex()
 		endmethod
 
-		/// Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
+		/**
+		* Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
+		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
+		*/
 		public method undockMainWindow takes AMainWindow mainWindow returns nothing
 			call this.m_mainWindows.remove(mainWindow)
 		endmethod
 		
-		/// Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
+		/**
+		* Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
+		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
+		*/
 		public method undockMainWindowByIndex takes integer index returns nothing
 			call this.m_mainWindows.erase(index)
 		endmethod
@@ -151,6 +161,11 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 				call this.m_shownMainWindow.hide()
 			endif
 			set this.m_shownMainWindow = mainWindow
+		endmethod
+		
+		/// @todo Friend relation to @struct AMainWindow, do not use!
+		public method resetShownMainWindow takes nothing returns nothing
+			set this.m_shownMainWindow = 0
 		endmethod
 
 		public method enableShortcuts takes nothing returns nothing

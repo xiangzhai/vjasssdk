@@ -1,3 +1,6 @@
+2009-08-07 Tamino Dauth <tamino@cdauth.de>
+* init methods of structs AThirdPersonCamera and AArrowKeys should have their constant settings as parameters.
+
 2009-08-05 Tamino Dauth <tamino@cdauth.de>
 * DONE: Fix custom system enabl- and disabling.
 
