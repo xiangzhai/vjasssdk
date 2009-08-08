@@ -62,4 +62,8 @@ SchwerGepanzerterSamurai.blp		Black_Stan				http://www.xgm.ru/
 SchwerGepanzerterSamuraiKatana.blp	Black_Stan				http://www.xgm.ru/
 SchwerGepanzerterSamuraiStoff.blp	Black_Stan				http://www.xgm.ru/
 Waldlaeufer.blp				Whitehorn				http://www.wc3campaigns.net/
+Warrior0.blp				Miseracord				http://www.hiveworkshop.com/
+Warrior1.blp				Miseracord				http://www.hiveworkshop.com/
+Warrior2.blp				Miseracord				http://www.hiveworkshop.com/
 Weihnachtsmann.blp			_Virus_					http://www.xgm.ru/
+Wizard.blp				CloudWolf				http://www.hiveworkshop.com/

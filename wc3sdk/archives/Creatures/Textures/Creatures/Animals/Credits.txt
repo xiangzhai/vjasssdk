@@ -6,6 +6,7 @@ BaerenformBlau.blp					Blizzard Entertainment		http://xgm.ru/
 BaerenformBraun.blp					Blizzard Entertainment		http://xgm.ru/
 BaerSchwarz.blp						Blizzard Entertainment		http://xgm.ru/
 BaerWeiss.blp						Blizzard Entertainment		http://xgm.ru/
+Deer.blp						olofmoleman			http://www.hiveworkshop.com/
 DracheFluegel.blp					-				http://xgm.ru/
 DracheKoerper.blp					-				http://xgm.ru/
 DracheKopf.blp						-				http://xgm.ru/
