@@ -1,0 +1,5 @@
+Name				Author				From
+WarCraftFont.tff		Blizzard				http://www.wc3campaigns.net/
+FrizQuadrataTT.tff	Ernst Friz, Victor Caruso	http://www.wc3campaigns.net/
+Folkard.tff			David Nalle				http://www.wc3campaigns.net/
+Abaddon.tff			David Nalle				http://www.wc3campaigns.net/

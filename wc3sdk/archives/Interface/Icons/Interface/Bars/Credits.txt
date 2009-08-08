@@ -1,0 +1,7 @@
+File		Authors	Source
+Blue.blp	Baradé	DMdF
+Green.blp	Baradé	DMdF
+Purple.blp	Baradé	DMdF
+Red.blp		Baradé	DMdF
+White.blp	Baradé	DMdF
+Yellow.blp	Baradé	DMdF
