@@ -2,7 +2,7 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 
 	/// @author Tamino Dauth
 	/// @source http://www.cplusplus.com/reference/stl/list/
-	//! textmacro A_VECTOR takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, MAXSIZE, MAXINSTANCES
+	//! textmacro A_VECTOR takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, MAXSIZE, STRUCTSPACE
 		
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ value returns boolean
@@ -18,7 +18,7 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$Generator takes nothing returns $ELEMENTTYPE$
 	
-		$STRUCTPREFIX$ struct $NAME$[$MAXINSTANCES$]
+		$STRUCTPREFIX$ struct $NAME$[$STRUCTSPACE$]
 			//members
 			private $ELEMENTTYPE$ array m_element[$MAXSIZE$]
 			private integer m_size
@@ -572,19 +572,28 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 			public static constant method maxSize takes nothing returns integer
 				return $MAXSIZE$
 			endmethod
+			
+			public static constant method maxInstances takes nothing returns integer
+				return $STRUCTSPACE$ / $MAXSIZE$
+			endmethod
 		endstruct
 	//! endtextmacro
 	
-	///default vectors, Jass data types
-	//! runtextmacro A_VECTOR("", "AIntegerVector", "integer", "0", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
-	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
-	//! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
-	//! runtextmacro A_VECTOR("", "ARealVector", "real", "0.0", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
+	/**
+	* default vectors, Jass data types
+	* max instances = required struct space / biggest array member size
+	* 400000 is struct space maximum
+	* max instances = 50000 / 100 = 500
+	*/
+	//! runtextmacro A_VECTOR("", "AIntegerVector", "integer", "0", "100", "50000")
+	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "100", "50000")
+	//! runtextmacro A_VECTOR("", "ARealVector", "real", "0.0", "100", "50000")
 	
-	//! runtextmacro A_VECTOR("", "AEffectVector", "effect", "null", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
-	//! runtextmacro A_VECTOR("", "AUnitVector", "unit", "null", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
-	//! runtextmacro A_VECTOR("", "ARectVector", "rect", "null", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
-	//! runtextmacro A_VECTOR("", "AWeatherEffectVector", "weathereffect", "null", "8192", "50000") /// @todo JASS_MAX_ARRAY_SIZE
+	//! runtextmacro A_VECTOR("", "AEffectVector", "effect", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "AUnitVector", "unit", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "ARectVector", "rect", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "AWeatherEffectVector", "weathereffect", "null", "100", "50000")
 	
 	// use AIntegerVector for struct types.
 endlibrary

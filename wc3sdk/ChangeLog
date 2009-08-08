@@ -1,8 +1,12 @@
+2009-08-09 Tamino Dauth <tamino@cdauth.de>
+* Fixed resetting equipment of struct AInventory.
+
 2009-08-08 Tamino Dauth <tamino@cdauth.de>
 * Improved struct AAbstractQuest.
 * Replaced all <struct type>Vector structs by struct AIntegerVector.
 * Improved vector cleanups in destructors of several structs.
 * Added parameter MAXINSTANCES to text macro A_VECTOR.
+* Fixed required struct space of A_VECTOR instances (thanks to Vexorian).
 
 2009-08-07 Tamino Dauth <tamino@cdauth.de>
 * Revised struct AMissile and added structs AMissileType and ADamageMissileType..

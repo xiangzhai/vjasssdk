@@ -9,12 +9,14 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		debug endif
 	debug endfunction
 
-	/// Searches for the position of string @param searchedString in string @param usedString.
-	/// @state checked
-	/// If @param searchedString is not contained by @param usedString function will return -1 otherwise it will return the position.
-	/// @param usedString String which should contain the searched string.
-	/// @param searchedString String which is searched.
-	/// @return If the string was found it will return its position otherwise it will return -1.
+	/**
+	* Searches for the position of string @param searchedString in string @param usedString.
+	* @state checked
+	* If @param searchedString is not contained by @param usedString function will return -1 otherwise it will return the position.
+	* @param usedString String which should contain the searched string.
+	* @param searchedString String which is searched.
+	* @return If the string was found it will return its position otherwise it will return -1.
+	*/
 	function FindString takes string usedString, string searchedString returns integer
 		local integer i
 		local integer exitvalue
@@ -37,12 +39,14 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return -1
 	endfunction
 
-	/// Replaces a part of a string and returns the resulting string.
-	/// @state checked
-	/// @param usedString String which contains the sub string.
-	/// @param position Start position of the sub string.
-	/// @param replacingString String which should replace the sub string.
-	/// @return Returns the new string with the replaced sub string.
+	/**
+	* Replaces a part of a string and returns the resulting string.
+	* @state checked
+	* @param usedString String which contains the sub string.
+	* @param position Start position of the sub string.
+	* @param replacingString String which should replace the sub string.
+	* @return Returns the new string with the replaced sub string.
+	*/
 	function ReplaceSubString takes string usedString, integer position, string replacingString returns string
 		local string result = ""
 		debug call StringPositionDebug(usedString, position)
@@ -56,12 +60,14 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return result
 	endfunction
 
-	/// Replaces string @param replacedString in string @param usedString by string @param replacingString and returns the resulting string.
-	/// @state checked
-	/// @param usedString String which contains the sub string @param replacedString.
-	/// @param replacedString Sub string of string @param usedString which should be replaced.
-	/// @param replacingString String which should replace @param replacedString.
-	/// @return Returns the new string with the replaced sub string.
+	/**
+	* Replaces string @param replacedString in string @param usedString by string @param replacingString and returns the resulting string.
+	* @state checked
+	* @param usedString String which contains the sub string @param replacedString.
+	* @param replacedString Sub string of string @param usedString which should be replaced.
+	* @param replacingString String which should replace @param replacedString.
+	* @return Returns the new string with the replaced sub string.
+	*/
 	function ReplaceString takes string usedString, string replacedString, string replacingString returns string
 		local integer position = FindString(usedString, replacedString)
 		if (position != -1) then
@@ -70,12 +76,14 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return usedString
 	endfunction
 
-	/// Removes the sub string at position @param position with length @param length of string @param usedString and returns the resulting string.
-	/// @state checked
-	/// @param usedString String which contains the sub string.
-	/// @param position Position of the sub string.
-	/// @param length Length of the sub string.
-	/// @return Returns the new string with the replaced string.
+	/**
+	* Removes the sub string at position @param position with length @param length of string @param usedString and returns the resulting string.
+	* @state checked
+	* @param usedString String which contains the sub string.
+	* @param position Position of the sub string.
+	* @param length Length of the sub string.
+	* @return Returns the new string with the replaced string.
+	*/
 	function RemoveSubString takes string usedString, integer position, integer length returns string
 		local string result = "" //Has to be set otherwise usedString + ... doesn't work
 		debug call StringPositionDebug(usedString, position)
@@ -89,11 +97,13 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return result
 	endfunction
 
-	/// Removes string @param removedString from string @param subString and returns the resulting string. 
-	/// @state checked
-	/// @param usedString String @param subString should be removed from this string.
-	/// @param removedString String which should be removed.
-	/// @return Returns the new string without the removed string.
+	/**
+	* Removes string @param removedString from string @param subString and returns the resulting string. 
+	* @state checked
+	* @param usedString String @param subString should be removed from this string.
+	* @param removedString String which should be removed.
+	* @return Returns the new string without the removed string.
+	*/
 	function RemoveString takes string usedString, string removedString returns string
 		local integer position = FindString(usedString, removedString)
 		if (position != -1) then
@@ -102,12 +112,14 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return usedString
 	endfunction
 
-	/// Inserts string @param insertedString into string @param usedString at position @param position and returns the resulting string.
-	/// @state checked
-	/// @param usedString String into which string @param insertedString should be inserted.
-	/// @param position Position where string @param insertedString should be inserted.
-	/// @param insertedString String which should be inserted into string @param usedString.
-	/// @return Returns the new string with the inserted string.
+	/**
+	* Inserts string @param insertedString into string @param usedString at position @param position and returns the resulting string.
+	* @state checked
+	* @param usedString String into which string @param insertedString should be inserted.
+	* @param position Position where string @param insertedString should be inserted.
+	* @param insertedString String which should be inserted into string @param usedString.
+	* @return Returns the new string with the inserted string.
+	*/
 	function InsertString takes string usedString, integer position, string insertedString returns string
 		local string result = ""
 		debug call StringPositionDebug(usedString, position)
@@ -117,13 +129,15 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return result + insertedString + SubString(usedString, position, StringLength(usedString))
 	endfunction
 
-	/// Moves the sub string of string @param usedString at position @param position and with length @param length to position @param newPosition and returns the resulting string.
-	/// @state checked
-	/// @param usedString String in which the sub string should be moved.
-	/// @param position Start position of the sub string.
-	/// @param length Length of the sub string.
-	/// @param newPosition Position to which the sub string should be moved.
-	/// @return Returns the new string with the moved string.
+	/**
+	* Moves the sub string of string @param usedString at position @param position and with length @param length to position @param newPosition and returns the resulting string.
+	* @state checked
+	* @param usedString String in which the sub string should be moved.
+	* @param position Start position of the sub string.
+	* @param length Length of the sub string.
+	* @param newPosition Position to which the sub string should be moved.
+	* @return Returns the new string with the moved string.
+	*/
 	function MoveSubString takes string usedString, integer position, integer length, integer newPosition returns string
 		local string result = ""
 		debug call StringPositionDebug(usedString, position + length)
@@ -139,12 +153,14 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return result
 	endfunction
 
-	/// Moves string @param movedString of string @param usedString to position @param newPosition and returns the resulting string.
-	/// @state checked
-	/// @param usedString String in which string @param movedString should be moved.
-	/// @param movedString String which should be moved.
-	/// @param newPosition Position to which string @param movedString should be moved.
-	/// @return Returns the new string with the moved string.
+	/**
+	* Moves string @param movedString of string @param usedString to position @param newPosition and returns the resulting string.
+	* @state checked
+	* @param usedString String in which string @param movedString should be moved.
+	* @param movedString String which should be moved.
+	* @param newPosition Position to which string @param movedString should be moved.
+	* @return Returns the new string with the moved string.
+	*/
 	function MoveString takes string usedString, string movedString, integer newPosition returns string
 		local integer position = FindString(usedString, movedString)
 		if (position != -1) then
@@ -153,10 +169,12 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return usedString
 	endfunction
 
-	/// Reverses a string that it will be written backwards and returns the resulting string.
-	/// @state checked
-	/// @param usedString String which should be reversed.
-	/// @return Returns the new reversed string.
+	/**
+	* Reverses a string that it will be written backwards and returns the resulting string.
+	* @state checked
+	* @param usedString String which should be reversed.
+	* @return Returns the new reversed string.
+	*/
 	function ReverseString takes string usedString returns string
 		local integer i
 		local string result
@@ -169,20 +187,22 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 		return result
 	endfunction
 	
-	/// Basic case (in)sensitive pattern matching.
-	/// Supported wildcard characters:
-	/// * - matches 0 or more any characters
-	/// ? - matches exactly 1 any character
-	/// # - matches any digit, 0-9
-	/// [list] - matches any character in <list> (l, i, s and t in this example)
-	/// [!list] - matches any character that isn't in the list
-	/// Use \\* or \\? or \\[ to match a * or ? or [ respectively.
-	/// To get a ] in a list, put it as first character of the list.
-	/// To get a ! in a list, don't put it first.
-	/// By common convention, special characters *, ? and # have no meaning when used in a list.
-	/// If "case" is true, the matching is case sensitive.
-	/// @author AceHart
-	/// @source http://www.wc3c.net/showthread.php?t=102026
+	/**
+	* Basic case (in)sensitive pattern matching.
+	* Supported wildcard characters:
+	* * - matches 0 or more any characters
+	* ? - matches exactly 1 any character
+	* # - matches any digit, 0-9
+	* [list] - matches any character in <list> (l, i, s and t in this example)
+	* [!list] - matches any character that isn't in the list
+	* Use \\* or \\? or \\[ to match a * or ? or [ respectively.
+	* To get a ] in a list, put it as first character of the list.
+	* To get a ! in a list, don't put it first.
+	* By common convention, special characters *, ? and # have no meaning when used in a list.
+	* If "case" is true, the matching is case sensitive.
+	* @author AceHart
+	* @link http://www.wc3c.net/showthread.php?t=102026
+	*/
 	function StringMatch takes string text, string mask, boolean case returns boolean
 		local string a
 		local string b
