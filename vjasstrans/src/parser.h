@@ -32,12 +32,9 @@ class String;
 class Parser
 {
 	public:
-		bool parse(const std::string &filePath, std::list<class String*> &strings, bool replace = false);
+		bool parse(const std::string &filePath, std::list<class String*> &strings, bool replace = false, const std::string &translationFunction = "GetLocalizedString");
 		bool writeFdf(const std::string &filePath, const std::list<class String*> &strings);
 		bool writeWts(const std::string &filePath, const std::string &existingFilePath, const std::list<class String*> &strings);
-
-	private:
-		static std::string translationFunction;
 };
 
 }

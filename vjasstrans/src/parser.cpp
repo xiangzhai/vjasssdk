@@ -30,9 +30,7 @@
 namespace vjasstrans
 {
 
-std::string Parser::translationFunction = "tr";
-
-bool Parser::parse(const std::string &filePath, std::list<class String*> &strings, bool replace)
+bool Parser::parse(const std::string &filePath, std::list<class String*> &strings, bool replace, const std::string &translationFunction)
 {
 	fprintf(stdout, "Parsing file \"%s\".\n", filePath.c_str());
 

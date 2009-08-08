@@ -16,7 +16,7 @@ if (UNIX)
 	add_definitions(-DUNIX=1)
 elseif (WIN32)
 	set(EXECUTABLE_NAME
-	vjassdoc.exe
+	vjasstrans.exe
 	)
 	set(EXECUTABLE_INSTALL_DIR
 	.

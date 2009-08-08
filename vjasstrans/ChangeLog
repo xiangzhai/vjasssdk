@@ -1,3 +1,9 @@
+2009-08-08 Tamino Dauth <tamino@cdauth.de>
+* Revised main function.
+* Added option --trans.
+* Added file "src/internationalisation.h".
+* Improved --help and --version output.
+
 2009-08-07 Tamino Dauth <tamino@cdauth.de>
 * Added file "src/string.h".
 * Added file "src/parser.h".

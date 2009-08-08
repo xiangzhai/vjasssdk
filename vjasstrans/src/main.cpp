@@ -30,14 +30,17 @@
 
 #include "parser.h"
 #include "string.h"
+#include "internationalisation.h"
 
 namespace vjasstrans
 {
 
+static const char *version = "0.1";
 bool optionReplace = false;
 bool optionRecursive = false;
 bool optionFdf = false;
 bool optionWts = false;
+std::string optionTrans = "GetLocalizedString";
 
 }
 
@@ -56,7 +59,7 @@ static void addDirectory(const std::string &directoryPath, std::list<std::string
 	
 	if (dir == NULL)
 	{
-		fprintf(stderr, "Error while opening directory \"%s\".\n", directoryPath.c_str());
+		fprintf(stderr, _("Error while opening directory \"%s\".\n"), directoryPath.c_str());
 		return;
 	}
 	
@@ -67,7 +70,7 @@ static void addDirectory(const std::string &directoryPath, std::list<std::string
 	
 	if (entries == -1)
 	{
-		fprintf(stderr, "Error while reading directory \"%s\".\n", directoryPath.c_str());
+		fprintf(stderr, _("Error while reading directory \"%s\".\n"), directoryPath.c_str());
 		return;
 	}
 	
@@ -80,13 +83,13 @@ static void addDirectory(const std::string &directoryPath, std::list<std::string
 			
 			if (stat(path.c_str(), &fileInfo) == -1)
 			{
-				fprintf(stderr, "Error while reading file \"%s\".\n", path.c_str());
+				fprintf(stderr, _("Error while reading file \"%s\".\n"), path.c_str());
 				continue;
 			}
 			
 			if (fileInfo.st_mode & S_IFDIR)
 			{
-				fprintf(stderr, "Is another dir \"%s\".\n", path.c_str());
+				fprintf(stderr, _("Is another dir \"%s\".\n"), path.c_str());
 			
 				if (optionRecursive)
 					addDirectory(path.c_str(), filePaths);
@@ -99,97 +102,117 @@ static void addDirectory(const std::string &directoryPath, std::list<std::string
 	delete[] dirEntries;
 	
 	if (closedir(dir) == -1)
-		fprintf(stderr, "Error while closing directory \"%s\".\n", directoryPath.c_str());
+		fprintf(stderr, _("Error while closing directory \"%s\".\n"), directoryPath.c_str());
 
 }
 
 int main(int argc, char *argv[])
 {
-	if (argc >= 1)
+	// Set the current locale.
+	setlocale(LC_ALL, "");
+	// Set the text message domain.
+	bindtextdomain("vjasstrans", LOCALE_DIR);
+	textdomain("vjasstrans");
+	
+	if (argc < 1)
 	{
-		if (strcmp(argv[1], "--version") == 0)
-		{
-			std::cout << "1.0" << std::endl;
-
-			return EXIT_SUCCESS;
-		}
-		else if (strcmp(argv[1], "--help") == 0)
-		{
-			std::cout << "HELP" << std::endl;
-
-			return EXIT_SUCCESS;
-		}
-		else
-		{
-			std::list<std::string> filePaths;
-		
-			for (int i = 1; i < argc; ++i)
-			{
-				if (strcmp(argv[i], "--replace") == 0)
-				{
-					optionReplace = true;
-					continue;
-				}
-				else if (strcmp(argv[i], "--recursive") == 0)
-				{
-					optionRecursive = true;
-					continue;
-				}
-				else if (strcmp(argv[i], "--fdf") == 0)
-				{
-					optionFdf = true;
-					continue;
-				}
-				else if (strcmp(argv[i], "--wts") == 0)
-				{
-					optionWts = true;
-					continue;
-				}
-			
-				filePaths.push_back(argv[i]);
-			}
-			
-			// filtering non-existing files and directories
-			for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
-			{
-				struct stat fileInfo;
-				std::cout << "Checking file " << *iterator << std::endl;
-				
-				if (stat((*iterator).c_str(), &fileInfo) != 0)
-				{
-					fprintf(stderr, "File or directory \"%s\" does not exist.\n", (*iterator).c_str());
-					//filePaths.erase(iterator); /// @todo 
-				}
-				// is directory
-				else if (fileInfo.st_mode & S_IFDIR)
-				{
-					std::cout << "Is directory " << *iterator << std::endl;
-				
-					if (optionRecursive)
-						addDirectory(*iterator, filePaths);
-					
-					//filePaths.erase(iterator);
-				}
-			}
-			
-			class Parser parser;
-			
-			for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
-				parser.parse(*iterator, strings, optionReplace);
-
-			if (optionFdf)
-				parser.writeFdf("output.fdf", strings);
-			
-			if (optionWts)
-				parser.writeWts("output.wts", "", strings);
-		}
-	}
-	else
-	{
-		std::cout << "Missing arguments." << std::endl;
-
+		std::cout << _("Missing arguments.") << std::endl;
 		return EXIT_FAILURE;
 	}
+	
+	
+	if (strcmp(argv[1], "--version") == 0)
+	{
+		printf("vjasstrans %s.\n", version);
+		std::cout << _(
+		"Copyright © 2009 Tamino Dauth\n"
+		"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
+		"This is free software: you are free to change and redistribute it.\n"
+		"There is NO WARRANTY, to the extent permitted by law."
+		) << std::endl;
+		
+		return EXIT_SUCCESS;
+	}
+	else if (strcmp(argv[1], "--help") == 0)
+	{
+		std::cout <<
+		_("vjasstrans options:\n") <<
+		_("--version                   Shows the current version of vjasstrans.\n") <<
+		_("--replace                   Replaces all translated strings by STRING_<id> in code files.\n") <<
+		_("--recursive                 Parses all source files in sub directories.\n") <<
+		_("--fdf                       Creates file \"output.fdf\" with all parsed strings.\n") <<
+		_("--wts                       Creates file \"output.wts\" with all parsed strings.\n") <<
+		_("--trans <arg>               <arg> has to be the name of the translation function like GetLocalizedString.\n") <<
+		_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
+		std::endl;
+			
+		return EXIT_SUCCESS;
+	}
+	
+	std::list<std::string> filePaths;
+	
+	for (int i = 1; i < argc; ++i)
+	{
+		if (strcmp(argv[i], "--replace") == 0)
+		{
+			optionReplace = true;
+		}
+		else if (strcmp(argv[i], "--recursive") == 0)
+		{
+			optionRecursive = true;
+		}
+		else if (strcmp(argv[i], "--fdf") == 0)
+		{
+			optionFdf = true;
+		}
+		else if (strcmp(argv[i], "--wts") == 0)
+		{
+			optionWts = true;
+		}
+		else if (strcmp(argv[i], "--trans") == 0)
+		{
+			if (++i == argc)
+			{
+				std::cerr << "Missing argument of option --trans." << std::endl;
+				return EXIT_FAILURE;
+			}
+			
+			optionTrans = argv[i];
+		}
+		else
+			filePaths.push_back(argv[i]);
+	}
+			
+	// filtering non-existing files and directories
+	for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
+	{
+		struct stat fileInfo;
+		
+		if (stat((*iterator).c_str(), &fileInfo) != 0)
+		{
+			fprintf(stderr, "File or directory \"%s\" does not exist.\n", (*iterator).c_str());
+			//filePaths.erase(iterator); /// @todo 
+		}
+		// is directory
+		else if (fileInfo.st_mode & S_IFDIR)
+		{
+			if (optionRecursive)
+				addDirectory(*iterator, filePaths);
+			
+			//filePaths.erase(iterator);
+		}
+	}
+	
+	class Parser parser;
+	
+	for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
+		parser.parse(*iterator, strings, optionReplace, optionTrans);
+
+	if (optionFdf)
+		parser.writeFdf("output.fdf", strings);
+	
+	if (optionWts)
+		parser.writeWts("output.wts", "", strings);
 
 	return EXIT_SUCCESS;
 }
