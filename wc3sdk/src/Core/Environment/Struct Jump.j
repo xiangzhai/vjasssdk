@@ -26,7 +26,7 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 		//! runtextmacro A_STRUCT_DEBUG("\"AJump\"")
 		
 		private method refreshPosition takes nothing returns boolean
-			set this.m_x = this.m_x + this.m_distance / 100.0
+			set this.m_x = this.m_x + (this.m_distance / RMaxBJ(1.0, thistype.m_refreshRate) * 10.0)
 			//debug call this.print("Refresh. Distance is " + R2S(this.m_distance) + " refresh rate is " + R2S(thistype.m_refreshRate))
 			call SetUnitX(this.m_unit, GetPolarProjectionX(this.m_startX, GetUnitFacing(this.m_unit), this.m_x))
 			call SetUnitY(this.m_unit, GetPolarProjectionY(this.m_startY, GetUnitFacing(this.m_unit), this.m_x))

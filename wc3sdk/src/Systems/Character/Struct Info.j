@@ -9,12 +9,15 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		local player user = info.talk().character().user()
 		local unit speaker
 		local unit listener
+		local player speakerOwner
 		if (toCharacter) then
 			set speaker = info.talk().unit()
 			set listener = info.talk().character().unit()
+			set speakerOwner = GetOwningPlayer(info.talk().unit())
 		else
 			set speaker =  info.talk().character().unit()
 			set listener = info.talk().unit()
+			set speakerOwner = info.talk().character().user()
 		endif
 		if (usedSound != null) then
 			set duration = GetSoundDurationBJ(usedSound)
@@ -37,7 +40,7 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		call SetCameraTargetControllerNoZForPlayer(user, speaker, 0.0, 0.0, false)
 		*/
 		call AThirdPersonCamera.playerThirdPersonCamera(user).enable(listener, 0.0)
-		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), GetUnitName(speaker), text, duration, duration)
+		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), owner, GetUnitName(speaker), text, duration, duration)
 		if (info.talk().character().talkLog() != 0) then
 			call info.talk().character().talkLog().addMessage(info.talk(), text) //log message
 		endif
@@ -65,6 +68,7 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		set user = null
 		set speaker = null
 		set listener = null
+		set speakerOwner = null
 	endfunction
 
 	/// @todo Shoud be a static member of @struct AInfo, vJass bug.

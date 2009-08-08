@@ -2,9 +2,9 @@ library ALibraryCoreInterfaceCinematic
 
 	//smaller function than the real
 	//you don't have to use player forces
-	function SetCinematicSceneForPlayer takes player user, integer unitType, string title, string text, real sceneTime, real voiceTime returns nothing
+	function SetCinematicSceneForPlayer takes player user, integer unitType, player owner, string title, string text, real sceneTime, real voiceTime returns nothing
 		local player localPlayer = GetLocalPlayer()
-		local playercolor playerColour = GetPlayerColor(user)
+		local playercolor playerColour = GetPlayerColor(owner)
 		if (user == localPlayer) then
 			call SetCinematicScene(unitType, playerColour, title, text, sceneTime, voiceTime)
 		endif

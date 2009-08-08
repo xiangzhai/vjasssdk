@@ -1,5 +1,6 @@
 2009-08-09 Tamino Dauth <tamino@cdauth.de>
 * Fixed resetting equipment of struct AInventory.
+* Added owner parameter to function SetCinematicSceneForPlayer.
 
 2009-08-08 Tamino Dauth <tamino@cdauth.de>
 * Improved struct AAbstractQuest.
