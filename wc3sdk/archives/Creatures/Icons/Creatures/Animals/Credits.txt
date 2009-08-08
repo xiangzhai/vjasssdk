@@ -1,3 +1,5 @@
-Name			Author	From
-BTNWolfsform.blp	-	http://xgm.ru/
-DISBTNWolfsform.blp	-	http://xgm.ru/
+File			Authors		Source
+BTNDeer.blp		olofmoleman	http://www.hiveworkshop.com/
+BTNWolfsform.blp	-		http://xgm.ru/
+DISBTNDeer.blp		olofmoleman	http://www.hiveworkshop.com/
+DISBTNWolfsform.blp	-		http://xgm.ru/
