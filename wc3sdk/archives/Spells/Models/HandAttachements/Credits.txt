@@ -1,0 +1,7 @@
+File			Authors	Source
+Blitzschlag.mdx		pyritie	http://www.wc3campaigns.net/
+Entzuenden.mdx		pyritie	http://www.wc3campaigns.net/
+Feuergeschoss.mdx	pyritie	http://www.wc3campaigns.net/
+Feuersbrunst.mdx	pyritie	http://www.wc3campaigns.net/
+GleissendesLicht.mdx	pyritie	http://www.wc3campaigns.net/
+Inferno.mdx		pyritie	http://www.wc3campaigns.net/ 
