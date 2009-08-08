@@ -1,3 +1,7 @@
+2009-08-08 Tamino Dauth <tamino@cdauth.de>
+* DONE: Replace struct type vectors by AIntegerVector.
+* Vector structs need more space.
+
 2009-08-07 Tamino Dauth <tamino@cdauth.de>
 * init methods of structs AThirdPersonCamera and AArrowKeys should have their constant settings as parameters.
 

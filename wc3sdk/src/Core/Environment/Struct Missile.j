@@ -1,56 +1,23 @@
 library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint, ALibraryCoreInterfaceSelection
 
-	/// not private! Public static methods return AMissileVectors.
-	//! runtextmacro A_VECTOR("", "AMissileVector", "AMissile", "0", "100") /// @todo FIXME - size
-
 	/// OnCollisionFunction functions can be set by method @method setOnCollisionFunction and will be called when missile collides.
-	function interface AMissileOnCollisionFunction takes AMissile missile returns nothing
+	function interface AMissileTypeOnCollisionFunction takes AMissile missile returns nothing
 
 	/// OnDeathFunction functions can by set by method @method setOnDeathFunction and will be called when missile hits target.
-	function interface AMissileOnDeathFunction takes AMissile missile returns nothing
+	function interface AMissileTypeOnDeathFunction takes AMissile missile returns nothing
 
-	/// Provides the functionality of a single physical missile which is able to cause damage and to have a widget source and target or three coordinate values (x, y and z).
-	/// @todo Incompleted!
-	/// @todo Add static methods for missile containers.
-	/// @todo Collision between missiles?!
-	/// @author Draculark
-	/// @author Tamino Dauth
-	/// @source http://warcraft.ingame.de/forum/showthread.php?s=6f44abe813a621c950b94373b91ed929&threadid=186184
-	struct AMissile
-		//static start members
-		private static real refreshTime
-		private static boolean enableCollisions
-		//static members
-		private static trigger refreshTrigger
-		private static AMissileVector missiles
-		//dynamic members
+	struct AMissileType
 		private player m_owner
 		private integer m_unitType
 		private real m_speed
-		private real m_damage
-		private real m_damageRange
-		private unit m_damageSource
-		private attacktype m_attackType
-		private damagetype m_damageType
-		private weapontype m_weaponType
-		private real m_targetX
-		private real m_targetY
-		private widget m_targetWidget
+		private real m_maxHeight
 		private boolean m_collides
+		private boolean m_destroyOnDeath
 		private string m_deathEffectPath
 		private string m_startSoundPath
 		private string m_deathSoundPath
-		private AMissileOnCollisionFunction m_onCollisionFunction
-		private AMissileOnDeathFunction m_onDeathFunction
-		//members
-		private unit usedUnit
-		private real cos
-		private real sin
-		private boolean paused
-		
-		//! runtextmacro A_STRUCT_DEBUG("\"AMissile\"")
-		
-		//dynamic member methods
+		private AMissileTypeOnCollisionFunction m_onCollisionFunction
+		private AMissileTypeOnDeathFunction m_onDeathFunction
 		
 		public method setOwner takes player owner returns nothing
 			set this.m_owner = owner
@@ -69,12 +36,122 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCor
 		endmethod
 		
 		public method setSpeed takes real speed returns nothing
-			set this.m_speed = speed * AMissile.refreshTime
+			set this.m_speed = speed * AMissile.refreshTime()
 		endmethod
 		
 		public method speed takes nothing returns real
 			return this.m_speed
 		endmethod
+		
+		public method setMaxHeight takes real speed returns nothing
+			set this.m_speed = speed * AMissile.refreshTime()
+		endmethod
+		
+		public method maxHeight takes nothing returns real
+			return this.m_maxHeight
+		endmethod
+		
+		public method setCollides takes boolean collides returns nothing
+			set this.m_collides = collides
+		endmethod
+		
+		public method collides takes nothing returns boolean
+			return this.m_collides
+		endmethod
+		
+		public method setDestroyOnDeath takes boolean destroyOnDeath returns nothing
+			set this.m_destroyOnDeath = destroyOnDeath
+		endmethod
+		
+		public method destroyOnDeath takes nothing returns boolean
+			return this.m_destroyOnDeath
+		endmethod
+		
+		public method setDeathEffectPath takes string deathEffectPath returns nothing
+			set this.m_deathEffectPath = deathEffectPath
+		endmethod
+		
+		public method deathEffectPath takes nothing returns string
+			return this.m_deathEffectPath
+		endmethod
+		
+		public method setStartSoundPath takes string startSoundPath returns nothing
+			set this.m_startSoundPath = startSoundPath
+		endmethod
+		
+		public method startSoundPath takes nothing returns string
+			return this.m_startSoundPath
+		endmethod
+		
+		public method setDeathSoundPath takes string deathSoundPath returns nothing
+			set this.m_deathSoundPath = deathSoundPath
+		endmethod
+		
+		public method deathSoundPath takes nothing returns string
+			return this.m_deathSoundPath
+		endmethod
+		
+		public method setOnCollisionFunction takes AMissileTypeOnCollisionFunction onCollisionFunction returns nothing
+			set this.m_onCollisionFunction = onCollisionFunction
+		endmethod
+		
+		public method onCollisionFunction takes nothing returns AMissileTypeOnCollisionFunction
+			return this.m_onCollisionFunction
+		endmethod
+		
+		public method setOnDeathFunction takes AMissileTypeOnDeathFunction onDeathFunction returns nothing
+			set this.m_onDeathFunction = onDeathFunction
+		endmethod
+		
+		public method onDeathFunction takes nothing returns AMissileTypeOnDeathFunction
+			return this.m_onDeathFunction
+		endmethod
+		
+		public static method create takes nothing returns thistype
+			local thistype this = thistype.allocate()
+			//dynamic members
+			set this.m_owner = null
+			set this.m_unitType = 'hfoo'
+			set this.m_speed = 100.0
+			set this.m_maxHeight = 400.0
+			set this.m_collides = false
+			set this.m_destroyOnDeath = false
+			set this.m_deathEffectPath = null
+			set this.m_startSoundPath = null
+			set this.m_deathSoundPath = null
+			set this.m_onCollisionFunction = 0
+			set this.m_onDeathFunction = 0
+			return this
+		endmethod
+		
+		public method onDestroy takes nothing returns nothing
+			//dynamic members
+			set this.m_owner = null
+		endmethod
+	endstruct
+	
+	private function ADamageMissileTypeOnDeathFunctionDamage takes AMissile missile returns nothing
+		local ADamageMissileType this = ADamageMissileType(missile.missileType())
+		if (this.damage() <= 0.0) then
+			return
+		endif
+		if (this.damageRange() > 0.0) then
+			call UnitDamagePoint(this.damageSource(), 0.0, this.damageRange(), GetUnitX(missile.unit()), GetUnitY(missile.unit()), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+		//cause area damage to units who aren't allies of the source unit
+		elseif (missile.targetWidget() != null) then
+			call UnitDamageTarget(this.damageSource(), missile.targetWidget(), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+		//cause single target damage if missile hits widget otherwise show floating text?
+		endif
+	endfunction
+	
+	struct ADamageMissileType extends AMissileType
+		//dynamic members
+		private real m_damage
+		private real m_damageRange
+		private unit m_damageSource
+		private attacktype m_attackType
+		private damagetype m_damageType
+		private weapontype m_weaponType
 		
 		public method setDamage takes real damage returns nothing
 			set this.m_damage = damage
@@ -124,6 +201,68 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCor
 			return this.m_weaponType
 		endmethod
 		
+		public static method create takes nothing returns thistype
+			local thistype this = thistype.allocate()
+			//dynamic members
+			set this.m_damage = 0.0
+			set this.m_damageRange = 0.0
+			set this.m_damageSource = null
+			set this.m_attackType = ATTACK_TYPE_NORMAL
+			set this.m_damageType = DAMAGE_TYPE_NORMAL
+			set this.m_weaponType = WEAPON_TYPE_WHOKNOWS
+			
+			call this.setOnDeathFunction(ADamageMissileTypeOnDeathFunctionDamage)
+			return this
+		endmethod
+		
+		public method onDestroy takes nothing returns nothing
+			//dynamic members
+			set this.m_damageSource = null
+			set this.m_attackType = null
+			set this.m_damageType = null
+			set this.m_weaponType = null
+		endmethod
+	endstruct
+
+	/** 
+	* Provides the functionality of a single physical missile which is able to cause damage and to have a widget source and target or three coordinate values (x, y and z).
+	* @todo Incompleted!
+	* @todo Add static methods for missile containers.
+	* @todo Collision between missiles?!
+	* @author Draculark
+	* @author Tamino Dauth
+	* @link http://warcraft.ingame.de/forum/showthread.php?s=6f44abe813a621c950b94373b91ed929&threadid=186184
+	*/
+	struct AMissile
+		//static start members
+		private static real m_refreshTime
+		private static boolean enableCollisions
+		//static members
+		private static AIntegerVector m_missiles
+		private static timer m_refreshTimer
+		//dynamic members
+		private AMissileType m_missileType
+		private real m_targetX
+		private real m_targetY
+		private widget m_targetWidget
+		private boolean m_isPaused
+		//members
+		private unit m_unit
+		private real m_distance
+		private integer m_index
+		
+		//! runtextmacro A_STRUCT_DEBUG("\"AMissile\"")
+		
+		//dynamic members
+		
+		public method setMissileType takes AMissileType missileType returns nothing
+			set this.m_missileType = missileType
+		endmethod
+		
+		public method missileType takes nothing returns AMissileType
+			return this.m_missileType
+		endmethod
+		
 		public method setTargetX takes real targetX returns nothing
 			set this.m_targetX = targetX
 		endmethod
@@ -148,52 +287,22 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCor
 			return this.m_targetWidget
 		endmethod
 		
-		public method setCollides takes boolean collides returns nothing
-			set this.m_collides = collides
+		public method setPaused takes boolean isPaused returns nothing
+			set this.m_isPaused = isPaused
 		endmethod
 		
-		public method collides takes nothing returns boolean
-			return this.m_collides
+		public method isPaused takes nothing returns boolean
+			return this.m_isPaused
 		endmethod
 		
-		public method setDeathEffectPath takes string deathEffectPath returns nothing
-			set this.m_deathEffectPath = deathEffectPath
+		//members
+		
+		public method unit takes nothing returns unit
+			return this.m_unit
 		endmethod
 		
-		public method deathEffectPath takes nothing returns string
-			return this.m_deathEffectPath
-		endmethod
-		
-		public method setStartSoundPath takes string startSoundPath returns nothing
-			set this.m_startSoundPath = startSoundPath
-		endmethod
-		
-		public method startSoundPath takes nothing returns string
-			return this.m_startSoundPath
-		endmethod
-		
-		public method setDeathSoundPath takes string deathSoundPath returns nothing
-			set this.m_deathSoundPath = deathSoundPath
-		endmethod
-		
-		public method deathSoundPath takes nothing returns string
-			return this.m_deathSoundPath
-		endmethod
-		
-		public method setOnCollisionFunction takes AMissileOnCollisionFunction onCollisionFunction returns nothing
-			set this.m_onCollisionFunction = onCollisionFunction
-		endmethod
-		
-		public method onCollisionFunction takes nothing returns AMissileOnCollisionFunction
-			return this.m_onCollisionFunction
-		endmethod
-		
-		public method setOnDeathFunction takes AMissileOnDeathFunction onDeathFunction returns nothing
-			set this.m_onDeathFunction = onDeathFunction
-		endmethod
-		
-		public method onDeathFunction takes nothing returns AMissileOnDeathFunction
-			return this.m_onDeathFunction
+		public method distance takes nothing returns real
+			return this.m_distance
 		endmethod
 		
 		//convenience methods
@@ -204,201 +313,191 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCor
 		
 		/// Makes the missile unpaused which means that it will be moved next time when the periodic trigger moves all unpaused missiles.
 		public method continue takes nothing returns nothing
-			set this.paused = true
+			set this.m_isPaused = true
 		endmethod
 
 		/// A paused missile won't be moved until it gets unpaused.
 		public method pause takes nothing returns nothing
-			set this.paused = false
+			set this.m_isPaused = false
 		endmethod
 		
 		//public methods
 
 		/// Starts the missile from coordinates @param x, @param y, and @param z with angle @param angle.
 		public method start takes real x, real y, real z, real angle returns nothing
-			debug if (this.usedUnit != null) then
+			debug if (this.m_unit != null) then
 				debug call this.print("Missile has already been started.")
 				debug return 
 			debug endif
-
-			set this.usedUnit = CreateUnit(this.m_owner, this.m_unitType, x, y, angle)
-			call SetUnitInvulnerable(this.usedUnit, true)
-			call MakeUnitSelectable(this.usedUnit, false) //ALibraryInterfaceSelection
-			call SetUnitZ(this.usedUnit, z) //ALibraryMathsHandle
-			set this.paused = false
-			if (this.m_startSoundPath != null) then
-				call PlaySound(this.m_startSoundPath) /// @todo use coordinates!
+			debug if (this.m_missileType == 0) then
+				debug call this.print("Can't start with missile type 0.")
+			debug endif
+			set this.m_unit = CreateUnit(this.m_missileType.owner(), this.m_missileType.unitType(), x, y, angle)
+			call SetUnitInvulnerable(this.m_unit, true)
+			call MakeUnitSelectable(this.m_unit, false) //ALibraryInterfaceSelection
+			call SetUnitZ(this.m_unit, z) //ALibraryMathsHandle
+			set this.m_isPaused = false
+			if (this.m_targetWidget != null) then
+				set this.m_distance = GetDistanceBetweenPoints(GetUnitX(this.m_unit), GetUnitY(this.m_unit), 0.0, GetWidgetX(this.m_targetWidget), GetWidgetY(this.m_targetWidget), 0.0)
+			else
+				set this.m_distance = GetDistanceBetweenPoints(GetUnitX(this.m_unit), GetUnitY(this.m_unit), 0.0, this.m_targetX, this.m_targetY, 0.0)
+			endif
+			if (this.m_missileType.startSoundPath() != null) then
+				call PlaySound(this.m_missileType.startSoundPath()) /// @todo use coordinates!
 			endif
 		endmethod
 
 		/// Stops the missile. This means that the missile will be destroyed, damage will be distributed, a death effect will be shown, a death sound will be played and the death function will be executed.
 		public method stop takes nothing returns nothing
-			call this.causeDamage()
-			call this.showDeathEffect()
-			if (this.m_deathSoundPath != null) then
-				call PlaySound(this.m_deathSoundPath) /// @todo use coordinates!
+			local effect createdEffect
+			if (this.m_missileType.deathEffectPath() != null) then
+				set createdEffect = AddSpecialEffect(this.m_missileType.deathEffectPath(), GetUnitX(this.m_unit), GetUnitY(this.m_unit))
+				call DestroyEffect(createdEffect)
+				set createdEffect = null
 			endif
-			call KillUnit(this.usedUnit)
-			call RemoveUnit(this.usedUnit)
-			set this.usedUnit = null
-			set this.paused = true
-			if (this.m_onDeathFunction != 0) then
-				call this.m_onDeathFunction.execute(this)
+			if (this.m_missileType.deathSoundPath() != null) then
+				call PlaySound(this.m_missileType.deathSoundPath()) /// @todo use coordinates!
 			endif
-		endmethod
-		
-		public method setPaused takes boolean paused returns nothing
-			set this.paused = paused
-		endmethod
-		
-		public method isPaused takes nothing returns boolean
-			return this.paused
+			call KillUnit(this.m_unit)
+			call RemoveUnit(this.m_unit)
+			set this.m_unit = null
+			set this.m_isPaused = true
+			if (this.m_missileType.onDeathFunction() != 0) then
+				call this.m_missileType.onDeathFunction().execute(this)
+			endif
+			if (this.m_missileType.destroyOnDeath()) then
+				call this.destroy()
+			endif
 		endmethod
 		
 		//private methods
 
 		private method move takes nothing returns nothing
 			local rect mapRect = GetPlayableMapRect()
-			local real currentX = GetUnitX(this.usedUnit)
-			local real currentY = GetUnitY(this.usedUnit)
+			local real currentX = GetUnitX(this.m_unit)
+			local real currentY = GetUnitY(this.m_unit)
+			local real currentDistance
 			local real angle
+			local real cos
+			local real sin
 			local real newX
 			local real newY
-			
+			local real newZ
 			if (this.m_targetWidget != null) then
+				set currentDistance = GetDistanceBetweenPoints(currentX, currentY, 0.0, GetWidgetX(this.m_targetWidget), GetWidgetY(this.m_targetWidget), 0.0)
 				set angle = Atan2(GetWidgetY(this.m_targetWidget) - currentY, GetWidgetX(this.m_targetWidget) - currentX)
 			else
+				set currentDistance = GetDistanceBetweenPoints(currentX, currentY, 0.0, this.m_targetX, this.m_targetY, 0.0)
 				set angle = Atan2(this.m_targetY - currentY, this.m_targetX - currentX)
 			endif
-			set this.cos = Cos(angle)
-			set this.sin = Sin(angle)
-			call SetUnitFacing(this.usedUnit, angle)
-			set newX = currentX + this.m_speed * this.cos
-			set newY = currentY + this.m_speed * this.sin
-			
-			if (this.m_collides) then
-				
-			endif
-			
+			set cos = Cos(angle)
+			set sin = Sin(angle)
+			call SetUnitFacing(this.m_unit, angle)
+			set newX = currentX + this.m_missileType.speed() * cos
+			set newY = currentY + this.m_missileType.speed() * sin
+			set newZ = ParabolaZ(this.m_missileType.maxHeight(), this.m_distance, currentDistance)
+
 			if (RectContainsCoords(mapRect, newX, newY) and IsTerrainPathable(newX, newY, PATHING_TYPE_WALKABILITY)) then //not?!
-				call SetUnitX(this.usedUnit, newX)
-				call SetUnitY(this.usedUnit, newY)
+				call SetUnitX(this.m_unit, newX)
+				call SetUnitY(this.m_unit, newY)
+				call SetUnitZ(this.m_unit, newZ)
+				if (this.m_missileType.collides()) then
+					/// @todo Check for things, maybe other missiles?
+				elseif (this.m_targetWidget != null) then
+					if (newX == GetWidgetX(this.m_targetWidget) and newY == GetWidgetY(this.m_targetWidget)) then
+						call this.stop()
+					endif
+				elseif (newX == this.m_targetX and newY == this.m_targetY) then
+					call this.stop()
+				endif
 			else
 				call this.stop()
 			endif
-		endmethod
-		
-		private method causeDamage takes nothing returns nothing
-			if (this.m_damage <= 0.0) then
-				return
-			endif
-		
-			if (this.m_damageRange > 0.0) then
-				call UnitDamagePoint(this.m_damageSource, 0.0, this.m_damageRange, GetUnitX(this.usedUnit), GetUnitY(this.usedUnit), this.m_damage, true, false, this.m_attackType, this.m_damageType, this.m_weaponType)
-				//cause area damage to units who aren't allies of the source unit
-			elseif (this.m_targetWidget != null) then
-				call UnitDamageTarget(this.m_damageSource, this.m_targetWidget, this.m_damage, true, false, this.m_attackType, this.m_damageType, this.m_weaponType)
-				//cause single target damage if missile hits widget otherwise show floating text?
-			endif
-		endmethod
-		
-		private method showDeathEffect takes nothing returns nothing
-			local effect createdEffect
-			if (this.m_deathEffectPath != null) then
-				set createdEffect = AddSpecialEffect(this.m_deathEffectPath, GetUnitX(this.usedUnit), GetUnitY(this.usedUnit))
-				call DestroyEffect(createdEffect)
-				set createdEffect = null
-			endif
+			set mapRect = null
 		endmethod
 
 		public static method create takes nothing returns AMissile
-			local AMissile this = AMissile.allocate()
+			local thistype this = thistype.allocate()
+			//dynamic members
+			set this.m_missileType = 0
 			//members
-			set this.usedUnit = null
-			set this.paused = true
-
-			call AMissile.missiles.pushBack(this)
+			set this.m_unit = null
+			set this.m_isPaused = true
+			call thistype.m_missiles.pushBack(this)
+			set this.m_index = thistype.m_missiles.backIndex()
 			return this
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//dynamic members
-			set this.m_damageSource = null
-			set this.m_attackType = null
-			set this.m_damageType = null
-			set this.m_weaponType = null
+			//static members
+			call thistype.m_missiles.erase(this.m_index)
 			//members
-			if (this.usedUnit != null) then
-				call RemoveUnit(this.usedUnit)
+			if (this.m_unit != null) then
+				call RemoveUnit(this.m_unit)
 			endif
-			set this.usedUnit = null
-			
-			call AMissile.missiles.remove(this)
+			set this.m_unit = null
 		endmethod
 
-		private static method refreshTriggerAction takes nothing returns nothing
-			local integer i = 0
+		private static method timerFunctionRefresh takes nothing returns nothing
+			local integer i = thistype.m_missiles.backIndex()
 			loop
-				exitwhen (i == AMissile.missiles.size())
-				if (not AMissile.missiles[i].paused) then
-					call AMissile.missiles[i].move()
+				exitwhen (i < 0)
+				if (not thistype(thistype.m_missiles[i]).m_isPaused) then
+					call thistype(thistype.m_missiles[i]).move()
 				endif
-				set i = i + 1
+				set i = i - 1
 			endloop
-		endmethod
-
-		private static method createRefreshTrigger takes nothing returns nothing
-			local event triggerEvent
-			local triggeraction triggerAction
-			set AMissile.refreshTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterTimerEvent(AMissile.refreshTrigger, AMissile.refreshTime, true)
-			set triggerAction = TriggerAddAction(AMissile.refreshTrigger, function AMissile.refreshTriggerAction)
-			set triggerEvent = null 
-			set triggerAction = null
 		endmethod
 
 		public static method init takes real refreshTime, boolean enableCollisions returns nothing
 			debug if (refreshTime <= 0.0) then
-				debug call Print("Wrong value refresh time value in AMissile struct initialization: " + R2S(refreshTime) + ".")
+				debug call thistype.staticPrint("Wrong value refresh time value in AMissile struct initialization: " + R2S(refreshTime) + ".")
 			debug endif
-			set AMissile.refreshTime = refreshTime
-			set AMissile.enableCollisions = enableCollisions
-			set AMissile.missiles = AMissileVector.create()
-			call AMissile.createRefreshTrigger()
+			//static start members
+			set thistype.m_refreshTime = refreshTime
+			set thistype.enableCollisions = enableCollisions
+			//static members
+			set thistype.m_missiles = AIntegerVector.create()
+			set thistype.m_refreshTimer = CreateTimer()
+			call TimerStart(thistype.m_refreshTimer, thistype.m_refreshTime, true, function thistype.timerFunctionRefresh)
 		endmethod
 
 		public static method cleanUp takes nothing returns nothing
-			local integer i = 0
-			call DestroyTrigger(AMissile.refreshTrigger)
-			set AMissile.refreshTrigger = null
+			call DestroyTimer(thistype.m_refreshTimer)
+			set thistype.m_refreshTimer = null
 			//remove all missiles
 			loop
-				exitwhen (i == AMissile.missiles.size())
-				call AMissile.missiles[i].destroy()
-				set i = i + 1
+				exitwhen (thistype.m_missiles.empty())
+				call thistype(thistype.m_missiles.back()).destroy()
 			endloop
-			call AMissile.missiles.destroy()
+			call thistype.m_missiles.destroy()
 		endmethod
 
 		public static method enable takes nothing returns nothing
-			call EnableTrigger(AMissile.refreshTrigger)
+			call ResumeTimer(thistype.m_refreshTimer)
 		endmethod
 
 		public static method disable takes nothing returns nothing
-			call DisableTrigger(AMissile.refreshTrigger)
+			call PauseTimer(thistype.m_refreshTimer)
+		endmethod
+		
+		//dynamic static members
+		
+		public static method refreshTime takes nothing returns real
+			return thistype.m_refreshTime
 		endmethod
 		
 		//convenience methods
-		
+		/*
 		public static method createCircle takes real x, real y, real z, real distance, integer count, boolean start, player owner, integer unitType, real speed, real damage, real damageRange, unit damageSource, attacktype attackType, damagetype damageType, weapontype weaponType, boolean collides, string deathEffectPath, string deathSoundPath returns AMissileVector
 			local AMissileVector vector = AMissileVector.create()
-			local AMissile missile
+			local thistype missile
 			local real angle = 0.0
 			local real angleValue = 360.0 / count
 			local integer i = 0
 			loop
 				exitwhen (i == count)
-				set missile = AMissile.create()
+				set missile = thistype.create()
 				call missile.setOwner(owner)
 				call missile.setUnitType(unitType)
 				call missile.setSpeed(speed)
@@ -424,8 +523,9 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCor
 		endmethod
 		
 		public static method createCircleFromUnit takes unit usedUnit, real distance, integer count, boolean start, player owner, integer unitType, real speed, real damage, real damageRange, unit damageSource, attacktype attackType, damagetype damageType, weapontype weaponType, boolean collides, string deathEffectPath, string deathSoundPath returns AMissileVector
-			return AMissile.createCircle(GetUnitX(usedUnit), GetUnitY(usedUnit), GetUnitZ(usedUnit), distance, count, start, owner, unitType, speed, damage, damageRange, damageSource, attackType, damageType, weaponType, collides, deathEffectPath, deathSoundPath)
+			return thistype.createCircle(GetUnitX(usedUnit), GetUnitY(usedUnit), GetUnitZ(usedUnit), distance, count, start, owner, unitType, speed, damage, damageRange, damageSource, attackType, damageType, weaponType, collides, deathEffectPath, deathSoundPath)
 		endmethod
+		*/
 	endstruct
 
 endlibrary

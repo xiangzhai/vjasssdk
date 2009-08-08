@@ -1,8 +1,5 @@
 library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle, AStructSystemsCharacterCharacter
 
-	/// @todo Size should be @member ATalk.maxInfos.
-	//! runtextmacro A_VECTOR("private", "AInfoVector", "AInfo", "0", "100")
-	
 	/// @todo Should be a part of @struct ATalk, vJass bug.
 	function interface ATalkStartAction takes ATalk talk returns nothing
 	
@@ -37,7 +34,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		private unit m_unit
 		private ATalkStartAction m_startAction
 		//members
-		private AInfoVector m_infos
+		private AIntegerVector m_infos
 		private ACharacter m_character
 		private trigger m_orderTrigger
 		private effect m_effect
@@ -73,7 +70,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_infos.size())
-				call this.m_infos[i].show()
+				call AInfo(this.m_infos[i]).show()
 				set i = i + 1
 			endloop
 			call this.show()
@@ -88,7 +85,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_infos.size())
-				call this.m_infos[i].hide()
+				call AInfo(this.m_infos[i]).hide()
 				set i = i + 1
 			endloop
 			call AGui.playerGui(this.m_character.user()).dialog().clear()
@@ -116,7 +113,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		
 		/// @returns Returns if info with index @param index has already been shown to the character which is talking currently to the NPC.
 		public method infoHasBeenShown takes integer index returns boolean
-			return this.m_infos[index].hasBeenShownToCharacter(this.m_character.userId())
+			return AInfo(this.m_infos[index]).hasBeenShownToCharacter(this.m_character.userId())
 		endmethod
 		
 		//methods
@@ -165,31 +162,33 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		
 		/// Used by @struct AInfo.
 		public method showInfo takes integer index returns boolean
-			return this.m_infos[index].show()
+			return AInfo(this.m_infos[index]).show()
 		endmethod
 		
 		/// Used by @function ADialogButtonAction.
 		public method runInfo takes integer index returns nothing
-			call this.m_infos[index].run()
+			call AInfo(this.m_infos[index]).run()
 		endmethod
 		
 		public method getInfoByDialogButtonIndex takes integer dialogButtonIndex returns AInfo
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_infos.size())
-				if (this.m_infos[i].isShown() and this.m_infos[i].dialogButtonIndex() == dialogButtonIndex) then
-					return this.m_infos[i]
+				if (AInfo(this.m_infos[i]).isShown() and AInfo(this.m_infos[i]).dialogButtonIndex() == dialogButtonIndex) then
+					return AInfo(this.m_infos[i])
 				endif
 				set i = i + 1
 			endloop
 			return 0
 		endmethod
 		
+		/// Friend relationship to @struct AInfo, do not use.
 		public method addInfoInstance takes AInfo info returns integer
 			call this.m_infos.pushBack(info)
 			return this.m_infos.backIndex()
 		endmethod
 		
+		/// Friend relationship to @struct AInfo, do not use.
 		public method removeInfoInstanceByIndex takes integer index returns nothing
 			call this.m_infos.erase(index)
 		endmethod
@@ -263,7 +262,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			set this.m_unit = usedUnit
 			set this.m_startAction = startAction
 			//members
-			set this.m_infos = AInfoVector.create()
+			set this.m_infos = AIntegerVector.create()
 			set this.m_character = 0
 		
 			call this.createOrderTrigger()
@@ -284,11 +283,9 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		endmethod
 
 		private method destroyInfos takes nothing returns nothing
-			local integer i = 0
 			loop
-				exitwhen (i == this.m_infos.size())
-				call this.m_infos[i].destroy()
-				set i = i + 1
+				exitwhen (this.m_infos.empty())
+				call AInfo(this.m_infos.back()).destroy()
 			endloop
 			call this.m_infos.destroy()
 		endmethod

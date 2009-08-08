@@ -31,7 +31,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		private AWidgetOnHitAction m_onHitAction
 		private AWidgetOnTrackAction m_onTrackAction
 		//members
-		private integer m_mainWindowIndex
+		private integer m_index
 		private trackable m_trackable
 		private trigger m_onHitTrigger
 		private trigger m_onTrackTrigger
@@ -110,8 +110,8 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		
 		//members
 		
-		public method mainWindowIndex takes nothing returns integer
-			return this.m_mainWindowIndex
+		public method index takes nothing returns integer
+			return this.m_index
 		endmethod
 		
 		//convenience methods
@@ -226,17 +226,12 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			set this.m_sizeY = sizeY
 			set this.m_onHitAction = onHitAction
 			set this.m_onTrackAction = onTrackAction
+			//members
+			set this.m_index = mainWindow.dockWidget(this)
 
 			call this.createTrackable()
 			call this.createOnHitTrigger()
 			call this.createOnTrackTrigger()
-
-			if (mainWindow != 0) then
-				set this.m_mainWindowIndex = mainWindow.dockWidget(this)
-			else
-				set this.m_mainWindowIndex = -1
-			endif
-
 			return this
 		endmethod
 
@@ -262,12 +257,9 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
+			call this.m_mainWindow.undockWidgetByIndex(this.m_index)
 			call this.destroyOnHitTrigger()
 			call this.destroyOnTrackTrigger()
-
-			if (this.m_mainWindow != 0) then
-				call this.m_mainWindow.undockWidget(this)
-			endif
 		endmethod
 
 		public static method init takes string onHitSoundPath, string onTrackSoundPath returns nothing

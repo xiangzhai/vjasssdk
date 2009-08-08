@@ -1,9 +1,5 @@
 library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreMathsConversion, AStructSystemsCharacterClass, AStructSystemsCharacterCharacter
 
-	/// @todo AItemType.maxAbilities should be the max size value
-	//! runtextmacro A_VECTOR("private", "AAbilityVector", "integer", "0", "10")
-	//! runtextmacro A_VECTOR("private", "ABooleanVector", "boolean", "false", "10")
-
 	/// Represents an item type, not an item object!
 	struct AItemType
 		//static constant members
@@ -13,7 +9,6 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 		public static constant integer equipmentTypeSecondaryWeapon = 3
 		public static constant integer equipmentTypeAmulet = 4
 		public static constant integer maxEquipmentTypes = 5
-		private static constant integer maxAbilities = 10
 		//static start members
 		private static string textLevel
 		private static string textStrength
@@ -29,7 +24,7 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 		private integer m_requiredIntelligence
 		private AClass m_requiredClass
 		//members
-		private AAbilityVector m_abilities
+		private AIntegerVector m_abilities
 		private ABooleanVector m_permanent
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"AItemType\"")
@@ -169,7 +164,7 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 			set this.m_requiredIntelligence = requiredIntelligence
 			set this.m_requiredClass = requiredClass
 			//members
-			set this.m_abilities = AAbilityVector.create()
+			set this.m_abilities = AIntegerVector.create()
 			set this.m_permanent = ABooleanVector.create()
 
 			debug if (AHashTable.global().integer("AItemTypes", I2S(itemType)) != 0) then

@@ -60,56 +60,48 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 			return Location((this.x() + (distance * Cos(angle))), (this.y() + (distance * Sin(angle))))
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Added special effect.
 		public method addSpecialEffect takes string modelName, real angle, real distance returns effect
 			return AddSpecialEffect(modelName, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance))
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Added spell effect.
 		public method addSpellEffect takes string abilityString, effecttype effectType, real angle, real distance returns effect
 			return AddSpellEffect(abilityString, effectType, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance))
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Added spell effect.
 		public method addSpellEffectById takes integer abilityId, effecttype effectType, real angle, real distance returns effect
 			return AddSpellEffectById(abilityId, effectType, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance))
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Created unit.
 		public method createUnit takes player user, integer unitType, real angle, real distance, real face returns unit
 			return CreateUnit(user, unitType, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance), face)
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Created destructable.
 		public method createDestructable takes integer destructableType, real angle, real distance, real face, real scale, integer variation returns destructable
 			return CreateDestructable(destructableType, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance), face, scale, variation)
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Created destructable.
 		public method createDestructableZ takes integer destructableType, real angle, real distance, real z, real face, real scale, integer variation returns destructable
 			return CreateDestructableZ(destructableType, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance), z, face, scale, variation)
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Created item.
 		public method createItem takes integer itemType, real angle, real distance returns item
 			return CreateItem(itemType, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance))
 		endmethod
 
-		/// @author Tamino Dauth
 		/// @return Created trackable.
 		public method createTrackable takes string modelPath, real angle, real distance, real facing returns trackable
 			return CreateTrackable(modelPath, this.polarProjectionX(angle, distance), this.polarProjectionY(angle, distance), facing)
 		endmethod
 
-		public static method create takes real x, real y, real radius returns ACircle
-			local ACircle this = ACircle.allocate(x, y)
+		public static method create takes real x, real y, real radius returns thistype
+			local thistype this = thistype.allocate(x, y)
 			//dynamic members
 			set this.m_radius = radius
 

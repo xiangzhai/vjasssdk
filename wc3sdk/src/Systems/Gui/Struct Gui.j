@@ -1,8 +1,5 @@
 library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, AStructCoreInterfacePlayerSelection, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceMisc, ALibraryCoreStringConversion
 
-	/// @todo AGui.maxMainWindows should be the max size value
-	//! runtextmacro A_VECTOR("private", "AMainWindowVector", "AMainWindow", "0", "4")
-
 	/// @todo Should be a static member of @struct AGui, vJass bug.
 	/// This is the generic shortcut function interface.
 	/// @param id Id of the object which belongs to the function call.
@@ -11,14 +8,6 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 	/// @todo Should be a static member of @struct AGui, vJass bug.
 	/// If you want to use an explicit gui action use this.
 	function interface AGuiOnPressGuiShortcutAction takes AGui gui returns nothing
-
-	/// @todo Should be a static method of @struct AGui, vJass bug.
-	private function unaryFunctionDestroyMainWindow takes AMainWindow element returns nothing
-		//saver
-		if (element != 0) then
-			call element.destroy()
-		endif
-	endfunction
 
 	/**
 	* Represents the graphical user interface which can be used by all playing players.
@@ -61,7 +50,7 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 		//start members
 		private player m_user
 		//members
-		private AMainWindowVector m_mainWindows
+		private AIntegerVector m_mainWindows
 		private AMainWindow m_shownMainWindow
 		private trigger m_leaveTrigger
 		private unit m_shortcutHandler
@@ -125,47 +114,8 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 			call this.m_playerSelection.restore()
 		endmethod
 
-		/**
-		* If you dock a main window it will be destroyed when the GUI will be destroyed.
-		* @return Container index.
-		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
-		*/
-		public method dockMainWindow takes AMainWindow mainWindow returns integer
-			call this.m_mainWindows.pushBack(mainWindow)
-			return this.m_mainWindows.backIndex()
-		endmethod
-
-		/**
-		* Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
-		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
-		*/
-		public method undockMainWindow takes AMainWindow mainWindow returns nothing
-			call this.m_mainWindows.remove(mainWindow)
-		endmethod
-		
-		/**
-		* Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
-		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
-		*/
-		public method undockMainWindowByIndex takes integer index returns nothing
-			call this.m_mainWindows.erase(index)
-		endmethod
-
 		public method showMainWindowByIndex takes integer index returns nothing
-			call this.m_mainWindows[index].show()
-		endmethod
-
-		/// @todo Friend relation to @struct AMainWindow, do not use!
-		public method hideShownMainWindowAndSetNew takes AMainWindow mainWindow returns nothing
-			if (this.m_shownMainWindow != 0) then
-				call this.m_shownMainWindow.hide()
-			endif
-			set this.m_shownMainWindow = mainWindow
-		endmethod
-		
-		/// @todo Friend relation to @struct AMainWindow, do not use!
-		public method resetShownMainWindow takes nothing returns nothing
-			set this.m_shownMainWindow = 0
+			call AMainWindow(this.m_mainWindows[index]).show()
 		endmethod
 
 		public method enableShortcuts takes nothing returns nothing
@@ -213,6 +163,37 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 			call this.m_dialog.setMessage(message)
 			call this.m_dialog.addDialogButton(thistype.m_textOk, thistype.m_shortcutOk, 0)
 			call this.m_dialog.show()
+		endmethod
+		
+		/**
+		* If you dock a main window it will be destroyed when the GUI will be destroyed.
+		* @return Container index.
+		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
+		*/
+		public method dockMainWindow takes AMainWindow mainWindow returns integer
+			call this.m_mainWindows.pushBack(mainWindow)
+			return this.m_mainWindows.backIndex()
+		endmethod
+		
+		/**
+		* Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
+		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
+		*/
+		public method undockMainWindowByIndex takes integer index returns nothing
+			call this.m_mainWindows.erase(index)
+		endmethod
+
+		/// @todo Friend relation to @struct AMainWindow, do not use!
+		public method hideShownMainWindowAndSetNew takes AMainWindow mainWindow returns nothing
+			if (this.m_shownMainWindow != 0) then
+				call this.m_shownMainWindow.hide()
+			endif
+			set this.m_shownMainWindow = mainWindow
+		endmethod
+		
+		/// @todo Friend relation to @struct AMainWindow, do not use!
+		public method resetShownMainWindow takes nothing returns nothing
+			set this.m_shownMainWindow = 0
 		endmethod
 
 		private method enableSpecialShortcutTriggers takes nothing returns nothing
@@ -345,7 +326,7 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 			//start members
 			set this.m_user = user
 			//members
-			set this.m_mainWindows = AMainWindowVector.create()
+			set this.m_mainWindows = AIntegerVector.create()
 			set this.m_shownMainWindow = 0
 			set this.m_playerSelection = APlayerSelection.create(user)
 			set this.m_dialog = ADialog.create(user)
@@ -355,10 +336,6 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 			call this.createShortcutHandleTrigger()
 			call this.disableShortcuts()
 			return this
-		endmethod
-
-		private method destroyDockedMainWindows takes nothing returns nothing
-			call this.m_mainWindows.forEach(unaryFunctionDestroyMainWindow)
 		endmethod
 		
 		private method destroyLeaveTrigger takes nothing returns nothing
@@ -391,7 +368,11 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 		/// Will be destroyed when player leaves the game.
 		private method onDestroy takes nothing returns nothing
 			//members
-			call this.destroyDockedMainWindows()
+			loop
+				exitwhen (this.m_mainWindows.empty())
+				call AMainWindow(this.m_mainWindows.back()).destroy()
+				// don't pop back
+			endloop
 			call this.m_mainWindows.destroy()
 			call this.m_playerSelection.destroy()
 			call this.m_dialog.destroy()
@@ -402,11 +383,13 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 			call this.destroySpecialShortcutTriggers()
 		endmethod
 
-		/// @param shortcutHandlerUnitType The unit type of the unit which is selected during the display time of the GUI. It should have all shortcut abilities.
-		/// @param shortcutHandlerX The x coordinate of the shortcut handlers position.
-		/// @param shortcutHandlerY The y coordinate of the shortcut handlers position.
-		/// @param textOk The text which is displayed as Ok text.
-		/// @param shortcutOk The shortcut which is used for the Ok text.
+		/**
+		* @param shortcutHandlerUnitType The unit type of the unit which is selected during the display time of the GUI. It should have all shortcut abilities.
+		* @param shortcutHandlerX The x coordinate of the shortcut handlers position.
+		* @param shortcutHandlerY The y coordinate of the shortcut handlers position.
+		* @param textOk The text which is displayed as Ok text.
+		* @param shortcutOk The shortcut which is used for the Ok text.
+		*/
 		public static method init takes integer shortcutHandlerUnitType, real shortcutHandlerX, real shortcutHandlerY, string textOk, integer shortcutOk returns nothing
 			//static start members
 			set thistype.m_shortcutHandlerUnitType = shortcutHandlerUnitType

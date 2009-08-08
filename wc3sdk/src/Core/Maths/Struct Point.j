@@ -37,8 +37,8 @@ library AStructCoreMathsPoint requires ALibraryCoreMathsPoint
 			return GetPolarProjectionOfPoint(this.m_x, this.m_y, angle, distance)
 		endmethod
 
-		public static method create takes real x, real y returns APoint
-			local APoint this = APoint.allocate()
+		public static method create takes real x, real y returns thistype
+			local thistype this = thistype.allocate()
 			//dynamic members
 			set this.m_x = x
 			set this.m_y = y

@@ -1,10 +1,5 @@
 library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceCamera, AStructSystemsCharacterAbstractCharacterSystem
 
-	/// @todo Should be a static function of @struct ACharacter, vJass bug.
-	private function unaryFunctionDestroySpell takes ASpell element returns nothing
-		call element.destroy()
-	endfunction
-
 	/// This struct represents a single RPG character. Each player can own exactly one character.
 	/// You can configure the character systems and enable or disable the several character system modules.
 	/// Each module makes the system requiring more memory, so clearly think of which system modules are required and which aren't.
@@ -45,7 +40,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		private ARevival m_revival
 		private AInventory m_inventory
 		private ATalkLog m_talkLog
-		private ASpellVector m_spells
+		private AIntegerVector m_spells
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"ACharacter\"")
 
@@ -356,8 +351,8 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_spells.size())
-				if (this.m_spells[i].ability() == abilityId) then
-					return this.m_spells[i]
+				if (ASpell(this.m_spells[i]).ability() == abilityId) then
+					return ASpell(this.m_spells[i])
 				endif
 				set i = i + 1
 			endloop
@@ -492,7 +487,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			//members
 			set this.m_inventory = 0
 			set this.m_talkLog = 0
-			set this.m_spells = ASpellVector.create()
+			set this.m_spells = AIntegerVector.create()
 
 			call this.createLeaveTrigger()
 			call this.createDeathTrigger()
@@ -545,12 +540,15 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			endif
 		endmethod
 
-		//Automatic desturction when player leaves
+		//Automatic destruction when player leaves
 		private method onDestroy takes nothing returns nothing
 			//start members
 			set this.m_user = null
 			//members
-			call this.m_spells.forEach(unaryFunctionDestroySpell)
+			loop
+				exitwhen (this.m_spells.empty())
+				call ASpell(this.m_spells.back()).destroy()
+			endloop
 			call this.m_spells.destroy()
 
 			call this.removeUnit()

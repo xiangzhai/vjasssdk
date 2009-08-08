@@ -30,8 +30,8 @@ library AStructSystemsGuiCheckBox requires AStructSystemsGuiWidget, AStructSyste
 
 		//methods
 
-		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, AWidgetOnTrackAction onTrackAction, boolean checked returns ACheckBox
-			local ACheckBox this = ACheckBox.allocate(mainWindow, x, y, sizeX, sizeY, onHitAction, onTrackAction)
+		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, AWidgetOnTrackAction onTrackAction, boolean checked returns thistype
+			local thistype this = thistype.allocate(mainWindow, x, y, sizeX, sizeY, onHitAction, onTrackAction)
 			//dynamic members
 			set this.m_checked = false
 			//members

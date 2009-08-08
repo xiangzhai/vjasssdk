@@ -4,7 +4,8 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 		//start members
 		private AQuest m_quest
 		//members
-		private questitem questLogQuestItem
+		private questitem m_questItem
+		private integer m_index
 
 		///! runtextmacro A_STRUCT_DEBUG("\"AQuestItem\"")
 		
@@ -19,12 +20,12 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 			call super.setState(state)
 			set result = not this.m_quest.checkQuestItemsForState(state)
 			if (AQuest.isQuestLogUsed()) then
-				if (this.questLogQuestItem == null) then
-					set this.questLogQuestItem = QuestCreateItem(this.m_quest.questLogQuest())
-					call QuestItemSetDescription(this.questLogQuestItem, this.title())
+				if (this.m_questItem == null) then
+					set this.m_questItem = QuestCreateItem(this.m_quest.questLogQuest())
+					call QuestItemSetDescription(this.m_questItem, this.title())
 				endif
 				//call QuestItemSetDescription(this.questLogQuestItem, this.title())
-				call QuestItemSetCompleted(this.questLogQuestItem, state == AAbstractQuest.stateCompleted)
+				call QuestItemSetCompleted(this.m_questItem, state == AAbstractQuest.stateCompleted)
 				if (result) then
 					call FlashQuestDialogButton()
 					call ForceQuestDialogUpdate() //required?
@@ -41,24 +42,20 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 			set this.m_quest = usedQuest
 			//members
 			if (AQuest.isQuestLogUsed()) then
-				set this.questLogQuestItem = null
+				set this.m_questItem = null
 			endif
-
-			call usedQuest.addQuestItem(this)
+			set this.m_index = usedQuest.addQuestItem(this)
 			return this
 		endmethod
 
-		private method destroyQuestLogQuestItem takes nothing returns nothing
+		public method onDestroy takes nothing returns nothing
+			call this.m_quest.removeQuestItemByIndex(this.m_index)
 			if (AQuest.isQuestLogUsed()) then
-				if (this.questLogQuestItem != null) then
-					set this.questLogQuestItem = null
+				if (this.m_questItem != null) then
+					set this.m_questItem = null
 					//Could not destroy quest items!
 				endif
 			endif
-		endmethod
-
-		public method onDestroy takes nothing returns nothing
-			call this.destroyQuestLogQuestItem()
 		endmethod
 	endstruct
 

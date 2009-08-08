@@ -58,8 +58,6 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			endif
 		endmethod
 	endstruct
-
-	//! runtextmacro A_VECTOR("private", "AActorDataVector", "AActorData", "0", "100")
 	
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoInitAction takes AVideo video returns nothing
@@ -104,7 +102,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		private static AActorData m_actor //copy of first character
 		private static APlayerSelection array m_playerSelection[12] /// @todo bj_MAX_PLAYERS
 		private static boolean array m_playerHadDialog[12] /// @todo bj_MAX_PLAYERS
-		private static AActorDataVector m_actorData
+		private static AIntegerVector m_actorData
 		//start members
 		private AVideoInitAction initAction
 		private AVideoPlayAction playAction
@@ -297,7 +295,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			set thistype.skipped = false
 			set thistype.skippingPlayers = 0
 			set thistype.m_actor = 0
-			set thistype.m_actorData = AActorDataVector.create()
+			set thistype.m_actorData = AIntegerVector.create()
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
@@ -318,12 +316,11 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		endmethod
 		
 		public static method cleanUp takes nothing returns nothing
-			local integer i = thistype.m_actorData.backIndex()
 			//static members
 			loop
-				exitwhen (i < 0)
-				call thistype.m_actorData[i].destroy()
-				set i = i - 1
+				exitwhen (thistype.m_actorData.empty())
+				call AActorData(thistype.m_actorData.back()).destroy()
+				call thistype.m_actorData.popBack()
 			endloop
 			call thistype.m_actorData.destroy()
 		
@@ -356,12 +353,12 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		endmethod
 		
 		public static method unitActor takes integer index returns unit
-			return thistype.m_actorData[index].actor()
+			return AActorData(thistype.m_actorData[index]).actor()
 		endmethod
 		
 		public static method restoreUnitActor takes integer index returns boolean
-			call thistype.m_actorData[index].restore()
-			call thistype.m_actorData[index].destroy()
+			call AActorData(thistype.m_actorData[index]).restore()
+			call AActorData(thistype.m_actorData[index]).destroy()
 			call thistype.m_actorData.erase(index)
 			return true
 		endmethod

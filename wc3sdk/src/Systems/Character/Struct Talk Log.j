@@ -1,10 +1,9 @@
 library AStructSystemsCharacterTalkLog requires AStructCoreGeneralVector, AStructSystemsCharacterAbstractCharacterSystem
 
-	//! runtextmacro A_VECTOR("private", "ATalkVector", "ATalk", "0", "100") /// @todo JASS_MAX_ARRAY_SIZE, vJass bug.
-	//! runtextmacro A_VECTOR("private", "AStringVectorVector", "AStringVector", "0", "100") /// @todo JASS_MAX_ARRAY_SIZE, vJass bug.
+	//! runtextmacro A_VECTOR("private", "AStringVectorVector", "AStringVector", "0", "100", "8192") /// @todo JASS_MAX_ARRAY_SIZE, vJass bug.
 
 	struct ATalkLog extends AAbstractCharacterSystem
-		private ATalkVector m_talks
+		private AIntegerVector m_talks
 		private AStringVectorVector m_speeches
 		
 		public method addMessage takes ATalk talk, string message returns nothing
@@ -39,7 +38,7 @@ library AStructSystemsCharacterTalkLog requires AStructCoreGeneralVector, AStruc
 		public static method create takes ACharacter character returns thistype
 			local thistype this = thistype.allocate(character)
 			//members
-			set this.m_talks = ATalkVector.create()
+			set this.m_talks = AIntegerVector.create()
 			set this.m_speeches = AStringVectorVector.create()
 			return this
 		endmethod

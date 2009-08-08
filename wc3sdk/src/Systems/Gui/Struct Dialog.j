@@ -1,12 +1,11 @@
 library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreStringConversion
 
-	/// @todo Size should have value @member ADialog.maxDialogButtons.
-	//! runtextmacro A_VECTOR("private", "ADialogButtonVector", "ADialogButton", "0", "100")
-	
-	/// Provides a kind of wrapper struct for common Warcraft 3 dialogs.
-	/// Actually it's not only a wrapper since it's expands the whole functionality of dialogs by using @struct ADialogButton instances.
-	/// Besides it allows user to add more than 12 (or 16? Warcraft 3 limit) buttons by adding next and previous page buttons and splitting
-	/// all 10-button groups into pages.
+	/**
+	* Provides a kind of wrapper struct for common Warcraft 3 dialogs.
+	* Actually it's not only a wrapper since it's expands the whole functionality of dialogs by using @struct ADialogButton instances.
+	* Besides it allows user to add more than 12 (or 16? Warcraft 3 limit) buttons by adding next and previous page buttons and splitting
+	* all 10-button groups into pages.
+	*/
 	struct ADialog
 		//static constant members
 		public static constant integer maxDialogButtons = 100
@@ -23,7 +22,7 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 		private player m_player
 		//members
 		private dialog m_dialog
-		private ADialogButtonVector m_dialogButtons
+		private AIntegerVector m_dialogButtons
 		private integer m_currentPage
 		private integer m_maxPageNumber
 		private button m_previousPageButton
@@ -49,11 +48,11 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			local integer exitValue
 			set this.m_isDisplayed = displayed
 			if (displayed) then
-				set i = this.m_currentPage * ADialog.maxPageButtons
-				set exitValue = (this.m_currentPage + 1) * ADialog.maxPageButtons
+				set i = this.m_currentPage * thistype.maxPageButtons
+				set exitValue = (this.m_currentPage + 1) * thistype.maxPageButtons
 				loop
 					exitwhen (i == exitValue or i == this.m_dialogButtons.size())
-					call this.m_dialogButtons[i].addButton()
+					call ADialogButton(this.m_dialogButtons[i]).addButton()
 					set i = i + 1
 				endloop
 				if (this.m_maxPageNumber > 0) then
@@ -61,11 +60,11 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 					call this.createNextPageButton()
 				endif
 			else
-				set i = this.m_currentPage * ADialog.maxPageButtons
+				set i = this.m_currentPage * thistype.maxPageButtons
 				set exitValue = (this.m_currentPage + 1) * ADialog.maxPageButtons
 				loop
 					exitwhen (i == exitValue or i == this.m_dialogButtons.size())
-					call this.m_dialogButtons[i].removeButton()
+					call ADialogButton(this.m_dialogButtons[i]).removeButton()
 					set i = i + 1
 				endloop
 				if (this.m_maxPageNumber > 0) then
@@ -168,8 +167,8 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 				set this.m_isDisplayed = false
 			endif
 			loop
-				exitwhen (this.m_dialogButtons.size() == 0)
-				call this.m_dialogButtons.back().destroy() //removes itself from the vector!
+				exitwhen (this.m_dialogButtons.empty())
+				call ADialogButton(this.m_dialogButtons.back()).destroy() //removes itself from the vector!
 			endloop
 			set this.m_currentPage = 0
 			call DialogClear(this.m_dialog)
@@ -258,7 +257,7 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 			set this.m_player = usedPlayer
 			//members
 			set this.m_dialog = DialogCreate()
-			set this.m_dialogButtons = ADialogButtonVector.create()
+			set this.m_dialogButtons = AIntegerVector.create()
 			set this.m_currentPage = 0
 			set this.m_maxPageNumber = 0
 			

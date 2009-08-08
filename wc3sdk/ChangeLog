@@ -1,3 +1,12 @@
+2009-08-08 Tamino Dauth <tamino@cdauth.de>
+* Improved struct AAbstractQuest.
+* Replaced all <struct type>Vector structs by struct AIntegerVector.
+* Improved vector cleanups in destructors of several structs.
+* Added parameter MAXINSTANCES to text macro A_VECTOR.
+
+2009-08-07 Tamino Dauth <tamino@cdauth.de>
+* Revised struct AMissile and added structs AMissileType and ADamageMissileType..
+
 2009-08-06 Tamino Dauth <tamino@cdauth.de>
 * Improved struct AArrowKeys.
 * Improved ATalk's camera settings.

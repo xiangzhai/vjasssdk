@@ -1,7 +1,5 @@
 library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreStringConversion
 
-	//! runtextmacro A_VECTOR("private", "AUnitVector", "unit", "null", "100")
-
 	function interface APvpOnEnterAction takes APvp pvp, unit usedUnit returns nothing
 	
 	function interface APvpOnLeaveAction takes APvp pvp, unit usedUnit returns nothing

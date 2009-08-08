@@ -1,15 +1,11 @@
 library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, AStructCoreGeneralVector, AStructSystemsCharacterAbstractQuest
 
-	/// @todo Size should be @member AQuest.maxQuestItems.
-	//! runtextmacro A_VECTOR("private", "AQuestItemVector", "AQuestItem", "0", "100")
-
 	struct AQuest extends AAbstractQuest
-		private static constant integer maxQuestItems = 100
 		//static start members
 		private static boolean useQuestLog
 		private static string updateSoundPath
 		//dynamic members
-		private AQuestItemVector m_questItems
+		private AIntegerVector m_questItems
 		private string m_iconPath
 		private string m_description
 		//members
@@ -18,11 +14,6 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		///! runtextmacro A_STRUCT_DEBUG("\"AQuest\"")
 
 		//dynamic members
-
-		public method addQuestItem takes AQuestItem questItem returns integer
-			call this.m_questItems.pushBack(questItem)
-			return this.m_questItems.backIndex()
-		endmethod
 
 		public method questItem takes integer index returns AQuestItem
 			return this.m_questItems[index]
@@ -71,8 +62,8 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 				set i = 0
 				loop
 					exitwhen (i == this.m_questItems.size())
-					if (this.m_questItems[i].state() == AAbstractQuest.stateNew) then
-						call this.m_questItems[i].setState(state)
+					if (AQuestItem(this.m_questItems[i]).state() == AAbstractQuest.stateNew) then
+						call AQuestItem(this.m_questItems[i]).setState(state)
 					endif
 					set i = i + 1
 				endloop
@@ -120,7 +111,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 				set i = 0
 				loop
 					exitwhen(i == this.m_questItems.size())
-					if (this.m_questItems[i].state() != state) then
+					if (AQuestItem(this.m_questItems[i]).state() != state) then
 						set result = false
 					endif
 					set i = i + 1
@@ -130,6 +121,17 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 				endif
 			endif
 			return result
+		endmethod
+		
+		/// Friend relationship to @struct AQuestItem, do not use.
+		public method addQuestItem takes AQuestItem questItem returns integer
+			call this.m_questItems.pushBack(questItem)
+			return this.m_questItems.backIndex()
+		endmethod
+		
+		/// Friend relationship to @struct AQuestItem, do not use.
+		public method removeQuestItemByIndex takes integer index returns nothing
+			call this.m_questItems.erase(index)
 		endmethod
 
 		private method createQuestLogQuest takes nothing returns nothing
@@ -143,7 +145,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		public static method create takes ACharacter character, string title returns thistype
 			local thistype this = thistype.allocate(character, title)
 			//members
-			set this.m_questItems = AQuestItemVector.create()
+			set this.m_questItems = AIntegerVector.create()
 
 			call this.createQuestLogQuest()
 			return this
@@ -158,25 +160,23 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 	
 		//Alle QuestItems werden auch zerstört
 		private method destroyQuestItems takes nothing returns nothing
-			local integer i = 0
 			loop
-				exitwhen (i == this.m_questItems.size())
-				call AQuestItem.destroy(this.m_questItems[i])
-				set i = i + 1
+				exitwhen (this.m_questItems.empty())
+				call AQuestItem(this.m_questItems.back()).destroy()
 			endloop
+			call this.m_questItems.destroy()
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
 			call this.destroyQuestLogQuest()
 			call this.destroyQuestItems()
-			call this.m_questItems.destroy()
 		endmethod
 
 		//init is already used
 		public static method init0 takes boolean useQuestLog, string updateSoundPath returns nothing
 			//static start members
-			set AQuest.useQuestLog = useQuestLog
-			set AQuest.updateSoundPath = updateSoundPath
+			set thistype.useQuestLog = useQuestLog
+			set thistype.updateSoundPath = updateSoundPath
 		endmethod
 
 		//static start members

@@ -1,8 +1,5 @@
 library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector
 
-	//! runtextmacro A_VECTOR("private", "ARectVector", "rect", "null", "100")
-	//! runtextmacro A_VECTOR("private", "AWeatherEffectVector", "weathereffect", "null", "100")
-
 	struct AWeather
 		public static constant integer weatherTypeAshenvaleRainHeavy = 0
 		public static constant integer weatherTypeAshenvaleRainLight = 1
@@ -32,7 +29,7 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		//dynamic members
 		private real m_minimumChangeTime
 		private real m_maximumChangeTime
-		private boolean array m_isWeatherTypeAllowed[22] /// @todo thistype.maxWeatherTypes, vJass bug
+		private boolean array m_isWeatherTypeAllowed[thistype.maxWeatherTypes]
 		//members
 		private region m_region
 		private timer m_changeTimer
