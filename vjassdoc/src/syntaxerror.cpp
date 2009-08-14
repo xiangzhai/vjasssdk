@@ -18,30 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_COMPILER_H
-#define VJASSDOC_COMPILER_H
-
-#include <fstream>
+#include "syntaxerror.h"
 
 namespace vjassdoc
 {
 
-class Parser;
-
-class Compiler
+SyntaxError::SyntaxError(class SourceFile *sourceFile, unsigned int line, const std::string &message) : m_sourceFile(sourceFile), m_line(line), m_message(message)
 {
-	public:
-		void compile();
-	
-	private:
-		void writeGlobals(std::fstream &fstream);
-		void writeMembers(std::fstream &fstream);
-		/// Writes triggers of methods for TriggerEvaluate() and TriggerExecute().
-		void writeFunctionGlobals(std::fstream &fstream);
-		void writeMethodGlobals(std::fstream &fstream);
-		void writeLibraries(std::fstream &fstream);
-};
-
 }
 
-#endif
+}

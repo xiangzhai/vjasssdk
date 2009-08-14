@@ -1,3 +1,6 @@
+2009-08-08 Tamino Dauth <tamino@cdauth.de>
+* Improved class Compiler.
+
 2009-08-03 Tamino Dauth <tamino@cdauth.de>
 * Added method autoCompletion to class Parser.
 * Added file "tests/autocompletion.cpp".

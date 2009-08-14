@@ -18,29 +18,51 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_COMPILER_H
-#define VJASSDOC_COMPILER_H
+#ifndef VJASSDOC_SYNTAXERROR_H
+#define VJASSDOC_SYNTAXERROR_H
 
-#include <fstream>
+#include <string>
+
+#include "sourcefile.h"
 
 namespace vjassdoc
 {
 
-class Parser;
-
-class Compiler
+class SyntaxError
 {
 	public:
-		void compile();
+		static bool Comparator(class SyntaxError *syntaxError0, class SyntaxError *syntaxError1);
+	
+		SyntaxError(class SourceFile *sourceFile, unsigned int line, const std::string &message);
+		class SourceFile* sourceFile() const;
+		unsigned int line() const;
+		std::string message() const;
 	
 	private:
-		void writeGlobals(std::fstream &fstream);
-		void writeMembers(std::fstream &fstream);
-		/// Writes triggers of methods for TriggerEvaluate() and TriggerExecute().
-		void writeFunctionGlobals(std::fstream &fstream);
-		void writeMethodGlobals(std::fstream &fstream);
-		void writeLibraries(std::fstream &fstream);
+		class SourceFile *m_sourceFile;
+		unsigned int m_line;
+		std::string m_message;
 };
+
+inline bool SyntaxError::Comparator(class SyntaxError *syntaxError0, class SyntaxError *syntaxError1)
+{
+	return syntaxError0->sourceFile()->identifier() < syntaxError1->sourceFile()->identifier();
+}
+
+inline class SourceFile* SyntaxError::sourceFile() const
+{
+	return this->m_sourceFile;
+}
+
+inline unsigned int SyntaxError::line() const
+{
+	return this->m_line;
+}
+
+inline std::string SyntaxError::message() const
+{
+	return this->m_message;
+}
 
 }
 

@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_INTERNATIONALISATION
-#define VJASSDOC_INTERNATIONALISATION
+#ifndef VJASSDOC_INTERNATIONALISATION_H
+#define VJASSDOC_INTERNATIONALISATION_H
 
 //preparation for gettext
 #include <libintl.h>

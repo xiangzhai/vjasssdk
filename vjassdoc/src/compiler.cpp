@@ -48,6 +48,7 @@ void Compiler::compile()
 	fstream << "globals" << std::endl;
 	this->writeGlobals(fstream);
 	this->writeMembers(fstream);
+	this->writeFunctionGlobals(fstream);
 	this->writeMethodGlobals(fstream);
 	fstream << "endglobals" << std::endl;
 
@@ -97,9 +98,14 @@ void Compiler::writeMembers(std::fstream &fstream)
 		if (member->isDelegate())
 			continue;
 
-		/// @todo Check if type is an interface or struct and use integers for those types.	
 		if (member->type() != 0)
-			fstream << member->type()->identifier();
+		{
+			// Check if type is an interface or struct and use integers for those types.
+			if (dynamic_cast<class Interface*>(member->type()) != 0)
+				fstream << "integer";
+			else
+				fstream << member->type()->identifier();
+		}
 		else
 			fstream << member->typeExpression();
 		
@@ -118,10 +124,30 @@ void Compiler::writeMembers(std::fstream &fstream)
 	}
 }
 
+void Compiler::writeFunctionGlobals(std::fstream &fstream)
+{
+	if (Vjassdoc::showVerbose())
+		std::cout << _("Writing function globals.") << std::endl;
+	
+	// check if there are .execute or .evaluate calls of a function.
+}
+
 void Compiler::writeMethodGlobals(std::fstream &fstream)
 {
 	if (Vjassdoc::showVerbose())
 		std::cout << _("Writing method globals.") << std::endl;
+	
+	// check if there are .execute or .evaluate calls of a method.
+	// Note that .evaluate and .execute aren't used automatically like in vJass.
+}
+
+void Compile::writeLibraries(std::fstream &fstream)
+{
+	if (Vjassdoc::showVerbose())
+		std::cout << _("Writing libraries.") << std::endl;
+	
+	// write all functions and methods and text macro instances in the right order.
+	// text macros and preprocessors should be called before.
 }
 
 }

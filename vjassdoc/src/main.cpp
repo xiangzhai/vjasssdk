@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	{
 		if (strcmp(argv[1], "--version") == 0)
 		{
-			printf("vjassdoc %d.\n", Vjassdoc::version);
+			printf("vjassdoc %s.\n", Vjassdoc::version);
 			std::cout << _(
 			"Copyright © 2008, 2009 Tamino Dauth\n"
 			"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
@@ -389,7 +389,6 @@ int main(int argc, char *argv[])
 				}
 			}
 
-			std::cout << "Add file path " << argv[i] << std::endl;
 			filePaths.push_back(argv[i]);
 		}
 		else if (needDatabases)

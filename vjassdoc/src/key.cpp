@@ -18,30 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_COMPILER_H
-#define VJASSDOC_COMPILER_H
-
-#include <fstream>
+#include "objects.h"
 
 namespace vjassdoc
 {
 
-class Parser;
+#ifdef SQLITE
+const char *Key::sqlTableName = "Keys";
+unsigned int Key::sqlColumns;
+std::string Key::sqlColumnStatement;
 
-class Compiler
+void Key::initClass()
 {
-	public:
-		void compile();
-	
-	private:
-		void writeGlobals(std::fstream &fstream);
-		void writeMembers(std::fstream &fstream);
-		/// Writes triggers of methods for TriggerEvaluate() and TriggerExecute().
-		void writeFunctionGlobals(std::fstream &fstream);
-		void writeMethodGlobals(std::fstream &fstream);
-		void writeLibraries(std::fstream &fstream);
-};
+	Key::sqlColumns = Keyword::sqlColumns;
+	Key::sqlColumnStatement = Keyword::sqlColumnStatement;
+}
+#endif
 
+Key::Key(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : Keyword(identifier, sourceFile, line, docComment, library, scope, isPrivate)
+{
 }
 
+#ifdef SQLITE
+Key::Key(std::vector<const unsigned char*> &columnVector) : Keyword(columnVector)
+{
+}
 #endif
+
+}
