@@ -1,6 +1,42 @@
+2009-08-24 Tamino Dauth <tamino@cdauth.de>
+* Added method removeFromRucksackByTypeId to struct AInventory.
+* Fixed move item to page bug of struct AInventory.
+
+2009-08-22 Tamino Dauth <tamino@cdauth.de>
+* Added function CreateUnitAtRect.
+
+2009-08-19 Tamino Dauth <tamino@cdauth.de>
+* Start page is shown automatically by talks if no info is.
+
+2009-08-15 Tamino Dauth <tamino@cdauth.de>
+* Added method setActorsMoveSpeed to struct AVideo.
+* Added function SetUnitFacingToFaceRectTimed.
+* Inventory and talk log systems stay enabled now when charakter is set unmovable.
+
+2009-08-14 Tamino Dauth <tamino@cdauth.de>
+* Added function CreateUnitsAtPoint.
+* Added function SmartCameraPan.
+* Talk speeches should for finishing video sequences now.
+* Added several icon and model files to archive Items.
+* Added file "src/Systems/Character/Struct Kill Quest Item.j".
+
+2009-08-13 Tamino Dauth <tamino@cdauth.de>
+* Added several files to archive "Creatures".
+
+2009-08-12 Tamino Dauth <tamino@cdauth.de>
+* Added sky model option to struct AWeather.
+* Added functions moveNpcTo, moveNpcToRectCenter, waitForNewNpcRect and moveNpcToRectCenterAndWait.
+* Improved struct AInventory and added private struct AInventoryItemData.
+
+2009-08-11 Tamino Dauth <tamino@cdauth.de>
+* Improved struct AInventory.
+* Added debugging cheat "damage".
+
 2009-08-09 Tamino Dauth <tamino@cdauth.de>
 * Fixed resetting equipment of struct AInventory.
 * Added owner parameter to function SetCinematicSceneForPlayer.
+* Improved index setting when resetting slots of struct AInventory.
+* Added several creature model and icon files to archive Creatures.
 
 2009-08-08 Tamino Dauth <tamino@cdauth.de>
 * Improved struct AAbstractQuest.

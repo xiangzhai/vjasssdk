@@ -1,4 +1,4 @@
-library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit
+library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit, AStructSystemsCharacterVideo
 
 
 	/**
@@ -10,6 +10,7 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		local unit speaker
 		local unit listener
 		local player speakerOwner
+		call waitForVideo(1.0) // do not show any speeches during video
 		if (toCharacter) then
 			set speaker = info.talk().unit()
 			set listener = info.talk().character().unit()
@@ -40,10 +41,11 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		call SetCameraTargetControllerNoZForPlayer(user, speaker, 0.0, 0.0, false)
 		*/
 		call AThirdPersonCamera.playerThirdPersonCamera(user).enable(listener, 0.0)
-		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), owner, GetUnitName(speaker), text, duration, duration)
+		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), speakerOwner, GetUnitName(speaker), text, duration, duration)
 		if (info.talk().character().talkLog() != 0) then
 			call info.talk().character().talkLog().addMessage(info.talk(), text) //log message
 		endif
+		call waitForVideo(1.0) // do not show any speeches during video
 		if (AInfo.skipKey == -1) then
 			call TriggerSleepAction(duration)
 		else

@@ -61,9 +61,16 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		
 		//convenience methods
 		
-		/// Shows the talk's Warcraft 3 dialog.
+		/**
+		* Shows the talk's Warcraft 3 dialog.
+		* If no info has been added start page is shown automatically.
+		*/
 		public method show takes nothing returns nothing
-			call AGui.playerGui(this.m_character.user()).dialog().show()
+			if (AGui.playerGui(this.m_character.user()).dialog().dialogButtons() == 0) then
+				call this.showStartPage()
+			else
+				call AGui.playerGui(this.m_character.user()).dialog().show()
+			endif
 		endmethod
 		
 		public method showAll takes nothing returns nothing

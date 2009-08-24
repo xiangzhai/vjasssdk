@@ -1,8 +1,10 @@
 library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceCamera, AStructSystemsCharacterAbstractCharacterSystem
 
-	/// This struct represents a single RPG character. Each player can own exactly one character.
-	/// You can configure the character systems and enable or disable the several character system modules.
-	/// Each module makes the system requiring more memory, so clearly think of which system modules are required and which aren't.
+	/**
+	* This struct represents a single RPG character. Each player can own exactly one character.
+	* You can configure the character systems and enable or disable the several character system modules.
+	* Each module makes the system requiring more memory, so clearly think of which system modules are required and which aren't.
+	*/
 	struct ACharacter
 		//static constant members
 		public static constant integer messageTypeInfo = 0
@@ -61,11 +63,11 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			set this.m_isMovable = movable
 			call IssueImmediateOrder(this.m_unit, "stop") //new, required?!
 			call PauseUnit(this.m_unit, not movable)
-			call SetUnitInvulnerable(this.m_unit, not movable) 
+			call SetUnitInvulnerable(this.m_unit, not movable)
 			if (movable) then
-				call this.enableSystems()
+				call this.enableMovableSystems()
 			else
-				call this.disableSystems()
+				call this.disableMovableSystems()
 			endif
 		endmethod
 
@@ -359,7 +361,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			return 0
 		endmethod
 
-		private method enableSystems takes nothing returns nothing
+		private method enableMovableSystems takes nothing returns nothing
 			if (thistype.m_useViewSystem and this.m_view.enableAgain()) then
 				call this.m_view.enable()
 			endif
@@ -375,15 +377,17 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			if (thistype.m_useRevivalSystem and this.m_revival.enableAgain()) then
 				call this.m_revival.enable()
 			endif
+			/*
 			if (thistype.m_useInventorySystem and this.m_inventory.enableAgain()) then
 				call this.m_inventory.enable()
 			endif
 			if (thistype.m_useTalkLogSystem and this.m_talkLog.enableAgain()) then
 				call this.m_talkLog.enable()
 			endif
+			*/
 		endmethod
 
-		private method disableSystems takes nothing returns nothing
+		private method disableMovableSystems takes nothing returns nothing
 			if (thistype.m_useViewSystem and this.m_view.isEnabled()) then
 				call this.m_view.disable()
 			endif
@@ -399,12 +403,14 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			if (thistype.m_useRevivalSystem and this.m_revival.isEnabled()) then
 				call this.m_revival.disable()
 			endif
+			/*
 			if (thistype.m_useInventorySystem and this.m_inventory.isEnabled()) then
 				call this.m_inventory.disable()
 			endif
 			if (thistype.m_useTalkLogSystem and this.m_talkLog.isEnabled()) then
 				call this.m_talkLog.disable()
 			endif
+			*/
 		endmethod
 
 		private static method triggerActionDestroyCharacter takes nothing returns nothing

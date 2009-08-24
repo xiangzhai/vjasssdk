@@ -1,4 +1,4 @@
-library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMathsHandle
+library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
 
 	/// Die Entfernung zwischen zwei Einheiten.
 	/// Da es die nativen Funktionen GetUnitX() und GetUnitY() gibt, dürfte es schneller sein, als erst Locations der Einheiten zu erzeugen und diese zu vergleichen.
@@ -167,6 +167,11 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 			set y=ny
 		endif
 		return IsUnitInRangeXY(u,x,y,0.0)
+	endfunction
+	
+	/// @author Tamino Dauth
+	function SetUnitFacingToFaceRectTimed takes unit whichUnit, rect whichRect, real duration returns nothing
+		call SetUnitFacingTimed(whichUnit, GetAngleBetweenPoints(GetUnitX(whichUnit), GetUnitY(whichUnit), GetRectCenterX(whichRect), GetRectCenterY(whichRect)), duration)
 	endfunction
 
 endlibrary

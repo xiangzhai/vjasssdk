@@ -28,13 +28,13 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		
 		public static method create takes unit oldUnit returns thistype
 			local thistype this = thistype.allocate()
-			local player newOwner = Player(PLAYER_NEUTRAL_PASSIVE) // set passive owner so unit won't attack or be attacked
+			//local player newOwner = Player(PLAYER_NEUTRAL_PASSIVE) // set passive owner so unit won't attack or be attacked
 			//start members
 			call ShowUnit(oldUnit, false)
 			set this.m_unit = oldUnit
 			//members
 			set this.m_actor = CopyUnit(oldUnit, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit), bj_UNIT_STATE_METHOD_MAXIMUM)
-			call SetUnitOwner(this.m_actor, newOwner, false)
+			//call SetUnitOwner(this.m_actor, newOwner, false)
 			call ShowUnit(this.m_actor, true)
 			if (IsUnitHidden(this.m_actor)) then
 				call ShowUnit(this.m_actor, true)
@@ -42,9 +42,10 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			if (IsUnitPaused(this.m_actor)) then
 				call PauseUnit(this.m_actor, false)
 			endif
+			call SelectUnit(this.m_actor, false)
 			call SetUnitInvulnerable(this.m_actor, true)
 			call IssueImmediateOrder(this.m_actor, "stop") //cancel orders.
-			set newOwner = null
+			//set newOwner = null
 			return this
 		endmethod
 		
@@ -59,6 +60,15 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		endmethod
 	endstruct
 	
+	/// Waits until no video is running.
+	/// @param interval Check interval.
+	function waitForVideo takes real interval returns nothing
+		loop
+			exitwhen (AVideo.runningVideo == 0)
+			call TriggerSleepAction(interval)
+		endloop
+	endfunction
+	
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoInitAction takes AVideo video returns nothing
 
@@ -68,24 +78,17 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoStopAction takes AVideo video returns nothing
 
-	/// Waits until no video is running.
-	/// @param interval Check interval.
-	function waitForVideo takes real interval returns nothing
-		loop
-			exitwhen (AVideo.runningVideo == 0)
-			call TriggerSleepAction(interval)
-		endloop
-	endfunction
-
-	/// Provides access to a global video. Global means that the video is played/shown for all character owners.
-	/// The ASL character system doesn't support local videos which means videos for each single character owner.
-	/// Videos can have initialization, play and stop actions which has to be defined as function interface functions.
-	/// User can easily save and restore actors data by using methods @method saveActor and @method restoreActor.
-	/// Additionally there is a method called @method actor which gives user access to an almost exact copy of the "first character".
-	/// The first character is always the character of first player in list which still is online. List is starting with player 1 (id 0).
-	/// Since you don't use character units (beside the copied one) they will be hidden in video initialization.
-	/// Besides all units will be paused so you have to unpause a unit if you want to give orders (like move) to it.
-	/// Videos can be skipped by pressing a user-defined key. If at least half of players want to skip a video (have pressed that key) it will be skipped.
+	/**
+	* Provides access to a global video. Global means that the video is played/shown for all character owners.
+	* The ASL character system doesn't support local videos which means videos for each single character owner.
+	* Videos can have initialization, play and stop actions which has to be defined as function interface functions.
+	* User can easily save and restore actors data by using methods @method saveActor and @method restoreActor.
+	* Additionally there is a method called @method actor which gives user access to an almost exact copy of the "first character".
+	* The first character is always the character of first player in list which still is online. List is starting with player 1 (id 0).
+	* Since you don't use character units (beside the copied one) they will be hidden in video initialization.
+	* Besides all units will be paused so you have to unpause a unit if you want to give orders (like move) to it.
+	* Videos can be skipped by pressing a user-defined key. If at least half of players want to skip a video (have pressed that key) it will be skipped.
+	*/
 	struct AVideo
 		//static start members
 		private static integer divident
@@ -133,17 +136,10 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			if (this.initAction != 0) then
 				call this.initAction.execute(this)
 			endif
-			//debug call Print("Before video")
-
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.waitTime)
-
 			call EnableTrigger(thistype.skipTrigger)
 			//call EnableUserControl(true) //otherwise we could not catch the press event (just the escape key)
-			//debug if (this.playAction == 0) then
-				//debug call this.print("Play action is 0.")
-				//debug return
-			//debug endif
 			call this.playAction.execute(this)
 		endmethod
 
@@ -186,15 +182,12 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		/// Waits in video.
 		/// @return Returns true if video was skipped
 		public method wait takes real seconds returns boolean
-			//debug call this.print("Wait in video " + R2S(seconds) + ".")
 			loop
 				call TriggerSleepAction(thistype.waitInterval)
 				set seconds = seconds - thistype.waitInterval
-				//debug call this.print("Remaining seconds: " + R2S(seconds) + ".")
 				if (thistype.skipped) then
 					return true
 				elseif (seconds <= 0) then
-					//debug call this.print("Was not skipped.")
 					return false
 				endif
 			endloop
@@ -212,11 +205,6 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		endmethod
 		
 		private static method triggerConditionSkip takes nothing returns boolean
-			//debug if (thistype.runningVideo == 0) then
-				//debug call thistype.staticPrint("Running video is 0.")
-			//debug else
-				//debug call thistype.staticPrint("Running video is not 0.")
-			//debug endif
 			return thistype.runningVideo != 0
 		endmethod
 
@@ -263,7 +251,6 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
 				if (IsPlayerPlayingUser(user)) then
-					//debug call thistype.staticPrint("Create skip trigger for player " + I2S(i) + ".")
 					set triggerEvent = TriggerRegisterKeyEventForPlayer(user, thistype.skipTrigger, KEY_ESCAPE, true) //ALibraryInterfaceMisc, important: If it is the escape key it is the same key as in the character selection.
 					set triggerEvent = null
 				endif
@@ -330,10 +317,13 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		//static members
 
 		public static method wasSkipped takes nothing returns boolean
-			//debug if (AVideo.skipped) then
-				//debug call Print("Skipped is true.")
-			//debug endif
 			return thistype.skipped
+		endmethod
+		
+		//static memthods
+		
+		public static method isRunning takes nothing returns boolean
+			return thistype.runningVideo != 0
 		endmethod
 		
 		public static method actor takes nothing returns unit
@@ -369,6 +359,15 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 				exitwhen (i < 0)
 				call thistype.restoreUnitActor(i)
 				set i = i - 1
+			endloop
+		endmethod
+		
+		public static method setActorsMoveSpeed takes real moveSpeed returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_actorData.size())
+				call SetUnitMoveSpeed(AActorData(thistype.m_actorData[i]).actor(), moveSpeed)
+				set i = i + 1
 			endloop
 		endmethod
 		

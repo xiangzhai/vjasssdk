@@ -134,8 +134,8 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 			//start members
 			set this.m_target = target
 			//members
-			set this.m_damageSources = AIntegerVector.create()
-			set this.m_damageAmounts = AIntegerVector.create()
+			set this.m_damageSources = AUnitVector.create()
+			set this.m_damageAmounts = ARealVector.create()
 			
 			call this.createDamageTrigger()
 			return this

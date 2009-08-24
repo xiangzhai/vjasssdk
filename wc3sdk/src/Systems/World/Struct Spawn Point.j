@@ -229,6 +229,10 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 			return this
 		endmethod
 		
+		public static method createByExistingUnitWithTypeAndRect takes unit usedUnit, real weight, rect usedRect, real range returns thistype
+			return thistype.createByExistingUnitWithType(usedUnit, weight, GetRectCenterX(usedRect), GetRectCenterY(usedRect), range)
+		endmethod
+		
 		public static method createByExistingUnitWithTypeAndPosition takes unit usedUnit, real weight, real range returns thistype
 			local thistype this = thistype.create(GetUnitX(usedUnit), GetUnitY(usedUnit), range)
 			call this.addExistingUnitWithType(usedUnit, weight)

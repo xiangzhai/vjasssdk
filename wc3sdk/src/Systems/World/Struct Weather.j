@@ -25,10 +25,12 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		public static constant integer weatherTypeNoWeather = 21
 		private static constant integer maxWeatherTypes = 22
 		//static start members
-		private static integer array m_weatherTypeEffectId
+		private static integer array m_weatherTypeEffectId[thistype.maxWeatherTypes]
+		private static string array m_skyModelFile[thistype.maxWeatherTypes]
 		//dynamic members
 		private real m_minimumChangeTime
 		private real m_maximumChangeTime
+		private boolean m_changeSky
 		private boolean array m_isWeatherTypeAllowed[thistype.maxWeatherTypes]
 		//members
 		private region m_region
@@ -54,6 +56,14 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		public method maximumChangeTime takes nothing returns real
 			return this.m_maximumChangeTime
+		endmethod
+		
+		public method setChangeSky takes boolean changeSky returns nothing
+			set this.m_changeSky = changeSky
+		endmethod
+		
+		public method changeSky takes nothing returns boolean
+			return this.m_changeSky
 		endmethod
 		
 		public method setWeatherTypeAllowed takes integer weatherType, boolean allowed returns nothing
@@ -117,7 +127,6 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		public method changeWeather takes integer weatherType returns nothing
 			local integer i = 0
-			debug call this.print("Change weather to " + I2S(weatherType) + ".")
 			loop
 				exitwhen (i == this.m_rects.size())
 				if (this.m_weatherEffects[i] != null) then
@@ -130,6 +139,9 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 				endif
 				set i = i + 1
 			endloop
+			if (this.m_changeSky) then
+				call SetSkyModel(thistype.m_skyModelFile[weatherType])
+			endif
 		endmethod
 		
 		private static method timerFunctionChangeWeather takes nothing returns nothing
@@ -138,7 +150,6 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 			local integer array possibleWeatherTypes
 			local integer maxPossibleWeatherTypes = 0
 			local integer i = 0
-			debug call thistype.staticPrint("Weather changes!")
 			loop
 				exitwhen (i == thistype.maxWeatherTypes)
 				if (this.m_isWeatherTypeAllowed[i]) then
@@ -159,6 +170,8 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
+			//dynamic members
+			set this.m_changeSky = false
 			//members
 			set this.m_region = CreateRegion()
 			set this.m_changeTimer = CreateTimer()
@@ -194,28 +207,50 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		public static method init takes nothing returns nothing
 			//static start members
-			set thistype.m_weatherTypeEffectId[0] = 'RAhr'
-			set thistype.m_weatherTypeEffectId[1] = 'RAlr'
-			set thistype.m_weatherTypeEffectId[2] = 'MEds'
-			set thistype.m_weatherTypeEffectId[3] = 'FDbh'
-			set thistype.m_weatherTypeEffectId[4] = 'FDbl'
-			set thistype.m_weatherTypeEffectId[5] = 'FDgh'
-			set thistype.m_weatherTypeEffectId[6] = 'FDgl'
-			set thistype.m_weatherTypeEffectId[7] = 'FDrh'
-			set thistype.m_weatherTypeEffectId[8] = 'FDrl'
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainHeavy] = 'RAhr'
+			set thistype.m_skyModelFile[thistype.weatherTypeAshenvaleRainHeavy] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainLight] = 'RAlr'
+			set thistype.m_skyModelFile[thistype.weatherTypeAshenvaleRainLight] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeDalaranShield] = 'MEds'
+			set thistype.m_skyModelFile[thistype.weatherTypeDalaranShield] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeBlueDungeonFogHeavy] = 'FDbh'
+			set thistype.m_skyModelFile[thistype.weatherTypeBlueDungeonFogHeavy] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeBlueDungeonFogLight] = 'FDbl'
+			set thistype.m_skyModelFile[thistype.weatherTypeBlueDungeonFogLight] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeGreenDungeonFogHeavy] = 'FDgh'
+			set thistype.m_skyModelFile[thistype.weatherTypeGreenDungeonFogHeavy] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeGreenDungeonFogLight] = 'FDgl'
+			set thistype.m_skyModelFile[thistype.weatherTypeGreenDungeonFogLight] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeRedDungeonFogHeavy] = 'FDrh'
+			set thistype.m_skyModelFile[thistype.weatherTypeRedDungeonFogHeavy] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeRedDungeonFogLight] = 'FDrl'
+			set thistype.m_skyModelFile[thistype.weatherTypeRedDungeonFogLight] = ""
 			set thistype.m_weatherTypeEffectId[9] = 'FDwh'
+			set thistype.m_skyModelFile[9] = ""
 			set thistype.m_weatherTypeEffectId[10] = 'FDwl'
+			set thistype.m_skyModelFile[10] = ""
 			set thistype.m_weatherTypeEffectId[11] = 'RLhr'
+			set thistype.m_skyModelFile[11] = ""
 			set thistype.m_weatherTypeEffectId[12] = 'RLlr'
+			set thistype.m_skyModelFile[12] = ""
 			set thistype.m_weatherTypeEffectId[13] = 'SNbs'
+			set thistype.m_skyModelFile[13] = ""
 			set thistype.m_weatherTypeEffectId[14] = 'SNhs'
+			set thistype.m_skyModelFile[14] = ""
 			set thistype.m_weatherTypeEffectId[15] = 'SNls'
+			set thistype.m_skyModelFile[15] = ""
 			set thistype.m_weatherTypeEffectId[16] = 'WOcw'
+			set thistype.m_skyModelFile[16] = ""
 			set thistype.m_weatherTypeEffectId[17] = 'WOlw'
-			set thistype.m_weatherTypeEffectId[19] = 'LRaa'
+			set thistype.m_skyModelFile[17] = ""
+			set thistype.m_weatherTypeEffectId[18] = 'LRaa'
+			set thistype.m_skyModelFile[18] = ""
 			set thistype.m_weatherTypeEffectId[19] = 'LRma'
+			set thistype.m_skyModelFile[19] = ""
 			set thistype.m_weatherTypeEffectId[20] = 'WNcw'
+			set thistype.m_skyModelFile[20] = ""
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeNoWeather] = 0
+			set thistype.m_skyModelFile[thistype.weatherTypeNoWeather] = ""
 		endmethod
 	endstruct
 

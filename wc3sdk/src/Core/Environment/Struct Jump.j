@@ -10,6 +10,8 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 		//static members
 		private static timer m_timer
 		private static AIntegerVector m_jumps
+		//dynamic members
+		private real m_speed
 		//start members
 		private unit m_unit
 		private real m_maxHeight
@@ -24,9 +26,21 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 		private real m_x
 		
 		//! runtextmacro A_STRUCT_DEBUG("\"AJump\"")
+
+		//dynamic members
+
+		public method setSpeed takes real speed returns nothing
+			set this.m_speed = speed * thistype.m_refreshRate
+		endmethod
+
+		public method speed takes nothing returns real
+			return this.m_speed
+		endmethod
+
+		//start members
 		
 		private method refreshPosition takes nothing returns boolean
-			set this.m_x = this.m_x + (this.m_distance / RMaxBJ(1.0, thistype.m_refreshRate) * 10.0)
+			set this.m_x = this.m_x + this.m_speed
 			//debug call this.print("Refresh. Distance is " + R2S(this.m_distance) + " refresh rate is " + R2S(thistype.m_refreshRate))
 			call SetUnitX(this.m_unit, GetPolarProjectionX(this.m_startX, GetUnitFacing(this.m_unit), this.m_x))
 			call SetUnitY(this.m_unit, GetPolarProjectionY(this.m_startY, GetUnitFacing(this.m_unit), this.m_x))
@@ -38,6 +52,8 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 		
 		public static method create takes unit usedUnit, real maxHeight, real targetX, real targetY, AJumpAlightAction alightAction returns thistype
 			local thistype this = thistype.allocate()
+			//dynamic members
+			call this.setSpeed(100.0)
 			//start members
 			set this.m_unit = usedUnit
 			set this.m_maxHeight = maxHeight
@@ -86,7 +102,7 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 					if (jump.m_alightAction != 0) then
 						call jump.m_alightAction.execute(jump.m_unit)
 					endif
-					call thistype(jump).destroy()
+					call jump.destroy()
 					//do not increase i, jump was removed from vector
 				elseif (IsUnitDeadBJ(jump.m_unit)) then
 					call jump.destroy()

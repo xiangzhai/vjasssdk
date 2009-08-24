@@ -1,4 +1,4 @@
-library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
+library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibraryCoreMathsPoint
 
 	/**
 	* Similar to @function RotateCameraAroundLocBJ but does not use location.
@@ -58,6 +58,25 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreMathsPoint
 			endif
 		endif
 		set localPlayer = null 
+	endfunction
+	
+	/**
+	* Similar to @function SmartCameraPanForPlayer but does not use one single player.
+	* @author Tamino Dauth
+	* @state untested
+	*/
+	function SmartCameraPan takes real x, real y, real duration returns nothing
+		local player user
+		local integer i = 0
+		loop
+			exitwhen (i == bj_MAX_PLAYERS)
+			set user = Player(i)
+			if (IsPlayerPlayingUser(user)) then
+				call SmartCameraPanForPlayer(user, x, y, duration)
+			endif
+			set user = null
+			set i = i + 1
+		endloop
 	endfunction
 
 	/**

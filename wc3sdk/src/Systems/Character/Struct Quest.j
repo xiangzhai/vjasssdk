@@ -1,4 +1,4 @@
-library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, AStructCoreGeneralVector, AStructSystemsCharacterAbstractQuest
+library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, AStructCoreGeneralVector, ALibraryCoreStringConversion, AStructSystemsCharacterAbstractQuest
 
 	struct AQuest extends AAbstractQuest
 		//static start members
@@ -56,6 +56,8 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 
 		public stub method setState takes integer state returns nothing
 			local integer i
+			local player user
+			local playercolor playerColor
 			local string title
 			call super.setState(state)
 			if (state == AAbstractQuest.stateCompleted or state == AAbstractQuest.stateFailed) then
@@ -72,7 +74,11 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 				if (this.character() == 0) then
 					set title = this.title()
 				else
-					set title = this.title() + " - " + this.character().name()
+					set user = this.character().user()
+					set playerColor = GetPlayerColor(user)
+					set title = "|cff" + PlayerColorToString(playerColor) + this.title() + "|r"
+					set user = null
+					set playerColor = null
 				endif
 				call QuestSetTitle(this.m_questLogQuest, title)
 				//call QuestSetDescription(this.questLogQuest, this.description)
@@ -144,7 +150,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 
 		public static method create takes ACharacter character, string title returns thistype
 			local thistype this = thistype.allocate(character, title)
-			//members
+			//dynamic members
 			set this.m_questItems = AIntegerVector.create()
 
 			call this.createQuestLogQuest()

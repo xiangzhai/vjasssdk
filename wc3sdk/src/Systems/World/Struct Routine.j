@@ -1,12 +1,58 @@
 library AStructSystemsWorldRoutine requires AStructCoreGeneralHashTable
 
+	/// Isn't a method since it uses @function TriggerSleepAction.
+	function moveNpcTo takes ARoutine routine, real x, real y returns boolean
+		local unit npc = routine.unit()
+		loop
+			if (not routine.isInTime()) then
+				set npc = null
+				return false
+			elseif (routine.isAbleToMove()) then
+				call IssuePointOrder(npc, "move", x, y)
+				exitwhen (true)
+			endif
+			call TriggerSleepAction(1.0)
+		endloop
+		set npc = null
+		return routine.isInTime()
+	endfunction
+	
+	/// Isn't a method since it uses @function TriggerSleepAction.
+	function moveNpcToRectCenter takes ARoutine routine, rect targetRect returns boolean
+		return moveNpcTo(routine, GetRectCenterX(targetRect), GetRectCenterY(targetRect))
+	endfunction
+	
+	/// Isn't a method since it uses @function TriggerSleepAction.
+	function waitForNewNpcRect takes ARoutine routine, rect newRect returns boolean
+		local unit npc = routine.unit()
+		loop
+			exitwhen (RectContainsUnit(newRect, npc) or not routine.isInTime())
+			call TriggerSleepAction(1.0)
+		endloop
+		set npc = null
+		return routine.isInTime()
+	endfunction
+	
+	/// Isn't a method since it uses @function TriggerSleepAction.
+	function moveNpcToRectCenterAndWait takes ARoutine routine, rect targetRect returns boolean
+		if (not moveNpcToRectCenter(routine, targetRect)) then
+			return false
+		endif
+		if (not waitForNewNpcRect(routine, targetRect)) then
+			return false
+		endif
+		return routine.isInTime()
+	endfunction
+
 	/// @todo Should be a part of @struct ARoutine, vJass bug.
 	function interface ARoutineAction takes ARoutine routine returns nothing
 
-	/// ARoute provides NPC routine handling like in the game Gothic or Gothic II.
-	/// You are able to assign day times and routine actions using the function interface @functioninterface ARouteAction.
-	/// Additionally you can make periodic routines by setting a 'run rate'.
-	/// If the assigned unit is paused, routine won't be runned until unit gets unpaused.
+	/**
+	* Provides NPC routine handling like in the game Gothic or Gothic II.
+	* You are able to assign day times and routine actions using the function interface @functioninterface ARouteAction.
+	* Additionally you can make periodic routines by setting a 'run rate'.
+	* If the assigned unit is paused, routine won't be runned until unit gets unpaused.
+	*/
 	struct ARoutine
 		//start members
 		private unit m_unit
