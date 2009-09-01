@@ -20,7 +20,7 @@ library AStructCoreGeneralAsl requires ALibraryCoreDebugMisc, ALibraryCoreString
 			set thistype.m_usingRtc = usingRtc
 			set thistype.m_usingJapi = usingJapi
 			
-			debug call Print(tr("Initializing Advanced ScriptLibrary"))
+			debug call Print(tr("Initializing Advanced Script Library"))
 			debug call Print(StringArg(tr("Version: %s"), thistype.version))
 			debug call Print(StringArg(tr("Maintainer: %s"), thistype.maintainer))
 			debug call Print(StringArg(tr("Website: %s"), thistype.website))

@@ -19,4 +19,16 @@ library ALibraryCoreGeneralItem
 		return result
 	endfunction
 
+	/**
+	* @author Tamino Dauth
+	* @return Returns name of item type @param itemTypeId.
+	*/
+	function GetItemTypeIdName takes integer itemTypeId returns string
+		local item whichItem = CreateItem(itemTypeId, 0.0, 0.0)
+		local string result = GetItemName(whichItem)
+		call RemoveItem(whichItem)
+		set whichItem = null
+		return result
+	endfunction
+
 endlibrary

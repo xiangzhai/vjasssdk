@@ -129,6 +129,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			call ACharacter.setAllMovable(false)
 			call ACharacter.showAll(false)
 			call PauseAllUnitsBJ(true)
+			call SetCameraBoundsToRect(bj_mapInitialPlayableArea) // for all players
 			set playersAll = GetPlayersAll()
 			call CinematicModeExBJ(true, playersAll, 0.0)
 			set playersAll = null

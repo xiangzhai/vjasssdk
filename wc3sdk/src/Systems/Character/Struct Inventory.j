@@ -1,6 +1,6 @@
 library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, AStructCoreGeneralHashTable, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, AStructSystemsCharacterAbstractCharacterSystem, AStructSystemsCharacterCharacter, AStructSystemsCharacterItemType
 
-	private struct AInventoryItemData
+	struct AInventoryItemData
 		//dynamic members
 		private integer m_itemTypeId
 		private integer m_charges
@@ -274,6 +274,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				call this.enableEquipment()
 			endif
 
+			/// @todo wait for calling methods above?
 			call EnableTrigger(this.m_openTrigger)
 			call EnableTrigger(this.m_orderTrigger)
 			call EnableTrigger(this.m_pickupTrigger)
@@ -289,6 +290,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				call this.disableEquipment()
 			endif
 
+			/// @todo wait for calling methods above?
 			call DisableTrigger(this.m_openTrigger)
 			call DisableTrigger(this.m_orderTrigger)
 			call DisableTrigger(this.m_pickupTrigger)
@@ -618,7 +620,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call this.setRucksackItem(index, inventoryItemData, add)
 		endmethod
 
-		private method clearRucksackItem takes integer index, boolean drop returns nothing
+		public method clearRucksackItem takes integer index, boolean drop returns nothing
 			local unit characterUnit
 			local item slotItem
 			if (this.m_rucksackIsEnabled and this.m_rucksackPage == this.itemRucksackPage(index)) then
@@ -658,7 +660,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set slotItem = null
 		endmethod
 		
-		private method refreshRucksackItemCharges takes integer index returns nothing
+		public method refreshRucksackItemCharges takes integer index returns nothing
 			local unit characterUnit
 			local integer slot
 			local item slotItem

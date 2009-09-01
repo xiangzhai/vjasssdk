@@ -69,7 +69,6 @@ library AStructSystemsGuiDialogButton requires ALibraryCoreDebugMisc, AStructCor
 		private static method triggerActionRunDialogButtonAction takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ADialogButton this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			debug call this.print("Button action! and clear")
 			call this.dialog().setDisplayedByButton(false) // Do not clear the dialog automatically (dialog().clear()) since it can be shown again with same buttons.
 			call this.m_action.execute(this)
 			set triggeringTrigger = null

@@ -20,7 +20,7 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 		endif
 		if (result) then
 			call questItem.addKill()
-			call questItem.quest().displayUpdateMessage(IntegerArg(IntegerArg("%i von i% getötet.", questItem.killed()), questItem.count()))
+			call questItem.quest().displayUpdateMessage(IntegerArg(IntegerArg("%i von i% getÃ¶tet.", questItem.killed()), questItem.count()))
 		endif
 		return questItem.killed() == questItem.count()
 	endfunction

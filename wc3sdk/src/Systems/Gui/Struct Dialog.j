@@ -129,7 +129,6 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 		
 		public method addDialogButtonInstance takes ADialogButton instance returns integer
 			if (this.m_dialogButtons.size() - this.m_maxPageNumber * ADialog.maxPageButtons == ADialog.maxPageButtons) then
-				debug call this.print("Button size has reached page maximum.")
 				set this.m_maxPageNumber = this.m_maxPageNumber + 1
 			endif
 			call this.m_dialogButtons.pushBack(instance)
@@ -138,7 +137,6 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 		
 		public method removeDialogButtonInstance takes ADialogButton instance returns nothing
 			if (this.m_dialogButtons.size() - this.m_maxPageNumber * ADialog.maxPageButtons == 0) then
-				debug call this.print("Button size has reached page maximum. Decrease page number! Instance " + I2S(instance))
 				set this.m_maxPageNumber = this.m_maxPageNumber - 1
 			endif
 			call this.m_dialogButtons.remove(instance)
@@ -146,7 +144,6 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 		
 		public method removeDialogButtonByIndex takes integer index returns nothing
 			if (this.m_dialogButtons.size() - this.m_maxPageNumber * ADialog.maxPageButtons == 0) then
-				debug call this.print("Button size has reached page maximum. Decrease page number! Index " + I2S(index))
 				set this.m_maxPageNumber = this.m_maxPageNumber - 1
 			endif
 			call this.m_dialogButtons.erase(index)
