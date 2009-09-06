@@ -21,11 +21,16 @@
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
+#include <iostream> //verbose
 //POSIX
 #include <sys/stat.h>
 
-#include "parser.h"
-#include "string.h"
+#include <boost/tokenizer.hpp>
+
+#include "parser.hpp"
+#include "string.hpp"
+#include "options.hpp"
+#include "internationalisation.hpp"
 
 namespace vjasstrans
 {
@@ -48,17 +53,14 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 
 	for (unsigned int i = 0; std::getline(fstream, line); ++i)
 	{
-		std::string::size_type position = line.find(searchedString);
-
-		if (position != std::string::npos)
+		for (std::string::size_type position = line.find(searchedString); position != std::string::npos; position = line.find(searchedString, position))
 		{
-			std::string::size_type length = line.find("\")", position);
+			position += searchedString.length();
+			std::string::size_type length = line.find("\"", position);
 
-			if (position != std::string::npos)
+			if (length != std::string::npos && line[length - 1] != '\\') //tr("Ich heiße \"Hans\"") -> ignore escape sequences
 			{
 				length = length - position;
-				position += 4;
-				length -= 4;
 				std::string defaultString = line.substr(position, length);
 				int id = strings.size();
 				std::list<class String*>::iterator iterator = strings.begin();
@@ -76,7 +78,7 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 				{
 					std::stringstream sstream;
 					sstream << "STRING_" << id;
-					strings.push_back(new String(filePath, i, sstream.str(), defaultString));
+					strings.push_back(new String(filePath, i, sstream.str(), defaultString, ""));
 					
 					if (replace)
 						line.replace(position, length, sstream.str());
@@ -86,29 +88,120 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 			}
 		}
 
-		lines.push_back(line);
+		if (replace)
+			lines.push_back(line);
 	}
 
 	fstream.close();
-	fstream.open(filePath.c_str(), std::ios_base::out);
 
-	for (std::list<std::string>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
+	if (replace)
 	{
-		fstream << *iterator << '\n';
+		fstream.open(filePath.c_str(), std::ios_base::out);
+
+		for (std::list<std::string>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
+		{
+			if (iterator != lines.begin())
+				fstream << '\n';
+
+			fstream << *iterator;
+		}
+
+		fstream.close();
+	}
+
+	return true;
+}
+
+bool Parser::readFdf(const std::string &filePath, std::list<class String*> &strings)
+{
+	fprintf(stdout, _("Reading fdf file \"%s\".\n"), filePath.c_str());
+	std::ifstream fstream(filePath.c_str(), std::ios_base::in);
+
+	if (!fstream)
+	{
+		fprintf(stderr, _("Error while opening file \"%s\".\n"), filePath.c_str());
+		return false;
+	}
+
+	std::string line;
+
+	for (unsigned int i = 0; std::getline(fstream, line); ++i)
+	{
+		if (line.empty())
+			continue;
+
+		boost::tokenizer<> tokenizer(line);
+		boost::tokenizer<>::iterator iterator = tokenizer.begin();
+
+		if (iterator != tokenizer.end() && (*iterator).length() > 7 && (*iterator).substr(0, 7)  == "STRING_")
+		{
+			std::string idString = *iterator;
+			std::size_t index = line.find_last_of("/*");
+
+			if (index == std::string::npos)
+			{
+				std::cerr << "Error at line " << i << ", missing */." << std::endl;
+				continue;
+			}
+
+			index += 3;
+			std::size_t length = line.find_last_of("*/", index);
+
+			if (length == std::string::npos)
+			{
+				std::cerr << "Error at line " << i << ", missing /*." << std::endl;
+				continue;
+			}
+
+			length -= index + 3;
+			std::string defaultString = line.substr(index, length);
+
+			if (defaultString.empty())
+			{
+				std::cerr << "Error at line " << line << ", missing default string." << std::endl;
+				continue;
+			}
+
+			index = line.find('"');
+
+			if (index == std::string::npos)
+			{
+				std::cerr << "Error at line " << i << ", missing \"." << std::endl;
+				continue;
+			}
+
+			index += 2;
+			length = line.find("\"", index);
+
+			if (length == std::string::npos)
+			{
+				std::cerr << "Error at line " << i << ", missing \"." << std::endl;
+				continue;
+			}
+
+			length -= index + 2;
+			std::string valueString = line.substr(index, length);
+			strings.push_back(new String("", 0, idString, defaultString, valueString));
+		}
 	}
 
 	fstream.close();
+	std::cout << "Listening file strings:" << std::endl;
+
+	for (std::list<class String*>::iterator iterator = strings.begin(); iterator != strings.end(); ++iterator)
+		std::cout << "- " << (*iterator)->idString() << "\t\t" << (*iterator)->defaultString() << std::endl;
 
 	return true;
 }
 
 bool Parser::writeFdf(const std::string &filePath, const std::list<class String*> &strings)
 {
+	fprintf(stdout, _("Writing fdf file \"%s\".\n"), filePath.c_str());
 	std::ofstream fstream(filePath.c_str());
 
 	if (!fstream)
 	{
-		fprintf(stdout, "Error while opening file \"%s\".\n", filePath.c_str());
+		fprintf(stdout, _("Error while opening file \"%s\".\n"), filePath.c_str());
 		return false;
 	}
 
@@ -117,7 +210,7 @@ bool Parser::writeFdf(const std::string &filePath, const std::list<class String*
 
 	for (std::list<class String*>::const_iterator iterator = strings.begin(); iterator != strings.end(); ++iterator, ++i)
 	{
-		fstream << "\t" << (*iterator)->idString() << "\t\t\t\"\"";
+		fstream << "\t" << (*iterator)->idString() << "\t\t\t\"" << (*iterator)->valueString() << '\"';
 		
 		if (i != strings.size() - 1)
 			fstream << ',';
@@ -130,53 +223,74 @@ bool Parser::writeFdf(const std::string &filePath, const std::list<class String*
 	return true;
 }
 
-bool Parser::writeWts(const std::string &filePath, const std::string &existingFilePath, const std::list<class String*> &strings)
+bool Parser::readWts(const std::string &filePath, std::list<class String*> &strings)
 {
-	struct stat fileInfo;
-	bool exists = stat(existingFilePath.c_str(), &fileInfo) == 0;
-	std::fstream fstream;
-	unsigned int startId = 0;
-
-	if (exists)
-	{
-		fstream.open(existingFilePath.c_str(), std::ios_base::in);
-		
-		if (!fstream)
-		{
-			fprintf(stderr, "Error while opening map strings file \"%s\".\n", filePath.c_str());
-			return false;
-		}
-
-		std::list<std::string> lines;
-		std::string line;
-
-		for (unsigned int i = 0; std::getline(fstream, line); ++i)
-		{
-			std::string::size_type position = line.find("STRING");
-			
-			if (position != std::string::npos)
-				startId = atoi(line.substr(position + 1).c_str()) + 1;
-			
-			lines.push_back(line);
-		}
-
-		fstream.close();
-	}
+	fprintf(stdout, _("Reading wts file \"%s\".\n"), filePath.c_str());
+	std::ifstream fstream(filePath.c_str());
 	
-	fstream.open(filePath.c_str(), std::ios_base::out);
-
 	if (!fstream)
 	{
-		fprintf(stderr, "Error while creating wts file \"%s\".\n", filePath.c_str());
+		fprintf(stderr, _("Error while opening map strings file \"%s\".\n"), filePath.c_str());
 		return false;
 	}
 
-	for (std::list<class String*>::const_iterator iterator = strings.begin(); iterator != strings.end(); ++iterator, ++startId)
+	std::list<std::string> lines;
+	std::string line;
+
+	for (unsigned int i = 0; std::getline(fstream, line); ++i, lines.push_back(line))
 	{
-		fstream << "STRING " << startId << '\n'
+		std::string::size_type position = line.find("STRING");
+		
+		if (line.substr(0, 6) != "STRING")
+			continue;
+
+		std::string idString = line.substr(0, 6) + "_" + line.substr(7);
+
+		if (std::getline(fstream, line) && ++i && line.substr(2) == "//")
+		{
+			
+			std::string defaultString = line.length() < 4 ? "" : line.substr(3);
+
+			if (std::getline(fstream, line) && ++i && line == "{" && std::getline(fstream, line) && ++i)
+			{
+				std::string valueString = line;
+				strings.push_back(new String("", 0, idString, defaultString, line));
+			}
+			else
+			{
+				fprintf(stderr, _("Error at line %i: Missing value string line or { character line.\n"), i);
+				break;
+			}
+		}
+		else
+		{
+			fprintf(stderr, _("Error at line %i: Missing default string line.\n"), i);
+			break;
+		}
+	}
+
+	fstream.close();
+
+	return true;
+}
+
+bool Parser::writeWts(const std::string &filePath, const std::list<class String*> &strings)
+{
+	fprintf(stdout, _("Writing wts file \"%s\".\n"), filePath.c_str());
+	std::ofstream fstream(filePath.c_str());
+
+	if (!fstream)
+	{
+		fprintf(stderr, _("Error while creating wts file \"%s\".\n"), filePath.c_str());
+		return false;
+	}
+
+	for (std::list<class String*>::const_iterator iterator = strings.begin(); iterator != strings.end(); ++iterator)
+	{
+		fstream << "STRING " << (*iterator)->id() << '\n'
 		<< "// " << (*iterator)->defaultString() << '\n'
 		<< "{\n"
-		<< (*iterator)->defaultString() << '\n'
+		<< (*iterator)->valueString() << '\n'
 		<< "}\n"
 		<< std::endl;
 	}

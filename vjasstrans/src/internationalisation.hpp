@@ -18,47 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSTRANS_STRING_H
-#define VJASSTRANS_STRING_H
+#ifndef VJASSTRANS_INTERNATIONALISATION_H
+#define VJASSTRANS_INTERNATIONALISATION_H
 
-#include <string>
-
-namespace vjasstrans
-{
-
-class String
-{
-	public:
-		String(const std::string &filePath, unsigned int line, const std::string &idString, const std::string &defaultString) : m_filePath(filePath), m_line(line), m_idString(idString), m_defaultString(defaultString)
-		{
-		};
-
-		std::string filePath() const
-		{
-			return this->m_filePath;
-		};
-		unsigned int line() const
-		{
-			return this->m_line;
-		};
-		std::string idString() const
-		{
-			return this->m_idString;
-		};
-		std::string defaultString() const
-		{
-			return this->m_defaultString;
-		};
-
-	private:
-		std::string m_filePath;
-		unsigned int m_line;
-		std::string m_idString;
-		std::string m_defaultString;
-
-
-};
-
-}
+//preparation for gettext
+#include <libintl.h>
+#include <locale.h>
+#define _(string) gettext(string)
 
 #endif

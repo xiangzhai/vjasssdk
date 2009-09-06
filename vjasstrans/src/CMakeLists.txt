@@ -1,6 +1,7 @@
 set(SRC
 	main.cpp
 	parser.cpp
+	options.cpp
 )
 
 add_executable(vjasstrans ${SRC})

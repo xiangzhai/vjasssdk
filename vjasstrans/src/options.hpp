@@ -18,24 +18,24 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSTRANS_PARSER_H
-#define VJASSTRANS_PARSER_H
+#ifndef VJASSTRANS_OPTIONS_H
+#define VJASSTRANS_OPTIONS_H
 
-#include <list>
 #include <string>
 
 namespace vjasstrans
 {
 
-class String;
-
-class Parser
-{
-	public:
-		bool parse(const std::string &filePath, std::list<class String*> &strings, bool replace = false, const std::string &translationFunction = "GetLocalizedString");
-		bool writeFdf(const std::string &filePath, const std::list<class String*> &strings);
-		bool writeWts(const std::string &filePath, const std::string &existingFilePath, const std::list<class String*> &strings);
-};
+extern const char *version;
+extern bool optionReplace;
+extern bool optionRecursive;
+extern bool optionFdf;
+extern bool optionWts;
+extern bool optionAfdf;
+extern bool optionAwts;
+extern std::string optionTrans;
+extern std::string optionWtspath;
+extern std::string optionFdfpath;
 
 }
 

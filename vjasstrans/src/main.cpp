@@ -28,21 +28,11 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#include "parser.h"
-#include "string.h"
-#include "internationalisation.h"
+#include "parser.hpp"
+#include "string.hpp"
+#include "options.hpp"
+#include "internationalisation.hpp"
 
-namespace vjasstrans
-{
-
-static const char *version = "0.1";
-bool optionReplace = false;
-bool optionRecursive = false;
-bool optionFdf = false;
-bool optionWts = false;
-std::string optionTrans = "GetLocalizedString";
-
-}
 
 using namespace vjasstrans;
 
@@ -114,7 +104,7 @@ int main(int argc, char *argv[])
 	bindtextdomain("vjasstrans", LOCALE_DIR);
 	textdomain("vjasstrans");
 	
-	if (argc < 1)
+	if (argc == 1)
 	{
 		std::cout << _("Missing arguments.") << std::endl;
 		return EXIT_FAILURE;
@@ -140,12 +130,19 @@ int main(int argc, char *argv[])
 		_("--version                   Shows the current version of vjasstrans.\n") <<
 		_("--replace                   Replaces all translated strings by STRING_<id> in code files.\n") <<
 		_("--recursive                 Parses all source files in sub directories.\n") <<
-		_("--fdf                       Creates file \"output.fdf\" with all parsed strings.\n") <<
-		_("--wts                       Creates file \"output.wts\" with all parsed strings.\n") <<
-		_("--trans <arg>               <arg> has to be the name of the translation function like GetLocalizedString.\n") <<
+		_("--fdf                       Creates file with all parsed strings.\n") <<
+		_("--wts                       Creates file with all parsed strings.\n") <<
+		_("--afdf                      Appends file with all parsed strings.\n") <<
+		_("--awts                      Appends file with all parsed strings.")
+		<< std::endl
+		;
+		fprintf(stdout, _("--trans <arg>               <arg> has to be the name of the translation function. Default value: %s.\n"), optionTrans.c_str());
+		fprintf(stdout, _("--wtspath <arg>             <arg> has to be the file path of wts file. Default value: %s.\n"), optionWtspath.c_str());
+		fprintf(stdout, _("--fdfpath <arg>             <arg> has to be the file path of fdf file. Default value: %s.\n"), optionFdfpath.c_str());
+		std::cout <<
 		_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 		std::endl;
-			
+		
 		return EXIT_SUCCESS;
 	}
 	
@@ -169,6 +166,14 @@ int main(int argc, char *argv[])
 		{
 			optionWts = true;
 		}
+		else if (strcmp(argv[i], "--awts") == 0)
+		{
+			optionAwts = true;
+		}
+		else if (strcmp(argv[i], "--afdf") == 0)
+		{
+			optionAfdf = true;
+		}
 		else if (strcmp(argv[i], "--trans") == 0)
 		{
 			if (++i == argc)
@@ -178,6 +183,26 @@ int main(int argc, char *argv[])
 			}
 			
 			optionTrans = argv[i];
+		}
+		else if (strcmp(argv[i], "--wtspath") == 0)
+		{
+			if (++i == argc)
+			{
+				std::cerr << "Missing argument of option --wtspath." << std::endl;
+				return EXIT_FAILURE;
+			}
+			
+			optionWtspath = argv[i];
+		}
+		else if (strcmp(argv[i], "--fdfpath") == 0)
+		{
+			if (++i == argc)
+			{
+				std::cerr << "Missing argument of option --fdfpath." << std::endl;
+				return EXIT_FAILURE;
+			}
+			
+			optionFdfpath = argv[i];
 		}
 		else
 			filePaths.push_back(argv[i]);
@@ -203,16 +228,20 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	class Parser parser;
+	if (optionAfdf)
+		Parser::readFdf(optionFdfpath, strings);
+	
+	if (optionAwts)
+		Parser::readWts(optionWtspath, strings);
 	
 	for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
-		parser.parse(*iterator, strings, optionReplace, optionTrans);
-
-	if (optionFdf)
-		parser.writeFdf("output.fdf", strings);
+		Parser::parse(*iterator, strings, optionReplace, optionTrans);
 	
-	if (optionWts)
-		parser.writeWts("output.wts", "", strings);
+	if (optionFdf || optionAfdf)
+		Parser::writeFdf(optionFdfpath, strings);
+	
+	if (optionWts || optionAwts)
+		Parser::writeWts(optionWtspath, strings);
 
 	return EXIT_SUCCESS;
 }
