@@ -36,7 +36,6 @@ class Vjassdoc
 {
 	public:
 		static const char *version;
-		static const char *dirSeparator;
 		static bool supportsDatabaseCreation;
 
 

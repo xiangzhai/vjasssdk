@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
 #include <sstream>
 
 #include "objects.h"
@@ -46,8 +45,8 @@ void FunctionInterface::initClass()
 	for (int i = 0; i < FunctionInterface::maxParameters; ++i)
 		sstream << "Parameter" << i << " INT,";
 	
-	DocComment::sqlColumnStatement += sstream.str();
-	DocComment::sqlColumnStatement += "ReturnType INT";
+	FunctionInterface::sqlColumnStatement += sstream.str();
+	FunctionInterface::sqlColumnStatement += "ReturnType INT";
 }
 #endif
 
@@ -155,18 +154,12 @@ std::string FunctionInterface::sqlStatement() const
 	
 	for (std::list<class Parameter*>::iterator iterator = list.begin(); iterator != list.end() && i < FunctionInterface::maxParameters; ++iterator)
 	{
-		std::cout << "Number " << i << std::endl;
-		std::cout << "Adding parameter " << (*iterator)->id() << " with index " << i << std::endl;
 		sstream << "Parameter" << i << "=" << Object::objectId((*iterator)) << ", ";
-		std::cout << "After adding" << std::endl;
 		++i;
 	}
 	
 	for ( ; i < FunctionInterface::maxParameters; ++i)
-	{
-		std::cout << "Parameter " << i << " is free." << std::endl;
 		sstream << "Parameter" << i << "=-1, ";
-	}
 	
 	sstream << "ReturnType=" << Object::objectId(this->returnType());
 	

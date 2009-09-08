@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		std::cerr << _("Missing arguments.\nUse --help to get some information about all available options.") << std::endl;
+		std::cerr << _("Missing arguments.\nUse \"--help\" to get some information about all available options.") << std::endl;
 		
 		return EXIT_FAILURE;
 	}

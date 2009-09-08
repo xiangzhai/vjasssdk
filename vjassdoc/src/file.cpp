@@ -246,10 +246,10 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					while (iterator != list.end())
 					{
 						openPath = *iterator;
-						std::size_t length = strlen(Vjassdoc::dirSeparator);
+						std::size_t length = strlen(dirSeparator);
 						
-						if (strcmp(openPath.substr(openPath.length() - length, length).c_str(), Vjassdoc::dirSeparator) != 0)
-							openPath += Vjassdoc::dirSeparator;
+						if (strcmp(openPath.substr(openPath.length() - length, length).c_str(), dirSeparator) != 0)
+							openPath += dirSeparator;
 						
 						openPath += filePath;
 						fin.open(openPath.c_str(), std::ios_base::ate);
@@ -954,7 +954,6 @@ void File::truncateComments(std::string &line, unsigned int index)
 	}
 }
 
-/// @todo @ filter should be processed during in initialization.
 void File::getDocComment(const std::string &line, unsigned int index)
 {
 	std::string docCommentItem = getToken(line, index, true);

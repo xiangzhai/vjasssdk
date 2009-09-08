@@ -315,6 +315,18 @@ void DocComment::init()
 		
 	}
 	
+	bool isEmpty = true;
+	
+	/// @todo Seems to be that some documentation comments can contain white space characters only (if there are only authors?!).
+	for (int i = 0; i < result.length(); ++i)
+	{
+		if (result[i] != ' ' && result[i] != '\t' && result[i] != '\n')
+			isEmpty = false;
+	}
+	
+	if (isEmpty)
+		result.clear();
+	
 	this->setIdentifier(result);
 }
 

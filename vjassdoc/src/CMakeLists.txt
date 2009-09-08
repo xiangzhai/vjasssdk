@@ -71,6 +71,11 @@ add_executable(vjassdoc ${LIB_SRC} main.cpp)
 target_link_libraries(vjassdoc sqlite3)
 target_link_libraries(vjassdoc gettextlib)
 
+# todo: check compile flag GUI
+#if (GUI)
+	add_subdirectory(gui)
+#endif (GUI)
+
 #install
 
 install(FILES

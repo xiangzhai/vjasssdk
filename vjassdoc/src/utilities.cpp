@@ -24,6 +24,14 @@
 namespace vjassdoc
 {
 
+#ifdef UNIX
+const char *dirSeparator = "/";
+#elif defined WIN32
+const char *dirSeparator = "\\\\";
+#else
+#error You have to define UNIX or WIN32.
+#endif
+
 std::string getToken(const std::string &line, unsigned int &index, bool endOfLine)
 {
 	if (index >= line.length() || line.empty()) //important
@@ -53,6 +61,15 @@ std::string getToken(const std::string &line, unsigned int &index, bool endOfLin
 
 	return line.substr(position, length);
 }
+
+void cutFilePath(std::string &filePath)
+{
+	std::size_t position = filePath.find_last_of(dirSeparator);
+	
+	if (position != std::string::npos)
+		filePath.erase(0, position + 1);
+}
+
 
 bool fileExists(const std::string &fileName)
 {

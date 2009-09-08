@@ -1,3 +1,10 @@
+2009-09-08 Tamino Dauth <tamino@cdauth.de>
+* Fixed database and improved writing.
+* Added several methods to class Parser.
+* Improved adding databases.
+* Revised some cmake files.
+* Added files "src/gui/CMakeFiles.txt", "src/gui/main.cpp", "src/gui/mainwindow.hpp", "src/gui/mainwindow.cpp" and "src/gui/ui/widget.ui".
+
 2009-08-08 Tamino Dauth <tamino@cdauth.de>
 * Improved class Compiler.
 

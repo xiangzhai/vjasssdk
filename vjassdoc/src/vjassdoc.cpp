@@ -31,13 +31,6 @@ namespace vjassdoc
 {
 
 const char *Vjassdoc::version = "0.3";
-#ifdef UNIX
-const char *Vjassdoc::dirSeparator = "/";
-#elif defined WIN32
-const char *Vjassdoc::dirSeparator = "\\\\";
-#else
-#error You have to define UNIX or WIN32.
-#endif
 #ifdef SQLITE
 bool Vjassdoc::supportsDatabaseCreation = true;
 #else
@@ -98,7 +91,6 @@ void Vjassdoc::configure(bool jass, bool debug, bool privateSpace, bool textmacr
 #ifdef SQLITE
 void Vjassdoc::initClasses()
 {
-	std::cout << "Before initialization." << std::endl;
 	Object::initClass();
 	Comment::initClass();
 	Keyword::initClass();
@@ -122,7 +114,6 @@ void Vjassdoc::initClasses()
 	Library::initClass();
 	SourceFile::initClass();
 	DocComment::initClass();
-	std::cout << "After initialization." << std::endl;
 }
 #endif
 
@@ -152,8 +143,35 @@ void Vjassdoc::run()
 #error You have to define UNIX or WIN32.
 #endif
 
-	
-	Vjassdoc::getParser()->parse();
+#ifdef SQLITE
+	if (!Vjassdoc::getDatabases().empty())
+	{
+		if (Vjassdoc::showVerbose())
+			std::cout << _("You've selected one or several databases.") << std::endl;
+		
+		std::list<std::string> databases = Vjassdoc::getDatabases();
+
+		for (std::list<std::string>::iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
+			Vjassdoc::getParser()->addDatabase((*iterator).c_str());
+	}
+#endif
+
+	Vjassdoc::getParser()->parse(Vjassdoc::getFilePaths());
+
+	if (Vjassdoc::sortAlphabetically())
+		Vjassdoc::getParser()->sortAlphabetically();
+
+	if (Vjassdoc::saveAsHtml())
+		Vjassdoc::getParser()->createHtmlFiles();
+
+	if (Vjassdoc::checkSyntax())
+		Vjassdoc::getParser()->showSyntaxErrors();
+
+#ifdef SQLITE
+	//create SQL database for search functions
+	if (Vjassdoc::createDatabase())
+		Vjassdoc::getParser()->createDatabase();
+#endif
 
 	if (!Vjassdoc::compileFilePath().empty())
 		Vjassdoc::getCompiler()->compile();

@@ -212,7 +212,7 @@ std::string Struct::sqlStatement() const
 	<< "Size=" << Object::objectId(this->size()) << ", "
 	<< "SizeExpression=\"" << this->sizeExpression() << "\", "
 	<< "Extension=" << Object::objectId(this->extension()) << ", "
-	<< "ExtensionExpression\"" << this->extensionExpression() << "\", "
+	<< "ExtensionExpression=\"" << this->extensionExpression() << "\", "
 	<< "Constructor=" << Object::objectId(this->constructor()) << ", "
 	<< "Destructor=" << Object::objectId(this->destructor()) << ", "
 	<< "Initializer=" << Object::objectId(this->initializer());

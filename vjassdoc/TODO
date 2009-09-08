@@ -50,6 +50,18 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add support for compiler flag DATABASE.
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-09-07 Tamino Dauth <tamino@cdauth.de>
+* Text macro instance comparator does not work correctly.
+* FIXED: Methods table is not created in database.
+* FIXED: Functions table is not created in database.
+* FIXED: Function interfaces table is not created in database.
+* FIXED: Implementations table is empty.
+* FIXED: Hooks table is not created in database.
+* FIXED: Interfaces table is empty.
+* FIXED: Struct values are null in table.
+* FIXED: Modules table is empty.
+* FIXED: Scopes table is empty.
+
 2009-08-03 Tamino Dauth <tamino@cdauth.de>
 * Improve auto completion.
 
@@ -70,7 +82,7 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add hook support.
 
 2009-06-21 Tamino Dauth <tamino@cdauth.de>
-* Structs and parameters aren't written correctly into databases.
+* FIXED: Structs and parameters aren't written correctly into databases.
 * Database loading vector of each object should be saved for special database initialization.
 
 2009-06-20 Tamino Dauth <tamino@cdauth.de>

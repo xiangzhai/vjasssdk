@@ -5,8 +5,7 @@ project(vjassdoc)
 
 find_library(gettext REQUIRED)
 
-add_definitions(-DSQLITE) #test, remove if you want to 
-add_definitions(-DDEBUG) #test, remove if you want to 
+add_definitions(-DSQLITE=1 -DDEBUG=1 -DGUI=1) # test
 
 if (SQLITE)
 	find_library(sqlite3 REQUIRED)
@@ -64,10 +63,12 @@ endif (UNIX)
 
 add_definitions(-DLOCALE_DIR=\"${LOCALE_INSTALL_DIR}\")
 
+include_directories(/usr/kde/4.2/include/ /usr/include/qt4/) # test
 include_directories(src)
 add_subdirectory(src)
 add_subdirectory(locale)
 
-#if (DEBUG)
+# todo: check compile flag DEBUG
+if (DEBUG)
 	add_subdirectory(tests)
-#endif (DEBUG)
+endif (DEBUG)

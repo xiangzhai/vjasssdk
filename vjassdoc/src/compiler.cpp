@@ -141,7 +141,7 @@ void Compiler::writeMethodGlobals(std::fstream &fstream)
 	// Note that .evaluate and .execute aren't used automatically like in vJass.
 }
 
-void Compile::writeLibraries(std::fstream &fstream)
+void Compiler::writeLibraries(std::fstream &fstream)
 {
 	if (Vjassdoc::showVerbose())
 		std::cout << _("Writing libraries.") << std::endl;

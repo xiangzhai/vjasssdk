@@ -120,9 +120,13 @@ class Parser
 		~Parser();
 		void createInheritanceListPage();
 		void createRequirementListPage();
-		void parse();
+		void sortAlphabetically();
+		void createHtmlFiles();
+		void showSyntaxErrors();
+		void parse(const std::list<std::string> &filePaths);
 
 #ifdef SQLITE
+		void createDatabase();
 		int addDatabase(const char *filePath);
 		void removeDatabase(const int &index);
 		/**
