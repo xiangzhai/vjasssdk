@@ -1,4 +1,4 @@
-#find_library(vjassdoclib REQUIRED)
+find_library(vjassdoclib REQUIRED)
 
 add_executable(autocompletion autocompletion.cpp)
 target_link_libraries(autocompletion vjassdoclib)

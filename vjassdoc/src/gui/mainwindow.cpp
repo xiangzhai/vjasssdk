@@ -63,7 +63,6 @@ void MainWindow::run()
 	foreach (QString iterator, databasesEditListBox->items())
 		databases.push_back(iterator.toAscii().data()); //iterator.toStdString()
 
-/*
 	vjassdoc::Vjassdoc::configure(
 	optionJassCheckBox->isChecked(),
 	optionDebugCheckBox->isChecked(),
@@ -90,7 +89,6 @@ void MainWindow::run()
 #endif
 	Vjassdoc::run();
 	Vjassdoc::clear();
-*/
 }
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent)

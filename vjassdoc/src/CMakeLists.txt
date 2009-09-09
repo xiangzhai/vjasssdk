@@ -64,17 +64,23 @@ set(HEADERS
 	utilities.h
 )
 
+# library
 add_library(vjassdoclib SHARED ${LIB_SRC})
-target_link_libraries(vjassdoclib sqlite3)
+if (USE_SQLITE)
+	target_link_libraries(vjassdoclib sqlite3)
+endif (USE_SQLITE)
 target_link_libraries(vjassdoclib gettextlib)
+
+# program
 add_executable(vjassdoc ${LIB_SRC} main.cpp)
-target_link_libraries(vjassdoc sqlite3)
+if (USE_SQLITE)
+	target_link_libraries(vjassdoc sqlite3)
+endif (USE_SQLITE)
 target_link_libraries(vjassdoc gettextlib)
 
-# todo: check compile flag GUI
-if (-DGUI)
+if (USE_GUI)
 	add_subdirectory(gui)
-endif (-DGUI)
+endif (USE_GUI)
 
 #install
 
