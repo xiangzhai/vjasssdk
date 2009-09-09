@@ -72,23 +72,23 @@ target_link_libraries(vjassdoc sqlite3)
 target_link_libraries(vjassdoc gettextlib)
 
 # todo: check compile flag GUI
-#if (GUI)
+if (-DGUI)
 	add_subdirectory(gui)
-#endif (GUI)
+endif (-DGUI)
 
 #install
 
 install(FILES
 	${HEADERS}
-	DESTINATION ${INCLUDE_INSTALL_DIR}
+	DESTINATION include/vjassdoc/
 )
 
-install(FILES
-	${LIB_NAME}
-	DESTINATION ${LIB_INSTALL_DIR}
+install(TARGETS
+	vjassdoclib
+	DESTINATION lib
 )
 
-install(FILES
-	${EXECUTABLE_NAME}
-	DESTINATION ${EXECUTABLE_INSTALL_DIR} #newer cmake ${RUNTIME_OUTPUT_DIRECTORY} 
+install(TARGETS
+	vjassdoc
+	DESTINATION bin
 )

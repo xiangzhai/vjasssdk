@@ -1,3 +1,6 @@
+2009-09-09 Tamino Dauth <tamino@cdauth.de>
+* Improved cmake files.
+
 2009-09-08 Tamino Dauth <tamino@cdauth.de>
 * Fixed database and improved writing.
 * Added several methods to class Parser.
