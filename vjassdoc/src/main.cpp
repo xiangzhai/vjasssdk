@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	// Set the current locale.
 	setlocale(LC_ALL, "");
 	// Set the text message domain.
-	bindtextdomain("vjassdoc", "usr/share/local");
+	bindtextdomain("vjassdoc", LOCALE_DIR);
 	textdomain("vjassdoc");
 
 	if (argc > 1)

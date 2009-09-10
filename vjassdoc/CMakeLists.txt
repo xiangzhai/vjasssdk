@@ -46,7 +46,7 @@ else (UNIX)
 	message("Warning: Unknown operating system.")
 endif (UNIX)
 
-#add_definitions(-DLOCALE_DIR=\"usr/share/local\")
+add_definitions(-DLOCALE_DIR=\\"${CMAKE_INSTALL_PREFIX}/share/local\\")
 
 include_directories(src)
 add_subdirectory(src)

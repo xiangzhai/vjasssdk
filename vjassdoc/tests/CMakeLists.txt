@@ -5,5 +5,5 @@ target_link_libraries(autocompletion vjassdoclib)
 
 install(TARGETS
 	autocompletion
-	DESTINATION bin
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 )
