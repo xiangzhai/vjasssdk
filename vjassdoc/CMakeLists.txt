@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 2.4.7)
-cmake_policy(SET CMP0005 NEW)
+cmake_minimum_required(VERSION 2.6.4)
 
 project(vjassdoc)
 
@@ -46,7 +45,7 @@ else (UNIX)
 	message("Warning: Unknown operating system.")
 endif (UNIX)
 
-add_definitions(-DLOCALE_DIR=\\"${CMAKE_INSTALL_PREFIX}/share/local\\")
+add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/local\")
 
 include_directories(src)
 add_subdirectory(src)
