@@ -3,19 +3,8 @@ cmake_policy(SET CMP0005 NEW)
 
 project(vjassdoc)
 
-find_package(Gettext)
-
-if (GETTEXT_FOUND)
-	message(STATUS "Gettext has been found.")
-else (GETTEXT_FOUND)
-	message(SEND_ERROR "Gettext has not been found.")
-endif (GETTEXT_FOUND)
-
-find_package(Boost COMPONENTS tokenizer) 
-	message(STATUS "Boost tokenizer component has been found.")
-if (Boost_TOKENIZER_FOUND)
-	message(SEND_ERROR "Boost tokenizer component has not found.")
-endif (Boost_TOKENIZER_FOUND)
+find_package(Gettext REQUIRED)
+find_package(Boost REQUIRED)
 
 # setup flags
 
