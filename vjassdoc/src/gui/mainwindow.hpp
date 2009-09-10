@@ -24,31 +24,25 @@
 #include <kmainwindow.h>
 #include <kaboutdata.h>
 
-#include "ui/ui_widget.hpp"
-
 namespace vjassdoc
 {
 
 namespace gui
 {
 
-class MainWindow : public KMainWindow, public Ui::Widget
+class Widget;
+
+class MainWindow : public KMainWindow
 {
 	//Q_OBJECT
-
-	public slots:
-		void run();
-
 	public:
 		static const KAboutData *aboutData;
 
 		MainWindow(QWidget *parent = 0);
 		virtual ~MainWindow();
 
-	private slots:
-		void buttonClicked(KDialog::ButtonCode button);
-
 	private:
+		class Widget *m_widget;
 		//Q_DISABLE_COPY(MainWindow)
 };
 

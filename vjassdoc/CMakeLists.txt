@@ -3,21 +3,35 @@ cmake_policy(SET CMP0005 NEW)
 
 project(vjassdoc)
 
+find_package(Gettext)
+
+if (GETTEXT_FOUND)
+	message(STATUS "Gettext has been found.")
+else (GETTEXT_FOUND)
+	message(SEND_ERROR "Gettext has not been found.")
+endif (GETTEXT_FOUND)
+
+find_package(Boost COMPONENTS tokenizer) 
+	message(STATUS "Boost tokenizer component has been found.")
+if (Boost_TOKENIZER_FOUND)
+	message(SEND_ERROR "Boost tokenizer component has not found.")
+endif (Boost_TOKENIZER_FOUND)
+
 # setup flags
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_definitions(-DDEBUG=1)
 	set(USE_DEBUG 1)
-	message("Build type is \"Debug\", using -DDEBUG.")
+	message(STATUS "Build type is \"Debug\", using -DDEBUG.")
 endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 find_package(Qt4)
-find_package(KDE4)
+find_package(KDE4) #FindGettext
 
 if (QT4_FOUND AND KDE4_FOUND)
 	add_definitions(-DGUI=1)
 	set(USE_GUI 1)
-	message("Qt 4 and KDE 4 have been found, using -DGUI.")
+	message(STATUS "Qt 4 and KDE 4 have been found, using -DGUI.")
 	include(${QT_USE_FILE})
 	add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 	#add_definitions(-DQT_STL)
@@ -30,7 +44,7 @@ find_library(SQLITE_FOUND sqlite3)
 if (SQLITE_FOUND)
 	add_definitions(-DSQLITE=1)
 	set(USE_SQLITE 1)
-	message("sqlite3 has been found, using -DSQLITE.")
+	message(STATUS "sqlite3 has been found, using -DSQLITE.")
 endif (SQLITE_FOUND)
 
 #add_definitions(-DSQLITE=1 -DDEBUG=1 -DGUI=1) # test
@@ -44,8 +58,6 @@ else (UNIX)
 endif (UNIX)
 
 #add_definitions(-DLOCALE_DIR=\"usr/share/local\")
-
-#find_package(Gettext REQUIRED)
 
 include_directories(src)
 add_subdirectory(src)

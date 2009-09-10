@@ -1,3 +1,8 @@
+2009-09-10 Tamino Dauth <tamino@cdauth.de>
+* Improved cmake files.
+* Added file "src/gui/widget.hpp".
+* Added file "src/gui/widget.cpp".
+
 2009-09-09 Tamino Dauth <tamino@cdauth.de>
 * Improved cmake files.
 * Improved main window widget UI.

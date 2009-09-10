@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>Tamino Dauth</author>
  <class>Widget</class>
  <widget class="QWidget" name="Widget">
   <property name="geometry">
@@ -158,36 +159,32 @@
     </layout>
    </item>
    <item row="0" column="1">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="outputDirectoryLabel">
-           <property name="text">
-            <string>Output directory:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="KUrlRequester" name="outputDirectoryUrlRequester"/>
-         </item>
-        </layout>
+        <widget class="QLabel" name="outputDirectoryLabel">
+         <property name="text">
+          <string>Output directory:</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="compilationDirectoryLabel">
-           <property name="text">
-            <string>Compilation directory:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="KUrlRequester" name="compilationDirectoryUrlRequester"/>
-         </item>
-        </layout>
+        <widget class="KUrlRequester" name="outputDirectoryUrlRequester"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="compilationDirectoryLabel">
+         <property name="text">
+          <string>Compilation directory:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KUrlRequester" name="compilationDirectoryUrlRequester"/>
        </item>
       </layout>
      </item>
