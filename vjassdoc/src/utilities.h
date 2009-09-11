@@ -27,7 +27,7 @@ namespace vjassdoc
 {
 
 extern const char *dirSeparator;
-extern std::string getToken(const std::string &line, unsigned int &index, bool endOfLine = false);
+extern std::string getToken(const std::string &line, std::size_t &index, bool endOfLine = false);
 extern void cutFilePath(std::string &filePath);
 extern bool fileExists(const std::string &fileName);
 

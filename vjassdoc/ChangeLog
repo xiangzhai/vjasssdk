@@ -1,3 +1,11 @@
+2009-09-11 Tamino Dauth <tamino@cdauth.de>
+* Renamed option methods of class Vjassdoc.
+* Duration and CPU duration of Vjassdoc are accessable now.
+* Added file "src/gui/application.hpp".
+* Added file "src/gui/application.cpp".
+* Improved class Widget.
+* Improved UI of class Widget.
+
 2009-09-10 Tamino Dauth <tamino@cdauth.de>
 * Improved cmake files.
 * Added file "src/gui/widget.hpp".

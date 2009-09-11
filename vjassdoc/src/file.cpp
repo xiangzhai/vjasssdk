@@ -139,7 +139,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 	{
 		++this->currentLine;
 		
-		if (Vjassdoc::showVerbose())
+		if (Vjassdoc::optionVerbose())
 			printf(_("Reading line %d of file %s.\n"), this->currentLine, filePath.c_str());
 
 		index = 0; //reset index!
@@ -161,7 +161,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				std::string identifier = getToken(line, index, true);
 			
 				if (!identifier.empty())
-					Vjassdoc::getParser()->add(new Comment(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment));
+					Vjassdoc::parser()->add(new Comment(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment));
 				
 				break;
 			}
@@ -182,7 +182,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				}
 				else
 				{
-					Vjassdoc::getParser()->add(new class Comment(line.substr(index), Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment));
+					Vjassdoc::parser()->add(new class Comment(line.substr(index), Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment));
 					this->clearDocComment();
 				}
 
@@ -208,8 +208,8 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					if (this->currentDocComment == 0)
 					{
 						this->gotDocComment = true;
-						this->currentDocComment = new class DocComment(line.substr(index), Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
-						Vjassdoc::getParser()->add(this->currentDocComment);
+						this->currentDocComment = new class DocComment(line.substr(index), Vjassdoc::parser()->currentSourceFile(), this->currentLine);
+						Vjassdoc::parser()->add(this->currentDocComment);
 					}
 					else
 						this->currentDocComment->addIdentifier(line.substr(index));
@@ -240,7 +240,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					std::string openPath;
 					std::ifstream fin;
 					bool result = false;
-					std::list<std::string> list = Vjassdoc::getImportDirs();
+					std::list<std::string> list = Vjassdoc::optionImport();
 					std::list<std::string>::const_iterator iterator = list.begin();
 					
 					while (iterator != list.end())
@@ -279,18 +279,18 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 
 					if (result)
 					{
-						if (Vjassdoc::showVerbose())
+						if (Vjassdoc::optionVerbose())
 							printf(_("Importing file %s.\n"), openPath.c_str());
 						
-						Vjassdoc::getParser()->add(new SourceFile(filePath, openPath));
+						Vjassdoc::parser()->add(new SourceFile(filePath, openPath));
 						this->clearDocComment();
 					}
 					else
 					{
-						if (Vjassdoc::showVerbose())
+						if (Vjassdoc::optionVerbose())
 							printf(_("Importing file %s.\n"), filePath.c_str());
 						
-						Vjassdoc::getParser()->add(new SourceFile(filePath, filePath));
+						Vjassdoc::parser()->add(new SourceFile(filePath, filePath));
 						this->clearDocComment();
 					}
 				}
@@ -300,11 +300,11 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					//std::cout << "Start text macro " << identifier << std::endl;
 					std::string args = this->getTextMacroArguments(line, index); //Nicht direkt übergeben, dann stimmt index nicht
 					//std::cout << "With arguments " << args << std::endl;
-					Vjassdoc::getParser()->add(new TextMacro(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, args));
+					Vjassdoc::parser()->add(new TextMacro(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, args));
 					
-					if (!Vjassdoc::parseTextMacroSpace())
+					if (!Vjassdoc::optionTextmacros())
 					{
-						if (Vjassdoc::showVerbose())
+						if (Vjassdoc::optionVerbose())
 							std::cout << _("Ignoring text macro space.") << std::endl;
 
 						this->notRequiredSpace = TextmacroExpression;
@@ -321,11 +321,11 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					std::string args = token.substr(argsPosition + 1, token.length() - argsPosition - 2);
 
 					//parser->addTextMacroInstance(this->docComment, this->getIdentifier(identifier), args);
-					Vjassdoc::getParser()->add(new TextMacroInstance(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, args));
+					Vjassdoc::parser()->add(new TextMacroInstance(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, args));
 					this->clearDocComment();
 				}
 				//NOTE Syntax checker!
-				else if (Vjassdoc::checkSyntax() && preprocessor != expressionText[DovjassinitExpression] && preprocessor != expressionText[InjectExpression] && preprocessor != expressionText[EndinjectExpression] && preprocessor != expressionText[NovjassExpression] && preprocessor != expressionText[EndnovjassExpression] && preprocessor != expressionText[LoaddataExpression] && preprocessor != expressionText[ExternalExpression])
+				else if (Vjassdoc::optionSyntax() && preprocessor != expressionText[DovjassinitExpression] && preprocessor != expressionText[InjectExpression] && preprocessor != expressionText[EndinjectExpression] && preprocessor != expressionText[NovjassExpression] && preprocessor != expressionText[EndnovjassExpression] && preprocessor != expressionText[LoaddataExpression] && preprocessor != expressionText[ExternalExpression])
 				{
 					char message[255];
 
@@ -334,7 +334,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					else
 						sprintf(message, _("Missing preprocessor statement."));
 
-					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+					Vjassdoc::parser()->add(new SyntaxError(Vjassdoc::parser()->currentSourceFile(), this->currentLine, message));
 				}
 				
 				break;
@@ -347,11 +347,11 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				this->truncateComments(line, index);
 				std::string identifier = getToken(line, index);
 
-				if (Vjassdoc::checkSyntax() && identifier.empty())
+				if (Vjassdoc::optionSyntax() && identifier.empty())
 				{
 					char message[255];
 					sprintf(message, _("Missing type identifier."));
-					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+					Vjassdoc::parser()->add(new SyntaxError(Vjassdoc::parser()->currentSourceFile(), this->currentLine, message));
 				}
 
 				std::string parentTypeIdentifier;
@@ -359,11 +359,11 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				
 				if (parentTypeIdentifier == expressionText[ExtendsExpression])
 					parentTypeIdentifier = getToken(line, index);
-				else if (Vjassdoc::checkSyntax() && !parentTypeIdentifier.empty())
+				else if (Vjassdoc::optionSyntax() && !parentTypeIdentifier.empty())
 				{
 					char message[255];
 					sprintf(message, _("Unknown expression: \"%s\". Expected \"extends\"."), parentTypeIdentifier.c_str());
-					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+					Vjassdoc::parser()->add(new SyntaxError(Vjassdoc::parser()->currentSourceFile(), this->currentLine, message));
 				}
 				
 				std::string size = getToken(line, index);
@@ -377,21 +377,21 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 	
 					std::string::size_type start = size.find('[') + 1;
 
-					if (Vjassdoc::checkSyntax() && start == std::string::npos)
+					if (Vjassdoc::optionSyntax() && start == std::string::npos)
 					{
 						char message[255];
 						sprintf(message, _("Missing \"[\" expression."));
-						Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+						Vjassdoc::parser()->add(new SyntaxError(Vjassdoc::parser()->currentSourceFile(), this->currentLine, message));
 						getSize = false;
 					}
 
 					std::string::size_type length = size.find(']') - start;
 
-					if (Vjassdoc::checkSyntax() && length == std::string::npos)
+					if (Vjassdoc::optionSyntax() && length == std::string::npos)
 					{
 						char message[255];
 						sprintf(message, _("Missing \"]\" expression."));
-						Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+						Vjassdoc::parser()->add(new SyntaxError(Vjassdoc::parser()->currentSourceFile(), this->currentLine, message));
 						getSize = false;
 					}
 
@@ -399,7 +399,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 						size = size.substr(start, length);
 				}
 
-				Vjassdoc::getParser()->add(new Type(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, parentTypeIdentifier, size));
+				Vjassdoc::parser()->add(new Type(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, parentTypeIdentifier, size));
 				this->clearDocComment();
 				break;
 			}
@@ -475,14 +475,14 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				unsigned int lastIndex = index;
 				token = getToken(line, index);
 
-				if (Vjassdoc::checkSyntax() && token.empty())
+				if (Vjassdoc::optionSyntax() && token.empty())
 				{
 					char message[255];
 					sprintf(message, _("Missing expression after \"private\" keyword."));
-					Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+					Vjassdoc::parser()->add(new SyntaxError(Vjassdoc::parser()->currentSourceFile(), this->currentLine, message));
 				}
 
-				if (!Vjassdoc::parsePrivateSpace())
+				if (!Vjassdoc::optionPrivate())
 				{
 					//just possible if it is a method
 					if (this->isInStruct && token == expressionText[StaticExpression])
@@ -499,7 +499,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					else if (token == expressionText[StructExpression])
 						this->notRequiredSpace = StructExpression;
 					
-					if (Vjassdoc::showVerbose())
+					if (Vjassdoc::optionVerbose())
 						printf(_("Starting with not required space. Reason: %d.\n"), this->notRequiredSpace);
 					
 					//as there will be an object let the program clear the current doc comment
@@ -669,7 +669,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 
 	Vjassdoc::addLines(this->currentLine);
 	Vjassdoc::addFile();
-	printf(_("Parsed file %s successfully (number %d, %d lines).\n"), filePath.c_str(), Vjassdoc::getFiles(), this->currentLine);
+	printf(_("Parsed file %s successfully (number %d, %d lines).\n"), filePath.c_str(), Vjassdoc::files(), this->currentLine);
 	fin.close();
 }
 
@@ -686,7 +686,7 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 		}
 
 		this->currentBlockComment += line.substr(0, position);
-		Vjassdoc::getParser()->add(new class Comment(this->currentBlockComment, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment));
+		Vjassdoc::parser()->add(new class Comment(this->currentBlockComment, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment));
 		this->currentBlockComment.clear();
 		this->isInBlockComment = false;
 		index = position + 2;
@@ -714,8 +714,8 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 		if (this->currentDocComment == 0)
 		{
 			this->gotDocComment = true;
-			this->currentDocComment = new class DocComment(this->currentBlockDocComment, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
-			Vjassdoc::getParser()->add(this->currentDocComment);
+			this->currentDocComment = new class DocComment(this->currentBlockDocComment, Vjassdoc::parser()->currentSourceFile(), this->currentLine);
+			Vjassdoc::parser()->add(this->currentDocComment);
 		}
 		else
 			this->currentDocComment->addIdentifier(this->currentBlockDocComment);
@@ -729,19 +729,19 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 
 	if (token.empty())
 	{
-		if (Vjassdoc::showVerbose())
+		if (Vjassdoc::optionVerbose())
 			std::cout << _("Empty line, ignoring line.") << std::endl;
 			
 		return File::NoExpression;
 	}
 
-	if (!Vjassdoc::jassOnly() && token == expressionText[File::DebugExpression])
+	if (!Vjassdoc::optionJass() && token == expressionText[File::DebugExpression])
 	{
-		if (Vjassdoc::useDebugMode())
+		if (Vjassdoc::optionDebug())
 			getToken(line, index); //cut the keyword
 		else
 		{
-			if (Vjassdoc::showVerbose())
+			if (Vjassdoc::optionVerbose())
 				std::cout << _("Debug statement, ignoring line.") << std::endl;
 			
 			return File::DebugExpression;
@@ -758,7 +758,7 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 			(this->notRequiredSpace == File::InterfaceExpression && token == expressionText[File::EndinterfaceExpression]) ||
 			(this->notRequiredSpace == File::StructExpression && token == expressionText[File::EndstructExpression]) || (this->notRequiredSpace == File::ModuleExpression && token == File::expressionText[File::EndmoduleExpression]))
 		{
-			if (Vjassdoc::showVerbose())
+			if (Vjassdoc::optionVerbose())
 				printf(_("Not required space. Reason: %d.\n"), this->notRequiredSpace);
 
 			this->notRequiredSpace = File::InvalidExpression;
@@ -769,7 +769,7 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 
 	unsigned int maxExpressions = NothingExpression; //maximum stand-alone vJass expression
 
-	if (Vjassdoc::jassOnly())
+	if (Vjassdoc::optionJass())
 		maxExpressions = PreprocessorExpression; // Spart Speicher, da die Schleife nur alle Jass Schlüsselwörter durchläuft.
 	
 	for (unsigned int expression = File::DocCommentExpression; expression < maxExpressions; ++expression)
@@ -789,7 +789,7 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 		index = 0;
 		//token = this->getIdentifier(getToken(line, index, true).substr(2, line.length()));
 		token = getToken(line, index, true).substr(2, line.length());
-		Vjassdoc::getParser()->add(new class Comment(token, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment));
+		Vjassdoc::parser()->add(new class Comment(token, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment));
 		this->clearDocComment();
 		return File::CommentExpression;
 	}
@@ -806,12 +806,12 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 	char message[255];
 	sprintf(message, _("Unknown expression: \"%s\"."), line.substr(index).c_str());
 
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cerr << message << std::endl;
 
-	if (Vjassdoc::checkSyntax())
+	if (Vjassdoc::optionSyntax())
 	{
-		Vjassdoc::getParser()->add(new SyntaxError(Vjassdoc::getParser()->currentSourceFile(), this->currentLine, message));
+		Vjassdoc::parser()->add(new SyntaxError(Vjassdoc::parser()->currentSourceFile(), this->currentLine, message));
 	}
 
 	return File::InvalidExpression;
@@ -820,7 +820,6 @@ File::Expression File::getFirstLineExpression(std::string &line, unsigned int &i
 void File::truncateComments(std::string &line, unsigned int index)
 {
 	bool isInString = false;
-	int length = line.length();
 	
 	while (index < line.length())
 	{
@@ -828,7 +827,7 @@ void File::truncateComments(std::string &line, unsigned int index)
 		{
 			isInString = !isInString;
 			
-			if (Vjassdoc::showVerbose())
+			if (Vjassdoc::optionVerbose())
 			{
 				if (isInString)
 					std::cout << _("Detected \" character. Ignoring // and /// expressions.") << std::endl;
@@ -844,21 +843,6 @@ void File::truncateComments(std::string &line, unsigned int index)
 				this->getDocComment(line, index);
 				
 				break;
-				/*
-				if (this->currentDocComment == 0)
-				{
-					std::cout << "Before allocating a new documentation comment." << std::endl;
-					this->currentDocComment = new DocComment(0, Vjassdoc::getParser()->currentSourceFile(), index);
-					Vjassdoc::getParser()->add(this->currentDocComment);
-					std::cout << "After allocating a new documentation comment." << std::endl;
-				}
-	
-				std::string token = line.substr(index + 3, line.length() - (index + 3));
-				this->currentDocComment->addIdentifier(token);
-				line.erase(index - 1);
-	
-				return true;
-				*/
 			}
 			else if (index < line.length() - 2 && line.substr(index, 2) == expressionText[CommentExpression])
 			{
@@ -866,10 +850,10 @@ void File::truncateComments(std::string &line, unsigned int index)
 			
 				if (!token.empty())
 				{
-					Vjassdoc::getParser()->add(new Comment(token, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment));
+					Vjassdoc::parser()->add(new Comment(token, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment));
 					line.erase(index - 1);
 				}
-				else if (Vjassdoc::showVerbose())
+				else if (Vjassdoc::optionVerbose())
 					std::cout << _("Detected empty comment.") << std::endl;
 				
 				break;
@@ -877,7 +861,7 @@ void File::truncateComments(std::string &line, unsigned int index)
 			else if (index < line.length() - 3 && line.substr(index, 3) == expressionText[BlockDocCommentExpression] && !(index < line.length() - 4 && line[index + 3] == '/')) //exception: /**/
 			{
 				bool result = false;
-				int i;
+				std::size_t i;
 
 				for (i = index + 2; i < line.length() - 1; ++i)
 				{
@@ -903,8 +887,8 @@ void File::truncateComments(std::string &line, unsigned int index)
 						if (this->currentDocComment == 0)
 						{
 							this->gotDocComment = true;
-							this->currentDocComment = new class DocComment(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
-							Vjassdoc::getParser()->add(this->currentDocComment);
+							this->currentDocComment = new class DocComment(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine);
+							Vjassdoc::parser()->add(this->currentDocComment);
 						}
 						else
 							this->currentDocComment->addIdentifier(identifier);
@@ -917,7 +901,7 @@ void File::truncateComments(std::string &line, unsigned int index)
 			else if (index < line.length() - 2 && line.substr(index, 2) == expressionText[BlockCommentExpression])
 			{
 				bool result = false;
-				int i;
+				std::size_t i;
 
 				for (i = index + 2; i < line.length() - 1; ++i)
 				{
@@ -940,7 +924,7 @@ void File::truncateComments(std::string &line, unsigned int index)
 					
 					if (!identifier.empty())
 					{
-						Vjassdoc::getParser()->add(new class Comment(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment));
+						Vjassdoc::parser()->add(new class Comment(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment));
 						this->clearDocComment();
 					}
 					
@@ -962,14 +946,14 @@ void File::getDocComment(const std::string &line, unsigned int index)
 	{
 		if (this->currentDocComment == 0)
 		{
-			this->currentDocComment = new DocComment(docCommentItem, Vjassdoc::getParser()->currentSourceFile(), this->currentLine);
-			Vjassdoc::getParser()->add(this->currentDocComment);
+			this->currentDocComment = new DocComment(docCommentItem, Vjassdoc::parser()->currentSourceFile(), this->currentLine);
+			Vjassdoc::parser()->add(this->currentDocComment);
 			this->gotDocComment = true;
 		}
 		else
 			this->currentDocComment->addIdentifier('\n' + docCommentItem); //parse before and modify, space characters are important!
 	}
-	else if (Vjassdoc::showVerbose())
+	else if (Vjassdoc::optionVerbose())
 		std::cout << _("Detected empty documentation comment.") << std::endl;
 }
 
@@ -984,22 +968,22 @@ void File::clearDocComment()
 
 inline void File::getKeyword(const std::string &line, unsigned int &index, bool isPrivate)
 {
-	Vjassdoc::getParser()->add(new Keyword(getToken(line, index), Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate));
+	Vjassdoc::parser()->add(new Keyword(getToken(line, index), Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate));
 }
 
 inline void File::getKey(const std::string &line, unsigned int &index, bool isPrivate)
 {
-	Vjassdoc::getParser()->add(new Key(getToken(line, index), Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate));
+	Vjassdoc::parser()->add(new Key(getToken(line, index), Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate));
 }
 
 bool File::getGlobal(const std::string &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isStatic, bool isDelegate)
 {
-	if (!this->isInGlobals && Vjassdoc::jassOnly() || (!Vjassdoc::jassOnly() && !this->isInGlobals && !this->isInInterface && !this->isInStruct))
+	if (!this->isInGlobals && (Vjassdoc::optionJass() || (!Vjassdoc::optionJass() && !this->isInGlobals && !this->isInInterface && !this->isInStruct)))
 			return false;
 
 	std::string identifier = getToken(line, index);
 	
-	if (!Vjassdoc::jassOnly() && this->isInVjassBlock())
+	if (!Vjassdoc::optionJass() && this->isInVjassBlock())
 	{
 		/*
 		If the member is public it HAS to start with the public keyword
@@ -1076,10 +1060,12 @@ bool File::getGlobal(const std::string &line, unsigned int &index, bool isPrivat
 	
 	if (isArray)
 	{
-		int position = identifier.find('[', 0);
+		std::size_t position = identifier.find('[', 0);
+
 		if (position != std::string::npos)
 		{
-			int length = identifier.find(']', position);
+			std::size_t length = identifier.find(']', position);
+
 			if (length != std::string::npos)
 			{
 				length = (length - position) + 1;
@@ -1095,11 +1081,11 @@ bool File::getGlobal(const std::string &line, unsigned int &index, bool isPrivat
 	if (!isArray && getToken(line, index) == "=")
 		value = getToken(line, index, true); //End of line for function calls
 
-	if (Vjassdoc::jassOnly() || !this->isInStruct && !this->isInInterface)
-		Vjassdoc::getParser()->add(new Global(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, isPublic, isConstant, type, value, size));
+	if (Vjassdoc::optionJass() || (!this->isInStruct && !this->isInInterface))
+		Vjassdoc::parser()->add(new Global(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, isPublic, isConstant, type, value, size));
 	else
 	{
-		Vjassdoc::getParser()->add(new Member(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, isPublic, isConstant, type, value, size, this->getCurrentContainer(), isStatic, isDelegate));
+		Vjassdoc::parser()->add(new Member(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, isPublic, isConstant, type, value, size, this->getCurrentContainer(), isStatic, isDelegate));
 	}
 	
 	this->clearDocComment();
@@ -1111,7 +1097,7 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 	std::string identifier = getToken(line, index);
 	bool isOperator = false;
 
-	if (!Vjassdoc::jassOnly() && this->isInVjassBlock())
+	if (!Vjassdoc::optionJass() && this->isInVjassBlock())
 	{
 		/*
 		If the method is public it HAS to start with the public keyword, so the parameter will be set.
@@ -1187,7 +1173,7 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 
 	bool isFunctionInterface = false;
 	
-	if (!Vjassdoc::jassOnly() && identifier == expressionText[InterfaceExpression])
+	if (!Vjassdoc::optionJass() && identifier == expressionText[InterfaceExpression])
 	{
 		isFunctionInterface = true;
 		identifier = getToken(line, index);
@@ -1224,9 +1210,9 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 			if (position != std::string::npos) //takes integer x,integer ... or takes integer x, integer ...
 				identifier.erase(position);
 
-			class Parameter *parameter = new class Parameter(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, 0, typeExpression);
+			class Parameter *parameter = new class Parameter(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, 0, typeExpression);
 			parameters.push_back(parameter);
-			Vjassdoc::getParser()->add(parameter);
+			Vjassdoc::parser()->add(parameter);
 
 			if (position == std::string::npos || position == oldIdentifier.length() - 1)
 			{
@@ -1247,18 +1233,18 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 
 	if (!isFunctionInterface)
 	{
-		if (Vjassdoc::jassOnly() || !this->isInStruct && !this->isInInterface && !this->isInModule)
+		if (Vjassdoc::optionJass() || (!this->isInStruct && !this->isInInterface && !this->isInModule))
 		{
-			if (!Vjassdoc::parseFunctionSpace() && !isNative)
+			if (!Vjassdoc::optionFunctions() && !isNative)
 			{
-				if (Vjassdoc::showVerbose())
+				if (Vjassdoc::optionVerbose())
 					std::cout << _("Ignoring function space.") << std::endl;
 
 				this->notRequiredSpace = FunctionExpression;
 			}
 
-			class Function *function = new Function(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type, isPublic, isConstant, isNative);
-			Vjassdoc::getParser()->add(function);
+			class Function *function = new Function(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type, isPublic, isConstant, isNative);
+			Vjassdoc::parser()->add(function);
 			this->currentFunction = function;
 		}
 		else
@@ -1266,9 +1252,9 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 			std::string defaultReturnValueExpression;
 
 			//Do not expect endmethod in interfaces!
-			if (!Vjassdoc::parseFunctionSpace() && !this->isInInterface)
+			if (!Vjassdoc::optionFunctions() && !this->isInInterface)
 			{
-				if (Vjassdoc::showVerbose())
+				if (Vjassdoc::optionVerbose())
 					std::cout << _("Ignoring method space.") << std::endl;
 
 				this->notRequiredSpace = MethodExpression;
@@ -1280,19 +1266,19 @@ bool File::getFunction(const std::string &line, unsigned int &index, bool isPriv
 				if (defaultReturnValueExpression == File::expressionText[File::DefaultsExpression])
 					defaultReturnValueExpression = getToken(line, index);
 				
-				if (Vjassdoc::showVerbose() && defaultReturnValueExpression.empty())
+				if (Vjassdoc::optionVerbose() && defaultReturnValueExpression.empty())
 					std::cerr << _("Missing default return value expression.") << std::endl;
 			}
 
-			class Method *method = new Method(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type, isPublic, isConstant, this->getCurrentContainer(), isStatic, isStub, isOperator, defaultReturnValueExpression);
-			Vjassdoc::getParser()->add(method);
+			class Method *method = new Method(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type, isPublic, isConstant, this->getCurrentContainer(), isStatic, isStub, isOperator, defaultReturnValueExpression);
+			Vjassdoc::parser()->add(method);
 			
 			if (!this->isInInterface) //interfaces have single line methods without endmethod
 				this->currentFunction = method;
 		}
 	}
 	else
-		Vjassdoc::getParser()->add(new FunctionInterface(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type));
+		Vjassdoc::parser()->add(new FunctionInterface(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, parameters, type));
 
 	this->clearDocComment();
 	
@@ -1311,7 +1297,7 @@ void File::getImplementation(const std::string &line, unsigned int &index)
 		identifier = getToken(line, index);
 	}
 
-	Vjassdoc::getParser()->add(new Implementation(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->getCurrentContainer(), identifier, isOptional));
+	Vjassdoc::parser()->add(new Implementation(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->getCurrentContainer(), identifier, isOptional));
 }
 
 void File::getHook(const std::string &line, unsigned int &index)
@@ -1319,7 +1305,7 @@ void File::getHook(const std::string &line, unsigned int &index)
 	std::string functionExpression = getToken(line, index);
 	std::string hookFunctionExpression = getToken(line, index);
 
-	Vjassdoc::getParser()->add(new Hook(functionExpression, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, functionExpression, hookFunctionExpression));
+	Vjassdoc::parser()->add(new Hook(functionExpression, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, functionExpression, hookFunctionExpression));
 }
 
 void File::getLibrary(const std::string &line, unsigned int &index, bool isOnce)
@@ -1339,9 +1325,9 @@ void File::getLibrary(const std::string &line, unsigned int &index, bool isOnce)
 	if (token == expressionText[RequiresExpression] || token == expressionText[NeedsExpression] || token == expressionText[UsesExpression])
 		requirement = this->getLibraryRequirement(line, index);
 
-	Library *library = new Library(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, isOnce, initializer, requirement);
+	Library *library = new Library(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, isOnce, initializer, requirement);
 	this->currentLibrary = library;
-	Vjassdoc::getParser()->add(library);
+	Vjassdoc::parser()->add(library);
 	this->clearDocComment();
 }
 
@@ -1353,19 +1339,19 @@ void File::getScope(const std::string &line, unsigned int &index, bool isPrivate
 	if (getToken(line, index) == expressionText[InitializerExpression])
 		initializerExpression = getToken(line, index);
 
-	class Scope *scope = new Scope(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, isPrivate, initializerExpression);
+	class Scope *scope = new Scope(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, isPrivate, initializerExpression);
 	this->isInScope = true;
 	this->currentScope = scope;
-	Vjassdoc::getParser()->add(scope);
+	Vjassdoc::parser()->add(scope);
 }
 
 void File::getInterface(const std::string &line, unsigned int &index, bool isPrivate)
 {
 	std::string identifier = getToken(line, index);
-	class Interface *interface = new Interface(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate);
+	class Interface *interface = new Interface(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate);
 	this->isInInterface = true;
 	this->currentInterface = interface;
-	Vjassdoc::getParser()->add(interface);
+	Vjassdoc::parser()->add(interface);
 }
 
 void File::getStruct(const std::string &line, unsigned int &index, bool isPrivate)
@@ -1385,19 +1371,19 @@ void File::getStruct(const std::string &line, unsigned int &index, bool isPrivat
 	if (getToken(line, index) == expressionText[ExtendsExpression])
 		extensionExpression = getToken(line, index);
 
-	class Struct *usedStruct = new Struct(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, sizeExpression, extensionExpression);
+	class Struct *usedStruct = new Struct(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate, sizeExpression, extensionExpression);
 	this->isInStruct = true;
 	this->currentStruct = usedStruct;
-	Vjassdoc::getParser()->add(usedStruct);
+	Vjassdoc::parser()->add(usedStruct);
 }
 
 void File::getModule(const std::string &line, unsigned int &index, bool isPrivate)
 {
 	std::string identifier = getToken(line, index);
-	class Module *module = new Module(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate);
+	class Module *module = new Module(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentLibrary, this->currentScope, isPrivate);
 	this->isInModule = true;
 	this->currentModule = module;
-	Vjassdoc::getParser()->add(module);
+	Vjassdoc::parser()->add(module);
 }
 
 void File::getLocal(const std::string &line, unsigned int &index)
@@ -1414,7 +1400,7 @@ void File::getLocal(const std::string &line, unsigned int &index)
 	else
 		valueExpression.clear();
 
-	Vjassdoc::getParser()->add(new Local(identifier, Vjassdoc::getParser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentFunction, typeExpression, valueExpression));
+	Vjassdoc::parser()->add(new Local(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, this->currentFunction, typeExpression, valueExpression));
 }
 
 std::string File::removeFirstSpace(const std::string &line, unsigned int index) const

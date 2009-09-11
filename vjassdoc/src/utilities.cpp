@@ -32,7 +32,7 @@ const char *dirSeparator = "\\\\";
 #error You have to define UNIX or WIN32.
 #endif
 
-std::string getToken(const std::string &line, unsigned int &index, bool endOfLine)
+std::string getToken(const std::string &line, std::size_t &index, bool endOfLine)
 {
 	if (index >= line.length() || line.empty()) //important
 		return std::string();

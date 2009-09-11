@@ -200,12 +200,12 @@ void DocComment::initClass()
 }
 #endif
 
-DocComment::DocComment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line) : m_object(0), Object(identifier, sourceFile, line, 0)
+DocComment::DocComment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line) : Object(identifier, sourceFile, line, 0), m_object(0)
 {
 }
 
 #ifdef SQLITE
-DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : m_object(0), Object(columnVector)
+DocComment::DocComment(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_object(0)
 {
 	this->prepareVector();
 }
@@ -269,7 +269,7 @@ void DocComment::init()
 						class Object *object = 0;
 						
 						for (unsigned int i = 0; i < Parser::MaxLists && object == 0; ++i)
-							object = Vjassdoc::getParser()->searchObjectInList(identifier, Parser::List(i));
+							object = Vjassdoc::parser()->searchObjectInList(identifier, Parser::List(i));
 					
 						if (object != 0)
 							this->m_seeObjects.push_back(object);
@@ -318,7 +318,7 @@ void DocComment::init()
 	bool isEmpty = true;
 	
 	/// @todo Seems to be that some documentation comments can contain white space characters only (if there are only authors?!).
-	for (int i = 0; i < result.length(); ++i)
+	for (std::size_t i = 0; i < result.length(); ++i)
 	{
 		if (result[i] != ' ' && result[i] != '\t' && result[i] != '\n')
 			isEmpty = false;

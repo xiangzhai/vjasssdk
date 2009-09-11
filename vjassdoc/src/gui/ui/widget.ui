@@ -203,7 +203,14 @@
       </widget>
      </item>
      <item>
-      <widget class="KDialog" name="dialog"/>
+      <widget class="KDialogButtonBox" name="dialogButtonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+       </property>
+       <property name="centerButtons">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -211,10 +218,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KDialog</class>
-   <extends>QDialog</extends>
-   <header>kdialog.h</header>
-   <container>1</container>
+   <class>KDialogButtonBox</class>
+   <extends>QDialogButtonBox</extends>
+   <header>kdialogbuttonbox.h</header>
   </customwidget>
   <customwidget>
    <class>KEditListBox</class>

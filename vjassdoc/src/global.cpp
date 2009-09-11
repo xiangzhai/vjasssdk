@@ -80,7 +80,7 @@ void Global::init()
 		this->m_typeExpression.clear();
 	
 	this->m_value = this->findValue(this->m_type, this->valueExpression);
-	this->m_size = this->findValue(Vjassdoc::getParser()->integerType(), this->sizeExpression);
+	this->m_size = this->findValue(Vjassdoc::parser()->integerType(), this->sizeExpression);
 }
 
 void Global::pageNavigation(std::ofstream &file) const

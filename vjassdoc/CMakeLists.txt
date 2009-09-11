@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.6.4)
 project(vjassdoc)
 
 find_package(Gettext REQUIRED)
+# todo: require tokenizer component.
 find_package(Boost REQUIRED)
 
 # setup flags

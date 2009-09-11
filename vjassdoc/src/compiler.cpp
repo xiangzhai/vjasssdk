@@ -32,18 +32,18 @@ namespace vjassdoc
 
 void Compiler::compile()
 {
-	std::fstream fstream(Vjassdoc::compileFilePath().c_str());
+	std::fstream fstream(Vjassdoc::optionCompile().c_str());
 
 	if (!fstream.good())
 	{
-		if (Vjassdoc::showVerbose())
-			fprintf(stderr, _("Error while opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::compileFilePath().c_str());
+		if (Vjassdoc::optionVerbose())
+			fprintf(stderr, _("Error while opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::optionCompile().c_str());
 		
 		return;
 	}
 	
-	if (Vjassdoc::showVerbose())
-		fprintf(stderr, _("Opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::compileFilePath().c_str());
+	if (Vjassdoc::optionVerbose())
+		fprintf(stderr, _("Opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::optionCompile().c_str());
 	
 	fstream << "globals" << std::endl;
 	this->writeGlobals(fstream);
@@ -57,10 +57,10 @@ void Compiler::compile()
 
 void Compiler::writeGlobals(std::fstream &fstream)
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing globals.") << std::endl;
 
-	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Globals, Parser::Comparator());
+	std::list<class Object*> list = Vjassdoc::parser()->getSpecificList(Parser::Globals, Parser::Comparator());
 	
 	for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 	{
@@ -86,10 +86,10 @@ void Compiler::writeGlobals(std::fstream &fstream)
 
 void Compiler::writeMembers(std::fstream &fstream)
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing members.") << std::endl;
 
-	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Members, Parser::Comparator());
+	std::list<class Object*> list = Vjassdoc::parser()->getSpecificList(Parser::Members, Parser::Comparator());
 	
 	for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 	{
@@ -126,7 +126,7 @@ void Compiler::writeMembers(std::fstream &fstream)
 
 void Compiler::writeFunctionGlobals(std::fstream &fstream)
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing function globals.") << std::endl;
 	
 	// check if there are .execute or .evaluate calls of a function.
@@ -134,7 +134,7 @@ void Compiler::writeFunctionGlobals(std::fstream &fstream)
 
 void Compiler::writeMethodGlobals(std::fstream &fstream)
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing method globals.") << std::endl;
 	
 	// check if there are .execute or .evaluate calls of a method.
@@ -143,7 +143,7 @@ void Compiler::writeMethodGlobals(std::fstream &fstream)
 
 void Compiler::writeLibraries(std::fstream &fstream)
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing libraries.") << std::endl;
 	
 	// write all functions and methods and text macro instances in the right order.

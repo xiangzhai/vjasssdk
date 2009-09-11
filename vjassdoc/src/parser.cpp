@@ -169,7 +169,7 @@ Parser::Parser() :
 		m_codeType(new Type("code", 0, 0, 0, "", ""))
 {
 	//add default types
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Adding default Jass types.") << std::endl;
 
 	this->add(m_integerType);
@@ -348,7 +348,7 @@ void Parser::createInheritanceListPage()
 	<< "\t</body>\n"
 	<< "</html>\n"
 	;
-	std::ofstream fout((Vjassdoc::getDir() + dirSeparator + "inheritancelist.html").c_str());
+	std::ofstream fout((Vjassdoc::optionDir() + dirSeparator + "inheritancelist.html").c_str());
 
 	if (!fout.good())
 	{
@@ -397,7 +397,7 @@ void Parser::createRequirementListPage()
 	<< "\t</body>\n"
 	<< "</html>\n"
 	;
-	std::ofstream fout((Vjassdoc::getDir() + dirSeparator + "requirementlist.html").c_str());
+	std::ofstream fout((Vjassdoc::optionDir() + dirSeparator + "requirementlist.html").c_str());
 
 	if (!fout.good())
 	{
@@ -424,12 +424,12 @@ void Parser::showSyntaxErrors()
 
 void Parser::sortAlphabetically()
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Sorting alphabetically.") << std::endl;
 
-	for (int i = 0; i < MaxLists; ++i)
+	for (int i = 0; i < Parser::MaxLists; ++i)
 	{
-		if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
+		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
 			continue;
 
 		this->getList(Parser::List(i)).sort(Object::AlphabeticalComparator());
@@ -438,10 +438,10 @@ void Parser::sortAlphabetically()
 
 void Parser::createHtmlFiles()
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Creating HTML files.") << std::endl;
 	
-	std::string title = Vjassdoc::getTitle();
+	std::string title = Vjassdoc::optionTitle();
 	std::stringstream sout;
 	sout
 	<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -467,13 +467,13 @@ void Parser::createHtmlFiles()
 
 	for (int i = 0; i < Parser::MaxLists; ++i)
 	{
-		if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
+		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 			continue;
 
 		sout << "\t\t\t<li><a href=\"#" << Parser::title[i] << "\">" << Parser::title[i] << " (" << this->getList(Parser::List(i)).size() << ")</a></li>" << std::endl;
 	}
 
-	if (Vjassdoc::createSpecialPages())
+	if (Vjassdoc::optionSpecialpages())
 	{
 		sout
 		<< "\t\t\t<li>" << "<a href=\"inheritancelist.html\">" << _("Inheritance List") << "</a></li>\n"
@@ -491,7 +491,7 @@ void Parser::createHtmlFiles()
 	//Für alle Objekte werden Link-Listen erstellt. Dann werden die Objekte in Dateien aufgeteilt, die im Index verlinkt werden.
 	for (int i = 0; i < Parser::MaxLists; ++i)
 	{
-		if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
+		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 			continue;
 
 		sout
@@ -499,7 +499,7 @@ void Parser::createHtmlFiles()
 		this->addObjectList(sout, List(i));
 	}
 
-	if (Vjassdoc::createSpecialPages())
+	if (Vjassdoc::optionSpecialpages())
 	{
 		this->createInheritanceListPage();
 		//this->createRequirementListPage();
@@ -511,7 +511,7 @@ void Parser::createHtmlFiles()
 	
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
-			if (Parser::List(i) == Parser::SourceFiles || Parser::List(i) == Parser::DocComments || !Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
+			if (Parser::List(i) == Parser::SourceFiles || Parser::List(i) == Parser::DocComments || !Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
 				continue;
 		
 			std::list<class Object*> list = this->getList(Parser::List(i));
@@ -540,16 +540,16 @@ void Parser::createHtmlFiles()
 	<< "</html>";
 
 	//write output
-	std::ofstream fout((Vjassdoc::getDir() + dirSeparator + "index.html").c_str());
+	std::ofstream fout((Vjassdoc::optionDir() + dirSeparator + "index.html").c_str());
 	fout << sout.str();
 	fout.close();
 	
 	//create pages
-	if (Vjassdoc::createPages())
+	if (Vjassdoc::optionPages())
 	{
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
-			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
+			if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
 				continue;
 			
 			std::list<class Object*> list = this->getList(Parser::List(i));
@@ -557,7 +557,7 @@ void Parser::createHtmlFiles()
 			for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 			{
 				std::ostringstream sstream;
-				sstream << Vjassdoc::getDir() << '/' << (*iterator)->id() << ".html";
+				sstream << Vjassdoc::optionDir() << '/' << (*iterator)->id() << ".html";
 				std::ofstream fout(sstream.str().c_str());
 				
 				fout
@@ -621,13 +621,13 @@ void Parser::parse(const std::list<std::string> &filePaths)
 		}
 	}
 
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		std::cout << _("Initializing parsed objects.") << std::endl;
 
 	//objects should be initialized before using them
 	for (int i = 0; i < Parser::MaxLists; ++i)
 	{
-		if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
+		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
 			continue;
 
 		std::list<class Object*> list = this->getList(Parser::List(i));
@@ -664,10 +664,10 @@ void Parser::parse(const std::list<std::string> &filePaths)
 #ifdef SQLITE
 void Parser::createDatabase()
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		printf(_("Creating database.\nUsing SQLite version %s.\n"), SQLITE_VERSION);
 
-	std::string fileName = Vjassdoc::getDir() + dirSeparator + "database.db";
+	std::string fileName = Vjassdoc::optionDir() + dirSeparator + "database.db";
 	
 	if (fileExists(fileName))
 	{
@@ -717,7 +717,7 @@ void Parser::createDatabase()
 	
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
-			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
+			if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 				continue;
 
 			std::cout << "Table list " << i << std::endl;
@@ -789,7 +789,7 @@ void Parser::createDatabase()
 
 int Parser::addDatabase(const char *filePath)
 {
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		printf(_("Loading database %s.\n"), filePath);
 
 	int result = -1;
@@ -804,7 +804,7 @@ int Parser::addDatabase(const char *filePath)
 	
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
-			if (!Vjassdoc::shouldParseObjectsOfList(Parser::List(i)))
+			if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
 				continue;
 
 			std::cout << "List " << i << std::endl;
@@ -868,7 +868,7 @@ int Parser::addDatabase(const char *filePath)
 			}
 		}
 
-		if (Vjassdoc::showVerbose())
+		if (Vjassdoc::optionVerbose())
 		{
 			printf(_("Got %d database objects.\n"), databaseStruct->objectList.size());
 			std::cout << _("Intializing database objects.") << std::endl;
@@ -883,7 +883,7 @@ int Parser::addDatabase(const char *filePath)
 			++objectIterator;
 		}
 
-		if (Vjassdoc::showVerbose())
+		if (Vjassdoc::optionVerbose())
 			std::cout << _("Adding database objects.") << std::endl;
 
 		/// @todo Add database objects into usual lists and increase ids.
@@ -920,7 +920,7 @@ void Parser::removeDatabase(const int &index)
 	}
 	*/
 	
-	if (Vjassdoc::showVerbose())
+	if (Vjassdoc::optionVerbose())
 		printf(_("Removing database %d.\n"), index);
 	
 	Database *database = this->databaseVector[index];
@@ -961,7 +961,7 @@ class Object* Parser::searchObjectInLastDatabase(const Object::IdType &id)
 
 class Object* Parser::searchObjectInList(const std::string &identifier, const enum List &list, const enum SearchMode &searchMode, const class Object *object)
 {
-	if (!Vjassdoc::shouldParseObjectsOfList(list))
+	if (!Vjassdoc::optionParseObjectsOfList(list))
 		return 0;
 
 	std::list<class Object*> objectList = this->getList(list);
@@ -971,7 +971,7 @@ class Object* Parser::searchObjectInList(const std::string &identifier, const en
 
 std::list<class Object*> Parser::getSpecificList(const enum List &list, const struct Comparator &comparator, const class Object *object)
 {
-	if (!Vjassdoc::shouldParseObjectsOfList(list))
+	if (!Vjassdoc::optionParseObjectsOfList(list))
 		return std::list<class Object*>();
 
 	std::list<class Object*> objectList = this->getList(list);

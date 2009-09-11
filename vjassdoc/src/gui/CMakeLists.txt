@@ -6,6 +6,7 @@ set(RESOURCES
 )
 
 set(SRC
+	application.cpp
 	mainwindow.cpp
 	widget.cpp
 	main.cpp

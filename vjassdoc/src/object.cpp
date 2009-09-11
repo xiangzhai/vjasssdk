@@ -102,8 +102,8 @@ Object::~Object()
 #ifdef SQLITE
 void Object::initByVector()
 {
-	this->m_sourceFile = static_cast<class SourceFile*>(Vjassdoc::getParser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[0])));
-	this->m_docComment = static_cast<class DocComment*>(Vjassdoc::getParser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[1])));
+	this->m_sourceFile = static_cast<class SourceFile*>(Vjassdoc::parser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[0])));
+	this->m_docComment = static_cast<class DocComment*>(Vjassdoc::parser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[1])));
 	
 	//drop elements
 	
@@ -169,35 +169,35 @@ bool Object::hasToSearchValueObject(class Object *type, const std::string &expre
 	{
 		do
 		{
-			if (type == Vjassdoc::getParser()->integerType())
+			if (type == Vjassdoc::parser()->integerType())
 			{
 				if (isdigit(expression[0]) || expression[0] == '-' || expression[0] == '+')
 					return false;
 				
 				return true;
 			}
-			else if (type == Vjassdoc::getParser()->realType())
+			else if (type == Vjassdoc::parser()->realType())
 			{
 				if (isdigit(expression[0]) || expression[0] == '-' || expression[0] == '+' || expression[0] == '.')
 					return false;
 				
 				return true;
 			}
-			else if (type == Vjassdoc::getParser()->stringType())
+			else if (type == Vjassdoc::parser()->stringType())
 			{
 				if (expression[0] == '\"' || expression == "null")
 					return false;
 				
 				return true;
 			}
-			else if (type == Vjassdoc::getParser()->booleanType())
+			else if (type == Vjassdoc::parser()->booleanType())
 			{
 				if (expression == "true" || expression == "false")
 					return false;
 				
 				return true;
 			}
-			else if (type == Vjassdoc::getParser()->handleType() || type == Vjassdoc::getParser()->codeType()) /// @todo Code type == null?!
+			else if (type == Vjassdoc::parser()->handleType() || type == Vjassdoc::parser()->codeType()) /// @todo Code type == null?!
 			{
 				if (expression == "null")
 					return false;
@@ -295,7 +295,7 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 				if (valueContainer != 0)
 				{
 					//std::cout << "with value container." << std::endl;
-					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Methods, Object::IsInContainer(), valueContainer);
+					std::list<class Object*> list = Vjassdoc::parser()->getSpecificList(Parser::Methods, Object::IsInContainer(), valueContainer);
 					value = Parser::searchObjectInCustomList(list, newExpression);
 				}
 				//functions only
@@ -312,7 +312,7 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 				if (valueContainer != 0)
 				{
 
-					std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Members, Object::IsInContainer(), valueContainer);
+					std::list<class Object*> list = Vjassdoc::parser()->getSpecificList(Parser::Members, Object::IsInContainer(), valueContainer);
 					value = Parser::searchObjectInCustomList(list, newExpression);
 				}
 				//globals only

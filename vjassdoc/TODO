@@ -50,6 +50,9 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add support for compiler flag DATABASE.
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-09-11 Tamino Dauth <tamino@cdauth.de>
+* Check member initialization of Object's child classes.
+
 2009-09-07 Tamino Dauth <tamino@cdauth.de>
 * Text macro instance comparator does not work correctly.
 * FIXED: Methods table is not created in database.

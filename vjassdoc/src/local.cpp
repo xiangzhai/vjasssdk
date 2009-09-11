@@ -51,7 +51,7 @@ Local::Local(const std::string &identifier, class SourceFile *sourceFile, unsign
 }
 
 #ifdef SQLITE
-Local::Local(std::vector<const unsigned char*> &columnVector) : m_function(0), m_type(0), m_value(0), Object(columnVector)
+Local::Local(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_function(0), m_type(0), m_value(0)
 {
 }
 #endif

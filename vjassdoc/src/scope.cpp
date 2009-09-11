@@ -41,7 +41,7 @@ void Scope::initClass()
 }
 #endif
 
-Scope::Scope(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, bool isPrivate, const std::string initializerExpression) : m_library(library), m_isPrivate(isPrivate), initializerExpression(initializerExpression), m_initializer(0), Object(identifier, sourceFile, line, docComment)
+Scope::Scope(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, bool isPrivate, const std::string initializerExpression) : Object(identifier, sourceFile, line, docComment), m_library(library), m_isPrivate(isPrivate), initializerExpression(initializerExpression), m_initializer(0)
 {
 }
 
@@ -103,7 +103,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Keywords\">" << _("Keywords") << "</a></h2>\n"
 	;
 	
-	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Keywords, Object::IsInScope(), this);
+	std::list<class Object*> list = Vjassdoc::parser()->getSpecificList(Parser::Keywords, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -121,7 +121,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Text Macros\">" << _("Text Macros") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::TextMacros, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::TextMacros, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -139,7 +139,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Text Macro Instances\">" << _("Text Macro Instances") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::TextMacroInstances, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::TextMacroInstances, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -157,7 +157,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Types\">" << _("Types") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Types, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Types, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -175,7 +175,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Globals\">" << _("Globals") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Globals, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Globals, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -193,7 +193,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Function Interfaces\">" << _("Function Interfaces") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::FunctionInterfaces, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::FunctionInterfaces, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -211,7 +211,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Functions\">" << _("Functions") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Functions, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Functions, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -229,7 +229,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Interfaces\">" << _("Interfaces") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Interfaces, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Interfaces, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{
@@ -247,7 +247,7 @@ void Scope::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Structs\">" << _("Structs") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Structs, Object::IsInScope(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Structs, Object::IsInScope(), this);
 	
 	if (!list.empty())
 	{

@@ -42,12 +42,12 @@ void Interface::initClass()
 }
 #endif
 
-Interface::Interface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), Object(identifier, sourceFile, line, docComment)
+Interface::Interface(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate)
 {
 }
 
 #ifdef SQLITE
-Interface::Interface(std::vector<const unsigned char*> &columnVector) : m_library(0), m_scope(0), Object(columnVector)
+Interface::Interface(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_library(0), m_scope(0)
 {
 }
 #endif
@@ -129,7 +129,7 @@ class Scope* Interface::scope() const
 
 void Interface::getMemberList(std::ofstream &file) const
 {
-	std::list<class Object*> memberList = Vjassdoc::getParser()->getSpecificList(Parser::Members, Object::IsInContainer(), this);
+	std::list<class Object*> memberList = Vjassdoc::parser()->getSpecificList(Parser::Members, Object::IsInContainer(), this);
 	
 	if (!memberList.empty())
 	{
@@ -178,7 +178,7 @@ void Interface::getMemberList(std::ofstream &file) const
 
 void Interface::getImplementationList(std::ofstream &file) const
 {
-	std::list<class Object*> implementationList = Vjassdoc::getParser()->getSpecificList(Parser::Implementations, Object::IsInContainer(), this);
+	std::list<class Object*> implementationList = Vjassdoc::parser()->getSpecificList(Parser::Implementations, Object::IsInContainer(), this);
 	
 	if (!implementationList.empty())
 	{
@@ -207,7 +207,7 @@ void Interface::getImplementationList(std::ofstream &file) const
 
 void Interface::getMethodList(std::ofstream &file) const
 {
-	std::list<class Object*> methodList = Vjassdoc::getParser()->getSpecificList(Parser::Methods, Object::IsInContainer(), this);
+	std::list<class Object*> methodList = Vjassdoc::parser()->getSpecificList(Parser::Methods, Object::IsInContainer(), this);
 	
 	if (!methodList.empty())
 	{

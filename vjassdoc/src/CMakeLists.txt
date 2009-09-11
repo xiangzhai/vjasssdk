@@ -1,4 +1,4 @@
-set(LIB_SRC
+set(SRC
 	#objects
 	object.cpp
 	comment.cpp
@@ -65,18 +65,20 @@ set(HEADERS
 )
 
 # library
-add_library(vjassdoclib SHARED ${LIB_SRC})
+add_library(vjassdoclib STATIC ${SRC} ${HEADERS}) #SHARED
 if (USE_SQLITE)
 	target_link_libraries(vjassdoclib sqlite3)
 endif (USE_SQLITE)
 target_link_libraries(vjassdoclib gettextlib)
+# todo: link with boost?
 
 # program
-add_executable(vjassdoc ${LIB_SRC} main.cpp)
+add_executable(vjassdoc main.cpp)
 if (USE_SQLITE)
 	target_link_libraries(vjassdoc sqlite3)
 endif (USE_SQLITE)
-target_link_libraries(vjassdoc gettextlib)
+target_link_libraries(vjassdoc gettextlib vjassdoclib)
+# todo: link with boost?
 
 if (USE_GUI)
 	add_subdirectory(gui)

@@ -36,197 +36,221 @@ class Vjassdoc
 {
 	public:
 		static const char *version;
-		static bool supportsDatabaseCreation;
+		static const bool supportsDatabaseCreation;
 
 
-		static void configure(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, const std::string &compilePath, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases);
+		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, bool optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases);
 #ifdef SQLITE
 		static void initClasses();
 #endif
 		static void run();
 		static void clear();
-		static class Parser* getParser();
-		static class Compiler* getCompiler();
-		static bool jassOnly();
-		static bool useDebugMode();
-		static bool parsePrivateSpace();
-		static bool parseTextMacroSpace();
-		static bool parseFunctionSpace();
-		static bool saveAsHtml();
-		static bool createPages();
-		static bool createSpecialPages();
-		static bool checkSyntax();
-		static std::string compileFilePath();
-		static bool createDatabase();
-		static bool showVerbose();
-		static bool sortAlphabetically();
-		static bool shouldParseObjectsOfList(const enum Parser::List &list);
-		static std::string getTitle();
-		static std::string getDir();
-		static std::list<std::string> getImportDirs();
-		static std::list<std::string> getFilePaths();
-		static std::list<std::string> getDatabases();
+		static class Parser* parser();
+		static class Compiler* compiler();
+		static unsigned int lines();
+		static unsigned int files();
+		static double duration();
+		static double cpuDuration();
+		static bool optionJass();
+		static bool optionDebug();
+		static bool optionPrivate();
+		static bool optionTextmacros();
+		static bool optionFunctions();
+		static bool optionHtml();
+		static bool optionPages();
+		static bool optionSpecialpages();
+		static bool optionSyntax();
+		static std::string optionCompile();
+		static bool optionDatabase();
+		static bool optionVerbose();
+		static bool optionTime();
+		static bool optionAlphabetical();
+		static bool optionParseObjectsOfList(const enum Parser::List &list);
+		static std::string optionTitle();
+		static std::string optionDir();
+		static std::list<std::string> optionImport();
+		static std::list<std::string> optionFiles();
+		static std::list<std::string> optionDatabases();
 		
 		static void addLines(const unsigned int &addedLines);
 		static void addFile();
-		static unsigned int getFiles();
 	private:
 		Vjassdoc();
 		Vjassdoc(Vjassdoc&);
 		~Vjassdoc();
 
-		static class Parser *parser;
-		static class Compiler *compiler;
-		static bool jass;
-		static bool debug;
-		static bool privateSpace;
-		static bool textmacros;
-		static bool functions;
-		static bool html;
-		static bool pages;
-		static bool specialPages;
-		static bool syntax;
-		static std::string m_compileFilePath;
-		static bool database;
-		static bool verbose;
-		static bool time;
-		static bool alphabetical;
-		static bool parseObjectsOfList[Parser::MaxLists];
-		static std::string title;
-		static std::string dir;
-		static std::list<std::string> importDirs;
-		static std::list<std::string> filePaths;
-		static std::list<std::string> databases;
-		
-		static unsigned int lines;
-		static unsigned int files;
+		static class Parser *m_parser;
+		static class Compiler *m_compiler;
+		static unsigned int m_lines;
+		static unsigned int m_files;
+		static double m_duration;
+		static double m_cpuDuration;
+		static bool m_optionJass;
+		static bool m_optionDebug;
+		static bool m_optionPrivate;
+		static bool m_optionTextmacros;
+		static bool m_optionFunctions;
+		static bool m_optionHtml;
+		static bool m_optionPages;
+		static bool m_optionSpecialpages;
+		static bool m_optionSyntax;
+		static std::string m_optionCompile;
+		static bool m_optionDatabase;
+		static bool m_optionVerbose;
+		static bool m_optionTime;
+		static bool m_optionAlphabetical;
+		static bool m_optionParseObjectsOfList[Parser::MaxLists];
+		static std::string m_optionTitle;
+		static std::string m_optionDir;
+		static std::list<std::string> m_optionImport;
+		static std::list<std::string> m_optionFiles;
+		static std::list<std::string> m_optionDatabases;
 };
 
-inline Parser* Vjassdoc::getParser()
+inline Parser* Vjassdoc::parser()
 {
-	if (Vjassdoc::parser == 0)
-		Vjassdoc::parser = new Parser();
+	if (Vjassdoc::m_parser == 0)
+		Vjassdoc::m_parser = new Parser();
 
-	return Vjassdoc::parser;
+	return Vjassdoc::m_parser;
 }
 
-inline Compiler* Vjassdoc::getCompiler()
+inline Compiler* Vjassdoc::compiler()
 {
-	if (Vjassdoc::compiler == 0)
-		Vjassdoc::compiler = new Compiler();
+	if (Vjassdoc::m_compiler == 0)
+		Vjassdoc::m_compiler = new Compiler();
 
-	return Vjassdoc::compiler;
+	return Vjassdoc::m_compiler;
 }
 
-
-inline bool Vjassdoc::jassOnly()
+inline unsigned int Vjassdoc::lines()
 {
-	return Vjassdoc::jass;
+	return Vjassdoc::m_lines;
 }
 
-inline bool Vjassdoc::useDebugMode()
+inline unsigned int Vjassdoc::files()
 {
-	return Vjassdoc::debug;
+	return Vjassdoc::m_files;
 }
 
-inline bool Vjassdoc::parsePrivateSpace()
+inline double Vjassdoc::duration()
 {
-	return Vjassdoc::privateSpace;
+	return Vjassdoc::m_duration;
 }
 
-inline bool Vjassdoc::parseTextMacroSpace()
+inline double Vjassdoc::cpuDuration()
 {
-	return Vjassdoc::textmacros;
+	return Vjassdoc::m_cpuDuration;
 }
 
-inline bool Vjassdoc::parseFunctionSpace()
+inline bool Vjassdoc::optionJass()
 {
-	return Vjassdoc::functions;
+	return Vjassdoc::m_optionJass;
 }
 
-inline bool Vjassdoc::saveAsHtml()
+inline bool Vjassdoc::optionDebug()
 {
-	return Vjassdoc::html;
+	return Vjassdoc::m_optionDebug;
 }
 
-inline bool Vjassdoc::createPages()
+inline bool Vjassdoc::optionPrivate()
 {
-	return Vjassdoc::pages;
+	return Vjassdoc::m_optionPrivate;
 }
 
-inline bool Vjassdoc::createSpecialPages()
+inline bool Vjassdoc::optionTextmacros()
 {
-	return Vjassdoc::specialPages;
+	return Vjassdoc::m_optionTextmacros;
 }
 
-inline bool Vjassdoc::checkSyntax()
+inline bool Vjassdoc::optionFunctions()
 {
-	return Vjassdoc::syntax;
+	return Vjassdoc::m_optionFunctions;
 }
 
-inline std::string Vjassdoc::compileFilePath()
+inline bool Vjassdoc::optionHtml()
 {
-	return Vjassdoc::m_compileFilePath;
+	return Vjassdoc::m_optionHtml;
 }
 
-inline bool Vjassdoc::createDatabase()
+inline bool Vjassdoc::optionPages()
 {
-	return Vjassdoc::database;
+	return Vjassdoc::m_optionPages;
 }
 
-inline bool Vjassdoc::showVerbose()
+inline bool Vjassdoc::optionSpecialpages()
 {
-	return Vjassdoc::verbose;
+	return Vjassdoc::m_optionSpecialpages;
 }
 
-inline bool Vjassdoc::sortAlphabetically()
+inline bool Vjassdoc::optionSyntax()
 {
-	return Vjassdoc::alphabetical;
+	return Vjassdoc::m_optionSyntax;
 }
 
-inline bool Vjassdoc::shouldParseObjectsOfList(const enum Parser::List &list)
+inline std::string Vjassdoc::optionCompile()
 {
-	return Vjassdoc::parseObjectsOfList[list];
+	return Vjassdoc::m_optionCompile;
 }
 
-inline std::string Vjassdoc::getTitle()
+inline bool Vjassdoc::optionDatabase()
 {
-	return Vjassdoc::title;
+	return Vjassdoc::m_optionDatabase;
 }
 
-inline std::string Vjassdoc::getDir()
+inline bool Vjassdoc::optionVerbose()
 {
-	return Vjassdoc::dir;
+	return Vjassdoc::m_optionVerbose;
 }
 
-inline std::list<std::string> Vjassdoc::getImportDirs()
+inline bool Vjassdoc::optionTime()
 {
-	return Vjassdoc::importDirs;
+	return Vjassdoc::m_optionTime;
 }
 
-inline std::list<std::string> Vjassdoc::getFilePaths()
+inline bool Vjassdoc::optionAlphabetical()
 {
-	return Vjassdoc::filePaths;
+	return Vjassdoc::m_optionAlphabetical;
 }
 
-inline std::list<std::string> Vjassdoc::getDatabases()
+inline bool Vjassdoc::optionParseObjectsOfList(const enum Parser::List &list)
 {
-	return Vjassdoc::databases;
+	return Vjassdoc::m_optionParseObjectsOfList[list];
+}
+
+inline std::string Vjassdoc::optionTitle()
+{
+	return Vjassdoc::m_optionTitle;
+}
+
+inline std::string Vjassdoc::optionDir()
+{
+	return Vjassdoc::m_optionDir;
+}
+
+inline std::list<std::string> Vjassdoc::optionImport()
+{
+	return Vjassdoc::m_optionImport;
+}
+
+inline std::list<std::string> Vjassdoc::optionFiles()
+{
+	return Vjassdoc::m_optionFiles;
+}
+
+inline std::list<std::string> Vjassdoc::optionDatabases()
+{
+	return Vjassdoc::m_optionDatabases;
 }
 
 inline void Vjassdoc::addLines(const unsigned int &addedLines)
 {
-	lines += addedLines;
+	Vjassdoc::m_lines += addedLines;
 }
 
 inline void Vjassdoc::addFile()
 {
-	files += 1;
-}
-
-inline unsigned int Vjassdoc::getFiles()
-{
-	return files;
+	++Vjassdoc::m_files;
 }
 
 }

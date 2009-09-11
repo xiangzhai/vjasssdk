@@ -1,18 +1,31 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
+#include "application.hpp"
 #include "mainwindow.hpp"
 
 int main(int argc, char *argv[])
 {
-	KCmdLineArgs::init(argc, argv, vjassdoc::gui::MainWindow::aboutData);
-	//KCmdLineOptions options;
-	//options.add("<mpq archives>", ki18n("irc:// URL or server hostname"), 0);
+	KAboutData aboutData(
+		"vjassdocgui",
+		0,
+		ki18n("vjassdocgui"),
+		"0.1",
+		ki18n("GUI for vjassdoc."),
+		KAboutData::License_GPL_V2,
+		ki18n("Copyright 2009, Tamino Dauth"),
+		KLocalizedString(),
+		"https://sourceforge.net/projects/vjasssdk/"
+	);
+	aboutData.addAuthor(ki18n("Tamino Dauth"), KLocalizedString(), "tamino@cdauth.de");
+	aboutData.setOrganizationDomain("https://sourceforge.net/projects/vjasssdk/");
 
-	//KCmdLineArgs::addCmdLineOptions(options);
-	KCmdLineArgs::addStdCmdLineOptions();
+	KCmdLineArgs::init(argc, argv, &aboutData);
 
-	KApplication app;
+	KCmdLineOptions options;
+	KCmdLineArgs::addCmdLineOptions(options);
+
+	vjassdoc::gui::Application app;
 	class vjassdoc::gui::MainWindow mainWindow;
 	mainWindow.show();
 

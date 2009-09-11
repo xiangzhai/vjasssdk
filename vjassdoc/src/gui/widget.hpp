@@ -20,12 +20,12 @@ class Widget : public QWidget, Ui::Widget
 {
 	Q_OBJECT
 
-	public:
-		Widget(class MainWindow *parent);
+	public slots:
 		void run();
 
-	private slots:
-		void buttonClicked(KDialog::ButtonCode button);
+	public:
+		Widget(class MainWindow *parent);
+		~Widget();
 };
 
 }

@@ -63,7 +63,7 @@ void Library::initClass()
 }
 #endif
 
-Library::Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions) : m_isOnce(isOnce), initializerExpression(initializerExpression), requirementExpressions(requirementExpressions), m_initializer(0), m_requirement(0), Object(identifier, sourceFile, line, docComment)
+Library::Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions) : Object(identifier, sourceFile, line, docComment), m_isOnce(isOnce), initializerExpression(initializerExpression), requirementExpressions(requirementExpressions), m_initializer(0), m_requirement(0)
 {
 }
 
@@ -171,7 +171,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Keywords\">" << _("Keywords") << "</a></h2>\n"
 	;
 	
-	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Keywords, Object::IsInLibrary(), this);
+	std::list<class Object*> list = Vjassdoc::parser()->getSpecificList(Parser::Keywords, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -189,7 +189,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Text Macros\">" << _("Text Macros") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::TextMacros, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::TextMacros, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -207,7 +207,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Text Macro Instances\">" << _("Text Macro Instances") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::TextMacroInstances, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::TextMacroInstances, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -225,7 +225,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Types\">" << _("Types") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Types, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Types, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -243,7 +243,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Globals\">" << _("Globals") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Globals, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Globals, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -261,7 +261,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Function Interfaces\">" << _("Function Interfaces") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::FunctionInterfaces, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::FunctionInterfaces, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -279,7 +279,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Functions\">" << _("Functions") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Functions, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Functions, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -297,7 +297,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Interfaces\">" << _("Interfaces") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Interfaces, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Interfaces, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -315,7 +315,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Structs\">" << _("Structs") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Structs, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Structs, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{
@@ -333,7 +333,7 @@ void Library::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Scopes\">" << _("Scopes") << "</a></h2>\n"
 	;
 	
-	list = Vjassdoc::getParser()->getSpecificList(Parser::Scopes, Object::IsInLibrary(), this);
+	list = Vjassdoc::parser()->getSpecificList(Parser::Scopes, Object::IsInLibrary(), this);
 	
 	if (!list.empty())
 	{

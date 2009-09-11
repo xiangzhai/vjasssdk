@@ -32,60 +32,62 @@ namespace vjassdoc
 
 const char *Vjassdoc::version = "0.3";
 #ifdef SQLITE
-bool Vjassdoc::supportsDatabaseCreation = true;
+const bool Vjassdoc::supportsDatabaseCreation = true;
 #else
-bool Vjassdoc::supportsDatabaseCreation = false;
+const bool Vjassdoc::supportsDatabaseCreation = false;
 #endif
-class Parser *Vjassdoc::parser = 0;
-class Compiler *Vjassdoc::compiler = 0;
-bool Vjassdoc::jass = false;
-bool Vjassdoc::debug = true;
-bool Vjassdoc::privateSpace = false;
-bool Vjassdoc::functions = false;
-bool Vjassdoc::textmacros = false;
-bool Vjassdoc::html = false;
-bool Vjassdoc::pages = false;
-bool Vjassdoc::specialPages = false;
-bool Vjassdoc::syntax = false;
-std::string Vjassdoc::m_compileFilePath;
-bool Vjassdoc::database = false;
-bool Vjassdoc::verbose = false;
-bool Vjassdoc::time = false;
-bool Vjassdoc::alphabetical = false;
-bool Vjassdoc::parseObjectsOfList[Parser::MaxLists];
-std::string Vjassdoc::title;
-std::string Vjassdoc::dir;
-std::list<std::string> Vjassdoc::importDirs = std::list<std::string>();
-std::list<std::string> Vjassdoc::filePaths = std::list<std::string>();
-std::list<std::string> Vjassdoc::databases = std::list<std::string>();
-unsigned int Vjassdoc::lines = 0;
-unsigned int Vjassdoc::files = 0;
+class Parser *Vjassdoc::m_parser = 0;
+class Compiler *Vjassdoc::m_compiler = 0;
+unsigned int Vjassdoc::m_lines = 0;
+unsigned int Vjassdoc::m_files = 0;
+double Vjassdoc::m_duration = 0.0;
+double Vjassdoc::m_cpuDuration = 0.0;
+bool Vjassdoc::m_optionJass = false;
+bool Vjassdoc::m_optionDebug = true;
+bool Vjassdoc::m_optionPrivate = false;
+bool Vjassdoc::m_optionFunctions = false;
+bool Vjassdoc::m_optionTextmacros = false;
+bool Vjassdoc::m_optionHtml = false;
+bool Vjassdoc::m_optionPages = false;
+bool Vjassdoc::m_optionSpecialpages = false;
+bool Vjassdoc::m_optionSyntax = false;
+std::string Vjassdoc::m_optionCompile;
+bool Vjassdoc::m_optionDatabase = false;
+bool Vjassdoc::m_optionVerbose = false;
+bool Vjassdoc::m_optionTime = false;
+bool Vjassdoc::m_optionAlphabetical = false;
+bool Vjassdoc::m_optionParseObjectsOfList[Parser::MaxLists];
+std::string Vjassdoc::m_optionTitle;
+std::string Vjassdoc::m_optionDir;
+std::list<std::string> Vjassdoc::m_optionImport = std::list<std::string>();
+std::list<std::string> Vjassdoc::m_optionFiles = std::list<std::string>();
+std::list<std::string> Vjassdoc::m_optionDatabases = std::list<std::string>();
 
-void Vjassdoc::configure(bool jass, bool debug, bool privateSpace, bool textmacros, bool functions, bool html, bool pages, bool specialPages, bool syntax, const std::string &compileFilePath, bool database, bool verbose, bool time, bool alphabetical, bool parseObjectsOfList[Parser::MaxLists], const std::string &title, const std::string &dir, std::list<std::string> importDirs, std::list<std::string> filePaths, std::list<std::string> databases)
+void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, bool optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases)
 {
-	Vjassdoc::jass = jass;
-	Vjassdoc::debug = debug;
-	Vjassdoc::privateSpace = privateSpace;
-	Vjassdoc::textmacros = textmacros;
-	Vjassdoc::functions = functions;
-	Vjassdoc::html = html;
-	Vjassdoc::pages = pages;
-	Vjassdoc::specialPages = specialPages;
-	Vjassdoc::syntax = syntax;
-	Vjassdoc::m_compileFilePath = compileFilePath;
-	Vjassdoc::database = database;
-	Vjassdoc::verbose = verbose;
-	Vjassdoc::time = time;
-	Vjassdoc::alphabetical = alphabetical;
+	Vjassdoc::m_optionJass = optionJass;
+	Vjassdoc::m_optionDebug = optionDebug;
+	Vjassdoc::m_optionPrivate = optionPrivate;
+	Vjassdoc::m_optionTextmacros = optionTextmacros;
+	Vjassdoc::m_optionFunctions = optionFunctions;
+	Vjassdoc::m_optionHtml = optionHtml;
+	Vjassdoc::m_optionPages = optionPages;
+	Vjassdoc::m_optionSpecialpages = optionSpecialpages;
+	Vjassdoc::m_optionSyntax = optionSyntax;
+	Vjassdoc::m_optionCompile = optionCompile;
+	Vjassdoc::m_optionDatabase = optionDatabase;
+	Vjassdoc::m_optionVerbose = optionVerbose;
+	Vjassdoc::m_optionTime = optionTime;
+	Vjassdoc::m_optionAlphabetical = optionAlphabetical;
 
 	for (int i = 0; i < Parser::MaxLists; ++i)
-		Vjassdoc::parseObjectsOfList[i] = parseObjectsOfList[i];
+		Vjassdoc::m_optionParseObjectsOfList[i] = optionParseObjectsOfList[i];
 	
-	Vjassdoc::title = title;
-	Vjassdoc::dir = dir;
-	Vjassdoc::importDirs = importDirs;
-	Vjassdoc::filePaths = filePaths;
-	Vjassdoc::databases = databases;
+	Vjassdoc::m_optionTitle = optionTitle;
+	Vjassdoc::m_optionDir = optionDir;
+	Vjassdoc::m_optionImport = optionImport;
+	Vjassdoc::m_optionFiles = optionFiles;
+	Vjassdoc::m_optionDatabases = optionDatabases;
 }
 
 #ifdef SQLITE
@@ -119,14 +121,16 @@ void Vjassdoc::initClasses()
 
 void Vjassdoc::run()
 {
-	Vjassdoc::lines = 0;
-	Vjassdoc::files = 0;
+	Vjassdoc::m_lines = 0;
+	Vjassdoc::m_files = 0;
+	Vjassdoc::m_duration = 0.0;
+	Vjassdoc::m_cpuDuration = 0.0;
 	
 	timeval timeValue;
 	long beginMicroseconds, endMicroseconds;
 	clock_t beginCpu, endCpu;
 	
-	if (time)
+	if (Vjassdoc::optionTime())
 	{
 		gettimeofday(&timeValue, 0);
 		beginMicroseconds = long(1e6) * timeValue.tv_sec + timeValue.tv_usec;
@@ -134,73 +138,73 @@ void Vjassdoc::run()
 	}
 	
 #ifdef UNIX
-		if (verbose)
+		if (Vjassdoc::optionVerbose)
 			std::cout << _("UNIX mode has been detected.") << std::endl;
 #elif defined WIN32
-		if (verbose)
+		if (Vjassdoc::optionVerbose)
 			std::cout << _("Win32 mode has been detected.") << std::endl;
 #else
 #error You have to define UNIX or WIN32.
 #endif
 
 #ifdef SQLITE
-	if (!Vjassdoc::getDatabases().empty())
+	if (!Vjassdoc::optionDatabases().empty())
 	{
-		if (Vjassdoc::showVerbose())
+		if (Vjassdoc::optionVerbose())
 			std::cout << _("You've selected one or several databases.") << std::endl;
 		
-		std::list<std::string> databases = Vjassdoc::getDatabases();
+		std::list<std::string> databases = Vjassdoc::optionDatabases();
 
 		for (std::list<std::string>::iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
-			Vjassdoc::getParser()->addDatabase((*iterator).c_str());
+			Vjassdoc::parser()->addDatabase((*iterator).c_str());
 	}
 #endif
 
-	Vjassdoc::getParser()->parse(Vjassdoc::getFilePaths());
+	Vjassdoc::parser()->parse(Vjassdoc::optionFiles());
 
-	if (Vjassdoc::sortAlphabetically())
-		Vjassdoc::getParser()->sortAlphabetically();
+	if (Vjassdoc::optionAlphabetical())
+		Vjassdoc::parser()->sortAlphabetically();
 
-	if (Vjassdoc::saveAsHtml())
-		Vjassdoc::getParser()->createHtmlFiles();
+	if (Vjassdoc::optionHtml())
+		Vjassdoc::parser()->createHtmlFiles();
 
-	if (Vjassdoc::checkSyntax())
-		Vjassdoc::getParser()->showSyntaxErrors();
+	if (Vjassdoc::optionSyntax())
+		Vjassdoc::parser()->showSyntaxErrors();
 
 #ifdef SQLITE
 	//create SQL database for search functions
-	if (Vjassdoc::createDatabase())
-		Vjassdoc::getParser()->createDatabase();
+	if (Vjassdoc::optionDatabase())
+		Vjassdoc::parser()->createDatabase();
 #endif
 
-	if (!Vjassdoc::compileFilePath().empty())
-		Vjassdoc::getCompiler()->compile();
+	if (!Vjassdoc::optionCompile().empty())
+		Vjassdoc::compiler()->compile();
 	
-	if (time)
+	if (Vjassdoc::optionTime())
 	{
 		gettimeofday(&timeValue, 0);
 		endMicroseconds = long(1e6) * timeValue.tv_sec + timeValue.tv_usec;
 		endCpu = clock();
-		double duration = (double)(endMicroseconds - beginMicroseconds) / double(1e6);
-		double cpuDuration = (double)(endCpu - beginCpu) / double(CLOCKS_PER_SEC);
-		printf(_("Duration:\n%f seconds\nCPU duration:\n%f seconds\n"), duration, cpuDuration);
+		Vjassdoc::m_duration = (double)(endMicroseconds - beginMicroseconds) / double(1e6);
+		Vjassdoc::m_cpuDuration = (double)(endCpu - beginCpu) / double(CLOCKS_PER_SEC);
+		printf(_("Duration:\n%f seconds\nCPU duration:\n%f seconds\n"), Vjassdoc::m_duration, Vjassdoc::m_cpuDuration);
 	}
 	
-	printf(_("Finished (%d lines, %d files).\n"), lines, files);
+	printf(_("Finished (%d lines, %d files).\n"), Vjassdoc::m_lines, Vjassdoc::m_files);
 }
 
 void Vjassdoc::clear()
 {
-	if (Vjassdoc::parser != 0)
+	if (Vjassdoc::m_parser != 0)
 	{
-		delete Vjassdoc::parser;
-		Vjassdoc::parser = 0;
+		delete Vjassdoc::m_parser;
+		Vjassdoc::m_parser = 0;
 	}
 
-	if (Vjassdoc::compiler != 0)
+	if (Vjassdoc::m_compiler != 0)
 	{
-		delete Vjassdoc::compiler;
-		Vjassdoc::compiler = 0;
+		delete Vjassdoc::m_compiler;
+		Vjassdoc::m_compiler = 0;
 	}
 }
 

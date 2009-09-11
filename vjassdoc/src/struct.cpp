@@ -52,12 +52,12 @@ void Struct::initClass()
 }
 #endif
 
-Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : m_sizeExpression(sizeExpression), m_extensionExpression(extensionExpression), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
+Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate), m_sizeExpression(sizeExpression), m_extensionExpression(extensionExpression), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0)
 {
 }
 
 #ifdef SQLITE
-Struct::Struct(std::vector<const unsigned char*> &columnVector) : m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0), Interface(columnVector)
+Struct::Struct(std::vector<const unsigned char*> &columnVector) : Interface(columnVector), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0)
 {
 }
 #endif
@@ -68,7 +68,7 @@ void Struct::init()
 	
 	if (!this->sizeExpression().empty())
 	{
-		this->m_size = this->findValue(static_cast<class Object*>(Vjassdoc::getParser()->integerType()), this->m_sizeExpression);
+		this->m_size = this->findValue(static_cast<class Object*>(Vjassdoc::parser()->integerType()), this->m_sizeExpression);
 	
 		if (this->m_size != 0)
 			this->m_sizeExpression.clear();
@@ -139,7 +139,7 @@ void Struct::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Child Structs\">" << _("Child Structs") << "</a></h2>\n"
 	;
 	
-	std::list<class Object*> list = Vjassdoc::getParser()->getSpecificList(Parser::Structs, Struct::HasExtension(), this);
+	std::list<class Object*> list = Vjassdoc::parser()->getSpecificList(Parser::Structs, Struct::HasExtension(), this);
 	
 	if (!list.empty())
 	{

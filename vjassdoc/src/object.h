@@ -276,7 +276,7 @@ inline std::string Object::anchor() const
 {
 	std::ostringstream sstream;
 	
-	if (Vjassdoc::createPages())
+	if (Vjassdoc::optionPages())
 		return this->pageLink();
 	
 	return this->m_identifier;
@@ -284,7 +284,7 @@ inline std::string Object::anchor() const
 
 inline class Object* Object::searchObjectInList(const std::string &identifier, const enum Parser::List &list, enum Parser::SearchMode searchMode)
 {
-	return Vjassdoc::getParser()->searchObjectInList(identifier, list, searchMode, this);
+	return Vjassdoc::parser()->searchObjectInList(identifier, list, searchMode, this);
 }
 
 }
