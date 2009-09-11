@@ -1,35 +1,20 @@
-cmake_minimum_required(VERSION 2.4.7)
-cmake_policy(SET CMP0005 NEW)
+cmake_minimum_required(VERSION 2.6.4)
 
 project(vjasstrans)
 
+find_package(Gettext REQUIRED)
+find_package(Boost REQUIRED)
+# todo: require boost tokenizer component only.
+
 if (UNIX)
-	set(EXECUTABLE_NAME
-	vjasstrans
-	)
-	set(EXECUTABLE_INSTALL_DIR
-	/usr/bin
-	)
-	set(LOCALE_INSTALL_DIR
-	/usr/share/locale
-	)
 	add_definitions(-DUNIX=1)
 elseif (WIN32)
-	set(EXECUTABLE_NAME
-	vjasstrans.exe
-	)
-	set(EXECUTABLE_INSTALL_DIR
-	.
-	)
-	set(LOCALE_INSTALL_DIR
-	./locale
-	)
 	add_definitions(-DWIN32=1)
 else (UNIX)
 	message("Warning: Unknown operating system.")
 endif (UNIX)
 
-add_definitions(-DLOCALE_DIR=\"${LOCALE_INSTALL_DIR}\")
+add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/local\")
 
 include_directories(src)
 add_subdirectory(src)

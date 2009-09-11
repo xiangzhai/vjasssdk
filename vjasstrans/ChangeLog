@@ -1,3 +1,17 @@
+2009-09-10 Tamino Dauth <tamino@cdauth.de>
+* Improved cmake files.
+
+2009-09-06 Tamino Dauth <tamino@cdauth.de>
+* Added options --wtspath, --fdfpath, --afdf and --awts.
+* Methods of class Parser are static now.
+* Added file "src/options.hpp".
+* Added file "src/options.cpp".
+* Fixed parsing issues of several translation strings in one function call.
+* Wts and fdf files can be appended now.
+
+2009-09-05 Tamino Dauth <tamino@cdauth.de>
+* Revised code of class Parser.
+
 2009-08-08 Tamino Dauth <tamino@cdauth.de>
 * Revised main function.
 * Added option --trans.
