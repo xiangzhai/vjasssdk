@@ -26,13 +26,13 @@
 #include <sstream>
 #include <list>
 
-#include "file.h"
-#include "vjassdoc.h"
-#include "objects.h"
-#include "parser.h"
-#include "internationalisation.h"
-#include "syntaxerror.h"
-#include "utilities.h"
+#include "file.hpp"
+#include "vjassdoc.hpp"
+#include "objects.hpp"
+#include "parser.hpp"
+#include "internationalisation.hpp"
+#include "syntaxerror.hpp"
+#include "utilities.hpp"
 
 namespace vjassdoc
 {

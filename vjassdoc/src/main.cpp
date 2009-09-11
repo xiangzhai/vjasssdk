@@ -26,9 +26,9 @@
 #include <vector>
 #include <list>
 
-#include "internationalisation.h"
-#include "vjassdoc.h"
-#include "parser.h"
+#include "internationalisation.hpp"
+#include "vjassdoc.hpp"
+#include "parser.hpp"
 
 using namespace vjassdoc;
 

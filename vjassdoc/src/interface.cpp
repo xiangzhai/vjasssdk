@@ -20,9 +20,9 @@
 
 #include <sstream>
 
-#include "objects.h"
-#include "internationalisation.h"
-#include "vjassdoc.h"
+#include "objects.hpp"
+#include "internationalisation.hpp"
+#include "vjassdoc.hpp"
 
 namespace vjassdoc
 {

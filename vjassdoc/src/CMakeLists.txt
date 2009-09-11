@@ -33,35 +33,35 @@ set(SRC
 )
 
 set(HEADERS
-	object.h
-	comment.h
-	keyword.h
-	key.h
-	textmacro.h
-	textmacroinstance.h
-	type.h
-	local.h
-	global.h
-	member.h
-	functioninterface.h
-	function.h
-	method.h
-	parameter.h
-	implementation.h
-	hook.h
-	interface.h
-	struct.h
-	module.h
-	scope.h
-	library.h
-	sourcefile.h
-	doccomment.h
-	syntaxerror.h
-	file.h
-	parser.h
-	compiler.h
-	vjassdoc.h
-	utilities.h
+	object.hpp
+	comment.hpp
+	keyword.hpp
+	key.hpp
+	textmacro.hpp
+	textmacroinstance.hpp
+	type.hpp
+	local.hpp
+	global.hpp
+	member.hpp
+	functioninterface.hpp
+	function.hpp
+	method.hpp
+	parameter.hpp
+	implementation.hpp
+	hook.hpp
+	interface.hpp
+	struct.hpp
+	module.hpp
+	scope.hpp
+	library.hpp
+	sourcefile.hpp
+	doccomment.hpp
+	syntaxerror.hpp
+	file.hpp
+	parser.hpp
+	compiler.hpp
+	vjassdoc.hpp
+	utilities.hpp
 )
 
 # library

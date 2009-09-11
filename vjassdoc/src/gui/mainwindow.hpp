@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2009 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_GUI_MAINWINDOW_H
-#define VJASSDOC_GUI_MAINWINDOW_H
+#ifndef VJASSDOC_GUI_MAINWINDOW_HPP
+#define VJASSDOC_GUI_MAINWINDOW_HPP
 
 #include <kmainwindow.h>
 #include <kaboutdata.h>

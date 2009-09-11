@@ -22,8 +22,8 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "vjassdoc.h"
-#include "objects.h"
+#include "vjassdoc.hpp"
+#include "objects.hpp"
 
 using namespace vjassdoc;
 

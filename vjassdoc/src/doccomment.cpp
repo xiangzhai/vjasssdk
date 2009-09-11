@@ -21,9 +21,9 @@
 #include <iostream> //debug
 #include <sstream>
 
-#include "objects.h"
-#include "internationalisation.h"
-#include "utilities.h"
+#include "objects.hpp"
+#include "internationalisation.hpp"
+#include "utilities.hpp"
 
 namespace vjassdoc
 {

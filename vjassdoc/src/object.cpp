@@ -23,12 +23,12 @@
 #include <cctype>
 #include <iostream> //debug
 
-#include "objects.h"
-#include "sourcefile.h"
-#include "doccomment.h"
-#include "vjassdoc.h"
-#include "internationalisation.h"
-#include "file.h"
+#include "objects.hpp"
+#include "sourcefile.hpp"
+#include "doccomment.hpp"
+#include "vjassdoc.hpp"
+#include "internationalisation.hpp"
+#include "file.hpp"
 
 namespace vjassdoc
 {

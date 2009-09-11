@@ -1,5 +1,5 @@
-#ifndef VJASSDOC_GUI_WIDGET_H
-#define VJASSDOC_GUI_WIDGET_H
+#ifndef VJASSDOC_GUI_WIDGET_HPP
+#define VJASSDOC_GUI_WIDGET_HPP
 
 #include <QObject>
 #include <QWidget>

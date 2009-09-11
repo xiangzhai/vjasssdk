@@ -4,7 +4,7 @@
 
 #include "widget.hpp"
 #include "mainwindow.hpp"
-#include "vjassdoc.h"
+#include "vjassdoc.hpp"
 
 namespace vjassdoc
 {

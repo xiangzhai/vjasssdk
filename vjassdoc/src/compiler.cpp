@@ -22,10 +22,10 @@
 #include <iostream>
 #include <boost/tokenizer.hpp>
 
-#include "vjassdoc.h"
-#include "internationalisation.h"
-#include "parser.h"
-#include "objects.h"
+#include "vjassdoc.hpp"
+#include "internationalisation.hpp"
+#include "parser.hpp"
+#include "objects.hpp"
 
 namespace vjassdoc
 {

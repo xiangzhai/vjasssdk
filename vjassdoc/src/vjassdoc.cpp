@@ -23,9 +23,9 @@
 #include <iostream>
 #include <cstdio>
 
-#include "vjassdoc.h"
-#include "internationalisation.h"
-#include "objects.h"
+#include "vjassdoc.hpp"
+#include "internationalisation.hpp"
+#include "objects.hpp"
 
 namespace vjassdoc
 {
