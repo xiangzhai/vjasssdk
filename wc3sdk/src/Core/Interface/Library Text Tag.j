@@ -112,4 +112,21 @@ library ALibraryCoreInterfaceTextTag
 		call ShowFadingTextTagForPlayer(user, I2S(damage) + "!", 0.025, x, y, 255, 0, 0, 255, 0.04, 2.0, 5.0)
 	endfunction
 
+	/**
+	* @author Vexorian
+	* @author Tamino Dauth
+	*/
+	function Bounty takes player whichPlayer, real x, real y, integer bounty returns nothing
+		local string effectPath = ""
+		local effect whichEffect
+		call SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_GOLD) + bounty)
+		if (GetLocalPlayer() == whichPlayer) then
+			set effectPath = "UI\\Feedback\\GoldCredit\\GoldCredit.mdl"
+		endif
+		set whichEffect = AddSpecialEffect(effectPath, x, y)
+		call DestroyEffect(whichEffect)
+		set whichEffect = null
+		call ShowBountyTextTagForPlayer(whichPlayer, x, y, bounty)
+	endfunction
+
 endlibrary

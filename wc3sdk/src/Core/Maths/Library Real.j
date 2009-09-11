@@ -32,13 +32,15 @@ library ALibraryCoreMathsReal
 		return (- t * t + 1) * (maxDistance / curve)
 	endfunction
 	
-	/// This function takes as a parameters the distance that the parabolic movement should move (d)
-	/// and the maximum height the projectile will flight (h).
-	/// So x is a value between 0 and d, and the function will return the height for that value.
-	/// As a side note, if x < 0 or x > d then this function will return negative values.
-	/// @author moyack
-	/// @author Spec
-	/// @source http://www.wc3c.net/showthread.php?t=102077
+	/**
+	* This function takes as a parameters the distance that the parabolic movement should move (d)
+	* and the maximum height the projectile will flight (h).
+	* So x is a value between 0 and d, and the function will return the height for that value.
+	* As a side note, if x < 0 or x > d then this function will return negative values.
+	* @author moyack
+	* @author Spec
+	* @source http://www.wc3c.net/showthread.php?t=102077
+	*/
 	function ParabolaZ takes real maxHeight, real distance, real x returns real
 		return (4 * maxHeight / distance) * (distance - x) * (x / distance)
 	endfunction

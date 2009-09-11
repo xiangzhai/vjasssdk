@@ -17,6 +17,9 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 		/// Allows filling some elements with the return value.
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$Generator takes nothing returns $ELEMENTTYPE$
+
+		/// @todo Should be a part of @struct $NAME$, vJass bug.
+		$STRUCTPREFIX$ function interface $NAME$BinaryOperation takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns $ELEMENTTYPE$
 	
 		$STRUCTPREFIX$ struct $NAME$[$STRUCTSPACE$]
 			//members
@@ -30,18 +33,30 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				return this.m_size
 			endmethod
 		
+			/**
+			* @return Returns the first element value of vector.
+			*/
 			public method front takes nothing returns $ELEMENTTYPE$
 				return this.m_element[0]
 			endmethod
 			
+			/**
+			* @return Returns the last element value of vector.
+			*/
 			public method back takes nothing returns $ELEMENTTYPE$
 				return this.m_element[this.m_size - 1]
 			endmethod
 			
+			/**
+			* @return Returns the last element index of vector.
+			*/
 			public method backIndex takes nothing returns integer
 				return this.m_size - 1
 			endmethod
 			
+			/**
+			* @return Returns the element at index @param index.
+			*/
 			public method at takes integer index returns $ELEMENTTYPE$
 				debug if (index < 0 or index >= this.m_size) then
 					debug call Print("Invalid index: " + I2S(index) + ".")
@@ -87,35 +102,45 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				endloop
 			endmethod
 			
-			/// Inserts a new element at the beginning of the list, right before its current first element. The content of this new element is initialized to @param value.
-			/// This effectively increases the list size by one.
+			/**
+			* Inserts a new element at the beginning of the list, right before its current first element. The content of this new element is initialized to @param value.
+			* This effectively increases the list size by one.
+			*/
 			public method pushFront takes $ELEMENTTYPE$ value returns nothing
 				call this.insert(0, value)
 			endmethod
 			
-			/// Removes the first element in the list container, effectively reducing the list size by one.
-			/// This doesn't call the removed element's destructor!
+			/**
+			* Removes the first element in the list container, effectively reducing the list size by one.
+			* This doesn't call the removed element's destructor!
+			*/
 			public method popFront takes nothing returns nothing
 				call this.erase(0)
 			endmethod
 			
-			/// Adds a new element at the end of the list, right after its current last 
-			/// element. The content of this new element is initialized to @param value.
-			/// This effectively increases the list size by one.
+			/**
+			* Adds a new element at the end of the list, right after its current last 
+			* element. The content of this new element is initialized to @param value.
+			* This effectively increases the list size by one.
+			*/
 			public method pushBack takes $ELEMENTTYPE$ value returns nothing
 				set this.m_element[this.m_size] = value
 				set this.m_size = this.m_size + 1
 			endmethod
 			
-			/// Removes the last element in the list container, effectively reducing the list size by one.
-			/// This calls the removed element's destructor.
+			/**
+			* Removes the last element in the list container, effectively reducing the list size by one.
+			* This calls the removed element's destructor.
+			*/
 			public method popBack takes nothing returns nothing
 				set this.m_element[this.m_size - 1] = $NULLVALUE$
 				set this.m_size = this.m_size - 1
 			endmethod
 			
-			/// The list container is extended by inserting new elements before the element at position @param position with value @param value.
-			/// This effectively increases the container size by @param number.
+			/**
+			* The list container is extended by inserting new elements before the element at position @param position with value @param value.
+			* This effectively increases the container size by @param number.
+			*/
 			public method insertNumber takes integer position, integer number, $ELEMENTTYPE$ value returns nothing
 				local integer i = this.m_size - 1
 				local integer firstExitValue = position + number - 1
@@ -148,8 +173,10 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				call this.insertNumber(position, 1, value)
 			endmethod
 			
-			/// Removes from the list @param number elements at position @param position.
-			/// This effectively reduces the list size by @param number.
+			/**
+			* Removes from the list @param number elements at position @param position.
+			* This effectively reduces the list size by @param number.
+			*/
 			public method eraseNumber takes integer position, integer number returns nothing
 				local integer i = position + number
 				debug if (position < 0 or position >= this.m_size) then
@@ -172,8 +199,10 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				call this.eraseNumber(position, 1)
 			endmethod
 			
-			/// Exchanges the content of the vector by the content of @param vector, which is another vector object containing elements of the same type. Sizes may differ.
-			/// After the call to this member function, the elements in this container are those which were in @param vector before the call, and the elements of @param vector are those which were in this.
+			/**
+			* Exchanges the content of the vector by the content of @param vector, which is another vector object containing elements of the same type. Sizes may differ.
+			* After the call to this member function, the elements in this container are those which were in @param vector before the call, and the elements of @param vector are those which were in this.
+			*/
 			public method swap takes thistype vector returns nothing
 				local $ELEMENTTYPE$ tempValue
 				local integer i = 0
@@ -201,8 +230,10 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				set this.m_size = 0
 			endmethod
 			
-			/// Moves @param vectorNumber elements from vector @param vector at position @param vectorPosition into the vector container at the specified position @param position, effectively inserting the specified elements into the container and removing them from @param vector.
-			/// This increases the container size by the amount of elements inserted, and reduces the size of @param vector by the same amount.
+			/**
+			* Moves @param vectorNumber elements from vector @param vector at position @param vectorPosition into the vector container at the specified position @param position, effectively inserting the specified elements into the container and removing them from @param vector.
+			* This increases the container size by the amount of elements inserted, and reduces the size of @param vector by the same amount.
+			*/
 			public method splice takes integer position, thistype vector, integer vectorPosition, integer vectorNumber returns nothing
 				local integer i = vectorPosition
 				local integer exitValue = vectorPosition + vectorNumber
@@ -233,9 +264,11 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				call vector.eraseNumber(vectorPosition, vectorNumber)
 			endmethod
 			
-			/// Removes from the list all the elements with the specific value @param value. This reduces the list size by the amount of elements removed.
-			/// Unlike method @method erase, which erases elements by their position, this method removes elements by their value.
-			/// A similar method, @method removeIf, exists, which allows for a condition other than a plain value comparison to be performed on each element in order to determine the elements to be removed.
+			/**
+			* Removes from the list all the elements with the specific value @param value. This reduces the list size by the amount of elements removed.
+			* Unlike method @method erase, which erases elements by their position, this method removes elements by their value.
+			* A similar method, @method removeIf, exists, which allows for a condition other than a plain value comparison to be performed on each element in order to determine the elements to be removed.
+			*/
 			public method remove takes $ELEMENTTYPE$ value returns nothing
 				//backwards should be faster
 				local integer i = this.m_size - 1
@@ -248,9 +281,11 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				endloop
 			endmethod
 			
-			/// Removes from the list all the elements for which predicate @param unaryPredicate returns true. This reduces the list size by the amount of elements removed.
-			/// Predicate @param unaryPredicate can be implemented as a function taking one argument of the same type as the list and returning a @type boolean.
-			/// The function calls unaryPredicate.evaluate(x) for each element (where i is the element). Any of the elements in the list for which this returns true, is removed from the container.
+			/**
+			* Removes from the list all the elements for which predicate @param unaryPredicate returns true. This reduces the list size by the amount of elements removed.
+			* Predicate @param unaryPredicate can be implemented as a function taking one argument of the same type as the list and returning a @type boolean.
+			* The function calls unaryPredicate.evaluate(x) for each element (where i is the element). Any of the elements in the list for which this returns true, is removed from the container.
+			*/
 			public method removeIf takes $NAME$UnaryPredicate unaryPredicate returns nothing
 				//backwards should be faster
 				local integer i = this.m_size - 1
@@ -267,8 +302,10 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				endloop
 			endmethod
 			
-			/// The first version, with no parameters, removes all but the first element from every consecutive group of equal elements in the vector container.
-			/// Notice that an element is only removed from the vector if it is equal to the element immediately preceding it. Thus, this function is specially useful for sorted lists.
+			/**
+			* The first version, with no parameters, removes all but the first element from every consecutive group of equal elements in the vector container.
+			* Notice that an element is only removed from the vector if it is equal to the element immediately preceding it. Thus, this function is specially useful for sorted lists.
+			*/
 			public method unique takes nothing returns nothing
 				//backwards should be faster
 				local integer i = this.m_size - 2
@@ -298,8 +335,10 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				endloop
 			endmethod
 			
-			/// Merges @param vector into the vector, inserting all the elements of @param vector into the vector object at their respective ordered positions. This empties @param vector and increases the vector size.
-			/// @todo insert sorted?!
+			/**
+			* Merges @param vector into the vector, inserting all the elements of @param vector into the vector object at their respective ordered positions. This empties @param vector and increases the vector size.
+			* @todo insert sorted?!
+			*/
 			public method merge takes thistype vector returns nothing
 				local integer i = 0
 				call this.insertNumber(0, vector.m_size, $NULLVALUE$)
@@ -311,11 +350,13 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				call vector.clear()
 			endmethod
 			
-			/// The second version (template function), has the same behavior, but takes a specific function to perform the comparison operation in charge of determining the insertion points. The comparison function has to perform weak strict ordering (which basically means the comparison operation has to be transitive and irreflexive).
-			/// The merging is performed using two iterators: one to iterate through x and another one to keep the insertion point in the vector object; During the iteration of x, if the current element in x compares less than the element at the current insertion point in the list object, the element is removed from x and inserted into that location, otherwise the insertion point is advanced. This operation is repeated until either end is reached, in which moment the remaining elements of x (if any) are moved to the end of the list object and the function returns (this last operation is performed in constant time).
-			/// @todo implement mergeIf pls.
-			/// template <class Compare>
-			/// void merge ( list<T,Allocator>& x, Compare comp );
+			/**
+			* The second version (template function), has the same behavior, but takes a specific function to perform the comparison operation in charge of determining the insertion points. The comparison function has to perform weak strict ordering (which basically means the comparison operation has to be transitive and irreflexive).
+			* The merging is performed using two iterators: one to iterate through x and another one to keep the insertion point in the vector object; During the iteration of x, if the current element in x compares less than the element at the current insertion point in the list object, the element is removed from x and inserted into that location, otherwise the insertion point is advanced. This operation is repeated until either end is reached, in which moment the remaining elements of x (if any) are moved to the end of the list object and the function returns (this last operation is performed in constant time).
+			* @todo implement mergeIf pls.
+			* template <class Compare>
+			* void merge ( list<T,Allocator>& x, Compare comp );
+			*/
 			
 			/// Common quick sort algorithm.
 			private method quickSort takes integer left, integer right, $NAME$BinaryPredicate binaryPredicate returns nothing
@@ -351,8 +392,10 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				endif
 			endmethod
 
-			/// Sorts the elements in the container from lower to higher. The sorting is performed by comparing the elements in the container in pairs using a sorting algorithm.
-			/// The comparisons are perfomed using function @param binaryPredicate, which performs weak strict ordering (this basically means the comparison operation has to be transitive and irreflexive).
+			/**
+			* Sorts the elements in the container from lower to higher. The sorting is performed by comparing the elements in the container in pairs using a sorting algorithm.
+			* The comparisons are perfomed using function @param binaryPredicate, which performs weak strict ordering (this basically means the comparison operation has to be transitive and irreflexive).
+			*/
 			public method sortNumber takes integer position, integer number, $NAME$BinaryPredicate binaryPredicate returns nothing
 				debug if (not this.debugCheckPositionAndNumber(position, number)) then
 					debug return
@@ -392,7 +435,34 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 			/// adjacentFind
 			/// adjacentFindIf
 			/// binarySearch
-			/// copy
+
+			/**
+			* Copies elements in range @param position0, @param number0 into vector @param vector
+			* starting at index @param position1.
+			* @return Returns index of last copied element.
+			*/
+			public method copyNumber takes integer position0, integer number0, $NAME$ vector, integer position1 returns integer
+				local integer exitValue = position0 + number0
+				debug call this.debugCheckPositionAndNumber(position0, number0)
+				debug call vector.debugCheckPositionAndNumber(position1, number0)
+				loop
+					exitwhen (position0 == exitValue)
+					set vector.m_element[position1] = this.m_element[position0]
+					set position0 = position0 + 1
+					set position1 = position1 + 1
+				endloop
+				return exitValue - 1
+			endmethod
+
+			/**
+			* Copies all elements into vector @param vector.
+			* Vectors should have the same size.
+			* @return Returns index of last copied element.
+			*/
+			public method copy takes $NAME$ vector returns integer
+				return this.copyNumber(0, this.m_size, vector, 0)
+			endmethod
+
 			/// copyBackward
 			/// copyN
 			/// countIf
@@ -461,8 +531,10 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				return this.find(value) != -1
 			endmethod
 
-			/// Calls user-defined function @param unaryFunction for each element in range beginning at position @param position and ending at position @param position + @param number - 1.
-			/// Function @param unaryFunction is called like this: call unaryFunction.execute(x) where x is the current element of iteration.
+			/**
+			* Calls user-defined function @param unaryFunction for each element in range beginning at position @param position and ending at position @param position + @param number - 1.
+			*  Function @param unaryFunction is called like this: call unaryFunction.execute(x) where x is the current element of iteration.
+			*/
 			public method forEachNumber takes integer position, integer number, $NAME$UnaryFunction unaryFunction returns nothing
 				local integer i = position
 				local integer exitValue = position + number
@@ -498,8 +570,113 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				call this.generateNumber(0, this.m_size, generator)
 			endmethod
 			
-			/// includes
-			/// innerProduct
+			/**
+			* Returns true if all the elements in the range @param position1, @param number1 
+			* are equivalent to some element in @param position0, @param number0.
+			* The comparison uses @param comparator to test this;
+			* The value of an element, a, is equivalent to another one, b, when (not 
+			* comparator.evaluate(a, b) and not comparator(b, a)).
+			* For the function to yield the expected result, the elements in the ranges shall 
+			* be already ordered according to the same strict weak ordering criterion
+			* (@param comparator).
+			* C++ template example:
+			* @code
+			* bool includes ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2 )
+			* {
+			* 	while (first1!=last1)
+			* 	{
+			* 		if (*first2<*first1) break;
+			* 		else if (*first1<*first2) ++first1;
+			* 		else { ++first1; ++first2; }
+			* 		if (first2==last2) return true;
+			* 	}
+			* 	return false;
+			* }
+			* @endcode
+			* @return Returns true if every element in the range @param position1, @param number1 is contained in the range @param position0, @param number0, false otherwise.
+			*/
+			public method includes takes integer position0, integer number0, integer position1, integer number1, $NAME$BinaryPredicate comparator returns boolean
+				local integer lastIndex0 = position0 + number0 - 1
+				local integer lastIndex1 = position1 + number1 - 1
+				debug if (position0 < 0 or position0 >= this.m_size) then
+					debug call Print("Wrong position0: " + I2S(position0) + ".")
+					debug return false
+				debug elseif (number0 <= 0 or position0 + number0 > this.m_size) then
+					debug call Print("Wrong number0: " + I2S(number0) + ".")
+					debug return false
+				debug elseif (position1 < 0 or position1 >= this.m_size) then
+					debug call Print("Wrong position1: " + I2S(position1) + ".")
+					debug return false
+				debug elseif (number1 <= 0 or position1 + number1 > this.m_size) then
+					debug call Print("Wrong number1: " + I2S(number1) + ".")
+					debug return false
+				debug endif
+				loop
+					exitwhen (position0 == lastIndex0)
+					if (comparator.evaluate(this.m_element[position0], this.m_element[position1])) then
+						exitwhen (true)
+					elseif (comparator.evaluate(this.m_element[position1], this.m_element[position0])) then
+						set position0 = position0 + 1
+					else
+						set position0 = position0 + 1
+						set position1 = position1 + 1
+					endif
+					if (position1 == lastIndex1) then
+						return true
+					endif
+				endloop
+				return false
+			endmethod
+
+
+			/**
+			* Compute cumulative inner product of range
+			*
+			* Returns the result of accumulating @param initialValue with the inner products of the
+			* pairs formed by the elements of two ranges starting at @param position0 and @param position1.
+			* The two default operations (to add up the result of multiplying the pairs) have * to be overridden by parameters @param binaryOperation0 and @param binaryOperation1.
+			* @return The result of accumulating @param initialValue and the products of all the pairs of elements in the ranges starting at @param position0 and @param position1.
+			*
+			* C++ template example:
+			* @code
+			* template <class InputIterator1, class InputIterator2, class T>
+			* T inner_product ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, T init )
+			* {
+			* 	while (first1!=last1)
+			* 		init = init + (*first1++)*(*first2++);
+			* 		// or: init=binary_op1(init,binary_op2(*first1++,*first2++))
+			* 		// for the binary_op's version
+			* 	return init;
+			* }
+			* @endcode
+			*/
+			public method innerProduct takes integer position0, integer number0, integer position1, $ELEMENTTYPE$ initialValue, $NAME$BinaryOperation binaryOperation0, $NAME$BinaryOperation binaryOperation1 returns $ELEMENTTYPE$
+				local integer lastIndex = position0 + number0 - 1
+				debug if (position0 < 0 or position0 >= this.m_size) then
+					debug call Print("Wrong position0: " + I2S(position0) + ".")
+					debug return $NULLVALUE$
+				debug elseif (number0 <= 0 or position0 + number0 > this.m_size) then
+					debug call Print("Wrong number0: " + I2S(number0) + ".")
+					debug return $NULLVALUE$
+				debug elseif (position1 < 0 or position1 >= this.m_size) then
+					debug call Print("Wrong position1: " + I2S(position1) + ".")
+					debug return $NULLVALUE$
+				debug elseif (binaryOperation0 == 0) then
+					debug call Print("Binary operation 0 is 0.")
+					debug return $NULLVALUE$
+				debug elseif (binaryOperation1 == 0) then
+					debug call Print("Binary operation 1 is 0.")
+					debug return $NULLVALUE$
+				debug endif
+				loop
+					exitwhen (position0 == lastIndex)
+					set initialValue = binaryOperation0.evaluate(initialValue, binaryOperation1.evaluate(this.m_element[position0], this.m_element[position1]))
+					set position0 = position0 + 1
+					set position1 = position1 + 1
+				endloop
+				return initialValue
+			endmethod
+
 			/// inplaceMerge
 			/// maxElement
 			/// minElement
@@ -563,7 +740,6 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 				return this
 			endmethod
 			
-			
 			/// Vector will be cleared before destruction.
 			public method onDestroy takes nothing returns nothing
 				call this.clear()
@@ -589,9 +765,12 @@ library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
 	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "100", "50000")
 	//! runtextmacro A_VECTOR("", "ARealVector", "real", "0.0", "100", "50000")
+	//! runtextmacro A_VECTOR("", "AHandleVector", "handle", "null", "100", "50000")
 	
 	//! runtextmacro A_VECTOR("", "AEffectVector", "effect", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "AUnitVector", "unit", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "AItemVector", "item", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "ADestructableVector", "destructable", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "ARectVector", "rect", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "AWeatherEffectVector", "weathereffect", "null", "100", "50000")
 	

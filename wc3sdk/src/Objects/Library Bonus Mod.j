@@ -1,64 +1,141 @@
 /**
 * The Bonus Mod (originally created by @author weaaddar) is a famous system
 * for modifing specific unit properties where Jass natives are missed and can not be used.
-* It uses a special method by adding and removing property-modifing abilities to a unit.
-* For this reason it allows the user to modify damage, armour, hit points and mana of a unit.
+* It uses a special method by adding and removing property-modifying abilities to a unit.
+* For this reason it allows the user to modify damage, armour, hit points, mana, sight range, hit point regeneration and mana regeneration of a unit.
 * Note that you've to call @function AInitBonusMod before using this library.
 * It won't be called by default (using it as initializer) since this would be decrease the performance for users who maybe won't use it at all.
+* Here's a list of natives for changing unit properties:
+* @function SetUnitState For changing life, maximum life, mana and maximum mana.
+* @function SetUnitMoveSpeed
+* @function SetUnitAcquireRange
+* @function SetUnitBlendTime
+* @function SetUnitFlyHeight
+* @function SetUnitFog
+* @function SetUnitScale
+* ...
 * @author weaaddar
 */
-library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCoreDebugMisc //misc for debuggings
+library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCoreDebugMisc
 
-/*
-	Uncomment this to use Bonus Mod.
+	//! textmacro A_BONUS_MOD_DAMAGE takes RAWCODE, NAME, VALUE
+		//! external ObjectMerger w3a AItg $RAWCODE$ Iatt 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""
+	//! endtextmacro
+
+	//! textmacro A_BONUS_MOD_ARMOR takes RAWCODE, NAME, VALUE
+		//! external ObjectMerger w3a AId1 $RAWCODE$ Idef 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""
+	//! endtextmacro
+
+	//! textmacro A_BONUS_MOD_LIFE takes RAWCODE, NAME, VALUE
+		//! external ObjectMerger w3a AIl2 $RAWCODE$ Ilif 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""
+	//! endtextmacro
+
+	//! textmacro A_BONUS_MOD_MANA takes RAWCODE, NAME, VALUE
+		//! external ObjectMerger w3a AImb $RAWCODE$ Iman 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""
+	//! endtextmacro
+
+	//! textmacro A_BONUS_MOD_SIGHT_RANGE takes RAWCODE, NAME, VALUE
+		//! external ObjectMerger w3a AIsi $RAWCODE$ Isib 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""
+	//! endtextmacro
+
+	//! textmacro A_BONUS_MOD_LIFE_REGENERATION takes RAWCODE, NAME, VALUE
+		//! external ObjectMerger w3a Arel $RAWCODE$ Ihpr 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""
+	//! endtextmacro
+
+	//! textmacro A_BONUS_MOD_MANA_REGENERATION takes RAWCODE, NAME, VALUE
+		//! external ObjectMerger w3a AIrm $RAWCODE$ Imrp 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""
+	//! endtextmacro
+
+	/*
+	//Uncomment this to use Bonus Mod.
 	//A1
-	//! external ObjectMerger w3a AItg AZZ1 Iatt 1 1 anam "Damage +1" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ2 Iatt 1 2 anam "Damage +2" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ3 Iatt 1 4 anam "Damage +4" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ4 Iatt 1 8 anam "Damage +8" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ5 Iatt 1 16 anam "Damage +16" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ6 Iatt 1 32 anam "Damage +32" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ7 Iatt 1 64 anam "Damage +64" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ8 Iatt 1 128 anam "Damage +128" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZ9 Iatt 1 256 anam "Damage +256" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AItg AZZA Iatt 1 -512 anam "Damage -512" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY1 Idef 1 1 anam "Armour +1" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY2 Idef 1 2 anam "Armour +2" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY3 Idef 1 4 anam "Armour +4" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY4 Idef 1 8 anam "Armour +8" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY5 Idef 1 16 anam "Armour +16" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY6 Idef 1 32 anam "Armour +32" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY7 Idef 1 64 anam "Armour +64" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY8 Idef 1 128 anam "Armour +128" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZY9 Idef 1 256 anam "Armour +256" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AId1 AZYA Idef 1 -512 anam "Armour -512" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX1 Ilif 1 10 anam "HP +10" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX2 Ilif 1 20 anam "HP +20" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX3 Ilif 1 40 anam "HP +40" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX4 Ilif 1 80 anam "HP +80" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX5 Ilif 1 160 anam "HP +160" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX6 Ilif 1 320 anam "HP +320" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX7 Ilif 1 640 anam "HP +640" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX8 Ilif 1 1280 anam "HP +1280" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZX9 Ilif 1 2560 anam "HP +2560" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AIl2 AZXA Ilif 1 -5120 anam "HP -5120" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW1 Iman 1 10 anam "Mana +10" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW2 Iman 1 20 anam "Mana +20" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW3 Iman 1 40 anam "Mana +40" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW4 Iman 1 80 anam "Mana +80" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW5 Iman 1 160 anam "Mana +160" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW6 Iman 1 320 anam "Mana +320" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW7 Iman 1 640 anam "Mana +640" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW8 Iman 1 1280 anam "Mana +1280" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZW9 Iman 1 2560 anam "Mana +2560" EditorSuffix "ASL" Art ""
-	//! external ObjectMerger w3a AImb AZWA Iman 1 -5120 anam "Mana -5120" EditorSuffix "ASL" Art ""
-*/
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ0", "Damage +1", "1")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ1", "Damage +2", "2")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ2", "Damage +4", "4")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ3", "Damage +8", "8")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ4", "Damage +16", "16")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ5", "Damage +32", "32")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ6", "Damage +64", "64")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ7", "Damage +128", "128")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ8", "Damage +256", "256")
+	//! runtextmacro A_BONUS_MOD_DAMAGE("AZZ9", "Damage -512", "-512")
+
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY0", "Armor +1", "1")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY1", "Armor +2", "2")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY2", "Armor +4", "4")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY3", "Armor +8", "8")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY4", "Armor +16", "16")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY5", "Armor +32", "32")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY6", "Armor +64", "64")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY7", "Armor +128", "128")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY8", "Armor +256", "256")
+	//! runtextmacro A_BONUS_MOD_ARMOR("AZY9", "Armor -512", "-512")
+
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX0", "Life +10", "10")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX1", "Life +20", "20")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX2", "Life +40", "40")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX3", "Life +80", "80")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX4", "Life +160", "160")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX5", "Life +320", "320")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX6", "Life +640", "640")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX7", "Life +1280", "1280")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX8", "Life +2560", "2560")
+	//! runtextmacro A_BONUS_MOD_LIFE("AZX9", "Life -5120", "-5120")
+
+	//! runtextmacro A_BONUS_MOD_MANA("AZW0", "Mana +10", "10")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW1", "Mana +20", "20")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW2", "Mana +40", "40")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW3", "Mana +80", "80")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW4", "Mana +160", "160")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW5", "Mana +320", "320")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW6", "Mana +640", "640")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW7", "Mana +1280", "1280")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW8", "Mana +2560", "2560")
+	//! runtextmacro A_BONUS_MOD_MANA("AZW9", "Mana -5120", "-5120")
+
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV0", "Sight range +10", "10")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV1", "Sight range +20", "20")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV2", "Sight range +40", "40")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV3", "Sight range +80", "80")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV4", "Sight range +160", "160")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV5", "Sight range +320", "320")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV6", "Sight range +640", "640")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV7", "Sight range +1280", "1280")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV8", "Sight range +2560", "2560")
+	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV9", "Sight range -5120", "-5120")
+	
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU0", "Life regeneration +1", "1")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU1", "Life regeneration +2", "2")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU2", "Life regeneration +4", "4")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU3", "Life regeneration +8", "8")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU4", "Life regeneration +16", "16")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU5", "Life regeneration +32", "32")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU6", "Life regeneration +64", "64")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU7", "Life regeneration +128", "128")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU8", "Life regeneration +256", "256")
+	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU9", "Life regeneration -512", "-512")
+
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT0", "Mana regeneration +1", "1")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT1", "Mana regeneration +2", "2")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT2", "Mana regeneration +4", "4")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT3", "Mana regeneration +8", "8")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT4", "Mana regeneration +16", "16")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT5", "Mana regeneration +32", "32")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT6", "Mana regeneration +64", "64")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT7", "Mana regeneration +128", "128")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT8", "Mana regeneration +256", "256")
+	//! runtextmacro A_BONUS_MOD_MANA_REGENERATION("AZT9", "Mana regeneration -512", "-512")
+	*/
 
 	globals
 		constant integer A_BONUS_TYPE_DAMAGE = 0
 		constant integer A_BONUS_TYPE_ARMOR = 1
-		constant integer A_BONUS_TYPE_HP = 2
+		constant integer A_BONUS_TYPE_LIFE = 2
 		constant integer A_BONUS_TYPE_MANA = 3
+		constant integer A_BONUS_TYPE_SIGHT_RANGE = 4 // Sight Range Bonus
+		constant integer A_BONUS_TYPE_MANA_REGENERATION = 5 // Mana Regeneration Bonus (A % value)
+		constant integer A_BONUS_TYPE_LIFE_REGENERATION = 6 // Life Regeneration Bonus (An absolute value)
+		constant integer A_BONUS_MAX_TYPES = 7
 		/**
 		* Bonus Mod's Number of abilities per bonus, if last power of 2 ability is -512,
 		* this shall be 10, and the maximum bonus would be 511 while the minimum -512.
@@ -69,7 +146,7 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 		* If it is 1, they would be : 1,2,4,8,16,...
 		* If it is 5, they would be: 5,10,20,40,80,..
 		*/
-		private constant integer BonusHPManaFactor = 10
+		private constant integer BonusBigValuesFactor = 10
 		private integer array abilityId
 		private AHashTable hashTable
 	endglobals
@@ -85,182 +162,286 @@ library ALibraryObjectsBonusMod requires AStructCoreGeneralHashTable, ALibraryCo
 	private function BonusMin takes nothing returns integer
 	   return -R2I(Pow(2, Ix(1, 0) - 1))
 	endfunction
+
+	/// @todo Should be private, vJass bug.
+	debug function CheckType takes integer bonusType returns nothing
+		debug if (bonusType < 0 or bonusType >= A_BONUS_MAX_TYPES) then
+			debug call Print("ABonusMod error: Wrong type, value " + I2S(bonusType) + ".")
+		debug endif
+	debug endfunction
 	
 	/**
-	* Returns units bonus of a specific property.
-	* @param who The unit which is checked for the bonus.
-	* @param t The property type which is checked for.
+	* @param whichUnit Unit which is checked for bonus.
+	* @param bonusType Property type which is checked for.
 	* Possible values are:
 	* @global A_BONUS_TYPE_DAMAGE
 	* @global A_BONUS_TYPE_ARMOR
-	* @global A_BONUS_TYPE_HP
+	* @global A_BONUS_TYPE_LIFE
 	* @global A_BONUS_TYPE_MANA
-	* @return Returns the bonus value.
+	* @global A_BONUS_TYPE_SIGHT_RANGE
+	* @global A_BONUS_TYPE_MANA_REGENERATION
+	* @global A_BONUS_TYPE_LIFE_REGENERATION
+	* @return Returns units bonus of a specific property.
 	*/
-	function AUnitGetBonus takes unit who, integer t returns integer
-		return hashTable.handleInteger(who, I2S(t))
+	function AUnitGetBonus takes unit whichUnit, integer bonusType returns integer
+		debug call CheckType(bonusType)
+		return hashTable.handleInteger(whichUnit, I2S(bonusType))
 	endfunction
 
 	/**
 	* Sets units bonus of a specific property.
-	* @param who The unit which should get the bonus.
-	* @param t The property type which is used for adding the bonus.
+	* @param whichUnit Unit which should get bonus.
+	* @param bonusType Property type which is used for setting bonus.
 	* Possible values are:
 	* @global A_BONUS_TYPE_DAMAGE
 	* @global A_BONUS_TYPE_ARMOR
-	* @global A_BONUS_TYPE_HP
+	* @global A_BONUS_TYPE_LIFE
 	* @global A_BONUS_TYPE_MANA
-	* @return Returns if the bonus was added successfully.
+	* @global A_BONUS_TYPE_SIGHT_RANGE
+	* @global A_BONUS_TYPE_MANA_REGENERATION
+	* @global A_BONUS_TYPE_LIFE_REGENERATION
+	* @param amount Bonus amount which should be set.
+	* @return Returns if bonus was set successfully.
 	*/
-	function AUnitSetBonus takes unit who, integer t, integer amount returns boolean
+	function AUnitSetBonus takes unit whichUnit, integer bonusType, integer amount returns boolean
 		local integer x
-		local integer i = Ix(1, -1)
-		local integer bit = R2I(Pow(2, i))
-		local boolean bol = false
-		local boolean man = false
-		if (who == null or t < 0 or t > 3) then
-			return false
-		elseif (t > 1) then
-			set amount = amount / BonusHPManaFactor
-			call hashTable.setHandleInteger(who, I2S(t), amount * BonusHPManaFactor)
+		local integer i
+		local integer bit
+		local boolean negative
+		local boolean mana
+		debug if (whichUnit == null or bonusType < 0 or bonusType >= A_BONUS_MAX_TYPES) then
+			debug call CheckType(bonusType)
+			debug return false
+		debug endif
+		if (amount == 0) then
+			call hashTable.removeHandleInteger(whichUnit, I2S(bonusType))
+
+			if (bonusType == A_BONUS_TYPE_LIFE and hashTable.hasHandleInteger(whichUnit, "ABonusModLeftLife")) then
+				call hashTable.removeHandleInteger(whichUnit, "ABonusModLeftLife")
+			elseif (bonusType == A_BONUS_TYPE_MANA and hashTable.hasHandleInteger(whichUnit, "ABonusModLeftMana")) then
+				call hashTable.removeHandleInteger(whichUnit, "ABonusModLeftMana")
+			endif
+		elseif (bonusType == A_BONUS_TYPE_LIFE or bonusType == A_BONUS_TYPE_MANA or bonusType == A_BONUS_TYPE_SIGHT_RANGE) then
+			set amount = amount / BonusBigValuesFactor
+			call hashTable.setHandleInteger(whichUnit, I2S(bonusType), amount * BonusBigValuesFactor)
 		else
-			call hashTable.setHandleInteger(who, I2S(t), amount)
+			call hashTable.setHandleInteger(whichUnit, I2S(bonusType), amount)
 		endif
-		if (t == 3) and (GetUnitState(who,UNIT_STATE_MAX_MANA) <= 0) then
-			set man = true
-		endif
-		call UnitRemoveAbility(who, abilityId[Ix(t, Ix(1, -1))])
+		set mana = (bonusType == A_BONUS_TYPE_MANA) and (GetUnitState(whichUnit, UNIT_STATE_MAX_MANA) <= 0)
+		call UnitRemoveAbility(whichUnit, abilityId[Ix(bonusType, Ix(1, -1))])
 		if (amount < 0) then
-			set bol = true
-			set amount= bit + amount
+			set negative = true
+			set amount = bit + amount
+		else
+			set negative = false
 		endif
+
+		set i = Ix(1, -1)
+		set bit = R2I(Pow(2, i))
 		loop
 			set bit = bit / 2
 			set i = i - 1
 			exitwhen (i < 0)
 			if (amount >= bit) then
-				set x = abilityId[Ix(t, i)]
-				call UnitAddAbility(who, x)
-				debug call Print("Adding ability " + GetObjectName(x))
-				call UnitMakeAbilityPermanent(who, true, x)
+				set x = abilityId[Ix(bonusType, i)]
+				call UnitAddAbility(whichUnit, x)
+				call UnitMakeAbilityPermanent(whichUnit, true, x)
 				set amount = amount - bit
 			else
-				call UnitRemoveAbility(who, abilityId[Ix(t, i)])
+				call UnitRemoveAbility(whichUnit, abilityId[Ix(bonusType, i)])
 			endif
 		endloop
-		if (bol) then
-			set x = abilityId[Ix(t,Ix(1, -1))]
-			call UnitAddAbility(who, x)
-			call UnitMakeAbilityPermanent(who, true, x)
+		if (negative) then
+			set x = abilityId[Ix(bonusType, Ix(1, -1))]
+			call UnitAddAbility(whichUnit, x)
+			call UnitMakeAbilityPermanent(whichUnit, true, x)
 		endif
-		if (man and (GetUnitState(who,UNIT_STATE_MAX_MANA) > 0)) then
-			call SetUnitState(who,UNIT_STATE_MANA, 0)
+		if (mana and (GetUnitState(whichUnit, UNIT_STATE_MAX_MANA) > 0)) then
+			call SetUnitState(whichUnit, UNIT_STATE_MANA, 0)
 		endif
 		return amount == 0
 	endfunction
 
-	function AUnitClearBonus takes unit who, integer t returns nothing
-	   call AUnitSetBonus(who, t, 0)
+	/**
+	* Sets units bonus of a specific property to 0. If bonus is set to 0 saved hash table data is cleared automatically.
+	* @param whichUnit Unit which should bonus cleared of.
+	* @param bonusType Property type which is used for adding bonus.
+	* Possible values are:
+	* @global A_BONUS_TYPE_DAMAGE
+	* @global A_BONUS_TYPE_ARMOR
+	* @global A_BONUS_TYPE_LIFE
+	* @global A_BONUS_TYPE_MANA
+	* @global A_BONUS_TYPE_SIGHT_RANGE
+	* @global A_BONUS_TYPE_MANA_REGENERATION
+	* @global A_BONUS_TYPE_LIFE_REGENERATION
+	* @return Returns if bonus was cleared successfully.
+	*/
+	function AUnitClearBonus takes unit whichUnit, integer bonusType returns boolean
+		debug call CheckType(bonusType)
+		return AUnitSetBonus(whichUnit, bonusType, 0)
 	endfunction
 
-	function AUnitAddBonus takes unit who, integer t, integer amount returns boolean
+	/**
+	* Adds bonus of a specific property to unit.
+	* @param whichUnit Unit which should get bonus.
+	* @param bonusType Property type which is used for adding bonus.
+	* Possible values are:
+	* @global A_BONUS_TYPE_DAMAGE
+	* @global A_BONUS_TYPE_ARMOR
+	* @global A_BONUS_TYPE_LIFE
+	* @global A_BONUS_TYPE_MANA
+	* @global A_BONUS_TYPE_SIGHT_RANGE
+	* @global A_BONUS_TYPE_MANA_REGENERATION
+	* @global A_BONUS_TYPE_LIFE_REGENERATION
+	* @param amount Bonus amount which should be added.
+	* @return Returns if bonus was added successfully.
+	*/
+	function AUnitAddBonus takes unit whichUnit, integer bonusType, integer amount returns boolean
 		local integer x
 		local boolean b
 		local real l
 		local string s
 		local real min
 		local real mod
+		debug call CheckType(bonusType)
 		if (amount == 0) then
 			return true
 		endif
-		if (t > 1) then
-			set amount = (amount / BonusHPManaFactor) * BonusHPManaFactor
-		endif
-		if (t >= 2) then
-
-			if (t == 2) then
-				set l = GetWidgetLife(who)
-				set mod = ModuloReal(l, BonusHPManaFactor)
-				set s = "BonusModLeftHP"
+		if (bonusType == A_BONUS_TYPE_LIFE or bonusType == A_BONUS_TYPE_MANA or bonusType == A_BONUS_TYPE_SIGHT_RANGE) then
+			//set amount = (amount / BonusBigValuesFactor) * BonusBigValuesManaFactor /// @todo Baradé, ?!!
+			if (bonusType == A_BONUS_TYPE_LIFE) then
+				set l = GetWidgetLife(whichUnit)
+				set mod = ModuloReal(l, BonusBigValuesFactor)
+				set s = "ABonusModLeftLife"
 				if mod >= 1 then
 					set min = 0
 				else
-					set min = BonusHPManaFactor
+					set min = BonusBigValuesFactor
 				endif
-			else
-				set l = GetUnitState(who, UNIT_STATE_MAX_MANA)
-				set mod = ModuloReal(l, BonusHPManaFactor)
-				set s= "BonusModLeftMana"
+			elseif (bonusType == A_BONUS_TYPE_MANA) then
+				set l = GetUnitState(whichUnit, UNIT_STATE_MAX_MANA)
+				set mod = ModuloReal(l, BonusBigValuesFactor)
+				set s = "ABonusModLeftMana"
 				set min = 0
 			endif
-			set amount= amount + hashTable.handleInteger(who, s)
+			set amount = amount + hashTable.handleInteger(whichUnit, s)
 			if (amount < 0) and (l + amount < 1) then
 				set x = R2I(min + mod - l)
-				set b = AUnitSetBonus(who, t, AUnitGetBonus(who, t) + x)
-				call hashTable.setHandleInteger(who, s, amount - x)
+				set b = AUnitSetBonus(whichUnit, bonusType, AUnitGetBonus(whichUnit, bonusType) + x)
+				call hashTable.setHandleInteger(whichUnit, s, amount - x)
 			else
-				call hashTable.setHandleInteger(who, s, 0)
-				set b = AUnitSetBonus(who, t, AUnitGetBonus(who, t) + amount)
+				call hashTable.setHandleInteger(whichUnit, s, 0)
+				set b = AUnitSetBonus(whichUnit, bonusType, AUnitGetBonus(whichUnit, bonusType) + amount)
 			endif
 			return b
 		endif
-		return AUnitSetBonus(who, t, AUnitGetBonus(who, t) + amount)
+		return AUnitSetBonus(whichUnit, bonusType, AUnitGetBonus(whichUnit, bonusType) + amount)
+	endfunction
+
+	/**
+	* The same as @function AUnitAddBonus with a negative amount but a little bit more logic and readable in my opinion.
+	* Removes bonus of a specific property to unit.
+	* @author Tamino Dauth
+	* @param whichUnit Unit which should loose bonus.
+	* @param bonusType Property type which is used for removing bonus.
+	* Possible values are:
+	* @global A_BONUS_TYPE_DAMAGE
+	* @global A_BONUS_TYPE_ARMOR
+	* @global A_BONUS_TYPE_LIFE
+	* @global A_BONUS_TYPE_MANA
+	* @global A_BONUS_TYPE_SIGHT_RANGE
+	* @global A_BONUS_TYPE_MANA_REGENERATION
+	* @global A_BONUS_TYPE_LIFE_REGENERATION
+	* @param amount Bonus amount which should be removed.
+	* @return Returns if bonus was removed successfully.
+	*/
+	function AUnitRemoveBonus takes unit whichUnit, integer bonusType, integer amount returns boolean
+		return AUnitAddBonus(whichUnit, bonusType, -amount)
 	endfunction
 	
-	/// @author Tamino Dauth
-	function AFlushBonusUnit takes unit who returns nothing
-		call hashTable.flushHandle(who)
-	endfunction
-	
-	/// So here you set each of the bonus abilities, 0 is damage, 1 armor, 2 health, and 3 mana
-	/// The second numbers are the powers (2^1 is 1, 2^2=4, 2^3=8, ...
-	/// Remember: Last power ability should be negative.
+	/**
+	* So here you set each of the bonus abilities, 0 is damage, 1 armor, 2 health, and 3 mana
+	* The second numbers are the powers (2^1 is 1, 2^2=4, 2^3=8, ...
+	* Remember: Last power ability should be negative.
+	*/
 	function AInitBonusMod takes nothing returns nothing
 		//Damage
-		set abilityId[Ix(0,0)] = 'AZZ1' //+001
-		set abilityId[Ix(0,1)] = 'AZZ2' //+002
-		set abilityId[Ix(0,2)] = 'AZZ3' //+004
-		set abilityId[Ix(0,3)] = 'AZZ4' //+008
-		set abilityId[Ix(0,4)] = 'AZZ5' //+016
-		set abilityId[Ix(0,5)] = 'AZZ6' //+032
-		set abilityId[Ix(0,6)] = 'AZZ7' //+064
-		set abilityId[Ix(0,7)] = 'AZZ8' //+128
-		set abilityId[Ix(0,8)] = 'AZZ9' //+256
-		set abilityId[Ix(0,9)] = 'AZZA' //-512
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 0)] = 'AZZ0' //+001
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 1)] = 'AZZ1' //+002
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 2)] = 'AZZ2' //+004
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 3)] = 'AZZ3' //+008
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 4)] = 'AZZ4' //+016
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 5)] = 'AZZ5' //+032
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 6)] = 'AZZ6' //+064
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 7)] = 'AZZ7' //+128
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 8)] = 'AZZ8' //+256
+		set abilityId[Ix(A_BONUS_TYPE_DAMAGE, 9)] = 'AZZ9' //-512
 		//Armor
-		set abilityId[Ix(1,0)] = 'AZY1' //+001
-		set abilityId[Ix(1,1)] = 'AZY2' //+002
-		set abilityId[Ix(1,2)] = 'AZY3' //+004
-		set abilityId[Ix(1,3)] = 'AZY4' //+008
-		set abilityId[Ix(1,4)] = 'AZY5' //+016
-		set abilityId[Ix(1,5)] = 'AZY6' //+032
-		set abilityId[Ix(1,6)] = 'AZY7' //+064
-		set abilityId[Ix(1,7)] = 'AZY8' //+128
-		set abilityId[Ix(1,8)] = 'AZY9' //+256
-		set abilityId[Ix(1,9)] = 'AZYA' //-512
-		//HP
-		set abilityId[Ix(2,0)] = 'AZX1' //+0010
-		set abilityId[Ix(2,1)] = 'AZX2' //+0020
-		set abilityId[Ix(2,2)] = 'AZX3' //+0040
-		set abilityId[Ix(2,3)] = 'AZX4' //+0080
-		set abilityId[Ix(2,4)] = 'AZX5' //+0160
-		set abilityId[Ix(2,5)] = 'AZX6' //+0320
-		set abilityId[Ix(2,6)] = 'AZX7' //+0640
-		set abilityId[Ix(2,7)] = 'AZX8' //+1280
-		set abilityId[Ix(2,8)] = 'AZX9' //+2560
-		set abilityId[Ix(2,9)] = 'AZXA' //-5120
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 0)] = 'AZY0' //+001
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 1)] = 'AZY1' //+002
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 2)] = 'AZY2' //+004
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 3)] = 'AZY3' //+008
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 4)] = 'AZY4' //+016
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 5)] = 'AZY5' //+032
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 6)] = 'AZY6' //+064
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 7)] = 'AZY7' //+128
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 8)] = 'AZY8' //+256
+		set abilityId[Ix(A_BONUS_TYPE_ARMOR, 9)] = 'AZY9' //-512
+		//Life
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 0)] = 'AZX0' //+0010
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 1)] = 'AZX1' //+0020
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 2)] = 'AZX2' //+0040
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 3)] = 'AZX3' //+0080
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 4)] = 'AZX4' //+0160
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 5)] = 'AZX5' //+0320
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 6)] = 'AZX6' //+0640
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 7)] = 'AZX7' //+1280
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 8)] = 'AZX8' //+2560
+		set abilityId[Ix(A_BONUS_TYPE_LIFE, 9)] = 'AZX9' //-5120
 		//Mana
-		set abilityId[Ix(3,0)] = 'AZW1' //+0010
-		set abilityId[Ix(3,1)] = 'AZW2' //+0020
-		set abilityId[Ix(3,2)] = 'AZW3' //+0040
-		set abilityId[Ix(3,3)] = 'AZW4' //+0080
-		set abilityId[Ix(3,4)] = 'AZW5' //+0160
-		set abilityId[Ix(3,5)] = 'AZW6' //+0320
-		set abilityId[Ix(3,6)] = 'AZW7' //+0640
-		set abilityId[Ix(3,7)] = 'AZW8' //+1280
-		set abilityId[Ix(3,8)] = 'AZW9' //+2560
-		set abilityId[Ix(3,9)] = 'AZWA' //-5120
-		
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 0)] = 'AZW0' //+0010
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 1)] = 'AZW1' //+0020
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 2)] = 'AZW2' //+0040
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 3)] = 'AZW3' //+0080
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 4)] = 'AZW4' //+0160
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 5)] = 'AZW5' //+0320
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 6)] = 'AZW6' //+0640
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 7)] = 'AZW7' //+1280
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 8)] = 'AZW8' //+2560
+		set abilityId[Ix(A_BONUS_TYPE_MANA, 9)] = 'AZW9' //-5120
+		//Sight Range
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 0)] = 'AZV0' //+0010
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 1)] = 'AZV1' //+0020
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 2)] = 'AZV2' //+0040
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 3)] = 'AZV3' //+0080
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 4)] = 'AZV4' //+0160
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 5)] = 'AZV5' //+0320
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 6)] = 'AZV6' //+0640
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 7)] = 'AZV7' //+1280
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 8)] = 'AZV8' //+2560
+		set abilityId[Ix(A_BONUS_TYPE_SIGHT_RANGE, 9)] = 'AZV9' //-5120
+		//Life Regeneration
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 0)] = 'AZU0' //+001
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 1)] = 'AZU1' //+002
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 2)] = 'AZU2' //+004
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 3)] = 'AZU3' //+008
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 4)] = 'AZU4' //+016
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 5)] = 'AZU5' //+032
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 6)] = 'AZU6' //+064
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 7)] = 'AZU7' //+128
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 8)] = 'AZU8' //+256
+		set abilityId[Ix(A_BONUS_TYPE_LIFE_REGENERATION, 9)] = 'AZU9' //-512
+		//Mana Regneration
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 0)] = 'AZT0' //+001
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 1)] = 'AZT1' //+002
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 2)] = 'AZT2' //+004
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 3)] = 'AZT3' //+008
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 4)] = 'AZT4' //+016
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 5)] = 'AZT5' //+032
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 6)] = 'AZT6' //+064
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 7)] = 'AZT7' //+128
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 8)] = 'AZT8' //+256
+		set abilityId[Ix(A_BONUS_TYPE_MANA_REGENERATION, 9)] = 'AZT9' //-512
 		set hashTable = AHashTable.create()
 	endfunction
 

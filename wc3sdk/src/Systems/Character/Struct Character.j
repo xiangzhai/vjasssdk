@@ -13,6 +13,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		//static start members
 		private static boolean m_removeUnitOnDestruction
 		private static boolean m_destroyOnPlayerLeaves
+		private static boolean m_shareOnPlayerLeaves
 		private static boolean m_destroyOnDeath
 		private static boolean m_useViewSystem
 		private static boolean m_useFocusSystem
@@ -174,10 +175,12 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			return GetPlayerName(this.m_user)
 		endmethod
 
-		/// Displays a message to the owner of the character.
-		/// @todo Change this method.
-		/// @param messageType The message type.
-		/// @param message The message text.
+		/**
+		* Displays a message to the owner of the character.
+		* @todo Change this method.
+		* @param messageType The message type.
+		* @param message The message text.
+		*/
 		public method displayMessage takes integer messageType, string message returns nothing
 			call DisplayTimedTextToPlayer(this.m_user, 0.0, 0.0, 6.0, message)
 		endmethod
@@ -331,11 +334,27 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		public method copy takes integer stateMethod returns unit
 			return CopyUnit(this.m_unit, GetUnitX(this.m_unit), GetUnitY(this.m_unit), GetUnitFacing(this.m_unit), stateMethod)
 		endmethod
-		
+
+		public method shareControl takes boolean share returns nothing
+			local player whichPlayer
+			local integer i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				if (i != GetPlayerId(this.m_user)) then
+					set whichPlayer = Player(i)
+					call SetPlayerAlliance(this.m_user, whichPlayer, ALLIANCE_SHARED_CONTROL, share)
+					set whichPlayer = null
+				endif
+				set i = i + 1
+			endloop
+		endmethod
+
 		//methods
 		
-		/// Refresh events (without death events, there won't be any revival).
-		/// Only use this method when replacing the character's unit for some time.
+		/**
+		* Refresh events (without death events, there won't be any revival).
+		* Only use this method when replacing the character's unit for some time.
+		*/
 		public method replaceUnit takes unit newUnit returns nothing
 			set this.m_unit = newUnit
 		endmethod
@@ -420,10 +439,10 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			set triggeringTrigger = null
 		endmethod
 
-		private static method triggerActionSetUnmovable takes nothing returns nothing
+		private static method triggerActionShareControl takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.setMovable(false)
+			call this.shareControl(true)
 			set triggeringTrigger = null
 		endmethod
 
@@ -434,8 +453,8 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			set triggerEvent = TriggerRegisterPlayerEvent(this.m_leaveTrigger, this.m_user, EVENT_PLAYER_LEAVE)
 			if (thistype.m_destroyOnPlayerLeaves) then
 				set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionDestroyCharacter)
-			else
-				set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionSetUnmovable)
+			elseif (thistype.m_shareOnPlayerLeaves) then
+				set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionShareControl)
 			endif
 			call AHashTable.global().setHandleInteger(this.m_leaveTrigger, "this", this)
 			set triggerEvent = null
@@ -446,14 +465,12 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		private method createDeathTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			if (thistype.m_destroyOnDeath) then
-				set this.m_deathTrigger = CreateTrigger()
-				set triggerEvent = TriggerRegisterUnitEvent(this.m_deathTrigger, this.m_unit, EVENT_UNIT_DEATH)
-				set triggerAction = TriggerAddAction(this.m_deathTrigger, function thistype.triggerActionDestroyCharacter)
-				call AHashTable.global().setHandleInteger(this.m_deathTrigger, "this", this)
-				set triggerEvent = null
-				set triggerAction = null
-			endif
+			set this.m_deathTrigger = CreateTrigger()
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_deathTrigger, this.m_unit, EVENT_UNIT_DEATH)
+			set triggerAction = TriggerAddAction(this.m_deathTrigger, function thistype.triggerActionDestroyCharacter)
+			call AHashTable.global().setHandleInteger(this.m_deathTrigger, "this", this)
+			set triggerEvent = null
+			set triggerAction = null
 		endmethod
 
 		private method createSystems takes nothing returns nothing
@@ -495,8 +512,12 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			set this.m_talkLog = 0
 			set this.m_spells = AIntegerVector.create()
 
-			call this.createLeaveTrigger()
-			call this.createDeathTrigger()
+			if (thistype.m_destroyOnPlayerLeaves or thistype.m_shareOnPlayerLeaves) then
+				call this.createLeaveTrigger()
+			endif
+			if (thistype.m_destroyOnDeath) then
+				call this.createDeathTrigger()
+			endif
 			call this.createSystems()
 			return this
 		endmethod
@@ -515,10 +536,8 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		endmethod
 
 		private method destroyDeathTrigger takes nothing returns nothing
-			if (thistype.m_destroyOnDeath) then
-				call AHashTable.global().destroyTrigger(this.m_deathTrigger)
-				set this.m_deathTrigger = null
-			endif
+			call AHashTable.global().destroyTrigger(this.m_deathTrigger)
+			set this.m_deathTrigger = null
 		endmethod
 
 		private method destroySystems takes nothing returns nothing
@@ -558,14 +577,19 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			call this.m_spells.destroy()
 
 			call this.removeUnit()
-			call this.destroyLeaveTrigger()
-			call this.destroyDeathTrigger()
+			if (thistype.m_destroyOnPlayerLeaves or thistype.m_shareOnPlayerLeaves) then
+				call this.destroyLeaveTrigger()
+			endif
+			if (thistype.m_destroyOnDeath) then
+				call this.destroyDeathTrigger()
+			endif
 			call this.destroySystems()
 		endmethod
 
 		/**
 		* Call this method before you use this class!
-		* @param destroyOnPlayerLeaves If this value is false the character will be set unmovable when his owner leaves otherwise he will be destroyed.
+		* @param destroyOnPlayerLeaves If this value is true the character will be destroyed when his owner leaves game.
+		* @param shareOnPlayerLeaves If this value is true control over character will be shared with other character owners.
 		* @param destroyOnDeath If this value is false the character will be set unmovable when he dies otherwise he will be destroyed.
 		* @param useViewSystem Shows if the view system is used.
 		* @param useFocusSystem Shows if the focus system is used.
@@ -582,10 +606,11 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		* @see AInventory
 		* @see ATalkLog
 		*/
-		public static method init takes  boolean removeUnitOnDestruction, boolean destroyOnPlayerLeaves, boolean destroyOnDeath, boolean useViewSystem, boolean useFocusSystem, boolean useMovementSystem, boolean useFightSystem, boolean useRevivalSystem, boolean useInventorySystem, boolean useTalkLogSystem returns nothing
+		public static method init takes  boolean removeUnitOnDestruction, boolean destroyOnPlayerLeaves, boolean shareOnPlayerLeaves, boolean destroyOnDeath, boolean useViewSystem, boolean useFocusSystem, boolean useMovementSystem, boolean useFightSystem, boolean useRevivalSystem, boolean useInventorySystem, boolean useTalkLogSystem returns nothing
 			//static start members
 			set thistype.m_removeUnitOnDestruction = removeUnitOnDestruction
 			set thistype.m_destroyOnPlayerLeaves = destroyOnPlayerLeaves
+			set thistype.m_shareOnPlayerLeaves = shareOnPlayerLeaves
 			set thistype.m_destroyOnDeath = destroyOnDeath
 			set thistype.m_useViewSystem = useViewSystem
 			set thistype.m_useFocusSystem = useFocusSystem
@@ -594,8 +619,11 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 			set thistype.m_useRevivalSystem = useRevivalSystem
 			set thistype.m_useInventorySystem = useInventorySystem
 			set thistype.m_useTalkLogSystem = useTalkLogSystem
-			
-			debug if (thistype.m_destroyOnDeath and thistype.m_useRevivalSystem) then
+
+			debug if (destroyOnPlayerLeaves and shareOnPlayerLeaves) then
+				debug call thistype.staticPrint("destroyOnPlayerLeaves and shareOnPlayerLeaves can not be set true at the same time.")
+			debug endif
+			debug if (destroyOnDeath and useRevivalSystem) then
 				debug call thistype.staticPrint("You're using destroy on death and use revival system options at the same time.")
 			debug endif
 		endmethod
@@ -606,6 +634,10 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		
 		public static method destroyOnPlayerLeaves takes nothing returns boolean
 			return thistype.m_destroyOnPlayerLeaves
+		endmethod
+
+		public static method shareOnPlayerLeaves takes nothing returns boolean
+			return thistype.m_shareOnPlayerLeaves
 		endmethod
 		
 		public static method destroyOnDeath takes nothing returns boolean
@@ -669,26 +701,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		
 		/// @todo You could also check it by only comparing with the units owner character unit.
 		public static method getCharacterByUnit takes unit usedUnit returns thistype
-			return AHashTable.global().handleInteger(usedUnit, "ACharacter")
-			/*
-			local integer i
-			local player user
-			debug if (usedUnit == null) then
-				debug call thistype.staticPrint("Used unit is null.")
-			debug endif
-			set i = 0
-			loop
-				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (thistype.playerCharacter(user) != 0 and thistype.playerCharacter(user).unit() == usedUnit) then
-					set user = null
-					return thistype.playerCharacter(user)
-				endif
-				set user = null
-				set i = i + 1
-			endloop
-			return 0
-			*/
+			return AHashTable.global().handleInteger(usedUnit, "ACharacter")		
 		endmethod
 		
 		public static method isUnitCharacter takes unit usedUnit returns boolean

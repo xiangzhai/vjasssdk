@@ -33,9 +33,11 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 		return (GetUnitAbilityLevel(usedUnit, 'Bvul') > 0)
 	endfunction
 
-	/// @todo Function does not support all alliance states (only bj_ALLIANCE_NEUTRAL, bj_ALLIANCE_ALLIED and bj_ALLIANCE_UNALLIED).
-	/// @author Tamino Dauth
-	/// @return Returns the alliance state of the two unit's owners.
+	/**
+	* @todo Function does not support all alliance states (only bj_ALLIANCE_NEUTRAL, bj_ALLIANCE_ALLIED and bj_ALLIANCE_UNALLIED).
+	* @author Tamino Dauth
+	* @return Returns the alliance state of the two unit's owners.
+	*/
 	function GetUnitAllianceStateToUnit takes unit usedUnit, unit otherUnit returns integer
 		local player usedUnitOwner = GetOwningPlayer(usedUnit)
 		local player otherUnitOwner = GetOwningPlayer(otherUnit)
@@ -54,9 +56,11 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 		return allianceState
 	endfunction
 
-	/// @author Anitarf
-	/// @author Tamino Dauth (removed leak)
-	/// @source http://www.wc3c.net/
+	/**
+	* @author Anitarf
+	* @author Tamino Dauth (removed leak)
+	* @source http://www.wc3c.net/
+	*/
 	function IsUnitSpellResistant takes unit u returns boolean
 		local player owner = GetOwningPlayer(u)
 		local boolean result = IsUnitType(u, UNIT_TYPE_HERO) or IsUnitType(u, UNIT_TYPE_RESISTANT) or (GetPlayerId(owner) >= PLAYER_NEUTRAL_AGGRESSIVE and GetUnitLevel(u) >= 6) //the level at which creeps gain spell resistance
@@ -70,29 +74,30 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 		return IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE)
 	endfunction
 	
-	/// Other functions available for use are GetFullDamage and GetReducedDamage.
-	/// GetFullDamage, when passed the actual damage a unit takes (In most cases,
-	/// GetEventDamage from EVENT_UNIT_DAMAGED event callbacks) and a unit's armor,
-	/// it will return how much damage was dealt before armor reduction. Similarly,
-	/// GetReducedDamage, when given the base damage and armor, will return how much
-	/// damage will be dealt after armor is considered. These functions DO NOT
-	/// consider armor types in their calculations, so any further reductions or
-	/// bonuses due to that will need to be considered BEFORE using these functions.
-	/// I recommend using your damage detection system to modify and build your own
-	/// armor types anyways.
-	/// 
-	/// You can use the ObjectMerger call below in order to generate the ability for
-	/// keeping units with maximum life lower than DAMAGE_TEST from dying when
-	/// using GetUnitArmor on them. If you do not plan on editing the 'AIlz' ability
-	/// in your map, you can keep the ObjectMerger call commented out and replace
-	/// 'lif&' in the configuration constants with 'AIlz'. The 'AIlz' ability adds
-	/// 50 max life, which is plenty for the script.
-	///
-	/// Function Listing --
-	///     function GetUnitArmor takes unit u returns real
-	///     function GetReducedDamage takes real baseDamage, real armor returns real
-	///     function GetFullDamage takes real damage, real armor returns real
-	///
+	/**
+	* Other functions available for use are GetFullDamage and GetReducedDamage.
+	* GetFullDamage, when passed the actual damage a unit takes (In most cases,
+	* GetEventDamage from EVENT_UNIT_DAMAGED event callbacks) and a unit's armor,
+	* it will return how much damage was dealt before armor reduction. Similarly,
+	* GetReducedDamage, when given the base damage and armor, will return how much
+	* damage will be dealt after armor is considered. These functions DO NOT
+	* consider armor types in their calculations, so any further reductions or
+	* bonuses due to that will need to be considered BEFORE using these functions.
+	* I recommend using your damage detection system to modify and build your own
+	* armor types anyways.
+	*
+	* You can use the ObjectMerger call below in order to generate the ability for
+	* keeping units with maximum life lower than DAMAGE_TEST from dying when
+	* using GetUnitArmor on them. If you do not plan on editing the 'AIlz' ability
+	* in your map, you can keep the ObjectMerger call commented out and replace
+	* 'lif&' in the configuration constants with 'AIlz'. The 'AIlz' ability adds
+	* 50 max life, which is plenty for the script.
+	*
+	* Function Listing --
+	* function GetUnitArmor takes unit u returns real
+	* function GetReducedDamage takes real baseDamage, real armor returns real
+	* function GetFullDamage takes real damage, real armor returns real
+	*/
 	globals
 		//Values that should be changed for your map
 		private constant real ARMOR_REDUCTION_MULTIPLIER = 0.06 /// @author Rising_Dusk

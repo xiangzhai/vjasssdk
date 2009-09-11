@@ -1,3 +1,6 @@
+2009-09-02 Tamino Dauth <tamino@cdauth.de>
+* Add computer controller and shared control support to character system.
+
 2009-08-24 Tamino Dauth <tamino@cdauth.de>
 * FIXED: If you move an item to next page second time, next page item is moved sometimes?!
 

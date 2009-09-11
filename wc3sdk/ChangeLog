@@ -1,3 +1,24 @@
+2009-09-11 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/Core/String/Struct Tokenizer.j".
+
+2009-09-09 Tamino Dauth <tamino@cdauth.de>
+* Added methods incudes, innerProduct, copyNumber and copy to struct of text macro A_VECTOR.
+
+2009-09-07 Tamino Dauth <tamino@cdauth.de>
+* Added function Bounty.
+* Improved bonus mod and added bonus typs sight range and mana and life regeneration.
+* Removed function AClearUnitBonus.
+* Added function AUnitRemoveBonus.
+* Added icons for ability "Linderung".
+
+2009-09-06 Tamino Dauth <tamino@cdauth.de>
+* Added several debug hooks for Blizzards natives.
+* Added handle counters to struct ABenchmark.
+
+2009-09-02 Tamino Dauth <tamino@cdauth.de>
+* Added first implementation of computer controllers and shared control support to character system.
+* Added function CountPlayingPlayers.
+
 2009-08-24 Tamino Dauth <tamino@cdauth.de>
 * Added method removeFromRucksackByTypeId to struct AInventory.
 * Fixed move item to page bug of struct AInventory.

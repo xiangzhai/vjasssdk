@@ -115,7 +115,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	/// @todo Desynchronization!
 	function GetCameraTargetPositionOfPlayer takes player user returns location
 		local player localPlayer = GetLocalPlayer()
-		local location cameraTargetPosition
+		local location cameraTargetPosition = null
 		if (user == localPlayer) then
 			set cameraTargetPosition = GetCameraTargetPositionLoc()
 		endif
@@ -126,7 +126,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	/// @todo Desynchronization!
 	function GetCameraTargetPositionXOfPlayer takes player user returns real
 		local player localPlayer = GetLocalPlayer()
-		local real value
+		local real value = 0.0
 		if (user == localPlayer) then
 			set value = GetCameraTargetPositionX()
 		endif
@@ -137,7 +137,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	/// @todo Desynchronization!
 	function GetCameraTargetPositionYOfPlayer takes player user returns real
 		local player localPlayer = GetLocalPlayer()
-		local real value
+		local real value = 0.0
 		if (user == localPlayer) then
 			set value = GetCameraTargetPositionY()
 		endif
@@ -148,7 +148,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	/// @todo Desynchronization!
 	function GetCameraTargetPositionZOfPlayer takes player user returns real
 		local player localPlayer = GetLocalPlayer()
-		local real value
+		local real value = 0.0
 		if (user == localPlayer) then
 			set value = GetCameraTargetPositionZ()
 		endif
@@ -159,7 +159,7 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	/// @todo Desynchronization!
 	function GetCameraFieldOfPlayer takes player user, camerafield cameraField returns real
 		local player localPlayer = GetLocalPlayer()
-		local real cameraFieldValue
+		local real cameraFieldValue = 0.0
 		if (user == localPlayer) then
 			set cameraFieldValue = GetCameraField(cameraField)
 		endif

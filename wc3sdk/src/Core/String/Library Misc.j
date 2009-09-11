@@ -5,7 +5,7 @@ library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
 	/// Debug for testing over- and underflow.
 	debug function StringPositionDebug takes string usedString, integer position returns nothing
 		debug if ((position < 0) or (position >= StringLength(usedString))) then
-			debug call Print("StringPositionDebug: Wrong position value: " + I2S(position) + ".") //ALibraryGeneralDebug
+			debug call Print("StringPositionDebug: Wrong position value: " + I2S(position) + ".")
 		debug endif
 	debug endfunction
 

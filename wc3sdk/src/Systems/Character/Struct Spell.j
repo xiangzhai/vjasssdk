@@ -78,9 +78,13 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, AStructCore
 		
 		//Make it available
 		public method enable takes nothing returns nothing
+			call EnableTrigger(this.m_upgradeTrigger)
+			call EnableTrigger(this.m_castTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
+			call DisableTrigger(this.m_upgradeTrigger)
+			call DisableTrigger(this.m_castTrigger)
 		endmethod
 		
 		private static method triggerConditionRightAbility takes nothing returns boolean

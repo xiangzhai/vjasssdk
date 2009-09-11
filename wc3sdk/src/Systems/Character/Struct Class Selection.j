@@ -52,11 +52,15 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 		//methods
 		
 		public method show takes nothing returns nothing
-			call ClearScreenMessagesForPlayer(this.m_user)
-			call SetUserInterfaceForPlayer(this.m_user, false, true)
-			call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
-			call MultiboardMinimize(this.m_infoSheet, false)
-			call this.createUnit()
+			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT) then
+				call this.selectRandomClass()
+			else
+				call ClearScreenMessagesForPlayer(this.m_user)
+				call SetUserInterfaceForPlayer(this.m_user, false, true)
+				call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
+				call MultiboardMinimize(this.m_infoSheet, false)
+				call this.createUnit()
+			endif
 		endmethod
 
 		//get new test
@@ -146,6 +150,9 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 
 		private method selectClass takes nothing returns nothing
 			local ACharacter character = ACharacter.setPlayerCharacter(this.m_user, this.m_class.generateUnit(this.m_user, this.m_startX, this.m_startY, this.m_startFacing))
+			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or (GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT and ACharacter.shareOnPlayerLeaves())) then
+				call character.shareControl(true)
+			endif
 			call SetUserInterfaceForPlayer(this.m_user, false, false)
 			call ResetToGameCameraForPlayer(this.m_user, 0.0)
 			//call PanCameraToForPlayer(this.m_user, this.m_startX, this.m_startY) ///WAAAAA
@@ -153,11 +160,34 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 			call this.m_selectClassAction.execute(character, this.m_class)
 			call this.destroy()
 		endmethod
+
+		private method selectRandomClass takes nothing returns nothing
+			set this.m_class = GetRandomInt(thistype.m_firstClass, thistype.m_lastClass)
+			call this.selectClass()
+		endmethod
 		
 		private static method triggerActionPlayerLeaves takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.destroy()
+			local player whichPlayer
+			local integer i
+			if (ACharacter.shareOnPlayerLeaves()) then
+				set i = 0
+				loop
+					exitwhen (i == bj_MAX_PLAYERS)
+					if (i != GetPlayerId(this.m_user)) then
+						set whichPlayer = Player(i)
+						call SetPlayerAlliance(this.m_user, whichPlayer, ALLIANCE_SHARED_CONTROL, true)
+						set whichPlayer = null
+					endif
+					set i = i + 1
+				endloop
+			endif
+			if (ACharacter.destroyOnPlayerLeaves()) then
+				call this.destroy()
+			else
+				call this.selectClass()
+			endif
 			set triggeringTrigger = null
 		endmethod
 		

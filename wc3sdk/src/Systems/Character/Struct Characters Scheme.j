@@ -23,52 +23,6 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 		private method onDestroy takes nothing returns nothing
 		endmethod
 
-		/// Call this method before you use this struct!
-		/// Call this after a trigger sleep action, multiboard is created!
-		/// @param refreshRate Should be bigger than 0.0.
-		public static method init takes real refreshRate, integer barLength, string textTitle, string textLevel, string textLeftGame returns nothing
-			//static start members
-			set thistype.m_refreshRate = refreshRate
-			debug if (refreshRate <= 0) then
-				debug call thistype.staticPrint("Refresh rate is <= 0")
-			debug endif
-			set thistype.m_barLength = barLength
-			set thistype.m_textTitle = textTitle
-			set thistype.m_textLevel = textLevel
-			set thistype.m_textLeftGame = textLeftGame
-			//static members
-			call thistype.createRefreshTrigger()
-			call thistype.createMultiboard()
-		endmethod
-
-		public static method show takes nothing returns nothing
-			call EnableTrigger(thistype.m_refreshTrigger)
-			call MultiboardDisplay(thistype.m_multiboard, true)
-		endmethod
-		
-		public static method showForPlayer takes player user returns nothing
-			call ShowMultiboardForPlayer(user, thistype.m_multiboard, true)
-		endmethod
-
-		public static method hide takes nothing returns nothing
-			call MultiboardDisplay(thistype.m_multiboard, false)
-			call DisableTrigger(thistype.m_refreshTrigger)
-		endmethod
-		
-		public static method hideForPlayer takes player user returns nothing
-			call ShowMultiboardForPlayer(user, thistype.m_multiboard, false)
-		endmethod
-
-		public static method maximize takes nothing returns nothing
-			call EnableTrigger(thistype.m_refreshTrigger)
-			call MultiboardMinimize(thistype.m_multiboard, false)
-		endmethod
-
-		public static method minimize takes nothing returns nothing
-			call MultiboardMinimize(thistype.m_multiboard, true)
-			call DisableTrigger(thistype.m_refreshTrigger)
-		endmethod
-		
 		private static method triggerActionRefresh takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
@@ -78,7 +32,7 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 				exitwhen (i == thistype.m_maxPlayers)
 				set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
 				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
+				if ((IsPlayerPlayingUser(user) and ACharacter.playerCharacter(user) != 0) or (ACharacter.shareOnPlayerLeaves() and ACharacter.playerCharacter(user) != 0)) then
 					//refresh name (class - unit name) - level
 					call MultiboardSetItemValue(multiboardItem, GetModifiedPlayerName(user) + " [" + GetUnitName(ACharacter.playerCharacter(user).unit()) + "] - " + thistype.m_textLevel + " " + I2S(GetHeroLevel(ACharacter.playerCharacter(user).unit())))
 
@@ -124,6 +78,7 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 			set triggerAction = null
 		endmethod
 
+		/// Call this AFTER character creation/character class selection
 		private static method createMultiboard takes nothing returns nothing
 			local integer i
 			local player user
@@ -135,7 +90,8 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
+				//if (IsPlayerPlayingUser(user)) then // computer players are allowed now
+				if (ACharacter.playerCharacter(user) != 0) then
 					call MultiboardSetRowCount(thistype.m_multiboard, MultiboardGetRowCount(thistype.m_multiboard) + 1)
 					set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
 					call MultiboardSetItemWidth(multiboardItem, 0.35) /// @todo check it
@@ -159,8 +115,56 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 					call thistype.m_manaBar[i].setAllIcons("Icons\\Interface\\Bars\\Blue.blp", true)
 					set thistype.m_maxPlayers = i + 1
 				endif
+				//endif
 				set i = i + 1
 			endloop
+		endmethod
+
+		/// Call this method before you use this struct!
+		/// Call this after a trigger sleep action, multiboard is created!
+		/// Call this AFTER character creation/character class selection
+		/// @param refreshRate Should be bigger than 0.0.
+		public static method init takes real refreshRate, integer barLength, string textTitle, string textLevel, string textLeftGame returns nothing
+			//static start members
+			set thistype.m_refreshRate = refreshRate
+			debug if (refreshRate <= 0) then
+				debug call thistype.staticPrint("Refresh rate is <= 0")
+			debug endif
+			set thistype.m_barLength = barLength
+			set thistype.m_textTitle = textTitle
+			set thistype.m_textLevel = textLevel
+			set thistype.m_textLeftGame = textLeftGame
+			//static members
+			call thistype.createRefreshTrigger()
+			call thistype.createMultiboard()
+		endmethod
+
+		public static method show takes nothing returns nothing
+			call EnableTrigger(thistype.m_refreshTrigger)
+			call MultiboardDisplay(thistype.m_multiboard, true)
+		endmethod
+		
+		public static method showForPlayer takes player user returns nothing
+			call ShowMultiboardForPlayer(user, thistype.m_multiboard, true)
+		endmethod
+
+		public static method hide takes nothing returns nothing
+			call MultiboardDisplay(thistype.m_multiboard, false)
+			call DisableTrigger(thistype.m_refreshTrigger)
+		endmethod
+		
+		public static method hideForPlayer takes player user returns nothing
+			call ShowMultiboardForPlayer(user, thistype.m_multiboard, false)
+		endmethod
+
+		public static method maximize takes nothing returns nothing
+			call EnableTrigger(thistype.m_refreshTrigger)
+			call MultiboardMinimize(thistype.m_multiboard, false)
+		endmethod
+
+		public static method minimize takes nothing returns nothing
+			call MultiboardMinimize(thistype.m_multiboard, true)
+			call DisableTrigger(thistype.m_refreshTrigger)
 		endmethod
 	endstruct
 

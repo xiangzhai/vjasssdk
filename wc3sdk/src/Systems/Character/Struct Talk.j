@@ -210,8 +210,8 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 			if (GetIssuedOrderId() == OrderId(ATalk.order)) then //Rechtsklick
 				set triggerUnit = GetTriggerUnit()
 				set owner = GetOwningPlayer(triggerUnit)
-				//Is character
-				if (triggerUnit == ACharacter.playerCharacter(owner).unit()) then
+				// Is character, if there is shared control or controller is computer player talks can not be used.
+				if (GetPlayerSlotState(owner) != PLAYER_SLOT_STATE_LEFT and GetPlayerController(owner) != MAP_CONTROL_COMPUTER and triggerUnit == ACharacter.playerCharacter(owner).unit()) then
 					set triggeringTrigger = GetTriggeringTrigger()
 					set this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 					set orderTargetUnit = GetOrderTargetUnit() 
