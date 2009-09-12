@@ -1,0 +1,43 @@
+2009-09-12 Tamino Dauth <tamino@cdauth.de>
+* Revised several code files and added GPL license.
+* Revised cmake files.
+* Renamed project to "wc3lib".
+
+2009-09-05 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/map/w3m.cpp".
+* Added file "src/mpq/mpq.cpp".
+
+2009-08-26 Tamino Dauth <tamino@cdauth.de>
+* Revised cmake files.
+* Added file "src/mdlx/bone.hpp".
+* Added file "src/mdlx/bone.cpp".
+* Improved BLP JPEG read functionality.
+
+2009-08-25 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/mdlx/attachment.hpp".
+* Added file "src/mdlx/attachment.cpp".
+* Added file "src/map/environment.hpp".
+* Added file "src/map/tilepoint.hpp".
+* Added file "src/map/trees.hpp".
+* Added file "src/map/tree.hpp".
+* Added file "src/map/itemset.hpp".
+
+2009-08-24 Tamino Dauth <tamino@cdauth.de>
+* Added more code for writing MDL files.
+* Added file "src/mdlx/object.hpp".
+* Added file "src/mdlx/object.cpp".
+
+2009-08-22 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/map/w3m.hpp".
+* Improved blp read- and writing.
+* Improved mdx reading.
+* Added file "src/exception.hpp".
+* Added file "src/exception.cpp".
+
+2009-08-21 Tamino Dauth <tamino@cdauth.de>
+* Improved blp read- and writing.
+
+2009-08-20 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/mdlx/mdlx.hpp".
+* Added file "src/mdlx/mdlx.cpp".
+* Added file "src/mdlx/platform.hpp".

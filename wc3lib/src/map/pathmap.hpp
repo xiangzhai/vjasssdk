@@ -1,0 +1,58 @@
+/***************************************************************************
+ *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   tamino@cdauth.de                                                      *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef WC3LIB_MAP_PATHMAP_HPP
+#define WC3LIB_MAP_PATHMAP_HPP
+
+namespace wc3lib
+{
+
+namespace map
+{
+
+class Pathmap
+{
+	public:
+		enum Data
+		{
+			Walk = 0x02,
+			Fly = 0x04,
+			Build = 0x08,
+			Blight = 0x20,
+			Water = 0x40,
+			Unknown = 0x80
+		};
+
+		struct Header
+		{
+			char fileId[4]; //[4]: file ID = 'MP3W'
+			int fileVersion; //: file version = 0
+			int width; //: path map width (=map_width*4)
+			int height; //: path map height (=map_height*4)
+		};
+
+	private:
+};
+
+}
+
+}
+
+#endif

@@ -1,0 +1,80 @@
+/***************************************************************************
+ *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   tamino@cdauth.de                                                      *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef WC3LIB_MDLX_ATTACHMENT_HPP
+#define WC3LIB_MDLX_ATTACHMENT_HPP
+
+#include "object.hpp"
+
+namespace wc3lib
+{
+
+namespace mdlx
+{
+
+class Visibility;
+
+class Attachment : public Object
+{
+	public:
+		Attachment(class Mdlx *mdlx);
+		virtual ~Attachment();
+		ascii path() const;
+		long32 unknown0() const;
+		long32 attachmentId() const;
+		class Visibility* visibility() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		ascii m_path[0x100];
+		long32 m_unknown0;
+		long32 m_attachmentId;
+		class Visibility *m_visibility; //(KATV)
+};
+
+inline ascii Attachment::path() const
+{
+	return this->m_path;
+}
+
+inline long32 Attachment::unknown0() const
+{
+	return this->m_unknown0;
+}
+
+inline long32 Attachment::attachmentId() const
+{
+	return this->m_attachmentId;
+}
+
+inline class Visibility* Attachment::visibility() const
+{
+	return this->m_visibility;
+}
+
+}
+
+}
+
+#endif

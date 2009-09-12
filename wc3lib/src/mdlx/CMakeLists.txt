@@ -1,0 +1,25 @@
+set(wc3lib_MDLX_SRC
+	mdlx/attachment.cpp
+	mdlx/bone.cpp
+	mdlx/camera.cpp
+	mdlx/collisionshape.cpp
+	mdlx/event.cpp
+	mdlx/ganimation.cpp
+	mdlx/geoset.cpp
+	mdlx/geosetanimation.cpp
+	mdlx/mdlx.cpp
+	mdlx/object.cpp
+)
+
+set(wc3lib_MDLX_H
+	mdlx/attachment.hpp
+	mdlx/bone.hpp
+	mdlx/camera.hpp
+	mdlx/collisionshape.hpp
+	mdlx/event.hpp
+	mdlx/ganimation.hpp
+	mdlx/geoset.hpp
+	mdlx/geosetanimation.hpp
+	mdlx/mdlx.hpp
+	mdlx/object.hpp
+)
