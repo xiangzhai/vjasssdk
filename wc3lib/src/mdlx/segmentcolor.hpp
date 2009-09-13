@@ -18,12 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
+#ifndef WC3LIB_MDLX_SEGMENTCOLOR_HPP
+#define WC3LIB_MDLX_SEGMENTCOLOR_HPP
 
-#include <list>
+#include <fstream>
 
-#include "object.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,29 +32,47 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class SegmentColor
 {
 	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
+		SegmentColor(class Mdlx *mdlx);
+		virtual ~SegmentColor();
 
-		std::list<long32> frames() const;
+		class Mdlx* mdlx() const;
+		float32 red() const;
+		float32 green() const;
+		float32 blue() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
+		class Mdlx *m_mdlx;
+		// SegmentColor usually 3 segments
+		// Inverse order from MDL
+		float32 m_red, m_green, m_blue;
 };
 
-inline std::list<long32> Event::frames() const
+inline class Mdlx* SegmentColor::mdlx() const
 {
-	return this->m_frames;
+	return this->m_mdlx;
+}
+
+inline float32 SegmentColor::red() const
+{
+	return this->m_red;
+}
+
+inline float32 SegmentColor::green() const
+{
+	return this->m_green;
+}
+
+inline float32 SegmentColor::blue() const
+{
+	return this->m_blue;
 }
 
 }

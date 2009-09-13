@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_SCALING_HPP
-#define WC3LIB_MDLX_SCALING_HPP
+#ifndef WC3LIB_MDLX_NORMAL_HPP
+#define WC3LIB_MDLX_NORMAL_HPP
 
 #include <fstream>
 
@@ -32,25 +32,26 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-
-class Scaling
+class Rotation
 {
 	public:
-		Scaling(class Mdlx *mdlx);
-		virtual ~Scaling();
+		Rotation(class Mdlx *mdlx);
+		virtual ~Rotation();
 
 		class Mdlx* mdlx() const;
-		long32 frame() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
-		float32 inTanX() const;
-		float32 inTanY() const;
-		float32 inTanZ() const;
-		float32 outTanX() const;
-		float32 outTanY() const;
-		float32 outTanZ() const;
+		float32 frame() const;
+		float32 a() const;
+		float32 b() const;
+		float32 c() const;
+		float32 d() const;
+		float32 inTanA() const;
+		float32 inTanB() const;
+		float32 inTanC() const;
+		float32 inTanD() const;
+		float32 outTanA() const;
+		float32 outTanB() const;
+		float32 outTanC() const;
+		float32 outTanD() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -59,67 +60,83 @@ class Scaling
 
 	protected:
 		class Mdlx *m_mdlx;
-		long32	m_frame;
-		float32	m_x, m_y, m_z;
-		//if (LineType > 1) {
-		float32	m_inTanX, m_inTanY, m_inTanZ;
-		float32	m_outTanX, m_outTanY, m_outTanZ;
+		long32 m_frame;
+		float32 m_a, m_b, m_c, m_d;
+		//if (LineType > 1)
+		//{
+		float32 m_inTanA, m_inTanB, m_inTanC, m_inTanD;
+		float32 m_outTanA, m_outTanB, m_outTanC, m_outTanD;
 		//}
 };
 
-inline class Mdlx* Scaling::mdlx() const
+class Mdlx* Rotation::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 Scaling::frame() const
+float32 Rotation::frame() const
 {
 	return this->m_frame;
 }
 
-inline float32 Scaling::x() const
+float32 Rotation::a() const
 {
-	return this->m_x;
+	return this->m_a;
 }
 
-inline float32 Scaling::y() const
+float32 Rotation::b() const
 {
-	return this->m_y;
+	return this->m_b;
 }
 
-inline float32 Scaling::z() const
+float32 Rotation::c() const
 {
-	return this->m_z;
+	return this->m_c;
 }
 
-inline float32 Scaling::inTanX() const
+float32 Rotation::d() const
 {
-	return this->m_inTanX;
+	return this->m_d;
 }
 
-inline float32 Scaling::inTanY() const
+float32 Rotation::inTanA() const
 {
-	return this->m_inTanY;
+	return this->m_inTanA;
 }
 
-inline float32 Scaling::inTanZ() const
+float32 Rotation::inTanB() const
 {
-	return this->m_inTanZ;
+	return this->m_inTanB;
 }
 
-inline float32 Scaling::outTanX() const
+float32 Rotation::inTanC() const
 {
-	return this->m_outTanX;
+	return this->m_inTanC;
 }
 
-inline float32 Scaling::outTanY() const
+float32 Rotation::inTanD() const
 {
-	return this->m_outTanY;
+	return this->m_inTanD;
 }
 
-inline float32 Scaling::outTanZ() const
+float32 Rotation::outTanA() const
 {
-	return this->m_outTanZ;
+	return this->m_outTanA;
+}
+
+float32 Rotation::outTanB() const
+{
+	return this->m_outTanB;
+}
+
+float32 Rotation::outTanC() const
+{
+	return this->m_outTanC;
+}
+
+float32 Rotation::outTanD() const
+{
+	return this->m_outTanD;
 }
 
 }

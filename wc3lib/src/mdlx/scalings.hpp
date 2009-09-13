@@ -24,6 +24,7 @@
 #include <fstream>
 #include <list>
 
+#include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -36,7 +37,8 @@ namespace mdlx
 class Mdlx;
 class Scaling;
 
-class Scalings
+//KGSC
+class Scalings : public MdxBlock
 {
 	public:
 		enum LineType
@@ -53,7 +55,7 @@ class Scalings
 		class Mdlx* mdlx() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
-		std::list<class Scaling> scalings() const;
+		std::list<class Scaling*> scalings() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -64,7 +66,7 @@ class Scalings
 		class Mdlx *m_mdlx;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Scaling> m_scalings;
+		std::list<class Scaling*> m_scalings;
 };
 
 inline class Mdlx* Scalings::mdlx() const
@@ -82,7 +84,7 @@ inline long32 Scalings::globalSequenceId() const
 	return this->m_globalSequenceId;
 }
 
-inline std::list<class Scaling> Scalings::scalings() const
+inline std::list<class Scaling*> Scalings::scalings() const
 {
 	return this->m_scalings;
 }
@@ -91,4 +93,4 @@ inline std::list<class Scaling> Scalings::scalings() const
 
 }
 
-#endif // SCALINGS_HPP
+#endif

@@ -18,12 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
+#ifndef WC3LIB_MDLX_TRANSLATION0S_HPP
+#define WC3LIB_MDLX_TRANSLATION0S_HPP
 
+#include <fstream>
 #include <list>
 
-#include "object.hpp"
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,29 +34,59 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class Mdlx;
+class Translation0;
+
+//KCTR, like KGSC (Scalings)
+class Translation0s : public MdxBlock
 {
 	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
 
-		std::list<long32> frames() const;
+		Translation0s(class Mdlx *mdlx);
+		virtual ~Translation0s();
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
+		class Mdlx* mdlx() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Translation*> translations() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
+		class Mdlx *m_mdlx;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Translation0*> m_translations;
 };
 
-inline std::list<long32> Event::frames() const
+inline class Mdlx* Translation0s::mdlx() const
 {
-	return this->m_frames;
+	return this->m_mdlx;
+}
+
+inline long32 Translation0s::lineType() const
+{
+	return this->m_lineType;
+}
+
+inline long32 Translation0s::globalSequenceId() const
+{
+	return this->m_globalSequenceId;
+}
+
+inline std::list<class Translation0*> Translation0s::translations() const
+{
+	return this->m_translations;
 }
 
 }
@@ -61,3 +94,4 @@ inline std::list<long32> Event::frames() const
 }
 
 #endif
+

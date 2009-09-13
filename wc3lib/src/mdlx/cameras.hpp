@@ -18,12 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
+#ifndef WC3LIB_MDLX_CAMERAS_HPP
+#define WC3LIB_MDLX_CAMERAS_HPP
 
+#include <fstream>
 #include <list>
 
-#include "object.hpp"
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,29 +34,36 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class Mdlx;
+class Camera;
+
+//CAMS
+class Cameras : public MdxBlock
 {
 	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
+		Bones(class Mdlx *mdlx);
+		virtual ~Cameras();
 
-		std::list<long32> frames() const;
+		class Mdlx* mdlx() const;
+		std::list<class Camera*> cameras() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
+		std::list<class Camera*> m_cameras;
 };
 
-inline std::list<long32> Event::frames() const
+inline class Mdlx* Cameras::mdlx() const
 {
-	return this->m_frames;
+	return this->m_mdlx;
+}
+
+inline std::list<class Camera*> Cameras::cameras() const
+{
+	return this->m_cameras;
 }
 
 }

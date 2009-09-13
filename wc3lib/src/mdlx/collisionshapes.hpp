@@ -18,12 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
+#ifndef WC3LIB_MDLX_COLLISIONSHAPES_HPP
+#define WC3LIB_MDLX_COLLISIONSHAPES_HPP
 
+#include <fstream>
 #include <list>
 
-#include "object.hpp"
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,29 +34,36 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class Mdlx;
+class CollisionShape;
+
+//CLID
+class CollisionShapes : public MdxBlock
 {
 	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
+		CollisionShapes(class Mdlx *mdlx);
+		virtual ~CollisionShapes();
 
-		std::list<long32> frames() const;
+		class Mdlx* mdlx() const;
+		std::list<class CollisionShape*> collisionShapes() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
+		std::list<class CollisionShape*> m_collisionShapes;
 };
 
-inline std::list<long32> Event::frames() const
+inline class Mdlx* CollisionShapes::mdlx() const
 {
-	return this->m_frames;
+	return this->m_mdlx;
+}
+
+inline std::list<class CollisionShape*> CollisionShapes::collisionShapes() const
+{
+	return this->m_collisionShapes;
 }
 
 }

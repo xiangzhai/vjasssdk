@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scalings::Scalings(class Mdlx *mdlx) : m_mdlx(mdlx)
+Scalings::Scalings(class Mdlx *mdlx) : MdxBlock("KGSC"), m_mdlx(mdlx)
 {
 }
 

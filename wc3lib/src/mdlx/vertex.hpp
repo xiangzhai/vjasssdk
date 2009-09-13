@@ -18,12 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
+#ifndef WC3LIB_MDLX_VERTEX_HPP
+#define WC3LIB_MDLX_VERTEX_HPP
 
-#include <list>
+#include <fstream>
 
-#include "object.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,29 +32,45 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class Vertex
 {
 	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
+		Vertex(class Mdlx *mdlx);
+		virtual ~Vertex();
 
-		std::list<long32> frames() const;
+		class Mdlx* mdlx() const;
+		float32 x() const;
+		float32 y() const;
+		float32 z() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
+		class Mdlx *m_mdlx;
+		float32 m_x, m_y, m_z;
 };
 
-inline std::list<long32> Event::frames() const
+class Mdlx* Vertex::mdlx() const
 {
-	return this->m_frames;
+	return this->m_mdlx;
+}
+
+float32 Vertex::x() const
+{
+	return this->m_x;
+}
+
+float32 Vertex::y() const
+{
+	return this->m_y;
+}
+
+float32 Vertex::z() const
+{
+	return this->m_z;
 }
 
 }

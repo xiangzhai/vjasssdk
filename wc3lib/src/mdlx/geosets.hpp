@@ -18,12 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
+#ifndef WC3LIB_MDLX_GEOSETS_HPP
+#define WC3LIB_MDLX_GEOSETS_HPP
 
 #include <list>
 
-#include "object.hpp"
+#include "mdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,13 +31,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class Mdlx;
+
+class Geosets : public MdxBlock
 {
 	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
-
-		std::list<long32> frames() const;
+		Geosets(class Mdlx *mdlx);
+		virtual ~Geosets();
 
 		virtual void readMdl(std::fstream &fstream) throw (Exception);
 		virtual void readMdx(std::fstream &fstream) throw (Exception);
@@ -45,16 +45,23 @@ class Event : public Object
 		virtual void writeMdx(std::fstream &fstream) throw (Exception);
 
 	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
+		//long	nbytes;
+		std::list<class Geoset*> m_geosets;
+		class Vertices *m_vertices; //VRTX
+		class Normals *m_normals;
+		class PrimitiveTypes *m_primitiveTypes; //PTYP
+		class PrimitiveSizes *m_primitiveSizes; //PCNT
+		class PrimitiveVertices *m_primitiveVertices; //PVTX
+		class GroupVertices *m_groupVertices; //GNDX
+		class MaterialGroupLengths *m_materialGroupLengths; //MTGC
+		class Matrices *m_matrices; //MATS
+		/*
+		--(BIDX) ???
+		--(BWGT) ???
+		*/
+		class TexturePatches *m_texturePatches; //UVAS, texture patches?
+		class TextureVertices *m_textureVertices; //UVBS
 };
-
-inline std::list<long32> Event::frames() const
-{
-	return this->m_frames;
-}
 
 }
 

@@ -20,6 +20,12 @@
 
 #include "scaling.hpp"
 
+namespace wc3lib
+{
+
+namespace mdlx
+{
+
 Scaling::Scaling(class Mdlx *mdlx) : m_mdlx(mdlx)
 {
 }

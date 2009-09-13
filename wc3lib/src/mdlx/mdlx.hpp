@@ -22,7 +22,6 @@
 #define WC3LIB_MDLX_MDLX_HPP
 
 #include <fstream>
-#include <list>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -33,7 +32,26 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Object;
+class Version;
+class Model;
+class Sequences;
+class GlobalSequences;
+class Materials;
+class Textures;
+class TextureAnimations;
+class Geosets;
+class GeosetAnimations;
+class Bones;
+class Lights;
+class Helpers;
+class Attachments;
+class PivotPoints;
+class ParticleEmitters;
+class ParticleEmitter2s;
+class RibbonEmitters;
+class Cameras;
+class Events;
+class CollisionShapes;
 
 /**
 * long/float size: 32-bit
@@ -74,20 +92,10 @@ class Mdlx
 			std::list<long32> groupCounts; //[nmtrcs]; //   for each group.
 		};
 
-		struct Vertice
-		{
-			float32 x, y, z;
-		};
-
 		struct Vertices
 		{
 			//long	nvrts;
 			std::list<struct Vertice*> vertices; //[nvrts]
-		};
-
-		struct Normal
-		{
-			float32 x, y, z;
 		};
 
 		struct Normals
@@ -96,27 +104,12 @@ class Mdlx
 		};
 
 		//--UVBS // [TVertices] (nonexistant in v1300)
-		struct Tvertice
-		{
-			float32 x, y;
-		};
-
-		struct Tvertices
+		struct TextureVertices
 		{
 			std::list<struct Tvertice*> tvertices;
 		};
 
-		struct Rotation
-		{
-			long32 frame;
-			float32 a, b, c, d;
-			//if (LineType > 1)
-			//{
-			float32 inTana, inTanb, inTanc, inTand;
-			float32 outTana, outTanb, outTanc, outTand;
-			//}
-		};
-
+		//KGRT						// [Rotation]
 		struct Rotations
 		{
 			//Rotations
@@ -126,210 +119,76 @@ class Mdlx
 			std::list<struct Rotation*> m_rotations; //[nunks]
 		};
 
-		struct Material
-		{
-			//long nbytesi;
-			long32 priorityPlane;
-			long32 renderMode; //(+1:ConstantColor;+16:SortPrimsFarZ;+32:FullResolution)
-			std::list<struct Layer*> layers;
-		};
-
-		struct PivotPoint
-		{
-			float32 x, y, z;
-		};
-
-		struct ParticleEmitter
-		{
-			long32 nbytesi;
-			long32 nbytesikg; // inclusive bytecount including KGXXs
-			ascii name[0x50]; //(0x50 bytes)
-			long32 objectID;
-			long32 parent; //(0xFFFFFFFF if none)
-			long32 flags; //(bit20)	// +bit23(EmitterUsesMDL) +bit8(EmitterUsesTGA)
-			//(KGTR)
-			//(KGRT)
-			//(KGSC)
-			float32 emissionRate;
-			float32 gravity;
-			float32 longitude;
-			float32 latitidue;
-			ascii modelPath[0x100]; //(0x100 bytes)
-			long32 unknown0; //(0)
-			float32 lifeSpan;
-			float32 initVelocity;
-			//(KPEV)
-		};
-
-		struct ParticleEmitter2
-		{
-			long32 nbytesi;
-			long32 nbytesikg; // inclusive bytecount including KGXXs
-			ascii name[0x50]; //(0x50 bytes)
-			long32 objectID;
-			long32 parent; //(0xFFFFFFFF if none)
-			long32 flags; //(bit20)	// +bit26(DontInherit Rotation)
-			//(KGTR) // +bit23(Unshaded)	+bit10(Unfogged)
-			//(KGRT) // +bit12(XYQuad)	+bit9(LineEmitter)
-			//(KGSC) // +bit11(ModelSpace)	+bit8(SortPrimsFarZ)
-			float32 speed;
-			float32 variation;
-			float32 latitidue;
-			float32 gravity;
-			float32 lifespan;
-			float32 emissionRate;
-			float32 length;
-			float32 width;
-			long32 filterMode; //(0:Blend;1:Additive;2:Modulate;4:AlphaKey)
-			long32 rows;
-			long32 columns;
-			long32 flag2; //(0:Head;1:Tail;2:Both)
-			float32 tailLength;
-			float32 time;
-
-			struct SegmentColor
-			{			// SegmentColor usually 3 segments
-				float red, green, blue; // Inverse order from MDL
-			};//color[numsegments]
-
-			byte alpha1, alpha2, alpha3; //byte
-			float32 scalingX, scalingY, scalingZ;
-			long32 lifeSpanUvAnim1, lifeSpanUvAnim2, lifeSpanUvAnim3;
-			long32 decayUvAnim1, decayUvAnim2, decayUvAnim3;
-			long32 tailUvAnim1, tailUvAnim2, tailUvAnim3;
-			long32 tailDecayUvAnim1, tailDecayUvAnim2, tailDecayUvAnim3;
-			long32 textureID;
-			long32 squirt; //(1:Squirt)
-			long32 priorityPlane;
-			long32 replaceableId;
-			//(KP2S)
-			//(KP2L)
-			//(KP2E)
-			//(KP2V)
-			//(KP2N)
-			//(KP2W)
-		};
 
 
+		void readMdx(std::fstream &fstream) throw (class Exception);
+		void readMdl(std::fstream &fstream) throw (class Exception);
+		void readBlend(std::fstream &fstream) throw (class Exception);
+		void read3ds(std::fstream &fstream) throw (class Exception);
 
-		void readMdx(std::fstream &fstream) throw (Exception);
-		void readMdl(std::fstream &fstream) throw (Exception);
-		void readBlend(std::fstream &fstream) throw (Exception);
-		void read3ds(std::fstream &fstream) throw (Exception);
-
-		void writeMdx(std::fstream &fstream) throw (Exception);
-		void writeMdl(std::fstream &fstream) throw (Exception);
-		void writeBlend(std::fstream &fstream);
-		void write3ds(std::fstream &fstream);
+		void writeMdx(std::fstream &fstream) throw (class Exception);
+		void writeMdl(std::fstream &fstream) throw (class Exception);
+		void writeBlend(std::fstream &fstream) throw (class Exception);
+		void write3ds(std::fstream &fstream) throw (class Exception);
 
 		static const long32 currentVersion = 0x20030000;
 
 	protected:
-		void readMdlVersion(std::fstream &fstream) throw (Exception);
-		void readMdlModel(std::fstream &fstream) throw (Exception);
+		class Version *m_version; //VERS
+		class Model *m_model; //MODL
+		class Sequences *m_sequences; //SEQS
+		class GlobalSequences *m_globalSequences; //GLBS
+		class Materials *m_materials; //MTLS
+			//class Layers *m_layers; //LAYS
+			//class Alphas *m_alphas; //KMTA
+			//class  TextureIds *m_textureIds; //KMTF
+		class Textures *m_textures; //TEXS
+		class TextureAnimations *m_textureAnimations; //TXAN
+			//class Translations *m_translations; //KTAT
+			//class Rotations *m_rotations; //KGRT
+			//class Scalings *m_scalings; //KGSC
+		class Geosets *m_geosets;
+		class GeosetAnimations *m_geosetAnimations;
+		class Bones *m_bones;
+		class Lights *m_lights; //LITE
+		class Helpers *m_helpers;
+		class Attachments *m_attachments;
+		class PivotPoints *m_pivotPoints; //PIVT
+		class ParticleEmitters *m_particleEmitters; //PREM
+		class ParticleEmitter2s *m_particleEmitter2s; //PRE2
+		class RibbonEmitters *m_ribbonEmitters; //RIBB
+		class Cameras *m_cameras;
+		class Events *m_events;
+		class CollisionShapes *m_collisionShapes;
 
-		void writeMdlVersion(std::fstream &fstream) throw (Exception);
-		void writeMdlModel(std::fstream &fstream) throw (Exception);
-		void writeMdlSequences(std::fstream &fstream) throw (Exception);
-		void writeMdlGlobalSequences(std::fstream &fstream) throw (Exception);
-		void writeMdlMaterials(std::fstream &fstream) throw (Exception);
-		void writeMdlTextureAnimations(std::fstream &fstream) throw (Exception);
-		void writeMdlGeoset(std::fstream &fstream) throw (Exception);
-		void writeMdlGeosetAnimations(std::fstream &fstream) throw (Exception);
-		void writeMdlBones(std::fstream &fstream) throw (Exception);
-
-		//long nbytes;
-		std::list<struct Attachment*> m_attachments; //[natts]
-		struct Bones *m_bones;
-		//long nbytes;
-		std::list<struct Camera*> m_cameras;
-		//long nbytes;
-		std::list<struct CollisionShape*> m_collisionShapes;
-		//long nbytes;
-		std::list<struct Event*> m_events;
-		//long nbytes;
-		struct GeosetAnimations *m_geosetAnimations;
-		//long nbytes;
-		std::list<struct Geoset*> m_geosets;
-		//long nvrts;
-		std::list<struct Vertice*> m_vertices; //[nvrts];
-		//long nnrms;
-		struct Normals *m_normals;
-		// Not sure of the function of these.
-		//long m_nptyps; //   PTYP seems to be a way to indicate the type 
-		std::list<long32> m_primTypes; //[nptyps]; //   of primitive (4) for each group indicated
-		//   in PCNT. And each value in PCNT is how 
-		//long m_npcnts; //   many verts in a face (3).
-		std::list<long32> m_primCounts; //[npcnts];
-		//--PVTX // [Faces]
-		//long ntris;
-		std::list<short32> m_faceTriangles; //[ntris];
-		//--GNDX // [VertexGroup]
-		//long nvgrps;
-		std::list<byte> m_vertexGroups; //[nvgrps]; //byte
-		//--MTGC // [Groups]
-		//long nmtrcs; //   GroupCount is an array of lengths
-		std::list<long32> m_groupCounts; //[nmtrcs]; //   for each group.
-		//--MATS // [Matrices]
-		//long nmats; //   Each group is composed of the next
-		std::list<long32> m_matrices; //[nmats]; //   groupCount[i] items of matrices.
-		//--(BIDX) ???
-		//--(BWGT) ???
-		//--UVAS (repositioned over PTYP)
-		//long ntvrts;
-		//std::list<UVA> m_uvas; //UVBS[ntvrts]
-		//--UVBS // [TVertices] (nonexistant in v1300)
-		//long nvrts;
-		std::list<struct TVertice*> m_tvertices; //[nvrts];
-		//GLBS // [GlobalSequences]
-		//long nbytes;
-		std::list<long32> m_globalSequencesDurations; //[ndurs]; // ndurs = nbytes/4;
-		struct Helpers *m_helpers;
-		//Rotations
-		struct Rotations *m_rotations;
-	
-		//KGSC // [Scaling]
-		struct Scalings *m_scalings;
-
-		//KMTA // [Alpha]
-		struct Alphas *m_alphas;
-		//LAYS // [Layer} (ID may have been removed, extra bytes...)
-		//long nlays;
-		std::list<struct Layer*> m_layers; //[nlays];
-		//LITE // [Light]
-		//long nbytes;
-		std::list<struct Light*> m_lights; //[nlits];
-		//MODL // [Model] (extra byte before blendTIme (0))
-		struct Model *m_model;
-		//MTLS // [Materials]
-		//long nbytes;
-		std::list<struct Material*> m_materials;
-		//OBJ
-		struct Object *m_object;
-		//PIVT // [PivotPoints]
-		//long nbytes;
-		std::list<struct PivotPoint*> m_pivontPoints;
-		//PREM // [ParticleEmitter]
-		//long nbytes;
-		std::list<struct ParticleEmitter*> m_particleEmitters;
-		//PRE2 // [ParticleEmitter2]
-		//long nbytes;
-		std::list<struct ParticleEmitter2*> m_particleEmitters2;
-		//RIBB
-		//long nbytes;
-		std::list<struct RibbonEmitter*> m_ribbonEmitters;
-		//SEQS // [Sequences] (v13: +8 bytes?)
-		//long nbytes;
-		std::list<struct Sequence*> m_sequences;
-		//TEXS // [Textures] (same as v800)
-		//long nbytes;
-		std::list<struct Texture*> m_textures;
-		//TXAN // [Texture Animations]
-		//long nbytes;
-		std::list<struct TextureAnimation*> m_textureAnimations;
-		//VERS // [Version]
-		//long	nbytes;
-		long32 m_version; // Currently 0x20030000 (800)
+		/*
+		class Visibilities0 *m_visibilities0; //KATV
+		class Visibilities1 *m_visibilities1; //KLAV
+		class Visibilities2 *m_visibilities2; //KP2V
+		class Visibilities3 *m_visibilities3; //KPEV
+		class Visibilities4 *m_visibilities4; //KRVS
+		KGAO	// [Alpha]:	  KMTA;
+		KLAI	// [Intensity]:   KMTA;
+		KLBI	// [AmbIntensity]:KMTA;
+		KMTF	// [TextureID]:	  KMTA; -> state is long value not float
+		KP2E	// [EmissnRate]:  KMTA;
+		KP2L	// [Latitude]: 	  KMTA;
+		KP2N	// [Length]: 	  KMTA;
+		KP2S	// [Speed]:	  KMTA;
+		KP2W	// [Width]: 	  KMTA;
+		KRHA	// [HeightAbove]: KMTA;
+		KRHB	// [HeightBelow]: KMTA;
+		KCRL 	// [Rotation]:	  KMTA;
+		KGAC	// [Color]:	  KGSC;
+		KLAC	// [Color]:	  KGSC;
+		KLBC	// [AmbColor]:	  KGSC;
+		KCTR 	// [Translation]: KGSC;
+		KGTR 	// [Translation]: KGSC;
+		KTAT	// [Translation]: KGSC;
+		KTAS	// [Scaling]: 	  KGSC;
+		KTAR	// [Rotation]:	  KGSC;
+		KTTR	// [Translation]: KGSC;
+		*/
 };
 
 }

@@ -34,159 +34,52 @@ struct BlendFileBlock
 	int count; /// Number of structure located in this file-block
 };
 
-void Mdlx::readMdx(std::fstream &fstream) throw (Exception)
+void Mdlx::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	std::cout << "Test 1" << std::endl;
-	char identifier[5];
-	identifier[4] = '\0';
-	long32 bytes, number;
-
-	//mdlx
-	fstream.read(identifier, 4);
-
-	std::cout << "Test 2 with identifier " << identifier << std::endl;
-
-	if (strcmp(identifier, "MDLX") != 0)
-		throw Exception("Missing MDLX tag.");
-
-	//version
-	fstream.getline(identifier, 4);
-	std::cout << "Test 2 with identifier " << identifier << " and gcount " << fstream.gcount() << std::endl;
-
-	if (strcmp(identifier, "VERS") != 0)
-		throw Exception("Missing VERS tag.");
-
-	fstream >> this->m_version;
-
-	//model
-	fstream.getline(identifier, 4);
-
-	if (strcmp(identifier, "MODL") != 0)
-		throw Exception("Missing MODL tag.");
-
-	//(extra byte before blendTIme (0))
-	fstream >> bytes; //long nbytes;
-	fstream >> this->m_name; //(0x150 bytes)
-	fstream >> this->m_unkown0; //(0)
-	fstream >> this->m_boundsRadius;
-	fstream >> this->m_minExtX;
-	fstream >> this->m_minExtY;
-	fstream >> this->m_minExtZ;
-	fstream >> this->m_maxExtX;
-	fstream >> this->m_maxExtY;
-	fstream >> this->m_maxExtZ;
-	byte tmp;
-	fstream >> tmp;
-	fstream >> this->m_blendTime;
-	
-	//sequences
-	fstream.getline(identifier, 5);
-
-	if (strcmp(identifier, "SEQS") != 0)
-		throw Exception("Missing SEQS tag.");
-
-	fstream >> bytes;
-	number = bytes / sizeof(struct Sequence);
-
-	for (long32 i = 0; i < number; ++i)
-	{
-		
-		struct Sequence *sequence = new Sequence;
-		fstream.read((char*)sequence, sizeof(struct Sequence));
-		this->m_sequences.push_back(sequence);
-	}
-
-	//global sequences
-	fstream.getline(identifier, 5);
-
-	if (strcmp(identifier, "GLBS") != 0)
-		throw Exception("Missing GLBS tag.");
-
-
-	fstream >> bytes; //long nbytes;
-
-	for (long32 i = 0; i < bytes / 4; ++i)
-	{
-		long32 duration;
-		fstream >> duration;
-		this->m_globalSequencesDurations.push_back(duration); //[ndurs]; // ndurs = nbytes/4;
-	}
-
-	//materials
-	fstream.getline(identifier, 5);
-
-	if (strcmp(identifier, "MTLS") != 0)
-		throw Exception("Missing MTLS tag.");
-
-	
-	fstream >> bytes;
-	number = bytes / sizeof(struct Material);
-
-	for (long32 i = 0; i < number; ++i)
-	{
-		
-		struct Material *material = new Material;
-		fstream >> bytes;
-		fstream >> material->priorityPlane;
-		fstream >> material->renderMode; //(+1:ConstantColor;+16:SortPrimsFarZ;+32:FullResolution)
-		fstream.getline(identifier, 4); //LAYS
-		this->m_materials.push_back(material);
-	}
-
-
-/*
-	fstream >> bytes;
-	number = bytes / sizeof(struct Attachment);
-
-	for (long32 i = 0; i < number; ++i)
-	{
-		
-		struct Attachment *attachment = new Attachment;
-		fstream >> bytes;;
-		/// @todo OBJ
-		fstream.getline(attachment->path, 0x100);
-		//bytes -= 0x100;
-		fstream >> attachment->unknown0;
-		fstream >> attachment->attachmentId;
-		fstream >> attachment->visibility;
-		this->m_attachments.push_back(attachment);
-	}
-
-	fstream >> bytes;
-	number = bytes / sizeof(struct Bone);
-
-	for (long32 i = 0; i < number; ++i)
-	{
-		struct Bone *bone = new Bone;
-		/// @todo OBJ
-		fstream >> bone->geosetId;
-		fstream >> bone->geosetAnimationId;
-		this->m_bones.push_back(bone);
-	}
-
-	fstream >> bytes;
-	number = bytes / sizeof(struct Camera);
-
-	for (long32 i = 0; i < number; ++i)
-	{
-		struct Camera *camera = new Camera;
-		fstream >> bytes;
-		fstream.getline(camera->name, 0x50);
-		fstream >> camera->posX;
-		fstream >> camera->posY;
-		fstream >> camera->posZ;
-		fstream >> camera->fieldOfView;
-		fstream >> camera->farClip;
-		fstream >> camera->nearClip;
-
-		this->m_cameras.push_back(camera);
-	}
-*/
+	this->m_version->readMdx(fstream);
+	this->m_model->readMdx(fstream);
+	this->m_sequences->readMdx(fstream);
+	this->m_globalSequences->readMdx(fstream);
+	this->m_materials->readMdx(fstream);
+	this->m_textures->readMdx(fstream);
+	this->m_textureAnimations->readMdx(fstream);
+	this->m_geosets->readMdx(fstream);
+	this->m_geosetAnimations->readMdx(fstream);
+	this->m_bones->readMdx(fstream);
+	this->m_lights->readMdx(fstream);
+	this->m_helpers->readMdx(fstream);
+	this->m_attachments->readMdx(fstream);
+	this->m_pivotPoints->readMdx(fstream);
+	this->m_particleEmitters->readMdx(fstream);
+	this->m_particleEmitter2s->readMdx(fstream);
+	this->m_ribbonEmitters->readMdx(fstream);
+	this->m_cameras->readMdx(fstream);
+	this->m_events->readMdx(fstream);
+	this->m_collisionShapes->readMdx(fstream);
 }
 
 void Mdlx::readMdl(std::fstream &fstream) throw (Exception)
 {
-	this->readMdlVersion(fstream);
+	this->m_version->readMdl(fstream);
+	this->m_model->readMdl(fstream);
+	this->m_sequences->readMdl(fstream);
+	this->m_globalSequences->readMdl(fstream);
+	this->m_materials->readMdl(fstream);
+	this->m_textures->readMdl(fstream);
+	this->m_textureAnimations->readMdl(fstream);
+	this->m_geosets->readMdl(fstream);
+	this->m_geosetAnimations->readMdl(fstream);
+	this->m_bones->readMdl(fstream);
+	this->m_lights->readMdl(fstream);
+	this->m_helpers->readMdl(fstream);
+	this->m_attachments->readMdl(fstream);
+	this->m_pivotPoints->readMdl(fstream);
+	this->m_particleEmitters->readMdl(fstream);
+	this->m_particleEmitter2s->readMdl(fstream);
+	this->m_ribbonEmitters->readMdl(fstream);
+	this->m_cameras->readMdl(fstream);
+	this->m_events->readMdl(fstream);
+	this->m_collisionShapes->readMdl(fstream);
 }
 
 void Mdlx::writeMdl(std::fstream &fstream) throw (Exception)

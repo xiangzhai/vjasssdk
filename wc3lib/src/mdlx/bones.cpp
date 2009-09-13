@@ -18,12 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
-
-#include <list>
-
-#include "object.hpp"
+#include "bones.hpp"
 
 namespace wc3lib
 {
@@ -31,33 +26,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+Bones::Bones(class Mdlx *mdlx) : MdxBlock("BONE"), m_mdlx(mdlx)
 {
-	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
+}
 
-		std::list<long32> frames() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
-
-	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
-};
-
-inline std::list<long32> Event::frames() const
+Bones::~Bones()
 {
-	return this->m_frames;
+}
+
+void Bones::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Bones::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Bones::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Bones::writeMdx(std::fstream &fstream) throw (class Exception)
+{
 }
 
 }
 
 }
-
-#endif

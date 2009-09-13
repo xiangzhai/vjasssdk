@@ -18,12 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENT_HPP
-#define WC3LIB_MDLX_EVENT_HPP
+#ifndef WC3LIB_MDLX_NORMAL_HPP
+#define WC3LIB_MDLX_NORMAL_HPP
 
-#include <list>
+#include <fstream>
 
-#include "object.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,29 +32,56 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class Layers;
+
+class Material
 {
 	public:
-		Event(class Mdlx *mdlx);
-		virtual ~Event();
+		enum RenderMode
+		{
+			ConstantColor = 1,
+			SortPrimsFarZ = 0x16,
+			FullResolution = 0x32
+		};
 
-		std::list<long32> frames() const;
+		Material(class Mdlx *mdlx);
+		virtual ~Material();
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
+		class Mdlx* mdlx() const;
+		float32 priorityPlane() const;
+		float32 renderMode() const;
+		class Layers* layers() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		//ascii *bla; //ASCII "KEVT" // Actually a separate object
-		//long32 ntrks; // usually (1)
-		//0xFFFFFFFF!!!
-		std::list<long32> m_frames;//[ntrks];
+		//long nbytesi;
+		long32 m_priorityPlane;
+		long32 m_renderMode; //(+1:ConstantColor;+16:SortPrimsFarZ;+32:FullResolution)
+		class Layers *m_layers;
 };
 
-inline std::list<long32> Event::frames() const
+inline class Mdlx* Material::mdlx() const
 {
-	return this->m_frames;
+	return this->m_mdlx;
+}
+
+inline float32 Material::priorityPlane() const
+{
+	return this->m_priorityPlane;
+}
+
+inline float32 Material::renderMode() const
+{
+	return this->m_renderMode;
+}
+
+inline class Layers* Material::layers() const
+{
+	return this->m_layers;
 }
 
 }

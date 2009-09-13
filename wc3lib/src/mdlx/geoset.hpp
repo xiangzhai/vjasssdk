@@ -78,7 +78,7 @@ class Geoset
 		float32 maxExtentZ() const;
 		std::list<class Ganimation> ganimations() const;
 		class TexturePatches* texturePatches() const;
-		class Tvertices* tvertices() const;
+		class TextureVertices* textureVertices() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -105,7 +105,7 @@ class Geoset
 		std::list<class Ganimation*> m_ganimations;
 		//struct GAnimation *ganimations; //[nganim], naim?!?! Tamino Dauth
 		class TexturePatches *m_texturePatches; //UVAS
-		class Tvertices *m_tvertices; //UVBS
+		class TextureVertices *m_textureVertices; //UVBS
 };
 
 inline class Mdlx* Geoset::mdlx() const
@@ -213,9 +213,9 @@ inline class TexturePatches* Geoset::texturePatches() const
 	return this->m_texturePatches;
 }
 
-inline class Tvertices* Geoset::tvertices() const
+inline class TextureVertices* Geoset::textureVertices() const
 {
-	return this->m_tvertices;
+	return this->m_textureVertices;
 }
 
 }
