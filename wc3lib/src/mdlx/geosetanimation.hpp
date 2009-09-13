@@ -64,7 +64,7 @@ class GeosetAnimation
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
-	private:
+	protected:
 		class Mdlx *m_mdlx;
 		float32 m_staticAlpha; //(1.0:use KGAO)
 		long32 m_colorAnimation; //(0:none;1:DropShadow;2:Color;3:Both)

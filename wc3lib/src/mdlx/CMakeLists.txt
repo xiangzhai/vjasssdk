@@ -1,25 +1,35 @@
 set(wc3lib_MDLX_SRC
-	mdlx/attachment.cpp
-	mdlx/bone.cpp
-	mdlx/camera.cpp
-	mdlx/collisionshape.cpp
-	mdlx/event.cpp
-	mdlx/ganimation.cpp
-	mdlx/geoset.cpp
-	mdlx/geosetanimation.cpp
-	mdlx/mdlx.cpp
-	mdlx/object.cpp
+	attachment.cpp
+	bone.cpp
+	camera.cpp
+	collisionshape.cpp
+	event.cpp
+	ganimation.cpp
+	geoset.cpp
+	geosetanimation.cpp
+	mdlx.cpp
+	object.cpp
+	visibility.cpp
 )
 
 set(wc3lib_MDLX_H
-	mdlx/attachment.hpp
-	mdlx/bone.hpp
-	mdlx/camera.hpp
-	mdlx/collisionshape.hpp
-	mdlx/event.hpp
-	mdlx/ganimation.hpp
-	mdlx/geoset.hpp
-	mdlx/geosetanimation.hpp
-	mdlx/mdlx.hpp
-	mdlx/object.hpp
+	attachment.hpp
+	bone.hpp
+	camera.hpp
+	collisionshape.hpp
+	event.hpp
+	ganimation.hpp
+	geoset.hpp
+	geosetanimation.hpp
+	mdlx.hpp
+	object.hpp
+	visibility.hpp
 )
+
+add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})
+#target_link_libraries(wc3libblp gettextlib)
+
+#install
+
+install(TARGETS wc3libmdlx DESTINATION lib/wc3lib/)
+install(FILES ${wc3lib_MDLX_H} PUBLIC_HEADER DESTINATION lib/wc3lib/mdlx)

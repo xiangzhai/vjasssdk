@@ -54,7 +54,7 @@ class CollisionShape : public Object
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
-	private:
+	protected:
 		long32 m_shape; //(0:box;2:sphere)
 		float32 m_x, m_y, m_z;
 		//if (Shape == 0)

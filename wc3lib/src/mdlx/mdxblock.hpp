@@ -18,11 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GANIMATION_HPP
-#define WC3LIB_MDLX_GANIMATION_HPP
+#ifndef WC3LIB_MDLX_MDXBLOCK_HPP
+#define WC3LIB_MDLX_MDXBLOCK_HPP
 
 #include <fstream>
-#include <exception>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -30,73 +32,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-
-class Ganimation
+class MdxBlock
 {
 	public:
-		Ganimation(class Geoset *geoset);
-		virtual ~Ganimation();
+		MdxBlock(byte blockName[4], bool optional = false);
 
-		class Geoset* geoset() const;
-		float32 boundsRadius() const;
-		float32 minExtentX() const;
-		float32 minExtentY() const;
-		float32 minExtentZ() const;
-		float32 maxExtentX() const;
-		float32 maxExtentY() const;
-		float32 maxExtentZ() const;
+		const byte* blockName() const;
+		bool optional() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Geoset *m_geoset;
-		float32 m_boundsRadius;
-		float32 m_minExtentX, m_minExtentY, m_minExtentZ;
-		float32 m_maxExtentX, m_maxExtentY, m_maxExtentZ;
+		byte m_blockName[4]; /// @todo byte or ascii?
+		bool m_optional;
 };
 
-class Geoset* Ganimation::geoset() const
+inline const byte* MdxBlock::blockName() const
 {
-	return this->m_geoset;
+	return this->m_blockName;
 }
 
-float32 Ganimation::boundsRadius() const
+inline bool MdxBlock::optional() const
 {
-	return this->m_boundsRadius;
-}
-
-float32 Ganimation::minExtentX() const
-{
-	return this->m_minExtentX;
-}
-
-float32 Ganimation::minExtentY() const
-{
-	return this->m_minExtentY;
-}
-
-float32 Ganimation::minExtentZ() const
-{
-	return this->m_minExtentZ;
-}
-
-float32 Ganimation::maxExtentX() const
-{
-	return this->m_maxExtentX;
-}
-
-float32 Ganimation::maxExtentY() const
-{
-	return this->m_maxExtentY;
-}
-
-float32 Ganimation::maxExtentZ() const
-{
-	return this->m_maxExtentZ;
+	return this->m_optional;
 }
 
 }

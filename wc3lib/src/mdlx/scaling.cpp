@@ -18,61 +18,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ATTACHMENT_HPP
-#define WC3LIB_MDLX_ATTACHMENT_HPP
+#include "scaling.hpp"
 
-#include "object.hpp"
-
-namespace wc3lib
+Scaling::Scaling(class Mdlx *mdlx) : m_mdlx(mdlx)
 {
-
-namespace mdlx
-{
-
-class Attachment : public Object
-{
-	public:
-		Attachment(class Mdlx *mdlx);
-		virtual ~Attachment();
-		ascii[0x100] path() const;
-		long32 unknown0() const;
-		long32 attachmentId() const;
-		class Visibility* visibility() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		ascii m_path[0x100];
-		long32 m_unknown0;
-		long32 m_attachmentId;
-		class Visibility *m_visibility; //(KATV)
-};
-
-inline ascii[0x100] Attachment::path() const
-{
-	return this->m_path;
 }
 
-inline long32 Attachment::unknown0() const
+Scaling::~Scaling()
 {
-	return this->m_unknown0;
 }
 
-inline long32 Attachment::attachmentId() const
+void Scaling::readMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_attachmentId;
 }
 
-inline class Visibility* Attachment::visibility() const
+void Scaling::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_visibility;
+}
+
+void Scaling::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Scaling::writeMdx(std::fstream &fstream) throw (class Exception)
+{
 }
 
 }
 
 }
-
-#endif

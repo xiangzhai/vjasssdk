@@ -41,7 +41,8 @@ class Bone : public Object
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
-	private:
+
+	protected:
 		long32 m_geosetId;
 		long32 m_geosetAnimationId;
 };

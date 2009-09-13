@@ -18,40 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERA_HPP
-#define WC3LIB_MDLX_CAMERA_HPP
+#ifndef WC3LIB_MDLX_TEXTUREANIMATION_HPP
+#define WC3LIB_MDLX_TEXTUREANIMATION_HPP
 
 #include <fstream>
 
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
-
-class Exception;
 
 namespace mdlx
 {
 
 class Mdlx;
+class Translation;
+class Rotation;
+class Scaling;
 
-//not a child of class Object!
-class Camera
+class TextureAnimation
 {
 	public:
-		Camera(class Mdlx *mdlx);
-		virtual ~Camera();
+		TextureAnimation(class Mdlx *mdlx);
+		virtual ~TextureAnimation();
+
 		class Mdlx* mdlx() const;
-		ascii* name() const;
-		float32 positionX() const;
-		float32 positionY() const;
-		float32 positionZ() const;
-		float32 fieldOfView() const;
-		float32 farClip() const;
-		float32 nearClip() const;
-		class Target* target() const;
-		class Rotation* rotation() const;
 		class Translation* translation() const;
+		class Rotation* rotation() const;
+		class Scaling* scaling() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -59,72 +54,35 @@ class Camera
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		//long32 nbytesi;
 		class Mdlx *m_mdlx;
-		//long nbytesi;
-		ascii m_name[0x50]; //(0x50)
-		float32 m_positionX, m_positionY, m_positionZ;
-		float32 m_fieldOfView;
-		float32 m_farClip;
-		float32 m_nearClip;
-		class Target *m_target;
-		class Rotation *m_rotation; //(KCRL)
-		class Translation *m_translation; //(KTTR)
-		//(BKCT) ?????????????????????????????????????????????????????????????????
+		class Translation *m_translation; //(KTAT) // Might be optional
+		class Rotation *m_rotation; //(KTAR)
+		class Scaling *m_scaling; //(KTAS)
 };
 
-class Mdlx* Camera::mdlx() const
+inline class Mdlx* TextureAnimation::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline ascii* Camera::name() const
+inline class Translation* TextureAnimation::translation() const
 {
-	return this->m_name;
+	return this->m_translation;
 }
 
-inline float32 Camera::positionX() const
-{
-	return this->m_positionX;
-}
-
-inline float32 Camera::positionY() const
-{
-	return this->m_positionY;
-}
-
-inline float32 Camera::positionZ() const
-{
-	return this->m_positionZ;
-}
-
-inline float32 Camera::fieldOfView() const
-{
-	return this->m_fieldOfView;
-}
-
-inline float32 Camera::farClip() const
-{
-	return this->m_farClip;
-}
-
-inline float32 Camera::nearClip() const
-{
-	return this->m_nearClip;
-}
-
-inline class Target* Camera::target() const
-{
-	return this->m_target;
-}
-
-inline class Rotation* Camera::rotation() const
+inline class Rotation* TextureAnimation::rotation() const
 {
 	return this->m_rotation;
 }
 
-inline class Translation* Camera::translation() const
+inline class Scaling* TextureAnimation::scaling() const
 {
-	return this->m_translation;
+	return this->m_scaling;
+}
+
+}
+
 }
 
 #endif

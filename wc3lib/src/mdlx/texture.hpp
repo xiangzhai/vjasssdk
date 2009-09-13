@@ -18,40 +18,40 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERA_HPP
-#define WC3LIB_MDLX_CAMERA_HPP
+#ifndef WC3LIB_MDLX_TEXTURE_HPP
+#define WC3LIB_MDLX_TEXTURE_HPP
 
 #include <fstream>
 
+#include "../exception.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
 {
-
-class Exception;
 
 namespace mdlx
 {
 
 class Mdlx;
 
-//not a child of class Object!
-class Camera
+class Texture
 {
 	public:
-		Camera(class Mdlx *mdlx);
-		virtual ~Camera();
+		enum Wrapping
+		{
+			WrapWidth = 1,
+			WrapHeight = 2,
+			Both = 3
+		};
+
+		Texture(class Mdlx *mdlx);
+		virtual ~Texture();
+
 		class Mdlx* mdlx() const;
-		ascii* name() const;
-		float32 positionX() const;
-		float32 positionY() const;
-		float32 positionZ() const;
-		float32 fieldOfView() const;
-		float32 farClip() const;
-		float32 nearClip() const;
-		class Target* target() const;
-		class Rotation* rotation() const;
-		class Translation* translation() const;
+		long32 replaceableId() const;
+		ascii[0x100] texturePath() const;
+		long32 unknown0() const;
+		long32 wrapping() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -60,71 +60,39 @@ class Camera
 
 	protected:
 		class Mdlx *m_mdlx;
-		//long nbytesi;
-		ascii m_name[0x50]; //(0x50)
-		float32 m_positionX, m_positionY, m_positionZ;
-		float32 m_fieldOfView;
-		float32 m_farClip;
-		float32 m_nearClip;
-		class Target *m_target;
-		class Rotation *m_rotation; //(KCRL)
-		class Translation *m_translation; //(KTTR)
-		//(BKCT) ?????????????????????????????????????????????????????????????????
+		long32 m_replaceableId;
+		ascii m_texturePath[0x100]; //(0x100 bytes)
+		long32 m_unknown0; //(0)
+		long32 m_wrapping; //(1:WrapWidth;2:WrapHeight;3:Both)
 };
 
-class Mdlx* Camera::mdlx() const
+inline class Mdlx* Texture::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline ascii* Camera::name() const
+inline long32 Texture::replaceableId() const
 {
-	return this->m_name;
+	return this->m_replaceableId;
 }
 
-inline float32 Camera::positionX() const
+inline ascii[0x100] Texture::texturePath() const
 {
-	return this->m_positionX;
+	return this->m_texturePath;
 }
 
-inline float32 Camera::positionY() const
+inline long32 Texture::unknown0() const
 {
-	return this->m_positionY;
+	return this->m_unknown0;
 }
 
-inline float32 Camera::positionZ() const
+inline long32 Texture::wrapping() const
 {
-	return this->m_positionZ;
+	return this->m_wrapping;
 }
 
-inline float32 Camera::fieldOfView() const
-{
-	return this->m_fieldOfView;
 }
 
-inline float32 Camera::farClip() const
-{
-	return this->m_farClip;
-}
-
-inline float32 Camera::nearClip() const
-{
-	return this->m_nearClip;
-}
-
-inline class Target* Camera::target() const
-{
-	return this->m_target;
-}
-
-inline class Rotation* Camera::rotation() const
-{
-	return this->m_rotation;
-}
-
-inline class Translation* Camera::translation() const
-{
-	return this->m_translation;
 }
 
 #endif

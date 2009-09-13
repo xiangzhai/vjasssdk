@@ -38,7 +38,7 @@ void Mdlx::readMdx(std::fstream &fstream) throw (Exception)
 {
 	std::cout << "Test 1" << std::endl;
 	char identifier[5];
-	identifier[5] = '\0';
+	identifier[4] = '\0';
 	long32 bytes, number;
 
 	//mdlx

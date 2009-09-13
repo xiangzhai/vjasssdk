@@ -23,6 +23,7 @@
 
 #include <fstream>
 
+#include "../exception.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -36,7 +37,6 @@ class Translation;
 class Rotation;
 class Scaling;
 class Visibility;
-class Exception;
 
 class Object
 {
@@ -75,7 +75,7 @@ class Object
 
 		class Mdlx* mdlx() const;
 		void setName(ascii name[0x50]);
-		ascii* name() const;
+		ascii[0x50] name() const;
 		void setObjectId(long32 objectId);
 		long32 objectId() const;
 		void setParent(long32 parent);
@@ -86,16 +86,17 @@ class Object
 		class Translation* translation() const;
 		void setRotation(class Rotation *rotation);
 		class Rotation* rotation() const;
-		void setScaling(class Sclaing *scaling);
+		void setScaling(class Scaling *scaling);
 		class Scaling* scaling() const;
 		void setVisibilty(class Visibility *visibility);
 		class Visibility* visibility() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
-	private:
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
 		class Mdlx *m_mdlx;
 		ascii m_name[0x50];
 		long32 m_objectId;
@@ -112,13 +113,14 @@ inline class Mdlx* Object::mdlx() const
 	return this->m_mdlx;
 }
 
-inline void Object::setName(ascii name[0x50)
+inline void Object::setName(ascii name[0x50])
 {
-	this->m_name = name;
+	for (int i = 0; i < 0x50; ++i)
+		this->m_name[i] = name[i];
 }
 
 
-inline ascii* Object::name() const
+inline ascii[0x50] Object::name() const
 {
 	return this->m_name;
 }
@@ -174,7 +176,7 @@ inline class Rotation* Object::rotation() const
 	return this->m_rotation;
 }
 
-inline void Object::setScaling(class Sclaing *scaling)
+inline void Object::setScaling(class Scaling *scaling)
 {
 	this->m_scaling = scaling;
 }

@@ -18,12 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <sstream>
 #include <cstring>
 
 #include <boost/tokenizer.hpp>
 
 #include "attachment.hpp"
-#include "../exception.hpp"
+#include "visibility.hpp"
 
 namespace wc3lib
 {
@@ -37,8 +38,6 @@ Attachment::Attachment(class Mdlx *mdlx) : Object(mdlx), m_visibility(0)
 
 Attachment::~Attachment()
 {
-	if (this->m_visibility != 0)
-		delete this->m_visibility;
 }
 
 void Attachment::readMdl(std::fstream &fstream) throw (Exception)
@@ -56,7 +55,9 @@ void Attachment::readMdl(std::fstream &fstream) throw (Exception)
 	if (iterator == tokenizer.end() || sizeof((*iterator).c_str()) > 0x100) /// @todo Name size is bigger than in object?! path length?
 		throw Exception("");
 
-	this->m_name = (*iterator).c_str();
+	for (std::size_t i = 0; i < sizeof(this->m_name); ++i)
+		this->m_name[i] = (*iterator).c_str()[i];
+
 	++iterator;
 
 	if ((*iterator) != "{")
@@ -75,7 +76,7 @@ void Attachment::readMdl(std::fstream &fstream) throw (Exception)
 	sstream >> this->m_objectId;
 }
 
-void Attachment::readMdx(std::fstream &fstream) throw (Exception)
+void Attachment::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes; //nbytesi;
 	fstream >> bytes;
@@ -84,10 +85,10 @@ void Attachment::readMdx(std::fstream &fstream) throw (Exception)
 	fstream >> this->m_unknown0;
 	fstream >> this->m_attachmentId;
 	this->m_visibility = new Visibility(this->mdlx());
-	this->m_visibility.readMdx(fstream);
+	this->m_visibility->readMdx(fstream);
 }
 
-void Attachment::writeMdl(std::fstream &fstream) throw (Exception)
+void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	// Observe properties of an Object.
 	// Path only appears if its length is greater than 0. 
@@ -138,7 +139,7 @@ void Attachment::writeMdl(std::fstream &fstream) throw (Exception)
 	fstream << "}\n";
 }
 
-void Attachment::writeMdx(std::fstream &fstream) throw (Exception)
+void Attachment::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

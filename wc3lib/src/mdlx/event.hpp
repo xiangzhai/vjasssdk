@@ -44,7 +44,7 @@ class Event : public Object
 		virtual void writeMdl(std::fstream &fstream) throw (Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (Exception);
 
-	private:
+	protected:
 		//ascii *bla; //ASCII "KEVT" // Actually a separate object
 		//long32 ntrks; // usually (1)
 		//0xFFFFFFFF!!!

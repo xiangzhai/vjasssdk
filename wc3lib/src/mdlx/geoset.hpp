@@ -85,7 +85,7 @@ class Geoset
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
-	private:
+	protected:
 		class Mdlx *m_mdlx;
 		class Vertices *m_vertices; //VRTX
 		class Normals *m_normals; //NRMS

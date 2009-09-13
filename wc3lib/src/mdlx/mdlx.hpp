@@ -74,37 +74,6 @@ class Mdlx
 			std::list<long32> groupCounts; //[nmtrcs]; //   for each group.
 		};
 
-		struct Geoset
-		{
-			struct Vertices *vertices; //VRTX
-			struct Normals *normals; //NRMS
-			struct PrimitiveType *primitveType; //PTYP
-			struct PrimitiveSizes *primitiveSizes; //PCNT
-			struct PrimitiveVertices *primitiveVertices; //PVTX
-			struct VertexGroups *vertexGroups; //GNDX
-			struct MatriceGroupCounts *matriceGroupCounts; //MTGC
-			struct Matrices *matrices; //MATS
-			long32 materialId;
-			long32 selectionGroup;
-			long32 selectable; //(0:none;4:Unselectable)
-			float32 boundsRadius;
-			float32 minExtx, minExty, minExtz;
-			float32 maxExtx, maxExty, maxExtz;
-			//long32 nanim;
-
-			struct GAnimation
-			{
-				float32 boundsRadius;
-				float32 minExtx, minExty, minExtz;
-				float32 maxExtx, maxExty, maxExtz;
-			};
-
-			std::list<struct GAnimation*> ganimations;
-			//struct GAnimation *ganimations; //[nganim], naim?!?! Tamino Dauth
-			struct TexturePatches *texturePatches; //UVAS
-			struct Tvertices *tvertices; //UVBS
-		};
-
 		struct Vertice
 		{
 			float32 x, y, z;
@@ -155,83 +124,6 @@ class Mdlx
 			long32 lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 			long32 globalSequenceId; // 0xFFFFFFFF if none
 			std::list<struct Rotation*> m_rotations; //[nunks]
-		};
-
-		struct Scaling
-		{
-			long32 frame;
-			float32 x, y, z;
-			//if (LineType > 1) {
-			float32 inTanx, inTany, inTanz;
-			float32 outTanx, outTany, outTanz;
-			//}
-		};
-
-
-		struct Scalings
-		{
-			long32 m_scalingLineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-			long32 m_scalingGlobalSequenceId; // 0xFFFFFFFF if none
-			std::list<struct Scaling*> m_scalings; //[nunks];
-		};
-
-		struct Alpha
-		{
-			long32 frame;
-			float32 state; //(0 or 1)
-			//if (LineType > 1) {
-			float32 inTan;
-			float32 outTan;
-			//}
-		};
-
-		struct Alphas //KMTA
-		{
-			//long nunks;
-			long32 m_alphaLineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-			long32 m_alphaGlobalSequenceId; // 0xFFFFFFFF if none
-			std::list<struct Alpha*> m_alphas; //[nunks];
-		};
-
-		struct Layer
-		{
-			//long nbytesi;
-			long32 filterMode; //(0:none;1:transparent;2:blend;3:additive;4:addalpha;5:modulate)
-			long32 shading; //+1:unshaded;+2:SphereEnvMap;+16:twosided;
-			long32 textureId; //  +32:unfogged;+64:NoDepthTest;+128:NoDepthSet)
-			long32 tVertexAnimationId; // 0xFFFFFFFF if none
-			long32 coordId;
-			float32 alpha; //(0(transparent)->1(opaque))
-			//(KMTA)
-			//(KMTF) // state is long not float
-		};
-
-		struct Light
-		{
-			//long nbytesi;
-			//OBJ
-			long32 type; //(0:Omnidirectional;1:Directional;2:Ambient)
-			float32 attStart, attEnd;
-			float32 colorRed, colorGreen, colorBlue;
-			float32 intensity;
-			float32 ambColorRed, ambColorGreen, ambColorBlue;
-			float32 ambIntensity;
-			//(KLAI)
-			//(KLAV)
-			//(KLAC)
-			//(KLBC)
-			//(KLBI)
-		};
-
-		struct Model
-		{
-			//long nbytes;
-			ascii m_name[0x150]; //(0x150 bytes)
-			long32 m_unkown0; //(0)
-			float32 m_boundsRadius;
-			float32 m_minExtX, m_minExtY, m_minExtZ;
-			float32 m_maxExtX, m_maxExtY, m_maxExtZ;
-			long32 m_blendTime;
 		};
 
 		struct Material
@@ -318,70 +210,6 @@ class Mdlx
 			//(KP2W)
 		};
 
-		struct RibbonEmitter
-		{
-			//long nbytesi;
-			//long nbytesikg; // inclusive bytecount including KGXXs
-			ascii name[0x50]; //(0x50 bytes)
-			long32 objectId;
-			long32 parent; //(0xFFFFFFFF if none)
-			long32 flags; //(0x00400000)
-			//(KGTR)
-			//(KGRT)
-			//(KGSC)
-			float32 heightAbove;
-			float32 heightBelow;
-			float32 alpha;
-			float32 colorRed, colorGreen, colorBlue;
-			float32 lifeSpan;
-			long32 unknown0; //(0)
-			long32 emissionRate;
-			long32 rows;
-			long32 columns;
-			long32 materialId;
-			float32 gravity;
-			//(KRVS)
-			//(KRHA)
-			//(KRHB)
-		};
-
-		struct Sequence
-		{
-			ascii name[0x50]; //(0x50 bytes)
-			long32 intervalStart, intervalEnd;
-			float32 moveSpeed;
-			long32 noLooping; //(0:loop; 1:no loop)
-			float32 rarity;
-			long32 unknown0; //(0)
-			float32 boundsRadius;
-			float32 minExtX, minExtY, minExtZ;
-			float32 maxExtX, maxExtY, maxExtZ;
-		};
-
-		struct Texture
-		{
-			long32 replaceableId;
-			ascii texturePath[0x100]; //(0x100 bytes)
-			long32 unknown0; //(0)
-			long32 wrapping; //(1:WrapWidth;2:WrapHeight;3:Both)
-		};
-
-		struct TextureAnimation
-		{
-			//long32 nbytesi;
-			struct Translation *translation; //(KTAT) // Might be optional
-			struct Rotation *rotation; //(KTAR)
-			struct Scaling *scaling; //(KTAS)
-		};
-
-
-		struct Helpers
-		{
-			//HELP // [Helper]
-			//long nbytes;
-			std::list<struct Object*> helpers; //[nhlprs]; std::list<OBJ> m_helpers; //[nhlprs];
-		};
-
 
 
 		void readMdx(std::fstream &fstream) throw (Exception);
@@ -395,7 +223,8 @@ class Mdlx
 		void write3ds(std::fstream &fstream);
 
 		static const long32 currentVersion = 0x20030000;
-	private:
+
+	protected:
 		void readMdlVersion(std::fstream &fstream) throw (Exception);
 		void readMdlModel(std::fstream &fstream) throw (Exception);
 

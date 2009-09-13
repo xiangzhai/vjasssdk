@@ -18,40 +18,40 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERA_HPP
-#define WC3LIB_MDLX_CAMERA_HPP
+#ifndef WC3LIB_MDLX_SCALING_HPP
+#define WC3LIB_MDLX_SCALING_HPP
 
 #include <fstream>
 
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
-
-class Exception;
 
 namespace mdlx
 {
 
 class Mdlx;
 
-//not a child of class Object!
-class Camera
+class Scaling
 {
+
 	public:
-		Camera(class Mdlx *mdlx);
-		virtual ~Camera();
+		Scaling(class Mdlx *mdlx);
+		virtual ~Scaling();
+
 		class Mdlx* mdlx() const;
-		ascii* name() const;
-		float32 positionX() const;
-		float32 positionY() const;
-		float32 positionZ() const;
-		float32 fieldOfView() const;
-		float32 farClip() const;
-		float32 nearClip() const;
-		class Target* target() const;
-		class Rotation* rotation() const;
-		class Translation* translation() const;
+		long32 frame() const;
+		float32 x() const;
+		float32 y() const;
+		float32 z() const;
+		float32 inTanX() const;
+		float32 inTanY() const;
+		float32 inTanZ() const;
+		float32 outTanX() const;
+		float32 outTanY() const;
+		float32 outTanZ() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -60,71 +60,71 @@ class Camera
 
 	protected:
 		class Mdlx *m_mdlx;
-		//long nbytesi;
-		ascii m_name[0x50]; //(0x50)
-		float32 m_positionX, m_positionY, m_positionZ;
-		float32 m_fieldOfView;
-		float32 m_farClip;
-		float32 m_nearClip;
-		class Target *m_target;
-		class Rotation *m_rotation; //(KCRL)
-		class Translation *m_translation; //(KTTR)
-		//(BKCT) ?????????????????????????????????????????????????????????????????
+		long32	m_frame;
+		float32	m_x, m_y, m_z;
+		//if (LineType > 1) {
+		float32	m_inTanX, m_inTanY, m_inTanZ;
+		float32	m_outTanX, m_outTanY, m_outTanZ;
+		//}
 };
 
-class Mdlx* Camera::mdlx() const
+inline class Mdlx* Scaling::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline ascii* Camera::name() const
+inline long32 Scaling::frame() const
 {
-	return this->m_name;
+	return this->m_frame;
 }
 
-inline float32 Camera::positionX() const
+inline float32 Scaling::x() const
 {
-	return this->m_positionX;
+	return this->m_x;
 }
 
-inline float32 Camera::positionY() const
+inline float32 Scaling::y() const
 {
-	return this->m_positionY;
+	return this->m_y;
 }
 
-inline float32 Camera::positionZ() const
+inline float32 Scaling::z() const
 {
-	return this->m_positionZ;
+	return this->m_z;
 }
 
-inline float32 Camera::fieldOfView() const
+inline float32 Scaling::inTanX() const
 {
-	return this->m_fieldOfView;
+	return this->m_inTanX;
 }
 
-inline float32 Camera::farClip() const
+inline float32 Scaling::inTanY() const
 {
-	return this->m_farClip;
+	return this->m_inTanY;
 }
 
-inline float32 Camera::nearClip() const
+inline float32 Scaling::inTanZ() const
 {
-	return this->m_nearClip;
+	return this->m_inTanZ;
 }
 
-inline class Target* Camera::target() const
+inline float32 Scaling::outTanX() const
 {
-	return this->m_target;
+	return this->m_outTanX;
 }
 
-inline class Rotation* Camera::rotation() const
+inline float32 Scaling::outTanY() const
 {
-	return this->m_rotation;
+	return this->m_outTanY;
 }
 
-inline class Translation* Camera::translation() const
+inline float32 Scaling::outTanZ() const
 {
-	return this->m_translation;
+	return this->m_outTanZ;
+}
+
+}
+
 }
 
 #endif

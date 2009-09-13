@@ -18,40 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERA_HPP
-#define WC3LIB_MDLX_CAMERA_HPP
+#ifndef WC3LIB_MDLX_ALPHAS_HPP
+#define WC3LIB_MDLX_ALPHAS_HPP
 
 #include <fstream>
+#include <list>
 
+#include "mdxblock.hpp"
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
-
-class Exception;
 
 namespace mdlx
 {
 
 class Mdlx;
+class Alpha;
 
-//not a child of class Object!
-class Camera
+//(KMTA)
+class Alphas : public MdxBlock
 {
 	public:
-		Camera(class Mdlx *mdlx);
-		virtual ~Camera();
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
+
+		Alphas(class Mdlx *mdlx);
+		virtual ~Alphas();
+
 		class Mdlx* mdlx() const;
-		ascii* name() const;
-		float32 positionX() const;
-		float32 positionY() const;
-		float32 positionZ() const;
-		float32 fieldOfView() const;
-		float32 farClip() const;
-		float32 nearClip() const;
-		class Target* target() const;
-		class Rotation* rotation() const;
-		class Translation* translation() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Alpha*> alphas() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -59,72 +63,33 @@ class Camera
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
-		//long nbytesi;
-		ascii m_name[0x50]; //(0x50)
-		float32 m_positionX, m_positionY, m_positionZ;
-		float32 m_fieldOfView;
-		float32 m_farClip;
-		float32 m_nearClip;
-		class Target *m_target;
-		class Rotation *m_rotation; //(KCRL)
-		class Translation *m_translation; //(KTTR)
-		//(BKCT) ?????????????????????????????????????????????????????????????????
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Alpha*> m_alphas;
 };
 
-class Mdlx* Camera::mdlx() const
+inline class Mdlx* Alphas::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline ascii* Camera::name() const
+inline long32 Alphas::lineType() const
 {
-	return this->m_name;
+	return this->m_lineType;
 }
 
-inline float32 Camera::positionX() const
+inline long32 Alphas::globalSequenceId() const
 {
-	return this->m_positionX;
+	return this->m_globalSequenceId;
 }
 
-inline float32 Camera::positionY() const
+inline std::list<class Alpha*> Alphas::alphas() const
 {
-	return this->m_positionY;
+	return this->m_alphas;
 }
 
-inline float32 Camera::positionZ() const
-{
-	return this->m_positionZ;
 }
 
-inline float32 Camera::fieldOfView() const
-{
-	return this->m_fieldOfView;
-}
-
-inline float32 Camera::farClip() const
-{
-	return this->m_farClip;
-}
-
-inline float32 Camera::nearClip() const
-{
-	return this->m_nearClip;
-}
-
-inline class Target* Camera::target() const
-{
-	return this->m_target;
-}
-
-inline class Rotation* Camera::rotation() const
-{
-	return this->m_rotation;
-}
-
-inline class Translation* Camera::translation() const
-{
-	return this->m_translation;
 }
 
 #endif

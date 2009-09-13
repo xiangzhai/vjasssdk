@@ -18,11 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GANIMATION_HPP
-#define WC3LIB_MDLX_GANIMATION_HPP
+#include <cstdio>
 
-#include <fstream>
-#include <exception>
+#include "mdxblock.hpp"
 
 namespace wc3lib
 {
@@ -30,77 +28,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-
-class Ganimation
+MdxBlock::MdxBlock(byte blockName[4], bool optional = false) : m_blockName(blockName), m_optional(optional)
 {
-	public:
-		Ganimation(class Geoset *geoset);
-		virtual ~Ganimation();
+}
 
-		class Geoset* geoset() const;
-		float32 boundsRadius() const;
-		float32 minExtentX() const;
-		float32 minExtentY() const;
-		float32 minExtentZ() const;
-		float32 maxExtentX() const;
-		float32 maxExtentY() const;
-		float32 maxExtentZ() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class Geoset *m_geoset;
-		float32 m_boundsRadius;
-		float32 m_minExtentX, m_minExtentY, m_minExtentZ;
-		float32 m_maxExtentX, m_maxExtentY, m_maxExtentZ;
-};
-
-class Geoset* Ganimation::geoset() const
+/// @todo Consider optional like in Python script.
+void MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_geoset;
+	byte identifier[sizeof(this->m_blockName)];
+	//identifier[4] = '\0';
+	fstream.read(identifier, sizeof(this->m_blockName));
+
+	if (strcmp(identifier, this->m_blockName) != 0)
+	{
+		char message[50];
+		sprintf(message, "Missing \"%s\" block name.", this->blockName);
+		throw Exception(message);
+	}
 }
 
-float32 Ganimation::boundsRadius() const
+void MdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_boundsRadius;
-}
-
-float32 Ganimation::minExtentX() const
-{
-	return this->m_minExtentX;
-}
-
-float32 Ganimation::minExtentY() const
-{
-	return this->m_minExtentY;
-}
-
-float32 Ganimation::minExtentZ() const
-{
-	return this->m_minExtentZ;
-}
-
-float32 Ganimation::maxExtentX() const
-{
-	return this->m_maxExtentX;
-}
-
-float32 Ganimation::maxExtentY() const
-{
-	return this->m_maxExtentY;
-}
-
-float32 Ganimation::maxExtentZ() const
-{
-	return this->m_maxExtentZ;
+	fstream.write(this->m_blockName, sizeof(this->m_blockName));
 }
 
 }
 
 }
-
-#endif

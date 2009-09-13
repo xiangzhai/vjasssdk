@@ -18,40 +18,41 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERA_HPP
-#define WC3LIB_MDLX_CAMERA_HPP
+#ifndef WC3LIB_MDLX_SEQUENCE_HPP
+#define WC3LIB_MDLX_SEQUENCE_HPP
 
 #include <fstream>
 
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
-class Exception;
-
 namespace mdlx
 {
 
-class Mdlx;
-
-//not a child of class Object!
-class Camera
+class Sequence
 {
 	public:
-		Camera(class Mdlx *mdlx);
-		virtual ~Camera();
+		Sequence(class Mdlx *mdlx);
+		virtual ~Sequence();
+
 		class Mdlx* mdlx() const;
-		ascii* name() const;
-		float32 positionX() const;
-		float32 positionY() const;
-		float32 positionZ() const;
-		float32 fieldOfView() const;
-		float32 farClip() const;
-		float32 nearClip() const;
-		class Target* target() const;
-		class Rotation* rotation() const;
-		class Translation* translation() const;
+		ascii name() const;
+		long32 intervalStart() const;
+		long32 intervalEnd() const;
+		float32 moveSpeed() const;
+		long32 noLooping() const;
+		float32 rarity() const;
+		long32 unknown0() const;
+		float32 boundsRadius() const;
+		float32 minExtX() const;
+		float32 minExtY() const;
+		float32 minExtZ() const;
+		float32 maxExtX() const;
+		float32 maxExtY() const;
+		float32 maxExtZ() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -60,71 +61,95 @@ class Camera
 
 	protected:
 		class Mdlx *m_mdlx;
-		//long nbytesi;
-		ascii m_name[0x50]; //(0x50)
-		float32 m_positionX, m_positionY, m_positionZ;
-		float32 m_fieldOfView;
-		float32 m_farClip;
-		float32 m_nearClip;
-		class Target *m_target;
-		class Rotation *m_rotation; //(KCRL)
-		class Translation *m_translation; //(KTTR)
-		//(BKCT) ?????????????????????????????????????????????????????????????????
+		ascii m_name[0x50]; //(0x50 bytes)
+		long32 m_intervalStart, m_intervalEnd;
+		float32 m_moveSpeed;
+		long32 m_noLooping; //(0:loop; 1:no loop)
+		float32 m_rarity;
+		long32 m_unknown0; //(0)
+		float32 m_boundsRadius;
+		float32 m_minExtX, m_minExtY, m_minExtZ;
+		float32 m_maxExtX, m_maxExtY, m_maxExtZ;
+
 };
 
-class Mdlx* Camera::mdlx() const
+inline class Mdlx* Sequence::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline ascii* Camera::name() const
+inline ascii Sequence::name() const
 {
 	return this->m_name;
 }
 
-inline float32 Camera::positionX() const
+inline long32 Sequence::intervalStart() const
 {
-	return this->m_positionX;
+	return this->m_intervalStart;
 }
 
-inline float32 Camera::positionY() const
+inline long32 Sequence::intervalEnd() const
 {
-	return this->m_positionY;
+	return this->m_intervalEnd;
 }
 
-inline float32 Camera::positionZ() const
+inline float32 Sequence::moveSpeed() const
 {
-	return this->m_positionZ;
+	return this->m_moveSpeed;
 }
 
-inline float32 Camera::fieldOfView() const
+inline long32 Sequence::noLooping() const
 {
-	return this->m_fieldOfView;
+	return this->m_noLooping;
 }
 
-inline float32 Camera::farClip() const
+inline float32 Sequence::rarity() const
 {
-	return this->m_farClip;
+	return this->m_rarity;
 }
 
-inline float32 Camera::nearClip() const
+inline long32 Sequence::unknown0() const
 {
-	return this->m_nearClip;
+	return this->m_unknown0;
 }
 
-inline class Target* Camera::target() const
+inline float32 Sequence::boundsRadius() const
 {
-	return this->m_target;
+	return this->m_boundsRadius;
 }
 
-inline class Rotation* Camera::rotation() const
+inline float32 Sequence::minExtX() const
 {
-	return this->m_rotation;
+	return this->m_minExtX;
 }
 
-inline class Translation* Camera::translation() const
+inline float32 Sequence::minExtY() const
 {
-	return this->m_translation;
+	return this->m_minExtY;
+}
+
+inline float32 Sequence::minExtZ() const
+{
+	return this->m_minExtZ;
+}
+
+inline float32 Sequence::maxExtX() const
+{
+	return this->m_maxExtX;
+}
+
+inline float32 Sequence::maxExtY() const
+{
+	return this->m_maxExtY;
+}
+
+inline float32 Sequence::maxExtZ() const
+{
+	return this->m_maxExtZ;
+}
+
+}
+
 }
 
 #endif
