@@ -18,15 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ALPHA2S_HPP
-#define WC3LIB_MDLX_ALPHA2S_HPP
+#ifndef WC3LIB_MDLX_GLOBALSEQUENCE_HPP
+#define WC3LIB_MDLX_GLOBALSEQUENCE_HPP
 
 #include <fstream>
-#include <list>
 
-#include "mdxblock.hpp"
-#include "platform.hpp"
 #include "../exception.hpp"
+#include "platform.hpp"
 
 namespace wc3lib
 {
@@ -35,27 +33,15 @@ namespace mdlx
 {
 
 class Mdlx;
-class Alpha2;
 
-//(KMTF)
-class Alpha2s : public MdxBlock
+class GlobalSequence
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
-		Alpha2s(class Mdlx *mdlx);
-		virtual ~Alpha2s();
+		GlobalSequence(class Mdlx *mdlx);
+		virtual ~GlobalSequence();
 
 		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Alpha2*> alphas() const;
+		long32 duration() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -64,29 +50,17 @@ class Alpha2s : public MdxBlock
 
 	protected:
 		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Alpha2*> m_alphas;
+		long32 m_duration;
 };
 
-inline class Mdlx* Alpha2s::mdlx() const
+inline class Mdlx* GlobalSequence::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 Alpha2s::lineType() const
+inline long32 GlobalSequence::duration() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Alpha2s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Alpha2*> Alpha2s::alphas() const
-{
-	return this->m_alphas;
+	return this->m_duration;
 }
 
 }

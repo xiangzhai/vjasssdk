@@ -1,14 +1,59 @@
 set(wc3lib_MDLX_SRC
+	alpha2s.cpp                                     
+	alpha.cpp
+	alphas.cpp                                      
 	attachment.cpp
+	attachments.cpp
 	bone.cpp
+	bones.cpp
 	camera.cpp
+	cameras.cpp
 	collisionshape.cpp
+	collisionshapes.cpp
 	event.cpp
+	events.cpp
 	ganimation.cpp
-	geoset.cpp
 	geosetanimation.cpp
+	geosetanimations.cpp
+	geoset.cpp
+	geosets.cpp
+	globalsequence.cpp
+	globalsequences.cpp
+	helper.cpp
+	helpers.cpp
+	layer.cpp
+	light.cpp
+	lights.cpp
+	material.cpp
+	materials.cpp
 	mdlx.cpp
+	mdxblock.cpp
+	model.cpp
+	normal.cpp
 	object.cpp
+	particleemitter2.cpp
+	particleemitter2s.cpp
+	particleemitter.cpp
+	particleemitters.cpp
+	pivotpoint.cpp
+	pivotpoints.cpp
+	ribbonemitter.cpp
+	ribbonemitters.cpp
+	rotation.cpp
+	scaling.cpp
+	scalings.cpp
+	segmentcolor.cpp
+	sequence.cpp
+	sequences.cpp
+	textureanimation.cpp
+	textureanimations.cpp
+	texture.cpp
+	textures.cpp
+	texturevertex.cpp
+	translation0.cpp
+	translation0s.cpp
+	version.cpp
+	vertex.cpp
 	visibility.cpp
 )
 

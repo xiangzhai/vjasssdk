@@ -28,16 +28,18 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+class Visibilities;
 
 class Attachment : public Object
 {
 	public:
 		Attachment(class Mdlx *mdlx);
 		virtual ~Attachment();
-		ascii[0x100] path() const;
+		const ascii* path() const;
 		long32 unknown0() const;
 		long32 attachmentId() const;
-		class Visibility* visibility() const;
+		class Visibilities* visibilities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -48,10 +50,10 @@ class Attachment : public Object
 		ascii m_path[0x100];
 		long32 m_unknown0;
 		long32 m_attachmentId;
-		class Visibility *m_visibility; //(KATV)
+		class Visibilities *m_visibilities; //(KATV)
 };
 
-inline ascii[0x100] Attachment::path() const
+inline const ascii* Attachment::path() const
 {
 	return this->m_path;
 }
@@ -66,9 +68,9 @@ inline long32 Attachment::attachmentId() const
 	return this->m_attachmentId;
 }
 
-inline class Visibility* Attachment::visibility() const
+inline class Visibilities* Attachment::visibilities() const
 {
-	return this->m_visibility;
+	return this->m_visibilities;
 }
 
 }

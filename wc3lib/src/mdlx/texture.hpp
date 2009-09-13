@@ -49,7 +49,7 @@ class Texture
 
 		class Mdlx* mdlx() const;
 		long32 replaceableId() const;
-		ascii[0x100] texturePath() const;
+		const ascii* texturePath() const;
 		long32 unknown0() const;
 		long32 wrapping() const;
 
@@ -76,7 +76,7 @@ inline long32 Texture::replaceableId() const
 	return this->m_replaceableId;
 }
 
-inline ascii[0x100] Texture::texturePath() const
+inline const char* Texture::texturePath() const
 {
 	return this->m_texturePath;
 }

@@ -43,7 +43,7 @@ class Alpha2
 
 		class Mdlx* mdlx() const;
 		long32 frame() const;
-		float32 state() const;
+		long32 state() const;
 		float32 inTan() const;
 		float32 outTan() const;
 
@@ -62,27 +62,27 @@ class Alpha2
 		//}
 };
 
-inline class Mdlx* Alpha::mdlx() const
+inline class Mdlx* Alpha2::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 Alpha::frame() const
+inline long32 Alpha2::frame() const
 {
 	return this->m_frame;
 }
 
-inline long32 Alpha::state() const
+inline long32 Alpha2::state() const
 {
 	return this->m_state;
 }
 
-inline float32 Alpha::inTan() const
+inline float32 Alpha2::inTan() const
 {
 	return this->m_inTan;
 }
 
-inline float32 Alpha::outTan() const
+inline float32 Alpha2::outTan() const
 {
 	return this->m_outTan;
 }

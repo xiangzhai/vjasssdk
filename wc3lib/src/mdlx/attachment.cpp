@@ -24,7 +24,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "attachment.hpp"
-#include "visibility.hpp"
+#include "visibilities.hpp"
 
 namespace wc3lib
 {
@@ -32,12 +32,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachment::Attachment(class Mdlx *mdlx) : Object(mdlx), m_visibility(0)
+Attachment::Attachment(class Mdlx *mdlx) : Object(mdlx), m_visibilities(new Visibilities(mdlx))
 {
 }
 
 Attachment::~Attachment()
 {
+	delete this->m_visibilities;
 }
 
 void Attachment::readMdl(std::fstream &fstream) throw (Exception)

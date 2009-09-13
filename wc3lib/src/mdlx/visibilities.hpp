@@ -18,44 +18,30 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ALPHA2S_HPP
-#define WC3LIB_MDLX_ALPHA2S_HPP
+#ifndef WC3LIB_MDLX_PIVOTPOINTS_HPP
+#define WC3LIB_MDLX_PIVOTPOINTS_HPP
 
-#include <fstream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+	
+class PivotPoint;
 
-class Mdlx;
-class Alpha2;
-
-//(KMTF)
-class Alpha2s : public MdxBlock
+/// @todo Add several visibility types!
+class PivotPoints : public MdxBlock
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
-		Alpha2s(class Mdlx *mdlx);
-		virtual ~Alpha2s();
+		PivotPoints(class Mdlx *mdlx);
+		virtual ~PivotPoints();
 
 		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Alpha2*> alphas() const;
+		std::list<class PivotPoint*> pivotPoints() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -64,29 +50,17 @@ class Alpha2s : public MdxBlock
 
 	protected:
 		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Alpha2*> m_alphas;
+		std::list<class PivotPoint*> m_pivotPoints;
 };
 
-inline class Mdlx* Alpha2s::mdlx() const
+inline class Mdlx* PivotPoints::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 Alpha2s::lineType() const
+inline std::list<class PivotPoint*> PivotPoints::pivotPoints() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Alpha2s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Alpha2*> Alpha2s::alphas() const
-{
-	return this->m_alphas;
+	return this->m_pivotPoints;
 }
 
 }

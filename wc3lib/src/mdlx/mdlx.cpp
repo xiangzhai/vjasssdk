@@ -5,12 +5,61 @@
 #include <boost/tokenizer.hpp>
 
 #include "mdlx.hpp"
+#include "version.hpp";
+#include "model.hpp";
+#include "sequences.hpp"
+#include "globalsequences.hpp"
+#include "materials.hpp"
+#include "textures.hpp"
+#include "textureanimations.hpp"
+#include "geosets.hpp"
+#include "geosetanimations.hpp"
+#include "bones.hpp"
+#include "lights.hpp"
+#include "helpers.hpp"
+#include "attachments.hpp"
+#include "pivotpoints.hpp"
+#include "particleemitters.hpp"
+#include "particleemitter2s.hpp"
+#include "ribbonemitters.hpp"
+#include "cameras.hpp"
+#include "events.hpp"
+#include "collisionshapes.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+
+Mdlx::Mdlx() : m_version(new Version(this)), m_model(new Model(this)), m_sequences(new Sequences(this)), m_globalSequences(new GlobalSequences(this)), m_materials(new Materials(this)), m_textures(new Textures(this)), m_textureAnimations(new TextureAnimations(this)), m_geosets(new Geosets(this)), m_geosetAnimations(new GeosetAnimations(this)), m_bones(new Bones(this)), m_lights(new Lights(this)), m_helpers(new Helpes(this)), m_attachments(new Attachments(this)), m_pivotPoints(new PivotPoints(this)), m_particleEmitters(new ParticleEmitters(this)), m_particleEmitter2s(new ParticleEmitter2s(this)), m_ribbonEmitters(new RibbonEmitters(this)), m_cameras(new Cameras(this)), m_events(new Events(this)), m_collisionShapes(new CollisionShapes(this))
+{
+
+}
+
+Mdlx::~Mdlx()
+{
+	delete this->m_version;
+	delete this->m_model;
+	delete this->m_sequences;
+	delete this->m_globalSequences;
+	delete this->m_materials;
+	delete this->m_textures;
+	delete this->m_textureAnimations;
+	delete this->m_geosets;
+	delete this->m_geosetAnimations;
+	delete this->m_bones;
+	delete this->m_lights;
+	delete this->m_helpers;
+	delete this->m_attachments;
+	delete this->m_pivotPoints;
+	delete this->m_particleEmitters;
+	delete this->m_particleEmitter2s;
+	delete this->m_ribbonEmitters;
+	delete this->m_cameras;
+	delete this->m_events;
+	delete this->m_collisionShapes;
+}
 
 /**
 * The first 12 bytes of every blend-file is the file-header.
@@ -84,145 +133,26 @@ void Mdlx::readMdl(std::fstream &fstream) throw (Exception)
 
 void Mdlx::writeMdl(std::fstream &fstream) throw (Exception)
 {
-	this->writeMdlVersion(fstream);
-	this->writeMdlModel(fstream);
-	this->writeMdlSequences(fstream);
-	this->writeMdlGlobalSequences(fstream);
-	this->writeMdlMaterials(fstream);
-	this->writeMdlTextureAnimations(fstream);
-	this->writeMdlGeoset(fstream);
-	this->writeMdlGeosetAnimations(fstream);
-	this->writeMdlBones(fstream);
-	this->writeMdlHelpers(fstream);
-}
-
-void Mdlx::readMdlVersion(std::fstream &fstream) throw (Exception)
-{
-	std::string line;
-	
-	while (std::getline(fstream, line))
-	{
-		boost::tokenizer<> tokenizer(line);
-		boost::tokenizer<>::iterator iterator = tokenizer.begin();
-
-		if (iterator == tokenizer.end())
-			throw Exception("Syntax error.");
-
-		if ((*iterator) == "//")
-			continue;
-		else if ((*iterator) == "Version")
-		{
-			++iterator;
-
-			if ((*iterator) != "{" || iterator == tokenizer.end())
-				throw Exception("Syntax error.");
-		}
-		else if ((*iterator) == "FormatVersion")
-		{
-			++iterator;
-
-			if (iterator == tokenizer.end())
-				throw Exception("Syntax error.");
-
-			std::stringstream sstream;
-			sstream << *iterator;
-			sstream >> this->m_version;
-		}
-		else if ((*iterator) == "}")
-			break;
-	}
-}
-
-void Mdlx::writeMdlVersion(std::fstream &fstream) throw (Exception)
-{
-	fstream << "// Current FormatVersion is 800\n"
-	"Version {\n"
-	"\tFormatVersion" << this->m_version << ",\n"
-	"}\n";
-}
-
-void Mdlx::writeMdlModel(std::fstream &fstream) throw (Exception)
-{
-	fstream << "Model " << this->m_name << "{\n";
-
-	if (this->m_geosets.size() > 0)
-		fstream << "\tNumGeosets " << this->m_geosets.size() << ",\n";
-
-	if (this->m_geosetAnimations.size() > 0)
-		fstream << "\tNumGeosetAnims " << this->m_geosetAnimations.size() << ",\n";
-	
-	if (this->m_helpers.size() > 0)
-		fstream << "\tNumHelpers " << this->m_helpers.size() << ",\n";
-	
-	if (this->m_lights.size() > 0)
-		fstream << "\tNumLights " << this->m_lights.size() << ",\n";
-	
-	if (this->m_bones.size() > 0)
-		fstream << "\tNumBones " << this->m_bones.size() << ",\n";
-	
-	if (this->m_attachments.size() > 0)
-		fstream << "\tNumAttachements " << this->m_attachments.size() << ",\n";
-	
-	if (this->m_particleEmitters.size() > 0)
-		fstream << "\tNumParticleEmitters " << this->m_particleEmitters.size() << ",\n";
-
-	if (this->m_particleEmitters2.size() > 0)
-		fstream << "\tNumParticleEmitters2 " << this->m_particleEmitters2.size() << ",\n";
-
-	if (this->m_ribbonEmitters.size() > 0)
-		fstream << "\tNumRibbonEmitters " << this->m_ribbonEmitters.size() << ",\n";
-
-	if (this->m_events.size() > 0)
-		fstream << "\tNumEvents " << this->m_events.size() << ",\n";
-
-	fstream << "\tBlendTime " << this->m_blendTime << ",\n";
-
-	if (this->m_minExtX != 0.0 || this->m_minExtY != 0.0 || this->m_minExtZ != 0.0)
-		fstream << "MinimumExtent { " << this->m_minExtX << ", " << this->m_minExtY << ", " << this->m_minExtZ << " },\n";
-
-	if (this->m_maxExtX != 0.0 || this->m_maxExtY != 0.0 || this->m_maxExtZ != 0.0)
-		fstream << "MaxmimumExtent { " << this->m_maxExtX << ", " << this->m_maxExtY << ", " << this->m_maxExtZ << " },\n";
-
-	if (this->m_boundsRadius != 0.0)
-		fstream << "BoundsRadius " << this->m_boundsRadius << ",\n";
-
-	fstream << "}\n";
-}
-
-void Mdlx::writeMdlSequences(std::fstream &fstream) throw (Exception)
-{
-	fstream
-	<< "Sequences " << this->m_sequences.size() << " {\n";
-	
-	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
-	{
-		fstream
-		<< "\tAnim " << (*iterator)->name << " {\n"
-		<< "\t\tInterval { " << (*iterator)->intervalStart << ", " << (*iterator)->intervalEnd << " },\t"
-		;
-
-		if ((*iterator)->noLooping == 1)
-			fstream << "\t\tNonLooping,\n";
-
-		if ((*iterator)->moveSpeed != 0.0)
-			fstream << "\t\tMoveSpeed " << (*iterator)->moveSpeed << ",\n";
-		
-		if ((*iterator)->rarity != 0.0)
-			fstream << "\t\tRarity " << (*iterator)->rarity << ",\n";
-
-		if ((*iterator)->minExtX != 0.0 || (*iterator)->minExtY != 0.0 || (*iterator)->minExtZ != 0.0)
-			fstream << "\t\tMinimumExtent { " << (*iterator)->minExtX << ", " << (*iterator)->minExtY << ", " << (*iterator)->minExtZ << " },\n";
-		
-		if ((*iterator)->maxExtX != 0.0 || (*iterator)->maxExtY != 0.0 || (*iterator)->maxExtZ != 0.0)
-			fstream << "\t\tMaxmimumExtent { " << (*iterator)->maxExtX << ", " << (*iterator)->maxExtY << ", " << (*iterator)->maxExtZ << " },\n";
-	
-		if ((*iterator)->boundsRadius != 0.0)
-			fstream << "\t\tBoundsRadius " << (*iterator)->boundsRadius << ",\n";
-	
-		fstream << "\t}\n";
-	}
-
-	fstream << "}\n";
+	this->m_version->writeMdl(fstream);
+	this->m_model->writeMdl(fstream);
+	this->m_sequences->writeMdl(fstream);
+	this->m_globalSequences->writeMdl(fstream);
+	this->m_materials->writeMdl(fstream);
+	this->m_textures->writeMdl(fstream);
+	this->m_textureAnimations->writeMdl(fstream);
+	this->m_geosets->readMdl(fstream);
+	this->m_geosetAnimations->writeMdl(fstream);
+	this->m_bones->writeMdl(fstream);
+	this->m_lights->writeMdl(fstream);
+	this->m_helpers->writeMdl(fstream);
+	this->m_attachments->writeMdl(fstream);
+	this->m_pivotPoints->writeMdl(fstream);
+	this->m_particleEmitters->writeMdl(fstream);
+	this->m_particleEmitter2s->writeMdl(fstream);
+	this->m_ribbonEmitters->writeMdl(fstream);
+	this->m_cameras->writeMdl(fstream);
+	this->m_events->writeMdl(fstream);
+	this->m_collisionShapes->writeMdl(fstream);
 }
 
 void Mdlx::writeMdlGlobalSequences(std::fstream &fstream) throw (Exception)

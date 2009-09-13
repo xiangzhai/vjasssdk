@@ -44,6 +44,50 @@ void Model::readMdx(std::fstream &fstream) throw (class Exception)
 
 void Model::writeMdl(std::fstream &fstream) throw (class Exception)
 {
+	fstream << "Model " << this->m_name << "{\n";
+
+	if (this->mdlx()->geosets()->geosets().size() > 0)
+		fstream << "\tNumGeosets " << this->mdlx()->geosets()->geosets().size() << ",\n";
+
+	if (this->mdlx()->geosetAnimations()->geosetAnimations().size() > 0)
+		fstream << "\tNumGeosetAnims " << this->mdlx()->geosetAnimations()->geosetAnimations().size() << ",\n";
+
+	if (this->mdlx()->helpers()->helpers().size() > 0)
+		fstream << "\tNumHelpers " << this->mdlx()->helpers()->helpers().size() << ",\n";
+
+	if (this->mdlx()->lights()->lights().size() > 0)
+		fstream << "\tNumLights " << this->lights()->lights().size() << ",\n";
+
+	if (this->mdlx()->bones()->bones().size() > 0)
+		fstream << "\tNumBones " << this->mdlx()->bones()->bones().size() << ",\n";
+
+	if (this->mdlx()->attachments()->attachments().size() > 0)
+		fstream << "\tNumAttachements " << this->mdlx()->attachments()->attachments().size() << ",\n";
+
+	if (this->mdlx()->particleEmitters()->particleEmitters().size() > 0)
+		fstream << "\tNumParticleEmitters " << this->mdlx()->particleEmitters()->particleEmitters().size() << ",\n";
+
+	if (this->mdlx()->particleEmitter2s()->particleEmitters().size() > 0)
+		fstream << "\tNumParticleEmitters2 " << this->mdlx()->particleEmitter2s()->particleEmitters().size() << ",\n";
+
+	if (this->mdlx()->ribbonEmitters->ribbonEmitters.size() > 0)
+		fstream << "\tNumRibbonEmitters " << this->mdlx()->ribbonEmitters->ribbonEmitters.size() << ",\n";
+
+	if (this->mdlx()->events()->events().size() > 0)
+		fstream << "\tNumEvents " << this->mdlx()->events()->events().size() << ",\n";
+
+	fstream << "\tBlendTime " << this->blendTime() << ",\n";
+
+	if (this->minExtX() != 0.0 || this->minExtY() != 0.0 || this->minExtZ() != 0.0)
+		fstream << "MinimumExtent { " << this->minExtX() << ", " << this->minExtY() << ", " << this->minExtZ() << " },\n";
+
+	if (this->maxExtX() != 0.0 || this->maxExtY() != 0.0 || this->maxExtZ() != 0.0)
+		fstream << "MaxmimumExtent { " << this->maxExtX() << ", " << this->maxExtY() << ", " << this->maxExtZ() << " },\n";
+
+	if (this->boundsRadius()!= 0.0)
+		fstream << "BoundsRadius " << this->boundsRadius() << ",\n";
+
+	fstream << "}\n";
 }
 
 void Model::writeMdx(std::fstream &fstream) throw (class Exception)

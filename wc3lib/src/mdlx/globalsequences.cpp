@@ -18,15 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ALPHA2S_HPP
-#define WC3LIB_MDLX_ALPHA2S_HPP
-
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "globalsequences.hpp"
+#include "globalsequence.hpp"
 
 namespace wc3lib
 {
@@ -34,63 +27,36 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Alpha2;
-
-//(KMTF)
-class Alpha2s : public MdxBlock
+GlobalSequences::GlobalSequences(class Mdlx *mdlx) : MdxBlock("GLBS"), m_mdlx(mdlx)
 {
-	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
+}
 
-		Alpha2s(class Mdlx *mdlx);
-		virtual ~Alpha2s();
-
-		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Alpha2*> alphas() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Alpha2*> m_alphas;
-};
-
-inline class Mdlx* Alpha2s::mdlx() const
+GlobalSequences::~GlobalSequences()
 {
-	return this->m_mdlx;
 }
 
-inline long32 Alpha2s::lineType() const
+void GlobalSequences::readMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_lineType;
 }
 
-inline long32 Alpha2s::globalSequenceId() const
+void GlobalSequences::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_globalSequenceId;
 }
 
-inline std::list<class Alpha2*> Alpha2s::alphas() const
+void GlobalSequences::writeMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_alphas;
+	fstream << "GlobalSequences " << this->globalSequences().size() << " {\n";
+
+	for (std::list<class GlobalSequence*>::iterator iterator = this->globalSequences().begin(); iterator != this->globalSequences().end(); ++iterator)
+		(*iterator)->writeMdl(fstream);
+
+	fstream << "}\n";
+}
+
+void GlobalSequences::writeMdx(std::fstream &fstream) throw (class Exception)
+{
 }
 
 }
 
 }
-
-#endif

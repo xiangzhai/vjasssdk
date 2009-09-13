@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "particleemitter2s.hpp"
 #include "particleemitter2.hpp"
 
 namespace wc3lib
@@ -26,27 +27,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2::ParticleEmitter2(class Mdlx *mdlx) : m_mdlx(mdlx)
+ParticleEmitter2s::ParticleEmitter2s(class Mdlx *mdlx) : MdxBlock("PRE2"), m_mdlx(mdlx)
 {
 }
 
-ParticleEmitter2::~ParticleEmitter2()
+ParticleEmitter2s::~ParticleEmitter2s()
 {
 }
 
-void ParticleEmitter2::readMdl(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter2s::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void ParticleEmitter2::readMdx(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter2s::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void ParticleEmitter2::writeMdl(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter2s::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void ParticleEmitter2::writeMdx(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter2s::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ALPHA2S_HPP
-#define WC3LIB_MDLX_ALPHA2S_HPP
+#ifndef WC3LIB_MDLX_EVENTS_HPP
+#define WC3LIB_MDLX_EVENTS_HPP
 
 #include <fstream>
 #include <list>
@@ -35,27 +35,16 @@ namespace mdlx
 {
 
 class Mdlx;
-class Alpha2;
+class Event;
 
-//(KMTF)
-class Alpha2s : public MdxBlock
+class Events : public MdxBlock
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
-		Alpha2s(class Mdlx *mdlx);
-		virtual ~Alpha2s();
+		Events(class Mdlx *mdlx);
+		virtual ~Events();
 
 		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Alpha2*> alphas() const;
+		std::list<class Event*> events() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -64,29 +53,17 @@ class Alpha2s : public MdxBlock
 
 	protected:
 		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Alpha2*> m_alphas;
+		std::list<class Event*> m_events;
 };
 
-inline class Mdlx* Alpha2s::mdlx() const
+inline class Mdlx* Events::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 Alpha2s::lineType() const
+inline std::list<class Event*> Events::events() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Alpha2s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Alpha2*> Alpha2s::alphas() const
-{
-	return this->m_alphas;
+	return this->m_events;
 }
 
 }

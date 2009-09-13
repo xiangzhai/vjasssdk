@@ -18,15 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ALPHA2S_HPP
-#define WC3LIB_MDLX_ALPHA2S_HPP
-
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "version.hpp"
 
 namespace wc3lib
 {
@@ -34,63 +26,69 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Alpha2;
-
-//(KMTF)
-class Alpha2s : public MdxBlock
+Version::Version(class Mdlx *mdlx) : MdxBlock("VERS"), m_mdlx(mdlx)
 {
-	public:
-		enum LineType
+}
+
+Version::~Version()
+{
+}
+
+void Version::readMdl(std::fstream &fstream) throw (class Exception)
+{
+	std::string line;
+
+	while (std::getline(fstream, line))
+	{
+		boost::tokenizer<> tokenizer(line);
+		boost::tokenizer<>::iterator iterator = tokenizer.begin();
+
+		if (iterator == tokenizer.end())
+			throw Exception("Version: Missing tokens.");
+
+		if ((*iterator) == "//")
+			continue;
+		else if ((*iterator) == "Version")
 		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
+			++iterator;
 
-		Alpha2s(class Mdlx *mdlx);
-		virtual ~Alpha2s();
+			if ((*iterator) != "{" || iterator == tokenizer.end())
+				throw Exception("Version: Syntax error.");
+		}
+		else if ((*iterator) == "FormatVersion")
+		{
+			++iterator;
 
-		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Alpha2*> alphas() const;
+			if (iterator == tokenizer.end())
+				throw Exception("Version: Missing tokens.");
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+			std::stringstream sstream;
+			sstream << *iterator;
+			sstream >> this->m_version;
+		}
+		else if ((*iterator) == "}")
+			break;
+	}
+}
 
-	protected:
-		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Alpha2*> m_alphas;
-};
-
-inline class Mdlx* Alpha2s::mdlx() const
+void Version::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_mdlx;
 }
 
-inline long32 Alpha2s::lineType() const
+void Version::writeMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_lineType;
+	fstream <<
+	"// Current FormatVersion is 800\n"
+	"Version {\n"
+	"\tFormatVersion" << this->m_version << ",\n"
+	"}\n"
+	;
 }
 
-inline long32 Alpha2s::globalSequenceId() const
+void Version::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Alpha2*> Alpha2s::alphas() const
-{
-	return this->m_alphas;
 }
 
 }
 
 }
-
-#endif

@@ -34,19 +34,19 @@ ParticleEmitter::~ParticleEmitter()
 {
 }
 
-void Normal::readMdl(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Normal::readMdx(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Normal::writeMdl(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Normal::writeMdx(std::fstream &fstream) throw (class Exception)
+void ParticleEmitter::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

@@ -33,10 +33,10 @@ namespace mdlx
 {
 
 class Mdlx;
-class Translation;
-class Rotation;
-class Scaling;
-class Visibility;
+class Translations;
+class Rotations;
+class Scalings;
+class Visibilities;
 
 class Object
 {
@@ -75,21 +75,21 @@ class Object
 
 		class Mdlx* mdlx() const;
 		void setName(ascii name[0x50]);
-		ascii[0x50] name() const;
+		const ascii* name() const;
 		void setObjectId(long32 objectId);
 		long32 objectId() const;
 		void setParent(long32 parent);
 		long32 parent() const;
 		void setType(long32 type);
 		long32 type() const;
-		void setTranslation(class Translation *translation);
-		class Translation* translation() const;
-		void setRotation(class Rotation *rotation);
-		class Rotation* rotation() const;
-		void setScaling(class Scaling *scaling);
-		class Scaling* scaling() const;
-		void setVisibilty(class Visibility *visibility);
-		class Visibility* visibility() const;
+		void setTranslations(class Translations *translations);
+		class Translations* translations() const;
+		void setRotations(class Rotations *rotations);
+		class Rotations* rotations() const;
+		void setScalings(class Scalings *scalings);
+		class Scalings* scalings() const;
+		void setVisibilties(class Visibilities *visibilities);
+		class Visibilities* visibilities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -102,10 +102,10 @@ class Object
 		long32 m_objectId;
 		long32 m_parent;
 		long32 m_type; //use enum
-		class Translation *m_translation;
-		class Rotation *m_rotation;
-		class Scaling *m_scaling;
-		class Visibility *m_visibility;
+		class Translations *m_translations;
+		class Rotations *m_rotations;
+		class Scalings *m_scalings;
+		class Visibilities *m_visibilities;
 };
 
 inline class Mdlx* Object::mdlx() const
@@ -120,7 +120,7 @@ inline void Object::setName(ascii name[0x50])
 }
 
 
-inline ascii[0x50] Object::name() const
+inline const ascii* Object::name() const
 {
 	return this->m_name;
 }
@@ -156,44 +156,44 @@ inline long32 Object::type() const
 	return this->m_type;
 }
 
-inline void Object::setTranslation(class Translation *translation)
+inline void Object::setTranslations(class Translations *translations)
 {
-	this->m_translation = translation;
+	this->m_translations = translations;
 }
 
-inline class Translation* Object::translation() const
+inline class Translations* Object::translations() const
 {
-	return this->m_translation;
+	return this->m_translations;
 }
 
-inline void Object::setRotation(class Rotation *rotation)
+inline void Object::setRotations(class Rotations *rotations)
 {
-	this->m_rotation = rotation;
+	this->m_rotations = rotations;
 }
 
-inline class Rotation* Object::rotation() const
+inline class Rotations* Object::rotations() const
 {
-	return this->m_rotation;
+	return this->m_rotations;
 }
 
-inline void Object::setScaling(class Scaling *scaling)
+inline void Object::setScalings(class Scalings *scalings)
 {
-	this->m_scaling = scaling;
+	this->m_scalings = scalings;
 }
 
-inline class Scaling* Object::scaling() const
+inline class Scalings* Object::scalings() const
 {
-	return this->m_scaling;
+	return this->m_scalings;
 }
 
-inline void Object::setVisibilty(class Visibility *visibility)
+inline void Object::setVisibilties(class Visibilities *visibilities)
 {
-	this->m_visibility = visibility;
+	this->m_visibilities = visibilities;
 }
 
-inline class Visibility* Object::visibility() const
+inline class Visibilities* Object::visibilities() const
 {
-	return this->visibility;
+	return this->m_visibilities;
 }
 
 }

@@ -61,6 +61,7 @@ class CollisionShapes;
 class Mdlx
 {
 	public:
+		/*
 		struct Bones
 		{
 			//long nbytes;
@@ -118,8 +119,31 @@ class Mdlx
 			long32 globalSequenceId; // 0xFFFFFFFF if none
 			std::list<struct Rotation*> m_rotations; //[nunks]
 		};
+		*/
 
+		Mdlx();
+		~Mdlx();
 
+		class Version* version() const;
+		class Model* model() const;
+		class Sequences* sequences() const;
+		class GlobalSequences* globalSequences() const;
+		class Materials* materials() const;
+		class Textures* textures() const;
+		class TextureAnimations* textureAnimations() const;
+		class Geosets* geosets() const;
+		class GeosetAnimations* geosetAnimations() const;
+		class Bones* bones() const;
+		class Lights* lights() const;
+		class Helpers* helpers() const;
+		class Attachments* attachments() const;
+		class PivotPoints* pivotPoints() const;
+		class ParticleEmitters* particleEmitters() const;
+		class ParticleEmitter2s* particleEmitter2s() const;
+		class RibbonEmitters* ribbonEmitters() const;
+		class Cameras* cameras() const;
+		class Events* events() const;
+		class CollisionShapes* collisionShapes() const;
 
 		void readMdx(std::fstream &fstream) throw (class Exception);
 		void readMdl(std::fstream &fstream) throw (class Exception);
@@ -130,8 +154,6 @@ class Mdlx
 		void writeMdl(std::fstream &fstream) throw (class Exception);
 		void writeBlend(std::fstream &fstream) throw (class Exception);
 		void write3ds(std::fstream &fstream) throw (class Exception);
-
-		static const long32 currentVersion = 0x20030000;
 
 	protected:
 		class Version *m_version; //VERS
@@ -190,6 +212,106 @@ class Mdlx
 		KTTR	// [Translation]: KGSC;
 		*/
 };
+
+inline class Version* Mdlx::version() const
+{
+	return this->m_version;
+}
+
+inline class Model* Mdlx::model() const
+{
+	return this->m_model;
+}
+
+inline class Sequences* Mdlx::sequences() const
+{
+	return this->m_sequences;
+}
+
+inline class GlobalSequences* Mdlx::globalSequences() const
+{
+	return this->m_globalSequences;
+}
+
+inline class Materials* Mdlx::materials() const
+{
+	return this->m_materials;
+}
+
+inline class Textures* Mdlx::textures() const
+{
+	return this->m_textures;
+}
+
+inline class TextureAnimations* Mdlx::textureAnimations() const
+{
+	return this->m_textureAnimations;
+}
+
+inline class Geosets* Mdlx::geosets() const
+{
+	return this->m_geosets;
+}
+
+inline class GeosetAnimations* Mdlx::geosetAnimations() const
+{
+	return this->m_geosetAnimations;
+}
+
+inline class Bones* Mdlx::bones() const
+{
+	return this->m_bones;
+}
+
+inline class Lights* Mdlx::lights() const
+{
+	return this->m_lights;
+}
+
+inline class Helpers* Mdlx::helpers() const
+{
+	return this->m_helpers;
+}
+
+inline class Attachments* Mdlx::attachments() const
+{
+	return this->m_attachments;
+}
+
+inline class PivotPoints* Mdlx::pivotPoints() const
+{
+	return this->m_pivotPoints;
+}
+
+inline class ParticleEmitters* Mdlx::particleEmitters() const
+{
+	return this->m_particleEmitters;
+}
+
+inline class ParticleEmitter2s* Mdlx::particleEmitter2s() const
+{
+	return this->m_particleEmitter2s;
+}
+
+inline class RibbonEmitters* Mdlx::ribbonEmitters() const
+{
+	return this->m_ribbonEmitters;
+}
+
+inline class Cameras* Mdlx::cameras() const
+{
+	return this->m_cameras;
+}
+
+inline class Events* Mdlx::events() const
+{
+	return this->m_events;
+}
+
+inline class CollisionShapes* Mdlx::collisionShapes() const
+{
+	return this->m_collisionShapes;
+}
 
 }
 
