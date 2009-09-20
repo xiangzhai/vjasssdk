@@ -24,16 +24,17 @@
 #include <fstream>
 
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
-
-class Exception;
 
 namespace mdlx
 {
 
 class Mdlx;
+class Alpha;
+class Color;
 
 class GeosetAnimation
 {

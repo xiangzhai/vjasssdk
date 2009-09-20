@@ -40,7 +40,7 @@ class SegmentColors;
 class Speeds;
 class Latitudes;
 class EmissionRates;
-class Visibilities;
+class Visibility2s;
 class Lengths;
 class Widths;
 
@@ -124,7 +124,7 @@ class ParticleEmitter2
 		class Speeds* speeds() const;
 		class Latitudes* latitudes() const;
 		class EmissionRates* emissionRates() const;
-		class Visibilities* visibilities() const;
+		class Visibility2s* visibilities() const;
 		class Lengths* lengths() const;
 		class Widths* widths() const;
 
@@ -172,7 +172,7 @@ class ParticleEmitter2
 		class Speeds *m_speeds; //(KP2S)
 		class Latitudes *m_latitudes; //(KP2L)
 		class EmissionRates *m_emissionRates; //(KP2E)
-		class Visibilities *m_visibilities; //(KP2V)
+		class Visibility2s *m_visibilities; //(KP2V)
 		class Lengths *m_lengths; //(KP2N)
 		class Widths *m_widths; //(KP2W)
 };
@@ -417,7 +417,7 @@ inline class EmissionRates* ParticleEmitter2::emissionRates() const
 	return this->m_emissionRates;
 }
 
-inline class Visibilities* ParticleEmitter2::visibilities() const
+inline class Visibility2s* ParticleEmitter2::visibilities() const
 {
 	return this->m_visibilities;
 }

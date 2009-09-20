@@ -18,81 +18,80 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "mpq.hpp"
+#ifndef WC3LIB_MDLX_KGAO_HPP
+#define WC3LIB_MDLX_KGAO_HPP
+
+#include <fstream>
+#include <list>
+
+#include "mdxblock.hpp"
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
-namespace mpq
+namespace mdlx
 {
 
-struct Header
+class Mdlx;
+class KgaoAlpha;
+
+//KGAO	// [Alpha]:	  KMTA;
+/// @todo Rename this class.
+class Kgao : public MdxBlock
 {
-	char magic[4];
-	int32 headerSize;
-	int32 archiveSize;
-	int16 formatVersion;
-	int8 sectorSizeShift;
-	int32 hashTableOffset;
-	int32 blockTableOffset;
-	int32 hashTableEntries;
-	int32 blockTableEntries;
-	int64 extendedBlockTableOffset;
-	int16 hashTableOffsetHigh;
-	int16 blockTableOffsetHigh;
+	public:
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
+
+		Kgao(class Mdlx *mdlx);
+		virtual ~Kgao();
+
+		class Mdlx* mdlx() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class KgaoAlpha*> alphas() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class Mdlx *m_mdlx;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class KgaoAlpha*> m_alphas;
 };
 
-struct BlockTable
+inline class Mdlx* Kgao::mdlx() const
 {
-	int32 blockOffset;
-	int32 blockSize;
-	int32 fileSize;
-	int32 flags;
-};
+	return this->m_mdlx;
+}
 
-struct HashTable
+inline long32 Kgao::lineType() const
 {
-	int32 filePathHashA;
-	int32 filePathHashB;
-	int16 language;
-	int8 platform;
-	int32 fileBlockIndex;
-};
+	return this->m_lineType;
+}
 
-struct FileData
+inline long32 Kgao::globalSequenceId() const
 {
-	int32 *sectorOffsetTable;
-};
+	return this->m_globalSequenceId;
+}
 
-struct ExtendedAttributes
+inline std::list<class KgaoAlpha*> Kgao::alphas() const
 {
-	int32 version;
-	int32 attributesPresent;
-	int32 *CRC32s;
-};
-
-struct WeakDigitalSignature
-{	
-	int32 unknown0;
-	int32 unknown1;
-};
-
-struct StringDigitalSignature
-{
-	char magic[4];
-	int2048 signature;
-};
-
-void Mpq::open(std::ifstream &fstream, enum Mode mode) throw (class Exception)
-{
-	struct Header header;
-	fstream.read((char*)&header, sizeof(struct Header));
-
-	/// @todo Check magic
-	
+	return this->m_alphas;
 }
 
 }
 
 }
+
+#endif

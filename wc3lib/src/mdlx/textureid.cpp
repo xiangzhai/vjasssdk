@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "alpha2.hpp"
+#include "textureid.hpp"
 
 namespace wc3lib
 {
@@ -26,27 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Alpha2::Alpha2(class Mdlx *mdlx) : m_mdlx(mdlx)
+TextureId::TextureId(class Mdlx *mdlx) : m_mdlx(mdlx)
 {
 }
 
-Alpha2::~Alpha2()
+TextureId::~TextureId()
 {
 }
 
-void Alpha2::readMdl(std::fstream &fstream) throw (class Exception)
+void TextureId::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Alpha2::readMdx(std::fstream &fstream) throw (class Exception)
+void TextureId::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Alpha2::writeMdl(std::fstream &fstream) throw (class Exception)
+void TextureId::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Alpha2::writeMdx(std::fstream &fstream) throw (class Exception)
+void TextureId::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

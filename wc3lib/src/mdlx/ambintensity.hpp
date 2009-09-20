@@ -18,7 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "alpha2s.hpp"
+#ifndef WC3LIB_MDLX_AMBINTENSITY_HPP
+#define WC3LIB_MDLX_AMBINTENSITY_HPP
+
+#include "alpha.hpp"
 
 namespace wc3lib
 {
@@ -26,30 +29,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-Alpha2s::Alpha2s(class Mdlx *mdlx) : MdxBlock("KMTA"), m_mdlx(mdlx)
+class AmbIntensity : public Alpha
 {
-}
-
-Alpha2s::~Alpha2s()
-{
-}
-
-void Alpha2s::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Alpha2s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Alpha2s::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Alpha2s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-}
+};
 
 }
 
 }
+
+#endif

@@ -36,7 +36,7 @@ class Mdlx;
 class Translations;
 class Rotations;
 class Scalings;
-class Visibilities;
+class Visibility0s;
 
 class Object
 {
@@ -88,8 +88,8 @@ class Object
 		class Rotations* rotations() const;
 		void setScalings(class Scalings *scalings);
 		class Scalings* scalings() const;
-		void setVisibilties(class Visibilities *visibilities);
-		class Visibilities* visibilities() const;
+		void setVisibilties(class Visibility0s *visibilities);
+		class Visibility0s* visibilities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -105,7 +105,7 @@ class Object
 		class Translations *m_translations;
 		class Rotations *m_rotations;
 		class Scalings *m_scalings;
-		class Visibilities *m_visibilities;
+		class Visibility0s *m_visibilities;
 };
 
 inline class Mdlx* Object::mdlx() const
@@ -186,12 +186,12 @@ inline class Scalings* Object::scalings() const
 	return this->m_scalings;
 }
 
-inline void Object::setVisibilties(class Visibilities *visibilities)
+inline void Object::setVisibilties(class Visibility0s *visibilities)
 {
 	this->m_visibilities = visibilities;
 }
 
-inline class Visibilities* Object::visibilities() const
+inline class Visibility0s* Object::visibilities() const
 {
 	return this->m_visibilities;
 }

@@ -21,6 +21,12 @@
 #ifndef WC3LIB_MPQ_MPQ_HPP
 #define WC3LIB_MPQ_MPQ_HPP
 
+#include <fstream>
+#include <list>
+#include <string>
+
+#include "../exception.hpp"
+
 namespace wc3lib
 {
 
@@ -47,12 +53,17 @@ class Mpq
 		Mpq();
 		~Mpq();
 
-		void open(std::ifstream &fstream, enum Mode mode) throw(class Exception);
-		void close() = 0;
-		void write(std::ofstream &fstream, enum Format format) = 0;
-		std::list<class MpqFile*> files() const = 0;
-		unsigned int size() const = 0;
-		std::string path() const = 0;
+		void open(std::ifstream &fstream, enum Mode mode) throw (class Exception);
+		void close();
+		void write(std::ofstream &fstream, enum Format format);
+		std::size_t size() const;
+		std::string path() const;
+		std::list<class MpqFile*> files() const;
+
+	private:
+		std::size_t m_size;
+		std::string m_path;
+		std::list<class MpqFile*> m_files;
 };
 
 }

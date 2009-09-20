@@ -54,7 +54,11 @@ set(wc3lib_MDLX_SRC
 	translation0s.cpp
 	version.cpp
 	vertex.cpp
-	visibility.cpp
+	visibility0.cpp
+	visibility1.cpp
+	visibility2.cpp
+	visibility3.cpp
+	visibility4.cpp
 )
 
 set(wc3lib_MDLX_H
@@ -68,7 +72,11 @@ set(wc3lib_MDLX_H
 	geosetanimation.hpp
 	mdlx.hpp
 	object.hpp
-	visibility.hpp
+	visibility0.hpp
+	visibility1.hpp
+	visibility2.hpp
+	visibility3.hpp
+	visibility4.hpp
 )
 
 add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})

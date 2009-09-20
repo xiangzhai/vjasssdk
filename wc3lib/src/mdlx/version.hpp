@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_VERSION_HPP
 #define WC3LIB_MDLX_VERSION_HPP
 
-#include "mdxblocj.hpp"
+#include "mdxblock.hpp"
 
 namespace wc3lib
 {

@@ -18,81 +18,77 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "mpq.hpp"
+#ifndef WC3LIB_MDLX_TEXTUREID_HPP
+#define WC3LIB_MDLX_TEXTUREID_HPP
+
+#include <fstream>
+
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
-namespace mpq
+namespace mdlx
 {
 
-struct Header
+class Mdlx;
+
+//state is long not float
+class TextureId
 {
-	char magic[4];
-	int32 headerSize;
-	int32 archiveSize;
-	int16 formatVersion;
-	int8 sectorSizeShift;
-	int32 hashTableOffset;
-	int32 blockTableOffset;
-	int32 hashTableEntries;
-	int32 blockTableEntries;
-	int64 extendedBlockTableOffset;
-	int16 hashTableOffsetHigh;
-	int16 blockTableOffsetHigh;
+	public:
+		TextureId(class Mdlx *mdlx);
+		virtual ~TextureId();
+
+		class Mdlx* mdlx() const;
+		long32 frame() const;
+		long32 state() const;
+		float32 inTan() const;
+		float32 outTan() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class Mdlx *m_mdlx;
+		long32 m_frame;
+		long32 m_state; //(0 or 1)
+		//if (LineType > 1) {
+		float32 m_inTan;
+		float32 m_outTan;
+		//}
 };
 
-struct BlockTable
+inline class Mdlx* TextureId::mdlx() const
 {
-	int32 blockOffset;
-	int32 blockSize;
-	int32 fileSize;
-	int32 flags;
-};
+	return this->m_mdlx;
+}
 
-struct HashTable
+inline long32 TextureId::frame() const
 {
-	int32 filePathHashA;
-	int32 filePathHashB;
-	int16 language;
-	int8 platform;
-	int32 fileBlockIndex;
-};
+	return this->m_frame;
+}
 
-struct FileData
+inline long32 TextureId::state() const
 {
-	int32 *sectorOffsetTable;
-};
+	return this->m_state;
+}
 
-struct ExtendedAttributes
+inline float32 TextureId::inTan() const
 {
-	int32 version;
-	int32 attributesPresent;
-	int32 *CRC32s;
-};
+	return this->m_inTan;
+}
 
-struct WeakDigitalSignature
-{	
-	int32 unknown0;
-	int32 unknown1;
-};
-
-struct StringDigitalSignature
+inline float32 TextureId::outTan() const
 {
-	char magic[4];
-	int2048 signature;
-};
-
-void Mpq::open(std::ifstream &fstream, enum Mode mode) throw (class Exception)
-{
-	struct Header header;
-	fstream.read((char*)&header, sizeof(struct Header));
-
-	/// @todo Check magic
-	
+	return this->m_outTan;
 }
 
 }
 
 }
+
+#endif

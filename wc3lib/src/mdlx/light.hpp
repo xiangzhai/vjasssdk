@@ -28,6 +28,8 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+class Visibility1s;
 
 class Light : public Object
 {
@@ -54,7 +56,7 @@ class Light : public Object
 		float32 ambColorBlue() const;
 		float32 ambIntensity() const;
 		class Intensity* intensity() const;
-		class Visibility* visibility() const;
+		class Visibility1s* visibilities() const;
 		class Color* color() const;
 		class AmbientColor* ambientColor() const;
 		class AmbientIntensity* ambientIntensity() const;
@@ -74,7 +76,7 @@ class Light : public Object
 		float32 m_ambColorRed, m_ambColorGreen, m_ambColorBlue;
 		float32 m_ambIntensity;
 		class Intensity *m_intensity; //(KLAI)
-		class Visibility *m_visibility; //(KLAV)
+		class Visibility1s *m_visibilities; //(KLAV)
 		class Color *m_color; //(KLAC)
 		class AmbientColor *m_ambientColor; //(KLBC)
 		class AmbientIntensity *m_ambientIntensity; //(KLBI)
@@ -140,9 +142,9 @@ inline class Intensity* Light::intensity() const
 	return this->m_intensity;
 }
 
-inline class Visibility* Light::visibility() const
+inline class Visibility1s* Light::visibilities() const
 {
-	return this->m_visibility;
+	return this->m_visibilities;
 }
 
 inline class Color* Light::color() const

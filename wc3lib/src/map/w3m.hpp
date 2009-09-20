@@ -21,10 +21,26 @@
 #ifndef WC3LIB_MAP_W3M_HPP
 #define WC3LIB_MAP_W3M_HPP
 
+#include <fstream>
+
 #include "../exception.hpp"
 
 namespace wc3lib
 {
+
+namespace mpq
+{
+
+class Mpq;
+
+}
+
+namespace blp
+{
+
+class Blp;
+
+}
 
 namespace map
 {
@@ -49,7 +65,7 @@ class W3m
 			ShowWaterWavesOnRollingShores = 0x1000 //: 1=show water waves on rolling shores
 		};
 
-		virtual void read(class Mpq *mpq) throw (Exception);
+		virtual void read(class mpq::Mpq *mpq) throw (Exception);
 		virtual void read(std::fstream &fstream) throw (Exception);
 
 		/**

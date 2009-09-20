@@ -39,7 +39,7 @@ class Sequence
 		virtual ~Sequence();
 
 		class Mdlx* mdlx() const;
-		ascii name() const;
+		const ascii* name() const;
 		long32 intervalStart() const;
 		long32 intervalEnd() const;
 		float32 moveSpeed() const;
@@ -78,7 +78,7 @@ inline class Mdlx* Sequence::mdlx() const
 	return this->m_mdlx;
 }
 
-inline ascii Sequence::name() const
+inline const ascii* Sequence::name() const
 {
 	return this->m_name;
 }

@@ -13,6 +13,8 @@ namespace mdlx
 {
 
 class Mdlx;
+class Alphas;
+class TextureIds;
 
 class Layer
 {
@@ -28,7 +30,7 @@ class Layer
 		long32	coordinatesId() const;
 		float32	alpha() const;
 		class Alphas* alphas() const;
-		class Alpha2s* alpha2s() const;
+		class TextureIds* textureIds() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -44,7 +46,7 @@ class Layer
 		long32	m_coordinatesId;
 		float32	m_alpha; //(0(transparent)->1(opaque))
 		class Alphas *m_alphas; //(KMTA)
-		class Alpha2s *m_alpha2s; //(KMTF) // state is long not float
+		class TextureIds *m_textureIds; //(KMTF) // state is long not float
 };
 
 inline class Mdlx* Layer::mdlx() const
@@ -87,9 +89,9 @@ inline class Alphas* Layer::alphas() const
 	return this->m_alphas;
 }
 
-inline class Alpha2s* Layer::alpha2s() const
+inline class TextureIds* Layer::textureIds() const
 {
-	return this->m_alpha2s;
+	return this->m_textureIds;
 }
 
 }

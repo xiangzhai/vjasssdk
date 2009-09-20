@@ -18,11 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ALPHA2_HPP
-#define WC3LIB_MDLX_ALPHA2_HPP
+#ifndef WC3LIB_MDLX_LENGTHS_HPP
+#define WC3LIB_MDLX_LENGTHS_HPP
 
 #include <fstream>
+#include <list>
 
+#include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -33,19 +35,27 @@ namespace mdlx
 {
 
 class Mdlx;
+class Length;
 
-//state is long not float
-class Alpha2
+//KP2N	// [Length]: 	  KMTA;
+class Lengths : public MdxBlock
 {
 	public:
-		Alpha2(class Mdlx *mdlx);
-		virtual ~Alpha2();
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
+
+		Lengths(class Mdlx *mdlx);
+		virtual ~Lengths();
 
 		class Mdlx* mdlx() const;
-		long32 frame() const;
-		long32 state() const;
-		float32 inTan() const;
-		float32 outTan() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Length*> lengths() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -54,37 +64,29 @@ class Alpha2
 
 	protected:
 		class Mdlx *m_mdlx;
-		long32 m_frame;
-		long32 m_state; //(0 or 1)
-		//if (LineType > 1) {
-		float32 m_inTan;
-		float32 m_outTan;
-		//}
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Length*> m_lengths;
 };
 
-inline class Mdlx* Alpha2::mdlx() const
+inline class Mdlx* Lengths::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 Alpha2::frame() const
+inline long32 Lengths::lineType() const
 {
-	return this->m_frame;
+	return this->m_lineType;
 }
 
-inline long32 Alpha2::state() const
+inline long32 Lengths::globalSequenceId() const
 {
-	return this->m_state;
+	return this->m_globalSequenceId;
 }
 
-inline float32 Alpha2::inTan() const
+inline std::list<class Length*> Lengths::alphas() const
 {
-	return this->m_inTan;
-}
-
-inline float32 Alpha2::outTan() const
-{
-	return this->m_outTan;
+	return this->m_lengths;
 }
 
 }

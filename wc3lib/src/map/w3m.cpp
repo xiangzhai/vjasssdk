@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "w3m.hpp"
+#include "mpq/mpq.hpp"
+#include "blp/blp.hpp"
 
 namespace wc3lib
 {
@@ -42,7 +44,7 @@ struct Footer
 	char authentification[256]; //: 256 data bytes for authentification. I don't know how they are used at the moment.
 };
 
-void W3m::read(class Mpq *mpq) throw (class Exception)
+void W3m::read(class mpq::Mpq *mpq) throw (class Exception)
 {
 }
 

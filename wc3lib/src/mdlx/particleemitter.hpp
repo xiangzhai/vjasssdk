@@ -36,7 +36,7 @@ class Mdlx;
 class Translations;
 class Rotations;
 class Scalings;
-class Visibilities;
+class Visibility3s;
 
 class ParticleEmitter
 {
@@ -66,7 +66,7 @@ class ParticleEmitter
 		long32 unknown0() const;
 		float32 lifeSpan() const;
 		float32 initVelocity() const;
-		class Visibilities* visibilities() const;
+		class Visibility3s* visibilities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -92,7 +92,7 @@ class ParticleEmitter
 		long32 m_unknown0; //(0)
 		float32 m_lifeSpan;
 		float32 m_initVelocity;
-		class Visibilities *m_visibilities; //(KPEV)
+		class Visibility3s *m_visibilities; //(KPEV)
 };
 
 inline class Mdlx* ParticleEmitter::mdlx() const
@@ -175,7 +175,7 @@ inline float32 ParticleEmitter::initVelocity() const
 	return this->m_initVelocity;
 }
 
-inline class Visibilities* ParticleEmitter::visibilities() const
+inline class Visibility3s* ParticleEmitter::visibilities() const
 {
 	return this->m_visibilities;
 }
