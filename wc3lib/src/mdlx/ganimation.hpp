@@ -22,7 +22,9 @@
 #define WC3LIB_MDLX_GANIMATION_HPP
 
 #include <fstream>
-#include <exception>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {

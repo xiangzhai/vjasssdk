@@ -24,11 +24,10 @@
 #include <fstream>
 
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
-
-class Exception;
 
 namespace mdlx
 {
@@ -42,7 +41,7 @@ class Camera
 		Camera(class Mdlx *mdlx);
 		virtual ~Camera();
 		class Mdlx* mdlx() const;
-		ascii* name() const;
+		const ascii* name() const;
 		float32 positionX() const;
 		float32 positionY() const;
 		float32 positionZ() const;
@@ -77,7 +76,7 @@ class Mdlx* Camera::mdlx() const
 	return this->m_mdlx;
 }
 
-inline ascii* Camera::name() const
+inline const ascii* Camera::name() const
 {
 	return this->m_name;
 }
@@ -125,6 +124,10 @@ inline class Rotation* Camera::rotation() const
 inline class Translation* Camera::translation() const
 {
 	return this->m_translation;
+}
+
+}
+
 }
 
 #endif

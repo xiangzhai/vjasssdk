@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Ganimation::Ganimation(class Geoset *geoset) : m_geoset(geoset), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), maxExtentZ(0.0)
+Ganimation::Ganimation(class Geoset *geoset) : m_geoset(geoset), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0)
 {
 }
 

@@ -100,7 +100,7 @@ inline float32 CollisionShape::z2() const
 
 inline float32 CollisionShape::boundsRadius() const
 {
-	return this->m_bounsRadius;
+	return this->m_boundsRadius;
 }
 
 }

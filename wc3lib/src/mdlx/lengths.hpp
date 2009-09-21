@@ -84,7 +84,7 @@ inline long32 Lengths::globalSequenceId() const
 	return this->m_globalSequenceId;
 }
 
-inline std::list<class Length*> Lengths::alphas() const
+inline std::list<class Length*> Lengths::lengths() const
 {
 	return this->m_lengths;
 }

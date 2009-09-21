@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "camera.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -35,19 +34,19 @@ Camera::~Camera()
 {
 }
 
-void Camera::readMdl(std::fstream &fstream) throw (Exception)
+void Camera::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Camera::readMdx(std::fstream &fstream) throw (Exception)
+void Camera::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Camera::writeMdl(std::fstream &fstream) throw (Exception)
+void Camera::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Camera::writeMdx(std::fstream &fstream) throw (Exception)
+void Camera::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

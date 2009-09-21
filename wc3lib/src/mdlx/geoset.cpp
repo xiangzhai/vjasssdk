@@ -19,6 +19,20 @@
  ***************************************************************************/
 
 #include "geoset.hpp"
+/*
+#include "mdlx.hpp"
+#include "vertices.hpp"
+#include "normals.hpp"
+#include "primitivetypes.hpp"
+#include "primitivesizes.hpp"
+class PrimitiveSizes;
+class Faces;
+class VertexGroup;
+class MatrixGroupCounts;
+class Matrices;
+class Ganimation;
+class TexturePatches;
+*/
 
 namespace wc3lib
 {
@@ -26,11 +40,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Geoset::Geoset()
-{
-}
-
-Geoset::Geoset(class Mdlx *mdlx) : m_mdlx(mdlx), m_vertices(0), m_normals(0),  m_primitveTypes(0), m_primitiveSizes(0),  m_faces(0),  m_vertexGroup(0), m_matrixGroupCounts(0),  m_matrices(0), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0), m_texturePatches(0),  m_tvertices(0)
+Geoset::Geoset(class Mdlx *mdlx) : m_mdlx(mdlx), m_vertices(0), m_normals(0),  m_primitveTypes(0), m_primitiveSizes(0),  m_faces(0),  m_vertexGroup(0), m_matrixGroupCounts(0),  m_matrices(0), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0), m_texturePatches(0)
 {
 }
 

@@ -54,7 +54,7 @@ class GeosetAnimations : public MdxBlock
 
 	protected:
 		class Mdlx *m_mdlx;
-		std::list<class GeosetAnimations*> m_geosetAnimations;
+		std::list<class GeosetAnimation*> m_geosetAnimations;
 };
 
 inline class Mdlx* GeosetAnimations::mdlx() const

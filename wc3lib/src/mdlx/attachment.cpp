@@ -24,7 +24,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "attachment.hpp"
-#include "visibilities.hpp"
+#include "visibility0s.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachment::Attachment(class Mdlx *mdlx) : Object(mdlx), m_visibilities(new Visibilities(mdlx))
+Attachment::Attachment(class Mdlx *mdlx) : Object(mdlx), m_visibilities(new Visibility0s(mdlx))
 {
 }
 
@@ -85,8 +85,8 @@ void Attachment::readMdx(std::fstream &fstream) throw (class Exception)
 	fstream >> this->m_path;
 	fstream >> this->m_unknown0;
 	fstream >> this->m_attachmentId;
-	this->m_visibility = new Visibility(this->mdlx());
-	this->m_visibility->readMdx(fstream);
+	this->m_visibilities = new Visibility0s(this->mdlx());
+	this->m_visibilities->readMdx(fstream);
 }
 
 void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
@@ -133,10 +133,10 @@ void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
 	if (strlen(this->path()) > 0)
 		fstream << "\tPath " << this->path() << ",\n";
 
-	fstream << "\tTranslation { " << this->translation()->x() << ", " << this->translation()->y() << ", " << this->translation()->z() << " }\n";
-	fstream << "\tRotation { " << this->rotation()->a() << ", " << this->rotation()->b() << ", " << this->rotation()->c() << ", " << this->rotation()->d() << " }\n";
-	fstream << "\tScaling { " << this->scaling()->x() << ", " << this->scaling()->y() << ", " << this->scaling()->z() << " }\n";
-	fstream << "\tVisibility " << this->visibility()->value() << '\n';
+	//fstream << "\tTranslation { " << this->translations()->x() << ", " << this->translations()->y() << ", " << this->translations()->z() << " }\n";
+	//fstream << "\tRotation { " << this->rotations()->a() << ", " << this->rotations()->b() << ", " << this->rotations()->c() << ", " << this->rotations()->d() << " }\n";
+	//fstream << "\tScaling { " << this->scalings()->x() << ", " << this->scalings()->y() << ", " << this->scalings()->z() << " }\n";
+	//fstream << "\tVisibility " << this->visibilities()->value() << '\n';
 	fstream << "}\n";
 }
 

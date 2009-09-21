@@ -27,6 +27,7 @@
 #include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
+//#include "attachment.hpp"
 
 namespace wc3lib
 {
@@ -45,7 +46,7 @@ class Attachments : public MdxBlock
 		virtual ~Attachments();
 
 		class Mdlx* mdlx() const;
-		std::list<class Attachments*> attachments() const;
+		std::list<class Attachment*> attachments() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -53,15 +54,16 @@ class Attachments : public MdxBlock
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		std::list<class Attachments*> m_attachments;
+		class Mdlx *m_mdlx;
+		std::list<class Attachment*> m_attachments;
 };
 
-inline class Mdlx* Attachment::mdlx() const
+inline class Mdlx* Attachments::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline std::list<class Attachment*> Attachment::attachments() const
+inline std::list<class Attachment*> Attachments::attachments() const
 {
 	return this->m_attachments;
 }

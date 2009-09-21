@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <string>
+#include <sstream>
+
 #include <boost/tokenizer.hpp>
 
 #include "globalsequence.hpp"
@@ -53,8 +56,9 @@ void GlobalSequence::readMdl(std::fstream &fstream) throw (class Exception)
 	else if (*((*iterator).end() - 1) != ',')
 		throw Exception("Global sequence: Missing \",\" character.");
 
-	(*iterator).erase((*iterator).length() - 1);
-	std::ostringstream sstream(*iterator);
+	line = (*iterator);
+	line.erase(line.length() - 1);
+	std::istringstream sstream(line);
 	sstream >> this->m_duration;
 }
 

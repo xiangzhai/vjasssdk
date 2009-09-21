@@ -26,27 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachment::Attachment(class Mdlx *mdlx) : MdxBlock("ATCH"), m_mdlx(mdlx)
+Attachments::Attachments(class Mdlx *mdlx) : MdxBlock("ATCH"), m_mdlx(mdlx)
 {
 }
 
-Attachment::~Attachment()
+Attachments::~Attachments()
 {
 }
 
-void Attachment::readMdl(std::fstream &fstream) throw (class Exception)
+void Attachments::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Attachment::readMdx(std::fstream &fstream) throw (class Exception)
+void Attachments::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
+void Attachments::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Attachment::writeMdx(std::fstream &fstream) throw (class Exception)
+void Attachments::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

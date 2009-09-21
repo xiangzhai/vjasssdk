@@ -55,7 +55,7 @@ class Intensities : public MdxBlock
 		class Mdlx* mdlx() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
-		std::list<class Intensity*> intensity() const;
+		std::list<class Intensity*> intensities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -66,7 +66,7 @@ class Intensities : public MdxBlock
 		class Mdlx *m_mdlx;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Intensity*> m_intensity;
+		std::list<class Intensity*> m_intensities;
 };
 
 inline class Mdlx* Intensities::mdlx() const
@@ -84,7 +84,7 @@ inline long32 Intensities::globalSequenceId() const
 	return this->m_globalSequenceId;
 }
 
-inline std::list<class Intensity*> Intensities::alphas() const
+inline std::list<class Intensity*> Intensities::intensities() const
 {
 	return this->m_intensities;
 }

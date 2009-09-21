@@ -55,7 +55,7 @@ class Light : public Object
 		float32 ambColorGreen() const;
 		float32 ambColorBlue() const;
 		float32 ambIntensity() const;
-		class Intensity* intensity() const;
+		class Intensities* intensities() const;
 		class Visibility1s* visibilities() const;
 		class Color* color() const;
 		class AmbientColor* ambientColor() const;
@@ -75,7 +75,7 @@ class Light : public Object
 		float32 m_intensity;
 		float32 m_ambColorRed, m_ambColorGreen, m_ambColorBlue;
 		float32 m_ambIntensity;
-		class Intensity *m_intensity; //(KLAI)
+		class Intensities *m_intensities; //(KLAI)
 		class Visibility1s *m_visibilities; //(KLAV)
 		class Color *m_color; //(KLAC)
 		class AmbientColor *m_ambientColor; //(KLBC)
@@ -137,9 +137,9 @@ inline float32 Light::ambIntensity() const
 	return this->m_ambIntensity;
 }
 
-inline class Intensity* Light::intensity() const
+inline class Intensities* Light::intensities() const
 {
-	return this->m_intensity;
+	return this->m_intensities;
 }
 
 inline class Visibility1s* Light::visibilities() const
@@ -160,6 +160,10 @@ inline class AmbientColor* Light::ambientColor() const
 inline class AmbientIntensity* Light::ambientIntensity() const
 {
 	return this->m_ambientIntensity;
+}
+
+}
+
 }
 
 #endif

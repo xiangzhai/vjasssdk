@@ -21,10 +21,11 @@
 #ifndef WC3LIB_MDLX_GEOSET_HPP
 #define WC3LIB_MDLX_GEOSET_HPP
 
+#include <list>
 #include <fstream>
-#include <exception>
 
 #include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -43,7 +44,6 @@ class MatrixGroupCounts;
 class Matrices;
 class Ganimation;
 class TexturePatches;
-class Tvertices;
 
 class Geoset
 {
@@ -76,7 +76,7 @@ class Geoset
 		float32 maxExtentX() const;
 		float32 maxExtentY() const;
 		float32 maxExtentZ() const;
-		std::list<class Ganimation> ganimations() const;
+		std::list<class Ganimation*> ganimations() const;
 		class TexturePatches* texturePatches() const;
 		class TextureVertices* textureVertices() const;
 
@@ -155,7 +155,7 @@ inline class Matrices* Geoset::matrices() const
 
 inline long32 Geoset::materialId() const
 {
-	return this->m_matrialId;
+	return this->m_materialId;
 }
 
 inline long32 Geoset::selectionGroup() const
@@ -163,7 +163,7 @@ inline long32 Geoset::selectionGroup() const
 	return this->m_selectionGroup;
 }
 
-inline long32 selectable() const
+inline long32 Geoset::selectable() const
 {
 	return this->m_selectable;
 }
@@ -198,12 +198,12 @@ inline float32 Geoset::maxExtentY() const
 	return this->m_maxExtentY;
 }
 
-inline float32 maxExtentZ() const
+inline float32 Geoset::maxExtentZ() const
 {
 	return this->m_maxExtentZ;
 }
 
-inline std::list<class Ganimation> Geoset::ganimations() const
+inline std::list<class Ganimation*> Geoset::ganimations() const
 {
 	return this->m_ganimations;
 }

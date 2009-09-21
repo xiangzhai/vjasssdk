@@ -53,7 +53,8 @@ class Bones : public MdxBlock
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		std::list<class Bones*> m_bones;
+		class Mdlx *m_mdlx;
+		std::list<class Bone*> m_bones;
 };
 
 inline class Mdlx* Bones::mdlx() const

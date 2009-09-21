@@ -41,7 +41,7 @@ class Camera;
 class Cameras : public MdxBlock
 {
 	public:
-		Bones(class Mdlx *mdlx);
+		Cameras(class Mdlx *mdlx);
 		virtual ~Cameras();
 
 		class Mdlx* mdlx() const;
@@ -53,6 +53,7 @@ class Cameras : public MdxBlock
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		class Mdlx *m_mdlx;
 		std::list<class Camera*> m_cameras;
 };
 

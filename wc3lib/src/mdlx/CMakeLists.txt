@@ -1,7 +1,8 @@
-set(wc3lib_MDLX_SRC
-	alpha2s.cpp                                     
+set(wc3lib_MDLX_SRC                                 
 	alpha.cpp
-	alphas.cpp                                      
+	alphas.cpp
+	ambintensities.cpp
+	ambintensity.cpp
 	attachment.cpp
 	attachments.cpp
 	bone.cpp
@@ -10,18 +11,24 @@ set(wc3lib_MDLX_SRC
 	cameras.cpp
 	collisionshape.cpp
 	collisionshapes.cpp
+	emissionrate.cpp
+	emissionrates.cpp
 	event.cpp
 	events.cpp
 	ganimation.cpp
+	geoset.cpp
 	geosetanimation.cpp
 	geosetanimations.cpp
-	geoset.cpp
 	geosets.cpp
 	globalsequence.cpp
 	globalsequences.cpp
 	helper.cpp
 	helpers.cpp
+	intensities.cpp
+	intensity.cpp
+	kgao.cpp
 	layer.cpp
+	lengths.cpp
 	light.cpp
 	lights.cpp
 	material.cpp
@@ -45,9 +52,11 @@ set(wc3lib_MDLX_SRC
 	segmentcolor.cpp
 	sequence.cpp
 	sequences.cpp
+	texture.cpp
 	textureanimation.cpp
 	textureanimations.cpp
-	texture.cpp
+	textureid.cpp
+	textureids.cpp
 	textures.cpp
 	texturevertex.cpp
 	translation0.cpp
@@ -55,6 +64,7 @@ set(wc3lib_MDLX_SRC
 	version.cpp
 	vertex.cpp
 	visibility0.cpp
+	visibility0s.cpp
 	visibility1.cpp
 	visibility2.cpp
 	visibility3.cpp

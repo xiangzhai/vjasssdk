@@ -53,6 +53,7 @@ class CollisionShapes : public MdxBlock
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		class Mdlx *m_mdlx;
 		std::list<class CollisionShape*> m_collisionShapes;
 };
 

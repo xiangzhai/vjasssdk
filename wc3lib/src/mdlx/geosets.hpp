@@ -45,6 +45,7 @@ class Geosets : public MdxBlock
 		virtual void writeMdx(std::fstream &fstream) throw (Exception);
 
 	protected:
+		class Mdlx *m_mdlx;
 		//long	nbytes;
 		std::list<class Geoset*> m_geosets;
 		class Vertices *m_vertices; //VRTX
