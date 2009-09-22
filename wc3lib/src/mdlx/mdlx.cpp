@@ -5,8 +5,8 @@
 #include <boost/tokenizer.hpp>
 
 #include "mdlx.hpp"
-#include "version.hpp";
-#include "model.hpp";
+#include "version.hpp"
+#include "model.hpp"
 #include "sequences.hpp"
 #include "globalsequences.hpp"
 #include "materials.hpp"
@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Mdlx::Mdlx() : m_version(new Version(this)), m_model(new Model(this)), m_sequences(new Sequences(this)), m_globalSequences(new GlobalSequences(this)), m_materials(new Materials(this)), m_textures(new Textures(this)), m_textureAnimations(new TextureAnimations(this)), m_geosets(new Geosets(this)), m_geosetAnimations(new GeosetAnimations(this)), m_bones(new Bones(this)), m_lights(new Lights(this)), m_helpers(new Helpes(this)), m_attachments(new Attachments(this)), m_pivotPoints(new PivotPoints(this)), m_particleEmitters(new ParticleEmitters(this)), m_particleEmitter2s(new ParticleEmitter2s(this)), m_ribbonEmitters(new RibbonEmitters(this)), m_cameras(new Cameras(this)), m_events(new Events(this)), m_collisionShapes(new CollisionShapes(this))
+Mdlx::Mdlx() : m_version(new Version(this)), m_model(new Model(this)), m_sequences(new Sequences(this)), m_globalSequences(new GlobalSequences(this)), m_materials(new Materials(this)), m_textures(new Textures(this)), m_textureAnimations(new TextureAnimations(this)), m_geosets(new Geosets(this)), m_geosetAnimations(new GeosetAnimations(this)), m_bones(new Bones(this)), m_lights(new Lights(this)), m_helpers(new Helpers(this)), m_attachments(new Attachments(this)), m_pivotPoints(new PivotPoints(this)), m_particleEmitters(new ParticleEmitters(this)), m_particleEmitter2s(new ParticleEmitter2s(this)), m_ribbonEmitters(new RibbonEmitters(this)), m_cameras(new Cameras(this)), m_events(new Events(this)), m_collisionShapes(new CollisionShapes(this))
 {
 
 }
@@ -155,6 +155,7 @@ void Mdlx::writeMdl(std::fstream &fstream) throw (Exception)
 	this->m_collisionShapes->writeMdl(fstream);
 }
 
+/*
 void Mdlx::writeMdlGlobalSequences(std::fstream &fstream) throw (Exception)
 {
 	fstream << "GlobalSequences " << this->m_globalSequencesDurations.size() << " {\n";
@@ -447,7 +448,7 @@ void Mdlx::writeMdlBones(std::fstream &fstream) throw (Exception)
 		CameraAnchored,
 		DontInherit { <Rotation|Translation|Scaling> },
 		*/
-
+/*
 		if ((*iterator)->geosetId == -1)
 			fstream << "\tGeosetId Multiple,\n";
 		else
@@ -463,7 +464,7 @@ void Mdlx::writeMdlBones(std::fstream &fstream) throw (Exception)
 		(Rotation { <float_a>, <float_b>, <float_c>, <float_d> })
 		(Scaling { <float_x>, <float_y>, <float_z> })
 		(Visibility <float>)
-		*/
+		*//*
 	}
 }
 
@@ -489,8 +490,10 @@ void Mdlx::writeMdlHelpers(std::fstream &fstream) throw (Exception)
 		(Scaling { <float_x>, <float_y>, <float_z> })
 		(Visibility <float>)
 		*/
+		/*
 	}
 }
+*/
 
 }
 

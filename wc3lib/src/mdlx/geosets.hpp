@@ -38,6 +38,18 @@ class Geosets : public MdxBlock
 	public:
 		Geosets(class Mdlx *mdlx);
 		virtual ~Geosets();
+		
+		std::list<class Geoset*> geosets() const;
+		class Vertices* vertices() const;
+		class Normals* normals() const;
+		class PrimitiveTypes* primitiveTypes() const;
+		class PrimitiveSizes* primitiveSizes() const;
+		class PrimitiveVertices* primitiveVertices() const;
+		class GroupVertices* groupVertices() const;
+		class MaterialGroupLengths* materialGroupLengths() const;
+		class Matrices* matrices() const;
+		class TexturePatches* texturePatches() const;
+		class TextureVertices* textureVertices() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (Exception);
 		virtual void readMdx(std::fstream &fstream) throw (Exception);
@@ -63,6 +75,61 @@ class Geosets : public MdxBlock
 		class TexturePatches *m_texturePatches; //UVAS, texture patches?
 		class TextureVertices *m_textureVertices; //UVBS
 };
+
+inline std::list<class Geoset*> Geosets::geosets() const
+{
+	return this->m_geosets;
+}
+
+inline class Vertices* Geosets::vertices() const
+{
+	return this->m_vertices;
+}
+
+inline class Normals* Geosets::normals() const
+{
+	return this->m_normals;
+}
+
+inline class PrimitiveTypes* Geosets::primitiveTypes() const
+{
+	return this->m_primitiveTypes;
+}
+
+inline class PrimitiveSizes* Geosets::primitiveSizes() const
+{
+	return this->m_primitiveSizes;
+}
+
+inline class PrimitiveVertices* Geosets::primitiveVertices() const
+{
+	return this->m_primitiveVertices;
+}
+
+inline class GroupVertices* Geosets::groupVertices() const
+{
+	return this->m_groupVertices;
+}
+
+inline class MaterialGroupLengths* Geosets::materialGroupLengths() const
+{
+	return this->m_materialGroupLengths;
+}
+
+inline class Matrices* Geosets::matrices() const
+{
+	return this->m_matrices;
+}
+
+inline class TexturePatches* Geosets::texturePatches() const
+{
+	return this->m_texturePatches;
+}
+
+inline class TextureVertices* Geosets::textureVertices() const
+{
+	return this->m_textureVertices;
+}
 
 }
 

@@ -62,7 +62,7 @@ inline class Mdlx* TextureAnimations::mdlx() const
 	return this->m_mdlx;
 }
 
-inline std::list<class TextureAnimation*> TextureAnimations::textures() const
+inline std::list<class TextureAnimation*> TextureAnimations::textureAnimations() const
 {
 	return this->m_textureAnimations;
 }

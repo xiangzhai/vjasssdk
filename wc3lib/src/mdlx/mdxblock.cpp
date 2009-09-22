@@ -18,7 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cstdio>
+//#include <cstdio>
+#include <cstring>
 
 #include "mdxblock.hpp"
 
@@ -28,8 +29,10 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdxBlock::MdxBlock(byte blockName[4], bool optional = false) : m_blockName(blockName), m_optional(optional)
+MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional)
 {
+	for (unsigned int i = 0; i < sizeof(this->m_blockName); ++i)
+		this->m_blockName[i] = blockName[i];
 }
 
 /// @todo Consider optional like in Python script.
@@ -42,7 +45,7 @@ void MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 	if (strcmp(identifier, this->m_blockName) != 0)
 	{
 		char message[50];
-		sprintf(message, "Missing \"%s\" block name.", this->blockName);
+		sprintf(message, "Missing \"%s\" block name.", this->m_blockName);
 		throw Exception(message);
 	}
 }

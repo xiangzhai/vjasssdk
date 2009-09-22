@@ -22,6 +22,8 @@ set(wc3lib_MDLX_SRC
 	geosets.cpp
 	globalsequence.cpp
 	globalsequences.cpp
+	groupvertex.cpp
+	groupvertices.cpp
 	helper.cpp
 	helpers.cpp
 	intensities.cpp
@@ -37,6 +39,7 @@ set(wc3lib_MDLX_SRC
 	mdxblock.cpp
 	model.cpp
 	normal.cpp
+	normals.cpp
 	object.cpp
 	particleemitter2.cpp
 	particleemitter2s.cpp
@@ -44,6 +47,12 @@ set(wc3lib_MDLX_SRC
 	particleemitters.cpp
 	pivotpoint.cpp
 	pivotpoints.cpp
+	primitivesize.cpp
+	primitivesizes.cpp
+	primitivetype.cpp
+	primitivetypes.cpp
+	primitivevertex.cpp
+	primitivevertices.cpp
 	ribbonemitter.cpp
 	ribbonemitters.cpp
 	rotation.cpp
@@ -63,6 +72,7 @@ set(wc3lib_MDLX_SRC
 	translation0s.cpp
 	version.cpp
 	vertex.cpp
+	vertices.cpp
 	visibility0.cpp
 	visibility0s.cpp
 	visibility1.cpp

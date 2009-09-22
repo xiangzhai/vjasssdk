@@ -38,8 +38,8 @@ class Vertices;
 class Normals;
 class PrimitiveTypes;
 class PrimitiveSizes;
-class Faces;
-class VertexGroup;
+class PrimitiveVertices;
+class GroupVertices;
 class MatrixGroupCounts;
 class Matrices;
 class Ganimation;
@@ -62,8 +62,8 @@ class Geoset
 		class Normals* normals() const;
 		class PrimitiveTypes* primitiveTypes() const;
 		class PrimitiveSizes* primitiveSizes() const;
-		class Faces* faces() const;
-		class VertexGroup* vertexGroup() const;
+		class PrimitiveVertices* primitiveVertices() const;
+		class GroupVertices* groupVertices() const;
 		class MatrixGroupCounts* matrixGroupCounts() const;
 		class Matrices* matrices() const;
 		long32 materialId() const;
@@ -91,8 +91,8 @@ class Geoset
 		class Normals *m_normals; //NRMS
 		class PrimitiveTypes *m_primitveTypes; //PTYP
 		class PrimitiveSizes *m_primitiveSizes; //PCNT
-		class Faces *m_faces; //PVTX
-		class VertexGroup *m_vertexGroup; //GNDX
+		class PrimitiveVertices *m_primitiveVertices; //PVTX
+		class GroupVertices *m_groupVertices; //GNDX
 		class MatrixGroupCounts *m_matrixGroupCounts; //MTGC
 		class Matrices *m_matrices; //MATS
 		long32 m_materialId;
@@ -133,14 +133,14 @@ inline class PrimitiveSizes* Geoset::primitiveSizes() const
 	return this->m_primitiveSizes;
 }
 
-inline class Faces* Geoset::faces() const
+inline class PrimitiveVertices* Geoset::primitiveVertices() const
 {
-	return this->m_faces;
+	return this->m_primitiveVertices;
 }
 
-inline class VertexGroup* Geoset::vertexGroup() const
+inline class GroupVertices* Geoset::groupVertices() const
 {
-	return this->m_vertexGroup;
+	return this->m_groupVertices;
 }
 
 inline class MatrixGroupCounts* Geoset::matrixGroupCounts() const

@@ -55,7 +55,7 @@ inline class Mdlx* Version::mdlx() const
 	return this->m_mdlx;
 }
 
-inline long32 Version::x() const
+inline long32 Version::version() const
 {
 	return this->m_version;
 }

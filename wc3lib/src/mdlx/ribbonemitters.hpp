@@ -53,7 +53,7 @@ class RibbonEmitters : public MdxBlock
 
 	protected:
 		class Mdlx *m_mdlx;
-		std::list<class RbbonEmitter*> m_ribbonEmitters;
+		std::list<class RibbonEmitter*> m_ribbonEmitters;
 };
 
 inline class Mdlx* RibbonEmitters::mdlx() const

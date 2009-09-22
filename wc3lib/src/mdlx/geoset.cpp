@@ -19,15 +19,14 @@
  ***************************************************************************/
 
 #include "geoset.hpp"
-/*
 #include "mdlx.hpp"
 #include "vertices.hpp"
 #include "normals.hpp"
 #include "primitivetypes.hpp"
 #include "primitivesizes.hpp"
-class PrimitiveSizes;
-class Faces;
-class VertexGroup;
+#include "primitivevertices.hpp"
+#include "groupvertices.hpp"
+/*
 class MatrixGroupCounts;
 class Matrices;
 class Ganimation;
@@ -40,7 +39,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Geoset::Geoset(class Mdlx *mdlx) : m_mdlx(mdlx), m_vertices(0), m_normals(0),  m_primitveTypes(0), m_primitiveSizes(0),  m_faces(0),  m_vertexGroup(0), m_matrixGroupCounts(0),  m_matrices(0), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0), m_texturePatches(0)
+Geoset::Geoset(class Mdlx *mdlx) : m_mdlx(mdlx), m_vertices(0), m_normals(0),  m_primitveTypes(0), m_primitiveSizes(0),  m_primitiveVertices(0),  m_groupVertices(0), m_matrixGroupCounts(0),  m_matrices(0), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0), m_texturePatches(0)
 {
 }
 
@@ -58,11 +57,11 @@ Geoset::~Geoset()
 	if (this->m_primitiveSizes != 0)
 		delete this->m_primitiveSizes;
 
-	if (this->m_faces != 0)
-		delete this->m_faces;
+	if (this->m_primitiveVertices != 0)
+		delete this->m_primitiveVertices;
 
-	if (this->m_vertexGroup != 0)
-		delete this->m_vertexGroup;
+	if (this->m_groupVertices != 0)
+		delete this->m_groupVertices;
 
 	if (this->m_matrixGroupCounts != 0)
 		delete this->m_matrixGroupCounts;

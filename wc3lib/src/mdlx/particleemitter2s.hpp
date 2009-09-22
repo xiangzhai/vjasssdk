@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PARTICLEEMITTERS_HPP
-#define WC3LIB_MDLX_PARTICLEEMITTERS_HPP
+#ifndef WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
+#define WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
 
 #include <fstream>
 #include <list>

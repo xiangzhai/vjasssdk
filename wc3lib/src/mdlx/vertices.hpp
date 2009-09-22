@@ -18,11 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_MATERIAL_HPP
-#define WC3LIB_MDLX_MATERIAL_HPP
+#ifndef WC3LIB_MDLX_VERTICES_HPP
+#define WC3LIB_MDLX_VERTICES_HPP
 
 #include <fstream>
+#include <list>
 
+#include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -32,26 +34,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Layers;
+class Geoset;
+class Vertex;
 
-class Material
+//VRTX [Vertices]
+class Vertices : public MdxBlock
 {
 	public:
-		enum RenderMode
-		{
-			ConstantColor = 1,
-			SortPrimsFarZ = 0x16,
-			FullResolution = 0x32
-		};
+		Vertices(class Geoset *geoset);
+		virtual ~Vertices();
 
-		Material(class Mdlx *mdlx);
-		virtual ~Material();
-
-		class Mdlx* mdlx() const;
-		float32 priorityPlane() const;
-		float32 renderMode() const;
-		class Layers* layers() const;
+		class Geoset* geoset() const;
+		std::list<class Vertex*> vertices() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -59,31 +53,18 @@ class Material
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
-		//long nbytesi;
-		long32 m_priorityPlane;
-		long32 m_renderMode; //(+1:ConstantColor;+16:SortPrimsFarZ;+32:FullResolution)
-		class Layers *m_layers;
+		class Geoset *m_geoset;
+		std::list<class Vertex*> m_vertices;
 };
 
-inline class Mdlx* Material::mdlx() const
+inline class Geoset* Vertices::geoset() const
 {
-	return this->m_mdlx;
+	return this->m_geoset;
 }
 
-inline float32 Material::priorityPlane() const
+inline std::list<class Vertex*> Vertices::vertices() const
 {
-	return this->m_priorityPlane;
-}
-
-inline float32 Material::renderMode() const
-{
-	return this->m_renderMode;
-}
-
-inline class Layers* Material::layers() const
-{
-	return this->m_layers;
+	return this->m_vertices;
 }
 
 }
@@ -91,3 +72,4 @@ inline class Layers* Material::layers() const
 }
 
 #endif
+

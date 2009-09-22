@@ -32,6 +32,8 @@ namespace wc3lib
 namespace mdlx
 {
 
+class Mdlx;
+
 class Normal
 {
 	public:

@@ -19,6 +19,16 @@
  ***************************************************************************/
 
 #include "model.hpp"
+/// @todo Maybe we should one single "objects" include file.
+#include "mdlx.hpp"
+#include "geosets.hpp"
+#include "geosetanimations.hpp"
+#include "helpers.hpp"
+#include "lights.hpp"
+#include "bones.hpp"
+#include "attachments.hpp"
+#include "particleemitters.hpp"
+#include "particleemitter2s.hpp"
 
 namespace wc3lib
 {

@@ -18,13 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_MATERIAL_HPP
-#define WC3LIB_MDLX_MATERIAL_HPP
-
-#include <fstream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "primitivetype.hpp"
 
 namespace wc3lib
 {
@@ -32,62 +26,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Layers;
-
-class Material
+PrimitiveType::PrimitiveType(class Mdlx *mdlx) : m_mdlx(mdlx)
 {
-	public:
-		enum RenderMode
-		{
-			ConstantColor = 1,
-			SortPrimsFarZ = 0x16,
-			FullResolution = 0x32
-		};
+}
 
-		Material(class Mdlx *mdlx);
-		virtual ~Material();
-
-		class Mdlx* mdlx() const;
-		float32 priorityPlane() const;
-		float32 renderMode() const;
-		class Layers* layers() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class Mdlx *m_mdlx;
-		//long nbytesi;
-		long32 m_priorityPlane;
-		long32 m_renderMode; //(+1:ConstantColor;+16:SortPrimsFarZ;+32:FullResolution)
-		class Layers *m_layers;
-};
-
-inline class Mdlx* Material::mdlx() const
+PrimitiveType::~PrimitiveType()
 {
-	return this->m_mdlx;
 }
 
-inline float32 Material::priorityPlane() const
+void PrimitiveType::readMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_priorityPlane;
 }
 
-inline float32 Material::renderMode() const
+void PrimitiveType::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_renderMode;
 }
 
-inline class Layers* Material::layers() const
+void PrimitiveType::writeMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_layers;
+}
+
+void PrimitiveType::writeMdx(std::fstream &fstream) throw (class Exception)
+{
 }
 
 }
 
 }
-
-#endif
