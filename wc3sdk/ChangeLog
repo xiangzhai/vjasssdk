@@ -1,3 +1,6 @@
+2009-09-22 Tamino Dauth <tamino@cdauth.de>
+* Struct AVector is called AVector3 now.
+
 2009-09-11 Tamino Dauth <tamino@cdauth.de>
 * Added file "src/Core/String/Struct Tokenizer.j".
 

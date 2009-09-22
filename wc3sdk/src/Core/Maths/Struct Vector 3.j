@@ -1,6 +1,6 @@
-library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
+library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
 
-	struct AVector
+	struct AVector3
 		//dynamic members
 		private real m_x
 		private real m_y
@@ -57,7 +57,7 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 		endmethod
 
 		/// Copys all data from vector @param vector.
-		public method copy takes AVector vector returns nothing
+		public method copy takes thistype vector returns nothing
 			set this.m_x = vector.m_x
 			set this.m_y = vector.m_y
 			set this.m_z = vector.m_z
@@ -65,7 +65,7 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 
 		/// Adds all data from vector @param vector.
 		/// Das Ergebnis ist ein Vektor, der vom Punkt 0 zur Spitze vom Vektor "this" verläuft, wenn man diesen an die Spitze des Vektors "vector" legt.
-		public method add takes AVector vector returns nothing
+		public method add takes thistype vector returns nothing
 			set this.m_x = this.m_x + vector.m_x
 			set this.m_y = this.m_y + vector.m_y
 			set this.m_z = this.m_z + vector.m_z
@@ -75,7 +75,7 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 		/// Subtracts all data from vector @param vector.
 		/// Das Ergebnis ist ein Vektor, der von der Spitze des Vektors "vector" zur Spitze des Vektors "this" verläuft.
 		/// Achtung: Der Vektor verläuft immer vom 2. Wert zum 1. Wert der Subtraktion.
-		public method subtract takes AVector vector returns nothing
+		public method subtract takes thistype vector returns nothing
 			set this.m_x = this.m_x - vector.m_x
 			set this.m_y = this.m_y - vector.m_y
 			set this.m_z = this.m_z - vector.m_z
@@ -83,7 +83,7 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 
 		/// Multiplies each value from vector @param vector and returns the sum of all results.
 		/// Ist das Ergebnis 0, so entsteht ein rechter Winkel, wenn man die beiden Vektoren mit ihren Spitzen aneinander legt.
-		public method multiply takes AVector vector returns real
+		public method multiply takes thistype vector returns real
 			return ((this.m_x * vector.m_x) + (this.m_y * vector.m_y) + (this.m_z * vector.m_z))
 		endmethod
 
@@ -99,7 +99,7 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 		/// Adds scaled vector @param vector which is scaled by value @param factor.
 		/// Note that vector @param vector won't be changed!
 		/// @author peq
-		public method addScaled takes AVector vector, real factor returns nothing
+		public method addScaled takes thistype vector, real factor returns nothing
 			set this.m_x = this.m_x + vector.m_x * factor
 			set this.m_y = this.m_y + vector.m_y * factor
 			set this.m_z = this.m_z + vector.m_z * factor
@@ -107,7 +107,7 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 
 		/// Projects vector @param vector.
 		/// Passt die Richtung des Vektors "this" an die Richtung des Vektors "vector" an ohne dabei die Länge des Vektors "this" zu verändern. 
-		public method project takes AVector vector returns nothing
+		public method project takes thistype vector returns nothing
 			local real factor = this.length() / vector.length()
 			set this.m_x = vector.m_x * factor
 			set this.m_y = vector.m_y * factor
@@ -129,8 +129,8 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 		/// @todo Not tested yet.
 		public method terrainNormal takes real x, real y, real sampleRadius returns nothing
 			local real array z
-			local AVector vectorX = AVector.create(0.0, 0.0, 0.0)
-			local AVector vectorY = AVector.create(0.0, 0.0, 0.0)
+			local thistype vectorX = thistype.create(0.0, 0.0, 0.0)
+			local thistype vectorY = thistype.create(0.0, 0.0, 0.0)
 			//Z
 			set z[0] = GetTerrainZ((x - sampleRadius), y)
 			set z[1] = GetTerrainZ((x + sampleRadius), y)
@@ -149,12 +149,12 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 			//Copy
 			call this.copy(vectorX)
 			//Destroy
-			call AVector.destroy(vectorX)
-			call AVector.destroy(vectorY)
+			call thistype.destroy(vectorX)
+			call thistype.destroy(vectorY)
 		endmethod
 
-		public static method create takes real x, real y, real z returns AVector
-			local AVector this = AVector.allocate()
+		public static method create takes real x, real y, real z returns thistype
+			local thistype this = thistype.allocate()
 			//dynamic members
 			set this.m_x = x
 			set this.m_y = y
@@ -164,16 +164,16 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 		endmethod
 
 		/// Returns the product of the two vectors @param vector0 and @vector1 in a new vector instance.
-		public static method product takes AVector vector0, AVector vector1 returns AVector
-			local AVector result = AVector.create(0.0, 0.0, 0.0)
+		public static method product takes thistype vector0, thistype vector1 returns thistype
+			local thistype result = thistype.create(0.0, 0.0, 0.0)
 			call result.copy(vector0)
 			call result.add(vector1)
 			return result
 		endmethod
 
 		/// Returns the difference of the two vectors @param vector0 and @vector1 in a new vector instance.
-		public static method difference takes AVector vector0, AVector vector1 returns AVector
-			local AVector result = AVector.create(0.0, 0.0, 0.0)
+		public static method difference takes thistype vector0, thistype vector1 returns thistype
+			local thistype result = thistype.create(0.0, 0.0, 0.0)
 			call result.copy(vector0)
 			call result.subtract(vector1)
 			return result
@@ -182,8 +182,8 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 		/// Returns the multiplication of the two vectors @param vector0 and @vector1 in a new vector instance.
 		/// @author Tamino Dauth
 		/// @state untested
-		public method multiplication takes AVector vector0, AVector vector1 returns AVector
-			local AVector result = AVector.create(0.0, 0.0, 0.0)
+		public method multiplication takes thistype vector0, thistype vector1 returns thistype
+			local thistype result = thistype.create(0.0, 0.0, 0.0)
 			call result.copy(vector0)
 			call result.multiply(vector1)
 			return result
@@ -192,8 +192,8 @@ library AStructCoreMathsVector requires ALibraryCoreMathsHandle, ALibraryCoreMat
 		/// Returns the projection of the two vectors @param vector0 and @vector1 in a new vector instance.
 		/// @author Tamino Dauth
 		/// @state untested
-		public method projection takes AVector vector0, AVector vector1 returns AVector
-			local AVector result = AVector.create(0.0, 0.0, 0.0)
+		public method projection takes thistype vector0, thistype vector1 returns thistype
+			local thistype result = thistype.create(0.0, 0.0, 0.0)
 			call result.copy(vector0)
 			call result.project(vector1)
 			return result
