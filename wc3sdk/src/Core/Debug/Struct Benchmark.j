@@ -47,7 +47,7 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 		public method start takes nothing returns nothing
 			set this.m_isRunning = true
 			set this.m_time = 0.0
-			if (Asl.usingJapi()) then
+			if (Asl.useJapi()) then
 				//set this.m_stopWatch = StopWatchCreate()
 			else
 				call TimerStart(this.m_timer, 99999.0, false, null)
@@ -56,7 +56,7 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 		
 		public method stop takes nothing returns nothing
 			set this.m_isRunning = false
-			if (Asl.usingJapi()) then
+			if (Asl.useJapi()) then
 				//set this.m_time = 1000 * StopWatchMark(this.m_stopWatch)
 				//call StopWatchDestroy(this.m_stopWatch)
 				set this.m_stopWatch = -1
@@ -77,7 +77,7 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 			//members
 			set this.m_isRunning = false
 			set this.m_time = 0
-			if (Asl.usingJapi()) then
+			if (Asl.useJapi()) then
 				set this.m_stopWatch = -1 //0?
 			else
 				set this.m_timer = CreateTimer()
@@ -92,7 +92,7 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 			//static members
 			call thistype.m_benchmarks.erase(this.m_index)
 			//members
-			if (Asl.usingJapi() and this.m_stopWatch != -1) then
+			if (Asl.useJapi() and this.m_stopWatch != -1) then
 				//call StopWatchDestroy(this.m_stopWatch)
 			else
 				call DestroyTimer(this.m_timer)

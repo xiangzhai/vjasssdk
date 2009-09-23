@@ -125,7 +125,7 @@ library AStructSystemsCharacterFight requires ALibraryCoreDebugMisc, AStructCore
 		* @param angle 20.0
 		*/
 		public static method init takes boolean useFps, string order, real time, string hitAnimation, real angle returns nothing
-			debug if (useFps and not Asl.usingRtc()) then
+			debug if (useFps and not Asl.useRtc()) then
 				debug call thistype.staticPrint("FPS is enabled but RtC isn't.")
 			debug endif
 			//static start members

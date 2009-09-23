@@ -457,7 +457,7 @@ library AStructSystemsCharacterMovement requires ALibraryCoreDebugMisc, AStructC
 		/// @param angle 90.0
 		/// @param stopWhileStanding false //If no key is pressed the
 		public static method init takes boolean useFps, integer fpsKeyMoveForward, integer fpsKeyMoveBackward, integer fpsKeyTurnRight, integer fpsKeyTurnLeft, real refreshRate, real speed, real angle, boolean stopWhileStanding returns nothing
-			debug if (useFps and not Asl.usingRtc()) then
+			debug if (useFps and not Asl.useRtc()) then
 				debug call thistype.staticPrint("FPS is enabled but RtC isn't.")
 			debug endif
 			//static start members

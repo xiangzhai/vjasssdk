@@ -1,3 +1,6 @@
+2009-09-23 Tamino Dauth <tamino@cdauth.de>
+* Renamed method usingJapi and usingRtc to useJapi and useRtc.
+
 2009-09-22 Tamino Dauth <tamino@cdauth.de>
 * Struct AVector is called AVector3 now.
 
