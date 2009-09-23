@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "normals.hpp"
+#include "scaling0.hpp"
 
 namespace wc3lib
 {
@@ -26,11 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+Scaling0::Scaling0(class Mdlx *mdlx) : m_mdlx(mdlx)
 {
 }
 
-Normals::~Normals()
+Scaling0::~Scaling0()
+{
+}
+
+void Scaling0::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Scaling0::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Scaling0::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Scaling0::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

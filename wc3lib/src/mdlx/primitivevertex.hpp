@@ -34,11 +34,11 @@ namespace mdlx
 
 class Mdlx;
 
-class PrimitveVertex
+class PrimitiveVertex
 {
 	public:
-		PrimitveVertex(class Mdlx *mdlx);
-		virtual ~PrimitveVertex();
+		PrimitiveVertex(class Mdlx *mdlx);
+		virtual ~PrimitiveVertex();
 
 		class Mdlx* mdlx() const;
 		short triangle() const;
@@ -53,12 +53,12 @@ class PrimitveVertex
 		short m_triangle;
 };
 
-inline class Mdlx* PrimitveVertex::mdlx() const
+inline class Mdlx* PrimitiveVertex::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline short PrimitveVertex::triangle() const
+inline short PrimitiveVertex::triangle() const
 {
 	return this->m_triangle;
 }

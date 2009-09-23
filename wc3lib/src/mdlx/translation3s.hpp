@@ -18,11 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_SCALING_HPP
-#define WC3LIB_MDLX_SCALING_HPP
+#ifndef WC3LIB_MDLX_TRANSLATION3S_HPP
+#define WC3LIB_MDLX_TRANSLATION3S_HPP
 
 #include <fstream>
+#include <list>
 
+#include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -33,24 +35,27 @@ namespace mdlx
 {
 
 class Mdlx;
+class Translation3;
 
-class Scaling
+//KTAT, like KGSC (Scalings)
+class Translation3s : public MdxBlock
 {
 	public:
-		Scaling(class Mdlx *mdlx);
-		virtual ~Scaling();
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
+
+		Translation3s(class Mdlx *mdlx);
+		virtual ~Translation3s();
 
 		class Mdlx* mdlx() const;
-		long32 frame() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
-		float32 inTanX() const;
-		float32 inTanY() const;
-		float32 inTanZ() const;
-		float32 outTanX() const;
-		float32 outTanY() const;
-		float32 outTanZ() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Translation3*> translations() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
@@ -59,67 +64,29 @@ class Scaling
 
 	protected:
 		class Mdlx *m_mdlx;
-		long32	m_frame;
-		float32	m_x, m_y, m_z;
-		//if (LineType > 1) {
-		float32	m_inTanX, m_inTanY, m_inTanZ;
-		float32	m_outTanX, m_outTanY, m_outTanZ;
-		//}
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Translation2*> m_translations;
 };
 
-inline class Mdlx* Scaling::mdlx() const
+inline class Mdlx* Translation3s::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 Scaling::frame() const
+inline long32 Translation3s::lineType() const
 {
-	return this->m_frame;
+	return this->m_lineType;
 }
 
-inline float32 Scaling::x() const
+inline long32 Translation3s::globalSequenceId() const
 {
-	return this->m_x;
+	return this->m_globalSequenceId;
 }
 
-inline float32 Scaling::y() const
+inline std::list<class Translation3*> Translation3s::translations() const
 {
-	return this->m_y;
-}
-
-inline float32 Scaling::z() const
-{
-	return this->m_z;
-}
-
-inline float32 Scaling::inTanX() const
-{
-	return this->m_inTanX;
-}
-
-inline float32 Scaling::inTanY() const
-{
-	return this->m_inTanY;
-}
-
-inline float32 Scaling::inTanZ() const
-{
-	return this->m_inTanZ;
-}
-
-inline float32 Scaling::outTanX() const
-{
-	return this->m_outTanX;
-}
-
-inline float32 Scaling::outTanY() const
-{
-	return this->m_outTanY;
-}
-
-inline float32 Scaling::outTanZ() const
-{
-	return this->m_outTanZ;
+	return this->m_translations;
 }
 
 }
@@ -127,3 +94,4 @@ inline float32 Scaling::outTanZ() const
 }
 
 #endif
+

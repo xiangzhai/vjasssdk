@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "normals.hpp"
+#include "matrixgroupcounts.hpp"
 
 namespace wc3lib
 {
@@ -26,11 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+MatrixGroupCounts::MatrixGroupCounts(class Geoset *geoset) : MdxBlock("MTGC"), m_geoset(geoset)
 {
 }
 
-Normals::~Normals()
+MatrixGroupCounts::~MatrixGroupCounts()
+{
+}
+
+void MatrixGroupCounts::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void MatrixGroupCounts::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void MatrixGroupCounts::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void MatrixGroupCounts::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

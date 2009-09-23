@@ -26,9 +26,9 @@
 #include "primitivesizes.hpp"
 #include "primitivevertices.hpp"
 #include "groupvertices.hpp"
+#include "matrixgroupcounts.hpp"
+#include "matrices.hpp"
 /*
-class MatrixGroupCounts;
-class Matrices;
 class Ganimation;
 class TexturePatches;
 */

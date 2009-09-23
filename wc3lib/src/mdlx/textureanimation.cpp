@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include "textureanimation.hpp"
+#include "translation2s.hpp"
+#include "rotation1s.hpp"
+#include "scaling1s.hpp"
 
 namespace wc3lib
 {
@@ -26,12 +29,15 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimation::TextureAnimation(class Mdlx *mdlx) : m_mdlx(mdlx)
+TextureAnimation::TextureAnimation(class Mdlx *mdlx) : m_mdlx(mdlx), m_translations(new Translation2s(mdlx)), m_rotations(new Rotation1s(mdlx)), m_scalings(new Scaling1s(mdlx))
 {
 }
 
 TextureAnimation::~TextureAnimation()
 {
+	delete this->m_translations;
+	delete this->m_rotations;
+	delete this->m_scalings;
 }
 
 void TextureAnimation::readMdl(std::fstream &fstream) throw (class Exception)
@@ -46,15 +52,24 @@ void TextureAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	fstream << "\tTVertexAnim {\n";
 
-	if ((*iterator)->m_translation != 0)
-		fstream << "\t\t(Translation { " << (*iterator)->translation->x << ", " << (*iterator)->translation->y << ", " << (*iterator)->translation->y << " })\n";
+	if (this->m_translations != 0)
+	{
+		class Translation2 *translation = *this->m_translations->translations().begin();
+		fstream << "\t\t(Translation { " << translation->x() << ", " << translation->y() << ", " << translation->z() << " })\n";
+	}
 
 	/// @todo InTan and OutTan only appear when Hermite or Bezier. GlobalSeqId only appears when its value is not 0xFFFFFFFF.
-	if ((*iterator)->rotation != 0)
-		fstream << "\t\t(Rotation { " << (*iterator)->rotation->a << ", " << (*iterator)->rotation->b << ", " << (*iterator)->rotation->c << ", " << (*iterator)->rotation->d << " })\n";
-
-	if ((*iterator)->scaling != 0)
-		fstream << "\t\t(Scaling { " << (*iterator)->scaling->x << ", " << (*iterator)->scaling->y << ", " << (*iterator)->scaling->y << " })\n";
+	if (this->m_rotations != 0)
+	{
+		class Rotation1 *rotation = *this->m_rotations->rotations().begin();
+		fstream << "\t\t(Rotation { " << rotation->a() << ", " << rotation->b() << ", " << rotation->c() << ", " << rotation->d() << " })\n";
+	}
+		
+	if (this->m_scalings != 0)
+	{
+		class Scaling1 *scaling = *this->m_scalings->scalings().begin();
+		fstream << "\t\t(Scaling { " << scaling->x() << ", " << scaling->y() << ", " << scaling->z() << " })\n";
+	}
 
 	fstream << "\t}\n";
 }

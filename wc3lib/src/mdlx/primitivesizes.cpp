@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveSizes::PrimitiveSizes(class Geoset *geoset) : MdlxBlock("PCNT"), m_geoset(geoset)
+PrimitiveSizes::PrimitiveSizes(class Geoset *geoset) : MdxBlock("PCNT"), m_geoset(geoset)
 {
 }
 

@@ -56,6 +56,8 @@ void Model::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	fstream << "Model " << this->m_name << "{\n";
 
+/*
+	mdlx stuff
 	if (this->mdlx()->geosets()->geosets().size() > 0)
 		fstream << "\tNumGeosets " << this->mdlx()->geosets()->geosets().size() << ",\n";
 
@@ -85,7 +87,8 @@ void Model::writeMdl(std::fstream &fstream) throw (class Exception)
 
 	if (this->mdlx()->events()->events().size() > 0)
 		fstream << "\tNumEvents " << this->mdlx()->events()->events().size() << ",\n";
-
+*/
+	
 	fstream << "\tBlendTime " << this->blendTime() << ",\n";
 
 	if (this->minExtX() != 0.0 || this->minExtY() != 0.0 || this->minExtZ() != 0.0)

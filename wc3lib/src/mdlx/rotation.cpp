@@ -34,7 +34,7 @@ Rotation::~Rotation()
 {
 }
 
-void Normal::readMdl(std::fstream &fstream) throw (class Exception)
+void Rotation::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 

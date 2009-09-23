@@ -55,7 +55,7 @@ class Translation0s : public MdxBlock
 		class Mdlx* mdlx() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
-		std::list<class Translation*> translations() const;
+		std::list<class Translation0*> translations() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);

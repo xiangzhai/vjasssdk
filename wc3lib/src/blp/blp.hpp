@@ -87,8 +87,8 @@ class Blp
 		dword width() const;
 		dword height() const;
 
-		void read(std::fstream &fstream, enum Format format) throw (Exception);
-		void readBlp(std::fstream &fstream) throw (Exception);
+		void read(std::fstream &fstream, enum Format format) throw (class Exception);
+		void readBlp(std::fstream &fstream) throw (class Exception);
 		void write(std::fstream &fstream, enum Format format);
 		void writeBlp(std::fstream &fstream);
 

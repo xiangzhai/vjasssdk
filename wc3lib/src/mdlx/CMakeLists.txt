@@ -35,6 +35,10 @@ set(wc3lib_MDLX_SRC
 	lights.cpp
 	material.cpp
 	materials.cpp
+	matrices.cpp
+	matrix.cpp
+	matrixgroupcount.cpp
+	matrixgroupcounts.cpp
 	mdlx.cpp
 	mdxblock.cpp
 	model.cpp
@@ -56,8 +60,8 @@ set(wc3lib_MDLX_SRC
 	ribbonemitter.cpp
 	ribbonemitters.cpp
 	rotation.cpp
-	scaling.cpp
-	scalings.cpp
+	scaling0.cpp
+	scaling0s.cpp
 	segmentcolor.cpp
 	sequence.cpp
 	sequences.cpp

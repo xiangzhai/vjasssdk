@@ -1,0 +1,16 @@
+wc3lib class name	MDX block name
+Visibility0s		KATV
+Visibility0s		KLAV
+Visibility0s		KP2V
+Visibility0s		KPEV
+Visibility0s		KRVS
+Color0s			KGAC
+Color1s			KLAC
+Rotation0s		KGRT
+Rotation1s		KTAR
+Scaling0s		KGSC
+Scaling1s		KTAS
+Translation0s		KCTR
+Translation1s		KGTR
+Translation2s		KTAT
+Translation3s		KTTR

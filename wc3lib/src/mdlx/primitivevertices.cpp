@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveVertices::PrimitiveVertices(class Geoset *geoset) : MdlxBlock("PVTX"), m_geoset(geoset)
+PrimitiveVertices::PrimitiveVertices(class Geoset *geoset) : MdxBlock("PVTX"), m_geoset(geoset)
 {
 }
 

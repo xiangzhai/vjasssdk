@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveTypes::PrimitiveTypes(class Geoset *geoset) : MdlxBlock("PTYP"), m_geoset(geoset)
+PrimitiveTypes::PrimitiveTypes(class Geoset *geoset) : MdxBlock("PTYP"), m_geoset(geoset)
 {
 }
 

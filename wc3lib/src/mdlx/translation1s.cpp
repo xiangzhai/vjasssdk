@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "normals.hpp"
+#include "translation1s.hpp"
 
 namespace wc3lib
 {
@@ -26,11 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+Translation1s::Translation1s(class Mdlx *mdlx) : MdxBlock("KGTR"), m_mdlx(mdlx)
 {
 }
 
-Normals::~Normals()
+Translation1s::Translation1s()
+{
+}
+
+void Translation1s::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Translation1s::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Translation1s::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Translation1s::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

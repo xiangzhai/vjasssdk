@@ -18,7 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "normals.hpp"
+#ifndef WC3LIB_MDLX_TRANSLATION1S_HPP
+#define WC3LIB_MDLX_TRANSLATION1S_HPP
+
+#include <fstream>
+#include <list>
+
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -26,14 +34,64 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+class Mdlx;
+class Translation1;
+
+//KGTR, like KGSC (Scalings)
+class Translation1s : public MdxBlock
 {
-}
+	public:
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
 
-Normals::~Normals()
+		Translation1s(class Mdlx *mdlx);
+		virtual ~Translation1s();
+
+		class Mdlx* mdlx() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Translation1*> translations() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class Mdlx *m_mdlx;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Translation1*> m_translations;
+};
+
+inline class Mdlx* Translation1s::mdlx() const
 {
+	return this->m_mdlx;
+}
+
+inline long32 Translation1s::lineType() const
+{
+	return this->m_lineType;
+}
+
+inline long32 Translation1s::globalSequenceId() const
+{
+	return this->m_globalSequenceId;
+}
+
+inline std::list<class Translation1*> Translation1s::translations() const
+{
+	return this->m_translations;
 }
 
 }
 
 }
+
+#endif
+

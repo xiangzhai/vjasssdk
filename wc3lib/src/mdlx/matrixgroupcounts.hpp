@@ -18,7 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "normals.hpp"
+#ifndef WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
+#define WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
+
+#include <fstream>
+#include <list>
+
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -26,14 +34,41 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+class Geoset;
+class MatrixGroupCount;
+
+//MTGC
+class MatrixGroupCounts : public MdxBlock
 {
-}
+	public:
+		MatrixGroupCounts(class Geoset *geoset);
+		virtual ~MatrixGroupCounts();
 
-Normals::~Normals()
+		class Geoset* geoset() const;
+		std::list<class MatrixGroupCount*> matrixGroupCounts() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class Geoset *m_geoset;
+		std::list<class MatrixGroupCount*> m_matrixGroupCounts;
+};
+
+inline class Geoset* MatrixGroupCounts::geoset() const
 {
+	return this->m_geoset;
+}
+
+inline std::list<class MatrixGroupCount*> MatrixGroupCounts::matrixGroupCounts() const
+{
+	return this->m_matrixGroupCounts;
 }
 
 }
 
 }
+
+#endif

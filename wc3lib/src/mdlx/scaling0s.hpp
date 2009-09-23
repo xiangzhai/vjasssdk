@@ -18,7 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "normals.hpp"
+#ifndef WC3LIB_MDLX_SCALING0S_HPP
+#define WC3LIB_MDLX_SCALING0S_HPP
+
+#include <fstream>
+#include <list>
+
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -26,14 +34,63 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+class Mdlx;
+class Scaling0;
+
+//KGSC
+class Scaling0s : public MdxBlock
 {
-}
+	public:
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
 
-Normals::~Normals()
+		Scaling0s(class Mdlx *mdlx);
+		virtual ~Scaling0s();
+
+		class Mdlx* mdlx() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Scaling0*> scalings() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class Mdlx *m_mdlx;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Scaling0*> m_scalings;
+};
+
+inline class Mdlx* Scaling0s::mdlx() const
 {
+	return this->m_mdlx;
+}
+
+inline long32 Scaling0s::lineType() const
+{
+	return this->m_lineType;
+}
+
+inline long32 Scaling0s::globalSequenceId() const
+{
+	return this->m_globalSequenceId;
+}
+
+inline std::list<class Scaling0*> Scaling0s::scalings() const
+{
+	return this->m_scalings;
 }
 
 }
 
 }
+
+#endif

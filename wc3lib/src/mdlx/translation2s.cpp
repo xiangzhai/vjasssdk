@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "scaling.hpp"
+#include "translation2s.hpp"
 
 namespace wc3lib
 {
@@ -26,27 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scaling::Scaling(class Mdlx *mdlx) : m_mdlx(mdlx)
+Translation2s::Translation2s(class Mdlx *mdlx) : MdxBlock("KTAT"), m_mdlx(mdlx)
 {
 }
 
-Scaling::~Scaling()
+Translation2s::Translation2s()
 {
 }
 
-void Scaling::readMdl(std::fstream &fstream) throw (class Exception)
+void Translation2s::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling::readMdx(std::fstream &fstream) throw (class Exception)
+void Translation2s::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling::writeMdl(std::fstream &fstream) throw (class Exception)
+void Translation2s::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling::writeMdx(std::fstream &fstream) throw (class Exception)
+void Translation2s::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

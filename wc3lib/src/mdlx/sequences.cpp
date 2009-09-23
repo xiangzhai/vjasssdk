@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "sequences.hpp"
+#include "sequence.hpp"
 
 namespace wc3lib
 {
@@ -58,12 +59,12 @@ void Sequences::writeMdl(std::fstream &fstream) throw (class Exception)
 			fstream << "\t\tNonLooping,\n";
 
 		if ((*iterator)->moveSpeed() != 0.0)
-			fstream << "\t\tMoveSpeed " << (*iterator)->moveSpeed << ",\n";
+			fstream << "\t\tMoveSpeed " << (*iterator)->moveSpeed() << ",\n";
 
 		if ((*iterator)->rarity() != 0.0)
-			fstream << "\t\tRarity " << (*iterator)->rarity << ",\n";
+			fstream << "\t\tRarity " << (*iterator)->rarity() << ",\n";
 
-		if ((*iterator)->minExtX() != 0.0 || (*iterator)->minExtY() != 0.0 || (*iterator)->minExtZ != 0.0)
+		if ((*iterator)->minExtX() != 0.0 || (*iterator)->minExtY() != 0.0 || (*iterator)->minExtZ() != 0.0)
 			fstream << "\t\tMinimumExtent { " << (*iterator)->minExtX() << ", " << (*iterator)->minExtY() << ", " << (*iterator)->minExtZ() << " },\n";
 
 		if ((*iterator)->maxExtX() != 0.0 || (*iterator)->maxExtY() != 0.0 || (*iterator)->maxExtZ() != 0.0)

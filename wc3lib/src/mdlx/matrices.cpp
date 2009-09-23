@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "normals.hpp"
+#include "matrices.hpp"
 
 namespace wc3lib
 {
@@ -26,11 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+Matrices::Matrices(class Geoset *geoset) : MdxBlock("MATS"), m_geoset(geoset)
 {
 }
 
-Normals::~Normals()
+Matrices::~Matrices()
+{
+}
+
+void Matrices::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Matrices::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Matrices::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Matrices::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
