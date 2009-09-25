@@ -30,7 +30,7 @@ Translation2s::Translation2s(class Mdlx *mdlx) : MdxBlock("KTAT"), m_mdlx(mdlx)
 {
 }
 
-Translation2s::Translation2s()
+Translation2s::~Translation2s()
 {
 }
 

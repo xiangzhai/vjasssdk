@@ -66,7 +66,7 @@ class Translation3s : public MdxBlock
 		class Mdlx *m_mdlx;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Translation2*> m_translations;
+		std::list<class Translation3*> m_translations;
 };
 
 inline class Mdlx* Translation3s::mdlx() const

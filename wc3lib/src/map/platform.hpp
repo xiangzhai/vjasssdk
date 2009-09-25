@@ -21,6 +21,8 @@
 #ifndef WC3LIB_MAP_PLATFORM_HPP
 #define WC3LIB_MAP_PLATFORM_hPP
 
+#include <stdint.h>
+
 namespace wc3lib
 {
 
@@ -42,7 +44,7 @@ typedef int32_t int32;
 * They are close to the C++ signed short but their range is from -16384 to 16383. It means the 2 highest bit are free of use for a flag for example.
 * Size: 2 bytes
 */
-typedef short short16;
+typedef int16_t short16;
 
 /**
 * Floats
@@ -60,7 +62,7 @@ typedef float float32;
 * Size (array of chars): usually 4 bytes
 */
 typedef char char8;
-typedef char[4] char8Array;
+//typedef char[4] char8Array;
 
 }
 

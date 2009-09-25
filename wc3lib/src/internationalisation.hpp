@@ -18,25 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PLATFORM_HPP
-#define WC3LIB_MDLX_PLATFORM_HPP
+#ifndef WC3LIB_INTERNATIONALISATION_HPP
+#define WC3LIB_INTERNATIONALISATION_HPP
 
-#include <stdint.h>
+//preparation for gettext
+#include <libintl.h>
+#include <locale.h>
+#define _(string) gettext(string)
 
-namespace wc3lib
-{
-
-namespace mdlx
-{
-
-typedef float float32;
-//typedef short short32; @todo undefined length?!
-typedef int32_t long32;
-typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
-typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?
-
-}
-
-}
-
-#endif 
+#endif

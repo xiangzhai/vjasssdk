@@ -34,6 +34,22 @@ PrimitiveVertices::~PrimitiveVertices()
 {
 }
 
+void PrimitiveVertices::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void PrimitiveVertices::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void PrimitiveVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
 }
 
 }

@@ -26,11 +26,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-Vertices::Vertices(class Geoset *geoset) : MdlxBlock("VRTX"), m_geoset(geoset)
+Vertices::Vertices(class Geoset *geoset) : MdxBlock("VRTX"), m_geoset(geoset)
 {
 }
 
 Vertices::~Vertices()
+{
+}
+
+void Vertices::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Vertices::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Vertices::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Vertices::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

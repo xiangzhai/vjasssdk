@@ -18,10 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PLATFORM_HPP
-#define WC3LIB_MDLX_PLATFORM_HPP
-
-#include <stdint.h>
+#include "scaling1s.hpp"
 
 namespace wc3lib
 {
@@ -29,14 +26,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-typedef float float32;
-//typedef short short32; @todo undefined length?!
-typedef int32_t long32;
-typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
-typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?
+Scaling1s::Scaling1s(class Mdlx *mdlx) : MdxBlock("KTAS"), m_mdlx(mdlx)
+{
+}
 
+Scaling1s::~Scaling1s()
+{
+}
+
+void Scaling1s::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Scaling1s::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Scaling1s::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Scaling1s::writeMdx(std::fstream &fstream) throw (class Exception)
+{
 }
 
 }
 
-#endif 
+}

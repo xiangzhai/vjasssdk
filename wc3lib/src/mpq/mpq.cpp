@@ -81,7 +81,7 @@ struct WeakDigitalSignature
 struct StringDigitalSignature
 {
 	char magic[4];
-	int2048 signature;
+//	int2048 signature;
 };
 
 void Mpq::open(std::ifstream &fstream, enum Mode mode) throw (class Exception)

@@ -34,6 +34,22 @@ Normals::~Normals()
 {
 }
 
+void Normals::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Normals::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Normals::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Normals::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
 }
 
 }

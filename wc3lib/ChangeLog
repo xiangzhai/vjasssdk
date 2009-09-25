@@ -1,3 +1,9 @@
+2009-09-25 Tamino Dauth <tamino@cdauth.de>
+* Improved several code files of mdlx library.
+* Changed several platform-specific data types.
+* Improved mdlxtest.
+* Added file "src/internationalisation.hpp".
+
 2009-09-23 Tamino Dauth <tamino@cdauth.de>
 * Improved several code files of mdlx library.
 * Added several code files to mdlx library.

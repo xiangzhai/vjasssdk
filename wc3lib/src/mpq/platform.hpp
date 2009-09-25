@@ -18,8 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef TEST_MPQ_PLATFORM_HPP
-#define TEST_MPQ_PLATFORM_HPP
+#ifndef WC3LIB_MPQ_PLATFORM_HPP
+#define WC3LIB_MPQ_PLATFORM_HPP
+
+#include <stdint.h>
 
 namespace wc3lib
 {
@@ -31,7 +33,7 @@ typedef int8_t int8;
 typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t int64;
-typedef int2048 int2048; /// @todo WTF?!?!?!!
+//typedef int2048 int2048; /// @todo WTF?!?!?!!
 
 }
 

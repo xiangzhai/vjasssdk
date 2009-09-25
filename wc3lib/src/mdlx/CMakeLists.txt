@@ -59,9 +59,14 @@ set(wc3lib_MDLX_SRC
 	primitivevertices.cpp
 	ribbonemitter.cpp
 	ribbonemitters.cpp
-	rotation.cpp
+	rotation0.cpp
+	rotation0s.cpp
+	rotation1.cpp
+	rotation1s.cpp
 	scaling0.cpp
 	scaling0s.cpp
+	scaling1.cpp
+	scaling1s.cpp
 	segmentcolor.cpp
 	sequence.cpp
 	sequences.cpp
@@ -74,6 +79,12 @@ set(wc3lib_MDLX_SRC
 	texturevertex.cpp
 	translation0.cpp
 	translation0s.cpp
+	translation1.cpp
+	translation1s.cpp
+	translation2.cpp
+	translation2s.cpp
+	translation3.cpp
+	translation3s.cpp
 	version.cpp
 	vertex.cpp
 	vertices.cpp

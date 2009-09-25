@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PLATFORM_HPP
-#define WC3LIB_MDLX_PLATFORM_HPP
+#ifndef WC3LIB_MDLX_TRANSLATION3_HPP
+#define WC3LIB_MDLX_TRANSLATION3_HPP
 
-#include <stdint.h>
+#include "scaling0.hpp"
 
 namespace wc3lib
 {
@@ -29,14 +29,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-typedef float float32;
-//typedef short short32; @todo undefined length?!
-typedef int32_t long32;
-typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
-typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?
+class Translation3 : public Scaling0
+{
+};
 
 }
 
 }
 
-#endif 
+#endif

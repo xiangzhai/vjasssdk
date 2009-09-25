@@ -30,24 +30,23 @@ CollisionShape::CollisionShape(class Mdlx *mdlx) : Object(mdlx)
 {
 }
 
-
 CollisionShape::~CollisionShape()
 {
 }
 
-void readMdl(std::fstream &fstream) throw (class Exception)
+void CollisionShape::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void readMdx(std::fstream &fstream) throw (class Exception)
+void CollisionShape::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void writeMdl(std::fstream &fstream) throw (class Exception)
+void CollisionShape::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void writeMdx(std::fstream &fstream) throw (class Exception)
+void CollisionShape::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

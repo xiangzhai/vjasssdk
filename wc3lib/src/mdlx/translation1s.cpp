@@ -30,7 +30,7 @@ Translation1s::Translation1s(class Mdlx *mdlx) : MdxBlock("KGTR"), m_mdlx(mdlx)
 {
 }
 
-Translation1s::Translation1s()
+Translation1s::~Translation1s()
 {
 }
 

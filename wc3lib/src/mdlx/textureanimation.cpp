@@ -20,8 +20,11 @@
 
 #include "textureanimation.hpp"
 #include "translation2s.hpp"
+#include "translation2.hpp"
 #include "rotation1s.hpp"
+#include "rotation1.hpp"
 #include "scaling1s.hpp"
+#include "scaling1.hpp"
 
 namespace wc3lib
 {
@@ -62,7 +65,8 @@ void TextureAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
 	if (this->m_rotations != 0)
 	{
 		class Rotation1 *rotation = *this->m_rotations->rotations().begin();
-		fstream << "\t\t(Rotation { " << rotation->a() << ", " << rotation->b() << ", " << rotation->c() << ", " << rotation->d() << " })\n";
+		/// @todo @class Rotation1 inherits from Scaling0 which does not have members a, b, c and d. @class Rotation0 does have these values but isn't the right data type considering the specification.
+		//fstream << "\t\t(Rotation { " << rotation->a() << ", " << rotation->b() << ", " << rotation->c() << ", " << rotation->d() << " })\n";
 	}
 		
 	if (this->m_scalings != 0)

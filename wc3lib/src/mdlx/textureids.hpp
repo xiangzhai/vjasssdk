@@ -84,7 +84,7 @@ inline long32 TextureIds::globalSequenceId() const
 	return this->m_globalSequenceId;
 }
 
-inline std::list<class TextureId*> TextureIds::alphas() const
+inline std::list<class TextureId*> TextureIds::textureIds() const
 {
 	return this->m_textureIds;
 }

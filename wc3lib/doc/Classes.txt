@@ -1,4 +1,9 @@
 wc3lib class name	MDX block name
+Mdlx			MDLX
+Attachments		ATCH
+Bones			BONE
+Cameras			CAMS
+CollisionShapes		CLID
 Visibility0s		KATV
 Visibility0s		KLAV
 Visibility0s		KP2V

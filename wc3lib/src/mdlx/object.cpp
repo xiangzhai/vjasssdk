@@ -34,6 +34,22 @@ Object::~Object()
 {
 }
 
+void Object::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Object::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Object::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Object::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
 }
 
 }

@@ -30,7 +30,7 @@ Translation0s::Translation0s(class Mdlx *mdlx) : MdxBlock("KCTR"), m_mdlx(mdlx)
 {
 }
 
-Translation0s::Translation0s()
+Translation0s::~Translation0s()
 {
 }
 

@@ -18,6 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <sstream>
+
+#include <boost/tokenizer.hpp>
+
 #include "version.hpp"
 
 namespace wc3lib

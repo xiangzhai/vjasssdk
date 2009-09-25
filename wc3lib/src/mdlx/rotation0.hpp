@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_NORMAL_HPP
-#define WC3LIB_MDLX_NORMAL_HPP
+#ifndef WC3LIB_MDLX_ROTATION0_HPP
+#define WC3LIB_MDLX_ROTATION0_HPP
 
 #include <fstream>
 
@@ -32,11 +32,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Rotation
+class Mdlx;
+
+class Rotation0
 {
 	public:
-		Rotation(class Mdlx *mdlx);
-		virtual ~Rotation();
+		Rotation0(class Mdlx *mdlx);
+		virtual ~Rotation0();
 
 		class Mdlx* mdlx() const;
 		float32 frame() const;
@@ -69,72 +71,72 @@ class Rotation
 		//}
 };
 
-class Mdlx* Rotation::mdlx() const
+class Mdlx* Rotation0::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-float32 Rotation::frame() const
+float32 Rotation0::frame() const
 {
 	return this->m_frame;
 }
 
-float32 Rotation::a() const
+float32 Rotation0::a() const
 {
 	return this->m_a;
 }
 
-float32 Rotation::b() const
+float32 Rotation0::b() const
 {
 	return this->m_b;
 }
 
-float32 Rotation::c() const
+float32 Rotation0::c() const
 {
 	return this->m_c;
 }
 
-float32 Rotation::d() const
+float32 Rotation0::d() const
 {
 	return this->m_d;
 }
 
-float32 Rotation::inTanA() const
+float32 Rotation0::inTanA() const
 {
 	return this->m_inTanA;
 }
 
-float32 Rotation::inTanB() const
+float32 Rotation0::inTanB() const
 {
 	return this->m_inTanB;
 }
 
-float32 Rotation::inTanC() const
+float32 Rotation0::inTanC() const
 {
 	return this->m_inTanC;
 }
 
-float32 Rotation::inTanD() const
+float32 Rotation0::inTanD() const
 {
 	return this->m_inTanD;
 }
 
-float32 Rotation::outTanA() const
+float32 Rotation0::outTanA() const
 {
 	return this->m_outTanA;
 }
 
-float32 Rotation::outTanB() const
+float32 Rotation0::outTanB() const
 {
 	return this->m_outTanB;
 }
 
-float32 Rotation::outTanC() const
+float32 Rotation0::outTanC() const
 {
 	return this->m_outTanC;
 }
 
-float32 Rotation::outTanD() const
+float32 Rotation0::outTanD() const
 {
 	return this->m_outTanD;
 }

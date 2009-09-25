@@ -21,11 +21,7 @@
 #ifndef WC3LIB_MDLX_TRANSLATION0_HPP
 #define WC3LIB_MDLX_TRANSLATION0_HPP
 
-#include <fstream>
-
-#include "scaling.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "scaling0.hpp"
 
 namespace wc3lib
 {
@@ -33,9 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-
-class Translation0 : public Scaling
+class Translation0 : public Scaling0
 {
 };
 

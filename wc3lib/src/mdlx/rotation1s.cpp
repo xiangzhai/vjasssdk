@@ -18,10 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PLATFORM_HPP
-#define WC3LIB_MDLX_PLATFORM_HPP
-
-#include <stdint.h>
+#include "rotation1s.hpp"
 
 namespace wc3lib
 {
@@ -29,14 +26,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-typedef float float32;
-//typedef short short32; @todo undefined length?!
-typedef int32_t long32;
-typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
-typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?
+Rotation1s::Rotation1s(class Mdlx *mdlx) : MdxBlock("KTAR"), m_mdlx(mdlx)
+{
+}
 
+Rotation1s::~Rotation1s()
+{
+}
+
+void Rotation1s::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Rotation1s::readMdx(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Rotation1s::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Rotation1s::writeMdx(std::fstream &fstream) throw (class Exception)
+{
 }
 
 }
 
-#endif 
+}

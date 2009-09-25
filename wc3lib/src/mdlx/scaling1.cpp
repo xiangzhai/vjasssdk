@@ -18,37 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "rotation.hpp"
+#include "scaling1.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-Rotation::Rotation(class Mdlx *mdlx) : m_mdlx(mdlx)
-{
-}
-
-Rotation::~Rotation()
-{
-}
-
-void Rotation::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Rotation::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Rotation::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Rotation::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-}
 
 }
 
