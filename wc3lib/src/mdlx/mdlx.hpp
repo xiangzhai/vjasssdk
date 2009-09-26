@@ -23,6 +23,7 @@
 
 #include <fstream>
 
+#include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -58,7 +59,7 @@ class CollisionShapes;
 * @todo OBJ == ?!
 * @todo KATV == float?!
 */
-class Mdlx
+class Mdlx : public MdxBlock
 {
 	public:
 		/*
@@ -145,14 +146,13 @@ class Mdlx
 		class Events* events() const;
 		class CollisionShapes* collisionShapes() const;
 
-		void readMdx(std::fstream &fstream) throw (class Exception);
 		void readMdl(std::fstream &fstream) throw (class Exception);
-		void readBlend(std::fstream &fstream) throw (class Exception);
-		void read3ds(std::fstream &fstream) throw (class Exception);
-
-		void writeMdx(std::fstream &fstream) throw (class Exception);
 		void writeMdl(std::fstream &fstream) throw (class Exception);
+		void readMdx(std::fstream &fstream) throw (class Exception);
+		void writeMdx(std::fstream &fstream) throw (class Exception);
+		void readBlend(std::fstream &fstream) throw (class Exception);
 		void writeBlend(std::fstream &fstream) throw (class Exception);
+		void read3ds(std::fstream &fstream) throw (class Exception);
 		void write3ds(std::fstream &fstream) throw (class Exception);
 
 	protected:

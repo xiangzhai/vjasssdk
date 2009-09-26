@@ -34,12 +34,13 @@ class Bone : public Object
 	public:
 		Bone(class Mdlx *mdlx);
 		virtual ~Bone();
+		
 		inline long32 geosetId() const;
 		inline long32 geosetAnimationId() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
@@ -60,4 +61,5 @@ inline long32 Bone::geosetAnimationId() const
 }
 
 }
+
 #endif

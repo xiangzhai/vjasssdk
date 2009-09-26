@@ -48,13 +48,9 @@ void Model::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Model::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Model::writeMdl(std::fstream &fstream) throw (class Exception)
 {
-	fstream << "Model " << this->m_name << "{\n";
+	fstream << "Model \"" << this->m_name << "\" {\n";
 
 /*
 	mdlx stuff
@@ -103,8 +99,26 @@ void Model::writeMdl(std::fstream &fstream) throw (class Exception)
 	fstream << "}\n";
 }
 
+void Model::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	MdxBlock::readMdx(fstream);
+	long32 bytes;
+	fstream >> bytes;
+	fstream >> this->m_name;
+	fstream >> this->m_unkown0;
+	fstream >> this->m_boundsRadius;
+	fstream >> this->m_minExtX;
+	fstream >> this->m_minExtY;
+	fstream >> this->m_minExtZ;
+	fstream >> this->m_maxExtX;
+	fstream >> this->m_maxExtY;
+	fstream >> this->m_maxExtZ;
+	fstream >> this->m_blendTime;
+}
+
 void Model::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	MdxBlock::writeMdx(fstream);
 }
 
 }

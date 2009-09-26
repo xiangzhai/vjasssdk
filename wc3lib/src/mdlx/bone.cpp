@@ -48,12 +48,12 @@ void Bone::readMdl(std::fstream &fstream) throw (class Exception)
 	/// @todo FIXME
 }
 
-void Bone::readMdx(std::fstream &fstream) throw (class Exception)
+void Bone::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	/// @todo FIXME
 }
 
-void Bone::writeMdl(std::fstream &fstream) throw (class Exception)
+void Bone::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	/// @todo FIXME
 }

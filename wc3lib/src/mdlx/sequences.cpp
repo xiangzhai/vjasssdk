@@ -27,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Sequences::Sequences(class Mdlx *mdlx) : MdxBlock("SEQS"), m_mdlx(mdlx)
+Sequences::Sequences(class Mdlx *mdlx) : MdxBlock("SEQS"), m_mdlx(mdlx), m_sequences(std::list<class Sequence*>())
 {
 }
 
@@ -36,10 +36,6 @@ Sequences::~Sequences()
 }
 
 void Sequences::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Sequences::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
@@ -79,8 +75,14 @@ void Sequences::writeMdl(std::fstream &fstream) throw (class Exception)
 	fstream << "}\n";
 }
 
+void Sequences::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	MdxBlock::readMdx(fstream);
+}
+
 void Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	MdxBlock::writeMdx(fstream);
 }
 
 }

@@ -39,8 +39,8 @@ class Version : public MdxBlock
 		long32 version() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 		static const long32 currentVersion = 0x20030000;

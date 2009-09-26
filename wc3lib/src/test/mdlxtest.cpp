@@ -147,22 +147,46 @@ int main(int argc, char *argv[])
 				return EXIT_FAILURE;
 			}
 			
-			optionIformat = argv[i];
+			optionOformat = argv[i];
 		}
 		else
 			optionFiles.push_back(argv[i]);
 	}
 	
-	static std::string outputPath = "test.mdl";
+	if (optionIformat.empty())
+	{
+		std::cerr << _("Input format was not defined.") << std::endl;
+		
+		return EXIT_FAILURE;
+	}
 	
-	std::fstream outputFstream;
+	if (optionOformat.empty())
+	{
+		std::cerr << _("Output format was not defined.") << std::endl;
+		
+		return EXIT_FAILURE;
+	}
+	
+	if (optionFiles.empty())
+	{
+		std::cerr << _("No input files were chosen.") << std::endl;
+		
+		return EXIT_FAILURE;
+	}
+	
 
 	for (std::list<std::string>::iterator iterator = optionFiles.begin(); iterator != optionFiles.end(); ++iterator)
 	{
-		std::fstream inputFstream;
-		inputFstream.open((*iterator).c_str(), std::ifstream::in | std::ifstream::binary);
+		std::cout << "Loop" << std::endl;
 		
-		if (!inputFstream)
+		std::ios_base::openmode openMode = std::ifstream::in;
+		
+		if (optionIformat == "mdx")
+			openMode |= std::ifstream::binary;
+		
+		std::fstream fstream((*iterator).c_str(), openMode);
+		
+		if (!fstream)
 		{
 			fprintf(stderr, _("Error while opening file \"%s\". Continuing with next one.\n"), (*iterator).c_str());
 			
@@ -174,22 +198,61 @@ int main(int argc, char *argv[])
 		try
 		{
 			if (optionIformat == "mdx")
-				mdlx.readMdx(inputFstream);
+				mdlx.readMdx(fstream);
 			else if (optionIformat == "mdl")
-				mdlx.readMdl(inputFstream);
+				mdlx.readMdl(fstream);
 		}
 		catch (class Exception &exception)
 		{
-			fprintf(stderr, _("Error while reading file \"s\":\n \"%s\"\n"), (*iterator).c_str(), exception.what());
+			fprintf(stderr, _("Error while reading file \"%s\":\n \"%s\"\n"), (*iterator).c_str(), exception.what());
+			std::cerr << _("Skiping file.") << std::endl;
+			
+			continue;
 		}
 		
-		inputFstream.close();
-		/// @todo Open file with right extension.
-		/*
-		outputFstream.open("test.mdl", std::ifstream::out | std::ifstream::binary);
-		mdlx.writeMdl(outputFstream);
-		outputFstream.close();
-		*/
+		fstream.close();
+		
+		openMode = std::ifstream::out;
+		std::string extension;
+		
+		if (optionOformat == "mdx")
+		{
+			openMode |= std::ifstream::binary;
+			extension = ".mdx";
+		}
+		else if (optionOformat == "mdl")
+		{
+			extension = ".mdl";
+		}
+		
+		/// @todo Remove old extension.
+		
+		std::string filePath = *iterator + extension;
+		fstream.open(filePath.c_str(), openMode);
+		
+		if (!fstream)
+		{
+			fprintf(stderr, _("Error while opening file \"%s\". Continuing with next one.\n"), filePath.c_str());
+			
+			continue;
+		}
+		
+		try
+		{
+			if (optionOformat == "mdx")
+				mdlx.writeMdx(fstream);
+			else if (optionOformat == "mdl")
+				mdlx.writeMdl(fstream);
+		}
+		catch (class Exception &exception)
+		{
+			fprintf(stderr, _("Error while writing file \"%s\":\n \"%s\"\n"), filePath.c_str(), exception.what());
+			std::cerr << _("Skiping file.") << std::endl;
+			
+			continue;
+		}
+		
+		fstream.close();
 	}
 
 	return EXIT_SUCCESS;

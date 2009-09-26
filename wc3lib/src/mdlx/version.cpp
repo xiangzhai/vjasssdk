@@ -19,10 +19,12 @@
  ***************************************************************************/
 
 #include <sstream>
+#include <cstdio>
 
 #include <boost/tokenizer.hpp>
 
 #include "version.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -75,22 +77,30 @@ void Version::readMdl(std::fstream &fstream) throw (class Exception)
 	}
 }
 
-void Version::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Version::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	fstream <<
 	"// Current FormatVersion is 800\n"
 	"Version {\n"
-	"\tFormatVersion" << this->m_version << ",\n"
+	"\tFormatVersion " << this->m_version << ",\n"
 	"}\n"
 	;
 }
 
+void Version::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	MdxBlock::readMdx(fstream);
+	long32 bytes;
+	fstream >> bytes;
+	fstream >> this->m_version;
+	
+	if (this->m_version != Version::currentVersion)
+		fprintf(stdout, _("Warning: Version %d probably is not supported. Current version is %d.\n"), this->m_version, Version::currentVersion);
+}
+
 void Version::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	MdxBlock::writeMdx(fstream);
 }
 
 }

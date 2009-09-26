@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Mdlx::Mdlx() : m_version(new Version(this)), m_model(new Model(this)), m_sequences(new Sequences(this)), m_globalSequences(new GlobalSequences(this)), m_materials(new Materials(this)), m_textures(new Textures(this)), m_textureAnimations(new TextureAnimations(this)), m_geosets(new Geosets(this)), m_geosetAnimations(new GeosetAnimations(this)), m_bones(new Bones(this)), m_lights(new Lights(this)), m_helpers(new Helpers(this)), m_attachments(new Attachments(this)), m_pivotPoints(new PivotPoints(this)), m_particleEmitters(new ParticleEmitters(this)), m_particleEmitter2s(new ParticleEmitter2s(this)), m_ribbonEmitters(new RibbonEmitters(this)), m_cameras(new Cameras(this)), m_events(new Events(this)), m_collisionShapes(new CollisionShapes(this))
+Mdlx::Mdlx() : MdxBlock("MDLX"), m_version(new Version(this)), m_model(new Model(this)), m_sequences(new Sequences(this)), m_globalSequences(new GlobalSequences(this)), m_materials(new Materials(this)), m_textures(new Textures(this)), m_textureAnimations(new TextureAnimations(this)), m_geosets(new Geosets(this)), m_geosetAnimations(new GeosetAnimations(this)), m_bones(new Bones(this)), m_lights(new Lights(this)), m_helpers(new Helpers(this)), m_attachments(new Attachments(this)), m_pivotPoints(new PivotPoints(this)), m_particleEmitters(new ParticleEmitters(this)), m_particleEmitter2s(new ParticleEmitter2s(this)), m_ribbonEmitters(new RibbonEmitters(this)), m_cameras(new Cameras(this)), m_events(new Events(this)), m_collisionShapes(new CollisionShapes(this))
 {
 
 }
@@ -83,30 +83,6 @@ struct BlendFileBlock
 	int count; /// Number of structure located in this file-block
 };
 
-void Mdlx::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	this->m_version->readMdx(fstream);
-	this->m_model->readMdx(fstream);
-	this->m_sequences->readMdx(fstream);
-	this->m_globalSequences->readMdx(fstream);
-	this->m_materials->readMdx(fstream);
-	this->m_textures->readMdx(fstream);
-	this->m_textureAnimations->readMdx(fstream);
-	this->m_geosets->readMdx(fstream);
-	this->m_geosetAnimations->readMdx(fstream);
-	this->m_bones->readMdx(fstream);
-	this->m_lights->readMdx(fstream);
-	this->m_helpers->readMdx(fstream);
-	this->m_attachments->readMdx(fstream);
-	this->m_pivotPoints->readMdx(fstream);
-	this->m_particleEmitters->readMdx(fstream);
-	this->m_particleEmitter2s->readMdx(fstream);
-	this->m_ribbonEmitters->readMdx(fstream);
-	this->m_cameras->readMdx(fstream);
-	this->m_events->readMdx(fstream);
-	this->m_collisionShapes->readMdx(fstream);
-}
-
 void Mdlx::readMdl(std::fstream &fstream) throw (Exception)
 {
 	this->m_version->readMdl(fstream);
@@ -153,6 +129,72 @@ void Mdlx::writeMdl(std::fstream &fstream) throw (Exception)
 	this->m_cameras->writeMdl(fstream);
 	this->m_events->writeMdl(fstream);
 	this->m_collisionShapes->writeMdl(fstream);
+}
+
+void Mdlx::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	MdxBlock::readMdx(fstream);
+	this->m_version->readMdx(fstream);
+	this->m_model->readMdx(fstream);
+	this->m_sequences->readMdx(fstream);
+	this->m_globalSequences->readMdx(fstream);
+	this->m_materials->readMdx(fstream);
+	this->m_textures->readMdx(fstream);
+	this->m_textureAnimations->readMdx(fstream);
+	this->m_geosets->readMdx(fstream);
+	this->m_geosetAnimations->readMdx(fstream);
+	this->m_bones->readMdx(fstream);
+	this->m_lights->readMdx(fstream);
+	this->m_helpers->readMdx(fstream);
+	this->m_attachments->readMdx(fstream);
+	this->m_pivotPoints->readMdx(fstream);
+	this->m_particleEmitters->readMdx(fstream);
+	this->m_particleEmitter2s->readMdx(fstream);
+	this->m_ribbonEmitters->readMdx(fstream);
+	this->m_cameras->readMdx(fstream);
+	this->m_events->readMdx(fstream);
+	this->m_collisionShapes->readMdx(fstream);
+}
+
+void Mdlx::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	MdxBlock::writeMdx(fstream);
+	this->m_version->writeMdx(fstream);
+	this->m_model->writeMdx(fstream);
+	this->m_sequences->writeMdx(fstream);
+	this->m_globalSequences->writeMdx(fstream);
+	this->m_materials->writeMdx(fstream);
+	this->m_textures->writeMdx(fstream);
+	this->m_textureAnimations->writeMdx(fstream);
+	this->m_geosets->writeMdx(fstream);
+	this->m_geosetAnimations->writeMdx(fstream);
+	this->m_bones->writeMdx(fstream);
+	this->m_lights->writeMdx(fstream);
+	this->m_helpers->writeMdx(fstream);
+	this->m_attachments->writeMdx(fstream);
+	this->m_pivotPoints->writeMdx(fstream);
+	this->m_particleEmitters->writeMdx(fstream);
+	this->m_particleEmitter2s->writeMdx(fstream);
+	this->m_ribbonEmitters->writeMdx(fstream);
+	this->m_cameras->writeMdx(fstream);
+	this->m_events->writeMdx(fstream);
+	this->m_collisionShapes->writeMdx(fstream);
+}
+
+void Mdlx::readBlend(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Mdlx::writeBlend(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Mdlx::read3ds(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void Mdlx::write3ds(std::fstream &fstream) throw (class Exception)
+{
 }
 
 /*

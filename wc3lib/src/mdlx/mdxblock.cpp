@@ -38,14 +38,14 @@ MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional)
 /// @todo Consider optional like in Python script.
 void MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	byte identifier[sizeof(this->m_blockName)];
-	//identifier[4] = '\0';
+	byte identifier[sizeof(this->m_blockName) + 1];
+	identifier[sizeof(this->m_blockName)] = '\0';
 	fstream.read(identifier, sizeof(this->m_blockName));
 
 	if (strcmp(identifier, this->m_blockName) != 0)
 	{
 		char message[50];
-		sprintf(message, "Missing \"%s\" block name.", this->m_blockName);
+		sprintf(message, "Unexptected identifier \"%s\". Missing \"%s\" block name.", identifier, this->m_blockName);
 		throw Exception(message);
 	}
 }

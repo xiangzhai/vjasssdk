@@ -26,16 +26,32 @@ import sys
 
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
+from PyKDE4.kio import *
 
 class MainWindow(KMainWindow):
 
 	openUrl = KUrl();
 
-	def __init__(self, parent=0, f=0):
-		self.fileMenu = KMenu("File", self)
-		self.menuBar().addMenu(self.fileMenu)
-		self.fileMenu.addAction(KStandardAction.openNew(self, fileNew(), self))
-		super(self, parent, f)
+	def __init__(self, parent = 0, f = 0):
+		KMainWindow.__init__(self)
+		fileMenu = KMenu("File", self)
+		self.menuBar().addMenu(fileMenu)
+		fileMenu.addAction(KStandardAction.openNew(self.fileNew, self))
+		fileMenu.addAction(KStandardAction.open(self.fileOpen, self))
+		fileMenu.addAction(KStandardAction.close(self.fileClose, self))
+		fileMenu.addSeparator()
+		fileMenu.addAction(KStandardAction.save(self.fileSave, self))
+		fileMenu.addAction(KStandardAction.saveAs(self.fileSaveAs, self))
+		fileMenu.addAction("Calculate shadows and save map", self, self.fileCalculateShadowsAndSave)
+		fileMenu.addSeparator()
+		fileMenu.addAction("Export script ...", self, self.fileExportScript)
+		fileMenu.addAction("Export mini map ...", self, self.fileExportMinimap)
+		fileMenu.addAction("Export strings ...", self, self.fileExportStrings)
+		fileMenu.addAction("Import strings ...", self, self.fileImportStrings)
+		fileMenu.addSeparator()
+
+		helpMenu = KHelpMenu(self)
+		self.menuBar().addMenu(helpMenu.menu())
 
 	def fileNew(self):
 		print "New file"
@@ -47,6 +63,42 @@ class MainWindow(KMainWindow):
 	def fileClose(self):
 		print "Close file"
 
+	def fileSave(self):
+		print "Save file"
 
+	def fileSaveAs(self):
+		print "Save file as"
+
+	def fileCalculateShadowsAndSave(self):
+		print "Calculate shadows and save file"
+		
+	def fileExportScript(self):
+		print "Export file script"
+	
+	def fileExportMinimap(self):
+		print "Export file minimap"
+	
+	def fileExportStrings(self):
+		print "Export file strings"
+	
+	def fileImportStrings(self):
+		print "Import file strings"
+
+appName     = "editor"
+catalog     = ""
+programName = ki18n("editor")
+version     = "0.1"
+description = ki18n("GUI editor for Warcraft 3 The Frozen Throne formats.")
+license     = KAboutData.License_GPL_V2
+copyright   = ki18n("(c) 2009 Tamino Dauth")
+text        = ki18n("none")
+homePage    = "http://sourceforge.net/projects/vjasssdk/"
+bugEmail    = "barade.barade@web.de"
+
+aboutData   = KAboutData(appName, catalog, programName, version, description,
+                        license, copyright, text, homePage, bugEmail)
+KCmdLineArgs.init(sys.argv, aboutData)
+app = KApplication()
 mainWindow = MainWindow()
 mainWindow.show()
+sys.exit(app.exec_())

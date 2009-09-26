@@ -48,8 +48,8 @@ class Model : public MdxBlock
 		long32 blendTime() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
