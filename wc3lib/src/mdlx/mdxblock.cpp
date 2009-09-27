@@ -20,6 +20,7 @@
 
 //#include <cstdio>
 #include <cstring>
+#include <iostream> //debug
 
 #include "mdxblock.hpp"
 
@@ -41,6 +42,7 @@ void MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 	byte identifier[sizeof(this->m_blockName) + 1];
 	identifier[sizeof(this->m_blockName)] = '\0';
 	fstream.read(identifier, sizeof(this->m_blockName));
+	std::cout << "Read bytes: " << fstream.gcount() << std::endl;
 
 	if (strcmp(identifier, this->m_blockName) != 0)
 	{

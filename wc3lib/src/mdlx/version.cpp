@@ -20,6 +20,7 @@
 
 #include <sstream>
 #include <cstdio>
+#include <iostream> //debug
 
 #include <boost/tokenizer.hpp>
 
@@ -48,7 +49,7 @@ void Version::readMdl(std::fstream &fstream) throw (class Exception)
 	{
 		boost::tokenizer<> tokenizer(line);
 		boost::tokenizer<>::iterator iterator = tokenizer.begin();
-
+		
 		if (iterator == tokenizer.end())
 			throw Exception("Version: Missing tokens.");
 
@@ -56,9 +57,11 @@ void Version::readMdl(std::fstream &fstream) throw (class Exception)
 			continue;
 		else if ((*iterator) == "Version")
 		{
-			++iterator;
+			++iterator; /// @todo Is not {?!
 
-			if ((*iterator) != "{" || iterator == tokenizer.end())
+			if (iterator == tokenizer.end())
+				throw Exception("Version: Missing tokens.");
+			else if ((*iterator) != "{")
 				throw Exception("Version: Syntax error.");
 		}
 		else if ((*iterator) == "FormatVersion")
@@ -92,7 +95,18 @@ void Version::readMdx(std::fstream &fstream) throw (class Exception)
 	MdxBlock::readMdx(fstream);
 	long32 bytes;
 	fstream >> bytes;
+	//fstream.read((char*)bytes, 4);
+	std::cout << "Bytes " << bytes << std::endl;
 	fstream >> this->m_version;
+	std::cout << "Version " << this->m_version << std::endl;
+	/*
+	bytes -= this->m_version;
+	std::cout << "New bytes " << bytes << std::endl;
+	std::cout << "Bytes " << bytes << " Position 0 " << fstream.tellg() << std::endl;
+	fstream.seekg(bytes, std::ios_base::cur); // seek byte rest
+	std::streampos newPosition = fstream.rdbuf()->pubseekoff(bytes, std::ios_base::cur, std::ios_base::in);
+	std::cout << "Position 1 " << newPosition << std::endl;
+	*/
 	
 	if (this->m_version != Version::currentVersion)
 		fprintf(stdout, _("Warning: Version %d probably is not supported. Current version is %d.\n"), this->m_version, Version::currentVersion);

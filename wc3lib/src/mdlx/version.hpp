@@ -43,7 +43,7 @@ class Version : public MdxBlock
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
-		static const long32 currentVersion = 0x20030000;
+		static const long32 currentVersion = 800;
 
 	protected:
 		class Mdlx *m_mdlx;
