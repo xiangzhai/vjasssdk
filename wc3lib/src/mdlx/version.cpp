@@ -20,12 +20,14 @@
 
 #include <sstream>
 #include <cstdio>
+#include <cstdlib>
 #include <iostream> //debug
 
 #include <boost/tokenizer.hpp>
 
 #include "version.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -44,40 +46,50 @@ Version::~Version()
 void Version::readMdl(std::fstream &fstream) throw (class Exception)
 {
 	std::string line;
+	bool gotVersion = false;
 
 	while (std::getline(fstream, line))
 	{
+		if (line.empty())
+			continue;
+		
 		boost::tokenizer<> tokenizer(line);
 		boost::tokenizer<>::iterator iterator = tokenizer.begin();
 		
 		if (iterator == tokenizer.end())
-			throw Exception("Version: Missing tokens.");
+			throw Exception(_("Version: Missing tokens."));
 
-		if ((*iterator) == "//")
+		if ((*iterator) == "//" || ((*iterator).length() > 2 && (*iterator).substr(0, 2) == "//"))
 			continue;
 		else if ((*iterator) == "Version")
 		{
+			std::cout << "Is version " << *iterator << std::endl;
+			std::cout << "Line " << line << std::endl;
 			++iterator; /// @todo Is not {?!
 
 			if (iterator == tokenizer.end())
-				throw Exception("Version: Missing tokens.");
+				throw Exception(_("Version: Missing tokens."));
 			else if ((*iterator) != "{")
-				throw Exception("Version: Syntax error.");
+				throw Exception(_("Version: Syntax error."));
 		}
 		else if ((*iterator) == "FormatVersion")
 		{
 			++iterator;
 
 			if (iterator == tokenizer.end())
-				throw Exception("Version: Missing tokens.");
+				throw Exception(_("Version: Missing tokens."));
 
 			std::stringstream sstream;
 			sstream << *iterator;
 			sstream >> this->m_version;
+			gotVersion = true;
 		}
 		else if ((*iterator) == "}")
 			break;
 	}
+	
+	if (!gotVersion)
+		throw Exception(_("Version: Missing format version number."));
 }
 
 void Version::writeMdl(std::fstream &fstream) throw (class Exception)
@@ -95,10 +107,16 @@ void Version::readMdx(std::fstream &fstream) throw (class Exception)
 	MdxBlock::readMdx(fstream);
 	long32 bytes;
 	fstream >> bytes;
-	//fstream.read((char*)bytes, 4);
+	
+	for (int i = 0; i < 4; ++i)
+		std::cout << "Byte " << i << ": " << reinterpret_cast<char*>(bytes)[i] << std::endl;
+	
 	std::cout << "Bytes " << bytes << std::endl;
 	fstream >> this->m_version;
 	std::cout << "Version " << this->m_version << std::endl;
+	
+	std::cout << "New Bytes " << ByteSwap((unsigned long)bytes) << " and new version " << ByteSwap((unsigned long)this->m_version) << std::endl;
+	fstream >> this->m_version;
 	/*
 	bytes -= this->m_version;
 	std::cout << "New bytes " << bytes << std::endl;

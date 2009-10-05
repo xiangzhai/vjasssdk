@@ -24,6 +24,7 @@ import sys
 # This is needed to ensure that dynamic_cast and RTTI works inside kdelibs.
 #sys.setdlopenflags(dl.RTLD_NOW|dl.RTLD_GLOBAL)
 
+from PyQt4 import QtGui
 from PyKDE4.kdecore import *
 from PyKDE4.kdeui import *
 from PyKDE4.kio import *
@@ -42,13 +43,21 @@ class MainWindow(KMainWindow):
 		fileMenu.addSeparator()
 		fileMenu.addAction(KStandardAction.save(self.fileSave, self))
 		fileMenu.addAction(KStandardAction.saveAs(self.fileSaveAs, self))
-		fileMenu.addAction("Calculate shadows and save map", self, self.fileCalculateShadowsAndSave)
+		fileMenu.addAction(self.tr("Calculate shadows and save map"), self.fileCalculateShadowsAndSave)
 		fileMenu.addSeparator()
-		fileMenu.addAction("Export script ...", self, self.fileExportScript)
-		fileMenu.addAction("Export mini map ...", self, self.fileExportMinimap)
-		fileMenu.addAction("Export strings ...", self, self.fileExportStrings)
-		fileMenu.addAction("Import strings ...", self, self.fileImportStrings)
+		fileMenu.addAction(self.tr("Export script ..."), self.fileExportScript)
+		fileMenu.addAction(self.tr("Export minimap ..."), self.fileExportMinimap)
+		fileMenu.addAction(self.tr("Export strings ..."), self.fileExportStrings)
+		fileMenu.addAction(self.tr("Import strings ..."), self.fileImportStrings)
 		fileMenu.addSeparator()
+		#recent files
+		fileMenu.addSeparator()
+		fileMenu.addAction(self.tr("Presettings ..."), self.filePresettings)
+		fileMenu.addAction(KStandardAction.configureNotifications(self.fileConfigureNotifications, self))
+		fileMenu.addSeparator()
+		fileMenu.addAction(self.tr("Test map"), self.fileTestMap)
+		fileMenu.addSeparator()
+		fileMenu.addAction(KStandardAction.quit(self.close, self))
 
 		helpMenu = KHelpMenu(self)
 		self.menuBar().addMenu(helpMenu.menu())
@@ -83,6 +92,15 @@ class MainWindow(KMainWindow):
 	
 	def fileImportStrings(self):
 		print "Import file strings"
+
+	def filePresettings(self):
+		print "Presettings"
+
+	def fileConfigureNotifications(self):
+		print "Notifications"
+
+	def fileTestMap(self):
+		print "Test map"
 
 appName     = "editor"
 catalog     = ""

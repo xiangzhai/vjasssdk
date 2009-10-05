@@ -18,7 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <cstdio>
+
 #include "alpha.hpp"
+#include "alphas.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Alpha::Alpha(class Mdlx *mdlx) : m_mdlx(mdlx)
+Alpha::Alpha(class Alphas *alphas) : m_alphas(alphas)
 {
 }
 
@@ -40,6 +44,21 @@ void Alpha::readMdl(std::fstream &fstream) throw (class Exception)
 
 void Alpha::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	fstream >> this->m_frame;
+	fstream >> this->m_state; //(0 or 1)
+	
+	if (this->m_state != 0 && this->m_state != 1)
+	{
+		char message[255];
+		sprintf(message, _("Unknown state: %d. Should be 0 or 1."), this->m_state);
+		throw Exception(message);
+	}
+	
+	if (this->alphas()->lineType() > 1)
+	{
+		fstream >> this->m_inTan;
+		fstream >> this->m_outTan;
+	}
 }
 
 void Alpha::writeMdl(std::fstream &fstream) throw (class Exception)

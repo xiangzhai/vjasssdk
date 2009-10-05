@@ -18,25 +18,36 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PLATFORM_HPP
-#define WC3LIB_MDLX_PLATFORM_HPP
+#ifndef WC3LIB_WC3LIB_UTILITIES_HPP
+#define WC3LIB_WC3LIB_UTILITIES_HPP
 
-#include <stdint.h>
+#include <algorithm> 
 
-namespace wc3lib
+/*
+extern unsigned long ByteSwap(unsigned long value);
+extern unsigned short ByteSwap(unsigned short value);
+*/
+inline unsigned long ByteSwap(unsigned long value)
 {
+	return (((value&0x000000FF)<<24)+((value&0x0000FF00)<<8)+ ((value&0x00FF0000)>>8)+((value&0xFF000000)>>24));
+}
 
-namespace mdlx
+inline unsigned short ByteSwap(unsigned short value)
 {
-
-typedef float float32;
-//typedef short short32; @todo undefined length?!
-typedef long long32; /// @todo are there any fstream >> operators which support int32_t?
-typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
-typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?
+   return (((value>> 8)) | (value << 8));
 
 }
 
+inline void ByteSwap(unsigned char *bytes, int size)
+{
+   register int i = 0;
+   register int j = size - 1;
+   
+   while (i < j)
+   {
+      std::swap(bytes[i], bytes[j]);
+      i++, j--;
+   }
 }
 
-#endif 
+#endif
