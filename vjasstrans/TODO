@@ -1,4 +1,8 @@
-2009-09--06 Tamino Dauth <tamino@cdauth.de>
+2009-10-06 Tamino Dauth <tamino@cdauth.de>
+* Reading fdf files does not work correctly since { character seems to be ignored by boost tokenizer -.-.
+* Check string conflict search.
+
+2009-09-06 Tamino Dauth <tamino@cdauth.de>
 * Improved file parsing (check the validity "syntax" of wts and fdf files).
 * Use exceptions instead of return values.
 * If you want to ignore function calls in comment definitions it should be choosable which scripting language the parsed file has since vJass adds block comments to syntax.

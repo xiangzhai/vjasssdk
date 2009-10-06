@@ -1,39 +1,7 @@
 StringList {
-	STRING_0			"",	/* STRING_0 */
-	STRING_1			"",	/* STRING_1 */
-	STRING_2			"",	/* STRING_2 */
-	STRING_3			"",	/* STRING_3 */
-	STRING_4			"",	/* STRING_4 */
-	STRING_5			"",	/* STRING_5 */
-	STRING_6			"",	/* STRING_6 */
-	STRING_7			"",	/* STRING_7 */
-	STRING_8			"",	/* STRING_8 */
-	STRING_9			"",	/* STRING_9 */
-	STRING_10			"",	/* STRING_10 */
-	STRING_11			"",	/* STRING_11 */
-	STRING_12			"",	/* STRING_12 */
-	STRING_13			"",	/* STRING_13 */
-	STRING_14			"",	/* STRING_14 */
-	STRING_15			"",	/* STRING_15 */
-	STRING_16			"",	/* STRING_16 */
-	STRING_17			"",	/* STRING_17 */
-	STRING_18			"",	/* STRING_18 */
-	STRING_19			"",	/* STRING_19 */
-	STRING_20			"",	/* STRING_20 */
-	STRING_21			"",	/* STRING_21 */
-	STRING_22			"",	/* STRING_22 */
-	STRING_23			"",	/* STRING_23 */
-	STRING_24			"",	/* STRING_24 */
-	STRING_25			"",	/* STRING_25 */
-	STRING_26			"",	/* STRING_26 */
-	STRING_27			"",	/* STRING_27 */
-	STRING_28			"",	/* STRING_28 */
-	STRING_29			"",	/* STRING_29 */
-	STRING_30			"",	/* STRING_30 */
-	STRING_31			"",	/* STRING_31 */
-	STRING_32			"",	/* STRING_32 */
-	STRING_33			"",	/* STRING_33 */
-	STRING_34			"",	/* STRING_34 */
-	STRING_35			"",	/* STRING_35 */
-	STRING_36			""	/* STRING_36 */
+	STRING_0			"",	/* dsfdssdfdsfsdf */
+	STRING_1			"",	/* Hallo Peter */
+	STRING_2			"Doch!",	/* Nein! */
+	STRING_3			"",	/* Du bist SCHEISSE! */
+	STRING_4			""	/* Du bist SCHEISSE */
 }

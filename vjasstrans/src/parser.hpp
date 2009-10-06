@@ -32,7 +32,7 @@ class String;
 class Parser
 {
 	public:
-		static bool parse(const std::string &filePath, std::list<class String*> &strings, bool replace = false, const std::string &translationFunction = "GetLocalizedString");
+		static bool parse(const std::string &filePath, std::list<class String*> &strings, const bool replace = false, const std::string &translationFunction = "GetLocalizedString");
 		static bool readFdf(const std::string &filePath, std::list<class String*> &strings);
 		static bool writeFdf(const std::string &filePath, const std::list<class String*> &strings);
 		static bool readWts(const std::string &filePath, std::list<class String*> &strings);

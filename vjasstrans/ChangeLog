@@ -1,3 +1,7 @@
+2009-10-06 Tamino Dauth <tamino@cdauth.de>
+* Improved parsing.
+* Doubled strings will be detected much better now.
+
 2009-09-10 Tamino Dauth <tamino@cdauth.de>
 * Improved cmake files.
 

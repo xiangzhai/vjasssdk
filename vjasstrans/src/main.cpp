@@ -107,6 +107,7 @@ int main(int argc, char *argv[])
 	if (argc == 1)
 	{
 		std::cout << _("Missing arguments.") << std::endl;
+		
 		return EXIT_FAILURE;
 	}
 	

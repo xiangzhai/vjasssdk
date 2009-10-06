@@ -22,6 +22,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream> //verbose
+#include <cstring>
 //POSIX
 #include <sys/stat.h>
 
@@ -34,58 +35,153 @@
 
 namespace vjasstrans
 {
-
-bool Parser::parse(const std::string &filePath, std::list<class String*> &strings, bool replace, const std::string &translationFunction)
+	
+static bool getNextTranslationFunctionCall(const std::string &line, const std::string &translationFunction, std::string::size_type &position, std::string::size_type &length, const bool ignoreReplacedValues = true)
 {
-	fprintf(stdout, "Parsing file \"%s\".\n", filePath.c_str());
+	std::cout << "Checking line " << line << " with position " << position << std::endl;
+	std::string searchedString = translationFunction + "(\""; // not static! translation function can be changed by main call
+	std::cout << "Searched string is " << searchedString << std::endl;
+	position = line.find(searchedString, position);
+	
+	if (position == std::string::npos)
+		return false;
+	
+	position += searchedString.length();
+	std::cout << "Set position" << std::endl;
+	
+	do
+	{
+		length = line.find("\"", position);
+	}
+	while (length != std::string::npos && line[length - 1] == '\\');
+	
+	if (length == std::string::npos)
+		return false;
+	
+	length = length - position;
+	std::cout << "Set length " << std::endl;
+	
+	static const char *replacedValueSchema = "STRING_";
+	
+	if (ignoreReplacedValues && line.substr(position, strlen(replacedValueSchema)) == replacedValueSchema)
+		return false;
+	
+	std::cout << "Returning true" << std::endl;
+	
+	return true;
+}
 
+static bool checkForStringConflict(std::list<class String*> &strings, class String *string)
+{
+	for (std::list<class String*>::iterator iterator = strings.begin(); iterator != strings.end(); ++iterator)
+	{
+		if ((*iterator)->defaultString() == string->defaultString())
+		{
+			fprintf(stdout, _("Detected string conflict:\nString 0: \"%s\"\nString 0 translation: \"%s\"\nString 1: \"%s\"\nString 1 translation: \"%s\"\nEnter 0 to use string 0 or 1 to use string 1.\n"));
+			int value;
+			std::cin >> value;
+			
+			if (value == 0)
+			{
+				std::cout << _("Using string 0.") << std::endl;
+				delete *iterator;
+				strings.erase(iterator);
+				strings.push_back(string);
+			}
+			else if (value == 1)
+			{
+				std::cout << _("Using string 1.") << std::endl;
+				delete string;
+			}
+			
+			return true;
+		}
+	}
+	
+	strings.push_back(string);
+	
+	return false;
+}
+
+bool Parser::parse(const std::string &filePath, std::list<class String*> &strings, const bool replace, const std::string &translationFunction)
+{
+	fprintf(stdout, _("Parsing file \"%s\".\n"), filePath.c_str());
 	std::fstream fstream(filePath.c_str(), std::ios_base::in);
 
 	if (!fstream)
 	{
-		fprintf(stdout, "Error while opening file \"%s\".\n", filePath.c_str());
+		fprintf(stdout, _("Error while opening file \"%s\".\n"), filePath.c_str());
+		
 		return false;
 	}
-
-	static std::string searchedString = translationFunction + "(\"";
-	std::list<std::string> lines;
+	
 	std::string line;
+	std::list<std::string> lines;
 
 	for (unsigned int i = 0; std::getline(fstream, line); ++i)
 	{
-		for (std::string::size_type position = line.find(searchedString); position != std::string::npos; position = line.find(searchedString, position))
-		{
-			position += searchedString.length();
-			std::string::size_type length = line.find("\"", position);
-
-			if (length != std::string::npos && line[length - 1] != '\\') //tr("Ich heiße \"Hans\"") -> ignore escape sequences
+		std::string::size_type position = 0;
+		std::string::size_type length = 0;
+		
+		while (getNextTranslationFunctionCall(line, translationFunction, position, length, true))
+		{			
+			std::string defaultString = line.substr(position, length);
+			int id = 0;
+			std::list<int> usedIds;
+			bool exists = false;
+			std::list<class String*>::iterator iterator = strings.begin();
+			
+			for (int j = 0; iterator != strings.end(); ++iterator, ++j)
 			{
-				length = length - position;
-				std::string defaultString = line.substr(position, length);
-				int id = strings.size();
-				std::list<class String*>::iterator iterator = strings.begin();
-				
-				for (int j = 0; iterator != strings.end(); ++iterator, ++j)
+				if ((*iterator)->defaultString() == defaultString)
 				{
-					if ((*iterator)->defaultString() == defaultString)
+					id = j;
+					exists = true;
+					
+					break;
+				}
+				
+				usedIds.push_back((*iterator)->id());
+			}
+			
+			// check if id is already used
+			if (!exists)
+			{
+				while (true)
+				{
+					bool notUsed = true;
+					
+					for (std::list<int>::iterator iterator = usedIds.begin(); notUsed && iterator != usedIds.end(); ++iterator)
 					{
-						id = j;
+						if (*iterator == id)
+							notUsed = false;
+					}
+					
+					if (notUsed)
 						break;
+					
+					// get overflows
+					try
+					{
+						++id;
+					}
+					catch (...)
+					{
+						fprintf(stderr, _("Error while trying to increase id with value %d.\n"), id);
+						
+						return false;
 					}
 				}
 				
-				if (id == strings.size())
-				{
-					std::stringstream sstream;
-					sstream << "STRING_" << id;
-					strings.push_back(new String(filePath, i, sstream.str(), defaultString, ""));
-					
-					if (replace)
-						line.replace(position, length, sstream.str());
-				}
-				else if (replace)
-					line.replace(position, length, (*iterator)->idString());
+				std::stringstream sstream;
+				sstream << "STRING_" << id;
+				strings.push_back(new String(filePath, i, sstream.str(), defaultString, ""));
+				
+				if (replace)
+					line.replace(position, length, sstream.str());
 			}
+			else if (replace)
+				line.replace(position, length, (*iterator)->idString());
 		}
 
 		if (replace)
@@ -119,74 +215,110 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 
 	if (!fstream)
 	{
-		fprintf(stderr, _("Error while opening file \"%s\".\n"), filePath.c_str());
+		fprintf(stderr, _("Error while opening fdf file \"%s\".\n"), filePath.c_str());
 		return false;
 	}
 
+	bool foundEndCharacter = false;
 	std::string line;
 
 	for (unsigned int i = 0; std::getline(fstream, line); ++i)
 	{
 		if (line.empty())
 			continue;
-
+		
 		boost::tokenizer<> tokenizer(line);
 		boost::tokenizer<>::iterator iterator = tokenizer.begin();
 
-		if (iterator != tokenizer.end() && (*iterator).length() > 7 && (*iterator).substr(0, 7)  == "STRING_")
+		if (iterator != tokenizer.end())
 		{
-			std::string idString = *iterator;
-			std::size_t index = line.find_last_of("/*");
-
-			if (index == std::string::npos)
+			if (*iterator == "StringList")
 			{
-				std::cerr << "Error at line " << i << ", missing */." << std::endl;
-				continue;
+				++iterator;
+				
+				/// @todo Missing { character ________|________
+				if (iterator == tokenizer.end() || *iterator != "{")
+				{
+					fprintf(stderr, _("Error at line %d: Missing \"{\" character.\n"), i);
+					
+					return false;
+				}
+				
+				
 			}
-
-			index += 3;
-			std::size_t length = line.find_last_of("*/", index);
-
-			if (length == std::string::npos)
+			else if (*iterator == "}") // end string list
 			{
-				std::cerr << "Error at line " << i << ", missing /*." << std::endl;
-				continue;
+				foundEndCharacter = true;
+				
+				break;
 			}
-
-			length -= index + 3;
-			std::string defaultString = line.substr(index, length);
-
-			if (defaultString.empty())
+			else if ((*iterator).length() > 7 && (*iterator).substr(0, 7)  == "STRING_")
 			{
-				std::cerr << "Error at line " << line << ", missing default string." << std::endl;
-				continue;
+				std::cout << "Length is bigger than 7." << std::endl;
+				std::string idString = *iterator;
+				std::size_t index = line.find_last_of("/*");
+		
+				if (index == std::string::npos)
+				{
+					fprintf(stderr, _("Error at line %d: Missing */.\n"), i);
+					
+					continue;
+				}
+		
+				index += 3;
+				std::size_t length = line.find_last_of("*/", index);
+		
+				if (length == std::string::npos)
+				{
+					fprintf(stderr, _("Error at line %d: Missing */.\n"), i);
+					
+					continue;
+				}
+		
+				length -= index + 3;
+				std::string defaultString = line.substr(index, length);
+		
+				if (defaultString.empty())
+				{
+					fprintf(stderr, _("Error at line %d: Missing default string.\n"), i);
+					
+					continue;
+				}
+		
+				index = line.find('"');
+		
+				if (index == std::string::npos)
+				{
+					fprintf(stderr, _("Error at line %d: Missing \".\n"), i);
+					
+					continue;
+				}
+		
+				index += 2;
+				length = line.find("\"", index);
+		
+				if (length == std::string::npos)
+				{
+					fprintf(stderr, _("Error at line %d: Missing \".\n"), i);
+					
+					continue;
+				}
+		
+				length -= index + 2;
+				std::string valueString = line.substr(index, length);
+				class String *string = new String("", 0, idString, defaultString, valueString);
+				checkForStringConflict(strings, string);
+				std::cout << "Adding string from fdf file" << std::endl;
 			}
-
-			index = line.find('"');
-
-			if (index == std::string::npos)
-			{
-				std::cerr << "Error at line " << i << ", missing \"." << std::endl;
-				continue;
-			}
-
-			index += 2;
-			length = line.find("\"", index);
-
-			if (length == std::string::npos)
-			{
-				std::cerr << "Error at line " << i << ", missing \"." << std::endl;
-				continue;
-			}
-
-			length -= index + 2;
-			std::string valueString = line.substr(index, length);
-			strings.push_back(new String("", 0, idString, defaultString, valueString));
 		}
 	}
 
 	fstream.close();
-	std::cout << "Listening file strings:" << std::endl;
+	
+	if (!foundEndCharacter)
+		std::cerr << _("Warning: Did not find closing \"}\" character.") << std::endl;
+	
+	std::cout << _("Listening file strings:") << std::endl;
 
 	for (std::list<class String*>::iterator iterator = strings.begin(); iterator != strings.end(); ++iterator)
 		std::cout << "- " << (*iterator)->idString() << "\t\t" << (*iterator)->defaultString() << std::endl;
@@ -201,7 +333,8 @@ bool Parser::writeFdf(const std::string &filePath, const std::list<class String*
 
 	if (!fstream)
 	{
-		fprintf(stdout, _("Error while opening file \"%s\".\n"), filePath.c_str());
+		fprintf(stdout, _("Error while opening fdf file \"%s\".\n"), filePath.c_str());
+		
 		return false;
 	}
 
@@ -230,7 +363,8 @@ bool Parser::readWts(const std::string &filePath, std::list<class String*> &stri
 	
 	if (!fstream)
 	{
-		fprintf(stderr, _("Error while opening map strings file \"%s\".\n"), filePath.c_str());
+		fprintf(stderr, _("Error while opening wts file \"%s\".\n"), filePath.c_str());
+		
 		return false;
 	}
 
@@ -246,25 +380,29 @@ bool Parser::readWts(const std::string &filePath, std::list<class String*> &stri
 
 		std::string idString = line.substr(0, 6) + "_" + line.substr(7);
 
-		if (std::getline(fstream, line) && ++i && line.substr(2) == "//")
+		if (std::getline(fstream, line) && ++i && line.substr(0, 2) == "//")
 		{
-			
 			std::string defaultString = line.length() < 4 ? "" : line.substr(3);
 
 			if (std::getline(fstream, line) && ++i && line == "{" && std::getline(fstream, line) && ++i)
 			{
 				std::string valueString = line;
-				strings.push_back(new String("", 0, idString, defaultString, line));
+				class String *string = new String("", 0, idString, defaultString, line);
+				if (!checkForStringConflict(strings, string))
+					std::cout << "Adding string from wts file" << std::endl;
 			}
 			else
 			{
 				fprintf(stderr, _("Error at line %i: Missing value string line or { character line.\n"), i);
+				
 				break;
 			}
 		}
 		else
 		{
 			fprintf(stderr, _("Error at line %i: Missing default string line.\n"), i);
+			std::cout << "Line: " << line << " and sub string " << line.substr(2) << std::endl;
+			
 			break;
 		}
 	}
@@ -282,6 +420,7 @@ bool Parser::writeWts(const std::string &filePath, const std::list<class String*
 	if (!fstream)
 	{
 		fprintf(stderr, _("Error while creating wts file \"%s\".\n"), filePath.c_str());
+		
 		return false;
 	}
 
