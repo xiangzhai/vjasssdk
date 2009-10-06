@@ -1,3 +1,7 @@
+2009-10-06 Tamino Dauth <tamino@cdauth.de>
+* Changed big/little endian read function to template.
+* Improved binary file reading.
+
 2009-09-27 Tamino Dauth <tamino@cdauth.de>
 * Improved several code files of mdlx library.
 * Improved mdlxtest.

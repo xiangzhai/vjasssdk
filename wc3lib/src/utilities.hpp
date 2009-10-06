@@ -18,36 +18,42 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_WC3LIB_UTILITIES_HPP
-#define WC3LIB_WC3LIB_UTILITIES_HPP
+#ifndef WC3LIB_UTILITIES_HPP
+#define WC3LIB_UTILITIES_HPP
 
-#include <algorithm> 
+#include <fstream>
 
-/*
-extern unsigned long ByteSwap(unsigned long value);
-extern unsigned short ByteSwap(unsigned short value);
+namespace wc3lib
+{
+
+/**
+* Note that you can not use fstream >> operators to read values (e. g. longs or floats) from binary files.
+* Thus this template function exists.
 */
-inline unsigned long ByteSwap(unsigned long value)
+template<typename T>
+inline T readValue(std::fstream &fstream, bool byteSwap = false)
 {
-	return (((value&0x000000FF)<<24)+((value&0x0000FF00)<<8)+ ((value&0x00FF0000)>>8)+((value&0xFF000000)>>24));
+	char bytes[sizeof(T)];
+	fstream.read(bytes, sizeof(T));
+	T result = 0;
+	
+	// i has to be signed?!
+	if (byteSwap)
+	{
+		for (int i = sizeof(T) - 1; i >= 0; --i)
+			result |= (bytes[i] << (i << 3));
+	}
+	else
+	{
+		int j =  sizeof(T) - 1;
+		
+		for (int i = 0; i < sizeof(T); ++i, --j)
+			result |= (bytes[i] << (j << 3));
+	}
+	
+	return result;
 }
 
-inline unsigned short ByteSwap(unsigned short value)
-{
-   return (((value>> 8)) | (value << 8));
-
-}
-
-inline void ByteSwap(unsigned char *bytes, int size)
-{
-   register int i = 0;
-   register int j = size - 1;
-   
-   while (i < j)
-   {
-      std::swap(bytes[i], bytes[j]);
-      i++, j--;
-   }
 }
 
 #endif

@@ -105,26 +105,21 @@ void Version::writeMdl(std::fstream &fstream) throw (class Exception)
 void Version::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::readMdx(fstream);
-	long32 bytes;
-	fstream >> bytes;
+	long32 bytes = 10;
 	
-	for (int i = 0; i < 4; ++i)
-		std::cout << "Byte " << i << ": " << reinterpret_cast<char*>(bytes)[i] << std::endl;
+	bytes = readValue<long32>(fstream, true); //readLong32(fstream, true);
 	
-	std::cout << "Bytes " << bytes << std::endl;
-	fstream >> this->m_version;
-	std::cout << "Version " << this->m_version << std::endl;
+	if (bytes != 4)
+	{
+		char message[50];
+		sprintf(message, _("Versions with more than 4 bytes are not supported. Read version has %d bytes."), bytes);
+		
+		throw Exception(message);
+	}
 	
-	std::cout << "New Bytes " << ByteSwap((unsigned long)bytes) << " and new version " << ByteSwap((unsigned long)this->m_version) << std::endl;
-	fstream >> this->m_version;
-	/*
-	bytes -= this->m_version;
-	std::cout << "New bytes " << bytes << std::endl;
-	std::cout << "Bytes " << bytes << " Position 0 " << fstream.tellg() << std::endl;
-	fstream.seekg(bytes, std::ios_base::cur); // seek byte rest
-	std::streampos newPosition = fstream.rdbuf()->pubseekoff(bytes, std::ios_base::cur, std::ios_base::in);
-	std::cout << "Position 1 " << newPosition << std::endl;
-	*/
+	this->m_version = readValue<long32>(fstream, true); //readLong32(fstream, true);
+	
+	std::cout << "Bytes " << bytes << " Version " << this->m_version << std::endl;
 	
 	if (this->m_version != Version::currentVersion)
 		fprintf(stdout, _("Warning: Version %d probably is not supported. Current version is %d.\n"), this->m_version, Version::currentVersion);

@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> //debug
+
 #include "model.hpp"
 /// @todo Maybe we should one single "objects" include file.
 #include "mdlx.hpp"
@@ -29,6 +31,7 @@
 #include "attachments.hpp"
 #include "particleemitters.hpp"
 #include "particleemitter2s.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -103,9 +106,9 @@ void Model::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::readMdx(fstream);
 	long32 bytes;
-	fstream >> bytes;
-	fstream >> this->m_name;
-	fstream >> this->m_unkown0;
+	bytes = readValue<long32>(fstream, true);
+	fstream.read(this->m_name, sizeof(this->m_name));
+	this->m_unkown0 = readValue<long32>(fstream, true);
 	fstream >> this->m_boundsRadius;
 	fstream >> this->m_minExtX;
 	fstream >> this->m_minExtY;

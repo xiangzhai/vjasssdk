@@ -182,7 +182,10 @@ int main(int argc, char *argv[])
 		std::ios_base::openmode openMode = std::ifstream::in;
 		
 		if (optionIformat == "mdx")
+		{
+			std::cout << "Is binary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 			openMode |= std::ifstream::binary;
+		}
 		
 		std::fstream fstream((*iterator).c_str(), openMode);
 		
