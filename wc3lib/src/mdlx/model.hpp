@@ -37,7 +37,7 @@ class Model : public MdxBlock
 
 		class Mdlx* mdlx() const;
 		const ascii* name() const;
-		long32 unkown0() const;
+		long32 unknown0() const;
 		float32 boundsRadius() const;
 		float32 minExtX() const;
 		float32 minExtY() const;
@@ -56,7 +56,7 @@ class Model : public MdxBlock
 		class Mdlx *m_mdlx;
 		//long nbytes;
 		ascii m_name[0x150]; //(0x150 bytes)
-		long32 m_unkown0; //(0)
+		long32 m_unknown0; //(0)
 		float32 m_boundsRadius;
 		float32 m_minExtX, m_minExtY, m_minExtZ;
 		float32 m_maxExtX, m_maxExtY, m_maxExtZ;
@@ -73,9 +73,9 @@ inline const ascii* Model::name() const
 	return this->m_name;
 }
 
-inline long32 Model::unkown0() const
+inline long32 Model::unknown0() const
 {
-	return this->m_unkown0;
+	return this->m_unknown0;
 }
 
 inline float32 Model::boundsRadius() const

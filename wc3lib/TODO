@@ -1,3 +1,6 @@
+2009-10-07 Tamino Dauth <tamino@cdauth.de>
+* Use std::fstream::read for binary files.
+
 2009-10-05 Tamino Dauth <tamino@cdauth.de>
 * Boost tokenizer does not get { tokens?
 

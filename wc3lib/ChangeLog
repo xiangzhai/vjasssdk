@@ -1,3 +1,7 @@
+2009-10-07 Tamino Dauth <tamino@cdauth.de>
+* Improved MDX file reading.
+* Added class Renderer.
+
 2009-10-06 Tamino Dauth <tamino@cdauth.de>
 * Changed big/little endian read function to template.
 * Improved binary file reading.

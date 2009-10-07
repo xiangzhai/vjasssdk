@@ -31,7 +31,7 @@
 #include "attachments.hpp"
 #include "particleemitters.hpp"
 #include "particleemitter2s.hpp"
-#include "../utilities.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -106,22 +106,44 @@ void Model::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::readMdx(fstream);
 	long32 bytes;
-	bytes = readValue<long32>(fstream, true);
+	std::streamsize realBytes = fstream.gcount();
+	fstream.read((char*)&bytes, sizeof(bytes));
 	fstream.read(this->m_name, sizeof(this->m_name));
-	this->m_unkown0 = readValue<long32>(fstream, true);
-	fstream >> this->m_boundsRadius;
-	fstream >> this->m_minExtX;
-	fstream >> this->m_minExtY;
-	fstream >> this->m_minExtZ;
-	fstream >> this->m_maxExtX;
-	fstream >> this->m_maxExtY;
-	fstream >> this->m_maxExtZ;
-	fstream >> this->m_blendTime;
+	fstream.read((char*)&this->m_unknown0, sizeof(this->m_unknown0));
+	fstream.read((char*)&this->m_boundsRadius, sizeof(this->m_boundsRadius));
+	fstream.read((char*)&this->m_minExtX, sizeof(this->m_minExtX));
+	fstream.read((char*)&this->m_minExtY, sizeof(this->m_minExtY));
+	fstream.read((char*)&this->m_minExtZ, sizeof(this->m_minExtZ));
+	fstream.read((char*)&this->m_maxExtX, sizeof(this->m_maxExtX));
+	fstream.read((char*)&this->m_maxExtY, sizeof(this->m_maxExtY));
+	fstream.read((char*)&this->m_maxExtZ, sizeof(this->m_maxExtZ));
+	fstream.read((char*)&this->m_blendTime, sizeof(this->m_blendTime));
+	/// @todo gcount counts only last operation bytes
+	std::cout << "GCOUNT: " << fstream.gcount() << std::endl;
+	realBytes = fstream.gcount() - realBytes;
+	
+	if (bytes != realBytes)
+	{
+		/// @todo Exception required?
+		fprintf(stderr, _("Model: Warning - Read byte count doesn't fit with real byte count.\nRead byte count: %d.\nReal byte count: %d.\n"), bytes, realBytes);
+	}
 }
 
 void Model::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::writeMdx(fstream);
+	long32 bytes = sizeof(*this); //nbytes, excluding byte count
+	fstream.write((char*)&bytes, sizeof(bytes));
+	fstream.write(this->m_name, sizeof(this->m_name));
+	fstream.write((char*)&this->m_unknown0, sizeof(this->m_unknown0));
+	fstream.write((char*)&this->m_boundsRadius, sizeof(this->m_boundsRadius));
+	fstream.write((char*)&this->m_minExtX, sizeof(this->m_minExtX));
+	fstream.write((char*)&this->m_minExtY, sizeof(this->m_minExtY));
+	fstream.write((char*)&this->m_minExtZ, sizeof(this->m_minExtZ));
+	fstream.write((char*)&this->m_maxExtX, sizeof(this->m_maxExtX));
+	fstream.write((char*)&this->m_maxExtY, sizeof(this->m_maxExtY));
+	fstream.write((char*)&this->m_maxExtZ, sizeof(this->m_maxExtZ));
+	fstream.write((char*)&this->m_blendTime, sizeof(this->m_blendTime));
 }
 
 }

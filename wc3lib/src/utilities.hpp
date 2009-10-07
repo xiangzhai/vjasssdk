@@ -54,6 +54,8 @@ inline T readValue(std::fstream &fstream, bool byteSwap = false)
 	return result;
 }
 
+
+
 }
 
 #endif
