@@ -18,8 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> //debug
+
 #include "sequences.hpp"
 #include "sequence.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -42,9 +45,9 @@ void Sequences::readMdl(std::fstream &fstream) throw (class Exception)
 void Sequences::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	fstream
-	<< "Sequences " << this->sequences().size() << " {\n";
+	<< "Sequences " << this->m_sequences.size() << " {\n";
 
-	for (std::list<class Sequence*>::iterator iterator = this->sequences().begin(); iterator != this->sequences().end(); ++iterator)
+	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
 	{
 		fstream
 		<< "\tAnim " << (*iterator)->name() << " {\n"
@@ -78,11 +81,36 @@ void Sequences::writeMdl(std::fstream &fstream) throw (class Exception)
 void Sequences::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::readMdx(fstream);
+	long32 bytes = 0; //nbytes
+	fstream.read(reinterpret_cast<char*>(&bytes), sizeof(bytes));
+	std::cout << "Sequence bytes: " << bytes << std::endl;
+	
+	while (bytes > 0)
+	{
+		class Sequence *sequence = new Sequence(this);
+		sequence->readMdx(fstream);
+		std::cout << "Instance bytes: " << sequence->bytes() << std::endl;
+		
+		if (sequence->bytes() == 0)
+			throw Exception(_("Sequences: 0 byte sequence."));
+		
+		bytes -= sequence->bytes();
+		this->m_sequences.push_back(sequence);
+	}
 }
 
 void Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::writeMdx(fstream);
+	long32 bytes = 0; //nbytes
+	
+	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
+		bytes += (*iterator)->bytes();
+	
+	fstream.write(reinterpret_cast<char*>(bytes), sizeof(bytes));
+	
+	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
+		(*iterator)->writeMdx(fstream);
 }
 
 }

@@ -105,10 +105,10 @@ void Version::writeMdl(std::fstream &fstream) throw (class Exception)
 void Version::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::readMdx(fstream);
-	long32 bytes = 10;
+	long32 bytes;
 	
 	//bytes = readValue<long32>(fstream, true);
-	fstream.read((char*)&bytes, sizeof(bytes));
+	fstream.read(reinterpret_cast<char*>(&bytes), sizeof(bytes));
 	
 	if (bytes != 4)
 	{
@@ -119,7 +119,7 @@ void Version::readMdx(std::fstream &fstream) throw (class Exception)
 	}
 	
 	//this->m_version = readValue<long32>(fstream, true);
-	fstream.read((char*)&this->m_version, sizeof(this->m_version));
+	fstream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
 	
 	std::cout << "Bytes " << bytes << " Version " << this->m_version << std::endl;
 	
@@ -130,6 +130,9 @@ void Version::readMdx(std::fstream &fstream) throw (class Exception)
 void Version::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::writeMdx(fstream);
+	long32 bytes = sizeof(this->m_version);
+	fstream.write(reinterpret_cast<char*>(&bytes), sizeof(bytes));
+	fstream.write(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
 }
 
 }

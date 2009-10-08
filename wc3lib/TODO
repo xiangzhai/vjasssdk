@@ -1,3 +1,6 @@
+2009-10-08 Tamino Dauth <tamino@cdauth.de>
+* BLP file reading (JPEG compression) does still not work.
+
 2009-10-07 Tamino Dauth <tamino@cdauth.de>
 * Use std::fstream::read for binary files.
 

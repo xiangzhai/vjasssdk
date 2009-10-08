@@ -32,13 +32,16 @@ namespace wc3lib
 namespace mdlx
 {
 
+class Sequences;
+
 class Sequence
 {
 	public:
-		Sequence(class Mdlx *mdlx);
+		Sequence(class Sequences *sequences);
 		virtual ~Sequence();
 
-		class Mdlx* mdlx() const;
+		class Sequences* sequences() const;
+		long32 bytes() const;
 		const ascii* name() const;
 		long32 intervalStart() const;
 		long32 intervalEnd() const;
@@ -55,12 +58,16 @@ class Sequence
 		float32 maxExtZ() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		/**
+		* @return Returns read byte count.
+		*/
 		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Sequences *m_sequences;
+		long32 m_bytes;
 		ascii m_name[0x50]; //(0x50 bytes)
 		long32 m_intervalStart, m_intervalEnd;
 		float32 m_moveSpeed;
@@ -73,9 +80,14 @@ class Sequence
 
 };
 
-inline class Mdlx* Sequence::mdlx() const
+inline class Sequences* Sequence::sequences() const
 {
-	return this->m_mdlx;
+	return this->m_sequences;
+}
+
+inline long32 Sequence::bytes() const
+{
+	return this->m_bytes;
 }
 
 inline const ascii* Sequence::name() const

@@ -1,3 +1,8 @@
+2009-10-08 Tamino Dauth <tamino@cdauth.de>
+* Improved program mdlxtest.
+* Improved MDX file reading, especially sequences reading.
+* Improved BLP read- and writing.
+
 2009-10-07 Tamino Dauth <tamino@cdauth.de>
 * Improved MDX file reading.
 * Added class Renderer.

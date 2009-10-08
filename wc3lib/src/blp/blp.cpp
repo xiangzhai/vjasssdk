@@ -63,12 +63,12 @@ void Blp::read(std::fstream &fstream, enum Format format) throw (Exception)
 	}
 }
 
-void Blp::readBlp(std::fstream &fstream) throw (Exception)
+void Blp::readBlp(std::fstream &fstream) throw (class Exception)
 {
 	fstream.seekg(0);
 	long counter = 0;
 	this->m_header = new struct Header;
-	fstream.read((char*)this->m_header, sizeof(struct Header));
+	fstream.read(reinterpret_cast<char*>(this->m_header), sizeof(struct Header));
 	counter += fstream.gcount();
 	std::cout << "Read " << counter << " bytes core data." << std::endl;
 	
@@ -76,7 +76,7 @@ void Blp::readBlp(std::fstream &fstream) throw (Exception)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
 		this->m_blpCompression.m_jpeg = new BlpJpeg;
-		fstream >> this->m_blpCompression.m_jpeg->m_jpegHeaderSize;
+		fstream.read(reinterpret_cast<char*>(&this->m_blpCompression.m_jpeg->m_jpegHeaderSize), sizeof(this->m_blpCompression.m_jpeg->m_jpegHeaderSize));
 		counter += fstream.gcount();
 		std::cout << "JPEG header size is " << this->m_blpCompression.m_jpeg->m_jpegHeaderSize << std::endl;
 		this->m_blpCompression.m_jpeg->m_jpegHeader = new byte[this->m_blpCompression.m_jpeg->m_jpegHeaderSize];
@@ -84,7 +84,7 @@ void Blp::readBlp(std::fstream &fstream) throw (Exception)
 		for (int i = 0; i < this->m_blpCompression.m_jpeg->m_jpegHeaderSize; ++i)
 		{
 			std::cout << "Reading header data " << i << std::endl;
-			fstream >> this->m_blpCompression.m_jpeg->m_jpegHeader[i];
+			fstream.read(reinterpret_cast<char*>(&this->m_blpCompression.m_jpeg->m_jpegHeader[i]), sizeof(this->m_blpCompression.m_jpeg->m_jpegHeader[i]));
 			counter += fstream.gcount();
 		}
 
@@ -98,7 +98,7 @@ void Blp::readBlp(std::fstream &fstream) throw (Exception)
 			
 			for (int j = 0; j < maxMipMaps; ++j)
 			{
-				fstream >> this->m_blpCompression.m_jpeg->m_mipMaps[i].m_jpegData[j]; /// @todo Reading 156 bytes instead of one.
+				fstream.read(reinterpret_cast<char*>(&this->m_blpCompression.m_jpeg->m_mipMaps[i].m_jpegData[j]), sizeof(this->m_blpCompression.m_jpeg->m_mipMaps[i])); /// @todo Reading 156 bytes instead of one.
 				counter += fstream.gcount();
 				std::cout << "Reading mip map jpeg data " << fstream.gcount() << std::endl;
 			}
@@ -111,7 +111,7 @@ void Blp::readBlp(std::fstream &fstream) throw (Exception)
 
 		for (int i = 0; i < 256; ++i)
 		{
-			fstream >> this->m_blpCompression.m_uncompressed1->m_palette[i];
+			fstream.read(reinterpret_cast<char*>(&this->m_blpCompression.m_uncompressed1->m_palette[i]), sizeof(this->m_blpCompression.m_uncompressed1->m_palette[i]));
 			counter += fstream.gcount();
 		}
 
@@ -121,7 +121,7 @@ void Blp::readBlp(std::fstream &fstream) throw (Exception)
 			{
 				for (int k = 0; k < this->m_header->m_height; ++k)
 				{
-					fstream >> this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_indexList[j * k];
+					fstream.read(reinterpret_cast<char*>(&this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_indexList[j * k]), sizeof(this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_indexList[j * k]));
 					counter += fstream.gcount();
 				}
 			}
@@ -133,7 +133,7 @@ void Blp::readBlp(std::fstream &fstream) throw (Exception)
 			{
 				for (int k = 0; k < this->m_header->m_height; ++k)
 				{
-					fstream >> this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_alphaList[j * k];
+					fstream.read(reinterpret_cast<char*>(&this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_alphaList[j * k]), sizeof(this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_alphaList[j * k]));
 					counter += fstream.gcount();
 				}
 			}
@@ -146,13 +146,13 @@ void Blp::readBlp(std::fstream &fstream) throw (Exception)
 	else
 	{
 		std::cerr << "Unknown compression mode." << std::endl;
-		throw std::exception();
+		throw Exception("");
 	}
 
 	std::cout << "Read " << counter << " bytes." << std::endl;
 }
 
-void Blp::write(std::fstream &fstream, enum Format format)
+void Blp::write(std::fstream &fstream, enum Format format) throw (class Exception)
 {
 	switch (format)
 	{
@@ -162,26 +162,25 @@ void Blp::write(std::fstream &fstream, enum Format format)
 	}
 }
 
-void Blp::writeBlp(std::fstream &fstream)
+void Blp::writeBlp(std::fstream &fstream) throw (class Exception)
 {
 	fstream.seekg(0);
 	long counter = 0;
-	fstream.write((const char*)this->m_header, sizeof(struct Header));
+	fstream.write(reinterpret_cast<char*>(this->m_header), sizeof(struct Header));
 	counter += sizeof(struct Header);
 	std::cout << "Wrote " << counter << " bytes core data." << std::endl;
 
 	if (this->m_header->m_compression == Blp::Jpeg)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
-		fstream
-		<< this->m_blpCompression.m_jpeg->m_jpegHeaderSize
+		fstream.write(reinterpret_cast<char*>(&this->m_blpCompression.m_jpeg->m_jpegHeaderSize), sizeof(this->m_blpCompression.m_jpeg->m_jpegHeaderSize));
 		;
 		counter += sizeof(this->m_blpCompression.m_jpeg->m_jpegHeaderSize);
 
 		for (int i = 0; i < this->m_blpCompression.m_jpeg->m_jpegHeaderSize; ++i)
 		{
 			std::cout << "Writing header data " << i << std::endl;
-			fstream << this->m_blpCompression.m_jpeg->m_jpegHeader[i];
+			fstream.write(reinterpret_cast<char*>(&this->m_blpCompression.m_jpeg->m_jpegHeader[i]), sizeof(this->m_blpCompression.m_jpeg->m_jpegHeader[i]));
 			counter += sizeof(this->m_blpCompression.m_jpeg->m_jpegHeader[i]);
 		}
 
@@ -193,7 +192,7 @@ void Blp::writeBlp(std::fstream &fstream)
 			
 			for (int j = 0; j < maxMipMaps; ++j)
 			{
-				fstream << this->m_blpCompression.m_jpeg->m_mipMaps[i].m_jpegData[j];
+				fstream.write(reinterpret_cast<char*>(&this->m_blpCompression.m_jpeg->m_mipMaps[i].m_jpegData[j]), sizeof(this->m_blpCompression.m_jpeg->m_mipMaps[i].m_jpegData[j]));
 				counter += sizeof(this->m_blpCompression.m_jpeg->m_mipMaps[i].m_jpegData[j]);
 			}
 		}
@@ -203,14 +202,14 @@ void Blp::writeBlp(std::fstream &fstream)
 		std::cout << "Detected uncompressed mode 1." << std::endl;
 
 		for (int i = 0; i < 256; ++i)
-			fstream << this->m_blpCompression.m_uncompressed1->m_palette[i];
+			fstream.write(reinterpret_cast<char*>(&this->m_blpCompression.m_uncompressed1->m_palette[i]), sizeof(this->m_blpCompression.m_uncompressed1->m_palette[i]));
 
 		for (int i = 0; i < 16; ++i)
 		{
 			for (int j = 0; j < this->m_header->m_width; ++j)
 			{
 				for (int k = 0; k < this->m_header->m_height; ++k)
-					fstream << this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_indexList[j * k];
+					fstream.write(reinterpret_cast<char*>(&this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_indexList[j * k]), this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_indexList[j * k]);
 			}
 		}
 
@@ -219,7 +218,7 @@ void Blp::writeBlp(std::fstream &fstream)
 			for (int j = 0; j < this->m_header->m_width; ++j)
 			{
 				for (int k = 0; k < this->m_header->m_height; ++k)
-					fstream << this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_alphaList[j * k];
+					fstream.write(reinterpret_cast<char*>(&this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_alphaList[j * k]), sizeof(this->m_blpCompression.m_uncompressed1->m_mipMaps[i].m_alphaList[j * k]));
 			}
 		}
 	}
@@ -228,7 +227,7 @@ void Blp::writeBlp(std::fstream &fstream)
 	else
 	{
 		std::cerr << "Unknown compression mode." << std::endl;
-		throw std::exception();
+		throw Exception("");
 	}
 
 	std::cout << "Wrote " << counter << " bytes." << std::endl;

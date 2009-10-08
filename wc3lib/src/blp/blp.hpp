@@ -89,8 +89,8 @@ class Blp
 
 		void read(std::fstream &fstream, enum Format format) throw (class Exception);
 		void readBlp(std::fstream &fstream) throw (class Exception);
-		void write(std::fstream &fstream, enum Format format);
-		void writeBlp(std::fstream &fstream);
+		void write(std::fstream &fstream, enum Format format) throw (class Exception);
+		void writeBlp(std::fstream &fstream) throw (class Exception);
 
 
 	private:
