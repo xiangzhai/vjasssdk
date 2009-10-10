@@ -14,7 +14,7 @@ library AStructSystemsGuiLayout requires ALibraryCoreDebugMisc, AStructSystemsGu
 		private integer nextX
 		private integer nextY
 
-		//! runtextmacro A_STRUCT_DEBUG("\"ALayout\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ALayout\"")
 
 		public method createWidget takes integer sizeX, integer sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AWidget
 			if (not this.prepareForNext(sizeX, sizeY)) then

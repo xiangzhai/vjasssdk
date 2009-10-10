@@ -15,7 +15,7 @@ library AStructSystemsCharacterShrine requires ALibraryCoreDebugMisc, AStructCor
 		private region m_discoverRegion
 		private effect m_discoverEffect
 
-		//! runtextmacro A_STRUCT_DEBUG("\"AShrine\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AShrine\"")
 
 		//start members
 

@@ -39,7 +39,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, AStructCoreG
 		private trigger m_orderTrigger
 		private effect m_effect
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ATalk\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ATalk\"")
 		
 		//start members
 		

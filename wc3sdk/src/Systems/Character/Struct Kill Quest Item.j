@@ -25,6 +25,7 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 		return questItem.killed() == questItem.count()
 	endfunction
 
+	/// @state untested
 	struct AKillQuestItem extends AQuestItem
 		//static start members
 		private static string message

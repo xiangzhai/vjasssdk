@@ -6,7 +6,7 @@ library AStructCoreInterfacePlayerSelection requires ALibraryCoreDebugMisc
 		//members
 		private group m_group
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"APlayerSelection\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"APlayerSelection\"")
 		
 		//start members
 		

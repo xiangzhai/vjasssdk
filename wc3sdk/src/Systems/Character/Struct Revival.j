@@ -13,7 +13,7 @@ library AStructSystemsCharacterRevival requires ALibraryCoreDebugMisc, AStructCo
 		private timer m_timer
 		private timerdialog m_timerDialog
 
-		//! runtextmacro A_STRUCT_DEBUG("\"ARevival\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ARevival\"")
 
 		//dynamic members
 

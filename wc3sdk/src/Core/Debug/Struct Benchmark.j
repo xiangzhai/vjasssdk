@@ -17,8 +17,11 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 		//members
 		private boolean m_isRunning
 		private real m_time
+static if (A_JAPI) then
 		private integer m_stopWatch
+else
 		private timer m_timer
+endif
 		private integer m_index
 		
 		//dynamic members
@@ -47,23 +50,23 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 		public method start takes nothing returns nothing
 			set this.m_isRunning = true
 			set this.m_time = 0.0
-			if (Asl.useJapi()) then
-				//set this.m_stopWatch = StopWatchCreate()
-			else
-				call TimerStart(this.m_timer, 99999.0, false, null)
-			endif
+static if (A_JAPI) then
+			set this.m_stopWatch = StopWatchCreate()
+else
+			call TimerStart(this.m_timer, 99999.0, false, null)
+endif
 		endmethod
 		
 		public method stop takes nothing returns nothing
 			set this.m_isRunning = false
-			if (Asl.useJapi()) then
-				//set this.m_time = 1000 * StopWatchMark(this.m_stopWatch)
-				//call StopWatchDestroy(this.m_stopWatch)
-				set this.m_stopWatch = -1
-			else
-				set this.m_time = TimerGetElapsed(this.m_timer)
-				call PauseTimer(this.m_timer)
-			endif
+static if (A_JAPI) then
+			set this.m_time = 1000 * StopWatchMark(this.m_stopWatch)
+			call StopWatchDestroy(this.m_stopWatch)
+			set this.m_stopWatch = -1
+else
+			set this.m_time = TimerGetElapsed(this.m_timer)
+			call PauseTimer(this.m_timer)
+endif
 		endmethod
 		
 		public method show takes nothing returns nothing
@@ -77,11 +80,11 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 			//members
 			set this.m_isRunning = false
 			set this.m_time = 0
-			if (Asl.useJapi()) then
-				set this.m_stopWatch = -1 //0?
-			else
-				set this.m_timer = CreateTimer()
-			endif
+static if (A_JAPI) then
+			set this.m_stopWatch = -1 //0?
+else
+			set this.m_timer = CreateTimer()
+endif
 			//static members
 			call thistype.m_benchmarks.pushBack(this)
 			set this.m_index = thistype.m_benchmarks.backIndex()
@@ -92,21 +95,25 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 			//static members
 			call thistype.m_benchmarks.erase(this.m_index)
 			//members
-			if (Asl.useJapi() and this.m_stopWatch != -1) then
-				//call StopWatchDestroy(this.m_stopWatch)
-			else
-				call DestroyTimer(this.m_timer)
-				set this.m_timer = null
+static if (A_JAPI) then
+			if (this.m_stopWatch != -1) then
+				call StopWatchDestroy(this.m_stopWatch)
 			endif
+else
+			call DestroyTimer(this.m_timer)
+			set this.m_timer = null
+endif
 		endmethod
 		
 		public static method init takes nothing returns nothing
 			//static members
 			set thistype.m_benchmarks = AIntegerVector.create()
+static if (A_DEBUG_HANDLES) then
 			set thistype.m_units = AUnitVector.create()
 			set thistype.m_items = AItemVector.create()
 			set thistype.m_destructables = ADestructableVector.create()
 			set thistype.m_effects = AEffectVector.create()
+endif
 		endmethod
 		
 		public static method cleanUp takes nothing returns nothing
@@ -116,10 +123,12 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 				call thistype(thistype.m_benchmarks.back()).destroy()
 			endloop
 			call thistype.m_benchmarks.destroy()
+static if (A_DEBUG_HANDLES) then
 			call thistype.m_units.destroy()
 			call thistype.m_items.destroy()
 			call thistype.m_destructables.destroy()
 			call thistype.m_effects.destroy()
+endif
 		endmethod
 		
 		public static method showBenchmarks takes nothing returns nothing
@@ -131,6 +140,7 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 			endloop
 		endmethod
 
+static if (A_DEBUG_HANDLES) then
 		public static method showUnits takes nothing returns nothing
 			local integer i = 0
 			loop
@@ -160,14 +170,18 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 			endloop
 			debug call Print("Total count: " + I2S(thistype.m_destructables.size()) + ".")
 		endmethod
+endif
 
 		public static method showAll takes nothing returns nothing
 			call thistype.showBenchmarks()
+static if (A_DEBUG_HANDLES) then
 			call thistype.showUnits()
 			call thistype.showItems()
 			call thistype.showDestructables()
+endif
 		endmethod
 
+static if (A_DEBUG_HANDLES) then
 		private static method createUnit takes player id, integer unitid, real x, real y, real face returns nothing
 			local unit whichUnit
 			if (thistype.m_units != 0) then //native can be called before ABenchmarks initialization!
@@ -218,13 +232,16 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 				call thistype.m_destructables.remove(d)
 			endif
 		endmethod
+endif
 	endstruct
 
+static if (A_DEBUG_HANDLES) then
 	debug hook CreateUnit ABenchmark.createUnit
 	debug hook RemoveUnit ABenchmark.removeUnit
 	debug hook CreateItem ABenchmark.createItem
 	debug hook RemoveItem ABenchmark.removeItem
 	debug hook CreateDestructable ABenchmark.createDestructable
 	debug hook RemoveDestructable ABenchmark.removeDestructable
+endif
 
 endlibrary

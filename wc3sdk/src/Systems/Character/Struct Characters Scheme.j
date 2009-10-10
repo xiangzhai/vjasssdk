@@ -14,7 +14,7 @@ library AStructSystemsCharacterCharactersScheme requires ALibraryCoreDebugMisc, 
 		private static AMultiboardBar array m_manaBar[12] //bj_MAX_PLAYERS /// @todo vJass bug
 		private static integer m_maxPlayers
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ACharactersScheme\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ACharactersScheme\"")
 
 		private static method create takes nothing returns thistype
 			return 0

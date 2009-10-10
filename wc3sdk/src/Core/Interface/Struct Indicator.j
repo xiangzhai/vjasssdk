@@ -21,7 +21,7 @@ library AStructCoreInterfaceIndicator requires ALibraryCoreDebugMisc, AStructCor
 		private real m_elapsedTime //= 0.00 //Vergangene Zeit
 		private boolean m_firstTime //= true
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AIndicator\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AIndicator\"")
 
 		//dynamic member methods
 

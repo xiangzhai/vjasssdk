@@ -41,7 +41,7 @@ library AStructSystemsGuiMainWindow requires ALibraryCoreDebugMisc, AStructCoreG
 		private fogmodifier m_visibilityModifier
 		private fogmodifier m_blackMaskModifier
 
-		//! runtextmacro A_STRUCT_DEBUG("\"AMainWindow\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AMainWindow\"")
 		
 		//dynamic members
 		

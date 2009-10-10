@@ -30,7 +30,7 @@ library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGener
 		private button m_nextPageButton
 		private trigger m_previousPageTrigger
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ADialog\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ADialog\"")
 		
 		//dynamic members
 		

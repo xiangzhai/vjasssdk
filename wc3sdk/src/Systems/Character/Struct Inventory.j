@@ -170,7 +170,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private integer m_rucksackPage
 		private boolean m_rucksackIsEnabled
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AInventory\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AInventory\"")
 
 		//members
 

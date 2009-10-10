@@ -17,7 +17,7 @@ library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, ASt
 		private ARealVector m_damageAmounts
 		private trigger m_damageTrigger
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ADamageRecorder\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ADamageRecorder\"")
 		
 		//dynamic members
 		

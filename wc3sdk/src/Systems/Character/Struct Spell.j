@@ -24,7 +24,7 @@ library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, AStructCore
 		private trigger m_upgradeTrigger
 		private trigger m_castTrigger
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ASpell\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ASpell\"")
 
 		//start members
 		

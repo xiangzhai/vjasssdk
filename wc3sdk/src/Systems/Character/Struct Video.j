@@ -111,7 +111,7 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 		private AVideoPlayAction playAction
 		private AVideoStopAction stopAction
 
-		//! runtextmacro A_STRUCT_DEBUG("\"AVideo\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AVideo\"")
 
 		//methods
 		

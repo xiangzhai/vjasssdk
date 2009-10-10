@@ -38,7 +38,7 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 		private ARectVector m_rects
 		private AWeatherEffectVector m_weatherEffects
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AWeather\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AWeather\"")
 		
 		//dynamic mebers
 		

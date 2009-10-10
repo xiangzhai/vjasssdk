@@ -16,7 +16,7 @@ library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, A
 		private integer m_index
 		private lightning m_lightning
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ADynamicLightning\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ADynamicLightning\"")
 		
 		//start members
 		

@@ -4,9 +4,6 @@ library AStructCoreGeneralAsl requires ALibraryCoreDebugMisc, ALibraryCoreString
 		public static constant string version = "0.1"
 		public static constant string maintainer = "Tamino Dauth"
 		public static constant string website = "http://sourceforge.net/projects/vjasssdk/"
-		//static members
-		private static boolean m_useRtc
-		private static boolean m_useJapi
 
 		private static method create takes nothing returns thistype
 			return 0
@@ -15,11 +12,7 @@ library AStructCoreGeneralAsl requires ALibraryCoreDebugMisc, ALibraryCoreString
 		private method onDestroy takes nothing returns nothing
 		endmethod
 		
-		public static method init takes boolean useRtc, boolean useJapi returns nothing
-			//static members
-			set thistype.m_useRtc = useRtc
-			set thistype.m_useJapi = useJapi
-			
+		public static method init takes nothing returns nothing
 			debug call Print(tr("Initializing Advanced Script Library"))
 			debug call Print(StringArg(tr("Version: %s"), thistype.version))
 			debug call Print(StringArg(tr("Maintainer: %s"), thistype.maintainer))
@@ -28,12 +21,24 @@ library AStructCoreGeneralAsl requires ALibraryCoreDebugMisc, ALibraryCoreString
 		
 		//static members
 		
-		public static method useRtc takes nothing returns boolean
-			return thistype.m_useRtc
+		public static constant method useRtc takes nothing returns boolean
+			return A_RTC
 		endmethod
 		
-		public static method useJapi takes nothing returns boolean
-			return thistype.m_useJapi
+		public static constant method useJapi takes nothing returns boolean
+			return A_JAPI
+		endmethod
+
+		public static constant method useObjects takes nothing returns boolean
+			return A_OBJECTS
+		endmethod
+
+		public static constant method useDebug takes nothing returns boolean
+			return A_DEBUG
+		endmethod
+
+		public static constant method useDebugHandles takes nothing returns boolean
+			return A_DEBUG_HANDLES
 		endmethod
 	endstruct
 

@@ -1,8 +1,8 @@
-//! import "Objects/Library Bonus Mod.j"
-//! import "Objects/Library Doodads.j"
-//! import "Objects/Library Units.j"
+//! import "Objects/Library Ambient.j"
+//! import "Objects/Library Creatures.j"
 
-/// Do not use this library.
-/// @state untested
-library AObjects requires ALibraryObjectsBonusMod, ALibraryObjectsDoodads, ALibraryObjectsUnits
+/**
+* Sub libraries provide functions for preloading of files from wc3sdk MPQ archives.
+*/
+library AObjects requires ALibraryObjectsAmbient, ALibraryObjectsCreatures
 endlibrary

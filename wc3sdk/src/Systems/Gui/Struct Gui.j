@@ -59,7 +59,7 @@ library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralH
 		private APlayerSelection m_playerSelection
 		private ADialog m_dialog
 
-		//! runtextmacro A_STRUCT_DEBUG("\"AGui\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AGui\"")
 
 		//dynamic members
 

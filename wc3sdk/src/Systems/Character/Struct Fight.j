@@ -15,7 +15,7 @@ library AStructSystemsCharacterFight requires ALibraryCoreDebugMisc, AStructCore
 		private boolean m_hasOrdered
 		private boolean m_canOrder
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AFight\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AFight\"")
 
 		public method enable takes nothing returns nothing
 			call super.enable()

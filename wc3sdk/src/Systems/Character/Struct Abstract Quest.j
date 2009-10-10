@@ -63,7 +63,7 @@ library AStructSystemsCharacterAbstractQuest requires ALibraryCoreDebugMisc, ALi
 		private integer m_index
 		private trigger array m_stateTrigger[thistype.maxStates]
 
-		//! runtextmacro A_STRUCT_DEBUG("\"AAbstractQuest\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AAbstractQuest\"")
 		
 		debug private method checkState takes integer state returns boolean
 			debug if ((state <= thistype.stateNotUsed) or (state >= thistype.maxStates)) then

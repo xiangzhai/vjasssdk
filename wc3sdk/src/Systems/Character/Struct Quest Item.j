@@ -7,7 +7,7 @@ library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStruct
 		private questitem m_questItem
 		private integer m_index
 
-		///! runtextmacro A_STRUCT_DEBUG("\"AQuestItem\"")
+		///! runtextmacro optional A_STRUCT_DEBUG("\"AQuestItem\"")
 		
 		//start members
 		

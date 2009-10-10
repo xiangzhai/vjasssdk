@@ -17,7 +17,7 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 		//members
 		private trigger cheatTrigger
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ACheat\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ACheat\"")
 		
 		//start members
 		

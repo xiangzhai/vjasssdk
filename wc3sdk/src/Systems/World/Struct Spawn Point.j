@@ -24,7 +24,7 @@ library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCo
 		private timer m_spawnTimer
 		private group m_unitGroup
 
-		//! runtextmacro A_STRUCT_DEBUG("\"ASpawnPoint\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ASpawnPoint\"")
 
 		//dynamic members
 		

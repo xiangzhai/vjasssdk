@@ -9,6 +9,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 	* clipping parts of the terrain.
 	* Note that you have to initialize @struct AArrowKeys before initializing this struct.
 	* @author Opossum
+	* @author Tamino Dauth
 	* @link http://www.wc3c.net/showthread.php?t=104786
 	*/
 	struct AThirdPersonCamera

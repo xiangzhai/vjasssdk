@@ -47,7 +47,7 @@ library AStructSystemsCharacterClassSelection requires ALibraryCoreDebugMisc, AS
 		private multiboard m_infoSheet
 		private AClass m_class
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AClassSelection\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AClassSelection\"")
 
 		//methods
 		

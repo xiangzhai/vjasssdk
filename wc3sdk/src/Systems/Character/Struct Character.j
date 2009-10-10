@@ -45,7 +45,7 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 		private ATalkLog m_talkLog
 		private AIntegerVector m_spells
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ACharacter\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ACharacter\"")
 
 		//dynamic members
 

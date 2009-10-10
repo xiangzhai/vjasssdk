@@ -16,7 +16,7 @@ library AStructSystemsGuiDialogButton requires ALibraryCoreDebugMisc, AStructCor
 		private button m_button
 		private trigger m_trigger
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"ADialogButton\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ADialogButton\"")
 		
 		//start members
 		

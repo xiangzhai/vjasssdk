@@ -25,7 +25,7 @@ library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGe
 		private real m_distance
 		private real m_x
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AJump\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AJump\"")
 
 		//dynamic members
 

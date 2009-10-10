@@ -11,7 +11,7 @@ library AStructSystemsCharacterQuest requires ALibraryCoreDebugMisc, ALibraryCor
 		//members
 		private quest m_questLogQuest
 
-		///! runtextmacro A_STRUCT_DEBUG("\"AQuest\"")
+		///! runtextmacro optional A_STRUCT_DEBUG("\"AQuest\"")
 
 		//dynamic members
 

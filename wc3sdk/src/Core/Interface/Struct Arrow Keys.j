@@ -1,7 +1,3 @@
-/**
-* @author Anitarf
-* @link http://www.wc3c.net/showthread.php?t=101271
-*/
 library AStructCoreInterfaceArrowKeys
 
 	/**
@@ -11,6 +7,11 @@ library AStructCoreInterfaceArrowKeys
 	*/
 	function interface AArrowKeysOnPressAction takes AArrowKeys arrowKeys, integer key, boolean pressed returns nothing
 
+	/**
+	* @author Anitarf
+	* @author Tamino Dauth
+	* @link http://www.wc3c.net/showthread.php?t=101271
+	*/
 	struct AArrowKeys
 		public static constant integer keyUp = 0
 		public static constant integer keyDown = 1

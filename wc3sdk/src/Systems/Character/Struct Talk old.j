@@ -13,7 +13,7 @@ library AStructSystemsCharacterTalk requires ALibraryCoreDebugMisc, ALibraryCore
 		//members
 		private boolean array wasPressed[12] //[bj_MAX_PLAYERS] /// @todo vJass bug
 
-		//! runtextmacro A_STRUCT_DEBUG("\"AInfo\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AInfo\"")
 
 		//members
 

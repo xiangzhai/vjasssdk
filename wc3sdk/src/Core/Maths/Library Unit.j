@@ -40,22 +40,24 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 		call SetUnitFlyHeight(usedUnit, z - GetUnitZ(usedUnit), 0.0) //ALibraryMathsHandle
 	endfunction
 
-	/// Beschreibung: Die Funktionen setzen eine Einheit auf angegebene Koordinaten, falls die Einheit
-	/// auf diesen stehen könnte. Dabei wird die Betrachtung für jede Koordinate separat ausgeführt.
-	/// Das heißt, die Einheit könnte in eine Achsenrichtung bewegt werden, auch wenn sie es in die
-	/// Zweite nicht kann. Dadurch slidet sie an Grenzen, wenn die Bewegung in eine Richtung möglich
-	/// ist. Die Funktionen returnen, ob die Einheit erfolgreich an die gegebenen Koordinaten bewegt
-	/// wurde.
-	/// Hinweise: Um zu entscheiden, ob die Einheit geblockt wird, wird ein kleiner Toleranzbereich
-	/// genommen. Auf Bewegung bezogene Ereignisse werden ausgeführt, auch wenn die Einheit im
-	/// Endeffekt zurückgesetzt wurde. Sowohl das Prüfen als auch das Zurücksetzen der Position
-	/// erfolgt über Bewegungsaktionen, die auf die Einheit angewandt werden. Da die Funktionen wohl
-	/// im Zusammenhang mit rekursiven Fortbewegungssystemen einer Einheit gebraucht werden (die
-	/// vorigen Koordinaten einer Einheit werden ausgelesen, um sie zum Beispiel für die Ermittlung
-	/// der Nächsten zu verarbeiten), muss man bei allen drei Funktionen die alten
-	/// Positionsinformationen der Einheit mitliefern. Das ist besser für die
-	/// Schnelligkeitsperformance, als wenn man es mehrfach ausliest.
-	/// @author WaterKnight
+	/**
+	* Beschreibung: Die Funktionen setzen eine Einheit auf angegebene Koordinaten, falls die Einheit
+	* auf diesen stehen könnte. Dabei wird die Betrachtung für jede Koordinate separat ausgeführt.
+	* Das heißt, die Einheit könnte in eine Achsenrichtung bewegt werden, auch wenn sie es in die
+	* Zweite nicht kann. Dadurch slidet sie an Grenzen, wenn die Bewegung in eine Richtung möglich
+	* ist. Die Funktionen returnen, ob die Einheit erfolgreich an die gegebenen Koordinaten bewegt
+	* wurde.
+	* Hinweise: Um zu entscheiden, ob die Einheit geblockt wird, wird ein kleiner Toleranzbereich
+	* genommen. Auf Bewegung bezogene Ereignisse werden ausgeführt, auch wenn die Einheit im
+	* Endeffekt zurückgesetzt wurde. Sowohl das Prüfen als auch das Zurücksetzen der Position
+	* erfolgt über Bewegungsaktionen, die auf die Einheit angewandt werden. Da die Funktionen wohl
+	* im Zusammenhang mit rekursiven Fortbewegungssystemen einer Einheit gebraucht werden (die
+	* vorigen Koordinaten einer Einheit werden ausgelesen, um sie zum Beispiel für die Ermittlung
+	* der Nächsten zu verarbeiten), muss man bei allen drei Funktionen die alten
+	* Positionsinformationen der Einheit mitliefern. Das ist besser für die
+	* Schnelligkeitsperformance, als wenn man es mehrfach ausliest.
+	* @author WaterKnight
+	*/
 	function SetUnitXIfNotBlocked takes unit usedUnit, real oldX, real oldY, real x returns boolean
 		call SetUnitPosition(usedUnit, x, oldY)
 		if ((RAbsBJ(GetUnitX(usedUnit) - x) > 1) or (RAbsBJ(GetUnitY(usedUnit) - oldY) > 1)) then

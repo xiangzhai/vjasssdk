@@ -18,7 +18,7 @@ library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, AStructCore
 		private unit target
 		private boolean fixedTarget
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AFocus\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AFocus\"")
 
 		public method enable takes nothing returns nothing
 			call super.enable()

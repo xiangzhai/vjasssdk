@@ -8,7 +8,7 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc
 		//members
 		private hashtable m_hashTable
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AHashTable\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AHashTable\"")
 		
 		//! textmacro AHashTableOperationMacro takes TYPE, TYPENAME, METHODNAME, METHODTYPENAME
 			public method set$TYPENAME$ takes string key, string label, $TYPE$ value returns nothing
@@ -95,6 +95,9 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc
 			set AHashTable.m_global = 0
 		endmethod
 		
+		/**
+		* Global hash table is used by Advanced Script Library itself.
+		*/
 		public static method global takes nothing returns thistype
 			if (thistype.m_global == 0) then
 				set thistype.m_global = thistype.create()

@@ -27,7 +27,7 @@ library AStructSystemsCharacterItemType requires ALibraryCoreDebugMisc, AStructC
 		private AIntegerVector m_abilities
 		private ABooleanVector m_permanent
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AItemType\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AItemType\"")
 
 		//start members
 		

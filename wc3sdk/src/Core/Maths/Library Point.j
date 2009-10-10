@@ -1,6 +1,6 @@
 library ALibraryCoreMathsPoint
 
-	/// Returns the z value of the point with coordinates @param x and @param y.
+	/// @return Returns the z value of the point with coordinates @param x and @param y.
 	function GetTerrainZ takes real x, real y returns real
 		local location usedLocation = Location(x, y)
 		local real z = GetLocationZ(usedLocation)
@@ -44,7 +44,7 @@ library ALibraryCoreMathsPoint
 		return -(A * x + B * y + D) / C
 	endfunction
 
-	/// Returns the distance between two points.
+	/// @return Returns the distance between two points.
 	/// Uses z values, too.
 	function GetDistanceBetweenPoints takes real x0, real y0, real z0, real x1, real y1, real z1 returns real
 		local real distanceX = (x1 - x0)
@@ -53,7 +53,7 @@ library ALibraryCoreMathsPoint
 		return SquareRoot((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ))
 	endfunction
 
-	/// Returns the centre between two points.
+	/// @return Returns the centre between two points.
 	/// Achtung: Z muss ignoriert werden, da sich kein Punkt mit einem Z-Wert erstellen lässt.
 	function GetCentreBetweenPoints takes real x0, real y0, real x1, real y1 returns location
 		return Location(((x0 + x1) / 2.0), ((y0 + y1) / 2.0))

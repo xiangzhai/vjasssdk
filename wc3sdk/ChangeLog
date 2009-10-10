@@ -1,3 +1,10 @@
+2009-10-10 Tamino Dauth <tamino@cdauth.de>
+* Moved Bonus Mod to systems.
+* Object libraries do only provide file preloading now.
+* Added static ifs.
+* Added optional library requirement.
+* Added optional text macro calls.
+
 2009-09-23 Tamino Dauth <tamino@cdauth.de>
 * Renamed method usingJapi and usingRtc to useJapi and useRtc.
 

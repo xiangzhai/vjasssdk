@@ -118,7 +118,7 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 		private integer m_talkIndex
 		private boolean array m_hasBeenShownToCharacter[12] //bj_MAX_PLAYERS
 
-		//! runtextmacro A_STRUCT_DEBUG("\"AInfo\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AInfo\"")
 
 		//start members
 
@@ -280,4 +280,5 @@ library AStructSystemsCharacterInfo requires ALibraryCoreDebugMisc, ALibraryCore
 			set AInfo.skipTrigger = null
 		endmethod
 	endstruct
+
 endlibrary
