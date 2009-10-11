@@ -41,12 +41,12 @@ void Keyword::initClass()
 }
 #endif
 
-Keyword::Keyword(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : m_library(library), m_scope(scope), m_isPrivate(isPrivate), Object(identifier, sourceFile, line, docComment)
+Keyword::Keyword(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate)
 {
 }
 
 #ifdef SQLITE
-Keyword::Keyword(std::vector<const unsigned char*> &columnVector) : m_library(0), Object(columnVector)
+Keyword::Keyword(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_library(0)
 {
 }
 #endif

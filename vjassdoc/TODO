@@ -50,6 +50,17 @@ New todo list Tamino Dauth <tamino@cdauth.de>:
 * DONE: Add support for compiler flag DATABASE.
 * DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.
 
+2009-10-11 Tamino Dauth <tamino@cdauth.de>
+* DONE: Keyword support textmacro_once.
+* Add glibc requirement to cmake files (because of getopt usage).
+* Import and database paths should be separated by : character.
+* Add static if support.
+* Add importance tree special page for source files.
+
+2009-10-10 Tamino Dauth <tamino@cdauth.de>
+* DONE: Use GNU command line parser library (getopt).
+* DONE: Add new keywords support (optional library requirement, run textmacro optional).
+
 2009-09-11 Tamino Dauth <tamino@cdauth.de>
 * Check member initialization of Object's child classes.
 

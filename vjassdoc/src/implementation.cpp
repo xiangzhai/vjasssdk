@@ -47,7 +47,7 @@ Implementation::Implementation(const std::string &identifier, class SourceFile *
 }
 
 #ifdef SQLITE
-Implementation::Implementation(std::vector<const unsigned char*> &columnVector) : m_container(0), Object(columnVector)
+Implementation::Implementation(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_container(0)
 {
 	this->prepareVector();
 }

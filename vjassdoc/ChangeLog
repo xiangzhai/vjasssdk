@@ -1,3 +1,7 @@
+2009-10-11 Tamino Dauth <tamino@cdauth.de>
+* Added first JassHelper 0.9.Z.3 support.
+* Improved class intialization.
+
 2009-09-11 Tamino Dauth <tamino@cdauth.de>
 * Renamed option methods of class Vjassdoc.
 * Duration and CPU duration of Vjassdoc are accessable now.

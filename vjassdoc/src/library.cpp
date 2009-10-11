@@ -57,18 +57,18 @@ void Library::initClass()
 	Library::sqlColumns = Object::sqlColumns + 3;
 	/// @todo Add class Requirement.
 	Library::sqlColumnStatement = Object::sqlColumnStatement +
-	",IsOnce BOOL,"
+	",IsOnce BOOLEAN,"
 	"Initializer INT,"
 	"Requirement INT";
 }
 #endif
 
-Library::Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions) : Object(identifier, sourceFile, line, docComment), m_isOnce(isOnce), initializerExpression(initializerExpression), requirementExpressions(requirementExpressions), m_initializer(0), m_requirement(0)
+Library::Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions, std::list<bool> *optionalRequirement) : Object(identifier, sourceFile, line, docComment), m_isOnce(isOnce), initializerExpression(initializerExpression), requirementExpressions(requirementExpressions), m_initializer(0), m_requirement(0), m_optionalRequirement(optionalRequirement)
 {
 }
 
 #ifdef SQLITE
-Library::Library(std::vector<const unsigned char*> &columnVector) : requirementExpressions(0), m_initializer(0), m_requirement(0), Object(columnVector)
+Library::Library(std::vector<const unsigned char*> &columnVector) : Object(columnVector), requirementExpressions(0), m_initializer(0), m_requirement(0), m_optionalRequirement(0)
 {
 }
 #endif
@@ -80,6 +80,9 @@ Library::~Library()
 	
 	if (this->m_requirement != 0)
 		delete this->m_requirement;
+	
+	if (this->m_optionalRequirement != 0)
+		delete this->m_optionalRequirement;
 }
 
 void Library::init()
@@ -156,10 +159,16 @@ void Library::page(std::ofstream &file) const
 	{
 		file << "\t\t<ul>\n";
 		std::list<std::string>::iterator expressionIterator = this->requirementExpressions->begin();
+		std::list<bool>::iterator optionalIterator = this->optionalRequirement()->begin();
 	
-		for (std::list<class Library*>::iterator iterator = this->requirement()->begin(); iterator != this->requirement()->end(); ++iterator, ++expressionIterator)
+		for (std::list<class Library*>::iterator iterator = this->requirement()->begin(); iterator != this->requirement()->end(); ++iterator, ++expressionIterator, ++optionalIterator)
 		{
-			file << "\t\t\t<li>" << Object::objectPageLink(*iterator, *expressionIterator) << "</li>\n";
+			file << "\t\t\t<li>";
+			
+			if (*optionalIterator)
+				file << "optional ";
+			
+			file << Object::objectPageLink(*iterator, *expressionIterator) << "</li>\n";
 		}
 		
 		file << "\t\t</ul>\n";

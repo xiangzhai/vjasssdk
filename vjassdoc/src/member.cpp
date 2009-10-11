@@ -48,7 +48,7 @@ Member::Member(const std::string &identifier, class SourceFile *sourceFile, unsi
 }
 
 #ifdef SQLITE
-Member::Member(std::vector<const unsigned char*> &columnVector) : m_container(0), Global(columnVector)
+Member::Member(std::vector<const unsigned char*> &columnVector) : Global(columnVector), m_container(0)
 {
 }
 #endif

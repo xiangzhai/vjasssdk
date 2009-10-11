@@ -41,12 +41,12 @@ void Scope::initClass()
 }
 #endif
 
-Scope::Scope(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, bool isPrivate, const std::string initializerExpression) : Object(identifier, sourceFile, line, docComment), m_library(library), m_isPrivate(isPrivate), initializerExpression(initializerExpression), m_initializer(0)
+Scope::Scope(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, bool isPrivate, const std::string initializerExpression) : Object(identifier, sourceFile, line, docComment), initializerExpression(initializerExpression), m_library(library), m_isPrivate(isPrivate), m_initializer(0)
 {
 }
 
 #ifdef SQLITE
-Scope::Scope(std::vector<const unsigned char*> &columnVector) : m_library(0), m_initializer(0), Object(columnVector)
+Scope::Scope(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_library(0), m_initializer(0)
 {
 }
 #endif

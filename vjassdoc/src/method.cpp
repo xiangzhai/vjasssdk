@@ -43,12 +43,12 @@ void Method::initClass()
 }
 #endif
 
-Method::Method(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, bool isOperator, const std::string &defaultReturnValueExpression) : Function(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression, isPublic, isConstant, false), m_container(container), m_isStatic(isStatic), m_isStub(isStub), m_isOperator(isOperator), m_defaultReturnValueExpression(defaultReturnValueExpression), m_defaultReturnValue(0)
+Method::Method(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, class Object *container, bool isStatic, bool isStub, bool isOperator, const std::string &defaultReturnValueExpression) : Function(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression, isPublic, isConstant, false), m_container(container), m_isStatic(isStatic), m_isStub(isStub), m_isOperator(isOperator), m_defaultReturnValue(0), m_defaultReturnValueExpression(defaultReturnValueExpression)
 {
 }
 
 #ifdef SQLITE
-Method::Method(std::vector<const unsigned char*> &columnVector) : m_container(0), m_defaultReturnValue(0), Function(columnVector)
+Method::Method(std::vector<const unsigned char*> &columnVector) : Function(columnVector), m_container(0), m_defaultReturnValue(0)
 {
 }
 #endif

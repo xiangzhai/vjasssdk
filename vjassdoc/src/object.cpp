@@ -52,7 +52,7 @@ std::string Object::sqlFilteredString(const std::string &usedString)
 {
 	std::string result;
 	
-	for (int i = 0; i < usedString.length(); ++i)
+	for (std::string::size_type i = 0; i < usedString.length(); ++i)
 	{
 		char character = usedString[i];
 		
@@ -81,7 +81,7 @@ std::string Object::sqlTableHeader(const std::string &tableName, const std::stri
 }
 #endif
 
-Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : m_id(m_maxIds), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line), m_docComment(docComment), m_container(0), m_scope(0), m_library(0)
+Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : m_container(0), m_scope(0), m_library(0), m_id(m_maxIds), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line), m_docComment(docComment)
 {
 	++m_maxIds;
 	
@@ -90,7 +90,7 @@ Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsi
 }
 
 #ifdef SQLITE
-Object::Object(std::vector<Object::VectorDataType> &columnVector) : m_sourceFile(0), m_docComment(0), m_container(0), m_scope(0), m_library(0), m_columnVector(columnVector)
+Object::Object(std::vector<Object::VectorDataType> &columnVector) :  m_container(0), m_scope(0), m_library(0), m_sourceFile(0), m_docComment(0), m_columnVector(columnVector)
 {
 }
 #endif
@@ -263,7 +263,7 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 			//FIXME Detect _ separators correctly?!
 			
 			bool functionCall = false;
-			int position = valueExpression.find('(');
+			std::string::size_type position = valueExpression.find('(');
 			
 			if (position != std::string::npos)
 				functionCall = true;

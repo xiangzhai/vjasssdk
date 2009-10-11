@@ -42,7 +42,7 @@ class TextMacroInstance : public TextMacro
 
 		static void initClass();
 #endif
-		TextMacroInstance(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &arguments);
+		TextMacroInstance(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOptional, const std::string &arguments);
 #ifdef SQLITE
 		TextMacroInstance(std::vector<const unsigned char*> &columnVector);
 #endif
@@ -53,9 +53,11 @@ class TextMacroInstance : public TextMacro
 		virtual std::string sqlStatement() const;
 #endif
 		virtual class TextMacro* textMacro() const;
+		bool isOptional() const;
 		
 	protected:
 		class TextMacro *m_textMacro;
+		bool m_isOptional;
 };
 
 inline bool TextMacroInstance::UsesTextMacro::operator()(const class TextMacroInstance *thisTextMacroInstance, const class TextMacro *textMacro) const
@@ -67,6 +69,11 @@ inline bool TextMacroInstance::UsesTextMacro::operator()(const class TextMacroIn
 inline class TextMacro* TextMacroInstance::textMacro() const
 {
 	return this->m_textMacro;
+}
+
+inline bool TextMacroInstance::isOptional() const
+{
+	return this->m_isOptional;
 }
 
 }

@@ -52,7 +52,7 @@ void Struct::initClass()
 }
 #endif
 
-Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate), m_sizeExpression(sizeExpression), m_extensionExpression(extensionExpression), m_size(0), m_extension(0), m_constructor(0), m_destructor(0), m_initializer(0)
+Struct::Struct(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, const std::string &sizeExpression, const std::string &extensionExpression) : Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate), m_size(0), m_sizeExpression(sizeExpression), m_extension(0), m_extensionExpression(extensionExpression), m_constructor(0), m_destructor(0), m_initializer(0)
 {
 }
 

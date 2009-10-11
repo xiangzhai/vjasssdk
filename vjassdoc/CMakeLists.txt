@@ -5,6 +5,7 @@ project(vjassdoc)
 find_package(Gettext REQUIRED)
 # todo: require tokenizer component.
 find_package(Boost REQUIRED)
+#find_package(GLIB2 REQUIRED)
 
 # setup flags
 

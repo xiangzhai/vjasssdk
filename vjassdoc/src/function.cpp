@@ -41,7 +41,7 @@ void Function::initClass()
 }
 #endif
 
-Function::Function(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, bool isNative) : m_isPublic(isPublic), m_isConstant(isConstant), m_isNative(isNative), FunctionInterface(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression)
+Function::Function(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, bool isNative) : FunctionInterface(identifier, sourceFile, line, docComment, library, scope, isPrivate, parameters, returnTypeExpression), m_isPublic(isPublic), m_isConstant(isConstant), m_isNative(isNative)
 {
 }
 

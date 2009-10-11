@@ -33,19 +33,22 @@ std::string TextMacroInstance::sqlColumnStatement;
 
 void TextMacroInstance::initClass()
 {
-	TextMacroInstance::sqlColumns = TextMacro::sqlColumns + 1;
+	TextMacroInstance::sqlColumns = TextMacro::sqlColumns + 2;
 	TextMacroInstance::sqlColumnStatement = TextMacro::sqlColumnStatement +
-	",TextMacro INT";
+	",TextMacro INT,"
+	"IsOptional BOOLEAN"
+	;
 }
 #endif
 
-TextMacroInstance::TextMacroInstance(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &arguments) : m_textMacro(0), TextMacro(identifier, sourceFile, line, docComment, arguments)
+TextMacroInstance::TextMacroInstance(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOptional, const std::string &arguments) : TextMacro(identifier, sourceFile, line, docComment, false, arguments), m_textMacro(0), m_isOptional(isOptional) /// isOnce of @class TextMacro is unnecessary
 {
 }
 
 #ifdef SQLITE
-TextMacroInstance::TextMacroInstance(std::vector<const unsigned char*> &columnVector) : m_textMacro(0), TextMacro(columnVector)
+TextMacroInstance::TextMacroInstance(std::vector<const unsigned char*> &columnVector) : TextMacro(columnVector), m_textMacro(0)
 {
+	/// @todo m_isOptional
 }
 #endif
 
@@ -59,18 +62,18 @@ void TextMacroInstance::init()
 
 void TextMacroInstance::pageNavigation(std::ofstream &file) const
 {
-	//do not use TextMacro::pageNavigation() because there are listed all instances.
+	//do not use TextMacro::pageNavigation() because there are listed all instances and isOnce.
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Arguments\">"		<< _("Arguments") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Text Macro\">"		<< _("Text Macro") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Optional\">"		<< _("Optional") << "</a></li>\n"
 	;
 }
 
 void TextMacroInstance::page(std::ofstream &file) const
 {
-	//do not use TextMacro::page() because there are listed all instances.
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
 	<< "\t\t<p>\n"
@@ -82,6 +85,8 @@ void TextMacroInstance::page(std::ofstream &file) const
 	<< "\t\t" << this->parameters() << '\n'
 	<< "\t\t<h2><a name=\"Text Macro\">" << _("Text Macro") << "</a></h2>\n"
 	<< "\t\t" << Object::objectPageLink(this->textMacro(), this->identifier()) << '\n'
+	<< "\t\t<h2><a name=\"Optional\">" << _("Optional") << "</a></h2>\n"
+	<< "\t\t" << Object::showBooleanProperty(this->isOptional()) << '\n'
 	;
 }
 
@@ -91,7 +96,9 @@ std::string TextMacroInstance::sqlStatement() const
 	std::ostringstream sstream;
 	sstream
 	<< TextMacro::sqlStatement() << ", "
-	<< "TextMacro=" << Object::objectId(this->textMacro());
+	<< "TextMacro=" << Object::objectId(this->textMacro()) << ", "
+	<< "IsOptional=" << this->isOptional()
+	;
 
 	return sstream.str();
 }

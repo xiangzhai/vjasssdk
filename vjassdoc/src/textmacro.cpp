@@ -33,13 +33,14 @@ std::string TextMacro::sqlColumnStatement;
 
 void TextMacro::initClass()
 {
-	TextMacro::sqlColumns = Object::sqlColumns + 1;
+	TextMacro::sqlColumns = Object::sqlColumns + 2;
 	TextMacro::sqlColumnStatement = Object::sqlColumnStatement +
+	",IsOnce BOOLEAN"
 	",Parameters VARCHAR(255)";
 }
 #endif
 
-TextMacro::TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &parameters) : m_parameters(parameters), Object(identifier, sourceFile, line, docComment)
+TextMacro::TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOnce, const std::string &parameters) : Object(identifier, sourceFile, line, docComment), m_isOnce(isOnce), m_parameters(parameters)
 {
 }
 
@@ -58,6 +59,7 @@ void TextMacro::pageNavigation(std::ofstream &file) const
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Once\">"		<< _("Once") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Parameters\">"		<< _("Parameters") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Instances\">"		<< _("Instances") << "</a></li>\n"
 	;
@@ -72,6 +74,8 @@ void TextMacro::page(std::ofstream &file) const
 	<< "\t\t</p>\n"
 	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
+	<< "\t\t<h2><a name=\"Once\">" << _("Once") << "</a></h2>\n"
+	<< "\t\t" << Object::showBooleanProperty(this->isOnce()) << '\n'
 	<< "\t\t<h2><a name=\"Parameters\">" << _("Parameters") << "</a></h2>\n"
 	<< "\t\t" << this->parameters() << '\n'
 	<< "\t\t<h2><a name=\"Instances\">" << _("Instances") << "</a></h2>\n"
@@ -103,6 +107,7 @@ std::string TextMacro::sqlStatement() const
 	std::ostringstream sstream;
 	sstream
 	<< Object::sqlStatement() << ", "
+	<< "IsOnce=" << this->isOnce() << ", "
 	<< "Parameters=\"" << Object::sqlFilteredString(this->parameters()) << '\"';
 
 	return sstream.str();

@@ -105,6 +105,7 @@ const char *File::expressionText[] =
 	"loaddata",
 	"external",
 	"textmacro",
+	"textmacro_once",
 	"endtextmacro",
 	"runtextmacro", //An instance of the macro
 	"requires",
@@ -295,35 +296,11 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 					}
 				}
 				else if (preprocessor == expressionText[TextmacroExpression])
-				{
-					std::string identifier = getToken(line, index);
-					//std::cout << "Start text macro " << identifier << std::endl;
-					std::string args = this->getTextMacroArguments(line, index); //Nicht direkt übergeben, dann stimmt index nicht
-					//std::cout << "With arguments " << args << std::endl;
-					Vjassdoc::parser()->add(new TextMacro(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, args));
-					
-					if (!Vjassdoc::optionTextmacros())
-					{
-						if (Vjassdoc::optionVerbose())
-							std::cout << _("Ignoring text macro space.") << std::endl;
-
-						this->notRequiredSpace = TextmacroExpression;
-					}
-					
-					this->clearDocComment();
-				}
+					this->getTextMacro(line, index, false);
+				else if (preprocessor == expressionText[TextmacroonceExpression])
+					this->getTextMacro(line, index, true);
 				else if (preprocessor == expressionText[RuntextmacroExpression])
-				{
-					std::string token = getToken(line, index, true);
-					unsigned int argsPosition = token.find('('); //For the case: //! runtextmacro TextMacroName(...) and not //! runtextmacro TextMacroName (...)
-
-					std::string identifier = token.substr(0, argsPosition);
-					std::string args = token.substr(argsPosition + 1, token.length() - argsPosition - 2);
-
-					//parser->addTextMacroInstance(this->docComment, this->getIdentifier(identifier), args);
-					Vjassdoc::parser()->add(new TextMacroInstance(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, args));
-					this->clearDocComment();
-				}
+					this->getTextMacroInstance(line, index);
 				//NOTE Syntax checker!
 				else if (Vjassdoc::optionSyntax() && preprocessor != expressionText[DovjassinitExpression] && preprocessor != expressionText[InjectExpression] && preprocessor != expressionText[EndinjectExpression] && preprocessor != expressionText[NovjassExpression] && preprocessor != expressionText[EndnovjassExpression] && preprocessor != expressionText[LoaddataExpression] && preprocessor != expressionText[ExternalExpression])
 				{
@@ -438,6 +415,7 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				this->currentFunction = 0;
 				break;
 
+			/// @todo Add static if support, should be evaluated during parse process (ignore code between static ifs, if variable is false).
 			case StaticExpression:
 			{
 				this->truncateComments(line, index);
@@ -1322,10 +1300,12 @@ void File::getLibrary(const std::string &line, unsigned int &index, bool isOnce)
 		token = getToken(line, index);
 	}
 	
+	std::list<bool> *optionalRequirement = new std::list<bool>();
+	
 	if (token == expressionText[RequiresExpression] || token == expressionText[NeedsExpression] || token == expressionText[UsesExpression])
-		requirement = this->getLibraryRequirement(line, index);
+		requirement = this->getLibraryRequirement(line, index, optionalRequirement);
 
-	Library *library = new Library(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, isOnce, initializer, requirement);
+	class Library *library = new Library(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, isOnce, initializer, requirement, optionalRequirement);
 	this->currentLibrary = library;
 	Vjassdoc::parser()->add(library);
 	this->clearDocComment();
@@ -1411,10 +1391,11 @@ std::string File::removeFirstSpace(const std::string &line, unsigned int index) 
 	return line.substr(index, line.length());
 }
 
-std::string File::getTextMacroArguments(const std::string &line, unsigned int &index) const
+
+static std::string getTextMacroArguments(const std::string &line, unsigned int &index)
 {
 	//get token takes
-	if (getToken(line, index) != expressionText[TakesExpression])
+	if (getToken(line, index) != File::expressionText[File::TakesExpression])
 		return std::string();
 
 	std::string argList = " ";
@@ -1433,7 +1414,47 @@ std::string File::getTextMacroArguments(const std::string &line, unsigned int &i
 	return std::string();
 }
 
-std::list<std::string>* File::getLibraryRequirement(const std::string &line, unsigned int &index) const
+void File::getTextMacro(const std::string &line, unsigned int &index, bool isOnce)
+{
+	std::string identifier = getToken(line, index);
+	//std::cout << "Start text macro " << identifier << std::endl;
+	std::string args = getTextMacroArguments(line, index); //Nicht direkt übergeben, dann stimmt index nicht
+	//std::cout << "With arguments " << args << std::endl;
+	Vjassdoc::parser()->add(new TextMacro(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, isOnce, args));
+	
+	if (!Vjassdoc::optionTextmacros())
+	{
+		if (Vjassdoc::optionVerbose())
+			std::cout << _("Ignoring text macro space.") << std::endl;
+
+		this->notRequiredSpace = TextmacroExpression;
+	}
+	
+	this->clearDocComment();
+}
+
+void File::getTextMacroInstance(const std::string &line, unsigned int &index)
+{
+	std::string token = getToken(line, index);
+	bool isOptional = false;
+	
+	if (token == expressionText[OptionalExpression])
+	{
+		isOptional = true;
+		token = getToken(line, index, true);
+	}
+	
+	std::string::size_type position = token.find('('); //For the case: //! runtextmacro TextMacroName(...) and not //! runtextmacro TextMacroName (...)
+
+	std::string identifier = token.substr(0, position);
+	std::string args = token.substr(position + 1, token.length() - position - 2);
+
+	//parser->addTextMacroInstance(this->docComment, this->getIdentifier(identifier), args);
+	Vjassdoc::parser()->add(new TextMacroInstance(identifier, Vjassdoc::parser()->currentSourceFile(), this->currentLine, this->currentDocComment, isOptional, args));
+	this->clearDocComment();
+}
+
+std::list<std::string>* File::getLibraryRequirement(const std::string &line, unsigned int &index, std::list<bool> *optionalRequirement) const
 {
 	std::string libraryToken;
 	std::list<std::string> *requiredLibraries = new std::list<std::string>();
@@ -1448,6 +1469,14 @@ std::list<std::string>* File::getLibraryRequirement(const std::string &line, uns
 		if (libraryToken == ",") //single separator
 			continue;
 
+		bool isOptional = false;
+		
+		if (libraryToken == expressionText[OptionalExpression])
+		{
+			isOptional = true;
+			libraryToken = getToken(line, index);
+		}
+		
 		//cut the separator
 		if (libraryToken.substr(libraryToken.length() - 1, libraryToken.length()) == ",")
 		{
@@ -1457,10 +1486,15 @@ std::list<std::string>* File::getLibraryRequirement(const std::string &line, uns
 		else
 		{
 			requiredLibraries->push_back(libraryToken);
+			optionalRequirement->push_back(isOptional);
+			
 			break;
 		}
+		
 		requiredLibraries->push_back(libraryToken);
+		optionalRequirement->push_back(isOptional);
 	}
+	
 	return requiredLibraries;
 }
 

@@ -41,7 +41,7 @@ class Library : public Object
 
 		static void initClass();
 #endif
-		Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions);
+		Library(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOnce, const std::string &initializerExpression, std::list<std::string> *requirementExpressions, std::list<bool> *optionalRequirement);
 		Library(std::vector<const unsigned char*> &columnVector);
 		virtual ~Library();
 		virtual void init();
@@ -53,6 +53,7 @@ class Library : public Object
 		bool isOnce() const;
 		class Function* initializer() const; //Function, Method (static)
 		std::list<class Library*>* requirement() const;
+		std::list<bool>* optionalRequirement() const;
 	
 	protected:
 		bool m_isOnce;
@@ -61,6 +62,7 @@ class Library : public Object
 
 		class Function *m_initializer; //Function is the parent class of Method, so it can be a method, too.
 		std::list<class Library*> *m_requirement;
+		std::list<bool> *m_optionalRequirement;
 };
 
 inline bool Library::isOnce() const
@@ -76,6 +78,11 @@ inline class Function* Library::initializer() const
 inline std::list<class Library*>* Library::requirement() const
 {
 	return this->m_requirement;
+}
+
+inline std::list<bool>* Library::optionalRequirement() const
+{
+	return this->m_optionalRequirement;
 }
 
 }

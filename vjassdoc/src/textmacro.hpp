@@ -36,7 +36,7 @@ class TextMacro : public Object
 
 		static void initClass();
 #endif
-		TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &parameters);
+		TextMacro(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, bool isOnce, const std::string &parameters);
 #ifdef SQLITE
 		TextMacro(std::vector<const unsigned char*> &columnVector);
 #endif
@@ -46,11 +46,18 @@ class TextMacro : public Object
 #ifdef SQLITE
 		virtual std::string sqlStatement() const;
 #endif
+		bool isOnce() const;
 		std::string parameters() const;
 
 	protected:
+		bool m_isOnce;
 		std::string m_parameters;
 };
+
+inline bool TextMacro::isOnce() const
+{
+	return this->m_isOnce;
+}
 
 inline std::string TextMacro::parameters() const
 {

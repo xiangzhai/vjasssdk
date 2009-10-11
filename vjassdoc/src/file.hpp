@@ -113,6 +113,7 @@ class File
 			LoaddataExpression,
 			ExternalExpression,
 			TextmacroExpression,
+			TextmacroonceExpression,
 			EndtextmacroExpression,
 			RuntextmacroExpression, //An instance of the macro
 			RequiresExpression,
@@ -181,8 +182,9 @@ class File
 		void getModule(const std::string &line, unsigned int &index, bool isPrivate);
 		void getLocal(const std::string &line, unsigned int &index);
 		std::string removeFirstSpace(const std::string &line, unsigned int index) const;
-		std::string getTextMacroArguments(const std::string &line, unsigned int &index) const;
-		std::list<std::string>* getLibraryRequirement(const std::string &line, unsigned int &index) const;
+		void getTextMacro(const std::string &line, unsigned int &index, bool isOnce);
+		void getTextMacroInstance(const std::string &line, unsigned int &index);
+		std::list<std::string>* getLibraryRequirement(const std::string &line, unsigned int &index, std::list<bool> *optionalRequirement) const;
 		bool isInVjassBlock() const;
 		class Object* getCurrentContainer() const;
 };

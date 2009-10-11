@@ -38,8 +38,8 @@ class Vjassdoc
 		static const char *version;
 		static const bool supportsDatabaseCreation;
 
-
 		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, bool optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases);
+		
 #ifdef SQLITE
 		static void initClasses();
 #endif

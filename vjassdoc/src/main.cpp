@@ -26,6 +26,8 @@
 #include <vector>
 #include <list>
 
+#include <getopt.h>
+
 #include "internationalisation.hpp"
 #include "vjassdoc.hpp"
 #include "parser.hpp"
@@ -39,85 +41,53 @@ int main(int argc, char *argv[])
 	// Set the text message domain.
 	bindtextdomain("vjassdoc", LOCALE_DIR);
 	textdomain("vjassdoc");
-
-	if (argc > 1)
+	
+	static struct option options[] =
 	{
-		if (strcmp(argv[1], "--version") == 0)
-		{
-			printf("vjassdoc %s.\n", Vjassdoc::version);
-			std::cout << _(
-			"Copyright © 2008, 2009 Tamino Dauth\n"
-			"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
-			"This is free software: you are free to change and redistribute it.\n"
-			"There is NO WARRANTY, to the extent permitted by law."
-			) << std::endl;
-			
-			return EXIT_SUCCESS;
-		}
-		else if (strcmp(argv[1], "--help") == 0)
-		{
-			std::cout <<
-			_("vjassdoc options:\n") <<
-			_("--version                   Shows the current version of vjassdoc.\n") <<
-			_("-j --jass                   vJass code will be ignored.\n") <<
-			_("-d --debug                  Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
-			_("--private                   Private objects will be parsed.\n") <<
-			_("-m --textmacros             Code between text macro statements will be parsed (Warning: There can be many parsing errors!).\n") <<
-			_("-f --functions              Code between function/method statements will be parsed.\n") <<
-			_("--no<object type name>      Objects of type <object type name> won't added to the output files.\n") <<
-			_("                            The following object type names are available:\n") <<
-			_("                            comments\n") <<
-			_("                            keywords\n") <<
-			_("                            textmacros\n") <<
-			_("                            textmacroinstances\n") <<
-			_("                            types\n") <<
-			_("                            locals\n") <<
-			_("                            globals\n") <<
-			_("                            members\n") <<
-			_("                            parameters\n") <<
-			_("                            functioninterfaces\n") <<
-			_("                            functions\n") <<
-			_("                            methods\n") <<
-			_("                            implementations\n") <<
-			_("                            hooks\n") <<
-			_("                            interfaces\n") <<
-			_("                            structs\n") <<
-			_("                            modules\n") <<
-			_("                            scopes\n") <<
-			_("                            libraries\n") <<
-			_("                            sourcefiles\n") <<
-			_("                            doccomments\n") <<
-			_("-h --html                   Program creates a simple HTML API documentation.\n") <<
-			_("-p --pages                  Program creates an HTML file for each parsed object.\n") <<
-			_("-s --specialpages           Program creates additional HTML files containing more information about all parsed objects.\n") <<
-			_("--syntax                    Program checks syntax. Not implemented yet!\n") <<
-			_("--compile <arg>             Program uses file <arg> to create a map Jass script.\n") <<
-#ifdef SQLITE
-			_("-b --database               Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
-#endif
-			_("-v --verbose                Program shows more information about the process.\n") <<
-			_("-t --time                   Detects the elapsed time and shows it at the end of the process.\n") <<
-			_("-a --alphabetical           All objects will be aranged in alphabetical order.\n") <<
-			_("--title <arg>               <arg> has to be replaced by the title which is used for the API documentation.\n") <<
-			_("--importdirs <args>         <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
-			_("--files <args>              <args> has to be replaced by the files which should be parsed.\n") <<
-			_("--dir <arg>                 <arg> has to be replaced by the output directory path.\n") <<
-#ifdef SQLITE			
-			_("--databases <args>          <args> has to be replaced by the SQLite databases which should be added to the output.\n") <<
-#endif
-			_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
-			std::endl;
-
-			return EXIT_SUCCESS;
-		}
-	}
-	else
-	{
-		std::cerr << _("Missing arguments.\nUse \"--help\" to get some information about all available options.") << std::endl;
-		
-		return EXIT_FAILURE;
-	}
-
+		{"version",                 no_argument,             0, 'V'},
+		{"help",                    no_argument,             0, 'h'},
+		{"jass",                    no_argument,             0, 'j'},
+		{"debug",                   no_argument,             0, 'd'},
+		{"private",                 no_argument,             0, 'p'},
+		{"textmacros",              no_argument,             0, 'm'},
+		{"functions",               no_argument,             0, 'f'},
+		{"nocomments",              no_argument,             0, 0},
+		{"nokeywords",              no_argument,             0, 0},
+		{"notextmacros",            no_argument,             0, 0},
+		{"notextmacroinstances",    no_argument,             0, 0},
+		{"notypes",                 no_argument,             0, 0},
+		{"nolocals",                no_argument,             0, 0},
+		{"noglobals",               no_argument,             0, 0},
+		{"nomembers",               no_argument,             0, 0},
+		{"noparameters",            no_argument,             0, 0},
+		{"nofunctioninterfaces",    no_argument,             0, 0},
+		{"nofunctions",             no_argument,             0, 0},
+		{"nomethods",               no_argument,             0, 0},
+		{"noimplementations",       no_argument,             0, 0},
+		{"nohooks",                 no_argument,             0, 0},
+		{"nointerfaces",            no_argument,             0, 0},
+		{"nostructs",               no_argument,             0, 0},
+		{"nomodules",               no_argument,             0, 0},
+		{"noscopes",                no_argument,             0, 0},
+		{"nolibraries",             no_argument,             0, 0},
+		{"nosourcefiles",           no_argument,             0, 0},
+		{"nodoccomments",           no_argument,             0, 0},
+		{"html",                    no_argument,             0, 'l'},
+		{"pages",                   no_argument,             0, 'g'},
+		{"specialpages",            no_argument,             0, 's'},
+		{"syntax",                  no_argument,             0, 'x'},
+		{"compile",                 required_argument,       0, 'C'},
+		{"database",                no_argument,             0, 'b'},
+		{"verbose",                 no_argument,             0, 'v'},
+		{"time",                    no_argument,             0, 't'},
+		{"alphabetical",            no_argument,             0, 'a'},
+		{"title",                   required_argument,       0, 'T'},
+		{"importdirs",              required_argument,       0, 'I'},
+		{"dir",                     required_argument,       0, 'D'},
+		{"databases",               required_argument,       0, 'B'},
+		{0, 0, 0, 0}
+	};
+	
 	bool jass = false;
 	bool debug = false;
 	bool parsePrivate = false;
@@ -134,301 +104,296 @@ int main(int argc, char *argv[])
 	bool alphabetical = false;
 	static const char* objectListOption[Parser::MaxLists] =
 	{
-		"--nocomments",
-		"--nokeywords",
-		"--nokeys",
-		"--notextmacros",
-		"--notextmacroinstances",
-		"--notypes",
-		"--nolocals",
-		"--noglobals",
-		"--nomembers",
-		"--noparameters",
-		"--nofunctioninterfaces",
-		"--nofunctions",
-		"--nomethods",
-		"--noimplementations",
-		"--nohooks",
-		"--nointerfaces",
-		"--nostructs",
-		"--nomodules",
-		"--noscopes",
-		"--nolibraries",
-		"--nosourcefiles",
-		"--nodoccomments"
+		"nocomments",
+		"nokeywords",
+		"nokeys",
+		"notextmacros",
+		"notextmacroinstances",
+		"notypes",
+		"nolocals",
+		"noglobals",
+		"nomembers",
+		"noparameters",
+		"nofunctioninterfaces",
+		"nofunctions",
+		"nomethods",
+		"noimplementations",
+		"nohooks",
+		"nointerfaces",
+		"nostructs",
+		"nomodules",
+		"noscopes",
+		"nolibraries",
+		"nosourcefiles",
+		"nodoccomments"
 	};
 	bool parseObjectsOfList[Parser::MaxLists] =
 	{
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true
+		true, //comments
+		true, //keywords
+		true, //keys
+		true, //text macros
+		true, //text macro instances
+		true, //types
+		true, //locals
+		true, //globals
+		true, //members
+		true, //parameters
+		true, //function interfaces
+		true, //functions
+		true, //methods
+		true, //implementations
+		true, //hooks
+		true, //interfaces
+		true, //structs
+		true, //modules
+		true, //scopes
+		true, //libraries
+		true, //source files
+		true //doc comments
 	};
 	std::string title;
 	std::string dir;
-	bool needImportDirs = false;
-	bool needFilePaths = false;
-	bool needDatabases = false;
 	std::list<std::string> importDirs;
-	std::list<std::string> filePaths;
 	std::list<std::string> databases;
-
-	for (int i = 1; i < argc; ++i)
+	std::list<std::string> filePaths;
+	int optionShortcut;
+	
+	while (true)
 	{
-		if (argv[i][0] == '-' && argv[i][1] != '-')
+		int optionIndex = 0;
+		optionShortcut = getopt_long(argc, argv, "VhjdpmflgsxC:bvtaT:I:D:B:", options, &optionIndex);
+
+		if (optionShortcut == -1)
+			break;
+     
+		switch (optionShortcut)
 		{
-			char option = argv[i][1];
-			int j = 2;
-			
-			do
+			case 'V':
 			{
-				switch (option)
-				{
-					case 'j':
-						jass = true;
-						break;
-					
-					case 'd':
-						debug = true;
-						break;
-					
-					case 'm':
-						textmacros = true;
-						break;
-					
-					case 'f':
-						functions = true;
-						break;
-					
-					case 'h':
-						html = true;
-						break;
-					
-					case 'p':
-						pages = true;
-						break;
-					
-					case 's':
-						specialPages = true;
-						break;
-#ifdef SQLITE					
-					case 'b':
-						database = true;
-						break;
+				printf("vjassdoc %s.\n", Vjassdoc::version);
+				std::cout << _(
+				"Copyright © 2008, 2009 Tamino Dauth\n"
+				"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
+				"This is free software: you are free to change and redistribute it.\n"
+				"There is NO WARRANTY, to the extent permitted by law."
+				) << std::endl;
+				
+				return EXIT_SUCCESS;
+			}
+			
+			case 'h':
+			{
+				printf("vjassdoc %s.\n\n", Vjassdoc::version);
+				std::cout <<
+				_("Usage: vjassdoc [Options] [Files]\n\n") <<
+				_("Options:\n") <<
+				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
+				_("\t-h --help                   Shows this text.\n") <<
+				_("\t-j --jass                   vJass code will be ignored.\n") <<
+				_("\t-d --debug                  Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
+				_("\t-p --private                Private objects will be parsed.\n") <<
+				_("\t-m --textmacros             Code between text macro statements will be parsed (Warning: There can be many parsing errors!).\n") <<
+				_("\t-f --functions              Code between function/method statements will be parsed.\n") <<
+				_("\t--no<object type name>      Objects of type <object type name> won't added to the output files.\n") <<
+				_("\t                            The following object type names are available:\n") <<
+				_("\t                            comments\n") <<
+				_("\t                            keywords\n") <<
+				_("\t                            textmacros\n") <<
+				_("\t                            textmacroinstances\n") <<
+				_("\t                            types\n") <<
+				_("\t                            locals\n") <<
+				_("\t                            globals\n") <<
+				_("\t                            members\n") <<
+				_("\t                            parameters\n") <<
+				_("\t                            functioninterfaces\n") <<
+				_("\t                            functions\n") <<
+				_("\t                            methods\n") <<
+				_("\t                            implementations\n") <<
+				_("\t                            hooks\n") <<
+				_("\t                            interfaces\n") <<
+				_("\t                            structs\n") <<
+				_("\t                            modules\n") <<
+				_("\t                            scopes\n") <<
+				_("\t                            libraries\n") <<
+				_("\t                            sourcefiles\n") <<
+				_("\t                            doccomments\n") <<
+				_("\t-l --html                   Program creates a simple HTML API documentation.\n") <<
+				_("\t-g --pages                  Program creates an HTML file for each parsed object.\n") <<
+				_("\t-s --specialpages           Program creates additional HTML files containing more information about all parsed objects.\n") <<
+				_("\t-x --syntax                 Program checks syntax. Not implemented yet!\n") <<
+				_("\t-C --compile <arg>          Program uses file <arg> to create a map Jass script.\n") <<
+#ifdef SQLITE
+				_("\t-b --database               Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
 #endif
-					
-					case 'v':
-						verbose = true;
-						break;
-					
-					case 't':
-						time = true;
-						break;
-					
-					case 'a':
-						alphabetical = true;
-						break;
-					
-					default:
+				_("\t-v --verbose                Program shows more information about the process.\n") <<
+				_("\t-t --time                   Detects the elapsed time and shows it at the end of the process.\n") <<
+				_("\t-a --alphabetical           All objects will be aranged in alphabetical order.\n") <<
+				_("\t-T --title <arg>            <arg> has to be replaced by the title which is used for the API documentation.\n") <<
+				_("\t-I --importdirs <args>      <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
+				_("\t-D --dir <arg>              <arg> has to be replaced by the output directory path.\n") <<
+#ifdef SQLITE			
+				_("\t-B --databases <args>       <args> has to be replaced by the SQLite databases which should be added to the output.\n") <<
+#endif
+				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
+				std::endl;
+	
+				return EXIT_SUCCESS;
+			}
+			
+			case 'j':
+				jass = true;
+				
+				break;
+
+			case 'd':
+				debug = true;
+				
+				break;
+			
+			case 'p':
+				parsePrivate = true;
+				
+				break;
+			
+			case 'm':
+				textmacros = true;
+				
+				break;
+			
+			case 'f':
+				functions = true;
+				
+				break;
+			
+			case 'l':
+				html = true;
+				
+				break;
+			
+			case 'g':
+				std::cout << "Pages are true" << std::endl;
+				pages = true;
+				
+				break;
+			
+			case 's':
+				specialPages = true;
+				
+				break;
+			
+			case 'x':
+				syntax = true;
+				
+				break;
+				
+			case 'C':
+				compileFilePath = optarg;
+				
+				break;
+#ifdef SQLITE					
+			case 'b':
+				database = true;
+				
+				break;
+#endif
+			
+			case 'v':
+				verbose = true;
+				
+				break;
+			
+			case 't':
+				time = true;
+				
+				break;
+			
+			case 'a':
+				alphabetical = true;
+				
+				break;
+			
+			case 'T':
+				title = optarg;
+				
+				break;
+
+			case 'I':
+				for (std::list<std::string>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
+				{
+					if (*iterator == optarg)
 					{
-						fprintf(stderr, _("Unknown option: %c.\n"), option);
+						fprintf(stderr, _("Import directory path \"%s\" has already been added to list.\n"), optarg);
+						
+						continue;
+					}
+				}
+
+				importDirs.push_back(optarg);
+				
+				break;
+			
+			case 'D':
+				dir = optarg;
+				
+				break;
+			
+#ifdef SQLITE			
+			case 'B':
+				for (std::list<std::string>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
+				{
+					if (*iterator == optarg)
+					{
+						fprintf(stderr, _("Database \"%s\" has already been added to list.\n"), optarg);
+						
+						continue;
+					}
+				}
+	
+				databases.push_back(optarg);
+				
+				break;
+#endif
+				
+			default:
+				for (int j = 0; j < Parser::MaxLists; ++j)
+				{
+					if (strcmp(options[optionIndex].name, objectListOption[j]) == 0)
+					{					
+						if (parseObjectsOfList[j])
+							parseObjectsOfList[j] = false;
+						else
+							fprintf(stderr, _("Objects of list %d already won't be parsed.\n"), j);
+						
 						break;
 					}
 				}
-				
-				option = argv[i][j];
-				++j;
-			}
-			while (option != '\0');
 		}
-		else if (strcmp(argv[i], "--jass") == 0)
-		{
-			jass = true;
-		}
-		else if (strcmp(argv[i], "--debug") == 0)
-		{
-			debug = true;
-		}
-		else if (strcmp(argv[i], "--private") == 0)
-		{
-			parsePrivate = true;
-		}
-		else if (strcmp(argv[i], "--textmacros") == 0)
-		{
-			textmacros = true;
-		}
-		else if (strcmp(argv[i], "--functions") == 0)
-		{
-			functions = true;
-		}
-		else if (strcmp(argv[i], "--html") == 0)
-		{
-			html = true;
-		}
-		else if (strcmp(argv[i], "--pages") == 0)
-		{
-			pages = true;
-		}
-		else if (strcmp(argv[i], "--specialpages") == 0)
-		{
-			specialPages = true;
-		}
-		else if (strcmp(argv[i], "--syntax") == 0)
-		{
-			syntax = true;
-		}
-		else if (strcmp(argv[i], "--compile") == 0)
-		{
-			if (++i == argc)
-			{
-				std::cerr << _("Missing --compile argument.") << std::endl;
-				return EXIT_FAILURE;
-			}
-
-			compileFilePath = argv[i];
-		}
-#ifdef SQLITE
-		else if (strcmp(argv[i], "--database") == 0)
-		{
-			database = true;
-		}
-#endif
-		else if (strcmp(argv[i], "--verbose") == 0)
-		{
-			verbose = true;
-		}
-		else if (strcmp(argv[i], "--time") == 0)
-		{
-			time = true;
-		}
-		else if (strcmp(argv[i], "--alphabetical") == 0)
-		{
-			alphabetical = true;
-		}
-		else if (strcmp(argv[i], "--title") == 0)
-		{
-			if (i == argc - 1)
-			{
-				std::cerr << _("Missing title argument.") << std::endl;
-				break;
-			}
-			
-			++i;
-			title = argv[i];
-		}
-		else if (strcmp(argv[i], "--importdirs") == 0)
-		{
-			needFilePaths = false;
-			needDatabases = false;
-			needImportDirs = true;
-		}
-		else if (strcmp(argv[i], "--files") == 0)
-		{
-			needImportDirs = false;
-			needDatabases = false;
-			needFilePaths = true;
-		}
-#ifdef SQLITE
-		else if (strcmp(argv[i], "--databases") == 0)
-		{
-			needImportDirs = false;
-			needFilePaths = false;
-			needDatabases = true;
-		}
-#endif
-		else if (strcmp(argv[i], "--dir") == 0)
-		{
-			if (i == argc - 1)
-			{
-				std::cerr << _("Missing directory argument.") << std::endl;
-				break;
-			}
-			
-			++i;
-			dir = argv[i];
-		}
-		else if (needImportDirs)
-		{
-			for (std::list<std::string>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
-			{
-				if (*iterator == argv[i])
-				{
-					fprintf(stderr, _("Import directory path \"%s\" has already been added to list.\n"), argv[i]);
-					continue;
-				}
-			}
-
-			importDirs.push_back(argv[i]);
-		}
-		else if (needFilePaths)
+	}
+		
+	
+	if (optind < argc)
+	{
+		for ( ; optind < argc; ++optind)
 		{
 			for (std::list<std::string>::const_iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
 			{
-				if (*iterator == argv[i])
+				if (*iterator == argv[optind])
 				{
-					fprintf(stderr, _("File path \"%s\" has already been added to list.\n"), argv[i]);
-					continue;
-				}
-			}
-
-			filePaths.push_back(argv[i]);
-		}
-		else if (needDatabases)
-		{
-			for (std::list<std::string>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
-			{
-				if (*iterator == argv[i])
-				{
-					fprintf(stderr, _("Database \"%s\" has already been added to list.\n"), argv[i]);
-					continue;
-				}
-			}
-
-			databases.push_back(argv[i]);
-		}
-		else
-		{
-			bool found = false;
-		
-			for (int j = 0; j < Parser::MaxLists; ++j)
-			{
-				if (strcmp(argv[i], objectListOption[j]) == 0)
-				{
-					found = true;
-				
-					if (parseObjectsOfList[j])
-						parseObjectsOfList[j] = false;
-					else
-						fprintf(stderr, _("Objects of list %d already won't be parsed.\n"), j);
+						fprintf(stderr, _("File path \"%s\" has already been added to list.\n"), argv[optind]);
+						
+						continue;
 				}
 			}
 			
-			if (!found)
-				fprintf(stderr, _("Unknown argument: %s.\n"), argv[i]);
+			filePaths.push_back(argv[optind]);
 		}
-	}
 
-	if (filePaths.size() == 0)
+	}
+	else
 	{
 		std::cerr << _("Missing file arguments.") << std::endl;
+		
 		return EXIT_FAILURE;
 	}
 	
