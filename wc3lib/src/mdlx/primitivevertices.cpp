@@ -38,16 +38,24 @@ void PrimitiveVertices::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void PrimitiveVertices::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 PrimitiveVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

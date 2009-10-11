@@ -88,20 +88,22 @@ void Sequences::readMdx(std::fstream &fstream) throw (class Exception)
 	while (bytes > 0)
 	{
 		class Sequence *sequence = new Sequence(this);
-		sequence->readMdx(fstream);
-		std::cout << "Instance bytes: " << sequence->bytes() << std::endl;
+		long32 readBytes = sequence->readMdx(fstream);
+		std::cout << "Instance bytes: " << readBytes << std::endl;
 		
-		if (sequence->bytes() == 0)
+		if (readBytes == 0)
 			throw Exception(_("Sequences: 0 byte sequence."));
 		
-		bytes -= sequence->bytes();
+		bytes -= readBytes;
 		this->m_sequences.push_back(sequence);
 	}
 }
 
-void Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 	MdxBlock::writeMdx(fstream);
+	/**
+	@todo Save file pointer position, add bytes by calling write mdx of each sequence, move back to file pointer and add byte count.
 	long32 bytes = 0; //nbytes
 	
 	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
@@ -111,6 +113,7 @@ void Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
 	
 	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
 		(*iterator)->writeMdx(fstream);
+	*/
 }
 
 }

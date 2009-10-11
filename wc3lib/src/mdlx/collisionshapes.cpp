@@ -38,16 +38,18 @@ void CollisionShapes::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void CollisionShapes::readMdx(std::fstream &fstream) throw (class Exception)
+long32 CollisionShapes::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void CollisionShapes::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void CollisionShapes::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 CollisionShapes::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

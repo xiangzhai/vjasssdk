@@ -148,8 +148,8 @@ class Mdlx : public MdxBlock
 
 		void readMdl(std::fstream &fstream) throw (class Exception);
 		void writeMdl(std::fstream &fstream) throw (class Exception);
-		void readMdx(std::fstream &fstream) throw (class Exception);
-		void writeMdx(std::fstream &fstream) throw (class Exception);
+		long32 readMdx(std::fstream &fstream) throw (class Exception);
+		long32 writeMdx(std::fstream &fstream) throw (class Exception);
 		void readBlend(std::fstream &fstream) throw (class Exception);
 		void writeBlend(std::fstream &fstream) throw (class Exception);
 		void read3ds(std::fstream &fstream) throw (class Exception);

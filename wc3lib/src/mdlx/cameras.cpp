@@ -38,16 +38,18 @@ void Cameras::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Cameras::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Cameras::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void Cameras::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Cameras::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Cameras::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

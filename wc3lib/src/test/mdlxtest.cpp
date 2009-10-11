@@ -221,7 +221,10 @@ int main(int argc, char *argv[])
 		try
 		{
 			if (optionIformat == "mdx")
-				mdlx.readMdx(fstream);
+			{
+				long32 bytes = mdlx.readMdx(fstream);
+				printf(_("Read MDX file successfully. %d Bytes.\n"), bytes);
+			}
 			else if (optionIformat == "mdl")
 				mdlx.readMdl(fstream);
 		}
@@ -263,7 +266,10 @@ int main(int argc, char *argv[])
 		try
 		{
 			if (optionOformat == "mdx")
-				mdlx.writeMdx(fstream);
+			{
+				long32 bytes = mdlx.writeMdx(fstream);
+				printf(_("Wrote MDX file successfully. %d Bytes.\n"), bytes);
+			}
 			else if (optionOformat == "mdl")
 				mdlx.writeMdl(fstream);
 		}

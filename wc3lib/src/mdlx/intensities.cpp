@@ -38,16 +38,24 @@ void Intensities::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Intensities::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Intensities::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Intensities::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Intensities::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Intensities::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

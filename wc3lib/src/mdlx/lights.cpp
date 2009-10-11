@@ -38,16 +38,25 @@ void Lights::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Lights::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Lights::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Lights::writeMdx(std::fstream &fstream) throw (class Exception)
+
+long32 Lights::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Lights::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

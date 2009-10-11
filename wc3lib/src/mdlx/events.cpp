@@ -39,16 +39,18 @@ void Events::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Events::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Events::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void Events::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Events::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Events::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

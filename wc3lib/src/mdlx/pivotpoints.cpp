@@ -39,16 +39,24 @@ void PivotPoints::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PivotPoints::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void PivotPoints::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PivotPoints::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PivotPoints::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 PivotPoints::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

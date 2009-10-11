@@ -40,8 +40,8 @@ class MdxBlock
 		const byte* blockName() const;
 		bool optional() const;
 
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
 		byte m_blockName[4]; /// @todo byte or ascii?

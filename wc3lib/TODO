@@ -1,3 +1,8 @@
+2009-10-09 Tamino Dauth <tamino@cdauth.de>
+* Use BLP header mip map offsets and sizes.
+* Note that there is unused space between header and JPEG mip map data which probably can be removed.
+* Read something about JPEG format implementation since BLP specification does not explain this.
+
 2009-10-08 Tamino Dauth <tamino@cdauth.de>
 * BLP file reading (JPEG compression) does still not work.
 

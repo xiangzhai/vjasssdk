@@ -38,16 +38,18 @@ void GroupVertices::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void GroupVertices::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void GroupVertices::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void GroupVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupVertices::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
+}
+
+long32 GroupVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

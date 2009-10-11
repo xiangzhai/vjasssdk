@@ -38,16 +38,18 @@ void Attachments::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Attachments::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Attachments::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void Attachments::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Attachments::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Attachments::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

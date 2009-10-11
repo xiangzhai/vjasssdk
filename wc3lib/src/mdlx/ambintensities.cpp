@@ -38,16 +38,18 @@ void AmbIntensities::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void AmbIntensities::readMdx(std::fstream &fstream) throw (class Exception)
+long32 AmbIntensities::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void AmbIntensities::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void AmbIntensities::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 AmbIntensities::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

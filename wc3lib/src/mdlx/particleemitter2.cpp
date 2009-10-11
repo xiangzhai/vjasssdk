@@ -39,16 +39,25 @@ void ParticleEmitter2s::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void ParticleEmitter2s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void ParticleEmitter2s::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void ParticleEmitter2s::writeMdx(std::fstream &fstream) throw (class Exception)
+
+long32 ParticleEmitter2s::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 ParticleEmitter2s::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

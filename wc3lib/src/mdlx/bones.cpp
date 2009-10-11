@@ -38,16 +38,18 @@ void Bones::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Bones::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Bones::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void Bones::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Bones::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Bones::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

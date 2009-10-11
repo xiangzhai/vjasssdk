@@ -24,6 +24,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "globalsequence.hpp"
+#include "globalsequences.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GlobalSequence::GlobalSequence(class Mdlx *mdlx) : m_mdlx(mdlx)
+GlobalSequence::GlobalSequence(class GlobalSequences *globalSequences) : m_globalSequences(globalSequences)
 {
 }
 
@@ -62,9 +63,11 @@ void GlobalSequence::readMdl(std::fstream &fstream) throw (class Exception)
 	sstream >> this->m_duration;
 }
 
-void GlobalSequence::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GlobalSequence::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	fstream >> this->m_duration;
+	fstream.read(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
+	
+	return fstream.gcount();
 }
 
 void GlobalSequence::writeMdl(std::fstream &fstream) throw (class Exception)

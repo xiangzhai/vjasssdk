@@ -38,16 +38,24 @@ void Matrices::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Matrices::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Matrices::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Matrices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Matrices::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Matrices::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

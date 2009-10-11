@@ -38,16 +38,18 @@ void Geosets::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Geosets::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Geosets::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Geosets::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
+}
+
+long32 Geosets::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

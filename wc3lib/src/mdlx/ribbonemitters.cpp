@@ -39,16 +39,25 @@ void RibbonEmitters::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void RibbonEmitters::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void RibbonEmitters::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
+
+long32 RibbonEmitters::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
 void RibbonEmitters::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

@@ -131,54 +131,60 @@ void Mdlx::writeMdl(std::fstream &fstream) throw (Exception)
 	this->m_collisionShapes->writeMdl(fstream);
 }
 
-void Mdlx::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Mdlx::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	MdxBlock::readMdx(fstream);
-	this->m_version->readMdx(fstream);
-	this->m_model->readMdx(fstream);
-	this->m_sequences->readMdx(fstream);
-	this->m_globalSequences->readMdx(fstream);
-	this->m_materials->readMdx(fstream);
-	this->m_textures->readMdx(fstream);
-	this->m_textureAnimations->readMdx(fstream);
-	this->m_geosets->readMdx(fstream);
-	this->m_geosetAnimations->readMdx(fstream);
-	this->m_bones->readMdx(fstream);
-	this->m_lights->readMdx(fstream);
-	this->m_helpers->readMdx(fstream);
-	this->m_attachments->readMdx(fstream);
-	this->m_pivotPoints->readMdx(fstream);
-	this->m_particleEmitters->readMdx(fstream);
-	this->m_particleEmitter2s->readMdx(fstream);
-	this->m_ribbonEmitters->readMdx(fstream);
-	this->m_cameras->readMdx(fstream);
-	this->m_events->readMdx(fstream);
-	this->m_collisionShapes->readMdx(fstream);
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	bytes += this->m_version->readMdx(fstream);
+	bytes += this->m_model->readMdx(fstream);
+	bytes += this->m_sequences->readMdx(fstream);
+	bytes += this->m_globalSequences->readMdx(fstream);
+	bytes += this->m_materials->readMdx(fstream);
+	bytes += this->m_textures->readMdx(fstream);
+	bytes += this->m_textureAnimations->readMdx(fstream);
+	bytes += this->m_geosets->readMdx(fstream);
+	bytes += this->m_geosetAnimations->readMdx(fstream);
+	bytes += this->m_bones->readMdx(fstream);
+	bytes += this->m_lights->readMdx(fstream);
+	bytes += this->m_helpers->readMdx(fstream);
+	bytes += this->m_attachments->readMdx(fstream);
+	bytes += this->m_pivotPoints->readMdx(fstream);
+	bytes += this->m_particleEmitters->readMdx(fstream);
+	bytes += this->m_particleEmitter2s->readMdx(fstream);
+	bytes += this->m_ribbonEmitters->readMdx(fstream);
+	bytes += this->m_cameras->readMdx(fstream);
+	bytes += this->m_events->readMdx(fstream);
+	bytes += this->m_collisionShapes->readMdx(fstream);
+	
+	return bytes;
 }
 
-void Mdlx::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Mdlx::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	MdxBlock::writeMdx(fstream);
-	this->m_version->writeMdx(fstream);
-	this->m_model->writeMdx(fstream);
-	this->m_sequences->writeMdx(fstream);
-	this->m_globalSequences->writeMdx(fstream);
-	this->m_materials->writeMdx(fstream);
-	this->m_textures->writeMdx(fstream);
-	this->m_textureAnimations->writeMdx(fstream);
-	this->m_geosets->writeMdx(fstream);
-	this->m_geosetAnimations->writeMdx(fstream);
-	this->m_bones->writeMdx(fstream);
-	this->m_lights->writeMdx(fstream);
-	this->m_helpers->writeMdx(fstream);
-	this->m_attachments->writeMdx(fstream);
-	this->m_pivotPoints->writeMdx(fstream);
-	this->m_particleEmitters->writeMdx(fstream);
-	this->m_particleEmitter2s->writeMdx(fstream);
-	this->m_ribbonEmitters->writeMdx(fstream);
-	this->m_cameras->writeMdx(fstream);
-	this->m_events->writeMdx(fstream);
-	this->m_collisionShapes->writeMdx(fstream);
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	bytes += this->m_version->writeMdx(fstream);
+	bytes += this->m_model->writeMdx(fstream);
+	bytes += this->m_sequences->writeMdx(fstream);
+	bytes += this->m_globalSequences->writeMdx(fstream);
+	bytes += this->m_materials->writeMdx(fstream);
+	bytes += this->m_textures->writeMdx(fstream);
+	bytes += this->m_textureAnimations->writeMdx(fstream);
+	bytes += this->m_geosets->writeMdx(fstream);
+	bytes += this->m_geosetAnimations->writeMdx(fstream);
+	bytes += this->m_bones->writeMdx(fstream);
+	bytes += this->m_lights->writeMdx(fstream);
+	bytes += this->m_helpers->writeMdx(fstream);
+	bytes += this->m_attachments->writeMdx(fstream);
+	bytes += this->m_pivotPoints->writeMdx(fstream);
+	bytes += this->m_particleEmitters->writeMdx(fstream);
+	bytes += this->m_particleEmitter2s->writeMdx(fstream);
+	bytes += this->m_ribbonEmitters->writeMdx(fstream);
+	bytes += this->m_cameras->writeMdx(fstream);
+	bytes += this->m_events->writeMdx(fstream);
+	bytes += this->m_collisionShapes->writeMdx(fstream);
+	
+	return bytes;
 }
 
 void Mdlx::readBlend(std::fstream &fstream) throw (class Exception)

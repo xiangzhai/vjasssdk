@@ -41,7 +41,6 @@ class Sequence
 		virtual ~Sequence();
 
 		class Sequences* sequences() const;
-		long32 bytes() const;
 		const ascii* name() const;
 		long32 intervalStart() const;
 		long32 intervalEnd() const;
@@ -61,13 +60,12 @@ class Sequence
 		/**
 		* @return Returns read byte count.
 		*/
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
 		class Sequences *m_sequences;
-		long32 m_bytes;
 		ascii m_name[0x50]; //(0x50 bytes)
 		long32 m_intervalStart, m_intervalEnd;
 		float32 m_moveSpeed;
@@ -83,11 +81,6 @@ class Sequence
 inline class Sequences* Sequence::sequences() const
 {
 	return this->m_sequences;
-}
-
-inline long32 Sequence::bytes() const
-{
-	return this->m_bytes;
 }
 
 inline const ascii* Sequence::name() const

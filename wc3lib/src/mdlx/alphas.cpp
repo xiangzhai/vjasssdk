@@ -38,16 +38,18 @@ void Alphas::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Alphas::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Alphas::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void Alphas::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Alphas::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Alphas::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

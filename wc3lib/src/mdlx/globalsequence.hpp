@@ -32,30 +32,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class GlobalSequences;
 
 class GlobalSequence
 {
 	public:
-		GlobalSequence(class Mdlx *mdlx);
+		GlobalSequence(class GlobalSequences *globalSequences);
 		virtual ~GlobalSequence();
 
-		class Mdlx* mdlx() const;
+		class GlobalSequences* globalSequences() const;
 		long32 duration() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class GlobalSequences *m_globalSequences;
 		long32 m_duration;
 };
 
-inline class Mdlx* GlobalSequence::mdlx() const
+inline class GlobalSequences* GlobalSequence::globalSequences() const
 {
-	return this->m_mdlx;
+	return this->m_globalSequences;
 }
 
 inline long32 GlobalSequence::duration() const

@@ -38,16 +38,25 @@ void Normals::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Normals::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Normals::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Normals::writeMdx(std::fstream &fstream) throw (class Exception)
+
+long32 Normals::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Normals::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

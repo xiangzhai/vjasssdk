@@ -32,29 +32,39 @@ namespace mdlx
 
 MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional)
 {
+	memcpy(this->m_blockName, blockName, sizeof(blockName));
+	/*
 	for (unsigned int i = 0; i < sizeof(this->m_blockName); ++i)
 		this->m_blockName[i] = blockName[i];
+	*/
 }
 
 /// @todo Consider optional like in Python script.
-void MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
+long32 MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	byte identifier[sizeof(this->m_blockName) + 1];
-	identifier[sizeof(this->m_blockName)] = '\0';
-	fstream.read(identifier, sizeof(this->m_blockName));
+	long32 bytes = 0;
+	byte identifier[sizeof(this->m_blockName)];
+	fstream.read(identifier, sizeof(identifier));
+	bytes += fstream.gcount();
 	std::cout << "Read bytes: " << fstream.gcount() << std::endl;
 
-	if (strcmp(identifier, this->m_blockName) != 0)
+	if (memcmp(identifier, this->m_blockName, sizeof(this->m_blockName)) != 0)
 	{
 		char message[50];
 		sprintf(message, "Unexptected identifier \"%s\". Missing \"%s\" block name.", identifier, this->m_blockName);
+		
 		throw Exception(message);
 	}
+	
+	return bytes;
 }
 
-void MdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 MdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 	fstream.write(this->m_blockName, sizeof(this->m_blockName));
+	
+	return sizeof(this->m_blockName);
+	
 }
 
 }

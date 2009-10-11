@@ -39,16 +39,24 @@ void Helpers::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Helpers::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Helpers::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Helpers::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Helpers::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Helpers::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

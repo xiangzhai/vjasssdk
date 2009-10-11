@@ -20,6 +20,7 @@
 
 #include "globalsequences.hpp"
 #include "globalsequence.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -39,10 +40,6 @@ void GlobalSequences::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void GlobalSequences::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void GlobalSequences::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	fstream << "GlobalSequences " << this->globalSequences().size() << " {\n";
@@ -53,8 +50,37 @@ void GlobalSequences::writeMdl(std::fstream &fstream) throw (class Exception)
 	fstream << "}\n";
 }
 
-void GlobalSequences::writeMdx(std::fstream &fstream) throw (class Exception)
+
+long32 GlobalSequences::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	long32 nbytes = 0; //nbytes
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += fstream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class GlobalSequence *globalSequence = new GlobalSequence(this);
+		long32 readBytes = globalSequence->readMdx(fstream);
+		
+		if (readBytes == 0)
+			throw Exception(_("Global Sequences: 0 byte global sequence."));
+		
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_globalSequences.push_back(globalSequence);
+	}
+	
+	return bytes;
+}
+
+long32 GlobalSequences::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
 }
 
 }

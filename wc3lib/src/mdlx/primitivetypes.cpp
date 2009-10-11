@@ -38,16 +38,24 @@ void PrimitiveTypes::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveTypes::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void PrimitiveTypes::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveTypes::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveTypes::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 PrimitiveTypes::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

@@ -38,16 +38,24 @@ void Materials::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Materials::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Materials::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Materials::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Materials::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Materials::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

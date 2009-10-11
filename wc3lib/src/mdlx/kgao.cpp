@@ -38,16 +38,24 @@ void Kgao::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Kgao::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Kgao::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Kgao::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Kgao::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Kgao::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Sequence::Sequence(class Sequences *sequences) : m_sequences(sequences), m_bytes(0)
+Sequence::Sequence(class Sequences *sequences) : m_sequences(sequences)
 {
 }
 
@@ -38,36 +38,39 @@ void Sequence::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Sequence::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Sequence::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
 	fstream.read(this->m_name, sizeof(this->m_name));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_intervalEnd), sizeof(this->m_intervalEnd));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_moveSpeed), sizeof(this->m_moveSpeed));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_noLooping), sizeof(this->m_noLooping));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_rarity), sizeof(this->m_rarity));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_minExtX), sizeof(this->m_minExtX));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_minExtY), sizeof(this->m_minExtY));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
-	this->m_bytes += fstream.gcount();
+	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
-	this->m_bytes += fstream.gcount();	
+	bytes += fstream.gcount();
+	
+	return bytes;
 }
 
 void Sequence::writeMdl(std::fstream &fstream) throw (class Exception)

@@ -38,16 +38,25 @@ void Lengths::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Lengths::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Lengths::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Lengths::writeMdx(std::fstream &fstream) throw (class Exception)
+
+long32 Lengths::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Lengths::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

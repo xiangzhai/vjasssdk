@@ -38,16 +38,18 @@ void EmissionRates::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void EmissionRates::readMdx(std::fstream &fstream) throw (class Exception)
+long32 EmissionRates::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 void EmissionRates::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void EmissionRates::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 EmissionRates::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }
