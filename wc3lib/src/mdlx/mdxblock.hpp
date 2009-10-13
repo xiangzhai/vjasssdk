@@ -35,7 +35,7 @@ namespace mdlx
 class MdxBlock
 {
 	public:
-		MdxBlock(byte blockName[4], bool optional = false);
+		MdxBlock(byte blockName[4], bool optional = true);
 
 		const byte* blockName() const;
 		bool optional() const;

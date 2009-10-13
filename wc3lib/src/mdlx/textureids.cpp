@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "textureids.hpp"
+#include "layer.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureIds::TextureIds(class Mdlx *mdlx) : MdxBlock("KMTF"), m_mdlx(mdlx)
+TextureIds::TextureIds(class Layer *layer) : MdxBlock("KMTF"), m_layer(layer)
 {
 }
 
@@ -38,16 +39,22 @@ void TextureIds::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureIds::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void TextureIds::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureIds::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureIds::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 TextureIds::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   tamino@cdauth.de                                                      *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #ifndef WC3LIB_MDLX_LAYER_HPP
 #define WC3LIB_MDLX_LAYER_HPP
 
@@ -12,33 +32,33 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Layers;
 class Alphas;
 class TextureIds;
 
 class Layer
 {
 	public:
-		Layer(class Mdlx *mdlx);
+		Layer(class Layers *layers);
 		virtual ~Layer();
 
-		class Mdlx* mdlx() const;
-		long32	filterMode() const;
-		long32	shading() const;
-		long32	textureId() const;
-		long32 	tvertexAnimationId() const;
-		long32	coordinatesId() const;
+		class Layers* layers() const;
+		long32 filterMode() const;
+		long32 shading() const;
+		long32 textureId() const;
+		long32 tvertexAnimationId() const;
+		long32 coordinatesId() const;
 		float32	alpha() const;
 		class Alphas* alphas() const;
 		class TextureIds* textureIds() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Layers *m_layers;
 		long32	m_filterMode; //(0:none;1:transparent;2:blend;3:additive;4:addalpha;5:modulate)
 		long32	m_shading; //+1:unshaded;+2:SphereEnvMap;+16:twosided;
 		long32	m_textureId; //  +32:unfogged;+64:NoDepthTest;+128:NoDepthSet)
@@ -49,9 +69,9 @@ class Layer
 		class TextureIds *m_textureIds; //(KMTF) // state is long not float
 };
 
-inline class Mdlx* Layer::mdlx() const
+inline class Layers* Layer::layers() const
 {
-	return this->m_mdlx;
+	return this->m_layers;
 }
 
 inline long32 Layer::filterMode() const

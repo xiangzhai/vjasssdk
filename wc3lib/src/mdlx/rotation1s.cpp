@@ -38,16 +38,22 @@ void Rotation1s::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Rotation1s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Rotation1s::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Rotation1s::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Rotation1s::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Rotation1s::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

@@ -1,5 +1,6 @@
 set(wc3lib_BLP_SRC
 	blp.cpp
+	blpjpeg.cpp
 	blpuncompressed1.cpp
 	blpuncompressed2.cpp
 )

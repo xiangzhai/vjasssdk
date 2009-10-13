@@ -21,6 +21,9 @@
 #ifndef WC3LIB_BLP_BLPJPEG_HPP
 #define WC3LIB_BLP_BLPJPEG_HPP
 
+#include <fstream>
+
+#include "../exception.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -28,6 +31,8 @@ namespace wc3lib
 
 namespace blp
 {
+	
+class Blp;
 
 /**
 * BLP JPEG structure (Compression == 0)
@@ -51,35 +56,34 @@ namespace blp
 *
 * The JPEG format is advanced so I won't go into detail here.
 */
-struct BlpJpeg
+class BlpJpeg
 {
-	struct MipMap
-	{
-		byte *m_jpegData; //[???], current height * current width? size == ????
-	};
+	public:
+		struct MipMap
+		{
+			byte *m_jpegData; //[???], current height * current width? size == ????
+		};
+		
+		static int requiredMipMaps(int width, int height);
+		
+		BlpJpeg(class Blp *blp);
+		~BlpJpeg();
 
-	static int requiredMipMaps(int width, int height);
+		class Blp* blp() const;
+		
+		dword read(std::fstream &fstream) throw (class Exception);
+		dword write(std::fstream &fstream) throw (class Exception);
 
-	dword m_jpegHeaderSize;
-	byte *m_jpegHeader;
-	MipMap m_mipMaps[16];
+	private:
+		class Blp *m_blp;
+		dword m_jpegHeaderSize;
+		byte *m_jpegHeader;
+		MipMap m_mipMaps[16];
 };
 
-/**
-* @author PitzerMike
-*/
-int BlpJpeg::requiredMipMaps(int width, int height)
+inline class Blp* BlpJpeg::blp() const
 {
-	int mips = 0;
-	
-	while (width > 0 && height > 0)
-	{
-		++mips;
-		width = width / 2;
-		height = height / 2;
-	}
-
-	return mips;
+	return this->m_blp;
 }
 
 }

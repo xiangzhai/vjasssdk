@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Materials;
 class Layers;
 
 class Material
@@ -45,30 +45,30 @@ class Material
 			FullResolution = 0x32
 		};
 
-		Material(class Mdlx *mdlx);
+		Material(class Materials *materials);
 		virtual ~Material();
 
-		class Mdlx* mdlx() const;
+		class Materials* materials() const;
 		float32 priorityPlane() const;
 		float32 renderMode() const;
 		class Layers* layers() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Materials *m_materials;
 		//long nbytesi;
 		long32 m_priorityPlane;
 		long32 m_renderMode; //(+1:ConstantColor;+16:SortPrimsFarZ;+32:FullResolution)
 		class Layers *m_layers;
 };
 
-inline class Mdlx* Material::mdlx() const
+inline class Materials* Material::materials() const
 {
-	return this->m_mdlx;
+	return this->m_materials;
 }
 
 inline float32 Material::priorityPlane() const

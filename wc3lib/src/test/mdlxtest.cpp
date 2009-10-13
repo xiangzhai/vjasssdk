@@ -29,6 +29,7 @@
 
 #include "../internationalisation.hpp"
 #include "../mdlx/mdlx.hpp"
+#include "../mdlx/platform.hpp"
 
 using namespace wc3lib;
 
@@ -222,7 +223,7 @@ int main(int argc, char *argv[])
 		{
 			if (optionIformat == "mdx")
 			{
-				long32 bytes = mdlx.readMdx(fstream);
+				mdlx::long32 bytes = mdlx.readMdx(fstream);
 				printf(_("Read MDX file successfully. %d Bytes.\n"), bytes);
 			}
 			else if (optionIformat == "mdl")
@@ -267,7 +268,7 @@ int main(int argc, char *argv[])
 		{
 			if (optionOformat == "mdx")
 			{
-				long32 bytes = mdlx.writeMdx(fstream);
+				mdlx::long32 bytes = mdlx.writeMdx(fstream);
 				printf(_("Wrote MDX file successfully. %d Bytes.\n"), bytes);
 			}
 			else if (optionOformat == "mdl")

@@ -30,6 +30,7 @@ set(wc3lib_MDLX_SRC
 	intensity.cpp
 	kgao.cpp
 	layer.cpp
+	layers.cpp
 	lengths.cpp
 	light.cpp
 	lights.cpp

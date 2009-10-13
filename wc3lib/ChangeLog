@@ -1,3 +1,8 @@
+2009-10-13 Tamino Dauth <tamino@cdauth.de>
+* Revised BlpJpeg class.
+* Improved editor Renderer class.
+* Improved MDX reading.
+
 2009-10-12 Tamino Dauth <tamino@cdauth.de>
 * Improved various read MDX methods.
 * Added return types for byte counting of read and write MDX methods.

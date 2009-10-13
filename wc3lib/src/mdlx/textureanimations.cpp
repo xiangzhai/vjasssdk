@@ -38,16 +38,22 @@ void TextureAnimations::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureAnimations::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void TextureAnimations::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureAnimations::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 TextureAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

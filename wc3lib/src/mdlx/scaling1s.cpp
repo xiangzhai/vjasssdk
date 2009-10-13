@@ -38,16 +38,22 @@ void Scaling1s::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling1s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Scaling1s::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling1s::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Scaling1s::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Scaling1s::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
 }
 
 }

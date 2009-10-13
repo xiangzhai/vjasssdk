@@ -34,7 +34,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Layer;
 class Alpha;
 
 //(KMTA)
@@ -49,29 +49,29 @@ class Alphas : public MdxBlock
 			Bezier = 3
 		};
 
-		Alphas(class Mdlx *mdlx);
+		Alphas(class Layer *layer);
 		virtual ~Alphas();
 
-		class Mdlx* mdlx() const;
+		class Layer* layer() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
 		std::list<class Alpha*> alphas() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Layer *m_layer;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class Alpha*> m_alphas;
 };
 
-inline class Mdlx* Alphas::mdlx() const
+inline class Layer* Alphas::layer() const
 {
-	return this->m_mdlx;
+	return this->m_layer;
 }
 
 inline long32 Alphas::lineType() const

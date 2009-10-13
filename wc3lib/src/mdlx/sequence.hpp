@@ -57,12 +57,12 @@ class Sequence
 		float32 maxExtZ() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		/**
 		* @return Returns read byte count.
 		*/
 		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
 		class Sequences *m_sequences;

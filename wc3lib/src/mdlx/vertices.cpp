@@ -38,16 +38,22 @@ void Vertices::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Vertices::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Vertices::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Vertices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Vertices::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Vertices::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

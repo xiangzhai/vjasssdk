@@ -53,8 +53,11 @@ void GlobalSequences::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 GlobalSequences::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
 	long32 nbytes = 0; //nbytes
 	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	bytes += fstream.gcount();

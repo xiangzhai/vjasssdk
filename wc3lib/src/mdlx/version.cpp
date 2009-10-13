@@ -102,37 +102,42 @@ void Version::writeMdl(std::fstream &fstream) throw (class Exception)
 	;
 }
 
-void Version::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Version::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	MdxBlock::readMdx(fstream);
-	long32 bytes;
+	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 nbytes;
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += fstream.gcount();
 	
-	//bytes = readValue<long32>(fstream, true);
-	fstream.read(reinterpret_cast<char*>(&bytes), sizeof(bytes));
-	
-	if (bytes != 4)
+	if (nbytes != 4)
 	{
 		char message[50];
-		sprintf(message, _("Versions with more than 4 bytes are not supported. Read version has %d bytes."), bytes);
+		sprintf(message, _("Versions with more than 4 bytes are not supported. Read version has %d bytes."), nbytes);
 		
 		throw Exception(message);
 	}
 	
-	//this->m_version = readValue<long32>(fstream, true);
 	fstream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
+	bytes += fstream.gcount();
 	
 	std::cout << "Bytes " << bytes << " Version " << this->m_version << std::endl;
 	
 	if (this->m_version != Version::currentVersion)
 		fprintf(stdout, _("Warning: Version %d probably is not supported. Current version is %d.\n"), this->m_version, Version::currentVersion);
+	
+	return bytes;
 }
 
-void Version::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Version::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	MdxBlock::writeMdx(fstream);
-	long32 bytes = sizeof(this->m_version);
-	fstream.write(reinterpret_cast<char*>(&bytes), sizeof(bytes));
-	fstream.write(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 nbytes = sizeof(this->m_version);
+	fstream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
+	bytes += sizeof(nbytes);
+	fstream.write(reinterpret_cast<const char*>(&this->m_version), sizeof(this->m_version));
+	bytes += sizeof(this->m_version);
+	
+	return bytes;
 }
 
 }

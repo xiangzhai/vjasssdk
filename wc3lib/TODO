@@ -1,3 +1,6 @@
+2009-10-13 Tamino Dauth <tamino@cdauth.de>
+* Fix MDX property validation (+n means n or bigger than n, I think).
+
 2009-10-09 Tamino Dauth <tamino@cdauth.de>
 * Use BLP header mip map offsets and sizes.
 * Note that there is unused space between header and JPEG mip map data which probably can be removed.

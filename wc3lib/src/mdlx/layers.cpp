@@ -18,15 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TRANSLATION1S_HPP
-#define WC3LIB_MDLX_TRANSLATION1S_HPP
-
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "layers.hpp"
+#include "layer.hpp"
+#include "material.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -34,64 +29,57 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Translation1;
-
-//KGTR, like KGSC (Scalings)
-class Translation1s : public MdxBlock
+Layers::Layers(class Material *material) : MdxBlock("LAYS"), m_material(material)
 {
-	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
+}
 
-		Translation1s(class Mdlx *mdlx);
-		virtual ~Translation1s();
-
-		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Translation1*> translations() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Translation1*> m_translations;
-};
-
-inline class Mdlx* Translation1s::mdlx() const
+Layers::~Layers()
 {
-	return this->m_mdlx;
 }
 
-inline long32 Translation1s::lineType() const
+void Layers::readMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_lineType;
 }
 
-inline long32 Translation1s::globalSequenceId() const
+void Layers::writeMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_globalSequenceId;
 }
 
-inline std::list<class Translation1*> Translation1s::translations() const
+
+long32 Layers::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_translations;
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nlays = 0;
+	fstream.read(reinterpret_cast<char*>(&nlays), sizeof(nlays));
+	bytes += fstream.gcount();
+	
+	for ( ; nlays > 0; --nlays)
+	{
+		class Layer *layer = new Layer(this);
+		long32 readBytes = layer->readMdx(fstream);
+		
+		if (readBytes == 0)
+			throw Exception(_("Global Sequences: 0 byte global sequence."));
+		
+		bytes += readBytes;
+		this->m_layers.push_back(layer);
+	}
+	
+	return bytes;
+}
+
+long32 Layers::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	bytes += MdxBlock::readMdx(fstream);
+	
+	return bytes;
 }
 
 }
 
 }
-
-#endif
-

@@ -18,7 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <cstdio>
+
 #include "material.hpp"
+#include "materials.hpp"
+#include "layers.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -26,19 +31,16 @@ namespace wc3lib
 namespace mdlx
 {
 
-Material::Material(class Mdlx *mdlx) : m_mdlx(mdlx)
+Material::Material(class Materials *materials) : m_materials(materials), m_layers(new Layers(this))
 {
 }
 
 Material::~Material()
 {
+	delete this->m_layers;
 }
 
 void Material::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Material::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
@@ -46,8 +48,41 @@ void Material::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Material::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Material::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	long32 nbytesi = 0;
+	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	bytes += fstream.gcount();
+	
+	if (nbytesi <= 0)
+	{
+		char message[50];
+		sprintf(message, _("Material: Small byte count.\nBytes %d.\n"), nbytesi);
+		
+		throw Exception(message);
+	}
+	
+	fstream.read(reinterpret_cast<char*>(&this->m_priorityPlane), sizeof(this->m_priorityPlane));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_renderMode), sizeof(this->m_renderMode));
+	bytes += fstream.gcount();
+	
+	if (this->m_renderMode != 1 && this->m_renderMode != 16 && this->m_renderMode != 32)
+		fprintf(stderr, _("Material: Warning, unknown render mode.\nRender mode %d.\n"), this->m_renderMode);
+	
+	bytes += this->m_layers->readMdx(fstream);
+	
+	if (nbytesi - sizeof(nbytesi) != bytes)
+		fprintf(stderr, _("Material: Real byte count is not equal to file byte count.\nReal byte count %d.\nFile byte count %d.\n"), bytes, nbytesi);
+	
+	return bytes;
+}
+
+long32 Material::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	return bytes;
 }
 
 }

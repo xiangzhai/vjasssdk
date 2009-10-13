@@ -78,42 +78,55 @@ void Sequences::writeMdl(std::fstream &fstream) throw (class Exception)
 	fstream << "}\n";
 }
 
-void Sequences::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Sequences::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	MdxBlock::readMdx(fstream);
-	long32 bytes = 0; //nbytes
-	fstream.read(reinterpret_cast<char*>(&bytes), sizeof(bytes));
-	std::cout << "Sequence bytes: " << bytes << std::endl;
+	long32 bytes = MdxBlock::readMdx(fstream);
 	
-	while (bytes > 0)
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes = 0;
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	std::cout << "Sequence bytes: " << nbytes << std::endl;
+	
+	while (nbytes > 0)
 	{
 		class Sequence *sequence = new Sequence(this);
 		long32 readBytes = sequence->readMdx(fstream);
-		std::cout << "Instance bytes: " << readBytes << std::endl;
 		
 		if (readBytes == 0)
 			throw Exception(_("Sequences: 0 byte sequence."));
 		
-		bytes -= readBytes;
+		nbytes -= readBytes;
+		bytes += readBytes;
 		this->m_sequences.push_back(sequence);
 	}
+	
+	return bytes;
 }
 
 long32 Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	MdxBlock::writeMdx(fstream);
-	/**
-	@todo Save file pointer position, add bytes by calling write mdx of each sequence, move back to file pointer and add byte count.
-	long32 bytes = 0; //nbytes
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 nbytes = 0;
+	std::fstream::pos_type position = fstream.tellg();
 	
 	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
-		bytes += (*iterator)->bytes();
+	{
+		long32 writtenBytes = (*iterator)->writeMdx(fstream);
+		
+		if (writtenBytes == 0)
+			throw Exception(_("Sequences: 0 byte sequence."));
+		
+		nbytes += writtenBytes;
+		bytes += writtenBytes;
+	}
 	
-	fstream.write(reinterpret_cast<char*>(bytes), sizeof(bytes));
+	fstream.seekg(position);
+	fstream.write(reinterpret_cast<const char*>(nbytes), sizeof(nbytes));
+	bytes += sizeof(nbytes);
 	
-	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
-		(*iterator)->writeMdx(fstream);
-	*/
+	return bytes;
 }
 
 }

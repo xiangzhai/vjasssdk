@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TRANSLATION1S_HPP
-#define WC3LIB_MDLX_TRANSLATION1S_HPP
+#ifndef WC3LIB_MDLX_LAYERS_HPP
+#define WC3LIB_MDLX_LAYERS_HPP
 
 #include <fstream>
 #include <list>
@@ -34,28 +34,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Translation1;
+class Material;
+class Layer;
 
-//KGTR, like KGSC (Scalings)
-class Translation1s : public MdxBlock
+class Layers : public MdxBlock
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
+		Layers(class Material *material);
+		virtual ~Layers();
 
-		Translation1s(class Mdlx *mdlx);
-		virtual ~Translation1s();
-
-		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Translation1*> translations() const;
+		class Material* material() const;
+		std::list<class Layer*> layers() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -63,30 +52,18 @@ class Translation1s : public MdxBlock
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Translation1*> m_translations;
+		class Material *m_material;
+		std::list<class Layer*> m_layers;
 };
 
-inline class Mdlx* Translation1s::mdlx() const
+inline class Material* Layers::material() const
 {
-	return this->m_mdlx;
+	return this->m_material;
 }
 
-inline long32 Translation1s::lineType() const
+inline std::list<class Layer*> Layers::layers() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Translation1s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Translation1*> Translation1s::translations() const
-{
-	return this->m_translations;
+	return this->m_layers;
 }
 
 }
@@ -94,4 +71,3 @@ inline std::list<class Translation1*> Translation1s::translations() const
 }
 
 #endif
-

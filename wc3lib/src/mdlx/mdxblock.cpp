@@ -44,16 +44,26 @@ long32 MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = 0;
 	byte identifier[sizeof(this->m_blockName)];
+	std::fstream::pos_type position = fstream.tellg();
 	fstream.read(identifier, sizeof(identifier));
 	bytes += fstream.gcount();
 	std::cout << "Read bytes: " << fstream.gcount() << std::endl;
 
 	if (memcmp(identifier, this->m_blockName, sizeof(this->m_blockName)) != 0)
 	{
-		char message[50];
-		sprintf(message, "Unexptected identifier \"%s\". Missing \"%s\" block name.", identifier, this->m_blockName);
-		
-		throw Exception(message);
+		if (this->m_optional)
+		{
+			fstream.seekg(position);
+			
+			return 0;
+		}
+		else
+		{
+			char message[50];
+			sprintf(message, "Unexptected identifier \"%s\". Missing \"%s\" block name.", identifier, this->m_blockName);
+			
+			throw Exception(message);
+		}
 	}
 	
 	return bytes;

@@ -34,8 +34,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class TextureId;
+class Materials;
+class Layer;
 
 //(KMTF)
 class TextureIds : public MdxBlock
@@ -49,29 +49,29 @@ class TextureIds : public MdxBlock
 			Bezier = 3
 		};
 
-		TextureIds(class Mdlx *mdlx);
+		TextureIds(class Layer *layer);
 		virtual ~TextureIds();
 
-		class Mdlx* mdlx() const;
+		class Layer* layer() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
 		std::list<class TextureId*> textureIds() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Layer *m_layer;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class TextureId*> m_textureIds;
 };
 
-inline class Mdlx* TextureIds::mdlx() const
+inline class Layer* TextureIds::layer() const
 {
-	return this->m_mdlx;
+	return this->m_layer;
 }
 
 inline long32 TextureIds::lineType() const

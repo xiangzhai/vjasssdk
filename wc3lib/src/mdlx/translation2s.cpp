@@ -38,16 +38,22 @@ void Translation2s::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Translation2s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Translation2s::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Translation2s::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Translation2s::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Translation2s::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

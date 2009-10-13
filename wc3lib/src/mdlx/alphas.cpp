@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "alphas.hpp"
+#include "layers.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Alphas::Alphas(class Mdlx *mdlx) : MdxBlock("KMTA"), m_mdlx(mdlx)
+Alphas::Alphas(class Layer *layer) : MdxBlock("KMTA"), m_layer(layer)
 {
 }
 
@@ -38,13 +39,13 @@ void Alphas::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
+void Alphas::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
 long32 Alphas::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	return 0;
-}
-
-void Alphas::writeMdl(std::fstream &fstream) throw (class Exception)
-{
 }
 
 long32 Alphas::writeMdx(std::fstream &fstream) throw (class Exception)

@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "materials.hpp"
+#include "material.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -44,16 +46,34 @@ void Materials::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 Materials::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+
+	long32 nbytes = 0; //nbytes
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += fstream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class Material *material = new Material(this);
+		long32 readBytes = material->readMdx(fstream);
+		
+		if (readBytes == 0)
+			throw Exception(_("Materials: 0 byte material"));
+		
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_materials.push_back(material);
+	}
 	
 	return bytes;
 }
 
 long32 Materials::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;
 }

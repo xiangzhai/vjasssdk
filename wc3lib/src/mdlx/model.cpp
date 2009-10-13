@@ -104,9 +104,7 @@ void Model::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 Model::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	MdxBlock::readMdx(fstream);
-	bytes += fstream.gcount();
+	long32 bytes = MdxBlock::readMdx(fstream);
 	long32 nbytes = 0;
 	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
@@ -135,7 +133,7 @@ long32 Model::readMdx(std::fstream &fstream) throw (class Exception)
 	fstream.read(reinterpret_cast<char*>(&this->m_blendTime), sizeof(this->m_blendTime));
 	bytes += fstream.gcount();
 	
-	if (bytes - 4 != nbytes) //- identifier length
+	if (bytes - 4 - sizeof(nbytes) != nbytes) //- identifier length
 	{
 		/// @todo Exception required?
 		fprintf(stderr, _("Model: Warning - Read byte count doesn't fit with real byte count.\nRead byte count: %d.\nReal byte count: %d.\n"), nbytes, bytes);
