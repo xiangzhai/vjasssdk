@@ -31,30 +31,32 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+class TextureVertices;
 
 class TextureVertex
 {
 	public:
-		TextureVertex(class Mdlx *mdlx);
+		TextureVertex(class TextureVertices *textureVertices);
 		virtual ~TextureVertex();
 
-		class Mdlx* mdlx() const;
+		class TextureVertices* textureVertices() const;
 		float32 x() const;
 		float32 y() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class TextureVertices *m_textureVertices;
 		float32 m_x, m_y;
 };
 
-inline class Mdlx* TextureVertex::mdlx() const
+inline class TextureVertices* TextureVertex::textureVertices() const
 {
-	return this->m_mdlx;
+	return this->m_textureVertices;
 }
 
 inline float32 TextureVertex::x() const

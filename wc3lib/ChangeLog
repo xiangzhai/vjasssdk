@@ -1,5 +1,7 @@
 2009-10-15 Tamino Dauth <tamino@cdauth.de>
 * Improved texture animations MDX reading.
+* Added several missing MDX property classes.
+* Improved various MDX reading methods.
 
 2009-10-14 Tamino Dauth <tamino@cdauth.de>
 * Improved textures and materials MDX reading.

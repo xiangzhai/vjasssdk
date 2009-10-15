@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "geoset.hpp"
-#include "mdlx.hpp"
+#include "geosets.hpp"
 #include "vertices.hpp"
 #include "normals.hpp"
 #include "primitivetypes.hpp"
@@ -28,10 +28,10 @@
 #include "groupvertices.hpp"
 #include "matrixgroupcounts.hpp"
 #include "matrices.hpp"
-/*
-class Ganimation;
-class TexturePatches;
-*/
+#include "ganimation.hpp"
+#include "texturepatches.hpp"
+#include "texturevertices.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -39,42 +39,25 @@ namespace wc3lib
 namespace mdlx
 {
 
-Geoset::Geoset(class Mdlx *mdlx) : m_mdlx(mdlx), m_vertices(0), m_normals(0),  m_primitveTypes(0), m_primitiveSizes(0),  m_primitiveVertices(0),  m_groupVertices(0), m_matrixGroupCounts(0),  m_matrices(0), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0), m_texturePatches(0)
+Geoset::Geoset(class Geosets *geosets) : m_geosets(geosets), m_vertices(new Vertices(this)), m_normals(new Normals(this)),  m_primitveTypes(new PrimitiveTypes(this)), m_primitiveSizes(new PrimitiveSizes(this)),  m_primitiveVertices(new PrimitiveVertices(this)),  m_groupVertices(new GroupVertices(this)), m_matrixGroupCounts(new MatrixGroupCounts(this)),  m_matrices(new Matrices(this)), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0), m_texturePatches(new TexturePatches(this)), m_textureVertices(new TextureVertices(this))
 {
 }
 
 Geoset::~Geoset()
 {
-	if (this->m_vertices != 0)
-		delete this->m_vertices;
-
-	if (this->m_normals != 0)
-		delete this->m_normals;
-
-	if (this->m_primitveTypes != 0)
-		delete this->m_primitveTypes;
-
-	if (this->m_primitiveSizes != 0)
-		delete this->m_primitiveSizes;
-
-	if (this->m_primitiveVertices != 0)
-		delete this->m_primitiveVertices;
-
-	if (this->m_groupVertices != 0)
-		delete this->m_groupVertices;
-
-	if (this->m_matrixGroupCounts != 0)
-		delete this->m_matrixGroupCounts;
-
-	if (this->m_matrices != 0)
-		delete this->m_matrices;
+	delete this->m_vertices;
+	delete this->m_normals;
+	delete this->m_primitveTypes;
+	delete this->m_primitiveSizes;
+	delete this->m_primitiveVertices;
+	delete this->m_groupVertices;
+	delete this->m_matrixGroupCounts;
+	delete this->m_matrices;
+	delete this->m_texturePatches;
+	delete this->m_textureVertices;
 }
 
 void Geoset::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
@@ -82,8 +65,69 @@ void Geoset::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Geoset::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	long32 nbytes = 0;
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	
+	if (nbytes <= 0)
+	{
+		char message[50];
+		sprintf(message, _("Geoset: 0 byte geoset.\n"));
+		
+		throw Exception(message);
+	}
+	
+	bytes += fstream.gcount();
+	bytes += this->m_vertices->readMdx(fstream);
+	bytes += this->m_normals->readMdx(fstream);
+	bytes += this->m_primitveTypes->readMdx(fstream);
+	bytes += this->m_primitiveSizes->readMdx(fstream);
+	bytes += this->m_primitiveVertices->readMdx(fstream);
+	bytes += this->m_groupVertices->readMdx(fstream);
+	bytes += this->m_matrixGroupCounts->readMdx(fstream);
+	bytes += this->m_matrices->readMdx(fstream);
+	fstream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_selectionGroup), sizeof(this->m_selectionGroup));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_selectable), sizeof(this->m_selectable));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
+	bytes += fstream.gcount();
+	long32 nanim = 0;
+	fstream.read(reinterpret_cast<char*>(&nanim), sizeof(nanim));
+	bytes += fstream.gcount();
+	
+	for ( ; nanim > 0; --nanim)
+	{
+		class Ganimation *ganimation = new Ganimation(this);
+		bytes += ganimation->readMdx(fstream);
+		this->m_ganimations.push_back(ganimation);
+	}
+	
+	bytes += this->m_texturePatches->readMdx(fstream);
+	bytes += this->m_textureVertices->readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 Geoset::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

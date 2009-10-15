@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "texturevertex.hpp"
+#include "texturevertices.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureVertex::TextureVertex(class Mdlx *mdlx) : m_mdlx(mdlx)
+TextureVertex::TextureVertex(class TextureVertices *textureVertices) : m_textureVertices(textureVertices)
 {
 }
 
@@ -38,16 +39,20 @@ void TextureVertex::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureVertex::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void TextureVertex::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureVertex::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureVertex::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	
+	
+	return 0;
+}
+
+long32 TextureVertex::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

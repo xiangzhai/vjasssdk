@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Geosets;
 class Vertices;
 class Normals;
 class PrimitiveTypes;
@@ -44,6 +44,7 @@ class MatrixGroupCounts;
 class Matrices;
 class Ganimation;
 class TexturePatches;
+class TextureVertices;
 
 class Geoset
 {
@@ -54,10 +55,10 @@ class Geoset
 			Unselectable = 4
 		};
 
-		Geoset(class Mdlx *mdlx);
+		Geoset(class Geosets *geosets);
 		virtual ~Geoset();
 
-		class Mdlx* mdlx() const;
+		class Geosets* geosets() const;
 		class Vertices* vertices() const;
 		class Normals* normals() const;
 		class PrimitiveTypes* primitiveTypes() const;
@@ -81,12 +82,12 @@ class Geoset
 		class TextureVertices* textureVertices() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Geosets *m_geosets;
 		class Vertices *m_vertices; //VRTX
 		class Normals *m_normals; //NRMS
 		class PrimitiveTypes *m_primitveTypes; //PTYP
@@ -108,9 +109,9 @@ class Geoset
 		class TextureVertices *m_textureVertices; //UVBS
 };
 
-inline class Mdlx* Geoset::mdlx() const
+inline class Geosets* Geoset::geosets() const
 {
-	return this->m_mdlx;
+	return this->m_geosets;
 }
 
 inline class Vertices* Geoset::vertices() const

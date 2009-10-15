@@ -32,24 +32,16 @@ namespace mdlx
 {
 
 class Mdlx;
+class Geoset;
 
 class Geosets : public MdxBlock
 {
 	public:
 		Geosets(class Mdlx *mdlx);
 		virtual ~Geosets();
-		
+
+		class Mdlx* mdlx() const;		
 		std::list<class Geoset*> geosets() const;
-		class Vertices* vertices() const;
-		class Normals* normals() const;
-		class PrimitiveTypes* primitiveTypes() const;
-		class PrimitiveSizes* primitiveSizes() const;
-		class PrimitiveVertices* primitiveVertices() const;
-		class GroupVertices* groupVertices() const;
-		class MaterialGroupLengths* materialGroupLengths() const;
-		class Matrices* matrices() const;
-		class TexturePatches* texturePatches() const;
-		class TextureVertices* textureVertices() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -60,75 +52,16 @@ class Geosets : public MdxBlock
 		class Mdlx *m_mdlx;
 		//long	nbytes;
 		std::list<class Geoset*> m_geosets;
-		class Vertices *m_vertices; //VRTX
-		class Normals *m_normals;
-		class PrimitiveTypes *m_primitiveTypes; //PTYP
-		class PrimitiveSizes *m_primitiveSizes; //PCNT
-		class PrimitiveVertices *m_primitiveVertices; //PVTX
-		class GroupVertices *m_groupVertices; //GNDX
-		class MaterialGroupLengths *m_materialGroupLengths; //MTGC
-		class Matrices *m_matrices; //MATS
-		/*
-		--(BIDX) ???
-		--(BWGT) ???
-		*/
-		class TexturePatches *m_texturePatches; //UVAS, texture patches?
-		class TextureVertices *m_textureVertices; //UVBS
 };
+
+inline class Mdlx* Geosets::mdlx() const
+{
+	return this->m_mdlx;
+}
 
 inline std::list<class Geoset*> Geosets::geosets() const
 {
 	return this->m_geosets;
-}
-
-inline class Vertices* Geosets::vertices() const
-{
-	return this->m_vertices;
-}
-
-inline class Normals* Geosets::normals() const
-{
-	return this->m_normals;
-}
-
-inline class PrimitiveTypes* Geosets::primitiveTypes() const
-{
-	return this->m_primitiveTypes;
-}
-
-inline class PrimitiveSizes* Geosets::primitiveSizes() const
-{
-	return this->m_primitiveSizes;
-}
-
-inline class PrimitiveVertices* Geosets::primitiveVertices() const
-{
-	return this->m_primitiveVertices;
-}
-
-inline class GroupVertices* Geosets::groupVertices() const
-{
-	return this->m_groupVertices;
-}
-
-inline class MaterialGroupLengths* Geosets::materialGroupLengths() const
-{
-	return this->m_materialGroupLengths;
-}
-
-inline class Matrices* Geosets::matrices() const
-{
-	return this->m_matrices;
-}
-
-inline class TexturePatches* Geosets::texturePatches() const
-{
-	return this->m_texturePatches;
-}
-
-inline class TextureVertices* Geosets::textureVertices() const
-{
-	return this->m_textureVertices;
 }
 
 }

@@ -18,9 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosets.hpp"
-#include "geoset.hpp"
-#include "../internationalisation.hpp"
+#ifndef WC3LIB_MDLX_TEXTUREVERTICES_HPP
+#define WC3LIB_MDLX_TEXTUREVERTICES_HPP
+
+#include <fstream>
+#include <list>
+
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -28,61 +34,41 @@ namespace wc3lib
 namespace mdlx
 {
 
-Geosets::Geosets(class Mdlx *mdlx) : MdxBlock("GEOS"), m_mdlx(mdlx)
+class Geoset;
+class TextureVertex;
+
+//UVBS
+class TextureVertices : public MdxBlock
 {
-}
+	public:
+		TextureVertices(class Geoset *geoset);
+		virtual ~TextureVertices();
 
-Geosets::~Geosets()
+		class Geoset* geoset() const;
+		std::list<class TextureVertex*> textureVertices() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class Geoset *m_geoset;
+		std::list<class TextureVertex*> m_textureVertices;
+};
+
+inline class Geoset* TextureVertices::geoset() const
 {
-	for (std::list<class Geoset*>::iterator iterator = this->m_geosets.begin(); iterator != this->m_geosets.end(); ++iterator)
-		delete *iterator;
+	return this->m_geoset;
 }
 
-void Geosets::readMdl(std::fstream &fstream) throw (class Exception)
+inline std::list<class TextureVertex*> TextureVertices::textureVertices() const
 {
-}
-
-void Geosets::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes = 0; //nbytes
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	
-	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geosets: 0 byte geosets.\n"));
-		
-		throw Exception(message);
-	}
-	
-	bytes += fstream.gcount();
-	
-	while (nbytes > 0)
-	{
-		class Geoset *geoset = new Geoset(this);
-		long32 readBytes = geoset->readMdx(fstream); 
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_geosets.push_back(geoset);
-	}
-	
-	return bytes;
-}
-
-long32 Geosets::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
+	return this->m_textureVertices;
 }
 
 }
 
 }
+
+#endif

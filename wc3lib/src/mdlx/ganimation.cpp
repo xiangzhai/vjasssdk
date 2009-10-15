@@ -38,16 +38,18 @@ void Ganimation::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Ganimation::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Ganimation::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Ganimation::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Ganimation::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
+}
+
+long32 Ganimation::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

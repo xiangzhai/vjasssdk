@@ -18,7 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosets.hpp"
+#include <iostream> //debug
+
+#include "texturepatches.hpp"
+#include "texturepatch.hpp"
 #include "geoset.hpp"
 #include "../internationalisation.hpp"
 
@@ -28,59 +31,59 @@ namespace wc3lib
 namespace mdlx
 {
 
-Geosets::Geosets(class Mdlx *mdlx) : MdxBlock("GEOS"), m_mdlx(mdlx)
+TexturePatches::TexturePatches(class Geoset *geoset) : MdxBlock("UVAS"), m_geoset(geoset)
 {
 }
 
-Geosets::~Geosets()
+TexturePatches::~TexturePatches()
 {
-	for (std::list<class Geoset*>::iterator iterator = this->m_geosets.begin(); iterator != this->m_geosets.end(); ++iterator)
+	for (std::list<class TexturePatch*>::iterator iterator = this->m_texturePatches.begin(); iterator != this->m_texturePatches.end(); ++iterator)
 		delete *iterator;
 }
 
-void Geosets::readMdl(std::fstream &fstream) throw (class Exception)
+void TexturePatches::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Geosets::writeMdl(std::fstream &fstream) throw (class Exception)
+void TexturePatches::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
+long32 TexturePatches::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
 	if (bytes == 0)
 		return 0;
 	
-	long32 nbytes = 0; //nbytes
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	long32 ntvrts = 0;
+	fstream.read(reinterpret_cast<char*>(&ntvrts), sizeof(ntvrts));
 	
-	if (nbytes <= 0)
+	if (ntvrts <= 0)
 	{
 		char message[50];
-		sprintf(message, _("Geosets: 0 byte geosets.\n"));
+		sprintf(message, _("Texture Patches: 0 byte texture patches.\n"));
 		
 		throw Exception(message);
 	}
 	
 	bytes += fstream.gcount();
 	
-	while (nbytes > 0)
+	for ( ; ntvrts > 0; --ntvrts)
 	{
-		class Geoset *geoset = new Geoset(this);
-		long32 readBytes = geoset->readMdx(fstream); 
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_geosets.push_back(geoset);
+		class TexturePatch *texturePatch = new TexturePatch(this);
+		bytes += texturePatch->readMdx(fstream);
+		this->m_texturePatches.push_back(texturePatches);
 	}
 	
 	return bytes;
 }
 
-long32 Geosets::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TexturePatches::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }
