@@ -30,12 +30,14 @@ namespace wc3lib
 namespace mdlx
 {
 
-Sequences::Sequences(class Mdlx *mdlx) : MdxBlock("SEQS"), m_mdlx(mdlx), m_sequences(std::list<class Sequence*>())
+Sequences::Sequences(class Mdlx *mdlx) : MdxBlock("SEQS"), m_mdlx(mdlx)
 {
 }
 
 Sequences::~Sequences()
 {
+	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
+		delete *iterator;
 }
 
 void Sequences::readMdl(std::fstream &fstream) throw (class Exception)
@@ -87,6 +89,7 @@ long32 Sequences::readMdx(std::fstream &fstream) throw (class Exception)
 	
 	long32 nbytes = 0;
 	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += fstream.gcount();
 	std::cout << "Sequence bytes: " << nbytes << std::endl;
 	
 	while (nbytes > 0)

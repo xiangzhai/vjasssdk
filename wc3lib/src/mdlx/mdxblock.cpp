@@ -47,7 +47,7 @@ long32 MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 	std::fstream::pos_type position = fstream.tellg();
 	fstream.read(identifier, sizeof(identifier));
 	bytes += fstream.gcount();
-	std::cout << "Read bytes: " << fstream.gcount() << std::endl;
+	//std::cout << "Read bytes: " << fstream.gcount() << std::endl;
 
 	if (memcmp(identifier, this->m_blockName, sizeof(this->m_blockName)) != 0)
 	{

@@ -34,6 +34,8 @@ GlobalSequences::GlobalSequences(class Mdlx *mdlx) : MdxBlock("GLBS"), m_mdlx(md
 
 GlobalSequences::~GlobalSequences()
 {
+	for (std::list<class GlobalSequence*>::iterator iterator = this->m_globalSequences.begin(); iterator != this->m_globalSequences.end(); ++iterator)
+		delete *iterator;
 }
 
 void GlobalSequences::readMdl(std::fstream &fstream) throw (class Exception)

@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Textures;
 
 class Texture
 {
@@ -44,31 +44,31 @@ class Texture
 			Both = 3
 		};
 
-		Texture(class Mdlx *mdlx);
+		Texture(class Textures *textures);
 		virtual ~Texture();
 
-		class Mdlx* mdlx() const;
+		class Textures* textures() const;
 		long32 replaceableId() const;
 		const ascii* texturePath() const;
 		long32 unknown0() const;
 		long32 wrapping() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Textures *m_textures;
 		long32 m_replaceableId;
 		ascii m_texturePath[0x100]; //(0x100 bytes)
 		long32 m_unknown0; //(0)
 		long32 m_wrapping; //(1:WrapWidth;2:WrapHeight;3:Both)
 };
 
-inline class Mdlx* Texture::mdlx() const
+inline class Textures* Texture::textures() const
 {
-	return this->m_mdlx;
+	return this->m_textures;
 }
 
 inline long32 Texture::replaceableId() const

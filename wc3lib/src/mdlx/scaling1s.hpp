@@ -34,7 +34,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class TextureAnimation;
 class Scaling1;
 
 //KTAS
@@ -49,10 +49,10 @@ class Scaling1s : public MdxBlock
 			Bezier = 3
 		};
 
-		Scaling1s(class Mdlx *mdlx);
+		Scaling1s(class TextureAnimation *textureAnimation);
 		virtual ~Scaling1s();
 
-		class Mdlx* mdlx() const;
+		class TextureAnimation* textureAnimation() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
 		std::list<class Scaling1*> scalings() const;
@@ -63,15 +63,15 @@ class Scaling1s : public MdxBlock
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class TextureAnimation *m_textureAnimation;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class Scaling1*> m_scalings;
 };
 
-inline class Mdlx* Scaling1s::mdlx() const
+inline class TextureAnimation* Scaling1s::textureAnimation() const
 {
-	return this->m_mdlx;
+	return this->m_textureAnimation;
 }
 
 inline long32 Scaling1s::lineType() const

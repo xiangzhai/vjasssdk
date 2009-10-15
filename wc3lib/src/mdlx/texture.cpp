@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "texture.hpp"
+#include "textures.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +28,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Texture::Texture(class Mdlx *mdlx) : m_mdlx(mdlx)
+Texture::Texture(class Textures *textures) : m_textures(textures)
 {
 }
 
@@ -38,16 +40,33 @@ void Texture::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Texture::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Texture::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Texture::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Texture::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_replaceableId), sizeof(this->m_replaceableId));
+	bytes += fstream.gcount();
+	fstream.read(this->m_texturePath, sizeof(this->m_texturePath));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_wrapping), sizeof(this->m_wrapping));
+	bytes += fstream.gcount();
+	
+	if (this->m_wrapping != 1 && this->m_wrapping != 2 && this->m_wrapping != 3)
+		fprintf(stderr, _("Texture: Warning, unknown wrapping %d.\n"), this->m_wrapping);
+	
+	return bytes;
+}
+
+long32 Texture::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	
+	return bytes;
 }
 
 }

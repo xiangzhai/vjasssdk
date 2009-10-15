@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class TextureAnimations;
 class Translation2s;
 class Rotation1s;
 class Scaling1s;
@@ -40,30 +40,30 @@ class Scaling1s;
 class TextureAnimation
 {
 	public:
-		TextureAnimation(class Mdlx *mdlx);
+		TextureAnimation(class TextureAnimations *textureAnimations);
 		virtual ~TextureAnimation();
 
-		class Mdlx* mdlx() const;
+		class TextureAnimations* textureAnimations() const;
 		class Translation2s* translations() const;
 		class Rotation1s* rotations() const;
 		class Scaling1s* scalings() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
 		//long32 nbytesi;
-		class Mdlx *m_mdlx;
+		class TextureAnimations *m_textureAnimations;
 		class Translation2s *m_translations; //(KTAT) // Might be optional
 		class Rotation1s *m_rotations; //(KTAR)
 		class Scaling1s *m_scalings; //(KTAS)
 };
 
-inline class Mdlx* TextureAnimation::mdlx() const
+inline class TextureAnimations* TextureAnimation::textureAnimations() const
 {
-	return this->m_mdlx;
+	return this->m_textureAnimations;
 }
 
 inline class Translation2s* TextureAnimation::translations() const

@@ -84,8 +84,8 @@ long32 Layer::readMdx(std::fstream &fstream) throw (class Exception)
 	bytes += this->m_alphas->readMdx(fstream);
 	bytes += this->m_textureIds->readMdx(fstream);
 	
-	if (nbytesi - sizeof(nbytesi) != bytes)
-		fprintf(stderr, _("Material: Real byte count is not equal to file byte count.\nReal byte count %d.\nFile byte count %d.\n"), bytes, nbytesi);
+	if (nbytesi != bytes)
+		fprintf(stderr, _("Layer: Real byte count is not equal to file byte count.\nReal byte count %d.\nFile byte count %d.\n"), bytes, nbytesi);
 	
 	return bytes;
 }

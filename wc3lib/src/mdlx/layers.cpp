@@ -63,7 +63,7 @@ long32 Layers::readMdx(std::fstream &fstream) throw (class Exception)
 		long32 readBytes = layer->readMdx(fstream);
 		
 		if (readBytes == 0)
-			throw Exception(_("Global Sequences: 0 byte global sequence."));
+			throw Exception(_("Layers: 0 byte layer."));
 		
 		bytes += readBytes;
 		this->m_layers.push_back(layer);

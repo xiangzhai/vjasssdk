@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "scaling1s.hpp"
+#include "textureanimation.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scaling1s::Scaling1s(class Mdlx *mdlx) : MdxBlock("KTAS"), m_mdlx(mdlx)
+Scaling1s::Scaling1s(class TextureAnimation *textureAnimation) : MdxBlock("KTAS", false), m_textureAnimation(textureAnimation)
 {
 }
 
@@ -45,6 +46,8 @@ void Scaling1s::writeMdl(std::fstream &fstream) throw (class Exception)
 long32 Scaling1s::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	//mustn't be 0
 	
 	return bytes;
 }

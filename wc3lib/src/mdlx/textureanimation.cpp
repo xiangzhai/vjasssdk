@@ -19,12 +19,11 @@
  ***************************************************************************/
 
 #include "textureanimation.hpp"
+#include "textureanimations.hpp"
 #include "translation2s.hpp"
-#include "translation2.hpp"
 #include "rotation1s.hpp"
-#include "rotation1.hpp"
 #include "scaling1s.hpp"
-#include "scaling1.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimation::TextureAnimation(class Mdlx *mdlx) : m_mdlx(mdlx), m_translations(new Translation2s(mdlx)), m_rotations(new Rotation1s(mdlx)), m_scalings(new Scaling1s(mdlx))
+TextureAnimation::TextureAnimation(class TextureAnimations *textureAnimations) : m_textureAnimations(textureAnimations), m_translations(new Translation2s(this)), m_rotations(new Rotation1s(this)), m_scalings(new Scaling1s(this))
 {
 }
 
@@ -47,12 +46,9 @@ void TextureAnimation::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureAnimation::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void TextureAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
 {
+	/*
 	fstream << "\tTVertexAnim {\n";
 
 	if (this->m_translations != 0)
@@ -76,9 +72,32 @@ void TextureAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
 	}
 
 	fstream << "\t}\n";
+	*/
 }
 
-void TextureAnimation::writeMdx(std::fstream &fstream) throw (class Exception)
+
+long32 TextureAnimation::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	long32 bytes = 0;
+	long32 nbytesi = 0;
+	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	bytes += fstream.gcount();
+	bytes +=this->m_translations->readMdx(fstream);
+	bytes +=this->m_rotations->readMdx(fstream);
+	bytes += this->m_scalings->readMdx(fstream);
+	
+	if (nbytesi != bytes)
+	{
+		char message[50];
+		sprintf(message, _("Texture Animation: Error, file byte count and real byte count aren't equal.\nFile byte count: %d bytes.\nReal byte count: %d.\n"), nbytesi, bytes);
+		
+		throw Exception(message);
+	}
+	
+	return bytes;
+}
+
+long32 TextureAnimation::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

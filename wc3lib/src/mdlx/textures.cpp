@@ -19,6 +19,10 @@
  ***************************************************************************/
 
 #include "textures.hpp"
+#include "texture.hpp"
+#include "../internationalisation.hpp"
+
+#include <iostream> //debug
 
 namespace wc3lib
 {
@@ -32,6 +36,8 @@ Textures::Textures(class Mdlx *mdlx) : MdxBlock("TEXS"), m_mdlx(mdlx)
 
 Textures::~Textures()
 {
+	for (std::list<class Texture*>::iterator iterator = this->m_textures.begin(); iterator != this->m_textures.end(); ++iterator)
+		delete *iterator;
 }
 
 void Textures::readMdl(std::fstream &fstream) throw (class Exception)
@@ -42,10 +48,31 @@ void Textures::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-
 long32 Textures::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	std::cout << "TEXTURES" << std::endl;
 	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32	nbytes = 0;
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += fstream.gcount();
+	std::cout << "Texture bytes: " << nbytes << std::endl;
+	
+	while (nbytes > 0)
+	{
+		class Texture *texture = new Texture(this);
+		long32 readBytes = texture->readMdx(fstream);
+		
+		if (readBytes == 0)
+			throw Exception(_("Textures: 0 byte texture."));
+		
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_textures.push_back(texture);
+	}
 	
 	return bytes;
 }

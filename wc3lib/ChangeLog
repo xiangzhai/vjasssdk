@@ -1,3 +1,9 @@
+2009-10-15 Tamino Dauth <tamino@cdauth.de>
+* Improved texture animations MDX reading.
+
+2009-10-14 Tamino Dauth <tamino@cdauth.de>
+* Improved textures and materials MDX reading.
+
 2009-10-13 Tamino Dauth <tamino@cdauth.de>
 * Revised BlpJpeg class.
 * Improved editor Renderer class.

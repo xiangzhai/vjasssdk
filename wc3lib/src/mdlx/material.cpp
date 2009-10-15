@@ -73,7 +73,7 @@ long32 Material::readMdx(std::fstream &fstream) throw (class Exception)
 	
 	bytes += this->m_layers->readMdx(fstream);
 	
-	if (nbytesi - sizeof(nbytesi) != bytes)
+	if (nbytesi != bytes)
 		fprintf(stderr, _("Material: Real byte count is not equal to file byte count.\nReal byte count %d.\nFile byte count %d.\n"), bytes, nbytesi);
 	
 	return bytes;
