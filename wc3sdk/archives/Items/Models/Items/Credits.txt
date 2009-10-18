@@ -13,6 +13,7 @@ EinfacherHochelfenschild3.mdx	xXm0RpH3usXx	http://www.wc3c.net/
 Flute.mdx			Matarael	http://www.hiveworkshop.com/
 GrosserHeiltrank.mdx		Ket		http://www.hiveworkshop.com/
 GrosserManatrank.mdx		Ket		http://www.hiveworkshop.com/
+Halberd.mdx			Kitabatake	http://www.hiveworkshop.com/
 Holzschild1.mdx			xXm0RpH3usXx	http://www.wc3c.net/
 Holzschild2.mdx			xXm0RpH3usXx	http://www.wc3c.net/
 Holzschild3.mdx			xXm0RpH3usXx	http://www.wc3c.net/
@@ -21,6 +22,10 @@ KleinerManatrank.mdx		Ket		http://www.hiveworkshop.com/
 LeichterHolzschild1.mdx		xXm0RpH3usXx	http://www.wc3c.net/
 LeichterHolzschild2.mdx		xXm0RpH3usXx	http://www.wc3c.net/
 LeichterHolzschild3.mdx		xXm0RpH3usXx	http://www.wc3c.net/
+Longsword.mdx			Kitabatake	http://www.hiveworkshop.com/
+Mace.mdx			Kitabatake	http://www.hiveworkshop.com/
+MorningStar.mdx			Kitabatake	http://www.hiveworkshop.com/
+Quarterstaff.mdx		Kitabatake	http://www.hiveworkshop.com/
 RicmansSchild.mdx		Sardor		DMdF Team
 RicmansSpeer.mdx		Sardor		DMdF Team
 Ring.mdx			republicola	http://www.hiveworkshop.com/
@@ -31,7 +36,9 @@ SchwererHolzschild1.mdx		xXm0RpH3usXx	http://www.wc3c.net/
 SchwererHolzschild2.mdx		xXm0RpH3usXx	http://www.wc3c.net/
 SchwererHolzschild3.mdx		xXm0RpH3usXx	http://www.wc3c.net/
 Shield.mdx			-		http://www.hiveworkshop.com/
-Spear.mdx			Matarael	http://www.hiveworkshop.com/
+Shortsword.mdx			Kitabatake	http://www.hiveworkshop.com/
+Spear1.mdx			Matarael	http://www.hiveworkshop.com/
+Spear2.mdx			Kitabatake	http://www.hiveworkshop.com/
 Stab.mdx			Sardor		DMdF Team
 StabdesWassers.mdx		Thrikodius	http://www.hiveworkshop.com/
 Vasallenschild1.mdx		xXm0RpH3usXx	http://www.wc3c.net/
