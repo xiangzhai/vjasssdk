@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wc3lib\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-26 21:38+0100\n"
+"POT-Creation-Date: 2009-10-16 16:21+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Tamino Dauth <tamino.dauth@web.de>\n"
 "Language-Team: Tamino Dauth <tamino@cdauth.de>\n"
@@ -15,11 +15,7 @@ msgstr ""
 "X-Poedit-Basepath: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/\n"
 "X-Poedit-SearchPath-0: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src\n"
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:64
-msgid "Missing arguments."
-msgstr ""
-
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:72
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:94
 msgid ""
 "Copyright © 2009 Tamino Dauth\n"
 "License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
@@ -27,102 +23,271 @@ msgid ""
 "There is NO WARRANTY, to the extent permitted by law."
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:83
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:106
 msgid "mdlxtest\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:84
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:107
 msgid ""
 "\n"
 "Usage:\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:85
-msgid "\tmdlxtest [] <input files>\n"
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:108
+msgid "\tmdlxtest [-io] <input files>\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:86
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:109
 msgid ""
 "\n"
 "Options:\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:87
-msgid "\t--version                 Shows the current version of mdlxtest.\n"
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:110
+msgid "\t-v, --version             Shows the current version of mdlxtest.\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:88
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:111
+msgid "\t-h, --help                Shows this text.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:112
 msgid "\t-i, --iformat <arg>       <arg> has to be replaced by input files format.\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:89
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:113
 msgid "\t-o, --oformat <arg>       <arg> has to be replaced by output files format.\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:90
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:114
 msgid ""
 "\n"
 "Report bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:106
-msgid "Missing --iformat argument."
-msgstr ""
-
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:113
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:138
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:124
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:145
 #, c-format
 msgid "Invalid format \"%s\".\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:120
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:145
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:131
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:152
 msgid "Input and output formats are equal."
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:131
-msgid "Missing --oformat argument."
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:172
+msgid "Missing file arguments."
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:158
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:179
 msgid "Input format was not defined."
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:165
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:186
 msgid "Output format was not defined."
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:172
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:193
 msgid "No input files were chosen."
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:191
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:235
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:215
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:262
 #, c-format
 msgid "Error while opening file \"%s\". Continuing with next one.\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:207
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:227
+#, c-format
+msgid "Read MDX file successfully. %d Bytes.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:234
 #, c-format
 msgid ""
 "Error while reading file \"%s\":\n"
 " \"%s\"\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:208
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:250
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:235
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:280
 msgid "Skiping file."
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:249
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:272
+#, c-format
+msgid "Wrote MDX file successfully. %d Bytes.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/test/mdlxtest.cpp:279
 #, c-format
 msgid ""
 "Error while writing file \"%s\":\n"
 " \"%s\"\n"
 msgstr ""
 
-#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:98
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/blp/blp.cpp:85
+#, c-format
+msgid "Error while reading BLP file. Expected \"BLP1\" keyword, got \"%s\".\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/blp/blp.cpp:138
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/blp/blp.cpp:222
+#, c-format
+msgid ""
+"Unknown compression mode.\n"
+"Compression mode %d.\n"
+"Picture type: %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/textureanimations.cpp:69
+msgid "Texture animations: 0 byte texture animation."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/textureanimation.cpp:92
+#, c-format
+msgid ""
+"Texture Animation: Error, file byte count and real byte count aren't equal.\n"
+"File byte count: %d bytes.\n"
+"Real byte count: %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/geoset.cpp:77
+#, c-format
+msgid "Geoset: 0 byte geoset.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/globalsequences.cpp:73
+msgid "Global Sequences: 0 byte global sequence."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/sequences.cpp:101
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/sequences.cpp:122
+msgid "Sequences: 0 byte sequence."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/texturevertices.cpp:64
+#, c-format
+msgid "Texture Vertices: 0 byte texture vertices.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/material.cpp:61
+#, c-format
+msgid ""
+"Material: Small byte count.\n"
+"Bytes %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/material.cpp:72
+#, c-format
+msgid ""
+"Material: Warning, unknown render mode.\n"
+"Render mode %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/material.cpp:77
+#, c-format
+msgid ""
+"Material: Real byte count is not equal to file byte count.\n"
+"Real byte count %d.\n"
+"File byte count %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/materials.cpp:64
+msgid "Materials: 0 byte material"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:60
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:71
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:80
+msgid "Version: Missing tokens."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:73
+msgid "Version: Syntax error."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:92
+msgid "Version: Missing format version number."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:115
+#, c-format
+msgid "Versions with more than 4 bytes are not supported. Read version has %d bytes."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/version.cpp:126
 #, c-format
 msgid "Warning: Version %d probably is not supported. Current version is %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/texture.cpp:60
+#, c-format
+msgid "Texture: Warning, unknown wrapping %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/textures.cpp:70
+msgid "Textures: 0 byte texture."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/layers.cpp:66
+msgid "Layers: 0 byte layer."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/layer.cpp:64
+#, c-format
+msgid ""
+"Layer: Warning, unknown filter mode.\n"
+"Filter mode %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/layer.cpp:70
+#, c-format
+msgid ""
+"Layer: Warning, unknown shading.\n"
+"Shading %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/layer.cpp:76
+#, c-format
+msgid ""
+"Layer: Warning, unknown texture id.\n"
+"Texture id %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/layer.cpp:88
+#, c-format
+msgid ""
+"Layer: Real byte count is not equal to file byte count.\n"
+"Real byte count %d.\n"
+"File byte count %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/texturepatches.cpp:65
+#, c-format
+msgid "Texture Patches: 0 byte texture patches.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/model.cpp:112
+msgid "Model: 0 byte model."
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/model.cpp:139
+#, c-format
+msgid ""
+"Model: Warning - Read byte count doesn't fit with real byte count.\n"
+"Read byte count: %d.\n"
+"Real byte count: %d.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/geosets.cpp:62
+#, c-format
+msgid "Geosets: 0 byte geosets.\n"
+msgstr ""
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/src/mdlx/alpha.cpp:53
+#, c-format
+msgid "Unknown state: %d. Should be 0 or 1."
 msgstr ""
 
