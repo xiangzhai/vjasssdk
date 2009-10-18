@@ -978,6 +978,26 @@ library AStructSystemsCharacterCharacter requires ALibraryCoreDebugMisc,AStructC
 				set i = i + 1
 			endloop
 		endmethod
+		
+		public static method setRandomPointInRectForAll takes rect whichRect returns nothing
+			local real minX = RMinBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
+			local real maxX = RMaxBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
+			local real minY = RMinBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
+			local real maxY = RMaxBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
+			local integer i
+			local player user
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (thistype.playerCharacter(user) != 0) then
+					call thistype.playerCharacter(user).setX(GetRandomReal(minX, maxX))
+					call thistype.playerCharacter(user).setY(GetRandomReal(minY, maxY))
+				endif
+				set user = null
+				set i = i + 1
+			endloop
+		endmethod
 	endstruct
 
 endlibrary

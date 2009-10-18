@@ -26,6 +26,14 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			call ShowUnit(this.m_unit, true)
 		endmethod
 		
+		public method restoreOnActorsLocation takes nothing returns nothing
+			call BJDebugMsg("restore on actors location")
+			call SetUnitX(this.m_unit, GetUnitX(this.m_actor))
+			call SetUnitY(this.m_unit, GetUnitY(this.m_actor))
+			call SetUnitFacing(this.m_unit, GetUnitFacing(this.m_actor))
+			call this.restore()
+		endmethod
+		
 		public static method create takes unit oldUnit returns thistype
 			local thistype this = thistype.allocate()
 			//local player newOwner = Player(PLAYER_NEUTRAL_PASSIVE) // set passive owner so unit won't attack or be attacked
@@ -347,19 +355,29 @@ library AStructSystemsCharacterVideo requires ALibraryCoreDebugMisc, AStructCore
 			return AActorData(thistype.m_actorData[index]).actor()
 		endmethod
 		
-		public static method restoreUnitActor takes integer index returns boolean
+		public static method restoreUnitActor takes integer index returns nothing
 			call AActorData(thistype.m_actorData[index]).restore()
 			call AActorData(thistype.m_actorData[index]).destroy()
 			call thistype.m_actorData.erase(index)
-			return true
+		endmethod
+		
+		public static method restoreUnitActorOnActorLocation takes integer index returns nothing
+			call AActorData(thistype.m_actorData[index]).restoreOnActorsLocation()
+			call AActorData(thistype.m_actorData[index]).destroy()
+			call thistype.m_actorData.erase(index)
 		endmethod
 		
 		public static method restoreUnitActors takes nothing returns nothing
-			local integer i = thistype.m_actorData.backIndex()
 			loop
-				exitwhen (i < 0)
-				call thistype.restoreUnitActor(i)
-				set i = i - 1
+				exitwhen (thistype.m_actorData.empty())
+				call thistype.restoreUnitActor(thistype.m_actorData.backIndex())
+			endloop
+		endmethod
+		
+		public static method restoreUnitActorsOnActorsLocations takes nothing returns nothing
+			loop
+				exitwhen (thistype.m_actorData.empty())
+				call thistype.restoreUnitActorOnActorLocation(thistype.m_actorData.backIndex())
 			endloop
 		endmethod
 		

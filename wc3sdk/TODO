@@ -1,3 +1,15 @@
+2009-10-16 Tamino Dauth <tamino@cdauth.de>
+* FIXED: Rechter Rucksackgegenstand wird nicht korrekt zurückgesetzt.
+* Report bugs to Vexorian:
+	- static ifs not bla or not bla doesn't work
+	- comments after static ifs do not work
+	- import macros won't be ignored between static ifs
+* Tagesablaufsystem automatisieren - Nur Uhrzeiten, Positionen und Positionsaktionen angeben. NPCs sollen von selbst hinlaufen. Eine Startaktion (ausgeführt ab Uhrzeit) und eine Schleifenaktion (läuft wenn angekommen), welche TriggerSleepActions enthalten darf, nächste erfolgt erst nach Ablauf über manuellen Aufruf von continue oder so.
+* Außerdem noch eine mögliche Endaktion aufrufen, falls benötigt.
+* Wird der NPC pausiert, so wird sein aktueller Tagesablauf ebenfalls pausiert. Ist er am Zielpunkt bereits angekommen, so wird bei der Depausierung, falls der Tagesablauf in der Zwischenzeit abgelaufen ist
+die Beendungsfunktion aufgerufen (falls vorhanden). Außerdem wird nach dem inzwischen begonnenen Tagesablauf gesucht und dessen Beginnfunktion aufgerufen.
+* Still missing various type methods for struct AHashTable (since new data type hashtable was introduced by Blizzard)
+
 2009-10-10 Tamino Dauth <tamino@cdauth.de>
 * Add documentation files.
 

@@ -43,7 +43,7 @@ library AStructSystemsCharacterMovement requires ALibraryCoreDebugMisc, AStructC
 		private static constant integer maxStates = 4
 		private static constant integer maxMovementTriggers = 8
 		//static start members
-static if A_RTC and A_FPS_MOVEMENT then
+static if (A_RTC and A_FPS_MOVEMENT) then
 		private static integer fpsKeyMoveForward
 		private static integer fpsKeyMoveBackward
 		private static integer fpsKeyTurnRight
@@ -55,7 +55,7 @@ endif
 		private static boolean stopWhileStanding
 		//members
 		private trigger m_movementTrigger
-static if A_RTC and A_FPS_MOVEMENT then
+static if (A_RTC and A_FPS_MOVEMENT) then
 		private trigger m_fpsTriggerUp
 		private trigger m_fpsTriggerDown
 else
@@ -201,7 +201,8 @@ endif
 			endif //Stop wird in den Start-Aktionen aufgerufen
 			set triggeringTrigger = null
 		endmethod
-static if not A_RTC or not A_FPS_MOVEMENT then
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 		private static method triggerActionMoveForward takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -277,7 +278,8 @@ endif
 			set conditionFunction = null
 			set triggerCondition = null
 			set triggerAction = null
-static if not A_RTC or not A_FPS_MOVEMENT then
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 			//forward
 			set this.m_startMovementTrigger[0] = CreateTrigger()
 			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[0], KEY_UP, true)
@@ -343,7 +345,7 @@ static if not A_RTC or not A_FPS_MOVEMENT then
 			set triggerAction = null
 endif
 		endmethod
-static if A_RTC and A_FPS_MOVEMENT then
+static if (A_RTC and A_FPS_MOVEMENT) then
 		private static method triggerActionFpsUp takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -405,7 +407,7 @@ endif
 			local thistype this = thistype.allocate(character)
 
 			call this.createMovementTriggers()
-static if A_RTC and A_FPS_MOVEMENT then
+static if (A_RTC and A_FPS_MOVEMENT) then
 			call this.createFpsTriggerUp()
 			call this.createFpsTriggerDown()
 endif
@@ -413,12 +415,14 @@ endif
 		endmethod
 
 		private method destroyKeyMovementTriggers takes nothing returns nothing
-static if not A_RTC or not A_FPS_MOVEMENT then
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 			local integer i
 endif
 			call AHashTable.global().destroyTrigger(this.m_movementTrigger)
-			set this.movementTrigger = null
-static if not A_RTC or not A_FPS_MOVEMENT then
+			set this.m_movementTrigger = null
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 			set i = 0
 			loop
 				exitwhen(i == thistype.maxMovementTriggers)
@@ -428,7 +432,7 @@ static if not A_RTC or not A_FPS_MOVEMENT then
 			endloop
 endif
 		endmethod
-static if A_RTC and A_FPS_MOVEMENT then
+static if (A_RTC and A_FPS_MOVEMENT) then
 		private method destroyFpsTriggerUp takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(this.m_fpsTriggerUp)
 			set this.fpsTriggerUp = null
@@ -442,13 +446,13 @@ endif
 		public method onDestroy takes nothing returns nothing
 
 			call this.destroyKeyMovementTriggers()
-static if A_RTC and A_FPS_MOVEMENT then
+static if (A_RTC and A_FPS_MOVEMENT) then
 			call this.destroyFpsTriggerUp()
 			call this.destroyFpsTriggerDown()
 endif
 		endmethod
-
-static if not A_RTC or not A_FPS_MOVEMENT then
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 		/**
 		* @param refreshRate 0.01
 		* @param speed 5.0

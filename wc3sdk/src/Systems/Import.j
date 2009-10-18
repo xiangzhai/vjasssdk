@@ -1,6 +1,6 @@
 //! import "Systems/Character/Import.j"
 //! import "Systems/BonusMod/Import.j"
-static if (A_DEBUG) then
+static if (DEBUG_MODE) then
 //! import "Systems/Debug/Import.j"
 endif
 //! import "Systems/Gui/Import.j"

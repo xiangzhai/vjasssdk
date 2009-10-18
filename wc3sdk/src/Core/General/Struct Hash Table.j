@@ -10,12 +10,12 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc
 		
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AHashTable\"")
 		
-		//! textmacro AHashTableOperationMacro takes TYPE, TYPENAME, METHODNAME, METHODTYPENAME
+		//! textmacro AHashTableOperationMacro takes TYPE, TYPENAME, METHODTYPENAME
 			public method set$TYPENAME$ takes string key, string label, $TYPE$ value returns nothing
 				call Save$METHODTYPENAME$(this.m_hashTable, StringHash(key), StringHash(label), value)
 			endmethod
 			
-			public method $METHODNAME$ takes string key, string label returns $TYPE$
+			public method $TYPE$ takes string key, string label returns $TYPE$
 				return Load$METHODTYPENAME$(this.m_hashTable, StringHash(key), StringHash(label))
 			endmethod
 
@@ -44,10 +44,84 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc
 			endmethod
 		//! endtextmacro
 
-		//! runtextmacro AHashTableOperationMacro("integer", "Integer", "integer", "Integer")
-		//! runtextmacro AHashTableOperationMacro("boolean", "Boolean", "boolean", "Boolean")
-		//! runtextmacro AHashTableOperationMacro("real", "Real", "real", "Real")
-		//! runtextmacro AHashTableOperationMacro("string", "String", "string", "Str")
+		//! runtextmacro AHashTableOperationMacro("integer", "Integer", "Integer")
+		//! runtextmacro AHashTableOperationMacro("boolean", "Boolean", "Boolean")
+		//! runtextmacro AHashTableOperationMacro("real", "Real", "Real")
+		//! runtextmacro AHashTableOperationMacro("string", "String", "Str")
+		
+		//! textmacro AHashTableHandleOperationMacro takes TYPE, TYPENAME, METHODTYPENAME
+			public method set$TYPENAME$ takes string key, string label, $TYPE$ value returns nothing
+				call Save$TYPENAME$Handle(this.m_hashTable, StringHash(key), StringHash(label), value)
+			endmethod
+			
+			public method $METHODTYPENAME$ takes string key, string label returns $TYPE$
+				return Load$TYPENAME$Handle(this.m_hashTable, StringHash(key), StringHash(label))
+			endmethod
+
+			public method has$TYPENAME$ takes string key, string label returns boolean
+				return HaveSavedHandle(this.m_hashTable, StringHash(key), StringHash(label))
+			endmethod
+
+			public method remove$TYPENAME$ takes string key, string label returns nothing
+				call RemoveSavedHandle(this.m_hashTable, StringHash(key), StringHash(label))
+			endmethod
+			
+			public method setHandle$TYPENAME$ takes handle usedHandle, string label, $TYPE$ value returns nothing
+				call Save$TYPENAME$Handle(this.m_hashTable, GetHandleId(usedHandle), StringHash(label), value)
+			endmethod
+			
+			public method handle$TYPENAME$ takes handle usedHandle, string label returns $TYPE$
+				return Load$TYPENAME$Handle(this.m_hashTable, GetHandleId(usedHandle), StringHash(label))
+			endmethod
+
+			public method hasHandle$TYPENAME$ takes handle usedHandle, string label returns boolean
+				return HaveSavedHandle(this.m_hashTable, GetHandleId(usedHandle), StringHash(label))
+			endmethod
+
+			public method removeHandle$TYPENAME$ takes handle usedHandle, string label returns nothing
+				call RemoveSavedHandle(this.m_hashTable, GetHandleId(usedHandle), StringHash(label))
+			endmethod
+		//! endtextmacro
+		
+		//! runtextmacro AHashTableHandleOperationMacro("player", "Player", "player")
+		//! runtextmacro AHashTableHandleOperationMacro("widget", "Widget", "widget")
+		//! runtextmacro AHashTableHandleOperationMacro("destructable", "Destructable", "destructable")
+		//! runtextmacro AHashTableHandleOperationMacro("item", "Item", "item")
+		//! runtextmacro AHashTableHandleOperationMacro("unit", "Unit", "unit")
+		//! runtextmacro AHashTableHandleOperationMacro("ability", "Ability", "ability")
+		//! runtextmacro AHashTableHandleOperationMacro("timer", "Timer", "timer")
+		//! runtextmacro AHashTableHandleOperationMacro("trigger", "Trigger", "trigger")
+		//! runtextmacro AHashTableHandleOperationMacro("triggercondition", "TriggerCondition", "triggerCondition")
+		//! runtextmacro AHashTableHandleOperationMacro("triggeraction", "TriggerAction", "triggerAction")
+		//! runtextmacro AHashTableHandleOperationMacro("event", "TriggerEvent", "triggerEvent")
+		//! runtextmacro AHashTableHandleOperationMacro("force", "Force", "force")
+		//! runtextmacro AHashTableHandleOperationMacro("group", "Group", "group")
+		//! runtextmacro AHashTableHandleOperationMacro("location", "Location", "location")
+		//! runtextmacro AHashTableHandleOperationMacro("rect", "Rect", "rect")
+		//! runtextmacro AHashTableHandleOperationMacro("boolexpr", "BooleanExpr", "boolexpr")
+		//! runtextmacro AHashTableHandleOperationMacro("sound", "Sound", "sound")
+		//! runtextmacro AHashTableHandleOperationMacro("effect", "Effect", "effect")
+		//! runtextmacro AHashTableHandleOperationMacro("unitpool", "UnitPool", "unitPool")
+		//! runtextmacro AHashTableHandleOperationMacro("itempool", "ItemPool", "itemPool")
+		//! runtextmacro AHashTableHandleOperationMacro("quest", "Quest", "quest")
+		//! runtextmacro AHashTableHandleOperationMacro("questitem", "QuestItem", "questitem")
+		//! runtextmacro AHashTableHandleOperationMacro("defeatcondition", "DefeatCondition", "defeatCondition")
+		//! runtextmacro AHashTableHandleOperationMacro("timerdialog", "TimerDialog", "timerDialog")
+		//! runtextmacro AHashTableHandleOperationMacro("leaderboard", "Leaderboard", "leaderboard")
+		//! runtextmacro AHashTableHandleOperationMacro("multiboard", "Multiboard", "multiboard")
+		//! runtextmacro AHashTableHandleOperationMacro("multiboarditem", "MultiboardItem", "multiboardItem")
+		//! runtextmacro AHashTableHandleOperationMacro("trackable", "Trackable", "trackable")
+		//! runtextmacro AHashTableHandleOperationMacro("dialog", "Dialog", "dialog")
+		//! runtextmacro AHashTableHandleOperationMacro("button", "Button", "button")
+		//! runtextmacro AHashTableHandleOperationMacro("texttag", "TextTag", "textTag")
+		//! runtextmacro AHashTableHandleOperationMacro("lightning", "Lightning", "lightning")
+		//! runtextmacro AHashTableHandleOperationMacro("image", "Image", "image")
+		//! runtextmacro AHashTableHandleOperationMacro("ubersplat", "Ubersplat", "ubersplat")
+		//! runtextmacro AHashTableHandleOperationMacro("region", "Region", "region")
+		//! runtextmacro AHashTableHandleOperationMacro("fogstate", "FogState", "fogState")
+		//! runtextmacro AHashTableHandleOperationMacro("fogmodifier", "FogModifier", "fogModifier")
+		///! runtextmacro AHashTableHandleOperationMacro("agent", "Agent", "agent") /// @todo Missing native
+		//! runtextmacro AHashTableHandleOperationMacro("hashtable", "Hashtable", "hashtable")
 
 		/// Flushes all data of the hashtable.
 		public method flush takes nothing returns nothing
@@ -83,7 +157,7 @@ library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc
 
 			return this
 		endmethod
-
+		
 		public method onDestroy takes nothing returns nothing
 			//members
 			call FlushParentHashtable(this.m_hashTable)

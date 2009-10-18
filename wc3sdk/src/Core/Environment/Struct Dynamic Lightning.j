@@ -1,5 +1,8 @@
 library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentLightning, AStructCoreGeneralVector, ALibraryCoreMathsHandle
 
+	/**
+	* Dynamic lightnings are lightnings which are moved automatically between positions of to specific units.
+	*/
 	struct ADynamicLightning
 		//static start members
 		private static boolean removeOnDeath
@@ -80,6 +83,9 @@ library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, A
 			endif
 		endmethod
 		
+		/**
+		* @param user If user is null, dynamic lightning will be visible for all players.
+		*/
 		public static method create takes player user, string usedCode, unit firstUnit, unit secondUnit returns thistype
 			local thistype this = thistype.allocate()
 			//start members

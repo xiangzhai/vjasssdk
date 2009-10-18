@@ -1080,6 +1080,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					call EnableTrigger(this.m_pickupTrigger)
 					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textDropPageItem)
 				elseif (GetItemTypeId(usedItem) == thistype.rightArrowItemType) then
+					call TriggerSleepAction(0.0)
 					call RemoveItem(usedItem)
 					set usedItem = null
 					call DisableTrigger(this.m_pickupTrigger)

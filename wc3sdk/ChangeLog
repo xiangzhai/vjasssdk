@@ -1,3 +1,16 @@
+2009-10-18 Tamino Dauth <tamino@cdauth.de>
+* Revised struct ARoutine.
+* Added several type methods to struct AHashTable for new native save and load functions of hash tables.
+* Set some sky models for several weather effects of struct AWeather.
+
+2009-10-17 Tamino Dauth <tamino@cdauth.de>
+* Revised struct ARoutine.
+
+2009-10-16 Tamino Dauth <tamino@cdauth.de>
+* Added Nerubian user interface to MPQ archive "Interface".
+* Method addGroup of struct AGroup won't destroy the added group automatically anymore.
+* Revised struct ARoutine.
+
 2009-10-10 Tamino Dauth <tamino@cdauth.de>
 * Moved Bonus Mod to systems.
 * Object libraries do only provide file preloading now.

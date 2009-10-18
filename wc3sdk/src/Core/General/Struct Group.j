@@ -12,8 +12,9 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 		
 		//methods
 		
-		public method addGroup takes group usedGroup returns nothing
+		public method addGroup takes group usedGroup, boolean destroy returns nothing
 			local unit firstOfGroup
+			local integer i
 			loop
 				exitwhen (IsUnitGroupEmptyBJ(usedGroup))
 				set firstOfGroup = FirstOfGroupSave(usedGroup)
@@ -21,8 +22,18 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 				call GroupRemoveUnit(usedGroup, firstOfGroup)
 				set firstOfGroup = null
 			endloop
-			call DestroyGroup(usedGroup)
-			set usedGroup = null
+			call GroupClear(usedGroup)
+			if (destroy) then
+				call DestroyGroup(usedGroup)
+				set usedGroup = null
+			else
+				set i = 0
+				loop
+					exitwhen (i == this.m_units.size())
+					call GroupAddUnit(usedGroup, this.m_units[i])
+					set i = i + 1
+				endloop
+			endif
 		endmethod
 
 		public method isDead takes nothing returns boolean

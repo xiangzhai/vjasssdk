@@ -5,7 +5,9 @@ static if (A_JAPI) then
 //! import "japi.j"
 endif
 //! import "Core/Import.j"
+static if (A_SYSTEMS) then
 //! import "Systems/Import.j"
+endif
 static if (A_OBJECTS) then
 //! import "Objects/Import.j"
 endif

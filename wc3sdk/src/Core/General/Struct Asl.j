@@ -33,10 +33,6 @@ library AStructCoreGeneralAsl requires ALibraryCoreDebugMisc, ALibraryCoreString
 			return A_OBJECTS
 		endmethod
 
-		public static constant method useDebug takes nothing returns boolean
-			return A_DEBUG
-		endmethod
-
 		public static constant method useDebugHandles takes nothing returns boolean
 			return A_DEBUG_HANDLES
 		endmethod

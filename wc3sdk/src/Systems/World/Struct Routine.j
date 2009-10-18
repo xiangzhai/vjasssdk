@@ -1,5 +1,6 @@
-library AStructSystemsWorldRoutine requires AStructCoreGeneralHashTable
+library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
 
+	/*
 	/// Isn't a method since it uses @function TriggerSleepAction.
 	function moveNpcTo takes ARoutine routine, real x, real y returns boolean
 		local unit npc = routine.unit()
@@ -43,31 +44,28 @@ library AStructSystemsWorldRoutine requires AStructCoreGeneralHashTable
 		endif
 		return routine.isInTime()
 	endfunction
-
-	/// @todo Should be a part of @struct ARoutine, vJass bug.
-	function interface ARoutineAction takes ARoutine routine returns nothing
-
-	/**
-	* Provides NPC routine handling like in the game Gothic or Gothic II.
-	* You are able to assign day times and routine actions using the function interface @functioninterface ARouteAction.
-	* Additionally you can make periodic routines by setting a 'run rate'.
-	* If the assigned unit is paused, routine won't be runned until unit gets unpaused.
 	*/
-	struct ARoutine
+	
+	private struct ARoutineUnitData
 		//start members
+		private ARoutine m_routine
 		private unit m_unit
 		private real m_startTimeOfDay
 		private real m_endTimeOfDay
-		private real m_runRate
-		private ARoutineAction m_action
+		private rect m_targetRect
 		//members
-		private trigger m_runTrigger
-		private trigger m_enableTrigger
-		private trigger m_disableTrigger
-
-		//start members
-
-		//You will need this in the routine action
+		private boolean m_isEnabled
+		private trigger m_startTrigger
+		private trigger m_endTrigger
+		private trigger m_targetTrigger
+		private region m_targetRegion
+		
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ARoutineUnitData\"")
+		
+		public method routine takes nothing returns ARoutine
+			return this.m_routine
+		endmethod
+		
 		public method unit takes nothing returns unit
 			return this.m_unit
 		endmethod
@@ -80,30 +78,46 @@ library AStructSystemsWorldRoutine requires AStructCoreGeneralHashTable
 			return this.m_endTimeOfDay
 		endmethod
 		
-		public method runRate takes nothing returns real
-			return this.m_runRate
+		public method targetRect takes nothing returns rect
+			return this.m_targetRect
 		endmethod
 		
-		public method action takes nothing returns ARoutineAction
-			return this.m_action
+		//members
+		
+		public method isEnabled takes nothing returns boolean
+			return this.m_isEnabled
 		endmethod
-
+		
 		//methods
-
+		
 		public method enable takes nothing returns nothing
-			if (this.m_runRate > 0.0) then
-				call EnableTrigger(this.m_runTrigger)
-				call EnableTrigger(this.m_disableTrigger)
+			set this.m_isEnabled = true
+			call EnableTrigger(this.m_startTrigger)
+			if (not IsUnitPaused(this.m_unit)) then
+				call EnableTrigger(this.m_endTrigger)
+				if (this.m_targetTrigger != null) then
+					call EnableTrigger(this.m_targetTrigger)
+				endif
 			endif
-			call EnableTrigger(this.m_enableTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
-			if (this.m_runRate > 0.0) then
-				call DisableTrigger(this.m_runTrigger)
-				call DisableTrigger(this.m_disableTrigger)
+			set this.m_isEnabled = false
+			call DisableTrigger(this.m_startTrigger)
+			if (not IsUnitPaused(this.m_unit)) then
+				call DisableTrigger(this.m_endTrigger)
+				if (this.m_targetTrigger != null) then
+					call DisableTrigger(this.m_targetTrigger)
+				endif
 			endif
-			call DisableTrigger(this.m_enableTrigger)
+		endmethod
+		
+		public method setEnabled takes boolean enabled returns nothing
+			if (enabled) then
+				call this.enable()
+			else
+				call this.disable()
+			endif
 		endmethod
 
 		public method isInTime takes nothing returns boolean
@@ -112,135 +126,360 @@ library AStructSystemsWorldRoutine requires AStructCoreGeneralHashTable
 			endif
 			return GetFloatGameState(GAME_STATE_TIME_OF_DAY) >= this.m_startTimeOfDay and GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.m_endTimeOfDay
 		endmethod
-
-		//Call PauseUnit if you want to stop the routine.
-		public method isAbleToMove takes nothing returns boolean
-			return not IsUnitPaused(this.m_unit)
-		endmethod
-
-		private method run takes nothing returns nothing
-			call this.m_action.execute(this)
-		endmethod
 		
-		private static method runCondition takes nothing returns boolean
+		private static method filterTarget takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			local boolean result = this.isAbleToMove()
+			local unit triggerUnit = GetTriggerUnit()
+			local boolean result = triggerUnit == this.m_unit
 			set triggeringTrigger = null
+			set triggerUnit = null
 			return result
 		endmethod
-
-		private static method runAction takes nothing returns nothing
+		
+		private static method triggerActionTarget takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.run()
-			set triggeringTrigger = null
-		endmethod
-
-		private method createRunTrigger takes nothing returns nothing
-			local event triggerEvent
-			local conditionfunc conditionFunction
-			local triggercondition triggerCondition
-			local triggeraction triggerAction
-			if (this.m_runRate > 0.0) then
-				set this.m_runTrigger = CreateTrigger()
-				set triggerEvent = TriggerRegisterTimerEvent(this.m_runTrigger, this.m_runRate, true)
-				set conditionFunction = Condition(function thistype.runCondition)
-				set triggerCondition = TriggerAddCondition(this.m_runTrigger, conditionFunction)
-				set triggerAction = TriggerAddAction(this.m_runTrigger, function thistype.runAction)
-				call AHashTable.global().setHandleInteger(this.m_runTrigger, "this", this)
-				set triggerEvent = null
-				set conditionFunction = null
-				set triggerCondition = null
-				set triggerAction = null
-			endif
-		endmethod
-
-		private static method triggerActionEnable takes nothing returns nothing
-			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			if (this.m_runRate > 0.0) then
-				call EnableTrigger(this.m_runTrigger)
-			else
-				call this.run()
+			call this.destroyTargetTrigger() // destroys this trigger
+			if (this.m_routine.targetAction() != 0) then
+				call this.m_routine.targetAction().execute(this.m_unit)
 			endif
 			set triggeringTrigger = null
 		endmethod
-
-		private method createEnableTrigger takes nothing returns nothing
+		
+		private method createTargetTrigger takes nothing returns nothing
+			local boolexpr filter
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.m_enableTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterGameStateEvent(this.m_enableTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.m_startTimeOfDay)
-			set triggerAction = TriggerAddAction(this.m_enableTrigger, function thistype.triggerActionEnable)
-			call AHashTable.global().setHandleInteger(this.m_enableTrigger, "this", this)
+			set this.m_targetRegion = CreateRegion()
+			call RegionAddRect(this.m_targetRegion, this.m_targetRect)
+			set this.m_targetTrigger = CreateTrigger()
+			set filter = Condition(function thistype.filterTarget)
+			set triggerEvent = TriggerRegisterEnterRegion(this.m_targetTrigger, this.m_targetRegion, filter)
+			set triggerAction = TriggerAddAction(this.m_targetTrigger, function thistype.triggerActionTarget)
+			call AHashTable.global().setHandleInteger(this.m_targetTrigger, "this", this)
+			call IssuePointOrder(this.m_unit, "move", GetRectCenterX(this.m_targetRect), GetRectCenterY(this.m_targetRect))
+			set filter = null
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
-		private static method triggerActionDisable takes nothing returns nothing
+		private static method triggerActionStart takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call DisableTrigger(this.m_runTrigger)
+			call BJDebugMsg("Start trigger is called")
+			if (not IsUnitPaused(this.m_unit)) then
+				call BJDebugMsg("Not paused")
+				if (thistype.unitHasNextRoutineUnitData(this.m_unit)) then
+					call thistype.clearNextRoutineUnitDataOfUnit(this.m_unit)
+				endif
+				call thistype.setCurrentRoutineUnitDataForUnit(this.m_unit, this)
+				if (this.m_routine.startAction() != 0) then
+					call this.m_routine.startAction().execute(this.m_unit)
+				endif
+				if (this.m_routine.hasTarget()) then
+					call this.createTargetTrigger()
+				endif
+			else
+				call BJDebugMsg("Paused")
+				call thistype.setNextRoutineUnitDataForUnit(this.m_unit, this)
+			endif
 			set triggeringTrigger = null
 		endmethod
 
-		private method createDisableTrigger takes nothing returns nothing
+		private method createStartTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			if (this.m_runRate > 0.0) then
-				set this.m_disableTrigger = CreateTrigger()
-				set triggerEvent = TriggerRegisterGameStateEvent(this.m_disableTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.m_endTimeOfDay)
-				set triggerAction = TriggerAddAction(this.m_disableTrigger, function thistype.triggerActionDisable)
-				call AHashTable.global().setHandleInteger(this.m_disableTrigger, "this", this)
-				set triggerEvent = null
-				set triggerAction = null
-			endif
+			set this.m_startTrigger = CreateTrigger()
+			set triggerEvent = TriggerRegisterGameStateEvent(this.m_startTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.m_startTimeOfDay)
+			set triggerAction = TriggerAddAction(this.m_startTrigger, function thistype.triggerActionStart)
+			call AHashTable.global().setHandleInteger(this.m_startTrigger, "this", this)
+			set triggerEvent = null
+			set triggerAction = null
 		endmethod
 
-		/// Usually it will be runned when the assigned time of day is reached.
-		/// @param runRate If runRate is <= 0.0 action won't be runned at an interval.
-		public static method create takes unit usedUnit, real startTimeOfDay, real endTimeOfDay, real runRate, ARoutineAction action returns thistype
+		private static method triggerActionEnd takes nothing returns nothing
+			local trigger triggeringTrigger = GetTriggeringTrigger()
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			call thistype.clearCurrentRoutineUnitDataOfUnit(this.m_unit)
+			if (this.m_routine.hasTarget() and this.m_targetTrigger != null) then
+				call this.destroyTargetTrigger()
+			endif
+			if (this.m_routine.endAction() != 0) then
+				call this.m_routine.endAction().execute(this.m_unit)
+			endif
+			set triggeringTrigger = null
+		endmethod
+
+		private method createEndTrigger takes nothing returns nothing
+			local event triggerEvent
+			local triggeraction triggerAction
+			set this.m_endTrigger = CreateTrigger()
+			set triggerEvent = TriggerRegisterGameStateEvent(this.m_endTrigger, GAME_STATE_TIME_OF_DAY, EQUAL, this.m_endTimeOfDay)
+			set triggerAction = TriggerAddAction(this.m_endTrigger, function thistype.triggerActionEnd)
+			call AHashTable.global().setHandleInteger(this.m_endTrigger, "this", this)
+			set triggerEvent = null
+			set triggerAction = null
+		endmethod
+		
+		public static method create takes ARoutine routine, unit whichUnit, real startTimeOfDay, real endTimeOfDay, rect targetRect returns thistype
 			local thistype this = thistype.allocate()
 			//start members
-			set this.m_unit = usedUnit
+			set this.m_routine = routine
+			set this.m_unit = whichUnit
 			set this.m_startTimeOfDay = startTimeOfDay
 			set this.m_endTimeOfDay = endTimeOfDay
-			set this.m_runRate = runRate
-			set this.m_action = action
+			set this.m_targetRect = targetRect
+			//members
+			set this.m_isEnabled = true
+			set this.m_targetRegion = null
 
-			call this.createRunTrigger()
-			call this.createEnableTrigger()
-			call this.createDisableTrigger()
+			call this.createStartTrigger()
+			call this.createEndTrigger()
+			
 			return this
 		endmethod
-
-		private method destroyRunTrigger takes nothing returns nothing
-			if (this.m_runRate > 0.0) then
-				call AHashTable.global().destroyTrigger(this.m_runTrigger)
-				set this.m_runTrigger = null
-			endif
+		
+		private method destroyTargetTrigger takes nothing returns nothing
+			call AHashTable.global().destroyTrigger(this.m_targetTrigger)
+			set this.m_targetTrigger = null
+			call RemoveRegion(this.m_targetRegion)
+			set this.m_targetRegion = null
 		endmethod
-
-		private method destroyEnableTrigger takes nothing returns nothing
-			call AHashTable.global().destroyTrigger(this.m_enableTrigger)
-			set this.m_enableTrigger = null
-		endmethod
-
-		private method destroyDisableTrigger takes nothing returns nothing
-			if (this.m_runRate > 0.0) then
-				call AHashTable.global().destroyTrigger(this.m_disableTrigger)
-				set this.m_disableTrigger = null
-			endif
-		endmethod
-
+		
 		public method onDestroy takes nothing returns nothing
 			//start members
 			set this.m_unit = null
+			set this.m_targetRect = null
+			//members
+			call AHashTable.global().destroyTrigger(this.m_startTrigger)
+			set this.m_startTrigger = null
+			call AHashTable.global().destroyTrigger(this.m_endTrigger)
+			set this.m_endTrigger = null
+			if (this.m_targetTrigger != null) then
+				call this.destroyTargetTrigger()
+			endif
+		endmethod
+		
+		public static method hookPauseUnit takes unit whichUnit, boolean flag returns nothing
+			local thistype this
 
-			call this.destroyRunTrigger()
-			call this.destroyEnableTrigger()
-			call this.destroyDisableTrigger()
+			if (not thistype.unitHasCurrentRoutineUnitData(whichUnit)) then
+				return
+			endif
+			
+			set this = thistype.currentRoutineUnitDataOfUnit(whichUnit)
+
+			debug if (this == 0) then
+				debug call thistype.staticPrint("Current routine unit data of unit " + GetUnitName(whichUnit) + " is 0.")
+				debug return
+			debug endif
+			
+			if (not this.m_isEnabled) then
+				debug call this.print("Is not enabled.")
+				return
+			endif
+			
+			// pause
+			if (flag) then
+				call BJDebugMsg("Routine Pause " + GetUnitName(whichUnit))
+				call DisableTrigger(this.m_endTrigger)
+				if (this.m_targetTrigger != null) then
+					call DisableTrigger(this.m_targetTrigger)
+				endif
+			// unpause
+			else
+				call BJDebugMsg("Routine Unpause " + GetUnitName(whichUnit))
+				if (this.isInTime()) then
+					if (this.m_routine.hasTarget()) then
+						if (this.m_targetTrigger != null) then
+							call EnableTrigger(this.m_endTrigger)
+							if (this.m_targetTrigger != null) then
+								call EnableTrigger(this.m_targetTrigger)
+							endif
+							call IssuePointOrder(this.m_unit, "move", GetRectCenterX(this.m_targetRect), GetRectCenterY(this.m_targetRect))
+						elseif (this.m_routine.isLoop() and this.m_routine.targetAction() != 0) then
+							call this.m_routine.targetAction().execute(whichUnit)
+						endif
+					endif
+				// not in time
+				else
+					if (not thistype.unitHasNextRoutineUnitData(this.m_unit)) then
+						return
+					endif
+					
+					set this = thistype.nextRoutineUnitDataOfUnit(whichUnit)
+					call thistype.clearNextRoutineUnitDataOfUnit(whichUnit)
+					call thistype.setCurrentRoutineUnitDataForUnit(whichUnit, this)
+					if (this.m_routine.startAction() != 0) then
+						call this.m_routine.startAction().execute(whichUnit)
+					endif
+				endif
+			endif
+		endmethod
+		
+		public static method hookRemoveUnit takes unit whichUnit returns nothing
+			call ARoutine.removeUnitFromAll(whichUnit)
+			if (thistype.unitHasCurrentRoutineUnitData(whichUnit)) then
+				call thistype.clearCurrentRoutineUnitDataOfUnit(whichUnit)
+			endif
+			if (thistype.unitHasNextRoutineUnitData(whichUnit)) then
+				call thistype.clearNextRoutineUnitDataOfUnit(whichUnit)
+			endif
+		endmethod
+		
+		private static method setCurrentRoutineUnitDataForUnit takes unit whichUnit, thistype routineUnitData returns nothing
+			call AHashTable.global().setHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData", routineUnitData)
+		endmethod
+		
+		private static method currentRoutineUnitDataOfUnit takes unit whichUnit returns thistype
+			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
+		endmethod
+		
+		private static method unitHasCurrentRoutineUnitData takes unit whichUnit returns boolean
+			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
+		endmethod
+		
+		private static method clearCurrentRoutineUnitDataOfUnit takes unit whichUnit returns nothing
+			call AHashTable.global().removeHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
+		endmethod
+		
+		private static method setNextRoutineUnitDataForUnit takes unit whichUnit, thistype routineUnitData returns nothing
+			//don't check if there's already a value, just overwrite!
+			call AHashTable.global().setHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData", routineUnitData)
+		endmethod
+		
+		private static method nextRoutineUnitDataOfUnit takes unit whichUnit returns thistype
+			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
+		endmethod
+		
+		private static method unitHasNextRoutineUnitData takes unit whichUnit returns boolean
+			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
+		endmethod
+		
+		private static method clearNextRoutineUnitDataOfUnit takes unit whichUnit returns nothing
+			call AHashTable.global().removeHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
+		endmethod
+	endstruct
+	
+	hook PauseUnit ARoutineUnitData.hookPauseUnit
+	hook RemoveUnit ARoutineUnitData.hookRemoveUnit
+	
+	function AContinueRoutineLoop takes unit whichUnit, ARoutineAction routineAction returns nothing
+		if (not IsUnitPaused(whichUnit)) then
+			call routineAction.execute(whichUnit)
+		endif
+		//otherwise cancel, routine loop action will be called automatically again when unit is unpaused and still in routine time
+	endfunction
+
+	/// @todo Should be a part of @struct ARoutine, vJass bug.
+	function interface ARoutineAction takes unit whichUnit returns nothing
+
+	/**
+	* Provides NPC routine handling like in the game Gothic or Gothic II.
+	* You are able to assign day times and routine actions using the function interface @functioninterface ARouteAction.
+	* Additionally you can make periodic routines by setting a 'run rate'.
+	* If the assigned unit is paused, routine won't be runned until unit gets unpaused.
+	*/
+	struct ARoutine
+		//static members
+		private static AIntegerVector m_routines
+		//start members
+		private boolean m_hasTarget
+		private boolean m_isLoop
+		private ARoutineAction m_startAction
+		private ARoutineAction m_endAction
+		private ARoutineAction m_targetAction
+		//members
+		private AIntegerVector m_unitData
+		private integer m_index
+
+		//start members
+		
+		public method hasTarget takes nothing returns boolean
+			return this.m_hasTarget
+		endmethod
+		
+		public method isLoop takes nothing returns boolean
+			return this.m_isLoop
+		endmethod
+		
+		public method startAction takes nothing returns ARoutineAction
+			return this.m_startAction
+		endmethod
+		
+		public method endAction takes nothing returns ARoutineAction
+			return this.m_startAction
+		endmethod
+		
+		public method targetAction takes nothing returns ARoutineAction
+			return this.m_targetAction
+		endmethod
+		
+		//methods
+		
+		public method addUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay, rect targetRect returns integer
+			local ARoutineUnitData routineUnitData = ARoutineUnitData.create(this, whichUnit, startTimeOfDay, endTimeOfDay, targetRect)
+			call this.m_unitData.pushBack(routineUnitData)
+			return this.m_unitData.backIndex()
+		endmethod
+		
+		public method removeUnitByIndex takes integer index returns nothing
+			call ARoutineUnitData(this.m_unitData[index]).destroy()
+			call this.m_unitData.erase(index)
+		endmethod
+		
+		public method removeUnit takes unit whichUnit returns integer
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_unitData.size())
+				if (ARoutineUnitData(this.m_unitData[i]).unit() == whichUnit) then
+					call this.removeUnitByIndex(i)
+					return i
+				endif
+				set i = i + 1
+			endloop
+			return -1
+		endmethod
+
+		public static method create takes boolean hasTarget, boolean isLoop, ARoutineAction startAction, ARoutineAction endAction, ARoutineAction targetAction returns thistype
+			local thistype this = thistype.allocate()
+			//start members
+			set this.m_hasTarget = hasTarget
+			set this.m_isLoop = isLoop
+			set this.m_startAction = startAction
+			set this.m_endAction = endAction
+			set this.m_targetAction = targetAction
+			//members
+			set this.m_unitData = AIntegerVector.create()
+			call thistype.m_routines.pushBack(this)
+			set this.m_index = thistype.m_routines.backIndex()
+
+			return this
+		endmethod
+
+		public method onDestroy takes nothing returns nothing
+			//members
+			loop
+				exitwhen (this.m_unitData.empty())
+				call this.removeUnitByIndex(this.m_unitData.backIndex())
+			endloop
+			call this.m_unitData.destroy()
+			call thistype.m_routines.erase(this.m_index)
+		endmethod
+		
+		public static method init takes nothing returns nothing
+			//static members
+			set thistype.m_routines = AIntegerVector.create()
+		endmethod
+		
+		public static method removeUnitFromAll takes unit whichUnit returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_routines.size())
+				call thistype(thistype.m_routines[i]).removeUnit(whichUnit)
+				set i = i + 1
+			endloop
 		endmethod
 	endstruct
 

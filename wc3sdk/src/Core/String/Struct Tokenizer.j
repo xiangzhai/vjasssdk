@@ -12,7 +12,7 @@ library AStructCoreStringTokenizer requires ALibraryCoreDebugMisc
 		//start members
 		private string m_string
 
-		//! runtextmacro A_STRUCT_DEBUG("\"ATokenizer\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"ATokenizer\"")
 
 		//dynamic members
 

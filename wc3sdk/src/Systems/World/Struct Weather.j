@@ -205,6 +205,7 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 			call this.removeWeatherEffects()
 		endmethod
 		
+		/// @todo Set all sky types (maybe add custom skies)
 		public static method init takes nothing returns nothing
 			//static start members
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainHeavy] = 'RAhr'
@@ -212,7 +213,7 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainLight] = 'RAlr'
 			set thistype.m_skyModelFile[thistype.weatherTypeAshenvaleRainLight] = ""
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeDalaranShield] = 'MEds'
-			set thistype.m_skyModelFile[thistype.weatherTypeDalaranShield] = ""
+			set thistype.m_skyModelFile[thistype.weatherTypeDalaranShield] = "Environment\\Sky\\DalaranSky\\DalaranSky.mdl"
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeBlueDungeonFogHeavy] = 'FDbh'
 			set thistype.m_skyModelFile[thistype.weatherTypeBlueDungeonFogHeavy] = ""
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeBlueDungeonFogLight] = 'FDbl'
@@ -225,32 +226,32 @@ library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGe
 			set thistype.m_skyModelFile[thistype.weatherTypeRedDungeonFogHeavy] = ""
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeRedDungeonFogLight] = 'FDrl'
 			set thistype.m_skyModelFile[thistype.weatherTypeRedDungeonFogLight] = ""
-			set thistype.m_weatherTypeEffectId[9] = 'FDwh'
-			set thistype.m_skyModelFile[9] = ""
-			set thistype.m_weatherTypeEffectId[10] = 'FDwl'
-			set thistype.m_skyModelFile[10] = ""
-			set thistype.m_weatherTypeEffectId[11] = 'RLhr'
-			set thistype.m_skyModelFile[11] = ""
-			set thistype.m_weatherTypeEffectId[12] = 'RLlr'
-			set thistype.m_skyModelFile[12] = ""
-			set thistype.m_weatherTypeEffectId[13] = 'SNbs'
-			set thistype.m_skyModelFile[13] = ""
-			set thistype.m_weatherTypeEffectId[14] = 'SNhs'
-			set thistype.m_skyModelFile[14] = ""
-			set thistype.m_weatherTypeEffectId[15] = 'SNls'
-			set thistype.m_skyModelFile[15] = ""
-			set thistype.m_weatherTypeEffectId[16] = 'WOcw'
-			set thistype.m_skyModelFile[16] = ""
-			set thistype.m_weatherTypeEffectId[17] = 'WOlw'
-			set thistype.m_skyModelFile[17] = ""
-			set thistype.m_weatherTypeEffectId[18] = 'LRaa'
-			set thistype.m_skyModelFile[18] = ""
-			set thistype.m_weatherTypeEffectId[19] = 'LRma'
-			set thistype.m_skyModelFile[19] = ""
-			set thistype.m_weatherTypeEffectId[20] = 'WNcw'
-			set thistype.m_skyModelFile[20] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeWhiteDungeonFogHeavy] = 'FDwh'
+			set thistype.m_skyModelFile[thistype.weatherTypeWhiteDungeonFogHeavy] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeWhiteDungeonFogLight] = 'FDwl'
+			set thistype.m_skyModelFile[thistype.weatherTypeWhiteDungeonFogLight] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeLordaeronRainHeavy] = 'RLhr'
+			set thistype.m_skyModelFile[thistype.weatherTypeLordaeronRainHeavy] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeLordaeronRainLight] = 'RLlr'
+			set thistype.m_skyModelFile[thistype.weatherTypeLordaeronRainLight] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeNorhtrendBlizzard] = 'SNbs'
+			set thistype.m_skyModelFile[thistype.weatherTypeNorhtrendBlizzard] = "Environment\\Sky\\BlizzardSky\\BlizzardSky.mdl"
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeNorhtrendSnowfallHeavy] = 'SNhs'
+			set thistype.m_skyModelFile[thistype.weatherTypeNorhtrendSnowfallHeavy] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeNorhtrendSnowfallLight] = 'SNls'
+			set thistype.m_skyModelFile[thistype.weatherTypeNorhtrendSnowfallLight] = ""
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeForeignCountryWindHeavy] = 'WOcw'
+			set thistype.m_skyModelFile[thistype.weatherTypeForeignCountryWindHeavy] = "Environment\\Sky\\Outland_Sky\\Outland_Sky.mdl"
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeForeignCountryWindLight] = 'WOlw'
+			set thistype.m_skyModelFile[thistype.weatherTypeForeignCountryWindLight] = "Environment\\Sky\\Outland_Sky\\Outland_Sky.mdl"
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeRays] = 'LRaa'
+			set thistype.m_skyModelFile[thistype.weatherTypeRays] = "Environment\\Sky\\LordaeronSummerSky\\LordaeronSummerSky.mdl"
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeRaysOfMoonlight] = 'LRma'
+			set thistype.m_skyModelFile[thistype.weatherTypeRaysOfMoonlight] = "Environment\\Sky\\LordaeronSummerSky\\LordaeronSummerSky.mdl"
+			set thistype.m_weatherTypeEffectId[thistype.weatherTypeWindHeavy] = 'WNcw'
+			set thistype.m_skyModelFile[thistype.weatherTypeWindHeavy] = "Environment\\Sky\\LordaeronSummerSky\\LordaeronSummerSky.mdl"
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeNoWeather] = 0
-			set thistype.m_skyModelFile[thistype.weatherTypeNoWeather] = ""
+			set thistype.m_skyModelFile[thistype.weatherTypeNoWeather] = "Environment\\Sky\\Sky\\SkyLight.mdl"
 		endmethod
 	endstruct
 
