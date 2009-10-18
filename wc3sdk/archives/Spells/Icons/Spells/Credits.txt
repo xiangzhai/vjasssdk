@@ -3,10 +3,12 @@ ATCABTNKonzentration.blp	KelThuzad		http://www.hiveworkshop.com/
 ATCDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 ATCHeiligeKraft.blp		Darkfang		http://www.hiveworkshop.com/
 ATCInferno.blp			X.e.r.e.X		http://www.hiveworkshop.com/
+ATCLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 ATTATBTNKonzentration.blp	KelThuzad		http://www.hiveworkshop.com/
 ATTDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 BTNAbsorbation.blp		OgeRfaCes		http://www.hiveworkshop.com/
 BTNAnstuermen.blp		The_Silent		http://www.hiveworkshop.com/
+BTNBeherrschung.blp		The_Avenger's_Return	http://www.hiveworkshop.com/
 BTNBlitzschlag.tga		Crazyrussian		http://www.wc3campaigns.net/
 BTNDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 BTNEisgeschoss.tga		Crazyrussian		http://www.wc3campaigns.net/
@@ -20,7 +22,7 @@ BTNFeuersbrunst.blp		bloodyroadkill		http://www.hiveworkshop.com/
 BTNFreeze.blp			~Void~			http://www.hiveworkshop.com/
 BTNGleissendesLicht.blp		shamanyouranus		http://www.hiveworkshop.com/
 BTNHeiligeKraft.blp		Darkfang		http://www.hiveworkshop.com/
-BTNBeherrschung.blp		The_Avenger's_Return	http://www.hiveworkshop.com/
+BTNLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 BTNInferno.blp			X.e.r.e.X		http://www.hiveworkshop.com/
 BTNKonzentration.blp		KelThuzad		http://www.hiveworkshop.com/
 BTNManaShield.blp		OgeRfaCes		http://www.hiveworkshop.com/
@@ -35,7 +37,9 @@ DISATCABTNKonzentration.blp	KelThuzad		http://www.hiveworkshop.com/
 DISATCDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 DISATCHeiligeKraft.blp		Darkfang		http://www.hiveworkshop.com/
 DISATCInferno.blp		X.e.r.e.X		http://www.hiveworkshop.com/
+DISATCLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 DISBTNAnstuermen.blp		The_Silent		http://www.hiveworkshop.com/
+DISBTNBeherrschung.blp		The_Avenger's_Return	http://www.hiveworkshop.com/
 DISBTNBlitzschlag.tga		Crazyrussian		http://www.wc3campaigns.net/
 DISBTNDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 DISBTNEisgeschoss.tga		Crazyrussian		http://www.wc3campaigns.net/
@@ -49,7 +53,7 @@ DISBTNFeuersbrunst.blp		bloodyroadkill		http://www.hiveworkshop.com/
 DISBTNFreeze.blp		~Void~			http://www.hiveworkshop.com/
 DISBTNGleissendesLicht.blp	shamanyouranus		http://www.hiveworkshop.com/
 DISBTNHeiligeKraft.blp		Darkfang		http://www.hiveworkshop.com/
-DISBTNBeherrschung.blp		The_Avenger's_Return	http://www.hiveworkshop.com/
+DISBTNLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 DISBTNInferno.blp		X.e.r.e.X		http://www.hiveworkshop.com/
 DISBTNKonzentration.blp		KelThuzad		http://www.hiveworkshop.com/
 DISBTNManaShield.blp		OgeRfaCes		http://www.hiveworkshop.com/
@@ -66,6 +70,7 @@ DISPASDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 DISPASHeiligeKraft.blp		Darkfang		http://www.hiveworkshop.com/
 DISPASInferno.blp		X.e.r.e.X		http://www.hiveworkshop.com/
 DISPASKonzentration.blp		KelThuzad		http://www.hiveworkshop.com/
+DISPASLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 DISPASManaShield.blp		OgeRfaCes		http://www.hiveworkshop.com/
 PASAbsorbation.blp		OgeRfaCes		http://www.hiveworkshop.com/
 PASAnstuermen.blp		The_Silent		http://www.hiveworkshop.com/
@@ -74,6 +79,7 @@ PASDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 PASHeiligeKraft.blp		Darkfang		http://www.hiveworkshop.com/
 PASInferno.blp			X.e.r.e.X		http://www.hiveworkshop.com/
 PASKonzentration.blp		KelThuzad		http://www.hiveworkshop.com/
+PASLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 PASTeleportation		Daelin			http://www.wc3campaigns.net/
 PASManaShield.blp		OgeRfaCes		http://www.hiveworkshop.com/
 SSCHDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
