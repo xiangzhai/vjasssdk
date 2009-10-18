@@ -1,0 +1,24 @@
+Name				Author			Source
+Altar.mdx			Sardor			Die Macht des Feuers
+Amboss.mdx			Born2Modificate		http://www.wc3campaigns.net/
+Apfel1.mdx			Sardor			Die Macht des Feuers
+Ast1.mdx			Born2Modificate		http://www.wc3campaigns.net/
+Ast2.mdx			Born2Modificate		http://www.wc3campaigns.net/
+Baumstumpf1.mdx			xXm0RpH3usXx		http://www.inwarcraft.de/
+Baumstumpf2.mdx			Born2Modificate		http://www.wc3campaigns.net/
+GeschlossenesBuch1.mdx		Sardor			Die Macht des Feuers
+GeschlossenesBuch2.mdx		Sardor			Die Macht des Feuers
+GeschlossenesBuch3.mdx		Sardor			Die Macht des Feuers
+GeoffnetesBuch1.mdx		Sardor			Die Macht des Feuers
+GeoffnetesBuch2.mdx		Sardor			Die Macht des Feuers
+GeoffnetesBuch3.mdx		Sardor			Die Macht des Feuers
+Holzbrett.mdx			Sardor			Die Macht des Feuers
+Kirchenbank.mdx			Sardor			Die Macht des Feuers
+Kiste1.mdx			Sardor			Die Macht des Feuers
+Kiste2.mdx			xXm0rpH3usXx		http://www.morpheus-modeling.info.ms/
+Mill.mdx			Rondo			http://www.rondo.eu.tp/
+Pechkessel.mdx			Rondo			http://www.rondo.eu.tp/
+Steinmauer.mdx			Sardor			Die Macht des Feuers
+Waffenplatz.mdx			Rondo			http://www.rondo.eu.tp/
+Wiederbelebungsschrein.mdx	Sardor			Die Macht des Feuers
+unfinished!!!!
