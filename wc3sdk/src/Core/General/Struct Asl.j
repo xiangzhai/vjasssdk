@@ -1,4 +1,4 @@
-library AStructCoreGeneralAsl requires ALibraryCoreDebugMisc, ALibraryCoreStringConversion
+library AStructCoreGeneralAsl requires optional ALibraryCoreDebugMisc, ALibraryCoreStringConversion
 
 	struct Asl
 		public static constant string version = "0.1"

@@ -1,4 +1,4 @@
-library AStructCoreInterfaceIndicator requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
+library AStructCoreInterfaceIndicator requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
 
 	/// @todo Some dynamic members could not be dynamic!
 	/// @todo Implement as abstract struct and add child structs with various object types.

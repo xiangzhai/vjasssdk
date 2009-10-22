@@ -1,4 +1,4 @@
-library AStructSystemsGuiDialog requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreStringConversion
+library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreStringConversion
 
 	/**
 	* Provides a kind of wrapper struct for common Warcraft 3 dialogs.

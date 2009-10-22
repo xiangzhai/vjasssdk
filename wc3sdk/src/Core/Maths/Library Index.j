@@ -1,4 +1,4 @@
-library ALibraryCoreMathsIndex requires ALibraryCoreDebugMisc
+library ALibraryCoreMathsIndex requires optional ALibraryCoreDebugMisc
 
 	/// @todo private causes an error
 	debug function DebugCheckIndex takes integer index returns nothing

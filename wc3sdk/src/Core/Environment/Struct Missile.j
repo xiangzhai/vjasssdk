@@ -1,4 +1,4 @@
-library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint, ALibraryCoreInterfaceSelection
+library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint, ALibraryCoreInterfaceSelection
 
 	/// OnCollisionFunction functions can be set by method @method setOnCollisionFunction and will be called when missile collides.
 	function interface AMissileTypeOnCollisionFunction takes AMissile missile returns nothing
@@ -251,7 +251,7 @@ library AStructCoreEnvironmentMissile requires ALibraryCoreDebugMisc, AStructCor
 		private real m_distance
 		private integer m_index
 		
-		//! runtextmacro A_STRUCT_DEBUG("\"AMissile\"")
+		//! runtextmacro optional A_STRUCT_DEBUG("\"AMissile\"")
 		
 		//dynamic members
 		

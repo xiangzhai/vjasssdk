@@ -1,4 +1,4 @@
-library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
+library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
 
 	/*
 	/// Isn't a method since it uses @function TriggerSleepAction.
@@ -46,7 +46,7 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 	endfunction
 	*/
 	
-	private struct ARoutineUnitData
+	struct ARoutineUnitData
 		//start members
 		private ARoutine m_routine
 		private unit m_unit
@@ -142,7 +142,7 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.destroyTargetTrigger() // destroys this trigger
 			if (this.m_routine.targetAction() != 0) then
-				call this.m_routine.targetAction().execute(this.m_unit)
+				call this.m_routine.targetAction().execute(this)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -175,10 +175,16 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 				endif
 				call thistype.setCurrentRoutineUnitDataForUnit(this.m_unit, this)
 				if (this.m_routine.startAction() != 0) then
-					call this.m_routine.startAction().execute(this.m_unit)
+					call this.m_routine.startAction().execute(this)
 				endif
 				if (this.m_routine.hasTarget()) then
-					call this.createTargetTrigger()
+					if (RectContainsUnit(this.m_targetRect, this.m_unit)) then
+						if (this.m_routine.targetAction() != 0) then
+							call this.m_routine.targetAction().execute(this)
+						endif
+					else
+						call this.createTargetTrigger()
+					endif
 				endif
 			else
 				call BJDebugMsg("Paused")
@@ -206,7 +212,7 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 				call this.destroyTargetTrigger()
 			endif
 			if (this.m_routine.endAction() != 0) then
-				call this.m_routine.endAction().execute(this.m_unit)
+				call this.m_routine.endAction().execute(this)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -291,6 +297,7 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 			else
 				call BJDebugMsg("Routine Unpause " + GetUnitName(whichUnit))
 				if (this.isInTime()) then
+					call BJDebugMsg("Is in time")
 					if (this.m_routine.hasTarget()) then
 						if (this.m_targetTrigger != null) then
 							call EnableTrigger(this.m_endTrigger)
@@ -299,11 +306,12 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 							endif
 							call IssuePointOrder(this.m_unit, "move", GetRectCenterX(this.m_targetRect), GetRectCenterY(this.m_targetRect))
 						elseif (this.m_routine.isLoop() and this.m_routine.targetAction() != 0) then
-							call this.m_routine.targetAction().execute(whichUnit)
+							call this.m_routine.targetAction().execute(this)
 						endif
 					endif
 				// not in time
 				else
+					call BJDebugMsg("Is not in time")
 					if (not thistype.unitHasNextRoutineUnitData(this.m_unit)) then
 						return
 					endif
@@ -312,7 +320,7 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 					call thistype.clearNextRoutineUnitDataOfUnit(whichUnit)
 					call thistype.setCurrentRoutineUnitDataForUnit(whichUnit, this)
 					if (this.m_routine.startAction() != 0) then
-						call this.m_routine.startAction().execute(whichUnit)
+						call this.m_routine.startAction().execute(this)
 					endif
 				endif
 			endif
@@ -365,15 +373,15 @@ library AStructSystemsWorldRoutine requires ALibraryCoreDebugMisc, AStructCoreGe
 	hook PauseUnit ARoutineUnitData.hookPauseUnit
 	hook RemoveUnit ARoutineUnitData.hookRemoveUnit
 	
-	function AContinueRoutineLoop takes unit whichUnit, ARoutineAction routineAction returns nothing
-		if (not IsUnitPaused(whichUnit)) then
-			call routineAction.execute(whichUnit)
+	function AContinueRoutineLoop takes ARoutineUnitData routineUnitData, ARoutineAction routineAction returns nothing
+		if (not IsUnitPaused(routineUnitData.unit())) then
+			call routineAction.execute(routineUnitData)
 		endif
 		//otherwise cancel, routine loop action will be called automatically again when unit is unpaused and still in routine time
 	endfunction
 
 	/// @todo Should be a part of @struct ARoutine, vJass bug.
-	function interface ARoutineAction takes unit whichUnit returns nothing
+	function interface ARoutineAction takes ARoutineUnitData routineUnitData returns nothing
 
 	/**
 	* Provides NPC routine handling like in the game Gothic or Gothic II.

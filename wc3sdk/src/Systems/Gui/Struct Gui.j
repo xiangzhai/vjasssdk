@@ -1,4 +1,4 @@
-library AStructSystemsGuiGui requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, AStructCoreInterfacePlayerSelection, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceMisc, ALibraryCoreStringConversion
+library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, AStructCoreInterfacePlayerSelection, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceMisc, ALibraryCoreStringConversion
 
 	/// @todo Should be a static member of @struct AGui, vJass bug.
 	/// This is the generic shortcut function interface.

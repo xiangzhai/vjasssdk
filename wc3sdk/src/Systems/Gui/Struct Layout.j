@@ -1,4 +1,4 @@
-library AStructSystemsGuiLayout requires ALibraryCoreDebugMisc, AStructSystemsGuiWidget, AStructSystemsGuiButton, AStructSystemsGuiText, AStructSystemsGuiImage
+library AStructSystemsGuiLayout requires optional ALibraryCoreDebugMisc, AStructSystemsGuiWidget, AStructSystemsGuiButton, AStructSystemsGuiText, AStructSystemsGuiImage
 
 	/// Note that this struct repesents a static layout!
 	struct ALayout

@@ -1,6 +1,6 @@
 /// @todo Not tested yet!
 /// The SubString functions are concepted that they doesn't need each other.
-library ALibraryCoreStringMisc requires ALibraryCoreDebugMisc
+library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 
 	/// Debug for testing over- and underflow.
 	debug function StringPositionDebug takes string usedString, integer position returns nothing

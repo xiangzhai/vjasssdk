@@ -1,4 +1,4 @@
-library AStructSystemsCharacterRevival requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreInterfaceMisc, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreInterfaceMisc, AStructSystemsCharacterAbstractCharacterSystem
 
 	struct ARevival extends AAbstractCharacterSystem
 		//static start members

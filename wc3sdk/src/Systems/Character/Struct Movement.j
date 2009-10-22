@@ -1,7 +1,7 @@
 /// The rtc.j file is required.
 /// Jumping is not implemented yet.
 /// Do not use this library, it is unfinished!
-library AStructSystemsCharacterMovement requires ALibraryCoreDebugMisc, AStructCoreGeneralAsl, AStructCoreGeneralHashTable, ALibraryCoreInterfaceMisc, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterMovement requires optional ALibraryCoreDebugMisc, AStructCoreGeneralAsl, AStructCoreGeneralHashTable, ALibraryCoreInterfaceMisc, AStructSystemsCharacterAbstractCharacterSystem
 
 	//Die Blocker-Suche noch weiter ausarbeiten und auch die Entfernung für die Kamera damit berechnen
 	//Herausfinden wir man Parameter in die Funktion der Blocker übergeben kann.

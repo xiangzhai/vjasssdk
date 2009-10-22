@@ -1,4 +1,4 @@
-library AStructCoreGeneralVector requires ALibraryCoreDebugMisc
+library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 
 	/// @author Tamino Dauth
 	/// @source http://www.cplusplus.com/reference/stl/list/

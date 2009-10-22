@@ -1,7 +1,7 @@
 /// Provides a simple signal template struct (oriented on Qt and the Boost signal library).
 /// Does not support signal return values.
 /// @author Tamino Dauth
-library AStructCoreGeneralSignal requires ALibraryCoreDebugMisc
+library AStructCoreGeneralSignal requires optional ALibraryCoreDebugMisc
 
 	//! textmacro A_SIGNAL takes STRUCTPREFIX, NAME, PARAMETERS, PARAMETERNAMES, SIZE
 		function interface $NAME$FunctionInterface takes $PARAMETERS$ returns nothing

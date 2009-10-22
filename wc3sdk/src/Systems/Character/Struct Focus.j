@@ -1,5 +1,5 @@
 /// Do not use this library, it is unfinished!
-library AStructSystemsCharacterFocus requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterAbstractCharacterSystem
 
 	struct AFocus extends AAbstractCharacterSystem
 		//static start members

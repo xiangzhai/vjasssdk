@@ -7,7 +7,7 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 		call AVote.activeVote().addVote(dialogButton.dialog().player(), dialogButton.index())
 	endfunction
 
-	/// @todo Maybe votes shouldn't be started for all playing players (player groups).
+	/// @todo Maybe votes shouldn't be started for all playing players (player groups/forces).
 	struct AVote
 		//static members
 		private static thistype m_activeVote

@@ -1,4 +1,4 @@
-library AStructSystemsWorldSpawnPoint requires ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, ALibraryCoreMathsPoint, ALibraryCoreStringConversion, AStructCoreGeneralHashTable
+library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, ALibraryCoreMathsPoint, ALibraryCoreStringConversion, AStructCoreGeneralHashTable
 
 	/// @struct ASpawnPoint provides the functionality of common creep spawn points, mostly used in RPG maps.
 	struct ASpawnPoint

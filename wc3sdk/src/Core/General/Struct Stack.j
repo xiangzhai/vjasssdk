@@ -1,4 +1,4 @@
-library AStructCoreGeneralStack requires ALibraryCoreDebugMisc
+library AStructCoreGeneralStack requires optional ALibraryCoreDebugMisc
 
 	//! textmacro A_STACK takes STRUCTPREFIX, NAME, TYPE
 		$STRUCTPREFIX$ struct $NAME$DataNode
@@ -93,6 +93,6 @@ library AStructCoreGeneralStack requires ALibraryCoreDebugMisc
 	//! endtextmacro
 
 	/// @todo Remove this after testing it.
-	//! runtextmacro A_STACK("private", "AIntegerStack", "integer")
+	///! runtextmacro A_STACK("private", "AIntegerStack", "integer")
 
 endlibrary

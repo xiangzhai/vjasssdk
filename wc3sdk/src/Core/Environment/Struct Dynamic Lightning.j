@@ -1,4 +1,4 @@
-library AStructCoreEnvironmentDynamicLightning requires ALibraryCoreDebugMisc, ALibraryCoreEnvironmentLightning, AStructCoreGeneralVector, ALibraryCoreMathsHandle
+library AStructCoreEnvironmentDynamicLightning requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentLightning, AStructCoreGeneralVector, ALibraryCoreMathsHandle
 
 	/**
 	* Dynamic lightnings are lightnings which are moved automatically between positions of to specific units.

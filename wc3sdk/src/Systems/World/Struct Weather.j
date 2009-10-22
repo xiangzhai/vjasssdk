@@ -1,4 +1,4 @@
-library AStructSystemsWorldWeather requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector
+library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector
 
 	struct AWeather
 		public static constant integer weatherTypeAshenvaleRainHeavy = 0

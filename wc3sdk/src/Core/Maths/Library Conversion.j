@@ -1,4 +1,4 @@
-library ALibraryCoreMathsConversion requires ALibraryCoreDebugMisc, ALibraryCoreStringMisc
+library ALibraryCoreMathsConversion requires optional ALibraryCoreDebugMisc, ALibraryCoreStringMisc
 
 	/**
 	* Converts an integer into any numeral system

@@ -1,4 +1,4 @@
-library AStructCoreEnvironmentJump requires ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreMathsReal, ALibraryCoreMathsPoint, ALibraryCoreMathsUnit
+library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreMathsReal, ALibraryCoreMathsPoint, ALibraryCoreMathsUnit
 
 	/// @todo Should be a part of @struct AJump, vJass bug.
 	function interface AJumpAlightAction takes unit usedUnit returns nothing

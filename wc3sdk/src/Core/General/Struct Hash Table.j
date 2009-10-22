@@ -1,4 +1,4 @@
-library AStructCoreGeneralHashTable requires ALibraryCoreDebugMisc
+library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 
 	/// Provides access to a single hashtable instance.
 	/// @author Tamino Dauth

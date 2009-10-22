@@ -1,3 +1,6 @@
+2009-10-22 Tamino Dauth <tamino@cdauth.de>
+* Improved world routine system.
+
 2009-10-18 Tamino Dauth <tamino@cdauth.de>
 * Revised struct ARoutine.
 * Added several type methods to struct AHashTable for new native save and load functions of hash tables.

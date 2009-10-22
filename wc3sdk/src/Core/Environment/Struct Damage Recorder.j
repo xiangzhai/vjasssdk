@@ -1,4 +1,4 @@
-library AStructCoreEnvironmentDamageRecorder requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
+library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
 
 	/// @todo Should be a part of struct @struct ADamageRecorder, vJass bug.
 	function interface ADamageRecorderOnDamageAction takes ADamageRecorder damageRecorder returns nothing

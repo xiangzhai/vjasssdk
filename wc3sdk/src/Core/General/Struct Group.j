@@ -11,6 +11,21 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 		endmethod
 		
 		//methods
+
+		public method fillGroup takes group whichGroup returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				call GroupAddUnit(whichGroup, this.m_units[i])
+				set i = i + 1
+			endloop
+		endmethod
+
+		public method group takes nothing returns group
+			local group whichGroup = CreateGroup()
+			call this.fillGroup(whichGroup)
+			return whichGroup
+		endmethod
 		
 		public method addGroup takes group usedGroup, boolean destroy returns nothing
 			local unit firstOfGroup

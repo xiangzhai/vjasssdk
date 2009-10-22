@@ -1,4 +1,4 @@
-library AStructSystemsCharacterQuestItem requires ALibraryCoreDebugMisc, AStructSystemsCharacterAbstractQuest, AStructSystemsCharacterQuest
+library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc, AStructSystemsCharacterAbstractQuest, AStructSystemsCharacterQuest
 
 	struct AQuestItem extends AAbstractQuest
 		//start members

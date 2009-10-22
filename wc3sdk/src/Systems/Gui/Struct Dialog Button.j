@@ -1,4 +1,4 @@
-library AStructSystemsGuiDialogButton requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreStringConversion
+library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreStringConversion
 
 	/// @todo Should be a part of @struct ADialogButton, vJass bug.
 	function interface ADialogButtonAction takes ADialogButton dialogButton returns nothing

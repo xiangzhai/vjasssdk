@@ -16,7 +16,7 @@
 * ...
 * @author weaaddar
 */
-library ALibrarySystemsBonusModBonusMod requires AStructCoreGeneralHashTable, ALibraryCoreDebugMisc
+library ALibrarySystemsBonusModBonusMod requires AStructCoreGeneralHashTable, optional ALibraryCoreDebugMisc
 
 	//! textmacro A_BONUS_MOD_DAMAGE takes RAWCODE, NAME, VALUE
 		//! external ObjectMerger w3a AItg $RAWCODE$ Iatt 1 $VALUE$ anam "$NAME$" ansf "ASL" aart ""

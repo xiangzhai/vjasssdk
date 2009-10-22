@@ -1,4 +1,4 @@
-library AStructCoreStringTokenizer requires ALibraryCoreDebugMisc
+library AStructCoreStringTokenizer requires optional ALibraryCoreDebugMisc
 
 	/**
 	* @link http://www.wc3c.net/showthread.php?t=106830

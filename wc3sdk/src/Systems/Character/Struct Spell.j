@@ -1,6 +1,6 @@
 /// This library contains the ASpell struct which is used for character spells.
 /// @author Tamino Dauth
-library AStructSystemsCharacterSpell requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterAbstractCharacterSystem
 
 	/// @todo vJass bug, should be a part of @struct ASpell.
 	function interface ASpellUpgradeAction takes ASpell spell, integer level returns nothing

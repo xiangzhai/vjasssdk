@@ -1,4 +1,4 @@
-library AStructCoreInterfacePlayerSelection requires ALibraryCoreDebugMisc
+library AStructCoreInterfacePlayerSelection requires optional ALibraryCoreDebugMisc
 
 	struct APlayerSelection
 		//start members
