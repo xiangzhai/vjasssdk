@@ -415,14 +415,24 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				this->currentFunction = 0;
 				break;
 
-			/// @todo Add static if support, should be evaluated during parse process (ignore code between static ifs, if variable is false).
 			case StaticExpression:
 			{
 				this->truncateComments(line, index);
 				unsigned int lastIndex = index;
 				
-				if (!this->getFunction(line, index, false, false, false, false, true, false))
-					this->getGlobal(line, lastIndex, false, false, false, true, false);
+				std::string token = getToken(line, index);
+				
+				if (token == File::expressionText[IfExpression])
+				{
+					/// @todo Add static if support, should be evaluated during parse process (ignore code between static ifs, if variable is false).
+				}
+				else
+				{
+					index = lastIndex;
+				
+					if (!this->getFunction(line, index, false, false, false, false, true, false))
+						this->getGlobal(line, lastIndex, false, false, false, true, false);
+				}
 
 				break;
 			}
@@ -536,16 +546,19 @@ File::File(const std::string &filePath) : filePath(filePath), notRequiredSpace(F
 				std::cout << "if expression" << std::endl;
 				break;
 
+			/// @todo Add static if support.
 			case ElseExpression:
-				std::cout << "else expression" << std::endl;
+				
 				break;
 
+			/// @todo Add static if support.
 			case ElseifExpression:
-				std::cout << "elseif expression" << std::endl;
+				
 				break;
 
+			/// @todo Add static if support.
 			case EndifExpression:
-				std::cout << "endif expression" << std::endl;
+				
 				break;
 
 			case ReturnExpression:

@@ -1,3 +1,9 @@
+2009-10-24 Tamino Dauth <tamino@cdauth.de>
+* Added function createHtmlHeader.
+* Added file path argument to option --database.
+* Added several argument parsing functionality to option parsing.
+* Renamed several members of class Parser.
+
 2009-10-11 Tamino Dauth <tamino@cdauth.de>
 * Added first JassHelper 0.9.Z.3 support.
 * Improved class intialization.

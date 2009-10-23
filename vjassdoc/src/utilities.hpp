@@ -22,6 +22,8 @@
 #define VJASSDOC_UTILITIES_HPP
 
 #include <string>
+#include <ostream>
+#include "internationalisation.hpp"
 
 namespace vjassdoc
 {
@@ -30,6 +32,7 @@ extern const char *dirSeparator;
 extern std::string getToken(const std::string &line, std::size_t &index, bool endOfLine = false);
 extern void cutFilePath(std::string &filePath);
 extern bool fileExists(const std::string &fileName);
+extern void createHtmlHeader(std::ostream &ostream, const std::string &title, const std::string &language = _("en"));
 
 }
 

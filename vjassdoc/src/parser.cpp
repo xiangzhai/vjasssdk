@@ -184,118 +184,118 @@ Parser::Parser() :
 Parser::~Parser()
 {
 
-	for (std::list<class Comment*>::iterator iterator = this->commentList.begin(); iterator != this->commentList.end(); ++iterator)
+	for (std::list<class Comment*>::iterator iterator = this->m_comments.begin(); iterator != this->m_comments.end(); ++iterator)
 		delete *iterator;
 
-	this->commentList.clear();
+	this->m_comments.clear();
 
-	for (std::list<class Keyword*>::iterator iterator = this->keywordList.begin(); iterator != this->keywordList.end(); ++iterator)
+	for (std::list<class Keyword*>::iterator iterator = this->m_keywords.begin(); iterator != this->m_keywords.end(); ++iterator)
 		delete *iterator;
 
-	this->keywordList.clear();
+	this->m_keywords.clear();
 
-	for (std::list<class TextMacro*>::iterator iterator = this->textMacroList.begin(); iterator != this->textMacroList.end(); ++iterator)
+	for (std::list<class TextMacro*>::iterator iterator = this->m_textMacros.begin(); iterator != this->m_textMacros.end(); ++iterator)
 		delete *iterator;
 
-	this->textMacroList.clear();
+	this->m_textMacros.clear();
 
-	for (std::list<class TextMacroInstance*>::iterator iterator = this->textMacroInstanceList.begin(); iterator != this->textMacroInstanceList.end(); ++iterator)
+	for (std::list<class TextMacroInstance*>::iterator iterator = this->m_textMacroInstances.begin(); iterator != this->m_textMacroInstances.end(); ++iterator)
 		delete *iterator;
 
-	this->textMacroInstanceList.clear();
+	this->m_textMacroInstances.clear();
 
-	for (std::list<class Type*>::iterator iterator = this->typeList.begin(); iterator != this->typeList.end(); ++iterator)
+	for (std::list<class Type*>::iterator iterator = this->m_types.begin(); iterator != this->m_types.end(); ++iterator)
 		delete *iterator;
 
-	this->typeList.clear();
+	this->m_types.clear();
 
-	for (std::list<class Global*>::iterator iterator = this->globalList.begin(); iterator != this->globalList.end(); ++iterator)
+	for (std::list<class Global*>::iterator iterator = this->m_globals.begin(); iterator != this->m_globals.end(); ++iterator)
 		delete *iterator;
 
-	this->globalList.clear();
+	this->m_globals.clear();
 
-	for (std::list<class Member*>::iterator iterator = this->memberList.begin(); iterator != this->memberList.end(); ++iterator)
+	for (std::list<class Member*>::iterator iterator = this->m_members.begin(); iterator != this->m_members.end(); ++iterator)
 		delete *iterator;
 
-	this->memberList.clear();
+	this->m_members.clear();
 
-	for (std::list<class Parameter*>::iterator iterator = this->parameterList.begin(); iterator != this->parameterList.end(); ++iterator)
+	for (std::list<class Parameter*>::iterator iterator = this->m_parameters.begin(); iterator != this->m_parameters.end(); ++iterator)
 		delete *iterator;
 
-	this->parameterList.clear();
+	this->m_parameters.clear();
 
-	for (std::list<class FunctionInterface*>::iterator iterator = this->functionInterfaceList.begin(); iterator != this->functionInterfaceList.end(); ++iterator)
+	for (std::list<class FunctionInterface*>::iterator iterator = this->m_functionInterfaces.begin(); iterator != this->m_functionInterfaces.end(); ++iterator)
 		delete *iterator;
 
-	this->functionInterfaceList.clear();
+	this->m_functionInterfaces.clear();
 
-	for (std::list<class Function*>::iterator iterator = this->functionList.begin(); iterator != this->functionList.end(); ++iterator)
+	for (std::list<class Function*>::iterator iterator = this->m_functions.begin(); iterator != this->m_functions.end(); ++iterator)
 		delete *iterator;
 
-	this->functionList.clear();
+	this->m_functions.clear();
 
-	for (std::list<class Method*>::iterator iterator = this->methodList.begin(); iterator != this->methodList.end(); ++iterator)
+	for (std::list<class Method*>::iterator iterator = this->m_methods.begin(); iterator != this->m_methods.end(); ++iterator)
 		delete *iterator;
 
-	this->methodList.clear();
+	this->m_methods.clear();
 
-	for (std::list<class Implementation*>::iterator iterator = this->implementationList.begin(); iterator != this->implementationList.end(); ++iterator)
+	for (std::list<class Implementation*>::iterator iterator = this->m_implementations.begin(); iterator != this->m_implementations.end(); ++iterator)
 		delete *iterator;
 
-	this->implementationList.clear();
+	this->m_implementations.clear();
 
-	for (std::list<class Interface*>::iterator iterator = this->interfaceList.begin(); iterator != this->interfaceList.end(); ++iterator)
+	for (std::list<class Interface*>::iterator iterator = this->m_interfaces.begin(); iterator != this->m_interfaces.end(); ++iterator)
 		delete *iterator;
 
-	this->interfaceList.clear();
+	this->m_interfaces.clear();
 
-	for (std::list<class Struct*>::iterator iterator = this->structList.begin(); iterator != this->structList.end(); ++iterator)
+	for (std::list<class Struct*>::iterator iterator = this->m_structs.begin(); iterator != this->m_structs.end(); ++iterator)
 		delete *iterator;
 
-	this->structList.clear();
+	this->m_structs.clear();
 
-	for (std::list<class Scope*>::iterator iterator = this->scopeList.begin(); iterator != this->scopeList.end(); ++iterator)
+	for (std::list<class Scope*>::iterator iterator = this->m_scopes.begin(); iterator != this->m_scopes.end(); ++iterator)
 		delete *iterator;
 
-	this->scopeList.clear();
+	this->m_scopes.clear();
 
-	for (std::list<class Library*>::iterator iterator = this->libraryList.begin(); iterator != this->libraryList.end(); ++iterator)
+	for (std::list<class Library*>::iterator iterator = this->m_libraries.begin(); iterator != this->m_libraries.end(); ++iterator)
 		delete *iterator;
 
-	this->libraryList.clear();
+	this->m_libraries.clear();
 
-	for (std::list<class SourceFile*>::iterator iterator = this->sourceFileList.begin(); iterator != this->sourceFileList.end(); ++iterator)
+	for (std::list<class SourceFile*>::iterator iterator = this->m_sourceFiles.begin(); iterator != this->m_sourceFiles.end(); ++iterator)
 		delete *iterator;
 
-	this->sourceFileList.clear();
+	this->m_sourceFiles.clear();
 
-	for (std::list<class DocComment*>::iterator iterator = this->docCommentList.begin(); iterator != this->docCommentList.end(); ++iterator)
+	for (std::list<class DocComment*>::iterator iterator = this->m_docComments.begin(); iterator != this->m_docComments.end(); ++iterator)
 		delete *iterator;
 
-	this->docCommentList.clear();
+	this->m_docComments.clear();
 	
 #ifdef SQLITE
-	for (std::vector<struct Database*>::iterator iterator = this->databaseVector.begin(); iterator != this->databaseVector.end(); ++iterator)
+	for (std::vector<struct Database*>::iterator iterator = this->m_databases.begin(); iterator != this->m_databases.end(); ++iterator)
 		delete *iterator;
 
-	this->databaseVector.clear();
+	this->m_databases.clear();
 #endif
 }
 
 void Parser::createInheritanceListPage()
 {
-	std::stringstream sstream;
-	sstream
-	<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	<< "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n"
-	<< "\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
-	<< "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" << _("en") << "\">\n"
-	<< "<html>\n"
-	<< "\t<head>\n"
-	<< "\t\t<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"/>\n"
-	<< "\t\t<title>" << _("Inheritance List") << "</title>\n"
-	<< "\t\t<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>\n"
-	<< "\t</head>\n"
+	std::ofstream fstream((Vjassdoc::optionDir() + dirSeparator + "inheritancelist.html").c_str());
+
+	if (!fstream)
+	{
+		fstream.close();
+		std::cerr << _("Was unable to create file \"inheritancelist.html\".") << std::endl;
+		
+		return;
+	}
+	
+	createHtmlHeader(fstream, _("Inheritance List"));
+	fstream
 	<< "\t<body>\n"
 	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
 	<< "\t\t<h1>" << _("Inheritance List") << "</h1>\n"
@@ -306,117 +306,99 @@ void Parser::createInheritanceListPage()
 	<< "\t\t<h2><a name=\"Interfaces\">" << _("Interfaces") << "</a></h2>\n"
 	;
 
-	if (!this->interfaceList.empty())
+	if (!this->m_interfaces.empty())
 	{
-		sstream << "\t\t<ul>\n";
+		fstream << "\t\t<ul>\n";
 
-		for (std::list<class Interface*>::iterator iterator = this->interfaceList.begin(); iterator != this->interfaceList.end(); ++iterator)
+		for (std::list<class Interface*>::iterator iterator = this->m_interfaces.begin(); iterator != this->m_interfaces.end(); ++iterator)
 		{
-			sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
-			this->getStructInheritanceList(*iterator, "\t\t\t\t", sstream);
-			sstream << "\t\t\t</li>\n";
+			fstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
+			this->getStructInheritanceList(*iterator, "\t\t\t\t", fstream);
+			fstream << "\t\t\t</li>\n";
 		}
 
-		sstream << "\t\t</ul>\n";
+		fstream << "\t\t</ul>\n";
 	}
 	else
-		sstream << "\t\t<p>-</p>\n";
+		fstream << "\t\t<p>-</p>\n";
 
-	sstream
+	fstream
 	<< "\t\t<h2><a name=\"Structs\">" << _("Structs") << "</a></h2>\n";
 
-	if (!this->structList.empty())
+	if (!this->m_structs.empty())
 	{
-		sstream << "\t\t<ul>\n";
+		fstream << "\t\t<ul>\n";
 
-		for (std::list<class Struct*>::iterator iterator = this->structList.begin(); iterator != this->structList.end(); ++iterator)
+		for (std::list<class Struct*>::iterator iterator = this->m_structs.begin(); iterator != this->m_structs.end(); ++iterator)
 		{
 			if ((*iterator)->extension() == 0)
 			{
-				sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
-				this->getStructInheritanceList(*iterator, "\t\t\t\t", sstream);
-				sstream << "\t\t\t</li>\n";
+				fstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
+				this->getStructInheritanceList(*iterator, "\t\t\t\t", fstream);
+				fstream << "\t\t\t</li>\n";
 			}
 		}
 
-		sstream << "\t\t</ul>\n";
+		fstream << "\t\t</ul>\n";
 	}
 	else
-		sstream << "\t\t<p>-</p>\n";
+		fstream << "\t\t<p>-</p>\n";
 
-	sstream
+	fstream
 	<< "\t</body>\n"
 	<< "</html>\n"
 	;
-	std::ofstream fout((Vjassdoc::optionDir() + dirSeparator + "inheritancelist.html").c_str());
 
-	if (!fout.good())
-	{
-		fout.close();
-		std::cerr << _("Was unable to create file \"inheritancelist.html\".") << std::endl;
-		return;
-	}
-
-	fout << sstream.str();
-	fout.close();
+	fstream.close();
 }
 
 void Parser::createRequirementListPage()
 {
-	std::stringstream sstream;
-	sstream
-	<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	<< "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n"
-	<< "\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
-	<< "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" << _("en") << "\">\n"
-	<< "<html>\n"
-	<< "\t<head>\n"
-	<< "\t\t<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"/>\n"
-	<< "\t\t<title>" << _("Requirement List") << "</title>\n"
-	<< "\t\t<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>\n"
-	<< "\t</head>\n"
+	std::ofstream fstream((Vjassdoc::optionDir() + dirSeparator + "requirementlist.html").c_str());
+
+	if (!fstream)
+	{
+		fstream.close();
+		std::cerr << _("Was unable to create file \"requirementlist.html\".") << std::endl;
+		
+		return;
+	}
+
+	createHtmlHeader(fstream, _("Requirement List"));
+	fstream
 	<< "\t<body>\n"
 	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
 	<< "\t\t<h1>" << _("Requirement List") << "</h1>\n"
 	<< "\t\t<ul>\n"
 	;
 
-	for (std::list<class Library*>::iterator iterator = this->libraryList.begin(); iterator != this->libraryList.end(); ++iterator)
+	for (std::list<class Library*>::iterator iterator = this->m_libraries.begin(); iterator != this->m_libraries.end(); ++iterator)
 	{
 		//requirement has to be 0
-		//if ((*iterator)->requirement() != 0)
-			//continue;
+		if ((*iterator)->requirement() != 0)
+			continue;
 
-		sstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
-		this->getLibraryRequirementList(*iterator, "\t\t\t\t", sstream);
-		sstream << "\t\t\t</li>\n";
+		fstream << "\t\t\t<li>" << (*iterator)->pageLink() << '\n';
+		this->getLibraryRequirementList(*iterator, "\t\t\t\t", fstream);
+		fstream << "\t\t\t</li>\n";
 	}
 
-	sstream
+	fstream
 	<< "\t\t</ul>\n"
 	<< "\t</body>\n"
 	<< "</html>\n"
 	;
-	std::ofstream fout((Vjassdoc::optionDir() + dirSeparator + "requirementlist.html").c_str());
-
-	if (!fout.good())
-	{
-		fout.close();
-		std::cerr << _("Was unable to create file \"requirementlist.html\".") << std::endl;
-		return;
-	}
-
-	fout << sstream.str();
-	fout.close();
+	
+	fstream.close();
 }
 
 void Parser::showSyntaxErrors()
 {
 	/// @todo compare all object identifiers with Jass and vJass keywords.
-	fprintf(stdout, _("%d syntax errors.\n"), this->syntaxErrorList.size());
-	this->syntaxErrorList.sort(SyntaxError::Comparator);
+	fprintf(stdout, _("%d syntax errors.\n"), this->m_syntaxErrors.size());
+	this->m_syntaxErrors.sort(SyntaxError::Comparator);
 	
-	for (std::list<class SyntaxError*>::iterator iterator = this->syntaxErrorList.begin(); iterator != this->syntaxErrorList.end(); ++iterator)
+	for (std::list<class SyntaxError*>::iterator iterator = this->m_syntaxErrors.begin(); iterator != this->m_syntaxErrors.end(); ++iterator)
 	{
 		fprintf(stdout, _("File %s, line %d: %s\n"), (*iterator)->sourceFile()->identifier().c_str(), (*iterator)->line(), (*iterator)->message().c_str());
 	}
@@ -441,26 +423,24 @@ void Parser::createHtmlFiles()
 	if (Vjassdoc::optionVerbose())
 		std::cout << _("Creating HTML files.") << std::endl;
 	
+	std::ofstream fstream((Vjassdoc::optionDir() + dirSeparator + "index.html").c_str());
+	
+	if (!fstream)
+	{
+		fstream.close();
+		std::cerr << _("Was unable to create file \"index.html\".") << std::endl;
+		
+		return;
+	}
+	
 	std::string title = Vjassdoc::optionTitle();
-	std::stringstream sout;
-	sout
-	<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	<< "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n"
-	<< "\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
-	<< "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" << _("en") << "\">\n"
-	<< "<html>\n"
-	<< "\t<head>\n"
-	<< "\t\t<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"/>\n"
-	<< "\t\t<title>" << title << "</title>\n"
-	<< "\t\t<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>\n"
-	<< "\t</head>\n"
+	createHtmlHeader(fstream, title);
+	fstream
 	<< "\t<body>\n"
 	<< "\t\t<h1>" << title << "</h1>\n";
-	
 	char buffer[50];
 	sprintf(buffer, _("Generated by vjassdoc %s."), Vjassdoc::version);
-
-	sout
+	fstream
 	<< "\t\t<p>" << buffer << "</p>\n"
 	<< "\t\t<ul>\n"
 	<< std::endl;
@@ -470,12 +450,12 @@ void Parser::createHtmlFiles()
 		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 			continue;
 
-		sout << "\t\t\t<li><a href=\"#" << Parser::title[i] << "\">" << Parser::title[i] << " (" << this->getList(Parser::List(i)).size() << ")</a></li>" << std::endl;
+		fstream << "\t\t\t<li><a href=\"#" << Parser::title[i] << "\">" << Parser::title[i] << " (" << this->getList(Parser::List(i)).size() << ")</a></li>" << std::endl;
 	}
 
 	if (Vjassdoc::optionSpecialpages())
 	{
-		sout
+		fstream
 		<< "\t\t\t<li>" << "<a href=\"inheritancelist.html\">" << _("Inheritance List") << "</a></li>\n"
 		<< "\t\t\t<li>" << "<a href=\"requirementlist.html\">" << _("Requirement List") << "</a></li>\n"
 		<< "\t\t\t<li>" << "<a href=\"#Undocumented Objects\">" << _("Undocumented Objects") << "</a></li>\n"
@@ -486,25 +466,25 @@ void Parser::createHtmlFiles()
 		;
 	}
 	
-	sout << "\t\t</ul>\n";
+	fstream << "\t\t</ul>\n";
 
-	//Für alle Objekte werden Link-Listen erstellt. Dann werden die Objekte in Dateien aufgeteilt, die im Index verlinkt werden.
+	// link lists for all object types are created
 	for (int i = 0; i < Parser::MaxLists; ++i)
 	{
 		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 			continue;
 
-		sout
+		fstream
 		<< "\t\t<h2><a name=\"" <<  Parser::title[i] << "\">" << Parser::title[i] << " (" << this->getList(Parser::List(i)).size() << ")</a></h2>" << std::endl;
-		this->addObjectList(sout, List(i));
+		this->addObjectList(fstream, List(i));
 	}
 
 	if (Vjassdoc::optionSpecialpages())
 	{
 		this->createInheritanceListPage();
-		//this->createRequirementListPage();
+		//this->createRequirementListPage(); /// @todo Bugged
 
-		sout
+		fstream
 		<< "\t\t<h2><a name=\"Undocumented Objects\">" << _("Undocumented Objects") << "</h2>\n"
 		<< "\t\t<ul>\n"
 		;
@@ -519,11 +499,11 @@ void Parser::createHtmlFiles()
 			for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
 			{
 				if ((*iterator)->docComment() == 0)
-					sout << "\t\t\t<li>" << Object::objectPageLink(*iterator) << "</li>\n";
+					fstream << "\t\t\t<li>" << Object::objectPageLink(*iterator) << "</li>\n";
 			}
 		}
 
-		sout
+		fstream
 		<< "\t\t</ul>\n"
 		;
 		/// @todo Implement these special pages:
@@ -535,14 +515,10 @@ void Parser::createHtmlFiles()
 */
 	}
 	
-	sout
+	fstream
 	<< "\t</body>" << std::endl
-	<< "</html>";
-
-	//write output
-	std::ofstream fout((Vjassdoc::optionDir() + dirSeparator + "index.html").c_str());
-	fout << sout.str();
-	fout.close();
+	<< "</html>";	
+	fstream.close();
 	
 	//create pages
 	if (Vjassdoc::optionPages())
@@ -559,6 +535,13 @@ void Parser::createHtmlFiles()
 				std::ostringstream sstream;
 				sstream << Vjassdoc::optionDir() << '/' << (*iterator)->id() << ".html";
 				std::ofstream fout(sstream.str().c_str());
+				
+				if (!fout)
+				{
+					fprintf(stderr, _("Error while creating file \"%s\".\n"), sstream.str().c_str());
+					
+					return;
+				}
 				
 				fout
 				<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -604,7 +587,7 @@ void Parser::parse(const std::list<std::string> &filePaths)
 	}
 
 	// there may be new source files if vJass's //! import macro was used
-	for (std::list<class SourceFile*>::const_iterator iterator = this->sourceFileList.begin(); iterator != this->sourceFileList.end(); ++iterator)
+	for (std::list<class SourceFile*>::const_iterator iterator = this->m_sourceFiles.begin(); iterator != this->m_sourceFiles.end(); ++iterator)
 	{
 		bool isInList = false;
 
@@ -662,16 +645,14 @@ void Parser::parse(const std::list<std::string> &filePaths)
 }
 
 #ifdef SQLITE
-void Parser::createDatabase()
+void Parser::createDatabase(const std::string &filePath)
 {
 	if (Vjassdoc::optionVerbose())
 		printf(_("Creating database.\nUsing SQLite version %s.\n"), SQLITE_VERSION);
-
-	std::string fileName = Vjassdoc::optionDir() + dirSeparator + "database.db";
 	
-	if (fileExists(fileName))
+	if (fileExists(filePath))
 	{
-		printf(_("Database \"%s\" does already exist. Do you want to replace it by the newer one?\n"), fileName.c_str());
+		printf(_("Database \"%s\" does already exist. Do you want to replace it by the newer one?\n"), filePath.c_str());
 		std::cout << _("Answer possiblities: y, yes, n, no.\n");
 		
 		std::string answer;
@@ -682,7 +663,7 @@ void Parser::createDatabase()
 			
 			if (answer == _("y") || answer == _("yes"))
 			{
-				if (remove(fileName.c_str()) != 0)
+				if (remove(filePath.c_str()) != 0)
 				{
 					std::cout << _("Was unable to replace old database.") << std::endl;
 					return;
@@ -702,7 +683,7 @@ void Parser::createDatabase()
 	}
 	
 	sqlite3 *database;
-	int state = sqlite3_open(fileName.c_str(), &database);
+	int state = sqlite3_open(filePath.c_str(), &database);
 	
 	if (state == SQLITE_OK)
 	{
@@ -787,20 +768,20 @@ void Parser::createDatabase()
 	sqlite3_close(database);
 }
 
-int Parser::addDatabase(const char *filePath)
+int Parser::addDatabase(const std::string &filePath)
 {
 	if (Vjassdoc::optionVerbose())
-		printf(_("Loading database %s.\n"), filePath);
+		printf(_("Loading database %s.\n"), filePath.c_str());
 
 	int result = -1;
 	sqlite3 *database;
-	int state = sqlite3_open_v2(filePath, &database, SQLITE_OPEN_READONLY, NULL);
+	int state = sqlite3_open_v2(filePath.c_str(), &database, SQLITE_OPEN_READONLY, NULL);
 
 	if (state == SQLITE_OK)
 	{
 		Parser::Database *databaseStruct = new Parser::Database;
-		result = this->databaseVector.size();
-		this->databaseVector.push_back(databaseStruct);
+		result = this->m_databases.size();
+		this->m_databases.push_back(databaseStruct);
 	
 		for (int i = 0; i < Parser::MaxLists; ++i)
 		{
@@ -903,7 +884,7 @@ int Parser::addDatabase(const char *filePath)
 		/// @todo Usual initialization if there are identifier properties without corresponding object ids?
 	}
 	else
-		fprintf(stderr, _("Was unable to open database \"%s\".\nState %d.\n"), filePath, state);
+		fprintf(stderr, _("Was unable to open database \"%s\".\nState %d.\n"), filePath.c_str(), state);
 	
 	sqlite3_close(database);
 	
@@ -923,7 +904,7 @@ void Parser::removeDatabase(const int &index)
 	if (Vjassdoc::optionVerbose())
 		printf(_("Removing database %d.\n"), index);
 	
-	Database *database = this->databaseVector[index];
+	class Database *database = this->m_databases[index];
 	std::list<enum List>::iterator iterator0 = database->listList.begin();
 	std::list<class Object*>::iterator iterator1 = database->objectList.begin();
 	
@@ -937,17 +918,17 @@ void Parser::removeDatabase(const int &index)
 
 	database->listList.clear();
 	database->objectList.clear();
-	this->databaseVector.erase(this->databaseVector.begin() + index - 1);
+	this->m_databases.erase(this->m_databases.begin() + index - 1);
 	delete database;
 }
 
 
 class Object* Parser::searchObjectInLastDatabase(const Object::IdType &id)
 {
-	if (databaseVector.empty())
+	if (this->m_databases.empty())
 		return 0;
 
-	std::list<class Object*> objectList = databaseVector.back()->objectList;
+	std::list<class Object*> objectList = this->m_databases.back()->objectList;
 
 	for (std::list<class Object*>::iterator iterator = objectList.begin(); iterator != objectList.end(); ++iterator)
 	{
@@ -1076,84 +1057,85 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 	switch (list)
 	{
 		case Parser::Comments:
-			return reinterpret_cast<std::list<class Object*>& >(this->commentList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_comments);
 
 		case Parser::Keywords:
-			return reinterpret_cast<std::list<class Object*>& >(this->keywordList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_keywords);
 
 		case Parser::Keys:
-			return reinterpret_cast<std::list<class Object*>& >(this->keyList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_keys);
 
 		case Parser::TextMacros:
-			return reinterpret_cast<std::list<class Object*>& >(this->textMacroList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_textMacros);
 
 		case Parser::TextMacroInstances:
-			return reinterpret_cast<std::list<class Object*>& >(this->textMacroInstanceList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_textMacroInstances);
 
 		case Parser::Types:
-			return reinterpret_cast<std::list<class Object*>& >(this->typeList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_types);
 
 		case Parser::Locals:
-			return reinterpret_cast<std::list<class Object*>& >(this->localList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_locals);
 
 		case Parser::Globals:
-			return reinterpret_cast<std::list<class Object*>& >(this->globalList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_globals);
 
 		case Parser::Members:
-			return reinterpret_cast<std::list<class Object*>& >(this->memberList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_members);
 
 		case Parser::Parameters:
-			return reinterpret_cast<std::list<class Object*>& >(this->parameterList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_parameters);
 
 		case Parser::FunctionInterfaces:
-			return reinterpret_cast<std::list<class Object*>& >(this->functionInterfaceList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_functionInterfaces);
 
 		case Parser::Functions:
-			return reinterpret_cast<std::list<class Object*>& >(this->functionList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_functions);
 
 		case Parser::Methods:
-			return reinterpret_cast<std::list<class Object*>& >(this->methodList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_methods);
 
 		case Parser::Implementations:
-			return reinterpret_cast<std::list<class Object*>& >(this->implementationList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_implementations);
 
 		case Parser::Hooks:
-			return reinterpret_cast<std::list<class Object*>& >(this->hookList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_hooks);
 
 		case Parser::Interfaces:
-			return reinterpret_cast<std::list<class Object*>& >(this->interfaceList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_interfaces);
 
 		case Parser::Structs:
-			return reinterpret_cast<std::list<class Object*>& >(this->structList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_structs);
 
 		case Parser::Modules:
-			return reinterpret_cast<std::list<class Object*>& >(this->moduleList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_modules);
 
 		case Parser::Scopes:
-			return reinterpret_cast<std::list<class Object*>& >(this->scopeList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_scopes);
 
 		case Parser::Libraries:
-			return reinterpret_cast<std::list<class Object*>& >(this->libraryList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_libraries);
 
 		case Parser::SourceFiles:
-			return reinterpret_cast<std::list<class Object*>& >(this->sourceFileList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_sourceFiles);
 
 		case Parser::DocComments:
-			return reinterpret_cast<std::list<class Object*>& >(this->docCommentList);
+			return reinterpret_cast<std::list<class Object*>& >(this->m_docComments);
 	}
 	
-	std::cerr << "Unknown list." << list << std::endl;
+	fprintf(stderr, _("Unknown list %d.\n"), list);
 
-	return reinterpret_cast<std::list<class Object*>& >(this->commentList);
+	return reinterpret_cast<std::list<class Object*>& >(this->m_comments);
 }
 
-std::stringstream& Parser::addObjectList(std::stringstream &output, const enum Parser::List &list)
+std::ostream& Parser::addObjectList(std::ostream &output, const enum Parser::List &list)
 {
 	std::list<class Object*> objectsList = this->getList(list);
 	
 	if (objectsList.empty())
 	{
 		output << "-\n";
+		
 		return output;
 	}
 	
@@ -1163,6 +1145,7 @@ std::stringstream& Parser::addObjectList(std::stringstream &output, const enum P
 		output << "\t\t\t<li>" << Object::objectPageLink(*iterator) << "</li>\n";
 
 	output << "\t\t</ul>\n";
+	
 	return output;
 }
 
@@ -1328,114 +1311,137 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 		case Parser::Comments:
 			result +=
 			Comment::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Keywords:
 			result +=
 			Keyword::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Keys:
 			result +=
 			Key::sqlColumnStatement;
+			
 			break;
 
 		case Parser::TextMacros:
 			result +=
 			TextMacro::sqlColumnStatement;
+			
 			break;
 
 		case Parser::TextMacroInstances:
 			result +=
 			TextMacroInstance::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Types:
 			result +=
 			Type::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Locals:
 			result +=
 			Local::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Globals:
 			result +=
 			Global::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Members:
 			result +=
 			Member::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Parameters:
 			result += Parameter::sqlColumnStatement;
+			
 			break;
 
 		case Parser::FunctionInterfaces:
 			result +=
 			FunctionInterface::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Functions:
 			result +=
 			Function::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Methods:
 			result +=
 			Method::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Implementations:
 			result +=
 			Implementation::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Hooks:
 			result +=
 			Hook::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Interfaces:
 			result +=
 			Interface::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Structs:
 			result +=
 			Struct::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Modules:
 			result +=
 			Module::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Scopes:
 			result +=
 			Scope::sqlColumnStatement;
+			
 			break;
 
 		case Parser::Libraries:
 			result +=
 			Library::sqlColumnStatement;
+			
 			break;
 
 		case Parser::SourceFiles:
 			result +=
 			SourceFile::sqlColumnStatement;
+			
 			break;
 
 		case Parser::DocComments:
 			result +=
 			DocComment::sqlColumnStatement;
+			
 			break;
 
 		default:
 			std::cerr << "Unknown list " << list << std::endl;
+			
 			break;
 	}
 	
@@ -1523,48 +1529,49 @@ class Object* Parser::createObjectByVector(std::vector<const unsigned char*> &co
 }
 #endif
 
-void Parser::getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::stringstream &sstream)
+void Parser::getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::ostream &ostream)
 {
 	std::list<class Object*> structList = this->getSpecificList(Parser::Structs, Struct::HasExtension(), extension);
 
 	if (structList.empty())
 		return;
 
-	sstream << prefix << "<ul>\n";
+	ostream << prefix << "<ul>\n";
 
 	for (std::list<class Object*>::iterator iterator = structList.begin(); iterator != structList.end(); ++iterator)
 	{
-		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
-		this->getStructInheritanceList(static_cast<class Interface*>(*iterator), prefix + "\t\t", sstream);
-		sstream << prefix << "\t</li>\n";
+		ostream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
+		this->getStructInheritanceList(static_cast<class Interface*>(*iterator), prefix + "\t\t", ostream);
+		ostream << prefix << "\t</li>\n";
 	}
 
-	sstream << prefix << "</ul>\n";
+	ostream << prefix << "</ul>\n";
 }
 
 /// @todo FIXME
-void Parser::getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::stringstream &sstream)
+void Parser::getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::ostream &ostream)
 {
 	std::cout << "Running with library " << requirement->identifier() << std::endl;
 
-	std::list<class Object*> specifiedList = this->getSpecificList(Parser::Libraries, Library::HasRequirement(), requirement);
+	std::list<class Object*> specifiedList = this->getSpecificList(Parser::Libraries, Library::HasRequirement(), requirement); /// @todo Comparator is not called.
 
 	if (specifiedList.empty())
 	{
-		//std::cout << "Requirement list is empty." << std::endl;
+		std::cout << "Requirement list is empty." << std::endl;
+		
 		return;
 	}
 
-	sstream << prefix << "<ul>\n";
+	ostream << prefix << "<ul>\n";
 
 	for (std::list<class Object*>::iterator iterator = specifiedList.begin(); iterator != specifiedList.end(); ++iterator)
 	{
-		sstream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
-		this->getLibraryRequirementList(static_cast<class Library*>(*iterator), prefix + "\t\t", sstream);
-		sstream << prefix << "\t</li>\n";
+		ostream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
+		this->getLibraryRequirementList(static_cast<class Library*>(*iterator), prefix + "\t\t", ostream);
+		ostream << prefix << "\t</li>\n";
 	}
 
-	sstream << prefix << "</ul>\n";
+	ostream << prefix << "</ul>\n";
 }
 
 }

@@ -38,7 +38,7 @@ class Vjassdoc
 		static const char *version;
 		static const bool supportsDatabaseCreation;
 
-		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, bool optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases);
+		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases);
 		
 #ifdef SQLITE
 		static void initClasses();
@@ -61,7 +61,7 @@ class Vjassdoc
 		static bool optionSpecialpages();
 		static bool optionSyntax();
 		static std::string optionCompile();
-		static bool optionDatabase();
+		static std::string optionDatabase();
 		static bool optionVerbose();
 		static bool optionTime();
 		static bool optionAlphabetical();
@@ -95,7 +95,7 @@ class Vjassdoc
 		static bool m_optionSpecialpages;
 		static bool m_optionSyntax;
 		static std::string m_optionCompile;
-		static bool m_optionDatabase;
+		static std::string m_optionDatabase;
 		static bool m_optionVerbose;
 		static bool m_optionTime;
 		static bool m_optionAlphabetical;
@@ -193,7 +193,7 @@ inline std::string Vjassdoc::optionCompile()
 	return Vjassdoc::m_optionCompile;
 }
 
-inline bool Vjassdoc::optionDatabase()
+inline std::string Vjassdoc::optionDatabase()
 {
 	return Vjassdoc::m_optionDatabase;
 }

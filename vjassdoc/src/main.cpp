@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 		{"specialpages",            no_argument,             0, 's'},
 		{"syntax",                  no_argument,             0, 'x'},
 		{"compile",                 required_argument,       0, 'C'},
-		{"database",                no_argument,             0, 'b'},
+		{"database",                required_argument,       0, 'b'},
 		{"verbose",                 no_argument,             0, 'v'},
 		{"time",                    no_argument,             0, 't'},
 		{"alphabetical",            no_argument,             0, 'a'},
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 	bool specialPages = false;
 	bool syntax = false;
 	std::string compileFilePath;
-	bool database = false;
+	std::string databaseFilePath;
 	bool verbose = false;
 	bool time = false;
 	bool alphabetical = false;
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 				_("\t-x --syntax                 Program checks syntax. Not implemented yet!\n") <<
 				_("\t-C --compile <arg>          Program uses file <arg> to create a map Jass script.\n") <<
 #ifdef SQLITE
-				_("\t-b --database               Parsed objects will be saved in a SQLite3 database which could be read out by other programs.\n") <<
+				_("\t-b --database <arg>         Program uses file <arg> to create an SQLite3 database which contains all parsed objects.\n") <<
 #endif
 				_("\t-v --verbose                Program shows more information about the process.\n") <<
 				_("\t-t --time                   Detects the elapsed time and shows it at the end of the process.\n") <<
@@ -233,8 +233,10 @@ int main(int argc, char *argv[])
 				_("\t-I --importdirs <args>      <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
 				_("\t-D --dir <arg>              <arg> has to be replaced by the output directory path.\n") <<
 #ifdef SQLITE			
-				_("\t-B --databases <args>       <args> has to be replaced by the SQLite databases which should be added to the output.\n") <<
+				_("\t-B --databases <args>       <args> has to be replaced by the SQLite3 databases which should be added to the output.\n") <<
 #endif
+				std::endl <<
+				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
 	
@@ -293,7 +295,7 @@ int main(int argc, char *argv[])
 				break;
 #ifdef SQLITE					
 			case 'b':
-				database = true;
+				databaseFilePath = optarg;
 				
 				break;
 #endif
@@ -319,17 +321,20 @@ int main(int argc, char *argv[])
 				break;
 
 			case 'I':
-				for (std::list<std::string>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
+				for (char *path = strtok(optarg, ":"); path != 0;  path = strtok(0, ":"))
 				{
-					if (*iterator == optarg)
+					for (std::list<std::string>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
 					{
-						fprintf(stderr, _("Import directory path \"%s\" has already been added to list.\n"), optarg);
-						
-						continue;
+						if (*iterator == path)
+						{
+							fprintf(stderr, _("Import directory path \"%s\" has already been added to list.\n"), path);
+							
+							continue;
+						}
 					}
-				}
 
-				importDirs.push_back(optarg);
+					importDirs.push_back(path);
+				}
 				
 				break;
 			
@@ -340,17 +345,20 @@ int main(int argc, char *argv[])
 			
 #ifdef SQLITE			
 			case 'B':
-				for (std::list<std::string>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
+				for (char *path = strtok(optarg, ":"); path != 0;  path = strtok(0, ":"))
 				{
-					if (*iterator == optarg)
+					for (std::list<std::string>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
 					{
-						fprintf(stderr, _("Database \"%s\" has already been added to list.\n"), optarg);
-						
-						continue;
+						if (*iterator == path)
+						{
+							fprintf(stderr, _("Database \"%s\" has already been added to list.\n"), path);
+							
+							continue;
+						}
 					}
+		
+					databases.push_back(path);
 				}
-	
-				databases.push_back(optarg);
 				
 				break;
 #endif
@@ -403,7 +411,7 @@ int main(int argc, char *argv[])
 	if (title.empty())
 		title = _("vJass API Documentation");
 
-	Vjassdoc::configure(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, compileFilePath, database, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
+	Vjassdoc::configure(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, compileFilePath, databaseFilePath, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
 #ifdef SQLITE
 	Vjassdoc::initClasses();
 #endif

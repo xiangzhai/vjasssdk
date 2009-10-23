@@ -21,6 +21,8 @@
 #include <string>
 #include <sys/stat.h>
 
+#include "utilities.hpp"
+
 namespace vjassdoc
 {
 
@@ -81,6 +83,22 @@ bool fileExists(const std::string &fileName)
 		return true;
 	
 	return false;
+}
+
+void createHtmlHeader(std::ostream &ostream, const std::string &title, const std::string &language)
+{
+	ostream
+	<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	<< "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n"
+	<< "\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
+	<< "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" << language.c_str() << "\">\n"
+	<< "<html>\n"
+	<< "\t<head>\n"
+	<< "\t\t<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"/>\n"
+	<< "\t\t<title>" << title.c_str() << "</title>\n"
+	<< "\t\t<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>\n"
+	<< "\t</head>\n"
+	;
 }
 
 }

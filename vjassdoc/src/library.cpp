@@ -20,6 +20,7 @@
 
 #include <sstream>
 #include <list>
+#include <iostream> //debug
 
 #include "objects.hpp"
 #include "internationalisation.hpp"
@@ -37,10 +38,14 @@ std::string Library::sqlColumnStatement;
 
 bool Library::HasRequirement::operator()(class Object *thisObject, class Object *library) const
 {
+	std::cout << "This object is " << thisObject->identifier() << " and library is " << library->identifier() << std::endl;
+	
 	class Library *thisLibrary = static_cast<class Library*>(thisObject);
 
 	if (thisLibrary->requirement() != 0)
 	{
+		std::cout << "Requirement is not 0." << std::endl;
+		
 		for (std::list<class Library*>::iterator iterator = thisLibrary->requirement()->begin(); iterator != thisLibrary->requirement()->end(); ++iterator)
 		{
 			if (*iterator == static_cast<class Library*>(library))

@@ -51,19 +51,19 @@ bool Vjassdoc::m_optionHtml = false;
 bool Vjassdoc::m_optionPages = false;
 bool Vjassdoc::m_optionSpecialpages = false;
 bool Vjassdoc::m_optionSyntax = false;
-std::string Vjassdoc::m_optionCompile;
-bool Vjassdoc::m_optionDatabase = false;
+std::string Vjassdoc::m_optionCompile = "";
+std::string Vjassdoc::m_optionDatabase = "";
 bool Vjassdoc::m_optionVerbose = false;
 bool Vjassdoc::m_optionTime = false;
 bool Vjassdoc::m_optionAlphabetical = false;
 bool Vjassdoc::m_optionParseObjectsOfList[Parser::MaxLists];
-std::string Vjassdoc::m_optionTitle;
-std::string Vjassdoc::m_optionDir;
+std::string Vjassdoc::m_optionTitle = "";
+std::string Vjassdoc::m_optionDir = "";
 std::list<std::string> Vjassdoc::m_optionImport = std::list<std::string>();
 std::list<std::string> Vjassdoc::m_optionFiles = std::list<std::string>();
 std::list<std::string> Vjassdoc::m_optionDatabases = std::list<std::string>();
 
-void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, bool optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases)
+void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases)
 {
 	Vjassdoc::m_optionJass = optionJass;
 	Vjassdoc::m_optionDebug = optionDebug;
@@ -173,8 +173,8 @@ void Vjassdoc::run()
 
 #ifdef SQLITE
 	//create SQL database for search functions
-	if (Vjassdoc::optionDatabase())
-		Vjassdoc::parser()->createDatabase();
+	if (!Vjassdoc::optionDatabase().empty())
+		Vjassdoc::parser()->createDatabase(Vjassdoc::optionDatabase());
 #endif
 
 	if (!Vjassdoc::optionCompile().empty())
