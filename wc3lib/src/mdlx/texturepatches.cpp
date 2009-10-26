@@ -73,7 +73,7 @@ long32 TexturePatches::readMdx(std::fstream &fstream) throw (class Exception)
 	{
 		class TexturePatch *texturePatch = new TexturePatch(this);
 		bytes += texturePatch->readMdx(fstream);
-		this->m_texturePatches.push_back(texturePatches);
+		this->m_texturePatches.push_back(texturePatch);
 	}
 	
 	return bytes;

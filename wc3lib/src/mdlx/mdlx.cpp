@@ -25,6 +25,9 @@
 #include "cameras.hpp"
 #include "events.hpp"
 #include "collisionshapes.hpp"
+#ifdef BLEND
+#include "readblend/readblend.h"
+#endif
 
 namespace wc3lib
 {
@@ -61,6 +64,8 @@ Mdlx::~Mdlx()
 	delete this->m_collisionShapes;
 }
 
+#ifdef BLEND
+
 /**
 * The first 12 bytes of every blend-file is the file-header.
 * The file-header has information on Blender (version-number) and the PC the blend-file was saved on (pointer-size and endianness).
@@ -74,6 +79,8 @@ struct BlendHeader
 	char versionNumber[3];	/// Version of Blender the file was created in; '248' means version 2.48
 };
 
+#endif
+
 struct BlendFileBlock
 {
 	char code[4]; /// Identifier of the file-block
@@ -83,7 +90,7 @@ struct BlendFileBlock
 	int count; /// Number of structure located in this file-block
 };
 
-void Mdlx::readMdl(std::fstream &fstream) throw (Exception)
+void Mdlx::readMdl(std::fstream &fstream) throw (class Exception)
 {
 	this->m_version->readMdl(fstream);
 	this->m_model->readMdl(fstream);
@@ -107,7 +114,7 @@ void Mdlx::readMdl(std::fstream &fstream) throw (Exception)
 	this->m_collisionShapes->readMdl(fstream);
 }
 
-void Mdlx::writeMdl(std::fstream &fstream) throw (Exception)
+void Mdlx::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 	this->m_version->writeMdl(fstream);
 	this->m_model->writeMdl(fstream);
@@ -187,13 +194,60 @@ long32 Mdlx::writeMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-void Mdlx::readBlend(std::fstream &fstream) throw (class Exception)
+#ifdef BLEND
+
+void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 {
+	struct MY_FILETYPE *file = MY_OPEN_FOR_READ(filePath.c_str());
+	
+	if (!file)
+	{
+		char message[50];
+		sprintf(message, _("Was unable to open file \"%s\".\n"), filePath.c_str())
+		
+		throw Exception(message);
+	}
+	
+	struct BlendFile *blendFile = blend_read(file);
+
+	if (!blendFile)
+	{
+		MY_CLOSE(file);
+		char message[50];
+		sprintf(message, _("Was unable to read Blender file \"%s\".\n"), filePath.c_str());
+		
+		throw Exception(message);
+	}
+
+	// print file information
+	blend_dump_typedefs(blendFile);
+	blend_dump_blocks(blendFile);
+
+	/**
+
+	blend_foreach_block(bf, blockiter, NULL);
+
+
+	{
+		BlendObject obj;
+		char want_name[] = "IMmetalrock.jpg";
+		if (blend_object_get_by_IDname(bf,&obj, want_name)) {
+			fprintf(stderr, "got %s.\n", want_name);
+		}
+	}
+
+
+	*/
+	
+	blend_free(blendFile);
+	MY_CLOSE(file);
 }
 
 void Mdlx::writeBlend(std::fstream &fstream) throw (class Exception)
 {
 }
+
+#endif
 
 void Mdlx::read3ds(std::fstream &fstream) throw (class Exception)
 {

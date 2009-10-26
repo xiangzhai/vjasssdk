@@ -1,3 +1,7 @@
+2009-10-26 Tamino Dauth <tamino@cdauth.de>
+* Added several MDLX classes.
+* Added first implementation of Blender file import.
+
 2009-10-15 Tamino Dauth <tamino@cdauth.de>
 * Improved texture animations MDX reading.
 * Added several missing MDX property classes.

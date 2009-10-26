@@ -18,8 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "scaling0.hpp"
-#include "scaling0s.hpp"
+#include "visibility2s.hpp"
 
 namespace wc3lib
 {
@@ -27,30 +26,34 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scaling0::Scaling0(class Scaling0s *scalings) : m_scalings(scalings)
+Visibility2s::Visibility2s(class Mdlx *mdlx) : MdxBlock("KP2V"), m_mdlx(mdlx)
 {
 }
 
-Scaling0::~Scaling0()
+Visibility2s::~Visibility2s()
 {
 }
 
-void Scaling0::readMdl(std::fstream &fstream) throw (class Exception)
+void Visibility2s::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling0::writeMdl(std::fstream &fstream) throw (class Exception)
+void Visibility2s::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-long32 Scaling0::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Visibility2s::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
 }
 
-long32 Scaling0::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Visibility2s::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Intensities::Intensities(class Mdlx *mdlx) : MdxBlock("KLAI"), m_mdlx(mdlx)
+Intensities::Intensities(class Light *light) : MdxBlock("KLAI"), m_light(light)
 {
 }
 

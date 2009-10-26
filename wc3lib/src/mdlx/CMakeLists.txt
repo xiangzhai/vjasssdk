@@ -1,8 +1,10 @@
-set(wc3lib_MDLX_SRC                                 
+set(wc3lib_MDLX_SRC                            
 	alpha.cpp
 	alphas.cpp
-	ambintensities.cpp
-	ambintensity.cpp
+	ambientcolor.cpp
+	ambientcolors.cpp
+	ambientintensities.cpp
+	ambientintensity.cpp
 	attachment.cpp
 	attachments.cpp
 	bone.cpp
@@ -11,6 +13,10 @@ set(wc3lib_MDLX_SRC
 	cameras.cpp
 	collisionshape.cpp
 	collisionshapes.cpp
+	color0.cpp
+	color0s.cpp
+	color1.cpp
+	color1s.cpp
 	emissionrate.cpp
 	emissionrates.cpp
 	event.cpp
@@ -77,7 +83,10 @@ set(wc3lib_MDLX_SRC
 	textureid.cpp
 	textureids.cpp
 	textures.cpp
+	texturepatch.cpp
+	texturepatches.cpp
 	texturevertex.cpp
+	texturevertices.cpp
 	translation0.cpp
 	translation0s.cpp
 	translation1.cpp
@@ -92,16 +101,28 @@ set(wc3lib_MDLX_SRC
 	visibility0.cpp
 	visibility0s.cpp
 	visibility1.cpp
+	visibility1s.cpp
 	visibility2.cpp
+	visibility2s.cpp
 	visibility3.cpp
+	visibility3s.cpp
 	visibility4.cpp
+	visibility4s.cpp
 )
 
 set(wc3lib_MDLX_H
 	attachment.hpp
+	ambientcolor.hpp
+	ambientcolors.hpp
+	ambientintensity.hpp
+	ambientintensities.hpp
 	bone.hpp
 	camera.hpp
 	collisionshape.hpp
+	color0.hpp
+	color0s.hpp
+	color1.hpp
+	color1s.hpp
 	event.hpp
 	ganimation.hpp
 	geoset.hpp
@@ -109,11 +130,19 @@ set(wc3lib_MDLX_H
 	mdlx.hpp
 	object.hpp
 	visibility0.hpp
+	visibility0s.hpp
 	visibility1.hpp
+	visibility1s.hpp
 	visibility2.hpp
+	visibility2s.hpp
 	visibility3.hpp
+	visibility3s.hpp
 	visibility4.hpp
+	visibility4s.hpp
 )
+
+# custom include path, Gentoo Linux
+include_directories(/usr/include/boost-1_35)
 
 add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})
 #target_link_libraries(wc3libblp gettextlib)

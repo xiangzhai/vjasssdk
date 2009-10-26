@@ -18,40 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_COLLISIONSHAPE_HPP
-#define WC3LIB_MDLX_COLLISIONSHAPE_HPP
+#ifndef WC3LIB_MDLX_TEXTUREPATCH_HPP
+#define WC3LIB_MDLX_TEXTUREPATCH_HPP
 
-#include "object.hpp"
+#include <fstream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+	
+class TexturePatches;
 
-class CollisionShapes;
-
-class CollisionShape : public Object
+class TexturePatch
 {
 	public:
-		enum Shape
-		{
-			Box = 0,
-			Sphere = 2
-		};
+		TexturePatch(class TexturePatches *texturePatches);
+		virtual ~TexturePatch();
 
-		CollisionShape(class CollisionShapes *collisionShapes);
-		virtual ~CollisionShape();
-		
-		class CollisionShapes* collisionShapes() const;
-		long32 shape() const;
+		class TexturePatches* texturePatches() const;
 		float32 x() const;
 		float32 y() const;
-		float32 z() const;
-		float32 x2() const;
-		float32 y2() const;
-		float32 z2() const;
-		float32 boundsRadius() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -59,58 +50,23 @@ class CollisionShape : public Object
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class CollisionShapes *m_collisionShapes;
-		long32 m_shape; //(0:box;2:sphere)
-		float32 m_x, m_y, m_z;
-		//if (Shape == 0)
-		float32 m_x2, m_y2, m_z2;
-		//else
-		float32 m_boundsRadius;
+		class TexturePatches *m_texturePatches;
+		float32 m_x, m_y;
 };
 
-inline class CollisionShapes* CollisionShape::collisionShapes() const
+inline class TexturePatches* TexturePatch::texturePatches() const
 {
-	return this->m_collisionShapes;
+	return this->m_texturePatches;
 }
 
-inline long32 CollisionShape::shape() const
-{
-	return this->m_shape;
-}
-
-inline float32 CollisionShape::x() const
+inline float32 TexturePatch::x() const
 {
 	return this->m_x;
 }
 
-inline float32 CollisionShape::y() const
+inline float32 TexturePatch::y() const
 {
 	return this->m_y;
-}
-
-inline float32 CollisionShape::z() const
-{
-	return this->m_z;
-}
-
-inline float32 CollisionShape::x2() const
-{
-	return this->m_x2;
-}
-
-inline float32 CollisionShape::y2() const
-{
-	return this->m_y2;
-}
-
-inline float32 CollisionShape::z2() const
-{
-	return this->m_z2;
-}
-
-inline float32 CollisionShape::boundsRadius() const
-{
-	return this->m_boundsRadius;
 }
 
 }

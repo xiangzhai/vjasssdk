@@ -61,42 +61,42 @@ class Ganimation
 		float32 m_maxExtentX, m_maxExtentY, m_maxExtentZ;
 };
 
-class Geoset* Ganimation::geoset() const
+inline class Geoset* Ganimation::geoset() const
 {
 	return this->m_geoset;
 }
 
-float32 Ganimation::boundsRadius() const
+inline float32 Ganimation::boundsRadius() const
 {
 	return this->m_boundsRadius;
 }
 
-float32 Ganimation::minExtentX() const
+inline float32 Ganimation::minExtentX() const
 {
 	return this->m_minExtentX;
 }
 
-float32 Ganimation::minExtentY() const
+inline float32 Ganimation::minExtentY() const
 {
 	return this->m_minExtentY;
 }
 
-float32 Ganimation::minExtentZ() const
+inline float32 Ganimation::minExtentZ() const
 {
 	return this->m_minExtentZ;
 }
 
-float32 Ganimation::maxExtentX() const
+inline float32 Ganimation::maxExtentX() const
 {
 	return this->m_maxExtentX;
 }
 
-float32 Ganimation::maxExtentY() const
+inline float32 Ganimation::maxExtentY() const
 {
 	return this->m_maxExtentY;
 }
 
-float32 Ganimation::maxExtentZ() const
+inline float32 Ganimation::maxExtentZ() const
 {
 	return this->m_maxExtentZ;
 }

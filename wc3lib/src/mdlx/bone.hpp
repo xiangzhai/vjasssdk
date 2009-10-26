@@ -29,24 +29,33 @@ namespace wc3lib
 namespace mdlx
 {
 
+class Bones;
+
 class Bone : public Object
 {
 	public:
-		Bone(class Mdlx *mdlx);
+		Bone(class Bones *bones);
 		virtual ~Bone();
 		
-		inline long32 geosetId() const;
-		inline long32 geosetAnimationId() const;
+		class Bones* bones() const;
+		long32 geosetId() const;
+		long32 geosetAnimationId() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		class Bones *m_bones;
 		long32 m_geosetId;
 		long32 m_geosetAnimationId;
 };
+
+inline class Bones* Bone::bones() const
+{
+	return this->m_bones;
+}
 
 inline long32 Bone::geosetId() const
 {

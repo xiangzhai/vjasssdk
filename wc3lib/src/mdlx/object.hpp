@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_OBJECT_HPP
 
 #include <fstream>
+#include <cstring>
 
 #include "../exception.hpp"
 #include "platform.hpp"
@@ -32,12 +33,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Translations;
-class Rotations;
-class Scalings;
+class Translation1s;
+class Rotation0s;
+class Scaling0s;
 class Visibility0s;
 
+/// No MDX block!
 class Object
 {
 	public:
@@ -82,19 +83,19 @@ class Object
 		long32 parent() const;
 		void setType(long32 type);
 		long32 type() const;
-		void setTranslations(class Translations *translations);
-		class Translations* translations() const;
-		void setRotations(class Rotations *rotations);
-		class Rotations* rotations() const;
-		void setScalings(class Scalings *scalings);
-		class Scalings* scalings() const;
+		void setTranslations(class Translation1s *translations);
+		class Translation1s* translations() const;
+		void setRotations(class Rotation0s *rotations);
+		class Rotation0s* rotations() const;
+		void setScalings(class Scaling0s *scalings);
+		class Scaling0s* scalings() const;
 		void setVisibilties(class Visibility0s *visibilities);
 		class Visibility0s* visibilities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
@@ -102,10 +103,10 @@ class Object
 		long32 m_objectId;
 		long32 m_parent;
 		long32 m_type; //use enum
-		class Translations *m_translations;
-		class Rotations *m_rotations;
-		class Scalings *m_scalings;
-		class Visibility0s *m_visibilities;
+		class Translation1s *m_translations; //(KGTR)
+		class Rotation0s *m_rotations; //(KGRT)
+		class Scaling0s *m_scalings; //(KGSC)
+		class Visibility0s *m_visibilities; //(KATV)
 };
 
 inline class Mdlx* Object::mdlx() const
@@ -115,8 +116,7 @@ inline class Mdlx* Object::mdlx() const
 
 inline void Object::setName(ascii name[0x50])
 {
-	for (int i = 0; i < 0x50; ++i)
-		this->m_name[i] = name[i];
+	memcpy(this->m_name, name, sizeof(name));
 }
 
 
@@ -156,32 +156,32 @@ inline long32 Object::type() const
 	return this->m_type;
 }
 
-inline void Object::setTranslations(class Translations *translations)
+inline void Object::setTranslations(class Translation1s *translations)
 {
 	this->m_translations = translations;
 }
 
-inline class Translations* Object::translations() const
+inline class Translation1s* Object::translations() const
 {
 	return this->m_translations;
 }
 
-inline void Object::setRotations(class Rotations *rotations)
+inline void Object::setRotations(class Rotation0s *rotations)
 {
 	this->m_rotations = rotations;
 }
 
-inline class Rotations* Object::rotations() const
+inline class Rotation0s* Object::rotations() const
 {
 	return this->m_rotations;
 }
 
-inline void Object::setScalings(class Scalings *scalings)
+inline void Object::setScalings(class Scaling0s *scalings)
 {
 	this->m_scalings = scalings;
 }
 
-inline class Scalings* Object::scalings() const
+inline class Scaling0s* Object::scalings() const
 {
 	return this->m_scalings;
 }

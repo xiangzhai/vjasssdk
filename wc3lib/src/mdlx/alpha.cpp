@@ -49,7 +49,7 @@ void Alpha::readMdx(std::fstream &fstream) throw (class Exception)
 	
 	if (this->m_state != 0 && this->m_state != 1)
 	{
-		char message[255];
+		char message[50];
 		sprintf(message, _("Unknown state: %d. Should be 0 or 1."), this->m_state);
 		throw Exception(message);
 	}

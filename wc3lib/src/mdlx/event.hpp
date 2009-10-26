@@ -30,26 +30,36 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+class Events;
 
 class Event : public Object
 {
 	public:
-		Event(class Mdlx *mdlx);
+		Event(class Events *events);
 		virtual ~Event();
 
+		class Events* events() const;
 		std::list<long32> frames() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (Exception);
-		virtual void readMdx(std::fstream &fstream) throw (Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (Exception);
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		class Events *m_events;
+		//OBJ
 		//ascii *bla; //ASCII "KEVT" // Actually a separate object
 		//long32 ntrks; // usually (1)
 		//0xFFFFFFFF!!!
 		std::list<long32> m_frames;//[ntrks];
 };
+
+inline class Events* Event::events() const
+{
+	return this->m_events;
+}
 
 inline std::list<long32> Event::frames() const
 {

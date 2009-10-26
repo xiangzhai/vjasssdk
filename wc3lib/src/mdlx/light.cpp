@@ -19,6 +19,12 @@
  ***************************************************************************/
 
 #include "light.hpp"
+#include "lights.hpp"
+#include "intensities.hpp"
+#include "visibility1s.hpp"
+#include "color1s.hpp"
+#include "ambientcolors.hpp"
+#include "ambientintensities.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Light::Light(class Mdlx *mdlx) : Object(mdlx)
+Light::Light(class Lights *lights) : Object(lights->mdlx()), m_lights(lights), m_intensities(new Intensities(this)), m_visibilities(new Visibility1s(this)), m_colors(new Color1s(this)), m_ambientColors(new AmbientColors(this)), m_ambientIntensities(new AmbientIntensities(this))
 {
 }
 
@@ -38,16 +44,18 @@ void Light::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Light::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Light::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Light::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Light::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
+}
+
+long32 Light::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

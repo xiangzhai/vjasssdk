@@ -28,8 +28,13 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
+
+class Lights;
+class Intensities;
 class Visibility1s;
+class Color1s;
+class AmbientColors;
+class AmbientIntensities;
 
 class Light : public Object
 {
@@ -41,9 +46,10 @@ class Light : public Object
 			Ambient = 2
 		};
 
-		Light(class Mdlx *mdlx);
+		Light(class Lights *lights);
 		virtual ~Light();
 
+		class Lights* lights() const;
 		long32 type() const;
 		float32 attStart() const;
 		float32 attEnd() const;
@@ -57,16 +63,17 @@ class Light : public Object
 		float32 ambIntensity() const;
 		class Intensities* intensities() const;
 		class Visibility1s* visibilities() const;
-		class Color* color() const;
-		class AmbientColor* ambientColor() const;
-		class AmbientIntensity* ambientIntensity() const;
+		class Color1s* colors() const;
+		class AmbientColors* ambientColors() const;
+		class AmbientIntensities* ambientIntensities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		class Lights *m_lights;
 		//long nbytesi;
 		//OBJ
 		long32 m_type; //(0:Omnidirectional;1:Directional;2:Ambient)
@@ -77,10 +84,15 @@ class Light : public Object
 		float32 m_ambIntensity;
 		class Intensities *m_intensities; //(KLAI)
 		class Visibility1s *m_visibilities; //(KLAV)
-		class Color *m_color; //(KLAC)
-		class AmbientColor *m_ambientColor; //(KLBC)
-		class AmbientIntensity *m_ambientIntensity; //(KLBI)
+		class Color1s *m_colors; //(KLAC)
+		class AmbientColors *m_ambientColors; //(KLBC)
+		class AmbientIntensities *m_ambientIntensities; //(KLBI)
 };
+
+inline class Lights* Light::lights() const
+{
+	return this->m_lights;
+}
 
 inline long32 Light::type() const
 {
@@ -147,19 +159,19 @@ inline class Visibility1s* Light::visibilities() const
 	return this->m_visibilities;
 }
 
-inline class Color* Light::color() const
+inline class Color1s* Light::colors() const
 {
-	return this->m_color;
+	return this->m_colors;
 }
 
-inline class AmbientColor* Light::ambientColor() const
+inline class AmbientColors* Light::ambientColors() const
 {
-	return this->m_ambientColor;
+	return this->m_ambientColors;
 }
 
-inline class AmbientIntensity* Light::ambientIntensity() const
+inline class AmbientIntensities* Light::ambientIntensities() const
 {
-	return this->m_ambientIntensity;
+	return this->m_ambientIntensities;
 }
 
 }

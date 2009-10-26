@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "scaling0.hpp"
-#include "scaling0s.hpp"
+#include "ambientcolors.hpp"
+#include "ambientcolor.hpp"
 
 namespace wc3lib
 {
@@ -27,30 +27,36 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scaling0::Scaling0(class Scaling0s *scalings) : m_scalings(scalings)
+AmbientColors::AmbientColors(class Light *light) : MdxBlock("KLBC"), m_light(light)
 {
 }
 
-Scaling0::~Scaling0()
+AmbientColors::~AmbientColors()
+{
+	for (std::list<class AmbientColor*>::iterator iterator = this->m_colors.begin(); iterator != this->m_colors.end(); ++iterator)
+		delete *iterator;
+}
+
+void AmbientColors::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling0::readMdl(std::fstream &fstream) throw (class Exception)
+void AmbientColors::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling0::writeMdl(std::fstream &fstream) throw (class Exception)
+long32 AmbientColors::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	return bytes;
 }
 
-long32 Scaling0::readMdx(std::fstream &fstream) throw (class Exception)
+long32 AmbientColors::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
-}
-
-long32 Scaling0::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

@@ -18,10 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_COLLISIONSHAPE_HPP
-#define WC3LIB_MDLX_COLLISIONSHAPE_HPP
+#ifndef WC3LIB_MDLX_COLOR1S_HPP
+#define WC3LIB_MDLX_COLOR1S_HPP
 
-#include "object.hpp"
+#include <fstream>
+#include <list>
+
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -29,29 +34,28 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CollisionShapes;
+class Light;
+class Color1;
 
-class CollisionShape : public Object
+//KLAC
+class Color1s : public MdxBlock
 {
 	public:
-		enum Shape
+		enum LineType
 		{
-			Box = 0,
-			Sphere = 2
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
 		};
 
-		CollisionShape(class CollisionShapes *collisionShapes);
-		virtual ~CollisionShape();
-		
-		class CollisionShapes* collisionShapes() const;
-		long32 shape() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
-		float32 x2() const;
-		float32 y2() const;
-		float32 z2() const;
-		float32 boundsRadius() const;
+		Color1s(class Light *light);
+		virtual ~Color1s();
+
+		class Light* light() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Color1*> colors() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -59,58 +63,30 @@ class CollisionShape : public Object
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class CollisionShapes *m_collisionShapes;
-		long32 m_shape; //(0:box;2:sphere)
-		float32 m_x, m_y, m_z;
-		//if (Shape == 0)
-		float32 m_x2, m_y2, m_z2;
-		//else
-		float32 m_boundsRadius;
+		class Light *m_light;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Color1*> m_colors;
 };
 
-inline class CollisionShapes* CollisionShape::collisionShapes() const
+inline class Light* Color1s::light() const
 {
-	return this->m_collisionShapes;
+	return this->m_light;
 }
 
-inline long32 CollisionShape::shape() const
+inline long32 Color1s::lineType() const
 {
-	return this->m_shape;
+	return this->m_lineType;
 }
 
-inline float32 CollisionShape::x() const
+inline long32 Color1s::globalSequenceId() const
 {
-	return this->m_x;
+	return this->m_globalSequenceId;
 }
 
-inline float32 CollisionShape::y() const
+inline std::list<class Color1*> Color1s::colors() const
 {
-	return this->m_y;
-}
-
-inline float32 CollisionShape::z() const
-{
-	return this->m_z;
-}
-
-inline float32 CollisionShape::x2() const
-{
-	return this->m_x2;
-}
-
-inline float32 CollisionShape::y2() const
-{
-	return this->m_y2;
-}
-
-inline float32 CollisionShape::z2() const
-{
-	return this->m_z2;
-}
-
-inline float32 CollisionShape::boundsRadius() const
-{
-	return this->m_boundsRadius;
+	return this->m_colors;
 }
 
 }

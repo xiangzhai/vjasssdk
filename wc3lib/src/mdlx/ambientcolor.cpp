@@ -18,10 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_AMBINTENSITY_HPP
-#define WC3LIB_MDLX_AMBINTENSITY_HPP
-
-#include "alpha.hpp"
+#include "ambientcolor.hpp"
 
 namespace wc3lib
 {
@@ -29,12 +26,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class AmbIntensity : public Alpha
-{
-};
-
 }
 
 }
-
-#endif

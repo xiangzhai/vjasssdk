@@ -34,7 +34,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Light;
 class Intensity;
 
 //KLAI	// [Intensity]:   KMTA;
@@ -49,10 +49,10 @@ class Intensities : public MdxBlock
 			Bezier = 3
 		};
 
-		Intensities(class Mdlx *mdlx);
+		Intensities(class Light *light);
 		virtual ~Intensities();
 
-		class Mdlx* mdlx() const;
+		class Light* light() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
 		std::list<class Intensity*> intensities() const;
@@ -63,15 +63,15 @@ class Intensities : public MdxBlock
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Light *m_light;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class Intensity*> m_intensities;
 };
 
-inline class Mdlx* Intensities::mdlx() const
+inline class Light* Intensities::light() const
 {
-	return this->m_mdlx;
+	return this->m_light;
 }
 
 inline long32 Intensities::lineType() const

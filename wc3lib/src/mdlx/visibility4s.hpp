@@ -18,10 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_COLLISIONSHAPE_HPP
-#define WC3LIB_MDLX_COLLISIONSHAPE_HPP
+#ifndef WC3LIB_MDLX_VISIBILITY4S_HPP
+#define WC3LIB_MDLX_VISIBILITY4S_HPP
 
-#include "object.hpp"
+#include <fstream>
+#include <list>
+
+#include "mdxblock.hpp"
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -29,29 +34,20 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CollisionShapes;
+class Mdlx;
+class Visibility4;
 
-class CollisionShape : public Object
+//KRVS
+class Visibility4s : public MdxBlock
 {
 	public:
-		enum Shape
-		{
-			Box = 0,
-			Sphere = 2
-		};
+		Visibility4s(class Mdlx *mdlx);
+		virtual ~Visibility4s();
 
-		CollisionShape(class CollisionShapes *collisionShapes);
-		virtual ~CollisionShape();
-		
-		class CollisionShapes* collisionShapes() const;
-		long32 shape() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
-		float32 x2() const;
-		float32 y2() const;
-		float32 z2() const;
-		float32 boundsRadius() const;
+		class Mdlx* mdlx() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class Visibility4*> visibilities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -59,58 +55,30 @@ class CollisionShape : public Object
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class CollisionShapes *m_collisionShapes;
-		long32 m_shape; //(0:box;2:sphere)
-		float32 m_x, m_y, m_z;
-		//if (Shape == 0)
-		float32 m_x2, m_y2, m_z2;
-		//else
-		float32 m_boundsRadius;
+		class Mdlx *m_mdlx;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class Visibility4*> m_visibilities;
 };
 
-inline class CollisionShapes* CollisionShape::collisionShapes() const
+inline class Mdlx* Visibility4s::mdlx() const
 {
-	return this->m_collisionShapes;
+	return this->m_mdlx;
 }
 
-inline long32 CollisionShape::shape() const
+inline long32 Visibility4s::lineType() const
 {
-	return this->m_shape;
+	return this->m_lineType;
 }
 
-inline float32 CollisionShape::x() const
+inline long32 Visibility4s::globalSequenceId() const
 {
-	return this->m_x;
+	return this->m_globalSequenceId;
 }
 
-inline float32 CollisionShape::y() const
+inline std::list<class Visibility4*> Visibility4s::visibilities() const
 {
-	return this->m_y;
-}
-
-inline float32 CollisionShape::z() const
-{
-	return this->m_z;
-}
-
-inline float32 CollisionShape::x2() const
-{
-	return this->m_x2;
-}
-
-inline float32 CollisionShape::y2() const
-{
-	return this->m_y2;
-}
-
-inline float32 CollisionShape::z2() const
-{
-	return this->m_z2;
-}
-
-inline float32 CollisionShape::boundsRadius() const
-{
-	return this->m_boundsRadius;
+	return this->m_visibilities;
 }
 
 }

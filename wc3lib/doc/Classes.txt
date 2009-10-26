@@ -1,21 +1,25 @@
-wc3lib class name	MDX block name
+wc3lib class name	MDX block name		Parent class		Expected class name
 Mdlx			MDLX
+Alphas			KMTA
 Attachments		ATCH
+AmbientColors		KLBC			Light			Light...
+AmbientIntensities	KLBI			Light			Light...
 Bones			BONE
 Cameras			CAMS
 CollisionShapes		CLID
-Visibility0s		KATV
-Visibility0s		KLAV
-Visibility0s		KP2V
-Visibility0s		KPEV
-Visibility0s		KRVS
+Intensities		KLAI			Light			LightAmbientIntensities
+Visibility0s		KATV			Mdlx (various classes, Object, Attachments)
+Visibility1s		KLAV			Light			LightAmbientVisibility
+Visibility2s		KP2V
+Visibility3s		KPEV
+Visibility4s		KRVS
 Color0s			KGAC
-Color1s			KLAC
-Rotation0s		KGRT
+Color1s			KLAC			Light			LightAmbientColors
+Rotation0s		KGRT			Mdlx (various classes)
 Rotation1s		KTAR
-Scaling0s		KGSC
+Scaling0s		KGSC			Mdlx (various classes)
 Scaling1s		KTAS
 Translation0s		KCTR
-Translation1s		KGTR
+Translation1s		KGTR			Mdlx (various classes)
 Translation2s		KTAT
 Translation3s		KTTR

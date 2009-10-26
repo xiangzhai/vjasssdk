@@ -62,68 +62,8 @@ class CollisionShapes;
 class Mdlx : public MdxBlock
 {
 	public:
-		/*
-		struct Bones
-		{
-			//long nbytes;
-			std::list<struct Bone*> bones; //[nbons]
-		};
-
-		struct PrimitiveVertices
-		{
-			//long	ntris;
-			std::list<short32> triangles; //[ntris];
-		};
-
-		struct VertexGroups
-		{
-			//long	nvgrps;
-			std::list<byte>	vertexGroups; //[nvgrps];
-		};
-
-		struct GeosetAnimations
-		{
-			//long	nbytes;
-			std::list<struct GeosetAnimation*> geosetAnimations;
-		};
-
-		struct MatriceGroupCounts
-		{
-			//--MTGC // [Groups]
-			//long	nmtrcs; //   GroupCount is an array of lengths
-			std::list<long32> groupCounts; //[nmtrcs]; //   for each group.
-		};
-
-		struct Vertices
-		{
-			//long	nvrts;
-			std::list<struct Vertice*> vertices; //[nvrts]
-		};
-
-		struct Normals
-		{
-			std::list<struct Normal*> normals; //[nnrms];
-		};
-
-		//--UVBS // [TVertices] (nonexistant in v1300)
-		struct TextureVertices
-		{
-			std::list<struct Tvertice*> tvertices;
-		};
-
-		//KGRT						// [Rotation]
-		struct Rotations
-		{
-			//Rotations
-			//long nunks;
-			long32 lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-			long32 globalSequenceId; // 0xFFFFFFFF if none
-			std::list<struct Rotation*> m_rotations; //[nunks]
-		};
-		*/
-
 		Mdlx();
-		~Mdlx();
+		virtual ~Mdlx();
 
 		class Version* version() const;
 		class Model* model() const;
@@ -148,10 +88,12 @@ class Mdlx : public MdxBlock
 
 		void readMdl(std::fstream &fstream) throw (class Exception);
 		void writeMdl(std::fstream &fstream) throw (class Exception);
-		long32 readMdx(std::fstream &fstream) throw (class Exception);
-		long32 writeMdx(std::fstream &fstream) throw (class Exception);
-		void readBlend(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+#ifdef BLEND
+		void readBlend(const std::string &filePath) throw (class Exception);
 		void writeBlend(std::fstream &fstream) throw (class Exception);
+#endif
 		void read3ds(std::fstream &fstream) throw (class Exception);
 		void write3ds(std::fstream &fstream) throw (class Exception);
 

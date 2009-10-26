@@ -18,7 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ambintensities.hpp"
+#ifndef WC3LIB_MDLX_AMBIENTCOLOR_HPP
+#define WC3LIB_MDLX_AMBIENTCOLOR_HPP
+
+#include "scaling0.hpp"
 
 namespace wc3lib
 {
@@ -26,32 +29,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-AmbIntensities::AmbIntensities(class Mdlx *mdlx) : MdxBlock("KLBI"), m_mdlx(mdlx)
+class AmbientColor : public Scaling0
 {
-}
-
-AmbIntensities::~AmbIntensities()
-{
-}
-
-void AmbIntensities::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 AmbIntensities::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
-
-void AmbIntensities::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 AmbIntensities::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
+};
 
 }
 
 }
+
+#endif

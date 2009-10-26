@@ -23,6 +23,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "bone.hpp"
+#include "bones.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -31,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Bone::Bone(class Mdlx *mdlx) : Object(mdlx)
+Bone::Bone(class Bones *bones) : Object(bones->mdlx())
 {
 }
 
@@ -53,14 +54,22 @@ void Bone::writeMdl(std::fstream &fstream) throw (class Exception)
 	/// @todo FIXME
 }
 
-void Bone::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Bone::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	/// @todo FIXME
+	long32 bytes = Object::readMdx(fstream);
+	fstream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_geosetAnimationId), sizeof(this->m_geosetAnimationId));
+	bytes += fstream.gcount();
+	
+	return bytes;
 }
 
-void Bone::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Bone::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	/// @todo FIXME
+	long32 bytes = Object::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

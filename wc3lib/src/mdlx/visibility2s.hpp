@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_AMBINTENSITIES_HPP
-#define WC3LIB_MDLX_AMBINTENSITIES_HPP
+#ifndef WC3LIB_MDLX_VISIBILITY2S_HPP
+#define WC3LIB_MDLX_VISIBILITY2S_HPP
 
 #include <fstream>
 #include <list>
@@ -35,58 +35,50 @@ namespace mdlx
 {
 
 class Mdlx;
-class AmbIntensity;
+class Visibility2;
 
-//KLBI	// [AmbIntensity]:KMTA;
-class AmbIntensities : public MdxBlock
+//KP2V
+class Visibility2s : public MdxBlock
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
-		AmbIntensities(class Mdlx *mdlx);
-		virtual ~AmbIntensities();
+		Visibility2s(class Mdlx *mdlx);
+		virtual ~Visibility2s();
 
 		class Mdlx* mdlx() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
-		std::list<class AmbIntensity*> intensities() const;
+		std::list<class Visibility2*> visibilities() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class AmbIntensity*> m_intensities;
+		std::list<class Visibility2*> m_visibilities;
 };
 
-inline class Mdlx* AmbIntensities::mdlx() const
+inline class Mdlx* Visibility2s::mdlx() const
 {
 	return this->m_mdlx;
 }
 
-inline long32 AmbIntensities::lineType() const
+inline long32 Visibility2s::lineType() const
 {
 	return this->m_lineType;
 }
 
-inline long32 AmbIntensities::globalSequenceId() const
+inline long32 Visibility2s::globalSequenceId() const
 {
 	return this->m_globalSequenceId;
 }
 
-inline std::list<class AmbIntensity*> AmbIntensities::intensities() const
+inline std::list<class Visibility2*> Visibility2s::visibilities() const
 {
-	return this->m_intensities;
+	return this->m_visibilities;
 }
 
 }

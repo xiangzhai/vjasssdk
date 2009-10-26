@@ -24,7 +24,9 @@
 #include <boost/tokenizer.hpp>
 
 #include "attachment.hpp"
+#include "attachments.hpp"
 #include "visibility0s.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +34,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachment::Attachment(class Mdlx *mdlx) : Object(mdlx), m_visibilities(new Visibility0s(mdlx))
+Attachment::Attachment(class Attachments *attachments) : Object(attachments->mdlx()), m_attachments(attachments), m_visibilities(new Visibility0s(attachments->mdlx()))
 {
 }
 
@@ -41,7 +43,7 @@ Attachment::~Attachment()
 	delete this->m_visibilities;
 }
 
-void Attachment::readMdl(std::fstream &fstream) throw (Exception)
+void Attachment::readMdl(std::fstream &fstream) throw (class Exception)
 {
 	std::string line;
 	std::getline(fstream, line);
@@ -75,18 +77,6 @@ void Attachment::readMdl(std::fstream &fstream) throw (Exception)
 	std::stringstream sstream;
 	sstream << (*iterator);
 	sstream >> this->m_objectId;
-}
-
-void Attachment::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes; //nbytesi;
-	fstream >> bytes;
-	Object::readMdx(fstream);
-	fstream >> this->m_path;
-	fstream >> this->m_unknown0;
-	fstream >> this->m_attachmentId;
-	this->m_visibilities = new Visibility0s(this->mdlx());
-	this->m_visibilities->readMdx(fstream);
 }
 
 void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
@@ -140,8 +130,35 @@ void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
 	fstream << "}\n";
 }
 
-void Attachment::writeMdx(std::fstream &fstream) throw (class Exception)
+
+long32 Attachment::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 nbytesi = 0;
+	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	long32 bytes = fstream.gcount();
+	bytes += Object::readMdx(fstream);
+	fstream.read(reinterpret_cast<char*>(&this->m_path), sizeof(this->m_path));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_attachmentId), sizeof(this->m_attachmentId));
+	bytes += fstream.gcount();
+	bytes += this->m_visibilities->readMdx(fstream);
+	
+	if (bytes != nbytesi)
+	{
+		char message[50];
+		sprintf(message, _("Attachment: File byte count is not equal to real byte count.\nFile byte count: %d.\nReal byte count: %d.\n"), nbytesi, bytes);
+		
+		throw Exception(message);
+	}
+	
+	return bytes;
+}
+
+long32 Attachment::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

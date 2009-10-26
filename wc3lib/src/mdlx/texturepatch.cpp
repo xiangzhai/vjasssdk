@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "scaling0.hpp"
-#include "scaling0s.hpp"
+#include "texturepatch.hpp"
+#include "texturepatches.hpp"
 
 namespace wc3lib
 {
@@ -27,28 +27,28 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scaling0::Scaling0(class Scaling0s *scalings) : m_scalings(scalings)
+TexturePatch::TexturePatch(class TexturePatches *texturePatches) : m_texturePatches(texturePatches)
 {
 }
 
-Scaling0::~Scaling0()
+TexturePatch::~TexturePatch()
 {
 }
 
-void Scaling0::readMdl(std::fstream &fstream) throw (class Exception)
+void TexturePatch::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Scaling0::writeMdl(std::fstream &fstream) throw (class Exception)
+void TexturePatch::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-long32 Scaling0::readMdx(std::fstream &fstream) throw (class Exception)
+long32 TexturePatch::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	return 0;
 }
 
-long32 Scaling0::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TexturePatch::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 	return 0;
 }

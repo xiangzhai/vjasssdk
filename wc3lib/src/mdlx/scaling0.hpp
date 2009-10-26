@@ -32,15 +32,15 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Scaling0s;
 
 class Scaling0
 {
 	public:
-		Scaling0(class Mdlx *mdlx);
+		Scaling0(class Scaling0s *mdlx);
 		virtual ~Scaling0();
 
-		class Mdlx* mdlx() const;
+		class Scaling0s* scalings() const;
 		long32 frame() const;
 		float32 x() const;
 		float32 y() const;
@@ -53,12 +53,12 @@ class Scaling0
 		float32 outTanZ() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Scaling0s *m_scalings;
 		long32	m_frame;
 		float32	m_x, m_y, m_z;
 		//if (LineType > 1) {
@@ -67,9 +67,9 @@ class Scaling0
 		//}
 };
 
-inline class Mdlx* Scaling0::mdlx() const
+inline class Scaling0s* Scaling0::scalings() const
 {
-	return this->m_mdlx;
+	return this->m_scalings;
 }
 
 inline long32 Scaling0::frame() const

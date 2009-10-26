@@ -18,40 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "scaling0.hpp"
-#include "scaling0s.hpp"
+#include "color1.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-Scaling0::Scaling0(class Scaling0s *scalings) : m_scalings(scalings)
-{
-}
-
-Scaling0::~Scaling0()
-{
-}
-
-void Scaling0::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Scaling0::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Scaling0::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
-
-long32 Scaling0::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
 
 }
 
