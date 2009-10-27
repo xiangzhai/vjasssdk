@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "groupvertices.hpp"
+#include "groupvertex.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,8 @@ GroupVertices::GroupVertices(class Geoset *geoset) : MdxBlock("GNDX"), m_geoset(
 
 GroupVertices::~GroupVertices()
 {
+	for (std::list<class GroupVertex*>::iterator iterator = this->m_groupVertices.begin(); iterator != this->m_groupVertices.end(); ++iterator)
+		delete *iterator;
 }
 
 void GroupVertices::readMdl(std::fstream &fstream) throw (class Exception)
@@ -44,7 +47,23 @@ void GroupVertices::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 GroupVertices::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nvgrps = 0;
+	fstream.read(reinterpret_cast<char*>(&nvgrps), sizeof(nvgrps));
+	bytes += fstream.gcount();
+	
+	for ( ; nvgrps > 0; --nvgrps)
+	{
+		class GroupVertex *groupVertex = new GroupVertex(this);
+		bytes += groupVertex->readMdx(fstream);
+		this->m_groupVertices.push_back(groupVertex);
+	}
+	
+	return bytes;
 }
 
 long32 GroupVertices::writeMdx(std::fstream &fstream) throw (class Exception)

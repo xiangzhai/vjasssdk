@@ -32,32 +32,32 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Normals;
 
 class Normal
 {
 	public:
-		Normal(class Mdlx *mdlx);
+		Normal(class Normals *normals);
 		virtual ~Normal();
 
-		class Mdlx* mdlx() const;
+		class Normals* normals() const;
 		float32 x() const;
 		float32 y() const;
 		float32 z() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Normals *m_normals;
 		float32 m_x, m_y, m_z;
 };
 
-inline class Mdlx* Normal::mdlx() const
+inline class Normals* Normal::normals() const
 {
-	return this->m_mdlx;
+	return this->m_normals;
 }
 
 inline float32 Normal::x() const

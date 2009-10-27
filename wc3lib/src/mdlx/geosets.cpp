@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> //debug
+
 #include "geosets.hpp"
 #include "geoset.hpp"
 #include "../internationalisation.hpp"
@@ -51,7 +53,11 @@ long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
 	if (bytes == 0)
+	{
+		std::cout << "No geosets." << std::endl;
+		
 		return 0;
+	}
 	
 	long32 nbytes = 0; //nbytes
 	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
@@ -64,12 +70,16 @@ long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
 		throw Exception(message);
 	}
 	
+	std::cout << "Read " << nbytes << " geoset bytes." << std::endl;
+	
 	bytes += fstream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class Geoset *geoset = new Geoset(this);
 		long32 readBytes = geoset->readMdx(fstream); 
+		std::cout << "Read geoset with " << readBytes << " bytes." << std::endl;
+		
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_geosets.push_back(geoset);

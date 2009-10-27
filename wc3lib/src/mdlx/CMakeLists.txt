@@ -141,11 +141,18 @@ set(wc3lib_MDLX_H
 	visibility4s.hpp
 )
 
+#if (BLEND)
+	add_subdirectory(readblend)
+#endif (BLEND)
+
 # custom include path, Gentoo Linux
 include_directories(/usr/include/boost-1_35)
 
 add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})
 #target_link_libraries(wc3libblp gettextlib)
+#if (BLEND)
+	target_link_libraries(wc3libmdlx wc3libmdlxreadblend)
+#endif (BLEND)
 
 #install
 

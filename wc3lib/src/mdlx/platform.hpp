@@ -30,7 +30,7 @@ namespace mdlx
 {
 
 typedef float float32;
-//typedef short short32; @todo undefined length?!
+typedef short short16; /// @todo undefined length?!
 typedef unsigned long long32; /// @todo are there any fstream >> operators which support int32_t?
 typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
 typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?

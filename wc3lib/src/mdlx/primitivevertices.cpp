@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "primitivevertices.hpp"
+#include "primitivevertex.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,8 @@ PrimitiveVertices::PrimitiveVertices(class Geoset *geoset) : MdxBlock("PVTX"), m
 
 PrimitiveVertices::~PrimitiveVertices()
 {
+	for (std::list<class PrimitiveVertex*>::iterator iterator = this->m_primitiveVertices.begin(); iterator != this->m_primitiveVertices.end(); ++iterator)
+		delete *iterator;
 }
 
 void PrimitiveVertices::readMdl(std::fstream &fstream) throw (class Exception)
@@ -44,16 +47,28 @@ void PrimitiveVertices::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+
+	long32 ntris = 0;
+	fstream.read(reinterpret_cast<char*>(&ntris), sizeof(ntris));
+	bytes += fstream.gcount();
+	
+	for ( ; ntris > 0; --ntris)
+	{
+		class PrimitiveVertex *primitiveVertex = new PrimitiveVertex(this);
+		bytes += primitiveVertex->readMdx(fstream);
+		this->m_primitiveVertices.push_back(primitiveVertex);
+	}
 	
 	return bytes;
 }
 
 long32 PrimitiveVertices::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;
 }

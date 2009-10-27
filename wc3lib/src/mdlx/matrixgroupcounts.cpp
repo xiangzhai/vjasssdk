@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "matrixgroupcounts.hpp"
+#include "matrixgroupcount.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,8 @@ MatrixGroupCounts::MatrixGroupCounts(class Geoset *geoset) : MdxBlock("MTGC"), m
 
 MatrixGroupCounts::~MatrixGroupCounts()
 {
+	for (std::list<class MatrixGroupCount*>::iterator iterator = this->m_matrixGroupCounts.begin(); iterator != this->m_matrixGroupCounts.end(); ++iterator)
+		delete *iterator;
 }
 
 void MatrixGroupCounts::readMdl(std::fstream &fstream) throw (class Exception)
@@ -45,16 +48,31 @@ void MatrixGroupCounts::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 MatrixGroupCounts::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nmtrcs = 0;
+	fstream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
+	bytes += fstream.gcount();
+	
+	for ( ; nmtrcs > 0; --nmtrcs)
+	{
+		class MatrixGroupCount *matrixGroupCount = new MatrixGroupCount(this);
+		bytes += matrixGroupCount->readMdx(fstream);
+		this->m_matrixGroupCounts.push_back(matrixGroupCount);
+	}
 	
 	return bytes;
 }
 
 long32 MatrixGroupCounts::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
+	if (!this->exists())
+		return 0;
+	
+	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;
 }

@@ -32,30 +32,30 @@ namespace wc3lib
 namespace mdlx
 {
 	
-class Mdlx;
+class PrimitiveSizes;
 
 class PrimitiveSize
 {
 	public:
-		PrimitiveSize(class Mdlx *mdlx);
+		PrimitiveSize(class PrimitiveSizes *primitiveSizes);
 		virtual ~PrimitiveSize();
 
-		class Mdlx* mdlx() const;
+		class PrimitiveSizes* primitiveSizes() const;
 		long32 value() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class PrimitiveSizes *m_primitiveSizes;
 		long32 m_value;
 };
 
-inline class Mdlx* PrimitiveSize::mdlx() const
+inline class PrimitiveSizes* PrimitiveSize::primitiveSizes() const
 {
-	return this->m_mdlx;
+	return this->m_primitiveSizes;
 }
 
 inline long32 PrimitiveSize::value() const

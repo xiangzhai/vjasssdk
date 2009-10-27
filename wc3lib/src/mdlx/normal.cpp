@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normal::Normal(class Mdlx *mdlx) : m_mdlx(mdlx)
+Normal::Normal(class Normals *normals) : m_normals(normals)
 {
 }
 
@@ -38,16 +38,26 @@ void Normal::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Normal::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Normal::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Normal::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Normal::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 Normal::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

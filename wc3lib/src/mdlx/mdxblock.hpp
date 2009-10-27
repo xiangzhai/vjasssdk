@@ -39,13 +39,17 @@ class MdxBlock
 
 		const byte* blockName() const;
 		bool optional() const;
+		bool exists() const;
 
 		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		
+		bool moveToBlockName(std::fstream &fstream);
 
 	protected:
 		byte m_blockName[4]; /// @todo byte or ascii?
 		bool m_optional;
+		bool m_exists;
 };
 
 inline const byte* MdxBlock::blockName() const
@@ -56,6 +60,11 @@ inline const byte* MdxBlock::blockName() const
 inline bool MdxBlock::optional() const
 {
 	return this->m_optional;
+}
+
+inline bool MdxBlock::exists() const
+{
+	return this->m_exists;
 }
 
 }

@@ -32,43 +32,45 @@ namespace wc3lib
 namespace mdlx
 {
 
+class Vertices;
+
 class Vertex
 {
 	public:
-		Vertex(class Mdlx *mdlx);
+		Vertex(class Vertices *vertices);
 		virtual ~Vertex();
 
-		class Mdlx* mdlx() const;
+		class Vertices* vertices() const;
 		float32 x() const;
 		float32 y() const;
 		float32 z() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Vertices *m_vertices;
 		float32 m_x, m_y, m_z;
 };
 
-class Mdlx* Vertex::mdlx() const
+inline class Vertices* Vertex::vertices() const
 {
-	return this->m_mdlx;
+	return this->m_vertices;
 }
 
-float32 Vertex::x() const
+inline float32 Vertex::x() const
 {
 	return this->m_x;
 }
 
-float32 Vertex::y() const
+inline float32 Vertex::y() const
 {
 	return this->m_y;
 }
 
-float32 Vertex::z() const
+inline float32 Vertex::z() const
 {
 	return this->m_z;
 }

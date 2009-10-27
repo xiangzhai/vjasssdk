@@ -32,30 +32,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class GroupVertices;
 
 class GroupVertex
 {
 	public:
-		GroupVertex(class Mdlx *mdlx);
+		GroupVertex(class GroupVertices *groupVertices);
 		virtual ~GroupVertex();
 
-		class Mdlx* mdlx() const;
+		class GroupVertices* groupVertices() const;
 		byte data() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class GroupVertices *m_groupVertices;
 		byte m_data;
 };
 
-inline class Mdlx* GroupVertex::mdlx() const
+inline class GroupVertices* GroupVertex::groupVertices() const
 {
-	return this->m_mdlx;
+	return this->m_groupVertices;
 }
 
 inline byte GroupVertex::data() const

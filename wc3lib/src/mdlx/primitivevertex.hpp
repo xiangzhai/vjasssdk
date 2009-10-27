@@ -32,33 +32,33 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class PrimitiveVertices;
 
 class PrimitiveVertex
 {
 	public:
-		PrimitiveVertex(class Mdlx *mdlx);
+		PrimitiveVertex(class PrimitiveVertices *primitiveVertices);
 		virtual ~PrimitiveVertex();
 
-		class Mdlx* mdlx() const;
-		short triangle() const;
+		class PrimitiveVertices* primitiveVertices() const;
+		short16 triangle() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
-		short m_triangle;
+		class PrimitiveVertices *m_primitiveVertices;
+		short16 m_triangle;
 };
 
-inline class Mdlx* PrimitiveVertex::mdlx() const
+inline class PrimitiveVertices* PrimitiveVertex::primitiveVertices() const
 {
-	return this->m_mdlx;
+	return this->m_primitiveVertices;
 }
 
-inline short PrimitiveVertex::triangle() const
+inline short16 PrimitiveVertex::triangle() const
 {
 	return this->m_triangle;
 }

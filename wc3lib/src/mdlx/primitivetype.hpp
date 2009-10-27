@@ -32,30 +32,30 @@ namespace wc3lib
 namespace mdlx
 {
 	
-class Mdlx;
+class PrimitiveTypes;
 
 class PrimitiveType
 {
 	public:
-		PrimitiveType(class Mdlx *mdlx);
+		PrimitiveType(class PrimitiveTypes *primitiveTypes);
 		virtual ~PrimitiveType();
 
-		class Mdlx* mdlx() const;
+		class PrimitiveTypes* primitiveTypes() const;
 		long32 value() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class PrimitiveTypes *m_primitiveTypes;
 		long32 m_value;
 };
 
-inline class Mdlx* PrimitiveType::mdlx() const
+inline class PrimitiveTypes* PrimitiveType::primitiveTypes() const
 {
-	return this->m_mdlx;
+	return this->m_primitiveTypes;
 }
 
 inline long32 PrimitiveType::value() const

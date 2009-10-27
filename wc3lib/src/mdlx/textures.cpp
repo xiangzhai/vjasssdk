@@ -65,6 +65,7 @@ long32 Textures::readMdx(std::fstream &fstream) throw (class Exception)
 	{
 		class Texture *texture = new Texture(this);
 		long32 readBytes = texture->readMdx(fstream);
+		std::cout << "Read texture with " << readBytes << " bytes." << std::endl;
 		
 		if (readBytes == 0)
 			throw Exception(_("Textures: 0 byte texture."));

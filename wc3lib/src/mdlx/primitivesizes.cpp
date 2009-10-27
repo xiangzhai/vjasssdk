@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "primitivesizes.hpp"
+#include "primitivesize.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,8 @@ PrimitiveSizes::PrimitiveSizes(class Geoset *geoset) : MdxBlock("PCNT"), m_geose
 
 PrimitiveSizes::~PrimitiveSizes()
 {
+	for (std::list<class PrimitiveSize*>::iterator iterator = this->m_primitiveSizes.begin(); iterator != this->m_primitiveSizes.end(); ++iterator)
+		delete *iterator;
 }
 
 void PrimitiveSizes::readMdl(std::fstream &fstream) throw (class Exception)
@@ -44,16 +47,28 @@ void PrimitiveSizes::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 PrimitiveSizes::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 npcnts = 0;
+	fstream.read(reinterpret_cast<char*>(&npcnts), sizeof(npcnts));
+	bytes += fstream.gcount();
+	
+	for ( ; npcnts > 0; --npcnts)
+	{
+		class PrimitiveSize *primitiveSize = new PrimitiveSize(this);
+		bytes += primitiveSize->readMdx(fstream);
+		this->m_primitiveSizes.push_back(primitiveSize);
+	}
 	
 	return bytes;
 }
 
 long32 PrimitiveSizes::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;
 }

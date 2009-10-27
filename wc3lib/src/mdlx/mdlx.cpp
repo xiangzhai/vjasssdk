@@ -26,8 +26,11 @@
 #include "events.hpp"
 #include "collisionshapes.hpp"
 #ifdef BLEND
+#include "readblend/abs-file.h"
 #include "readblend/readblend.h"
+#include "readblend/blendtype.h"
 #endif
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -196,19 +199,104 @@ long32 Mdlx::writeMdx(std::fstream &fstream) throw (class Exception)
 
 #ifdef BLEND
 
+struct BlendReader
+{
+	std::list<bObj> m_objects;
+	std::list<bMesh> m_meshes;
+	std::list<bMaterial> m_materials;
+	std::list<bTexLayer> m_textureLayers;
+};
+
+static BLENDBLOCKCALLBACK_RETURN blendBlockIterator(BLENDBLOCKCALLBACK_ARGS)
+{
+	const char *tagName = blend_block_get_tagname(blend_file, block);
+	const char *typeName = blend_block_get_typename(blend_file, block);
+	int entryCount = blend_block_get_entry_count(blend_file, block);
+	fprintf(stdout, _("Blend block:\nTag = %s\nType = %s\nEntries = %d\n"), tagName, typeName, entryCount);
+	
+	struct BlendReader blendReader = *reinterpret_cast<struct BlendReader*>(userdata);
+	
+	for (int i = 0; i < entryCount; ++i)
+	{
+		BlendObject blendObject = blend_block_get_object(blend_file, block, i);
+		const char *objectTypeName = blend_file->types[blendObject.type].name;
+		
+		if (strcmp(objectTypeName, "Object") == 0)
+		{
+			bObj object;
+			blend_acquire_obj_from_obj(blend_file, &blendObject, &object, 0);
+			blendReader.m_objects.push_back(object);
+		}
+		else if (strcmp(objectTypeName, "Mesh") == 0)
+		{
+			bMesh mesh;
+			blend_acquire_mesh_from_obj(blend_file, &blendObject, &mesh);
+			blendReader.m_meshes.push_back(mesh);
+		}
+		else if (strcmp(objectTypeName, "TexLayer") == 0)
+		{
+			bTexLayer textureLayer;
+			blend_acquire_texlayer_from_obj(blend_file, &blendObject, &textureLayer);
+			blendReader.m_textureLayers.push_back(textureLayer);
+		}
+		
+		BlendObject dataObject;
+		
+		if (blend_object_structure_getfield(blend_file, &dataObject, blendObject, "curscene"))
+		{
+			if (blend_object_type(blend_file, dataObject) == BLEND_OBJ_POINTER)
+			{
+				BlendBlock *tmpBlock = 0;
+				
+				if (blend_object_getdata(blend_file, &tmpBlock, dataObject))
+				{
+					BlendObject scene = blend_block_get_object(blend_file, tmpBlock, 0);
+					
+					if (blend_object_structure_getfield(blend_file, &dataObject, scene, "id")) 
+					{
+						if (blend_object_type(blend_file, dataObject) == BLEND_OBJ_STRUCT) 
+						{
+							BlendObject dataObject2;
+							
+							if (blend_object_structure_getfield(blend_file, &dataObject2, dataObject, "name")) 
+							{
+								char dest[19];
+								int max_chars = 20;
+							
+								if (blend_object_getstring(blend_file, dataObject2, dest, max_chars)) 
+								{
+									printf("dest=%s\n",dest);
+								}
+							}
+
+						}
+
+					}
+
+				}
+			}
+			else
+			{
+			}
+		}
+	}
+	     
+	return 1;
+}
+
 void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 {
-	struct MY_FILETYPE *file = MY_OPEN_FOR_READ(filePath.c_str());
+	MY_FILETYPE *file = MY_OPEN_FOR_READ(filePath.c_str());
 	
 	if (!file)
 	{
 		char message[50];
-		sprintf(message, _("Was unable to open file \"%s\".\n"), filePath.c_str())
+		sprintf(message, _("Was unable to open file \"%s\".\n"), filePath.c_str());
 		
 		throw Exception(message);
 	}
 	
-	struct BlendFile *blendFile = blend_read(file);
+	BlendFile *blendFile = blend_read(file);
 
 	if (!blendFile)
 	{
@@ -222,6 +310,14 @@ void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 	// print file information
 	blend_dump_typedefs(blendFile);
 	blend_dump_blocks(blendFile);
+	
+	struct BlendReader blendReader;
+	blend_foreach_block(blendFile, blendBlockIterator, &blendReader);
+	
+	for (std::list<bObj> ::iterator iterator = blendReader.m_objects.begin(); iterator != blendReader.m_objects.end(); ++iterator)
+	{
+		fprintf(stdout, _("Got object with name \"%s\".\n"), iterator->name);
+	}
 
 	/**
 

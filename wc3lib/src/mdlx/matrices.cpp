@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "matrices.hpp"
+#include "matrix.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,8 @@ Matrices::Matrices(class Geoset *geoset) : MdxBlock("MATS"), m_geoset(geoset)
 
 Matrices::~Matrices()
 {
+	for (std::list<class Matrix*>::iterator iterator = this->m_matrices.begin(); iterator != this->m_matrices.end(); ++iterator)
+		delete *iterator;
 }
 
 void Matrices::readMdl(std::fstream &fstream) throw (class Exception)
@@ -44,16 +47,28 @@ void Matrices::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 Matrices::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nmtrcs = 0;
+	fstream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
+	bytes += fstream.gcount();
+	
+	for ( ; nmtrcs > 0; --nmtrcs)
+	{
+		class Matrix *matrix = new Matrix(this);
+		bytes += matrix->readMdx(fstream);
+		this->m_matrices.push_back(matrix);
+	}
 	
 	return bytes;
 }
 
 long32 Matrices::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;
 }

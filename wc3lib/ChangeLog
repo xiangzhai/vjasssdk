@@ -1,3 +1,8 @@
+2009-10-27 Tamino Dauth <tamino@cdauth.de>
+* Added readblend cmake sub directory.
+* Improved Blender file import implementation.
+* Improved Geoset reading.
+
 2009-10-26 Tamino Dauth <tamino@cdauth.de>
 * Added several MDLX classes.
 * Added first implementation of Blender file import.

@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> //debug
+
 #include "geoset.hpp"
 #include "geosets.hpp"
 #include "vertices.hpp"
@@ -67,7 +69,6 @@ void Geoset::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
 	long32 nbytes = 0;
 	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
@@ -79,7 +80,8 @@ long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 		throw Exception(message);
 	}
 	
-	bytes += fstream.gcount();
+	std::cout << "Test 1" << std::endl;
+	long32 bytes = fstream.gcount();
 	bytes += this->m_vertices->readMdx(fstream);
 	bytes += this->m_normals->readMdx(fstream);
 	bytes += this->m_primitveTypes->readMdx(fstream);
@@ -88,6 +90,7 @@ long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 	bytes += this->m_groupVertices->readMdx(fstream);
 	bytes += this->m_matrixGroupCounts->readMdx(fstream);
 	bytes += this->m_matrices->readMdx(fstream);
+	std::cout << "Test 2" << std::endl;
 	fstream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
 	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_selectionGroup), sizeof(this->m_selectionGroup));
@@ -108,9 +111,11 @@ long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
 	bytes += fstream.gcount();
+	std::cout << "Test 3" << std::endl;
 	long32 nanim = 0;
 	fstream.read(reinterpret_cast<char*>(&nanim), sizeof(nanim));
 	bytes += fstream.gcount();
+	std::cout << "Test 4 nanimations " << nanim << std::endl;
 	
 	for ( ; nanim > 0; --nanim)
 	{
@@ -119,8 +124,11 @@ long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 		this->m_ganimations.push_back(ganimation);
 	}
 	
+	std::cout << "Test 5" << std::endl;
 	bytes += this->m_texturePatches->readMdx(fstream);
 	bytes += this->m_textureVertices->readMdx(fstream);
+	
+	std::cout << "Test 192832948" << std::endl;
 	
 	return bytes;
 }

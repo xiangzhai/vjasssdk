@@ -38,16 +38,22 @@ void Matrix::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Matrix::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Matrix::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Matrix::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Matrix::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_data), sizeof(this->m_data));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 Matrix::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

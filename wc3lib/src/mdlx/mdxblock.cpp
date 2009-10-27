@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional)
+MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional), m_exists(false)
 {
 	memcpy(this->m_blockName, blockName, sizeof(blockName));
 	/*
@@ -66,6 +66,8 @@ long32 MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 		}
 	}
 	
+	this->m_exists = true;
+	
 	return bytes;
 }
 
@@ -75,6 +77,21 @@ long32 MdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
 	
 	return sizeof(this->m_blockName);
 	
+}
+
+bool MdxBlock::moveToBlockName(std::fstream &fstream)
+{
+	byte readBlockName[4];
+	
+	while (fstream)
+	{
+		fstream.read(readBlockName, sizeof(readBlockName));
+		
+		if (memcmp(readBlockName, this->m_blockName, sizeof(this->m_blockName)) == 0)
+			return true;
+	}
+	
+	return true;
 }
 
 }

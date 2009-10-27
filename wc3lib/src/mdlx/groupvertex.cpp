@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GroupVertex::GroupVertex(class Mdlx *mdlx) : m_mdlx(mdlx)
+GroupVertex::GroupVertex(class GroupVertices *groupVertices) : m_groupVertices(groupVertices)
 {
 }
 
@@ -38,16 +38,22 @@ void GroupVertex::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void GroupVertex::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void GroupVertex::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void GroupVertex::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupVertex::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_data), sizeof(this->m_data));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 GroupVertex::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

@@ -44,7 +44,23 @@ void Ganimation::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 Ganimation::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
+	bytes += fstream.gcount();
+		
+	return bytes;
 }
 
 long32 Ganimation::writeMdx(std::fstream &fstream) throw (class Exception)

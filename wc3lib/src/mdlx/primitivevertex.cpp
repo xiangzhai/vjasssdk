@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveVertex::PrimitiveVertex(class Mdlx *mdlx) : m_mdlx(mdlx)
+PrimitiveVertex::PrimitiveVertex(class PrimitiveVertices *primitiveVertices) : m_primitiveVertices(primitiveVertices)
 {
 }
 
@@ -38,16 +38,22 @@ void PrimitiveVertex::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveVertex::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void PrimitiveVertex::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveVertex::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveVertex::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_triangle), sizeof(this->m_triangle));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 PrimitiveVertex::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

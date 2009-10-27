@@ -53,7 +53,11 @@ long32 TextureAnimations::readMdx(std::fstream &fstream) throw (class Exception)
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
 	if (bytes == 0)
+	{
+		std::cout << "No texture animations." << std::endl;
+		
 		return 0;
+	}
 	
 	long32 nbytes = 0;
 	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));

@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveSize::PrimitiveSize(class Mdlx *mdlx) : m_mdlx(mdlx)
+PrimitiveSize::PrimitiveSize(class PrimitiveSizes *primitiveSizes) : m_primitiveSizes(primitiveSizes)
 {
 }
 
@@ -38,16 +38,22 @@ void PrimitiveSize::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveSize::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void PrimitiveSize::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PrimitiveSize::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveSize::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_value), sizeof(this->m_value));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 PrimitiveSize::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

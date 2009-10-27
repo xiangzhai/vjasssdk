@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Vertex::Vertex(class Mdlx *mdlx) : m_mdlx(mdlx)
+Vertex::Vertex(class Vertices *vertices) : m_vertices(vertices)
 {
 }
 
@@ -38,16 +38,26 @@ void Vertex::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Vertex::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Vertex::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Vertex::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Vertex::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 bytes = 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 Vertex::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }
