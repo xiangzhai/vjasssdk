@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include "groupvertices.hpp"
 #include "groupvertex.hpp"
 
@@ -55,6 +57,7 @@ long32 GroupVertices::readMdx(std::fstream &fstream) throw (class Exception)
 	long32 nvgrps = 0;
 	fstream.read(reinterpret_cast<char*>(&nvgrps), sizeof(nvgrps));
 	bytes += fstream.gcount();
+	std::cout << "Group vertices " << nvgrps << std::endl;
 	
 	for ( ; nvgrps > 0; --nvgrps)
 	{
@@ -62,6 +65,8 @@ long32 GroupVertices::readMdx(std::fstream &fstream) throw (class Exception)
 		bytes += groupVertex->readMdx(fstream);
 		this->m_groupVertices.push_back(groupVertex);
 	}
+	
+	std::cout << "Group vertices bytes " << bytes << std::endl;
 	
 	return bytes;
 }

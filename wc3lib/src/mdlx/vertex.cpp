@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Vertex::Vertex(class Vertices *vertices) : m_vertices(vertices)
+Vertex::Vertex(class Vertices *vertices) : GroupMdxBlockMember(vertices)
 {
 }
 

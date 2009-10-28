@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimation::GeosetAnimation(class Mdlx *mdlx) : m_mdlx(mdlx), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alpha(0),  m_color(0)
+GeosetAnimation::GeosetAnimation(class GeosetAnimations *geosetAnimations) : m_geosetAnimations(geosetAnimations), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alpha(0),  m_color(0)
 {
 }
 
@@ -37,15 +37,17 @@ GeosetAnimation::~GeosetAnimation()
 void GeosetAnimation::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
-void GeosetAnimation::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
 
 void GeosetAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void GeosetAnimation::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimation::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	long	nbytesi;
+}
+
+long32 GeosetAnimation::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 

@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "primitivetypes.hpp"
-#include "primitivetype.hpp"
 
 namespace wc3lib
 {
@@ -27,14 +26,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveTypes::PrimitiveTypes(class Geoset *geoset) : MdxBlock("PTYP"), m_geoset(geoset)
+PrimitiveTypes::PrimitiveTypes(class Geoset *geoset) : GroupMdxBlock("PTYP"), m_geoset(geoset)
 {
 }
 
 PrimitiveTypes::~PrimitiveTypes()
 {
-	for (std::list<class PrimitiveType*>::iterator iterator = this->m_primitiveTypes.begin(); iterator != this->m_primitiveTypes.end(); ++iterator)
-		delete *iterator;
 }
 
 void PrimitiveTypes::readMdl(std::fstream &fstream) throw (class Exception)
@@ -45,33 +42,9 @@ void PrimitiveTypes::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-long32 PrimitiveTypes::readMdx(std::fstream &fstream) throw (class Exception)
+class GroupMdxBlockMember* PrimitiveTypes::createNewMember()
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nptyps = 0;
-	fstream.read(reinterpret_cast<char*>(&nptyps), sizeof(nptyps));
-	bytes += fstream.gcount();
-	
-	for ( ; nptyps > 0; --nptyps)
-	{
-		class PrimitiveType *primitiveType = new PrimitiveType(this);
-		bytes += primitiveType->readMdx(fstream);
-		this->m_primitiveTypes.push_back(primitiveType);
-	}
-	
-	return bytes;
-}
-
-long32 PrimitiveTypes::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new PrimitiveType(this);
 }
 
 }

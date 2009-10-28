@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include "primitivevertices.hpp"
 #include "primitivevertex.hpp"
 
@@ -55,6 +57,7 @@ long32 PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
 	long32 ntris = 0;
 	fstream.read(reinterpret_cast<char*>(&ntris), sizeof(ntris));
 	bytes += fstream.gcount();
+	std::cout << "Primitive vertices " << ntris << std::endl;
 	
 	for ( ; ntris > 0; --ntris)
 	{
@@ -62,6 +65,8 @@ long32 PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
 		bytes += primitiveVertex->readMdx(fstream);
 		this->m_primitiveVertices.push_back(primitiveVertex);
 	}
+	
+	std::cout << "Primitive vertices bytes " << bytes << std::endl;
 	
 	return bytes;
 }

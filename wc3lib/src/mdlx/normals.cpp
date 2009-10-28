@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "normals.hpp"
-#include "normal.hpp"
 
 namespace wc3lib
 {
@@ -27,14 +26,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normals::Normals(class Geoset *geoset) : MdxBlock("NRMS"), m_geoset(geoset)
+Normals::Normals(class Geoset *geoset) : GroupMdxBlock("NRMS"), m_geoset(geoset)
 {
 }
 
 Normals::~Normals()
 {
-	for (std::list<class Normal*>::iterator iterator = this->m_normals.begin(); iterator != this->m_normals.end(); ++iterator)
-		delete *iterator;
 }
 
 void Normals::readMdl(std::fstream &fstream) throw (class Exception)
@@ -45,33 +42,9 @@ void Normals::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-
-long32 Normals::readMdx(std::fstream &fstream) throw (class Exception)
+class GroupMdxBlockMember* Normals::createNewMember()
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nnrms = 0;
-	fstream.read(reinterpret_cast<char*>(&nnrms), sizeof(nnrms));
-	bytes += fstream.gcount();
-	
-	for ( ; nnrms > 0; --nnrms)
-	{
-		class Normal *normal = new Normal(this);
-		bytes += normal->readMdx(fstream);
-		this->m_normals.push_back(normal);
-	}
-	
-	return bytes;
-}
-
-long32 Normals::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new Normal(this);
 }
 
 }

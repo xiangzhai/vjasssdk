@@ -68,6 +68,7 @@ long32 TexturePatches::readMdx(std::fstream &fstream) throw (class Exception)
 	}
 	
 	bytes += fstream.gcount();
+	std::cout << "Before " << ntvrts << " texture patches." << std::endl;
 	
 	for ( ; ntvrts > 0; --ntvrts)
 	{
@@ -75,6 +76,8 @@ long32 TexturePatches::readMdx(std::fstream &fstream) throw (class Exception)
 		bytes += texturePatch->readMdx(fstream);
 		this->m_texturePatches.push_back(texturePatch);
 	}
+	
+	std::cout << "After texture patches." << std::endl;
 	
 	return bytes;
 }

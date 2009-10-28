@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_VERTICES_HPP
 #define WC3LIB_MDLX_VERTICES_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -38,23 +33,24 @@ class Geoset;
 class Vertex;
 
 //VRTX [Vertices]
-class Vertices : public MdxBlock
+class Vertices : public GroupMdxBlock
 {
 	public:
 		Vertices(class Geoset *geoset);
 		virtual ~Vertices();
 
 		class Geoset* geoset() const;
-		std::list<class Vertex*> vertices() const;
+		const std::list<class Vertex*>& vertices() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		//virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		//virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Geoset *m_geoset;
-		std::list<class Vertex*> m_vertices;
 };
 
 inline class Geoset* Vertices::geoset() const
@@ -62,9 +58,9 @@ inline class Geoset* Vertices::geoset() const
 	return this->m_geoset;
 }
 
-inline std::list<class Vertex*> Vertices::vertices() const
+inline const std::list<class Vertex*>& Vertices::vertices() const
 {
-	return this->m_vertices;
+	return reinterpret_cast<const std::list<class Vertex*>&>(this->m_members);
 }
 
 }

@@ -21,10 +21,8 @@
 #ifndef WC3LIB_MDLX_VERTEX_HPP
 #define WC3LIB_MDLX_VERTEX_HPP
 
-#include <fstream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "vertices.hpp"
 
 namespace wc3lib
 {
@@ -32,9 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Vertices;
-
-class Vertex
+class Vertex : public GroupMdxBlockMember
 {
 	public:
 		Vertex(class Vertices *vertices);
@@ -51,13 +47,12 @@ class Vertex
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Vertices *m_vertices;
 		float32 m_x, m_y, m_z;
 };
 
 inline class Vertices* Vertex::vertices() const
 {
-	return this->m_vertices;
+	return dynamic_cast<class Vertices*>(this->m_parent);
 }
 
 inline float32 Vertex::x() const

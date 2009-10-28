@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include "primitivesizes.hpp"
 #include "primitivesize.hpp"
 
@@ -55,6 +57,7 @@ long32 PrimitiveSizes::readMdx(std::fstream &fstream) throw (class Exception)
 	long32 npcnts = 0;
 	fstream.read(reinterpret_cast<char*>(&npcnts), sizeof(npcnts));
 	bytes += fstream.gcount();
+	std::cout << "Primitive sizes " << npcnts << std::endl;
 	
 	for ( ; npcnts > 0; --npcnts)
 	{
@@ -62,6 +65,8 @@ long32 PrimitiveSizes::readMdx(std::fstream &fstream) throw (class Exception)
 		bytes += primitiveSize->readMdx(fstream);
 		this->m_primitiveSizes.push_back(primitiveSize);
 	}
+	
+	std::cout << "Primitive sizes bytes " << bytes << std::endl;
 	
 	return bytes;
 }

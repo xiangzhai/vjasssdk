@@ -21,26 +21,23 @@
 #ifndef WC3LIB_MDLX_NORMAL_HPP
 #define WC3LIB_MDLX_NORMAL_HPP
 
-#include <fstream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
+	
 class Normals;
 
-class Normal
+class Normal : public GroupMdxBlockMember
 {
 	public:
 		Normal(class Normals *normals);
 		virtual ~Normal();
 
-		class Normals* normals() const;
+		//class Normals* normals() const;
 		float32 x() const;
 		float32 y() const;
 		float32 z() const;
@@ -51,14 +48,15 @@ class Normal
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Normals *m_normals;
 		float32 m_x, m_y, m_z;
 };
 
+/*
 inline class Normals* Normal::normals() const
 {
-	return this->m_normals;
+	return dynamic_cast<class Normals*>(this->m_parent);
 }
+*/
 
 inline float32 Normal::x() const
 {

@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "normal.hpp"
+#include "normals.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Normal::Normal(class Normals *normals) : m_normals(normals)
+Normal::Normal(class Normals *normals) : GroupMdxBlockMember(normals)
 {
 }
 

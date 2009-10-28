@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosetanimations.hpp"
-#include "geosetanimation.hpp"
+#include "geosetanimationcolors.hpp"
+#include "geosetanimationcolor.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -28,58 +28,64 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimations::GeosetAnimations(class Mdlx *mdlx) : MdxBlock("GEOA"), m_mdlx(mdlx)
+GeosetAnimationColors::GeosetAnimationColors(class GeosetAnimation *geosetAnimation) : MdxBlock("KGAC"), m_geosetAnimation(geosetAnimation)
 {
 }
 
-GeosetAnimations::~GeosetAnimations()
+GeosetAnimationColors::~GeosetAnimationColors()
 {
-	for (std::list<class GeosetAnimation*>::iterator iterator = this->m_geosetAnimations.begin(); iterator != this->m_geosetAnimations.end(); ++iterator)
+	for (std::list<class GeosetAnimationColor*>::iterator iterator = this->m_geosetAnimationColors.begin(); iterator != this->m_geosetAnimationColors.end(); ++iterator)
 		delete *iterator;
 }
 
-void GeosetAnimations::readMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimationColors::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void GeosetAnimations::writeMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimationColors::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimationColors::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
 	if (bytes == 0)
 		return 0;
 	
-	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	long32 nunks = 0;
+	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
 	bytes += fstream.gcount();
 	
-	if (nbytes <= 0)
+	if (nunks <= 0)
 	{
 		char message[50];
-		sprintf(message, _("Geoset animations: Byte count error, %d bytes.\n"), nbytes);
+		sprintf(message, _("Geoset animation colors: Count error, %d geoset animation colors.\n"), nunks);
 		
 		throw Exception(message);
 	}
 	
-	while (nbytes > 0)
+	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += fstream.gcount();
+	
+	for ( ; nunks > 0; --nunks)
 	{
-		class GeosetAnimation *geosetAnimation = new GeosetAnimation(this);
-		long32 readBytes = geosetAnimation->readMdx(fstream);
-		bytes += readBytes;
-		nbytes -= readBytes;
-		this->m_geosetAnimations.push_back(geosetAnimation);
+		class GeosetAnimationColor *geosetAnimationColor = new GeosetAnimationColor(this);
+		bytes += geosetAnimationColor->readMdx(fstream);
+		this->m_geosetAnimationColors.push_back(geosetAnimationColor);
 	}
 	
 	return bytes;
 }
 
-long32 GeosetAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimationColors::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	if (!this->exists())
+		return 0;
+	
+	long32 bytes = MdxBlock::writeMdx(fstream);
 }
 
 }

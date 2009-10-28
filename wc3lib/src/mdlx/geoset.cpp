@@ -126,6 +126,7 @@ long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 	
 	std::cout << "Test 5" << std::endl;
 	bytes += this->m_texturePatches->readMdx(fstream);
+	/// @todo Doesn't exist!!!!
 	bytes += this->m_textureVertices->readMdx(fstream);
 	
 	std::cout << "Test 192832948" << std::endl;

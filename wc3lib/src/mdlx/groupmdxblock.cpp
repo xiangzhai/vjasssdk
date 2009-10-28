@@ -18,68 +18,78 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosetanimations.hpp"
-#include "geosetanimation.hpp"
-#include "../internationalisation.hpp"
+#include <iostream> // debug
+
+#include "groupmdxblock.hpp"
+#include "groupmdxblockmember.hpp"
 
 namespace wc3lib
 {
-
+	
 namespace mdlx
 {
 
-GeosetAnimations::GeosetAnimations(class Mdlx *mdlx) : MdxBlock("GEOA"), m_mdlx(mdlx)
+GroupMdxBlock::GroupMdxBlock(byte blockName[4], bool optional) : MdxBlock(blockName, optional)
 {
 }
 
-GeosetAnimations::~GeosetAnimations()
+GroupMdxBlock::~GroupMdxBlock()
 {
-	for (std::list<class GeosetAnimation*>::iterator iterator = this->m_geosetAnimations.begin(); iterator != this->m_geosetAnimations.end(); ++iterator)
+	for (std::list<class GroupMdxBlockMember*>::iterator iterator = this->m_members.begin(); iterator != this->m_members.end(); ++iterator)
 		delete *iterator;
 }
 
-void GeosetAnimations::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void GeosetAnimations::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupMdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
 	if (bytes == 0)
 		return 0;
 	
-	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	std::cout << "Block name " << this->blockName() << std::endl;
+	long32 groupCount = 0;
+	fstream.read(reinterpret_cast<char*>(&groupCount), sizeof(groupCount));
 	bytes += fstream.gcount();
+	std::cout << "Group count " << groupCount << std::endl;
 	
-	if (nbytes <= 0)
+	for ( ; groupCount > 0; --groupCount)
 	{
-		char message[50];
-		sprintf(message, _("Geoset animations: Byte count error, %d bytes.\n"), nbytes);
-		
-		throw Exception(message);
+		class GroupMdxBlockMember *member = this->createNewMember();
+		bytes += member->readMdx(fstream);
+		this->m_members.push_back(member);
 	}
 	
-	while (nbytes > 0)
-	{
-		class GeosetAnimation *geosetAnimation = new GeosetAnimation(this);
-		long32 readBytes = geosetAnimation->readMdx(fstream);
-		bytes += readBytes;
-		nbytes -= readBytes;
-		this->m_geosetAnimations.push_back(geosetAnimation);
-	}
+	std::cout << "Group bytes " << bytes << std::endl;
 	
 	return bytes;
 }
 
-long32 GeosetAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupMdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	if (!this->exists())
+		return 0;
+	
+	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	long32 groupCount = this->m_members.size();
+	fstream.write(reinterpret_cast<const char*>(&groupCount), sizeof(groupCount));
+	bytes += sizeof(groupCount);
+	std::cout << "Group count " << groupCount << std::endl;
+	
+	for (std::list<class GroupMdxBlockMember*>::iterator iterator = this->m_members.begin(); iterator != this->m_members.end(); ++iterator)
+	{
+		bytes += (*iterator)->writeMdx(fstream);
+	}
+	
+	std::cout << "Group bytes " << bytes << std::endl;
+	
+	return bytes;
+}
+
+class GroupMdxBlockMember* GroupMdxBlock::createNewMember()
+{
+	class GroupMdxBlockMember *member = new GroupMdxBlockMember(this);
+	return member;
 }
 
 }

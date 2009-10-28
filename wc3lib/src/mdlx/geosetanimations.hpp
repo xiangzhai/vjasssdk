@@ -25,8 +25,6 @@
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {

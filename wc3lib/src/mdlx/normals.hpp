@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_NORMALS_HPP
 #define WC3LIB_MDLX_NORMALS_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblock.hpp"
+#include "groupmdxblockmember.hpp"
+#include "normal.hpp"
 
 namespace wc3lib
 {
@@ -35,26 +32,25 @@ namespace mdlx
 {
 
 class Geoset;
-class Normal;
 
 //NRMS // [Normals]
-class Normals : public MdxBlock
+class Normals : public GroupMdxBlock
 {
 	public:
 		Normals(class Geoset *geoset);
 		virtual ~Normals();
 
 		class Geoset* geoset() const;
-		std::list<class Normal*> normals() const;
+		const std::list<class Normal*>& normals() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Geoset *m_geoset;
-		std::list<class Normal*> m_normals;
+
 };
 
 inline class Geoset* Normals::geoset() const
@@ -62,9 +58,9 @@ inline class Geoset* Normals::geoset() const
 	return this->m_geoset;
 }
 
-inline std::list<class Normal*> Normals::normals() const
+inline const std::list<class Normal*>& Normals::normals() const
 {
-	return this->m_normals;
+	return reinterpret_cast<const std::list<class Normal*>&>(this->m_members);
 }
 
 }

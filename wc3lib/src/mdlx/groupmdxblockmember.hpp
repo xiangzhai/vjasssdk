@@ -18,70 +18,36 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosetanimations.hpp"
-#include "geosetanimation.hpp"
-#include "../internationalisation.hpp"
+#ifndef WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
+#define WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
+
+#include <fstream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-GeosetAnimations::GeosetAnimations(class Mdlx *mdlx) : MdxBlock("GEOA"), m_mdlx(mdlx)
-{
-}
-
-GeosetAnimations::~GeosetAnimations()
-{
-	for (std::list<class GeosetAnimation*>::iterator iterator = this->m_geosetAnimations.begin(); iterator != this->m_geosetAnimations.end(); ++iterator)
-		delete *iterator;
-}
-
-void GeosetAnimations::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void GeosetAnimations::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
 	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
-	
-	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geoset animations: Byte count error, %d bytes.\n"), nbytes);
+class GroupMdxBlock;
+
+class GroupMdxBlockMember
+{
+	public:
+		GroupMdxBlockMember(class GroupMdxBlock *parent);
 		
-		throw Exception(message);
-	}
-	
-	while (nbytes > 0)
-	{
-		class GeosetAnimation *geosetAnimation = new GeosetAnimation(this);
-		long32 readBytes = geosetAnimation->readMdx(fstream);
-		bytes += readBytes;
-		nbytes -= readBytes;
-		this->m_geosetAnimations.push_back(geosetAnimation);
-	}
-	
-	return bytes;
-}
-
-long32 GeosetAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		
+	protected:
+		class GroupMdxBlock *m_parent;
+};
 
 }
 
 }
+
+#endif

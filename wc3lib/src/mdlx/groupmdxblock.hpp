@@ -18,9 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosetanimations.hpp"
-#include "geosetanimation.hpp"
-#include "../internationalisation.hpp"
+#ifndef WC3LIB_MDLX_GROUPMDXBLOCK_HPP
+#define WC3LIB_MDLX_GROUPMDXBLOCK_HPP
+
+#include <list>
+
+#include "mdxblock.hpp"
 
 namespace wc3lib
 {
@@ -28,60 +31,39 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimations::GeosetAnimations(class Mdlx *mdlx) : MdxBlock("GEOA"), m_mdlx(mdlx)
-{
-}
+class GroupMdxBlockMember;
 
-GeosetAnimations::~GeosetAnimations()
+/**
+* Some MDX blocks are structured like:
+* byte[4]	MDX block name
+* long32	group members count
+* ...		group members list
+* This class provides a simple abstraction layer for those MDX block classes.
+*/
+class GroupMdxBlock : public MdxBlock
 {
-	for (std::list<class GeosetAnimation*>::iterator iterator = this->m_geosetAnimations.begin(); iterator != this->m_geosetAnimations.end(); ++iterator)
-		delete *iterator;
-}
-
-void GeosetAnimations::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void GeosetAnimations::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
-	
-	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geoset animations: Byte count error, %d bytes.\n"), nbytes);
+	public:
+		GroupMdxBlock(byte blockName[4], bool optional = true);
+		~GroupMdxBlock();
 		
-		throw Exception(message);
-	}
-	
-	while (nbytes > 0)
-	{
-		class GeosetAnimation *geosetAnimation = new GeosetAnimation(this);
-		long32 readBytes = geosetAnimation->readMdx(fstream);
-		bytes += readBytes;
-		nbytes -= readBytes;
-		this->m_geosetAnimations.push_back(geosetAnimation);
-	}
-	
-	return bytes;
-}
-
-long32 GeosetAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		
+	protected:
+		/**
+		* This method should be overwritten in child class.
+		* @return Returns a new allocated group member which will be added to list.
+		*/
+		virtual class GroupMdxBlockMember* createNewMember();
+		
+		/**
+		* Provides access to all read members for child class.
+		*/
+		std::list<class GroupMdxBlockMember*> m_members;
+};
 
 }
 
 }
+
+#endif

@@ -33,6 +33,7 @@ namespace mdlx
 {
 	
 class TexturePatches;
+class TextureVertices;
 
 class TexturePatch
 {
@@ -41,8 +42,7 @@ class TexturePatch
 		virtual ~TexturePatch();
 
 		class TexturePatches* texturePatches() const;
-		float32 x() const;
-		float32 y() const;
+		class TextureVertices* textureVertices() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -51,7 +51,7 @@ class TexturePatch
 
 	protected:
 		class TexturePatches *m_texturePatches;
-		float32 m_x, m_y;
+		class TextureVertices *m_textureVertices;
 };
 
 inline class TexturePatches* TexturePatch::texturePatches() const
@@ -59,14 +59,9 @@ inline class TexturePatches* TexturePatch::texturePatches() const
 	return this->m_texturePatches;
 }
 
-inline float32 TexturePatch::x() const
+inline class TextureVertices* TexturePatch::textureVertices() const
 {
-	return this->m_x;
-}
-
-inline float32 TexturePatch::y() const
-{
-	return this->m_y;
+	return this->m_textureVertices;
 }
 
 }

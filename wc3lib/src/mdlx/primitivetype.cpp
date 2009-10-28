@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "primitivetype.hpp"
+#include "primitivetypes.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveType::PrimitiveType(class PrimitiveTypes *primitiveTypes) : m_primitiveTypes(primitiveTypes)
+PrimitiveType::PrimitiveType(class PrimitiveTypes *primitiveTypes) : GroupMdxBlockMember(primitiveTypes)
 {
 }
 

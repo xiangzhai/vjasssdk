@@ -20,6 +20,7 @@
 
 #include "texturepatch.hpp"
 #include "texturepatches.hpp"
+#include "texturevertices.hpp"
 
 namespace wc3lib
 {
@@ -27,12 +28,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-TexturePatch::TexturePatch(class TexturePatches *texturePatches) : m_texturePatches(texturePatches)
+TexturePatch::TexturePatch(class TexturePatches *texturePatches) : m_texturePatches(texturePatches), m_textureVertices(new TextureVertices(this->texturePatches()->geoset()))
 {
 }
 
 TexturePatch::~TexturePatch()
 {
+	delete this->m_textureVertices;
 }
 
 void TexturePatch::readMdl(std::fstream &fstream) throw (class Exception)
@@ -45,18 +47,12 @@ void TexturePatch::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 TexturePatch::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += fstream.gcount();
-	
-	return bytes;
+	return this->m_textureVertices->readMdx(fstream);
 }
 
 long32 TexturePatch::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	return this->m_textureVertices->writeMdx(fstream);
 }
 
 }

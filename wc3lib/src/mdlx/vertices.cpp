@@ -29,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Vertices::Vertices(class Geoset *geoset) : MdxBlock("VRTX"), m_geoset(geoset)
+Vertices::Vertices(class Geoset *geoset) : GroupMdxBlock("VRTX"), m_geoset(geoset)
 {
 }
 
@@ -45,34 +45,9 @@ void Vertices::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-long32 Vertices::readMdx(std::fstream &fstream) throw (class Exception)
+class GroupMdxBlockMember* Vertices::createNewMember()
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-
-	long32 nvrts = 0;
-	fstream.read(reinterpret_cast<char*>(&nvrts), sizeof(nvrts));
-	bytes += fstream.gcount();
-	
-	std::cout << "Vertex number " << nvrts << std::endl;
-	
-	for ( ; nvrts > 0; --nvrts)
-	{
-		class Vertex *vertex = new Vertex(this);
-		bytes += vertex->readMdx(fstream);
-		this->m_vertices.push_back(vertex);
-	}
-	
-	return bytes;
-}
-
-long32 Vertices::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new Vertex(this);
 }
 
 }

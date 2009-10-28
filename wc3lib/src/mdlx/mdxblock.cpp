@@ -54,6 +54,8 @@ long32 MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 		if (this->m_optional)
 		{
 			fstream.seekg(position);
+			std::cout << "Block " << this->m_blockName << " is optional and doesn't exist." << std::endl;
+			std::cout << "Block name " << this->m_blockName << " is not equal to " << identifier << std::endl;
 			
 			return 0;
 		}

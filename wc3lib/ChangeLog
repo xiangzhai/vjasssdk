@@ -1,3 +1,8 @@
+2009-10-28 Tamino Dauth <tamino@cdauth.de>
+* Introduced new class GroupMdxBlock and GroupMdxBlockMember.
+* Added classes GeosetAnimationColors and GeosetAnimationColor.
+* Revised file "doc/Classes.txt" and added new classes.
+
 2009-10-27 Tamino Dauth <tamino@cdauth.de>
 * Added readblend cmake sub directory.
 * Improved Blender file import implementation.

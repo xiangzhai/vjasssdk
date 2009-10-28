@@ -21,12 +21,8 @@
 #ifndef WC3LIB_MDLX_PRIMITIVETYPES_HPP
 #define WC3LIB_MDLX_PRIMITIVETYPES_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblock.hpp"
+#include "primitivetype.hpp"
 
 namespace wc3lib
 {
@@ -35,26 +31,24 @@ namespace mdlx
 {
 
 class Geoset;
-class PrimitiveType;
 
 //--PTYP
-class PrimitiveTypes : public MdxBlock
+class PrimitiveTypes : public GroupMdxBlock
 {
 	public:
 		PrimitiveTypes(class Geoset *geoset);
 		virtual ~PrimitiveTypes();
 
 		class Geoset* geoset() const;
-		std::list<class PrimitiveType*> primitiveTypes() const;
+		const std::list<class PrimitiveType*>& primitiveTypes() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Geoset *m_geoset;
-		std::list<class PrimitiveType*> m_primitiveTypes;
 };
 
 inline class Geoset* PrimitiveTypes::geoset() const
@@ -62,9 +56,9 @@ inline class Geoset* PrimitiveTypes::geoset() const
 	return this->m_geoset;
 }
 
-inline std::list<class PrimitiveType*> PrimitiveTypes::primitiveTypes() const
+inline const std::list<class PrimitiveType*>& PrimitiveTypes::primitiveTypes() const
 {
-	return this->m_primitiveTypes;
+	return reinterpret_cast<const std::list<class PrimitiveType*>&>(this->m_members);
 }
 
 }

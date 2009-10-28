@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include "matrixgroupcounts.hpp"
 #include "matrixgroupcount.hpp"
 
@@ -56,6 +58,7 @@ long32 MatrixGroupCounts::readMdx(std::fstream &fstream) throw (class Exception)
 	long32 nmtrcs = 0;
 	fstream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
 	bytes += fstream.gcount();
+	std::cout << "Matrix group counts " << nmtrcs << std::endl;
 	
 	for ( ; nmtrcs > 0; --nmtrcs)
 	{
@@ -63,6 +66,8 @@ long32 MatrixGroupCounts::readMdx(std::fstream &fstream) throw (class Exception)
 		bytes += matrixGroupCount->readMdx(fstream);
 		this->m_matrixGroupCounts.push_back(matrixGroupCount);
 	}
+	
+	std::cout << "Matrix group counts bytes " << bytes << std::endl;
 	
 	return bytes;
 }

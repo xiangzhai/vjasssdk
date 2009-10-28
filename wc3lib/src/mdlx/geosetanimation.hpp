@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class GeosetAnimations;
 class Alpha;
 class Color;
 
@@ -47,10 +47,10 @@ class GeosetAnimation
 			Both = 3
 		};
 
-		GeosetAnimation(class Mdlx *mdlx);
+		GeosetAnimation(class GeosetAnimations *geosetAnimations);
 		virtual ~GeosetAnimation();
 
-		class Mdlx* mdlx() const;
+		class GeosetAnimations* geosetAnimations() const;
 		float32 staticAlpha() const;
 		long32 colorAnimation() const;
 		float32 colorRed() const;
@@ -61,12 +61,12 @@ class GeosetAnimation
 		class Color* color() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class GeosetAnimations *m_geosetAnimations;
 		float32 m_staticAlpha; //(1.0:use KGAO)
 		long32 m_colorAnimation; //(0:none;1:DropShadow;2:Color;3:Both)
 		float32 m_colorRed, m_colorGreen, m_colorBlue; //(default:1)
@@ -75,9 +75,9 @@ class GeosetAnimation
 		class Color *m_color; //(KGAC)
 };
 
-inline class Mdlx* GeosetAnimation::mdlx() const
+inline class GeosetAnimations* GeosetAnimation::geosetAnimations() const
 {
-	return this->m_mdlx;
+	return this->m_geosetAnimations;
 }
 
 inline float32 GeosetAnimation::staticAlpha() const

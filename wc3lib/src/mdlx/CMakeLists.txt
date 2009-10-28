@@ -24,10 +24,14 @@ set(wc3lib_MDLX_SRC
 	ganimation.cpp
 	geoset.cpp
 	geosetanimation.cpp
+	geosetanimationcolor.cpp
+	geosetanimationcolors.cpp
 	geosetanimations.cpp
 	geosets.cpp
 	globalsequence.cpp
 	globalsequences.cpp
+	groupmdxblock.cpp
+	groupmdxblockmember.cpp
 	groupvertex.cpp
 	groupvertices.cpp
 	helper.cpp
@@ -127,6 +131,8 @@ set(wc3lib_MDLX_H
 	ganimation.hpp
 	geoset.hpp
 	geosetanimation.hpp
+	groupmdxblock.hpp
+	groupmdxblockmember.hpp
 	mdlx.hpp
 	object.hpp
 	visibility0.hpp

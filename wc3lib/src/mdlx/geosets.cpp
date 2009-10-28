@@ -81,9 +81,12 @@ long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
 		std::cout << "Read geoset with " << readBytes << " bytes." << std::endl;
 		
 		nbytes -= readBytes;
+		std::cout << nbytes  << " bytes left." << std::endl;
 		bytes += readBytes;
 		this->m_geosets.push_back(geoset);
 	}
+	
+	std::cout << "Canceled" << std::endl;
 	
 	return bytes;
 }

@@ -18,70 +18,57 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosetanimations.hpp"
-#include "geosetanimation.hpp"
-#include "../internationalisation.hpp"
+#ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLORS_HPP
+#define WC3LIB_MDLX_GEOSETANIMATIONCOLORS_HPP
+
+#include <list>
+
+#include "mdxblock.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-GeosetAnimations::GeosetAnimations(class Mdlx *mdlx) : MdxBlock("GEOA"), m_mdlx(mdlx)
-{
-}
-
-GeosetAnimations::~GeosetAnimations()
-{
-	for (std::list<class GeosetAnimation*>::iterator iterator = this->m_geosetAnimations.begin(); iterator != this->m_geosetAnimations.end(); ++iterator)
-		delete *iterator;
-}
-
-void GeosetAnimations::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void GeosetAnimations::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
 	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
-	
-	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geoset animations: Byte count error, %d bytes.\n"), nbytes);
-		
-		throw Exception(message);
-	}
-	
-	while (nbytes > 0)
-	{
-		class GeosetAnimation *geosetAnimation = new GeosetAnimation(this);
-		long32 readBytes = geosetAnimation->readMdx(fstream);
-		bytes += readBytes;
-		nbytes -= readBytes;
-		this->m_geosetAnimations.push_back(geosetAnimation);
-	}
-	
-	return bytes;
-}
+class GeosetAnimation;
+class GeosetAnimationColor;
 
-long32 GeosetAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
+//KGAC
+class GeosetAnimationColors : public MdxBlock
 {
-	return 0;
+	public:
+		GeosetAnimationColors(class GeosetAnimation *geosetAnimation);
+		virtual ~GeosetAnimationColors();
+
+		class GeosetAnimation* geosetAnimation() const;
+		std::list<class GeosetAnimationColor*> geosetAnimationColors() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class GeosetAnimation *m_geosetAnimation;
+		//long	nunks;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId;
+		std::list<class GeosetAnimationColor*> m_geosetAnimationColors;
+};
+
+inline class GeosetAnimation* GeosetAnimationColors::geosetAnimation() const
+{
+	return this->m_geosetAnimation;
+}
+
+inline std::list<class GeosetAnimationColor*> GeosetAnimationColors::geosetAnimationColors() const
+{
+	return this->m_geosetAnimationColors;
 }
 
 }
 
 }
+
+#endif
