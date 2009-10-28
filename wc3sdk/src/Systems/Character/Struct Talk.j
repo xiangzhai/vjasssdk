@@ -10,7 +10,7 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 	
 	/// @todo Should be a static method of @struct ATalk, vJass bug.
 	private function AInfoActionExit takes AInfo info returns nothing
-		call info.talk().disable()
+		call info.talk().close()
 	endfunction
 
 	/**
@@ -36,6 +36,7 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		//members
 		private AIntegerVector m_infos
 		private ACharacter m_character
+		private boolean m_isEnabled
 		private trigger m_orderTrigger
 		private effect m_effect
 		
@@ -57,6 +58,10 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		/// @return Returns the character which is talking currently to the NPC.
 		public method character takes nothing returns ACharacter
 			return this.m_character
+		endmethod
+
+		public method isEnabled takes nothing returns boolean
+			return this.m_isEnabled
 		endmethod
 		
 		//convenience methods
@@ -126,7 +131,7 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		//methods
 		
 		/// Usually you don't have to call this method since talks will be activated by a specific unit order.
-		public method enableForCharacter takes ACharacter character returns nothing
+		public method openForCharacter takes ACharacter character returns nothing
 			debug if (this.m_character != 0) then
 				debug call this.print("Character is not 0.")
 				debug return
@@ -150,7 +155,7 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			call this.m_startAction.execute(this) //create buttons
 		endmethod
 		
-		public method disable takes nothing returns nothing
+		public method close takes nothing returns nothing
 			local player characterUser = this.m_character.user()
 			call AGui.playerGui(characterUser).dialog().clear()
 			call ResetUnitLookAt(this.m_character.unit())
@@ -165,6 +170,23 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_character = 0
 			call PauseUnit(this.m_unit, false) //Enables routines or something else
 			set characterUser = null
+		endmethod
+
+		public method enable takes nothing returns nothing
+			set this.m_isEnabled = true
+			call EnableTrigger(this.m_orderTrigger)
+			if (thistype.effectPath != null) then
+				set this.m_effect = AddSpecialEffectTarget(thistype.effectPath, this.m_unit, "overhead")
+			endif
+		endmethod
+
+		public method disable takes nothing returns nothing
+			set this.m_isEnabled = false
+			call DisableTrigger(this.m_orderTrigger)
+			if (thistype.effectPath != null) then
+				call DestroyEffect(this.m_effect)
+				set this.m_effect = null
+			endif
 		endmethod
 		
 		/// Used by @struct AInfo.
@@ -200,12 +222,12 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			call this.m_infos.erase(index)
 		endmethod
 		
-		private static method triggerConditionEnable takes nothing returns boolean
+		private static method triggerConditionOpen takes nothing returns boolean
 			local trigger triggeringTrigger
 			local unit triggerUnit
 			local player owner
 			local unit orderTargetUnit
-			local ATalk this
+			local thistype this
 			local boolean result = false
 			if (GetIssuedOrderId() == OrderId(ATalk.order)) then //Rechtsklick
 				set triggerUnit = GetTriggerUnit()
@@ -232,12 +254,12 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			return result
 		endmethod
 
-		private static method triggerActionEnable takes nothing returns nothing
+		private static method triggerActionOpen takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local player triggerPlayer = GetTriggerPlayer()
-			local ATalk this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call IssueImmediateOrder(ACharacter.playerCharacter(triggerPlayer).unit(), "stop")
-			call this.enableForCharacter(ACharacter.playerCharacter(triggerPlayer))
+			call this.openForCharacter(ACharacter.playerCharacter(triggerPlayer))
 			set triggeringTrigger = null
 			set triggerPlayer = null
 		endmethod
@@ -248,9 +270,9 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			local triggeraction triggerAction
 			set this.m_orderTrigger = CreateTrigger()
 			call TriggerRegisterAnyUnitEventBJ(this.m_orderTrigger, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
-			set conditionFunction = Condition(function ATalk.triggerConditionEnable)
+			set conditionFunction = Condition(function thistype.triggerConditionOpen)
 			set triggerCondition = TriggerAddCondition(this.m_orderTrigger, conditionFunction)
-			set triggerAction = TriggerAddAction(this.m_orderTrigger, function ATalk.triggerActionEnable)
+			set triggerAction = TriggerAddAction(this.m_orderTrigger, function thistype.triggerActionOpen)
 			call AHashTable.global().setHandleInteger(this.m_orderTrigger, "this", this)
 			set conditionFunction = null
 			set triggerCondition = null
@@ -258,19 +280,20 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		endmethod
 		
 		private method createEffect takes nothing returns nothing
-			if (ATalk.effectPath != null) then
-				set this.m_effect = AddSpecialEffectTarget(ATalk.effectPath, this.m_unit, "overhead")
+			if (thistype.effectPath != null) then
+				set this.m_effect = AddSpecialEffectTarget(thistype.effectPath, this.m_unit, "overhead")
 			endif
 		endmethod
 		
-		public static method create takes unit usedUnit, ATalkStartAction startAction returns ATalk
-			local ATalk this = ATalk.allocate()
+		public static method create takes unit usedUnit, ATalkStartAction startAction returns thistype
+			local thistype this = thistype.allocate()
 			//start members
 			set this.m_unit = usedUnit
 			set this.m_startAction = startAction
 			//members
 			set this.m_infos = AIntegerVector.create()
 			set this.m_character = 0
+			set this.m_isEnabled = true
 		
 			call this.createOrderTrigger()
 			call this.createEffect()
@@ -283,7 +306,7 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		endmethod
 
 		private method destroyEffect takes nothing returns nothing
-			if (ATalk.effectPath != null) then
+			if (thistype.effectPath != null) then
 				call DestroyEffect(this.m_effect)
 				set this.m_effect = null
 			endif
@@ -308,12 +331,12 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 
 		public static method init takes string order, real maxDistance, string effectPath, string textErrorMessage, string textExit, string textBack returns nothing
 			//static start members
-			set ATalk.order = order
-			set ATalk.maxDistance = maxDistance
-			set ATalk.effectPath = effectPath
-			set ATalk.textErrorMessage = textErrorMessage
-			set ATalk.textExit = textExit
-			set ATalk.textBack = textBack
+			set thistype.order = order
+			set thistype.maxDistance = maxDistance
+			set thistype.effectPath = effectPath
+			set thistype.textErrorMessage = textErrorMessage
+			set thistype.textExit = textExit
+			set thistype.textBack = textBack
 		endmethod
 	endstruct
 

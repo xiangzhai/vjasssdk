@@ -1,9 +1,9 @@
 library ALibraryCoreInterfaceMultiboard
 
-	function ShowMultiboardForPlayer takes player user, multiboard usedMultiboard, boolean show returns nothing
+	function ShowMultiboardForPlayer takes player whichPlayer, multiboard whichMultiboard, boolean show returns nothing
 		local player localPlayer = GetLocalPlayer()
-		if (user == localPlayer) then 
-			call MultiboardDisplay(usedMultiboard, show)
+		if (whichPlayer == localPlayer) then 
+			call MultiboardDisplay(whichMultiboard, show)
 		endif
 		set localPlayer = null
 	endfunction

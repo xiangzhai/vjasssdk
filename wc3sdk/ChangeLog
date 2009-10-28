@@ -1,3 +1,17 @@
+2009-10-27 Tamino Dauth <tamino@cdauth.de>
+* Revised method addGroup of struct AGroup.
+* Added function PauseAllUnits (and corresponding hook function).
+
+2009-10-25 Tamino Dauth <tamino@cdauth.de>
+* Improved and fixed functions of library ALibraryCoreStringMisc.
+* Improved and fixed constants and functions of library ALibraryCoreStringPool.
+* Improved and fixed functions of library ALibraryCoreStringConversion.
+
+2009-10-24 Tamino Dauth <tamino@cdauth.de>
+* Added methods openForCharacter and close to struct ATalk.
+* Added methods for en- and disabling routines to structs ARoutine and ARoutineData.
+* Improved struct AVote and added struct intializer method.
+
 2009-10-22 Tamino Dauth <tamino@cdauth.de>
 * Improved world routine system.
 

@@ -1,4 +1,4 @@
-library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc,AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceCamera, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceCamera, ALibraryCoreMathsUnit, AStructSystemsCharacterAbstractCharacterSystem
 
 	/**
 	* This struct represents a single RPG character. Each player can own exactly one character.
@@ -9,7 +9,6 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		//static constant members
 		public static constant integer messageTypeInfo = 0
 		public static constant integer messageTypeError = 1
-		public static constant integer maxSpells = 100
 		//static start members
 		private static boolean m_removeUnitOnDestruction
 		private static boolean m_destroyOnPlayerLeaves
@@ -359,9 +358,14 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			set this.m_unit = newUnit
 		endmethod
 		
-		/// Friend relation to ASpell, don't use.
+		/// Friend relation to @struct ASpell, don't use.
 		public method addSpell takes ASpell spell returns nothing
 			call this.m_spells.pushBack(spell)
+		endmethod
+
+		/// Friend relation to @struct ASpell, don't use.
+		public method removeSpell takes ASpell spell returns nothing
+			call this.m_spells.remove(spell)
 		endmethod
 		
 		public method spell takes integer index returns ASpell
@@ -979,11 +983,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			endloop
 		endmethod
 		
-		public static method setRandomPointInRectForAll takes rect whichRect returns nothing
-			local real minX = RMinBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
-			local real maxX = RMaxBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
-			local real minY = RMinBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
-			local real maxY = RMaxBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
+		public static method setToRandomPointOnRectForAll takes rect whichRect returns nothing
 			local integer i
 			local player user
 			set i = 0
@@ -991,8 +991,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
 				if (thistype.playerCharacter(user) != 0) then
-					call thistype.playerCharacter(user).setX(GetRandomReal(minX, maxX))
-					call thistype.playerCharacter(user).setY(GetRandomReal(minY, maxY))
+					call SetUnitToRandomPointOnRect(thistype.playerCharacter(user).unit(), whichRect)
 				endif
 				set user = null
 				set i = i + 1

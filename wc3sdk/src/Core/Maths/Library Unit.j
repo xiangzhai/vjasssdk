@@ -3,7 +3,7 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 	/// Die Entfernung zwischen zwei Einheiten.
 	/// Da es die nativen Funktionen GetUnitX() und GetUnitY() gibt, dürfte es schneller sein, als erst Locations der Einheiten zu erzeugen und diese zu vergleichen.
 	/// Achtung: Nur verwenden, wenn man auch wirklich den Z-Wert braucht.
-	/// @return The distance between the units.
+	/// @return Returns the distance between units.
 	function GetDistanceBetweenUnitsWithZ takes unit unit0, unit unit1 returns real
 		local location unitLocation0 = GetUnitLoc(unit0)
 		local location unitLocation1 = GetUnitLoc(unit1)
@@ -70,7 +70,7 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 
 	/// @author WaterKnight
 	function SetUnitYIfNotBlocked takes unit usedUnit, real oldX, real oldY, real y returns boolean
-		call SetUnitPosition(usedUnit, oldX, y )
+		call SetUnitPosition(usedUnit, oldX, y)
 		if ((RAbsBJ(GetUnitX(usedUnit) - oldX) > 1) or (RAbsBJ(GetUnitY(usedUnit) - y) > 1)) then
 			call SetUnitX(usedUnit, oldX)
 			call SetUnitY(usedUnit, oldY)
@@ -174,6 +174,16 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 	/// @author Tamino Dauth
 	function SetUnitFacingToFaceRectTimed takes unit whichUnit, rect whichRect, real duration returns nothing
 		call SetUnitFacingTimed(whichUnit, GetAngleBetweenPoints(GetUnitX(whichUnit), GetUnitY(whichUnit), GetRectCenterX(whichRect), GetRectCenterY(whichRect)), duration)
+	endfunction
+	
+	/// @author Tamino Dauth
+	function SetUnitToRandomPointOnRect takes unit whichUnit, rect whichRect returns nothing
+		local real minX = RMinBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
+		local real maxX = RMaxBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
+		local real minY = RMinBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
+		local real maxY = RMaxBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
+		call SetUnitX(whichUnit, GetRandomReal(minX, maxX))
+		call SetUnitY(whichUnit, GetRandomReal(minY, maxY))
 	endfunction
 
 endlibrary

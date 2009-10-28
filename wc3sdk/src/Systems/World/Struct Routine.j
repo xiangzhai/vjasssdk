@@ -335,17 +335,41 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 				call thistype.clearNextRoutineUnitDataOfUnit(whichUnit)
 			endif
 		endmethod
-		
-		private static method setCurrentRoutineUnitDataForUnit takes unit whichUnit, thistype routineUnitData returns nothing
-			call AHashTable.global().setHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData", routineUnitData)
+
+		public static method enableCurrentRoutineUnitDataOfUnit takes unit whichUnit returns boolean
+			local boolean result = thistype.unitHasCurrentRoutineUnitData(whichUnit)
+			if (result) then
+				call thistype.currentRoutineUnitDataOfUnit(whichUnit).enable()
+			endif
+			return result
 		endmethod
-		
-		private static method currentRoutineUnitDataOfUnit takes unit whichUnit returns thistype
+
+		public static method disableCurrentRoutineUnitDataOfUnit takes unit whichUnit returns boolean
+			local boolean result = thistype.unitHasCurrentRoutineUnitData(whichUnit)
+			if (result) then
+				call thistype.currentRoutineUnitDataOfUnit(whichUnit).disable()
+			endif
+			return result
+		endmethod
+
+		public static method currentRoutineUnitDataOfUnit takes unit whichUnit returns thistype
 			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
 		endmethod
 		
-		private static method unitHasCurrentRoutineUnitData takes unit whichUnit returns boolean
+		public static method unitHasCurrentRoutineUnitData takes unit whichUnit returns boolean
 			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
+		endmethod
+
+		public static method nextRoutineUnitDataOfUnit takes unit whichUnit returns thistype
+			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
+		endmethod
+		
+		public static method unitHasNextRoutineUnitData takes unit whichUnit returns boolean
+			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
+		endmethod
+		
+		private static method setCurrentRoutineUnitDataForUnit takes unit whichUnit, thistype routineUnitData returns nothing
+			call AHashTable.global().setHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData", routineUnitData)
 		endmethod
 		
 		private static method clearCurrentRoutineUnitDataOfUnit takes unit whichUnit returns nothing
@@ -355,14 +379,6 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		private static method setNextRoutineUnitDataForUnit takes unit whichUnit, thistype routineUnitData returns nothing
 			//don't check if there's already a value, just overwrite!
 			call AHashTable.global().setHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData", routineUnitData)
-		endmethod
-		
-		private static method nextRoutineUnitDataOfUnit takes unit whichUnit returns thistype
-			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
-		endmethod
-		
-		private static method unitHasNextRoutineUnitData takes unit whichUnit returns boolean
-			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
 		endmethod
 		
 		private static method clearNextRoutineUnitDataOfUnit takes unit whichUnit returns nothing
@@ -431,6 +447,40 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			call this.m_unitData.pushBack(routineUnitData)
 			return this.m_unitData.backIndex()
 		endmethod
+
+		public method enableForUnitByIndex takes integer index returns nothing
+			call ARoutineUnitData(this.m_unitData[index]).enable()
+		endmethod
+
+		public method enableForUnit takes unit whichUnit returns integer
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_unitData.size())
+				if (ARoutineUnitData(this.m_unitData[i]).unit() == whichUnit) then
+					call this.enableForUnitByIndex(i)
+					return i
+				endif
+				set i = i + 1
+			endloop
+			return -1
+		endmethod
+		
+		public method disableForUnitByIndex takes integer index returns nothing
+			call ARoutineUnitData(this.m_unitData[index]).disable()
+		endmethod
+
+		public method disableForUnit takes unit whichUnit returns integer
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_unitData.size())
+				if (ARoutineUnitData(this.m_unitData[i]).unit() == whichUnit) then
+					call this.disableForUnitByIndex(i)
+					return i
+				endif
+				set i = i + 1
+			endloop
+			return -1
+		endmethod
 		
 		public method removeUnitByIndex takes integer index returns nothing
 			call ARoutineUnitData(this.m_unitData[index]).destroy()
@@ -479,6 +529,24 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		public static method init takes nothing returns nothing
 			//static members
 			set thistype.m_routines = AIntegerVector.create()
+		endmethod
+
+		public static method enableForUnitInAll takes unit whichUnit returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_routines.size())
+				call thistype(thistype.m_routines[i]).enableForUnit(whichUnit)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public static method disableForUnitInAll takes unit whichUnit returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_routines.size())
+				call thistype(thistype.m_routines[i]).disableForUnit(whichUnit)
+				set i = i + 1
+			endloop
 		endmethod
 		
 		public static method removeUnitFromAll takes unit whichUnit returns nothing

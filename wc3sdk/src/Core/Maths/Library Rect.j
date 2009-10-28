@@ -1,7 +1,8 @@
 library ALibraryCoreMathsRect
 
-	/// Returns the rect where rect @param rect0 and @param rect1 cross each other.
-	/// @return If both rects do not cross anywhere function will return null.
+	/**
+	* @return Returns the rect where rect @param rect0 and @param rect1 cross each other. If both rects do not cross anywhere function will return null.
+	*/
 	function GetRectsBorderRect takes rect rect0, rect rect1 returns rect
 		local real x0 = RMaxBJ(GetRectMinX(rect0), GetRectMinX(rect1))
 		local real x1 = RMinBJ(GetRectMaxX(rect0), GetRectMaxX(rect1))
@@ -13,7 +14,10 @@ library ALibraryCoreMathsRect
 		return Rect(x0, y0, x1, y1)
 	endfunction
 
-	/// Alternative zu @function RectFromCenterSizeBJ.
+	/**
+	* @return Returns a rect at point with coordinates @param x and @param y and with width @param width and height @param height.
+	* @see RectFromCenterSizeBJ
+	*/
 	function RectFromPointSize takes real x, real y, real width, real height returns rect
 		return Rect((x - width * 0.5), (y - height * 0.5), (x + width * 0.5), (y + height * 0.5))
 	endfunction

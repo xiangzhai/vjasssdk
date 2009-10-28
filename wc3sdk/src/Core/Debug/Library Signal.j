@@ -1,18 +1,12 @@
 /// @author Tamino Dauth
 library ALibraryCoreDebugSignal requires ALibraryCoreDebugMisc, AStructCoreGeneralSignal
 
-	//! runtextmacro A_SIGNAL("private", "MouseMovementSignal", "real x, real y", "x, y", "100")
-
-	private function privateSlot0 takes real x, real y returns nothing
-		debug call Print("Private slot 0 with x " + R2S(x) + " and y " + R2S(y) + ".")
-	endfunction
-
-	private function privateSlot1 takes real x, real y returns nothing
-		debug call Print("Private slot 1 with x " + R2S(x) + " and y " + R2S(y) + ".")
-	endfunction
+	//! runtextmacro A_SIGNAL("private", "MouseMovementSignal", "real x, real y", "x, y")
 
 	private struct Window
 		private MouseMovementSignal m_signal
+
+		//! runtextmacro A_STRUCT_DEBUG("\"Window\"")
 
 		public method signal takes nothing returns MouseMovementSignal
 			return this.m_signal
@@ -22,11 +16,19 @@ library ALibraryCoreDebugSignal requires ALibraryCoreDebugMisc, AStructCoreGener
 			call this.m_signal.emit(x, y)
 		endmethod
 
-		public static method create takes nothing returns Window
-			local Window this = Window.allocate()
+		private static method privateSlot0 takes real x, real y returns nothing
+			debug call thistype.staticPrint("Private slot 0 with x " + R2S(x) + " and y " + R2S(y) + ".")
+		endmethod
+
+		private static method privateSlot1 takes real x, real y returns nothing
+			debug call thistype.staticPrint("Private slot 1 with x " + R2S(x) + " and y " + R2S(y) + ".")
+		endmethod
+
+		public static method create takes nothing returns thistype
+			local thistype this = thistype.allocate()
 			set this.m_signal = MouseMovementSignal.create()
-			call this.m_signal.connect(privateSlot0)
-			call this.m_signal.connect(privateSlot1)
+			call this.m_signal.connect(thistype.privateSlot0)
+			call this.m_signal.connect(thistype.privateSlot1)
 			return this
 		endmethod
 	endstruct

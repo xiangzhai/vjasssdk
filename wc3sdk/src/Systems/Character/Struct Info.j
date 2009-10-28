@@ -78,14 +78,6 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 
 	/// @todo Shoud be a static member of @struct AInfo, vJass bug.
 	function interface AInfoAction takes AInfo info returns nothing
-	
-	/// @todo Should be a part of @struct ATalk, vJass bug.
-	private function ADialogButtonActionRunInfo takes ADialogButton dialogButton returns nothing
-		local ATalk talk = ACharacter.playerCharacter(dialogButton.dialog().player()).talk()
-		local AInfo info = talk.getInfoByDialogButtonIndex(dialogButton.index())
-		call talk.clear()
-		call info.run()
-	endfunction
 
 	/**
 	* Members of talks are called informations or infos. An info is a single object which informs
@@ -162,6 +154,13 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 
 		//methods
 
+		private static method dialogButtonActionRunInfo takes ADialogButton dialogButton returns nothing
+			local ATalk talk = ACharacter.playerCharacter(dialogButton.dialog().player()).talk()
+			local thistype info = talk.getInfoByDialogButtonIndex(dialogButton.index())
+			call talk.clear()
+			call info.run()
+		endmethod
+
 		public method show takes nothing returns boolean
 			local unit self = this.m_talk.character().unit()
 			local player user = this.m_talk.character().user()
@@ -177,7 +176,7 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 					if (this.m_condition == 0 or this.m_condition.evaluate(this)) then
 						set result = true
 						set shortcut = AGui.playerGui(user).dialog().dialogButtons()
-						set this.m_dialogButton = AGui.playerGui(user).dialog().addDialogButton("[" + I2S(shortcut) + "] " + this.m_description, SHORTCUT_0 + shortcut, ADialogButtonActionRunInfo)
+						set this.m_dialogButton = AGui.playerGui(user).dialog().addDialogButton("[" + I2S(shortcut) + "] " + this.m_description, AShortcut0 + shortcut, thistype.dialogButtonActionRunInfo)
 					endif
 				endif
 			endif

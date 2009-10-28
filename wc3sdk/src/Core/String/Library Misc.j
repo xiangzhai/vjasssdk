@@ -1,37 +1,27 @@
-/// @todo Not tested yet!
-/// The SubString functions are concepted that they doesn't need each other.
 library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 
-	/// Debug for testing over- and underflow.
-	debug function StringPositionDebug takes string usedString, integer position returns nothing
-		debug if ((position < 0) or (position >= StringLength(usedString))) then
+	debug function StringPositionDebug takes string whichString, integer position returns nothing
+		debug if ((position < 0) or (position >= StringLength(whichString))) then
 			debug call Print("StringPositionDebug: Wrong position value: " + I2S(position) + ".")
 		debug endif
 	debug endfunction
 
 	/**
-	* Searches for the position of string @param searchedString in string @param usedString.
-	* @state checked
-	* If @param searchedString is not contained by @param usedString function will return -1 otherwise it will return the position.
-	* @param usedString String which should contain the searched string.
+	* Searches for position of string @param searchedString in string @param whichString.
+	* If @param searchedString is not contained by @param whichString function will return -1 otherwise it will return its position.
+	* @param whichString String which should contain searched string.
 	* @param searchedString String which is searched.
-	* @return If the string was found it will return its position otherwise it will return -1.
+	* @return If the string was found it returns its position otherwise it will return -1.
 	*/
-	function FindString takes string usedString, string searchedString returns integer
+	function FindString takes string whichString, string searchedString returns integer
 		local integer i
-		local integer exitvalue
-		debug if (StringLength(usedString) < StringLength(searchedString)) then
+		debug if (StringLength(whichString) < StringLength(searchedString)) then
 			debug call Print("FindString: Used string is lesser than searched string.")
 		debug endif
-		//Gleicher Inhalt
-		if (usedString == searchedString) then
-			return 0
-		endif
-		set exitvalue = StringLength(usedString) - StringLength(searchedString)
 		set i = 0
 		loop
-			exitwhen (i > exitvalue) //i ist nicht der zweite Positionsparameter
-			if (SubString(usedString, i, (i + StringLength(searchedString))) == searchedString) then //added -1
+			exitwhen (i + StringLength(searchedString) > StringLength(whichString))
+			if (SubString(whichString, i, i + StringLength(searchedString)) == searchedString) then
 				return i
 			endif
 			set i = i + 1
@@ -41,147 +31,125 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 
 	/**
 	* Replaces a part of a string and returns the resulting string.
-	* @state checked
-	* @param usedString String which contains the sub string.
-	* @param position Start position of the sub string.
-	* @param replacingString String which should replace the sub string.
+	* @param whichString String which is used for replacement operation.
+	* @param position Position where replacement should start.
+	* @param replacingString String which should replace a sub string of string @param whichString.
 	* @return Returns the new string with the replaced sub string.
 	*/
-	function ReplaceSubString takes string usedString, integer position, string replacingString returns string
+	function ReplaceSubString takes string whichString, integer position, string replacingString returns string
 		local string result = ""
-		debug call StringPositionDebug(usedString, position)
-		if (position > 0) then
-			set result = SubString(usedString, 0, position)
-		endif
-		set result = result + replacingString
-		if (StringLength(result) < StringLength(usedString)) then
-			set result = result + SubString(usedString, StringLength(result), StringLength(usedString))
+		debug call StringPositionDebug(whichString, position)
+		set result = SubString(whichString, 0, position) + replacingString
+		if (position + StringLength(replacingString) < StringLength(whichString)) then
+			set result = result + SubString(whichString, position + StringLength(replacingString), StringLength(whichString))
 		endif
 		return result
 	endfunction
 
 	/**
-	* Replaces string @param replacedString in string @param usedString by string @param replacingString and returns the resulting string.
-	* @state checked
-	* @param usedString String which contains the sub string @param replacedString.
-	* @param replacedString Sub string of string @param usedString which should be replaced.
+	* Replaces string @param replacedString in string @param whichString by string @param replacingString and returns the resulting string.
+	* Note that @param replacedString and @replacingString do not have to have the same size. The function removes @param replacedString and inserts @param replacingString afterwards at @param replacedString's old position.
+	* @param whichString String which contains the sub string @param replacedString.
+	* @param replacedString Sub string of string @param whichString which should be replaced.
 	* @param replacingString String which should replace @param replacedString.
 	* @return Returns the new string with the replaced sub string.
 	*/
-	function ReplaceString takes string usedString, string replacedString, string replacingString returns string
-		local integer position = FindString(usedString, replacedString)
-		if (position != -1) then
-			return ReplaceSubString(usedString, position, replacingString)
+	function ReplaceString takes string whichString, string replacedString, string replacingString returns string
+		local integer position = FindString(whichString, replacedString)
+		if (position == -1) then
+			return whichString
 		endif
-		return usedString
+		return SubString(whichString, 0, position) + replacingString + SubString(whichString, position + StringLength(replacedString), StringLength(whichString))
 	endfunction
 
 	/**
-	* Removes the sub string at position @param position with length @param length of string @param usedString and returns the resulting string.
-	* @state checked
-	* @param usedString String which contains the sub string.
-	* @param position Position of the sub string.
-	* @param length Length of the sub string.
-	* @return Returns the new string with the replaced string.
+	* Removes the sub string at position @param position with length @param length of string @param whichString and returns the resulting string.
+	* @param whichString String which is used for removing the sub string.
+	* @param position Position of the sub string which should be removed.
+	* @param length Length of the sub string which should be removed.
+	* @return Returns the new string without the sub string string.
 	*/
-	function RemoveSubString takes string usedString, integer position, integer length returns string
-		local string result = "" //Has to be set otherwise usedString + ... doesn't work
-		debug call StringPositionDebug(usedString, position)
-		debug call StringPositionDebug(usedString, position + length - 1)
-		if (position > 0) then
-			set result = SubString(usedString, 0, position)
-		endif
-		if ((position + length) < StringLength(usedString)) then
-			set result = result + SubString(usedString, position + length, StringLength(usedString))
-		endif
-		return result
+	function RemoveSubString takes string whichString, integer position, integer length returns string
+		debug call StringPositionDebug(whichString, position)
+		debug call StringPositionDebug(whichString, position + length - 1)
+		return SubString(whichString, 0, position) + SubString(whichString, position + length, StringLength(whichString))
 	endfunction
 
 	/**
-	* Removes string @param removedString from string @param subString and returns the resulting string. 
-	* @state checked
-	* @param usedString String @param subString should be removed from this string.
+	* Removes string @param removedString from string @param whichString and returns the resulting string. 
+	* @param whichString String from which @param subString should be removed.
 	* @param removedString String which should be removed.
 	* @return Returns the new string without the removed string.
 	*/
-	function RemoveString takes string usedString, string removedString returns string
-		local integer position = FindString(usedString, removedString)
-		if (position != -1) then
-			return RemoveSubString(usedString, position, StringLength(removedString))
+	function RemoveString takes string whichString, string removedString returns string
+		local integer position = FindString(whichString, removedString)
+		if (position == -1) then
+			debug call Print("RemoveString: String \"" + whichString + "\" does not contain string \"" + removedString + "\".")
+			return whichString
 		endif
-		return usedString
+		return RemoveSubString(whichString, position, StringLength(removedString))
 	endfunction
 
 	/**
-	* Inserts string @param insertedString into string @param usedString at position @param position and returns the resulting string.
-	* @state checked
-	* @param usedString String into which string @param insertedString should be inserted.
+	* Inserts string @param insertedString into string @param whichString at position @param position and returns the resulting string.
+	* @param whichString String into which string @param insertedString should be inserted.
 	* @param position Position where string @param insertedString should be inserted.
-	* @param insertedString String which should be inserted into string @param usedString.
+	* @param insertedString String which should be inserted into string @param whichString at position @param position.
 	* @return Returns the new string with the inserted string.
 	*/
-	function InsertString takes string usedString, integer position, string insertedString returns string
+	function InsertString takes string whichString, integer position, string insertedString returns string
 		local string result = ""
-		debug call StringPositionDebug(usedString, position)
-		if (position > 0) then
-			set result = SubString(usedString, 0, position)
-		endif
-		return result + insertedString + SubString(usedString, position, StringLength(usedString))
+		debug call StringPositionDebug(whichString, position)
+		return SubString(whichString, 0, position) + insertedString + SubString(whichString, position, StringLength(whichString))
 	endfunction
 
 	/**
-	* Moves the sub string of string @param usedString at position @param position and with length @param length to position @param newPosition and returns the resulting string.
-	* @state checked
-	* @param usedString String in which the sub string should be moved.
+	* Moves the sub string of string @param whichString at position @param position and with length @param length to position @param newPosition and returns the resulting string.
+	* @param whichString String in which the sub string should be moved.
 	* @param position Start position of the sub string.
 	* @param length Length of the sub string.
 	* @param newPosition Position to which the sub string should be moved.
 	* @return Returns the new string with the moved string.
 	*/
-	function MoveSubString takes string usedString, integer position, integer length, integer newPosition returns string
+	function MoveSubString takes string whichString, integer position, integer length, integer newPosition returns string
+		local string subString = ""
 		local string result = ""
-		debug call StringPositionDebug(usedString, position + length)
-		debug call StringPositionDebug(usedString, newPosition)
-		if (position > 0) then
-			set result = SubString(usedString, 0, position)
-		endif
-		set result = result + SubString(usedString, newPosition, newPosition + length)
-		set result = result + SubString(usedString, position, position + length)
-		if (StringLength(result) < StringLength(usedString)) then
-			set result = result + SubString(usedString, StringLength(result), StringLength(usedString))
-		endif
-		return result
+		debug call StringPositionDebug(whichString, position)
+		debug call StringPositionDebug(whichString, position + length - 1)
+		debug call StringPositionDebug(whichString, newPosition)
+		debug call StringPositionDebug(whichString, newPosition + length - 1)
+		set subString = SubString(whichString, position, length)
+		set result = RemoveSubString(whichString, position, length)
+		return InsertString(whichString, newPosition + StringLength(whichString) - StringLength(result), subString)
 	endfunction
 
 	/**
-	* Moves string @param movedString of string @param usedString to position @param newPosition and returns the resulting string.
-	* @state checked
-	* @param usedString String in which string @param movedString should be moved.
+	* Moves string @param movedString of string @param whichString to position @param newPosition and returns the resulting string.
+	* @param whichString String in which string @param movedString should be moved.
 	* @param movedString String which should be moved.
 	* @param newPosition Position to which string @param movedString should be moved.
 	* @return Returns the new string with the moved string.
 	*/
-	function MoveString takes string usedString, string movedString, integer newPosition returns string
-		local integer position = FindString(usedString, movedString)
-		if (position != -1) then
-			return MoveSubString(usedString, position, StringLength(movedString), newPosition) 
+	function MoveString takes string whichString, string movedString, integer newPosition returns string
+		local integer position = FindString(whichString, movedString)
+		if (position == -1) then
+			debug call Print("MoveString: String \"" + whichString + "\" does not contain string \"" + movedString + "\".")
+			return whichString
 		endif
-		return usedString
+		return MoveSubString(whichString, position, StringLength(whichString), newPosition) 
 	endfunction
 
 	/**
 	* Reverses a string that it will be written backwards and returns the resulting string.
-	* @state checked
-	* @param usedString String which should be reversed.
+	* @param whichString String which should be reversed.
 	* @return Returns the new reversed string.
 	*/
-	function ReverseString takes string usedString returns string
-		local integer i
-		local string result
-		set i = StringLength(usedString)
+	function ReverseString takes string whichString returns string
+		local integer i = StringLength(whichString)
+		local string result = ""
 		loop
 			exitwhen (i == 1)
-			set result = result + SubString(usedString, i - 1, i)
+			set result = result + SubString(whichString, i - 1, i)
 			set i = i - 1
 		endloop
 		return result
@@ -277,7 +245,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 					set y = SubString(b, j, j + 1)
 					exitwhen y != "*"
 				endloop
-		//			if y == null then
+//			if y == null then
 				if StringLength(y) < 1 then
 					return true
 				endif

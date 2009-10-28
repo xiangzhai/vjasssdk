@@ -11,7 +11,6 @@
 //! import "Systems/Character/Struct Item Type.j"
 //! import "Systems/Character/Struct Kill Quest Item.j"
 //! import "Systems/Character/Struct Movement.j"
-///! import "Systems/Character/Struct Neratia Fight.j"
 //! import "Systems/Character/Struct Spell.j"
 //! import "Systems/Character/Struct Pvp.j"
 //! import "Systems/Character/Struct Quest.j"

@@ -1,4 +1,4 @@
-library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
+library ALibraryCoreGeneralUnit requires AStructCoreGeneralGroup, ALibraryCoreGeneralItem
 
 	/**
 	* Sicheres Iterieren per FirstOfGroup
@@ -243,5 +243,59 @@ library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
 	function CreateUnitAtRect takes player whichPlayer, integer unitTypeId, rect whichRect, real facing returns unit
 		return CreateUnit(whichPlayer, unitTypeId, GetRectCenterX(whichRect), GetRectCenterY(whichRect), facing)
 	endfunction
+
+	/**
+	* Doesn't pause or unpause already paused units.
+	* Doesn't try to unpause new created units.
+	* Doesn't use global variable.
+	* Saves a key on each unit to identify paused unit.
+	* Key is removed automatically when unit is removed from game.
+	* @see PauseAllUnitsBJ
+	* @author Tamino Dauth
+	*/
+	function PauseAllUnits takes boolean pause returns nothing
+		local integer i
+		local player whichPlayer
+		local group whichGroup
+		local AGroup unitGroup
+		set whichGroup = CreateGroup()
+		set unitGroup = AGroup.create()
+		set i = 0
+		loop
+			exitwhen (i == bj_MAX_PLAYER_SLOTS)
+			set whichPlayer = Player(i)
+			// If this is a computer slot, pause/resume the AI.
+			if (GetPlayerController(whichPlayer) == MAP_CONTROL_COMPUTER) then
+				call PauseCompAI(whichPlayer, pause)
+			endif
+			// Enumerate and unpause every unit owned by the player.
+			call GroupEnumUnitsOfPlayer(whichGroup, whichPlayer, null)
+			call unitGroup.addGroup(whichGroup, false, true)
+			set i = i + 1
+		endloop
+		call DestroyGroup(whichGroup)
+		set whichGroup = null
+		set i = 0
+		loop
+			exitwhen (i == unitGroup.size())
+			if (pause and not IsUnitPaused(unitGroup.units()[i])) then
+				call PauseUnit(unitGroup.units()[i], true)
+				call AHashTable.global().setHandleBoolean(unitGroup.units()[i], "PauseAllUnits:IsPaused", true)
+			elseif (not pause and AHashTable.global().hasHandleBoolean(unitGroup.units()[i], "PauseAllUnits:IsPaused")) then
+				call PauseUnit(unitGroup.units()[i], false)
+				call AHashTable.global().removeHandleBoolean(unitGroup.units()[i], "PauseAllUnits:IsPaused")
+			endif
+			set i = i + 1
+		endloop
+		call unitGroup.destroy()
+	endfunction
+
+	private function hookFunctionRemoveUnit takes unit whichUnit returns nothing
+		if (AHashTable.global().hasHandleBoolean(whichUnit, "PauseAllUnits:IsPaused")) then
+			call AHashTable.global().removeHandleBoolean(whichUnit, "PauseAllUnits:IsPaused")
+		endif
+	endfunction
+
+	hook RemoveUnit hookFuntionRemoveUnit
 
 endlibrary

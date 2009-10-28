@@ -1,6 +1,13 @@
 library ALibraryCoreInterfaceMinimap
 
-	//WE DON'T WANT TO USE PLAYER FORCES!!!!!!!!!!!!!!!!!!!!!!!!!
+	/**
+	* Doesn't use forces.
+	* @see PingMinimapForForce
+	* @see PingMinimapLocForForce
+	* @see PingMinimapForForceEx
+	* @see PingMinimapForPlayer
+	* @see PingMinimapLocForPlayer
+	*/
 	function PingMinimapExForPlayer takes player user, real x, real y, real duration, real red, real green, real blue, boolean extraEffect returns nothing
 		local player localPlayer = GetLocalPlayer()
 		if (user == localPlayer) then 

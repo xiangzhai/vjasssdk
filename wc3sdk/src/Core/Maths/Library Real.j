@@ -52,9 +52,9 @@ library ALibraryCoreMathsReal
 	endfunction
 
 	/**
-	Called ALog since RtC has its own Log function.
-	@author Vexorian
-	@source http://www.wc3campaigns.net/
+	* Called ALog since RtC has its own Log function.
+	* @author Vexorian
+	* @source http://www.wc3campaigns.net/
 	*/
 	function ALog takes real x, integer iterations returns real
 		local real min = -88.0
@@ -74,8 +74,10 @@ library ALibraryCoreMathsReal
 		return mid
 	endfunction
 
-	/// @author Vexorian
-	/// @source http://www.wc3campaigns.net/
+	/**
+	* @author Vexorian
+	* @source http://www.wc3campaigns.net/
+	*/
 	function Logarithm takes real base, real x, integer iterations returns real
 		local real min = -88.0
 		local real max = 88.0

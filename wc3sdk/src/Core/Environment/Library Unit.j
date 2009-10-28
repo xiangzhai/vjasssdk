@@ -2,10 +2,12 @@
 /// @author Tamino Dauth
 library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 
-	/// Adds or removes the move ability to unit @param usedUnit.
-	/// @author Tamino Dauth
-	/// @param usedUnit The unit which the ability is added to.
-	/// @param movable If this value is true the ability will be added to unit @param usedUnit, otherwise it will be removed.
+	/**
+	* Adds or removes the move ability to unit @param usedUnit.
+	* @author Tamino Dauth
+	* @param usedUnit The unit which the ability is added to.
+	* @param movable If this value is true the ability will be added to unit @param usedUnit, otherwise it will be removed.
+	*/
 	function MakeUnitMovable takes unit usedUnit, boolean movable returns nothing
 		if (movable) then
 			call UnitAddAbility(usedUnit, 'Amov')
@@ -14,10 +16,12 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 		endif
 	endfunction
 
-	/// Adds or removes the attack ability to unit @param usedUnit.
-	/// @author Tamino Dauth
-	/// @param usedUnit The unit which the ability is added to.
-	/// @param attackable If this value is true the ability will be added to unit @param usedUnit, otherwise it will be removed.
+	/**
+	* Adds or removes the attack ability to unit @param usedUnit.
+	* @author Tamino Dauth
+	* @param usedUnit The unit which the ability is added to.
+	* @param attackable If this value is true the ability will be added to unit @param usedUnit, otherwise it will be removed.
+	*/
 	function MakeUnitAttackable takes unit usedUnit, boolean attackable returns nothing
 		if (attackable) then
 			call UnitAddAbility(usedUnit, 'Aatk')

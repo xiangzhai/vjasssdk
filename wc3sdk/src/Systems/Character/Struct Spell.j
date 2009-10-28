@@ -13,7 +13,6 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 
 	/// This struct represents exactly one spell which is owned by a character.
 	/// @author Tamino Dauth
-	/// @param Hello
 	struct ASpell extends AAbstractCharacterSystem
 		//start members
 		private integer m_ability
@@ -193,6 +192,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
+			call this.character().removeSpell(this)
 
 			if (this.m_upgradeAction != 0) then
 				call this.destroyUpgradeTrigger()

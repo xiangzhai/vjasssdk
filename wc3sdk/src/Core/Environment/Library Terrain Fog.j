@@ -12,25 +12,25 @@ library ALibraryCoreEnvironmentTerrainFog
 	endfunction
 
 	/// @author Tamino Dauth
-	/// @source http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
+	/// @link http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
 	function SetTerrainFogNight takes nothing returns nothing
 		call SetTerrainFogEx(0, 0, 5000.0, 0.0, 0.0, 0.0, 0.1961)
 	endfunction
 	
 	/// @author Tamino Dauth
-	/// @source http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
+	/// @link http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
 	function SetTerrainFogSunny takes nothing returns nothing
 		call SetTerrainFogEx(0, 0, 10000.0, 0.0, 1.0, 1.0, 0.3922)
 	endfunction
 	
 	/// @author Tamino Dauth
-	/// @source http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
+	/// @link http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
 	function SetTerrainFogForest takes nothing returns nothing
 		call SetTerrainFogEx(0, 0, 5000.0, 0.0, 0.0, 0.3137, 0.1961)
 	endfunction
 	
 	/// @author Tamino Dauth
-	/// @source http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
+	/// @link http://www.mappedia.de/wiki/Tutorial:Gel%C3%A4ndenebel
 	function SetTerrainFogFoggy takes nothing returns nothing
 		call SetTerrainFogEx(0, 0, 4000.0, 0.0, 0.7843, 0.7843, 0.7843)
 	endfunction

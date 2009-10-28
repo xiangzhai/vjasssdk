@@ -1,45 +1,5 @@
 library ALibraryCoreInterfaceTextTag
 
-	//SetTextTagAge
-	//Setzt das Alter des schwebenden Textes (Eventuell die Zeit, die er schon existiert).
-	//SetTextTagFadepoint
-	//Setzt die Zeit an der der schwebende Text ausgelbendet werden soll.
-	//SetTextTagPermanent
-	//Macht den schwebenden Text dauerhaft. Ist er nicht dauerhaft, wird er nach Ablaufen der Lebensdauer automatisch zerstrt.
-	//SetTextTagSuspended
-	//Unterbricht einen schwebenden Text.
-	//SetTextTagVelocity
-	//Stellt ein wie schnell sich der Text nach oben und rechts bewegt.
-	
-
-	//Auskommentierte Funktionen sind alter Mll
-	//Genau wie der Papst.
-	//Aktualisiert die Position, den Text und die Gre des Textes.
-	//Funktioniert nicht.
-	//function SetTextTagForPlayer takes integer PlayerNumber, texttag TextTag, string Text, real Size, real X, real Y, real Z returns nothing
-		//local player UsedPlayer = Player(PlayerNumber)
-		//local player LocalPlayer = GetLocalPlayer()
-		//if (UsedPlayer == GetLocalPlayer()) then
-			//call SetTextTagTextBJ(TextTag, Text, Size)
-		//endif
-		//call SetTextTagPos(TextTag, X, Y, Z)
-		//set UsedPlayer = null
-		//set LocalPlayer = null
-	//endfunction
-
-	//Verursacht Desynchronisation im Multiplayer.
-	//function CreateTextTagForPlayer takes integer PlayerNumber returns texttag
-		//local player UsedPlayer = Player(PlayerNumber)
-		//local player LocalPlayer = GetLocalPlayer()
-		//local texttag TextTag
-		//if (UsedPlayer == LocalPlayer) then
-			//set TextTag = CreateTextTag()
-		//endif
-		//set UsedPlayer = null
-		//set LocalPlayer = null
-		//return TextTag
-	//endfunction
-
 	/// @author Tamino Dauth
 	/// We do not want to use player forces ftw!!!
 	function ShowTextTagForPlayer takes player user, texttag textTag, boolean show returns nothing

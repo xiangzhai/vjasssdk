@@ -136,7 +136,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call ClearSelection()
 			call ACharacter.setAllMovable(false)
 			call ACharacter.showAll(false)
-			call PauseAllUnitsBJ(true)
+			call PauseAllUnits(true)
 			call SetCameraBoundsToRect(bj_mapInitialPlayableArea) // for all players
 			set playersAll = GetPlayersAll()
 			call CinematicModeExBJ(true, playersAll, 0.0)
@@ -172,7 +172,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				set thistype.m_actor = 0
 			endif
 			call ACharacter.showAll(true)
-			call PauseAllUnitsBJ(false)
+			call PauseAllUnits(false)
 			if (this.stopAction != 0) then
 				call this.stopAction.execute(this)
 			endif
@@ -192,13 +192,13 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		/// @return Returns true if video was skipped
 		public method wait takes real seconds returns boolean
 			loop
-				call TriggerSleepAction(thistype.waitInterval)
 				set seconds = seconds - thistype.waitInterval
 				if (thistype.skipped) then
 					return true
 				elseif (seconds <= 0) then
 					return false
 				endif
+				call TriggerSleepAction(thistype.waitInterval)
 			endloop
 			return false
 		endmethod
@@ -260,7 +260,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
 				if (IsPlayerPlayingUser(user)) then
-					set triggerEvent = TriggerRegisterKeyEventForPlayer(user, thistype.skipTrigger, KEY_ESCAPE, true) //ALibraryInterfaceMisc, important: If it is the escape key it is the same key as in the character selection.
+					set triggerEvent = TriggerRegisterKeyEventForPlayer(user, thistype.skipTrigger, AKeyEscape, true) //ALibraryInterfaceMisc, important: If it is the escape key it is the same key as in the character selection.
 					set triggerEvent = null
 				endif
 				set user = null

@@ -2,13 +2,12 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 
 	function interface AVoteResultAction takes AVote vote returns nothing
 
-	/// @todo Should be a part of @struct AVote, vJass bug.
-	private function ADialogButtonActionVote takes ADialogButton dialogButton returns nothing
-		call AVote.activeVote().addVote(dialogButton.dialog().player(), dialogButton.index())
-	endfunction
-
 	/// @todo Maybe votes shouldn't be started for all playing players (player groups/forces).
 	struct AVote
+		//static start members
+		private static real m_messageDuration
+		private static string m_voteMessage
+		private static string m_resultMessage
 		//static members
 		private static thistype m_activeVote
 		//start members
@@ -26,6 +25,10 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 		endmethod
 		
 		//method
+
+		private static method dialogButtonActionVote takes ADialogButton dialogButton returns nothing
+			call thistype.m_activeVote.addVote(dialogButton.dialog().player(), dialogButton.index())
+		endmethod
 		
 		public method start takes nothing returns nothing
 			local player user
@@ -42,7 +45,7 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 					set j = 0
 					loop
 						exitwhen (j == this.m_choices.size())
-						call AGui.playerGui(user).dialog().addDialogButton(this.m_choices[j], 0, ADialogButtonActionVote)
+						call AGui.playerGui(user).dialog().addDialogButton(this.m_choices[j], 0, thistype.dialogButtonActionVote)
 						set j = j + 1
 					endloop
 					call AGui.playerGui(user).dialog().show()
@@ -60,6 +63,7 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 		public method addVote takes player user, integer choice returns boolean
 			local integer i
 			local player playingPlayer
+			local integer result
 			set this.m_choiceVotes[choice] = this.m_choiceVotes[choice] + 1
 			/// @todo Show vote message
 			set this.m_playerHasVoted[GetPlayerId(user)] = true
@@ -67,8 +71,29 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
 				set playingPlayer = Player(i)
+				if (IsPlayerPlayingUser(playingPlayer) and playingPlayer != user) then
+					call DisplayTimedTextToPlayer(playingPlayer, 0.0, 0.0, thistype.m_messageDuration, IntegerArg(StringArg(StringArg(thistype.m_voteMessage, GetPlayerName(user)), this.m_choices[choice]), this.m_choiceVotes[choice]))
+				endif
+				set playingPlayer = null
+				set i = i + 1
+			endloop
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set playingPlayer = Player(i)
 				if (not this.m_playerHasVoted[i] and IsPlayerPlayingUser(playingPlayer)) then
 					return false
+				endif
+				set playingPlayer = null
+				set i = i + 1
+			endloop
+			set result = this.result()
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set playingPlayer = Player(i)
+				if (IsPlayerPlayingUser(playingPlayer)) then
+					call DisplayTimedTextToPlayer(playingPlayer, 0.0, 0.0, thistype.m_messageDuration, IntegerArg(StringArg(thistype.m_resultMessage, this.m_choices[result]), this.m_choiceVotes[result]))
 				endif
 				set playingPlayer = null
 				set i = i + 1
@@ -107,9 +132,13 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 			call this.m_choices.destroy()
 			call this.m_choiceVotes.destroy()
 		endmethod
-		
-		private static method onInit takes nothing returns nothing
-			//static members
+
+		public static method init takes real messageDuration, string voteMessage, string resultMessage returns nothing
+			//static start members
+			set thistype.m_messageDuration = messageDuration
+			set thistype.m_voteMessage = voteMessage
+			set thistype.m_resultMessage = resultMessage
+			//statc members
 			set thistype.m_activeVote = 0
 		endmethod
 		

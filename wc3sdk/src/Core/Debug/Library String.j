@@ -1,113 +1,92 @@
 /// Test of all core string functions.
-/// This is the last test I made with the core.
-/// @todo String functions weren't checked at all.
-/// @todo Test is not completed yet.
 library ALibraryCoreDebugString requires ALibraryCoreDebugMisc, ACoreString
 
 	private function GetStringConversionDebug takes nothing returns nothing
-		local string PrintString = ""
-		//function GetTimeString takes integer Seconds returns string - Works
-		set PrintString = ("GetTimeString - " + GetTimeString(120))
-		debug call Print(PrintString)
-		//function StringToPlayerColour takes string String returns playercolor - Works
+		debug call Print("GetTimeString - " + GetTimeString(120))
 		if (StringToPlayerColor("ff0000") == PLAYER_COLOR_RED) then
-			set PrintString = ("StringToPlayerColor - Works.")
+			debug call Print("StringToPlayerColor - Works.")
 		else
-			set PrintString = ("StringToPlayerColor - Doesn't work.")
+			debug call Print("StringToPlayerColor - Doesn't work.")
 		endif
-		debug call Print(PrintString)
-		//function PlayerColourToString takes playercolor PlayerColour returns string - Works
-		set PrintString = ("PlayerColorToString - " + PlayerColorToString(PLAYER_COLOR_BLUE) + "Blue text")
-		debug call Print(PrintString)
+		debug call Print("PlayerColorToString - " + PlayerColorToString(PLAYER_COLOR_BLUE) + "Blue text")
 	endfunction
 
-	private function GetStringPoolFunctionsDebug takes nothing returns nothing
-		local string PrintString = ""
-		//function GetRandomChar takes string CharPool returns string - Works
-		set PrintString = GetRandomChar("abc", 100.00) //if the chance is 100.00 it will be always upper case
-		debug call Print(PrintString)
-		//function GetRandomAlphabeticChar takes real RequestedChance returns string - Works
-		set PrintString = GetRandomAlphabeticalChar(100.00) //if the chance is 100.00 it will be always upper case
-		debug call Print(PrintString)
-		//function GetRandomNumeralChar takes nothing returns string - Works
-		set PrintString = GetRandomNumeralChar()
-		debug call Print(PrintString)
-		//function GetRandomPeculiarChar takes nothing returns string - Works
-		set PrintString = GetRandomSpecialChar()
-		debug call Print(PrintString)
-		//function GetRandomString takes integer Length, real CaseSensitivityChance, boolean IncludingNumbers, boolean IncludingPeculiars returns string - Check it
-		set PrintString = GetRandomString(23, 100.00, true, true, true) //if the chance is 100.00 it will be always upper case
-		debug call Print(PrintString)
-		//function IsStringFromStringPool takes string String, string StringPool returns boolean - Works
-		if (not IsStringFromStringPool("Hallo", "1111")) then
-			set PrintString = "IsStringFromStringPool - Works"
+	private function GetStringPoolFunctionsDebug takes string testString, string testParameter0 returns nothing
+		debug call Print("GetRandomCharacter - Result is \"" + GetRandomCharacter(testString) + "\".")
+		debug call Print("GetRandomAlphabeticalCharacter - Result is \"" + GetRandomAlphabeticalCharacter() + "\".")
+		debug call Print("GetRandomNumeralCharacter - Result is \"" + GetRandomNumeralCharacter() + "\".")
+		debug call Print("GetRandomSpecialCharacter - Result is \"" + GetRandomSpecialCharacter() + "\".")
+		debug call Print("GetRandomString - Result is \"" + GetRandomString(23, true, true, true) + "\".")
+		if (not IsStringFromCharacterPool(testString, testParameter0)) then
+			debug call Print("IsStringFromCharacterPool - Result is true.")
 		else
-			set PrintString = "IsStringFromStringPool - Doesn't work."
+			debug call Print("IsStringFromCharacterPool - Result is false.")
 		endif
-		debug call Print(PrintString)
-		//function IsStringAlphabetic takes string String returns boolean
-		if (IsStringAlphabetical("hallo")) then
-			set PrintString = "IsStringAlphabetical - Works"
+		if (IsStringAlphabetical(testString)) then
+			debug call Print("IsStringAlphabetical - Result is true.")
 		else
-			set PrintString = "IsStringAlphabetical - Doesn't work."
+			debug call Print("IsStringAlphabetical - Result is false.")
 		endif
-		debug call Print(PrintString)
-		//function IsStringNumeral takes string String returns boolean
-		if (IsStringNumeral("1243")) then
-			set PrintString = "IsStringNumeral - Works"
+		if (IsStringNumeral(testString)) then
+			debug call Print("IsStringNumeral - Result is true.")
 		else
-			set PrintString = "IsStringNumeral - Doesn't work."
+			debug call Print("IsStringNumeral - Result is false.")
 		endif
-		debug call Print(PrintString)
-		//function IsStringPeculiar takes string String returns boolean
-		if (IsStringSpecialChar("!()")) then
-			set PrintString = "IsStringSpecialCharacter - Works"
+		if (IsStringSpecial(testString)) then
+			debug call Print("IsStringSpecial - Result is true.")
 		else
-			set PrintString = "IsStringSpecialCharacter - Doesn't work."
+			debug call Print("IsStringSpecial - Result is false.")
 		endif
-		debug call Print(PrintString)
-		//function IsStringInteger takes string String returns boolean
-		if (IsStringInteger("-345")) then
-			set PrintString = "IsStringInteger - Works"
+		if (IsStringInteger(testString)) then
+			debug call Print("IsStringInteger - Result is true.")
 		else
-			set PrintString = "IsStringInteger - Doesn't work."
+			debug call Print("IsStringInteger - Result is false.")
 		endif
-		debug call Print(PrintString)
-	
-		//- 0% binär
-		//- 0 oktal
-		//- 0x hexadezimal
-	
-		//function IsStringBinary takes string String returns boolean
-		if (IsStringBinary("0%11011")) then
-			set PrintString = "IsStringBinary - Works"
+		if (IsStringBinary(testString)) then
+			debug call Print("IsStringBinary - Result is true.")
 		else
-			set PrintString = "IsStringBinary - Doesn't work."
+			debug call Print("IsStringBinary - Result is false.")
 		endif
-		debug call Print(PrintString)
-		//function IsStringOctal takes string String returns boolean
-		if (IsStringOctal("0243")) then
-			set PrintString = "IsStringOctal - Works"
+		if (IsStringOctal(testString)) then
+			debug call Print("IsStringOctal - Result is true.")
 		else
-			set PrintString = "IsStringOctal - Doesn't work."
+			debug call Print("IsStringOctal - Result is false.")
 		endif
-		debug call Print(PrintString)
-		//function IsStringHexadecimal takes string String returns boolean
-		if (IsStringHexadecimal("0xFF29A")) then
-			set PrintString = "IsStringHexadecimal - Works"
+		if (IsStringHexadecimal(testString)) then
+			debug call Print("IsStringHexadecimal - Result is true.")
 		else
-			set PrintString = "IsStringHexadecimal - Doesn't work."
+			debug call Print("IsStringHexadecimal - Result is false.")
 		endif
-		debug call Print(PrintString)
 	endfunction
 
-	function GetStringMiscFunctionsDebug takes nothing returns nothing
+	function GetStringMiscFunctionsDebug takes string testString, string testParameter0, string testParameter1 returns nothing
+		if (FindString(testString, testParameter0) != -1) then
+			debug call Print("FindString - Found it.")
+		else
+			debug call Print("FindString - Did not find it.")
+		endif
+		debug call Print("ReplaceSubString - Result is \"" + ReplaceSubString(testString, 0, testParameter0) + "\"")
+		debug call Print("ReplaceString - Result is \"" + ReplaceString(testString, testParameter0, testParameter1) + "\"")
+		debug call Print("RemoveSubString - Result is \"" + RemoveSubString(testString, 0, StringLength(testParameter0)) + "\"")
+		debug call Print("RemoveString - Result is \"" + RemoveString(testString, testParameter0) + "\"")
+		debug call Print("InsertString - Result is \"" + InsertString(testString, 0, testParameter0) + "\"")
+		debug call Print("MoveSubString - Result is \"" + MoveSubString(testString, 0, StringLength(testParameter0), 0) + "\"") /// @todo Move to old position to prevent crashes
+		debug call Print("MoveString - Result is \"" + MoveString(testString, testParameter0, 0) + "\"") /// @todo Move to old position to prevent crashes
+		debug call Print("ReverseString - Result is \"" + ReverseString(testString) + "\"")
+		debug if (StringMatch(testString, testParameter0, true)) then
+			debug call Print("StringMatch - Result is true.")
+		debug else
+			debug call Print("StringMatch - Result is false.")
+		debug endif
 	endfunction
 
 	function AStringDebug takes nothing returns nothing
+		local string testString = "Lieber Peter, gestern ging es mir gut."
+		local string testParameter0 = "ging"
+		local string testParameter1 = "auch"
 		call GetStringConversionDebug()
-		call GetStringPoolFunctionsDebug()
-		call GetStringMiscFunctionsDebug()
+		call GetStringPoolFunctionsDebug(testString, testParameter0)
+		call GetStringMiscFunctionsDebug(testString, testParameter0, testParameter1)
 	endfunction
 
 endlibrary

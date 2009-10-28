@@ -1,6 +1,6 @@
 library ALibraryCoreMathsPoint
 
-	/// @return Returns the z value of the point with coordinates @param x and @param y.
+	/// @return Returns the z value of point with coordinates @param x and @param y.
 	function GetTerrainZ takes real x, real y returns real
 		local location usedLocation = Location(x, y)
 		local real z = GetLocationZ(usedLocation)
@@ -44,8 +44,10 @@ library ALibraryCoreMathsPoint
 		return -(A * x + B * y + D) / C
 	endfunction
 
-	/// @return Returns the distance between two points.
-	/// Uses z values, too.
+	/**
+	* Uses z values, too.
+	* @return Returns the distance between two points.
+	*/
 	function GetDistanceBetweenPoints takes real x0, real y0, real z0, real x1, real y1, real z1 returns real
 		local real distanceX = (x1 - x0)
 		local real distanceY = (y1 - y0)
@@ -53,37 +55,57 @@ library ALibraryCoreMathsPoint
 		return SquareRoot((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ))
 	endfunction
 
-	/// @return Returns the centre between two points.
-	/// Achtung: Z muss ignoriert werden, da sich kein Punkt mit einem Z-Wert erstellen lässt.
+	/**
+	* Z has to be ignored since you're unable to create a location with its z value.
+	* @return Returns the centre between two points by using their coordinates.
+	*/
 	function GetCentreBetweenPoints takes real x0, real y0, real x1, real y1 returns location
 		return Location(((x0 + x1) / 2.0), ((y0 + y1) / 2.0))
 	endfunction
 
-	/// Der X-Wert des Punktes der Funktion "GetPolarProjectionOfPoint".
+	/**
+	* @return Returns x value of a polar projection.
+	* @see GetPolarProjectionY
+	* @see GetPolarProjectionOfPoint
+	*/
 	function GetPolarProjectionX takes real x, real angle, real distance returns real
 		return (x + distance * Cos(angle * bj_DEGTORAD))
 	endfunction
 
-	/// Der Y-Wert des Punktes der Funktion "GetPolarProjectionOfPoint".
+	/**
+	* @return Returns y value of a polar projection.
+	* @see GetPolarProjectionX
+	* @see GetPolarProjectionOfPoint
+	*/
 	function GetPolarProjectionY takes real Y, real angle, real distance returns real
 		return (Y + distance * Sin(angle * bj_DEGTORAD))
 	endfunction
 
-	/// Eine andere Version der Funktion "PolarProjectionBJ" ohne Location-Parameter.
+	/**
+	* @return Returns the polar projection location of a point by using its coordinates.
+	* @see GetPolarProjectionX
+	* @see GetPolarProjectionY
+	* @see PolarProjectionBJ
+	*/
 	function GetPolarProjectionOfPoint takes real x, real y, real angle, real distance returns location
 		local real resultX = (x + distance * Cos(angle * bj_DEGTORAD))
 		local real resultY = (y + distance * Sin(angle * bj_DEGTORAD))
 		return Location(resultX, resultY)
 	endfunction
 
-	/// Der Winkel zwischen zwei Punkten in Grad.
-	/// "AngleBetweenPoints" ist der Gegensatz dazu mit "Locations -> blizzard.j".
+	/**
+	* @return Returns angle between to points by using their coordinates.
+	* @see GetAngleBetweenPointsFromCentre
+	* @see AngleBetweenPoints
+	*/
 	function GetAngleBetweenPoints takes real x0, real y0, real x1, real y1 returns real
 		return Atan2BJ((y1 - y0), (x1 - x0))
 	endfunction
 
-	/// Der Winkel zwischen zwei Punkten in Grad.
-	/// "CentreX" und "CentreY" stellen dabei den Mittelpunkt dar, von dem aus die Winkel berechnet werden.
+	/**
+	* @return Returns angle between to points by using their coordinates and a centre.
+	* @see GetAngleBetweenPoints
+	*/
 	function GetAngleBetweenPointsFromCentre takes real centreX, real centreY, real x0, real y0, real x1, real y1 returns real
 		local real ax = (x0 - centreX)
 		local real ay = (y0 - centreY)

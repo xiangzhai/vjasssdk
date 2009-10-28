@@ -243,7 +243,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_changePreviousTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changePreviousTrigger, KEY_LEFT, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changePreviousTrigger, AKeyLeft, true)
 			set triggerAction = TriggerAddAction(this.m_changePreviousTrigger, function thistype.triggerActionChangeToPrevious)
 			call AHashTable.global().setHandleInteger(this.m_changePreviousTrigger, "this", this)
 			set triggerEvent = null
@@ -266,7 +266,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_changeNextTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changeNextTrigger, KEY_RIGHT, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_changeNextTrigger, AKeyRight, true)
 			set triggerAction = TriggerAddAction(this.m_changeNextTrigger, function thistype.triggerActionChangeToNext)
 			call AHashTable.global().setHandleInteger(this.m_changeNextTrigger, "this", this)
 			set triggerEvent = null
@@ -284,7 +284,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_selectTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_selectTrigger, KEY_ESCAPE, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.m_user, this.m_selectTrigger, AKeyEscape, true)
 			set triggerAction = TriggerAddAction(this.m_selectTrigger, function thistype.triggerActionSelectClass)
 			call AHashTable.global().setHandleInteger(this.m_selectTrigger, "this", this)
 			set triggerEvent = null

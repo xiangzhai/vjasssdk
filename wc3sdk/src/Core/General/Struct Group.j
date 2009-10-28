@@ -21,31 +21,40 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			endloop
 		endmethod
 
+		/**
+		* Creates a new Warcraft-3-like group from the group.
+		* @return Returns a newly created group.
+		*/
 		public method group takes nothing returns group
 			local group whichGroup = CreateGroup()
 			call this.fillGroup(whichGroup)
 			return whichGroup
 		endmethod
 		
-		public method addGroup takes group usedGroup, boolean destroy returns nothing
+		/**
+		* Adds all units of group @param whichGroup to the group.
+		* @param destroy If this value is true group @param whichGroup will be destroyed after it has been added.
+		* @param clear If this value is true group @param whichGroup will be cleared after it has been added. This value has no effect if destroy is already true. If both parameters are false group @param whichGroup won't change. Unfortunately the method has to re-add all units (limited Warcraft 3 natives).
+		*/
+		public method addGroup takes group whichGroup, boolean destroy, boolean clear returns nothing
 			local unit firstOfGroup
 			local integer i
 			loop
-				exitwhen (IsUnitGroupEmptyBJ(usedGroup))
-				set firstOfGroup = FirstOfGroupSave(usedGroup)
+				exitwhen (IsUnitGroupEmptyBJ(whichGroup))
+				set firstOfGroup = FirstOfGroupSave(whichGroup)
 				call this.m_units.pushBack(firstOfGroup)
-				call GroupRemoveUnit(usedGroup, firstOfGroup)
+				call GroupRemoveUnit(whichGroup, firstOfGroup)
 				set firstOfGroup = null
 			endloop
-			call GroupClear(usedGroup)
+			call GroupClear(whichGroup)
 			if (destroy) then
-				call DestroyGroup(usedGroup)
-				set usedGroup = null
-			else
+				call DestroyGroup(whichGroup)
+				set whichGroup = null
+			elseif (not clear) then
 				set i = 0
 				loop
 					exitwhen (i == this.m_units.size())
-					call GroupAddUnit(usedGroup, this.m_units[i])
+					call GroupAddUnit(whichGroup, this.m_units[i])
 					set i = i + 1
 				endloop
 			endif

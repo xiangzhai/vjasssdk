@@ -1,183 +1,171 @@
 /**
-* Provides many functions for working with string pools and checking strings and characters for their content.
+* Provides many functions for working with character pools and checking strings and characters for their content.
 * @author Tamino Dauth
-* @todo Not tested yet!
 */
 library ALibraryCoreStringPool requires ALibraryCoreStringMisc
 
 	globals
-		private constant string ALPHABETICAL_CHARS = "abcdefghijklmnopqrstuvwxyz"
-		private constant string NUMERAL_CHARS = "0123456789"
-		private constant string SPECIAL_CHARS = "!§$%&/()=?+-/*,.-;:_~#'|<>"
-		private constant string LANGUAGE_SPECIAL_CHARS = "äöüß" /// @todo Use localized string function.
-		private constant string SIGNATURE_CHARS = "+-" //Not a random pool. Is used for checking integers.
-		private constant string BINARY_CHARS = "01" //Here it's the same.
-		private constant string OCTAL_CHARS = "01234567"
-		private constant string HEXADECIMAL_CHARS = "0123456789ABCDEF"
+		constant string AAlphabeticalCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		constant string ANumeralCharacters = "0123456789"
+		constant string ASpecialCharacters = "!§$%&/()=?+-/*,.-;:_~#'|<>äöüß"
+		constant string AWhiteSpaceCharacters = " \t"
+		constant string ASignatureCharacters = "+-"
+		constant string ABinaryCharacters = "01"
+		constant string AOctalCharacters = "01234567"
+		constant string AHexadecimalCharacters = "0123456789ABCDEF"
 	endglobals
 
-	/** Generates a random character from the character pool @param charPool.
-	* @param charPool Character pool which is used for generation of the random character.
-	* @param capitalisationChance The percental chance for returning a capitalised character.
-	* @return A random character from the character pool @param charPool.
+	/**
+	* Generates a random character from the character pool @param charPool.
+	* @param charPool Character pool which is used for generation of a random character.
+	* @return Returns a random character from the character pool @param charPool.
 	*/
-	function GetRandomChar takes string charPool, real capitalisationChance returns string
+	function GetRandomCharacter takes string charPool returns string
 		local integer randomInteger = GetRandomInt(1, StringLength(charPool))
-		local string result = SubString(charPool, (randomInteger - 1), randomInteger)
-		local real chance
-		if (capitalisationChance > 0.0) then
-			set chance = GetRandomReal(1.0, 100.0)
-			if (chance <= capitalisationChance) then
-				return StringCase(result, true)
-			endif
-		endif
-		return StringCase(result, false)
+		return SubString(charPool, randomInteger - 1, randomInteger)
 	endfunction
 	
 	/**
 	* Generates a random alphabetical character.
-	* @param capitalisationChance The percental chance for returning a capitalised character.
-	* @return A random alphabetical character.
+	* @return Returns a random alphabetical character.
 	*/
-	function GetRandomAlphabeticalChar takes real capitalisationChance returns string
-		return GetRandomChar(ALPHABETICAL_CHARS, capitalisationChance)
+	function GetRandomAlphabeticalCharacter takes nothing returns string
+		return GetRandomCharacter(AAlphabeticalCharacters)
 	endfunction
 	
 	/**
 	* Generates a random numeral character.
-	* @return A random numeral character.
+	* @return Returns a random numeral character.
 	*/
-	function GetRandomNumeralChar takes nothing returns string
-		return I2S(GetRandomInt(0, 9))
-		//return GetRandomChar(NUMERAL_CHARS, 0.0) //Theoretisch auch durch I2S(GetRandomInt(0, 9)) lösbar. Brauche den StringPool aber vielleicht noch für IsStringNumeral
+	function GetRandomNumeralCharacter takes nothing returns string
+		return GetRandomCharacter(ANumeralCharacters)
 	endfunction
 	
 	/**
 	* Generates a random special character.
-	* @return A random special character.
+	* @return Returns a random special character.
 	*/
-	function GetRandomSpecialChar takes nothing returns string
-		return GetRandomChar(SPECIAL_CHARS, 0.0)
+	function GetRandomSpecialCharacter takes nothing returns string
+		return GetRandomCharacter(ASpecialCharacters)
 	endfunction
-	
+
 	/**
-	* Generates a random special character of the selected map or player language.
-	* @param capitalisationChance The percental chance for returning a capitalised character.
-	* @return A random special character of the selected map or player language.
+	* Generates a random white-space character.
+	* @return Returns a random white-space character.
 	*/
-	function GetRandomLanguageSpecialChar takes real capitalisationChance returns string
-		return GetRandomChar(LANGUAGE_SPECIAL_CHARS, capitalisationChance)
+	function GetRandomWhiteSpaceCharacter takes nothing returns string
+		return GetRandomCharacter(AWhiteSpaceCharacters)
 	endfunction
 
 	/**
 	* Generats a random string with the length @param length.
 	* Is able to include various other characters.
 	* @param length The length of the returned value.
-	* @param capitalisationChance The percental chance for returnsing a capitalised character.
-	* @param includeNumbers If this value is true number charactes will be added into the string pool.
-	* @param includeSpecialChars If this value is true special characters will be added into the string pool.
-	* @param includeLanguageSpecialChars If this value is true special characts of the selected map or player language will be added into the string pool.
-	* @return A random string generated from the selected string pool.
+	* @param includeNumberCharacters If this value is true number charactes will be added into the string pool.
+	* @param includeSpecialCharacters If this value is true special characters will be added into the string pool.
+	* @param includeWhiteSpaceCharacters If this value is true white-space characters will be added into the string pool.
+	* @return Returns a random string generated from the selected string pool.
 	*/
-	function GetRandomString takes integer length, real capitalisationChance, boolean includeNumbers, boolean includeSpecialChars, boolean includeLanguageSpecialChars returns string
+	function GetRandomString takes integer length, boolean includeNumberCharacters, boolean includeSpecialCharacters, boolean includeWhiteSpaceCharacters returns string
 		local integer i
-		local string chars = ALPHABETICAL_CHARS
+		local string characters = AAlphabeticalCharacters
 		local string result = ""
-		//case sensitivity shouldn't do anything here
-		if (includeNumbers) then
-			set chars = chars + NUMERAL_CHARS
+		if (includeNumberCharacters) then
+			set characters = characters + ANumeralCharacters
 		endif
-		//case sensitivity shouldn't do anything here
-		if (includeSpecialChars) then
-			set chars = chars + SPECIAL_CHARS
+		if (includeSpecialCharacters) then
+			set characters = characters + ASpecialCharacters
 		endif
-		if (includeLanguageSpecialChars) then
-			set chars = chars + LANGUAGE_SPECIAL_CHARS
+		if (includeWhiteSpaceCharacters) then
+			set characters = characters + AWhiteSpaceCharacters
 		endif
 		set i = 0
 		loop
 			exitwhen (i == length)
-			set result = result + GetRandomChar(chars, capitalisationChance)
+			set result = result + GetRandomCharacter(characters)
 			set i = i + 1
 		endloop
 		return result
 	endfunction
 
 	/**
-	* Checks if string @param usedString contains only characters from string pool @param stringPool.
+	* Checks if string @param whichString contains only characters from character pool @param characterPool.
 	* Checks each single character.
-	* @param usedString String which should be checked.
-	* @param stringPool String pool which will be used for comparing all characters.
-	* @return Returns if all characters from string @param usedString are contained by string pool @param stringPool.
+	* @param whichString String which should be checked.
+	* @param characterPool Character pool which will be used for comparing all characters.
+	* @return Returns if all characters from string @param whichString are contained by string pool @param characterPool.
 	*/
-	function IsStringFromStringPool takes string usedString, string stringPool returns boolean
+	function IsStringFromCharacterPool takes string whichString, string characterPool returns boolean
 		local integer i
 		set i = 1
 		loop
-			exitwhen (i > StringLength(usedString))
-			if (FindString(stringPool, StringCase(usedString, false)) == -1) then //ALibraryStringMisc
+			exitwhen (i > StringLength(whichString))
+			if (FindString(characterPool, SubString(whichString, i - 1, i)) == -1) then
 				return false
 			endif
-			set i = (i + 1)
+			set i = i + 1
 		endloop
 		return true
 	endfunction
 
 	/**
-	* Checks if string @param usedString is alphabetical.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString contains only alphabetical characters.
+	* Checks if string @param whichString is alphabetical.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString contains only alphabetical characters.
 	*/
-	function IsStringAlphabetical takes string usedString returns boolean
-		return IsStringFromStringPool(usedString, ALPHABETICAL_CHARS)
+	function IsStringAlphabetical takes string whichString returns boolean
+		return IsStringFromCharacterPool(whichString, AAlphabeticalCharacters)
 	endfunction
 
 	/**
-	* Checks if string @param usedString is numeral.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString contains only numeral characters.
+	* Checks if string @param whichString is numeral.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString contains only numeral characters.
 	*/
-	function IsStringNumeral takes string usedString returns boolean
-		return IsStringFromStringPool(usedString, NUMERAL_CHARS)
+	function IsStringNumeral takes string whichString returns boolean
+		return IsStringFromCharacterPool(whichString, ANumeralCharacters)
 	endfunction
 
 	/**
-	* Checks if string @param usedString contains only special characters.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString contains only special characters.
+	* Checks if string @param whichString contains only special characters.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString contains only special characters.
 	*/
-	function IsStringSpecialChar takes string usedString returns boolean
-		return IsStringFromStringPool(usedString, SPECIAL_CHARS)
-	endfunction
-	
-	/**
-	* Checks if string @param usedString contains only special characters from the selected map or player language.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString contains only special characters from the selected map or player language.
-	*/
-	function IsStringLanguageSpecialChar takes string usedString returns boolean
-		return IsStringFromStringPool(usedString, LANGUAGE_SPECIAL_CHARS)
+	function IsStringSpecial takes string whichString returns boolean
+		return IsStringFromCharacterPool(whichString, ASpecialCharacters)
 	endfunction
 
 	/**
-	* Checks if string @param usedString is a signature.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString is a signature.
+	* Checks if string @param whichString contains only white-space characters.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString contains only white-space characters.
 	*/
-	function IsStringSignature takes string usedString returns boolean
-		return IsStringFromStringPool(usedString, SIGNATURE_CHARS)
+	function IsStringWhiteSpace takes string whichString returns boolean
+		return IsStringFromCharacterPool(whichString, AWhiteSpaceCharacters)
 	endfunction
 
 	/**
-	* Checks if string @param usedString is an integer.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString is an integer.
+	* Checks if string @param whichString is a signature.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString is a signature.
 	*/
-	function IsStringInteger takes string usedString returns boolean
-		if (IsStringSignature(SubString(usedString, 0, 1))) then
-			return IsStringNumeral(SubString(usedString, 1, StringLength(usedString)))
+	function IsStringSignature takes string whichString returns boolean
+		return IsStringFromCharacterPool(whichString, ASignatureCharacters)
+	endfunction
+
+	/**
+	* Checks if string @param which is an integer.
+	* @param which Checked string.
+	* @return Returns true if string @param which is an integer.
+	*/
+	function IsStringInteger takes string whichString returns boolean
+		if (IsStringSignature(SubString(whichString, 0, 1))) then
+			if (StringLength(whichString) > 1) then
+				return IsStringNumeral(SubString(whichString, 1, StringLength(whichString)))
+			endif
+			return false
 		endif
-		return IsStringNumeral(SubString(usedString, 0, StringLength(usedString)))
+		return IsStringNumeral(SubString(whichString, 0, StringLength(whichString)))
 	endfunction
 
 	/**
@@ -187,49 +175,49 @@ library ALibraryCoreStringPool requires ALibraryCoreStringMisc
 	* - 0% binär
 	* - 0 oktal
 	* - 0x hexadezimal
-	* Checks if string @param usedString is binary.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString is binary.
 	*/
-	function IsStringBinary takes string usedString returns boolean
-		if (SubString(usedString, 0, 2) == "0%") then
-			return IsStringFromStringPool(SubString(usedString, 2, StringLength(usedString)), BINARY_CHARS)
-		endif
-		return false
-	endfunction
 
 	/**
-	* Bei den folgenden Zahlentypen muss die Zahl immer mit einer bestimmten Ziffernfolge beginnen.
-	* Ansonsten wird sie NICHT als eine solche Zahl erkannt.
-	* Dies ist eine Anlehnung an C++ und wahrscheinlich auch an vielen andere Sprachen:
-	* - 0% binär
-	* - 0 oktal
-	* - 0x hexadezimal
-	* Checks if string @param usedString is octal.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString is octal.
+	* Checks if string @param whichString is binary.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString is binary.
 	*/
-	function IsStringOctal takes string usedString returns boolean
-		if (SubString(usedString, 0, 1) == "0") then
-			return IsStringFromStringPool(SubString(usedString, 1, StringLength(usedString)), OCTAL_CHARS)
+	function IsStringBinary takes string whichString returns boolean
+		if (StringLength(whichString) >= 2 and SubString(whichString, 0, 2) == "0%") then
+			if (StringLength(whichString) > 2) then
+				return IsStringFromCharacterPool(SubString(whichString, 2, StringLength(whichString)), ABinaryCharacters)
+			endif
+			return false
 		endif
 		return false
 	endfunction
 
 	/**
-	* Bei den folgenden Zahlentypen muss die Zahl immer mit einer bestimmten Ziffernfolge beginnen.
-	* Ansonsten wird sie NICHT als eine solche Zahl erkannt.
-	* Dies ist eine Anlehnung an C++ und wahrscheinlich auch an vielen andere Sprachen:
-	* - 0% binär
-	* - 0 oktal
-	* - 0x hexadezimal
-	* Checks if string @param usedString is hexadecimal.
-	* @param usedString Checked string.
-	* @return Returns true if string @param usedString is hexadecimal.
+	* Checks if string @param whichString is octal.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString is octal.
 	*/
-	function IsStringHexadecimal takes string usedString returns boolean
-		if (SubString(usedString, 0, 2) == "0x") then
-			return IsStringFromStringPool(SubString(usedString, 2, StringLength(usedString)), HEXADECIMAL_CHARS)
+	function IsStringOctal takes string whichString returns boolean
+		if (StringLength(whichString) >= 1 and SubString(whichString, 0, 1) == "0") then
+			if (StringLength(whichString) > 1) then
+				return IsStringFromCharacterPool(SubString(whichString, 1, StringLength(whichString)), AOctalCharacters)
+			endif
+			return false
+		endif
+		return false
+	endfunction
+
+	/**
+	* Checks if string @param whichString is hexadecimal.
+	* @param whichString Checked string.
+	* @return Returns true if string @param whichString is hexadecimal.
+	*/
+	function IsStringHexadecimal takes string whichString returns boolean
+		if (StringLength(whichString) >= 2 and SubString(whichString, 0, 2) == "0x") then
+			if (StringLength(whichString) > 2) then
+				return IsStringFromCharacterPool(SubString(whichString, 2, StringLength(whichString)), AHexadecimalCharacters)
+			endif
+			return true
 		endif
 		return false
 	endfunction

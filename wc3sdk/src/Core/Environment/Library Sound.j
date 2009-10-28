@@ -1,9 +1,11 @@
 library ALibraryCoreEnvironmentSound
 
-	/// Plays a sound for the player user.
-	/// @author Tamino Dauth
-	/// @param user Player who can hear the sound.
-	/// @param usedSound Played sound.
+	/**
+	* Plays a sound for the player @param user.
+	* @author Tamino Dauth
+	* @param user Player who the sound is played for.
+	* @param usedSound Played sound.
+	*/
 	function PlaySoundForPlayer takes player user, sound usedSound returns nothing
 		local player localPlayer = GetLocalPlayer()
 		if (user == localPlayer) then

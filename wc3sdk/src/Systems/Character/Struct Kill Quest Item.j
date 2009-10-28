@@ -1,30 +1,5 @@
 library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversion, AStructSystemsCharacterQuest
 
-	private function stateEventCompleted takes AKillQuestItem questItem, trigger usedTrigger returns nothing
-		call TriggerRegisterAnyUnitEventBJ(usedTrigger, EVENT_PLAYER_UNIT_DEATH)
-	endfunction
-	
-	private function stateConditionCompleted takes AKillQuestItem questItem returns boolean
-		local unit killer
-		local unit triggerUnit
-		local boolean result = true
-		if (questItem.unitTypeId() != 0) then
-			set killer = GetKillingUnit()
-			set result = GetUnitTypeId(killer) == questItem.unitTypeId()
-			set killer = null
-		endif
-		if (result and questItem.targetUnitTypeId() != 0) then
-			set triggerUnit = GetTriggerUnit()
-			set result = GetUnitTypeId(triggerUnit) == questItem.targetUnitTypeId()
-			set triggerUnit = null
-		endif
-		if (result) then
-			call questItem.addKill()
-			call questItem.quest().displayUpdateMessage(IntegerArg(IntegerArg("%i von i% getötet.", questItem.killed()), questItem.count()))
-		endif
-		return questItem.killed() == questItem.count()
-	endfunction
-
 	/// @state untested
 	struct AKillQuestItem extends AQuestItem
 		//static start members
@@ -55,14 +30,30 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 		public method killed takes nothing returns integer
 			return this.m_killed
 		endmethod
-		
-		public method displayMessage takes nothing returns nothing
-			call this.quest().displayUpdateMessage(IntegerArg(IntegerArg(thistype.message, this.m_killed), this.m_count))
+
+		private method stateEventCompleted takes thistype questItem, trigger whichTrigger returns nothing
+			call TriggerRegisterAnyUnitEventBJ(whichTrigger, EVENT_PLAYER_UNIT_DEATH)
 		endmethod
 		
-		/// Friend relation to library functions, do not use!
-		public method addKill takes nothing returns nothing
-			set this.m_killed = this.m_killed + 1
+		private method stateConditionCompleted takes thistype questItem returns boolean
+			local unit killer
+			local unit triggerUnit
+			local boolean result = true
+			if (questItem.m_unitTypeId != 0) then
+				set killer = GetKillingUnit()
+				set result = GetUnitTypeId(killer) == questItem.m_unitTypeId
+				set killer = null
+			endif
+			if (result and questItem.m_targetUnitTypeId != 0) then
+				set triggerUnit = GetTriggerUnit()
+				set result = GetUnitTypeId(triggerUnit) == questItem.m_targetUnitTypeId
+				set triggerUnit = null
+			endif
+			if (result) then
+				set questItem.m_killed = questItem.m_killed + 1
+				call questItem.quest().displayUpdateMessage(IntegerArg(IntegerArg(thistype.message, questItem.m_killed), questItem.m_count))
+			endif
+			return questItem.m_killed == questItem.m_count
 		endmethod
 		
 		/**
@@ -78,8 +69,8 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 			//members
 			set this.m_killed = 0
 			
-			call this.setStateEvent(AAbstractQuest.stateCompleted, stateEventCompleted)
-			call this.setStateCondition(AAbstractQuest.stateCompleted, stateConditionCompleted)
+			call this.setStateEvent(AAbstractQuest.stateCompleted, thistype.stateEventCompleted)
+			call this.setStateCondition(AAbstractQuest.stateCompleted, thistype.stateConditionCompleted)
 			return this
 		endmethod
 		

@@ -282,7 +282,7 @@ endif
 static if (not A_FPS_MOVEMENT) then
 			//forward
 			set this.m_startMovementTrigger[0] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[0], KEY_UP, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[0], AKeyUp, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[0], function thistype.triggerActionMoveForward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[0], "this", this)
 			set triggerEvent = null
@@ -290,7 +290,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop forward
 			set this.m_startMovementTrigger[1] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[1], KEY_UP, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[1], AKeyUp, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[1], function thistype.triggerActionStopMovingForward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[1], "this", this)
 			set triggerEvent = null
@@ -298,7 +298,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//backward
 			set this.m_startMovementTrigger[2] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[2], KEY_DOWN, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[2], AKeyDown, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[2], function thistype.triggerActionMoveBackward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[2], "this", this)
 			set triggerEvent = null
@@ -306,7 +306,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop backward
 			set this.m_startMovementTrigger[3] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[3], KEY_DOWN, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[3], AKeyDown, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[3], function thistype.triggerActionStopMovingBackward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[3], "this", this)
 			set triggerEvent = null
@@ -314,7 +314,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//right
 			set this.m_startMovementTrigger[4] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[4], KEY_RIGHT, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[4], AKeyRight, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[4], function thistype.triggerActionTurnRight)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[4], "this", this)
 			set triggerEvent = null
@@ -322,7 +322,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop right
 			set this.m_startMovementTrigger[5] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[5], KEY_RIGHT, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[5], AKeyRight, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[5], function thistype.triggerActionStopTurningRight)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[5], "this", this)
 			set triggerEvent = null
@@ -330,7 +330,7 @@ static if (not A_FPS_MOVEMENT) then
 			
 			//left
 			set this.m_startMovementTrigger[6] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[6], KEY_LEFT, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[6], AKeyLeft, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[6], function thistype.triggerActionTurnLeft)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[6], "this", this)
 			set triggerEvent = null
@@ -338,7 +338,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop left
 			set this.m_startMovementTrigger[7] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[7], KEY_LEFT, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[7], AKeyLeft, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[7], function thistype.triggerActionStopTurningLeft)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[7], "this", this)
 			set triggerEvent = null
