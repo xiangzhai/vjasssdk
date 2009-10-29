@@ -1,4 +1,4 @@
-library ALibraryCoreGeneralUnit requires AStructCoreGeneralGroup, ALibraryCoreGeneralItem
+library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
 
 	/**
 	* Sicheres Iterieren per FirstOfGroup
@@ -277,7 +277,7 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralGroup, ALibraryCoreGe
 		set whichGroup = null
 		set i = 0
 		loop
-			exitwhen (i == unitGroup.size())
+			exitwhen (i == unitGroup.units().size())
 			if (pause and not IsUnitPaused(unitGroup.units()[i])) then
 				call PauseUnit(unitGroup.units()[i], true)
 				call AHashTable.global().setHandleBoolean(unitGroup.units()[i], "PauseAllUnits:IsPaused", true)
@@ -296,6 +296,6 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralGroup, ALibraryCoreGe
 		endif
 	endfunction
 
-	hook RemoveUnit hookFuntionRemoveUnit
+	hook RemoveUnit hookFunctionRemoveUnit
 
 endlibrary

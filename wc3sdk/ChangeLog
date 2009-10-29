@@ -1,3 +1,9 @@
+2009-10-29 Tamino Dauth <tamino@cdauth.de>
+* Added various new methods to struct AGroup.
+
+2009-10-28 Tamino Dauth <tamino@cdauth.de>
+* Fixed various syntax errors and bugs.
+
 2009-10-27 Tamino Dauth <tamino@cdauth.de>
 * Revised method addGroup of struct AGroup.
 * Added function PauseAllUnits (and corresponding hook function).
