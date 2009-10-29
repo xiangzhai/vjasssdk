@@ -32,7 +32,7 @@ namespace mdlx
 
 class Geoset;
 
-//--PTYP
+//PTYP
 class PrimitiveTypes : public GroupMdxBlock
 {
 	public:

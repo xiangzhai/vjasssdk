@@ -33,8 +33,8 @@ namespace mdlx
 {
 
 class GeosetAnimations;
-class Alpha;
-class Color;
+class GeosetAnimationAlphas;
+class GeosetAnimationColors;
 
 class GeosetAnimation
 {
@@ -57,8 +57,8 @@ class GeosetAnimation
 		float32 colorGreen() const;
 		float32 colorBlue() const;
 		long32 geosetId() const;
-		class Alpha* alpha() const;
-		class Color* color() const;
+		class GeosetAnimationAlphas* alphas() const;
+		class GeosetAnimationColors* colors() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -71,8 +71,8 @@ class GeosetAnimation
 		long32 m_colorAnimation; //(0:none;1:DropShadow;2:Color;3:Both)
 		float32 m_colorRed, m_colorGreen, m_colorBlue; //(default:1)
 		long32 m_geosetId;
-		class Alpha *m_alpha; //(KGAO)
-		class Color *m_color; //(KGAC)
+		class GeosetAnimationAlphas *m_alphas; //(KGAO)
+		class GeosetAnimationColors *m_colors; //(KGAC)
 };
 
 inline class GeosetAnimations* GeosetAnimation::geosetAnimations() const
@@ -110,14 +110,14 @@ inline long32 GeosetAnimation::geosetId() const
 	return this->m_geosetId;
 }
 
-inline class Alpha* GeosetAnimation::alpha() const
+inline class GeosetAnimationAlphas* GeosetAnimation::alphas() const
 {
-	return this->m_alpha;
+	return this->m_alphas;
 }
 
-inline class Color* GeosetAnimation::color() const
+inline class GeosetAnimationColors* GeosetAnimation::colors() const
 {
-	return this->m_color;
+	return this->m_colors;
 }
 
 }

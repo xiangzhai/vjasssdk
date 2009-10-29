@@ -57,6 +57,11 @@ class GeosetAnimationColor
 		//}
 };
 
+inline class GeosetAnimationColors* GeosetAnimationColor::geosetAnimationColors() const
+{
+	return this->m_geosetAnimationColors;
+}
+
 }
 
 }

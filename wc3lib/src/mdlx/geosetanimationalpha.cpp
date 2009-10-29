@@ -18,7 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "kgao.hpp"
+#include <iostream> // debug
+
+#include "geosetanimationalpha.hpp"
+#include "geosetanimationalphas.hpp"
 
 namespace wc3lib
 {
@@ -26,36 +29,47 @@ namespace wc3lib
 namespace mdlx
 {
 
-Kgao::Kgao(class Mdlx *mdlx) : MdxBlock("KGAO"), m_mdlx(mdlx)
+GeosetAnimationAlpha::GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas) : m_geosetAnimationAlphas(geosetAnimationAlphas)
 {
 }
 
-Kgao::~Kgao()
+void GeosetAnimationAlpha::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Kgao::readMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimationAlpha::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Kgao::writeMdl(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimationAlpha::readMdx(std::fstream &fstream) throw (class Exception)
 {
-}
-
-long32 Kgao::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
+	bytes += fstream.gcount();
+	
+	if (this->m_geosetAnimationAlphas->lineType() > 1)
+	{
+		fstream.read(reinterpret_cast<char*>(&this->m_inTan), sizeof(this->m_inTan));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTan), sizeof(this->m_outTan));
+		bytes += fstream.gcount();
+	}
+	// init against access errors
+	else
+	{
+		this->m_inTan = 0.0;
+		this->m_outTan = 0.0;
+	}
+	
+	std::cout << "Geoset animation alpha with " << bytes << " bytes " << std::endl;
 	
 	return bytes;
 }
 
-long32 Kgao::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimationAlpha::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return 0;
 }
 
 }

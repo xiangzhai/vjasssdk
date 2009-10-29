@@ -42,6 +42,7 @@ class GeosetAnimationColors : public MdxBlock
 		virtual ~GeosetAnimationColors();
 
 		class GeosetAnimation* geosetAnimation() const;
+		long32 lineType() const;
 		std::list<class GeosetAnimationColor*> geosetAnimationColors() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
@@ -60,6 +61,11 @@ class GeosetAnimationColors : public MdxBlock
 inline class GeosetAnimation* GeosetAnimationColors::geosetAnimation() const
 {
 	return this->m_geosetAnimation;
+}
+
+inline long32 GeosetAnimationColors::lineType() const
+{
+	return this->m_lineType;
 }
 
 inline std::list<class GeosetAnimationColor*> GeosetAnimationColors::geosetAnimationColors() const

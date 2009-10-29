@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "geosetanimationcolor.hpp"
+#include "geosetanimationcolors.hpp"
 
 namespace wc3lib
 {
@@ -40,7 +41,42 @@ void GeosetAnimationColor::writeMdl(std::fstream &fstream) throw (class Exceptio
 
 long32 GeosetAnimationColor::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
+	bytes += fstream.gcount();
+	
+	if (this->geosetAnimationColors()->lineType() > 1)
+	{
+		fstream.read(reinterpret_cast<char*>(&this->m_inTanX), sizeof(this->m_inTanX));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_inTanY), sizeof(this->m_inTanY));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_inTanZ), sizeof(this->m_inTanZ));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTanX), sizeof(this->m_outTanX));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTanY), sizeof(this->m_outTanY));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTanZ), sizeof(this->m_outTanZ));
+		bytes += fstream.gcount();
+	}
+	// init against access errors
+	else
+	{
+		this->m_inTanX = 0.0;
+		this->m_inTanY = 0.0;
+		this->m_inTanZ = 0.0;
+		this->m_outTanX = 0.0;
+		this->m_outTanY = 0.0;
+		this->m_outTanZ = 0.0;
+	}
+	
+	return bytes;
 }
 
 long32 GeosetAnimationColor::writeMdx(std::fstream &fstream) throw (class Exception)

@@ -34,10 +34,10 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Camera;
 class Translation3;
 
-//KTAT, like KGSC (Scalings)
+//KTTR, like KGSC (Scalings)
 class Translation3s : public MdxBlock
 {
 	public:
@@ -49,10 +49,10 @@ class Translation3s : public MdxBlock
 			Bezier = 3
 		};
 
-		Translation3s(class Mdlx *mdlx);
+		Translation3s(class Camera *camera);
 		virtual ~Translation3s();
 
-		class Mdlx* mdlx() const;
+		class Camera* camera() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
 		std::list<class Translation3*> translations() const;
@@ -63,15 +63,15 @@ class Translation3s : public MdxBlock
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Camera *m_camera;
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class Translation3*> m_translations;
 };
 
-inline class Mdlx* Translation3s::mdlx() const
+inline class Camera* Translation3s::camera() const
 {
-	return this->m_mdlx;
+	return this->m_camera;
 }
 
 inline long32 Translation3s::lineType() const

@@ -86,6 +86,8 @@ long32 GeosetAnimationColors::writeMdx(std::fstream &fstream) throw (class Excep
 		return 0;
 	
 	long32 bytes = MdxBlock::writeMdx(fstream);
+	
+	return bytes;
 }
 
 }

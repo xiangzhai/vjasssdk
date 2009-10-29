@@ -1,3 +1,7 @@
+2009-10-29 Tamino Dauth <tamino@cdauth.de>
+* Added and revised various MDLX classes.
+* Revised file "doc/Classes.txt".
+
 2009-10-28 Tamino Dauth <tamino@cdauth.de>
 * Introduced new class GroupMdxBlock and GroupMdxBlockMember.
 * Added classes GeosetAnimationColors and GeosetAnimationColor.

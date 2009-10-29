@@ -29,6 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
+//MODL
 class Model : public MdxBlock
 {
 	public:

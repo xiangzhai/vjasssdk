@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "translation1s.hpp"
+#include "translation1.hpp"
 
 namespace wc3lib
 {
@@ -46,11 +47,32 @@ long32 Translation1s::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nunks = 0;
+	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += fstream.gcount();
+
+	for ( ; nunks > 0; --nunks)
+	{
+		class Translation1 *translation = new Translation1(this);
+		bytes += translation->readMdx(fstream);
+		this->m_translations.push_back(translation);
+	}
+	
 	return bytes;
 }
 
 long32 Translation1s::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	if (!this->exists())
+		return 0;
+	
 	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;

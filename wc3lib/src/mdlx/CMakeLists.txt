@@ -13,8 +13,6 @@ set(wc3lib_MDLX_SRC
 	cameras.cpp
 	collisionshape.cpp
 	collisionshapes.cpp
-	color0.cpp
-	color0s.cpp
 	color1.cpp
 	color1s.cpp
 	emissionrate.cpp
@@ -24,6 +22,8 @@ set(wc3lib_MDLX_SRC
 	ganimation.cpp
 	geoset.cpp
 	geosetanimation.cpp
+	geosetanimationalpha.cpp
+	geosetanimationalphas.cpp
 	geosetanimationcolor.cpp
 	geosetanimationcolors.cpp
 	geosetanimations.cpp
@@ -123,14 +123,16 @@ set(wc3lib_MDLX_H
 	bone.hpp
 	camera.hpp
 	collisionshape.hpp
-	color0.hpp
-	color0s.hpp
 	color1.hpp
 	color1s.hpp
 	event.hpp
 	ganimation.hpp
 	geoset.hpp
 	geosetanimation.hpp
+	geosetanimationalpha.hpp
+	geosetanimationalphas.hpp
+	geosetanimationcolor.hpp
+	geosetanimationcolors.hpp
 	groupmdxblock.hpp
 	groupmdxblockmember.hpp
 	mdlx.hpp

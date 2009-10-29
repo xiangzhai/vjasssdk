@@ -18,15 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_COLOR0S_HPP
-#define WC3LIB_MDLX_COLOR0S_HPP
+#ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
+#define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
 
 #include <fstream>
-#include <list>
 
-#include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -34,59 +33,33 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Color0;
+class GeosetAnimationAlphas;
 
-//KGAC
-class Color0s : public MdxBlock
+class GeosetAnimationAlpha
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
-		Color0s(class Mdlx *mdlx);
-		virtual ~Color0s();
-
-		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Color0*> colors() const;
-
+		GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas);
+		
+		class GeosetAnimationAlphas* geosetAnimationAlphas() const;
+		
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
 		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Color0*> m_colors;
+		
+	private:
+		class GeosetAnimationAlphas *m_geosetAnimationAlphas;
+		long32 m_frame;
+		float32 m_state; //(0 or 1)
+		//if (LineType > 1) {
+		float32 m_inTan;
+		float32 m_outTan;
+		//}
 };
 
-inline class Mdlx* Color0s::mdlx() const
+inline class GeosetAnimationAlphas* GeosetAnimationAlpha::geosetAnimationAlphas() const
 {
-	return this->m_mdlx;
-}
-
-inline long32 Color0s::lineType() const
-{
-	return this->m_lineType;
-}
-
-inline long32 Color0s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Color0*> Color0s::colors() const
-{
-	return this->m_colors;
+	return this->m_geosetAnimationAlphas;
 }
 
 }

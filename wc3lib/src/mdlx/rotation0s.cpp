@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "rotation0s.hpp"
+#include "rotation0.hpp"
 
 namespace wc3lib
 {
@@ -46,11 +47,32 @@ long32 Rotation0s::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nunks = 0;
+	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += fstream.gcount();
+	
+	for ( ; nunks > 0; --nunks)
+	{
+		class Rotation0 *rotation = new Rotation0(this);
+		bytes += rotation->readMdx(fstream);
+		this->m_rotations.push_back(rotation);
+	}
+	
 	return bytes;
 }
 
 long32 Rotation0s::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	if (!this->exists())
+		return 0;
+	
 	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;

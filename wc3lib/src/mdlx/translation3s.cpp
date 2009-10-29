@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Translation3s::Translation3s(class Mdlx *mdlx) : MdxBlock("KTTR"), m_mdlx(mdlx)
+Translation3s::Translation3s(class Camera *camera) : MdxBlock("KTTR"), m_camera(camera)
 {
 }
 

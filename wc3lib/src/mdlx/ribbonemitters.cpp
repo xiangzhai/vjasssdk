@@ -48,11 +48,30 @@ long32 RibbonEmitters::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes = 0;
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += fstream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class RibbonEmitter *ribbonEmitter = new RibbonEmitter(this);
+		long32 readBytes = ribbonEmitter->readMdx(fstream);
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_ribbonEmitters.push_back(ribbonEmitter);
+	}
+	
 	return bytes;
 }
 
 long32 RibbonEmitters::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	if (!this->exists())
+		return 0;
+	
 	long32 bytes = MdxBlock::writeMdx(fstream);
 	
 	return bytes;

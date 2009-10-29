@@ -37,6 +37,7 @@ namespace mdlx
 class Mdlx;
 class ParticleEmitter;
 
+//PREM
 class ParticleEmitters : public MdxBlock
 {
 	public:

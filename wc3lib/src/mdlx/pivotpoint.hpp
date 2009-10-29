@@ -32,30 +32,32 @@ namespace wc3lib
 namespace mdlx
 {
 
+class PivotPoints;
+
 class PivotPoint
 {
 	public:
-		PivotPoint(class Mdlx *mdlx);
+		PivotPoint(class PivotPoints *pivotPoints);
 		virtual ~PivotPoint();
 
-		class Mdlx* mdlx() const;
+		class PivotPoints* pivotPoints() const;
 		float32 x() const;
 		float32 y() const;
 		float32 z() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class PivotPoints *m_pivotPoints;
 		float32 m_x, m_y, m_z;
 };
 
-inline class Mdlx* PivotPoint::mdlx() const
+inline class PivotPoints* PivotPoint::pivotPoints() const
 {
-	return this->m_mdlx;
+	return this->m_pivotPoints;
 }
 
 inline float32 PivotPoint::x() const

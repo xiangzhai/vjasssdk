@@ -37,6 +37,7 @@ namespace mdlx
 class Mdlx;
 class Helper;
 
+//HELP
 class Helpers : public MdxBlock
 {
 	public:

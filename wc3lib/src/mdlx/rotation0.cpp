@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "rotation0.hpp"
+#include "rotation0s.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Rotation0::Rotation0(class Mdlx *mdlx) : m_mdlx(mdlx)
+Rotation0::Rotation0(class Rotation0s *rotations) : m_rotations(rotations)
 {
 }
 
@@ -38,16 +39,49 @@ void Rotation0::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Rotation0::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void Rotation0::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Rotation0::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Rotation0::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_a), sizeof(this->m_a));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_b), sizeof(this->m_b));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_c), sizeof(this->m_c));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_d), sizeof(this->m_d));
+	bytes += fstream.gcount();
+	
+	if (this->m_rotations->lineType() > 1)
+	{
+		fstream.read(reinterpret_cast<char*>(&this->m_inTanA), sizeof(this->m_inTanA));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_inTanB), sizeof(this->m_inTanB));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_inTanC), sizeof(this->m_inTanC));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_inTanD), sizeof(this->m_inTanD));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTanA), sizeof(this->m_outTanA));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTanB), sizeof(this->m_outTanB));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTanC), sizeof(this->m_outTanC));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTanD), sizeof(this->m_outTanD));
+		bytes += fstream.gcount();
+	}
+	
+	return bytes;
+}
+
+long32 Rotation0::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

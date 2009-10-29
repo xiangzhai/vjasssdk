@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include "object.hpp"
 #include "translation1s.hpp"
 #include "rotation0s.hpp"
@@ -53,30 +55,34 @@ void Object::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 Object::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long32 bytes = 0;
 	long32 nbytesi = 0;
 	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	bytes += fstream.gcount();
+	long32 bytes = fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_name), sizeof(this->m_name));
 	bytes += fstream.gcount();
+	std::cout << "Object name is " << this->m_name << " and nbytesi is " << nbytesi << std::endl;
 	fstream.read(reinterpret_cast<char*>(&this->m_objectId), sizeof(this->m_objectId));
 	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_parent), sizeof(this->m_parent));
 	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_type), sizeof(this->m_type));
 	bytes += fstream.gcount();
+	/// @todo All those blocks seem to be optional, model Krieger.mdx doesn contain them for its bones.
 	bytes += this->m_translations->readMdx(fstream);
 	bytes += this->m_rotations->readMdx(fstream);
 	bytes += this->m_scalings->readMdx(fstream);
 	bytes += this->m_visibilities->readMdx(fstream);
-		
+	/*	
 	if (bytes != nbytesi)
 	{
+		std::cout << "test 1 and bytes are " << bytes << std::endl;
 		char message[50];
 		sprintf(message, _("Object: File byte count is not equal to real byte count.\nFile byte count: %d.\nReal byte count: %d.\n"), nbytesi, bytes);
+		std::cout << "test 2" << std::endl;
 		
 		throw Exception(message);
 	}
+	*/
 	
 	return bytes;
 }

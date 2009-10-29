@@ -18,7 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> //debug
+
 #include "geosetanimation.hpp"
+#include "geosetanimationalphas.hpp"
+#include "geosetanimationcolors.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -26,12 +31,14 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimation::GeosetAnimation(class GeosetAnimations *geosetAnimations) : m_geosetAnimations(geosetAnimations), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alpha(0),  m_color(0)
+GeosetAnimation::GeosetAnimation(class GeosetAnimations *geosetAnimations) : m_geosetAnimations(geosetAnimations), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alphas(new GeosetAnimationAlphas(this)),  m_colors(new GeosetAnimationColors(this))
 {
 }
 
 GeosetAnimation::~GeosetAnimation()
 {
+	delete this->m_alphas;
+	delete this->m_colors;
 }
 
 void GeosetAnimation::readMdl(std::fstream &fstream) throw (class Exception)
@@ -44,11 +51,46 @@ void GeosetAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
 
 long32 GeosetAnimation::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	long	nbytesi;
+	long32 nbytesi;
+	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_staticAlpha), sizeof(this->m_staticAlpha));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_colorAnimation), sizeof(this->m_colorAnimation));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_colorRed), sizeof(this->m_colorRed));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_colorGreen), sizeof(this->m_colorGreen));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_colorBlue), sizeof(this->m_colorBlue));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
+	bytes += fstream.gcount();
+	
+	std::cout << "Static alpha is " << this->m_staticAlpha << std::endl;
+	
+	if (this->m_staticAlpha == 1.0)
+	{
+		bytes += this->m_alphas->readMdx(fstream);
+	}
+	
+	bytes += this->m_colors->readMdx(fstream); /// @todo Seems to be optional, file Krieger.mdx doesn't have this block.
+	std::cout << "After colors" << std::endl;
+	
+	if (nbytesi != bytes)
+	{
+		char message[50];
+		sprintf(message, _("Geoset animation: File byte count isn't equal to real byte count:\nFile byte count %d.\nReal byte count %d.\n"), nbytesi, bytes);
+	
+		throw Exception(message);
+	}
+	
+	return bytes;
 }
 
 long32 GeosetAnimation::writeMdx(std::fstream &fstream) throw (class Exception)
 {
+	return 0;
 }
 
 }

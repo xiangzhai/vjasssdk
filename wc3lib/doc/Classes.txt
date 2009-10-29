@@ -1,22 +1,96 @@
-wc3lib class name	MDX block name		Parent class		Expected class name
-Mdlx			MDLX
-Alphas			KMTA
-Attachments		ATCH
-AmbientColors		KLBC			Light			Light...
-AmbientIntensities	KLBI			Light			Light...
-Bones			BONE
-Cameras			CAMS
-CollisionShapes		CLID
-Intensities		KLAI			Light			LightAmbientIntensities
+1. MDLX property classes
+
+wc3lib class name			MDX block name		Parent class (not inheritance!)		Expected class name				Blender object			OGRE class			3ds object
+Mdlx					MDLX
+Alphas					KMTA			Material				MaterialAlphas
+AmbientColors				KLBC			Light					Light...
+AmbientIntensities			KLBI			Light					Light...
+Attachments				ATCH			Mdlx					Attachments
+Bones					BONE			Mdlx					Bones
+Cameras					CAMS			Mdlx					Cameras
+CollisionShapes				CLID			Mdlx					CollisionShapes
+Color1s					KLAC			Light					LightAmbientColors
+EmissionRates				KP2E			ParticleEmitter2			ParticleEmitter2EmissionRates
+Events					EVTS			Mdlx					Events
+Ganimation				-			Geoset
+Geoset					-			Geosets
+Geosets					GEOS			Mdlx
+GeosetAnimations			GEOA			Mdlx
+GeosetAnimationColor			-			GeosetAnimationColors
+GeosetAnimationColors			KGAC			GeosetAnimation
+GeosetAnimationAlpha			-			GeosetAnimationAlphas
+GeosetAnimationAlphas			KGAO			GeosetAnimation
+GlobalSequence				-			GlobalSequences
+GlobalSequences				GLBS			Mdlx
+GroupVertex				-			GroupVertices
+GroupVertices				GNDX			Geoset
+Helper					-			Helpers
+Helpers					HELP			Mdlx
+Intensity				-			Intensities
+Intensities				KLAI			Light					LightAmbientIntensities
+Layer					-			Layers
+Layers					LAYS			Material
+Length					-			Lengths
+Lengths					KP2N			ParticleEmitter2			ParticleEmitter2Number???
+Light					-			Lights
+Lights					LITE			Mdlx
+Material				-			Materials
+Materials				MTLS			Mdlx
+Matrix					-			Matrices
+Matrices				MATS			Geoset
+MatrixGroupCount			-			MatrixGroupCounts
+MatrixGroupCounts			MTGC			Geoset
+Mdlx					-			-
+Model					MODL			Mdlx
+Normal					-			Normals
+Normals					NRMS			Geoset
+ParticleEmitter				-			ParticleEmitters
+ParticleEmitters			PREM			Mdlx
+ParticleEmitter2			-			ParticleEmitter2s
+ParticleEmitter2s			PRE2			Mdlx					ParticleEmitters2
+PivotPoint				-			PivotPoints
+PivotPoints				PIVT			Mdlx
+PrimitiveSize				-			PrimitiveSizes				PrimitiveCount
+PrimitiveSizes				PCNT			Geoset					PrimitiveCounts
+PrimitiveType				-			PrimitiveTypes
+PrimitiveTypes				PTYP			Geoset
+PrimitiveVertex				-			PrimitiveVertices			Face? (probably primitive vertex is much better)
+PrimitiveVertices			PVTX			Geoset					Faces? (probably primitive vertices is much better)
+RibbonEmitter				-			RibbonEmitters
+RibbonEmitters				RIBB			Mdlx
+RibbonEmitterVisibilitySpeeds		KRVS			RibbonEmitter
+RibbonEmitterHeightsAbove		KRHA			RibbonEmitter
+RibbonEmitterHeightsBelow		KRHB			RibbonEmitter
+Rotation0				-			Rotation0s				Rotation
+Rotation0s				KGRT			Mdlx (various classes)			Rotations
+Rotation1				-			Rotation1s				TextureAnimationRotation
+Rotation1s				KTAR			TextureAnimation			TextureAnimationRotations
+Scaling0				-			Scaling0s
+Scaling0s				KGSC			Mdlx (various classes)
+Scaling0				-			Scaling1s				TextureAnimationScaling
+Scaling1s				KTAS			TextureAnimation			TextureAnimationScalings
+SegmentColor				-			ParticleEmitter2
+Sequence				-			Sequences
+Sequences				SEQS			Mdlx
+Texture					-			Textures
+Textures				TEXS			Mdlx
+TextureVertex				-			TextureVertices
+TextureVertices				UVBS			Geoset					??? (warblend calls texture coordinates)
+Translation0				-			Translation0s				CameraTranslation
+Translation0s				KCTR			Camera					CameraTranslations
+Translation1				-			Translation1s
+Translation1s				KGTR			Mdlx (various classes)
+Translation2				-			Translation2s				TextureAnimationTranslation
+Translation2s				KTAT			TextureAnimation			TextureAnimationTranslations
+Translation3				-			Translation3s				CameraTextureTranslation?!
+Translation3s				KTTR			Camera					CameraTextureTranslations?!
+
+old
 Visibility0s		KATV			Mdlx (various classes, Object, Attachments)
-Visibility1s		KLAV			Light			LightAmbientVisibility
+Visibility1s		KLAV			Light					LightAmbientVisibility
 Visibility2s		KP2V
 Visibility3s		KPEV
 Visibility4s		KRVS
-Color0s			KGAC
-Color1s			KLAC			Light			LightAmbientColors
-GeosetAnimationColors	KGAC			GeosetAnimation
-GeosetAnimationAlphas	KGAO			GeosetAnimation
 Rotation0s		KGRT			Mdlx (various classes)
 Rotation1s		KTAR
 Scaling0s		KGSC			Mdlx (various classes)
@@ -25,3 +99,13 @@ Translation0s		KCTR
 Translation1s		KGTR			Mdlx (various classes)
 Translation2s		KTAT
 Translation3s		KTTR
+
+
+2. Abstract MDLX property classes
+Name					Child classes
+GroupMdxBlock
+GroupMdxBlockMember			
+Object
+RotationBase
+ScalingBase
+TranslationBase

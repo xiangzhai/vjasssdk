@@ -19,12 +19,17 @@
  ***************************************************************************/
 
 #include "helper.hpp"
+#include "helpers.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+	
+Helper::Helper(class Helpers *helpers) : Object(helpers->mdlx()), m_helpers(helpers)
+{
+}
 
 }
 

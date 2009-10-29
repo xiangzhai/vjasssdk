@@ -32,15 +32,15 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Rotation0s;
 
 class Rotation0
 {
 	public:
-		Rotation0(class Mdlx *mdlx);
+		Rotation0(class Rotation0s *rotations);
 		virtual ~Rotation0();
 
-		class Mdlx* mdlx() const;
+		class Rotation0s* rotations() const;
 		float32 frame() const;
 		float32 a() const;
 		float32 b() const;
@@ -56,12 +56,12 @@ class Rotation0
 		float32 outTanD() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Rotation0s *m_rotations;
 		long32 m_frame;
 		float32 m_a, m_b, m_c, m_d;
 		//if (LineType > 1)
@@ -71,72 +71,72 @@ class Rotation0
 		//}
 };
 
-class Mdlx* Rotation0::mdlx() const
+inline class Rotation0s* Rotation0::rotations() const
 {
-	return this->m_mdlx;
+	return this->m_rotations;
 }
 
-float32 Rotation0::frame() const
+inline float32 Rotation0::frame() const
 {
 	return this->m_frame;
 }
 
-float32 Rotation0::a() const
+inline float32 Rotation0::a() const
 {
 	return this->m_a;
 }
 
-float32 Rotation0::b() const
+inline float32 Rotation0::b() const
 {
 	return this->m_b;
 }
 
-float32 Rotation0::c() const
+inline float32 Rotation0::c() const
 {
 	return this->m_c;
 }
 
-float32 Rotation0::d() const
+inline float32 Rotation0::d() const
 {
 	return this->m_d;
 }
 
-float32 Rotation0::inTanA() const
+inline float32 Rotation0::inTanA() const
 {
 	return this->m_inTanA;
 }
 
-float32 Rotation0::inTanB() const
+inline float32 Rotation0::inTanB() const
 {
 	return this->m_inTanB;
 }
 
-float32 Rotation0::inTanC() const
+inline float32 Rotation0::inTanC() const
 {
 	return this->m_inTanC;
 }
 
-float32 Rotation0::inTanD() const
+inline float32 Rotation0::inTanD() const
 {
 	return this->m_inTanD;
 }
 
-float32 Rotation0::outTanA() const
+inline float32 Rotation0::outTanA() const
 {
 	return this->m_outTanA;
 }
 
-float32 Rotation0::outTanB() const
+inline float32 Rotation0::outTanB() const
 {
 	return this->m_outTanB;
 }
 
-float32 Rotation0::outTanC() const
+inline float32 Rotation0::outTanC() const
 {
 	return this->m_outTanC;
 }
 
-float32 Rotation0::outTanD() const
+inline float32 Rotation0::outTanD() const
 {
 	return this->m_outTanD;
 }

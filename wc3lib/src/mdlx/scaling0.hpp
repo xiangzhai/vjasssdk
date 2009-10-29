@@ -37,7 +37,7 @@ class Scaling0s;
 class Scaling0
 {
 	public:
-		Scaling0(class Scaling0s *mdlx);
+		Scaling0(class Scaling0s *scalings);
 		virtual ~Scaling0();
 
 		class Scaling0s* scalings() const;

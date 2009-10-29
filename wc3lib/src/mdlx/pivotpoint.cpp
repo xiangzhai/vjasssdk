@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PivotPoint::PivotPoint(class Mdlx *mdlx) : m_mdlx(mdlx)
+PivotPoint::PivotPoint(class PivotPoints *pivotPoints) : m_pivotPoints(pivotPoints)
 {
 }
 
@@ -38,16 +38,25 @@ void PivotPoint::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PivotPoint::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void PivotPoint::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void PivotPoint::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PivotPoint::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 PivotPoint::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

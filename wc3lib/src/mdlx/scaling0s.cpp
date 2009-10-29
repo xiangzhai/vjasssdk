@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "scaling0s.hpp"
+#include "scaling0.hpp"
 
 namespace wc3lib
 {
@@ -45,6 +46,24 @@ void Scaling0s::writeMdl(std::fstream &fstream) throw (class Exception)
 long32 Scaling0s::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nunks = 0;
+	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += fstream.gcount();
+	
+	for ( ; nunks > 0; --nunks)
+	{
+		class Scaling0 *scaling = new Scaling0(this);
+		bytes += scaling->readMdx(fstream);
+		this->m_scalings.push_back(scaling);
+	}
 	
 	return bytes;
 }

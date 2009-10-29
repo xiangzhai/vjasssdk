@@ -34,6 +34,7 @@ namespace mdlx
 class Mdlx;
 class Geoset;
 
+//GEOS
 class Geosets : public MdxBlock
 {
 	public:

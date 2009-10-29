@@ -33,6 +33,7 @@ namespace mdlx
 	
 class PivotPoint;
 
+//PIVT
 class PivotPoints : public MdxBlock
 {
 	public:

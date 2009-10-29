@@ -29,9 +29,23 @@ namespace wc3lib
 namespace mdlx
 {
 
+class Helpers;
+
 class Helper : public Object
 {
+	public:
+		Helper(class Helpers *helpers);
+		
+		class Helpers* helpers() const;
+	
+	private:
+		class Helpers *m_helpers;
 };
+
+inline class Helpers* Helper::helpers() const
+{
+	return this->m_helpers;
+}
 
 }
 

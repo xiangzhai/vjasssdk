@@ -37,7 +37,7 @@ namespace mdlx
 class Geoset;
 class PrimitiveSize;
 
-//--PCNT
+//PCNT
 class PrimitiveSizes : public MdxBlock
 {
 	public:

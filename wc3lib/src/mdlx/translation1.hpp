@@ -21,17 +21,105 @@
 #ifndef WC3LIB_MDLX_TRANSLATION1_HPP
 #define WC3LIB_MDLX_TRANSLATION1_HPP
 
-#include "scaling0.hpp"
+#include <fstream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+	
+class Translation1s;
 
-class Translation1 : public Scaling0
+class Translation1
 {
+	public:
+		Translation1(class Translation1s *translations);
+		
+		class Translation1s* translations() const;
+		long32 frame() const;
+		float32 x() const;
+		float32 y() const;
+		float32 z() const;
+		float32 inTanX() const;
+		float32 inTanY() const;
+		float32 inTanZ() const;
+		float32 outTanX() const;
+		float32 outTanY() const;
+		float32 outTanZ() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class Translation1s *m_translations;
+		long32	m_frame;
+		float32	m_x, m_y, m_z;
+		//if (LineType > 1) {
+		float32	m_inTanX, m_inTanY, m_inTanZ;
+		float32	m_outTanX, m_outTanY, m_outTanZ;
+		//}
 };
+
+inline class Translation1s* Translation1::translations() const
+{
+	return this->m_translations;
+}
+
+inline long32 Translation1::frame() const
+{
+	return this->m_frame;
+}
+
+inline float32 Translation1::x() const
+{
+	return this->m_x;
+}
+
+inline float32 Translation1::y() const
+{
+	return this->m_y;
+}
+
+inline float32 Translation1::z() const
+{
+	return this->m_z;
+}
+
+inline float32 Translation1::inTanX() const
+{
+	return this->m_inTanX;
+}
+
+inline float32 Translation1::inTanY() const
+{
+	return this->m_inTanY;
+}
+
+inline float32 Translation1::inTanZ() const
+{
+	return this->m_inTanZ;
+}
+
+inline float32 Translation1::outTanX() const
+{
+	return this->m_outTanX;
+}
+
+inline float32 Translation1::outTanY() const
+{
+	return this->m_outTanY;
+}
+
+inline float32 Translation1::outTanZ() const
+{
+	return this->m_outTanZ;
+}
 
 }
 

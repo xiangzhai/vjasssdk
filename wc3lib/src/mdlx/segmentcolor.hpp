@@ -32,32 +32,34 @@ namespace wc3lib
 namespace mdlx
 {
 
+class ParticleEmitter2;
+	
 class SegmentColor
 {
 	public:
-		SegmentColor(class Mdlx *mdlx);
+		SegmentColor(class ParticleEmitter2 *particleEmitter);
 		virtual ~SegmentColor();
 
-		class Mdlx* mdlx() const;
+		class ParticleEmitter2* particleEmitter() const;
 		float32 red() const;
 		float32 green() const;
 		float32 blue() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class ParticleEmitter2 *m_particleEmitter;
 		// SegmentColor usually 3 segments
 		// Inverse order from MDL
 		float32 m_red, m_green, m_blue;
 };
 
-inline class Mdlx* SegmentColor::mdlx() const
+inline class ParticleEmitter2* SegmentColor::particleEmitter() const
 {
-	return this->m_mdlx;
+	return this->m_particleEmitter;
 }
 
 inline float32 SegmentColor::red() const

@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include "geosetanimations.hpp"
 #include "geosetanimation.hpp"
 #include "../internationalisation.hpp"
@@ -73,6 +75,8 @@ long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
 		nbytes -= readBytes;
 		this->m_geosetAnimations.push_back(geosetAnimation);
 	}
+	
+	std::cout << "After all geoset animations with count " << this->m_geosetAnimations.size() << std::endl;
 	
 	return bytes;
 }

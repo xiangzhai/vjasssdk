@@ -20,8 +20,9 @@
 
 #include <iostream> // debug
 
-#include "helpers.hpp"
-#include "helper.hpp"
+#include "geosetanimationalphas.hpp"
+#include "geosetanimationalpha.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -29,47 +30,61 @@ namespace wc3lib
 namespace mdlx
 {
 
-Helpers::Helpers(class Mdlx *mdlx) : MdxBlock("HELP"), m_mdlx(mdlx)
+GeosetAnimationAlphas::GeosetAnimationAlphas(class GeosetAnimation *geosetAnimation) : MdxBlock("KGAO"), m_geosetAnimation(geosetAnimation)
 {
 }
 
-Helpers::~Helpers()
+GeosetAnimationAlphas::~GeosetAnimationAlphas()
+{
+	for (std::list<class GeosetAnimationAlpha*>::iterator iterator = this->m_geosetAnimationAlphas.begin(); iterator != this->m_geosetAnimationAlphas.end(); ++iterator)
+		delete *iterator;
+}
+
+void GeosetAnimationAlphas::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Helpers::readMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimationAlphas::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Helpers::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Helpers::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimationAlphas::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
 	
 	if (bytes == 0)
 		return 0;
 	
-	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	long32 nunks = 0;
+	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
 	bytes += fstream.gcount();
 	
-	while (nbytes > 0)
+	std::cout << "Number of geoset animation alphas " << nunks << std::endl;
+	
+	if (nunks <= 0)
 	{
-		class Helper *helper = new Helper(this);
-		long32 readBytes = helper->readMdx(fstream);
-		std::cout << "Got " << readBytes << " bytes helper." << std::endl;
-		bytes += readBytes;
-		nbytes -= readBytes;
-		this->m_helpers.push_back(helper);
+		char message[50];
+		sprintf(message, _("Geoset animation alphas: Count error, %d geoset animation alphas.\n"), nunks);
+		
+		throw Exception(message);
+	}
+	
+	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += fstream.gcount();
+	
+	for ( ; nunks > 0; --nunks)
+	{
+		class GeosetAnimationAlpha *geosetAnimationAlpha = new GeosetAnimationAlpha(this);
+		bytes += geosetAnimationAlpha->readMdx(fstream);
+		this->m_geosetAnimationAlphas.push_back(geosetAnimationAlpha);
 	}
 	
 	return bytes;
 }
 
-long32 Helpers::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimationAlphas::writeMdx(std::fstream &fstream) throw (class Exception)
 {
 	if (!this->exists())
 		return 0;

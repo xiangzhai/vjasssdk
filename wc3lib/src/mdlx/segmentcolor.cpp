@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-SegmentColor::SegmentColor(class Mdlx *mdlx) : m_mdlx(mdlx)
+SegmentColor::SegmentColor(class ParticleEmitter2 *particleEmitter) : m_particleEmitter(particleEmitter)
 {
 }
 
@@ -38,16 +38,25 @@ void SegmentColor::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void SegmentColor::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void SegmentColor::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void SegmentColor::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 SegmentColor::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	fstream.read(reinterpret_cast<char*>(&this->m_red), sizeof(this->m_red));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_green), sizeof(this->m_green));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_blue), sizeof(this->m_blue));
+	bytes += fstream.gcount();
+	
+	return bytes;
+}
+
+long32 SegmentColor::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return bytes;
 }
 
 }

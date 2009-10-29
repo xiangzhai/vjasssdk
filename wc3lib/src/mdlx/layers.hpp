@@ -37,6 +37,7 @@ namespace mdlx
 class Material;
 class Layer;
 
+//LAYS
 class Layers : public MdxBlock
 {
 	public:

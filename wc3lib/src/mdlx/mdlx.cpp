@@ -155,16 +155,27 @@ long32 Mdlx::readMdx(std::fstream &fstream) throw (class Exception)
 	bytes += this->m_geosets->readMdx(fstream);
 	bytes += this->m_geosetAnimations->readMdx(fstream);
 	bytes += this->m_bones->readMdx(fstream);
+	std::cout << "After bones" << std::endl;
 	bytes += this->m_lights->readMdx(fstream);
+	std::cout << "After lights" << std::endl;
 	bytes += this->m_helpers->readMdx(fstream);
+	std::cout << "After helpers" << std::endl;
 	bytes += this->m_attachments->readMdx(fstream);
+	std::cout << "After attachments" << std::endl;
 	bytes += this->m_pivotPoints->readMdx(fstream);
+	std::cout << "After pivot points" << std::endl;
 	bytes += this->m_particleEmitters->readMdx(fstream);
+	std::cout << "After particle emitters" << std::endl;
 	bytes += this->m_particleEmitter2s->readMdx(fstream);
+	std::cout << "After particle emitter2s" << std::endl;
 	bytes += this->m_ribbonEmitters->readMdx(fstream);
+	std::cout << "After ribbon emitters" << std::endl;
 	bytes += this->m_cameras->readMdx(fstream);
+	std::cout << "After cameras" << std::endl;
 	bytes += this->m_events->readMdx(fstream);
+	std::cout << "After events" << std::endl;
 	bytes += this->m_collisionShapes->readMdx(fstream);
+	std::cout << "After collision shapes" << std::endl;
 	
 	return bytes;
 }

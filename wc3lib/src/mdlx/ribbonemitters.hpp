@@ -37,6 +37,7 @@ namespace mdlx
 class Mdlx;
 class RibbonEmitter;
 
+//RIBB
 class RibbonEmitters : public MdxBlock
 {
 	public:

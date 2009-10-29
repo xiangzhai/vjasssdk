@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include "ribbonemitter.hpp"
+#include "ribbonemittervisibilityspeeds.hpp"
+#include "ribbonemitterheightsabove.hpp"
+#include "ribbonemitterheightsbelow.hpp"
 
 namespace wc3lib
 {
@@ -26,19 +29,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitter::RibbonEmitter(class Mdlx *mdlx) : m_mdlx(mdlx)
+RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : m_ribbonEmitters(ribbonEmitters), m_visibilitySpeeds(new RibbonEmitterVisibilitySpeeds(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
 {
 }
 
 RibbonEmitter::~RibbonEmitter()
 {
+	delete this->m_visibilitySpeeds;
+	delete this->m_heightsAbove;
+	delete this->m_heightsBelow;
 }
 
 void RibbonEmitter::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void RibbonEmitter::readMdx(std::fstream &fstream) throw (class Exception)
 {
 }
 
@@ -46,8 +48,63 @@ void RibbonEmitter::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void RibbonEmitter::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 RibbonEmitter::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	long32 nbytesi = 0;
+	fstream.read(reinterpret_cast<char*>(&nybtes), sizeof(nbytes));
+	long32 bytes = fstream.gcount();
+	long32 nbytesikg; // inclusive bytecount including KGXXs
+	fstream.read(reinterpret_cast<char*>(&nbytesikg), sizeof(nbytesikg));
+	bytes += fstream.gcount();
+	fstream.read(this->m_name, sizeof(this->m_name));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_objectId), sizeof(this->m_objectId));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_parent), sizeof(this->m_parent));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_flags), sizeof(this->m_flags));
+	bytes += fstream.gcount();
+	bytes += this->m_translation->readMdx(fstream);
+	bytes += this->m_rotation->readMdx(fstream);
+	bytes += this->m_scaling->readMdx(fstream);
+	fstream.read(reinterpret_cast<char*>(&this->m_heightAboveValue), sizeof(this->m_heightAboveValue));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_heightBelowValue), sizeof(this->m_heightBelowValue));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_alpha), sizeof(this->m_alpha));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_colorRed), sizeof(this->m_colorRed));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_colorGreen), sizeof(this->m_colorGreen));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_colorBlue), sizeof(this->m_colorBlue));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_lifeSpan), sizeof(this->m_lifeSpan));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_lifeSpan), sizeof(this->m_lifeSpan));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_emissionRate), sizeof(this->m_emissionRate));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_rows), sizeof(this->m_rows));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_columns), sizeof(this->m_columns));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_gravity), sizeof(this->m_gravity));
+	bytes += fstream.gcount();
+	bytes +=this->m_visibilitySpeeds->readMdx(fstream);
+	bytes +=this->m_heightsAbove->readMdx(fstream);
+	bytes +=this->m_heightsBelow->readMdx(fstream);
+	
+	return bytes;
+}
+
+long32 RibbonEmitter::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }
