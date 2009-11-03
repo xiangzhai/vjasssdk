@@ -53,6 +53,7 @@ const char *Parser::title[Parser::MaxLists] =
 	_("Function Interfaces"),
 	_("Functions"),
 	_("Methods"),
+	_("Calls"),
 	_("Implementations"),
 	_("Hooks"),
 	_("Interfaces"),
@@ -238,6 +239,11 @@ Parser::~Parser()
 		delete *iterator;
 
 	this->m_methods.clear();
+	
+	for (std::list<class Call*>::iterator iterator = this->m_calls.begin(); iterator != this->m_calls.end(); ++iterator)
+		delete *iterator;
+
+	this->m_calls.clear();
 
 	for (std::list<class Implementation*>::iterator iterator = this->m_implementations.begin(); iterator != this->m_implementations.end(); ++iterator)
 		delete *iterator;
@@ -583,7 +589,7 @@ void Parser::parse(const std::list<std::string> &filePaths)
 		this->add(sourceFile);
 		parsedList.push_back(sourceFile);
 		this->m_currentSourceFile = sourceFile;
-		class File file(*iterator);
+		this->parseFile(*iterator);
 	}
 
 	// there may be new source files if vJass's //! import macro was used
@@ -600,7 +606,7 @@ void Parser::parse(const std::list<std::string> &filePaths)
 		if (!isInList)
 		{
 			this->m_currentSourceFile = *iterator;
-			class File file((*iterator)->path());
+			this->parseFile((*iterator)->path());
 		}
 	}
 
@@ -1052,7 +1058,29 @@ std::list<class Object*> Parser::autoCompletion(const std::string &line, unsigne
 	return results;
 }
 
-std::list<class Object*>& Parser::getList(const enum Parser::List &list)
+void Parser::parseFile(const std::string &path)
+{
+	std::ifstream ifstream(path.c_str());
+
+	if (!ifstream.good())
+	{
+		ifstream.close();
+		fprintf(stderr, _("Was unable to open file %s.\n"), path.c_str());
+		
+		return;
+	}
+
+	
+	class File file;
+	std::size_t lines = file.parse(this, ifstream);
+	Vjassdoc::addLines(lines);
+	Vjassdoc::addFile();
+	printf(_("Parsed file %s successfully (number %d, %d lines).\n"), path.c_str(), Vjassdoc::files(), lines);
+	
+	ifstream.close();
+}
+
+std::list<class Object*>& Parser::getList(enum Parser::List list)
 {
 	switch (list)
 	{
@@ -1094,6 +1122,9 @@ std::list<class Object*>& Parser::getList(const enum Parser::List &list)
 
 		case Parser::Methods:
 			return reinterpret_cast<std::list<class Object*>& >(this->m_methods);
+			
+		case Parser::Calls:
+			return reinterpret_cast<std::list<class Object*>& >(this->m_calls);
 
 		case Parser::Implementations:
 			return reinterpret_cast<std::list<class Object*>& >(this->m_implementations);
@@ -1192,6 +1223,9 @@ std::string Parser::getTableName(const enum Parser::List &list)
 
 		case Parser::Methods:
 			return Method::sqlTableName;
+			
+		case Parser::Calls:
+			return Call::sqlTableName;
 
 		case Parser::Implementations:
 			return Implementation::sqlTableName;
@@ -1267,6 +1301,9 @@ unsigned int Parser::getTableColumns(const enum Parser::List &list)
 			return Function::sqlColumns;
 
 		case Parser::Methods:
+			return Method::sqlColumns;
+			
+		case Parser::Calls:
 			return Method::sqlColumns;
 
 		case Parser::Implementations:
@@ -1384,6 +1421,12 @@ std::string Parser::getTableCreationStatement(const enum Parser::List &list)
 			Method::sqlColumnStatement;
 			
 			break;
+		
+		case Parser::Calls:
+			result +=
+			Call::sqlColumnStatement;
+			
+			break;
 
 		case Parser::Implementations:
 			result +=
@@ -1492,6 +1535,9 @@ class Object* Parser::createObjectByVector(std::vector<const unsigned char*> &co
 
 		case Parser::Methods:
 			return static_cast<class Object*>(new Method(columnVector));
+		
+		case Parser::Calls:
+			return static_cast<class Object*>(new Call(columnVector));
 
 		case Parser::Implementations:
 			return static_cast<class Object*>(new Implementation(columnVector));

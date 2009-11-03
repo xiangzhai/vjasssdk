@@ -1,3 +1,9 @@
+2009-11-03 Tamino Dauth <tamino@cdauth.de>
+* Revised several code files and renamed members of class File.
+
+2009-10-31 Tamino Dauth <tamino@cdauth.de>
+* Revised class Call.
+
 2009-10-24 Tamino Dauth <tamino@cdauth.de>
 * Added function createHtmlHeader.
 * Added file path argument to option --database.

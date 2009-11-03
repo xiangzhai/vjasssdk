@@ -23,10 +23,12 @@
 
 #include <fstream>
 
+#include <list>
+
 namespace vjassdoc
 {
 
-class Parser;
+class FunctionPrototype;
 
 class Compiler
 {
@@ -37,9 +39,11 @@ class Compiler
 		void writeGlobals(std::fstream &fstream);
 		void writeMembers(std::fstream &fstream);
 		/// Writes triggers of methods for TriggerEvaluate() and TriggerExecute().
-		void writeFunctionGlobals(std::fstream &fstream);
-		void writeMethodGlobals(std::fstream &fstream);
+		void writeFunctionPrototypeGlobals(std::fstream &fstream);
+		void writeMethodPrototypeGlobals(std::fstream &fstream);
 		void writeLibraries(std::fstream &fstream);
+		
+		std::list<class FunctionPrototype*> m_prototypes;
 };
 
 }

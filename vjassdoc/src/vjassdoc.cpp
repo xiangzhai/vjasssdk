@@ -107,6 +107,7 @@ void Vjassdoc::initClasses()
 	FunctionInterface::initClass();
 	Function::initClass();
 	Method::initClass();
+	Call::initClass();
 	Implementation::initClass();
 	Hook::initClass();
 	Interface::initClass();

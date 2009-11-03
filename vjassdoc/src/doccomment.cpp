@@ -247,6 +247,7 @@ void DocComment::init()
 						std::string author = result.substr(start, length);
 						result.erase(start, length); /// @todo get the whole line or until next @ character.
 						this->m_authors.push_back(author);
+						
 						break;
 					}
 				
@@ -256,6 +257,7 @@ void DocComment::init()
 						std::string::size_type length = end != std::string::npos ? end - oldIndex : result.length() - oldIndex;
 						this->m_briefDescription = result.substr(oldIndex, length); // get the line
 						result.erase(oldIndex, length);
+						
 						break;
 					}
 					
@@ -293,6 +295,7 @@ void DocComment::init()
 						std::string todo = result.substr(start, length);
 						result.erase(start, length); /// @todo get the whole line or until next @ character.
 						this->m_todos.push_back(todo);
+						
 						break;
 					}
 					
@@ -306,6 +309,8 @@ void DocComment::init()
 							std::string link = Object::objectPageLink(object, identifier);
 							result.replace(position, oldIndex - position, link);
 						}
+						
+						break;
 					}
 				}
 				
@@ -367,7 +372,7 @@ void DocComment::page(std::ofstream &file) const
 	{
 		file << "\t\t<ul>\n";
 	
-		for (std::vector<std::string>::const_iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end(); ++iterator)
+		for (std::list<std::string>::const_iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end(); ++iterator)
 			file << "\t\t\t<li>" << *iterator << "</li>\n";
 		
 		file << "\t\t</ul>\n";
@@ -383,7 +388,7 @@ void DocComment::page(std::ofstream &file) const
 	{
 		file << "\t\t<ul>\n";
 	
-		for (std::vector<class Object*>::const_iterator iterator = this->m_seeObjects.begin(); iterator != this->m_seeObjects.end(); ++iterator)
+		for (std::list<class Object*>::const_iterator iterator = this->m_seeObjects.begin(); iterator != this->m_seeObjects.end(); ++iterator)
 			file << "\t\t\t<li>" << *iterator << "</li>\n";
 		
 		file << "\t\t</ul>\n";
@@ -399,7 +404,7 @@ void DocComment::page(std::ofstream &file) const
 	{
 		file << "\t\t<ul>\n";
 	
-		for (std::vector<std::string>::const_iterator iterator = this->m_todos.begin(); iterator != this->m_todos.end(); ++iterator)
+		for (std::list<std::string>::const_iterator iterator = this->m_todos.begin(); iterator != this->m_todos.end(); ++iterator)
 			file << "\t\t\t<li>" << *iterator << "</li>\n";
 		
 		file << "\t\t</ul>\n";
@@ -422,7 +427,7 @@ std::string DocComment::sqlStatement() const
 	int i = 0;
 	
 	/// @todo Memory access error.
-	for (std::vector<std::string>::const_iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end() && i < DocComment::maxAuthors; ++iterator, ++i)
+	for (std::list<std::string>::const_iterator iterator = this->m_authors.begin(); iterator != this->m_authors.end() && i < DocComment::maxAuthors; ++iterator, ++i)
 		sstream << "Author" << i << "=\"" << Object::sqlFilteredString(*iterator) << "\", ";
 	
 	for ( ; i < DocComment::maxAuthors; ++i)
@@ -431,7 +436,7 @@ std::string DocComment::sqlStatement() const
 	i = 0;
 	
 	/// @todo Memory access error.
-	for (std::vector<class Object*>::const_iterator iterator = this->m_seeObjects.begin(); iterator != this->m_seeObjects.end() && i < DocComment::maxSeeObjects; ++iterator, ++i)
+	for (std::list<class Object*>::const_iterator iterator = this->m_seeObjects.begin(); iterator != this->m_seeObjects.end() && i < DocComment::maxSeeObjects; ++iterator, ++i)
 		sstream << "SeeObject" << i << "=" << Object::objectId(*iterator) << ", ";
 	
 	for ( ; i < DocComment::maxSeeObjects; ++i)

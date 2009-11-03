@@ -4,7 +4,6 @@ project(vjassdoc)
 
 find_package(Gettext REQUIRED)
 # todo: require tokenizer component.
-find_package(Boost REQUIRED)
 #find_package(GLIB2 REQUIRED)
 
 # setup flags
@@ -14,6 +13,16 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	set(USE_DEBUG 1)
 	message(STATUS "Build type is \"Debug\", using -DDEBUG.")
 endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+find_package(Boost REQUIRED)
+
+if (Boost_FOUND)
+	message(STATUS "Boost has been found.")
+	include_directories(${Boost_INCLUDE_DIR} /usr/include/boost-1_35/) # second one for my Gentoo Linux
+else (Boost_FOUND)
+	message(STATUS "Boost has not been found.")
+	# cancel
+endif (Boost_FOUND)
 
 find_package(Qt4)
 find_package(KDE4) #FindGettext

@@ -23,7 +23,7 @@
  * Boston, MA  02110-1301, USA.                                       *
  **********************************************************************
  -->
-<language name="vjassdoc" version="1.0" kateversion="2.4" section="Markup" extensions="*.vjassdoc;*.VJASSDOC" author="Tamino Dauth (tamino@cdauth.de)" license="LGPL" priority="9">
+<language name="vjassdoc" version="1.0" kateversion="3.3.2" section="Markup" extensions="*.vjassdoc;*.VJASSDOC" author="Tamino Dauth (tamino@cdauth.de)" license="LGPL" priority="9">
   <highlighting>
     <list name="TagOnly">
       <item> @arg </item>

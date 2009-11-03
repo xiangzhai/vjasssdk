@@ -48,8 +48,8 @@ void Compiler::compile()
 	fstream << "globals" << std::endl;
 	this->writeGlobals(fstream);
 	this->writeMembers(fstream);
-	this->writeFunctionGlobals(fstream);
-	this->writeMethodGlobals(fstream);
+	this->writeFunctionPrototypeGlobals(fstream);
+	this->writeMethodPrototypeGlobals(fstream);
 	fstream << "endglobals" << std::endl;
 
 	fstream.close();
@@ -124,18 +124,18 @@ void Compiler::writeMembers(std::fstream &fstream)
 	}
 }
 
-void Compiler::writeFunctionGlobals(std::fstream &fstream)
+void Compiler::writeFunctionPrototypeGlobals(std::fstream &fstream)
 {
 	if (Vjassdoc::optionVerbose())
-		std::cout << _("Writing function globals.") << std::endl;
+		std::cout << _("Writing function prototype globals.") << std::endl;
 	
 	// check if there are .execute or .evaluate calls of a function.
 }
 
-void Compiler::writeMethodGlobals(std::fstream &fstream)
+void Compiler::writeMethodPrototypeGlobals(std::fstream &fstream)
 {
 	if (Vjassdoc::optionVerbose())
-		std::cout << _("Writing method globals.") << std::endl;
+		std::cout << _("Writing method prototype globals.") << std::endl;
 	
 	// check if there are .execute or .evaluate calls of a method.
 	// Note that .evaluate and .execute aren't used automatically like in vJass.

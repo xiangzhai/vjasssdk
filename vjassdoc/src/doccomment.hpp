@@ -21,7 +21,7 @@
 #ifndef VJASSDOC_DOCCOMMENT_HPP
 #define VJASSDOC_DOCCOMMENT_HPP
 
-#include <vector>
+#include <list>
 
 #include "object.hpp"
 
@@ -51,9 +51,9 @@ class DocComment : public Object
 		void setObject(class Object *object); //Just used by the Object class.
 		std::string briefDescription() const;
 		class Object *object() const;
-		std::vector<std::string> authors() const;
-		std::vector<class Object*> seeObjects() const;
-		std::vector<std::string> todos() const;
+		std::list<std::string> authors() const;
+		std::list<class Object*> seeObjects() const;
+		std::list<std::string> todos() const;
 
 	protected:
 		enum Keyword
@@ -192,9 +192,9 @@ class DocComment : public Object
 	
 		std::string m_briefDescription;
 		class Object *m_object;
-		std::vector<std::string> m_authors;
-		std::vector<class Object*> m_seeObjects;
-		std::vector<std::string> m_todos;
+		std::list<std::string> m_authors;
+		std::list<class Object*> m_seeObjects;
+		std::list<std::string> m_todos;
 	
 		class DocComment* docComment() const; //Do not use
 };
@@ -214,17 +214,17 @@ inline class Object* DocComment::object() const
 	return this->m_object;
 }
 
-inline std::vector<std::string> DocComment::authors() const
+inline std::list<std::string> DocComment::authors() const
 {
 	return this->m_authors;
 }
 
-inline std::vector<class Object*> DocComment::seeObjects() const
+inline std::list<class Object*> DocComment::seeObjects() const
 {
 	return this->m_seeObjects;
 }
 
-inline std::vector<std::string> DocComment::todos() const
+inline std::list<std::string> DocComment::todos() const
 {
 	return this->m_todos;
 }

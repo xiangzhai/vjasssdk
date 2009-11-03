@@ -29,7 +29,7 @@ namespace vjassdoc
 {
 
 extern const char *dirSeparator;
-extern std::string getToken(const std::string &line, std::size_t &index, bool endOfLine = false);
+extern std::string getToken(const std::string &line, std::string::size_type &index, bool endOfLine = false);
 extern void cutFilePath(std::string &filePath);
 extern bool fileExists(const std::string &fileName);
 extern void createHtmlHeader(std::ostream &ostream, const std::string &title, const std::string &language = _("en"));

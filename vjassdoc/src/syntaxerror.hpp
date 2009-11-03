@@ -33,14 +33,14 @@ class SyntaxError
 	public:
 		static bool Comparator(class SyntaxError *syntaxError0, class SyntaxError *syntaxError1);
 	
-		SyntaxError(class SourceFile *sourceFile, unsigned int line, const std::string &message);
+		SyntaxError(class SourceFile *sourceFile, std::size_t line, const std::string &message);
 		class SourceFile* sourceFile() const;
 		unsigned int line() const;
 		std::string message() const;
 	
 	private:
 		class SourceFile *m_sourceFile;
-		unsigned int m_line;
+		std::size_t m_line;
 		std::string m_message;
 };
 

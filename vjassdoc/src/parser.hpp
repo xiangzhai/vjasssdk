@@ -43,6 +43,7 @@ class Parameter;
 class FunctionInterface;
 class Function;
 class Method;
+class Call;
 class Implementation;
 class Interface;
 class Struct;
@@ -85,6 +86,7 @@ class Parser
 			FunctionInterfaces,
 			Functions,
 			Methods,
+			Calls,
 			Implementations,
 			Hooks,
 			Interfaces,
@@ -170,6 +172,7 @@ class Parser
 		void add(class FunctionInterface *functionInterface);
 		void add(class Function *function);
 		void add(class Method *method);
+		void add(class Call *call);
 		void add(class Implementation *implementation);
 		void add(class Hook *hook);
 		void add(class Interface *interface);
@@ -226,6 +229,7 @@ class Parser
 		std::list<class FunctionInterface*> m_functionInterfaces;
 		std::list<class Function*> m_functions;
 		std::list<class Method*> m_methods;
+		std::list<class Call*> m_calls;
 		std::list<class Implementation*> m_implementations;
 		std::list<class Hook*> m_hooks;
 		std::list<class Interface*> m_interfaces;
@@ -241,7 +245,8 @@ class Parser
 		std::vector<struct Database*> m_databases;
 #endif
 
-		std::list<class Object*>& getList(const enum List &list);
+		void parseFile(const std::string &path);
+		std::list<class Object*>& getList(enum List list);
 		
 		//HTML
 		std::ostream& addObjectList(std::ostream &output, const enum Parser::List &list);
@@ -321,6 +326,11 @@ inline void Parser::add(class Function *function)
 inline void Parser::add(class Method *method)
 {
 	this->m_methods.push_back(method);
+}
+
+inline void Parser::add(class Call *call)
+{
+	this->m_calls.push_back(call);
 }
 
 inline void Parser::add(class Implementation *implementation)

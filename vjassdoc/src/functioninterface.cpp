@@ -21,6 +21,7 @@
 #include <sstream>
 
 #include "objects.hpp"
+#include "syntaxerror.hpp"
 #include "internationalisation.hpp"
 
 namespace vjassdoc
@@ -85,6 +86,13 @@ void FunctionInterface::init()
 		
 		if (this->m_returnType != 0)
 			this->m_returnTypeExpression.clear();
+		else
+		{
+			char message[256];
+			sprintf(message, _("Undefined type \"%s\"."), this->m_returnTypeExpression.c_str());
+			
+			Vjassdoc::parser()->add(new SyntaxError(this->sourceFile(), this->line(), message));
+		}
 	}
 	else
 		this->m_returnTypeExpression = "-";

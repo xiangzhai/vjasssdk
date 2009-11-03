@@ -36,6 +36,7 @@
 #include "functioninterface.hpp"
 #include "function.hpp"
 #include "method.hpp"
+#include "call.hpp"
 #include "implementation.hpp"
 #include "hook.hpp"
 #include "interface.hpp"

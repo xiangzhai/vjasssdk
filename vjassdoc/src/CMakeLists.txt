@@ -14,6 +14,7 @@ set(SRC
 	functioninterface.cpp
 	function.cpp
 	method.cpp
+	call.cpp
 	implementation.cpp
 	hook.cpp
 	interface.cpp
@@ -46,6 +47,7 @@ set(HEADERS
 	functioninterface.hpp
 	function.hpp
 	method.hpp
+	call.hpp
 	parameter.hpp
 	implementation.hpp
 	hook.hpp

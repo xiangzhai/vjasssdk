@@ -125,6 +125,8 @@ class File
 			SuperExpression,
 			ThistypeExpression,
 			OperatorExpression,
+			ExecuteExpression,
+			EvaluateExpression,
 			MaxExpressions,
 			NoExpression,
 			InvalidExpression,
@@ -133,60 +135,62 @@ class File
 		
 		static const char *expressionText[File::MaxExpressions];
 		
-		File(const std::string &filePath);
+		File();
+		/**
+		  * @return Returns number of parsed lines.
+		*/
+		std::string::size_type parse(class Parser *parser, std::ifstream &ifstream);
 		
 	private:
-		const std::string filePath;
-
-		File::Expression notRequiredSpace;
-		bool isInGlobals;
-		bool isInLibrary;
-		bool isInScope;
-		bool isInInterface;
-		bool isInStruct;
-		bool isInModule;
-		bool isInBlockComment;
-		bool isInBlockDocComment;
-
-		unsigned int currentLine;
-		class DocComment *currentDocComment;
-		class Library *currentLibrary;
-		class Scope *currentScope;
-		//containers
-		class Interface *currentInterface;
-		class Struct *currentStruct;
-		class Module *currentModule;
-		class Function *currentFunction;
-		std::string currentBlockComment;
-		std::string currentBlockDocComment;
-
-		bool gotDocComment;
-
-		std::ifstream fin;
-
-		File::Expression getFirstLineExpression(std::string &line, unsigned int &index);
-		void truncateComments(std::string &line, unsigned int index);
-		void getDocComment(const std::string &line, unsigned int index);
+		File::Expression getFirstLineExpression(std::string &line, std::string::size_type &index);
+		void truncateComments(std::string &line, std::string::size_type index);
+		void getDocComment(const std::string &line, std::string::size_type index);
 		void getBlockDocComment(const std::string &line);
 		void clearDocComment();
-		void getKeyword(const std::string &line, unsigned int &index, bool isPrivate);
-		void getKey(const std::string &line, unsigned int &index, bool isPrivate);
-		bool getGlobal(const std::string &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isStatic, bool isDelegate);
-		bool getFunction(const std::string  &line, unsigned int &index, bool isPrivate, bool isPublic, bool isConstant, bool isNative, bool isStatic, bool isStub);
-		void getImplementation(const std::string &line, unsigned int &index);
-		void getHook(const std::string &line, unsigned int &index);
-		void getLibrary(const std::string &line, unsigned int &index, bool isOnce);
-		void getScope(const std::string &line, unsigned int &index, bool isPrivate);
-		void getInterface(const std::string &line, unsigned int &index, bool isPrivate);
-		void getStruct(const std::string &line, unsigned int &index, bool isPrivate);
-		void getModule(const std::string &line, unsigned int &index, bool isPrivate);
-		void getLocal(const std::string &line, unsigned int &index);
-		std::string removeFirstSpace(const std::string &line, unsigned int index) const;
-		void getTextMacro(const std::string &line, unsigned int &index, bool isOnce);
-		void getTextMacroInstance(const std::string &line, unsigned int &index);
-		std::list<std::string>* getLibraryRequirement(const std::string &line, unsigned int &index, std::list<bool> *optionalRequirement) const;
+		void getKeyword(const std::string &line, std::string::size_type &index, bool isPrivate);
+		void getKey(const std::string &line, std::string::size_type &index, bool isPrivate);
+		bool getGlobal(const std::string &line, std::string::size_type &index, bool isPrivate, bool isPublic, bool isConstant, bool isStatic, bool isDelegate);
+		bool getFunction(const std::string  &line, std::string::size_type &index, bool isPrivate, bool isPublic, bool isConstant, bool isNative, bool isStatic, bool isStub);
+		void getCall(const std::string &line, std::string::size_type &index);
+		void getImplementation(const std::string &line, std::string::size_type &index);
+		void getHook(const std::string &line, std::string::size_type &index);
+		void getLibrary(const std::string &line, std::string::size_type &index, bool isOnce);
+		void getScope(const std::string &line, std::string::size_type &index, bool isPrivate);
+		void getInterface(const std::string &line, std::string::size_type &index, bool isPrivate);
+		void getStruct(const std::string &line, std::string::size_type &index, bool isPrivate);
+		void getModule(const std::string &line, std::string::size_type &index, bool isPrivate);
+		void getLocal(const std::string &line, std::string::size_type &index);
+		std::string removeFirstSpace(const std::string &line, std::string::size_type index) const;
+		void getTextMacro(const std::string &line, std::string::size_type &index, bool isOnce);
+		void getTextMacroInstance(const std::string &line, std::string::size_type &index);
+		std::list<std::string>* getLibraryRequirement(const std::string &line, std::string::size_type &index, std::list<bool> *optionalRequirement) const;
 		bool isInVjassBlock() const;
 		class Object* getCurrentContainer() const;
+
+		class Parser *m_parser;
+		File::Expression m_notRequiredSpace;
+		bool m_isInGlobals;
+		bool m_isInLibrary;
+		bool m_isInScope;
+		bool m_isInInterface;
+		bool m_isInStruct;
+		bool m_isInModule;
+		bool m_isInBlockComment;
+		bool m_isInBlockDocComment;
+
+		std::string::size_type m_currentLine;
+		class DocComment *m_currentDocComment;
+		class Library *m_currentLibrary;
+		class Scope *m_currentScope;
+		//containers
+		class Interface *m_currentInterface;
+		class Struct *m_currentStruct;
+		class Module *m_currentModule;
+		class Function *m_currentFunction;
+		std::string m_currentBlockComment;
+		std::string m_currentBlockDocComment;
+
+		bool m_gotDocComment;
 };
 
 }
