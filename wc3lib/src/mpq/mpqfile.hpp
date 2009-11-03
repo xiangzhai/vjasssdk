@@ -21,6 +21,9 @@
 #ifndef WC3LIB_MPQ_MPQFILE_HPP
 #define WC3LIB_MPQ_MPQFILE_HPP
 
+#include <istream>
+#include <ostream>
+
 namespace wc3lib
 {
 
@@ -41,23 +44,61 @@ class MpqFile
 		MpqFile(class Mpq *mpq);
 		~MpqFile();
 
-		void remove() = 0;
-		std::iostream read() = 0;
-		void rename(const std::string &newName) = 0;
-		void extract(std::ofstream &fstream) = 0;
+		void remove();
+		void rename(const std::string &newName);
+		std::streamsize read(std::istream &istream);
+		std::streamsize write(std::ostream &ostream); //extract
 		/// @return Returns file size in bytes.
-		unsigned int size() const = 0;
+		std::size_t size() const;
 		/// @return Returns compressed file size in bytes.
-		unsigned int compressedSize() const = 0;
-		enum Locale locale() const = 0;
-		std::string path() const = 0;
-		std::string name() const = 0;
-		bool isDir() const = 0;
+		std::size_t compressedSize() const;
+		enum Locale locale() const;
+		std::string path() const;
+		std::string name() const;
+		bool isDir() const;
 
 	private:
 		class Mpq *m_mpq;
+		std::size_t m_size; /// @todo  Get correct size type from MPQ specification
+		std::size_t m_compressedSize;
+		enum Locale m_locale;
+		std::string m_path;
+		std::string m_name;
+		bool m_isDir;
 };
 
+inline std::size_t MpqFile::size() const
+{
+	return this->m_size;
+}
+
+inline std::size_t MpqFile::compressedSize() const
+{
+	return this->m_compressedSize;
+}
+
+inline enum MpqFile::Locale MpqFile::locale() const
+{
+	return this->m_locale;
+}
+
+inline std::string MpqFile::path() const
+{
+	return this->m_path;
+}
+
+inline std::string MpqFile::name() const
+{
+	return this->m_name;
+}
+
+inline bool MpqFile::isDir() const
+{
+	return this->m_isDir;
 }
 
 }
+
+}
+
+#endif

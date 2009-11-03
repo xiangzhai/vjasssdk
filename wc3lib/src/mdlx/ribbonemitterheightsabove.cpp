@@ -18,13 +18,42 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility4.hpp"
+#include "ribbonemitterheightsabove.hpp"
+#include "ribbonemitterheightabove.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+
+RibbonEmitterHeightsAbove::RibbonEmitterHeightsAbove(class RibbonEmitter *ribbonEmitter) : MdxBlock("KRHA"), m_ribbonEmitter(ribbonEmitter)
+{
+}
+
+RibbonEmitterHeightsAbove::~RibbonEmitterHeightsAbove()
+{
+	for (std::list<class RibbonEmitterHeightAbove*>::iterator iterator = this->m_heights.begin(); iterator != this->m_heights.end(); ++iterator)
+		delete *iterator;
+}
+
+void RibbonEmitterHeightsAbove::readMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+void RibbonEmitterHeightsAbove::writeMdl(std::fstream &fstream) throw (class Exception)
+{
+}
+
+long32 RibbonEmitterHeightsAbove::readMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
+}
+
+long32 RibbonEmitterHeightsAbove::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
+}
 
 }
 

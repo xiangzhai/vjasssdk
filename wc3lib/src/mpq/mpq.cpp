@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "mpq.hpp"
+#include "mpqfile.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -84,13 +85,42 @@ struct StringDigitalSignature
 //	int2048 signature;
 };
 
-void Mpq::open(std::ifstream &fstream, enum Mode mode) throw (class Exception)
+std::streamsize Mpq::read(std::istream &istream, enum Mode mode) throw (class Exception)
 {
 	struct Header header;
-	fstream.read((char*)&header, sizeof(struct Header));
+	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
 
 	/// @todo Check magic
 	
+	return 0;
+	
+}
+
+std::streamsize Mpq::write(std::ostream &ostream, enum Format format) const
+{
+	return 0;
+}
+
+const class MpqFile* Mpq::findFile(const std::string &path) const
+{
+	for (std::list<class MpqFile*>::const_iterator iterator = this->m_files.begin(); iterator != this->m_files.end(); ++iterator)
+	{
+		if ((*iterator)->path() == path)
+			return *iterator;
+	}
+	
+	return 0;
+}
+
+const class MpqFile* Mpq::findFileByName(const std::string &name) const
+{
+	for (std::list<class MpqFile*>::const_iterator iterator = this->m_files.begin(); iterator != this->m_files.end(); ++iterator)
+	{
+		if ((*iterator)->name() == name)
+			return *iterator;
+	}
+	
+	return 0;
 }
 
 }

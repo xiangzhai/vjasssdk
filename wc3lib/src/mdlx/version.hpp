@@ -29,6 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
+//VERS
 class Version : public MdxBlock
 {
 	public:

@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "textureid.hpp"
+#include "textureids.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureId::TextureId(class Mdlx *mdlx) : m_mdlx(mdlx)
+TextureId::TextureId(class TextureIds *textureIds) : m_textureIds(textureIds)
 {
 }
 
@@ -38,16 +39,33 @@ void TextureId::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureId::readMdx(std::fstream &fstream) throw (class Exception)
-{
-}
-
 void TextureId::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void TextureId::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureId::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
+	bytes += fstream.gcount();
+	
+	if (this->m_textureIds->lineType() > 1)
+	{
+		fstream.read(reinterpret_cast<char*>(&this->m_inTan), sizeof(this->m_inTan));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTan), sizeof(this->m_outTan));
+		bytes += fstream.gcount();
+	}
+		
+	return bytes;
+}
+
+long32 TextureId::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

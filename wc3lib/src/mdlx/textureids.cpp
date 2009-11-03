@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "textureids.hpp"
-#include "layer.hpp"
+#include "textureid.hpp"
 
 namespace wc3lib
 {
@@ -46,6 +46,24 @@ void TextureIds::writeMdl(std::fstream &fstream) throw (class Exception)
 long32 TextureIds::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nunks;
+	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += fstream.gcount();
+	
+	for ( ; nunks > 0; --nunks)
+	{
+		class TextureId *textureId = new TextureId(this);
+		bytes += textureId->readMdx(fstream);
+		this->m_textureIds.push_back(textureId);
+	}
 	
 	return bytes;
 }

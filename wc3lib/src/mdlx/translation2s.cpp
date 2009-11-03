@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "translation2s.hpp"
+#include "translation2.hpp"
 #include "textureanimation.hpp"
 
 namespace wc3lib
@@ -49,6 +50,21 @@ long32 Translation2s::readMdx(std::fstream &fstream) throw (class Exception)
 	
 	if (bytes == 0)
 		return 0;
+	
+	long32 nunks = 0;
+	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += fstream.gcount();
+	
+	for ( ; nunks > 0; --nunks)
+	{
+		class Translation2 *translation = new Translation2(this);
+		bytes += translation->readMdx(fstream);
+		this->m_translations.push_back(translation);
+	}
 	
 	return bytes;
 }

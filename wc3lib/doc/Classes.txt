@@ -1,11 +1,13 @@
 1. MDLX property classes
 
-wc3lib class name			MDX block name		Parent class (not inheritance!)		Expected class name				Blender object			OGRE class			3ds object
-Mdlx					MDLX
-Alphas					KMTA			Material				MaterialAlphas
-AmbientColors				KLBC			Light					Light...
-AmbientIntensities			KLBI			Light					Light...
-Attachments				ATCH			Mdlx					Attachments
+MDX block name			MDL tag name			wc3lib class name		Parent class (not inheritance!)		Expected class name				Blender object			OGRE class			3ds object
+MDLX				-				Mdlx				-					-
+-								Alpha				Alphas					MaterialAlpha
+KMTA								Alphas				Material				MaterialAlphas
+KLBC								AmbientColors			Light					Light...
+KLBI								AmbientIntensities		Light					Light...
+ATCH								Attachments			Mdlx					Attachments
+
 Bones					BONE			Mdlx					Bones
 Cameras					CAMS			Mdlx					Cameras
 CollisionShapes				CLID			Mdlx					CollisionShapes
@@ -34,6 +36,8 @@ Length					-			Lengths
 Lengths					KP2N			ParticleEmitter2			ParticleEmitter2Number???
 Light					-			Lights
 Lights					LITE			Mdlx
+TextureId				KMTF			TextureIds				MaterialTextureF????
+TextureIds				KMTF			Material				MaterialTextureF????s
 Material				-			Materials
 Materials				MTLS			Mdlx
 Matrix					-			Matrices
@@ -58,9 +62,6 @@ PrimitiveVertex				-			PrimitiveVertices			Face? (probably primitive vertex is m
 PrimitiveVertices			PVTX			Geoset					Faces? (probably primitive vertices is much better)
 RibbonEmitter				-			RibbonEmitters
 RibbonEmitters				RIBB			Mdlx
-RibbonEmitterVisibilitySpeeds		KRVS			RibbonEmitter
-RibbonEmitterHeightsAbove		KRHA			RibbonEmitter
-RibbonEmitterHeightsBelow		KRHB			RibbonEmitter
 Rotation0				-			Rotation0s				Rotation
 Rotation0s				KGRT			Mdlx (various classes)			Rotations
 Rotation1				-			Rotation1s				TextureAnimationRotation
@@ -84,22 +85,36 @@ Translation2				-			Translation2s				TextureAnimationTranslation
 Translation2s				KTAT			TextureAnimation			TextureAnimationTranslations
 Translation3				-			Translation3s				CameraTextureTranslation?!
 Translation3s				KTTR			Camera					CameraTextureTranslations?!
+Version					VERS			Mdlx
+Vertex					-			Vertices
+Vertices				VRTX			Geoset
+Visibility0				-			Visibility0s				AttachmentVisibility
+Visibility0s				KATV			Mdlx (various classes Attachment, Mdlx - Object)				AttachmentVisibilities
+Visibility1				-			Visibility1s				LightAmbientVisibility
+Visibility1s				KLAV			Light					LightAmbientVisibilities
+Visibility2				-			Visibility3s				ParticleEmitter2Visibility
+Visibility2s				KP2V			ParticleEmitter2			ParticleEmitter2Visibilities
+Visibility3				-			Visibility3s				ParticleEmitterVisibility
+Visibility3s				KPEV			ParticleEmitter				ParticleEmitterVisibilities
+RibbonEmitterVisibility			-			RibbonEmitterVisibilities		RibbonEmitterVisibility
+RibbonEmitterVisibilities		KRVS			RibbonEmitter				RibbonEmitterVisibilities
+RibbonEmitterHeightAbove		-			RibbonEmitterHeightsAbove
+RibbonEmitterHeightsAbove		KRHA			RibbonEmitter
+RibbonEmitterHeightBelow		-			RibbonEmitterHeightsBelow
+RibbonEmitterHeightsBelow		KRHB			RibbonEmitter
 
-old
-Visibility0s		KATV			Mdlx (various classes, Object, Attachments)
-Visibility1s		KLAV			Light					LightAmbientVisibility
-Visibility2s		KP2V
-Visibility3s		KPEV
-Visibility4s		KRVS
-Rotation0s		KGRT			Mdlx (various classes)
-Rotation1s		KTAR
-Scaling0s		KGSC			Mdlx (various classes)
-Scaling1s		KTAS
-Translation0s		KCTR
-Translation1s		KGTR			Mdlx (various classes)
-Translation2s		KTAT
-Translation3s		KTTR
-
+Missing:
+-					-			below					ParticleEmitter2Speed
+-					KP2S			ParticleEmitter2			ParticleEmitter2Speeds
+					-			below					ParticleEmitter2Latitude
+-					KP2L			ParticleEmitter2			ParticleEmitter2Latitudes
+					-			below					ParticleEmitter2Width
+-					KP2W			ParticleEmitter2			ParticleEmitter2Widths
+					
+-					-			below					CameraRotationL..??
+-					KCRL			Camera					CameraRotationL..??
+-					-			below					EventTranslation
+-					KEVT			Event					EventTranslations?
 
 2. Abstract MDLX property classes
 Name					Child classes
@@ -109,3 +124,13 @@ Object
 RotationBase
 ScalingBase
 TranslationBase
+
+3. Map property classes
+
+
+4. Graphical user interfaces
+
+3.1 The BLP/texture editor
+3.2 The MDLX/model editor
+3.3 The MPQ editor
+3.4 The map editor

@@ -18,11 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TRANSLATION2_HPP
-#define WC3LIB_MDLX_TRANSLATION2_HPP
+#ifndef WC3LIB_MDLX_RIBBONEMITTERHEIGHTSABOVE_HPP
+#define WC3LIB_MDLX_RIBBONEMITTERHEIGHTSABOVE_HPP
 
 #include <fstream>
+#include <list>
 
+#include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -32,25 +34,20 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Translation2s;
+class RibbonEmitter;
+class RibbonEmitterHeightAbove;
 
-class Translation2
+//KRHA
+class RibbonEmitterHeightsAbove : public MdxBlock
 {
 	public:
-		Translation2(class Translation2s *translations);
-		virtual ~Translation2();
+		RibbonEmitterHeightsAbove(class RibbonEmitter *ribbonEmitter);
+		virtual ~RibbonEmitterHeightsAbove();
 
-		class Translation2s* translations() const;
-		long32 frame() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
-		float32 inTanX() const;
-		float32 inTanY() const;
-		float32 inTanZ() const;
-		float32 outTanX() const;
-		float32 outTanY() const;
-		float32 outTanZ() const;
+		class RibbonEmitter* ribbonEmitter() const;
+		long32 lineType() const;
+		long32 globalSequenceId() const;
+		std::list<class RibbonEmitterHeightAbove*> heights() const;
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
@@ -58,68 +55,30 @@ class Translation2
 		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 
 	protected:
-		class Translation2s *m_translations;
-		long32	m_frame;
-		float32	m_x, m_y, m_z;
-		//if (LineType > 1) {
-		float32	m_inTanX, m_inTanY, m_inTanZ;
-		float32	m_outTanX, m_outTanY, m_outTanZ;
-		//}
+		class RibbonEmitter *m_ribbonEmitter;
+		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class RibbonEmitterHeightAbove*> m_heights;
 };
 
-inline class Translation2s* Translation2::translations() const
+inline class RibbonEmitter* RibbonEmitterHeightsAbove::ribbonEmitter() const
 {
-	return this->m_translations;
+	return this->m_ribbonEmitter;
 }
 
-inline long32 Translation2::frame() const
+inline long32 RibbonEmitterHeightsAbove::lineType() const
 {
-	return this->m_frame;
+	return this->m_lineType;
 }
 
-inline float32 Translation2::x() const
+inline long32 RibbonEmitterHeightsAbove::globalSequenceId() const
 {
-	return this->m_x;
+	return this->m_globalSequenceId;
 }
 
-inline float32 Translation2::y() const
+inline std::list<class RibbonEmitterHeightAbove*> RibbonEmitterHeightsAbove::heights() const
 {
-	return this->m_y;
-}
-
-inline float32 Translation2::z() const
-{
-	return this->m_z;
-}
-
-inline float32 Translation2::inTanX() const
-{
-	return this->m_inTanX;
-}
-
-inline float32 Translation2::inTanY() const
-{
-	return this->m_inTanY;
-}
-
-inline float32 Translation2::inTanZ() const
-{
-	return this->m_inTanZ;
-}
-
-inline float32 Translation2::outTanX() const
-{
-	return this->m_outTanX;
-}
-
-inline float32 Translation2::outTanY() const
-{
-	return this->m_outTanY;
-}
-
-inline float32 Translation2::outTanZ() const
-{
-	return this->m_outTanZ;
+	return this->m_heights;
 }
 
 }

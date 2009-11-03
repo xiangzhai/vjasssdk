@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MPQ_MPQ_HPP
 #define WC3LIB_MPQ_MPQ_HPP
 
-#include <fstream>
+#include <istream>
+#include <ostream>
 #include <list>
 #include <string>
 
@@ -53,18 +54,31 @@ class Mpq
 		Mpq();
 		~Mpq();
 
-		void open(std::ifstream &fstream, enum Mode mode) throw (class Exception);
-		void close();
-		void write(std::ofstream &fstream, enum Format format);
-		std::size_t size() const;
+		/**
+		* @return Returns MPQ's size in bytes.
+		*/
+		std::streamsize read(std::istream &istream, enum Mode mode) throw (class Exception);
+		
+		/**
+		* @return Returns MPQ's size in bytes.
+		*/
+		std::streamsize write(std::ostream &ostream, enum Format format) const;
+		
+		const class MpqFile* findFile(const std::string &path) const;
+		const class MpqFile* findFileByName(const std::string &name) const;
+		
+		std::streamsize size() const;
 		std::string path() const;
-		std::list<class MpqFile*> files() const;
+		const std::list<class MpqFile*>& files() const;
 
 	private:
-		std::size_t m_size;
-		std::string m_path;
 		std::list<class MpqFile*> m_files;
 };
+
+inline const std::list<class MpqFile*>& Mpq::files() const
+{
+	return this->m_files;
+}
 
 }
 

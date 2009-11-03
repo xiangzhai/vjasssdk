@@ -18,13 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TEXTUREID_HPP
-#define WC3LIB_MDLX_TEXTUREID_HPP
-
-#include <fstream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "ribbonemitterheightsbelow.hpp"
+#include "ribbonemitterheightbelow.hpp"
 
 namespace wc3lib
 {
@@ -32,63 +27,34 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureIds;
-
-//state is long not float
-class TextureId
+RibbonEmitterHeightsBelow::RibbonEmitterHeightsBelow(class RibbonEmitter *ribbonEmitter) : MdxBlock("KRHB"), m_ribbonEmitter(ribbonEmitter)
 {
-	public:
-		TextureId(class TextureIds *textureIds);
-		virtual ~TextureId();
+}
 
-		class TextureIds* textureIds() const;
-		long32 frame() const;
-		long32 state() const;
-		float32 inTan() const;
-		float32 outTan() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class TextureIds *m_textureIds;
-		long32 m_frame;
-		long32 m_state; //(0 or 1), state is long not float!!!
-		//if (LineType > 1) {
-		float32 m_inTan;
-		float32 m_outTan;
-		//}
-};
-
-inline class TextureIds* TextureId::textureIds() const
+RibbonEmitterHeightsBelow::~RibbonEmitterHeightsBelow()
 {
-	return this->m_textureIds;
 }
 
-inline long32 TextureId::frame() const
+void RibbonEmitterHeightsBelow::readMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_frame;
+	for (std::list<class RibbonEmitterHeightBelow*>::iterator iterator = this->m_heights.begin(); iterator != this->m_heights.end(); ++iterator)
+		delete *iterator;
 }
 
-inline long32 TextureId::state() const
+void RibbonEmitterHeightsBelow::writeMdl(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_state;
 }
 
-inline float32 TextureId::inTan() const
+long32 RibbonEmitterHeightsBelow::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_inTan;
+	return 0;
 }
 
-inline float32 TextureId::outTan() const
+long32 RibbonEmitterHeightsBelow::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return this->m_outTan;
+	return 0;
 }
 
 }
 
 }
-
-#endif

@@ -56,7 +56,7 @@ long32 SegmentColor::readMdx(std::fstream &fstream) throw (class Exception)
 
 long32 SegmentColor::writeMdx(std::fstream &fstream) throw (class Exception)
 {
-	return bytes;
+	return 0;
 }
 
 }

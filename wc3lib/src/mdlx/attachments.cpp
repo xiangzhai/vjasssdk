@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "attachments.hpp"
+#include "attachment.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,8 @@ Attachments::Attachments(class Mdlx *mdlx) : MdxBlock("ATCH"), m_mdlx(mdlx)
 
 Attachments::~Attachments()
 {
+	for (std::list<class Attachment*>::iterator iterator = this->m_attachments.begin(); iterator != this->m_attachments.end(); ++iterator)
+		delete *iterator;
 }
 
 void Attachments::readMdl(std::fstream &fstream) throw (class Exception)
@@ -40,7 +43,25 @@ void Attachments::readMdl(std::fstream &fstream) throw (class Exception)
 
 long32 Attachments::readMdx(std::fstream &fstream) throw (class Exception)
 {
-	return 0;
+	long32 bytes = MdxBlock::readMdx(fstream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes;
+	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += fstream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class Attachment *attachment = new Attachment(this);
+		long32 readBytes = attachment->readMdx(fstream);
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_attachments.push_back(attachment);
+	}
+	
+	return bytes;
 }
 
 void Attachments::writeMdl(std::fstream &fstream) throw (class Exception)

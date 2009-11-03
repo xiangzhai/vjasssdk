@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include "layers.hpp"
 #include "layer.hpp"
 #include "material.hpp"
@@ -59,6 +61,7 @@ long32 Layers::readMdx(std::fstream &fstream) throw (class Exception)
 	
 	for ( ; nlays > 0; --nlays)
 	{
+		std::cout << "Layer " << nlays - 1 << std::endl;
 		class Layer *layer = new Layer(this);
 		long32 readBytes = layer->readMdx(fstream);
 		

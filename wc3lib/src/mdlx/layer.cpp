@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
 #include <cstdio>
 
 #include "layer.hpp"
@@ -55,10 +56,11 @@ long32 Layer::readMdx(std::fstream &fstream) throw (class Exception)
 	long32 bytes = 0;
 	long32 nbytesi = 0;
 	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	std::cout << "nbytesi is " << nbytesi << std::endl;
 	bytes += fstream.gcount();
-	
 	fstream.read(reinterpret_cast<char*>(&this->m_filterMode), sizeof(this->m_filterMode)); //(0:none;1:transparent;2:blend;3:additive;4:addalpha;5:modulate)
 	bytes += fstream.gcount();
+	std::cout << "filterMode is " << this->m_filterMode << std::endl;
 	
 	if (this->m_filterMode < 0 || this->m_filterMode > 5)
 		fprintf(stderr, _("Layer: Warning, unknown filter mode.\nFilter mode %d.\n"), this->m_filterMode);
@@ -82,7 +84,9 @@ long32 Layer::readMdx(std::fstream &fstream) throw (class Exception)
 	fstream.read(reinterpret_cast<char*>(&this->m_alpha), sizeof(this->m_alpha));
 	bytes += fstream.gcount();
 	bytes += this->m_alphas->readMdx(fstream);
+	std::cout << "Before texture ids with " << bytes << " bytes." << std::endl;
 	bytes += this->m_textureIds->readMdx(fstream);
+	std::cout << "After texture ids with " << bytes << " bytes." << std::endl;
 	
 	if (nbytesi != bytes)
 		fprintf(stderr, _("Layer: Real byte count is not equal to file byte count.\nReal byte count %d.\nFile byte count %d.\n"), bytes, nbytesi);

@@ -38,7 +38,6 @@ set(wc3lib_MDLX_SRC
 	helpers.cpp
 	intensities.cpp
 	intensity.cpp
-	kgao.cpp
 	layer.cpp
 	layers.cpp
 	lengths.cpp
@@ -70,6 +69,12 @@ set(wc3lib_MDLX_SRC
 	primitivevertices.cpp
 	ribbonemitter.cpp
 	ribbonemitters.cpp
+	ribbonemitterheightabove.cpp
+	ribbonemitterheightsabove.cpp
+	ribbonemitterheightbelow.cpp
+	ribbonemitterheightsbelow.cpp
+	ribbonemittervisibility.cpp
+	ribbonemittervisibilities.cpp
 	rotation0.cpp
 	rotation0s.cpp
 	rotation1.cpp
@@ -110,8 +115,6 @@ set(wc3lib_MDLX_SRC
 	visibility2s.cpp
 	visibility3.cpp
 	visibility3s.cpp
-	visibility4.cpp
-	visibility4s.cpp
 )
 
 set(wc3lib_MDLX_H
@@ -137,6 +140,12 @@ set(wc3lib_MDLX_H
 	groupmdxblockmember.hpp
 	mdlx.hpp
 	object.hpp
+	ribbonemitterheightabove.hpp
+	ribbonemitterheightsabove.hpp
+	ribbonemitterheightbelow.hpp
+	ribbonemitterheightsbelow.hpp
+	ribbonemittervisibility.hpp
+	ribbonemittervisibilities.hpp
 	visibility0.hpp
 	visibility0s.hpp
 	visibility1.hpp
@@ -145,8 +154,6 @@ set(wc3lib_MDLX_H
 	visibility2s.hpp
 	visibility3.hpp
 	visibility3s.hpp
-	visibility4.hpp
-	visibility4s.hpp
 )
 
 #if (BLEND)

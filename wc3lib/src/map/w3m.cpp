@@ -18,9 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream>
+
 #include "w3m.hpp"
 #include "mpq/mpq.hpp"
+#include "mpq/mpqfile.hpp"
 #include "blp/blp.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -44,24 +48,59 @@ struct Footer
 	char authentification[256]; //: 256 data bytes for authentification. I don't know how they are used at the moment.
 };
 
-void W3m::read(class mpq::Mpq *mpq) throw (class Exception)
+std::streamsize W3m::read(class mpq::Mpq *mpq) throw (class Exception)
 {
+	return 0;
 }
 
-void W3m::read(std::fstream &fstream) throw (class Exception)
+std::streamsize W3m::read(std::fstream &fstream) throw (class Exception)
 {
+	std::streamsize bytes = 0;
 	struct Header header;
-	fstream.read((char*)&header, sizeof(struct Header));
+	fstream.read(reinterpret_cast<char*>(&header), sizeof(header));
+	bytes += fstream.gcount();
 	this->m_name = header.name;
 	this->m_flags = header.flags;
 	this->m_maxPlayers = header.maxPlayers;
 	int byteCount = 512 - fstream.gcount(); //followed by 00 bytes until the 512 bytes of the header are filled.
-	char *bytes = new char[byteCount];
-	fstream.read(bytes, byteCount);
-	delete[] bytes;
-	bytes = 0;
-
-	//create mpq archive
+	char *freeBytes = new char[byteCount];
+	fstream.read(freeBytes, byteCount);
+	bytes += fstream.gcount();
+	delete[] freeBytes;
+	freeBytes = 0;
+	
+	class mpq::Mpq *mpq = new mpq::Mpq;
+	bytes += mpq->read(fstream, mpq::Mpq::Read); // starts reading after header's position
+	const class mpq::MpqFile *mpqFile = mpq->findFile("(listfile)");
+	
+	if (mpqFile == 0)
+	{
+		std::cerr << _("W3m: Warning, file \"(listfile)\" was not found.") << std::endl;
+	}
+	
+	mpqFile = mpq->findFile("(signature)");
+	
+	for (std::list<class mpq::MpqFile*>::const_iterator iterator = mpq->files().begin(); iterator != mpq->files().end(); ++iterator)
+	{
+		if ((*iterator)->path() == "(listfile)")
+		{
+		}
+		//else if (*iterator->path() == "(signature)")
+		//else if (*iterator->path() == "(signature)")
+	}
+	
+	delete mpq;
+	mpq = 0;
+	
+	//struct Footer footer;
+	//fstream.read(reinterpret_cast<char*>(&footer), sizeof(footer));
+	/*
+	if ()
+	{
+		bytes += fstream.gcount();
+	}
+	*/
+	return 0;
 }
 
 }

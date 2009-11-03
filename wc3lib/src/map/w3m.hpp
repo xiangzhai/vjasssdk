@@ -65,13 +65,12 @@ class W3m
 			ShowWaterWavesOnRollingShores = 0x1000 //: 1=show water waves on rolling shores
 		};
 
-		virtual void read(class mpq::Mpq *mpq) throw (Exception);
-		virtual void read(std::fstream &fstream) throw (Exception);
-
+		virtual std::streamsize read(class mpq::Mpq *mpq) throw (Exception);
+		virtual std::streamsize read(std::fstream &fstream) throw (Exception);
 		/**
 		* Creates an MPQ archive with map header and all required files.
 		*/
-		virtual void write(std::fstream &fstream) throw (std::exception);
+		virtual std::streamsize write(std::fstream &fstream) throw (std::exception);
 
 	private:
 		std::string m_name;

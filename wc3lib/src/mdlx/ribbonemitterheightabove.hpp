@@ -18,7 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility4s.hpp"
+#ifndef WC3LIB_MDLX_RIBBONEMITTERHEIGHTABOVE_HPP
+#define WC3LIB_MDLX_RIBBONEMITTERHEIGHTABOVE_HPP
+
+#include <fstream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -26,36 +32,62 @@ namespace wc3lib
 namespace mdlx
 {
 
-Visibility4s::Visibility4s(class Mdlx *mdlx) : MdxBlock("KRVS"), m_mdlx(mdlx)
+class RibbonEmitterHeightsAbove;
+
+class RibbonEmitterHeightAbove
 {
-}
+	public:
+		RibbonEmitterHeightAbove(class RibbonEmitterHeightsAbove *heights);
+		virtual ~RibbonEmitterHeightAbove();
 
-Visibility4s::~Visibility4s()
+		class RibbonEmitterHeightsAbove* heights() const;
+		long32 frame() const;
+		float32 state() const;
+		float32 inTan() const;
+		float32 outTan() const;
+
+		virtual void readMdl(std::fstream &fstream) throw (class Exception);
+		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+
+	protected:
+		class RibbonEmitterHeightsAbove *m_heights;
+		long32 m_frame;
+		float32 m_state; //(0 or 1)
+		//if (LineType > 1) {
+		float32 m_inTan;
+		float32 m_outTan;
+		//}
+};
+
+inline class RibbonEmitterHeightsAbove* RibbonEmitterHeightAbove::heights() const
 {
+	return this->m_heights;
 }
 
-void Visibility4s::readMdl(std::fstream &fstream) throw (class Exception)
+inline long32 RibbonEmitterHeightAbove::frame() const
 {
+	return this->m_frame;
 }
 
-void Visibility4s::writeMdl(std::fstream &fstream) throw (class Exception)
+inline float32 RibbonEmitterHeightAbove::state() const
 {
+	return this->m_state;
 }
 
-long32 Visibility4s::readMdx(std::fstream &fstream) throw (class Exception)
+inline float32 RibbonEmitterHeightAbove::inTan() const
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
+	return this->m_inTan;
 }
 
-long32 Visibility4s::writeMdx(std::fstream &fstream) throw (class Exception)
+inline float32 RibbonEmitterHeightAbove::outTan() const
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return this->m_outTan;
 }
 
 }
 
 }
+
+#endif

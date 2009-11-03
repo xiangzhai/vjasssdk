@@ -42,31 +42,34 @@ void Alpha::readMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Alpha::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	fstream >> this->m_frame;
-	fstream >> this->m_state; //(0 or 1)
-	
-	if (this->m_state != 0 && this->m_state != 1)
-	{
-		char message[50];
-		sprintf(message, _("Unknown state: %d. Should be 0 or 1."), this->m_state);
-		throw Exception(message);
-	}
-	
-	if (this->alphas()->lineType() > 1)
-	{
-		fstream >> this->m_inTan;
-		fstream >> this->m_outTan;
-	}
-}
-
 void Alpha::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-void Alpha::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Alpha::readMdx(std::fstream &fstream) throw (class Exception)
 {
+	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
+	long32 bytes = fstream.gcount();
+	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state)); //(0 or 1)
+	bytes += fstream.gcount();
+	
+	if (this->m_state != 0 && this->m_state != 1)
+		fprintf(stderr, _("Alpha: Unknown state %d. Should be 0 or 1.\n"), this->m_state);
+	
+	if (this->m_alphas->lineType() > 1)
+	{
+		fstream.read(reinterpret_cast<char*>(&this->m_inTan), sizeof(this->m_inTan));
+		bytes += fstream.gcount();
+		fstream.read(reinterpret_cast<char*>(&this->m_outTan), sizeof(this->m_outTan));
+		bytes += fstream.gcount();
+	}
+	
+	return bytes;
+}
+
+long32 Alpha::writeMdx(std::fstream &fstream) throw (class Exception)
+{
+	return 0;
 }
 
 }

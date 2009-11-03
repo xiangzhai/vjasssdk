@@ -23,7 +23,7 @@
 #include <OGRE/Ogre.h>	
 #include <OGRE/OgreErrorDialog.h>
 
-#include "../exception.hpp"
+//#include "../exception.hpp"
 #include "renderer.hpp"
 
 namespace wc3lib
@@ -34,8 +34,10 @@ namespace editor
 
 void Renderer::start()
 {
+	/*
 	try
 	{
+	*/
 		this->m_root = new Ogre::Root("../../plugins.cfg", "../ogre.cfg", "ogre.log");
 		
 		if (!this->m_root->restoreConfig())
@@ -61,16 +63,20 @@ void Renderer::start()
 		
 		this->m_root->startRendering();
 
+	/*
 	}
-	catch (class Exception &exception)
+	catch (class Ogre::Exception &exception)
 	{
-		std::cerr << exception.what() << std::endl;
+	*/
+		//std::cerr << exception.what() << std::endl;
 		/*
 		Ogre::ErrorDialog *dialog = Ogre::PlatformManager::getSingleton().createErrorDialog();
 		dialog->display(exception.getFullDescription());
 		delete dialog;	
 		*/
+	/*
 	}
+	*/
 }
 
 }

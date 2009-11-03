@@ -19,7 +19,11 @@
  ***************************************************************************/
 
 #include "ribbonemitter.hpp"
-#include "ribbonemittervisibilityspeeds.hpp"
+#include "ribbonemitters.hpp"
+#include "translation1s.hpp"
+#include "rotation0s.hpp"
+#include "scaling0s.hpp"
+#include "ribbonemittervisibilities.hpp"
 #include "ribbonemitterheightsabove.hpp"
 #include "ribbonemitterheightsbelow.hpp"
 
@@ -29,13 +33,16 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : m_ribbonEmitters(ribbonEmitters), m_visibilitySpeeds(new RibbonEmitterVisibilitySpeeds(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
+RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : m_ribbonEmitters(ribbonEmitters), m_translations(new Translation1s(ribbonEmitters->mdlx())), m_rotations(new Rotation0s(ribbonEmitters->mdlx())), m_scalings(new Scaling0s(ribbonEmitters->mdlx())), m_visibilities(new RibbonEmitterVisibilities(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
 {
 }
 
 RibbonEmitter::~RibbonEmitter()
 {
-	delete this->m_visibilitySpeeds;
+	delete this->m_translations;
+	delete this->m_rotations;
+	delete this->m_scalings;
+	delete this->m_visibilities;
 	delete this->m_heightsAbove;
 	delete this->m_heightsBelow;
 }
@@ -51,7 +58,7 @@ void RibbonEmitter::writeMdl(std::fstream &fstream) throw (class Exception)
 long32 RibbonEmitter::readMdx(std::fstream &fstream) throw (class Exception)
 {
 	long32 nbytesi = 0;
-	fstream.read(reinterpret_cast<char*>(&nybtes), sizeof(nbytes));
+	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
 	long32 bytes = fstream.gcount();
 	long32 nbytesikg; // inclusive bytecount including KGXXs
 	fstream.read(reinterpret_cast<char*>(&nbytesikg), sizeof(nbytesikg));
@@ -64,9 +71,9 @@ long32 RibbonEmitter::readMdx(std::fstream &fstream) throw (class Exception)
 	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_flags), sizeof(this->m_flags));
 	bytes += fstream.gcount();
-	bytes += this->m_translation->readMdx(fstream);
-	bytes += this->m_rotation->readMdx(fstream);
-	bytes += this->m_scaling->readMdx(fstream);
+	bytes += this->m_translations->readMdx(fstream);
+	bytes += this->m_rotations->readMdx(fstream);
+	bytes += this->m_scalings->readMdx(fstream);
 	fstream.read(reinterpret_cast<char*>(&this->m_heightAboveValue), sizeof(this->m_heightAboveValue));
 	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_heightBelowValue), sizeof(this->m_heightBelowValue));
@@ -95,7 +102,7 @@ long32 RibbonEmitter::readMdx(std::fstream &fstream) throw (class Exception)
 	bytes += fstream.gcount();
 	fstream.read(reinterpret_cast<char*>(&this->m_gravity), sizeof(this->m_gravity));
 	bytes += fstream.gcount();
-	bytes +=this->m_visibilitySpeeds->readMdx(fstream);
+	bytes +=this->m_visibilities->readMdx(fstream);
 	bytes +=this->m_heightsAbove->readMdx(fstream);
 	bytes +=this->m_heightsBelow->readMdx(fstream);
 	
