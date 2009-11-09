@@ -35,7 +35,7 @@ const KAboutData *MainWindow::aboutData = new KAboutData("vjassdocgui",
 "",
 ki18n("vjassdocgui"),
 "0.1",
-ki18n("Program which rulez!!!!!!!!!!1111"),
+ki18n("Graphical user interface for vjassdoc."),
 KAboutData::License_GPL_V2,
 ki18n("(C) 2009 Tamino Dauth"),
 ki18n("Bla bla bla"),
@@ -43,7 +43,7 @@ ki18n("Bla bla bla"),
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent), m_widget(new Widget(this))
 {
-	//this->m_widget->setupUi(this);
+	this->m_widget->setupUi(this);
 	this->setCentralWidget(this->m_widget);
 }
 

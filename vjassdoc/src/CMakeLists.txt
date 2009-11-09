@@ -81,6 +81,7 @@ if (USE_SQLITE)
 endif (USE_SQLITE)
 
 if (USE_GUI)
+	message(STATUS "Creating GUI.")
 	add_subdirectory(gui)
 endif (USE_GUI)
 

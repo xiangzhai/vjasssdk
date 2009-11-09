@@ -51,7 +51,7 @@ void Widget::run()
 	this->optionSpecialpagesCheckBox->isChecked(),
 	this->optionSyntaxCheckBox->isChecked(),
 	this->compilationDirectoryUrlRequester->url().path().toAscii().data(),
-	this->optionDatabaseCheckBox->isChecked(),
+	this->databaseDirectoryUrlRequester->url().path().toAscii().data(),
 	this->optionVerboseCheckBox->isChecked(),
 	this->optionTimeCheckBox->isChecked(),
 	this->optionAlphabeticalCheckBox->isChecked(),
