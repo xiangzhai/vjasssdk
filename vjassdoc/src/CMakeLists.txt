@@ -67,18 +67,18 @@ set(HEADERS
 )
 
 # library
-add_library(vjassdoclib SHARED ${SRC} ${HEADERS})
+add_library(vjassdoclib SHARED ${SRC})
 target_link_libraries(vjassdoclib ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 if (USE_SQLITE)
 	target_link_libraries(vjassdoclib sqlite3) #${SQLITE_LIBRARIES}
 endif (USE_SQLITE)
 
-# program
-add_executable(vjassdoc main.cpp)
-target_link_libraries(vjassdoc vjassdoclib) # ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES}
-#if (USE_SQLITE)
-#	target_link_libraries(vjassdoc sqlite3) #${SQLITE_LIBRARIES}
-#endif (USE_SQLITE)
+# program, todo only link with vjassdoclib and drop ${SRC}
+add_executable(vjassdoc main.cpp ${SRC})
+target_link_libraries(vjassdoc ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
+if (USE_SQLITE)
+	target_link_libraries(vjassdoc sqlite3) #${SQLITE_LIBRARIES}
+endif (USE_SQLITE)
 
 if (USE_GUI)
 	add_subdirectory(gui)
