@@ -35,6 +35,7 @@ class Widget;
 class MainWindow : public KMainWindow
 {
 	//Q_OBJECT
+	
 	public:
 		static const KAboutData *aboutData;
 

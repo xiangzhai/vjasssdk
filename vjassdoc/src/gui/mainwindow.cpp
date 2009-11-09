@@ -43,7 +43,7 @@ ki18n("Bla bla bla"),
 
 MainWindow::MainWindow(QWidget *parent) : KMainWindow(parent), m_widget(new Widget(this))
 {
-	this->m_widget->setupUi(this);
+	//this->m_widget->setupUi(this);
 	this->setCentralWidget(this->m_widget);
 }
 
