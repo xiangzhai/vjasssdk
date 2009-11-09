@@ -1,6 +1,10 @@
+2009-11-04 Tamino Dauth <tamino@cdauth.de>
+* Add //! externalblock and //! endexternalblock support (simply add a new class called ExternalBlock).
+* Missing cmake FindSqlite module.
+
 2009-10-31 Tamino Dauth <tamino@cdauth.de>
-* Add function prototype support to class Compiler.
-* Add statement classes (like Call).
+* Add function prototype support to class Compiler. You'll need to create globals for each used argument type of those calls. Set these globals before trigger evaluation/execution and create locals in prototype function which has no arguments. These locals should get the global's values immediatly and uses as arguments (since you could use TriggerSleepAction calls in executions and the globals are used by all those prototype calls).
+* Add statement classes (like Call, Loop, If).
 
 2009-10-11 Tamino Dauth <tamino@cdauth.de>
 * DONE: Keyword support textmacro_once.

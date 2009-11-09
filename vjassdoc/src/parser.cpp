@@ -672,6 +672,7 @@ void Parser::createDatabase(const std::string &filePath)
 				if (remove(filePath.c_str()) != 0)
 				{
 					std::cout << _("Was unable to replace old database.") << std::endl;
+					
 					return;
 				}
 				
@@ -680,6 +681,7 @@ void Parser::createDatabase(const std::string &filePath)
 			else if (answer == _("n") || answer == _("no"))
 			{
 				std::cout << _("Canceled database creation.") << std::endl;
+				
 				return;
 			}
 			else
@@ -707,13 +709,14 @@ void Parser::createDatabase(const std::string &filePath)
 			if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
 				continue;
 
-			std::cout << "Table list " << i << std::endl;
-			std::cout << "Table creation statement: " << this->getTableCreationStatement(Parser::List(i)).c_str() << std::endl;
 			state = sqlite3_exec(database, this->getTableCreationStatement(Parser::List(i)).c_str(), 0, 0, &message);
-			//std::cout << "After table creation" << std::endl;
 
 			if (state != SQLITE_OK)
 			{
+				/// @todo test output
+				std::cout << "Table list " << i << std::endl;
+				std::cout << "Table creation statement: " << this->getTableCreationStatement(Parser::List(i)).c_str() << std::endl;
+				
 				fprintf(stderr, _("Was unable to create table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), Parser::getTableName(Parser::List(i)).c_str(), i, state, message);
 				sqlite3_free(message);
 			}

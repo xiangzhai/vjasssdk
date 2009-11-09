@@ -3,17 +3,19 @@ cmake_minimum_required(VERSION 2.6.4)
 project(vjassdoc)
 
 find_package(Gettext REQUIRED)
-# todo: require tokenizer component.
+
+if (GETTEXT_FOUND)
+	message(STATUS "Gettext has been found.")
+	include_directories(${GETTEXT_INCLUDE_DIR})
+else (GETTEXT_FOUND)
+	message(STATUS "Gettext has not been found.")
+	# cancel
+endif (GETTEXT_FOUND)
+
+# todo: require GNU C library for getopt
 #find_package(GLIB2 REQUIRED)
 
-# setup flags
-
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_definitions(-DDEBUG=1)
-	set(USE_DEBUG 1)
-	message(STATUS "Build type is \"Debug\", using -DDEBUG.")
-endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
-
+# todo: require tokenizer component.
 find_package(Boost REQUIRED)
 
 if (Boost_FOUND)
@@ -24,8 +26,16 @@ else (Boost_FOUND)
 	# cancel
 endif (Boost_FOUND)
 
+# setup flags
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_definitions(-DDEBUG=1)
+	set(USE_DEBUG 1)
+	message(STATUS "Build type is \"Debug\", using -DDEBUG.")
+endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
 find_package(Qt4)
-find_package(KDE4) #FindGettext
+find_package(KDE4)
 
 if (QT4_FOUND AND KDE4_FOUND)
 	add_definitions(-DGUI=1)
@@ -38,12 +48,14 @@ if (QT4_FOUND AND KDE4_FOUND)
 	include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
 endif (QT4_FOUND AND KDE4_FOUND)
 
-find_library(SQLITE_FOUND sqlite3)
+find_package(Sqlite)
 
 if (SQLITE_FOUND)
 	add_definitions(-DSQLITE=1)
 	set(USE_SQLITE 1)
-	message(STATUS "sqlite3 has been found, using -DSQLITE.")
+	message(STATUS "sqlite has been found, using -DSQLITE.")
+	add_definitions(${SQLITE_DEFINITIONS})
+	include_directories(${SQLITE_INCLUDE_DIR})
 endif (SQLITE_FOUND)
 
 #add_definitions(-DSQLITE=1 -DDEBUG=1 -DGUI=1) # test

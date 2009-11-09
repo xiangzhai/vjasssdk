@@ -1,3 +1,8 @@
+2009-11-04 Tamino Dauth <tamino@cdauth.de>
+* --database option has shortcut -L now instead of -b.
+* Fixed various option issues.
+* Added --nocall option support.
+
 2009-11-03 Tamino Dauth <tamino@cdauth.de>
 * Revised several code files and renamed members of class File.
 

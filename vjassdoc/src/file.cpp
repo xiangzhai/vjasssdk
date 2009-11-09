@@ -255,6 +255,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 						{
 							result = true;
 							fin.close(); //TODO Just close if good?
+							
 							break;
 						}
 
@@ -687,6 +688,8 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 		}
 	}
 
+	std::size_t lines = this->m_currentLine;
+	
 	// reset members
 	this->m_parser = 0;
 	this->m_notRequiredSpace = File::InvalidExpression;
@@ -708,7 +711,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 	this->m_currentFunction = 0;
 	this->m_gotDocComment = false;
 	
-	return this->m_currentLine;
+	return lines;
 }
 
 File::Expression File::getFirstLineExpression(std::string &line, std::string::size_type &index)

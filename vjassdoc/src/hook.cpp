@@ -35,10 +35,10 @@ void Hook::initClass()
 {
 	Hook::sqlColumns = Object::sqlColumns + 4;
 	Hook::sqlColumnStatement = Object::sqlColumnStatement +
-	"Function INT,"
-	"FunctionExpression VARCHAR(255),"
-	"HookFunction INT,"
-	"HookFunctionExpression VARCHAR(255),";
+	",Function INT"
+	",FunctionExpression VARCHAR(255)"
+	",HookFunction INT"
+	",HookFunctionExpression VARCHAR(255)";
 }
 #endif
 

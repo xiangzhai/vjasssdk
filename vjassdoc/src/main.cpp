@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
 		{"nofunctioninterfaces",    no_argument,             0, 0},
 		{"nofunctions",             no_argument,             0, 0},
 		{"nomethods",               no_argument,             0, 0},
+		{"nocalls",                 no_argument,             0, 0},
 		{"noimplementations",       no_argument,             0, 0},
 		{"nohooks",                 no_argument,             0, 0},
 		{"nointerfaces",            no_argument,             0, 0},
@@ -77,14 +78,18 @@ int main(int argc, char *argv[])
 		{"specialpages",            no_argument,             0, 's'},
 		{"syntax",                  no_argument,             0, 'x'},
 		{"compile",                 required_argument,       0, 'C'},
-		{"database",                required_argument,       0, 'b'},
+#ifdef SQLITE
+		{"database",                required_argument,       0, 'L'},
+#endif
 		{"verbose",                 no_argument,             0, 'v'},
 		{"time",                    no_argument,             0, 't'},
 		{"alphabetical",            no_argument,             0, 'a'},
 		{"title",                   required_argument,       0, 'T'},
 		{"importdirs",              required_argument,       0, 'I'},
 		{"dir",                     required_argument,       0, 'D'},
+#ifdef SQLITE
 		{"databases",               required_argument,       0, 'B'},
+#endif
 		{0, 0, 0, 0}
 	};
 	
@@ -117,6 +122,7 @@ int main(int argc, char *argv[])
 		"nofunctioninterfaces",
 		"nofunctions",
 		"nomethods",
+		"nocalls",
 		"noimplementations",
 		"nohooks",
 		"nointerfaces",
@@ -142,6 +148,7 @@ int main(int argc, char *argv[])
 		true, //function interfaces
 		true, //functions
 		true, //methods
+		true, //calls
 		true, //implementations
 		true, //hooks
 		true, //interfaces
@@ -162,7 +169,7 @@ int main(int argc, char *argv[])
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "VhjdpmflgsxC:bvtaT:I:D:B:", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "VhjdpmflgsxC:L:vtaT:I:D:B:", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -209,6 +216,7 @@ int main(int argc, char *argv[])
 				_("\t                            functioninterfaces\n") <<
 				_("\t                            functions\n") <<
 				_("\t                            methods\n") <<
+				_("\t                            calls\n") <<
 				_("\t                            implementations\n") <<
 				_("\t                            hooks\n") <<
 				_("\t                            interfaces\n") <<
@@ -224,7 +232,7 @@ int main(int argc, char *argv[])
 				_("\t-x --syntax                 Program checks syntax. Not implemented yet!\n") <<
 				_("\t-C --compile <arg>          Program uses file <arg> to create a map Jass script.\n") <<
 #ifdef SQLITE
-				_("\t-b --database <arg>         Program uses file <arg> to create an SQLite3 database which contains all parsed objects.\n") <<
+				_("\t-L --database <arg>         Program uses file <arg> to create an SQLite3 database which contains all parsed objects.\n") <<
 #endif
 				_("\t-v --verbose                Program shows more information about the process.\n") <<
 				_("\t-t --time                   Detects the elapsed time and shows it at the end of the process.\n") <<
@@ -274,7 +282,6 @@ int main(int argc, char *argv[])
 				break;
 			
 			case 'g':
-				std::cout << "Pages are true" << std::endl;
 				pages = true;
 				
 				break;
@@ -294,7 +301,7 @@ int main(int argc, char *argv[])
 				
 				break;
 #ifdef SQLITE					
-			case 'b':
+			case 'L':
 				databaseFilePath = optarg;
 				
 				break;
@@ -376,6 +383,8 @@ int main(int argc, char *argv[])
 						break;
 					}
 				}
+				
+				break;
 		}
 	}
 		
