@@ -6,7 +6,7 @@
 
 #include <kdialog.h>
 
-#include "ui/ui_widget.hpp"
+#include "ui_widget.h"
 
 namespace vjassdoc
 {

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 		"https://sourceforge.net/projects/vjasssdk/"
 	);
 	aboutData.addAuthor(ki18n("Tamino Dauth"), KLocalizedString(), "tamino@cdauth.de");
-	aboutData.setOrganizationDomain("https://sourceforge.net/projects/vjasssdk/");
+	//aboutData.setOrganizationDomain("https://sourceforge.net/projects/vjasssdk/");
 
 	KCmdLineArgs::init(argc, argv, &aboutData);
 

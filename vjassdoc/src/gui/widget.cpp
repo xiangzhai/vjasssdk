@@ -17,8 +17,17 @@ void Widget::run()
 	if (this->filesEditListBox->items().isEmpty())
 	{
 		KMessageBox::error(this, tr("Missing file paths."), tr("Error"));
+		
 		return;
 	}
+	
+	if (!QFile::exists(this->outputDirectoryUrlRequester->url().path()))
+	{
+		KMessageBox::error(this, tr("Missing output directory \"%1\".").arg(this->outputDirectoryUrlRequester->url().path()), tr("Error"));
+		
+		return;
+	}
+
 
 	bool parseObjectsOfList[vjassdoc::Parser::MaxLists];
 
@@ -99,12 +108,12 @@ Widget::Widget(class MainWindow *parent) : QWidget(parent)
 	this->optionJassCheckBox->setChecked(settings.value("pages", true).toBool());
 	this->optionJassCheckBox->setChecked(settings.value("specialpages", true).toBool());
 	this->optionJassCheckBox->setChecked(settings.value("syntax", false).toBool());
-	this->optionJassCheckBox->setChecked(settings.value("database", false).toBool());
 	this->optionJassCheckBox->setChecked(settings.value("verbose", false).toBool());
 	this->optionJassCheckBox->setChecked(settings.value("time", true).toBool());
 	this->optionJassCheckBox->setChecked(settings.value("alphabetical", true).toBool());
 	this->outputDirectoryUrlRequester->setUrl(settings.value("dir").toString());
 	this->compilationDirectoryUrlRequester->setUrl(settings.value("compile").toString());
+	this->databaseDirectoryUrlRequester->setUrl(settings.value("database").toString());
 	QStringList import;
 	size = settings.beginReadArray("import");
 	i = 0;
@@ -156,12 +165,12 @@ Widget::~Widget()
 	settings.setValue("pages", this->optionPagesCheckBox->isChecked());
 	settings.setValue("specialpages", this->optionSpecialpagesCheckBox->isChecked());
 	settings.setValue("syntax", this->optionSyntaxCheckBox->isChecked());
-	settings.setValue("database", this->optionDatabaseCheckBox->isChecked());
 	settings.setValue("verbose", this->optionVerboseCheckBox->isChecked());
 	settings.setValue("time", this->optionTimeCheckBox->isChecked());
 	settings.setValue("alphabetical", this->optionAlphabeticalCheckBox->isChecked());
 	settings.setValue("dir", this->outputDirectoryUrlRequester->url().path());
 	settings.setValue("compile", this->compilationDirectoryUrlRequester->url().path());
+	settings.setValue("database", this->databaseDirectoryUrlRequester->url().path());
 	settings.beginWriteArray("import", this->importDirectoriesEditListBox->items().size());
 	i = 0;
 

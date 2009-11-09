@@ -1,4 +1,4 @@
-set(SRC
+set(VJASSDOC_SRC
 	#objects
 	object.cpp
 	comment.cpp
@@ -33,7 +33,7 @@ set(SRC
 	utilities.cpp
 )
 
-set(HEADERS
+set(VJASSDOC_H
 	object.hpp
 	comment.hpp
 	keyword.hpp
@@ -67,28 +67,24 @@ set(HEADERS
 )
 
 # library
-add_library(vjassdoclib SHARED ${SRC})
+add_library(vjassdoclib ${VJASSDOC_SRC})
 target_link_libraries(vjassdoclib ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 if (USE_SQLITE)
 	target_link_libraries(vjassdoclib sqlite3) #${SQLITE_LIBRARIES}
 endif (USE_SQLITE)
 
-# program, todo only link with vjassdoclib and drop ${SRC}
-add_executable(vjassdoc main.cpp ${SRC})
-target_link_libraries(vjassdoc ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
-if (USE_SQLITE)
-	target_link_libraries(vjassdoc sqlite3) #${SQLITE_LIBRARIES}
-endif (USE_SQLITE)
+# program
+add_executable(vjassdoc main.cpp)
+target_link_libraries(vjassdoc vjassdoclib)
 
 if (USE_GUI)
-	message(STATUS "Creating GUI.")
 	add_subdirectory(gui)
 endif (USE_GUI)
 
 #install
 
 install(FILES
-	${HEADERS}
+	${VJASSDOC_H}
 	DESTINATION include/vjassdoc/
 )
 
