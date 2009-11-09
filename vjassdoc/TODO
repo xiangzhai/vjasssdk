@@ -1,3 +1,8 @@
+2009-11-09 Tamino Dauth <tamino@cdauth.de>
+* Undocumented objects should have their own page.
+* Maybe document comments shouldn't be listed on index page.
+* Fix member parsing.
+
 2009-11-04 Tamino Dauth <tamino@cdauth.de>
 * Add //! externalblock and //! endexternalblock support (simply add a new class called ExternalBlock).
 * Missing cmake FindSqlite module.

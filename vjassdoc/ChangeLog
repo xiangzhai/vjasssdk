@@ -1,3 +1,8 @@
+2009-11-09 Tamino Dauth <tamino@cdauth.de>
+* Revised option descriptions.
+* Revised German option descriptions.
+* Released version 0.3.
+
 2009-11-04 Tamino Dauth <tamino@cdauth.de>
 * --database option has shortcut -L now instead of -b.
 * Fixed various option issues.

@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
 			{
 				printf("vjassdoc %s.\n\n", Vjassdoc::version);
 				std::cout <<
-				_("Usage: vjassdoc [Options] [Files]\n\n") <<
+				_("Usage: vjassdoc [Options] [Code files]\n\n") <<
 				_("Options:\n") <<
 				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
 				_("\t-h --help                   Shows this text.\n") <<
@@ -226,15 +226,15 @@ int main(int argc, char *argv[])
 				_("\t                            libraries\n") <<
 				_("\t                            sourcefiles\n") <<
 				_("\t                            doccomments\n") <<
-				_("\t-l --html                   Program creates a simple HTML API documentation.\n") <<
-				_("\t-g --pages                  Program creates an HTML file for each parsed object.\n") <<
-				_("\t-s --specialpages           Program creates additional HTML files containing more information about all parsed objects.\n") <<
-				_("\t-x --syntax                 Program checks syntax. Not implemented yet!\n") <<
-				_("\t-C --compile <arg>          Program uses file <arg> to create a map Jass script.\n") <<
+				_("\t-l --html                   Creates a simple HTML API documentation.\n") <<
+				_("\t-g --pages                  Creates an HTML file for each parsed object.\n") <<
+				_("\t-s --specialpages           Creates additional HTML files containing more information about all parsed objects.\n") <<
+				_("\t-x --syntax                 Checks syntax. Not implemented yet!\n") <<
+				_("\t-C --compile <arg>          Uses file <arg> to create a map Jass script.\n") <<
 #ifdef SQLITE
-				_("\t-L --database <arg>         Program uses file <arg> to create an SQLite3 database which contains all parsed objects.\n") <<
+				_("\t-L --database <arg>         Uses file <arg> to create an SQLite3 database which contains all parsed objects.\n") <<
 #endif
-				_("\t-v --verbose                Program shows more information about the process.\n") <<
+				_("\t-v --verbose                Shows more information about the process.\n") <<
 				_("\t-t --time                   Detects the elapsed time and shows it at the end of the process.\n") <<
 				_("\t-a --alphabetical           All objects will be aranged in alphabetical order.\n") <<
 				_("\t-T --title <arg>            <arg> has to be replaced by the title which is used for the API documentation.\n") <<
