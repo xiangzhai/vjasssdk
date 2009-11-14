@@ -48,12 +48,12 @@ void Light::writeMdl(std::fstream &fstream) throw (class Exception)
 {
 }
 
-long32 Light::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Light::readMdx(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-long32 Light::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Light::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

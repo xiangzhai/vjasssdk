@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitterVisibilities::RibbonEmitterVisibilities(class RibbonEmitter *ribbonEmitter) : MdxBlock("KRVS"), m_ribbonEmitter(ribbonEmitter)
+RibbonEmitterVisibilities::RibbonEmitterVisibilities(class RibbonEmitter *ribbonEmitter) : MdxAlphas("KRVS"), m_ribbonEmitter(ribbonEmitter)
 {
 }
 
@@ -34,26 +34,12 @@ RibbonEmitterVisibilities::~RibbonEmitterVisibilities()
 {
 }
 
-void RibbonEmitterVisibilities::readMdl(std::fstream &fstream) throw (class Exception)
+void RibbonEmitterVisibilities::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void RibbonEmitterVisibilities::writeMdl(std::fstream &fstream) throw (class Exception)
+void RibbonEmitterVisibilities::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-}
-
-long32 RibbonEmitterVisibilities::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 RibbonEmitterVisibilities::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
 }
 
 }

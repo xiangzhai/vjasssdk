@@ -26,6 +26,10 @@ namespace wc3lib
 namespace mdlx
 {
 
+EmissionRate::EmissionRate(class EmissionRates *emissionRates) : MdxAlpha(emissionRates)
+{
+}
+	
 }
 
 }

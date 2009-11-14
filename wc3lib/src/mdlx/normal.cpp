@@ -35,28 +35,27 @@ Normal::~Normal()
 {
 }
 
-void Normal::readMdl(std::fstream &fstream) throw (class Exception)
+void Normal::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Normal::writeMdl(std::fstream &fstream) throw (class Exception)
+void Normal::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Normal::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Normal::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
+	long32 bytes = istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
+	bytes += istream.gcount();
 	
 	return bytes;
 }
 
-long32 Normal::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Normal::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

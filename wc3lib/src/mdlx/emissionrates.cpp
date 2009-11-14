@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-EmissionRates::EmissionRates(class Mdlx *mdlx) : MdxBlock("KP2E"), m_mdlx(mdlx)
+EmissionRates::EmissionRates(class Mdlx *mdlx) : MdxAlphas("KP2E"), m_mdlx(mdlx)
 {
 }
 
@@ -34,22 +34,12 @@ EmissionRates::~EmissionRates()
 {
 }
 
-void EmissionRates::readMdl(std::fstream &fstream) throw (class Exception)
+void EmissionRates::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-long32 EmissionRates::readMdx(std::fstream &fstream) throw (class Exception)
+void EmissionRates::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	return 0;
-}
-
-void EmissionRates::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 EmissionRates::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
 }
 
 }

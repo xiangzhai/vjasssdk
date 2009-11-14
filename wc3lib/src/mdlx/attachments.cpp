@@ -37,25 +37,29 @@ Attachments::~Attachments()
 		delete *iterator;
 }
 
-void Attachments::readMdl(std::fstream &fstream) throw (class Exception)
+void Attachments::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-long32 Attachments::readMdx(std::fstream &fstream) throw (class Exception)
+void Attachments::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+}
+
+long32 Attachments::readMdx(std::istream &istream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class Attachment *attachment = new Attachment(this);
-		long32 readBytes = attachment->readMdx(fstream);
+		long32 readBytes = attachment->readMdx(istream);
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_attachments.push_back(attachment);
@@ -64,11 +68,7 @@ long32 Attachments::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-void Attachments::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Attachments::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Attachments::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

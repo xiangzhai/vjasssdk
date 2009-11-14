@@ -1,6 +1,4 @@
 set(wc3lib_MDLX_SRC                            
-	alpha.cpp
-	alphas.cpp
 	ambientcolor.cpp
 	ambientcolors.cpp
 	ambientintensities.cpp
@@ -19,6 +17,8 @@ set(wc3lib_MDLX_SRC
 	emissionrates.cpp
 	event.cpp
 	events.cpp
+	eventtrack.cpp
+	eventtracks.cpp
 	ganimation.cpp
 	geoset.cpp
 	geosetanimation.cpp
@@ -44,19 +44,31 @@ set(wc3lib_MDLX_SRC
 	light.cpp
 	lights.cpp
 	material.cpp
+	materialalpha.cpp
+	materialalphas.cpp
 	materials.cpp
 	matrices.cpp
 	matrix.cpp
 	matrixgroupcount.cpp
 	matrixgroupcounts.cpp
 	mdlx.cpp
+	mdxalpha.cpp
+	mdxalphas.cpp
 	mdxblock.cpp
+	mdxscaling.cpp
+	mdxscalings.cpp
 	model.cpp
 	normal.cpp
 	normals.cpp
 	object.cpp
 	particleemitter2.cpp
+	particleemitter2latitude.cpp
+	particleemitter2latitudes.cpp
 	particleemitter2s.cpp
+	particleemitter2speed.cpp
+	particleemitter2speeds.cpp
+	particleemitter2width.cpp
+	particleemitter2widths.cpp
 	particleemitter.cpp
 	particleemitters.cpp
 	pivotpoint.cpp
@@ -129,6 +141,9 @@ set(wc3lib_MDLX_H
 	color1.hpp
 	color1s.hpp
 	event.hpp
+	events.hpp
+	eventtrack.hpp
+	eventtracks.hpp
 	ganimation.hpp
 	geoset.hpp
 	geosetanimation.hpp
@@ -138,8 +153,24 @@ set(wc3lib_MDLX_H
 	geosetanimationcolors.hpp
 	groupmdxblock.hpp
 	groupmdxblockmember.hpp
+	materialalpha.hpp
+	materialalphas.hpp
 	mdlx.hpp
+	mdxalpha.cpp
+	mdxalphas.cpp
+	mdxscaling.cpp
+	mdxscalings.cpp
 	object.hpp
+	particleemitter2.hpp
+	particleemitter2latitude.hpp
+	particleemitter2latitudes.hpp
+	particleemitter2s.hpp
+	particleemitter2speed.hpp
+	particleemitter2speeds.hpp
+	particleemitter2width.hpp
+	particleemitter2widths.hpp
+	particleemitter.hpp
+	particleemitters.hpp
 	ribbonemitterheightabove.hpp
 	ribbonemitterheightsabove.hpp
 	ribbonemitterheightbelow.hpp
@@ -165,9 +196,9 @@ include_directories(/usr/include/boost-1_35)
 
 add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})
 #target_link_libraries(wc3libblp gettextlib)
-#if (BLEND)
+if (BLEND)
 	target_link_libraries(wc3libmdlx wc3libmdlxreadblend)
-#endif (BLEND)
+endif (BLEND)
 
 #install
 

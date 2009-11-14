@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
-
 #include "geosets.hpp"
 #include "geoset.hpp"
 #include "../internationalisation.hpp"
@@ -40,17 +38,17 @@ Geosets::~Geosets()
 		delete *iterator;
 }
 
-void Geosets::readMdl(std::fstream &fstream) throw (class Exception)
+void Geosets::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Geosets::writeMdl(std::fstream &fstream) throw (class Exception)
+void Geosets::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Geosets::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 	{
@@ -60,7 +58,7 @@ long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
 	}
 	
 	long32 nbytes = 0; //nbytes
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
 	if (nbytes <= 0)
 	{
@@ -72,12 +70,12 @@ long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
 	
 	std::cout << "Read " << nbytes << " geoset bytes." << std::endl;
 	
-	bytes += fstream.gcount();
+	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class Geoset *geoset = new Geoset(this);
-		long32 readBytes = geoset->readMdx(fstream); 
+		long32 readBytes = geoset->readMdx(istream); 
 		std::cout << "Read geoset with " << readBytes << " bytes." << std::endl;
 		
 		nbytes -= readBytes;
@@ -91,7 +89,7 @@ long32 Geosets::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Geosets::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Geosets::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
 
-#include <fstream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
-#include "../internationalisation.hpp"
+#include "mdxalpha.hpp"
+#include "geosetanimationalphas.hpp"
 
 namespace wc3lib
 {
@@ -35,7 +32,7 @@ namespace mdlx
 
 class GeosetAnimationAlphas;
 
-class GeosetAnimationAlpha
+class GeosetAnimationAlpha : public MdxAlpha
 {
 	public:
 		GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas);
@@ -44,22 +41,11 @@ class GeosetAnimationAlpha
 		
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-		
-	private:
-		class GeosetAnimationAlphas *m_geosetAnimationAlphas;
-		long32 m_frame;
-		float32 m_state; //(0 or 1)
-		//if (LineType > 1) {
-		float32 m_inTan;
-		float32 m_outTan;
-		//}
 };
 
 inline class GeosetAnimationAlphas* GeosetAnimationAlpha::geosetAnimationAlphas() const
 {
-	return this->m_geosetAnimationAlphas;
+	return dynamic_cast<class GeosetAnimationAlphas*>(this->m_alphas);
 }
 
 }

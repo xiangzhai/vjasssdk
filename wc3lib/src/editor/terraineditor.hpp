@@ -18,60 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cstdio>
+#ifndef WC3LIB_EDITOR_TERRAINEDITOR_HPP
+#define WC3LIB_EDITOR_TERRAINEDITOR_HPP
 
-#include "alpha.hpp"
-#include "alphas.hpp"
-#include "../internationalisation.hpp"
+#include "modelview.hpp"
 
 namespace wc3lib
 {
-
-namespace mdlx
-{
-
-Alpha::Alpha(class Alphas *alphas) : m_alphas(alphas)
-{
-}
-
-Alpha::~Alpha()
-{
-}
-
-void Alpha::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Alpha::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Alpha::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state)); //(0 or 1)
-	bytes += fstream.gcount();
 	
-	if (this->m_state != 0 && this->m_state != 1)
-		fprintf(stderr, _("Alpha: Unknown state %d. Should be 0 or 1.\n"), this->m_state);
-	
-	if (this->m_alphas->lineType() > 1)
-	{
-		fstream.read(reinterpret_cast<char*>(&this->m_inTan), sizeof(this->m_inTan));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_outTan), sizeof(this->m_outTan));
-		bytes += fstream.gcount();
-	}
-	
-	return bytes;
-}
-
-long32 Alpha::writeMdx(std::fstream &fstream) throw (class Exception)
+namespace editor
 {
-	return 0;
-}
+	
+class TerrainEditor : public ModelView
+{
+	public:
+		TerrainEditor(QWidget *parent = 0, Qt::WFlags f = 0);
+		virtual ~TerrainEditor();
+};
 
 }
 
 }
+
+#endif

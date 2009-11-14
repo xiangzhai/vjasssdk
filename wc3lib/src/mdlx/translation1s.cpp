@@ -35,45 +35,45 @@ Translation1s::~Translation1s()
 {
 }
 
-void Translation1s::readMdl(std::fstream &fstream) throw (class Exception)
+void Translation1s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Translation1s::writeMdl(std::fstream &fstream) throw (class Exception)
+void Translation1s::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Translation1s::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Translation1s::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nunks = 0;
-	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += istream.gcount();
 
 	for ( ; nunks > 0; --nunks)
 	{
 		class Translation1 *translation = new Translation1(this);
-		bytes += translation->readMdx(fstream);
+		bytes += translation->readMdx(istream);
 		this->m_translations.push_back(translation);
 	}
 	
 	return bytes;
 }
 
-long32 Translation1s::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Translation1s::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	if (!this->exists())
-		return 0;
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

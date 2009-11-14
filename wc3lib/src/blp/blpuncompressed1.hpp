@@ -21,6 +21,8 @@
 #ifndef WC3LIB_BLP_BLPUNCOMPRESSED1_HPP
 #define WC3LIB_BLP_BLPUNCOMPRESSED1_HPP
 
+#include <iostream>
+
 #include "platform.hpp"
 
 namespace wc3lib
@@ -40,20 +42,33 @@ class Blp;
 * the corresponding RGB value is (the palette is still RGBA, but A is not
 * used). The alpha list contains the alpha value for the pixel.
 */
-struct BlpUncompressed1
+class BlpUncompressed1
 {
-	struct MipMap
-	{
-		byte *m_indexList; //[CurrentWidth * CurrentHeight];
-		byte *m_alphaList; //[CurrentWidth * CurrentHeight];
-	};
+	public:
+		struct MipMap
+		{
+			byte *m_indexList; //[CurrentWidth * CurrentHeight];
+			byte *m_alphaList; //[CurrentWidth * CurrentHeight];
+		};
 
-	BlpUncompressed1(const class Blp &blp);
-	~BlpUncompressed1();
-
-	color m_palette[256];
-	MipMap m_mipMaps[16];
+		BlpUncompressed1(class Blp *blp);
+		~BlpUncompressed1();
+	
+		class Blp* blp() const;
+		
+		dword read(std::istream &istream) throw (class Exception);
+		dword write(std::ostream &ostream) throw (class Exception);
+	
+	private:
+		class Blp *m_blp;
+		color m_palette[256];
+		struct MipMap m_mipMaps[16];
 };
+
+inline class Blp* BlpUncompressed1::blp() const
+{
+	return this->m_blp;
+}
 
 }
 

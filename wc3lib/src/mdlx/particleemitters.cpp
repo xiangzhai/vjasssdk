@@ -33,28 +33,47 @@ ParticleEmitters::ParticleEmitters(class Mdlx *mdlx) : MdxBlock("PREM"), m_mdlx(
 
 ParticleEmitters::~ParticleEmitters()
 {
+	for (std::list<class ParticleEmitter*>::iterator iterator = this->m_particleEmitters.begin(); iterator != this->m_particleEmitters.end(); ++iterator)
+		delete *iterator;
 }
 
-void ParticleEmitters::readMdl(std::fstream &fstream) throw (class Exception)
+void ParticleEmitters::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void ParticleEmitters::writeMdl(std::fstream &fstream) throw (class Exception)
+void ParticleEmitters::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 ParticleEmitters::readMdx(std::fstream &fstream) throw (class Exception)
+long32 ParticleEmitters::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes;
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class ParticleEmitter *particleEmitter = new ParticleEmitter(this);
+		long32 readBytes = particleEmitter->readMdx(istream);
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_particleEmitters.push_back(particleEmitter);
+	}
 	
 	return bytes;
 }
 
-long32 ParticleEmitters::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 ParticleEmitters::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

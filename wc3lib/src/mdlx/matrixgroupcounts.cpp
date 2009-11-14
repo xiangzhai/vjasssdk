@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "matrixgroupcounts.hpp"
 #include "matrixgroupcount.hpp"
 
@@ -39,31 +37,31 @@ MatrixGroupCounts::~MatrixGroupCounts()
 		delete *iterator;
 }
 
-void MatrixGroupCounts::readMdl(std::fstream &fstream) throw (class Exception)
+void MatrixGroupCounts::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void MatrixGroupCounts::writeMdl(std::fstream &fstream) throw (class Exception)
+void MatrixGroupCounts::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
 
-long32 MatrixGroupCounts::readMdx(std::fstream &fstream) throw (class Exception)
+long32 MatrixGroupCounts::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nmtrcs = 0;
-	fstream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
+	bytes += istream.gcount();
 	std::cout << "Matrix group counts " << nmtrcs << std::endl;
 	
 	for ( ; nmtrcs > 0; --nmtrcs)
 	{
 		class MatrixGroupCount *matrixGroupCount = new MatrixGroupCount(this);
-		bytes += matrixGroupCount->readMdx(fstream);
+		bytes += matrixGroupCount->readMdx(istream);
 		this->m_matrixGroupCounts.push_back(matrixGroupCount);
 	}
 	
@@ -72,12 +70,12 @@ long32 MatrixGroupCounts::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 MatrixGroupCounts::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 MatrixGroupCounts::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
 	
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

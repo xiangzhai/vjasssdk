@@ -36,12 +36,20 @@ using namespace wc3lib;
 static const char *version = "0.1";
 
 static const int maxFormats = 5;
-static const char *formatExpression[maxFormats] =
+static const char *formatExpression[maxFormats + 1] =
 {
 	"mdl",
 	"mdx",
+	
+#ifdef BLEND
 	"blend",
-	"3ds"
+#endif
+	
+#ifdef MAX
+	"3ds",
+#endif
+	
+	""
 };
 
 static inline bool checkFormatString(const char *formatString)
@@ -202,7 +210,13 @@ int main(int argc, char *argv[])
 		
 		std::ios_base::openmode openMode = std::ifstream::in;
 		
-		if (optionIformat == "mdx")
+		if (optionIformat == "mdx"
+		    
+#ifdef BLEND
+		|| optionIformat == "blend"
+#endif
+		
+		)
 		{
 			std::cout << "Is binary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 			openMode |= std::ifstream::binary;
@@ -228,6 +242,17 @@ int main(int argc, char *argv[])
 			}
 			else if (optionIformat == "mdl")
 				mdlx.readMdl(fstream);
+
+#ifdef BLEND
+			else if (optionIformat == "blend")
+				mdlx.readBlend(fstream);
+#endif
+			
+#ifdef MAX
+			else if (optionIformat == "3ds")
+				mdlx.read3ds(fstream);
+#endif
+			
 		}
 		catch (class Exception &exception)
 		{
@@ -251,10 +276,30 @@ int main(int argc, char *argv[])
 		{
 			extension = ".mdl";
 		}
+
+#ifdef BLEND
+		else if (optionOformat == "blend")
+		{
+			openMode |= std::ifstream::binary;
+			extension = ".blend";
+		}
+#endif
 		
-		/// @todo Remove old extension.
+#ifdef MAX
+		else if (optionOformat == "3ds")
+		{
+			extension = ".3ds";
+		}
+#endif
 		
-		std::string filePath = *iterator + extension;
+		std::string filePath = *iterator;
+		std::string::size_type index = filePath.find_last_of('.');
+		
+		// remove old extension
+		if (index != std::string::npos && filePath.substr(index).length() <= 3)
+			filePath.erase(index);
+		
+		filePath += extension;
 		fstream.open(filePath.c_str(), openMode);
 		
 		if (!fstream)
@@ -273,6 +318,16 @@ int main(int argc, char *argv[])
 			}
 			else if (optionOformat == "mdl")
 				mdlx.writeMdl(fstream);
+
+#ifdef BLEND
+			else if (optionOformat == "blend")
+				mdlx.writeBlend(fstream);
+#endif
+
+#ifdef MAX
+			else if (optionOformat == "3ds")
+				mdlx.write3ds(fstream);
+#endif
 		}
 		catch (class Exception &exception)
 		{

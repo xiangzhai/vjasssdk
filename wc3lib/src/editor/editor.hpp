@@ -28,16 +28,37 @@ namespace wc3lib
 
 namespace editor
 {
-	
-class Renderer;
+
+class TerrainEditor;
+class TriggerEditor;
+class ObjectEditor;
+class AiEditor;
+class CampaignEditor;
+class SoundEditor;
+class ImportEditor;
+class MpqEditor; // new
+class ModelEditor; // new
+class TextureEditor; // new
 
 class Editor : public KMainWindow
 {
+	Q_OBJECT
+	
 	public:
-		Editor();
+		Editor(QWidget *parent, Qt::WindowFlags f);
+	
+	public slots:
+		void newMap();
+		void showTerrainEditor();
 		
 	private:
-		class Renderer *m_renderer;
+		class TerrainEditor *m_terrainEditor;
+		class TriggerEditor *m_triggerEditor;
+		class ObjectEditor *m_objectEditor;
+		class AiEditor *m_aiEditor;
+		class CampaignEditor *m_campaignEditor;
+		class SoundEditor *m_soundEditor;
+		class ImportEditor *m_importEditor;
 };
 
 }

@@ -25,11 +25,13 @@
 #include "cameras.hpp"
 #include "events.hpp"
 #include "collisionshapes.hpp"
+
 #ifdef BLEND
 #include "readblend/abs-file.h"
 #include "readblend/readblend.h"
 #include "readblend/blendtype.h"
 #endif
+
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -68,7 +70,6 @@ Mdlx::~Mdlx()
 }
 
 #ifdef BLEND
-
 /**
 * The first 12 bytes of every blend-file is the file-header.
 * The file-header has information on Blender (version-number) and the PC the blend-file was saved on (pointer-size and endianness).
@@ -82,8 +83,6 @@ struct BlendHeader
 	char versionNumber[3];	/// Version of Blender the file was created in; '248' means version 2.48
 };
 
-#endif
-
 struct BlendFileBlock
 {
 	char code[4]; /// Identifier of the file-block
@@ -92,124 +91,122 @@ struct BlendFileBlock
 	int sdnaIndex; /// Index of the SDNA structure
 	int count; /// Number of structure located in this file-block
 };
+#endif
 
-void Mdlx::readMdl(std::fstream &fstream) throw (class Exception)
+void Mdlx::readMdl(std::istream &istream) throw (class Exception)
 {
-	this->m_version->readMdl(fstream);
-	this->m_model->readMdl(fstream);
-	this->m_sequences->readMdl(fstream);
-	this->m_globalSequences->readMdl(fstream);
-	this->m_materials->readMdl(fstream);
-	this->m_textures->readMdl(fstream);
-	this->m_textureAnimations->readMdl(fstream);
-	this->m_geosets->readMdl(fstream);
-	this->m_geosetAnimations->readMdl(fstream);
-	this->m_bones->readMdl(fstream);
-	this->m_lights->readMdl(fstream);
-	this->m_helpers->readMdl(fstream);
-	this->m_attachments->readMdl(fstream);
-	this->m_pivotPoints->readMdl(fstream);
-	this->m_particleEmitters->readMdl(fstream);
-	this->m_particleEmitter2s->readMdl(fstream);
-	this->m_ribbonEmitters->readMdl(fstream);
-	this->m_cameras->readMdl(fstream);
-	this->m_events->readMdl(fstream);
-	this->m_collisionShapes->readMdl(fstream);
+	this->m_version->readMdl(istream);
+	this->m_model->readMdl(istream);
+	this->m_sequences->readMdl(istream);
+	this->m_globalSequences->readMdl(istream);
+	this->m_materials->readMdl(istream);
+	this->m_textures->readMdl(istream);
+	this->m_textureAnimations->readMdl(istream);
+	this->m_geosets->readMdl(istream);
+	this->m_geosetAnimations->readMdl(istream);
+	this->m_bones->readMdl(istream);
+	this->m_lights->readMdl(istream);
+	this->m_helpers->readMdl(istream);
+	this->m_attachments->readMdl(istream);
+	this->m_pivotPoints->readMdl(istream);
+	this->m_particleEmitters->readMdl(istream);
+	this->m_particleEmitter2s->readMdl(istream);
+	this->m_ribbonEmitters->readMdl(istream);
+	this->m_cameras->readMdl(istream);
+	this->m_events->readMdl(istream);
+	this->m_collisionShapes->readMdl(istream);
 }
 
-void Mdlx::writeMdl(std::fstream &fstream) throw (class Exception)
+void Mdlx::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	this->m_version->writeMdl(fstream);
-	this->m_model->writeMdl(fstream);
-	this->m_sequences->writeMdl(fstream);
-	this->m_globalSequences->writeMdl(fstream);
-	this->m_materials->writeMdl(fstream);
-	this->m_textures->writeMdl(fstream);
-	this->m_textureAnimations->writeMdl(fstream);
-	this->m_geosets->readMdl(fstream);
-	this->m_geosetAnimations->writeMdl(fstream);
-	this->m_bones->writeMdl(fstream);
-	this->m_lights->writeMdl(fstream);
-	this->m_helpers->writeMdl(fstream);
-	this->m_attachments->writeMdl(fstream);
-	this->m_pivotPoints->writeMdl(fstream);
-	this->m_particleEmitters->writeMdl(fstream);
-	this->m_particleEmitter2s->writeMdl(fstream);
-	this->m_ribbonEmitters->writeMdl(fstream);
-	this->m_cameras->writeMdl(fstream);
-	this->m_events->writeMdl(fstream);
-	this->m_collisionShapes->writeMdl(fstream);
+	this->m_version->writeMdl(ostream);
+	this->m_model->writeMdl(ostream);
+	this->m_sequences->writeMdl(ostream);
+	this->m_globalSequences->writeMdl(ostream);
+	this->m_materials->writeMdl(ostream);
+	this->m_textures->writeMdl(ostream);
+	this->m_textureAnimations->writeMdl(ostream);
+	this->m_geosets->writeMdl(ostream);
+	this->m_geosetAnimations->writeMdl(ostream);
+	this->m_bones->writeMdl(ostream);
+	this->m_lights->writeMdl(ostream);
+	this->m_helpers->writeMdl(ostream);
+	this->m_attachments->writeMdl(ostream);
+	this->m_pivotPoints->writeMdl(ostream);
+	this->m_particleEmitters->writeMdl(ostream);
+	this->m_particleEmitter2s->writeMdl(ostream);
+	this->m_ribbonEmitters->writeMdl(ostream);
+	this->m_cameras->writeMdl(ostream);
+	this->m_events->writeMdl(ostream);
+	this->m_collisionShapes->writeMdl(ostream);
 }
 
-long32 Mdlx::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Mdlx::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
-	bytes += this->m_version->readMdx(fstream);
-	bytes += this->m_model->readMdx(fstream);
-	bytes += this->m_sequences->readMdx(fstream);
-	bytes += this->m_globalSequences->readMdx(fstream);
-	bytes += this->m_materials->readMdx(fstream);
-	bytes += this->m_textures->readMdx(fstream);
-	bytes += this->m_textureAnimations->readMdx(fstream);
-	bytes += this->m_geosets->readMdx(fstream);
-	bytes += this->m_geosetAnimations->readMdx(fstream);
-	bytes += this->m_bones->readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
+	bytes += this->m_version->readMdx(istream);
+	bytes += this->m_model->readMdx(istream);
+	bytes += this->m_sequences->readMdx(istream);
+	bytes += this->m_globalSequences->readMdx(istream);
+	bytes += this->m_materials->readMdx(istream);
+	bytes += this->m_textures->readMdx(istream);
+	bytes += this->m_textureAnimations->readMdx(istream);
+	bytes += this->m_geosets->readMdx(istream);
+	bytes += this->m_geosetAnimations->readMdx(istream);
+	bytes += this->m_bones->readMdx(istream);
 	std::cout << "After bones" << std::endl;
-	bytes += this->m_lights->readMdx(fstream);
+	bytes += this->m_lights->readMdx(istream);
 	std::cout << "After lights" << std::endl;
-	bytes += this->m_helpers->readMdx(fstream);
+	bytes += this->m_helpers->readMdx(istream);
 	std::cout << "After helpers" << std::endl;
-	bytes += this->m_attachments->readMdx(fstream);
+	bytes += this->m_attachments->readMdx(istream);
 	std::cout << "After attachments" << std::endl;
-	bytes += this->m_pivotPoints->readMdx(fstream);
+	bytes += this->m_pivotPoints->readMdx(istream);
 	std::cout << "After pivot points" << std::endl;
-	bytes += this->m_particleEmitters->readMdx(fstream);
+	bytes += this->m_particleEmitters->readMdx(istream);
 	std::cout << "After particle emitters" << std::endl;
-	bytes += this->m_particleEmitter2s->readMdx(fstream);
+	bytes += this->m_particleEmitter2s->readMdx(istream);
 	std::cout << "After particle emitter2s" << std::endl;
-	bytes += this->m_ribbonEmitters->readMdx(fstream);
+	bytes += this->m_ribbonEmitters->readMdx(istream);
 	std::cout << "After ribbon emitters" << std::endl;
-	bytes += this->m_cameras->readMdx(fstream);
+	bytes += this->m_cameras->readMdx(istream);
 	std::cout << "After cameras" << std::endl;
-	bytes += this->m_events->readMdx(fstream);
+	bytes += this->m_events->readMdx(istream);
 	std::cout << "After events" << std::endl;
-	bytes += this->m_collisionShapes->readMdx(fstream);
+	bytes += this->m_collisionShapes->readMdx(istream);
 	std::cout << "After collision shapes" << std::endl;
 	
 	return bytes;
 }
 
-long32 Mdlx::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Mdlx::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
-	bytes += this->m_version->writeMdx(fstream);
-	bytes += this->m_model->writeMdx(fstream);
-	bytes += this->m_sequences->writeMdx(fstream);
-	bytes += this->m_globalSequences->writeMdx(fstream);
-	bytes += this->m_materials->writeMdx(fstream);
-	bytes += this->m_textures->writeMdx(fstream);
-	bytes += this->m_textureAnimations->writeMdx(fstream);
-	bytes += this->m_geosets->writeMdx(fstream);
-	bytes += this->m_geosetAnimations->writeMdx(fstream);
-	bytes += this->m_bones->writeMdx(fstream);
-	bytes += this->m_lights->writeMdx(fstream);
-	bytes += this->m_helpers->writeMdx(fstream);
-	bytes += this->m_attachments->writeMdx(fstream);
-	bytes += this->m_pivotPoints->writeMdx(fstream);
-	bytes += this->m_particleEmitters->writeMdx(fstream);
-	bytes += this->m_particleEmitter2s->writeMdx(fstream);
-	bytes += this->m_ribbonEmitters->writeMdx(fstream);
-	bytes += this->m_cameras->writeMdx(fstream);
-	bytes += this->m_events->writeMdx(fstream);
-	bytes += this->m_collisionShapes->writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	bytes += this->m_version->writeMdx(ostream);
+	bytes += this->m_model->writeMdx(ostream);
+	bytes += this->m_sequences->writeMdx(ostream);
+	bytes += this->m_globalSequences->writeMdx(ostream);
+	bytes += this->m_materials->writeMdx(ostream);
+	bytes += this->m_textures->writeMdx(ostream);
+	bytes += this->m_textureAnimations->writeMdx(ostream);
+	bytes += this->m_geosets->writeMdx(ostream);
+	bytes += this->m_geosetAnimations->writeMdx(ostream);
+	bytes += this->m_bones->writeMdx(ostream);
+	bytes += this->m_lights->writeMdx(ostream);
+	bytes += this->m_helpers->writeMdx(ostream);
+	bytes += this->m_attachments->writeMdx(ostream);
+	bytes += this->m_pivotPoints->writeMdx(ostream);
+	bytes += this->m_particleEmitters->writeMdx(ostream);
+	bytes += this->m_particleEmitter2s->writeMdx(ostream);
+	bytes += this->m_ribbonEmitters->writeMdx(ostream);
+	bytes += this->m_cameras->writeMdx(ostream);
+	bytes += this->m_events->writeMdx(ostream);
+	bytes += this->m_collisionShapes->writeMdx(ostream);
 	
 	return bytes;
 }
 
 #ifdef BLEND
-
 struct BlendReader
 {
 	std::list<bObj> m_objects;
@@ -353,16 +350,17 @@ void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 void Mdlx::writeBlend(std::fstream &fstream) throw (class Exception)
 {
 }
-
 #endif
 
-void Mdlx::read3ds(std::fstream &fstream) throw (class Exception)
+#ifdef MAX
+void Mdlx::read3ds(std::istream &istream) throw (class Exception)
 {
 }
 
-void Mdlx::write3ds(std::fstream &fstream) throw (class Exception)
+void Mdlx::write3ds(std::ostream &ostream) throw (class Exception)
 {
 }
+#endif
 
 /*
 void Mdlx::writeMdlGlobalSequences(std::fstream &fstream) throw (Exception)

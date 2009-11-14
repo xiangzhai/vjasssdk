@@ -40,10 +40,10 @@ GlobalSequence::~GlobalSequence()
 {
 }
 
-void GlobalSequence::readMdl(std::fstream &fstream) throw (class Exception)
+void GlobalSequence::readMdl(std::istream &istream) throw (class Exception)
 {
 	std::string line;
-	std::getline(fstream, line);
+	std::getline(istream, line);
 	boost::tokenizer<> tokenizer(line);
 	boost::tokenizer<>::iterator iterator = tokenizer.begin();
 
@@ -63,21 +63,21 @@ void GlobalSequence::readMdl(std::fstream &fstream) throw (class Exception)
 	sstream >> this->m_duration;
 }
 
-void GlobalSequence::writeMdl(std::fstream &fstream) throw (class Exception)
+void GlobalSequence::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	fstream << "\tDuration " << this->duration() << ",\n";
+	ostream << "\tDuration " << this->duration() << ",\n";
 }
 
-long32 GlobalSequence::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GlobalSequence::readMdx(std::istream &istream) throw (class Exception)
 {
-	fstream.read(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
+	istream.read(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
 	
-	return fstream.gcount();
+	return istream.gcount();
 }
 
-long32 GlobalSequence::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GlobalSequence::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	fstream.write(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
+	ostream.write(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
 	
 	return sizeof(this->m_duration);
 }

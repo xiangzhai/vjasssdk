@@ -22,14 +22,14 @@
 #define WC3LIB_MDLX_PRIMITIVETYPE_HPP
 
 #include "groupmdxblockmember.hpp"
+#include "primitivetypes.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-class PrimitiveTypes;
 	
 class PrimitiveType : public GroupMdxBlockMember
 {
@@ -37,24 +37,22 @@ class PrimitiveType : public GroupMdxBlockMember
 		PrimitiveType(class PrimitiveTypes *primitiveTypes);
 		virtual ~PrimitiveType();
 
-		//class PrimitiveTypes* primitiveTypes() const;
+		class PrimitiveTypes* primitiveTypes() const;
 		long32 value() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		long32 m_value;
 };
 
-/*
 inline class PrimitiveTypes* PrimitiveType::primitiveTypes() const
 {
-	return dynamic_cast<class PrimitiveTypes*>(this->m_parent);
+	//return dynamic_cast<class PrimitiveTypes*>(this->m_parent);
 }
-*/
 
 inline long32 PrimitiveType::value() const
 {

@@ -40,20 +40,20 @@ MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional), m_e
 }
 
 /// @todo Consider optional like in Python script.
-long32 MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
+long32 MdxBlock::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 bytes = 0;
 	byte identifier[sizeof(this->m_blockName)];
-	std::fstream::pos_type position = fstream.tellg();
-	fstream.read(identifier, sizeof(identifier));
-	bytes += fstream.gcount();
-	//std::cout << "Read bytes: " << fstream.gcount() << std::endl;
+	std::istream::pos_type position = istream.tellg();
+	istream.read(identifier, sizeof(identifier));
+	bytes += istream.gcount();
+	//std::cout << "Read bytes: " << istream.gcount() << std::endl;
 
 	if (memcmp(identifier, this->m_blockName, sizeof(this->m_blockName)) != 0)
 	{
 		if (this->m_optional)
 		{
-			fstream.seekg(position);
+			istream.seekg(position);
 			std::cout << "Block " << this->m_blockName << " is optional and doesn't exist." << std::endl;
 			std::cout << "Block name " << this->m_blockName << " is not equal to " << identifier << std::endl;
 			
@@ -73,21 +73,24 @@ long32 MdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 MdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 MdxBlock::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	fstream.write(this->m_blockName, sizeof(this->m_blockName));
+	if (!this->m_exists)
+		return 0;
+	
+	ostream.write(this->m_blockName, sizeof(this->m_blockName));
 	
 	return sizeof(this->m_blockName);
 	
 }
 
-bool MdxBlock::moveToBlockName(std::fstream &fstream)
+bool MdxBlock::moveToBlockName(std::iostream &iostream)
 {
 	byte readBlockName[4];
 	
-	while (fstream)
+	while (iostream)
 	{
-		fstream.read(readBlockName, sizeof(readBlockName));
+		iostream.read(readBlockName, sizeof(readBlockName));
 		
 		if (memcmp(readBlockName, this->m_blockName, sizeof(this->m_blockName)) == 0)
 			return true;

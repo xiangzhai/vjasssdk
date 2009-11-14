@@ -40,62 +40,62 @@ Sequences::~Sequences()
 		delete *iterator;
 }
 
-void Sequences::readMdl(std::fstream &fstream) throw (class Exception)
+void Sequences::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Sequences::writeMdl(std::fstream &fstream) throw (class Exception)
+void Sequences::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	fstream
+	ostream
 	<< "Sequences " << this->m_sequences.size() << " {\n";
 
 	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
 	{
-		fstream
+		ostream
 		<< "\tAnim " << (*iterator)->name() << " {\n"
 		<< "\t\tInterval { " << (*iterator)->intervalStart() << ", " << (*iterator)->intervalEnd() << " },\t"
 		;
 
 		if ((*iterator)->noLooping() == 1)
-			fstream << "\t\tNonLooping,\n";
+			ostream << "\t\tNonLooping,\n";
 
 		if ((*iterator)->moveSpeed() != 0.0)
-			fstream << "\t\tMoveSpeed " << (*iterator)->moveSpeed() << ",\n";
+			ostream << "\t\tMoveSpeed " << (*iterator)->moveSpeed() << ",\n";
 
 		if ((*iterator)->rarity() != 0.0)
-			fstream << "\t\tRarity " << (*iterator)->rarity() << ",\n";
+			ostream << "\t\tRarity " << (*iterator)->rarity() << ",\n";
 
 		if ((*iterator)->minExtX() != 0.0 || (*iterator)->minExtY() != 0.0 || (*iterator)->minExtZ() != 0.0)
-			fstream << "\t\tMinimumExtent { " << (*iterator)->minExtX() << ", " << (*iterator)->minExtY() << ", " << (*iterator)->minExtZ() << " },\n";
+			ostream << "\t\tMinimumExtent { " << (*iterator)->minExtX() << ", " << (*iterator)->minExtY() << ", " << (*iterator)->minExtZ() << " },\n";
 
 		if ((*iterator)->maxExtX() != 0.0 || (*iterator)->maxExtY() != 0.0 || (*iterator)->maxExtZ() != 0.0)
-			fstream << "\t\tMaxmimumExtent { " << (*iterator)->maxExtX() << ", " << (*iterator)->maxExtY() << ", " << (*iterator)->maxExtZ() << " },\n";
+			ostream << "\t\tMaxmimumExtent { " << (*iterator)->maxExtX() << ", " << (*iterator)->maxExtY() << ", " << (*iterator)->maxExtZ() << " },\n";
 
 		if ((*iterator)->boundsRadius() != 0.0)
-			fstream << "\t\tBoundsRadius " << (*iterator)->boundsRadius() << ",\n";
+			ostream << "\t\tBoundsRadius " << (*iterator)->boundsRadius() << ",\n";
 
-		fstream << "\t}\n";
+		ostream << "\t}\n";
 	}
 
-	fstream << "}\n";
+	ostream << "}\n";
 }
 
-long32 Sequences::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Sequences::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	std::cout << "Sequence bytes: " << nbytes << std::endl;
 	
 	while (nbytes > 0)
 	{
 		class Sequence *sequence = new Sequence(this);
-		long32 readBytes = sequence->readMdx(fstream);
+		long32 readBytes = sequence->readMdx(istream);
 		
 		if (readBytes == 0)
 			throw Exception(_("Sequences: 0 byte sequence."));
@@ -108,15 +108,15 @@ long32 Sequences::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Sequences::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	long32 nbytes = 0;
-	std::fstream::pos_type position = fstream.tellg();
+	std::ostream::pos_type position = ostream.tellp();
 	
 	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
 	{
-		long32 writtenBytes = (*iterator)->writeMdx(fstream);
+		long32 writtenBytes = (*iterator)->writeMdx(ostream);
 		
 		if (writtenBytes == 0)
 			throw Exception(_("Sequences: 0 byte sequence."));
@@ -125,8 +125,8 @@ long32 Sequences::writeMdx(std::fstream &fstream) throw (class Exception)
 		bytes += writtenBytes;
 	}
 	
-	fstream.seekg(position);
-	fstream.write(reinterpret_cast<const char*>(nbytes), sizeof(nbytes));
+	ostream.seekp(position);
+	ostream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
 	bytes += sizeof(nbytes);
 	
 	return bytes;

@@ -35,30 +35,30 @@ RibbonEmitters::~RibbonEmitters()
 {
 }
 
-void RibbonEmitters::readMdl(std::fstream &fstream) throw (class Exception)
+void RibbonEmitters::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void RibbonEmitters::writeMdl(std::fstream &fstream) throw (class Exception)
+void RibbonEmitters::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
 
-long32 RibbonEmitters::readMdx(std::fstream &fstream) throw (class Exception)
+long32 RibbonEmitters::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class RibbonEmitter *ribbonEmitter = new RibbonEmitter(this);
-		long32 readBytes = ribbonEmitter->readMdx(fstream);
+		long32 readBytes = ribbonEmitter->readMdx(istream);
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_ribbonEmitters.push_back(ribbonEmitter);
@@ -67,12 +67,12 @@ long32 RibbonEmitters::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 RibbonEmitters::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 RibbonEmitters::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	if (!this->exists())
-		return 0;
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

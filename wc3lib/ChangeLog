@@ -1,5 +1,30 @@
+2009-11-13 Tamino Dauth <tamino@cdauth.de>
+* Improved various MDXL classes.
+
+2009-11-12 Tamino Dauth <tamino@cdauth.de>
+* Dropped classes BlpJpeg, BlpUncompressed1 and BlpUncompressed2.
+* Improved class Blp.
+* Added classes BlpIOHandler and BlpIOPlugin.
+* Improved various MDLX classes.
+
+2009-11-11 Tamino Dauth <tamino@cdauth.de>
+* Revised MDLX and BLP classes.
+
+2009-11-08 Tamino Dauth <tamino@cdauth.de>
+* Added classes MdxAlphas, MdxAlpha, MdxScalings, MdxScaling, ParticleEmitter2Latitude, ParticleEmitter2Latitudes, ParticleEmitter2Width and ParticleEmitter2Widths.
+* Renamed class Alpha to MaterialAlpha.
+* Renamed class Alphas to MaterialAlphas.
+* Revised class ParticleEmitter2.
+* Revised read and write methods of BLP classes.
+
+2009-11-05 Tamino Dauth <tamino@cdauth.de>
+* Added classes EventTracks and EventTrack.
+
 2009-11-04 Tamino Dauth <tamino@cdauth.de>
 * Revised file "doc/Classes.txt".
+* Improved cmake files.
+* Added qtogre files.
+* Added class editor::TerrainEditor.
 
 2009-11-03 Tamino Dauth <tamino@cdauth.de>
 * Improved MDLX classes.

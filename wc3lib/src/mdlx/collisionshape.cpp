@@ -35,45 +35,45 @@ CollisionShape::~CollisionShape()
 {
 }
 
-void CollisionShape::readMdl(std::fstream &fstream) throw (class Exception)
+void CollisionShape::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void CollisionShape::writeMdl(std::fstream &fstream) throw (class Exception)
+void CollisionShape::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 CollisionShape::readMdx(std::fstream &fstream) throw (class Exception)
+long32 CollisionShape::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = Object::readMdx(fstream);
-	fstream.read(reinterpret_cast<char*>(&this->m_shape), sizeof(this->m_shape));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
-	bytes += fstream.gcount();
+	long32 bytes = Object::readMdx(istream);
+	istream.read(reinterpret_cast<char*>(&this->m_shape), sizeof(this->m_shape));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
+	bytes += istream.gcount();
 	
 	if (this->m_shape == Box)
 	{
-		fstream.read(reinterpret_cast<char*>(&this->m_x2), sizeof(this->m_x2));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_y2), sizeof(this->m_y2));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_z2), sizeof(this->m_z2));
-		bytes += fstream.gcount();
+		istream.read(reinterpret_cast<char*>(&this->m_x2), sizeof(this->m_x2));
+		bytes += istream.gcount();
+		istream.read(reinterpret_cast<char*>(&this->m_y2), sizeof(this->m_y2));
+		bytes += istream.gcount();
+		istream.read(reinterpret_cast<char*>(&this->m_z2), sizeof(this->m_z2));
+		bytes += istream.gcount();
 	}
 	else
 	{
-		fstream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-		bytes += fstream.gcount();
+		istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
+		bytes += istream.gcount();
 	}
 	
 	return bytes;
 }
 
-long32 CollisionShape::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 CollisionShape::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

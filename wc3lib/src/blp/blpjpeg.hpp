@@ -21,7 +21,7 @@
 #ifndef WC3LIB_BLP_BLPJPEG_HPP
 #define WC3LIB_BLP_BLPJPEG_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "../exception.hpp"
 #include "platform.hpp"
@@ -71,8 +71,8 @@ class BlpJpeg
 
 		class Blp* blp() const;
 		
-		dword read(std::fstream &fstream) throw (class Exception);
-		dword write(std::fstream &fstream) throw (class Exception);
+		dword read(std::istream &istream) throw (class Exception);
+		dword write(std::ostream &ostream) throw (class Exception);
 
 	private:
 		class Blp *m_blp;

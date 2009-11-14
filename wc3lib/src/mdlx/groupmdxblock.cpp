@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "groupmdxblock.hpp"
 #include "groupmdxblockmember.hpp"
 
@@ -39,23 +37,23 @@ GroupMdxBlock::~GroupMdxBlock()
 		delete *iterator;
 }
 
-long32 GroupMdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupMdxBlock::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	std::cout << "Block name " << this->blockName() << std::endl;
 	long32 groupCount = 0;
-	fstream.read(reinterpret_cast<char*>(&groupCount), sizeof(groupCount));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&groupCount), sizeof(groupCount));
+	bytes += istream.gcount();
 	std::cout << "Group count " << groupCount << std::endl;
 	
 	for ( ; groupCount > 0; --groupCount)
 	{
 		class GroupMdxBlockMember *member = this->createNewMember();
-		bytes += member->readMdx(fstream);
+		bytes += member->readMdx(istream);
 		this->m_members.push_back(member);
 	}
 	
@@ -64,21 +62,21 @@ long32 GroupMdxBlock::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 GroupMdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupMdxBlock::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
 	
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	long32 groupCount = this->m_members.size();
-	fstream.write(reinterpret_cast<const char*>(&groupCount), sizeof(groupCount));
+	ostream.write(reinterpret_cast<const char*>(&groupCount), sizeof(groupCount));
 	bytes += sizeof(groupCount);
 	std::cout << "Group count " << groupCount << std::endl;
 	
 	for (std::list<class GroupMdxBlockMember*>::iterator iterator = this->m_members.begin(); iterator != this->m_members.end(); ++iterator)
 	{
-		bytes += (*iterator)->writeMdx(fstream);
+		bytes += (*iterator)->writeMdx(ostream);
 	}
 	
 	std::cout << "Group bytes " << bytes << std::endl;
@@ -89,6 +87,7 @@ long32 GroupMdxBlock::writeMdx(std::fstream &fstream) throw (class Exception)
 class GroupMdxBlockMember* GroupMdxBlock::createNewMember()
 {
 	class GroupMdxBlockMember *member = new GroupMdxBlockMember(this);
+	
 	return member;
 }
 

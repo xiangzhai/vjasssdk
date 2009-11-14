@@ -18,12 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
 #include <cstdio>
 
 #include "layer.hpp"
 #include "layers.hpp"
-#include "alphas.hpp"
+#include "materialalphas.hpp"
 #include "textureids.hpp"
 #include "../internationalisation.hpp"
 
@@ -33,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Layer::Layer(class Layers *layers) : m_layers(layers), m_alphas(new Alphas(this)), m_textureIds(new TextureIds(this))
+Layer::Layer(class Layers *layers) : m_layers(layers), m_alphas(new MaterialAlphas(this)), m_textureIds(new TextureIds(this))
 {
 }
 
@@ -43,49 +42,49 @@ Layer::~Layer()
 	delete this->m_textureIds;
 }
 
-void Layer::readMdl(std::fstream &fstream) throw (class Exception)
+void Layer::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Layer::writeMdl(std::fstream &fstream) throw (class Exception)
+void Layer::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Layer::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Layer::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 bytes = 0;
 	long32 nbytesi = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
 	std::cout << "nbytesi is " << nbytesi << std::endl;
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_filterMode), sizeof(this->m_filterMode)); //(0:none;1:transparent;2:blend;3:additive;4:addalpha;5:modulate)
-	bytes += fstream.gcount();
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_filterMode), sizeof(this->m_filterMode)); //(0:none;1:transparent;2:blend;3:additive;4:addalpha;5:modulate)
+	bytes += istream.gcount();
 	std::cout << "filterMode is " << this->m_filterMode << std::endl;
 	
 	if (this->m_filterMode < 0 || this->m_filterMode > 5)
 		fprintf(stderr, _("Layer: Warning, unknown filter mode.\nFilter mode %d.\n"), this->m_filterMode);
 	
-	fstream.read(reinterpret_cast<char*>(&this->m_shading), sizeof(this->m_shading)); //+1:unshaded;+2:SphereEnvMap;+16:twosided;
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_shading), sizeof(this->m_shading)); //+1:unshaded;+2:SphereEnvMap;+16:twosided;
+	bytes += istream.gcount();
 	
 	if (this->m_shading != 1 && this->m_shading != 2 && this->m_shading != 16)
 		fprintf(stderr, _("Layer: Warning, unknown shading.\nShading %d.\n"), this->m_shading);
 	
-	fstream.read(reinterpret_cast<char*>(&this->m_textureId), sizeof(this->m_textureId)); //  +32:unfogged;+64:NoDepthTest;+128:NoDepthSet)
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_textureId), sizeof(this->m_textureId)); //  +32:unfogged;+64:NoDepthTest;+128:NoDepthSet)
+	bytes += istream.gcount();
 	
 	if (this->m_textureId != 32 && this->m_textureId != 64 && this->m_textureId != 128)
 		fprintf(stderr, _("Layer: Warning, unknown texture id.\nTexture id %d.\n"), this->m_textureId);
 	
-	fstream.read(reinterpret_cast<char*>(&this->m_tvertexAnimationId), sizeof(this->m_tvertexAnimationId)); // 0xFFFFFFFF if none
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_coordinatesId), sizeof(this->m_coordinatesId));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_alpha), sizeof(this->m_alpha));
-	bytes += fstream.gcount();
-	bytes += this->m_alphas->readMdx(fstream);
+	istream.read(reinterpret_cast<char*>(&this->m_tvertexAnimationId), sizeof(this->m_tvertexAnimationId)); // 0xFFFFFFFF if none
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_coordinatesId), sizeof(this->m_coordinatesId));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_alpha), sizeof(this->m_alpha));
+	bytes += istream.gcount();
+	bytes += this->m_alphas->readMdx(istream);
 	std::cout << "Before texture ids with " << bytes << " bytes." << std::endl;
-	bytes += this->m_textureIds->readMdx(fstream);
+	bytes += this->m_textureIds->readMdx(istream);
 	std::cout << "After texture ids with " << bytes << " bytes." << std::endl;
 	
 	if (nbytesi != bytes)
@@ -94,7 +93,7 @@ long32 Layer::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Layer::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Layer::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

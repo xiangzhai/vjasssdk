@@ -69,8 +69,8 @@ class Light : public Object
 
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Lights *m_lights;

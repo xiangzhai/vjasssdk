@@ -34,24 +34,23 @@ GroupVertex::~GroupVertex()
 {
 }
 
-void GroupVertex::readMdl(std::fstream &fstream) throw (class Exception)
+void GroupVertex::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GroupVertex::writeMdl(std::fstream &fstream) throw (class Exception)
+void GroupVertex::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 GroupVertex::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupVertex::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	fstream.read(reinterpret_cast<char*>(&this->m_data), sizeof(this->m_data));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_data), sizeof(this->m_data));
+	long32 bytes = istream.gcount();
 	
 	return bytes;
 }
 
-long32 GroupVertex::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupVertex::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

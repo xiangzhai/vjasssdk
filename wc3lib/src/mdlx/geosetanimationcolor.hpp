@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
 
-#include <fstream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
-#include "../internationalisation.hpp"
+#include "mdxscaling.hpp"
+#include "geosetanimationcolors.hpp"
 
 namespace wc3lib
 {
@@ -35,7 +32,7 @@ namespace mdlx
 
 class GeosetAnimationColors;
 
-class GeosetAnimationColor
+class GeosetAnimationColor : public MdxScaling
 {
 	public:
 		GeosetAnimationColor(class GeosetAnimationColors *geosetAnimationColors);
@@ -44,22 +41,11 @@ class GeosetAnimationColor
 		
 		virtual void readMdl(std::fstream &fstream) throw (class Exception);
 		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-		
-	private:
-		class GeosetAnimationColors *m_geosetAnimationColors;
-		long32 m_frame;
-		float32	m_x, m_y, m_z;
-		//if (LineType > 1) {
-		float32 m_inTanX, m_inTanY, m_inTanZ;
-		float32	m_outTanX, m_outTanY, m_outTanZ;
-		//}
 };
 
 inline class GeosetAnimationColors* GeosetAnimationColor::geosetAnimationColors() const
 {
-	return this->m_geosetAnimationColors;
+	return dynamic_cast<class GeosetAnimationColors*>(this->m_scalings);
 }
 
 }

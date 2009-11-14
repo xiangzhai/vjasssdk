@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Lengths::Lengths(class Mdlx *mdlx) : MdxBlock("KP2N"), m_mdlx(mdlx)
+Lengths::Lengths(class ParticleEmitter2 *particleEmitter) : MdxAlphas("KP2N"), m_particleEmitter(particleEmitter)
 {
 }
 
@@ -34,29 +34,12 @@ Lengths::~Lengths()
 {
 }
 
-void Lengths::readMdl(std::fstream &fstream) throw (class Exception)
+void Lengths::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Lengths::writeMdl(std::fstream &fstream) throw (class Exception)
+void Lengths::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-}
-
-
-long32 Lengths::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Lengths::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
-	
-	return bytes;
 }
 
 }

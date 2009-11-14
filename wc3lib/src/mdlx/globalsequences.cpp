@@ -38,36 +38,36 @@ GlobalSequences::~GlobalSequences()
 		delete *iterator;
 }
 
-void GlobalSequences::readMdl(std::fstream &fstream) throw (class Exception)
+void GlobalSequences::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GlobalSequences::writeMdl(std::fstream &fstream) throw (class Exception)
+void GlobalSequences::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	fstream << "GlobalSequences " << this->globalSequences().size() << " {\n";
+	ostream << "GlobalSequences " << this->globalSequences().size() << " {\n";
 
 	for (std::list<class GlobalSequence*>::iterator iterator = this->globalSequences().begin(); iterator != this->globalSequences().end(); ++iterator)
-		(*iterator)->writeMdl(fstream);
+		(*iterator)->writeMdl(ostream);
 
-	fstream << "}\n";
+	ostream << "}\n";
 }
 
 
-long32 GlobalSequences::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GlobalSequences::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes = 0; //nbytes
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class GlobalSequence *globalSequence = new GlobalSequence(this);
-		long32 readBytes = globalSequence->readMdx(fstream);
+		long32 readBytes = globalSequence->readMdx(istream);
 		
 		if (readBytes == 0)
 			throw Exception(_("Global Sequences: 0 byte global sequence."));
@@ -80,10 +80,10 @@ long32 GlobalSequences::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 GlobalSequences::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GlobalSequences::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	bytes += MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

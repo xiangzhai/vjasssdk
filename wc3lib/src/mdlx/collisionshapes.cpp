@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "collisionshapes.hpp"
+#include "collisionshape.hpp"
 
 namespace wc3lib
 {
@@ -32,24 +33,49 @@ CollisionShapes::CollisionShapes(class Mdlx *mdlx) : MdxBlock("CLID"), m_mdlx(md
 
 CollisionShapes::~CollisionShapes()
 {
+	for (std::list<class CollisionShape*>::iterator iterator = this->m_collisionShapes.begin(); iterator != this->m_collisionShapes.end(); ++iterator)
+		delete *iterator;
 }
 
-void CollisionShapes::readMdl(std::fstream &fstream) throw (class Exception)
+void CollisionShapes::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-long32 CollisionShapes::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
-
-void CollisionShapes::writeMdl(std::fstream &fstream) throw (class Exception)
+void CollisionShapes::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 CollisionShapes::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 CollisionShapes::readMdx(std::istream &istream) throw (class Exception)
 {
-	return 0;
+	long32 bytes = MdxBlock::readMdx(istream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes;
+	istream.read(reinterpret_cast<char*>(nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class CollisionShape *collisionShape = new CollisionShape(this);
+		long32 readBytes = collisionShape->readMdx(istream);
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_collisionShapes.push_back(collisionShape);
+	}
+	
+	return bytes;
+}
+
+long32 CollisionShapes::writeMdx(std::ostream &ostream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	return bytes;
 }
 
 }

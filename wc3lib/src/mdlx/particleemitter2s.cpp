@@ -18,56 +18,66 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
-#define WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
-
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "particleemitter2s.hpp"
+#include "particleemitter2.hpp"
 
 namespace wc3lib
 {
-
+	
 namespace mdlx
 {
 
-class Mdlx;
-class ParticleEmitter2;
-
-class ParticleEmitter2s : public MdxBlock
+ParticleEmitter2s::ParticleEmitter2s(class Mdlx *mdlx) : MdxBlock("PRE2"), m_mdlx(mdlx)
 {
-	public:
-		ParticleEmitter2s(class Mdlx *mdlx);
-		virtual ~ParticleEmitter2s();
+}
 
-		class Mdlx* mdlx() const;
-		std::list<class ParticleEmitter2*> particleEmitters() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class Mdlx *m_mdlx;
-		std::list<class ParticleEmitter2*> m_particleEmitters;
-};
-
-inline class Mdlx* ParticleEmitter2s::mdlx() const
+ParticleEmitter2s::~ParticleEmitter2s()
 {
-	return this->m_mdlx;
+	for (std::list<class ParticleEmitter2*>::iterator iterator = this->m_particleEmitters.begin(); iterator != this->m_particleEmitters.end(); ++iterator)
+		delete *iterator;
 }
 
-inline std::list<class ParticleEmitter2*> ParticleEmitter2s::particleEmitters() const
+void ParticleEmitter2s::readMdl(std::istream &istream) throw (class Exception)
 {
-	return this->m_particleEmitters;
+}
+
+void ParticleEmitter2s::writeMdl(std::ostream &ostream) throw (class Exception)
+{
+}
+
+long32 ParticleEmitter2s::readMdx(std::istream &istream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::readMdx(istream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes;
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class ParticleEmitter2 *particleEmitter = new ParticleEmitter2(this);
+		long32 readBytes = particleEmitter->readMdx(istream);
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_particleEmitters.push_back(particleEmitter);
+	}
+	
+	return bytes;
+}
+
+long32 ParticleEmitter2s::writeMdx(std::ostream &ostream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	return bytes;
 }
 
 }
 
 }
-
-#endif

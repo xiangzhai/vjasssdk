@@ -27,7 +27,7 @@ namespace wc3lib
 namespace blp
 {
 
-BlpUncompressed1::BlpUncompressed1(const class Blp &blp)
+BlpUncompressed1::BlpUncompressed1(class Blp *blp) : m_blp(blp)
 {
 	for (int i = 0; i < 16; ++i)
 	{
@@ -43,6 +43,80 @@ BlpUncompressed1::~BlpUncompressed1()
 		delete[] this->m_mipMaps[i].m_indexList;
 		delete[] this->m_mipMaps[i].m_alphaList;
 	}
+}
+
+dword BlpUncompressed1::read(std::istream &istream) throw (class Exception)
+{
+	dword bytes = 0;
+	
+	for (int i = 0; i < 256; ++i)
+	{
+		istream.read(reinterpret_cast<char*>(&this->m_palette[i]), sizeof(color));
+		bytes += istream.gcount();
+	}
+
+	for (int i = 0; i < 16; ++i)
+	{
+		for (int j = 0; j < this->blp()->header()->m_width; ++j)
+		{
+			for (int k = 0; k < this->blp()->header()->m_height; ++k)
+			{
+				istream.read(reinterpret_cast<char*>(&this->m_mipMaps[i].m_indexList[j * k]), sizeof(byte));
+				bytes += istream.gcount();
+			}
+		}
+	}
+
+	for (int i = 0; i < 16; ++i)
+	{
+		for (int j = 0; j < this->blp()->header()->m_width; ++j)
+		{
+			for (int k = 0; k < this->blp()->header()->m_height; ++k)
+			{
+				istream.read(reinterpret_cast<char*>(&this->m_mipMaps[i].m_alphaList[j * k]), sizeof(byte));
+				bytes += istream.gcount();
+			}
+		}
+	}
+	
+	return bytes;
+}
+
+dword BlpUncompressed1::write(std::ostream &ostream) throw (class Exception)
+{
+	dword bytes = 0;
+	
+	for (int i = 0; i < 256; ++i)
+	{
+		ostream.write(reinterpret_cast<const char*>(&this->m_palette[i]), sizeof(color));
+		bytes += sizeof(color);
+	}
+
+	for (int i = 0; i < 16; ++i)
+	{
+		for (int j = 0; j < this->blp()->header()->m_width; ++j)
+		{
+			for (int k = 0; k < this->blp()->header()->m_height; ++k)
+			{
+				ostream.write(reinterpret_cast<const char*>(&this->m_mipMaps[i].m_indexList[j * k]), sizeof(byte));
+				bytes += sizeof(byte);
+			}
+		}
+	}
+
+	for (int i = 0; i < 16; ++i)
+	{
+		for (int j = 0; j < this->blp()->header()->m_width; ++j)
+		{
+			for (int k = 0; k < this->blp()->header()->m_height; ++k)
+			{
+				ostream.write(reinterpret_cast<const char*>(&this->m_mipMaps[i].m_alphaList[j * k]), sizeof(byte));
+				bytes += sizeof(byte);
+			}
+		}
+	}
+	
+	return bytes;
 }
 
 }

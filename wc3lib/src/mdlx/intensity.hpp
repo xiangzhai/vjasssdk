@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_INTENSITY_HPP
 #define WC3LIB_MDLX_INTENSITY_HPP
 
-#include "alpha.hpp"
+#include "mdxalpha.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Intensity : public Alpha
+class Intensity : public MdxAlpha
 {
 };
 

@@ -40,34 +40,34 @@ Bone::~Bone()
 {
 }
 
-void Bone::readMdl(std::fstream &fstream) throw (class Exception)
+void Bone::readMdl(std::istream &istream) throw (class Exception)
 {
 	std::string line;
-	std::getline(fstream, line);
+	std::getline(istream, line);
 	boost::tokenizer<> tokenizer(line);
 	boost::tokenizer<>::iterator iterator = tokenizer.begin();
 	/// @todo FIXME
 }
 
-void Bone::writeMdl(std::fstream &fstream) throw (class Exception)
+void Bone::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 	/// @todo FIXME
 }
 
-long32 Bone::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Bone::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = Object::readMdx(fstream);
-	fstream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_geosetAnimationId), sizeof(this->m_geosetAnimationId));
-	bytes += fstream.gcount();
+	long32 bytes = Object::readMdx(istream);
+	istream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_geosetAnimationId), sizeof(this->m_geosetAnimationId));
+	bytes += istream.gcount();
 	
 	return bytes;
 }
 
-long32 Bone::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Bone::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = Object::writeMdx(fstream);
+	long32 bytes = Object::writeMdx(ostream);
 	
 	return bytes;
 }

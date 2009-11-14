@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "groupvertices.hpp"
 #include "groupvertex.hpp"
 
@@ -39,30 +37,30 @@ GroupVertices::~GroupVertices()
 		delete *iterator;
 }
 
-void GroupVertices::readMdl(std::fstream &fstream) throw (class Exception)
+void GroupVertices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GroupVertices::writeMdl(std::fstream &fstream) throw (class Exception)
+void GroupVertices::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 GroupVertices::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupVertices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nvgrps = 0;
-	fstream.read(reinterpret_cast<char*>(&nvgrps), sizeof(nvgrps));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nvgrps), sizeof(nvgrps));
+	bytes += istream.gcount();
 	std::cout << "Group vertices " << nvgrps << std::endl;
 	
 	for ( ; nvgrps > 0; --nvgrps)
 	{
 		class GroupVertex *groupVertex = new GroupVertex(this);
-		bytes += groupVertex->readMdx(fstream);
+		bytes += groupVertex->readMdx(istream);
 		this->m_groupVertices.push_back(groupVertex);
 	}
 	
@@ -71,7 +69,7 @@ long32 GroupVertices::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 GroupVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupVertices::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

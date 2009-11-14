@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_EMISSIONRATE_HPP
 #define WC3LIB_MDLX_EMISSIONRATE_HPP
 
-#include "alpha.hpp"
+#include "mdxalpha.hpp"
+#include "emissionrates.hpp"
 
 namespace wc3lib
 {
@@ -29,9 +30,19 @@ namespace wc3lib
 namespace mdlx
 {
 
-class EmissionRate : public Alpha
+class EmissionRate : public MdxAlpha
 {
+	public:
+		EmissionRate(class EmissionRates *emissionRates);
+	
+		class EmissionRates* emissionRates() const;
 };
+
+inline class EmissionRates* EmissionRate::emissionRates() const
+{
+	//return dynamic_cast<class EmissionRates*>(this->m_alphas);
+
+}
 
 }
 

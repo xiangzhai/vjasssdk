@@ -38,23 +38,23 @@ Bones::~Bones()
 		delete *iterator;
 }
 
-void Bones::readMdl(std::fstream &fstream) throw (class Exception)
+void Bones::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Bones::writeMdl(std::fstream &fstream) throw (class Exception)
+void Bones::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Bones::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Bones::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
 	if (nbytes <= 0)
 	{
@@ -67,7 +67,7 @@ long32 Bones::readMdx(std::fstream &fstream) throw (class Exception)
 	while (nbytes > 0)
 	{
 		class Bone *bone = new Bone(this);
-		long32 readBytes = bone->readMdx(fstream);
+		long32 readBytes = bone->readMdx(istream);
 		bytes += readBytes;
 		nbytes -= readBytes;
 		this->m_bones.push_back(bone);
@@ -76,7 +76,7 @@ long32 Bones::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Bones::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Bones::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

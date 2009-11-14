@@ -32,6 +32,7 @@ namespace mdlx
 {
 	
 class Events;
+class EventTracks;
 
 class Event : public Object
 {
@@ -40,12 +41,13 @@ class Event : public Object
 		virtual ~Event();
 
 		class Events* events() const;
-		std::list<long32> frames() const;
+		class EventTracks* tracks() const;
+		const std::list<long32>& frames() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Events *m_events;
@@ -53,6 +55,7 @@ class Event : public Object
 		//ascii *bla; //ASCII "KEVT" // Actually a separate object
 		//long32 ntrks; // usually (1)
 		//0xFFFFFFFF!!!
+		class EventTracks *m_tracks; //KEVT
 		std::list<long32> m_frames;//[ntrks];
 };
 
@@ -61,7 +64,12 @@ inline class Events* Event::events() const
 	return this->m_events;
 }
 
-inline std::list<long32> Event::frames() const
+inline class EventTracks* Event::tracks() const
+{
+	return this->m_tracks;
+}
+
+inline const std::list<long32>& Event::frames() const
 {
 	return this->m_frames;
 }

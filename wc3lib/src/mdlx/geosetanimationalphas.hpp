@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONALPHAS_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONALPHAS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -35,27 +33,20 @@ class GeosetAnimation;
 class GeosetAnimationAlphas;
 
 //KGAO
-class GeosetAnimationAlphas : public MdxBlock
+class GeosetAnimationAlphas : public MdxAlphas
 {
 	public:
 		GeosetAnimationAlphas(class GeosetAnimation *geosetAnimation);
 		virtual ~GeosetAnimationAlphas();
 
 		class GeosetAnimation* geosetAnimation() const;
-		std::list<class GeosetAnimationAlpha*> geosetAnimationAlphas() const;
-		long32 lineType() const;
+		const std::list<class GeosetAnimationAlpha*>& geosetAnimationAlphas() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class GeosetAnimation *m_geosetAnimation;
-		//long	nunks;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId;
-		std::list<class GeosetAnimationAlpha*> m_geosetAnimationAlphas;
 };
 
 inline class GeosetAnimation* GeosetAnimationAlphas::geosetAnimation() const
@@ -63,14 +54,9 @@ inline class GeosetAnimation* GeosetAnimationAlphas::geosetAnimation() const
 	return this->m_geosetAnimation;
 }
 
-inline long32 GeosetAnimationAlphas::lineType() const
+inline const std::list<class GeosetAnimationAlpha*>& GeosetAnimationAlphas::geosetAnimationAlphas() const
 {
-	return this->m_lineType;
-}
-
-inline std::list<class GeosetAnimationAlpha*> GeosetAnimationAlphas::geosetAnimationAlphas() const
-{
-	return this->m_geosetAnimationAlphas;
+	//return reinterpret_cast<const std::list<class GeosetAnimationAlpha*> >(this->m_alphas);
 }
 
 }

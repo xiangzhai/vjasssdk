@@ -35,45 +35,45 @@ Rotation0s::~Rotation0s()
 {
 }
 
-void Rotation0s::readMdl(std::fstream &fstream) throw (class Exception)
+void Rotation0s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Rotation0s::writeMdl(std::fstream &fstream) throw (class Exception)
+void Rotation0s::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Rotation0s::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Rotation0s::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nunks = 0;
-	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += istream.gcount();
 	
 	for ( ; nunks > 0; --nunks)
 	{
 		class Rotation0 *rotation = new Rotation0(this);
-		bytes += rotation->readMdx(fstream);
+		bytes += rotation->readMdx(istream);
 		this->m_rotations.push_back(rotation);
 	}
 	
 	return bytes;
 }
 
-long32 Rotation0s::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Rotation0s::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	if (!this->exists())
-		return 0;
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

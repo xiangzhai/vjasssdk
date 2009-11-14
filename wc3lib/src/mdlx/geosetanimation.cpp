@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
-
 #include "geosetanimation.hpp"
 #include "geosetanimationalphas.hpp"
 #include "geosetanimationcolors.hpp"
@@ -41,40 +39,40 @@ GeosetAnimation::~GeosetAnimation()
 	delete this->m_colors;
 }
 
-void GeosetAnimation::readMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimation::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GeosetAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimation::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 GeosetAnimation::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimation::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
-	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_staticAlpha), sizeof(this->m_staticAlpha));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_colorAnimation), sizeof(this->m_colorAnimation));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_colorRed), sizeof(this->m_colorRed));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_colorGreen), sizeof(this->m_colorGreen));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_colorBlue), sizeof(this->m_colorBlue));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	long32 bytes = istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_staticAlpha), sizeof(this->m_staticAlpha));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_colorAnimation), sizeof(this->m_colorAnimation));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_colorRed), sizeof(this->m_colorRed));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_colorGreen), sizeof(this->m_colorGreen));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_colorBlue), sizeof(this->m_colorBlue));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
+	bytes += istream.gcount();
 	
 	std::cout << "Static alpha is " << this->m_staticAlpha << std::endl;
 	
 	if (this->m_staticAlpha == 1.0)
 	{
-		bytes += this->m_alphas->readMdx(fstream);
+		bytes += this->m_alphas->readMdx(istream);
 	}
 	
-	bytes += this->m_colors->readMdx(fstream); /// @todo Seems to be optional, file Krieger.mdx doesn't have this block.
+	bytes += this->m_colors->readMdx(istream); /// @todo Seems to be optional, file Krieger.mdx doesn't have this block.
 	std::cout << "After colors" << std::endl;
 	
 	if (nbytesi != bytes)
@@ -88,7 +86,7 @@ long32 GeosetAnimation::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 GeosetAnimation::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimation::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

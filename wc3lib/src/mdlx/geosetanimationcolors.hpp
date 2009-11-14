@@ -23,7 +23,7 @@
 
 #include <list>
 
-#include "mdxblock.hpp"
+#include "mdxscalings.hpp"
 
 namespace wc3lib
 {
@@ -35,27 +35,20 @@ class GeosetAnimation;
 class GeosetAnimationColor;
 
 //KGAC
-class GeosetAnimationColors : public MdxBlock
+class GeosetAnimationColors : public MdxScalings
 {
 	public:
 		GeosetAnimationColors(class GeosetAnimation *geosetAnimation);
 		virtual ~GeosetAnimationColors();
 
 		class GeosetAnimation* geosetAnimation() const;
-		long32 lineType() const;
-		std::list<class GeosetAnimationColor*> geosetAnimationColors() const;
+		const std::list<class GeosetAnimationColor*>& geosetAnimationColors() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class GeosetAnimation *m_geosetAnimation;
-		//long	nunks;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId;
-		std::list<class GeosetAnimationColor*> m_geosetAnimationColors;
 };
 
 inline class GeosetAnimation* GeosetAnimationColors::geosetAnimation() const
@@ -63,14 +56,9 @@ inline class GeosetAnimation* GeosetAnimationColors::geosetAnimation() const
 	return this->m_geosetAnimation;
 }
 
-inline long32 GeosetAnimationColors::lineType() const
+inline const std::list<class GeosetAnimationColor*>& GeosetAnimationColors::geosetAnimationColors() const
 {
-	return this->m_lineType;
-}
-
-inline std::list<class GeosetAnimationColor*> GeosetAnimationColors::geosetAnimationColors() const
-{
-	return this->m_geosetAnimationColors;
+	//return this->m_geosetAnimationColors;
 }
 
 }

@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "object.hpp"
 #include "translation1s.hpp"
 #include "rotation0s.hpp"
@@ -45,33 +43,33 @@ Object::~Object()
 	delete this->m_visibilities;
 }
 
-void Object::readMdl(std::fstream &fstream) throw (class Exception)
+void Object::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Object::writeMdl(std::fstream &fstream) throw (class Exception)
+void Object::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Object::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Object::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_name), sizeof(this->m_name));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	long32 bytes = istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_name), sizeof(this->m_name));
+	bytes += istream.gcount();
 	std::cout << "Object name is " << this->m_name << " and nbytesi is " << nbytesi << std::endl;
-	fstream.read(reinterpret_cast<char*>(&this->m_objectId), sizeof(this->m_objectId));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_parent), sizeof(this->m_parent));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_type), sizeof(this->m_type));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_objectId), sizeof(this->m_objectId));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_parent), sizeof(this->m_parent));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_type), sizeof(this->m_type));
+	bytes += istream.gcount();
 	/// @todo All those blocks seem to be optional, model Krieger.mdx doesn contain them for its bones.
-	bytes += this->m_translations->readMdx(fstream);
-	bytes += this->m_rotations->readMdx(fstream);
-	bytes += this->m_scalings->readMdx(fstream);
-	bytes += this->m_visibilities->readMdx(fstream);
+	bytes += this->m_translations->readMdx(istream);
+	bytes += this->m_rotations->readMdx(istream);
+	bytes += this->m_scalings->readMdx(istream);
+	bytes += this->m_visibilities->readMdx(istream);
 	/*	
 	if (bytes != nbytesi)
 	{
@@ -87,7 +85,7 @@ long32 Object::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Object::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Object::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

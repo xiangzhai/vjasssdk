@@ -21,12 +21,8 @@
 #ifndef WC3LIB_MDLX_EMISSIONRATES_HPP
 #define WC3LIB_MDLX_EMISSIONRATES_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalphas.hpp"
+#include "emissionrate.hpp"
 
 namespace wc3lib
 {
@@ -38,35 +34,21 @@ class Mdlx;
 class EmissionRate;
 
 //KP2E	// [EmissionRate]:  KMTA;
-class EmissionRates : public MdxBlock
+class EmissionRates : public MdxAlphas
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
 		EmissionRates(class Mdlx *mdlx);
 		virtual ~EmissionRates();
 
 		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class EmissionRate*> emissionRates() const;
+		
+		const std::list<class EmissionRate*>& emissionRates() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		
 	protected:
 		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class EmissionRate*> m_emissionRates;
 };
 
 inline class Mdlx* EmissionRates::mdlx() const
@@ -74,19 +56,9 @@ inline class Mdlx* EmissionRates::mdlx() const
 	return this->m_mdlx;
 }
 
-inline long32 EmissionRates::lineType() const
+inline const std::list<class EmissionRate*>& EmissionRates::emissionRates() const
 {
-	return this->m_lineType;
-}
-
-inline long32 EmissionRates::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class EmissionRate*> EmissionRates::emissionRates() const
-{
-	return this->m_emissionRates;
+	//return reinterpret_cast<std::list<class EmissionRate*>&>(this->m_alphas);
 }
 
 }

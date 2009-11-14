@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 
-#include <fstream>
+#include <iostream>
+#include <list>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -32,17 +33,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Translations;
-class Rotations;
-class Scalings;
-class SegmentColors;
-class Speeds;
-class Latitudes;
+class ParticleEmitter2s;
+class Translation1s;
+class Rotation0s;
+class Scaling0s;
+class SegmentColor;
+class ParticleEmitter2Speeds;
+class ParticleEmitter2Latitudes;
 class EmissionRates;
 class Visibility2s;
 class Lengths;
-class Widths;
+class ParticleEmitter2Widths;
 
 class ParticleEmitter2
 {
@@ -73,17 +74,17 @@ class ParticleEmitter2
 			Both = 2
 		};
 
-		ParticleEmitter2(class Mdlx *mdlx);
+		ParticleEmitter2(class ParticleEmitter2s *particleEmitters);
 		virtual ~ParticleEmitter2();
 
-		class Mdlx* mdlx() const;
+		class ParticleEmitter2s* particleEmitters() const;
 		const ascii* name() const;
 		long32 objectId() const;
 		long32 parent() const;
 		long32 flags() const;
-		class Translations* translations() const;
-		class Rotations* rotations() const;
-		class Scalings* scalings() const;
+		class Translation1s* translations() const;
+		class Rotation0s* rotations() const;
+		class Scaling0s* scalings() const;
 		float32 speed() const;
 		float32 variation() const;
 		float32 latitidue() const;
@@ -98,7 +99,7 @@ class ParticleEmitter2
 		long32 flag2() const;
 		float32 tailLength() const;
 		float32 time() const;
-		class SegmentColors* segmentColors() const;
+		const std::list<class SegmentColor*>& segmentColors() const;
 		byte alpha1() const;
 		byte alpha2() const;
 		byte alpha3() const;
@@ -121,29 +122,29 @@ class ParticleEmitter2
 		long32 squirt() const;
 		long32 priorityPlane() const;
 		long32 replaceableId() const;
-		class Speeds* speeds() const;
-		class Latitudes* latitudes() const;
+		class ParticleEmitter2Speeds* speeds() const;
+		class ParticleEmitter2Latitudes* latitudes() const;
 		class EmissionRates* emissionRates() const;
 		class Visibility2s* visibilities() const;
-		class Lengths* lengths() const;
-		class Widths* widths() const;
+		class Lengths* numbers() const;
+		class ParticleEmitter2Widths* widths() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class ParticleEmitter2s *m_particleEmitters;
 		//long32 nbytesi;
 		//long32 nbytesikg; // inclusive bytecount including KGXXs
 		ascii m_name[0x50]; //(0x50 bytes)
 		long32 m_objectId;
 		long32 m_parent; //(0xFFFFFFFF if none)
 		long32 m_flags; //(bit20)	// +bit26(DontInherit Rotation)
-		class Translations *m_translations; //(KGTR) // +bit23(Unshaded)	+bit10(Unfogged)
-		class Rotations *m_rotations; //(KGRT) // +bit12(XYQuad)	+bit9(LineEmitter)
-		class Scalings *m_scalings; //(KGSC) // +bit11(ModelSpace)	+bit8(SortPrimsFarZ)
+		class Translation1s *m_translations; //(KGTR) // +bit23(Unshaded)	+bit10(Unfogged)
+		class Rotation0s *m_rotations; //(KGRT) // +bit12(XYQuad)	+bit9(LineEmitter)
+		class Scaling0s *m_scalings; //(KGSC) // +bit11(ModelSpace)	+bit8(SortPrimsFarZ)
 		float32 m_speed;
 		float32 m_variation;
 		float32 m_latitidue;
@@ -158,7 +159,7 @@ class ParticleEmitter2
 		long32 m_flag2; //(0:Head;1:Tail;2:Both)
 		float32 m_tailLength;
 		float32 m_time;
-		class SegmentColors *m_segmentColors;
+		std::list<class SegmentColor*> m_segmentColors;
 		byte m_alpha1, m_alpha2, m_alpha3; //byte
 		float32 m_scalingX, m_scalingY, m_scalingZ;
 		long32 m_lifeSpanUvAnim1, m_lifeSpanUvAnim2, m_lifeSpanUvAnim3;
@@ -169,17 +170,17 @@ class ParticleEmitter2
 		long32 m_squirt; //(1:Squirt)
 		long32 m_priorityPlane;
 		long32 m_replaceableId;
-		class Speeds *m_speeds; //(KP2S)
-		class Latitudes *m_latitudes; //(KP2L)
+		class ParticleEmitter2Speeds *m_speeds; //(KP2S)
+		class ParticleEmitter2Latitudes *m_latitudes; //(KP2L)
 		class EmissionRates *m_emissionRates; //(KP2E)
 		class Visibility2s *m_visibilities; //(KP2V)
-		class Lengths *m_lengths; //(KP2N)
-		class Widths *m_widths; //(KP2W)
+		class Lengths *m_numbers; //(KP2N)
+		class ParticleEmitter2Widths *m_widths; //(KP2W)
 };
 
-inline class Mdlx* ParticleEmitter2::mdlx() const
+inline class ParticleEmitter2s* ParticleEmitter2::particleEmitters() const
 {
-	return this->m_mdlx;
+	return this->m_particleEmitters;
 }
 
 inline const ascii* ParticleEmitter2::name() const
@@ -202,17 +203,17 @@ inline long32 ParticleEmitter2::flags() const
 	return this->m_flags;
 }
 
-inline class Translations* ParticleEmitter2::translations() const
+inline class Translation1s* ParticleEmitter2::translations() const
 {
 	return this->m_translations;
 }
 
-inline class Rotations* ParticleEmitter2::rotations() const
+inline class Rotation0s* ParticleEmitter2::rotations() const
 {
 	return this->m_rotations;
 }
 
-inline class Scalings* ParticleEmitter2::scalings() const
+inline class Scaling0s* ParticleEmitter2::scalings() const
 {
 	return this->m_scalings;
 }
@@ -287,7 +288,7 @@ inline float32 ParticleEmitter2::time() const
 	return this->m_time;
 }
 
-inline class SegmentColors* ParticleEmitter2::segmentColors() const
+inline const std::list<class SegmentColor*>& ParticleEmitter2::segmentColors() const
 {
 	return this->m_segmentColors;
 }
@@ -402,12 +403,12 @@ inline long32 ParticleEmitter2::replaceableId() const
 	return this->m_replaceableId;
 }
 
-inline class Speeds* ParticleEmitter2::speeds() const
+inline class ParticleEmitter2Speeds* ParticleEmitter2::speeds() const
 {
 	return this->m_speeds;
 }
 
-inline class Latitudes* ParticleEmitter2::latitudes() const
+inline class ParticleEmitter2Latitudes* ParticleEmitter2::latitudes() const
 {
 	return this->m_latitudes;
 }
@@ -422,12 +423,12 @@ inline class Visibility2s* ParticleEmitter2::visibilities() const
 	return this->m_visibilities;
 }
 
-inline class Lengths* ParticleEmitter2::lengths() const
+inline class Lengths* ParticleEmitter2::numbers() const
 {
-	return this->m_lengths;
+	return this->m_numbers;
 }
 
-inline class Widths* ParticleEmitter2::widths() const
+inline class ParticleEmitter2Widths* ParticleEmitter2::widths() const
 {
 	return this->m_widths;
 }

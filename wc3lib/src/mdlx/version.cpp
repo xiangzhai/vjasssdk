@@ -43,12 +43,12 @@ Version::~Version()
 {
 }
 
-void Version::readMdl(std::fstream &fstream) throw (class Exception)
+void Version::readMdl(std::istream &istream) throw (class Exception)
 {
 	std::string line;
 	bool gotVersion = false;
 
-	while (std::getline(fstream, line))
+	while (std::getline(istream, line))
 	{
 		if (line.empty())
 			continue;
@@ -92,9 +92,9 @@ void Version::readMdl(std::fstream &fstream) throw (class Exception)
 		throw Exception(_("Version: Missing format version number."));
 }
 
-void Version::writeMdl(std::fstream &fstream) throw (class Exception)
+void Version::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	fstream <<
+	ostream <<
 	"// Current FormatVersion is 800\n"
 	"Version {\n"
 	"\tFormatVersion " << this->m_version << ",\n"
@@ -102,12 +102,12 @@ void Version::writeMdl(std::fstream &fstream) throw (class Exception)
 	;
 }
 
-long32 Version::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Version::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	long32 nbytes;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	if (nbytes != 4)
 	{
@@ -117,8 +117,8 @@ long32 Version::readMdx(std::fstream &fstream) throw (class Exception)
 		throw Exception(message);
 	}
 	
-	fstream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
+	bytes += istream.gcount();
 	
 	std::cout << "Bytes " << bytes << " Version " << this->m_version << std::endl;
 	
@@ -128,13 +128,13 @@ long32 Version::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Version::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Version::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	long32 nbytes = sizeof(this->m_version);
-	fstream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
+	ostream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
 	bytes += sizeof(nbytes);
-	fstream.write(reinterpret_cast<const char*>(&this->m_version), sizeof(this->m_version));
+	ostream.write(reinterpret_cast<const char*>(&this->m_version), sizeof(this->m_version));
 	bytes += sizeof(this->m_version);
 	
 	return bytes;

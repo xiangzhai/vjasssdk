@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERVISIBILITIES_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERVISIBILITIES_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -38,27 +33,20 @@ class RibbonEmitter;
 class RibbonEmitterVisibility;
 
 //KRVS
-class RibbonEmitterVisibilities : public MdxBlock
+class RibbonEmitterVisibilities : public MdxAlphas
 {
 	public:
 		RibbonEmitterVisibilities(class RibbonEmitter *ribbonEmitter);
 		virtual ~RibbonEmitterVisibilities();
 
 		class RibbonEmitter* ribbonEmitter() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class RibbonEmitterVisibility*> visibilities() const;
+		const std::list<class RibbonEmitterVisibility*>& visibilities() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class RibbonEmitter *m_ribbonEmitter;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class RibbonEmitterVisibility*> m_visibilities;
 };
 
 inline class RibbonEmitter* RibbonEmitterVisibilities::ribbonEmitter() const
@@ -66,19 +54,9 @@ inline class RibbonEmitter* RibbonEmitterVisibilities::ribbonEmitter() const
 	return this->m_ribbonEmitter;
 }
 
-inline long32 RibbonEmitterVisibilities::lineType() const
+inline const std::list<class RibbonEmitterVisibility*>& RibbonEmitterVisibilities::visibilities() const
 {
-	return this->m_lineType;
-}
-
-inline long32 RibbonEmitterVisibilities::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class RibbonEmitterVisibility*> RibbonEmitterVisibilities::visibilities() const
-{
-	return this->m_visibilities;
+	return reinterpret_cast<const std::list<class RibbonEmitterVisibility*>&>(this->m_alphas);
 }
 
 }

@@ -37,38 +37,38 @@ Matrices::~Matrices()
 		delete *iterator;
 }
 
-void Matrices::readMdl(std::fstream &fstream) throw (class Exception)
+void Matrices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Matrices::writeMdl(std::fstream &fstream) throw (class Exception)
+void Matrices::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Matrices::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Matrices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nmtrcs = 0;
-	fstream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
+	bytes += istream.gcount();
 	
 	for ( ; nmtrcs > 0; --nmtrcs)
 	{
 		class Matrix *matrix = new Matrix(this);
-		bytes += matrix->readMdx(fstream);
+		bytes += matrix->readMdx(istream);
 		this->m_matrices.push_back(matrix);
 	}
 	
 	return bytes;
 }
 
-long32 Matrices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Matrices::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
-
 #include "geoset.hpp"
 #include "geosets.hpp"
 #include "vertices.hpp"
@@ -59,18 +57,18 @@ Geoset::~Geoset()
 	delete this->m_textureVertices;
 }
 
-void Geoset::readMdl(std::fstream &fstream) throw (class Exception)
+void Geoset::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Geoset::writeMdl(std::fstream &fstream) throw (class Exception)
+void Geoset::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Geoset::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
 	if (nbytes <= 0)
 	{
@@ -81,60 +79,60 @@ long32 Geoset::readMdx(std::fstream &fstream) throw (class Exception)
 	}
 	
 	std::cout << "Test 1" << std::endl;
-	long32 bytes = fstream.gcount();
-	bytes += this->m_vertices->readMdx(fstream);
-	bytes += this->m_normals->readMdx(fstream);
-	bytes += this->m_primitveTypes->readMdx(fstream);
-	bytes += this->m_primitiveSizes->readMdx(fstream);
-	bytes += this->m_primitiveVertices->readMdx(fstream);
-	bytes += this->m_groupVertices->readMdx(fstream);
-	bytes += this->m_matrixGroupCounts->readMdx(fstream);
-	bytes += this->m_matrices->readMdx(fstream);
+	long32 bytes = istream.gcount();
+	bytes += this->m_vertices->readMdx(istream);
+	bytes += this->m_normals->readMdx(istream);
+	bytes += this->m_primitveTypes->readMdx(istream);
+	bytes += this->m_primitiveSizes->readMdx(istream);
+	bytes += this->m_primitiveVertices->readMdx(istream);
+	bytes += this->m_groupVertices->readMdx(istream);
+	bytes += this->m_matrixGroupCounts->readMdx(istream);
+	bytes += this->m_matrices->readMdx(istream);
 	std::cout << "Test 2" << std::endl;
-	fstream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_selectionGroup), sizeof(this->m_selectionGroup));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_selectable), sizeof(this->m_selectable));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_selectionGroup), sizeof(this->m_selectionGroup));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_selectable), sizeof(this->m_selectable));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
+	bytes += istream.gcount();
 	std::cout << "Test 3" << std::endl;
 	long32 nanim = 0;
-	fstream.read(reinterpret_cast<char*>(&nanim), sizeof(nanim));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nanim), sizeof(nanim));
+	bytes += istream.gcount();
 	std::cout << "Test 4 nanimations " << nanim << std::endl;
 	
 	for ( ; nanim > 0; --nanim)
 	{
 		class Ganimation *ganimation = new Ganimation(this);
-		bytes += ganimation->readMdx(fstream);
+		bytes += ganimation->readMdx(istream);
 		this->m_ganimations.push_back(ganimation);
 	}
 	
 	std::cout << "Test 5" << std::endl;
-	bytes += this->m_texturePatches->readMdx(fstream);
+	bytes += this->m_texturePatches->readMdx(istream);
 	/// @todo Doesn't exist!!!!
-	bytes += this->m_textureVertices->readMdx(fstream);
+	bytes += this->m_textureVertices->readMdx(istream);
 	
 	std::cout << "Test 192832948" << std::endl;
 	
 	return bytes;
 }
 
-long32 Geoset::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Geoset::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

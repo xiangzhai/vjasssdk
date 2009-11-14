@@ -1,3 +1,14 @@
+2009-11-13 Tamino Dauth <tamino@cdauth.de>
+* Add class for MdxBlocks with nbytes followed by struct lists (like GroupMdxBlock).
+
+2009-11-11 Tamino Dauth <tamino@cdauth.de>
+* Class Blp should always use format of BlpUncompressed1 and convert other formats when readed and written.
+* Add Qt or KDE BLP image class.
+
+2009-11-08 Tamino Dauth <tamino@cdauth.de>
+* Fix Ogre search in cmake files.
+* How to use compile flags with make files?
+
 2009-11-03 Tamino Dauth <tamino@cdauth.de>
 * Missing layer alphas.
 * Add editor GUI widgets.
@@ -26,7 +37,7 @@
 * BLP file reading (JPEG compression) does still not work.
 
 2009-10-07 Tamino Dauth <tamino@cdauth.de>
-* Use std::fstream::read for binary files.
+* DONE: Use std::fstream::read for binary files.
 
 2009-10-05 Tamino Dauth <tamino@cdauth.de>
 * Boost tokenizer does not get { tokens?

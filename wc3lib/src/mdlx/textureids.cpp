@@ -35,42 +35,42 @@ TextureIds::~TextureIds()
 {
 }
 
-void TextureIds::readMdl(std::fstream &fstream) throw (class Exception)
+void TextureIds::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureIds::writeMdl(std::fstream &fstream) throw (class Exception)
+void TextureIds::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 TextureIds::readMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureIds::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nunks;
-	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
+	bytes += istream.gcount();
 	
 	for ( ; nunks > 0; --nunks)
 	{
 		class TextureId *textureId = new TextureId(this);
-		bytes += textureId->readMdx(fstream);
+		bytes += textureId->readMdx(istream);
 		this->m_textureIds.push_back(textureId);
 	}
 	
 	return bytes;
 }
 
-long32 TextureIds::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureIds::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

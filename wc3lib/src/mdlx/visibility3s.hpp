@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_VISIBILITY3S_HPP
 #define WC3LIB_MDLX_VISIBILITY3S_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -34,51 +29,34 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class ParticleEmitter;
 class Visibility3;
 
 //KPEV
-class Visibility3s : public MdxBlock
+class Visibility3s : public MdxAlphas
 {
 	public:
-		Visibility3s(class Mdlx *mdlx);
+		Visibility3s(class ParticleEmitter *particleEmitter);
 		virtual ~Visibility3s();
 
-		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Visibility3*> visibilities() const;
+		class ParticleEmitter* particleEmitter() const;
+		const std::list<class Visibility3*>& visibilities() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		
 	protected:
-		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Visibility3*> m_visibilities;
+		class ParticleEmitter *m_particleEmitter;
 };
 
-inline class Mdlx* Visibility3s::mdlx() const
+inline class ParticleEmitter* Visibility3s::particleEmitter() const
 {
-	return this->m_mdlx;
+	return this->m_particleEmitter;
 }
 
-inline long32 Visibility3s::lineType() const
+inline const std::list<class Visibility3*>& Visibility3s::visibilities() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Visibility3s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Visibility3*> Visibility3s::visibilities() const
-{
-	return this->m_visibilities;
+	return reinterpret_cast<const std::list<class Visibility3*>&>(this->m_alphas);
 }
 
 }

@@ -33,23 +33,48 @@ Events::Events(class Mdlx *mdlx) : MdxBlock("EVTS"), m_mdlx(mdlx)
 
 Events::~Events()
 {
+	for (std::list<class Event*>::iterator iterator = this->m_events.begin(); iterator != this->m_events.end(); ++iterator)
+		delete *iterator;
 }
 
-void Events::readMdl(std::fstream &fstream) throw (class Exception)
+void Events::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-long32 Events::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
-}
-
-void Events::writeMdl(std::fstream &fstream) throw (class Exception)
+void Events::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Events::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Events::readMdx(std::istream &istream) throw (class Exception)
 {
+	long32 bytes = MdxBlock::readMdx(istream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes;
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class Event *event = new Event(this);
+		long32 readBytes = event->readMdx(istream);
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_events.push_back(event);
+	}
+	
+	return bytes;
+}
+
+long32 Events::writeMdx(std::ostream &ostream) throw (class Exception)
+{
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
+	
 	return 0;
 }
 

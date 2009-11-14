@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "primitivetype.hpp"
-#include "primitivetypes.hpp"
 
 namespace wc3lib
 {
@@ -35,24 +34,24 @@ PrimitiveType::~PrimitiveType()
 {
 }
 
-void PrimitiveType::readMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveType::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PrimitiveType::writeMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveType::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 PrimitiveType::readMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveType::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 bytes = 0;
-	fstream.read(reinterpret_cast<char*>(&this->m_value), sizeof(this->m_value));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_value), sizeof(this->m_value));
+	bytes += istream.gcount();
 	
 	return bytes;
 }
 
-long32 PrimitiveType::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveType::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

@@ -43,10 +43,10 @@ Attachment::~Attachment()
 	delete this->m_visibilities;
 }
 
-void Attachment::readMdl(std::fstream &fstream) throw (class Exception)
+void Attachment::readMdl(std::istream &istream) throw (class Exception)
 {
 	std::string line;
-	std::getline(fstream, line);
+	std::getline(istream, line);
 	boost::tokenizer<> tokenizer(line);
 	boost::tokenizer<>::iterator iterator = tokenizer.begin();
 
@@ -66,7 +66,7 @@ void Attachment::readMdl(std::fstream &fstream) throw (class Exception)
 	if ((*iterator) != "{")
 		throw Exception("");
 
-	std::getline(fstream, line);
+	std::getline(istream, line);
 	tokenizer.assign(line);
 	iterator = tokenizer.begin();
 
@@ -79,7 +79,7 @@ void Attachment::readMdl(std::fstream &fstream) throw (class Exception)
 	sstream >> this->m_objectId;
 }
 
-void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
+void Attachment::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 	// Observe properties of an Object.
 	// Path only appears if its length is greater than 0. 
@@ -88,62 +88,62 @@ void Attachment::writeMdl(std::fstream &fstream) throw (class Exception)
 	// NightElfCampaign3D and UndeadCampaign3D.mdl are the only two MDLs
 	// that utilize this attribute. Their only exclusive similarity is the
 	// underscore prefixing their name string. "_Blah"
-	fstream
+	ostream
 	<< "Attachment " << this->name() << " {\n"
 	<< "\tObjectId " << this->objectId() << ",\n"
 	;
 
 	if (this->parent() != 0xFFFFFFFF)
-		fstream << "\tParent " << this->parent() << ",\n";
+		ostream << "\tParent " << this->parent() << ",\n";
 
 	if (this->type() & Object::BillboardedLockZ)
-		fstream << "\tBillboardedLockZ,\n";
+		ostream << "\tBillboardedLockZ,\n";
 
 	if (this->type() & Object::BillboardedLockY)
-		fstream << "\tBillboardedLockY,\n";
+		ostream << "\tBillboardedLockY,\n";
 	
 	if (this->type() & Object::BillboardedLockX)
-		fstream << "\tBillboardedLockX,\n";
+		ostream << "\tBillboardedLockX,\n";
 	
 	if (this->type() & Object::Billboarded)
-		fstream << "\tBillboarded,\n";
+		ostream << "\tBillboarded,\n";
 	
 	if (this->type() & Object::CameraAnchored)
-		fstream << "\tCameraAnchored,\n";
+		ostream << "\tCameraAnchored,\n";
 
 	if (this->type() & Object::DontInheritRotation)
-		fstream << "\tDontInherit { Rotation },\n";
+		ostream << "\tDontInherit { Rotation },\n";
 	else if (this->type() & Object::DontInheritTranslation)
-		fstream << "\tDontInherit { Translation },\n";
+		ostream << "\tDontInherit { Translation },\n";
 	else if (this->type() & Object::DontInheritScaling)
-		fstream << "\tDontInherit { Scaling },\n";
+		ostream << "\tDontInherit { Scaling },\n";
 
-	fstream << "\tAttachmentID " << this->attachmentId() << ",\n";
+	ostream << "\tAttachmentID " << this->attachmentId() << ",\n";
 
 	if (strlen(this->path()) > 0)
-		fstream << "\tPath " << this->path() << ",\n";
+		ostream << "\tPath " << this->path() << ",\n";
 
 	//fstream << "\tTranslation { " << this->translations()->x() << ", " << this->translations()->y() << ", " << this->translations()->z() << " }\n";
 	//fstream << "\tRotation { " << this->rotations()->a() << ", " << this->rotations()->b() << ", " << this->rotations()->c() << ", " << this->rotations()->d() << " }\n";
 	//fstream << "\tScaling { " << this->scalings()->x() << ", " << this->scalings()->y() << ", " << this->scalings()->z() << " }\n";
 	//fstream << "\tVisibility " << this->visibilities()->value() << '\n';
-	fstream << "}\n";
+	ostream << "}\n";
 }
 
 
-long32 Attachment::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Attachment::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = fstream.gcount();
-	bytes += Object::readMdx(fstream);
-	fstream.read(reinterpret_cast<char*>(&this->m_path), sizeof(this->m_path));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_attachmentId), sizeof(this->m_attachmentId));
-	bytes += fstream.gcount();
-	bytes += this->m_visibilities->readMdx(fstream);
+	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	long32 bytes = istream.gcount();
+	bytes += Object::readMdx(istream);
+	istream.read(reinterpret_cast<char*>(&this->m_path), sizeof(this->m_path));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_attachmentId), sizeof(this->m_attachmentId));
+	bytes += istream.gcount();
+	bytes += this->m_visibilities->readMdx(istream);
 	
 	if (bytes != nbytesi)
 	{
@@ -156,7 +156,7 @@ long32 Attachment::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Attachment::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Attachment::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

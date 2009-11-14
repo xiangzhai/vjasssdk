@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "helpers.hpp"
 #include "helper.hpp"
 
@@ -37,29 +35,29 @@ Helpers::~Helpers()
 {
 }
 
-void Helpers::readMdl(std::fstream &fstream) throw (class Exception)
+void Helpers::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Helpers::writeMdl(std::fstream &fstream) throw (class Exception)
+void Helpers::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Helpers::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Helpers::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class Helper *helper = new Helper(this);
-		long32 readBytes = helper->readMdx(fstream);
+		long32 readBytes = helper->readMdx(istream);
 		std::cout << "Got " << readBytes << " bytes helper." << std::endl;
 		bytes += readBytes;
 		nbytes -= readBytes;
@@ -69,12 +67,12 @@ long32 Helpers::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Helpers::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Helpers::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
 	
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

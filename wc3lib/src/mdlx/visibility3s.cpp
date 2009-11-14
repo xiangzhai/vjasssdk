@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Visibility3s::Visibility3s(class Mdlx *mdlx) : MdxBlock("KPEV"), m_mdlx(mdlx)
+Visibility3s::Visibility3s(class ParticleEmitter *particleEmitter) : MdxAlphas("KPEV"), m_particleEmitter(particleEmitter)
 {
 }
 
@@ -34,26 +34,12 @@ Visibility3s::~Visibility3s()
 {
 }
 
-void Visibility3s::readMdl(std::fstream &fstream) throw (class Exception)
+void Visibility3s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Visibility3s::writeMdl(std::fstream &fstream) throw (class Exception)
+void Visibility3s::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-}
-
-long32 Visibility3s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Visibility3s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
 }
 
 }

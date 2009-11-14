@@ -18,10 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "geosetanimationalpha.hpp"
-#include "geosetanimationalphas.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimationAlpha::GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas) : m_geosetAnimationAlphas(geosetAnimationAlphas)
+GeosetAnimationAlpha::GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas) : MdxAlpha(geosetAnimationAlphas)
 {
 }
 
@@ -39,37 +36,6 @@ void GeosetAnimationAlpha::readMdl(std::fstream &fstream) throw (class Exception
 
 void GeosetAnimationAlpha::writeMdl(std::fstream &fstream) throw (class Exception)
 {
-}
-
-long32 GeosetAnimationAlpha::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
-	bytes += fstream.gcount();
-	
-	if (this->m_geosetAnimationAlphas->lineType() > 1)
-	{
-		fstream.read(reinterpret_cast<char*>(&this->m_inTan), sizeof(this->m_inTan));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_outTan), sizeof(this->m_outTan));
-		bytes += fstream.gcount();
-	}
-	// init against access errors
-	else
-	{
-		this->m_inTan = 0.0;
-		this->m_outTan = 0.0;
-	}
-	
-	std::cout << "Geoset animation alpha with " << bytes << " bytes " << std::endl;
-	
-	return bytes;
-}
-
-long32 GeosetAnimationAlpha::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
 }
 
 }

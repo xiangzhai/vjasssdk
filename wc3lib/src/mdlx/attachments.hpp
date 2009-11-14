@@ -21,13 +21,9 @@
 #ifndef WC3LIB_MDLX_ATTACHMENTS_HPP
 #define WC3LIB_MDLX_ATTACHMENTS_HPP
 
-#include <fstream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
-//#include "attachment.hpp"
 
 namespace wc3lib
 {
@@ -48,10 +44,10 @@ class Attachments : public MdxBlock
 		class Mdlx* mdlx() const;
 		std::list<class Attachment*> attachments() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &istream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;

@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_VISIBILITY2S_HPP
 #define WC3LIB_MDLX_VISIBILITY2S_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -38,27 +33,20 @@ class Mdlx;
 class Visibility2;
 
 //KP2V
-class Visibility2s : public MdxBlock
+class Visibility2s : public MdxAlphas
 {
 	public:
 		Visibility2s(class Mdlx *mdlx);
 		virtual ~Visibility2s();
 
 		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Visibility2*> visibilities() const;
+		const std::list<class Visibility2*>& visibilities() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Visibility2*> m_visibilities;
 };
 
 inline class Mdlx* Visibility2s::mdlx() const
@@ -66,19 +54,9 @@ inline class Mdlx* Visibility2s::mdlx() const
 	return this->m_mdlx;
 }
 
-inline long32 Visibility2s::lineType() const
+inline const std::list<class Visibility2*>& Visibility2s::visibilities() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Visibility2s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Visibility2*> Visibility2s::visibilities() const
-{
-	return this->m_visibilities;
+	return reinterpret_cast<const class std::list<class Visibility2*>&>(this->m_alphas);
 }
 
 }

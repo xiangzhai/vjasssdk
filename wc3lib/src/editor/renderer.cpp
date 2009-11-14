@@ -21,7 +21,7 @@
 #include <iostream>
 
 #include <OGRE/Ogre.h>	
-#include <OGRE/OgreErrorDialog.h>
+//#include <OGRE/OgreErrorDialog.h>
 
 //#include "../exception.hpp"
 #include "renderer.hpp"

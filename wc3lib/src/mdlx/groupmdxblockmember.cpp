@@ -30,12 +30,12 @@ GroupMdxBlockMember::GroupMdxBlockMember(class GroupMdxBlock *parent) : m_parent
 {
 }
 
-long32 GroupMdxBlockMember::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupMdxBlockMember::readMdx(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-long32 GroupMdxBlockMember::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GroupMdxBlockMember::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

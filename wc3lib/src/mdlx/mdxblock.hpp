@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_MDXBLOCK_HPP
 #define WC3LIB_MDLX_MDXBLOCK_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -41,10 +41,10 @@ class MdxBlock
 		bool optional() const;
 		bool exists() const;
 
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 		
-		bool moveToBlockName(std::fstream &fstream);
+		bool moveToBlockName(std::iostream &iostream);
 
 	protected:
 		byte m_blockName[4]; /// @todo byte or ascii?

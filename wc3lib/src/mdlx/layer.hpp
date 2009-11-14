@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_LAYER_HPP
 #define WC3LIB_MDLX_LAYER_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -33,7 +33,7 @@ namespace mdlx
 {
 
 class Layers;
-class Alphas;
+class MaterialAlphas;
 class TextureIds;
 
 class Layer
@@ -49,13 +49,13 @@ class Layer
 		long32 tvertexAnimationId() const;
 		long32 coordinatesId() const;
 		float32	alpha() const;
-		class Alphas* alphas() const;
+		class MaterialAlphas* alphas() const;
 		class TextureIds* textureIds() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Layers *m_layers;
@@ -65,7 +65,7 @@ class Layer
 		long32 	m_tvertexAnimationId; // 0xFFFFFFFF if none
 		long32	m_coordinatesId;
 		float32	m_alpha; //(0(transparent)->1(opaque))
-		class Alphas *m_alphas; //(KMTA)
+		class MaterialAlphas *m_alphas; //(KMTA)
 		class TextureIds *m_textureIds; //(KMTF) // state is long not float
 };
 
@@ -104,7 +104,7 @@ inline float32 Layer::alpha() const
 	return this->m_alpha;
 }
 
-inline class Alphas* Layer::alphas() const
+inline class MaterialAlphas* Layer::alphas() const
 {
 	return this->m_alphas;
 }

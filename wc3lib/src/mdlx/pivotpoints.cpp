@@ -35,29 +35,29 @@ PivotPoints::~PivotPoints()
 {
 }
 
-void PivotPoints::readMdl(std::fstream &fstream) throw (class Exception)
+void PivotPoints::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PivotPoints::writeMdl(std::fstream &fstream) throw (class Exception)
+void PivotPoints::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 PivotPoints::readMdx(std::fstream &fstream) throw (class Exception)
+long32 PivotPoints::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class PivotPoint *pivotPoint = new PivotPoint(this);
-		long32 readBytes = pivotPoint->readMdx(fstream);
+		long32 readBytes = pivotPoint->readMdx(istream);
 		bytes += readBytes;
 		nbytes -= readBytes;
 		this->m_pivotPoints.push_back(pivotPoint);
@@ -66,12 +66,12 @@ long32 PivotPoints::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 PivotPoints::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PivotPoints::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
 	
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

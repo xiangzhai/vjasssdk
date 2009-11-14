@@ -36,29 +36,29 @@ Materials::~Materials()
 {
 }
 
-void Materials::readMdl(std::fstream &fstream) throw (class Exception)
+void Materials::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Materials::writeMdl(std::fstream &fstream) throw (class Exception)
+void Materials::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Materials::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Materials::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 
 	long32 nbytes = 0; //nbytes
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class Material *material = new Material(this);
-		long32 readBytes = material->readMdx(fstream);
+		long32 readBytes = material->readMdx(istream);
 		
 		if (readBytes == 0)
 			throw Exception(_("Materials: 0 byte material"));
@@ -71,9 +71,9 @@ long32 Materials::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Materials::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Materials::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

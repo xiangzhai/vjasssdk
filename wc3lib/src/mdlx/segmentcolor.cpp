@@ -34,27 +34,27 @@ SegmentColor::~SegmentColor()
 {
 }
 
-void SegmentColor::readMdl(std::fstream &fstream) throw (class Exception)
+void SegmentColor::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void SegmentColor::writeMdl(std::fstream &fstream) throw (class Exception)
+void SegmentColor::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 SegmentColor::readMdx(std::fstream &fstream) throw (class Exception)
+long32 SegmentColor::readMdx(std::istream &istream) throw (class Exception)
 {
-	fstream.read(reinterpret_cast<char*>(&this->m_red), sizeof(this->m_red));
-	long32 bytes = fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_green), sizeof(this->m_green));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_blue), sizeof(this->m_blue));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_red), sizeof(this->m_red));
+	long32 bytes = istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_green), sizeof(this->m_green));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_blue), sizeof(this->m_blue));
+	bytes += istream.gcount();
 	
 	return bytes;
 }
 
-long32 SegmentColor::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 SegmentColor::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

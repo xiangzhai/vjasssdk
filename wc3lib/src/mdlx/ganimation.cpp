@@ -34,36 +34,35 @@ Ganimation::~Ganimation()
 {
 }
 
-void Ganimation::readMdl(std::fstream &fstream) throw (class Exception)
+void Ganimation::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Ganimation::writeMdl(std::fstream &fstream) throw (class Exception)
+void Ganimation::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Ganimation::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Ganimation::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	fstream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
+	long32 bytes = istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
+	bytes += istream.gcount();
 		
 	return bytes;
 }
 
-long32 Ganimation::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Ganimation::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

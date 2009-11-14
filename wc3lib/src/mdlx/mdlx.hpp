@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MDLX_MDLX_HPP
 #define WC3LIB_MDLX_MDLX_HPP
 
-#include <fstream>
-
 #include "mdxblock.hpp"
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -86,16 +84,20 @@ class Mdlx : public MdxBlock
 		class Events* events() const;
 		class CollisionShapes* collisionShapes() const;
 
-		void readMdl(std::fstream &fstream) throw (class Exception);
-		void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		void readMdl(std::istream &istream) throw (class Exception);
+		void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+
 #ifdef BLEND
 		void readBlend(const std::string &filePath) throw (class Exception);
-		void writeBlend(std::fstream &fstream) throw (class Exception);
+		void writeBlend(std::istream &istream) throw (class Exception);
 #endif
-		void read3ds(std::fstream &fstream) throw (class Exception);
-		void write3ds(std::fstream &fstream) throw (class Exception);
+
+#ifdef MAX
+		void read3ds(std::istream &istream) throw (class Exception);
+		void write3ds(std::ostream &ostream) throw (class Exception);
+#endif
 
 	protected:
 		class Version *m_version; //VERS
@@ -124,35 +126,6 @@ class Mdlx : public MdxBlock
 		class Cameras *m_cameras;
 		class Events *m_events;
 		class CollisionShapes *m_collisionShapes;
-
-		/*
-		class Visibilities0 *m_visibilities0; //KATV
-		class Visibilities1 *m_visibilities1; //KLAV
-		class Visibilities2 *m_visibilities2; //KP2V
-		class Visibilities3 *m_visibilities3; //KPEV
-		class Visibilities4 *m_visibilities4; //KRVS
-		KGAO	// [Alpha]:	  KMTA;
-		KLAI	// [Intensity]:   KMTA;
-		KLBI	// [AmbIntensity]:KMTA;
-		KMTF	// [TextureID]:	  KMTA; -> state is long value not float
-		KP2E	// [EmissnRate]:  KMTA;
-		KP2L	// [Latitude]: 	  KMTA;
-		KP2N	// [Length]: 	  KMTA;
-		KP2S	// [Speed]:	  KMTA;
-		KP2W	// [Width]: 	  KMTA;
-		KRHA	// [HeightAbove]: KMTA;
-		KRHB	// [HeightBelow]: KMTA;
-		KCRL 	// [Rotation]:	  KMTA;
-		KGAC	// [Color]:	  KGSC;
-		KLAC	// [Color]:	  KGSC;
-		KLBC	// [AmbColor]:	  KGSC;
-		KCTR 	// [Translation]: KGSC;
-		KGTR 	// [Translation]: KGSC;
-		KTAT	// [Translation]: KGSC;
-		KTAS	// [Scaling]: 	  KGSC;
-		KTAR	// [Rotation]:	  KGSC;
-		KTTR	// [Translation]: KGSC;
-		*/
 };
 
 inline class Version* Mdlx::version() const

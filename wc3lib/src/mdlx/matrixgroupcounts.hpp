@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
 #define WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
 
-#include <fstream>
+#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
@@ -47,10 +47,10 @@ class MatrixGroupCounts : public MdxBlock
 		class Geoset* geoset() const;
 		std::list<class MatrixGroupCount*> matrixGroupCounts() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Geoset *m_geoset;

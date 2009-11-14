@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "lights.hpp"
+#include "light.hpp"
 
 namespace wc3lib
 {
@@ -34,27 +35,44 @@ Lights::~Lights()
 {
 }
 
-void Lights::readMdl(std::fstream &fstream) throw (class Exception)
+void Lights::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Lights::writeMdl(std::fstream &fstream) throw (class Exception)
+void Lights::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
 
-long32 Lights::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Lights::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
+	
+	if (bytes == 0)
+		return 0;
+	
+	long32 nbytes;
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
+	
+	while (nbytes > 0)
+	{
+		class Light *light = new Light(this);
+		long32 readBytes = light->readMdx(istream);
+		nbytes -= readBytes;
+		bytes += readBytes;
+		this->m_lights.push_back(light);
+	}
 	
 	return bytes;
 }
 
-long32 Lights::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Lights::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

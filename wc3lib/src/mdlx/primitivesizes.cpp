@@ -39,30 +39,30 @@ PrimitiveSizes::~PrimitiveSizes()
 		delete *iterator;
 }
 
-void PrimitiveSizes::readMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveSizes::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PrimitiveSizes::writeMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveSizes::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 PrimitiveSizes::readMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveSizes::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 npcnts = 0;
-	fstream.read(reinterpret_cast<char*>(&npcnts), sizeof(npcnts));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&npcnts), sizeof(npcnts));
+	bytes += istream.gcount();
 	std::cout << "Primitive sizes " << npcnts << std::endl;
 	
 	for ( ; npcnts > 0; --npcnts)
 	{
 		class PrimitiveSize *primitiveSize = new PrimitiveSize(this);
-		bytes += primitiveSize->readMdx(fstream);
+		bytes += primitiveSize->readMdx(istream);
 		this->m_primitiveSizes.push_back(primitiveSize);
 	}
 	
@@ -71,9 +71,12 @@ long32 PrimitiveSizes::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 PrimitiveSizes::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveSizes::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

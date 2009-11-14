@@ -2,18 +2,29 @@
 
 MDX block name			MDL tag name			wc3lib class name		Parent class (not inheritance!)		Expected class name				Blender object			OGRE class			3ds object
 MDLX				-				Mdlx				-					-
--								Alpha				Alphas					MaterialAlpha
-KMTA								Alphas				Material				MaterialAlphas
+-								MaterialAlpha			Alphas					MaterialAlpha
+KMTA								MaterialAlphas			Layer					MaterialAlphas
 KLBC								AmbientColors			Light					Light...
 KLBI								AmbientIntensities		Light					Light...
 ATCH								Attachments			Mdlx					Attachments
+-				-				Bone				Bones					Bone
+BONE				-				Bones				Mdlx					Bones
 
-Bones					BONE			Mdlx					Bones
+-				-				ParticleEmitter2Speed		ParticleEmitter2Speeds			ParticleEmitter2Speed
+KP2S				-				ParticleEmitter2Speeds		ParticleEmitter2			ParticleEmitter2Speeds
+-				-				ParticleEmitter2Latitude	ParticleEmitter2Latitudes		ParticleEmitter2Latitude
+KP2L				-				ParticleEmitter2Latitudes	ParticleEmitter2			ParticleEmitter2Latitudes
+-				-				ParticleEmitter2Width		ParticleEmitter2Widths			ParticleEmitter2Width
+KP2W				-				ParticleEmitter2Widths		ParticleEmitter2			ParticleEmitter2Widths
+
 Cameras					CAMS			Mdlx					Cameras
 CollisionShapes				CLID			Mdlx					CollisionShapes
 Color1s					KLAC			Light					LightAmbientColors
 EmissionRates				KP2E			ParticleEmitter2			ParticleEmitter2EmissionRates
+Event					-			Events					Event
 Events					EVTS			Mdlx					Events
+EventTrack				-			EventTracks				EventTrack
+EventTracks				KEVT			Event					EventTracks
 Ganimation				-			Geoset
 Geoset					-			Geosets
 Geosets					GEOS			Mdlx
@@ -32,8 +43,8 @@ Intensity				-			Intensities
 Intensities				KLAI			Light					LightAmbientIntensities
 Layer					-			Layers
 Layers					LAYS			Material
-Length					-			Lengths
-Lengths					KP2N			ParticleEmitter2			ParticleEmitter2Number???
+Length					-			Lengths					ParticleEmitter2Number
+Lengths					KP2N			ParticleEmitter2			ParticleEmitter2Numbers???
 Light					-			Lights
 Lights					LITE			Mdlx
 TextureId				KMTF			TextureIds				MaterialTextureF????
@@ -103,27 +114,24 @@ RibbonEmitterHeightsAbove		KRHA			RibbonEmitter
 RibbonEmitterHeightBelow		-			RibbonEmitterHeightsBelow
 RibbonEmitterHeightsBelow		KRHB			RibbonEmitter
 
-Missing:
--					-			below					ParticleEmitter2Speed
--					KP2S			ParticleEmitter2			ParticleEmitter2Speeds
-					-			below					ParticleEmitter2Latitude
--					KP2L			ParticleEmitter2			ParticleEmitter2Latitudes
-					-			below					ParticleEmitter2Width
--					KP2W			ParticleEmitter2			ParticleEmitter2Widths
-					
+Missing:				
 -					-			below					CameraRotationL..??
 -					KCRL			Camera					CameraRotationL..??
--					-			below					EventTranslation
--					KEVT			Event					EventTranslations?
 
 2. Abstract MDLX property classes
 Name					Child classes
 GroupMdxBlock
 GroupMdxBlockMember			
 Object
-RotationBase
-ScalingBase
-TranslationBase
+MdxAlpha
+MdxAlphas
+MdxScaling
+MdxScalings
+
+
+
+MdxTranslation
+MdxTranslations
 
 3. Map property classes
 

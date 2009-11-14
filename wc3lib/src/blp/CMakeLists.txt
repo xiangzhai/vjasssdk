@@ -1,15 +1,9 @@
 set(wc3lib_BLP_SRC
 	blp.cpp
-	blpjpeg.cpp
-	blpuncompressed1.cpp
-	blpuncompressed2.cpp
 )
 
 set(wc3lib_BLP_H
 	blp.hpp
-	blpjpeg.hpp
-	blpuncompressed1.hpp
-	blpuncompressed2.hpp
 	platform.hpp
 )
 

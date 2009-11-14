@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_TEXTUREIDS_HPP
 #define WC3LIB_MDLX_TEXTUREIDS_HPP
 
-#include <fstream>
+#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
@@ -57,10 +57,10 @@ class TextureIds : public MdxBlock
 		long32 globalSequenceId() const;
 		std::list<class TextureId*> textureIds() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Layer *m_layer;

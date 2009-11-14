@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Visibility2s::Visibility2s(class Mdlx *mdlx) : MdxBlock("KP2V"), m_mdlx(mdlx)
+Visibility2s::Visibility2s(class Mdlx *mdlx) : MdxAlphas("KP2V"), m_mdlx(mdlx)
 {
 }
 
@@ -34,26 +34,12 @@ Visibility2s::~Visibility2s()
 {
 }
 
-void Visibility2s::readMdl(std::fstream &fstream) throw (class Exception)
+void Visibility2s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Visibility2s::writeMdl(std::fstream &fstream) throw (class Exception)
+void Visibility2s::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-}
-
-long32 Visibility2s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Visibility2s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
 }
 
 }

@@ -21,17 +21,31 @@
 #ifndef WC3LIB_MDLX_VISIBILITY2_HPP
 #define WC3LIB_MDLX_VISIBILITY2_HPP
 
-#include "alpha.hpp"
+#include "mdxalpha.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+	
+class Visibility2s;
 
-class Visibility2 : public Alpha
+class Visibility2 : public MdxAlpha
 {
+	public:
+		Visibility2(class Visibility2s *visibilities);
+		
+		class Visibility2* visibilities() const;
+		
+	protected:
+		class Visibility2s *m_visibilities;
 };
+
+inline class Visibility2s* Visibility2::visibilities() const
+{
+	return this->m_visibilities;
+}
 
 }
 

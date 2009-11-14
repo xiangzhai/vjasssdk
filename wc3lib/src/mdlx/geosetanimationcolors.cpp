@@ -19,8 +19,6 @@
  ***************************************************************************/
 
 #include "geosetanimationcolors.hpp"
-#include "geosetanimationcolor.hpp"
-#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -28,66 +26,20 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimationColors::GeosetAnimationColors(class GeosetAnimation *geosetAnimation) : MdxBlock("KGAC"), m_geosetAnimation(geosetAnimation)
+GeosetAnimationColors::GeosetAnimationColors(class GeosetAnimation *geosetAnimation) : MdxScalings("KGAC"), m_geosetAnimation(geosetAnimation)
 {
 }
 
 GeosetAnimationColors::~GeosetAnimationColors()
 {
-	for (std::list<class GeosetAnimationColor*>::iterator iterator = this->m_geosetAnimationColors.begin(); iterator != this->m_geosetAnimationColors.end(); ++iterator)
-		delete *iterator;
 }
 
-void GeosetAnimationColors::readMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimationColors::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GeosetAnimationColors::writeMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimationColors::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-}
-
-long32 GeosetAnimationColors::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nunks = 0;
-	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
-	bytes += fstream.gcount();
-	
-	if (nunks <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geoset animation colors: Count error, %d geoset animation colors.\n"), nunks);
-		
-		throw Exception(message);
-	}
-	
-	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
-	bytes += fstream.gcount();
-	
-	for ( ; nunks > 0; --nunks)
-	{
-		class GeosetAnimationColor *geosetAnimationColor = new GeosetAnimationColor(this);
-		bytes += geosetAnimationColor->readMdx(fstream);
-		this->m_geosetAnimationColors.push_back(geosetAnimationColor);
-	}
-	
-	return bytes;
-}
-
-long32 GeosetAnimationColors::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	if (!this->exists())
-		return 0;
-	
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
 }
 
 }

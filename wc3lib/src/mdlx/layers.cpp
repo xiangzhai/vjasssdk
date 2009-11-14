@@ -39,31 +39,31 @@ Layers::~Layers()
 {
 }
 
-void Layers::readMdl(std::fstream &fstream) throw (class Exception)
+void Layers::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Layers::writeMdl(std::fstream &fstream) throw (class Exception)
+void Layers::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
 
-long32 Layers::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Layers::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nlays = 0;
-	fstream.read(reinterpret_cast<char*>(&nlays), sizeof(nlays));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nlays), sizeof(nlays));
+	bytes += istream.gcount();
 	
 	for ( ; nlays > 0; --nlays)
 	{
 		std::cout << "Layer " << nlays - 1 << std::endl;
 		class Layer *layer = new Layer(this);
-		long32 readBytes = layer->readMdx(fstream);
+		long32 readBytes = layer->readMdx(istream);
 		
 		if (readBytes == 0)
 			throw Exception(_("Layers: 0 byte layer."));
@@ -75,10 +75,9 @@ long32 Layers::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Layers::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Layers::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

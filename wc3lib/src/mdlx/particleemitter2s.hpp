@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
 
-#include <fstream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -45,12 +42,12 @@ class ParticleEmitter2s : public MdxBlock
 		virtual ~ParticleEmitter2s();
 
 		class Mdlx* mdlx() const;
-		std::list<class ParticleEmitter2*> particleEmitters() const;
+		const std::list<class ParticleEmitter2*>& particleEmitters() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
@@ -62,7 +59,7 @@ inline class Mdlx* ParticleEmitter2s::mdlx() const
 	return this->m_mdlx;
 }
 
-inline std::list<class ParticleEmitter2*> ParticleEmitter2s::particleEmitters() const
+inline const std::list<class ParticleEmitter2*>& ParticleEmitter2s::particleEmitters() const
 {
 	return this->m_particleEmitters;
 }

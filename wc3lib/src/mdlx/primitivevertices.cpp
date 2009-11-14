@@ -39,30 +39,30 @@ PrimitiveVertices::~PrimitiveVertices()
 		delete *iterator;
 }
 
-void PrimitiveVertices::readMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveVertices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PrimitiveVertices::writeMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveVertices::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveVertices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 
 	long32 ntris = 0;
-	fstream.read(reinterpret_cast<char*>(&ntris), sizeof(ntris));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&ntris), sizeof(ntris));
+	bytes += istream.gcount();
 	std::cout << "Primitive vertices " << ntris << std::endl;
 	
 	for ( ; ntris > 0; --ntris)
 	{
 		class PrimitiveVertex *primitiveVertex = new PrimitiveVertex(this);
-		bytes += primitiveVertex->readMdx(fstream);
+		bytes += primitiveVertex->readMdx(istream);
 		this->m_primitiveVertices.push_back(primitiveVertex);
 	}
 	
@@ -71,9 +71,12 @@ long32 PrimitiveVertices::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 PrimitiveVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 PrimitiveVertices::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_CAMERA_HPP
 #define WC3LIB_MDLX_CAMERA_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -32,15 +32,20 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
+class Cameras;
+class Translation0s;
+class Rotations; /// @todo Implement class KCRL
+class Translation3s;
 
 //not a child of class Object!
 class Camera
 {
 	public:
-		Camera(class Mdlx *mdlx);
+		Camera(class Cameras *cameras);
 		virtual ~Camera();
-		class Mdlx* mdlx() const;
+		
+		class Cameras* cameras() const;
+		
 		const ascii* name() const;
 		float32 positionX() const;
 		float32 positionY() const;
@@ -48,32 +53,36 @@ class Camera
 		float32 fieldOfView() const;
 		float32 farClip() const;
 		float32 nearClip() const;
-		class Target* target() const;
-		class Rotation* rotation() const;
-		class Translation* translation() const;
+		float32	targetX() const;
+		float32 targetY() const;
+		float32 targetZ() const;
+		class Translation0s* targetTranslations() const;
+		class Rotations* rotations() const;
+		class Translation3s* translations() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void readMdx(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		class Mdlx *m_mdlx;
+		class Cameras *m_cameras;
 		//long nbytesi;
 		ascii m_name[0x50]; //(0x50)
 		float32 m_positionX, m_positionY, m_positionZ;
 		float32 m_fieldOfView;
 		float32 m_farClip;
 		float32 m_nearClip;
-		class Target *m_target;
-		class Rotation *m_rotation; //(KCRL)
-		class Translation *m_translation; //(KTTR)
+		float32	m_targetX, m_targetY, m_targetZ;
+		class Translation0s *m_targetTranslations; //(KCTR)
+		class Rotations *m_rotations; //(KCRL)
+		class Translation3s *m_translations; //(KTTR)
 		//(BKCT) ?????????????????????????????????????????????????????????????????
 };
 
-class Mdlx* Camera::mdlx() const
+class Cameras* Camera::cameras() const
 {
-	return this->m_mdlx;
+	return this->m_cameras;
 }
 
 inline const ascii* Camera::name() const
@@ -111,19 +120,34 @@ inline float32 Camera::nearClip() const
 	return this->m_nearClip;
 }
 
-inline class Target* Camera::target() const
+inline float32 Camera::targetX() const
 {
-	return this->m_target;
+	return this->m_targetX;
 }
 
-inline class Rotation* Camera::rotation() const
+inline float32 Camera::targetY() const
 {
-	return this->m_rotation;
+	return this->m_targetY;
 }
 
-inline class Translation* Camera::translation() const
+inline float32 Camera::targetZ() const
 {
-	return this->m_translation;
+	return this->m_targetZ;
+}
+
+inline class Translation0s* Camera::targetTranslations() const
+{
+	return this->m_targetTranslations;
+}
+
+inline class Rotations* Camera::rotations() const
+{
+	return this->m_rotations;
+}
+
+inline class Translation3s* Camera::translations() const
+{
+	return this->m_translations;
 }
 
 }

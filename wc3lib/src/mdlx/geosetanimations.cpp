@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "geosetanimations.hpp"
 #include "geosetanimation.hpp"
 #include "../internationalisation.hpp"
@@ -40,24 +38,24 @@ GeosetAnimations::~GeosetAnimations()
 		delete *iterator;
 }
 
-void GeosetAnimations::readMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimations::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GeosetAnimations::writeMdl(std::fstream &fstream) throw (class Exception)
+void GeosetAnimations::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimations::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	
 	if (nbytes <= 0)
 	{
@@ -70,7 +68,7 @@ long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
 	while (nbytes > 0)
 	{
 		class GeosetAnimation *geosetAnimation = new GeosetAnimation(this);
-		long32 readBytes = geosetAnimation->readMdx(fstream);
+		long32 readBytes = geosetAnimation->readMdx(istream);
 		bytes += readBytes;
 		nbytes -= readBytes;
 		this->m_geosetAnimations.push_back(geosetAnimation);
@@ -81,8 +79,11 @@ long32 GeosetAnimations::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 GeosetAnimations::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 GeosetAnimations::writeMdx(std::ostream &ostream) throw (class Exception)
 {
+	if (MdxBlock::writeMdx(ostream) == 0)
+		return 0;
+	
 	return 0;
 }
 

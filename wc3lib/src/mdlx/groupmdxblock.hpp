@@ -46,8 +46,8 @@ class GroupMdxBlock : public MdxBlock
 		GroupMdxBlock(byte blockName[4], bool optional = true);
 		~GroupMdxBlock();
 		
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 		
 	protected:
 		/**

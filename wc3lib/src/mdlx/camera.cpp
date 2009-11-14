@@ -19,6 +19,10 @@
  ***************************************************************************/
 
 #include "camera.hpp"
+#include "cameras.hpp"
+#include "translation3s.hpp"
+//#include "rotation
+#include "translation0s.hpp"
 
 namespace wc3lib
 {
@@ -26,27 +30,30 @@ namespace wc3lib
 namespace mdlx
 {
 
-Camera::Camera(class Mdlx *mdlx) : m_mdlx(mdlx)
+Camera::Camera(class Cameras *cameras) : m_cameras(cameras), m_targetTranslations(new Translation0s(cameras->mdlx())), m_rotations(0), m_translations(new Translation3s(this))
 {
 }
 
 Camera::~Camera()
 {
+	delete this->m_targetTranslations;
+	delete this->m_rotations;
+	delete this->m_translations;
 }
 
-void Camera::readMdl(std::fstream &fstream) throw (class Exception)
+void Camera::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Camera::readMdx(std::fstream &fstream) throw (class Exception)
+void Camera::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-void Camera::writeMdl(std::fstream &fstream) throw (class Exception)
+long32 Camera::readMdx(std::istream &istream) throw (class Exception)
 {
 }
 
-void Camera::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Camera::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 }
 
