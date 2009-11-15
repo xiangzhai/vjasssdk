@@ -59,8 +59,18 @@ dword Blp::read(std::istream &istream, enum Format format) throw (class Exceptio
 {
 	switch (format)
 	{
-		case Blp::BlpFormat:
-			return this->readBlp(istream);
+#ifdef JPEG
+		case Blp::JpegFormat:
+			return this->readJpeg(istream);
+#endif
+#ifdef TGA
+		case Blp::TgaFormat:
+			return this->readTga(istream);
+#endif
+#ifdef PNG
+		case Blp::PngFormat:
+			return this->readPng(istream);
+#endif	
 			
 		default:
 			throw Exception(_("Unknown format."));
@@ -90,14 +100,14 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 {
 	this->clear();
 	// header
-	dword identifier[4];
-	istream.read(reinterpret_cast<char*>(identifier), sizeof(identifier));
+	dword identifier;
+	istream.read(reinterpret_cast<char*>(&identifier), sizeof(identifier));
 	dword bytes = istream.gcount();
 	
-	if (memcmp(reinterpret_cast<const void*>(identifier), Blp::identifier, sizeof(identifier)) != 0)
+	if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier, sizeof(Blp::identifier)))
 	{
 		char message[50];
-		sprintf(message, _("Error while reading BLP file. Expected \"%s\" keyword, got \"%s\".\n"), Blp::identifier, identifier);
+		sprintf(message, _("Error while reading BLP file. Expected \"%s\" keyword, got \"%s\".\n"), Blp::identifier, reinterpret_cast<const char*>(&identifier));
 		
 		throw Exception(message);
 	}
@@ -269,7 +279,18 @@ dword Blp::write(std::ostream &ostream, enum Format format) throw (class Excepti
 	{
 		case Blp::BlpFormat:
 			return this->writeBlp(ostream);
-			
+#ifdef JPEG
+		case Blp::JpegFormat:
+			return this->writeJpeg(ostream);
+#endif
+#ifdef TGA
+		case Blp::TgaFormat:
+			return this->writeTga(ostream);
+#endif
+#ifdef PNG
+		case Blp::PngFormat:
+			return this->writePng(ostream);
+#endif	
 		default:
 			throw Exception(_("Unknown format."));
 	}
@@ -280,9 +301,7 @@ dword Blp::write(std::ostream &ostream, enum Format format) throw (class Excepti
 
 dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 {
-	dword identifier[4];
-	memcpy(identifier, Blp::identifier, sizeof(identifier));
-	ostream.write(reinterpret_cast<const char*>(identifier), sizeof(identifier));
+	ostream.write(Blp::identifier, sizeof(Blp::identifier));
 	dword bytes = sizeof(identifier);	
 	ostream.write(reinterpret_cast<const char*>(&this->m_compression), sizeof(this->m_compression));
 	bytes += sizeof(this->m_compression);
@@ -390,8 +409,17 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	
 	return bytes;
 }
+#ifdef JPEG
+dword Blp::readJpeg(std::istream &istream) throw (class Exception)
+{
+	return 0;
+}
 
-
+dword Blp::writeJpeg(std::ostream &ostream) throw (class Exception)
+{
+	return 0;
+}
+#endif
 #ifdef TGA
 dword Blp::readTga(std::istream &istream) throw (class Exception)
 {
@@ -399,6 +427,17 @@ dword Blp::readTga(std::istream &istream) throw (class Exception)
 }
 
 dword Blp::writeTga(std::ostream &ostream) throw (class Exception)
+{
+	return 0;
+}
+#endif
+#ifdef PNG
+dword Blp::readPng(std::istream &istream) throw (class Exception)
+{
+	return 0;
+}
+
+dword Blp::writePng(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

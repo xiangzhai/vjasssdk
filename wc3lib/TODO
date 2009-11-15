@@ -1,3 +1,6 @@
+2009-11-15 Tamino Dauth <tamino@cdauth.de>
+* Fix particle emitter 2 or translation 1 reading methods.
+
 2009-11-14 Tamino Dauth <tamino@cdauth.de>
 * Class Blp should read JPEG mip maps by using Open JPEG.
 

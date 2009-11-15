@@ -62,11 +62,15 @@ class Blp
 		{
 			BlpFormat,
 
-#ifdef TGA
-			TgaFormat,
+#ifdef JPEG
+			JpegFormat,
 #endif
-			
-			UnknownFormat
+#ifdef TGA
+			TgaFormat
+#endif
+#ifdef PNG
+			,PngFormat
+#endif
 		};
 
 		enum Compression
@@ -76,6 +80,7 @@ class Blp
 		};
 		
 		static const char identifier[4];
+
 		static const std::size_t maxMipMaps;
 
 		Blp();
@@ -106,10 +111,17 @@ class Blp
 		*/
 		dword readBlp(std::istream &istream) throw (class Exception);
 		dword writeBlp(std::ostream &ostream) throw (class Exception);
-		
+#ifdef JPEG
+		dword readJpeg(std::istream &istream) throw (class Exception);
+		dword writeJpeg(std::ostream &ostream) throw (class Exception);
+#endif
 #ifdef TGA
 		dword readTga(std::istream &istream) throw (class Exception);
 		dword writeTga(std::ostream &ostream) throw (class Exception);
+#endif
+#ifdef PNG
+		dword readPng(std::istream &istream) throw (class Exception);
+		dword writePng(std::ostream &ostream) throw (class Exception);
 #endif
 
 		/**

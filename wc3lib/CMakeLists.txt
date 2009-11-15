@@ -16,7 +16,7 @@ find_package(Boost REQUIRED)
 
 include_directories(src)
 add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/local\")
-#add_definitions(-DBLEND -DMAX) # test
+#add_definitions(-DJPEG -DTGA -DPNG -DBLEND -DMAX) # test
 
 #add_subdirectory(doc)
 #add_subdirectory(ui)
