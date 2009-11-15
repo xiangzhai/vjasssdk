@@ -51,10 +51,10 @@ long32 MdxScalings::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
 	bytes += istream.gcount();
-	
+
 	for ( ; nunks > 0; --nunks)
 	{
-		class MdxScaling *scaling = new MdxScaling(this);
+		class MdxScaling *scaling = this->createNewMember();
 		bytes += scaling->readMdx(istream);
 		this->m_scalings.push_back(scaling);
 	}
@@ -81,6 +81,11 @@ long32 MdxScalings::writeMdx(std::ostream &ostream) throw (class Exception)
 		bytes += (*iterator)->writeMdx(ostream);
 	
 	return bytes;
+}
+
+class MdxScaling* MdxScalings::createNewMember()
+{
+	return new MdxScaling(this);
 }
 
 }

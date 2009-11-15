@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_SCALING0S_HPP
 #define WC3LIB_MDLX_SCALING0S_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "mdxscalings.hpp"
 
 namespace wc3lib
 {
@@ -35,35 +33,22 @@ class Mdlx;
 class Scaling0;
 
 //KGSC
-class Scaling0s : public MdxBlock
+class Scaling0s : public MdxScalings
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
 		Scaling0s(class Mdlx *mdlx);
 		virtual ~Scaling0s();
 
 		class Mdlx* mdlx() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
 		const std::list<class Scaling0*>& scalings() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
+		virtual class MdxScaling* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Scaling0*> m_scalings;
 };
 
 inline class Mdlx* Scaling0s::mdlx() const
@@ -71,19 +56,9 @@ inline class Mdlx* Scaling0s::mdlx() const
 	return this->m_mdlx;
 }
 
-inline long32 Scaling0s::lineType() const
-{
-	return this->m_lineType;
-}
-
-inline long32 Scaling0s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
 inline const std::list<class Scaling0*>& Scaling0s::scalings() const
 {
-	return this->m_scalings;
+	return reinterpret_cast<const std::list<class Scaling0*>&>(this->m_scalings);
 }
 
 }

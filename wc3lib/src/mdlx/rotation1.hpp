@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_ROTATION1_HPP
 #define WC3LIB_MDLX_ROTATION1_HPP
 
-#include "scaling0.hpp"
+#include "mdxscaling.hpp"
+#include "rotation1s.hpp"
 
 namespace wc3lib
 {
@@ -29,10 +30,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-/// @todo Why not like KGSC (Rotation0)
-class Rotation1 : public Scaling0
+class Rotation1 : public MdxScaling
 {
+	public:
+		Rotation1(class Rotation1s *rotations);
+		
+		class Rotation1s* rotations() const;
 };
+
+inline class Rotation1s* Rotation1::rotations() const
+{
+	return dynamic_cast<class Rotation1s*>(this->m_scalings);
+}
 
 }
 

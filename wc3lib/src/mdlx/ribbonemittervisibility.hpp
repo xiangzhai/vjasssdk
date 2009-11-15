@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERVISIBILITY_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERVISIBILITY_HPP
 
-#include "alpha.hpp"
+#include "mdxalpha.hpp"
+#include "ribbonemittervisibilities.hpp"
 
 namespace wc3lib
 {
@@ -29,9 +30,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-class RibbonEmitterVisibility : public Alpha
+class RibbonEmitterVisibility : public MdxAlpha
 {
+	public:
+		RibbonEmitterVisibility(class RibbonEmitterVisibilities *ribbonEmitterVisibilities);
+		
+		class RibbonEmitterVisibilities* visibilities() const;
 };
+
+inline class RibbonEmitterVisibilities* RibbonEmitterVisibility::visibilities() const
+{
+	return dynamic_cast<class RibbonEmitterVisibilities*>(this->m_alphas);
+}
 
 }
 

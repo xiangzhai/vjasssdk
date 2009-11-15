@@ -25,6 +25,10 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+Scaling1::Scaling1(class Scaling1s *scalings) : MdxScaling(scalings)
+{
+}
 
 }
 

@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_TRANSLATION2S_HPP
 #define WC3LIB_MDLX_TRANSLATION2S_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxscalings.hpp"
 
 namespace wc3lib
 {
@@ -38,35 +33,22 @@ class TextureAnimation;
 class Translation2;
 
 //KTAT, like KGSC (Scalings)
-class Translation2s : public MdxBlock
+class Translation2s : public MdxScalings
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
 		Translation2s(class TextureAnimation *textureAnimation);
 		virtual ~Translation2s();
 
 		class TextureAnimation* textureAnimation() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Translation2*> translations() const;
+		const std::list<class Translation2*>& translations() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
+		virtual class MdxScaling* createNewMember();
+		
 		class TextureAnimation *m_textureAnimation;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Translation2*> m_translations;
 };
 
 inline class TextureAnimation* Translation2s::textureAnimation() const
@@ -74,19 +56,9 @@ inline class TextureAnimation* Translation2s::textureAnimation() const
 	return this->m_textureAnimation;
 }
 
-inline long32 Translation2s::lineType() const
+inline const std::list<class Translation2*>& Translation2s::translations() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Translation2s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Translation2*> Translation2s::translations() const
-{
-	return this->m_translations;
+	return reinterpret_cast<const std::list<class Translation2*>&>(this->m_scalings);
 }
 
 }

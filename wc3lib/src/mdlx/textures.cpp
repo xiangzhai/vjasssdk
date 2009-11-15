@@ -40,31 +40,31 @@ Textures::~Textures()
 		delete *iterator;
 }
 
-void Textures::readMdl(std::fstream &fstream) throw (class Exception)
+void Textures::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Textures::writeMdl(std::fstream &fstream) throw (class Exception)
+void Textures::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Textures::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Textures::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::cout << "TEXTURES" << std::endl;
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32	nbytes = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	bytes += istream.gcount();
 	std::cout << "Texture bytes: " << nbytes << std::endl;
 	
 	while (nbytes > 0)
 	{
 		class Texture *texture = new Texture(this);
-		long32 readBytes = texture->readMdx(fstream);
+		long32 readBytes = texture->readMdx(istream);
 		std::cout << "Read texture with " << readBytes << " bytes." << std::endl;
 		
 		if (readBytes == 0)
@@ -78,9 +78,12 @@ long32 Textures::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 Textures::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Textures::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

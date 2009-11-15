@@ -63,6 +63,7 @@ long32 ParticleEmitter2s::readMdx(std::istream &istream) throw (class Exception)
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_particleEmitters.push_back(particleEmitter);
+		std::cout << "Got particle emitter with " << readBytes << " bytes and " << nbytes << " bytes left." << std::endl;
 	}
 	
 	return bytes;

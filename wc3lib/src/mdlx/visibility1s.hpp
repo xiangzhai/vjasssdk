@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_VISIBILITY1S_HPP
 #define WC3LIB_MDLX_VISIBILITY1S_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -38,27 +33,22 @@ class Light;
 class Visibility1;
 
 //KLAV
-class Visibility1s : public MdxBlock
+class Visibility1s : public MdxAlphas
 {
 	public:
 		Visibility1s(class Light *light);
 		virtual ~Visibility1s();
 
 		class Light* light() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Visibility1*> visibilities() const;
+		const std::list<class Visibility1*>& visibilities() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
+		virtual class MdxAlpha* createNewMember();
+		
 		class Light *m_light;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Visibility1*> m_visibilities;
 };
 
 inline class Light* Visibility1s::light() const
@@ -66,19 +56,9 @@ inline class Light* Visibility1s::light() const
 	return this->m_light;
 }
 
-inline long32 Visibility1s::lineType() const
+inline const std::list<class Visibility1*>& Visibility1s::visibilities() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Visibility1s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Visibility1*> Visibility1s::visibilities() const
-{
-	return this->m_visibilities;
+	return reinterpret_cast<const std::list<class Visibility1*>&>(this->m_alphas);
 }
 
 }

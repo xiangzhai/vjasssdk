@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "particleemitter2speeds.hpp"
+#include "particleemitter2speed.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,19 @@ ParticleEmitter2Speeds::ParticleEmitter2Speeds(class ParticleEmitter2 *particleE
 
 ParticleEmitter2Speeds::~ParticleEmitter2Speeds()
 {
+}
+
+void ParticleEmitter2Speeds::readMdl(std::istream &istream) throw (class Exception)
+{
+}
+
+void ParticleEmitter2Speeds::writeMdl(std::ostream &ostream) throw (class Exception)
+{
+}
+
+class MdxAlpha* ParticleEmitter2Speeds::createNewMember()
+{
+	return new ParticleEmitter2Speed(this);
 }
 
 }

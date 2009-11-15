@@ -101,7 +101,7 @@ long32 RibbonEmitter::readMdx(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_gravity), sizeof(this->m_gravity));
-	bytes += fstream.gcount();
+	bytes += istream.gcount();
 	bytes += this->m_visibilities->readMdx(istream);
 	bytes += this->m_heightsAbove->readMdx(istream);
 	bytes += this->m_heightsBelow->readMdx(istream);

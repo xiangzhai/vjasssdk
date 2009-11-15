@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "visibility1s.hpp"
+#include "visibility1.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Visibility1s::Visibility1s(class Light *light) : MdxBlock("KLAV"), m_light(light)
+Visibility1s::Visibility1s(class Light *light) : MdxAlphas("KLAV"), m_light(light)
 {
 }
 
@@ -34,26 +35,17 @@ Visibility1s::~Visibility1s()
 {
 }
 
-void Visibility1s::readMdl(std::fstream &fstream) throw (class Exception)
+void Visibility1s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Visibility1s::writeMdl(std::fstream &fstream) throw (class Exception)
+void Visibility1s::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Visibility1s::readMdx(std::fstream &fstream) throw (class Exception)
+class MdxAlpha* Visibility1s::createNewMember()
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Visibility1s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new Visibility1(this);
 }
 
 }

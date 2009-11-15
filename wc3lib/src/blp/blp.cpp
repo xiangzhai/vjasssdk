@@ -29,13 +29,15 @@
 #include "blpuncompressed2.hpp"
 #include "../internationalisation.hpp"
 
+#include <openjpeg.h>
+
 namespace wc3lib
 {
 
 namespace blp
 {
 
-const char Blp::identifier[4] = "BLP1";
+const char Blp::identifier[4] = { 'B', 'L', 'P', '1' };
 const std::size_t Blp::maxMipMaps = 16;
 
 Blp::Blp()
@@ -142,7 +144,52 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 	if (this->m_compression == Blp::Jpeg)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
-		//bytes += this->m_blp->readBlpJpeg(istream);
+		dword jpegHeaderSize;
+		istream.read(reinterpret_cast<char*>(&jpegHeaderSize), sizeof(jpegHeaderSize));
+		bytes += istream.gcount();
+		byte *jpegHeader = new byte[jpegHeaderSize];
+		istream.read(reinterpret_cast<char*>(jpegHeader), jpegHeaderSize);
+		bytes += istream.gcount();
+		std::cout << "Using Open JPEG version " << OPENJPEG_VERSION << std::endl;
+		opj_common_ptr cinfo;
+		unsigned char *buffer;
+		std::streampos position = istream.tellg();
+		istream.seekg(0, std::istream::end);
+		std::streampos size = istream.tellg() - position;
+		//istream.seekg(position);
+		//istream.read(buffer, size);
+		opj_cio_t *decompressIO = opj_cio_open(cinfo, buffer, size);
+		
+		if (decompressIO == NULL)
+			throw Exception(_("Error while reading JPEG data."));
+	
+//int OPJ_CALLCONV cio_tell(opj_cio_t *cio);
+//void OPJ_CALLCONV cio_seek(opj_cio_t *cio, int pos);
+
+		opj_dinfo_t *decompressInfo = opj_create_decompress(CODEC_JP2);
+
+		if (decompressInfo == NULL)
+			throw Exception(_("Error while creating JPEG decompressor."));
+		
+		opj_dparameters_t *decompressParameters;
+		opj_set_default_decoder_parameters(decompressParameters);
+		opj_setup_decoder(decompressInfo, decompressParameters);
+		
+		opj_image_t *decompressImage = opj_decode(decompressInfo, decompressIO);
+		
+		if (decompressImage == NULL)
+			throw Exception(_("Error while creating decompressed JPEG image."));
+		
+		std::cout << "Got decompressed and decoded JPEG image with size X " << decompressImage->x1 << ", size Y " << decompressImage->y1 << ", " << decompressImage->numcomps << " components and color space " << decompressImage->color_space << std::endl;
+		
+		/// @todo Fill mip maps.
+		for (int i = 0; i < mipMaps; ++i)
+		{
+		}
+		
+		opj_destroy_decompress(decompressInfo);
+		opj_cio_close(decompressIO);
+		delete jpegHeader;
 	}
 	else if (this->m_compression == Blp::Uncompressed && (this->m_pictureType == 3 || this->m_pictureType == 4))
 	{
@@ -297,7 +344,6 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	if (this->m_compression == Blp::Jpeg)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
-		//bytes += this->m_blp->writeBlpJpeg(ostream);
 	}
 	else if (this->m_compression == Blp::Uncompressed && (this->m_pictureType == 3 || this->m_pictureType == 4))
 	{

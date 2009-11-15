@@ -36,6 +36,14 @@ class MdxScaling;
 class MdxScalings : public MdxBlock
 {
 	public:
+		enum LineType
+		{
+			DontInterp = 0,
+			Linear = 1,
+			Hermite = 2,
+			Bezier = 3
+		};
+	
 		MdxScalings(byte blockName[4], bool optional = true);
 		virtual ~MdxScalings();
 		
@@ -45,12 +53,18 @@ class MdxScalings : public MdxBlock
 		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 		
 	protected:
+		/**
+		* This method should be overwritten in child class.
+		* @return Returns a new allocated group member which will be added to list.
+		*/
+		virtual class MdxScaling* createNewMember();
+		
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class MdxScaling*> m_scalings;
 };
 
-long32 MdxScalings::lineType() const
+inline long32 MdxScalings::lineType() const
 {
 	return this->m_lineType;
 }

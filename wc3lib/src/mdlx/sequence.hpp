@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_SEQUENCE_HPP
 #define WC3LIB_MDLX_SEQUENCE_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -56,13 +56,13 @@ class Sequence
 		float32 maxExtY() const;
 		float32 maxExtZ() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 		/**
 		* @return Returns read byte count.
 		*/
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Sequences *m_sequences;

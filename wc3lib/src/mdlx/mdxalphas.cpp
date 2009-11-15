@@ -54,7 +54,7 @@ long32 MdxAlphas::readMdx(std::istream &istream) throw (class Exception)
 	
 	for ( ; nunks > 0; --nunks)
 	{
-		class MdxAlpha *alpha = new MdxAlpha(this);
+		class MdxAlpha *alpha = this->createNewMember();
 		bytes += alpha->readMdx(istream);
 		this->m_alphas.push_back(alpha);
 	}
@@ -81,6 +81,11 @@ long32 MdxAlphas::writeMdx(std::ostream &ostream) throw (class Exception)
 		bytes += (*iterator)->writeMdx(ostream);
 	
 	return bytes;
+}
+
+class MdxAlpha* MdxAlphas::createNewMember()
+{
+	return new MdxAlpha(this);
 }
 
 }

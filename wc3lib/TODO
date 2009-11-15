@@ -1,3 +1,6 @@
+2009-11-14 Tamino Dauth <tamino@cdauth.de>
+* Class Blp should read JPEG mip maps by using Open JPEG.
+
 2009-11-13 Tamino Dauth <tamino@cdauth.de>
 * Add class for MdxBlocks with nbytes followed by struct lists (like GroupMdxBlock).
 

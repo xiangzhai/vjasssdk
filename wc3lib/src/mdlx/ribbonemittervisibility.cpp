@@ -25,6 +25,10 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+RibbonEmitterVisibility::RibbonEmitterVisibility(class RibbonEmitterVisibilities *ribbonEmitterVisibilities) : MdxAlpha(ribbonEmitterVisibilities)
+{
+}
 
 }
 

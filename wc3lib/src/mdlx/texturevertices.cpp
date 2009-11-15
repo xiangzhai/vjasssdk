@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
-
 #include "texturevertices.hpp"
 #include "texturevertex.hpp"
 #include "../internationalisation.hpp"
@@ -40,23 +38,23 @@ TextureVertices::~TextureVertices()
 		delete *iterator;
 }
 
-void TextureVertices::readMdl(std::fstream &fstream) throw (class Exception)
+void TextureVertices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureVertices::writeMdl(std::fstream &fstream) throw (class Exception)
+void TextureVertices::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 TextureVertices::readMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureVertices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nvrts = 0;
-	fstream.read(reinterpret_cast<char*>(&nvrts), sizeof(nvrts));
+	istream.read(reinterpret_cast<char*>(&nvrts), sizeof(nvrts));
 	
 	if (nvrts <= 0)
 	{
@@ -66,21 +64,24 @@ long32 TextureVertices::readMdx(std::fstream &fstream) throw (class Exception)
 		throw Exception(message);
 	}
 	
-	bytes += fstream.gcount();
+	bytes += istream.gcount();
 	
 	for ( ; nvrts > 0; --nvrts)
 	{
 		class TextureVertex *textureVertex = new TextureVertex(this);
-		bytes += textureVertex->readMdx(fstream);
+		bytes += textureVertex->readMdx(istream);
 		this->m_textureVertices.push_back(textureVertex);
 	}
 	
 	return bytes;
 }
 
-long32 TextureVertices::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureVertices::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

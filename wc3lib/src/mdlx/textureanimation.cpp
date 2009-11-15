@@ -42,11 +42,11 @@ TextureAnimation::~TextureAnimation()
 	delete this->m_scalings;
 }
 
-void TextureAnimation::readMdl(std::fstream &fstream) throw (class Exception)
+void TextureAnimation::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
+void TextureAnimation::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 	/*
 	fstream << "\tTVertexAnim {\n";
@@ -76,15 +76,15 @@ void TextureAnimation::writeMdl(std::fstream &fstream) throw (class Exception)
 }
 
 
-long32 TextureAnimation::readMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureAnimation::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 bytes = 0;
 	long32 nbytesi = 0;
-	fstream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	bytes += fstream.gcount();
-	bytes +=this->m_translations->readMdx(fstream);
-	bytes +=this->m_rotations->readMdx(fstream);
-	bytes += this->m_scalings->readMdx(fstream);
+	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	bytes += istream.gcount();
+	bytes += this->m_translations->readMdx(istream);
+	bytes += this->m_rotations->readMdx(istream);
+	bytes += this->m_scalings->readMdx(istream);
 	
 	if (nbytesi != bytes)
 	{
@@ -97,7 +97,7 @@ long32 TextureAnimation::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 TextureAnimation::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureAnimation::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 }
 

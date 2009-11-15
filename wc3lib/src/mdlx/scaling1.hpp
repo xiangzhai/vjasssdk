@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_SCALING1_HPP
 #define WC3LIB_MDLX_SCALING1_HPP
 
-#include "scaling0.hpp"
+#include "mdxscaling.hpp"
+#include "scaling1s.hpp"
 
 namespace wc3lib
 {
@@ -29,11 +30,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-
-class Scaling1 : public Scaling0
+class Scaling1 : public MdxScaling
 {
+	public:
+		Scaling1(class Scaling1s *scalings);
+		
+		class Scaling1s* scalings() const;
 };
+
+inline class Scaling1s* Scaling1::scalings() const
+{
+	return dynamic_cast<class Scaling1s*>(this->m_scalings);
+}
 
 }
 

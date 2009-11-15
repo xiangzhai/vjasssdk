@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "rotation1s.hpp"
-#include "textureanimation.hpp"
+#include "rotation1.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Rotation1s::Rotation1s(class TextureAnimation *textureAnimation) : MdxBlock("KTAR", false), m_textureAnimation(textureAnimation)
+Rotation1s::Rotation1s(class TextureAnimation *textureAnimation) : MdxScalings("KTAR", false), m_textureAnimation(textureAnimation)
 {
 }
 
@@ -35,30 +35,19 @@ Rotation1s::~Rotation1s()
 {
 }
 
-void Rotation1s::readMdl(std::fstream &fstream) throw (class Exception)
+void Rotation1s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Rotation1s::writeMdl(std::fstream &fstream) throw (class Exception)
+void Rotation1s::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Rotation1s::readMdx(std::fstream &fstream) throw (class Exception)
+class MdxScaling* Rotation1s::createNewMember()
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	return new Rotation1(this);
+}
 	
-	//bytes mustn't be 0
-	
-	return bytes;
-}
-
-long32 Rotation1s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
-}
-
 }
 
 }

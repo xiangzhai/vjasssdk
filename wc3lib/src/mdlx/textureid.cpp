@@ -35,35 +35,35 @@ TextureId::~TextureId()
 {
 }
 
-void TextureId::readMdl(std::fstream &fstream) throw (class Exception)
+void TextureId::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureId::writeMdl(std::fstream &fstream) throw (class Exception)
+void TextureId::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 TextureId::readMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureId::readMdx(std::istream &istream) throw (class Exception)
 {
-	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
+	long32 bytes = istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
+	bytes += istream.gcount();
 	
 	if (this->m_textureIds->lineType() > 1)
 	{
-		fstream.read(reinterpret_cast<char*>(&this->m_inTan), sizeof(this->m_inTan));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_outTan), sizeof(this->m_outTan));
-		bytes += fstream.gcount();
+		istream.read(reinterpret_cast<char*>(&this->m_inTan), sizeof(this->m_inTan));
+		bytes += istream.gcount();
+		istream.read(reinterpret_cast<char*>(&this->m_outTan), sizeof(this->m_outTan));
+		bytes += istream.gcount();
 	}
 		
 	return bytes;
 }
 
-long32 TextureId::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TextureId::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }

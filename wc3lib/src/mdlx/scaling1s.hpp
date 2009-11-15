@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_SCALING1S_HPP
 #define WC3LIB_MDLX_SCALING1S_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxscalings.hpp"
 
 namespace wc3lib
 {
@@ -38,35 +33,22 @@ class TextureAnimation;
 class Scaling1;
 
 //KTAS
-class Scaling1s : public MdxBlock
+class Scaling1s : public MdxScalings
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
 		Scaling1s(class TextureAnimation *textureAnimation);
 		virtual ~Scaling1s();
 
 		class TextureAnimation* textureAnimation() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Scaling1*> scalings() const;
+		const std::list<class Scaling1*>& scalings() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
+		virtual class MdxScaling* createNewMember();
+		
 		class TextureAnimation *m_textureAnimation;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Scaling1*> m_scalings;
 };
 
 inline class TextureAnimation* Scaling1s::textureAnimation() const
@@ -74,19 +56,9 @@ inline class TextureAnimation* Scaling1s::textureAnimation() const
 	return this->m_textureAnimation;
 }
 
-inline long32 Scaling1s::lineType() const
+inline const std::list<class Scaling1*>& Scaling1s::scalings() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Scaling1s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Scaling1*> Scaling1s::scalings() const
-{
-	return this->m_scalings;
+	return reinterpret_cast<const std::list<class Scaling1*>&>(this->m_scalings);
 }
 
 }

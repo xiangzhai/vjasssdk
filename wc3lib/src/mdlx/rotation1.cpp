@@ -25,6 +25,11 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+Rotation1::Rotation1(class Rotation1s *rotations) : MdxScaling(rotations)
+{
+}
+
 }
 
 }

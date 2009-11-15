@@ -37,80 +37,80 @@ Sequence::~Sequence()
 {
 }
 
-void Sequence::readMdl(std::fstream &fstream) throw (class Exception)
+void Sequence::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Sequence::writeMdl(std::fstream &fstream) throw (class Exception)
+void Sequence::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Sequence::readMdx(std::fstream &fstream) throw (class Exception)
+long32 Sequence::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 bytes = 0;
-	fstream.read(this->m_name, sizeof(this->m_name));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_intervalEnd), sizeof(this->m_intervalEnd));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_moveSpeed), sizeof(this->m_moveSpeed));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_noLooping), sizeof(this->m_noLooping));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_rarity), sizeof(this->m_rarity));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtX), sizeof(this->m_minExtX));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtY), sizeof(this->m_minExtY));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
-	bytes += fstream.gcount();
+	istream.read(this->m_name, sizeof(this->m_name));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_intervalEnd), sizeof(this->m_intervalEnd));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_moveSpeed), sizeof(this->m_moveSpeed));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_noLooping), sizeof(this->m_noLooping));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_rarity), sizeof(this->m_rarity));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtX), sizeof(this->m_minExtX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtY), sizeof(this->m_minExtY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
+	bytes += istream.gcount();
 	std::cout << "Single sequence bytes " << bytes << std::endl;
 	
 	return bytes;
 }
 
-long32 Sequence::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 Sequence::writeMdx(std::ostream &ostream) throw (class Exception)
 {
 	long32 bytes = 0;
-	fstream.write(this->m_name, sizeof(this->m_name));
+	ostream.write(this->m_name, sizeof(this->m_name));
 	bytes += sizeof(this->m_name);
-	fstream.write(reinterpret_cast<const char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
+	ostream.write(reinterpret_cast<const char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
 	bytes += sizeof(this->m_intervalStart);
-	fstream.write(reinterpret_cast<const char*>(&this->m_intervalEnd), sizeof(this->m_intervalEnd));
+	ostream.write(reinterpret_cast<const char*>(&this->m_intervalEnd), sizeof(this->m_intervalEnd));
 	bytes += sizeof(this->m_intervalEnd);
-	fstream.write(reinterpret_cast<const char*>(&this->m_moveSpeed), sizeof(this->m_moveSpeed));
+	ostream.write(reinterpret_cast<const char*>(&this->m_moveSpeed), sizeof(this->m_moveSpeed));
 	bytes += sizeof(this->m_moveSpeed);
-	fstream.write(reinterpret_cast<const char*>(&this->m_noLooping), sizeof(this->m_noLooping));
+	ostream.write(reinterpret_cast<const char*>(&this->m_noLooping), sizeof(this->m_noLooping));
 	bytes += sizeof(this->m_noLooping);
-	fstream.write(reinterpret_cast<const char*>(&this->m_rarity), sizeof(this->m_rarity));
+	ostream.write(reinterpret_cast<const char*>(&this->m_rarity), sizeof(this->m_rarity));
 	bytes += sizeof(this->m_rarity);
-	fstream.write(reinterpret_cast<const char*>(&this->m_unknown0), sizeof(this->m_unknown0));
+	ostream.write(reinterpret_cast<const char*>(&this->m_unknown0), sizeof(this->m_unknown0));
 	bytes += sizeof(this->m_unknown0);
-	fstream.write(reinterpret_cast<const char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
+	ostream.write(reinterpret_cast<const char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
 	bytes += sizeof(this->m_boundsRadius);
-	fstream.write(reinterpret_cast<const char*>(&this->m_minExtX), sizeof(this->m_minExtX));
+	ostream.write(reinterpret_cast<const char*>(&this->m_minExtX), sizeof(this->m_minExtX));
 	bytes += sizeof(this->m_minExtX);
-	fstream.write(reinterpret_cast<const char*>(&this->m_minExtY), sizeof(this->m_minExtY));
+	ostream.write(reinterpret_cast<const char*>(&this->m_minExtY), sizeof(this->m_minExtY));
 	bytes += sizeof(this->m_minExtY);
-	fstream.write(reinterpret_cast<const char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
+	ostream.write(reinterpret_cast<const char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
 	bytes += sizeof(this->m_minExtZ);
-	fstream.write(reinterpret_cast<const char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
+	ostream.write(reinterpret_cast<const char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
 	bytes += sizeof(this->m_maxExtX);
-	fstream.write(reinterpret_cast<const char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
+	ostream.write(reinterpret_cast<const char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
 	bytes += sizeof(this->m_maxExtY);
-	fstream.write(reinterpret_cast<const char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
+	ostream.write(reinterpret_cast<const char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
 	bytes += sizeof(this->m_maxExtZ);
 	
 	return bytes;

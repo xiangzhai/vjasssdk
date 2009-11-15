@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_TEXTURE_HPP
 #define WC3LIB_MDLX_TEXTURE_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "../exception.hpp"
 #include "platform.hpp"
@@ -53,10 +53,10 @@ class Texture
 		long32 unknown0() const;
 		long32 wrapping() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Textures *m_textures;

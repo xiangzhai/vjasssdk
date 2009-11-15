@@ -83,6 +83,7 @@ long32 ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&this->m_flags), sizeof(this->m_flags));
 	bytes += istream.gcount();
 	bytes += this->m_translations->readMdx(istream);
+	/// @todo Missing rotations
 	bytes += this->m_rotations->readMdx(istream); //(KGRT) // +bit12(XYQuad)	+bit9(LineEmitter)
 	bytes += this->m_scalings->readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_speed), sizeof(this->m_speed));

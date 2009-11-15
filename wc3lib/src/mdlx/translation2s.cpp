@@ -20,7 +20,6 @@
 
 #include "translation2s.hpp"
 #include "translation2.hpp"
-#include "textureanimation.hpp"
 
 namespace wc3lib
 {
@@ -28,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Translation2s::Translation2s(class TextureAnimation *textureAnimation) : MdxBlock("KTAT"), m_textureAnimation(textureAnimation)
+Translation2s::Translation2s(class TextureAnimation *textureAnimation) : MdxScalings("KTAT"), m_textureAnimation(textureAnimation)
 {
 }
 
@@ -36,47 +35,17 @@ Translation2s::~Translation2s()
 {
 }
 
-void Translation2s::readMdl(std::fstream &fstream) throw (class Exception)
+void Translation2s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Translation2s::writeMdl(std::fstream &fstream) throw (class Exception)
+void Translation2s::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Translation2s::readMdx(std::fstream &fstream) throw (class Exception)
+class MdxScaling* Translation2s::createNewMember()
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nunks = 0;
-	fstream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
-	bytes += fstream.gcount();
-	
-	for ( ; nunks > 0; --nunks)
-	{
-		class Translation2 *translation = new Translation2(this);
-		bytes += translation->readMdx(fstream);
-		this->m_translations.push_back(translation);
-	}
-	
-	return bytes;
-}
-
-long32 Translation2s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	return bytes;
+	return new Translation2(this);
 }
 
 }

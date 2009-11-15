@@ -53,12 +53,18 @@ class MdxAlphas : public MdxBlock
 		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 		
 	protected:
+		/**
+		* This method should be overwritten in child class.
+		* @return Returns a new allocated group member which will be added to list.
+		*/
+		virtual class MdxAlpha* createNewMember();
+		
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class MdxAlpha*> m_alphas;
 };
 
-long32 MdxAlphas::lineType() const
+inline long32 MdxAlphas::lineType() const
 {
 	return this->m_lineType;
 }

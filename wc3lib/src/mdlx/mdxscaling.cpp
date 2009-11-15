@@ -54,9 +54,9 @@ long32 MdxScaling::readMdx(std::istream &istream) throw (class Exception)
 		bytes += istream.gcount();
 		istream.read(reinterpret_cast<char*>(&this->m_inTanZ), sizeof(this->m_inTanZ));
 		bytes += istream.gcount();
-		istream.read(reinterpret_cast<char*>(&this->m_outTanX), sizeof(this->m_inTanX));
+		istream.read(reinterpret_cast<char*>(&this->m_outTanX), sizeof(this->m_outTanX));
 		bytes += istream.gcount();
-		istream.read(reinterpret_cast<char*>(&this->m_outTanY), sizeof(this->m_inTanY));
+		istream.read(reinterpret_cast<char*>(&this->m_outTanY), sizeof(this->m_outTanY));
 		bytes += istream.gcount();
 		istream.read(reinterpret_cast<char*>(&this->m_outTanZ), sizeof(this->m_outTanZ));
 		bytes += istream.gcount();

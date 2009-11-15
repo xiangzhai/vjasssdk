@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "particleemitter2widths.hpp"
+#include "particleemitter2width.hpp"
 
 namespace wc3lib
 {
@@ -32,6 +33,19 @@ ParticleEmitter2Widths::ParticleEmitter2Widths(class ParticleEmitter2 *particleE
 
 ParticleEmitter2Widths::~ParticleEmitter2Widths()
 {
+}
+
+void ParticleEmitter2Widths::readMdl(std::istream &istream) throw (class Exception)
+{
+}
+
+void ParticleEmitter2Widths::writeMdl(std::ostream &ostream) throw (class Exception)
+{
+}
+
+class MdxAlpha* ParticleEmitter2Widths::createNewMember()
+{
+	return new ParticleEmitter2Width(this);
 }
 
 }

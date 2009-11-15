@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_TEXTUREANIMATION_HPP
 #define WC3LIB_MDLX_TEXTUREANIMATION_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -48,13 +48,12 @@ class TextureAnimation
 		class Rotation1s* rotations() const;
 		class Scaling1s* scalings() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual long32 readMdx(std::istream &istream) throw (class Exception);
+		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		//long32 nbytesi;
 		class TextureAnimations *m_textureAnimations;
 		class Translation2s *m_translations; //(KTAT) // Might be optional
 		class Rotation1s *m_rotations; //(KTAR)

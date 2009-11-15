@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERHEIGHTSABOVE_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERHEIGHTSABOVE_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -38,27 +33,20 @@ class RibbonEmitter;
 class RibbonEmitterHeightAbove;
 
 //KRHA
-class RibbonEmitterHeightsAbove : public MdxBlock
+class RibbonEmitterHeightsAbove : public MdxAlphas
 {
 	public:
 		RibbonEmitterHeightsAbove(class RibbonEmitter *ribbonEmitter);
 		virtual ~RibbonEmitterHeightsAbove();
 
 		class RibbonEmitter* ribbonEmitter() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class RibbonEmitterHeightAbove*> heights() const;
+		const std::list<class RibbonEmitterHeightAbove*>& heights() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class RibbonEmitter *m_ribbonEmitter;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class RibbonEmitterHeightAbove*> m_heights;
 };
 
 inline class RibbonEmitter* RibbonEmitterHeightsAbove::ribbonEmitter() const
@@ -66,19 +54,9 @@ inline class RibbonEmitter* RibbonEmitterHeightsAbove::ribbonEmitter() const
 	return this->m_ribbonEmitter;
 }
 
-inline long32 RibbonEmitterHeightsAbove::lineType() const
+inline const std::list<class RibbonEmitterHeightAbove*>& RibbonEmitterHeightsAbove::heights() const
 {
-	return this->m_lineType;
-}
-
-inline long32 RibbonEmitterHeightsAbove::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class RibbonEmitterHeightAbove*> RibbonEmitterHeightsAbove::heights() const
-{
-	return this->m_heights;
+	return reinterpret_cast<const std::list<class RibbonEmitterHeightAbove*>&>(this->m_alphas);
 }
 
 }

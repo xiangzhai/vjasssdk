@@ -34,6 +34,14 @@ ParticleEmitter2Latitudes::~ParticleEmitter2Latitudes()
 {
 }
 
+void ParticleEmitter2Latitudes::readMdl(std::istream &istream) throw (class Exception)
+{
+}
+
+void ParticleEmitter2Latitudes::writeMdl(std::ostream &ostream) throw (class Exception)
+{
+}
+
 }
 
 }

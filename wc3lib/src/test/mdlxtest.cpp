@@ -28,6 +28,8 @@
  #include <getopt.h>
 
 #include "../internationalisation.hpp"
+#include "../blp/blp.hpp"
+#include "../blp/platform.hpp"
 #include "../mdlx/mdlx.hpp"
 #include "../mdlx/platform.hpp"
 
@@ -35,32 +37,302 @@ using namespace wc3lib;
 
 static const char *version = "0.1";
 
-static const int maxFormats = 5;
-static const char *formatExpression[maxFormats + 1] =
+enum Format
 {
-	"mdl",
-	"mdx",
-	
+	Blp,
+#ifdef JPEG
+	Jpeg,
+#endif
+#ifdef TGA
+	Tga,
+#endif
+#ifdef PNG
+	Png,
+#endif
+	Mdl,
+	Mdx,
 #ifdef BLEND
-	"blend",
+	Blend,
 #endif
-	
 #ifdef MAX
-	"3ds",
+	Max,
 #endif
-	
-	""
+	MaxFormats,
+	InvalidFormat
 };
 
-static inline bool checkFormatString(const char *formatString)
+static const char *formatExpression[MaxFormats] =
 {
-	for (int i = 0; i < maxFormats; ++i)
+	"blp",
+#ifdef JPEG
+	"jpeg",
+#endif
+#ifdef TGA
+	"tga",
+#endif
+#ifdef PNG
+	"png",
+#endif
+	"mdl",
+	"mdx",
+#ifdef BLEND
+	"blend"
+#endif
+#ifdef MAX
+	, "3ds"
+#endif
+};
+
+static const char *formatExtension[MaxFormats] =
+{
+	"blp",
+#ifdef JPEG
+	"jpeg",
+#endif
+#ifdef TGA
+	"tga",
+#endif
+#ifdef PNG
+	"png",
+#endif
+	"mdl",
+	"mdx",
+#ifdef BLEND
+	"blend"
+#endif
+#ifdef MAX	
+	, "3ds"
+#endif
+};	
+
+static const bool formatIsBinary[MaxFormats] =
+{
+	true,
+#ifdef JPEG
+	true,
+#endif
+#ifdef TGA
+	true,
+#endif
+#ifdef PNG
+	true,
+#endif
+	false,
+	true,
+#ifdef BLEND
+	true,	
+#endif
+#ifdef MAX
+	true
+#endif
+};
+
+static const bool formatConvertibility[MaxFormats][MaxFormats] =
+{
+	// blp   jpeg   tga    png    mdl    mdx,   blend  3ds
+	{
+		true,
+#ifdef JPEG
+		true,
+#endif
+#ifdef TGA
+		true,
+#endif
+#ifdef PNG
+		true,
+#endif
+		false,
+		false,
+#ifdef BLEND
+		false
+#endif
+#ifdef MAX
+		,false
+#endif
+	},
+#ifdef JPEG
+	{
+		true,
+#ifdef JPEG
+		true,
+#endif
+#ifdef TGA
+		true,
+#endif
+#ifdef PNG
+		true,
+#endif
+		false,
+		false,
+#ifdef BLEND
+		false
+#endif
+#ifdef MAX
+		,false
+#endif
+	},
+#endif
+#ifdef TGA
+	{
+		true,
+#ifdef JPEG
+		true,
+#endif
+#ifdef TGA
+		true,
+#endif
+#ifdef PNG
+		true,
+#endif
+		false,
+		false,
+#ifdef BLEND
+		false
+#endif
+#ifdef MAX
+		,false
+#endif
+	},
+#endif
+#ifdef PNG
+	{
+		true,
+#ifdef JPEG
+		true,
+#endif
+#ifdef TGA
+		true,
+#endif
+#ifdef PNG
+		true,
+#endif
+		false,
+		false,
+#ifdef BLEND
+		false
+#endif
+#ifdef MAX
+		,false
+#endif
+	},
+#endif
+	// mdl
+	{
+		false,
+#ifdef JPEG
+		false,
+#endif
+#ifdef TGA
+		false,
+#endif
+#ifdef PNG
+		false,
+#endif
+		true,
+		true,
+#ifdef BLEND
+		true
+#endif
+#ifdef MAX
+		,true
+#endif
+	},
+	// mdx
+	{
+		false,
+#ifdef JPEG
+		false,
+#endif
+#ifdef TGA
+		false,
+#endif
+#ifdef PNG
+		false,
+#endif
+		true,
+		true,
+#ifdef BLEND
+		true
+#endif
+#ifdef MAX
+		,true
+#endif
+	},
+#ifdef BLEND
+	{
+		false,
+#ifdef JPEG
+		false,
+#endif
+#ifdef TGA
+		false,
+#endif
+#ifdef PNG
+		false,
+#endif
+		true,
+		true,
+#ifdef BLEND
+		true
+#endif
+#ifdef MAX
+		,true
+#endif
+	}
+#endif
+#ifdef MAX
+	,{
+		false,
+#ifdef JPEG
+		false,
+#endif
+#ifdef TGA
+		false,
+#endif
+#ifdef PNG
+		false,
+#endif
+		true,
+		true,
+#ifdef BLEND
+		true
+#endif
+#ifdef MAX
+		,true
+#endif
+	}
+#endif
+};
+
+static inline std::string getFormatExpression(enum Format format)
+{
+	return formatExpression[format];
+}
+
+static inline enum Format getFormatByExpression(const char *formatString)
+{
+	for (int i = 0; i < MaxFormats; ++i)
 	{
 		if (strcmp(formatString, formatExpression[i]) == 0)
-			return true;
+			return Format(i);
 	}
 	
-	return false;
+	return InvalidFormat;
+}
+
+static inline std::string getFormatExtension(enum Format format)
+{
+	return formatExtension[format];
+}
+
+static inline bool isFormatBinary(enum Format format)
+{
+	return formatIsBinary[format];
+}
+
+static inline bool checkFormatConvertibility(enum Format format0, enum Format format1)
+{
+	return formatConvertibility[format0][format1];
 }
 
 int main(int argc, char *argv[])
@@ -80,8 +352,8 @@ int main(int argc, char *argv[])
 		{0, 0, 0, 0}
 	};
 	
-	std::string optionIformat;
-	std::string optionOformat;
+	enum Format optionIformat = InvalidFormat;
+	enum Format optionOformat = InvalidFormat;
 	std::list<std::string> optionFiles;
 	int optionShortcut;
 	
@@ -127,42 +399,28 @@ int main(int argc, char *argv[])
 			
 			case 'i':
 			{
-				if (!checkFormatString(optarg))
+				if (getFormatByExpression(optarg) == InvalidFormat)
 				{
 					fprintf(stderr, _("Invalid format \"%s\".\n"), optarg);
 					
 					return EXIT_FAILURE;
 				}
 				
-				if (optionOformat == optarg)
-				{
-					std::cerr << _("Input and output formats are equal.") << std::endl;
-							    
-					return EXIT_FAILURE;
-				}
-				
-				optionIformat = optarg;
+				optionIformat = getFormatByExpression(optarg);
 				
 				break;
 			}
 			
 			case 'o':
 			{
-				if (!checkFormatString(optarg))
+				if (getFormatByExpression(optarg) == InvalidFormat)
 				{
 					fprintf(stderr, _("Invalid format \"%s\".\n"), optarg);
 					
 					return EXIT_FAILURE;
 				}
 				
-				if (optionIformat == optarg)
-				{
-					std::cerr << _("Input and output formats are equal.") << std::endl;
-							    
-					return EXIT_FAILURE;
-				}
-				
-				optionOformat = optarg;
+				optionOformat = getFormatByExpression(optarg);
 				
 				break;
 			}
@@ -182,16 +440,23 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	if (optionIformat.empty())
+	if (optionIformat == InvalidFormat)
 	{
 		std::cerr << _("Input format was not defined.") << std::endl;
 		
 		return EXIT_FAILURE;
 	}
 	
-	if (optionOformat.empty())
+	if (optionOformat == InvalidFormat)
 	{
 		std::cerr << _("Output format was not defined.") << std::endl;
+		
+		return EXIT_FAILURE;
+	}
+	
+	if (!checkFormatConvertibility(optionIformat, optionOformat))
+	{
+		fprintf(stderr, _("Format \"%s\" can not be converted into format \"%s\"."), getFormatExpression(optionIformat).c_str(), getFormatExpression(optionOformat).c_str());
 		
 		return EXIT_FAILURE;
 	}
@@ -210,21 +475,12 @@ int main(int argc, char *argv[])
 		
 		std::ios_base::openmode openMode = std::ifstream::in;
 		
-		if (optionIformat == "mdx"
-		    
-#ifdef BLEND
-		|| optionIformat == "blend"
-#endif
-		
-		)
-		{
-			std::cout << "Is binary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+		if (isFormatBinary(optionIformat))
 			openMode |= std::ifstream::binary;
-		}
 		
-		std::fstream fstream((*iterator).c_str(), openMode);
+		std::ifstream ifstream((*iterator).c_str(), openMode);
 		
-		if (!fstream)
+		if (!ifstream)
 		{
 			fprintf(stderr, _("Error while opening file \"%s\". Continuing with next one.\n"), (*iterator).c_str());
 			
@@ -232,27 +488,78 @@ int main(int argc, char *argv[])
 		}
 		
 		class mdlx::Mdlx mdlx;
+		class blp::Blp blp;
 		
 		try
 		{
-			if (optionIformat == "mdx")
+			switch (optionIformat)
 			{
-				mdlx::long32 bytes = mdlx.readMdx(fstream);
-				printf(_("Read MDX file successfully. %d Bytes.\n"), bytes);
-			}
-			else if (optionIformat == "mdl")
-				mdlx.readMdl(fstream);
-
-#ifdef BLEND
-			else if (optionIformat == "blend")
-				mdlx.readBlend(fstream);
+				case Blp:
+				{
+					blp::dword bytes = blp.readBlp(ifstream);
+					printf(_("Read BLP file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}		
+#ifdef JPEG
+				case Jpeg:
+				{
+					blp::dword bytes = blp.readJpeg(ifstream);
+					printf(_("Read JPEG file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
 #endif
-			
-#ifdef MAX
-			else if (optionIformat == "3ds")
-				mdlx.read3ds(fstream);
+#ifdef TGA
+				case Tga:
+				{
+					blp::dword bytes = blp.readTga(ifstream);
+					printf(_("Read TGA file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
 #endif
-			
+#ifdef PNG
+				case Png:
+				{
+					blp::dword bytes = blp.readPng(ifstream);
+					printf(_("Read PNG file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
+#endif
+				case Mdl:
+					mdlx.readMdl(ifstream);
+					std::cout << _("Read MDL file successfully.") << std::endl;
+					
+					break;
+				
+				case Mdx:
+				{
+					mdlx::long32 bytes = mdlx.readMdx(ifstream);
+					printf(_("Read MDX file successfully. %d Bytes.\n"), bytes);
+					
+					break;
+				}
+#ifdef BLEND					
+				case Blend:
+				{
+					mdlx::long32 bytes = mdlx.readBlend(ifstream);
+					printf(_("Read Blender file successfully. %d Bytes.\n"), bytes);
+					
+					break;
+				}
+#endif
+#ifdef MAX					
+				case Max:
+				{
+					mdlx::long32 bytes = mdlx.readMax(ifstream);
+					printf(_("Read 3ds Max file successfully. %d Bytes.\n"), bytes);
+					
+					break;
+				}
+#endif			
+			}			
 		}
 		catch (class Exception &exception)
 		{
@@ -262,36 +569,14 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		
-		fstream.close();
+		ifstream.close();
 		
-		openMode = std::ifstream::out;
-		std::string extension;
+		openMode = std::ofstream::out;
 		
-		if (optionOformat == "mdx")
-		{
-			openMode |= std::ifstream::binary;
-			extension = ".mdx";
-		}
-		else if (optionOformat == "mdl")
-		{
-			extension = ".mdl";
-		}
-
-#ifdef BLEND
-		else if (optionOformat == "blend")
-		{
-			openMode |= std::ifstream::binary;
-			extension = ".blend";
-		}
-#endif
+		if (isFormatBinary(optionOformat))
+			openMode |= std::ofstream::binary;
 		
-#ifdef MAX
-		else if (optionOformat == "3ds")
-		{
-			extension = ".3ds";
-		}
-#endif
-		
+		std::string extension = getFormatExtension(optionOformat);
 		std::string filePath = *iterator;
 		std::string::size_type index = filePath.find_last_of('.');
 		
@@ -300,9 +585,9 @@ int main(int argc, char *argv[])
 			filePath.erase(index);
 		
 		filePath += extension;
-		fstream.open(filePath.c_str(), openMode);
+		std::ofstream ofstream(filePath.c_str(), openMode);
 		
-		if (!fstream)
+		if (!ofstream)
 		{
 			fprintf(stderr, _("Error while opening file \"%s\". Continuing with next one.\n"), filePath.c_str());
 			
@@ -311,23 +596,73 @@ int main(int argc, char *argv[])
 		
 		try
 		{
-			if (optionOformat == "mdx")
+			
+			switch (optionOformat)
 			{
-				mdlx::long32 bytes = mdlx.writeMdx(fstream);
-				printf(_("Wrote MDX file successfully. %d Bytes.\n"), bytes);
+				case Blp:
+				{
+					blp::dword bytes = blp.writeBlp(ofstream);
+					printf(_("Wrote BLP file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
+#ifdef JPEG					
+				case Jpeg:
+				{
+					blp::dword bytes = blp.writeJpeg(ofstream);
+					printf(_("Wrote JPEG file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
+#endif
+#ifdef TGA					
+				case Tga:
+				{
+					blp::dword bytes = blp.writeTga(ofstream);
+					printf(_("Wrote TGA file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
+#endif
+#ifdef PNG					
+				case Png:
+				{
+					blp::dword bytes = blp.writePng(ofstream);
+					printf(_("Wrote PNG file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
+#endif				
+				case Mdl:
+					mdlx.writeMdl(ofstream);
+					std::cout << _("Wrote MDL file successfully.") << std::endl;
+					
+					break;
+				
+				case Mdx:
+					mdlx::long32 bytes = mdlx.writeMdx(ofstream);
+					printf(_("Wrote MDX file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+#ifdef BLEND					
+				case Blend:
+				{
+					mdlx::long32 bytes = mdlx.writeBlend(ofstream);
+					printf(_("Wrote Blender file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
+#endif
+#ifdef MAX					
+				case Max:
+				{
+					mdlx::long32 bytes = mdlx.writeMax(ofstream);
+					printf(_("Wrote 3ds Max file successfully. %d Bytes.\n"), bytes);
+				
+					break;
+				}
+#endif
 			}
-			else if (optionOformat == "mdl")
-				mdlx.writeMdl(fstream);
-
-#ifdef BLEND
-			else if (optionOformat == "blend")
-				mdlx.writeBlend(fstream);
-#endif
-
-#ifdef MAX
-			else if (optionOformat == "3ds")
-				mdlx.write3ds(fstream);
-#endif
 		}
 		catch (class Exception &exception)
 		{
@@ -337,7 +672,7 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		
-		fstream.close();
+		ofstream.close();
 	}
 
 	return EXIT_SUCCESS;

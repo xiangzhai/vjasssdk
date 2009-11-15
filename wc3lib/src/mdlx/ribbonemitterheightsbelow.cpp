@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ribbonemitterheightsbelow.hpp"
-#include "ribbonemitterheightbelow.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitterHeightsBelow::RibbonEmitterHeightsBelow(class RibbonEmitter *ribbonEmitter) : MdxBlock("KRHB"), m_ribbonEmitter(ribbonEmitter)
+RibbonEmitterHeightsBelow::RibbonEmitterHeightsBelow(class RibbonEmitter *ribbonEmitter) : MdxAlphas("KRHB"), m_ribbonEmitter(ribbonEmitter)
 {
 }
 
@@ -35,24 +34,12 @@ RibbonEmitterHeightsBelow::~RibbonEmitterHeightsBelow()
 {
 }
 
-void RibbonEmitterHeightsBelow::readMdl(std::fstream &fstream) throw (class Exception)
-{
-	for (std::list<class RibbonEmitterHeightBelow*>::iterator iterator = this->m_heights.begin(); iterator != this->m_heights.end(); ++iterator)
-		delete *iterator;
-}
-
-void RibbonEmitterHeightsBelow::writeMdl(std::fstream &fstream) throw (class Exception)
+void RibbonEmitterHeightsBelow::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-long32 RibbonEmitterHeightsBelow::readMdx(std::fstream &fstream) throw (class Exception)
+void RibbonEmitterHeightsBelow::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-	return 0;
-}
-
-long32 RibbonEmitterHeightsBelow::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
 }
 
 }

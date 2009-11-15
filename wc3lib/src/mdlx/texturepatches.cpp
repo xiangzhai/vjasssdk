@@ -41,23 +41,23 @@ TexturePatches::~TexturePatches()
 		delete *iterator;
 }
 
-void TexturePatches::readMdl(std::fstream &fstream) throw (class Exception)
+void TexturePatches::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TexturePatches::writeMdl(std::fstream &fstream) throw (class Exception)
+void TexturePatches::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 TexturePatches::readMdx(std::fstream &fstream) throw (class Exception)
+long32 TexturePatches::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
+	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 ntvrts = 0;
-	fstream.read(reinterpret_cast<char*>(&ntvrts), sizeof(ntvrts));
+	istream.read(reinterpret_cast<char*>(&ntvrts), sizeof(ntvrts));
 	
 	if (ntvrts <= 0)
 	{
@@ -67,13 +67,13 @@ long32 TexturePatches::readMdx(std::fstream &fstream) throw (class Exception)
 		throw Exception(message);
 	}
 	
-	bytes += fstream.gcount();
+	bytes += istream.gcount();
 	std::cout << "Before " << ntvrts << " texture patches." << std::endl;
 	
 	for ( ; ntvrts > 0; --ntvrts)
 	{
 		class TexturePatch *texturePatch = new TexturePatch(this);
-		bytes += texturePatch->readMdx(fstream);
+		bytes += texturePatch->readMdx(istream);
 		this->m_texturePatches.push_back(texturePatch);
 	}
 	
@@ -82,9 +82,12 @@ long32 TexturePatches::readMdx(std::fstream &fstream) throw (class Exception)
 	return bytes;
 }
 
-long32 TexturePatches::writeMdx(std::fstream &fstream) throw (class Exception)
+long32 TexturePatches::writeMdx(std::ostream &ostream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(fstream);
+	long32 bytes = MdxBlock::writeMdx(ostream);
+	
+	if (bytes == 0)
+		return 0;
 	
 	return bytes;
 }

@@ -25,6 +25,10 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+Visibility1::Visibility1(class Visibility1s *visibilities) : MdxAlpha(visibilities)
+{
+}
 
 }
 

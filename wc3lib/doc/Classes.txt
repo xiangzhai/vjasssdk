@@ -128,11 +128,6 @@ MdxAlphas
 MdxScaling
 MdxScalings
 
-
-
-MdxTranslation
-MdxTranslations
-
 3. Map property classes
 
 

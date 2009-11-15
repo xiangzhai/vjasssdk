@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "scaling0.hpp"
-#include "scaling0s.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scaling0::Scaling0(class Scaling0s *scalings) : m_scalings(scalings)
+Scaling0::Scaling0(class Scaling0s *scalings) : MdxScaling(scalings)
 {
 }
 
@@ -35,47 +34,12 @@ Scaling0::~Scaling0()
 {
 }
 
-void Scaling0::readMdl(std::fstream &fstream) throw (class Exception)
+void Scaling0::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Scaling0::writeMdl(std::fstream &fstream) throw (class Exception)
+void Scaling0::writeMdl(std::ostream &ostream) throw (class Exception)
 {
-}
-
-long32 Scaling0::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	fstream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += fstream.gcount();
-	fstream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
-	bytes += fstream.gcount();
-	
-	if (this->m_scalings->lineType() > 1)
-	{
-		fstream.read(reinterpret_cast<char*>(&this->m_inTanX), sizeof(this->m_inTanX));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_inTanY), sizeof(this->m_inTanY));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_inTanZ), sizeof(this->m_inTanZ));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_outTanX), sizeof(this->m_outTanX));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_outTanY), sizeof(this->m_outTanY));
-		bytes += fstream.gcount();
-		fstream.read(reinterpret_cast<char*>(&this->m_outTanZ), sizeof(this->m_outTanZ));
-		bytes += fstream.gcount();
-	}
-	
-	return bytes;
-}
-
-long32 Scaling0::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
 }
 
 }

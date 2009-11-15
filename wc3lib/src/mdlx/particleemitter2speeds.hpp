@@ -40,10 +40,12 @@ class ParticleEmitter2Speeds : public MdxAlphas
 		
 		class ParticleEmitter2* particleEmitter() const;
 		
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 		
 	private:
+		virtual class MdxAlpha* createNewMember();
+		
 		class ParticleEmitter2 *m_particleEmitter;
 };
 
