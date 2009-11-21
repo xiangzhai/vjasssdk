@@ -1,0 +1,168 @@
+2009-11-19 Tamino Dauth <tamino@cdauth.de>
+* DONE: Add //! import zinc <filepath> and //! import vjass <filepath> support.
+* Add Zinc support.
+* Add //! zinc and //! endzinc support.
+
+2009-11-09 Tamino Dauth <tamino@cdauth.de>
+* Undocumented objects should have their own page.
+* Maybe document comments shouldn't be listed on index page.
+* Fix member parsing.
+* vjassdoc executable should only be created by using file main.cpp and be linked with vjassdoclib.
+* Improve GUI (use default menus and actions).
+
+2009-11-04 Tamino Dauth <tamino@cdauth.de>
+* Add //! externalblock and //! endexternalblock support (simply add a new class called ExternalBlock).
+* Missing cmake FindSqlite module.
+
+2009-10-31 Tamino Dauth <tamino@cdauth.de>
+* Add function prototype support to class Compiler. You'll need to create globals for each used argument type of those calls. Set these globals before trigger evaluation/execution and create locals in prototype function which has no arguments. These locals should get the global's values immediatly and uses as arguments (since you could use TriggerSleepAction calls in executions and the globals are used by all those prototype calls).
+* Add statement classes (like Call, Loop, If).
+
+2009-10-11 Tamino Dauth <tamino@cdauth.de>
+* DONE: Keyword support textmacro_once.
+* Add glibc requirement to cmake files (because of getopt usage).
+* Import and database paths should be separated by : character.
+* Add static if support.
+* Add importance tree special page for source files.
+
+2009-10-10 Tamino Dauth <tamino@cdauth.de>
+* DONE: Use GNU command line parser library (getopt).
+* DONE: Add new keywords support (optional library requirement, run textmacro optional).
+
+2009-09-11 Tamino Dauth <tamino@cdauth.de>
+* Check member initialization of Object's child classes.
+
+2009-09-07 Tamino Dauth <tamino@cdauth.de>
+* Text macro instance comparator does not work correctly.
+* FIXED: Methods table is not created in database.
+* FIXED: Functions table is not created in database.
+* FIXED: Function interfaces table is not created in database.
+* FIXED: Implementations table is empty.
+* FIXED: Hooks table is not created in database.
+* FIXED: Interfaces table is empty.
+* FIXED: Struct values are null in table.
+* FIXED: Modules table is empty.
+* FIXED: Scopes table is empty.
+
+2009-08-03 Tamino Dauth <tamino@cdauth.de>
+* Improve auto completion.
+
+2009-07-18 Tamino Dauth <tamino@cdauth.de>
+* Globals without documentation comment, library and scope do not have -1 values in database. They have 4294967295. Can't there be negative values? Library requirement can be -1.
+* FIXED: Structs aren't written correctly into database (all values beside identifier are NULL).
+
+2009-07-17 Tamino Dauth <tamino@cdauth.de>
+* FIXED: Database object initialization won't work because all objects have type Object and not their custom class types!
+* DONE: Method getToken of class File should be moved to file utilities.cpp.
+
+2009-07-15 Tamino Dauth <tamino@cdatuh.de>
+* Line breaks should be added to documentation comments.
+
+2009-07-08 Tamino Dauth <tamino@cdauth.de>
+* DONE: @keywords search should be moved to documentation intialization.
+* Treat block comment exception /**/ when searching block documentation comments.
+* DONE: Add hook support.
+
+2009-06-21 Tamino Dauth <tamino@cdauth.de>
+* FIXED: Structs and parameters aren't written correctly into databases.
+* Database loading vector of each object should be saved for special database initialization.
+
+2009-06-20 Tamino Dauth <tamino@cdauth.de>
+* Fix special page creation of requirement page.
+
+2009-06-17 Tamino Dauth <tamino@cdauth.de>
+* DONE: Support enhanced struct space (struct structname[space]).
+* Check array struct support (struct structname extends array [ 20000] supported?).
+* DONE: Add block comment support /* */.
+
+2009-05-17 Tamino Dauth <tamino@cdauth.de>
+* FIXED: Text macro space is not parsable, arguments can be everywhere.
+
+2009-05-16 Tamino Dauth <tamino@cdauth.de>
+* Why are iterators in for loops which are using the list m_parameters of class FunctionInterface constant?!
+* FIXED: Parameter pages aren't created.
+* Wrong database object identifiers.
+* Fix id handling (column vectors) when loading databases.
+
+2009-05-14 Tamino Dauth <tamino@cdauth.de>
+* Check out text macro space parsing! Program seems to crash.
+
+2009-05-03 Tamino Dauth <tamino@cdauth.de>
+* Check out the Parameter class!
+
+2009-05-01 Tamino Dauth <tamino@cdauth.de>
+* DONE: Add static init methods to all Object child classes which connecting the static string members.
+* DISCARDED: Add class Requirement which represents a single library requirement.
+
+2009-04-29 Tamino Dauth <tamino@cdauth.de>
+* Output language should be selectable.
+
+2009-04-17 Tamino Dauth <tamino@cdauth.de>
+* DONE: Improve operator support for expressions like method operator bla (thanks to Vexorian who discovered and reported this bug).
+* DONE: Add maybe <pre> and <code> tags to source files (thanks to Vexorian who made the <pre> suggestion).
+
+2009-04-15 Tamino Dauth <tamino@cdauth.de>
+* DONE: Add module support.
+* Add thistype and super support when searching for members or methods.
+* DONE: Show implemented modules on struct or interface pages.
+
+Notes:
+* Parser is not created while parsing all files (note that you have to separate the parsing process into a single method).
+* Do not use 0 for string arguments! Probably it will crash the program.
+
+0.3:
+* DONE: Object lines should link to created code files and their lines.
+* There should be an inheritance tree of all interfaces and structs.
+* There should be a dependencies tree of all libraries.
+
+Old todo list Tamino Dauth <tamino@cdauth.de>:
+* Das Schlüsselwort keyword muss noch richtig unterstützt werden.
+* Die alphabetische Sortierung erkennt die Operatormethode, sortiert aber nur ab und zu.
+* Wenn das Zeilenende eines Dokuments das Zeilenende eines anderen Betriebssystems hat wie zum Beispiel von Mac oder Windows, wird das Ende der Zeile nicht erkannt.
+* Manche Textmakroinstanzen haben keine Argumente.
+* public-Funktionen in Bibliotheken werden eventuell nicht als solche erkannt.
+* Die Ausdrücke der File-Klasse sollten so sortiert werden, dass die Ausdrücke, die am Anfang der Zeile stehen können zuerst überprüft werden. Dabei muss gewährleistet bleiben, dass man zwischen Jass- und vJass-Code trennen kann.
+* Das delegate-Schlüsselwort muss unterstützt werden. Es entspricht einer Eigenschaft einer Struktur.
+* Strukturen können nun auch als globales Array definiert werden (mit Hilfe des Ausdrucks "extends array"). Hier gilt es außerdem zu beachten, dass z.B. Werte wie variablenName[0] nicht unbedingt Eigenschaften oder globale Variablen, sondern eben auch solche Strukturen sein können.
+* In Unions können Return-Methoden nicht einfach überladen werden.
+* In Unions können sich keine Eigenschaften mit eigenem Konstruktor befinden.
+
+New todo list Tamino Dauth <tamino@cdauth.de>:
+* FIXED: currentSourceFile should be a property of the Parser class instead of the File class.
+* FIXED: Add an expression postfix to all local variables which are representing a start property identifier.
+* FIXED: In some cases the file class handles source code as a syntax checker. Remove all of these code parts whenever it is possible. You should try to disable them first by using a preprocessor for testing if there will be caused new bugs by removing them.
+* FIXED: Fix the help output formatting.
+* DONE: Implement option combination ability (-avxdf).
+* DONE: Link the gettext library (libintl.so)
+* FIXED: The add method of the Parser class crashes the program (insertations into lists).
+* FIXED: DocComment list won't be written into the file.
+* FIXED: Shown time is too high!
+* DONE: Check the parsed globals!
+* Parser::List should be able to be combined (0x02 etc.) that the search algorithm could get more than one list in each call.
+* DONE: Each class should handle its searchings and output.
+* DONE: Do not use the class get methods in class methods.
+* FIXED: First and second lines do not differ.
+* FIXED: Documentation comments have to wrong titles (title is shown at twice).
+* Revise the Makefile.
+* FIXED: Parameterauflistung (siehe Methoden).
+* FIXED: DocComments can not be in the same line as it text macro instance (crashes the program).
+* FIXED: Public constant members do not have the right interface or struct.
+* FIXED: Use UTF-8 encoding.
+* DONE: Parser's search object method should make more comparisons if there can be more than one object with the searched identifier (for example methods).
+* Verbose mode needs enormous memory!!!
+* DONE: Check scopes.
+* FIXED: There always is used the type of the last parameter for all other parameters, too.
+* FIXED: If the identifier of some object contains a " char there will be a syntax error when creating the database.
+* FIXED: public static constant members won't be parsed as constant.
+* FIXED: The value of a global can be a function or method call with literal arguments.
+* DONE: Support for the stub keyword is required.
+* Values should be checked if they contain a . character because values could look like this: structorinterfacename.methodname/structorinterfacename.membername/functioninterfacename.structorinterface.functionormethod
+* DONE: Add documentation comment keyword @state.
+* DONE: Documentation keywords should be usable in whole phrases like this: /// This function has the parameters: @param paramname1, @param paramname2.
+* Add documentation comment keywords for all kinds of objects and link them to their pages: @functioninterface functioninterfacename etc.
+* FIXED: Program crashes when extension interface of a struct is linked on its page.
+* HTML file output language should be selectable.
+* . separator should by detected by findValue().
+* Text macros and text macro instances won't be listed on library and probably not on scope pages, too.
+* DONE: Add support for compiler flag DATABASE.
+* DONE: Add static member function bool supportsDatabaseCreation() to class Vjassdoc.

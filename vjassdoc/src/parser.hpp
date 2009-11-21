@@ -123,6 +123,7 @@ class Parser
 		~Parser();
 		void createInheritanceListPage();
 		void createRequirementListPage();
+		void createUndocumentatedListPage();
 		void sortAlphabetically();
 		void createHtmlFiles();
 		void showSyntaxErrors();

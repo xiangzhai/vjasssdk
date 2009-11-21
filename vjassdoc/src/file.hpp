@@ -105,11 +105,17 @@ class File
 			ArrayExpression,
 			//vJass none-start-line expressions
 			ImportExpression,
+			OptionZincExpression,
+			OptionVjassExpression,
 			DovjassinitExpression,
 			InjectExpression,
 			EndinjectExpression,
 			NovjassExpression,
 			EndnovjassExpression,
+			ZincExpression,
+			EndzincExpression,
+			ExternalblockExpression,
+			EndexternalblockExpression,
 			LoaddataExpression,
 			ExternalExpression,
 			TextmacroExpression,
@@ -137,15 +143,23 @@ class File
 		
 		File();
 		/**
-		  * @return Returns number of parsed lines.
+		* @return Returns number of parsed lines.
 		*/
 		std::string::size_type parse(class Parser *parser, std::ifstream &ifstream);
 		
 	private:
 		File::Expression getFirstLineExpression(std::string &line, std::string::size_type &index);
+		/**
+		* Truncates all comments and documentation comments (including block comments) from line @param line, starting at position @param index.
+		*/
 		void truncateComments(std::string &line, std::string::size_type index);
 		void getDocComment(const std::string &line, std::string::size_type index);
 		void getBlockDocComment(const std::string &line);
+		/**
+		* Clears the current documentation comment. Note that documentation comments are object related.
+		* If you add a new parsed object to parser lists and you use the current documentation comment it should be cleared afterwards that it won't be
+		* added to the next parsed object, too.
+		*/
 		void clearDocComment();
 		void getKeyword(const std::string &line, std::string::size_type &index, bool isPrivate);
 		void getKey(const std::string &line, std::string::size_type &index, bool isPrivate);
@@ -164,12 +178,23 @@ class File
 		void getTextMacro(const std::string &line, std::string::size_type &index, bool isOnce);
 		void getTextMacroInstance(const std::string &line, std::string::size_type &index);
 		std::list<std::string>* getLibraryRequirement(const std::string &line, std::string::size_type &index, std::list<bool> *optionalRequirement) const;
+		/**
+		* @return Returns true if current line is in vJass block. Possible vJass blocks are:
+		* <ul>
+		* <li>Libraries</li>
+		* <li>Scopes</li>
+		* <li>Interfaces</li>
+		* <li>Structs</li>
+		* <li>Modules</li>
+		* </ul>
+		*/
 		bool isInVjassBlock() const;
 		class Object* getCurrentContainer() const;
 
 		class Parser *m_parser;
 		File::Expression m_notRequiredSpace;
 		bool m_isInGlobals;
+		bool m_isInTextMacro;
 		bool m_isInLibrary;
 		bool m_isInScope;
 		bool m_isInInterface;
@@ -180,6 +205,7 @@ class File
 
 		std::string::size_type m_currentLine;
 		class DocComment *m_currentDocComment;
+		class TextMacro *m_currentTextMacro;
 		class Library *m_currentLibrary;
 		class Scope *m_currentScope;
 		//containers

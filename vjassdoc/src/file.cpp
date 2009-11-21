@@ -25,6 +25,8 @@
 #include <sstream>
 #include <list>
 
+#include <boost/format.hpp>
+
 #include "file.hpp"
 #include "vjassdoc.hpp"
 #include "objects.hpp"
@@ -96,11 +98,15 @@ const char *File::expressionText[] =
 	"array",
 	//vJass none-start-line expressions
 	"import",
+	"zinc",
+	"vjass",
 	"dovjassinit",
 	"inject",
 	"endinject",
 	"novjass",
 	"endnovjass",
+	"zinc",
+	"endzinc",
 	"loaddata",
 	"external",
 	"textmacro",
@@ -120,7 +126,7 @@ const char *File::expressionText[] =
 	"evaluate"
 };
 
-File::File() : m_parser(0), m_notRequiredSpace(File::InvalidExpression), m_isInGlobals(false), m_isInLibrary(false), m_isInScope(false), m_isInInterface(false), m_isInStruct(false), m_isInModule(false), m_isInBlockComment(false), m_isInBlockDocComment(false), m_currentLine(0), m_currentDocComment(0), m_currentLibrary(0), m_currentScope(0), m_currentInterface(0), m_currentStruct(0), m_currentModule(0), m_currentFunction(0), m_gotDocComment(false)
+File::File() : m_parser(0), m_notRequiredSpace(File::InvalidExpression), m_isInGlobals(false), m_isInTextMacro(false), m_isInLibrary(false), m_isInScope(false), m_isInInterface(false), m_isInStruct(false), m_isInModule(false), m_isInBlockComment(false), m_isInBlockDocComment(false), m_currentLine(0), m_currentDocComment(0), m_currentTextMacro(0),  m_currentLibrary(0), m_currentScope(0), m_currentInterface(0), m_currentStruct(0), m_currentModule(0), m_currentFunction(0), m_gotDocComment(false)
 {
 }
 
@@ -137,7 +143,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 		++this->m_currentLine;
 		
 		if (Vjassdoc::optionVerbose())
-			printf(_("Reading line %d.\n"), this->m_currentLine);
+			std::cout << boost::format(_("Reading line %1%.\n")) % this->m_currentLine << std::endl;;
 
 		index = 0; //reset index!
 		expression = this->getFirstLineExpression(line, index);
@@ -150,6 +156,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 			//optional
 			case DocCommentExpression:
 				this->getDocComment(line, index);
+				
 				break;
 
 			case CommentExpression:
@@ -218,11 +225,13 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 			case KeywordExpression:
 				this->truncateComments(line, index);
 				this->getKeyword(line, index, false);
+				
 				break;
 
 			case KeyExpression:
 				this->truncateComments(line, index);
 				this->getKey(line, index, false);
+				
 				break;
 
 			case PreprocessorExpression:
@@ -232,7 +241,13 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 				
 				if (preprocessor == expressionText[ImportExpression])
 				{
-					std::string filePath = getToken(line, index, true);
+					std::string filePath = getToken(line, index);
+					
+					if (filePath == expressionText[File::OptionVjassExpression] || filePath == expressionText[File::OptionZincExpression])
+						filePath = getToken(line, index, true);
+					else if (index < line.size())
+						filePath += line.substr(index);
+					
 					filePath = filePath.substr(1, filePath.length() - 2);
 					std::string openPath;
 					std::ifstream fin;
@@ -270,7 +285,8 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 							fin.close(); /// @todo Just close if good?
 						else
 						{
-							fprintf(stderr, _("Was unable to import file %s.\n"), filePath.c_str());
+							std::cerr << boost::format(_("Was unable to import file %1%.\n")) % filePath << std::endl;;
+							
 							continue;
 						}
 					}
@@ -298,17 +314,23 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 					this->getTextMacro(line, index, true);
 				else if (preprocessor == expressionText[RuntextmacroExpression])
 					this->getTextMacroInstance(line, index);
-				//NOTE Syntax checker!
-				else if (Vjassdoc::optionSyntax() && preprocessor != expressionText[DovjassinitExpression] && preprocessor != expressionText[InjectExpression] && preprocessor != expressionText[EndinjectExpression] && preprocessor != expressionText[NovjassExpression] && preprocessor != expressionText[EndnovjassExpression] && preprocessor != expressionText[LoaddataExpression] && preprocessor != expressionText[ExternalExpression])
+				else if (preprocessor == File::ExternalblockExpression)
 				{
-					char message[255];
+					/// @todo Add classes ExternalBlock and External?
+					this->clearDocComment();
+					this->m_notRequiredSpace = File::ExternalblockExpression;
+				}
+				//NOTE Syntax checker!
+				else if (Vjassdoc::optionSyntax() && preprocessor != expressionText[DovjassinitExpression] && preprocessor != expressionText[InjectExpression] && preprocessor != expressionText[EndinjectExpression] && preprocessor != expressionText[NovjassExpression] && preprocessor != expressionText[EndnovjassExpression] && preprocessor != expressionText[ZincExpression] && preprocessor != expressionText[EndzincExpression] && preprocessor != expressionText[LoaddataExpression] && preprocessor != expressionText[ExternalExpression])
+				{
+					std::ostringstream osstream;
 
 					if (!preprocessor.empty())
-						sprintf(message, _("Unknown preprocessor statement: \"%s\"."), preprocessor.c_str());
+						osstream << boost::str(boost::format(_("Unknown preprocessor statement: \"%1%\".")) % preprocessor);
 					else
-						sprintf(message, _("Missing preprocessor statement."));
+						osstream << _("Missing preprocessor statement.");
 
-					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, message));
+					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, osstream.str()));
 				}
 				
 				break;
@@ -322,11 +344,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 				std::string identifier = getToken(line, index);
 
 				if (Vjassdoc::optionSyntax() && identifier.empty())
-				{
-					char message[255];
-					sprintf(message, _("Missing type identifier."));
-					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, message));
-				}
+					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, _("Missing type identifier.")));
 
 				std::string parentTypeIdentifier;
 				parentTypeIdentifier = getToken(line, index);
@@ -334,11 +352,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 				if (parentTypeIdentifier == expressionText[ExtendsExpression])
 					parentTypeIdentifier = getToken(line, index);
 				else if (Vjassdoc::optionSyntax() && !parentTypeIdentifier.empty())
-				{
-					char message[255];
-					sprintf(message, _("Unknown expression: \"%s\". Expected \"extends\"."), parentTypeIdentifier.c_str());
-					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, message));
-				}
+					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, boost::str(boost::format(_("Unknown expression: \"%1%\". Expected \"extends\".")) % parentTypeIdentifier)));
 				
 				std::string size = getToken(line, index);
 				
@@ -353,9 +367,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 
 					if (Vjassdoc::optionSyntax() && start == std::string::npos)
 					{
-						char message[255];
-						sprintf(message, _("Missing \"[\" expression."));
-						this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, message));
+						this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, _("Missing \"[\" expression.")));
 						getSize = false;
 					}
 
@@ -363,9 +375,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 
 					if (Vjassdoc::optionSyntax() && length == std::string::npos)
 					{
-						char message[255];
-						sprintf(message, _("Missing \"]\" expression."));
-						this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, message));
+						this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, _("Missing \"]\" expression.")));
 						getSize = false;
 					}
 
@@ -467,11 +477,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 				token = getToken(line, index);
 
 				if (Vjassdoc::optionSyntax() && token.empty())
-				{
-					char message[256];
-					sprintf(message, _("Missing expression after \"private\" keyword."));
-					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, message));
-				}
+					this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, _("Missing expression after \"private\" keyword.")));
 
 				if (!Vjassdoc::optionPrivate())
 				{
@@ -694,6 +700,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 	this->m_parser = 0;
 	this->m_notRequiredSpace = File::InvalidExpression;
 	this->m_isInGlobals = false;
+	this->m_isInTextMacro = false;
 	this->m_isInLibrary = false;
 	this->m_isInScope = false;
 	this->m_isInInterface = false;
@@ -703,12 +710,15 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 	this->m_isInBlockDocComment = false;
 	this->m_currentLine = 0;
 	this->m_currentDocComment = 0;
+	this->m_currentTextMacro = 0;
 	this->m_currentLibrary = 0;
 	this->m_currentScope = 0;
 	this->m_currentInterface = 0;
 	this->m_currentStruct = 0;
 	this->m_currentModule = 0;
 	this->m_currentFunction = 0;
+	this->m_currentBlockComment.clear();
+	this->m_currentBlockDocComment.clear();
 	this->m_gotDocComment = false;
 	
 	return lines;
@@ -792,10 +802,13 @@ File::Expression File::getFirstLineExpression(std::string &line, std::string::si
 	//Function and text macro blocks won't be parsed
 	if (this->m_notRequiredSpace != File::InvalidExpression)
 	{
+		if (Vjassdoc::optionVerbose())
+			printf(_("Not required space. Reason: %d.\n"), this->m_notRequiredSpace);
+		
+		/// @todo what should we do with tokens 
 		if (
 			(this->m_notRequiredSpace == File::FunctionExpression && token == expressionText[File::EndfunctionExpression]) ||
 			(this->m_notRequiredSpace == File::MethodExpression && token == expressionText[File::EndmethodExpression]) ||
-			(this->m_notRequiredSpace == File::TextmacroExpression && token == expressionText[File::PreprocessorExpression] && getToken(line, index) == expressionText[File::EndtextmacroExpression]) || /// @todo Truncate the //! prefix
 			(this->m_notRequiredSpace == File::ScopeExpression && token == expressionText[File::EndscopeExpression]) ||
 			(this->m_notRequiredSpace == File::InterfaceExpression && token == expressionText[File::EndinterfaceExpression]) ||
 			(this->m_notRequiredSpace == File::StructExpression && token == expressionText[File::EndstructExpression]) ||
@@ -803,20 +816,55 @@ File::Expression File::getFirstLineExpression(std::string &line, std::string::si
 			)
 		{
 			if (Vjassdoc::optionVerbose())
-				printf(_("Not required space. Reason: %d.\n"), this->m_notRequiredSpace);
-
+				std::cout << _("Not required space ends.") << std::endl;
+			
 			this->m_notRequiredSpace = File::InvalidExpression;
 		}
+		else if (token == expressionText[File::PreprocessorExpression])
+		{
+			if (this->m_notRequiredSpace == File::TextmacroExpression)
+			{
+				std::string token = getToken(line, index);
+				
+				if (token == expressionText[File::EndtextmacroExpression])
+				{
+					if (Vjassdoc::optionVerbose())
+						std::cout << _("Not required space ends.") << std::endl;
+					
+					this->m_notRequiredSpace = File::InvalidExpression;
+					this->m_isInTextMacro = false;
+				}
+			
+			}
+			else if (this->m_notRequiredSpace == File::ExternalblockExpression)
+			{
+				std::string token = getToken(line, index);
+				
+				if (token == expressionText[File::EndexternalblockExpression])
+				{
+					if (Vjassdoc::optionVerbose())
+						std::cout << _("Not required space ends.") << std::endl;
+					
+					this->m_notRequiredSpace = File::InvalidExpression;
+				}
+			}
+		}
 		
-		return File::NoExpression; //stop parsing, ignore comments and documentation comments because it is not required space
+		// stopped not required space
+		if (this->m_notRequiredSpace == File::InvalidExpression)
+		{
+			this->truncateComments(line, index);
+		}
+		
+		return File::NoExpression; // stop parsing, ignore comments and documentation comments because it is not required space
 	}
 
-	unsigned int maxExpressions = NothingExpression; //maximum stand-alone vJass expression
+	std::size_t maxExpressions = NothingExpression; //maximum stand-alone vJass expression
 
 	if (Vjassdoc::optionJass())
 		maxExpressions = PreprocessorExpression; // Spart Speicher, da die Schleife nur alle Jass Schlüsselwörter durchläuft.
 	
-	for (unsigned int expression = File::DocCommentExpression; expression < maxExpressions; ++expression)
+	for (std::size_t expression = File::DocCommentExpression; expression < maxExpressions; ++expression)
 	{
 		if (token == expressionText[expression])
 			return File::Expression(expression);
@@ -844,19 +892,15 @@ File::Expression File::getFirstLineExpression(std::string &line, std::string::si
 	if (this->getGlobal(line, index, false, false, false, false, false))
 	{
 		this->clearDocComment();
+		
 		return File::CustomExpression;
 	}
 
-	char message[255];
-	sprintf(message, _("Unknown expression: \"%s\"."), line.substr(index).c_str());
-
 	if (Vjassdoc::optionVerbose())
-		std::cerr << message << std::endl;
+		std::cerr << boost::format(_("Unknown expression: \"%1%\".")) % line.substr(index) << std::endl;
 
 	if (Vjassdoc::optionSyntax())
-	{
-		this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, message));
-	}
+		this->m_parser->add(new SyntaxError(this->m_parser->currentSourceFile(), this->m_currentLine, boost::str(boost::format(_("Unknown expression: \"%1%\".")) % line.substr(index))));
 
 	return File::InvalidExpression;
 }
@@ -1550,7 +1594,8 @@ void File::getTextMacro(const std::string &line, std::string::size_type &index, 
 	//std::cout << "Start text macro " << identifier << std::endl;
 	std::string args = getTextMacroArguments(line, index); //Nicht direkt übergeben, dann stimmt index nicht
 	//std::cout << "With arguments " << args << std::endl;
-	this->m_parser->add(new TextMacro(identifier, this->m_parser->currentSourceFile(), this->m_currentLine, this->m_currentDocComment, isOnce, args));
+	class TextMacro *textMacro = new TextMacro(identifier, this->m_parser->currentSourceFile(), this->m_currentLine, this->m_currentDocComment, isOnce, args);
+	this->m_parser->add(textMacro);
 	
 	if (!Vjassdoc::optionTextmacros())
 	{
@@ -1561,6 +1606,8 @@ void File::getTextMacro(const std::string &line, std::string::size_type &index, 
 	}
 	
 	this->clearDocComment();
+	this->m_isInTextMacro = true;
+	this->m_currentTextMacro = textMacro;
 }
 
 void File::getTextMacroInstance(const std::string &line, std::string::size_type &index)
@@ -1630,7 +1677,7 @@ std::list<std::string>* File::getLibraryRequirement(const std::string &line, std
 
 inline bool File::isInVjassBlock() const
 {
-	return (this->m_isInLibrary || this->m_isInScope || this->m_isInInterface || this->m_isInStruct || this->m_isInModule);
+	return (this->m_isInTextMacro || this->m_isInLibrary || this->m_isInScope || this->m_isInInterface || this->m_isInStruct || this->m_isInModule);
 }
 
 inline class Object* File::getCurrentContainer() const
