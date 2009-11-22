@@ -1,3 +1,17 @@
+2009-11-22 Tamino Dauth <tamino@cdauth.de>
+* Renamed terrain textures.
+
+2009-11-11 Tamino Dauth <tamino@cdauth.de>
+* Added module AStructModule.
+* Added struct ABuff.
+
+2009-11-09 Tamino Dauth <tamino@cdauth.de>
+* Added function PreventSave.
+
+2009-11-07 Tamino Dauth <tamino@cdauth.de>
+* Released Advanced Script Library version 1.0.
+* Improved editor system.
+
 2009-10-29 Tamino Dauth <tamino@cdauth.de>
 * Added various new methods to struct AGroup.
 

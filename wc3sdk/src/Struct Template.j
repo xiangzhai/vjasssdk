@@ -1,29 +1,29 @@
 library A<Struct/Library><Module Name: Core/Objects/Systems><Sub Module Name><Name>
 
+	//text macro calls
+
 	//keywords
 
-globals
-	//public constant globals
-	//public globals
-	//private constant globals
-	//public globals
-endglobals
+	globals
+		//public constant globals
+		//public globals
+		//private constant globals
+		//public globals
+	endglobals
 
-//function interfaces of interface
+	//type definitions
 
-//function interface instances of interface
+	//function interfaces of interface
 
-//interfaces
-interface AInterfaceName
-	//same as in struct definition
-endinterface
+	//interfaces
+	interface AInterfaceName
+		//same as in struct definition
+	endinterface
 
-//function interfaces of struct
+	//function interfaces of struct
 
-//function interface instances of struct
-
-//structs
-struct AStructName
+	//structs
+	struct AStructName
 		//public static constant members
 		//private static constant members
 		//private static dynamic members
@@ -33,6 +33,8 @@ struct AStructName
 		//private dynamic members
 		//private start members
 		//private members
+		
+		//module implementations
 		
 		//dynamic member methods
 		
@@ -59,6 +61,8 @@ struct AStructName
 		
 		//public init method (init all static start members)
 		//Use this instead of onInit if nothing should be initialized if the system is not be used
+		
+		//public cleanUp method (uninit all static members)
 		
 		//public static set and get methods
 		

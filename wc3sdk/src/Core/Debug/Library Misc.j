@@ -22,6 +22,10 @@ library ALibraryCoreDebugMisc requires ALibraryCoreGeneralPlayer
 		debug endloop
 		debug call Cheat("DebugMsg: " + message) //JNGP
 	debug endfunction
+	
+	debug function PrintFunctionError takes string functionName, string message returns nothing
+		debug call Print("Function error in function \"" + functionName + "\": " + message)
+	debug endfunction
 
 	/**
 	* Useful for getting the causing struct and instance of the debug message.
@@ -76,11 +80,6 @@ library ALibraryCoreDebugMisc requires ALibraryCoreGeneralPlayer
 	*/
 	debug function Breakpoint takes nothing returns nothing
 		debug call Cheat("war3err_Break") //JNGP
-	debug endfunction
-
-	/// @todo Should be private, vJass bug.
-	debug function PrintFunctionError takes string functionName, string message returns nothing
-		debug call Print("Function error in function \"" + functionName + "\": " + message)
 	debug endfunction
 
 	/// @todo Should be private, vJass bug.
@@ -148,6 +147,11 @@ library ALibraryCoreDebugMisc requires ALibraryCoreGeneralPlayer
 		//debug return RestoreUnit(cache, missionKey, key, forWhichPlayer, x, y, facing)
 	debug endfunction
 
+	/// @todo Should be private, vJass bug.
+	debug function DebugSetImageRender takes image whichImage, boolean flag returns nothing
+		debug call PrintFunctionError("SetImageRender", "Does not work, use SetImageRenderAlways instead.")
+	debug endfunction
+
 	debug hook Player DebugPlayer
 	debug hook InitGameCache DebugInitGameCache
 	//debug hook DestroyTimer SCOPE_PRIVATEDestroyTimer
@@ -155,6 +159,7 @@ library ALibraryCoreDebugMisc requires ALibraryCoreGeneralPlayer
 	debug hook SetUnitY DebugSetUnitY
 	debug hook CreateUnit DebugCreateUnit
 	debug hook RestoreUnit DebugRestoreUnit
+	debug hook SetImageRender DebugSetImageRender
 
 	//GroupEnumUnitsInRectCounted und GroupEnumUnitsInRangeCounted
 	//- Die Funktionen GroupEnumUnitsInRectCounted und GroupEnumUnitsInRangeCounted können sich unterschiedlich verhalten, falls sie eine große Anzahl von Einheiten haben.

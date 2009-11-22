@@ -68,15 +68,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 	endstruct
 	
-	/// Waits until no video is running.
-	/// @param interval Check interval.
-	function waitForVideo takes real interval returns nothing
-		loop
-			exitwhen (AVideo.runningVideo == 0)
-			call TriggerSleepAction(interval)
-		endloop
-	endfunction
-	
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoInitAction takes AVideo video returns nothing
 
@@ -186,21 +177,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set thistype.skipped = false
 			set thistype.skippingPlayers = 0
 			//No camera pan! Call it manually, please.
-		endmethod
-		
-		/// Waits in video.
-		/// @return Returns true if video was skipped
-		public method wait takes real seconds returns boolean
-			loop
-				set seconds = seconds - thistype.waitInterval
-				if (thistype.skipped) then
-					return true
-				elseif (seconds <= 0) then
-					return false
-				endif
-				call TriggerSleepAction(thistype.waitInterval)
-			endloop
-			return false
 		endmethod
 
 		public static method create takes AVideoInitAction initAction, AVideoPlayAction playAction, AVideoStopAction stopAction returns thistype
@@ -323,13 +299,19 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call thistype.destroySkipTrigger()
 		endmethod
 		
+		//static start members
+		
+		public static method waitInterval takes nothing returns real
+			return thistype.waitInterval
+		endmethod
+		
 		//static members
 
 		public static method wasSkipped takes nothing returns boolean
 			return thistype.skipped
 		endmethod
 		
-		//static memthods
+		//static methods
 		
 		public static method isRunning takes nothing returns boolean
 			return thistype.runningVideo != 0
@@ -432,5 +414,39 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endloop
 		endmethod
 	 endstruct
+	 
+	/// Waits until no video is running anymore.
+	/// @param interval Check interval.
+	function waitForVideo takes real interval returns nothing
+		loop
+			exitwhen (AVideo.runningVideo == 0)
+			//call TriggerSleepAction(interval)
+			call PolledWait(interval) // synchron waiting, important for multiplayer games
+		endloop
+	endfunction
+	
+	/// Waits @param seconds seconds in video.
+	/// Note that this function is like @function PolledWait since it has to be synchronos
+	/// @return Returns true if video was skipped
+	/// @see PolledWait
+	function wait takes real seconds returns boolean
+		local timer whichTimer = CreateTimer()
+		call TimerStart(whichTimer, seconds, false, null)
+		loop
+			set seconds = TimerGetRemaining(whichTimer) seconds - AVideo.waitInterval()
+			exitwhen (seconds <= 0.0)
+			if (thistype.skipped) then
+				call PauseTimer(whichTimer)
+				call DestroyTimer(whichTimer)
+				set whichTimer = null
+				return true
+			endif
+			call TriggerSleepAction(thistype.waitInterval)
+		endloop
+		call PauseTimer(whichTimer)
+		call DestroyTimer(whichTimer)
+		set whichTimer = null
+		return false
+	endfunction
 
 endlibrary

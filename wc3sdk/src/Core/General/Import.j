@@ -10,6 +10,7 @@
 //! import "Core/General/Library Item.j"
 //! import "Core/General/Library Player.j"
 //! import "Core/General/Library Unit.j"
+//! import "Core/General/Module System Struct.j"
 
-library ACoreGeneral requires AStructCoreGeneralAsl, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralSignal, AStructCoreGeneralSlkTableEntry, AStructCoreGeneralStack, AStructCoreGeneralVector, ALibraryCoreGeneralConversion, ALibraryCoreGeneralGame, ALibraryCoreGeneralItem, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit
+library ACoreGeneral requires AStructCoreGeneralAsl, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralSignal, AStructCoreGeneralSlkTableEntry, AStructCoreGeneralStack, AStructCoreGeneralVector, ALibraryCoreGeneralConversion, ALibraryCoreGeneralGame, ALibraryCoreGeneralItem, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, AModuleCoreGeneralSystemStruct
 endlibrary

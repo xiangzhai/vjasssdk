@@ -1,6 +1,7 @@
 //! import "Systems/Character/Struct Characters Scheme.j"
 //! import "Systems/Character/Struct Abstract Character System.j"
 //! import "Systems/Character/Struct Abstract Quest.j"
+//! import "Systems/Character/Struct Buff.j"
 //! import "Systems/Character/Struct Character.j"
 //! import "Systems/Character/Struct Class Selection.j"
 //! import "Systems/Character/Struct Class.j"
@@ -23,5 +24,5 @@
 //! import "Systems/Character/Struct View.j"
 //! import "Systems/Character/Struct Video.j"
 
-library ASystemsCharacter requires AStructSystemsCharacterCharactersScheme, AStructSystemsCharacterAbstractCharacterSystem, AStructSystemsCharacterAbstractQuest, AStructSystemsCharacterCharacter, AStructSystemsCharacterClassSelection, AStructSystemsCharacterClass, AStructSystemsCharacterFight, AStructSystemsCharacterFocus, AStructSystemsCharacterInfo, AStructSystemsCharacterInventory, AStructSystemsCharacterItemType, AStructSystemsCharacterKillQuestItem, AStructSystemsCharacterMovement, AStructSystemsCharacterPvp, AStructSystemsCharacterQuest, AStructSystemsCharacterQuestItem, AStructSystemsCharacterRevival, AStructSystemsCharacterShrine, AStructSystemsCharacterSpell, AStructSystemsCharacterTalk, AStructSystemsCharacterTalkLog, AStructSystemsCharacterView
+library ASystemsCharacter requires AStructSystemsCharacterCharactersScheme, AStructSystemsCharacterAbstractCharacterSystem, AStructSystemsCharacterAbstractQuest, AStructSystemsCharacterBuff, AStructSystemsCharacterCharacter, AStructSystemsCharacterClassSelection, AStructSystemsCharacterClass, AStructSystemsCharacterFight, AStructSystemsCharacterFocus, AStructSystemsCharacterInfo, AStructSystemsCharacterInventory, AStructSystemsCharacterItemType, AStructSystemsCharacterKillQuestItem, AStructSystemsCharacterMovement, AStructSystemsCharacterPvp, AStructSystemsCharacterQuest, AStructSystemsCharacterQuestItem, AStructSystemsCharacterRevival, AStructSystemsCharacterShrine, AStructSystemsCharacterSpell, AStructSystemsCharacterTalk, AStructSystemsCharacterTalkLog, AStructSystemsCharacterView
 endlibrary

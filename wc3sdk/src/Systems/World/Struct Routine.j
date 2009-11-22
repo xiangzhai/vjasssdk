@@ -102,6 +102,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		public method disable takes nothing returns nothing
+			call BJDebugMsg("Disable routine of " + GetUnitName(this.m_unit))
 			set this.m_isEnabled = false
 			call DisableTrigger(this.m_startTrigger)
 			if (not IsUnitPaused(this.m_unit)) then

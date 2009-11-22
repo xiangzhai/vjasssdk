@@ -11,17 +11,17 @@ library ALibraryCoreInterfaceImage
 	* - Dann muss man es mit dem Wc3Viewer zu einem BLP-Bild konvertieren
 	* Hier braucht man eine lokale Variable für das Image, wegen des Renderns
 	*/
-	function CreateImageForPlayer takes player user, string imagePath, real x, real y, real z, real sizeX, real sizeY returns image
+	function CreateImageForPlayer takes player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY returns image
 		local player localPlayer = GetLocalPlayer()
-		local image usedImage	
-		local string localPath = ""
-		if (user == localPlayer) then
-			set localPath = imagePath
+		local image whichImage	
+		local string localFile = ""
+		if (whichPlayer == localPlayer) then
+			set localFile = file
 		endif
-		set usedImage = CreateImage(localPath, sizeX, sizeY, 0.0, (x - (sizeX / 2.0)), (y - (sizeY / 2.0)), z, 0.0, 0.0, 0.0, 2) //Bild wird in der Mitte platziert
-		call SetImageRenderAlways(usedImage, true) //Hierbei testen, ob es dadurch dann doch für alle Spieler sichtbar ist
+		set whichImage = CreateImage(localFile, sizeX, sizeY, 0.0, (x - (sizeX / 2.0)), (y - (sizeY / 2.0)), z, 0.0, 0.0, 0.0, 2) //Bild wird in der Mitte platziert
+		call SetImageRenderAlways(whichImage, true) //Hierbei testen, ob es dadurch dann doch für alle Spieler sichtbar ist
 		set localPlayer = null
-		return usedImage
+		return whichImage
 	endfunction
 
 	/**
@@ -30,10 +30,10 @@ library ALibraryCoreInterfaceImage
 	* @param shownImage Image handle which should be shown or hidden.
 	* @param show If this value is true image @param shownImage will be shown otherwise it will be hidden.
 	*/
-	function ShowImageForPlayer takes player user, image shownImage, boolean show returns nothing
+	function ShowImageForPlayer takes player whichPlayer, image whichImage, boolean show returns nothing
 		local player localPlayer = GetLocalPlayer()
-		if (user == localPlayer) then 
-			call ShowImage(shownImage, show)
+		if (whichPlayer == localPlayer) then 
+			call ShowImage(whichImage, show)
 		endif
 		set localPlayer = null
 	endfunction
