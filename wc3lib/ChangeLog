@@ -1,3 +1,13 @@
+2009-11-23 Tamino Dauth <tamino@cdauth.de>
+* Class blp::Blp allows now more than 256 different paletted colors.
+* Deleted unnecessary BLP classes.
+* Improved mdlxtest bytes output.
+* Revised blp::Blp's read and write methods for uncompressed format 1.
+
+2009-11-17 Tamino Dauth <tamino@cdauth.de>
+* First implementation of Boost Libraries functions.
+* Added classes mdlx::CameraRotationLengths and mdlx::CameraRotationLength.
+
 2009-11-14 Tamino Dauth <tamino@cdauth.de>
 * Improved MDLX classes.
 * Improved BLP classes.

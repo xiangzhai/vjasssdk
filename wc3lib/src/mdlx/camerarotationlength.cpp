@@ -18,25 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "blpuncompressed2.hpp"
-#include "blp.hpp"
+#include "camerarotationlength.hpp"
 
 namespace wc3lib
 {
-
-namespace blp
+	
+namespace mdlx
 {
 
-BlpUncompressed2::BlpUncompressed2(const class Blp &blp)
+CameraRotationLength::CameraRotationLength(class CameraRotationLengths *lengths) : MdxAlpha(lengths)
 {
-	for (int i = 0; i < 16; ++i)
-		this->m_mipMaps[i].m_indexList = new byte[blp.width() * blp.height()];
-}
-
-BlpUncompressed2::~BlpUncompressed2()
-{
-	for (int i = 0; i < 16; ++i)
-		delete[] this->m_mipMaps[i].m_indexList;
 }
 
 }

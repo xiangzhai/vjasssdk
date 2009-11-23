@@ -54,8 +54,8 @@ class Blp
 				/// @todo Make private, separated file, member methods
 				dword m_width;
 				dword m_height;
-				std::list<byte> m_indexList; //[CurrentWidth * CurrentHeight];
-				std::list<byte> m_alphaList; //[CurrentWidth * CurrentHeight];
+				std::list<byte> m_indexList; //[mip map width * mip map height];
+				std::list<byte> m_alphaList; //[mip map width * mip map height];
 		};
 
 		enum Format
@@ -98,8 +98,8 @@ class Blp
 		dword pictureType() const;
 		void setPictureSubType(dword pictureSubType);
 		dword pictureSubType() const;
-		void setPaletteColor(std::size_t index, color paletteColor);
-		const color* palette() const;
+		void setPalette(std::list<color> &palette);
+		const std::list<color>& palette() const;
 		void addMipMap(class MipMap *mipMap);
 		const std::list<class MipMap*>& mipMaps() const;
 
@@ -147,7 +147,7 @@ class Blp
 						//5 - Uncompressed index list
 		dword m_pictureSubType;		//1 - ???
 		// uncompressed 1
-		color m_palette[256];
+                std::list<color> m_palette; // uncompressed 1 and 2 only use 256 different colors.
 		std::list<class MipMap*> m_mipMaps;
 };
 
@@ -211,12 +211,12 @@ inline dword Blp::pictureSubType() const
 	return this->m_pictureSubType;
 }
 
-inline void Blp::setPaletteColor(std::size_t index, color paletteColor)
+inline void Blp::setPalette(std::list<color> &palette)
 {
-	this->m_palette[index] = paletteColor;
+	this->m_palette = palette;
 }
 
-inline const color* Blp::palette() const
+inline const std::list<color>& Blp::palette() const
 {
 	return this->m_palette;
 }

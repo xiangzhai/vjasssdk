@@ -71,14 +71,12 @@ bool BlpIOHandler::read(QImage *image)
 		this->m_blp->setPictureType(5);
 	
 	this->m_blp->setPictureSubType(1);
-	int i = 0;
+	std::list<blp::color> palette;
 	
 	foreach (QRgb rgb, image->colorTable())
-	{
-		this->m_blp->setPaletteColor(i, rgb);
-		++i;
-	}
-	
+		palette.push_back(rgb);
+
+	this->m_blp->setPalette(palette);
 	struct blp::Blp::MipMap *mipMap = new blp::Blp::MipMap;
 	mipMap->m_width = image->width();
 	mipMap->m_height = image->height();

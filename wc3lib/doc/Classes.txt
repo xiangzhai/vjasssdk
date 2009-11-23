@@ -115,8 +115,8 @@ RibbonEmitterHeightBelow		-			RibbonEmitterHeightsBelow
 RibbonEmitterHeightsBelow		KRHB			RibbonEmitter
 
 Missing:				
--					-			below					CameraRotationL..??
--					KCRL			Camera					CameraRotationL..??
+CameraRotationLength			-			below					CameraRotationLength??
+CameraRotationLengths			KCRL			Camera					CameraRotationLengths??
 
 2. Abstract MDLX property classes
 Name					Child classes

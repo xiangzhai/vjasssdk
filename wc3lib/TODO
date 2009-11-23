@@ -1,3 +1,10 @@
+2009-11-23 Tamino Dauth <tamino@cdauth.de>
+* BLP2 uses another specification or BaerWeiss.blp is BlpUncompressed2, fix BlpUncompressed1 and BlpUncompressed2 diffences recognition.
+
+2009-11-17 Tamino Dauth <tamino@cdauth.de>
+* Use Boost libraries image classes to read and write images with the BLP library.
+* Allow JPEG compression option.
+
 2009-11-15 Tamino Dauth <tamino@cdauth.de>
 * Fix particle emitter 2 or translation 1 reading methods.
 
@@ -13,7 +20,7 @@
 
 2009-11-08 Tamino Dauth <tamino@cdauth.de>
 * Fix Ogre search in cmake files.
-* How to use compile flags with make files?
+* DONE: How to use compile flags with make files?
 
 2009-11-03 Tamino Dauth <tamino@cdauth.de>
 * Missing layer alphas.

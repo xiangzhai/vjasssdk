@@ -18,42 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_BLP_BLPUNCOMPRESSED2_HPP
-#define WC3LIB_BLP_BLPUNCOMPRESSED2_HPP
-
-#include "platform.hpp"
+#include "camerarotationlengths.hpp"
 
 namespace wc3lib
 {
-
-namespace blp
+	
+namespace mdlx
 {
 
-/**
-* BLP Uncompressed 2 structure (Compression == 1, PictureType == 5)
-* CurrentWidth/CurrentHeight is the width/height for the current mipmap.
-* Mipmap size/offset works the same as explained for JPEGs above.
-*
-* Each cell in the index list refers to a location in the palette where
-* the corresponding RGBA value is. The alpha value is inversed so the real
-* alpha is "255 - alpha".
-*/
-struct BlpUncompressed2
+CameraRotationLengths::CameraRotationLengths(class Camera *camera) : MdxAlphas("KCRL"), m_camera(camera)
 {
-	struct MipMap
-	{
-		byte *m_indexList; //[CurrentWidth * CurrentHeight];
-	};
-
-	BlpUncompressed2(const class Blp &blp);
-	~BlpUncompressed2();
-
-	color m_palette[256];
-	MipMap m_mipMaps[16];
-};
-
 }
 
 }
 
-#endif
+}

@@ -12,7 +12,12 @@ project(wc3lib)
 
 find_package(Gettext REQUIRED)
 # todo: require tokenizer component only
-find_package(Boost REQUIRED)
+#find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system thread date_time)
+if (Boost_FOUND)
+	include_directories(${Boost_INCLUDE_DIR} /usr/include/boost-1_35) # Gentoo Linux
+endif (Boost_FOUND)
+
 
 include_directories(src)
 add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/local\")

@@ -8,6 +8,8 @@ set(wc3lib_MDLX_SRC
 	bone.cpp
 	bones.cpp
 	camera.cpp
+	camerarotationlength.cpp
+	camerarotationlengths.cpp
 	cameras.cpp
 	collisionshape.cpp
 	collisionshapes.cpp
@@ -137,6 +139,9 @@ set(wc3lib_MDLX_H
 	ambientintensities.hpp
 	bone.hpp
 	camera.hpp
+	camerarotationlength.hpp
+	camerarotationlengths.hpp
+	cameras.hpp
 	collisionshape.hpp
 	color1.hpp
 	color1s.hpp

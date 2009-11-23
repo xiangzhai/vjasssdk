@@ -25,7 +25,9 @@
 #include <list>
 #include <fstream>
 
- #include <getopt.h>
+#include <boost/format.hpp>
+
+#include <getopt.h>
 
 #include "../internationalisation.hpp"
 #include "../blp/blp.hpp"
@@ -335,6 +337,14 @@ static inline bool checkFormatConvertibility(enum Format format0, enum Format fo
 	return formatConvertibility[format0][format1];
 }
 
+static inline std::string formatBytes(unsigned int bytes)
+{
+	if (bytes % 1024)
+		return boost::str(boost::format(_("%1% KiBytes")) % double(bytes / 1024));
+
+	return boost::str(boost::format(_("%1% bytes")) % bytes);
+}
+
 int main(int argc, char *argv[])
 {
 	// Set the current locale.
@@ -369,8 +379,10 @@ int main(int argc, char *argv[])
 		{
 			case 'v':
 			{
-				printf("mdlxtest %s.\n", version);
-				std::cout << _(
+				std::cout <<
+				boost::format(_("mdlxtest %1%.")) % version
+				<< std::endl <<
+				_(
 				"Copyright © 2009 Tamino Dauth\n"
 				"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
 				"This is free software: you are free to change and redistribute it.\n"
@@ -401,7 +413,7 @@ int main(int argc, char *argv[])
 			{
 				if (getFormatByExpression(optarg) == InvalidFormat)
 				{
-					fprintf(stderr, _("Invalid format \"%s\".\n"), optarg);
+					std::cerr << boost::format(_("Invalid format \"%1%\".")) % optarg << std::endl;
 					
 					return EXIT_FAILURE;
 				}
@@ -415,7 +427,7 @@ int main(int argc, char *argv[])
 			{
 				if (getFormatByExpression(optarg) == InvalidFormat)
 				{
-					fprintf(stderr, _("Invalid format \"%s\".\n"), optarg);
+					std::cerr << boost::format(_("Invalid format \"%1%\".")) % optarg << std::endl;
 					
 					return EXIT_FAILURE;
 				}
@@ -497,7 +509,7 @@ int main(int argc, char *argv[])
 				case Blp:
 				{
 					blp::dword bytes = blp.readBlp(ifstream);
-					printf(_("Read BLP file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}		
@@ -505,7 +517,7 @@ int main(int argc, char *argv[])
 				case Jpeg:
 				{
 					blp::dword bytes = blp.readJpeg(ifstream);
-					printf(_("Read JPEG file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -514,7 +526,7 @@ int main(int argc, char *argv[])
 				case Tga:
 				{
 					blp::dword bytes = blp.readTga(ifstream);
-					printf(_("Read TGA file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -523,7 +535,7 @@ int main(int argc, char *argv[])
 				case Png:
 				{
 					blp::dword bytes = blp.readPng(ifstream);
-					printf(_("Read PNG file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -537,7 +549,7 @@ int main(int argc, char *argv[])
 				case Mdx:
 				{
 					mdlx::long32 bytes = mdlx.readMdx(ifstream);
-					printf(_("Read MDX file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 					
 					break;
 				}
@@ -545,7 +557,7 @@ int main(int argc, char *argv[])
 				case Blend:
 				{
 					mdlx::long32 bytes = mdlx.readBlend(ifstream);
-					printf(_("Read Blender file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
 					
 					break;
 				}
@@ -554,7 +566,7 @@ int main(int argc, char *argv[])
 				case Max:
 				{
 					mdlx::long32 bytes = mdlx.readMax(ifstream);
-					printf(_("Read 3ds Max file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 					
 					break;
 				}
@@ -602,7 +614,7 @@ int main(int argc, char *argv[])
 				case Blp:
 				{
 					blp::dword bytes = blp.writeBlp(ofstream);
-					printf(_("Wrote BLP file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -610,7 +622,7 @@ int main(int argc, char *argv[])
 				case Jpeg:
 				{
 					blp::dword bytes = blp.writeJpeg(ofstream);
-					printf(_("Wrote JPEG file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -619,7 +631,7 @@ int main(int argc, char *argv[])
 				case Tga:
 				{
 					blp::dword bytes = blp.writeTga(ofstream);
-					printf(_("Wrote TGA file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -628,7 +640,7 @@ int main(int argc, char *argv[])
 				case Png:
 				{
 					blp::dword bytes = blp.writePng(ofstream);
-					printf(_("Wrote PNG file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -641,14 +653,14 @@ int main(int argc, char *argv[])
 				
 				case Mdx:
 					mdlx::long32 bytes = mdlx.writeMdx(ofstream);
-					printf(_("Wrote MDX file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 #ifdef BLEND					
 				case Blend:
 				{
 					mdlx::long32 bytes = mdlx.writeBlend(ofstream);
-					printf(_("Wrote Blender file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}
@@ -657,7 +669,7 @@ int main(int argc, char *argv[])
 				case Max:
 				{
 					mdlx::long32 bytes = mdlx.writeMax(ofstream);
-					printf(_("Wrote 3ds Max file successfully. %d Bytes.\n"), bytes);
+					std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 				
 					break;
 				}

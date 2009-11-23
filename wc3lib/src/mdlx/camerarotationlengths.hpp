@@ -18,45 +18,45 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "camera.hpp"
-#include "cameras.hpp"
-#include "translation3s.hpp"
-#include "camerarotationlengths.hpp"
-#include "translation0s.hpp"
+#ifndef WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
+#define WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
+
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
-
+	
 namespace mdlx
 {
+	
+class Camera;
+class CameraRotationLength;
 
-Camera::Camera(class Cameras *cameras) : m_cameras(cameras), m_targetTranslations(new Translation0s(cameras->mdlx())), m_rotationLengths(new CameraRotationLengths(this)), m_translations(new Translation3s(this))
+class CameraRotationLengths : public MdxAlphas
 {
-}
+	public:
+		CameraRotationLengths(class Camera *camera);
+		
+		class Camera* camera() const;
+		const std::list<class CameraRotationLength*>& lengths() const;
+		
+	private:
+		class Camera *m_camera;
+		
+};
 
-Camera::~Camera()
+inline class Camera* CameraRotationLengths::camera() const
 {
-	delete this->m_targetTranslations;
-	delete this->m_rotationLengths;
-	delete this->m_translations;
+	return this->m_camera;
 }
 
-void Camera::readMdl(std::istream &istream) throw (class Exception)
+inline const std::list<class CameraRotationLength*>& CameraRotationLengths::lengths() const
 {
-}
-
-void Camera::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
-long32 Camera::readMdx(std::istream &istream) throw (class Exception)
-{
-}
-
-long32 Camera::writeMdx(std::ostream &ostream) throw (class Exception)
-{
+	return reinterpret_cast<const std::list<class CameraRotationLength*>&>(this->m_alphas);
 }
 
 }
 
 }
+
+#endif

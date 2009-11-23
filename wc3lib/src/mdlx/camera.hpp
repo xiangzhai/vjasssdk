@@ -34,7 +34,7 @@ namespace mdlx
 
 class Cameras;
 class Translation0s;
-class Rotations; /// @todo Implement class KCRL
+class CameraRotationLengths;
 class Translation3s;
 
 //not a child of class Object!
@@ -57,7 +57,7 @@ class Camera
 		float32 targetY() const;
 		float32 targetZ() const;
 		class Translation0s* targetTranslations() const;
-		class Rotations* rotations() const;
+		class CameraRotationLengths* rotationLengths() const;
 		class Translation3s* translations() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
@@ -75,7 +75,7 @@ class Camera
 		float32 m_nearClip;
 		float32	m_targetX, m_targetY, m_targetZ;
 		class Translation0s *m_targetTranslations; //(KCTR)
-		class Rotations *m_rotations; //(KCRL)
+		class CameraRotationLengths *m_rotationLengths; //(KCRL)
 		class Translation3s *m_translations; //(KTTR)
 		//(BKCT) ?????????????????????????????????????????????????????????????????
 };
@@ -140,9 +140,9 @@ inline class Translation0s* Camera::targetTranslations() const
 	return this->m_targetTranslations;
 }
 
-inline class Rotations* Camera::rotations() const
+inline class CameraRotationLengths* Camera::rotationLengths() const
 {
-	return this->m_rotations;
+	return this->m_rotationLengths;
 }
 
 inline class Translation3s* Camera::translations() const

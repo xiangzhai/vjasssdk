@@ -18,56 +18,30 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_BLP_BLPUNCOMPRESSED1_HPP
-#define WC3LIB_BLP_BLPUNCOMPRESSED1_HPP
+#ifndef WC3LIB_MDLX_CAMERAROTATIONLENGTH_HPP
+#define WC3LIB_MDLX_CAMERAROTATIONLENGTH_HPP
 
-#include <iostream>
-
-#include "platform.hpp"
+#include "mdxalpha.hpp"
+#include "camerarotationlengths.hpp"
 
 namespace wc3lib
 {
-
-namespace blp
+	
+namespace mdlx
 {
 
-class Blp;
-
-/**
-* BLP Uncompressed 1 structure (Compression == 1, PictureType == 3 or 4)
-* CurrentWidth/CurrentHeight is the width/height for the current mipmap.
-* Mipmap size/offset works the same as explained for JPEGs above.
-*
-* Each cell in the index list refers to a location in the palette where
-* the corresponding RGB value is (the palette is still RGBA, but A is not
-* used). The alpha list contains the alpha value for the pixel.
-*/
-class BlpUncompressed1
+class CameraRotationLength : public MdxAlpha
 {
 	public:
-		struct MipMap
-		{
-			byte *m_indexList; //[CurrentWidth * CurrentHeight];
-			byte *m_alphaList; //[CurrentWidth * CurrentHeight];
-		};
-
-		BlpUncompressed1(class Blp *blp);
-		~BlpUncompressed1();
-	
-		class Blp* blp() const;
+		CameraRotationLength(class CameraRotationLengths *lengths);
 		
-		dword read(std::istream &istream) throw (class Exception);
-		dword write(std::ostream &ostream) throw (class Exception);
-	
-	private:
-		class Blp *m_blp;
-		color m_palette[256];
-		struct MipMap m_mipMaps[16];
+		class CameraRotationLengths* lengths() const;
+		
 };
 
-inline class Blp* BlpUncompressed1::blp() const
+inline class CameraRotationLengths* CameraRotationLength::lengths() const
 {
-	return this->m_blp;
+	return dynamic_cast<class CameraRotationLengths*>(this->m_alphas);
 }
 
 }
