@@ -1,3 +1,6 @@
+2009-11-25 Tamino Dauth <tamino@cdauth.de>
+* Improved BLP compression mode detection and added enum PictureType to class Blp.
+
 2009-11-23 Tamino Dauth <tamino@cdauth.de>
 * Class blp::Blp allows now more than 256 different paletted colors.
 * Deleted unnecessary BLP classes.

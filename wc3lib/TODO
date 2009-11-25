@@ -1,3 +1,6 @@
+2009-11-25 Tamino Dauth <tamino@cdauth.de>
+* Maybe rename Blp::Uncompressed to Blp::PalettedCompressed.
+
 2009-11-23 Tamino Dauth <tamino@cdauth.de>
 * BLP2 uses another specification or BaerWeiss.blp is BlpUncompressed2, fix BlpUncompressed1 and BlpUncompressed2 diffences recognition.
 

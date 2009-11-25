@@ -76,7 +76,16 @@ class Blp
 		enum Compression
 		{
 			Jpeg = 0,
-			Uncompressed = 1
+			Uncompressed = 1//,
+			//UncompressedAlphaChannel = 8
+		};
+		
+		enum PictureType
+		{
+			UncompressedAlpha1 = 3,
+			UncompressedAlpha2 = 4,
+			UncompressedNoAlpha = 5,
+			Unknown = 1
 		};
 		
 		static const char identifier[4];

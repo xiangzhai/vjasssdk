@@ -264,9 +264,9 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 			++size;
 		}
 	}
-	else if (this->m_compression == Blp::Uncompressed) //&& (this->m_pictureType == 3 || this->m_pictureType == 4))
+	else if (this->m_compression == Blp::Uncompressed && (this->m_pictureType == Blp::UncompressedAlpha1 || this->m_pictureType == Blp::UncompressedAlpha2))
 	{
-		std::cout << "Detected uncompressed mode 1." << std::endl;
+		std::cout << "Detected uncompressed mode 1 with alpha." << std::endl;
 		
 		for (int i = 0; i < 256; ++i)
 		{
@@ -319,18 +319,59 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 			std::cout << "Mip map alpha list size " << (*iterator)->m_alphaList.size() << std::endl;
 		}
 	}
-	else if (this->m_compression == Blp::Uncompressed && this->m_pictureType == 5)
+	else if (this->m_compression == Blp::Uncompressed && this->m_pictureType == Blp::UncompressedNoAlpha)
 	{
-		std::cout << "Detected uncompressed mode 2." << std::endl;
-		//bytes += this->m_blp->readBlpUncompressed2(istream);
+		std::cout << "Detected uncompressed mode 2 without alphas." << std::endl;
+		
+		for (int i = 0; i < 256; ++i)
+		{
+                        color paletteColor;
+                        istream.read(reinterpret_cast<char*>(&paletteColor), sizeof(paletteColor));
+			bytes += istream.gcount();
+			this->m_palette.push_back(paletteColor);
+		}
+	
+		std::list<dword>::iterator offset = mipMapOffsets.begin();
+		std::list<dword>::iterator size = mipMapSizes.begin();
+		
+		for (std::list<struct MipMap*>::iterator iterator = this->m_mipMaps.begin(); iterator != this->m_mipMaps.end(); ++iterator)
+		{
+			std::streampos position = istream.tellg();
+			istream.seekg(*offset);
+			std::size_t nullBytes = istream.tellg() - position;
+			
+			if (nullBytes > 0)
+				std::cout << boost::format(_("Ingoring %1% 0 bytes.")) % nullBytes << std::endl;
+			
+			dword toReadBytes = *size;
+
+			for (int j = 0; j < (*iterator)->m_width; ++j)
+			{
+				for (int k = 0; k < (*iterator)->m_height; ++k)
+				{
+					byte value;
+					istream.read(reinterpret_cast<char*>(&value), sizeof(value));
+					bytes += istream.gcount();
+					toReadBytes -= istream.gcount();
+					(*iterator)->m_indexList.push_back(value);
+				}
+			}
+			
+			if (toReadBytes != 0)
+			{
+				istream.seekg(toReadBytes, std::ios_base::cur);
+				std::cout << "Skipping " << toReadBytes << " unnecessary bytes." << std::endl;
+			}
+			
+			++offset;
+			++size;
+
+			std::cout << "Mip map index list size " << (*iterator)->m_indexList.size() << std::endl;
+			std::cout << "Mip map alpha list size " << (*iterator)->m_alphaList.size() << std::endl;
+		}
 	}
 	else
-	{
-		char message[50];
-		sprintf(message, _("Unknown compression mode.\nCompression mode %d.\nPicture type: %d.\n"), this->m_compression, this->m_pictureType);
-		
-		throw Exception(message);
-	}
+		throw Exception(boost::str(boost::format( _("Unknown compression mode.\nCompression mode %1%.\nPicture type: %2%.\n")) % this->m_compression % this->m_pictureType));
 
 	std::cout << "Read " << bytes << " bytes." << std::endl;
 	
@@ -438,9 +479,9 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
 	}
-	else if (this->m_compression == Blp::Uncompressed) // && (this->m_pictureType == 3 || this->m_pictureType == 4))
+	else if (this->m_compression == Blp::Uncompressed && (this->m_pictureType == Blp::UncompressedAlpha1 || this->m_pictureType == Blp::UncompressedAlpha2))
 	{
-		std::cout << "Detected uncompressed mode 1." << std::endl;
+		std::cout << "Detected uncompressed mode 1 with alpha." << std::endl;
 		int i = 0;
 		
 		BOOST_FOREACH(color iterator, this->m_palette)
@@ -495,9 +536,9 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 
 		std::cout << "BYTES " << bytes << std::endl;
 	}
-	else if (this->m_compression == Blp::Uncompressed && this->m_pictureType == 5)
+	else if (this->m_compression == Blp::Uncompressed && this->m_pictureType == Blp::UncompressedNoAlpha)
 	{
-		std::cout << "Detected uncompressed mode 2." << std::endl;
+		std::cout << "Detected uncompressed mode 2 without alpha." << std::endl;
 		//bytes += this->m_blp->writeBlpUncompressed2(ostream);
 	}
 	else
@@ -596,7 +637,7 @@ dword Blp::mipMapHeight(int index) const
 
 bool Blp::usesAlphaList() const
 {
-	return (this->m_compression == Blp::Uncompressed && (this->m_pictureType == 3 || this->m_pictureType == 4));
+	return (this->m_compression == Blp::Uncompressed && (this->m_pictureType == Blp::UncompressedAlpha1 || this->m_pictureType == Blp::UncompressedAlpha2));
 }
 
 }
