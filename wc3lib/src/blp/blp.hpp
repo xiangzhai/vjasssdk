@@ -72,25 +72,31 @@ class Blp
 			,PngFormat
 #endif
 		};
+		
+		enum Version
+		{
+			Blp0, //ROC
+			Blp1, //TFT
+			Blp2 // WoW
+		};
 
 		enum Compression
 		{
 			Jpeg = 0,
-			Uncompressed = 1//,
-			//UncompressedAlphaChannel = 8
+			Paletted = 1
 		};
 		
-		enum PictureType
+		enum Flag
 		{
-			UncompressedAlpha1 = 3,
-			UncompressedAlpha2 = 4,
-			UncompressedNoAlpha = 5,
-			Unknown = 1
+			NoAlpha = 0,
+			Alpha = 8
 		};
 		
-		static const char identifier[4];
-
+		static const char identifier0[4];
+		static const char identifier1[4];
+		static const char identifier2[4];
 		static const std::size_t maxMipMaps;
+		static const std::size_t maxCompressedPaletteSize;
 
 		Blp();
 		~Blp();
@@ -143,9 +149,9 @@ class Blp
 	protected:
 		dword mipMapWidth(int index) const;
 		dword mipMapHeight(int index) const;
-		bool usesAlphaList() const;
 		
 		// header
+		enum Version m_version;
 		dword m_compression;		//0 - Uses JPEG compression
 						//1 - Uses palettes (uncompressed)
 		dword m_flags;			//#8 - Uses alpha channel (?)

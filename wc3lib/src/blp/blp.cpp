@@ -31,6 +31,7 @@
 #include "../internationalisation.hpp"
 
 #include <openjpeg.h>
+//#include <jpeglib.h>
 
 namespace wc3lib
 {
@@ -38,8 +39,11 @@ namespace wc3lib
 namespace blp
 {
 
-const char Blp::identifier[4] = { 'B', 'L', 'P', '1' };
+const char Blp::identifier0[4] = { 'B', 'L', 'P', '0' };
+const char Blp::identifier1[4] = { 'B', 'L', 'P', '1' };
+const char Blp::identifier2[4] = { 'B', 'L', 'P', '2' };
 const std::size_t Blp::maxMipMaps = 16;
+const std::size_t Blp::maxCompressedPaletteSize = 256;
 
 Blp::Blp()
 {
@@ -99,7 +103,7 @@ static int requiredMipMaps(int width, int height)
 
 static void jpegEventManagerFunction(const char *msg, void *client_data)
 {
-	fprintf(stdout, _("JPEG event manager message:\n%s\n"), msg);
+	std::cout << boost::format(_("JPEG event manager message:\n%1%")) % msg << std::endl;
 }
 
 dword Blp::readBlp(std::istream &istream) throw (class Exception)
@@ -110,13 +114,14 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&identifier), sizeof(identifier));
 	dword bytes = istream.gcount();
 	
-	if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier, sizeof(Blp::identifier)) && memcmp(reinterpret_cast<char*>(&identifier), "BLP2", 4)) /// @todo BLP2 for testings
-	{
-		char message[50];
-		sprintf(message, _("Error while reading BLP file. Expected \"%s\" keyword, got \"%s\".\n"), Blp::identifier, reinterpret_cast<const char*>(&identifier));
-		
-		throw Exception(message);
-	}
+	if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier0, sizeof(Blp::identifier0)) == 0)
+		this->m_version = Blp::Blp0;
+	else if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier1, sizeof(Blp::identifier1)) == 0)
+		this->m_version = Blp::Blp1;
+	else if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier2, sizeof(Blp::identifier2)) == 0)
+		this->m_version = Blp::Blp2;
+	else
+		throw Exception(boost::str(boost::format(_("Error while reading BLP file. Missing BLP identifier, got \"%1%\".")) % reinterpret_cast<const char*>(&identifier)));
 	
 	istream.read(reinterpret_cast<char*>(&this->m_compression), sizeof(this->m_compression));
 	bytes += istream.gcount();
@@ -147,13 +152,17 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 		
 		if (i < mipMaps)
 		{
-			std::cout << "Reading mip map " << i << std::endl;
+			std::cout << "Reading mip map's " << i << " offset " << offset << " and size " << size << std::endl;
 			mipMapOffsets.push_back(offset);
 			mipMapSizes.push_back(size);
 			
 			struct MipMap *mipMap = new MipMap;
 			mipMap->m_width = this->mipMapWidth(i);
 			mipMap->m_height = this->mipMapHeight(i);
+			
+			if (size != mipMap->m_width * mipMap->m_height)
+				std::cout << "Size " << size << " is not equal to " << mipMap->m_width * mipMap->m_height << std::endl;
+			
 			this->m_mipMaps.push_back(mipMap);
 		}
 		
@@ -181,36 +190,43 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 			if (nullBytes > 0)
 				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
 			
-			unsigned char *buffer = new unsigned char[boost::numeric_cast<std::size_t>(*size)];
-			istream.read((char*)buffer, boost::numeric_cast<std::streamsize>(*size));
+			std::size_t bufferSize = boost::numeric_cast<std::size_t>(*size);
+			unsigned char *buffer = new unsigned char[bufferSize];
+			istream.read((char*)buffer, boost::numeric_cast<std::streamsize>(bufferSize));
 
 			try
 			{
 				opj_common_ptr cinfo;
-				opj_cio_t *decompressIO = opj_cio_open(cinfo, buffer, boost::numeric_cast<std::size_t>(*size));
+				opj_cio_t *decompressIO = opj_cio_open(cinfo, buffer, bufferSize);
 
 				if (decompressIO == NULL)
 					throw Exception(_("Error while reading JPEG data."));
 
-				/*
-			opj_event_mgr_t eventManager;
-			std::cout << "TEST --- 1" << std::endl;
-			eventManager.error_handler = &jpegEventManagerFunction;
-			std::cout << "TEST --- 2" << std::endl;
-			eventManager.info_handler = &jpegEventManagerFunction;
-			std::cout << "TEST --- 3" << std::endl;
-			eventManager.warning_handler = &jpegEventManagerFunction;
-			std::cout << "TEST --- 4" << std::endl;
+				opj_event_mgr_t eventManager;
+				std::cout << "TEST --- 1" << std::endl;
+				eventManager.error_handler = &jpegEventManagerFunction;
+				std::cout << "TEST --- 2" << std::endl;
+				eventManager.info_handler = &jpegEventManagerFunction;
+				std::cout << "TEST --- 3" << std::endl;
+				eventManager.warning_handler = &jpegEventManagerFunction;
+				std::cout << "TEST --- 4" << std::endl;
 			
-			if (opj_set_event_mgr(cinfo, &eventManager, 0) == NULL)	
-				throw Exception(_("Error while creating JPEG event manager."));
-			*/
+				if (opj_set_event_mgr(cinfo, &eventManager, 0) == NULL)	
+					throw Exception(_("Error while creating JPEG event manager."));
 
 				//int OPJ_CALLCONV cio_tell(opj_cio_t *cio);
 				//void OPJ_CALLCONV cio_seek(opj_cio_t *cio, int pos);
 
 				std::cout << "Test 1" << std::endl;
-				opj_dinfo_t *decompressInfo = opj_create_decompress(CODEC_JP2); //CODEC_UNKNOWN, CODEC_JP2
+				opj_dinfo_t *decompressInfo = opj_create_decompress(CODEC_JPT); //CODEC_UNKNOWN, CODEC_JP2
+				/*
+				typedef enum CODEC_FORMAT {
+				CODEC_UNKNOWN
+				CODEC_J2K
+				CODEC_JPT
+				CODEC_JP2
+				} OPJ_CODEC_FORMAT;
+				*/
 
 				if (decompressInfo == NULL)
 					throw Exception(_("Error while creating JPEG decompressor."));
@@ -222,9 +238,11 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 				std::cout << "Test 3" << std::endl;
 				opj_setup_decoder(decompressInfo, &decompressParameters);
 				std::cout << "Test 4" << std::endl;
-
+				cio_seek(decompressIO, 0);
 				opj_image_t *decompressImage = opj_decode(decompressInfo, decompressIO);
-
+				std::cout << "Test 5" << std::endl;
+				
+				
 				if (decompressImage == NULL)
 					throw Exception(_("Error while creating decompressed JPEG image."));
 
@@ -264,11 +282,16 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 			++size;
 		}
 	}
-	else if (this->m_compression == Blp::Uncompressed && (this->m_pictureType == Blp::UncompressedAlpha1 || this->m_pictureType == Blp::UncompressedAlpha2))
+	else if (this->m_compression == Blp::Paletted)
 	{
-		std::cout << "Detected uncompressed mode 1 with alpha." << std::endl;
+		std::cout << "Detected paletted compression." << std::endl;
 		
-		for (int i = 0; i < 256; ++i)
+		if (this->m_flags == Blp::Alpha)
+			std::cout << "With alphas!" << std::endl;
+		else
+			std::cout << "Without alphas!" << std::endl;
+		
+		for (int i = 0; i < Blp::maxCompressedPaletteSize; ++i)
 		{
                         color paletteColor;
                         istream.read(reinterpret_cast<char*>(&paletteColor), sizeof(paletteColor));
@@ -279,30 +302,46 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 		std::list<dword>::iterator offset = mipMapOffsets.begin();
 		std::list<dword>::iterator size = mipMapSizes.begin();
 		
-		for (std::list<struct MipMap*>::iterator iterator = this->m_mipMaps.begin(); iterator != this->m_mipMaps.end(); ++iterator)
+		BOOST_FOREACH(struct MipMap *mipMap, this->m_mipMaps)
 		{
 			std::streampos position = istream.tellg();
+			//std::cout << "Position is " << position << std::endl;
 			istream.seekg(*offset);
+			//std::cout << "New position is " << istream.tellg() << std::endl;
 			std::size_t nullBytes = istream.tellg() - position;
 			
 			if (nullBytes > 0)
-				std::cout << boost::format(_("Ingoring %1% 0 bytes.")) % nullBytes << std::endl;
+				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
 			
 			dword toReadBytes = *size;
 
-			for (int j = 0; j < (*iterator)->m_width; ++j)
+			for (int j = 0; j < mipMap->m_width; ++j)
 			{
-				for (int k = 0; k < (*iterator)->m_height; ++k)
+				for (int k = 0; k < mipMap->m_height; ++k)
 				{
 					byte value;
 					istream.read(reinterpret_cast<char*>(&value), sizeof(value));
 					bytes += istream.gcount();
 					toReadBytes -= istream.gcount();
-					(*iterator)->m_indexList.push_back(value);
-					istream.read(reinterpret_cast<char*>(&value), sizeof(value));
-					bytes += istream.gcount();
-					toReadBytes -= istream.gcount();
-					(*iterator)->m_alphaList.push_back(value);
+					//std::cout << "To read bytes " << toReadBytes << std::endl;
+					mipMap->m_indexList.push_back(value);
+					
+					/*
+					if (istream.eof())
+					{
+						std::cout << "End of File" << std::endl;
+						
+						throw Exception("");
+					}
+					*/
+					
+					if (this->m_flags == Blp::Alpha)
+					{
+						istream.read(reinterpret_cast<char*>(&value), sizeof(value));
+						bytes += istream.gcount();
+						toReadBytes -= istream.gcount();
+						mipMap->m_alphaList.push_back(value);
+					}
 				}
 			}
 			
@@ -315,63 +354,12 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 			++offset;
 			++size;
 
-			std::cout << "Mip map index list size " << (*iterator)->m_indexList.size() << std::endl;
-			std::cout << "Mip map alpha list size " << (*iterator)->m_alphaList.size() << std::endl;
-		}
-	}
-	else if (this->m_compression == Blp::Uncompressed && this->m_pictureType == Blp::UncompressedNoAlpha)
-	{
-		std::cout << "Detected uncompressed mode 2 without alphas." << std::endl;
-		
-		for (int i = 0; i < 256; ++i)
-		{
-                        color paletteColor;
-                        istream.read(reinterpret_cast<char*>(&paletteColor), sizeof(paletteColor));
-			bytes += istream.gcount();
-			this->m_palette.push_back(paletteColor);
-		}
-	
-		std::list<dword>::iterator offset = mipMapOffsets.begin();
-		std::list<dword>::iterator size = mipMapSizes.begin();
-		
-		for (std::list<struct MipMap*>::iterator iterator = this->m_mipMaps.begin(); iterator != this->m_mipMaps.end(); ++iterator)
-		{
-			std::streampos position = istream.tellg();
-			istream.seekg(*offset);
-			std::size_t nullBytes = istream.tellg() - position;
-			
-			if (nullBytes > 0)
-				std::cout << boost::format(_("Ingoring %1% 0 bytes.")) % nullBytes << std::endl;
-			
-			dword toReadBytes = *size;
-
-			for (int j = 0; j < (*iterator)->m_width; ++j)
-			{
-				for (int k = 0; k < (*iterator)->m_height; ++k)
-				{
-					byte value;
-					istream.read(reinterpret_cast<char*>(&value), sizeof(value));
-					bytes += istream.gcount();
-					toReadBytes -= istream.gcount();
-					(*iterator)->m_indexList.push_back(value);
-				}
-			}
-			
-			if (toReadBytes != 0)
-			{
-				istream.seekg(toReadBytes, std::ios_base::cur);
-				std::cout << "Skipping " << toReadBytes << " unnecessary bytes." << std::endl;
-			}
-			
-			++offset;
-			++size;
-
-			std::cout << "Mip map index list size " << (*iterator)->m_indexList.size() << std::endl;
-			std::cout << "Mip map alpha list size " << (*iterator)->m_alphaList.size() << std::endl;
+			std::cout << "Mip map index list size " << mipMap->m_indexList.size() << std::endl;
+			std::cout << "Mip map alpha list size " << mipMap->m_alphaList.size() << std::endl;
 		}
 	}
 	else
-		throw Exception(boost::str(boost::format( _("Unknown compression mode.\nCompression mode %1%.\nPicture type: %2%.\n")) % this->m_compression % this->m_pictureType));
+		throw Exception(boost::str(boost::format( _("Unknown compression mode: %1%.")) % this->m_compression));
 
 	std::cout << "Read " << bytes << " bytes." << std::endl;
 	
@@ -416,8 +404,29 @@ dword Blp::write(std::ostream &ostream, enum Format format) throw (class Excepti
 
 dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 {
-	ostream.write(Blp::identifier, sizeof(Blp::identifier));
-	dword bytes = sizeof(identifier);	
+	dword bytes = 0;
+	
+	switch (this->m_version)
+	{
+		case Blp::Blp0:
+			ostream.write(Blp::identifier0, sizeof(Blp::identifier0));
+			bytes += sizeof(identifier0);
+			
+			break;
+			
+		case Blp::Blp1:
+			ostream.write(Blp::identifier1, sizeof(Blp::identifier1));
+			bytes += sizeof(identifier1);
+			
+			break;
+			
+		case Blp::Blp2:
+			ostream.write(Blp::identifier2, sizeof(Blp::identifier2));
+			bytes += sizeof(identifier2);
+			
+			break;
+	}
+	
 	ostream.write(reinterpret_cast<const char*>(&this->m_compression), sizeof(this->m_compression));
 	bytes += sizeof(this->m_compression);
 	ostream.write(reinterpret_cast<const char*>(&this->m_flags), sizeof(this->m_flags));
@@ -434,16 +443,16 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	std::list<dword> mipMapOffsets;
 	std::list<dword> mipMapSizes;
 	
-	for (std::list<struct MipMap*>::iterator iterator = this->m_mipMaps.begin(); iterator != this->m_mipMaps.end(); ++iterator)
+	BOOST_FOREACH (struct MipMap *mipMap, this->m_mipMaps)
 	{
 		mipMapOffsets.push_back(startOffset);
-		dword size = (*iterator)->m_indexList.size() * sizeof(byte);
+		dword size = mipMap->m_indexList.size() * sizeof(byte);
 		
-		if (this->usesAlphaList())
-			size += (*iterator)->m_alphaList.size() * sizeof(byte);
+		if (this->m_flags == Blp::Alpha)
+			size += mipMap->m_alphaList.size() * sizeof(byte);
 			
 		mipMapSizes.push_back(size);
-		startOffset += size;	
+		startOffset += size;
 	}
 	
 	std::list<dword>::iterator offsetIterator = mipMapOffsets.begin();
@@ -456,6 +465,7 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 		{
 			ostream.write(reinterpret_cast<const char*>(&(*offsetIterator)), sizeof(*offsetIterator));
 			bytes += sizeof(*offsetIterator);
+			std::cout << "Wrote " << sizeof(*offsetIterator) << " bytes offset header data." << std::endl;
 			ostream.write(reinterpret_cast<const char*>(&(*sizeIterator)), sizeof(*sizeIterator));
 			bytes += sizeof(*sizeIterator);
 			++offsetIterator;
@@ -479,34 +489,41 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
 	}
-	else if (this->m_compression == Blp::Uncompressed && (this->m_pictureType == Blp::UncompressedAlpha1 || this->m_pictureType == Blp::UncompressedAlpha2))
+	else if (this->m_compression == Blp::Paletted)
 	{
-		std::cout << "Detected uncompressed mode 1 with alpha." << std::endl;
+		std::cout << "Detected paletted compression." << std::endl;
+		
+		if (this->m_flags == Blp::Alpha)
+			std::cout << "With alphas!" << std::endl;
+		else
+			std::cout << "Without alphas!" << std::endl;
+		
 		int i = 0;
 		
-		BOOST_FOREACH(color iterator, this->m_palette)
+		BOOST_FOREACH(color palettColor, this->m_palette)
 		{
-			if (i >= 256)
+			if (i >= Blp::maxCompressedPaletteSize)
 			{
-				std::cout << boost::format(_("Warning: BLP image does contain more than 256 different colors: %1%.")) % this->m_palette.size() << std::endl;
+				std::cout << boost::format(_("Warning: BLP image does contain more than %1% different colors: %2%.")) % Blp::maxCompressedPaletteSize % this->m_palette.size() << std::endl;
 
 				break;
                         }
 
-			ostream.write(reinterpret_cast<const char*>(&iterator), sizeof(iterator));
-			bytes += sizeof(iterator);
+			ostream.write(reinterpret_cast<const char*>(&palettColor), sizeof(palettColor));
+			bytes += sizeof(palettColor);
 			++i;
 		}
 
 		std::cout << "Wrote " << bytes << " with palette." << std::endl;
 
                 /// @todo Write 0 byte colors?
-		if (i < 256)
+		if (i < Blp::maxCompressedPaletteSize)
 		{
-			for ( ; i < 256; ++i)
+			for ( ; i < Blp::maxCompressedPaletteSize; ++i)
 			{
-				ostream.write(0, sizeof(color));
-				bytes += sizeof(color);
+				color palettColor = 0;
+				ostream.write(reinterpret_cast<const char*>(&palettColor), sizeof(palettColor));
+				bytes += sizeof(palettColor);
 			}
 		}
 
@@ -525,29 +542,23 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 				ostream.write(reinterpret_cast<const char*>(&(*index)), sizeof(*index));
 				bytes += sizeof(*index);
 				//std::cout << "Wrote index with size " << sizeof(*index) << std::endl;
-				ostream.write(reinterpret_cast<const char*>(&(*alpha)), sizeof(*alpha));
-				bytes += sizeof(*alpha);
-				//std::cout << "Wrote index with alpha " << sizeof(*alpha) << std::endl;
-				
 				++index;
-				++alpha;
+				
+				if (this->m_flags == Blp::Alpha)
+				{
+					ostream.write(reinterpret_cast<const char*>(&(*alpha)), sizeof(*alpha));
+					bytes += sizeof(*alpha);
+					++alpha;
+				}
+				
+				//std::cout << "Wrote index with alpha " << sizeof(*alpha) << std::endl;
 			}
 		}
 
 		std::cout << "BYTES " << bytes << std::endl;
 	}
-	else if (this->m_compression == Blp::Uncompressed && this->m_pictureType == Blp::UncompressedNoAlpha)
-	{
-		std::cout << "Detected uncompressed mode 2 without alpha." << std::endl;
-		//bytes += this->m_blp->writeBlpUncompressed2(ostream);
-	}
 	else
-	{
-		char message[50];
-		sprintf(message, _("Unknown compression mode.\nCompression mode %d.\nPicture type: %d.\n"), this->m_compression, this->m_pictureType);
-		
-		throw Exception(message);
-	}
+		throw Exception(boost::str(boost::format(_("Unknown compression mode: %1%.")) % this->m_compression));
 
 	std::cout << "Wrote " << bytes << " bytes." << std::endl;
 	
@@ -633,11 +644,6 @@ dword Blp::mipMapHeight(int index) const
 		height /= 2;
 	
 	return height;
-}
-
-bool Blp::usesAlphaList() const
-{
-	return (this->m_compression == Blp::Uncompressed && (this->m_pictureType == Blp::UncompressedAlpha1 || this->m_pictureType == Blp::UncompressedAlpha2));
 }
 
 }

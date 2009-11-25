@@ -26,6 +26,7 @@
 #include <fstream>
 
 #include <boost/format.hpp>
+#include <boost/filesystem.hpp>
 
 #include <getopt.h>
 
@@ -345,6 +346,61 @@ static inline std::string formatBytes(unsigned int bytes)
 	return boost::str(boost::format(_("%1% bytes")) % bytes);
 }
 
+static inline bool expectInput()
+{
+	std::string input;
+	std::cin >> input;
+			
+	while (input != _("y") && input != _("n")) 
+	{
+		std::cout << _("Wrong input. Expecting new input (y/n):") << std::endl;
+		std::cin >> input;
+	}
+			
+	if (input == _("y"))
+		return true;
+	else
+		return false;
+}
+
+static bool addFilePath(const boost::filesystem::path &path, std::list<boost::filesystem::path> &filePaths, bool recursive, std::string extension)
+{
+	if (!boost::filesystem::exists(path))
+	{
+		std::cerr << boost::format(_("Error, path \"%1%\" does not exist.\nContinue process (y/n)?")) % path.string() << std::endl;
+		
+		return expectInput();
+	}
+	
+	if (boost::filesystem::is_directory(path))
+	{
+		if (recursive)
+		{
+			boost::filesystem::directory_iterator endIterator;
+			
+			for (boost::filesystem::directory_iterator iterator(path); iterator != endIterator; ++iterator)
+				addFilePath(iterator->path(), filePaths, recursive, extension);
+		}
+		else
+		{
+			std::cerr << boost::format(_("Error, path \"%1%\" seems to be a directory and option -R is not used.\nContinue process (ignore file, y/n)?")) % path.string() << std::endl;
+			
+			return expectInput();
+		}
+	}
+	else if (extension != "*")
+	{
+		std::string::size_type index = path.string().find_last_of(extension);
+		
+		if (index == std::string::npos)	
+			return false;
+	}
+	
+	filePaths.push_back(path);
+	
+	return true;
+}
+
 int main(int argc, char *argv[])
 {
 	// Set the current locale.
@@ -355,22 +411,26 @@ int main(int argc, char *argv[])
 	
 	static struct option options[] =
 	{
-		{"version",  no_argument,             0, 'v'},
-		{"help",     no_argument,             0, 'h'},
-		{"iformat",  required_argument,       0, 'i'},
-		{"oformat",  required_argument,       0, 'o'},
+		{"version",     no_argument,             0, 'v'},
+		{"help",        no_argument,             0, 'h'},
+		{"iformat",     required_argument,       0, 'i'},
+		{"oformat",     required_argument,       0, 'o'},
+		{"recursive",   no_argument,             0, 'R'},
+		{"verbose",     no_argument,             0, 'V'}, /// @todo Probably reserved for --version, too
 		{0, 0, 0, 0}
 	};
 	
 	enum Format optionIformat = InvalidFormat;
 	enum Format optionOformat = InvalidFormat;
-	std::list<std::string> optionFiles;
+	bool optionRecursive = false;
+	bool optionVerbose = false;
+	std::list<boost::filesystem::path> optionFiles;
 	int optionShortcut;
 	
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "vhi:o:", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "vhi:o:RV", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -380,7 +440,7 @@ int main(int argc, char *argv[])
 			case 'v':
 			{
 				std::cout <<
-				boost::format(_("mdlxtest %1%.")) % version
+				boost::format(_("converter %1%.")) % version
 				<< std::endl <<
 				_(
 				"Copyright © 2009 Tamino Dauth\n"
@@ -395,9 +455,9 @@ int main(int argc, char *argv[])
 			case 'h':
 			{
 				std::cout <<
-				_("mdlxtest\n") <<
+				_("converter\n") <<
 				_("\nUsage:\n") <<
-				_("\tmdlxtest [-io] <input files>\n") <<
+				_("\tconverter [-io] <input files>\n") <<
 				_("\nOptions:\n") <<
 				_("\t-v, --version             Shows the current version of mdlxtest.\n") <<
 				_("\t-h, --help                Shows this text.\n") <<
@@ -436,13 +496,36 @@ int main(int argc, char *argv[])
 				
 				break;
 			}
+			
+			case 'R':
+			{
+				optionRecursive = true;
+				
+				break;
+			}
+			
+			case 'V':
+			{
+				optionVerbose = true;
+				
+				break;
+			}
 		}
 	}
 	
 	if (optind < argc)
 	{
 		while (optind < argc)
-			optionFiles.push_back(argv[optind++]);
+		{
+			boost::filesystem::path path = argv[optind++];
+			
+			if (!addFilePath(path, optionFiles, optionRecursive, getFormatExtension(optionIformat)))
+			{
+				std::cerr << _("Canceled process.") << std::endl;
+				
+				return EXIT_FAILURE;
+			}
+		}
 
 	}
 	else
@@ -468,7 +551,7 @@ int main(int argc, char *argv[])
 	
 	if (!checkFormatConvertibility(optionIformat, optionOformat))
 	{
-		fprintf(stderr, _("Format \"%s\" can not be converted into format \"%s\"."), getFormatExpression(optionIformat).c_str(), getFormatExpression(optionOformat).c_str());
+		std::cerr << boost::format(_("Format \"%1%\" can not be converted into format \"%2%\".")) % getFormatExpression(optionIformat) % getFormatExpression(optionOformat) << std::endl;
 		
 		return EXIT_FAILURE;
 	}
@@ -481,7 +564,7 @@ int main(int argc, char *argv[])
 	}
 	
 
-	for (std::list<std::string>::iterator iterator = optionFiles.begin(); iterator != optionFiles.end(); ++iterator)
+	for (std::list<boost::filesystem::path>::iterator iterator = optionFiles.begin(); iterator != optionFiles.end(); ++iterator)
 	{
 		std::cout << "Loop" << std::endl;
 		
@@ -490,11 +573,14 @@ int main(int argc, char *argv[])
 		if (isFormatBinary(optionIformat))
 			openMode |= std::ifstream::binary;
 		
-		std::ifstream ifstream((*iterator).c_str(), openMode);
+		if (optionVerbose)
+			std::cout << boost::format(_("Reading file \"%1%\".")) % iterator->string() << std::endl;
+		
+		std::ifstream ifstream(iterator->string().c_str(), openMode);
 		
 		if (!ifstream)
 		{
-			fprintf(stderr, _("Error while opening file \"%s\". Continuing with next one.\n"), (*iterator).c_str());
+			std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % iterator->string() << std::endl;
 			
 			continue;
 		}
@@ -575,7 +661,7 @@ int main(int argc, char *argv[])
 		}
 		catch (class Exception &exception)
 		{
-			fprintf(stderr, _("Error while reading file \"%s\":\n \"%s\"\n"), (*iterator).c_str(), exception.what());
+			std::cerr << boost::format(_("Error while reading file \"%1%\":\n\"%2%\"")) % iterator->string() % exception.what() << std::endl;
 			std::cerr << _("Skiping file.") << std::endl;
 			
 			continue;
@@ -589,7 +675,7 @@ int main(int argc, char *argv[])
 			openMode |= std::ofstream::binary;
 		
 		std::string extension = getFormatExtension(optionOformat);
-		std::string filePath = *iterator;
+		std::string filePath = iterator->string();
 		std::string::size_type index = filePath.find_last_of('.');
 		
 		// remove old extension
@@ -601,7 +687,7 @@ int main(int argc, char *argv[])
 		
 		if (!ofstream)
 		{
-			fprintf(stderr, _("Error while opening file \"%s\". Continuing with next one.\n"), filePath.c_str());
+			std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % filePath << std::endl;
 			
 			continue;
 		}
@@ -678,7 +764,7 @@ int main(int argc, char *argv[])
 		}
 		catch (class Exception &exception)
 		{
-			fprintf(stderr, _("Error while writing file \"%s\":\n \"%s\"\n"), filePath.c_str(), exception.what());
+			std::cerr << boost::format(_("Error while writing file \"%1%\":\n\"%1%\"")) % filePath % exception.what() << std::endl;
 			std::cerr << _("Skiping file.") << std::endl;
 			
 			continue;

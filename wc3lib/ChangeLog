@@ -1,5 +1,9 @@
 2009-11-25 Tamino Dauth <tamino@cdauth.de>
 * Improved BLP compression mode detection and added enum PictureType to class Blp.
+* Renamed program mdlxtest to converter.
+* Improved converter and added option --recursive.
+* Dropped program blptest and corresponding source code.
+* Revised BLP file read- and writing.
 
 2009-11-23 Tamino Dauth <tamino@cdauth.de>
 * Class blp::Blp allows now more than 256 different paletted colors.

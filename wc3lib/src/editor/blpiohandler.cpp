@@ -49,28 +49,30 @@ bool BlpIOHandler::canRead() const
 
 bool BlpIOHandler::read(QImage *image)
 {
+	/*
+	Using JPEG compression
 	if (image->numColors() > 256)
 		return false;
-	
-	if (this->m_blp != 0)
-		delete this->m_blp;
-	
-	this->m_blp->setCompression(blp::Blp::Uncompressed);
+	*/
+	this->m_blp->clear();
+	this->m_blp->setCompression(blp::Blp::Jpeg);
 	
 	if (image->hasAlphaChannel())
-		this->m_blp->setFlags(8);
+		this->m_blp->setFlags(blp::Blp::Alpha);
 	else
-		this->m_blp->setFlags(0);
+		this->m_blp->setFlags(blp::Blp::NoAlpha);
 		
 	this->m_blp->setWidth(image->width());
 	this->m_blp->setHeight(image->height());
-	
+	this->m_blp->setPictureType(0);
+	/*
 	if (image->hasAlphaChannel())
 		this->m_blp->setPictureType(3);
 	else
 		this->m_blp->setPictureType(5);
-	
-	this->m_blp->setPictureSubType(1);
+	*/
+		
+	this->m_blp->setPictureSubType(0); //1
 	std::list<blp::color> palette;
 	
 	foreach (QRgb rgb, image->colorTable())

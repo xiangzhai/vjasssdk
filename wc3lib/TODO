@@ -1,5 +1,7 @@
 2009-11-25 Tamino Dauth <tamino@cdauth.de>
-* Maybe rename Blp::Uncompressed to Blp::PalettedCompressed.
+* DONE: Maybe rename Blp::Uncompressed to Blp::PalettedCompressed.
+* DONE: Add constant member Blp::maxCompressedPaletteSize.
+* Too much mip map data is read (end of file)?
 
 2009-11-23 Tamino Dauth <tamino@cdauth.de>
 * BLP2 uses another specification or BaerWeiss.blp is BlpUncompressed2, fix BlpUncompressed1 and BlpUncompressed2 diffences recognition.
