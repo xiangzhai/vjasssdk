@@ -6,14 +6,14 @@
 	 - Moyack for giving me sections of the vJass API
 	 - Barade for a list of missing keywords and for feedback
 	 - Creators of java.xml, cpp.xml and pascal.xml files and Kate forum for giving me precise instructions
+	 - Deaod and Akolytor for providing me a complete list of BJ and native fucntions. 
 	 - http://htmlhelp.com/cgi-bin/color.cgi    for providing me all rgb colors I needed
 	 - http://kate-editor.org/article/writing_a_kate_highlighting_xml_file     for some help provided
 	 
 	 Creators Note:
 	  - This extension was created so KDE Linux users could have an easy and light way of programming in vJass. This extension is opensource and freeware, but please if you use it, credit me, because I lost many hours to make this work and to bring this to the world. Hoping it helps, Flame_Phoenix.-->
-<language name="vjass" version="1.25" kateversion="2.4" section="Other" extensions="*.j" author="Pedro Miguel Martins"> 
+<language name="vJass" version="1.26" kateversion="3.3.2" section="Other" extensions="*.j;*.J" author="Pedro Miguel Martins"> 
 	<highlighting>
-		
 		<!-- keywords of vJass-->
 		<list name="keywords">
 			<item>then</item>
@@ -62,37 +62,29 @@
 			<item>exists</item>
 			<item>implement</item>
 			<item>optional</item>
+			<item>hook</item>
+			<!-- Zinc -->
+			<item>for</item>
+			<item>while</item>
+			<item>break</item>
 		</list>
 		
-		<!-- All functions of vJass-->
-		<list name="functions">
+		<!-- All native functions of vJass-->
+		<list name="CommonJNatives">
 			<item>AbilityId</item>
 			<item>AbilityId2String</item>
-			<item>AbortCinematicFadeBJ</item>
 			<item>Acos</item>
-			<item>AcosBJ</item>
-			<item>AddAssault</item>
-			<item>AddDefenders</item>
-			<item>AddGuardPost</item>
 			<item>AddHeroXP</item>
-			<item>AddHeroXPSwapped</item>
 			<item>AddIndicator</item>
 			<item>AddItemToAllStock</item>
 			<item>AddItemToStock</item>
-			<item>AddItemToStockBJ</item>
 			<item>AddLightning</item>
 			<item>AddLightningEx</item>
-			<item>AddLightningLoc</item>
 			<item>AddPlayerTechResearched</item>
 			<item>AddResourceAmount</item>
-			<item>AddResourceAmountBJ</item>
-			<item>AddSiege</item>
-			<item>AddSleepSeconds</item>
 			<item>AddSpecialEffect</item>
 			<item>AddSpecialEffectLoc</item>
-			<item>AddSpecialEffectLocBJ</item>
 			<item>AddSpecialEffectTarget</item>
-			<item>AddSpecialEffectTargetUnitBJ</item>
 			<item>AddSpellEffect</item>
 			<item>AddSpellEffectById</item>
 			<item>AddSpellEffectByIdLoc</item>
@@ -100,130 +92,42 @@
 			<item>AddSpellEffectTarget</item>
 			<item>AddSpellEffectTargetById</item>
 			<item>AddUnitAnimationProperties</item>
-			<item>AddUnitAnimationPropertiesBJ</item>
 			<item>AddUnitToAllStock</item>
 			<item>AddUnitToStock</item>
-			<item>AddUnitToStockBJ</item>
 			<item>AddWeatherEffect</item>
-			<item>AddWeatherEffectSaveLast</item>
-			<item>AdjustCameraBoundsBJ</item>
-			<item>AdjustCameraBoundsForPlayerBJ</item>
 			<item>AdjustCameraField</item>
-			<item>AdjustPlayerStateBJ</item>
-			<item>AdjustPlayerStateSimpleBJ</item>
-			<item>AllowVictoryDefeat</item>
 			<item>And</item>
-			<item>AngleBetweenPoints</item>
-			<item>AnyPlayerAttack</item>
 			<item>Asin</item>
-			<item>AsinBJ</item>
 			<item>Atan</item>
 			<item>Atan2</item>
-			<item>Atan2BJ</item>
-			<item>AtanBJ</item>
 			<item>AttachSoundToUnit</item>
-			<item>AttachSoundToUnitBJ</item>
-			<item>AttackMoveKill</item>
-			<item>AttackMoveKillA</item>
-			<item>AttackMoveXY</item>
-			<item>AttackMoveXYA</item>
-			<item>AwaitMeleeHeroes</item>
-			<item>BasicExpansion</item>
-			<item>BJDebugMsg</item>
-			<item>BlightGoldMineForPlayer</item>
-			<item>BlightGoldMineForPlayerBJ</item>
-			<item>BuildAttackers</item>
-			<item>BuildDefenders</item>
-			<item>BuildFactory</item>
-			<item>BuildLoop</item>
 			<item>CachePlayerHeroData</item>
-			<item>CameraClearNoiseForPlayer</item>
-			<item>CameraResetSmoothingFactorBJ</item>
-			<item>CameraSetEQNoiseForPlayer</item>
 			<item>CameraSetSmoothingFactor</item>
-			<item>CameraSetSmoothingFactorBJ</item>
 			<item>CameraSetSourceNoise</item>
 			<item>CameraSetSourceNoiseEx</item>
-			<item>CameraSetSourceNoiseForPlayer</item>
 			<item>CameraSetTargetNoise</item>
 			<item>CameraSetTargetNoiseEx</item>
-			<item>CameraSetTargetNoiseForPlayer</item>
 			<item>CameraSetupApply</item>
 			<item>CameraSetupApplyForceDuration</item>
 			<item>CameraSetupApplyForceDurationWithZ</item>
-			<item>CameraSetupApplyForPlayer</item>
 			<item>CameraSetupApplyWithZ</item>
 			<item>CameraSetupGetDestPositionLoc</item>
 			<item>CameraSetupGetDestPositionX</item>
 			<item>CameraSetupGetDestPositionY</item>
 			<item>CameraSetupGetField</item>
-			<item>CameraSetupGetFieldSwap</item>
 			<item>CameraSetupSetDestPosition</item>
 			<item>CameraSetupSetField</item>
-			<item>CampaignAI</item>
-			<item>CampaignAttacker</item>
-			<item>CampaignAttackerEx</item>
-			<item>CampaignBasics</item>
-			<item>CampaignBasicsA</item>
-			<item>CampaignDefender</item>
-			<item>CampaignDefenderEx</item>
-			<item>CancelCineSceneBJ</item>
-			<item>CaptainAtGoal</item>
-			<item>CaptainAttack</item>
-			<item>CaptainGoHome</item>
-			<item>CaptainGroupSize</item>
-			<item>CaptainInCombat</item>
-			<item>CaptainIsEmpty</item>
-			<item>CaptainIsFull</item>
-			<item>CaptainIsHome</item>
-			<item>CaptainReadiness</item>
-			<item>CaptainReadinessHP</item>
-			<item>CaptainReadinessMa</item>
-			<item>CaptainRetreating</item>
-			<item>CaptainVsPlayer</item>
-			<item>CaptainVsUnits</item>
-			<item>ChangeElevatorHeight</item>
-			<item>ChangeElevatorWallBlocker</item>
-			<item>ChangeElevatorWalls</item>
 			<item>ChangeLevel</item>
 			<item>Cheat</item>
-			<item>CheckInitPlayerSlotAvailability</item>
-			<item>CheckItemcodeStatus</item>
-			<item>CheckItemStatus</item>
 			<item>ChooseRandomCreep</item>
-			<item>ChooseRandomCreepBJ</item>
 			<item>ChooseRandomItem</item>
-			<item>ChooseRandomItemBJ</item>
 			<item>ChooseRandomItemEx</item>
-			<item>ChooseRandomItemExBJ</item>
 			<item>ChooseRandomNPBuilding</item>
-			<item>ChooseRandomNPBuildingBJ</item>
-			<item>CinematicFadeBJ</item>
-			<item>CinematicFadeCommonBJ</item>
-			<item>CinematicFilterGenericBJ</item>
-			<item>CinematicModeBJ</item>
-			<item>CinematicModeExBJ</item>
-			<item>ClearCaptainTargets</item>
-			<item>ClearHarvestAI</item>
 			<item>ClearMapMusic</item>
-			<item>ClearMapMusicBJ</item>
 			<item>ClearSelection</item>
-			<item>ClearSelectionForPlayer</item>
 			<item>ClearTextMessages</item>
-			<item>ClearTextMessagesBJ</item>
 			<item>CommandAI</item>
-			<item>CommandsWaiting</item>
-			<item>CommentString</item>
-			<item>CommonSleepUntilTargetDead</item>
-			<item>CommonSuicideOnPlayer</item>
-			<item>CompareLocationsBJ</item>
-			<item>CompareRectsBJ</item>
 			<item>Condition</item>
-			<item>ConditionalTriggerExecute</item>
-			<item>ConfigureNeutralVictim</item>
-			<item>ContinueCinematicFadeAfterBJ</item>
-			<item>ContinueCinematicFadeBJ</item>
-			<item>Conversions</item>
 			<item>ConvertAIDifficulty</item>
 			<item>ConvertAllianceType</item>
 			<item>ConvertAttackType</item>
@@ -231,7 +135,6 @@
 			<item>ConvertCameraField</item>
 			<item>ConvertDamageType</item>
 			<item>ConvertDialogEvent</item>
-			<item>ConvertedPlayer</item>
 			<item>ConvertEffectType</item>
 			<item>ConvertFGameState</item>
 			<item>ConvertFogState</item>
@@ -247,7 +150,6 @@
 			<item>ConvertMapFlag</item>
 			<item>ConvertMapSetting</item>
 			<item>ConvertMapVisibility</item>
-			<item>ConvertNeeds</item>
 			<item>ConvertPathingType</item>
 			<item>ConvertPlacement</item>
 			<item>ConvertPlayerColor</item>
@@ -264,7 +166,6 @@
 			<item>ConvertStartLocPrio</item>
 			<item>ConvertTexMapFlags</item>
 			<item>ConvertUnitEvent</item>
-			<item>ConvertUnits</item>
 			<item>ConvertUnitState</item>
 			<item>ConvertUnitType</item>
 			<item>ConvertVersion</item>
@@ -272,108 +173,52 @@
 			<item>ConvertWeaponType</item>
 			<item>ConvertWidgetEvent</item>
 			<item>CopySaveGame</item>
-			<item>CopySaveGameBJ</item>
 			<item>Cos</item>
-			<item>CosBJ</item>
-			<item>CountLivingPlayerUnitsOfTypeId</item>
-			<item>CountPlayersInForceBJ</item>
-			<item>CountPlayersInForceEnum</item>
-			<item>CountUnitsInGroup</item>
-			<item>CountUnitsInGroupEnum</item>
 			<item>CreateBlightedGoldmine</item>
 			<item>CreateCameraSetup</item>
-			<item>CreateCaptains</item>
 			<item>CreateCorpse</item>
-			<item>CreateCorpseLocBJ</item>
 			<item>CreateDeadDestructable</item>
-			<item>CreateDeadDestructableLocBJ</item>
 			<item>CreateDeadDestructableZ</item>
 			<item>CreateDefeatCondition</item>
-			<item>CreateDefeatConditionBJ</item>
 			<item>CreateDestructable</item>
-			<item>CreateDestructableLoc</item>
 			<item>CreateDestructableZ</item>
 			<item>CreateFogModifierRadius</item>
 			<item>CreateFogModifierRadiusLoc</item>
-			<item>CreateFogModifierRadiusLocBJ</item>
-			<item>CreateFogModifierRadiusLocSimple</item>
 			<item>CreateFogModifierRect</item>
-			<item>CreateFogModifierRectBJ</item>
-			<item>CreateFogModifierRectSimple</item>
 			<item>CreateForce</item>
 			<item>CreateGroup</item>
 			<item>CreateImage</item>
-			<item>CreateImageBJ</item>
 			<item>CreateItem</item>
-			<item>CreateItemLoc</item>
 			<item>CreateItemPool</item>
 			<item>CreateLeaderboard</item>
-			<item>CreateLeaderboardBJ</item>
 			<item>CreateMIDISound</item>
 			<item>CreateMultiboard</item>
-			<item>CreateMultiboardBJ</item>
-			<item>CreateNUnitsAtLoc</item>
-			<item>CreateNUnitsAtLocFacingLocBJ</item>
-			<item>CreatePermanentCorpseLocBJ</item>
 			<item>CreateQuest</item>
-			<item>CreateQuestBJ</item>
-			<item>CreateQuestItemBJ</item>
 			<item>CreateRegion</item>
 			<item>CreateSound</item>
 			<item>CreateSoundFilenameWithLabel</item>
 			<item>CreateSoundFromLabel</item>
 			<item>CreateTextTag</item>
-			<item>CreateTextTagLocBJ</item>
-			<item>CreateTextTagUnitBJ</item>
 			<item>CreateTimer</item>
-			<item>CreateTimerBJ</item>
 			<item>CreateTimerDialog</item>
-			<item>CreateTimerDialogBJ</item>
 			<item>CreateTrackable</item>
 			<item>CreateTrigger</item>
 			<item>CreateUbersplat</item>
-			<item>CreateUbersplatBJ</item>
 			<item>CreateUnit</item>
 			<item>CreateUnitAtLoc</item>
 			<item>CreateUnitAtLocByName</item>
-			<item>CreateUnitAtLocSaveLast</item>
 			<item>CreateUnitByName</item>
 			<item>CreateUnitPool</item>
-			<item>CreepAttackEx</item>
-			<item>CreepsOnMap</item>
 			<item>CripplePlayer</item>
-			<item>CustomDefeatBJ</item>
-			<item>CustomDefeatDialogBJ</item>
-			<item>CustomDefeatLoadBJ</item>
-			<item>CustomDefeatQuitBJ</item>
-			<item>CustomDefeatReduceDifficultyBJ</item>
-			<item>CustomDefeatRestartBJ</item>
-			<item>CustomVictoryBJ</item>
-			<item>CustomVictoryDialogBJ</item>
-			<item>CustomVictoryOkBJ</item>
-			<item>CustomVictoryQuitBJ</item>
-			<item>CustomVictorySkipBJ</item>
-			<item>DebugFI</item>
-			<item>DebugS</item>
-			<item>DebugUnitID</item>
 			<item>DecUnitAbilityLevel</item>
-			<item>DecUnitAbilityLevelSwapped</item>
 			<item>DefeatConditionSetDescription</item>
-			<item>DefeatConditionSetDescriptionBJ</item>
 			<item>DefineStartLocation</item>
 			<item>DefineStartLocationLoc</item>
 			<item>Deg2Rad</item>
-			<item>DelayedSuspendDecay</item>
-			<item>DelayedSuspendDecayBoneEnum</item>
-			<item>DelayedSuspendDecayCreate</item>
-			<item>DelayedSuspendDecayFleshEnum</item>
-			<item>DelayedSuspendDecayStopAnimEnum</item>
 			<item>DestroyBoolExpr</item>
 			<item>DestroyCondition</item>
 			<item>DestroyDefeatCondition</item>
-			<item>DestroyDefeatConditionBJ</item>
 			<item>DestroyEffect</item>
-			<item>DestroyEffectBJ</item>
 			<item>DestroyFilter</item>
 			<item>DestroyFogModifier</item>
 			<item>DestroyForce</item>
@@ -381,65 +226,34 @@
 			<item>DestroyImage</item>
 			<item>DestroyItemPool</item>
 			<item>DestroyLeaderboard</item>
-			<item>DestroyLeaderboardBJ</item>
 			<item>DestroyLightning</item>
-			<item>DestroyLightningBJ</item>
 			<item>DestroyMultiboard</item>
-			<item>DestroyMultiboardBJ</item>
 			<item>DestroyQuest</item>
-			<item>DestroyQuestBJ</item>
 			<item>DestroyTextTag</item>
-			<item>DestroyTextTagBJ</item>
 			<item>DestroyTimer</item>
-			<item>DestroyTimerBJ</item>
 			<item>DestroyTimerDialog</item>
-			<item>DestroyTimerDialogBJ</item>
 			<item>DestroyTrigger</item>
 			<item>DestroyUbersplat</item>
 			<item>DestroyUnitPool</item>
-			<item>DestructableAddIndicatorBJ</item>
 			<item>DestructableRestoreLife</item>
-			<item>DetectGameStarted</item>
 			<item>DialogAddButton</item>
-			<item>DialogAddButtonBJ</item>
-			<item>DialogAddButtonWithHotkeyBJ</item>
 			<item>DialogAddQuitButton</item>
 			<item>DialogClear</item>
-			<item>DialogClearBJ</item>
 			<item>DialogCreate</item>
 			<item>DialogDestroy</item>
 			<item>DialogDisplay</item>
-			<item>DialogDisplayBJ</item>
 			<item>DialogSetMessage</item>
-			<item>DialogSetMessageBJ</item>
-			<item>DisablePathing</item>
 			<item>DisableRestartMission</item>
 			<item>DisableTrigger</item>
 			<item>DisplayCineFilter</item>
-			<item>DisplayCineFilterBJ</item>
 			<item>DisplayLoadDialog</item>
-			<item>DisplayText</item>
-			<item>DisplayTextI</item>
-			<item>DisplayTextII</item>
-			<item>DisplayTextIII</item>
-			<item>DisplayTextToForce</item>
 			<item>DisplayTextToPlayer</item>
 			<item>DisplayTimedTextFromPlayer</item>
-			<item>DisplayTimedTextToForce</item>
 			<item>DisplayTimedTextToPlayer</item>
-			<item>DistanceBetweenPoints</item>
-			<item>DoAiScriptDebug</item>
-			<item>DoCampaignFarms</item>
-			<item>DoesUnitGenerateAlarms</item>
-			<item>DoNothing</item>
 			<item>DoNotSaveReplay</item>
-			<item>DoTransmissionBasicsXYBJ</item>
-			<item>EnableCreepSleepBJ</item>
-			<item>EnableDawnDusk</item>
 			<item>EnableDragSelect</item>
 			<item>EnableMinimapFilterButtons</item>
 			<item>EnableOcclusion</item>
-			<item>EnableOcclusionBJ</item>
 			<item>EnablePreSelect</item>
 			<item>EnableSelect</item>
 			<item>EnableTrigger</item>
@@ -447,104 +261,54 @@
 			<item>EnableUserUI</item>
 			<item>EnableWeatherEffect</item>
 			<item>EnableWorldFogBoundary</item>
-			<item>EnableWorldFogBoundaryBJ</item>
 			<item>EndCinematicScene</item>
 			<item>EndGame</item>
-			<item>EndGameBJ</item>
 			<item>EndThematicMusic</item>
-			<item>EndThematicMusicBJ</item>
-			<item>EnumDestructablesInCircleBJ</item>
-			<item>EnumDestructablesInCircleBJFilter</item>
 			<item>EnumDestructablesInRect</item>
-			<item>EnumDestructablesInRectAll</item>
 			<item>EnumItemsInRect</item>
-			<item>EnumItemsInRectBJ</item>
-			<item>EnumUnitsSelected</item>
 			<item>ExecuteFunc</item>
-			<item>ExpansionAttack</item>
-			<item>ExplodeUnitBJ</item>
-			<item>FFAInitPlayerSlots</item>
-			<item>FillGuardPosts</item>
 			<item>Filter</item>
-			<item>FindElevatorWallBlockerEnum</item>
-			<item>FinishCinematicFadeAfterBJ</item>
-			<item>FinishCinematicFadeBJ</item>
 			<item>FinishUbersplat</item>
 			<item>FirstOfGroup</item>
 			<item>FlashQuestDialogButton</item>
-			<item>FlashQuestDialogButtonBJ</item>
 			<item>FlushGameCache</item>
-			<item>FlushGameCacheBJ</item>
 			<item>FlushStoredBoolean</item>
 			<item>FlushStoredInteger</item>
 			<item>FlushStoredMission</item>
-			<item>FlushStoredMissionBJ</item>
 			<item>FlushStoredReal</item>
 			<item>FlushStoredString</item>
 			<item>FlushStoredUnit</item>
 			<item>FogEnable</item>
-			<item>FogEnableOff</item>
-			<item>FogEnableOn</item>
 			<item>FogMaskEnable</item>
-			<item>FogMaskEnableOff</item>
-			<item>FogMaskEnableOn</item>
 			<item>FogModifierStart</item>
 			<item>FogModifierStop</item>
-			<item>FoodAvail</item>
-			<item>FoodCap</item>
-			<item>FoodPool</item>
-			<item>FoodSpace</item>
-			<item>FoodUsed</item>
 			<item>ForceAddPlayer</item>
-			<item>ForceAddPlayerSimple</item>
 			<item>ForceCampaignSelectScreen</item>
 			<item>ForceCinematicSubtitles</item>
-			<item>ForceCinematicSubtitlesBJ</item>
 			<item>ForceClear</item>
 			<item>ForceEnumAllies</item>
 			<item>ForceEnumEnemies</item>
 			<item>ForceEnumPlayers</item>
 			<item>ForceEnumPlayersCounted</item>
-			<item>ForcePickRandomPlayer</item>
-			<item>ForcePickRandomPlayerEnum</item>
 			<item>ForcePlayerStartLocation</item>
 			<item>ForceQuestDialogUpdate</item>
 			<item>ForceRemovePlayer</item>
-			<item>ForceRemovePlayerSimple</item>
-			<item>ForceSetLeaderboardBJ</item>
 			<item>ForceUICancel</item>
-			<item>ForceUICancelBJ</item>
 			<item>ForceUIKey</item>
-			<item>ForceUIKeyBJ</item>
-			<item>ForeverSuicideOnPlayer</item>
 			<item>ForForce</item>
 			<item>ForGroup</item>
-			<item>ForGroupBJ</item>
-			<item>FormGroup</item>
-			<item>GameOverDialogBJ</item>
 			<item>GetAbilityEffect</item>
-			<item>GetAbilityEffectBJ</item>
 			<item>GetAbilityEffectById</item>
-			<item>GetAbilityName</item>
 			<item>GetAbilitySound</item>
-			<item>GetAbilitySoundBJ</item>
 			<item>GetAbilitySoundById</item>
 			<item>GetAIDifficulty</item>
-			<item>GetAiPlayer</item>
-			<item>GetAllianceTarget</item>
 			<item>GetAllyColorFilterState</item>
-			<item>GetAllyCount</item>
-			<item>GetAttackedUnitBJ</item>
 			<item>GetAttacker</item>
-			<item>GetBooleanAnd</item>
-			<item>GetBooleanOr</item>
-			<item>GetBuilding</item>
 			<item>GetBuyingUnit</item>
 			<item>GetCameraBoundMaxX</item>
 			<item>GetCameraBoundMaxY</item>
 			<item>GetCameraBoundMinX</item>
 			<item>GetCameraBoundMinY</item>
-			<item>GetCameraBoundsMapRect</item>
 			<item>GetCameraEyePositionLoc</item>
 			<item>GetCameraEyePositionX</item>
 			<item>GetCameraEyePositionY</item>
@@ -559,22 +323,15 @@
 			<item>GetChangingUnit</item>
 			<item>GetChangingUnitPrevOwner</item>
 			<item>GetClickedButton</item>
-			<item>GetClickedButtonBJ</item>
 			<item>GetClickedDialog</item>
-			<item>GetClickedDialogBJ</item>
 			<item>GetConstructedStructure</item>
 			<item>GetConstructingStructure</item>
-			<item>GetConvertedPlayerId</item>
 			<item>GetCreatureDensity</item>
-			<item>GetCreepCamp</item>
 			<item>GetCreepCampFilterState</item>
-			<item>GetCurrentCameraBoundsMapRectBJ</item>
-			<item>GetCurrentCameraSetup</item>
 			<item>GetCustomCampaignButtonVisible</item>
 			<item>GetDecayingUnit</item>
 			<item>GetDefaultDifficulty</item>
 			<item>GetDestructableLife</item>
-			<item>GetDestructableLoc</item>
 			<item>GetDestructableMaxLife</item>
 			<item>GetDestructableName</item>
 			<item>GetDestructableOccluderHeight</item>
@@ -582,14 +339,8 @@
 			<item>GetDestructableX</item>
 			<item>GetDestructableY</item>
 			<item>GetDetectedUnit</item>
-			<item>GetDyingDestructable</item>
 			<item>GetDyingUnit</item>
-			<item>GetElevatorHeight</item>
-			<item>GetEnemyBase</item>
-			<item>GetEnemyExpansion</item>
-			<item>GetEnemyPower</item>
 			<item>GetEnteringUnit</item>
-			<item>GetEntireMapRect</item>
 			<item>GetEnumDestructable</item>
 			<item>GetEnumItem</item>
 			<item>GetEnumPlayer</item>
@@ -603,12 +354,7 @@
 			<item>GetEventPlayerState</item>
 			<item>GetEventTargetUnit</item>
 			<item>GetEventUnitState</item>
-			<item>GetExpansionFoe</item>
-			<item>GetExpansionPeon</item>
-			<item>GetExpansionX</item>
-			<item>GetExpansionY</item>
 			<item>GetExpiredTimer</item>
-			<item>GetFadeFromSeconds</item>
 			<item>GetFilterDestructable</item>
 			<item>GetFilterItem</item>
 			<item>GetFilterPlayer</item>
@@ -616,35 +362,22 @@
 			<item>GetFloatGameState</item>
 			<item>GetFoodMade</item>
 			<item>GetFoodUsed</item>
-			<item>GetForceOfPlayer</item>
-			<item>GetForLoopIndexA</item>
-			<item>GetForLoopIndexB</item>
 			<item>GetGameDifficulty</item>
 			<item>GetGamePlacement</item>
 			<item>GetGameSpeed</item>
 			<item>GetGameTypeSelected</item>
-			<item>GetGold</item>
-			<item>GetGoldOwned</item>
 			<item>GetHeroAgi</item>
-			<item>GetHeroId</item>
 			<item>GetHeroInt</item>
 			<item>GetHeroLevel</item>
-			<item>GetHeroLevelAI</item>
 			<item>GetHeroProperName</item>
 			<item>GetHeroSkillPoints</item>
-			<item>GetHeroStatBJ</item>
 			<item>GetHeroStr</item>
 			<item>GetHeroXP</item>
 			<item>GetIntegerGameState</item>
-			<item>GetInventoryIndexOfItemTypeBJ</item>
 			<item>GetIssuedOrderId</item>
-			<item>GetIssuedOrderIdBJ</item>
 			<item>GetItemCharges</item>
 			<item>GetItemLevel</item>
-			<item>GetItemLifeBJ</item>
-			<item>GetItemLoc</item>
 			<item>GetItemName</item>
-			<item>GetItemOfTypeFromUnitBJ</item>
 			<item>GetItemPlayer</item>
 			<item>GetItemType</item>
 			<item>GetItemTypeId</item>
@@ -652,67 +385,24 @@
 			<item>GetItemX</item>
 			<item>GetItemY</item>
 			<item>GetKillingUnit</item>
-			<item>GetKillingUnitBJ</item>
-			<item>GetLastCommand</item>
-			<item>GetLastCreatedButtonBJ</item>
-			<item>GetLastCreatedDefeatConditionBJ</item>
-			<item>GetLastCreatedDestructable</item>
-			<item>GetLastCreatedEffectBJ</item>
-			<item>GetLastCreatedFogModifier</item>
-			<item>GetLastCreatedGameCacheBJ</item>
-			<item>GetLastCreatedGroup</item>
-			<item>GetLastCreatedGroupEnum</item>
-			<item>GetLastCreatedImage</item>
-			<item>GetLastCreatedItem</item>
-			<item>GetLastCreatedLeaderboard</item>
-			<item>GetLastCreatedLightningBJ</item>
-			<item>GetLastCreatedMultiboard</item>
-			<item>GetLastCreatedQuestBJ</item>
-			<item>GetLastCreatedQuestItemBJ</item>
-			<item>GetLastCreatedTerrainDeformation</item>
-			<item>GetLastCreatedTextTag</item>
-			<item>GetLastCreatedTimerBJ</item>
-			<item>GetLastCreatedTimerDialogBJ</item>
-			<item>GetLastCreatedUbersplat</item>
-			<item>GetLastCreatedUnit</item>
-			<item>GetLastCreatedWeatherEffect</item>
-			<item>GetLastData</item>
-			<item>GetLastHauntedGoldMine</item>
-			<item>GetLastPlayedMusic</item>
-			<item>GetLastPlayedSound</item>
-			<item>GetLastRemovedItem</item>
-			<item>GetLastReplacedUnitBJ</item>
-			<item>GetLastRestoredUnitBJ</item>
-			<item>GetLastTransmissionDurationBJ</item>
 			<item>GetLearnedSkill</item>
-			<item>GetLearnedSkillBJ</item>
 			<item>GetLearnedSkillLevel</item>
 			<item>GetLearningUnit</item>
 			<item>GetLeavingUnit</item>
 			<item>GetLevelingUnit</item>
 			<item>GetLightningColorA</item>
-			<item>GetLightningColorABJ</item>
 			<item>GetLightningColorB</item>
-			<item>GetLightningColorBBJ</item>
 			<item>GetLightningColorG</item>
-			<item>GetLightningColorGBJ</item>
 			<item>GetLightningColorR</item>
-			<item>GetLightningColorRBJ</item>
 			<item>GetLoadedUnit</item>
-			<item>GetLoadedUnitBJ</item>
 			<item>GetLocalizedHotkey</item>
 			<item>GetLocalizedString</item>
 			<item>GetLocalPlayer</item>
 			<item>GetLocationX</item>
 			<item>GetLocationY</item>
 			<item>GetLocationZ</item>
-			<item>GetMajorCreep</item>
 			<item>GetManipulatedItem</item>
 			<item>GetManipulatingUnit</item>
-			<item>GetMegaTarget</item>
-			<item>GetMinesOwned</item>
-			<item>GetMinorCreep</item>
-			<item>GetNextExpansion</item>
 			<item>GetObjectName</item>
 			<item>GetOrderedUnit</item>
 			<item>GetOrderPointLoc</item>
@@ -723,60 +413,36 @@
 			<item>GetOrderTargetItem</item>
 			<item>GetOrderTargetUnit</item>
 			<item>GetOwningPlayer</item>
-			<item>GetPlayableMapRect</item>
 			<item>GetPlayerAlliance</item>
 			<item>GetPlayerColor</item>
 			<item>GetPlayerController</item>
 			<item>GetPlayerHandicap</item>
-			<item>GetPlayerHandicapBJ</item>
 			<item>GetPlayerHandicapXP</item>
-			<item>GetPlayerHandicapXPBJ</item>
 			<item>GetPlayerId</item>
 			<item>GetPlayerName</item>
 			<item>GetPlayerRace</item>
 			<item>GetPlayers</item>
-			<item>GetPlayersAll</item>
-			<item>GetPlayersAllies</item>
-			<item>GetPlayersByMapControl</item>
 			<item>GetPlayerScore</item>
 			<item>GetPlayerSelectable</item>
-			<item>GetPlayersEnemies</item>
 			<item>GetPlayerSlotState</item>
-			<item>GetPlayersMatching</item>
 			<item>GetPlayerStartLocation</item>
-			<item>GetPlayerStartLocationLoc</item>
-			<item>GetPlayerStartLocationX</item>
-			<item>GetPlayerStartLocationY</item>
 			<item>GetPlayerState</item>
 			<item>GetPlayerStructureCount</item>
 			<item>GetPlayerTaxRate</item>
-			<item>GetPlayerTaxRateBJ</item>
 			<item>GetPlayerTeam</item>
 			<item>GetPlayerTechCount</item>
-			<item>GetPlayerTechCountSimple</item>
 			<item>GetPlayerTechMaxAllowed</item>
-			<item>GetPlayerTechMaxAllowedSwap</item>
 			<item>GetPlayerTechResearched</item>
 			<item>GetPlayerTypedUnitCount</item>
 			<item>GetPlayerUnitCount</item>
-			<item>GetPlayerUnitTypeCount</item>
-			<item>GetRandomDirectionDeg</item>
 			<item>GetRandomInt</item>
-			<item>GetRandomLocInRect</item>
-			<item>GetRandomPercentageBJ</item>
 			<item>GetRandomReal</item>
-			<item>GetRandomSubGroup</item>
-			<item>GetRandomSubGroupEnum</item>
-			<item>GetRectCenter</item>
 			<item>GetRectCenterX</item>
 			<item>GetRectCenterY</item>
-			<item>GetRectFromCircleBJ</item>
-			<item>GetRectHeightBJ</item>
 			<item>GetRectMaxX</item>
 			<item>GetRectMaxY</item>
 			<item>GetRectMinX</item>
 			<item>GetRectMinY</item>
-			<item>GetRectWidthBJ</item>
 			<item>GetRescuer</item>
 			<item>GetResearched</item>
 			<item>GetResearchingUnit</item>
@@ -785,16 +451,14 @@
 			<item>GetRevivableUnit</item>
 			<item>GetRevivingUnit</item>
 			<item>GetSaveBasicFilename</item>
+			<item>GetSelectedUnit</item>
 			<item>GetSellingUnit</item>
 			<item>GetSoldItem</item>
 			<item>GetSoldUnit</item>
 			<item>GetSoundDuration</item>
-			<item>GetSoundDurationBJ</item>
 			<item>GetSoundFileDuration</item>
-			<item>GetSoundFileDurationBJ</item>
 			<item>GetSoundIsLoading</item>
 			<item>GetSoundIsPlaying</item>
-			<item>GetSoundIsPlayingBJ</item>
 			<item>GetSpellAbility</item>
 			<item>GetSpellAbilityId</item>
 			<item>GetSpellAbilityUnit</item>
@@ -808,113 +472,68 @@
 			<item>GetStartLocPrio</item>
 			<item>GetStartLocPrioSlot</item>
 			<item>GetStoredBoolean</item>
-			<item>GetStoredBooleanBJ</item>
 			<item>GetStoredInteger</item>
-			<item>GetStoredIntegerBJ</item>
 			<item>GetStoredReal</item>
-			<item>GetStoredRealBJ</item>
 			<item>GetStoredString</item>
-			<item>GetStoredStringBJ</item>
 			<item>GetSummonedUnit</item>
 			<item>GetSummoningUnit</item>
 			<item>GetTeams</item>
 			<item>GetTerrainCliffLevel</item>
-			<item>GetTerrainCliffLevelBJ</item>
 			<item>GetTerrainType</item>
-			<item>GetTerrainTypeBJ</item>
 			<item>GetTerrainVariance</item>
-			<item>GetTerrainVarianceBJ</item>
-			<item>GetTimeOfDay</item>
 			<item>GetTimeOfDayScale</item>
-			<item>GetTimeOfDayScalePercentBJ</item>
 			<item>GetTournamentFinishNowPlayer</item>
 			<item>GetTournamentFinishNowRule</item>
 			<item>GetTournamentFinishSoonTimeRemaining</item>
 			<item>GetTournamentScore</item>
-			<item>GetTownUnitCount</item>
 			<item>GetTrainedUnit</item>
 			<item>GetTrainedUnitType</item>
-			<item>GetTransmissionDuration</item>
 			<item>GetTransportUnit</item>
-			<item>GetTransportUnitBJ</item>
 			<item>GetTriggerEvalCount</item>
 			<item>GetTriggerEventId</item>
 			<item>GetTriggerExecCount</item>
 			<item>GetTriggeringRegion</item>
 			<item>GetTriggeringTrackable</item>
 			<item>GetTriggeringTrigger</item>
+			<item>GetTriggeringVariableName</item>
 			<item>GetTriggerPlayer</item>
 			<item>GetTriggerUnit</item>
 			<item>GetTriggerWidget</item>
 			<item>GetUnitAbilityLevel</item>
-			<item>GetUnitAbilityLevelSwapped</item>
 			<item>GetUnitAcquireRange</item>
-			<item>GetUnitBuildTime</item>
-			<item>GetUnitCount</item>
-			<item>GetUnitCountDone</item>
-			<item>GetUnitCountEx</item>
 			<item>GetUnitCurrentOrder</item>
 			<item>GetUnitDefaultAcquireRange</item>
 			<item>GetUnitDefaultFlyHeight</item>
 			<item>GetUnitDefaultMoveSpeed</item>
 			<item>GetUnitDefaultPropWindow</item>
-			<item>GetUnitDefaultPropWindowBJ</item>
 			<item>GetUnitDefaultTurnSpeed</item>
 			<item>GetUnitFacing</item>
 			<item>GetUnitFlyHeight</item>
 			<item>GetUnitFoodMade</item>
 			<item>GetUnitFoodUsed</item>
-			<item>GetUnitGoldCost</item>
 			<item>GetUnitLevel</item>
-			<item>GetUnitLifePercent</item>
 			<item>GetUnitLoc</item>
-			<item>GetUnitManaPercent</item>
 			<item>GetUnitMoveSpeed</item>
 			<item>GetUnitName</item>
 			<item>GetUnitPointValue</item>
 			<item>GetUnitPointValueByType</item>
 			<item>GetUnitPropWindow</item>
-			<item>GetUnitPropWindowBJ</item>
 			<item>GetUnitRace</item>
 			<item>GetUnitRallyDestructable</item>
 			<item>GetUnitRallyPoint</item>
 			<item>GetUnitRallyUnit</item>
-			<item>GetUnitsInRangeOfLocAll</item>
-			<item>GetUnitsInRangeOfLocMatching</item>
-			<item>GetUnitsInRectAll</item>
-			<item>GetUnitsInRectMatching</item>
-			<item>GetUnitsInRectOfPlayer</item>
-			<item>GetUnitsInRectOfPlayerFilter</item>
-			<item>GetUnitsOfPlayerAll</item>
-			<item>GetUnitsOfPlayerAndTypeId</item>
-			<item>GetUnitsOfPlayerAndTypeIdFilter</item>
-			<item>GetUnitsOfPlayerMatching</item>
-			<item>GetUnitsOfTypeIdAll</item>
-			<item>GetUnitsOfTypeIdAllFilter</item>
-			<item>GetUnitsSelectedAll</item>
 			<item>GetUnitState</item>
-			<item>GetUnitStatePercent</item>
-			<item>GetUnitStateSwap</item>
 			<item>GetUnitTurnSpeed</item>
 			<item>GetUnitTypeId</item>
 			<item>GetUnitUserData</item>
-			<item>GetUnitWoodCost</item>
 			<item>GetUnitX</item>
 			<item>GetUnitY</item>
-			<item>GetUpgradeGoldCost</item>
-			<item>GetUpgradeLevel</item>
-			<item>GetUpgradeWoodCost</item>
 			<item>GetWidgetLife</item>
 			<item>GetWidgetX</item>
 			<item>GetWidgetY</item>
 			<item>GetWinningPlayer</item>
-			<item>GetWood</item>
 			<item>GetWorldBounds</item>
-			<item>GetZeppelin</item>
-			<item>GroupAddGroup</item>
-			<item>GroupAddGroupEnum</item>
 			<item>GroupAddUnit</item>
-			<item>GroupAddUnitSimple</item>
 			<item>GroupClear</item>
 			<item>GroupEnumUnitsInRange</item>
 			<item>GroupEnumUnitsInRangeCounted</item>
@@ -927,77 +546,30 @@
 			<item>GroupEnumUnitsOfTypeCounted</item>
 			<item>GroupEnumUnitsSelected</item>
 			<item>GroupImmediateOrder</item>
-			<item>GroupImmediateOrderBJ</item>
 			<item>GroupImmediateOrderById</item>
-			<item>GroupPickRandomUnit</item>
-			<item>GroupPickRandomUnitEnum</item>
 			<item>GroupPointOrder</item>
 			<item>GroupPointOrderById</item>
 			<item>GroupPointOrderByIdLoc</item>
 			<item>GroupPointOrderLoc</item>
-			<item>GroupPointOrderLocBJ</item>
-			<item>GroupRemoveGroup</item>
-			<item>GroupRemoveGroupEnum</item>
 			<item>GroupRemoveUnit</item>
-			<item>GroupRemoveUnitSimple</item>
-			<item>GroupTargetDestructableOrder</item>
-			<item>GroupTargetItemOrder</item>
 			<item>GroupTargetOrder</item>
-			<item>GroupTargetOrderBJ</item>
 			<item>GroupTargetOrderById</item>
-			<item>GroupTimedLife</item>
-			<item>GroupTrainOrderByIdBJ</item>
-			<item>GuardSecondary</item>
-			<item>HallsCompleted</item>
-			<item>HarvestGold</item>
-			<item>HarvestWood</item>
 			<item>HaveStoredBoolean</item>
 			<item>HaveStoredInteger</item>
 			<item>HaveStoredReal</item>
 			<item>HaveStoredString</item>
 			<item>HaveStoredUnit</item>
-			<item>HaveStoredValue</item>
 			<item>I2R</item>
 			<item>I2S</item>
-			<item>IAbsBJ</item>
-			<item>IgnoredUnits</item>
-			<item>IMaxBJ</item>
-			<item>IMinBJ</item>
 			<item>IncUnitAbilityLevel</item>
-			<item>IncUnitAbilityLevelSwapped</item>
-			<item>InitAI</item>
-			<item>InitAssault</item>
-			<item>InitAssaultGroup</item>
-			<item>InitBlizzard</item>
-			<item>InitBlizzardGlobals</item>
-			<item>InitBuildArray</item>
-			<item>InitDefenseGroup</item>
-			<item>InitDNCSounds</item>
 			<item>InitGameCache</item>
-			<item>InitGameCacheBJ</item>
-			<item>InitGenericPlayerSlots</item>
-			<item>InitMapRects</item>
-			<item>InitMeleeGroup</item>
-			<item>InitNeutralBuildings</item>
-			<item>InitQueuedTriggers</item>
-			<item>InitRescuableBehaviorBJ</item>
-			<item>InitSummonableCaps</item>
-			<item>IntegerTertiaryOp</item>
-			<item>Interleave3</item>
 			<item>IsCineFilterDisplayed</item>
-			<item>IsCustomCampaignButtonVisibile</item>
-			<item>IsDawnDuskEnabled</item>
-			<item>IsDestructableAliveBJ</item>
-			<item>IsDestructableDeadBJ</item>
 			<item>IsDestructableInvulnerable</item>
-			<item>IsDestructableInvulnerableBJ</item>
 			<item>IsFogEnabled</item>
 			<item>IsFoggedToPlayer</item>
 			<item>IsFogMaskEnabled</item>
 			<item>IsGameTypeSupported</item>
 			<item>IsHeroUnitId</item>
-			<item>ISignBJ</item>
-			<item>IsItemHiddenBJ</item>
 			<item>IsItemIdPawnable</item>
 			<item>IsItemIdPowerup</item>
 			<item>IsItemIdSellable</item>
@@ -1020,13 +592,10 @@
 			<item>IsNoVictoryCheat</item>
 			<item>IsPlayerAlly</item>
 			<item>IsPlayerEnemy</item>
-			<item>IsPlayerFlagSetBJ</item>
 			<item>IsPlayerInForce</item>
 			<item>IsPlayerObserver</item>
 			<item>IsPlayerRacePrefSet</item>
-			<item>IsPlayerSlotState</item>
 			<item>IsPointBlighted</item>
-			<item>IsPointBlightedBJ</item>
 			<item>IsPointInRegion</item>
 			<item>IsQuestCompleted</item>
 			<item>IsQuestDiscovered</item>
@@ -1036,11 +605,7 @@
 			<item>IsQuestRequired</item>
 			<item>IssueBuildOrder</item>
 			<item>IssueBuildOrderById</item>
-			<item>IssueBuildOrderByIdLocBJ</item>
-			<item>IssueHauntOrderAtLocBJ</item>
-			<item>IssueHauntOrderAtLocBJFilter</item>
 			<item>IssueImmediateOrder</item>
-			<item>IssueImmediateOrderBJ</item>
 			<item>IssueImmediateOrderById</item>
 			<item>IssueInstantPointOrder</item>
 			<item>IssueInstantPointOrderById</item>
@@ -1056,41 +621,21 @@
 			<item>IssuePointOrderById</item>
 			<item>IssuePointOrderByIdLoc</item>
 			<item>IssuePointOrderLoc</item>
-			<item>IssuePointOrderLocBJ</item>
-			<item>IssueTargetDestructableOrder</item>
-			<item>IssueTargetItemOrder</item>
 			<item>IssueTargetOrder</item>
-			<item>IssueTargetOrderBJ</item>
 			<item>IssueTargetOrderById</item>
-			<item>IssueTrainOrderByIdBJ</item>
-			<item>IssueUpgradeOrderByIdBJ</item>
 			<item>IsSuspendedXP</item>
 			<item>IsTerrainPathable</item>
-			<item>IsTerrainPathableBJ</item>
 			<item>IsTimerDialogDisplayed</item>
-			<item>IsTowered</item>
 			<item>IsTriggerEnabled</item>
-			<item>IsTriggerQueuedBJ</item>
-			<item>IsTriggerQueueEmptyBJ</item>
 			<item>IsTriggerWaitOnSleeps</item>
 			<item>IsUnit</item>
-			<item>IsUnitAliveBJ</item>
 			<item>IsUnitAlly</item>
-			<item>IsUnitDeadBJ</item>
 			<item>IsUnitDetected</item>
 			<item>IsUnitEnemy</item>
 			<item>IsUnitFogged</item>
-			<item>IsUnitGroupDeadBJ</item>
-			<item>IsUnitGroupDeadBJEnum</item>
-			<item>IsUnitGroupEmptyBJ</item>
-			<item>IsUnitGroupEmptyBJEnum</item>
-			<item>IsUnitGroupInRectBJ</item>
-			<item>IsUnitGroupInRectBJEnum</item>
 			<item>IsUnitHidden</item>
-			<item>IsUnitHiddenBJ</item>
 			<item>IsUnitIdType</item>
 			<item>IsUnitIllusion</item>
-			<item>IsUnitIllusionBJ</item>
 			<item>IsUnitInForce</item>
 			<item>IsUnitInGroup</item>
 			<item>IsUnitInRange</item>
@@ -1098,83 +643,877 @@
 			<item>IsUnitInRangeXY</item>
 			<item>IsUnitInRegion</item>
 			<item>IsUnitInTransport</item>
-			<item>IsUnitInTransportBJ</item>
 			<item>IsUnitInvisible</item>
 			<item>IsUnitLoaded</item>
-			<item>IsUnitLoadedBJ</item>
 			<item>IsUnitMasked</item>
 			<item>IsUnitOwnedByPlayer</item>
 			<item>IsUnitPaused</item>
-			<item>IsUnitPausedBJ</item>
 			<item>IsUnitRace</item>
 			<item>IsUnitSelected</item>
 			<item>IsUnitType</item>
 			<item>IsUnitVisible</item>
 			<item>IsVisibleToPlayer</item>
-			<item>ItemAddIndicatorBJ</item>
 			<item>ItemPoolAddItemType</item>
 			<item>ItemPoolRemoveItemType</item>
 			<item>KillDestructable</item>
 			<item>KillSoundWhenDone</item>
-			<item>KillSoundWhenDoneBJ</item>
 			<item>KillUnit</item>
 			<item>LeaderboardAddItem</item>
-			<item>LeaderboardAddItemBJ</item>
 			<item>LeaderboardClear</item>
 			<item>LeaderboardDisplay</item>
-			<item>LeaderboardDisplayBJ</item>
-			<item>LeaderboardGetIndexedPlayerBJ</item>
 			<item>LeaderboardGetItemCount</item>
-			<item>LeaderboardGetItemCountBJ</item>
 			<item>LeaderboardGetLabelText</item>
 			<item>LeaderboardGetPlayerIndex</item>
-			<item>LeaderboardGetPlayerIndexBJ</item>
 			<item>LeaderboardHasPlayerItem</item>
-			<item>LeaderboardHasPlayerItemBJ</item>
 			<item>LeaderboardRemoveItem</item>
 			<item>LeaderboardRemovePlayerItem</item>
-			<item>LeaderboardRemovePlayerItemBJ</item>
-			<item>LeaderboardResizeBJ</item>
 			<item>LeaderboardSetItemLabel</item>
 			<item>LeaderboardSetItemLabelColor</item>
 			<item>LeaderboardSetItemStyle</item>
 			<item>LeaderboardSetItemValue</item>
 			<item>LeaderboardSetItemValueColor</item>
 			<item>LeaderboardSetLabel</item>
-			<item>LeaderboardSetLabelBJ</item>
 			<item>LeaderboardSetLabelColor</item>
+			<item>LeaderboardSetSizeByItemCount</item>
+			<item>LeaderboardSetStyle</item>
+			<item>LeaderboardSetValueColor</item>
+			<item>LeaderboardSortItemsByLabel</item>
+			<item>LeaderboardSortItemsByPlayer</item>
+			<item>LeaderboardSortItemsByValue</item>
+			<item>LoadGame</item>
+			<item>Location</item>
+			<item>MoveLightning</item>
+			<item>MoveLightningEx</item>
+			<item>MoveLocation</item>
+			<item>MoveRectTo</item>
+			<item>MoveRectToLoc</item>
+			<item>MultiboardClear</item>
+			<item>MultiboardDisplay</item>
+			<item>MultiboardGetColumnCount</item>
+			<item>MultiboardGetItem</item>
+			<item>MultiboardGetRowCount</item>
+			<item>MultiboardGetTitleText</item>
+			<item>MultiboardMinimize</item>
+			<item>MultiboardReleaseItem</item>
+			<item>MultiboardSetColumnCount</item>
+			<item>MultiboardSetItemIcon</item>
+			<item>MultiboardSetItemsIcon</item>
+			<item>MultiboardSetItemsStyle</item>
+			<item>MultiboardSetItemStyle</item>
+			<item>MultiboardSetItemsValue</item>
+			<item>MultiboardSetItemsValueColor</item>
+			<item>MultiboardSetItemsWidth</item>
+			<item>MultiboardSetItemValue</item>
+			<item>MultiboardSetItemValueColor</item>
+			<item>MultiboardSetItemWidth</item>
+			<item>MultiboardSetRowCount</item>
+			<item>MultiboardSetTitleText</item>
+			<item>MultiboardSetTitleTextColor</item>
+			<item>MultiboardSuppressDisplay</item>
+			<item>NewSoundEnvironment</item>
+			<item>Not</item>
+			<item>Or</item>
+			<item>OrderId</item>
+			<item>OrderId2String</item>
+			<item>PanCameraTo</item>
+			<item>PanCameraToTimed</item>
+			<item>PanCameraToTimedWithZ</item>
+			<item>PanCameraToWithZ</item>
+			<item>PauseCompAI</item>
+			<item>PauseGame</item>
+			<item>PauseTimer</item>
+			<item>PauseUnit</item>
+			<item>PingMinimap</item>
+			<item>PingMinimapEx</item>
+			<item>PlaceRandomItem</item>
+			<item>PlaceRandomUnit</item>
+			<item>PlayCinematic</item>
+			<item>Player</item>
+			<item>PlayerGetLeaderboard</item>
+			<item>PlayerSetLeaderboard</item>
+			<item>PlayModelCinematic</item>
+			<item>PlayMusic</item>
+			<item>PlayMusicEx</item>
+			<item>PlayThematicMusic</item>
+			<item>PlayThematicMusicEx</item>
+			<item>Pow</item>
+			<item>Preload</item>
+			<item>PreloadEnd</item>
+			<item>PreloadEndEx</item>
+			<item>Preloader</item>
+			<item>PreloadGenClear</item>
+			<item>PreloadGenEnd</item>
+			<item>PreloadGenStart</item>
+			<item>PreloadRefresh</item>
+			<item>PreloadStart</item>
+			<item>QuestCreateItem</item>
+			<item>QuestItemSetCompleted</item>
+			<item>QuestItemSetDescription</item>
+			<item>QuestSetCompleted</item>
+			<item>QuestSetDescription</item>
+			<item>QuestSetDiscovered</item>
+			<item>QuestSetEnabled</item>
+			<item>QuestSetFailed</item>
+			<item>QuestSetIconPath</item>
+			<item>QuestSetRequired</item>
+			<item>QuestSetTitle</item>
+			<item>QueueDestructableAnimation</item>
+			<item>QueueUnitAnimation</item>
+			<item>R2I</item>
+			<item>R2S</item>
+			<item>R2SW</item>
+			<item>Rad2Deg</item>
+			<item>Rect</item>
+			<item>RectFromLoc</item>
+			<item>RecycleGuardPosition</item>
+			<item>RegionAddCell</item>
+			<item>RegionAddCellAtLoc</item>
+			<item>RegionAddRect</item>
+			<item>RegionClearCell</item>
+			<item>RegionClearCellAtLoc</item>
+			<item>RegionClearRect</item>
+			<item>RegisterStackedSound</item>
+			<item>ReloadGame</item>
+			<item>ReloadGameCachesFromDisk</item>
+			<item>RemoveAllGuardPositions</item>
+			<item>RemoveDestructable</item>
+			<item>RemoveGuardPosition</item>
+			<item>RemoveItem</item>
+			<item>RemoveItemFromAllStock</item>
+			<item>RemoveItemFromStock</item>
+			<item>RemoveLocation</item>
+			<item>RemovePlayer</item>
+			<item>RemoveRect</item>
+			<item>RemoveRegion</item>
+			<item>RemoveSaveDirectory</item>
+			<item>RemoveUnit</item>
+			<item>RemoveUnitFromAllStock</item>
+			<item>RemoveUnitFromStock</item>
+			<item>RemoveWeatherEffect</item>
+			<item>RenameSaveDirectory</item>
+			<item>ResetTerrainFog</item>
+			<item>ResetToGameCamera</item>
+			<item>ResetTrigger</item>
+			<item>ResetUbersplat</item>
+			<item>ResetUnitLookAt</item>
+			<item>RestartGame</item>
+			<item>RestoreUnit</item>
+			<item>ResumeMusic</item>
+			<item>ResumeTimer</item>
+			<item>ReviveHero</item>
+			<item>ReviveHeroLoc</item>
+			<item>S2I</item>
+			<item>S2R</item>
+			<item>SaveGame</item>
+			<item>SaveGameCache</item>
+			<item>SaveGameExists</item>
+			<item>SelectHeroSkill</item>
+			<item>SelectUnit</item>
+			<item>SetAllItemTypeSlots</item>
+			<item>SetAllUnitTypeSlots</item>
+			<item>SetAllyColorFilterState</item>
+			<item>SetAltMinimapIcon</item>
+			<item>SetBlight</item>
+			<item>SetBlightLoc</item>
+			<item>SetBlightPoint</item>
+			<item>SetBlightRect</item>
+			<item>SetCameraBounds</item>
+			<item>SetCameraField</item>
+			<item>SetCameraOrientController</item>
+			<item>SetCameraPosition</item>
+			<item>SetCameraQuickPosition</item>
+			<item>SetCameraRotateMode</item>
+			<item>SetCameraTargetController</item>
+			<item>SetCampaignAvailable</item>
+			<item>SetCampaignMenuRace</item>
+			<item>SetCampaignMenuRaceEx</item>
+			<item>SetCineFilterBlendMode</item>
+			<item>SetCineFilterDuration</item>
+			<item>SetCineFilterEndColor</item>
+			<item>SetCineFilterEndUV</item>
+			<item>SetCineFilterStartColor</item>
+			<item>SetCineFilterStartUV</item>
+			<item>SetCineFilterTexMapFlags</item>
+			<item>SetCineFilterTexture</item>
+			<item>SetCinematicCamera</item>
+			<item>SetCinematicScene</item>
+			<item>SetCreatureDensity</item>
+			<item>SetCreepCampFilterState</item>
+			<item>SetCustomCampaignButtonVisible</item>
+			<item>SetDayNightModels</item>
+			<item>SetDefaultDifficulty</item>
+			<item>SetDestructableAnimation</item>
+			<item>SetDestructableAnimationSpeed</item>
+			<item>SetDestructableInvulnerable</item>
+			<item>SetDestructableLife</item>
+			<item>SetDestructableMaxLife</item>
+			<item>SetDestructableOccluderHeight</item>
+			<item>SetDoodadAnimation</item>
+			<item>SetDoodadAnimationRect</item>
+			<item>SetEdCinematicAvailable</item>
+			<item>SetFloatGameState</item>
+			<item>SetFogStateRadius</item>
+			<item>SetFogStateRadiusLoc</item>
+			<item>SetFogStateRect</item>
+			<item>SetGameDifficulty</item>
+			<item>SetGamePlacement</item>
+			<item>SetGameSpeed</item>
+			<item>SetGameTypeSupported</item>
+			<item>SetHeroAgi</item>
+			<item>SetHeroInt</item>
+			<item>SetHeroLevel</item>
+			<item>SetHeroStr</item>
+			<item>SetHeroXP</item>
+			<item>SetImageAboveWater</item>
+			<item>SetImageColor</item>
+			<item>SetImageConstantHeight</item>
+			<item>SetImagePosition</item>
+			<item>SetImageRender</item>
+			<item>SetImageRenderAlways</item>
+			<item>SetImageType</item>
+			<item>SetIntegerGameState</item>
+			<item>SetIntroShotModel</item>
+			<item>SetIntroShotText</item>
+			<item>SetItemCharges</item>
+			<item>SetItemDropID</item>
+			<item>SetItemDropOnDeath</item>
+			<item>SetItemDroppable</item>
+			<item>SetItemInvulnerable</item>
+			<item>SetItemPawnable</item>
+			<item>SetItemPlayer</item>
+			<item>SetItemPosition</item>
+			<item>SetItemTypeSlots</item>
+			<item>SetItemUserData</item>
+			<item>SetItemVisible</item>
+			<item>SetLightningColor</item>
+			<item>SetMapDescription</item>
+			<item>SetMapFlag</item>
+			<item>SetMapMusic</item>
+			<item>SetMapName</item>
+			<item>SetMissionAvailable</item>
+			<item>SetMusicPlayPosition</item>
+			<item>SetMusicVolume</item>
+			<item>SetOpCinematicAvailable</item>
+			<item>SetPlayerAbilityAvailable</item>
+			<item>SetPlayerAlliance</item>
+			<item>SetPlayerColor</item>
+			<item>SetPlayerController</item>
+			<item>SetPlayerHandicap</item>
+			<item>SetPlayerHandicapXP</item>
+			<item>SetPlayerName</item>
+			<item>SetPlayerOnScoreScreen</item>
+			<item>SetPlayerRacePreference</item>
+			<item>SetPlayerRaceSelectable</item>
+			<item>SetPlayers</item>
+			<item>SetPlayerStartLocation</item>
+			<item>SetPlayerState</item>
+			<item>SetPlayerTaxRate</item>
+			<item>SetPlayerTeam</item>
+			<item>SetPlayerTechMaxAllowed</item>
+			<item>SetPlayerTechResearched</item>
+			<item>SetPlayerUnitsOwner</item>
+			<item>SetRandomSeed</item>
+			<item>SetRect</item>
+			<item>SetRectFromLoc</item>
+			<item>SetReservedLocalHeroButtons</item>
+			<item>SetResourceAmount</item>
+			<item>SetResourceDensity</item>
+			<item>SetSkyModel</item>
+			<item>SetSoundChannel</item>
+			<item>SetSoundConeAngles</item>
+			<item>SetSoundConeOrientation</item>
+			<item>SetSoundDistanceCutoff</item>
+			<item>SetSoundDistances</item>
+			<item>SetSoundDuration</item>
+			<item>SetSoundParamsFromLabel</item>
+			<item>SetSoundPitch</item>
+			<item>SetSoundPlayPosition</item>
+			<item>SetSoundPosition</item>
+			<item>SetSoundVelocity</item>
+			<item>SetSoundVolume</item>
+			<item>SetStartLocPrio</item>
+			<item>SetStartLocPrioCount</item>
+			<item>SetTeams</item>
+			<item>SetTerrainFog</item>
+			<item>SetTerrainFogEx</item>
+			<item>SetTerrainPathable</item>
+			<item>SetTerrainType</item>
+			<item>SetTextTagAge</item>
+			<item>SetTextTagColor</item>
+			<item>SetTextTagFadepoint</item>
+			<item>SetTextTagLifespan</item>
+			<item>SetTextTagPermanent</item>
+			<item>SetTextTagPos</item>
+			<item>SetTextTagPosUnit</item>
+			<item>SetTextTagSuspended</item>
+			<item>SetTextTagText</item>
+			<item>SetTextTagVelocity</item>
+			<item>SetTextTagVisibility</item>
+			<item>SetThematicMusicPlayPosition</item>
+			<item>SetTimeOfDayScale</item>
+			<item>SetTutorialCleared</item>
+			<item>SetUbersplatRender</item>
+			<item>SetUbersplatRenderAlways</item>
+			<item>SetUnitAbilityLevel</item>
+			<item>SetUnitAcquireRange</item>
+			<item>SetUnitAnimation</item>
+			<item>SetUnitAnimationByIndex</item>
+			<item>SetUnitAnimationWithRarity</item>
+			<item>SetUnitBlendTime</item>
+			<item>SetUnitColor</item>
+			<item>SetUnitCreepGuard</item>
+			<item>SetUnitExploded</item>
+			<item>SetUnitFacing</item>
+			<item>SetUnitFacingTimed</item>
+			<item>SetUnitFlyHeight</item>
+			<item>SetUnitFog</item>
+			<item>SetUnitInvulnerable</item>
+			<item>SetUnitLookAt</item>
+			<item>SetUnitMoveSpeed</item>
+			<item>SetUnitOwner</item>
+			<item>SetUnitPathing</item>
+			<item>SetUnitPosition</item>
+			<item>SetUnitPositionLoc</item>
+			<item>SetUnitPropWindow</item>
+			<item>SetUnitRescuable</item>
+			<item>SetUnitRescueRange</item>
+			<item>SetUnitScale</item>
+			<item>SetUnitState</item>
+			<item>SetUnitTimeScale</item>
+			<item>SetUnitTurnSpeed</item>
+			<item>SetUnitTypeSlots</item>
+			<item>SetUnitUseFood</item>
+			<item>SetUnitUserData</item>
+			<item>SetUnitVertexColor</item>
+			<item>SetUnitX</item>
+			<item>SetUnitY</item>
+			<item>SetWaterBaseColor</item>
+			<item>SetWaterDeforms</item>
+			<item>SetWidgetLife</item>
+			<item>ShowDestructable</item>
+			<item>ShowImage</item>
+			<item>ShowInterface</item>
+			<item>ShowUbersplat</item>
+			<item>ShowUnit</item>
+			<item>Sin</item>
+			<item>SquareRoot</item>
+			<item>StartCampaignAI</item>
+			<item>StartMeleeAI</item>
+			<item>StartSound</item>
+			<item>StopCamera</item>
+			<item>StopMusic</item>
+			<item>StopSound</item>
+			<item>StoreBoolean</item>
+			<item>StoreInteger</item>
+			<item>StoreReal</item>
+			<item>StoreString</item>
+			<item>StoreUnit</item>
+			<item>StringCase</item>
+			<item>StringLength</item>
+			<item>SubString</item>
+			<item>SuspendHeroXP</item>
+			<item>SuspendTimeOfDay</item>
+			<item>SyncSelections</item>
+			<item>SyncStoredBoolean</item>
+			<item>SyncStoredInteger</item>
+			<item>SyncStoredReal</item>
+			<item>SyncStoredString</item>
+			<item>SyncStoredUnit</item>
+			<item>Tan</item>
+			<item>TerrainDeformCrater</item>
+			<item>TerrainDeformRandom</item>
+			<item>TerrainDeformRipple</item>
+			<item>TerrainDeformStop</item>
+			<item>TerrainDeformStopAll</item>
+			<item>TerrainDeformWave</item>
+			<item>TimerDialogDisplay</item>
+			<item>TimerDialogSetRealTimeRemaining</item>
+			<item>TimerDialogSetSpeed</item>
+			<item>TimerDialogSetTimeColor</item>
+			<item>TimerDialogSetTitle</item>
+			<item>TimerDialogSetTitleColor</item>
+			<item>TimerGetElapsed</item>
+			<item>TimerGetRemaining</item>
+			<item>TimerGetTimeout</item>
+			<item>TimerStart</item>
+			<item>TriggerAddAction</item>
+			<item>TriggerAddCondition</item>
+			<item>TriggerClearActions</item>
+			<item>TriggerClearConditions</item>
+			<item>TriggerEvaluate</item>
+			<item>TriggerExecute</item>
+			<item>TriggerExecuteWait</item>
+			<item>TriggerRegisterDeathEvent</item>
+			<item>TriggerRegisterDialogButtonEvent</item>
+			<item>TriggerRegisterDialogEvent</item>
+			<item>TriggerRegisterEnterRegion</item>
+			<item>TriggerRegisterFilterUnitEvent</item>
+			<item>TriggerRegisterGameEvent</item>
+			<item>TriggerRegisterGameStateEvent</item>
+			<item>TriggerRegisterLeaveRegion</item>
+			<item>TriggerRegisterPlayerAllianceChange</item>
+			<item>TriggerRegisterPlayerChatEvent</item>
+			<item>TriggerRegisterPlayerEvent</item>
+			<item>TriggerRegisterPlayerStateEvent</item>
+			<item>TriggerRegisterPlayerUnitEvent</item>
+			<item>TriggerRegisterTimerEvent</item>
+			<item>TriggerRegisterTimerExpireEvent</item>
+			<item>TriggerRegisterTrackableHitEvent</item>
+			<item>TriggerRegisterTrackableTrackEvent</item>
+			<item>TriggerRegisterUnitEvent</item>
+			<item>TriggerRegisterUnitInRange</item>
+			<item>TriggerRegisterUnitStateEvent</item>
+			<item>TriggerRegisterVariableEvent</item>
+			<item>TriggerRemoveAction</item>
+			<item>TriggerRemoveCondition</item>
+			<item>TriggerSleepAction</item>
+			<item>TriggerSyncReady</item>
+			<item>TriggerSyncStart</item>
+			<item>TriggerWaitForSound</item>
+			<item>TriggerWaitOnSleeps</item>
+			<item>UnitAddAbility</item>
+			<item>UnitAddIndicator</item>
+			<item>UnitAddItem</item>
+			<item>UnitAddItemById</item>
+			<item>UnitAddItemToSlotById</item>
+			<item>UnitAddSleep</item>
+			<item>UnitAddSleepPerm</item>
+			<item>UnitAddType</item>
+			<item>UnitApplyTimedLife</item>
+			<item>UnitCanSleep</item>
+			<item>UnitCanSleepPerm</item>
+			<item>UnitCountBuffsEx</item>
+			<item>UnitDamagePoint</item>
+			<item>UnitDamageTarget</item>
+			<item>UnitDropItemPoint</item>
+			<item>UnitDropItemSlot</item>
+			<item>UnitDropItemTarget</item>
+			<item>UnitHasBuffsEx</item>
+			<item>UnitHasItem</item>
+			<item>UnitId</item>
+			<item>UnitId2String</item>
+			<item>UnitIgnoreAlarm</item>
+			<item>UnitIgnoreAlarmToggled</item>
+			<item>UnitInventorySize</item>
+			<item>UnitIsSleeping</item>
+			<item>UnitItemInSlot</item>
+			<item>UnitMakeAbilityPermanent</item>
+			<item>UnitModifySkillPoints</item>
+			<item>UnitPauseTimedLife</item>
+			<item>UnitPoolAddUnitType</item>
+			<item>UnitPoolRemoveUnitType</item>
+			<item>UnitRemoveAbility</item>
+			<item>UnitRemoveBuffs</item>
+			<item>UnitRemoveBuffsEx</item>
+			<item>UnitRemoveItem</item>
+			<item>UnitRemoveItemFromSlot</item>
+			<item>UnitRemoveType</item>
+			<item>UnitResetCooldown</item>
+			<item>UnitSetConstructionProgress</item>
+			<item>UnitSetUpgradeProgress</item>
+			<item>UnitSetUsesAltIcon</item>
+			<item>UnitShareVision</item>
+			<item>UnitStripHeroLevel</item>
+			<item>UnitSuspendDecay</item>
+			<item>UnitUseItem</item>
+			<item>UnitUseItemPoint</item>
+			<item>UnitUseItemTarget</item>
+			<item>UnitWakeUp</item>
+			<item>UnregisterStackedSound</item>
+			<item>VersionCompatible</item>
+			<item>VersionGet</item>
+			<item>VersionSupported</item>
+			<item>VolumeGroupReset</item>
+			<item>VolumeGroupSetVolume</item>
+			<item>WaygateActivate</item>
+			<item>WaygateGetDestinationX</item>
+			<item>WaygateGetDestinationY</item>
+			<item>WaygateIsActive</item>
+			<item>WaygateSetDestination</item>
+		</list>
+		
+		<!--BJ functions for vJass-->
+		<list name="CommonJBJs">
+			<item>AbortCinematicFadeBJ</item>
+			<item>AcosBJ</item>
+			<item>AddHeroXPSwapped</item>
+			<item>AddItemToStockBJ</item>
+			<item>AddLightningLoc</item>
+			<item>AddResourceAmountBJ</item>
+			<item>AddSpecialEffectLocBJ</item>
+			<item>AddSpecialEffectTargetUnitBJ</item>
+			<item>AddUnitAnimationPropertiesBJ</item>
+			<item>AddUnitToStockBJ</item>
+			<item>AddWeatherEffectSaveLast</item>
+			<item>AdjustCameraBoundsBJ</item>
+			<item>AdjustCameraBoundsForPlayerBJ</item>
+			<item>AdjustPlayerStateBJ</item>
+			<item>AdjustPlayerStateSimpleBJ</item>
+			<item>AllowVictoryDefeat</item>
+			<item>AngleBetweenPoints</item>
+			<item>AsinBJ</item>
+			<item>Atan2BJ</item>
+			<item>AtanBJ</item>
+			<item>AttachSoundToUnitBJ</item>
+			<item>BJDebugMsg</item>
+			<item>BlightGoldMineForPlayer</item>
+			<item>BlightGoldMineForPlayerBJ</item>
+			<item>CameraClearNoiseForPlayer</item>
+			<item>CameraResetSmoothingFactorBJ</item>
+			<item>CameraSetEQNoiseForPlayer</item>
+			<item>CameraSetSmoothingFactorBJ</item>
+			<item>CameraSetSourceNoiseForPlayer</item>
+			<item>CameraSetTargetNoiseForPlayer</item>
+			<item>CameraSetupApplyForPlayer</item>
+			<item>CameraSetupGetFieldSwap</item>
+			<item>CancelCineSceneBJ</item>
+			<item>ChangeElevatorHeight</item>
+			<item>ChangeElevatorWallBlocker</item>
+			<item>ChangeElevatorWalls</item>
+			<item>CheckInitPlayerSlotAvailability</item>
+			<item>CheckItemcodeStatus</item>
+			<item>CheckItemStatus</item>
+			<item>ChooseRandomCreepBJ</item>
+			<item>ChooseRandomItemBJ</item>
+			<item>ChooseRandomItemExBJ</item>
+			<item>ChooseRandomNPBuildingBJ</item>
+			<item>CinematicFadeBJ</item>
+			<item>CinematicFadeCommonBJ</item>
+			<item>CinematicFilterGenericBJ</item>
+			<item>CinematicModeBJ</item>
+			<item>CinematicModeExBJ</item>
+			<item>ClearMapMusicBJ</item>
+			<item>ClearSelectionForPlayer</item>
+			<item>ClearTextMessagesBJ</item>
+			<item>CommentString</item>
+			<item>CompareLocationsBJ</item>
+			<item>CompareRectsBJ</item>
+			<item>ConditionalTriggerExecute</item>
+			<item>ConfigureNeutralVictim</item>
+			<item>ContinueCinematicFadeAfterBJ</item>
+			<item>ContinueCinematicFadeBJ</item>
+			<item>ConvertedPlayer</item>
+			<item>CopySaveGameBJ</item>
+			<item>CosBJ</item>
+			<item>CountLivingPlayerUnitsOfTypeId</item>
+			<item>CountPlayersInForceBJ</item>
+			<item>CountPlayersInForceEnum</item>
+			<item>CountUnitsInGroup</item>
+			<item>CountUnitsInGroupEnum</item>
+			<item>CreateCorpseLocBJ</item>
+			<item>CreateDeadDestructableLocBJ</item>
+			<item>CreateDefeatConditionBJ</item>
+			<item>CreateDestructableLoc</item>
+			<item>CreateFogModifierRadiusLocBJ</item>
+			<item>CreateFogModifierRadiusLocSimple</item>
+			<item>CreateFogModifierRectBJ</item>
+			<item>CreateFogModifierRectSimple</item>
+			<item>CreateImageBJ</item>
+			<item>CreateItemLoc</item>
+			<item>CreateLeaderboardBJ</item>
+			<item>CreateMultiboardBJ</item>
+			<item>CreateNUnitsAtLoc</item>
+			<item>CreateNUnitsAtLocFacingLocBJ</item>
+			<item>CreatePermanentCorpseLocBJ</item>
+			<item>CreateQuestBJ</item>
+			<item>CreateQuestItemBJ</item>
+			<item>CreateTextTagLocBJ</item>
+			<item>CreateTextTagUnitBJ</item>
+			<item>CreateTimerBJ</item>
+			<item>CreateTimerDialogBJ</item>
+			<item>CreateUbersplatBJ</item>
+			<item>CreateUnitAtLocSaveLast</item>
+			<item>CustomDefeatBJ</item>
+			<item>CustomDefeatDialogBJ</item>
+			<item>CustomDefeatLoadBJ</item>
+			<item>CustomDefeatQuitBJ</item>
+			<item>CustomDefeatReduceDifficultyBJ</item>
+			<item>CustomDefeatRestartBJ</item>
+			<item>CustomVictoryBJ</item>
+			<item>CustomVictoryDialogBJ</item>
+			<item>CustomVictoryOkBJ</item>
+			<item>CustomVictoryQuitBJ</item>
+			<item>CustomVictorySkipBJ</item>
+			<item>DecUnitAbilityLevelSwapped</item>
+			<item>DefeatConditionSetDescriptionBJ</item>
+			<item>DelayedSuspendDecay</item>
+			<item>DelayedSuspendDecayBoneEnum</item>
+			<item>DelayedSuspendDecayCreate</item>
+			<item>DelayedSuspendDecayFleshEnum</item>
+			<item>DelayedSuspendDecayStopAnimEnum</item>
+			<item>DestroyDefeatConditionBJ</item>
+			<item>DestroyEffectBJ</item>
+			<item>DestroyLeaderboardBJ</item>
+			<item>DestroyLightningBJ</item>
+			<item>DestroyMultiboardBJ</item>
+			<item>DestroyQuestBJ</item>
+			<item>DestroyTextTagBJ</item>
+			<item>DestroyTimerBJ</item>
+			<item>DestroyTimerDialogBJ</item>
+			<item>DestructableAddIndicatorBJ</item>
+			<item>DetectGameStarted</item>
+			<item>DialogAddButtonBJ</item>
+			<item>DialogAddButtonWithHotkeyBJ</item>
+			<item>DialogClearBJ</item>
+			<item>DialogDisplayBJ</item>
+			<item>DialogSetMessageBJ</item>
+			<item>DisplayCineFilterBJ</item>
+			<item>DisplayTextToForce</item>
+			<item>DisplayTimedTextToForce</item>
+			<item>DistanceBetweenPoints</item>
+			<item>DoesUnitGenerateAlarms</item>
+			<item>DoNothing</item>
+			<item>DoTransmissionBasicsXYBJ</item>
+			<item>EnableCreepSleepBJ</item>
+			<item>EnableDawnDusk</item>
+			<item>EnableOcclusionBJ</item>
+			<item>EnableWorldFogBoundaryBJ</item>
+			<item>EndGameBJ</item>
+			<item>EndThematicMusicBJ</item>
+			<item>EnumDestructablesInCircleBJ</item>
+			<item>EnumDestructablesInCircleBJFilter</item>
+			<item>EnumDestructablesInRectAll</item>
+			<item>EnumItemsInRectBJ</item>
+			<item>EnumUnitsSelected</item>
+			<item>ExplodeUnitBJ</item>
+			<item>FFAInitPlayerSlots</item>
+			<item>FindElevatorWallBlockerEnum</item>
+			<item>FinishCinematicFadeAfterBJ</item>
+			<item>FinishCinematicFadeBJ</item>
+			<item>FlashQuestDialogButtonBJ</item>
+			<item>FlushGameCacheBJ</item>
+			<item>FlushStoredMissionBJ</item>
+			<item>FogEnableOff</item>
+			<item>FogEnableOn</item>
+			<item>FogMaskEnableOff</item>
+			<item>FogMaskEnableOn</item>
+			<item>ForceAddPlayerSimple</item>
+			<item>ForceCinematicSubtitlesBJ</item>
+			<item>ForcePickRandomPlayer</item>
+			<item>ForcePickRandomPlayerEnum</item>
+			<item>ForceRemovePlayerSimple</item>
+			<item>ForceSetLeaderboardBJ</item>
+			<item>ForceUICancelBJ</item>
+			<item>ForceUIKeyBJ</item>
+			<item>ForGroupBJ</item>
+			<item>GameOverDialogBJ</item>
+			<item>GetAbilityEffectBJ</item>
+			<item>GetAbilityName</item>
+			<item>GetAbilitySoundBJ</item>
+			<item>GetAttackedUnitBJ</item>
+			<item>GetBooleanAnd</item>
+			<item>GetBooleanOr</item>
+			<item>GetCameraBoundsMapRect</item>
+			<item>GetClickedButtonBJ</item>
+			<item>GetClickedDialogBJ</item>
+			<item>GetConvertedPlayerId</item>
+			<item>GetCurrentCameraBoundsMapRectBJ</item>
+			<item>GetCurrentCameraSetup</item>
+			<item>GetDestructableLoc</item>
+			<item>GetDyingDestructable</item>
+			<item>GetElevatorHeight</item>
+			<item>GetEntireMapRect</item>
+			<item>GetFadeFromSeconds</item>
+			<item>GetForceOfPlayer</item>
+			<item>GetForLoopIndexA</item>
+			<item>GetForLoopIndexB</item>
+			<item>GetHeroStatBJ</item>
+			<item>GetInventoryIndexOfItemTypeBJ</item>
+			<item>GetIssuedOrderIdBJ</item>
+			<item>GetItemLifeBJ</item>
+			<item>GetItemLoc</item>
+			<item>GetItemOfTypeFromUnitBJ</item>
+			<item>GetKillingUnitBJ</item>
+			<item>GetLastCreatedButtonBJ</item>
+			<item>GetLastCreatedDefeatConditionBJ</item>
+			<item>GetLastCreatedDestructable</item>
+			<item>GetLastCreatedEffectBJ</item>
+			<item>GetLastCreatedFogModifier</item>
+			<item>GetLastCreatedGameCacheBJ</item>
+			<item>GetLastCreatedGroup</item>
+			<item>GetLastCreatedGroupEnum</item>
+			<item>GetLastCreatedImage</item>
+			<item>GetLastCreatedItem</item>
+			<item>GetLastCreatedLeaderboard</item>
+			<item>GetLastCreatedLightningBJ</item>
+			<item>GetLastCreatedMultiboard</item>
+			<item>GetLastCreatedQuestBJ</item>
+			<item>GetLastCreatedQuestItemBJ</item>
+			<item>GetLastCreatedTerrainDeformation</item>
+			<item>GetLastCreatedTextTag</item>
+			<item>GetLastCreatedTimerBJ</item>
+			<item>GetLastCreatedTimerDialogBJ</item>
+			<item>GetLastCreatedUbersplat</item>
+			<item>GetLastCreatedUnit</item>
+			<item>GetLastCreatedWeatherEffect</item>
+			<item>GetLastHauntedGoldMine</item>
+			<item>GetLastPlayedMusic</item>
+			<item>GetLastPlayedSound</item>
+			<item>GetLastRemovedItem</item>
+			<item>GetLastReplacedUnitBJ</item>
+			<item>GetLastRestoredUnitBJ</item>
+			<item>GetLastTransmissionDurationBJ</item>
+			<item>GetLearnedSkillBJ</item>
+			<item>GetLightningColorABJ</item>
+			<item>GetLightningColorBBJ</item>
+			<item>GetLightningColorGBJ</item>
+			<item>GetLightningColorRBJ</item>
+			<item>GetLoadedUnitBJ</item>
+			<item>GetPlayableMapRect</item>
+			<item>GetPlayerHandicapBJ</item>
+			<item>GetPlayerHandicapXPBJ</item>
+			<item>GetPlayersAll</item>
+			<item>GetPlayersAllies</item>
+			<item>GetPlayersByMapControl</item>
+			<item>GetPlayersEnemies</item>
+			<item>GetPlayersMatching</item>
+			<item>GetPlayerStartLocationLoc</item>
+			<item>GetPlayerStartLocationX</item>
+			<item>GetPlayerStartLocationY</item>
+			<item>GetPlayerTaxRateBJ</item>
+			<item>GetPlayerTechCountSimple</item>
+			<item>GetPlayerTechMaxAllowedSwap</item>
+			<item>GetRandomDirectionDeg</item>
+			<item>GetRandomLocInRect</item>
+			<item>GetRandomPercentageBJ</item>
+			<item>GetRandomSubGroup</item>
+			<item>GetRandomSubGroupEnum</item>
+			<item>GetRectCenter</item>
+			<item>GetRectFromCircleBJ</item>
+			<item>GetRectHeightBJ</item>
+			<item>GetRectWidthBJ</item>
+			<item>GetSoundDurationBJ</item>
+			<item>GetSoundFileDurationBJ</item>
+			<item>GetSoundIsPlayingBJ</item>
+			<item>GetStoredBooleanBJ</item>
+			<item>GetStoredIntegerBJ</item>
+			<item>GetStoredRealBJ</item>
+			<item>GetStoredStringBJ</item>
+			<item>GetTerrainCliffLevelBJ</item>
+			<item>GetTerrainTypeBJ</item>
+			<item>GetTerrainVarianceBJ</item>
+			<item>GetTimeOfDay</item>
+			<item>GetTimeOfDayScalePercentBJ</item>
+			<item>GetTransmissionDuration</item>
+			<item>GetTransportUnitBJ</item>
+			<item>GetUnitAbilityLevelSwapped</item>
+			<item>GetUnitDefaultPropWindowBJ</item>
+			<item>GetUnitLifePercent</item>
+			<item>GetUnitManaPercent</item>
+			<item>GetUnitPropWindowBJ</item>
+			<item>GetUnitsInRangeOfLocAll</item>
+			<item>GetUnitsInRangeOfLocMatching</item>
+			<item>GetUnitsInRectAll</item>
+			<item>GetUnitsInRectMatching</item>
+			<item>GetUnitsInRectOfPlayer</item>
+			<item>GetUnitsInRectOfPlayerFilter</item>
+			<item>GetUnitsOfPlayerAll</item>
+			<item>GetUnitsOfPlayerAndTypeId</item>
+			<item>GetUnitsOfPlayerAndTypeIdFilter</item>
+			<item>GetUnitsOfPlayerMatching</item>
+			<item>GetUnitsOfTypeIdAll</item>
+			<item>GetUnitsOfTypeIdAllFilter</item>
+			<item>GetUnitsSelectedAll</item>
+			<item>GetUnitStatePercent</item>
+			<item>GetUnitStateSwap</item>
+			<item>GroupAddGroup</item>
+			<item>GroupAddGroupEnum</item>
+			<item>GroupAddUnitSimple</item>
+			<item>GroupImmediateOrderBJ</item>
+			<item>GroupPickRandomUnit</item>
+			<item>GroupPickRandomUnitEnum</item>
+			<item>GroupPointOrderLocBJ</item>
+			<item>GroupRemoveGroup</item>
+			<item>GroupRemoveGroupEnum</item>
+			<item>GroupRemoveUnitSimple</item>
+			<item>GroupTargetDestructableOrder</item>
+			<item>GroupTargetItemOrder</item>
+			<item>GroupTargetOrderBJ</item>
+			<item>GroupTrainOrderByIdBJ</item>
+			<item>HaveStoredValue</item>
+			<item>IAbsBJ</item>
+			<item>IMaxBJ</item>
+			<item>IMinBJ</item>
+			<item>IncUnitAbilityLevelSwapped</item>
+			<item>InitBlizzard</item>
+			<item>InitBlizzardGlobals</item>
+			<item>InitDNCSounds</item>
+			<item>InitGameCacheBJ</item>
+			<item>InitGenericPlayerSlots</item>
+			<item>InitMapRects</item>
+			<item>InitNeutralBuildings</item>
+			<item>InitQueuedTriggers</item>
+			<item>InitRescuableBehaviorBJ</item>
+			<item>InitSummonableCaps</item>
+			<item>IntegerTertiaryOp</item>
+			<item>IsCustomCampaignButtonVisibile</item>
+			<item>IsDawnDuskEnabled</item>
+			<item>IsDestructableAliveBJ</item>
+			<item>IsDestructableDeadBJ</item>
+			<item>IsDestructableInvulnerableBJ</item>
+			<item>ISignBJ</item>
+			<item>IsItemHiddenBJ</item>
+			<item>IsPlayerFlagSetBJ</item>
+			<item>IsPlayerSlotState</item>
+			<item>IsPointBlightedBJ</item>
+			<item>IssueBuildOrderByIdLocBJ</item>
+			<item>IssueHauntOrderAtLocBJ</item>
+			<item>IssueHauntOrderAtLocBJFilter</item>
+			<item>IssueImmediateOrderBJ</item>
+			<item>IssuePointOrderLocBJ</item>
+			<item>IssueTargetDestructableOrder</item>
+			<item>IssueTargetItemOrder</item>
+			<item>IssueTargetOrderBJ</item>
+			<item>IssueTrainOrderByIdBJ</item>
+			<item>IssueUpgradeOrderByIdBJ</item>
+			<item>IsTerrainPathableBJ</item>
+			<item>IsTriggerQueuedBJ</item>
+			<item>IsTriggerQueueEmptyBJ</item>
+			<item>IsUnitAliveBJ</item>
+			<item>IsUnitDeadBJ</item>
+			<item>IsUnitGroupDeadBJ</item>
+			<item>IsUnitGroupDeadBJEnum</item>
+			<item>IsUnitGroupEmptyBJ</item>
+			<item>IsUnitGroupEmptyBJEnum</item>
+			<item>IsUnitGroupInRectBJ</item>
+			<item>IsUnitGroupInRectBJEnum</item>
+			<item>IsUnitHiddenBJ</item>
+			<item>IsUnitIllusionBJ</item>
+			<item>IsUnitInTransportBJ</item>
+			<item>IsUnitLoadedBJ</item>
+			<item>IsUnitPausedBJ</item>
+			<item>ItemAddIndicatorBJ</item>
+			<item>KillSoundWhenDoneBJ</item>
+			<item>LeaderboardAddItemBJ</item>
+			<item>LeaderboardDisplayBJ</item>
+			<item>LeaderboardGetIndexedPlayerBJ</item>
+			<item>LeaderboardGetItemCountBJ</item>
+			<item>LeaderboardGetPlayerIndexBJ</item>
+			<item>LeaderboardHasPlayerItemBJ</item>
+			<item>LeaderboardRemovePlayerItemBJ</item>
+			<item>LeaderboardResizeBJ</item>
+			<item>LeaderboardSetLabelBJ</item>
 			<item>LeaderboardSetLabelColorBJ</item>
 			<item>LeaderboardSetPlayerItemLabelBJ</item>
 			<item>LeaderboardSetPlayerItemLabelColorBJ</item>
 			<item>LeaderboardSetPlayerItemStyleBJ</item>
 			<item>LeaderboardSetPlayerItemValueBJ</item>
 			<item>LeaderboardSetPlayerItemValueColorBJ</item>
-			<item>LeaderboardSetSizeByItemCount</item>
-			<item>LeaderboardSetStyle</item>
 			<item>LeaderboardSetStyleBJ</item>
-			<item>LeaderboardSetValueColor</item>
 			<item>LeaderboardSetValueColorBJ</item>
 			<item>LeaderboardSortItemsBJ</item>
-			<item>LeaderboardSortItemsByLabel</item>
 			<item>LeaderboardSortItemsByLabelBJ</item>
-			<item>LeaderboardSortItemsByPlayer</item>
 			<item>LeaderboardSortItemsByPlayerBJ</item>
-			<item>LeaderboardSortItemsByValue</item>
 			<item>LivingPlayerUnitsOfTypeIdFilter</item>
-			<item>LoadGame</item>
 			<item>LoadGameBJ</item>
-			<item>LoadZepWave</item>
-			<item>Location</item>
 			<item>LockGameSpeedBJ</item>
 			<item>LockGuardPosition</item>
-			<item>MajorCreepAttack</item>
 			<item>MakeUnitRescuableToForceBJ</item>
 			<item>MakeUnitRescuableToForceBJEnum</item>
 			<item>MakeUnitsPassiveForPlayer</item>
 			<item>MakeUnitsPassiveForPlayerEnum</item>
 			<item>MakeUnitsPassiveForTeam</item>
 			<item>MarkGameStarted</item>
-			<item>Max</item>
 			<item>MeleeCheckAddedUnit</item>
 			<item>MeleeCheckForCrippledPlayers</item>
 			<item>MeleeCheckForLosersAndVictors</item>
@@ -1185,7 +1524,6 @@
 			<item>MeleeClearNearbyUnits</item>
 			<item>MeleeCrippledPlayerTimeout</item>
 			<item>MeleeDefeatDialogBJ</item>
-			<item>MeleeDifficulty</item>
 			<item>MeleeDoDefeat</item>
 			<item>MeleeDoDefeatEnum</item>
 			<item>MeleeDoDrawEnum</item>
@@ -1226,7 +1564,6 @@
 			<item>MeleeStartingUnitsUnknownRace</item>
 			<item>MeleeStartingVisibility</item>
 			<item>MeleeTournamentFinishNowRuleA</item>
-			<item>MeleeTownHall</item>
 			<item>MeleeTrainedUnitIsHeroBJFilter</item>
 			<item>MeleeTriggerActionAllianceChange</item>
 			<item>MeleeTriggerActionConstructCancel</item>
@@ -1238,162 +1575,74 @@
 			<item>MeleeTriggerTournamentFinishSoon</item>
 			<item>MeleeVictoryDialogBJ</item>
 			<item>MeleeWasUserPlayer</item>
-			<item>MergeUnits</item>
-			<item>Min</item>
-			<item>MinorCreepAttack</item>
 			<item>ModifyGateBJ</item>
 			<item>ModifyHeroSkillPoints</item>
 			<item>ModifyHeroStat</item>
 			<item>ModuloInteger</item>
 			<item>ModuloReal</item>
-			<item>MoveLightning</item>
-			<item>MoveLightningEx</item>
 			<item>MoveLightningLoc</item>
-			<item>MoveLocation</item>
-			<item>MoveRectTo</item>
-			<item>MoveRectToLoc</item>
 			<item>MultiboardAllowDisplayBJ</item>
-			<item>MultiboardClear</item>
-			<item>MultiboardDisplay</item>
 			<item>MultiboardDisplayBJ</item>
-			<item>MultiboardGetColumnCount</item>
-			<item>MultiboardGetItem</item>
-			<item>MultiboardGetRowCount</item>
-			<item>MultiboardGetTitleText</item>
-			<item>MultiboardMinimize</item>
 			<item>MultiboardMinimizeBJ</item>
-			<item>MultiboardReleaseItem</item>
-			<item>MultiboardSetColumnCount</item>
 			<item>MultiboardSetItemColorBJ</item>
-			<item>MultiboardSetItemIcon</item>
 			<item>MultiboardSetItemIconBJ</item>
-			<item>MultiboardSetItemsIcon</item>
-			<item>MultiboardSetItemsStyle</item>
-			<item>MultiboardSetItemStyle</item>
 			<item>MultiboardSetItemStyleBJ</item>
-			<item>MultiboardSetItemsValue</item>
-			<item>MultiboardSetItemsValueColor</item>
-			<item>MultiboardSetItemsWidth</item>
-			<item>MultiboardSetItemValue</item>
 			<item>MultiboardSetItemValueBJ</item>
-			<item>MultiboardSetItemValueColor</item>
-			<item>MultiboardSetItemWidth</item>
 			<item>MultiboardSetItemWidthBJ</item>
-			<item>MultiboardSetRowCount</item>
-			<item>MultiboardSetTitleText</item>
-			<item>MultiboardSetTitleTextColor</item>
 			<item>MultiboardSetTitleTextColorBJ</item>
-			<item>MultiboardSuppressDisplay</item>
 			<item>NearbyElevatorExists</item>
 			<item>NearbyElevatorExistsEnum</item>
-			<item>NewSoundEnvironment</item>
-			<item>Not</item>
 			<item>NudgeItemsInRectEnum</item>
 			<item>NudgeObjectsInRect</item>
 			<item>NudgeUnitsInRectEnum</item>
 			<item>OffsetLocation</item>
 			<item>OffsetRectBJ</item>
-			<item>OneBuildLoop</item>
 			<item>OneOnOneInitPlayerSlots</item>
-			<item>Or</item>
-			<item>OrderId</item>
-			<item>OrderId2String</item>
 			<item>OrderId2StringBJ</item>
-			<item>PanCameraTo</item>
 			<item>PanCameraToForPlayer</item>
 			<item>PanCameraToLocForPlayer</item>
-			<item>PanCameraToTimed</item>
 			<item>PanCameraToTimedForPlayer</item>
 			<item>PanCameraToTimedLocForPlayer</item>
 			<item>PanCameraToTimedLocWithZForPlayer</item>
-			<item>PanCameraToTimedWithZ</item>
-			<item>PanCameraToWithZ</item>
 			<item>PauseAllUnitsBJ</item>
 			<item>PauseAllUnitsBJEnum</item>
-			<item>PauseCompAI</item>
-			<item>PauseGame</item>
 			<item>PauseGameOff</item>
 			<item>PauseGameOn</item>
-			<item>PauseTimer</item>
 			<item>PauseTimerBJ</item>
-			<item>PauseUnit</item>
 			<item>PauseUnitBJ</item>
 			<item>PercentTo255</item>
 			<item>PercentToInt</item>
 			<item>PerformStockUpdates</item>
 			<item>PickMeleeAI</item>
-			<item>PickMeleeHero</item>
-			<item>PingMinimap</item>
-			<item>PingMinimapEx</item>
 			<item>PingMinimapForForce</item>
 			<item>PingMinimapForForceEx</item>
 			<item>PingMinimapForPlayer</item>
 			<item>PingMinimapLocForForce</item>
 			<item>PingMinimapLocForForceEx</item>
 			<item>PingMinimapLocForPlayer</item>
-			<item>PlaceRandomItem</item>
-			<item>PlaceRandomUnit</item>
-			<item>PlayCinematic</item>
-			<item>Player</item>
-			<item>PlayerEx</item>
-			<item>PlayerGetLeaderboard</item>
 			<item>PlayerGetLeaderboardBJ</item>
 			<item>PlayersAreCoAllied</item>
-			<item>PlayerSetLeaderboard</item>
-			<item>PlayGame</item>
-			<item>PlayModelCinematic</item>
-			<item>PlayMusic</item>
 			<item>PlayMusicBJ</item>
-			<item>PlayMusicEx</item>
 			<item>PlayMusicExBJ</item>
 			<item>PlaySound</item>
 			<item>PlaySoundAtPointBJ</item>
 			<item>PlaySoundBJ</item>
 			<item>PlaySoundFromOffsetBJ</item>
 			<item>PlaySoundOnUnitBJ</item>
-			<item>PlayThematicMusic</item>
 			<item>PlayThematicMusicBJ</item>
-			<item>PlayThematicMusicEx</item>
 			<item>PlayThematicMusicExBJ</item>
 			<item>PolarProjectionBJ</item>
 			<item>PolledWait</item>
-			<item>PopLastCommand</item>
 			<item>PostTriggerExecuteBJ</item>
-			<item>Pow</item>
-			<item>Preload</item>
-			<item>PreloadEnd</item>
-			<item>PreloadEndEx</item>
-			<item>Preloader</item>
-			<item>PreloadGenClear</item>
-			<item>PreloadGenEnd</item>
-			<item>PreloadGenStart</item>
-			<item>PreloadRefresh</item>
-			<item>PreloadStart</item>
-			<item>PrepFullSuicide</item>
-			<item>PrepSuicideOnPlayer</item>
-			<item>PrepTime</item>
-			<item>PurchaseZeppelin</item>
-			<item>QuestCreateItem</item>
-			<item>QuestItemSetCompleted</item>
 			<item>QuestItemSetCompletedBJ</item>
-			<item>QuestItemSetDescription</item>
 			<item>QuestItemSetDescriptionBJ</item>
 			<item>QuestMessageBJ</item>
-			<item>QuestSetCompleted</item>
 			<item>QuestSetCompletedBJ</item>
-			<item>QuestSetDescription</item>
 			<item>QuestSetDescriptionBJ</item>
-			<item>QuestSetDiscovered</item>
 			<item>QuestSetDiscoveredBJ</item>
-			<item>QuestSetEnabled</item>
 			<item>QuestSetEnabledBJ</item>
-			<item>QuestSetFailed</item>
 			<item>QuestSetFailedBJ</item>
-			<item>QuestSetIconPath</item>
-			<item>QuestSetRequired</item>
-			<item>QuestSetTitle</item>
 			<item>QuestSetTitleBJ</item>
-			<item>QueueDestructableAnimation</item>
 			<item>QueueDestructableAnimationBJ</item>
 			<item>QueuedTriggerAddBJ</item>
 			<item>QueuedTriggerAttemptExec</item>
@@ -1405,13 +1654,8 @@
 			<item>QueuedTriggerGetIndex</item>
 			<item>QueuedTriggerRemoveBJ</item>
 			<item>QueuedTriggerRemoveByIndex</item>
-			<item>QueueUnitAnimation</item>
 			<item>QueueUnitAnimationBJ</item>
-			<item>R2I</item>
-			<item>R2S</item>
-			<item>R2SW</item>
 			<item>RAbsBJ</item>
-			<item>Rad2Deg</item>
 			<item>RandomDestructableInRectBJ</item>
 			<item>RandomDestructableInRectBJEnum</item>
 			<item>RandomDestructableInRectSimpleBJ</item>
@@ -1421,620 +1665,230 @@
 			<item>RandomItemInRectBJ</item>
 			<item>RandomItemInRectBJEnum</item>
 			<item>RandomItemInRectSimpleBJ</item>
-			<item>Rect</item>
 			<item>RectContainsCoords</item>
 			<item>RectContainsItem</item>
 			<item>RectContainsLoc</item>
 			<item>RectContainsUnit</item>
 			<item>RectFromCenterSizeBJ</item>
-			<item>RectFromLoc</item>
-			<item>RecycleGuardPosition</item>
 			<item>ReducePlayerTechMaxAllowed</item>
-			<item>ReformUntilTargetDead</item>
-			<item>RegionAddCell</item>
-			<item>RegionAddCellAtLoc</item>
-			<item>RegionAddRect</item>
-			<item>RegionClearCell</item>
-			<item>RegionClearCellAtLoc</item>
-			<item>RegionClearRect</item>
 			<item>RegisterDestDeathInRegionEnum</item>
-			<item>RegisterStackedSound</item>
-			<item>ReloadGame</item>
-			<item>ReloadGameCachesFromDisk</item>
-			<item>RemoveAllGuardPositions</item>
-			<item>RemoveDestructable</item>
-			<item>RemoveGuardPosition</item>
-			<item>RemoveInjuries</item>
-			<item>RemoveItem</item>
-			<item>RemoveItemFromAllStock</item>
-			<item>RemoveItemFromStock</item>
 			<item>RemoveItemFromStockBJ</item>
-			<item>RemoveLocation</item>
-			<item>RemovePlayer</item>
 			<item>RemovePlayerPreserveUnitsBJ</item>
 			<item>RemovePurchasedItem</item>
-			<item>RemoveRect</item>
-			<item>RemoveRegion</item>
-			<item>RemoveSaveDirectory</item>
 			<item>RemoveSaveDirectoryBJ</item>
-			<item>RemoveSiege</item>
-			<item>RemoveUnit</item>
-			<item>RemoveUnitFromAllStock</item>
-			<item>RemoveUnitFromStock</item>
 			<item>RemoveUnitFromStockBJ</item>
-			<item>RemoveWeatherEffect</item>
 			<item>RemoveWeatherEffectBJ</item>
-			<item>RenameSaveDirectory</item>
 			<item>RenameSaveDirectoryBJ</item>
 			<item>ReplaceUnitBJ</item>
 			<item>RescueUnitBJ</item>
-			<item>ResetCaptainLocs</item>
-			<item>ResetTerrainFog</item>
 			<item>ResetTerrainFogBJ</item>
-			<item>ResetToGameCamera</item>
 			<item>ResetToGameCameraForPlayer</item>
-			<item>ResetTrigger</item>
-			<item>ResetUbersplat</item>
 			<item>ResetUnitAnimation</item>
-			<item>ResetUnitLookAt</item>
-			<item>RestartGame</item>
-			<item>RestoreUnit</item>
 			<item>RestoreUnitLocFacingAngleBJ</item>
 			<item>RestoreUnitLocFacingPointBJ</item>
-			<item>ResumeMusic</item>
 			<item>ResumeMusicBJ</item>
-			<item>ResumeTimer</item>
-			<item>ReturnGuardPosts</item>
-			<item>ReviveHero</item>
-			<item>ReviveHeroLoc</item>
 			<item>RMaxBJ</item>
 			<item>RMinBJ</item>
 			<item>RotateCameraAroundLocBJ</item>
 			<item>RSignBJ</item>
-			<item>S2I</item>
-			<item>S2R</item>
 			<item>SaveAndChangeLevelBJ</item>
 			<item>SaveAndLoadGameBJ</item>
 			<item>SaveDyingWidget</item>
-			<item>SaveGame</item>
-			<item>SaveGameCache</item>
 			<item>SaveGameCacheBJ</item>
-			<item>SaveGameExists</item>
-			<item>SecondaryTown</item>
-			<item>SecTown</item>
 			<item>SelectGroupBJ</item>
 			<item>SelectGroupBJEnum</item>
 			<item>SelectGroupForPlayerBJ</item>
-			<item>SelectHeroSkill</item>
-			<item>SelectUnit</item>
 			<item>SelectUnitAdd</item>
 			<item>SelectUnitAddForPlayer</item>
 			<item>SelectUnitForPlayerSingle</item>
 			<item>SelectUnitRemove</item>
 			<item>SelectUnitRemoveForPlayer</item>
 			<item>SelectUnitSingle</item>
-			<item>SetAllianceTarget</item>
-			<item>SetAllItemTypeSlots</item>
-			<item>SetAllUnitTypeSlots</item>
-			<item>SetAllyColorFilterState</item>
-			<item>SetAltMinimapIcon</item>
 			<item>SetAmbientDaySound</item>
 			<item>SetAmbientNightSound</item>
-			<item>SetAmphibious</item>
-			<item>SetAssaultGroup</item>
-			<item>SetBlight</item>
-			<item>SetBlightLoc</item>
-			<item>SetBlightPoint</item>
 			<item>SetBlightRadiusLocBJ</item>
-			<item>SetBlightRect</item>
 			<item>SetBlightRectBJ</item>
-			<item>SetBuildAll</item>
-			<item>SetBuildExpa</item>
-			<item>SetBuildNext</item>
-			<item>SetBuildUnit</item>
-			<item>SetBuildUnitEx</item>
-			<item>SetBuildUpgr</item>
-			<item>SetBuildUpgrEx</item>
-			<item>SetCameraBounds</item>
 			<item>SetCameraBoundsToRect</item>
 			<item>SetCameraBoundsToRectForPlayerBJ</item>
-			<item>SetCameraField</item>
 			<item>SetCameraFieldForPlayer</item>
-			<item>SetCameraOrientController</item>
 			<item>SetCameraOrientControllerForPlayerBJ</item>
-			<item>SetCameraPosition</item>
 			<item>SetCameraPositionForPlayer</item>
 			<item>SetCameraPositionLocForPlayer</item>
-			<item>SetCameraQuickPosition</item>
 			<item>SetCameraQuickPositionForPlayer</item>
 			<item>SetCameraQuickPositionLoc</item>
 			<item>SetCameraQuickPositionLocForPlayer</item>
-			<item>SetCameraRotateMode</item>
-			<item>SetCameraTargetController</item>
 			<item>SetCameraTargetControllerNoZForPlayer</item>
-			<item>SetCampaignAI</item>
-			<item>SetCampaignAvailable</item>
 			<item>SetCampaignAvailableBJ</item>
-			<item>SetCampaignMenuRace</item>
 			<item>SetCampaignMenuRaceBJ</item>
-			<item>SetCampaignMenuRaceEx</item>
-			<item>SetCaptainChanges</item>
-			<item>SetCaptainHome</item>
-			<item>SetCineFilterBlendMode</item>
-			<item>SetCineFilterDuration</item>
-			<item>SetCineFilterEndColor</item>
-			<item>SetCineFilterEndUV</item>
-			<item>SetCineFilterStartColor</item>
-			<item>SetCineFilterStartUV</item>
-			<item>SetCineFilterTexMapFlags</item>
-			<item>SetCineFilterTexture</item>
 			<item>SetCinematicAvailableBJ</item>
-			<item>SetCinematicCamera</item>
 			<item>SetCinematicCameraForPlayer</item>
-			<item>SetCinematicScene</item>
 			<item>SetCinematicSceneBJ</item>
 			<item>SetCineModeVolumeGroupsBJ</item>
 			<item>SetCineModeVolumeGroupsImmediateBJ</item>
-			<item>SetCreatureDensity</item>
-			<item>SetCreepCampFilterState</item>
-			<item>SetCustomCampaignButtonVisible</item>
-			<item>SetDayNightModels</item>
-			<item>SetDefaultDifficulty</item>
-			<item>SetDefendPlayer</item>
 			<item>SetDestAnimationSpeedPercent</item>
-			<item>SetDestructableAnimation</item>
 			<item>SetDestructableAnimationBJ</item>
-			<item>SetDestructableAnimationSpeed</item>
-			<item>SetDestructableInvulnerable</item>
 			<item>SetDestructableInvulnerableBJ</item>
-			<item>SetDestructableLife</item>
 			<item>SetDestructableLifePercentBJ</item>
-			<item>SetDestructableMaxLife</item>
 			<item>SetDestructableMaxLifeBJ</item>
-			<item>SetDestructableOccluderHeight</item>
 			<item>SetDNCSoundsDawn</item>
 			<item>SetDNCSoundsDay</item>
 			<item>SetDNCSoundsDusk</item>
 			<item>SetDNCSoundsNight</item>
-			<item>SetDoodadAnimation</item>
 			<item>SetDoodadAnimationBJ</item>
-			<item>SetDoodadAnimationRect</item>
 			<item>SetDoodadAnimationRectBJ</item>
-			<item>SetEdCinematicAvailable</item>
-			<item>SetExpansion</item>
-			<item>SetFloatGameState</item>
-			<item>SetFogStateRadius</item>
-			<item>SetFogStateRadiusLoc</item>
-			<item>SetFogStateRect</item>
 			<item>SetForceAllianceStateBJ</item>
 			<item>SetForLoopIndexA</item>
 			<item>SetForLoopIndexB</item>
-			<item>SetFormGroupTimeouts</item>
-			<item>SetGameDifficulty</item>
-			<item>SetGamePlacement</item>
-			<item>SetGameSpeed</item>
-			<item>SetGameTypeSupported</item>
-			<item>SetGoldPeons</item>
-			<item>SetGroupsFlee</item>
-			<item>SetHarvestLumber</item>
-			<item>SetHeroAgi</item>
-			<item>SetHeroesBuyItems</item>
-			<item>SetHeroesFlee</item>
-			<item>SetHeroesTakeItems</item>
-			<item>SetHeroInt</item>
-			<item>SetHeroLevel</item>
 			<item>SetHeroLevelBJ</item>
-			<item>SetHeroLevels</item>
 			<item>SetHeroStat</item>
-			<item>SetHeroStr</item>
-			<item>SetHeroXP</item>
-			<item>SetIgnoreInjured</item>
-			<item>SetImageAboveWater</item>
-			<item>SetImageColor</item>
 			<item>SetImageColorBJ</item>
-			<item>SetImageConstantHeight</item>
-			<item>SetImagePosition</item>
 			<item>SetImagePositionBJ</item>
-			<item>SetImageRender</item>
-			<item>SetImageRenderAlways</item>
-			<item>SetImageType</item>
-			<item>SetInitialWave</item>
-			<item>SetIntegerGameState</item>
-			<item>SetIntroShotModel</item>
-			<item>SetIntroShotText</item>
-			<item>SetItemCharges</item>
-			<item>SetItemDropID</item>
-			<item>SetItemDropOnDeath</item>
 			<item>SetItemDropOnDeathBJ</item>
-			<item>SetItemDroppable</item>
 			<item>SetItemDroppableBJ</item>
-			<item>SetItemInvulnerable</item>
 			<item>SetItemInvulnerableBJ</item>
 			<item>SetItemLifeBJ</item>
-			<item>SetItemPawnable</item>
-			<item>SetItemPlayer</item>
 			<item>SetItemPlayerBJ</item>
-			<item>SetItemPosition</item>
 			<item>SetItemPositionLoc</item>
-			<item>SetItemTypeSlots</item>
-			<item>SetItemUserData</item>
-			<item>SetItemVisible</item>
 			<item>SetItemVisibleBJ</item>
-			<item>SetLightningColor</item>
 			<item>SetLightningColorBJ</item>
-			<item>SetMapDescription</item>
-			<item>SetMapFlag</item>
-			<item>SetMapMusic</item>
 			<item>SetMapMusicIndexedBJ</item>
 			<item>SetMapMusicRandomBJ</item>
-			<item>SetMapName</item>
-			<item>SetMeleeAI</item>
-			<item>SetMeleeGroup</item>
-			<item>SetMissionAvailable</item>
 			<item>SetMissionAvailableBJ</item>
 			<item>SetMusicOffsetBJ</item>
-			<item>SetMusicPlayPosition</item>
-			<item>SetMusicVolume</item>
 			<item>SetMusicVolumeBJ</item>
-			<item>SetNewHeroes</item>
 			<item>SetNextLevelBJ</item>
-			<item>SetOpCinematicAvailable</item>
-			<item>SetPeonsRepair</item>
-			<item>SetPlayerAbilityAvailable</item>
 			<item>SetPlayerAbilityAvailableBJ</item>
-			<item>SetPlayerAlliance</item>
 			<item>SetPlayerAllianceBJ</item>
 			<item>SetPlayerAllianceStateAllyBJ</item>
 			<item>SetPlayerAllianceStateBJ</item>
 			<item>SetPlayerAllianceStateControlBJ</item>
 			<item>SetPlayerAllianceStateFullControlBJ</item>
 			<item>SetPlayerAllianceStateVisionBJ</item>
-			<item>SetPlayerColor</item>
 			<item>SetPlayerColorBJ</item>
 			<item>SetPlayerColorBJEnum</item>
-			<item>SetPlayerController</item>
 			<item>SetPlayerFlagBJ</item>
-			<item>SetPlayerHandicap</item>
 			<item>SetPlayerHandicapBJ</item>
-			<item>SetPlayerHandicapXP</item>
 			<item>SetPlayerHandicapXPBJ</item>
 			<item>SetPlayerMaxHeroesAllowed</item>
-			<item>SetPlayerName</item>
-			<item>SetPlayerOnScoreScreen</item>
 			<item>SetPlayerOnScoreScreenBJ</item>
-			<item>SetPlayerRacePreference</item>
-			<item>SetPlayerRaceSelectable</item>
-			<item>SetPlayers</item>
 			<item>SetPlayerSlotAvailable</item>
-			<item>SetPlayerStartLocation</item>
-			<item>SetPlayerState</item>
 			<item>SetPlayerStateBJ</item>
-			<item>SetPlayerTaxRate</item>
 			<item>SetPlayerTaxRateBJ</item>
-			<item>SetPlayerTeam</item>
-			<item>SetPlayerTechMaxAllowed</item>
 			<item>SetPlayerTechMaxAllowedSwap</item>
-			<item>SetPlayerTechResearched</item>
 			<item>SetPlayerTechResearchedSwap</item>
 			<item>SetPlayerUnitAvailableBJ</item>
-			<item>SetPlayerUnitsOwner</item>
-			<item>SetProduce</item>
-			<item>SetRandomPaths</item>
-			<item>SetRandomSeed</item>
-			<item>SetRect</item>
-			<item>SetRectFromLoc</item>
-			<item>SetReplacementCount</item>
-			<item>SetReplacements</item>
 			<item>SetRescueBuildingColorChangeBJ</item>
 			<item>SetRescueUnitColorChangeBJ</item>
-			<item>SetReservedLocalHeroButtons</item>
-			<item>SetResourceAmount</item>
-			<item>SetResourceDensity</item>
-			<item>SetSkillArray</item>
-			<item>SetSkyModel</item>
-			<item>SetSlowChopping</item>
-			<item>SetSmartArtillery</item>
-			<item>SetSoundChannel</item>
-			<item>SetSoundConeAngles</item>
 			<item>SetSoundConeAnglesBJ</item>
-			<item>SetSoundConeOrientation</item>
-			<item>SetSoundDistanceCutoff</item>
 			<item>SetSoundDistanceCutoffBJ</item>
-			<item>SetSoundDistances</item>
-			<item>SetSoundDuration</item>
 			<item>SetSoundOffsetBJ</item>
-			<item>SetSoundParamsFromLabel</item>
-			<item>SetSoundPitch</item>
 			<item>SetSoundPitchBJ</item>
-			<item>SetSoundPlayPosition</item>
-			<item>SetSoundPosition</item>
 			<item>SetSoundPositionLocBJ</item>
-			<item>SetSoundVelocity</item>
-			<item>SetSoundVolume</item>
 			<item>SetSoundVolumeBJ</item>
 			<item>SetSpeechVolumeGroupsBJ</item>
 			<item>SetSpeechVolumeGroupsImmediateBJ</item>
 			<item>SetStackedSoundBJ</item>
-			<item>SetStagePoint</item>
-			<item>SetStartLocPrio</item>
-			<item>SetStartLocPrioCount</item>
-			<item>SetTargetHeroes</item>
-			<item>SetTeams</item>
-			<item>SetTerrainFog</item>
-			<item>SetTerrainFogEx</item>
 			<item>SetTerrainFogExBJ</item>
-			<item>SetTerrainPathable</item>
 			<item>SetTerrainPathableBJ</item>
-			<item>SetTerrainType</item>
 			<item>SetTerrainTypeBJ</item>
-			<item>SetTextTagAge</item>
 			<item>SetTextTagAgeBJ</item>
-			<item>SetTextTagColor</item>
 			<item>SetTextTagColorBJ</item>
-			<item>SetTextTagFadepoint</item>
 			<item>SetTextTagFadepointBJ</item>
-			<item>SetTextTagLifespan</item>
 			<item>SetTextTagLifespanBJ</item>
-			<item>SetTextTagPermanent</item>
 			<item>SetTextTagPermanentBJ</item>
-			<item>SetTextTagPos</item>
 			<item>SetTextTagPosBJ</item>
-			<item>SetTextTagPosUnit</item>
 			<item>SetTextTagPosUnitBJ</item>
-			<item>SetTextTagSuspended</item>
 			<item>SetTextTagSuspendedBJ</item>
-			<item>SetTextTagText</item>
 			<item>SetTextTagTextBJ</item>
-			<item>SetTextTagVelocity</item>
 			<item>SetTextTagVelocityBJ</item>
-			<item>SetTextTagVisibility</item>
 			<item>SetThematicMusicOffsetBJ</item>
-			<item>SetThematicMusicPlayPosition</item>
 			<item>SetTimeOfDay</item>
-			<item>SetTimeOfDayScale</item>
 			<item>SetTimeOfDayScalePercentBJ</item>
-			<item>SetTutorialCleared</item>
-			<item>SetUbersplatRender</item>
-			<item>SetUbersplatRenderAlways</item>
-			<item>SetUnitAbilityLevel</item>
 			<item>SetUnitAbilityLevelSwapped</item>
-			<item>SetUnitAcquireRange</item>
 			<item>SetUnitAcquireRangeBJ</item>
-			<item>SetUnitAnimation</item>
-			<item>SetUnitAnimationByIndex</item>
-			<item>SetUnitAnimationWithRarity</item>
-			<item>SetUnitBlendTime</item>
 			<item>SetUnitBlendTimeBJ</item>
-			<item>SetUnitColor</item>
-			<item>SetUnitCreepGuard</item>
-			<item>SetUnitExploded</item>
 			<item>SetUnitExplodedBJ</item>
-			<item>SetUnitFacing</item>
-			<item>SetUnitFacingTimed</item>
 			<item>SetUnitFacingToFaceLocTimed</item>
 			<item>SetUnitFacingToFaceUnitTimed</item>
-			<item>SetUnitFlyHeight</item>
 			<item>SetUnitFlyHeightBJ</item>
-			<item>SetUnitFog</item>
-			<item>SetUnitInvulnerable</item>
 			<item>SetUnitLifeBJ</item>
 			<item>SetUnitLifePercentBJ</item>
-			<item>SetUnitLookAt</item>
 			<item>SetUnitManaBJ</item>
 			<item>SetUnitManaPercentBJ</item>
-			<item>SetUnitMoveSpeed</item>
-			<item>SetUnitOwner</item>
-			<item>SetUnitPathing</item>
-			<item>SetUnitPosition</item>
-			<item>SetUnitPositionLoc</item>
 			<item>SetUnitPositionLocFacingBJ</item>
 			<item>SetUnitPositionLocFacingLocBJ</item>
-			<item>SetUnitPropWindow</item>
 			<item>SetUnitPropWindowBJ</item>
 			<item>SetUnitRallyDestructable</item>
 			<item>SetUnitRallyPoint</item>
 			<item>SetUnitRallyUnit</item>
-			<item>SetUnitRescuable</item>
-			<item>SetUnitRescueRange</item>
-			<item>SetUnitScale</item>
 			<item>SetUnitScalePercent</item>
-			<item>SetUnitsFlee</item>
-			<item>SetUnitState</item>
-			<item>SetUnitTimeScale</item>
 			<item>SetUnitTimeScalePercent</item>
-			<item>SetUnitTurnSpeed</item>
 			<item>SetUnitTurnSpeedBJ</item>
-			<item>SetUnitTypeSlots</item>
-			<item>SetUnitUseFood</item>
 			<item>SetUnitUseFoodBJ</item>
-			<item>SetUnitUserData</item>
-			<item>SetUnitVertexColor</item>
 			<item>SetUnitVertexColorBJ</item>
-			<item>SetUnitX</item>
-			<item>SetUnitY</item>
-			<item>SetUpgrade</item>
 			<item>SetUserControlForceOff</item>
 			<item>SetUserControlForceOn</item>
-			<item>SetWatchMegaTargets</item>
-			<item>SetWaterBaseColor</item>
 			<item>SetWaterBaseColorBJ</item>
-			<item>SetWaterDeforms</item>
-			<item>SetWidgetLife</item>
-			<item>SetWoodPeons</item>
-			<item>SetZepNextWave</item>
 			<item>ShareEverythingWithTeam</item>
 			<item>ShareEverythingWithTeamAI</item>
-			<item>ShiftTownSpot</item>
 			<item>ShowCustomCampaignButton</item>
-			<item>ShowDestructable</item>
 			<item>ShowDestructableBJ</item>
-			<item>ShowImage</item>
 			<item>ShowImageBJ</item>
-			<item>ShowInterface</item>
 			<item>ShowInterfaceForceOff</item>
 			<item>ShowInterfaceForceOn</item>
 			<item>ShowTextTagForceBJ</item>
-			<item>ShowUbersplat</item>
 			<item>ShowUbersplatBJ</item>
-			<item>ShowUnit</item>
 			<item>ShowUnitHide</item>
 			<item>ShowUnitShow</item>
-			<item>Sin</item>
 			<item>SinBJ</item>
-			<item>SingleMeleeAttack</item>
-			<item>SkillArrays</item>
-			<item>Sleep</item>
-			<item>SleepForever</item>
-			<item>SleepInCombat</item>
-			<item>SleepUntilAtGoal</item>
-			<item>SleepUntilTargetDead</item>
 			<item>SmartCameraPanBJ</item>
-			<item>SquareRoot</item>
-			<item>StaggerSleep</item>
-			<item>StandardAI</item>
-			<item>StartBuildLoop</item>
-			<item>StartCampaignAI</item>
-			<item>StartExpansion</item>
-			<item>StartGetEnemyBase</item>
-			<item>StartMeleeAI</item>
-			<item>StartSound</item>
 			<item>StartSoundForPlayerBJ</item>
 			<item>StartStockUpdates</item>
-			<item>StartThread</item>
 			<item>StartTimerBJ</item>
-			<item>StartTownBuilder</item>
-			<item>StartUnit</item>
-			<item>StartUpgrade</item>
-			<item>StopCamera</item>
 			<item>StopCameraForPlayerBJ</item>
-			<item>StopGathering</item>
-			<item>StopMusic</item>
 			<item>StopMusicBJ</item>
-			<item>StopSound</item>
 			<item>StopSoundBJ</item>
-			<item>StoreBoolean</item>
 			<item>StoreBooleanBJ</item>
-			<item>StoreInteger</item>
 			<item>StoreIntegerBJ</item>
-			<item>StoreReal</item>
 			<item>StoreRealBJ</item>
-			<item>StoreString</item>
 			<item>StoreStringBJ</item>
-			<item>StoreUnit</item>
 			<item>StoreUnitBJ</item>
 			<item>String2OrderIdBJ</item>
 			<item>String2UnitIdBJ</item>
-			<item>StringCase</item>
 			<item>StringIdentity</item>
-			<item>StringLength</item>
-			<item>SubString</item>
 			<item>SubStringBJ</item>
-			<item>SuicideOnce</item>
-			<item>SuicideOnPlayer</item>
-			<item>SuicideOnPlayerEx</item>
-			<item>SuicideOnPlayerWave</item>
-			<item>SuicideOnPoint</item>
-			<item>SuicideOnPointEx</item>
-			<item>SuicideOnUnits</item>
-			<item>SuicideOnUnitsEx</item>
-			<item>SuicidePlayer</item>
-			<item>SuicidePlayerUnits</item>
-			<item>SuicideSleep</item>
-			<item>SuicideUnit</item>
-			<item>SuicideUnitA</item>
-			<item>SuicideUnitB</item>
-			<item>SuicideUnitEx</item>
-			<item>SuicideUnits</item>
-			<item>SuicideUnitsEx</item>
-			<item>SuicideUntilSignal</item>
-			<item>SuspendHeroXP</item>
 			<item>SuspendHeroXPBJ</item>
-			<item>SuspendTimeOfDay</item>
-			<item>SyncSelections</item>
-			<item>SyncStoredBoolean</item>
-			<item>SyncStoredInteger</item>
-			<item>SyncStoredReal</item>
-			<item>SyncStoredString</item>
-			<item>SyncStoredUnit</item>
-			<item>Tan</item>
 			<item>TanBJ</item>
 			<item>TeamInitPlayerSlots</item>
-			<item>TeleportCaptain</item>
 			<item>TerrainDeformationCraterBJ</item>
 			<item>TerrainDeformationRandomBJ</item>
 			<item>TerrainDeformationRippleBJ</item>
 			<item>TerrainDeformationStopBJ</item>
 			<item>TerrainDeformationWaveBJ</item>
-			<item>TerrainDeformCrater</item>
-			<item>TerrainDeformRandom</item>
-			<item>TerrainDeformRipple</item>
-			<item>TerrainDeformStop</item>
-			<item>TerrainDeformStopAll</item>
-			<item>TerrainDeformWave</item>
 			<item>TextTagSize2Height</item>
 			<item>TextTagSpeed2Velocity</item>
-			<item>TimerDialogDisplay</item>
 			<item>TimerDialogDisplayBJ</item>
 			<item>TimerDialogDisplayForPlayerBJ</item>
-			<item>TimerDialogSetRealTimeRemaining</item>
-			<item>TimerDialogSetSpeed</item>
 			<item>TimerDialogSetSpeedBJ</item>
-			<item>TimerDialogSetTimeColor</item>
 			<item>TimerDialogSetTimeColorBJ</item>
-			<item>TimerDialogSetTitle</item>
 			<item>TimerDialogSetTitleBJ</item>
-			<item>TimerDialogSetTitleColor</item>
 			<item>TimerDialogSetTitleColorBJ</item>
-			<item>TimerGetElapsed</item>
-			<item>TimerGetRemaining</item>
-			<item>TimerGetTimeout</item>
-			<item>TimerStart</item>
-			<item>TownCount</item>
-			<item>TownCountDone</item>
-			<item>TownCountEx</item>
-			<item>TownCountTown</item>
-			<item>TownHasHall</item>
-			<item>TownHasMine</item>
-			<item>TownThreatened</item>
-			<item>TownWithMine</item>
-			<item>Trace</item>
-			<item>TraceI</item>
-			<item>TraceII</item>
-			<item>TraceIII</item>
 			<item>TransmissionFromUnitTypeWithNameBJ</item>
 			<item>TransmissionFromUnitWithNameBJ</item>
 			<item>TriggerActionUnitRescuedBJ</item>
-			<item>TriggerAddAction</item>
-			<item>TriggerAddCondition</item>
-			<item>TriggerClearActions</item>
-			<item>TriggerClearConditions</item>
-			<item>TriggerEvaluate</item>
-			<item>TriggerExecute</item>
 			<item>TriggerExecuteBJ</item>
-			<item>TriggerExecuteWait</item>
 			<item>TriggerRegisterAnyUnitEventBJ</item>
 			<item>TriggerRegisterBuildSubmenuEventBJ</item>
-			<item>TriggerRegisterDeathEvent</item>
 			<item>TriggerRegisterDestDeathInRegionEvent</item>
-			<item>TriggerRegisterDialogButtonEvent</item>
-			<item>TriggerRegisterDialogEvent</item>
 			<item>TriggerRegisterDialogEventBJ</item>
 			<item>TriggerRegisterDistanceBetweenUnits</item>
 			<item>TriggerRegisterEnterRectSimple</item>
-			<item>TriggerRegisterEnterRegion</item>
 			<item>TriggerRegisterEnterRegionSimple</item>
-			<item>TriggerRegisterFilterUnitEvent</item>
-			<item>TriggerRegisterGameEvent</item>
 			<item>TriggerRegisterGameLoadedEventBJ</item>
 			<item>TriggerRegisterGameSavedEventBJ</item>
-			<item>TriggerRegisterGameStateEvent</item>
 			<item>TriggerRegisterGameStateEventTimeOfDay</item>
 			<item>TriggerRegisterLeaveRectSimple</item>
-			<item>TriggerRegisterLeaveRegion</item>
 			<item>TriggerRegisterLeaveRegionSimple</item>
-			<item>TriggerRegisterPlayerAllianceChange</item>
-			<item>TriggerRegisterPlayerChatEvent</item>
-			<item>TriggerRegisterPlayerEvent</item>
 			<item>TriggerRegisterPlayerEventAllianceChanged</item>
 			<item>TriggerRegisterPlayerEventDefeat</item>
 			<item>TriggerRegisterPlayerEventEndCinematic</item>
@@ -2042,160 +1896,475 @@
 			<item>TriggerRegisterPlayerEventVictory</item>
 			<item>TriggerRegisterPlayerKeyEventBJ</item>
 			<item>TriggerRegisterPlayerSelectionEventBJ</item>
-			<item>TriggerRegisterPlayerStateEvent</item>
-			<item>TriggerRegisterPlayerUnitEvent</item>
 			<item>TriggerRegisterPlayerUnitEventSimple</item>
 			<item>TriggerRegisterShowSkillEventBJ</item>
-			<item>TriggerRegisterTimerEvent</item>
 			<item>TriggerRegisterTimerEventPeriodic</item>
 			<item>TriggerRegisterTimerEventSingle</item>
-			<item>TriggerRegisterTimerExpireEvent</item>
 			<item>TriggerRegisterTimerExpireEventBJ</item>
-			<item>TriggerRegisterTrackableHitEvent</item>
-			<item>TriggerRegisterTrackableTrackEvent</item>
-			<item>TriggerRegisterUnitEvent</item>
-			<item>TriggerRegisterUnitInRange</item>
 			<item>TriggerRegisterUnitInRangeSimple</item>
 			<item>TriggerRegisterUnitLifeEvent</item>
 			<item>TriggerRegisterUnitManaEvent</item>
-			<item>TriggerRegisterUnitStateEvent</item>
-			<item>TriggerRegisterVariableEvent</item>
-			<item>TriggerRemoveAction</item>
-			<item>TriggerRemoveCondition</item>
-			<item>TriggerSleepAction</item>
-			<item>TriggerSyncReady</item>
-			<item>TriggerSyncStart</item>
-			<item>TriggerWaitForSound</item>
-			<item>TriggerWaitOnSleeps</item>
 			<item>TryInitCinematicBehaviorBJ</item>
 			<item>TryInitRescuableTriggersBJ</item>
-			<item>UnitAddAbility</item>
 			<item>UnitAddAbilityBJ</item>
-			<item>UnitAddIndicator</item>
 			<item>UnitAddIndicatorBJ</item>
-			<item>UnitAddItem</item>
-			<item>UnitAddItemById</item>
 			<item>UnitAddItemByIdSwapped</item>
 			<item>UnitAddItemSwapped</item>
-			<item>UnitAddItemToSlotById</item>
-			<item>UnitAddSleep</item>
-			<item>UnitAddSleepPerm</item>
-			<item>UnitAddType</item>
 			<item>UnitAddTypeBJ</item>
-			<item>UnitAlive</item>
-			<item>UnitApplyTimedLife</item>
 			<item>UnitApplyTimedLifeBJ</item>
-			<item>UnitCanSleep</item>
 			<item>UnitCanSleepBJ</item>
-			<item>UnitCanSleepPerm</item>
-			<item>UnitCountBuffsEx</item>
 			<item>UnitCountBuffsExBJ</item>
-			<item>UnitDamagePoint</item>
 			<item>UnitDamagePointLoc</item>
-			<item>UnitDamageTarget</item>
 			<item>UnitDamageTargetBJ</item>
 			<item>UnitDropItem</item>
-			<item>UnitDropItemPoint</item>
 			<item>UnitDropItemPointBJ</item>
 			<item>UnitDropItemPointLoc</item>
-			<item>UnitDropItemSlot</item>
 			<item>UnitDropItemSlotBJ</item>
-			<item>UnitDropItemTarget</item>
 			<item>UnitDropItemTargetBJ</item>
 			<item>UnitGenerateAlarms</item>
 			<item>UnitHasBuffBJ</item>
-			<item>UnitHasBuffsEx</item>
-			<item>UnitHasItem</item>
 			<item>UnitHasItemOfTypeBJ</item>
-			<item>UnitId</item>
 			<item>UnitId2OrderIdBJ</item>
-			<item>UnitId2String</item>
 			<item>UnitId2StringBJ</item>
-			<item>UnitIgnoreAlarm</item>
-			<item>UnitIgnoreAlarmToggled</item>
 			<item>UnitInventoryCount</item>
-			<item>UnitInventorySize</item>
 			<item>UnitInventorySizeBJ</item>
-			<item>UnitInvis</item>
-			<item>UnitIsSleeping</item>
 			<item>UnitIsSleepingBJ</item>
-			<item>UnitItemInSlot</item>
 			<item>UnitItemInSlotBJ</item>
-			<item>UnitMakeAbilityPermanent</item>
 			<item>UnitMakeAbilityPermanentBJ</item>
-			<item>UnitModifySkillPoints</item>
-			<item>UnitPauseTimedLife</item>
 			<item>UnitPauseTimedLifeBJ</item>
-			<item>UnitPoolAddUnitType</item>
-			<item>UnitPoolRemoveUnitType</item>
-			<item>UnitRemoveAbility</item>
 			<item>UnitRemoveAbilityBJ</item>
 			<item>UnitRemoveBuffBJ</item>
-			<item>UnitRemoveBuffs</item>
 			<item>UnitRemoveBuffsBJ</item>
-			<item>UnitRemoveBuffsEx</item>
 			<item>UnitRemoveBuffsExBJ</item>
-			<item>UnitRemoveItem</item>
-			<item>UnitRemoveItemFromSlot</item>
 			<item>UnitRemoveItemFromSlotSwapped</item>
 			<item>UnitRemoveItemSwapped</item>
-			<item>UnitRemoveType</item>
 			<item>UnitRemoveTypeBJ</item>
-			<item>UnitResetCooldown</item>
 			<item>UnitSetCanSleepBJ</item>
-			<item>UnitSetConstructionProgress</item>
-			<item>UnitSetUpgradeProgress</item>
-			<item>UnitSetUsesAltIcon</item>
 			<item>UnitSetUsesAltIconBJ</item>
-			<item>UnitShareVision</item>
 			<item>UnitShareVisionBJ</item>
-			<item>UnitStripHeroLevel</item>
-			<item>UnitSuspendDecay</item>
 			<item>UnitSuspendDecayBJ</item>
-			<item>UnitUseItem</item>
 			<item>UnitUseItemDestructable</item>
-			<item>UnitUseItemPoint</item>
 			<item>UnitUseItemPointLoc</item>
-			<item>UnitUseItemTarget</item>
-			<item>UnitWakeUp</item>
 			<item>UnitWakeUpBJ</item>
 			<item>UnlockGameSpeedBJ</item>
-			<item>UnregisterStackedSound</item>
-			<item>Unsummon</item>
-			<item>UnsummonAll</item>
 			<item>UpdateEachStockBuilding</item>
 			<item>UpdateEachStockBuildingEnum</item>
 			<item>UpdateStockAvailability</item>
-			<item>UpgradeAll</item>
 			<item>UseTimeOfDayBJ</item>
-			<item>VersionCompatible</item>
-			<item>VersionGet</item>
-			<item>VersionSupported</item>
-			<item>VolumeGroupReset</item>
 			<item>VolumeGroupResetBJ</item>
 			<item>VolumeGroupResetImmediateBJ</item>
-			<item>VolumeGroupSetVolume</item>
 			<item>VolumeGroupSetVolumeBJ</item>
 			<item>VolumeGroupSetVolumeForPlayerBJ</item>
-			<item>WaitForSignal</item>
 			<item>WaitForSoundBJ</item>
-			<item>WaitForTown</item>
-			<item>WaitForUnits</item>
-			<item>WaitGetEnemyBase</item>
 			<item>WaitTransmissionDuration</item>
 			<item>WakePlayerUnits</item>
 			<item>WakePlayerUnitsEnum</item>
-			<item>WavePrepare</item>
-			<item>WaygateActivate</item>
 			<item>WaygateActivateBJ</item>
 			<item>WaygateGetDestinationLocBJ</item>
-			<item>WaygateGetDestinationX</item>
-			<item>WaygateGetDestinationY</item>
-			<item>WaygateIsActive</item>
 			<item>WaygateIsActiveBJ</item>
-			<item>WaygateSetDestination</item>
-			<item>WaygateSetDestinationLocBJ</item>
 			<item>WidgetDropItem</item>
+			<item>GetHandleId</item>
+			<item>StringHash</item>
+			<item>GetSpellTargetX</item>
+			<item>GetSpellTargetY</item>
+			<item>InitHashtable</item>
+			<item>SaveInteger</item>
+			<item>SaveReal</item>
+			<item>SaveBoolean</item>
+			<item>SaveStr</item>
+			<item>SavePlayerHandle</item>
+			<item>SaveWidgetHandle</item>
+			<item>SaveDestructableHandle</item>
+			<item>SaveItemHandle</item>
+			<item>SaveUnitHandle</item>
+			<item>SaveAbilityHandle</item>
+			<item>SaveTimerHandle</item>
+			<item>SaveTriggerHandle</item>
+			<item>SaveTriggerConditionHandle</item>
+			<item>SaveTriggerActionHandle</item>
+			<item>SaveTriggerEventHandle</item>
+			<item>SaveForceHandle</item>
+			<item>SaveGroupHandle</item>
+			<item>SaveLocationHandle</item>
+			<item>SaveRectHandle</item>
+			<item>SaveBooleanExprHandle</item>
+			<item>SaveSoundHandle</item>
+			<item>SaveEffectHandle</item>
+			<item>SaveUnitPoolHandle</item>
+			<item>SaveItemPoolHandle</item>
+			<item>SaveQuestHandle</item>
+			<item>SaveQuestItemHandle</item>
+			<item>SaveDefeatConditionHandle</item>
+			<item>SaveTimerDialogHandle</item>
+			<item>SaveLeaderboardHandle</item>
+			<item>SaveMultiboardHandle</item>
+			<item>SaveMultiboardItemHandle</item>
+			<item>SaveTrackableHandle</item>
+			<item>SaveDialogHandle</item>
+			<item>SaveButtonHandle</item>
+			<item>SaveTextTagHandle</item>
+			<item>SaveLightningHandle</item>
+			<item>SaveImageHandle</item>
+			<item>SaveUbersplatHandle</item>
+			<item>SaveRegionHandle</item>
+			<item>SaveFogStateHandle</item>
+			<item>SaveFogModifierHandle</item>
+			<item>SaveAgentHandle</item>
+			<item>SaveHashtableHandle</item>
+			<item>LoadInteger</item>
+			<item>LoadReal</item>
+			<item>LoadBoolean</item>
+			<item>LoadStr</item>
+			<item>LoadPlayerHandle</item>
+			<item>LoadWidgetHandle</item>
+			<item>LoadDestructableHandle</item>
+			<item>LoadItemHandle</item>
+			<item>LoadUnitHandle</item>
+			<item>LoadAbilityHandle</item>
+			<item>LoadTimerHandle</item>
+			<item>LoadTriggerHandle</item>
+			<item>LoadTriggerConditionHandle</item>
+			<item>LoadTriggerActionHandle</item>
+			<item>LoadTriggerEventHandle</item>
+			<item>LoadForceHandle</item>
+			<item>LoadGroupHandle</item>
+			<item>LoadLocationHandle</item>
+			<item>LoadRectHandle</item>
+			<item>LoadBooleanExprHandle</item>
+			<item>LoadSoundHandle</item>
+			<item>LoadEffectHandle</item>
+			<item>LoadUnitPoolHandle</item>
+			<item>LoadItemPoolHandle</item>
+			<item>LoadQuestHandle</item>
+			<item>LoadQuestItemHandle</item>
+			<item>LoadDefeatConditionHandle</item>
+			<item>LoadTimerDialogHandle</item>
+			<item>LoadLeaderboardHandle</item>
+			<item>LoadMultiboardHandle</item>
+			<item>LoadMultiboardItemHandle</item>
+			<item>LoadTrackableHandle</item>
+			<item>LoadDialogHandle</item>
+			<item>LoadButtonHandle</item>
+			<item>LoadTextTagHandle</item>
+			<item>LoadLightningHandle</item>
+			<item>LoadImageHandle</item>
+			<item>LoadUbersplatHandle</item>
+			<item>LoadRegionHandle</item>
+			<item>LoadFogStateHandle</item>
+			<item>LoadFogModifierHandle</item>
+			<item>LoadHashtableHandle</item>
+			<item>HaveSavedInteger</item>
+			<item>HaveSavedReal</item>
+			<item>HaveSavedBoolean</item>
+			<item>HaveSavedString</item>
+			<item>HaveSavedHandle</item>
+			<item>RemoveSavedInteger</item>
+			<item>RemoveSavedReal</item>
+			<item>RemoveSavedBoolean</item>
+			<item>RemoveSavedString</item>
+			<item>RemoveSavedHandle</item>
+			<item>FlushParentHashtable</item>
+			<item>FlushChildHashtable</item>
+		</list>
+		
+		<!-- Most AI natives-->
+		<list name="CommonAINatives">
+			<item>AddAssault</item>
+			<item>AddDefenders</item>
+			<item>AddGuardPost</item>
+			<item>AttackMoveKill</item>
+			<item>AttackMoveXY</item>
+			<item>CaptainAtGoal</item>
+			<item>CaptainAttack</item>
+			<item>CaptainGoHome</item>
+			<item>CaptainGroupSize</item>
+			<item>CaptainInCombat</item>
+			<item>CaptainIsEmpty</item>
+			<item>CaptainIsFull</item>
+			<item>CaptainIsHome</item>
+			<item>CaptainReadiness</item>
+			<item>CaptainReadinessHP</item>
+			<item>CaptainReadinessMa</item>
+			<item>CaptainRetreating</item>
+			<item>CaptainVsPlayer</item>
+			<item>CaptainVsUnits</item>
+			<item>ClearCaptainTargets</item>
+			<item>ClearHarvestAI</item>
+			<item>CommandsWaiting</item>
+			<item>ConvertUnits</item>
+			<item>CreateCaptains</item>
+			<item>CreepsOnMap</item>
+			<item>DebugFI</item>
+			<item>DebugS</item>
+			<item>DebugUnitID</item>
+			<item>DisablePathing</item>
+			<item>DisplayText</item>
+			<item>DisplayTextI</item>
+			<item>DisplayTextII</item>
+			<item>DisplayTextIII</item>
+			<item>DoAiScriptDebug</item>
+			<item>FillGuardPosts</item>
+			<item>GetAiPlayer</item>
+			<item>GetAllianceTarget</item>
+			<item>GetBuilding</item>
+			<item>GetCreepCamp</item>
+			<item>GetEnemyBase</item>
+			<item>GetEnemyExpansion</item>
+			<item>GetEnemyPower</item>
+			<item>GetExpansionFoe</item>
+			<item>GetExpansionPeon</item>
+			<item>GetExpansionX</item>
+			<item>GetExpansionY</item>
+			<item>GetGoldOwned</item>
+			<item>GetHeroId</item>
+			<item>GetHeroLevelAI</item>
+			<item>GetLastCommand</item>
+			<item>GetLastData</item>
+			<item>GetMegaTarget</item>
+			<item>GetMinesOwned</item>
+			<item>GetNextExpansion</item>
+			<item>GetPlayerUnitTypeCount</item>
+			<item>GetTownUnitCount</item>
+			<item>GetUnitBuildTime</item>
+			<item>GetUnitCount</item>
+			<item>GetUnitCountDone</item>
+			<item>GetUnitGoldCost</item>
+			<item>GetUnitWoodCost</item>
+			<item>GetUpgradeGoldCost</item>
+			<item>GetUpgradeLevel</item>
+			<item>GetUpgradeWoodCost</item>
+			<item>GroupTimedLife</item>
+			<item>HarvestGold</item>
+			<item>HarvestWood</item>
+			<item>IgnoredUnits</item>
+			<item>InitAssault</item>
+			<item>IsTowered</item>
+			<item>LoadZepWave</item>
+			<item>MeleeDifficulty</item>
+			<item>MergeUnits</item>
+			<item>PopLastCommand</item>
+			<item>PurchaseZeppelin</item>
+			<item>RemoveInjuries</item>
+			<item>RemoveSiege</item>
+			<item>ResetCaptainLocs</item>
+			<item>ReturnGuardPosts</item>
+			<item>SetAllianceTarget</item>
+			<item>SetAmphibious</item>
+			<item>SetCampaignAI</item>
+			<item>SetCaptainChanges</item>
+			<item>SetCaptainHome</item>
+			<item>SetDefendPlayer</item>
+			<item>SetExpansion</item>
+			<item>SetGroupsFlee</item>
+			<item>SetHeroesBuyItems</item>
+			<item>SetHeroesFlee</item>
+			<item>SetHeroesTakeItems</item>
+			<item>SetHeroLevels</item>
+			<item>SetIgnoreInjured</item>
+			<item>SetMeleeAI</item>
+			<item>SetNewHeroes</item>
+			<item>SetPeonsRepair</item>
+			<item>SetProduce</item>
+			<item>SetRandomPaths</item>
+			<item>SetReplacementCount</item>
+			<item>SetSlowChopping</item>
+			<item>SetSmartArtillery</item>
+			<item>SetStagePoint</item>
+			<item>SetTargetHeroes</item>
+			<item>SetUnitsFlee</item>
+			<item>SetUpgrade</item>
+			<item>SetWatchMegaTargets</item>
+			<item>ShiftTownSpot</item>
+			<item>Sleep</item>
+			<item>StartGetEnemyBase</item>
+			<item>StartThread</item>
+			<item>StopGathering</item>
+			<item>SuicidePlayer</item>
+			<item>SuicidePlayerUnits</item>
+			<item>SuicideUnit</item>
+			<item>SuicideUnitEx</item>
+			<item>TeleportCaptain</item>
+			<item>TownHasHall</item>
+			<item>TownHasMine</item>
+			<item>TownThreatened</item>
+			<item>TownWithMine</item>
+			<item>UnitAlive</item>
+			<item>UnitInvis</item>
+			<item>Unsummon</item>
+			<item>WaitGetEnemyBase</item>
+		</list>
+		
+		<list name="JAPINatives">
+			<item>xGetUnitDefenseType</item>
+			<item>xGetDefenseType</item>
+			<item>xGetUnitAttackType1</item>
+			<item>xGetAttackType1</item>
+			<item>xGetUnitAttackType2</item>
+			<item>xGetAttackType2</item>
+			<item>xGetUnitWeaponType1</item>
+			<item>xGetWeaponType1</item>
+			<item>xGetUnitWeaponType2</item>
+			<item>xGetWeaponType2</item>
+			<item>DumpUnitInfo</item>
+			<item>ArrayAlloc</item>
+			<item>ArraySetI</item>
+			<item>ArrayGetI</item>
+			<item>ArrayFree</item>
+			<item>DequeNew</item>
+			<item>DequePushFrontI</item>
+			<item>DequePushBackI</item>
+			<item>DequeFrontI</item>
+			<item>DequeBackI</item>
+			<item>DequePopFrontI</item>
+			<item>DequePopBackI</item>
+			<item>DequeFree</item>
+			<item>MapNew</item>
+			<item>MapSetII</item>
+			<item>MapGetII</item>
+			<item>MapSetSI</item>
+			<item>MapGetSI</item>
+			<item>MapFree</item>
+			<item>consII</item>
+			<item>carI</item>
+			<item>cdrI</item>
+			<item>destroypair</item>
+			<item>StopWatchCreate</item>
+			<item>StopWatchMark</item>
+			<item>StopWatchDestroy</item>
+			<item>ItoR</item>
+			<item>RtoI</item>
+			<item>Encrypt</item>
+			<item>Decrypt</item>
+			<item>DebugPrint</item>
+			<item>CallByName</item>
+			<item>InitNatives</item>
+		</list>
+		
+		<list name="RtCNatives">
+			<item>StringPos</item>
+			<item>StringReplace</item>
+			<item>IsWindowInFocus</item>
+			<item>Char</item>
+			<item>Log</item>
+			<item>Ln</item>
+			<item>BitAnd</item>
+			<item>BitOr</item>
+			<item>BitXor</item>
+			<item>BitBSL</item>
+			<item>BitBSR</item>
+			<item>BitFlip</item>
+			<item>GetTimestamp</item>
+			<item>GetTimeSeconds</item>
+			<item>GetTimeMinutes</item>
+			<item>GetTimeHours</item>
+			<item>GetTimeMonth</item>
+			<item>GetTimeDayWeek</item>
+			<item>GetTimeDayMonth</item>
+			<item>GetTimeDayYear</item>
+			<item>GetTimeYear</item>
+			<item>GetTickCount</item>
+			<item>GetTimeMilliseconds</item>
+			<item>GetMouseX</item>
+			<item>GetMouseY</item>
+			<item>GetMouseXRelative</item>
+			<item>GetMouseYRelative</item>
+			<item>SetMouseX</item>
+			<item>SetMouseY</item>
+			<item>SetMousePos</item>
+			<item>TriggerRegisterMouseEvent</item>
+			<item>GetMouseTargetX</item>
+			<item>GetMouseTargetY</item>
+			<item>SetMouseBlock</item>
+			<item>IsMouseOverUI</item>
+			<item>TriggerRegisterKeyEvent</item>
+			<item>IsKeyDown</item>
+			<item>SetKeyBlock</item>
+			<item>GetScreenWidth</item>
+			<item>GetScreenHeight</item>
+			<item>GetWindowWidth</item>
+			<item>GetWindowHeight</item>
+			<item>GetWindowX</item>
+			<item>GetWindowY</item>
+			<item>GetTriggerParam_Integer</item>
+			<item>GetTriggerParam_Real</item>
+			<item>GetTriggerParam_String</item>
+			<item>SocTCPConnect</item>
+			<item>SocTCPListen</item>
+			<item>SocTCPAccept</item>
+			<item>SocTCPIP</item>
+			<item>SocSetNagle</item>
+			<item>SocTCPConnected</item>
+			<item>SocUDPConnect</item>
+			<item>SocSendUDPMessage</item>
+			<item>SocSendTCPMessage</item>
+			<item>SocReceiveMessage</item>
+			<item>SocPeekMessage</item>
+			<item>SocSetFormat</item>
+			<item>SocGetLastInIP</item>
+			<item>SocGetLastInPort</item>
+			<item>SocSetSync</item>
+			<item>SocCloseSocket</item>
+			<item>SocGetSocketLastError</item>
+			<item>SocGetMyHost</item>
+			<item>SocCompareIp</item>
+			<item>SocExit</item>
+			<item>SocStart</item>
+			<item>SocNetConnected</item>
+			<item>BufferWriteByte</item>
+			<item>BufferWriteShort</item>
+			<item>BufferWriteUShort</item>
+			<item>BufferWriteInt</item>
+			<item>BufferWriteUInt</item>
+			<item>BufferWriteFloat</item>
+			<item>BufferWriteString</item>
+			<item>BufferWriteChars</item>
+			<item>BufferWriteOrderID</item>
+			<item>BufferReadByte</item>
+			<item>BufferReadShort</item>
+			<item>BufferReadUShort</item>
+			<item>BufferReadInt</item>
+			<item>BufferReadUInt</item>
+			<item>BufferReadFloat</item>
+			<item>BufferReadString</item>
+			<item>BufferReadChars</item>
+			<item>BufferReadOrderID</item>
+			<item>CreateBuffer</item>
+			<item>DestroyBuffer</item>
+			<item>BufferCopy</item>
+			<item>BufferClear</item>
+			<item>BufferSize</item>
+			<item>BufferBytesLeft</item>
+			<item>CreateVector</item>
+			<item>DestroyVector</item>
+			<item>VectorClear</item>
+			<item>GetVectorSize</item>
+			<item>SetVectorSize</item>
+			<item>VectorGet</item>
+			<item>VectorSet</item>
+			<item>VectorPushBack</item>
+			<item>VectorPopBack</item>
+			<item>VectorBack</item>
+			<item>VectorEmpty</item>
+			<item>CreateI64</item>
+			<item>DestroyI64</item>
+			<item>AddIntToI64</item>
+			<item>SubIntFromI64</item>
+			<item>AddI64ToI64</item>
+			<item>SubI64FromI64</item>
+			<item>MulI64</item>
+			<item>DivI64</item>
+			<item>I64AsString</item>
+			<item>I64AsIntHigh</item>
+			<item>I64AsIntLow</item>
+			<item>I64Compare</item>
+			<item>TriggerRegisterTooltipEvent</item>
+			<item>TriggerReturnString</item>
+			<item>GetTriggeringRawcode</item>
+			<item>GetTriggeringLevel</item>
+			<item>CreateTriggerGroup</item>
+			<item>DestroyTriggerGroup</item>
+			<item>TriggerGroupAdd</item>
+			<item>TriggerGroupRun</item>
 		</list>
 		
 		<!-- datatypes of vJass-->
@@ -2206,6 +2375,7 @@
 			<item>boolean</item>
 			<item>code</item>
 			<item>handle</item>
+			<item>agent</item>
 			<item>unit</item>
 			<item>timer</item>
 			<item>group</item>
@@ -2284,7 +2454,7 @@
 			<item>timerdialog</item>
 			<item>trackable</item>
 			<item>triggeraction</item>
-			<item>riggercondition</item>
+			<item>triggercondition</item>
 			<item>ubersplat</item>
 			<item>unitevent</item>
 			<item>unitpool</item>
@@ -2297,13 +2467,14 @@
 			<item>effecttype</item>
 			<item>widget</item>
 			<item>widgetevent</item>
+			<item>hashtable</item>
 			<item>nothing </item>
 			<item>array</item>
 			<item>thistype</item>
 		</list>
 		
-		
-		<list name="commonJConstants">
+		<!--Constant variables from the language-->
+		<list name="CommonJConstants">
 			<item>FALSE</item>
 			<item>TRUE</item>
 			<item>JASS_MAX_ARRAY_SIZE</item>
@@ -2547,7 +2718,7 @@
 			<item>EVENT_PLAYER_CHAT</item>
 			<item>EVENT_PLAYER_END_CINEMATIC</item>
 			<item>EVENT_PLAYER_UNIT_ATTACKED</item>
-			<item>VENT_PLAYER_UNIT_RESCUED</item>
+			<item>EVENT_PLAYER_UNIT_RESCUED</item>
 			<item>EVENT_PLAYER_UNIT_DEATH</item>
 			<item>EVENT_PLAYER_UNIT_DECAY</item>
 			<item>EVENT_PLAYER_UNIT_DETECTED</item>
@@ -2597,7 +2768,7 @@
 			<item>EVENT_UNIT_CONSTRUCT_FINISH</item>
 			<item>EVENT_UNIT_UPGRADE_START</item>
 			<item>EVENT_UNIT_UPGRADE_CANCEL</item>
-			<item>EVENT_UNIT_UPGRADE_FINISH                                                           </item>
+			<item>EVENT_UNIT_UPGRADE_FINISH</item>
 			<item>EVENT_UNIT_TRAIN_START</item>
 			<item>EVENT_UNIT_TRAIN_CANCEL</item>
 			<item>EVENT_UNIT_TRAIN_FINISH</item>
@@ -2732,7 +2903,8 @@
 			<item>SOUND_TYPE_EFFECT_LOOPED</item>
 		</list>
 		
-		<list name="blizzardJConstants">
+		<!--Engine constants-->
+		<list name="BlizzardJConstants">
 			<item>bj_PI</item>
 			<item>bj_E</item>
 			<item>bj_CELLWIDTH</item>
@@ -3283,7 +3455,8 @@
 			<item>filterLivingPlayerUnitsOfTypeId</item>
 		</list>
 		
-		<list name="aiConstants">
+		<!--More constant to complete the AI module-->
+		<list name="AIConstants">
 			<item>ARCHMAGE</item>
 			<item>PALADIN</item>
 			<item>MTN_KING</item>
@@ -3706,6 +3879,22 @@
 			<item>UPKEEP_TIER2</item>
 		</list>
 		
+		<!-- Constant variables from vJass -->
+		<list name="VConstants">
+			<item>DEBUG_MODE</item>
+		</list>
+		
+		<!-- Constant variables from RtC -->
+		<list name="RtCConstants">
+			<item>EVENT_LMOUSEUP</item>
+			<item>EVENT_LMOUSEDOWN</item>
+			<item>EVENT_RMOUSEUP</item>
+			<item>EVENT_RMOUSEDOWN</item>
+			<item>EVENT_MMOUSEUP</item>
+			<item>EVENT_MMOUSEDOWN</item>
+			<item>EVENT_MOUSEWHEEL</item>
+		</list>
+		
 		<!--I think that booleans and other special cases should also have nice colour =D-->
 		<list name="extensions">
 			<item>true</item>
@@ -3717,13 +3906,18 @@
 			<context attribute="Normal Text" lineEndContext="#pop" name="Normal Text" >
 			<DetectSpaces />
 				<keyword attribute="Keyword" context="#stay" String="keywords" />
-				<keyword attribute="Function" context="#stay" String="functions" />
+				<keyword attribute="CommonJBJs" context="#stay" String="CommonJBJs" />
+				<keyword attribute="CommonJNatives" context="#stay" String="CommonJNatives" />
+				<keyword attribute="CommonAINatives" context="#stay" String="CommonAINatives" />
+				<keyword attribute="JAPINatives" context="#stay" String="JAPINatives" />
+				<keyword attribute="RtCNatives" context="#stay" String="RtCNatives" />
 				<keyword attribute="DataType" context="#stay" String="datatypes" />
 				<keyword attribute="Extension" context="#stay" String="extensions" />
-				
-				<keyword attribute="BlizzardJConstans" context="#stay" String="blizzardJConstants"/>
-				
-				<keyword attribute="AIConstans" context="#stay" String="aiConstants"/>
+				<keyword attribute="BlizzardJConstants" context="#stay" String="BlizzardJConstants"/>
+				<keyword attribute="CommonJConstants" context="#stay" String="CommonJConstants"/>
+				<keyword attribute="AIConstants" context="#stay" String="AIConstants"/>
+				<keyword attribute="VConstants" context="#stay" String="VConstants" />
+				<keyword attribute="RtCConstants" context="#stay" String="RtCConstants" />
 				
 				<HlCOct attribute="Octal" context="#stay"/>
 				<HlCHex attribute="Hex" context="#stay"/>
@@ -3732,8 +3926,11 @@
 				<DetectChar attribute="String" context="String" char="&quot;" />
 				<DetectChar attribute="Raw" context="raw" char="'" />
 				
-				<!-- This are special folding regions-->
+				<!-- These are special folding regions-->
 				<StringDetect attribute="Region Marker" context="#stay" String="//! textmacro" beginRegion="textMRegion"/>
+				<StringDetect attribute="Region Marker" context="#stay" String="//! endtextmacro" endRegion="textMRegion"/>
+				
+				<StringDetect attribute="Region Marker" context="#stay" String="//! textmacro_once" beginRegion="textMRegion"/>
 				<StringDetect attribute="Region Marker" context="#stay" String="//! endtextmacro" endRegion="textMRegion"/>
 				
 				<StringDetect attribute="Region Marker" context="#stay" String="//! inject" beginRegion="injectMRegion"/>
@@ -3749,7 +3946,7 @@
 				<RegExpr attribute="Keyword" context="#stay" String="\bloop(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="loopRegion"/>
 				<RegExpr attribute="Keyword" context="#stay" String="\bendloop(?=((\{[^}]*(\}|$)|\(\*.*(\*\)|$))*)([.;\s]|$)|//|$)" insensitive="true" endRegion="loopRegion"/>
 				
-				<RegExpr attribute="Keyword" context="#pop" String="\bif(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="ifRegion"/>
+				<RegExpr attribute="Keyword" context="#pop" String="\bif(?=(\([^}]*(\)|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="ifRegion"/>
 				<RegExpr attribute="Keyword" context="#pop" String="\bendif(?=((\{[^}]*(\}|$)|\(\*.*(\*\)|$))*)([.;\s]|$)|//|$)" insensitive="true" endRegion="ifRegion"/>
 				
 				<RegExpr attribute="Keyword" context="#stay" String="\bscope(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="scopeRegion"/>
@@ -3775,7 +3972,9 @@
 				
 				<StringDetect attribute="Preprocessor" context="Preprocessor" String="//!"/>
 				
+				<IncludeRules context="##vjassdoc" />
         			<Detect2Chars attribute="Comment" context="Commentar 1" char="/" char1="/"/>
+				<Detect2Chars attribute="Comment" context="Commentar 2" char="/" char1="*" beginRegion="Comment"/>
 				
 				<!--To make reals and integers colored-->
 				<Float attribute="Float" context="#stay">
@@ -3814,15 +4013,19 @@
 			</context>
 			
 			<context attribute="Preprocessor" lineEndContext="#pop" name="Preprocessor"/>		
-			<context attribute="Comment" lineEndContext="#pop" name="Commentar 1"/>			
-			<context attribute="Region Marker" lineEndContext="#pop" name="Region Marker">
-      			</context>
+			<context attribute="Comment" lineEndContext="#pop" name="Commentar 1"/>
+			<context attribute="Comment" lineEndContext="#stay" name="Commentar 2">
+				<DetectSpaces />
+				<Detect2Chars attribute="Comment" context="#pop" char="*" char1="/" endRegion="Comment"/>
+				<DetectIdentifier />
+			</context>
+			<context attribute="Region Marker" lineEndContext="#pop" name="Region Marker"/>
+      			<!-- </context> -->
 		</contexts>
 		
 		<itemDatas>
 			<itemData name="Normal Text" 	defStyleNum="dsNormal" />
 			<itemData name="Keyword" 	defStyleNum="dsKeyword" />
-			<itemData name="Function" 	defStyleNum="dsFunction" />
 			<itemData name="DataType" 	defStyleNum="dsDataType" />
 			<itemData name="String" 	defStyleNum="dsString" />
 			<itemData name="String Char"  	defStyleNum="dsChar"/>
@@ -3834,13 +4037,28 @@
 			<itemData name="Comment"	defStyleNum="dsComment"/>
 			<itemData name="Region Marker" 	defStyleNum="dsRegionMarker" />
 			
+			
+			<itemData name="CommonJNatives"   	defStyleNum="dsKeyword"	color="#ba55d3" selColor="#ffffff" bold="1" italic="0"/>
+			
+			<itemData name="CommonAINatives"   	defStyleNum="dsKeyword"	color="#008000" selColor="#ffffff" bold="1" italic="0"/>
+			
+			<itemData name="JAPINatives"   	defStyleNum="dsKeyword"	color="#ba55d3" selColor="#ffffff" bold="1" italic="0"/>
+			
+			<itemData name="RtCNatives"   	defStyleNum="dsKeyword"	color="#ba55d3" selColor="#ffffff" bold="1" italic="0"/>
+			
+			<itemData name="CommonJBJs"   	defStyleNum="dsKeyword"	color="#ff0000" selColor="#ffffff" bold="1" italic="0"/>
+			
 			<itemData name="Extension"   	defStyleNum="dsKeyword"	color="#0095ff" selColor="#ffffff" bold="1" italic="0"/>
 			
-			<itemData name="CommomJConstans"   	defStyleNum="dsNormal"	color="#6b8e23"	selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="CommonJConstants"   	defStyleNum="dsNormal"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
 			
-			<itemData name="BlizzardJConstans"   	defStyleNum="dsNormal"	color="#dc143c"	selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="BlizzardJConstants"   	defStyleNum="dsNormal"	color="#00008b"	selColor="#ffffff" bold="0" italic="1"/>
 			
-			<itemData name="AIConstans"  	defStyleNum="dsNormal"	color="#9400d3" selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="AIConstants"  	defStyleNum="dsNormal"	color="#6b8e23" selColor="#ffffff" bold="0" italic="1"/>
+			
+			<itemData name="VConstants"  	defStyleNum="dsNormal"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
+			
+			<itemData name="RtCConstants"  	defStyleNum="dsNormal"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
 			
 			<itemData name="Preprocessor" defStyleNum="dsComment"	color="#00008b"	selColor="#ffffff" bold="0" italic="1"/>
 		</itemDatas>
@@ -3848,8 +4066,8 @@
 	
 	<general>
 		<comments>
-			<comment name="singleLine" start="//"/>
-			<start>//</start>
+			<comment name="singleLine" start="//" />
+			<comment name="multiLine" start="/*" end="*/" region="Comment"/>
 		</comments>
 		<keywords casesensitive="1"/>
 	</general>

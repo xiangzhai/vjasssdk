@@ -1,21 +1,46 @@
-The vjasssdk is a collection of useful tools which help working more efficient with Blizzard's Warcraft 3 scripting
-language Jass and its extension vJass.
-It has been assembled by Baradé and usually runs on UNIX, Win32 and Mac OS platforms.
-Here you can see a list of all provided tools and their description:
-- vjasside
-	The vjasside is an integrated development GUI environment written in Trolltechs C++ framework Qt.
-	It makes you easier to handle your code and your projects. Also it integrates all of the other tools,
+2009-11-26 Tamino Dauth <tamino@cdauth.de>
+
+The vjasssdk is a collection of useful tools which help you working more efficient with Blizzard's Warcraft 3 specific formats.
+Some parts has been developed by Tamino Dauth <tamino@cdauth.de> and others were made up by him but developed by others.
+Most applications should usually be able to be run on UNIX, Win32 and Mac OS platforms.
+Here is a list of all provided tools and their brief descriptions:
+
+* vjasside
+	The vjasside is an integrated development GUI environment written in Trolltechs (by now Nokia) C++ framework Qt.
+	It helps to handle your Jass and vJass code. Besides it integrates most of the other tools,
 	so you do not have to use every tool as stand-alone application.
+	Note that the development of this project has stopped since there are more efficient ways (e. g. KDE 4) to provide
+	a Jass, vJass and Zinc IDE.
 
-- vjassdoc:
+* vjassdoc:
 	vjassdoc is an API documentation tool which generates an API documentation by parsing your Jass and vJass files.
-	The documentation can be a simple HTML file which lists all of the code which is nessacary for other devlopers who
-	want to use it or/and a SQLite3 database for extern programs.
-	It is clearly written in C++ code using the STDL, gettext and SQLite3.
+	The documentation offers simple HTML files which list all parsed objects of the code which are necessary for other devlopers.
+	Additionally it allows the user to generate a SQLite3 database for extern programs.
+	It is clearly written in C++ code using the STDL, C++ Boost Libraries, gettext and SQLite3.
 
-- PJass:
+* PJass:
 	PJass is a Jass parser written in C by Rudi Cilibrasi. It is able to parse Jass code files and check them for syntax errors.
 
-- JassHelper:
-	The JassHelper is a vJass parser written in Pascal by Vexorian. It is able to parse vJass code files and check them for syntax
-	errors. Afterwards it generates a Jass map script and adds it to a map file.
+* JassHelper:
+	The JassHelper is a vJass and Zinc parser and "to-Jass-compiler" written in Pascal by Vexorian.
+	It allows you to parse vJass and Zinc code files and check them for syntax errors. Afterwards it generates a Jass map script.
+
+* Syntax highlighting files:
+	There are two supported editors: Kate and Notepad++. Note that Zinc highlighting is still missing.
+
+* Languages:
+	At the moment there are some language files which are Lex and Yacc files for the scripting languages Jass, vJass and Zinc.
+	These language files will be used for newly generated parser and compiler for those languages. They're also intended for replacing
+	vjassdoc's customized parser.
+
+* wc3lib
+	wc3lib is a Warcraft 3 The Frozen Throne format library which allows you to read and write Blizzard's formats:
+	* BLP
+	* MDL
+	* MDX
+	* MPQ
+	* W3N
+	* W3M
+	* W3X
+	* W3G
+	* etc.

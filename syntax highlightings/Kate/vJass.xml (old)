@@ -60,6 +60,11 @@
 			<item>delegate</item>
 			<item>stub</item>
 			<item>super</item>
+			<item>optional</item>
+			<item>allocate</item>
+			<item>create</item>
+			<item>onDestroy</item>
+			<item>onInit</item>
 		</list>
 		<list name="types">
 			<item>code</item>
