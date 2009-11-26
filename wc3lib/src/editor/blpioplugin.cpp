@@ -22,6 +22,7 @@
 
 #include "blpioplugin.hpp"
 #include "blpiohandler.hpp"
+#include "../blp/blp.hpp"
 
 namespace wc3lib
 {
@@ -48,7 +49,7 @@ BlpIOPlugin::Capabilities BlpIOPlugin::capabilities(QIODevice *device, const QBy
 	
 	if (device != 0 && device->peek(identifier, sizeof(identifier)) == sizeof(identifier)) /// @todo peek?
 	{	
-		if (memcmp(identifier, "BLP1", sizeof(identifier)))
+		if (memcmp(identifier, blp::Blp::identifier0, sizeof(blp::Blp::identifier0)) || memcmp(identifier, blp::Blp::identifier1, sizeof(blp::Blp::identifier1)) || memcmp(identifier, blp::Blp::identifier2, sizeof(blp::Blp::identifier2)))
 			return QImageIOPlugin::CanRead;
 	}
 	

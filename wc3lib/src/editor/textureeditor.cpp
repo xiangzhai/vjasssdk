@@ -18,28 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "terraineditor.hpp"
+#include "textureeditor.hpp"
 
 namespace wc3lib
 {
 	
 namespace editor
 {
-
-TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : SubEditor(editor), ModelView(editor, f)
+	
+TextureEditor::TextureEditor(class Editor *editor) : SubEditor(editor)
 {
 }
-
-TerrainEditor::~TerrainEditor()
-{
-}
-
-void TerrainEditor::show()
-{
-	SubEditor::show();
-	ModelView::show();
-}
-
+	
 }
 
 }

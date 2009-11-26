@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>ModelEditor</class>
+ <widget class="QWidget" name="ModelEditor">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -83,7 +83,7 @@
     </widget>
    </item>
    <item row="0" column="2" rowspan="3">
-    <widget class="QOgreWidget" name="rendererWidget" native="true">
+    <widget class="QOgreWdiget" name="rendererWidget" native="true">
      <property name="minimumSize">
       <size>
        <width>400</width>
@@ -102,9 +102,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QOgreWidget</class>
+   <class>QOgreWdiget</class>
    <extends>QWidget</extends>
-   <header>qogre/qogrewidget.h</header>
+   <header>qogre/QOgreWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

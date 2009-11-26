@@ -85,12 +85,22 @@ struct StringDigitalSignature
 //	int2048 signature;
 };
 
+Mpq::Mpq()
+{
+}
+
+Mpq::~Mpq()
+{
+}
+
 std::streamsize Mpq::read(std::istream &istream, enum Mode mode) throw (class Exception)
 {
 	struct Header header;
 	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
 
 	/// @todo Check magic
+	
+	/// @todo Read file !header! data and add @class MpqFile instances to member m_files
 	
 	return 0;
 	

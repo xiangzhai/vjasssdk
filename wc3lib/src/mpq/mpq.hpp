@@ -21,8 +21,7 @@
 #ifndef WC3LIB_MPQ_MPQ_HPP
 #define WC3LIB_MPQ_MPQ_HPP
 
-#include <istream>
-#include <ostream>
+#include <iostream>
 #include <list>
 #include <string>
 
@@ -71,7 +70,7 @@ class Mpq
 		std::string path() const;
 		const std::list<class MpqFile*>& files() const;
 
-	private:
+	protected:
 		std::list<class MpqFile*> m_files;
 };
 

@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MAP_W3M_HPP
 #define WC3LIB_MAP_W3M_HPP
 
-#include <fstream>
+#include <iostream>
 
 #include "../exception.hpp"
 
@@ -65,12 +65,12 @@ class W3m
 			ShowWaterWavesOnRollingShores = 0x1000 //: 1=show water waves on rolling shores
 		};
 
-		virtual std::streamsize read(class mpq::Mpq *mpq) throw (Exception);
-		virtual std::streamsize read(std::fstream &fstream) throw (Exception);
+		virtual std::streamsize read(class mpq::Mpq *mpq) throw (class Exception);
+		virtual std::streamsize read(std::istream &istream) throw (class Exception);
 		/**
 		* Creates an MPQ archive with map header and all required files.
 		*/
-		virtual std::streamsize write(std::fstream &fstream) throw (std::exception);
+		virtual std::streamsize write(std::ostream &ostream) throw (class Exception);
 
 	private:
 		std::string m_name;

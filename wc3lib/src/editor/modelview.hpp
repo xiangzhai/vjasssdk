@@ -64,8 +64,7 @@ class ModelView : public QOgreWidget
 		
 		virtual void setupResources();
 		virtual void configure();
-		
-	private:
+
 		class Ogre::Camera *m_camera;
 		class Ogre::Viewport *m_viewPort;
 		class Ogre::SceneManager *m_sceneManager;

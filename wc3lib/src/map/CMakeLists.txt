@@ -1,4 +1,5 @@
 set(wc3lib_MAP_SRC
+	w3g.cpp
 	w3m.cpp
 )
 
@@ -11,6 +12,7 @@ set(wc3lib_MAP_H
 	tilepoint.hpp
 	tree.hpp
 	trees.hpp
+	w3g.hpp
 	w3m.hpp
 	w3x.hpp
 )

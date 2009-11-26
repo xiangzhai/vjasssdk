@@ -53,24 +53,24 @@ std::streamsize W3m::read(class mpq::Mpq *mpq) throw (class Exception)
 	return 0;
 }
 
-std::streamsize W3m::read(std::fstream &fstream) throw (class Exception)
+std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = 0;
 	struct Header header;
-	fstream.read(reinterpret_cast<char*>(&header), sizeof(header));
-	bytes += fstream.gcount();
+	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
+	bytes += istream.gcount();
 	this->m_name = header.name;
 	this->m_flags = header.flags;
 	this->m_maxPlayers = header.maxPlayers;
-	int byteCount = 512 - fstream.gcount(); //followed by 00 bytes until the 512 bytes of the header are filled.
+	int byteCount = 512 - istream.gcount(); //followed by 00 bytes until the 512 bytes of the header are filled.
 	char *freeBytes = new char[byteCount];
-	fstream.read(freeBytes, byteCount);
-	bytes += fstream.gcount();
+	istream.read(freeBytes, byteCount);
+	bytes += istream.gcount();
 	delete[] freeBytes;
 	freeBytes = 0;
 	
 	class mpq::Mpq *mpq = new mpq::Mpq;
-	bytes += mpq->read(fstream, mpq::Mpq::Read); // starts reading after header's position
+	bytes += mpq->read(istream, mpq::Mpq::Read); // starts reading after header's position
 	const class mpq::MpqFile *mpqFile = mpq->findFile("(listfile)");
 	
 	if (mpqFile == 0)
@@ -100,6 +100,11 @@ std::streamsize W3m::read(std::fstream &fstream) throw (class Exception)
 		bytes += fstream.gcount();
 	}
 	*/
+	return 0;
+}
+
+std::streamsize W3m::write(std::ostream &ostream) throw (class Exception)
+{
 	return 0;
 }
 

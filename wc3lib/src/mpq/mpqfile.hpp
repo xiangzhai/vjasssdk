@@ -21,8 +21,7 @@
 #ifndef WC3LIB_MPQ_MPQFILE_HPP
 #define WC3LIB_MPQ_MPQFILE_HPP
 
-#include <istream>
-#include <ostream>
+#include <iostream>
 
 namespace wc3lib
 {

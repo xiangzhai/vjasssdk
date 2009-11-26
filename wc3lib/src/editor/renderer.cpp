@@ -34,18 +34,14 @@ namespace editor
 
 void Renderer::start()
 {
-	/*
 	try
 	{
-	*/
 		this->m_root = new Ogre::Root("../../plugins.cfg", "../ogre.cfg", "ogre.log");
 		
 		if (!this->m_root->restoreConfig())
 		{
 			if (!this->m_root->showConfigDialog())
-			{
 				return;
-			}
 		}
 		this->m_renderWindow = this->m_root->initialise(true, "Renderer Application");
 		
@@ -62,21 +58,14 @@ void Renderer::start()
 		this->m_camera->setAspectRatio(Ogre::Real(this->m_viewport->getActualWidth()) / Ogre::Real(this->m_viewport->getActualHeight()));
 		
 		this->m_root->startRendering();
-
-	/*
 	}
 	catch (class Ogre::Exception &exception)
 	{
-	*/
 		//std::cerr << exception.what() << std::endl;
-		/*
 		Ogre::ErrorDialog *dialog = Ogre::PlatformManager::getSingleton().createErrorDialog();
 		dialog->display(exception.getFullDescription());
-		delete dialog;	
-		*/
-	/*
+		delete dialog;
 	}
-	*/
 }
 
 }

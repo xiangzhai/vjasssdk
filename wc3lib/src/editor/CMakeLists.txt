@@ -10,12 +10,24 @@ message("Include dir" ${Ogre_INCLUDE_DIR})
 include_directories(/usr/include/OGRE)
 
 set(wc3lib_EDITOR_SRC
+	aieditor.cpp
 	blpiohandler.cpp
 	blpioplugin.cpp
-#	editor.cpp
-#	modelview.cpp
+	campaigneditor.cpp
+	editor.cpp
+	importmanager.cpp
+	modeleditor.cpp
+	modelview.cpp
+	mpqeditor.cpp
+	newmapdialog.cpp
 #	renderer.cpp
-#	terraineditor.cpp
+	objecteditor.cpp
+	objectmanager.cpp
+	soundeditor.cpp	
+	subeditor.cpp
+	terraineditor.cpp
+	textureeditor.cpp
+	triggereditor.cpp
 )
 
 set(wc3lib_EDITOR_H
@@ -23,22 +35,22 @@ set(wc3lib_EDITOR_H
 	blpioplugin.hpp
 	editor.hpp
 	modelview.hpp
-	renderer.hpp
+#	renderer.hpp
 	terraineditor.hpp
 )
 
 set(wc3lib_EDITOR_UI
 	modeleditor.ui
+	newmapdialog.ui
+	triggereditor.ui
 )
 
-#add_subdirectory(qogre)
+add_subdirectory(qogre)
 
 QT4_WRAP_UI(wc3lib_EDITOR_UI_H ${wc3lib_EDITOR_UI})
 
 add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
-#target_link_libraries(wc3libblp gettextlib)
- #OgreMain, qogre/wc3libeditorqogre
-target_link_libraries(wc3libeditor wc3libblp ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
+target_link_libraries(wc3libeditor wc3libblp qogre/wc3libeditorqogre OgreMain ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 
 #install
 

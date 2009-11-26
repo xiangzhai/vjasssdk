@@ -31,38 +31,59 @@ namespace editor
 
 class TerrainEditor;
 class TriggerEditor;
-class ObjectEditor;
-class AiEditor;
-class CampaignEditor;
 class SoundEditor;
-class ImportEditor;
-class MpqEditor; // new
-class ModelEditor; // new
-class TextureEditor; // new
+class ObjectEditor;
+class CampaignEditor;
+class AiEditor;
+class ObjectManager;
+class ImportManager;
+class MpqEditor;
+class ModelEditor;
+class TextureEditor;
+class NewMapDialog;
 
+/**
+* @todo Each @class SubEditor has it's own tool bar with all other sub editors.
+*/
 class Editor : public KMainWindow
 {
 	Q_OBJECT
 	
 	public:
 		Editor(QWidget *parent, Qt::WindowFlags f);
+		~Editor();
 	
 	public slots:
 		void newMap();
 		void showTerrainEditor();
+		void showTriggerEditor();
+		void showSoundEditor();
+		void showObjectEditor();
+		void showCampaignEditor();
+		void showAiEditor();
+		void showObjectManager();
+		void showImportManager();
+		void showMpqEditor();
+		void showModelEditor();
+		void showTextureEditor();
 		
-	private:
+	protected:
 		class TerrainEditor *m_terrainEditor;
 		class TriggerEditor *m_triggerEditor;
-		class ObjectEditor *m_objectEditor;
-		class AiEditor *m_aiEditor;
-		class CampaignEditor *m_campaignEditor;
 		class SoundEditor *m_soundEditor;
-		class ImportEditor *m_importEditor;
+		class ObjectEditor *m_objectEditor;
+		class CampaignEditor *m_campaignEditor;
+		class AiEditor *m_aiEditor;
+		class ObjectManager *m_objectManager;
+		class ImportManager *m_importManager;
+		class MpqEditor *m_mpqEditor; // new
+		class ModelEditor *m_modelEditor; // new
+		class TextureEditor *m_textureEditor; // new
+		class NewMapDialog *m_newMapDialog;
 };
 
 }
 
 }
 
-#endif // EDITOR_HPP
+#endif
