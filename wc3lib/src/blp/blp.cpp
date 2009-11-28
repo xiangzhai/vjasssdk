@@ -156,7 +156,7 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 			mipMapOffsets.push_back(offset);
 			mipMapSizes.push_back(size);
 			
-			struct MipMap *mipMap = new MipMap;
+			class MipMap *mipMap = new MipMap;
 			mipMap->m_width = this->mipMapWidth(i);
 			mipMap->m_height = this->mipMapHeight(i);
 			
@@ -181,7 +181,7 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 		std::list<dword>::iterator offset = mipMapOffsets.begin();
 		std::list<dword>::iterator size = mipMapSizes.begin();
 		
-		BOOST_FOREACH(struct MipMap *mipMap, this->m_mipMaps)
+		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{
 			std::streampos position = istream.tellg();
 			istream.seekg(*offset);
@@ -302,7 +302,7 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 		std::list<dword>::iterator offset = mipMapOffsets.begin();
 		std::list<dword>::iterator size = mipMapSizes.begin();
 		
-		BOOST_FOREACH(struct MipMap *mipMap, this->m_mipMaps)
+		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{
 			std::streampos position = istream.tellg();
 			//std::cout << "Position is " << position << std::endl;

@@ -55,4 +55,4 @@ target_link_libraries(wc3libeditor wc3libblp qogre/wc3libeditorqogre OgreMain ${
 #install
 
 install(TARGETS wc3libeditor DESTINATION lib/wc3lib/)
-install(FILES ${wc3lib_EDITOR_H} PUBLIC_HEADER DESTINATION lib/wc3lib/editor)
+install(FILES ${wc3lib_EDITOR_H} PUBLIC_HEADER DESTINATION include/wc3lib/editor)

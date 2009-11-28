@@ -22,7 +22,7 @@
 #include "translation1s.hpp"
 #include "rotation0s.hpp"
 #include "scaling0s.hpp"
-#include "visibility0s.hpp"
+#include "attachmentvisibilities.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -31,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Object::Object(class Mdlx *mdlx) : m_mdlx(mdlx), m_translations(new Translation1s(mdlx)), m_rotations(new Rotation0s(this->mdlx())), m_scalings(new Scaling0s(this->mdlx())), m_visibilities(new Visibility0s(this->mdlx()))
+Object::Object(class Mdlx *mdlx) : m_mdlx(mdlx), m_translations(new Translation1s(mdlx)), m_rotations(new Rotation0s(this->mdlx())), m_scalings(new Scaling0s(this->mdlx())), m_visibilities(new AttachmentVisibilities(this->mdlx()))
 {
 }
 

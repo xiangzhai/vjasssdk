@@ -5,6 +5,8 @@ set(wc3lib_MDLX_SRC
 	ambientintensity.cpp
 	attachment.cpp
 	attachments.cpp
+	attachmentvisibility.cpp
+	attachmentvisibilities.cpp
 	bone.cpp
 	bones.cpp
 	camera.cpp
@@ -121,8 +123,6 @@ set(wc3lib_MDLX_SRC
 	version.cpp
 	vertex.cpp
 	vertices.cpp
-	visibility0.cpp
-	visibility0s.cpp
 	visibility1.cpp
 	visibility1s.cpp
 	visibility2.cpp
@@ -182,8 +182,6 @@ set(wc3lib_MDLX_H
 	ribbonemitterheightsbelow.hpp
 	ribbonemittervisibility.hpp
 	ribbonemittervisibilities.hpp
-	visibility0.hpp
-	visibility0s.hpp
 	visibility1.hpp
 	visibility1s.hpp
 	visibility2.hpp
@@ -208,4 +206,4 @@ endif (BLEND)
 #install
 
 install(TARGETS wc3libmdlx DESTINATION lib/wc3lib/)
-install(FILES ${wc3lib_MDLX_H} PUBLIC_HEADER DESTINATION lib/wc3lib/mdlx)
+install(FILES ${wc3lib_MDLX_H} PUBLIC_HEADER DESTINATION include/wc3lib/mdlx)

@@ -18,69 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ATTACHMENT_HPP
-#define WC3LIB_MDLX_ATTACHMENT_HPP
+#ifndef WC3LIB_SLK_SLK_HPP
+#define WC3LIB_SLK_SLK_HPP
 
-#include "object.hpp"
+#include <istream>
+#include <ostream>
+
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
-namespace mdlx
+namespace slk
 {
 
-class Attachments;
-class AttachmentVisibilities;
+class SlkEntry;
 
-class Attachment : public Object
+class Slk
 {
 	public:
-		Attachment(class Attachments *attachments);
-		virtual ~Attachment();
-		
-		class Attachments* attachments() const;
-		const ascii* path() const;
-		long32 unknown0() const;
-		long32 attachmentId() const;
-		class AttachmentVisibilities* visibilities() const;
+		Slk();
+		~Slk();
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		class Attachments *m_attachments;
-		ascii m_path[0x100];
-		long32 m_unknown0;
-		long32 m_attachmentId;
-		class AttachmentVisibilities *m_visibilities; //(KATV)
+		virtual class SlkEntry* slkEntry(int column) = 0;
+
+		int m_lines;
+		int m_columns;
 };
-
-inline class Attachments* Attachment::attachments() const
-{
-	return this->m_attachments;
-}
-
-inline const ascii* Attachment::path() const
-{
-	return this->m_path;
-}
-
-inline long32 Attachment::unknown0() const
-{
-	return this->m_unknown0;
-}
-
-inline long32 Attachment::attachmentId() const
-{
-	return this->m_attachmentId;
-}
-
-inline class AttachmentVisibilities* Attachment::visibilities() const
-{
-	return this->m_visibilities;
-}
 
 }
 

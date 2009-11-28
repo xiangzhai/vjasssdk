@@ -18,10 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ATTACHMENT_HPP
-#define WC3LIB_MDLX_ATTACHMENT_HPP
+#ifndef WC3LIB_MDLX_VISIBILITY1_HPP
+#define WC3LIB_MDLX_VISIBILITY1_HPP
 
-#include "object.hpp"
+#include "mdxalpha.hpp"
+#include "visibility1s.hpp"
 
 namespace wc3lib
 {
@@ -29,57 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Attachments;
-class AttachmentVisibilities;
-
-class Attachment : public Object
+class Visibility1 : public MdxAlpha
 {
 	public:
-		Attachment(class Attachments *attachments);
-		virtual ~Attachment();
+		Visibility1(class Visibility1s *visibilities);
 		
-		class Attachments* attachments() const;
-		const ascii* path() const;
-		long32 unknown0() const;
-		long32 attachmentId() const;
-		class AttachmentVisibilities* visibilities() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
-
-	protected:
-		class Attachments *m_attachments;
-		ascii m_path[0x100];
-		long32 m_unknown0;
-		long32 m_attachmentId;
-		class AttachmentVisibilities *m_visibilities; //(KATV)
+		class Visibility1s* visibilities() const;
 };
 
-inline class Attachments* Attachment::attachments() const
+inline class Visibility1s* Visibility1::visibilities() const
 {
-	return this->m_attachments;
-}
-
-inline const ascii* Attachment::path() const
-{
-	return this->m_path;
-}
-
-inline long32 Attachment::unknown0() const
-{
-	return this->m_unknown0;
-}
-
-inline long32 Attachment::attachmentId() const
-{
-	return this->m_attachmentId;
-}
-
-inline class AttachmentVisibilities* Attachment::visibilities() const
-{
-	return this->m_visibilities;
+	return dynamic_cast<class Visibility1s*>(this->m_alphas);
 }
 
 }

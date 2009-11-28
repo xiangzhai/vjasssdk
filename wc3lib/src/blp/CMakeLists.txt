@@ -16,4 +16,4 @@ target_link_libraries(wc3libblp ${OPENJPEG_LIBS})
 #install
 
 install(TARGETS wc3libblp DESTINATION lib/wc3lib/)
-install(FILES ${wc3lib_BLP_H} PUBLIC_HEADER DESTINATION lib/wc3lib/blp)
+install(FILES ${wc3lib_BLP_H} PUBLIC_HEADER DESTINATION include/wc3lib/blp)

@@ -18,10 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ATTACHMENT_HPP
-#define WC3LIB_MDLX_ATTACHMENT_HPP
+#ifndef WC3LIB_MDLX_ATTACHMENTVISIBILITIES_HPP
+#define WC3LIB_MDLX_ATTACHMENTVISIBILITIES_HPP
 
-#include "object.hpp"
+#include <list>
+
+#include "mdxalphas.hpp"
+#include "attachmentvisibility.hpp"
 
 namespace wc3lib
 {
@@ -29,57 +32,34 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Attachments;
-class AttachmentVisibilities;
+class Mdlx;
+class AttachmentVisibility;
 
-class Attachment : public Object
+//KATV, like KMTA (Alphas ), used by OBJ and ATCH
+class AttachmentVisibilities : public MdxAlphas
 {
 	public:
-		Attachment(class Attachments *attachments);
-		virtual ~Attachment();
-		
-		class Attachments* attachments() const;
-		const ascii* path() const;
-		long32 unknown0() const;
-		long32 attachmentId() const;
-		class AttachmentVisibilities* visibilities() const;
+		AttachmentVisibilities(class Mdlx *mdlx);
+		virtual ~AttachmentVisibilities();
+
+		class Mdlx* mdlx() const;
+		const std::list<class AttachmentVisibility*>& visibilities() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		class Attachments *m_attachments;
-		ascii m_path[0x100];
-		long32 m_unknown0;
-		long32 m_attachmentId;
-		class AttachmentVisibilities *m_visibilities; //(KATV)
+		class Mdlx *m_mdlx;
 };
 
-inline class Attachments* Attachment::attachments() const
+inline class Mdlx* AttachmentVisibilities::mdlx() const
 {
-	return this->m_attachments;
+	return this->m_mdlx;
 }
 
-inline const ascii* Attachment::path() const
+inline const std::list<class AttachmentVisibility*>& AttachmentVisibilities::visibilities() const
 {
-	return this->m_path;
-}
-
-inline long32 Attachment::unknown0() const
-{
-	return this->m_unknown0;
-}
-
-inline long32 Attachment::attachmentId() const
-{
-	return this->m_attachmentId;
-}
-
-inline class AttachmentVisibilities* Attachment::visibilities() const
-{
-	return this->m_visibilities;
+	//return reinterpret_cast<const std::list<class AttachmentVisibility*> >(&this->m_alphas);
 }
 
 }

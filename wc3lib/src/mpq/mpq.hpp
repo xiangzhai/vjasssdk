@@ -25,6 +25,7 @@
 #include <list>
 #include <string>
 
+#include "platform.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -46,9 +47,13 @@ class Mpq
 
 		enum Format
 		{
-			Mpq1,
-			Mpq2
+			Mpq1, // original format
+			Mpq2 // Burning Crusade, large files
 		};
+
+		static const int32 identifier1;
+		static const int16 format1Identifier;
+		static const int16 format2Identifier;
 
 		Mpq();
 		~Mpq();
@@ -71,6 +76,32 @@ class Mpq
 		const std::list<class MpqFile*>& files() const;
 
 	protected:
+		class Block
+		{
+			public:
+				enum Flags
+				{
+					IsFile = 0x80000000,
+					IsSingleUnit = 0x01000000,
+					IsEncrypted = 0x00020000,
+					IsCompressed = 0x00000200,
+					IsImploded = 0x00000100
+				};
+
+				Block(class Mpq *mpq);
+
+				std::streamsize read(std::istream &istream) throw (class Exception);
+
+			protected:
+				class Mpq *m_mpq;
+				int32 m_blockOffset;
+				int32 m_blockSize;
+				int32 m_fileSize;
+				Flags m_flags;
+		};
+
+		enum Format m_format;
+		std::list<class Block*> m_blocks;
 		std::list<class MpqFile*> m_files;
 };
 

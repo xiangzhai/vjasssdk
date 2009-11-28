@@ -25,7 +25,7 @@
 
 #include "attachment.hpp"
 #include "attachments.hpp"
-#include "visibility0s.hpp"
+#include "attachmentvisibilities.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -34,7 +34,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachment::Attachment(class Attachments *attachments) : Object(attachments->mdlx()), m_attachments(attachments), m_visibilities(new Visibility0s(attachments->mdlx()))
+Attachment::Attachment(class Attachments *attachments) : Object(attachments->mdlx()), m_attachments(attachments), m_visibilities(new AttachmentVisibilities(attachments->mdlx()))
 {
 }
 

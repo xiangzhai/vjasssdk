@@ -18,10 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ATTACHMENT_HPP
-#define WC3LIB_MDLX_ATTACHMENT_HPP
+#ifndef WC3LIB_MDLX_RIBBONEMITTER_HPP
+#define WC3LIB_MDLX_RIBBONEMITTER_HPP
 
-#include "object.hpp"
+#include <iostream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -29,20 +32,21 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Attachments;
-class AttachmentVisibilities;
+class RibbonEmitters;
+class Translation1s;
+class Rotation0s;
+class Scaling0s;
+class RibbonEmitterVisibilities;
+class RibbonEmitterHeightsAbove;
+class RibbonEmitterHeightsBelow;
 
-class Attachment : public Object
+class RibbonEmitter
 {
 	public:
-		Attachment(class Attachments *attachments);
-		virtual ~Attachment();
-		
-		class Attachments* attachments() const;
-		const ascii* path() const;
-		long32 unknown0() const;
-		long32 attachmentId() const;
-		class AttachmentVisibilities* visibilities() const;
+		RibbonEmitter(class RibbonEmitters *ribbonEmitters);
+		virtual ~RibbonEmitter();
+
+		class RibbonEmitters* ribbonEmitters() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
@@ -50,36 +54,35 @@ class Attachment : public Object
 		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		class Attachments *m_attachments;
-		ascii m_path[0x100];
-		long32 m_unknown0;
-		long32 m_attachmentId;
-		class AttachmentVisibilities *m_visibilities; //(KATV)
+		class RibbonEmitters *m_ribbonEmitters;
+		//long nbytesi;
+		//long nbytesikg; // inclusive bytecount including KGXXs
+		ascii m_name[0x50]; //(0x50 bytes)
+		long32 m_objectId;
+		long32 m_parent; //(0xFFFFFFFF if none)
+		long32 m_flags; //(0x00400000)
+		class Translation1s *m_translations; //(KGTR)
+		class Rotation0s *m_rotations; //(KGRT)
+		class Scaling0s *m_scalings; //(KGSC)
+		float32 m_heightAboveValue;
+		float32 m_heightBelowValue;
+		float32 m_alpha;
+		float32 m_colorRed, m_colorGreen, m_colorBlue;
+		float32 m_lifeSpan;
+		long32 m_unknown0; //(0)
+		long32 m_emissionRate;
+		long32 m_rows;
+		long32 m_columns;
+		long32 m_materialId;
+		float32 m_gravity;
+		class RibbonEmitterVisibilities *m_visibilities; //(KRVS)
+		class RibbonEmitterHeightsAbove *m_heightsAbove; //(KRHA)
+		class RibbonEmitterHeightsBelow *m_heightsBelow; //(KRHB)
 };
 
-inline class Attachments* Attachment::attachments() const
+inline class RibbonEmitters* RibbonEmitter::ribbonEmitters() const
 {
-	return this->m_attachments;
-}
-
-inline const ascii* Attachment::path() const
-{
-	return this->m_path;
-}
-
-inline long32 Attachment::unknown0() const
-{
-	return this->m_unknown0;
-}
-
-inline long32 Attachment::attachmentId() const
-{
-	return this->m_attachmentId;
-}
-
-inline class AttachmentVisibilities* Attachment::visibilities() const
-{
-	return this->m_visibilities;
+	return this->m_ribbonEmitters;
 }
 
 }

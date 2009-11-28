@@ -36,7 +36,7 @@ namespace mdlx
 class Translation1s;
 class Rotation0s;
 class Scaling0s;
-class Visibility0s;
+class AttachmentVisibilities;
 
 /// No MDX block!
 class Object
@@ -89,8 +89,8 @@ class Object
 		class Rotation0s* rotations() const;
 		void setScalings(class Scaling0s *scalings);
 		class Scaling0s* scalings() const;
-		void setVisibilties(class Visibility0s *visibilities);
-		class Visibility0s* visibilities() const;
+		void setVisibilties(class AttachmentVisibilities *visibilities);
+		class AttachmentVisibilities* visibilities() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
@@ -106,7 +106,7 @@ class Object
 		class Translation1s *m_translations; //(KGTR)
 		class Rotation0s *m_rotations; //(KGRT)
 		class Scaling0s *m_scalings; //(KGSC)
-		class Visibility0s *m_visibilities; //(KATV)
+		class AttachmentVisibilities *m_visibilities; //(KATV)
 };
 
 inline class Mdlx* Object::mdlx() const
@@ -186,12 +186,12 @@ inline class Scaling0s* Object::scalings() const
 	return this->m_scalings;
 }
 
-inline void Object::setVisibilties(class Visibility0s *visibilities)
+inline void Object::setVisibilties(class AttachmentVisibilities *visibilities)
 {
 	this->m_visibilities = visibilities;
 }
 
-inline class Visibility0s* Object::visibilities() const
+inline class AttachmentVisibilities* Object::visibilities() const
 {
 	return this->m_visibilities;
 }

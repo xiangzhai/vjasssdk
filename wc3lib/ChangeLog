@@ -1,3 +1,9 @@
+2009-11-28 Tamino Dauth <tamino@cdauth.de>
+* Improved class mpq::Mpq and added various private classes.
+* Renamed class mdlx::Visibility0 to mdlx::AttachmentVisibility.
+* Renamed class mdlx::Visibility0s to mdlx::AttachmentVisibilities.
+* Revised cmake files.
+
 2009-11-26 Tamino Dauth <tamino@cdauth.de>
 * Revised and added various editor classes and UIs.
 * Revised MPQ and map classes.

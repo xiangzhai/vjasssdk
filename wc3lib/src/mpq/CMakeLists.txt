@@ -1,5 +1,6 @@
 set(wc3lib_MPQ_SRC
 	mpq.cpp
+	mpqfile.cpp
 )
 
 set(wc3lib_MPQ_H
@@ -14,4 +15,4 @@ add_library(wc3libmpq SHARED ${wc3lib_MPQ_SRC})
 #install
 
 install(TARGETS wc3libmpq DESTINATION lib/wc3lib/)
-install(FILES ${wc3lib_MPQ_H} PUBLIC_HEADER DESTINATION lib/wc3lib/mpq)
+install(FILES ${wc3lib_MPQ_H} PUBLIC_HEADER DESTINATION include/wc3lib/mpq)

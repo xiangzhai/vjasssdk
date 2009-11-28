@@ -20,7 +20,8 @@ KP2W				-				ParticleEmitter2Widths		ParticleEmitter2			ParticleEmitter2Widths
 CAMS				-				Cameras				Mdlx					Cameras				
 -				-				CollisionShape			CollisionShapes				CollisionShape
 CLID				-				CollisionShapes			Mdlx					CollisionShapes
-
+-				-				AttachmentVisibility			AttachmentVisibilities			AttachmentVisibility
+								-				-	KATV				-				AttachmentVisibilities			Mdlx (various classes Attachment, Mdlx - Object)
 
 Color1s					KLAC			Light					LightAmbientColors
 EmissionRates				KP2E			ParticleEmitter2			ParticleEmitter2EmissionRates
@@ -102,8 +103,6 @@ Translation3s				KTTR			Camera					CameraTextureTranslations?!
 Version					VERS			Mdlx
 Vertex					-			Vertices
 Vertices				VRTX			Geoset
-Visibility0				-			Visibility0s				AttachmentVisibility
-Visibility0s				KATV			Mdlx (various classes Attachment, Mdlx - Object)				AttachmentVisibilities
 Visibility1				-			Visibility1s				LightAmbientVisibility
 Visibility1s				KLAV			Light					LightAmbientVisibilities
 Visibility2				-			Visibility3s				ParticleEmitter2Visibility
