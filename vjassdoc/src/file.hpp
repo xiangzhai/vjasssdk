@@ -147,7 +147,7 @@ class File
 		*/
 		std::string::size_type parse(class Parser *parser, std::ifstream &ifstream);
 		
-	private:
+	protected:
 		File::Expression getFirstLineExpression(std::string &line, std::string::size_type &index);
 		/**
 		* Truncates all comments and documentation comments (including block comments) from line @param line, starting at position @param index.

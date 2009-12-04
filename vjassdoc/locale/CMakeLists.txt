@@ -1,21 +1,12 @@
+#add_subdirectory(de/LC_MESSAGES)
+#add_subdirectory(en/LC_MESSAGES)
+#add_subdirectory(mk/LC_MESSAGES)
+ 
+#new
+#gettext_create_translations(vjassdoc.pot de/LC_MESSAGES/vjassdoc.po en/LC_MESSAGES/vjassdoc.po mk/LC_MESSAGES/vjassdoc.po)
 
-#include(FindLibintl)
-#gettext_create_translations(de/LC_MESSAGES/vjassdoc.mo de/LC_MESSAGES/vjassdoc.po)
-#gettext_create_translations(en/LC_MESSAGES/vjassdoc.mo en/LC_MESSAGES/vjassdoc.po)
-#gettext_create_translations(mk/LC_MESSAGES/vjassdoc.mo mk/LC_MESSAGES/vjassdoc.po)
-
-
-#install
-
-install(FILES
-de/LC_MESSAGES/vjassdoc.mo
-DESTINATION share/locale/de/LC_MESSAGES/
-)
-install(FILES
-en/LC_MESSAGES/vjassdoc.mo
-DESTINATION share/locale/en/LC_MESSAGES/
-)
-install(FILES
-mk/LC_MESSAGES/vjassdoc.mo
-DESTINATION share/locale/mk/LC_MESSAGES/
-)
+#install(FILES
+#	de/LC_MESSAGES/vjassdoc.mo
+#	DESTINATION
+#	share/locale/vjassdoc/de/LC_MESSAGES
+#)

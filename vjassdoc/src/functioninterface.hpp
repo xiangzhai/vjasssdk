@@ -33,7 +33,7 @@ class FunctionInterface : public Object
 	public:
 #ifdef SQLITE
 		static const char *sqlTableName;
-		static unsigned int sqlColumns;
+		static std::size_t sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
@@ -57,7 +57,9 @@ class FunctionInterface : public Object
 		std::string returnTypeExpression() const;
 
 	protected:
-		static const int maxParameters;
+#ifdef SQLITE
+		static const int sqlMaxParameters;
+#endif
 		class Library *m_library;
 		class Scope *m_scope;
 		bool m_isPrivate;

@@ -6,6 +6,7 @@ set(VJASSDOC_SRC
 	key.cpp
 	textmacro.cpp
 	textmacroinstance.cpp
+	externalcall.cpp
 	type.cpp
 	global.cpp
 	local.cpp
@@ -40,6 +41,7 @@ set(VJASSDOC_H
 	key.hpp
 	textmacro.hpp
 	textmacroinstance.hpp
+	externalcall.hpp
 	type.hpp
 	local.hpp
 	global.hpp
@@ -69,17 +71,17 @@ set(VJASSDOC_H
 # library
 add_library(vjassdoclib ${VJASSDOC_SRC})
 target_link_libraries(vjassdoclib ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
-if (USE_SQLITE)
+if (${FLAGS} MATCHES "SQLITE")
 	target_link_libraries(vjassdoclib sqlite3) #${SQLITE_LIBRARIES}
-endif (USE_SQLITE)
+endif (${FLAGS} MATCHES "SQLITE")
 
 # program
 add_executable(vjassdoc main.cpp)
 target_link_libraries(vjassdoc vjassdoclib)
 
-if (USE_GUI)
+if (${FLAGS} MATCHES "KDE")
 	add_subdirectory(gui)
-endif (USE_GUI)
+endif (${FLAGS} MATCHES "KDE")
 
 #install
 

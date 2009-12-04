@@ -20,7 +20,9 @@
 
 #include <cstdio>
 #include <iostream>
+
 #include <boost/tokenizer.hpp>
+#include <boost/format.hpp>
 
 #include "vjassdoc.hpp"
 #include "internationalisation.hpp"
@@ -30,32 +32,17 @@
 namespace vjassdoc
 {
 
-void Compiler::compile()
+void Compiler::compile(std::ostream &ostream)
 {
-	std::fstream fstream(Vjassdoc::optionCompile().c_str());
-
-	if (!fstream.good())
-	{
-		if (Vjassdoc::optionVerbose())
-			fprintf(stderr, _("Error while opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::optionCompile().c_str());
-		
-		return;
-	}
-	
-	if (Vjassdoc::optionVerbose())
-		fprintf(stderr, _("Opening or creating file \"%s\" for compilation process.\n"), Vjassdoc::optionCompile().c_str());
-	
-	fstream << "globals" << std::endl;
-	this->writeGlobals(fstream);
-	this->writeMembers(fstream);
-	this->writeFunctionPrototypeGlobals(fstream);
-	this->writeMethodPrototypeGlobals(fstream);
-	fstream << "endglobals" << std::endl;
-
-	fstream.close();
+	ostream << "globals" << std::endl;
+	this->writeGlobals(ostream);
+	this->writeMembers(ostream);
+	this->writeFunctionPrototypeGlobals(ostream);
+	this->writeMethodPrototypeGlobals(ostream);
+	ostream << "endglobals" << std::endl;
 }
 
-void Compiler::writeGlobals(std::fstream &fstream)
+void Compiler::writeGlobals(std::ostream &ostream)
 {
 	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing globals.") << std::endl;
@@ -67,24 +54,24 @@ void Compiler::writeGlobals(std::fstream &fstream)
 		class Global *global = static_cast<class Global*>(*iterator);
 	
 		if (global->type() != 0)
-			fstream << global->type()->identifier();
+			ostream << global->type()->identifier();
 		else
-			fstream << global->typeExpression();
+			ostream << global->typeExpression();
 		
 		if (global->size() != 0 || global->sizeLiteral() != 0)
-			fstream << " array ";
+			ostream << " array ";
 		
 		if (global->library() != 0)
-			fstream << global->library()->identifier() << "__";
+			ostream << global->library()->identifier() << "__";
 		
 		if (global->scope() != 0)
-			fstream << global->scope()->identifier() << "__";
+			ostream << global->scope()->identifier() << "__";
 		
-		fstream << global->identifier() << '\n';
+		ostream << global->identifier() << '\n';
 	}
 }
 
-void Compiler::writeMembers(std::fstream &fstream)
+void Compiler::writeMembers(std::ostream &ostream)
 {
 	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing members.") << std::endl;
@@ -102,29 +89,29 @@ void Compiler::writeMembers(std::fstream &fstream)
 		{
 			// Check if type is an interface or struct and use integers for those types.
 			if (dynamic_cast<class Interface*>(member->type()) != 0)
-				fstream << "integer";
+				ostream << "integer";
 			else
-				fstream << member->type()->identifier();
+				ostream << member->type()->identifier();
 		}
 		else
-			fstream << member->typeExpression();
+			ostream << member->typeExpression();
 		
 		if (member->size() != 0 || member->sizeLiteral() != 0 || !member->isStatic())
-			fstream << " array ";
+			ostream << " array ";
 		
 		if (member->library() != 0)
-			fstream << member->library()->identifier() << "__";
+			ostream << member->library()->identifier() << "__";
 		
 		if (member->scope() != 0)
-			fstream << member->scope()->identifier() << "__";
+			ostream << member->scope()->identifier() << "__";
 		
-		fstream << member->container()->identifier() << "__";
+		ostream << member->container()->identifier() << "__";
 		
-		fstream << member->identifier() << '\n';
+		ostream << member->identifier() << '\n';
 	}
 }
 
-void Compiler::writeFunctionPrototypeGlobals(std::fstream &fstream)
+void Compiler::writeFunctionPrototypeGlobals(std::ostream &ostream)
 {
 	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing function prototype globals.") << std::endl;
@@ -132,7 +119,7 @@ void Compiler::writeFunctionPrototypeGlobals(std::fstream &fstream)
 	// check if there are .execute or .evaluate calls of a function.
 }
 
-void Compiler::writeMethodPrototypeGlobals(std::fstream &fstream)
+void Compiler::writeMethodPrototypeGlobals(std::ostream &ostream)
 {
 	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing method prototype globals.") << std::endl;
@@ -141,7 +128,7 @@ void Compiler::writeMethodPrototypeGlobals(std::fstream &fstream)
 	// Note that .evaluate and .execute aren't used automatically like in vJass.
 }
 
-void Compiler::writeLibraries(std::fstream &fstream)
+void Compiler::writeLibraries(std::ostream &ostream)
 {
 	if (Vjassdoc::optionVerbose())
 		std::cout << _("Writing libraries.") << std::endl;

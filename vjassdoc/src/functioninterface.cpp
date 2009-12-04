@@ -29,7 +29,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *FunctionInterface::sqlTableName = "FunctionInterfaces";
-unsigned int FunctionInterface::sqlColumns;
+std::size_t FunctionInterface::sqlColumns;
 std::string FunctionInterface::sqlColumnStatement;
 const int FunctionInterface::maxParameters = 10;
 

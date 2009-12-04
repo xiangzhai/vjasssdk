@@ -21,143 +21,135 @@
 #include <sstream>
 #include <cstdlib>
 #include <cctype>
-#include <iostream> //debug
 
-#include "objects.hpp"
-#include "sourcefile.hpp"
-#include "doccomment.hpp"
-#include "vjassdoc.hpp"
+#include <boost/foreach.hpp>
+
+//#include "objects.hpp"
 #include "internationalisation.hpp"
-#include "file.hpp"
 
 namespace vjassdoc
 {
 
-unsigned int Object::sqlColumns;
-std::string Object::sqlColumnStatement;
-Object::IdType Object::m_maxIds = 0;
-
-void Object::initClass()
+Object::List::List()
 {
-	Object::sqlColumns = 4;
-	Object::sqlColumnStatement =
-	"Identifier VARCHAR(255),"
-	"SourceFile INT,"
-	"Line INT,"
-	"DocComment INT";
 }
 
-#ifdef SQLITE
-std::string Object::sqlFilteredString(const std::string &usedString)
+List::~List()
 {
-	std::string result;
+	BOOST_FOREACH(class Object *object, this->m_objects)
+			delete object;
+}
+
+void Object::List::add(class Object *object)
+{
+	this->m_objects.push_back(object);
+}
+
+std::list<class Object*>& Object::List::objects() const
+{
+	return this->m_objects;
+}
+#ifdef HTML
+void Object::List::writeHtmlList(std::ostream &ostream)
+{
+	this->htmlCategoryName
+	ostream
+	<< "\t\t<h2><a name=\"" << this->htmlCategoryName() << "\">" << boost::str(boost::format(_("%1% (%2%)")) % this->htmlCategoryName() % this->m_objects.size()) << "</a></h2>" << std::endl
+	<< "\t\t<ul>" << std::endl
+	;
 	
-	for (std::string::size_type i = 0; i < usedString.length(); ++i)
-	{
-		char character = usedString[i];
-		
-		switch (character)
-		{
-			case '\'':
-				result += "\'\'";
-				break;
-			
-			case '\"':
-				result += "\"\"";
-				break;
-			
-			default:
-				result += character;
-				break;
-		}
-	}
-
-	return result;
+	
+	BOOST_FOREACH(class Object *object, this->m_objects)
+		ostream << "\t\t<li>" << object->htmlPageLink() << "</li>" << std::endl;
+	
+	ostream << "\t\t</ul>" << std::endl;
 }
 
-std::string Object::sqlTableHeader(const std::string &tableName, const std::string &entries)
+void Object::List::writeHtmlPages() throw (std::exception)
 {
-	return "CREATE TABLE " + tableName + "(Id INT PRIMARY KEY," + entries + ')';
+	BOOST_FOREACH(class Object *object, this->m_objects)
+	{
+		std::ofstream ofstream(object->htmlPagePath().string());
+		
+		if (!ofstream)
+			throw std::exception();
+		
+		object->writeHtmlPageNavigation(ofstream);
+		object->writeHtmlPageContent(ofstream);
+	}
+}
+#endif
+#ifdef SQLITE
+void Object::List::writeSqlTable(sqlite3 *database)
+{
+	//return "CREATE TABLE " + tableName + "(Id INT PRIMARY KEY," + entries + ')';
+}
+
+std::string Object::List::sqlTableName() const
+{
+	return "";
+}
+
+std::size_t Object::List::sqlColumns() const
+{
+	return 4;
+}
+
+std::string Object::List::sqlColumnDataType(std::size_t column) const throw (std::exception)
+{
+	switch (column)
+	{
+		case 0:
+			return "VARCHAR(255)";
+			
+		case 1:
+			return "INT";
+			
+		case 2:
+			return "INT";
+			
+		case 3:
+			return "INT";
+	}
+	
+	throw std::exception();
+}
+
+std::string Object::List::sqlColumnName(std::size_t column) const throw (std::exception)
+{
+	switch (column)
+	{
+		case 0:
+			return "Identifier";
+			
+		case 1:
+			return "SourceFile";
+			
+		case 2:
+			return "Line";
+			
+		case 3:
+			return "DocComment";
+	}
+	
+	throw std::exception();
 }
 #endif
 
-Object::Object(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : m_container(0), m_scope(0), m_library(0), m_id(m_maxIds), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line), m_docComment(docComment)
+Object::Object(const std::string &identifier, class SourceFile *sourceFile, std::size_t line, class DocComment *docComment) : m_container(0), m_scope(0), m_library(0), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line), m_docComment(docComment)
 {
-	++m_maxIds;
-	
 	if (docComment != 0)
 		docComment->setObject(this);
 }
 
 #ifdef SQLITE
-Object::Object(std::vector<Object::VectorDataType> &columnVector) :  m_container(0), m_scope(0), m_library(0), m_sourceFile(0), m_docComment(0), m_columnVector(columnVector)
+Object::Object(std::vector<Object::VectorDataType> &columnVector) :  m_container(0), m_scope(0), m_library(0), m_sourceFile(0), m_docComment(0)
 {
 }
 #endif
 
 Object::~Object()
 {
-}
-
-#ifdef SQLITE
-void Object::initByVector()
-{
-	this->m_sourceFile = static_cast<class SourceFile*>(Vjassdoc::parser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[0])));
-	this->m_docComment = static_cast<class DocComment*>(Vjassdoc::parser()->searchObjectInLastDatabase(atoi((const char*)this->m_columnVector[1])));
-	
-	//drop elements
-	
-	if (this->m_docComment != 0)
-		this->m_docComment->setObject(this);
-}
-
-void Object::clearVector()
-{
-	this->m_columnVector.clear();
-}
-
-std::string Object::sqlStatement() const
-{
-	std::ostringstream sstream;
-	sstream
-	<< "Identifier=\"" << Object::sqlFilteredString(this->identifier()) << "\", "
-	<< "SourceFile=" << Object::objectId(this->sourceFile()) << ", "
-	<< "Line=" << this->line() << ", "
-	<< "DocComment=" << Object::objectId(this->docComment());
-
-	return sstream.str();
-}
-#endif
-
-//empty condition methods
-class Object* Object::container() const
-{
-	return m_container;
-}
-
-class Scope* Object::scope() const
-{
-	return m_scope;
-}
-
-class Library* Object::library() const
-{
-	return m_library;
-}
-
-bool Object::IsInContainer::operator()(const class Object *thisObject, const class Object *container) const
-{
-	return thisObject->container() == container;
-}
-
-bool Object::IsInScope::operator()(const class Object *thisObject, const class Object *scope) const
-{
-	return thisObject->scope() == static_cast<const class Scope*>(scope);
-}
-
-bool Object::IsInLibrary::operator()(const class Object *thisObject, const class Object *library) const
-{
-	return thisObject->library() == static_cast<const class Library*>(library);
 }
 
 bool Object::hasToSearchValueObject(class Object *type, const std::string &expression)
@@ -331,19 +323,5 @@ class Object* Object::findValue(class Object *type, std::string &valueExpression
 	
 	return value;
 }
-
-#ifdef SQLITE
-void Object::prepareVector()
-{
-	this->m_id = atoi((const char*)this->m_columnVector.front());
-	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
-	
-	this->m_identifier = (const char*)(this->m_columnVector.front());
-	this->m_columnVector.erase(this->m_columnVector.begin()); //drop element
-	
-	this->m_line = atoi((const char*)this->m_columnVector[1]);
-	this->m_columnVector.erase(this->m_columnVector.begin() + 1); //drop element
-}
-#endif
 
 }

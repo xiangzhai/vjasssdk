@@ -23,16 +23,21 @@
 
 #include <string>
 #include <ostream>
-#include "internationalisation.hpp"
 
 namespace vjassdoc
 {
 
-extern const char *dirSeparator;
 extern std::string getToken(const std::string &line, std::string::size_type &index, bool endOfLine = false);
-extern void cutFilePath(std::string &filePath);
-extern bool fileExists(const std::string &fileName);
 extern void createHtmlHeader(std::ostream &ostream, const std::string &title, const std::string &language = _("en"));
+/**
+* Converts boolean value to a localized string.
+* This method has been written for showing boolean members of classes in a HTML file.
+* Instead of 0 and 1 it returns the strings 'No' and 'Yes' in the local language.
+*/
+extern std::string booleanToString(bool value);
+#ifdef SQLITE
+extern std::string sqlFilteredString(const std::string &value);
+#endif
 
 }
 

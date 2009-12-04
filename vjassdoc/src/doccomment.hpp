@@ -33,7 +33,7 @@ class DocComment : public Object
 	public:
 #ifdef SQLITE
 		static const char *sqlTableName;
-		static unsigned int sqlColumns;
+		static std::size_t sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
@@ -185,9 +185,10 @@ class DocComment : public Object
 			VarKeyword,
 			MaxKeywords
 		};
-	
-		static const int maxAuthors;
-		static const int maxSeeObjects;
+#ifdef SQLITE
+		static const std::size_t sqlMaxAuthors;
+		static const std::size_t sqlMaxSeeObjects;
+#endif
 		static const char *keyword[DocComment::MaxKeywords];
 	
 		std::string m_briefDescription;

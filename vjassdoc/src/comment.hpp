@@ -29,22 +29,41 @@ namespace vjassdoc
 class Comment : public Object
 {
 	public:
-#ifdef SQLITE
-		static const char *sqlTableName;
-		static unsigned int sqlColumns;
-		static std::string sqlColumnStatement;
-
-		static void initClass();
+		class List : public Object::List
+		{		
+#ifdef HTML
+				virtual std::string htmlCategoryName() const;
+				virtual std::string htmlFolderName() const;
 #endif
+
+			protected:
+#ifdef SQLITE
+				virtual std::string sqlTableName() const;
+				virtual std::size_t sqlColumns() const;
+				virtual std::string sqlColumnDataType(std::size_t column) const throw (std::exception);
+				virtual std::string sqlColumnName(std::size_t column) const throw (std::exception);
+#endif
+		};
+	
 		Comment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment);
 #ifdef SQLITE
-		Comment(std::vector<const unsigned char*> &columnVector);
+		Comment(std::vector<Object::SqlValueDataType> &columnVector);
 #endif
 		virtual ~Comment();
 		virtual void init();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
+#ifdef HTML
+		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
+		virtual void writeHtmlPageContent(std::ostream &ostream) const;
+#endif
+		
+	protected:
+		virtual std::string htmlPageName() const;
 };
+
+inline virtual std::string Comment::htmlPageName() const
+{
+	return this->m_identifier;
+}
 
 }
 

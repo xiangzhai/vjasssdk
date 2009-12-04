@@ -25,16 +25,38 @@
 
 namespace vjassdoc
 {
+	
+#ifdef HTML
+std::string Comment::List::htmlCategoryName() const
+{
+	return _("Comments");
+}
+
+std::string Comment::List::htmlFolderName() const
+{
+	return _("comments");
+}
+#endif
 
 #ifdef SQLITE
-const char *Comment::sqlTableName = "Comments";
-unsigned int Comment::sqlColumns;
-std::string Comment::sqlColumnStatement;
-
-void Comment::initClass()
+std::string Comment::List::sqlTableName() const
 {
-	Comment::sqlColumns = Object::sqlColumns;
-	Comment::sqlColumnStatement = Object::sqlColumnStatement;
+	return _("Comments");
+}
+
+std::size_t Comment::List::sqlColumns() const
+{
+	return Object::List::sqlColumns();
+}
+
+std::string Comment::List::sqlColumnDataType(std::size_t column) const throw (std::exception)
+{
+	return Object::List::sqlColumnDataType(column);
+}
+
+std::string Comment::List::sqlColumnName(std::size_t column) const throw (std::exception)
+{
+	return Object::List::sqlColumnName(column);
 }
 #endif
 
@@ -43,9 +65,8 @@ Comment::Comment(const std::string &identifier, class SourceFile *sourceFile, un
 }
 
 #ifdef SQLITE
-Comment::Comment(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Comment::Comment(std::vector<Object::SqlValueDataType> &columnVector) : Object(columnVector)
 {
-	this->prepareVector();
 }
 #endif
 
@@ -57,18 +78,18 @@ void Comment::init()
 {
 }
 
-void Comment::pageNavigation(std::ofstream &file) const
+void Comment::writeHtmlPageNavigation(std::ostream &ostream) const
 {
-	file
+	ostream
 	<< "\t\t\t<li><a href=\"#Text\">"		<< _("Text") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	;
 }
 
-void Comment::page(std::ofstream &file) const
+void Comment::writeHtmlPageContent(std::ostream &ostream) const
 {
-	file
+	ostream
 	<< "\t\t<h2><a name=\"Text\">" << _("Text") << "</a></h2>\n"
 	<< "\t\t<p>\n"
 	<< "\t\t" << this->identifier() << "\n"

@@ -33,7 +33,7 @@ class Local : public Object
 	public:
 #ifdef SQLITE
 		static const char *sqlTableName;
-		static unsigned int sqlColumns;
+		static std::size_t sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();

@@ -32,9 +32,9 @@ namespace vjassdoc
 const char *DocComment::sqlTableName = "DocComments";
 unsigned int DocComment::sqlColumns;
 std::string DocComment::sqlColumnStatement;
+const std::size_t DocComment::sqlMaxAuthors = 10;
+const std::size_t DocComment::sqlMaxSeeObjects = 10;
 #endif
-const int DocComment::maxAuthors = 10;
-const int DocComment::maxSeeObjects = 10;
 const char *DocComment::keyword[DocComment::MaxKeywords] =
 {
 	"comment",

@@ -27,23 +27,23 @@ namespace vjassdoc
 {
 
 #ifdef SQLITE
-const int Call::maxArguments = 10;
 const char *Call::sqlTableName = "Calls";
-unsigned int Call::sqlColumns;
+std::size_t Call::sqlColumns;
 std::string Call::sqlColumnStatement;
+std::size_t Call::sqlMaxArguments;
 
 void Call::initClass()
 {
-	Call::sqlColumns = Object::sqlColumns + 2 + 2 * Call::maxArguments + 2;
+	Call::sqlColumns = Object::sqlColumns + 2 + 2 * Call::sqlMaxArguments + 2;
 	Call::sqlColumnStatement = Object::sqlColumnStatement +
 	",FunctionIdentifier VARCHAR(255)"
 	",Function INT";
 	std::ostringstream sstream;
 	
-	for (int i = 0; i < Call::maxArguments; ++i)
+	for (int i = 0; i < Call::sqlMaxArguments; ++i)
 		sstream << ",ArgumentIdentifier" << i << " VARCHAR(255)";
 	
-	for (int i = 0; i < Call::maxArguments; ++i)
+	for (int i = 0; i < Call::sqlMaxArguments; ++i)
 		sstream << ",Argument" << i << " INT";
 	
 	Call::sqlColumnStatement += sstream.str();

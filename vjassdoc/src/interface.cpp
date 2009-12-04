@@ -29,7 +29,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Interface::sqlTableName = "Interfaces";
-unsigned int Interface::sqlColumns;
+std::size_t Interface::sqlColumns;
 std::string Interface::sqlColumnStatement;
 
 void Interface::initClass()

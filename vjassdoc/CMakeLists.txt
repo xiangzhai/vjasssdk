@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 2.6.4)
+cmake_minimum_required(VERSION 2.6)
 
 project(vjassdoc)
+
+get_directory_property(FLAGS COMPILE_DEFINITIONS)
+message(STATUS "Compile definitions are ${FLAGS}")
 
 find_package(Gettext REQUIRED)
 
@@ -12,63 +15,49 @@ else (GETTEXT_FOUND)
 	# cancel
 endif (GETTEXT_FOUND)
 
-# todo: require GNU C library for getopt
-#find_package(GLIB2 REQUIRED)
-
-# todo: require tokenizer component.
 find_package(Boost REQUIRED)
 
 if (Boost_FOUND)
 	message(STATUS "Boost has been found.")
-	include_directories(${Boost_INCLUDE_DIR} /usr/include/boost-1_35/) # second one for my Gentoo Linux
+	include_directories(${Boost_INCLUDE_DIRS})
 else (Boost_FOUND)
 	message(STATUS "Boost has not been found.")
 	# cancel
 endif (Boost_FOUND)
 
-# setup flags
+if (${FLAGS} MATCHES "KDE")
+	find_package(Qt4 REQUIRED)
+	find_package(KDE4 REQUIRED)
+	
+	if (QT4_FOUND AND KDE4_FOUND)
+		add_definitions(-DGUI=1)
+		set(USE_GUI 1)
+		message(STATUS "Qt 4 and KDE 4 have been found, using -DGUI.")
+		include(${QT_USE_FILE})
+		add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+		#add_definitions(-DQT_STL)
+		link_directories(${KDE4_LIB_DIR})
+		include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
+	else (QT4_FOUND AND KDE4_FOUND)
+		message(STATUS "Qt 4 or KDE 4 has not been found.")
+		# cancel
+	endif (QT4_FOUND AND KDE4_FOUND)
+endif (${FLAGS} MATCHES "KDE")
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_definitions(-DDEBUG=1)
-	set(USE_DEBUG 1)
-	message(STATUS "Build type is \"Debug\", using -DDEBUG.")
-endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+if (${FLAGS} MATCHES "SQLITE")
+	find_library(sqlite3 REQUIRED)
+endif (${FLAGS} MATCHES "SQLITE")
 
-find_package(Qt4)
-find_package(KDE4)
+#if (SQLITE_FOUND)
+#	add_definitions(-DSQLITE=1)
+#	set(USE_SQLITE 1)
+#	message(STATUS "sqlite has been found, using -DSQLITE.")
+#	add_definitions(${SQLITE_DEFINITIONS})
+#	include_directories(${SQLITE_INCLUDE_DIR})
+#endif (SQLITE_FOUND)
 
-if (QT4_FOUND AND KDE4_FOUND)
-	add_definitions(-DGUI=1)
-	set(USE_GUI 1)
-	message(STATUS "Qt 4 and KDE 4 have been found, using -DGUI.")
-	include(${QT_USE_FILE})
-	add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-	#add_definitions(-DQT_STL)
-	link_directories(${KDE4_LIB_DIR})
-	include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
-endif (QT4_FOUND AND KDE4_FOUND)
-
-find_package(Sqlite)
-
-if (SQLITE_FOUND)
-	add_definitions(-DSQLITE=1)
-	set(USE_SQLITE 1)
-	message(STATUS "sqlite has been found, using -DSQLITE.")
-	add_definitions(${SQLITE_DEFINITIONS})
-	include_directories(${SQLITE_INCLUDE_DIR})
-endif (SQLITE_FOUND)
-
-#add_definitions(-DSQLITE=1 -DDEBUG=1 -DGUI=1) # test
-
-if (UNIX)
-	add_definitions(-DUNIX=1)
-elseif (WIN32)
-	add_definitions(-DWIN32=1)
-else (UNIX)
-	message("Warning: Unknown operating system.")
-endif (UNIX)
-
-add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/local\")
+add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")
+add_definitions(-DSQLITE -DHTML) # test
 
 include_directories(src)
 add_subdirectory(src)

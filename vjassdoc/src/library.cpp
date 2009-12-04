@@ -20,7 +20,8 @@
 
 #include <sstream>
 #include <list>
-#include <iostream> //debug
+
+#include <boost/format.hpp>
 
 #include "objects.hpp"
 #include "internationalisation.hpp"
@@ -30,21 +31,15 @@
 namespace vjassdoc
 {
 
-#ifdef SQLITE
-const char *Library::sqlTableName = "Libraries";
-unsigned int Library::sqlColumns;
-std::string Library::sqlColumnStatement;
-#endif
-
 bool Library::HasRequirement::operator()(class Object *thisObject, class Object *library) const
 {
-	std::cout << "This object is " << thisObject->identifier() << " and library is " << library->identifier() << std::endl;
+	//std::cout << "This object is " << thisObject->identifier() << " and library is " << library->identifier() << std::endl;
 	
 	class Library *thisLibrary = static_cast<class Library*>(thisObject);
 
 	if (thisLibrary->requirement() != 0)
 	{
-		std::cout << "Requirement is not 0." << std::endl;
+		//std::cout << "Requirement is not 0." << std::endl;
 		
 		for (std::list<class Library*>::iterator iterator = thisLibrary->requirement()->begin(); iterator != thisLibrary->requirement()->end(); ++iterator)
 		{
@@ -55,16 +50,28 @@ bool Library::HasRequirement::operator()(class Object *thisObject, class Object 
 	
 	return false;
 }
+	
+#ifdef SQLITE
+const char *Library::sqlTableName = "Libraries";
+std::size_t Library::sqlColumns;
+std::string Library::sqlColumnStatement;
+const std::size_t Library::maxRequirement = 10;
+#endif
 
 #ifdef SQLITE
 void Library::initClass()
 {
-	Library::sqlColumns = Object::sqlColumns + 3;
+	Library::sqlColumns = Object::sqlColumns + 2 + Library::maxRequirement;
 	/// @todo Add class Requirement.
 	Library::sqlColumnStatement = Object::sqlColumnStatement +
 	",IsOnce BOOLEAN,"
-	"Initializer INT,"
-	"Requirement INT";
+	"Initializer INT";
+	std::istream istream;
+	
+	for (int i = 0; i < Library::maxRequirement; ++i)
+		istream << ",Requirement" << i << " INT";
+	
+	Library::sqlColumnStatement += istream.str();
 }
 #endif
 
@@ -378,14 +385,19 @@ std::string Library::sqlStatement() const
 {
 	std::stringstream sstream;
 	sstream
-	<< Object::sqlStatement() << ", "
-	<< "IsOnce=" << this->isOnce() << ", "
-	<< "Initializer=" << Object::objectId(this->initializer()) << ", ";
+	<< Object::sqlStatement()
+	<< ", IsOnce=" << this->isOnce() << ", "
+	<< ", Initializer=" << Object::objectId(this->initializer());
+	int i = 0;
 	
-	if (this->requirement() != 0)
-		sstream << "Requirement=" << Object::objectId(this->requirement()->front()); //Array
-	else
-		sstream << "Requirement=-1";
+	BOOST_FOREACH(class Object *iterator, this->m_requirement)
+	{
+		sstream << ", Requirement=" << Object::objectId(iterator);
+		++i;
+	}
+	
+	for ( ; i < Library::maxRequirement; ++i)
+		sstream << ", Requirement=NULL";
 	
 	return sstream.str();
 }

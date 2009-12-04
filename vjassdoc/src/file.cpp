@@ -26,6 +26,7 @@
 #include <list>
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 #include "file.hpp"
 #include "vjassdoc.hpp"
@@ -252,19 +253,10 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 					std::string openPath;
 					std::ifstream fin;
 					bool result = false;
-					std::list<std::string> list = Vjassdoc::optionImport();
-					std::list<std::string>::const_iterator iterator = list.begin();
 					
-					while (iterator != list.end())
+					BOOST_FOREACH(boost::filesystem::path path, Vjassdoc::optionImport())
 					{
-						openPath = *iterator;
-						std::size_t length = strlen(dirSeparator);
-						
-						if (strcmp(openPath.substr(openPath.length() - length, length).c_str(), dirSeparator) != 0)
-							openPath += dirSeparator;
-						
-						openPath += filePath;
-						fin.open(openPath.c_str(), std::ios_base::ate);
+						fin.open((path / filePath).string().c_str(), std::ios_base::ate);
 
 						if (fin.good())
 						{
@@ -273,8 +265,6 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 							
 							break;
 						}
-
-						++iterator;
 					}
 
 					if (!result)
@@ -314,7 +304,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 					this->getTextMacro(line, index, true);
 				else if (preprocessor == expressionText[RuntextmacroExpression])
 					this->getTextMacroInstance(line, index);
-				else if (preprocessor == File::ExternalblockExpression)
+				else if (preprocessor == expressionText[File::ExternalblockExpression])
 				{
 					/// @todo Add classes ExternalBlock and External?
 					this->clearDocComment();

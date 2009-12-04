@@ -36,7 +36,7 @@ class Library : public Object
 
 #ifdef SQLITE	
 		static const char *sqlTableName;
-		static unsigned int sqlColumns;
+		static std::size_t sqlColumns;
 		static std::string sqlColumnStatement;
 
 		static void initClass();
@@ -56,6 +56,9 @@ class Library : public Object
 		std::list<bool>* optionalRequirement() const;
 	
 	protected:
+#ifdef SQLITE
+		static const std::size_t sqlMaxRequirement;
+#endif
 		bool m_isOnce;
 		std::string initializerExpression;
 		std::list<std::string> *requirementExpressions;

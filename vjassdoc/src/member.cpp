@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include <sstream>
-#include <iostream> //debug
 
 #include "objects.hpp"
 #include "file.hpp"
@@ -30,7 +29,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Member::sqlTableName = "Members";
-unsigned int Member::sqlColumns;
+std::size_t Member::sqlColumns;
 std::string Member::sqlColumnStatement;
 
 void Member::initClass()
@@ -61,7 +60,7 @@ void Member::init()
 	{
 		/// @todo ERROR
 		this->m_typeExpression = static_cast<class Struct*>(this->container())->extensionExpression(); /// use expression since structs are initialized after members.
-		std::cout << "Identifier " << static_cast<class Struct*>(this->container())->extensionExpression() << std::endl;
+		//std::cout << "Identifier " << static_cast<class Struct*>(this->container())->extensionExpression() << std::endl;
 	}
 	
 	Global::init();

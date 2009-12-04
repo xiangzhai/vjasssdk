@@ -28,7 +28,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Hook::sqlTableName = "Hooks";
-unsigned int Hook::sqlColumns;
+std::size_t Hook::sqlColumns;
 std::string Hook::sqlColumnStatement;
 
 void Hook::initClass()

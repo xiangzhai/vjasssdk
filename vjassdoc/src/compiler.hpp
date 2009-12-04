@@ -21,8 +21,7 @@
 #ifndef VJASSDOC_COMPILER_HPP
 #define VJASSDOC_COMPILER_HPP
 
-#include <fstream>
-
+#include <ostream>
 #include <list>
 
 namespace vjassdoc
@@ -33,15 +32,15 @@ class FunctionPrototype;
 class Compiler
 {
 	public:
-		void compile();
+		void compile(std::ostream &ostream);
 	
-	private:
-		void writeGlobals(std::fstream &fstream);
-		void writeMembers(std::fstream &fstream);
+	protected:
+		void writeGlobals(std::ostream &ostream);
+		void writeMembers(std::ostream &ostream);
 		/// Writes triggers of methods for TriggerEvaluate() and TriggerExecute().
-		void writeFunctionPrototypeGlobals(std::fstream &fstream);
-		void writeMethodPrototypeGlobals(std::fstream &fstream);
-		void writeLibraries(std::fstream &fstream);
+		void writeFunctionPrototypeGlobals(std::ostream &ostream);
+		void writeMethodPrototypeGlobals(std::ostream &ostream);
+		void writeLibraries(std::ostream &ostream);
 		
 		std::list<class FunctionPrototype*> m_prototypes;
 };

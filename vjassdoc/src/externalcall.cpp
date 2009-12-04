@@ -20,53 +20,64 @@
 
 #include <sstream>
 
+#include <boost/foreach.hpp>
+
 #include "objects.hpp"
+#include "vjassdoc.hpp"
 #include "internationalisation.hpp"
 
 namespace vjassdoc
 {
 
 #ifdef SQLITE
-const char *Keyword::sqlTableName = "Keywords";
-std::size_t Keyword::sqlColumns;
-std::string Keyword::sqlColumnStatement;
+const char *ExternalCall::sqlTableName = "ExternalCalls";
+std::size_t ExternalCall::sqlColumns;
+std::string ExternalCall::sqlColumnStatement;
 
-void Keyword::initClass()
+void ExternalCall::initClass()
 {
-	Keyword::sqlColumns = Object::sqlColumns + 3;
-	Keyword::sqlColumnStatement = Object::sqlColumnStatement +
-	",Library INT,"
-	"Scope INT, "
-	"IsPrivate BOOLEAN";
+	ExternalCall::sqlColumns = Object::sqlColumns + ExternalCall::maxArguments;
+	ExternalCall::sqlColumnStatement = Object::sqlColumnStatement;
+	std::istream istream;
+	
+	for (int i = 0; i < ExternalCall::maxArguments; ++i)
+		istream << ",Argument" << i << " VARCHAR(50)";
+	
+	ExternalCall::sqlColumnStatement += istream.str();
 }
 #endif
 
-Keyword::Keyword(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : Object(identifier, sourceFile, line, docComment), m_library(library), m_scope(scope), m_isPrivate(isPrivate)
+ExternalCall::ExternalCall(const std::string &identifier, class SourceFile *sourceFile, std::size_t line, class DocComment *docComment, std::list<std::string> *arguments) : Object(identifier, sourceFile, line, docComment), m_arguments(0)
 {
+}
+
+ExternalCall::~ExternalCall()
+{
+	if (this->m_arguments != 0)
+		delete this->m_arguments;
 }
 
 #ifdef SQLITE
-Keyword::Keyword(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_library(0)
+ExternalCall::ExternalCall(std::vector<const unsigned char*> &columnVector) : Object(columnVector), m_arguments(0)
 {
+	this->prepareVector();
 }
 #endif
 
-void Keyword::init()
+void ExternalCall::init()
 {
 }
 
-void Keyword::pageNavigation(std::ofstream &file) const
+void ExternalCall::pageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Library\">"		<< _("Library") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Scope\">"		<< _("Scope") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Private\">"		<< _("Private") << "</a></li>\n"
+	<< "\t\t\t<li><a href=\"#Arguments\">"		<< _("Arguments") << "</a></li>\n"
 	;
 }
 
-void Keyword::page(std::ofstream &file) const
+void ExternalCall::page(std::ofstream &file) const
 {
 	file
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
@@ -75,37 +86,48 @@ void Keyword::page(std::ofstream &file) const
 	<< "\t\t</p>\n"
 	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
-	<< "\t\t<h2><a name=\"Library\">" << _("Library") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->library()) << "\n"
-	<< "\t\t<h2><a name=\"Scope\">" << _("Scope") << "</a></h2>\n"
-	<< "\t\t" << Object::objectPageLink(this->scope()) << "\n"
-	<< "\t\t<h2><a name=\"Private\">" << _("Private") << "</a></h2>\n"
-	<< "\t\t" << Object::showBooleanProperty(this->isPrivate()) << "\n"
+	<< "\t\t<h2><a name=\"Arguments\">" << _("Arguments") << "</a></h2>\n"
 	;
+	
+	if (this->m_arguments != 0 && !this->m_arguments->empty())
+	{
+		file << "\t\t<ul>\n";
+		
+		for (std::list<std::string>::iterator iterator = this->m_arguments->begin(); iterator != this->m_arguments->end(); ++iterator)
+			file << "\t\t\t<li>" << *iterator << "</li>\n";
+		
+		file << "\t\t</ul>\n";
+	}
+	else
+		file << "\t\t<p>-</p>\n";
 }
 
 #ifdef SQLITE
-std::string Keyword::sqlStatement() const
+std::string ExternalCall::sqlStatement() const
 {
-	std::stringstream sstream;
+	std::ostringstream sstream;
 	sstream
-	<< Object::sqlStatement() << ", "
-	<< "Library=" << Object::objectId(this->library()) << ", "
-	<< "Scope=" << Object::objectId(this->scope()) << ", "
-	<< "IsPrivate=" << this->isPrivate();
+	<< Object::sqlStatement()
+	
+	int i = 0;
+	
+	BOOST_FOREACH(std::string iterator, this->m_arguments)
+	{
+		if (i < ExternalCall::maxArguments)
+			break;
+		
+		sstream << ", Argument" << i << "=\"" << iterator << "\"";
+		++i;
+	}
+	
+	if (i < ExternalCall::maxArguments)
+	{
+		for ( ; i < ExternalCall::maxArguments; ++i)
+			sstream << ", Argument" << i << "=NULL";
+	}
 	
 	return sstream.str();
 }
 #endif
-
-class Library* Keyword::library() const
-{
-	return this->m_library;
-}
-
-class Scope* Keyword::scope() const
-{
-	return this->m_scope;
-}
 
 }

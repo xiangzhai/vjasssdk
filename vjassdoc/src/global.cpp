@@ -20,7 +20,6 @@
 
 #include <cctype>
 #include <sstream>
-#include <iostream>
 
 #include "objects.hpp"
 #include "vjassdoc.hpp"
@@ -31,7 +30,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Global::sqlTableName = "Globals";
-unsigned int Global::sqlColumns;
+std::size_t Global::sqlColumns;
 std::string Global::sqlColumnStatement;
 
 void Global::initClass()
@@ -153,15 +152,6 @@ void Global::page(std::ofstream &file) const
 #ifdef SQLITE
 std::string Global::sqlStatement() const
 {
-	if (this->identifier() == "EVENT_GAME_LEAVE_REGION")
-	{
-		std::cout
-		<< "Library " << this->library() << std::endl
-		<< "Scope " << this->scope() << std::endl
-		<< "Documentation comment " << this->docComment() << std::endl
-		;
-	}
-
 	std::ostringstream sstream;
 	sstream
 	<< Object::sqlStatement() << ", "

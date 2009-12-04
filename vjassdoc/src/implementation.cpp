@@ -29,7 +29,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Implementation::sqlTableName = "Implementations";
-unsigned int Implementation::sqlColumns;
+std::size_t Implementation::sqlColumns;
 std::string Implementation::sqlColumnStatement;
 
 void Implementation::initClass()

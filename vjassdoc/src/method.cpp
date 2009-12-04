@@ -28,7 +28,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Method::sqlTableName = "Methods";
-unsigned int Method::sqlColumns;
+std::size_t Method::sqlColumns;
 std::string Method::sqlColumnStatement;
 
 void Method::initClass()

@@ -1,3 +1,21 @@
+2009-12-04 Tamino Dauth <tamino@cdauth.de>
+* Revised EVERYTHING HAHAHAHAHA!!!!!1111einseinself
+
+2009-12-03 Tamino Dauth <tamino@cdauth.de>
+* Add class Object::List and child classes to Jass and vJass object classes.
+
+2009-12-02 Tamino Dauth <tamino@cdauth.de>
+* Fix relations between classes which contain lists of objects. There should only be child to parent relations and everything else has to be created by dynamic searches on lists.
+
+2009-11-29 Tamino Dauth <tamino@cdauth.de>
+* Use boost file system.
+* Remove operating system checks and macro definition.
+* Add correct compile flag checks.
+
+2009-11-20 Tamino Dauth <tamino@cdauth.de>
+* Use Bison-generated parser/compiler.
+* Use boost::format function for internationalized messages.
+
 2009-11-19 Tamino Dauth <tamino@cdauth.de>
 * DONE: Add //! import zinc <filepath> and //! import vjass <filepath> support.
 * Add Zinc support.
@@ -21,7 +39,7 @@
 2009-10-11 Tamino Dauth <tamino@cdauth.de>
 * DONE: Keyword support textmacro_once.
 * Add glibc requirement to cmake files (because of getopt usage).
-* Import and database paths should be separated by : character.
+* DONE: Import and database paths should be separated by : character.
 * Add static if support.
 * Add importance tree special page for source files.
 

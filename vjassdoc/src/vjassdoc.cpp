@@ -23,6 +23,8 @@
 #include <iostream>
 #include <cstdio>
 
+#include <boost/format.hpp>
+
 #include "vjassdoc.hpp"
 #include "internationalisation.hpp"
 #include "objects.hpp"
@@ -38,8 +40,8 @@ const bool Vjassdoc::supportsDatabaseCreation = false;
 #endif
 class Parser *Vjassdoc::m_parser = 0;
 class Compiler *Vjassdoc::m_compiler = 0;
-unsigned int Vjassdoc::m_lines = 0;
-unsigned int Vjassdoc::m_files = 0;
+std::size_t Vjassdoc::m_lines = 0;
+std::size_t Vjassdoc::m_files = 0;
 double Vjassdoc::m_duration = 0.0;
 double Vjassdoc::m_cpuDuration = 0.0;
 bool Vjassdoc::m_optionJass = false;
@@ -59,11 +61,11 @@ bool Vjassdoc::m_optionAlphabetical = false;
 bool Vjassdoc::m_optionParseObjectsOfList[Parser::MaxLists];
 std::string Vjassdoc::m_optionTitle = "";
 std::string Vjassdoc::m_optionDir = "";
-std::list<std::string> Vjassdoc::m_optionImport = std::list<std::string>();
-std::list<std::string> Vjassdoc::m_optionFiles = std::list<std::string>();
-std::list<std::string> Vjassdoc::m_optionDatabases = std::list<std::string>();
+std::list<boost::filesystem::path> Vjassdoc::m_optionImport = std::list<boost::filesystem::path>();
+std::list<boost::filesystem::path> Vjassdoc::m_optionFiles = std::list<boost::filesystem::path>();
+std::list<boost::filesystem::path> Vjassdoc::m_optionDatabases = std::list<boost::filesystem::path>();
 
-void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases)
+void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<boost::filesystem::path> optionImport, std::list<boost::filesystem::path> optionFiles, std::list<boost::filesystem::path> optionDatabases)
 {
 	Vjassdoc::m_optionJass = optionJass;
 	Vjassdoc::m_optionDebug = optionDebug;
@@ -90,36 +92,6 @@ void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, 
 	Vjassdoc::m_optionDatabases = optionDatabases;
 }
 
-#ifdef SQLITE
-void Vjassdoc::initClasses()
-{
-	Object::initClass();
-	Comment::initClass();
-	Keyword::initClass();
-	Key::initClass();
-	TextMacro::initClass();
-	TextMacroInstance::initClass();
-	Type::initClass();
-	Local::initClass();
-	Global::initClass();
-	Member::initClass();
-	Parameter::initClass();
-	FunctionInterface::initClass();
-	Function::initClass();
-	Method::initClass();
-	Call::initClass();
-	Implementation::initClass();
-	Hook::initClass();
-	Interface::initClass();
-	Struct::initClass();
-	Module::initClass();
-	Scope::initClass();
-	Library::initClass();
-	SourceFile::initClass();
-	DocComment::initClass();
-}
-#endif
-
 void Vjassdoc::run()
 {
 	Vjassdoc::m_lines = 0;
@@ -137,37 +109,72 @@ void Vjassdoc::run()
 		beginMicroseconds = long(1e6) * timeValue.tv_sec + timeValue.tv_usec;
 		beginCpu = clock();
 	}
-	
-#ifdef UNIX
-		if (Vjassdoc::optionVerbose)
-			std::cout << _("UNIX mode has been detected.") << std::endl;
-#elif defined WIN32
-		if (Vjassdoc::optionVerbose)
-			std::cout << _("Win32 mode has been detected.") << std::endl;
-#else
-#error You have to define UNIX or WIN32.
-#endif
 
 #ifdef SQLITE
 	if (!Vjassdoc::optionDatabases().empty())
 	{
-		if (Vjassdoc::optionVerbose())
-			std::cout << _("You've selected one or several databases.") << std::endl;
-		
-		std::list<std::string> databases = Vjassdoc::optionDatabases();
-
-		for (std::list<std::string>::iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
-			Vjassdoc::parser()->addDatabase((*iterator).c_str());
+		BOOST_FOREACH(boost::filesystem::path path, Vjassdoc::optionDatabases())
+		{
+			if (Vjassdoc::optionVerbose())
+				std::cout << boost::str(boost::format(_("Loading database \"%1%\".")) % filePath) << std::endl;
+			
+			Vjassdoc::parser()->addDatabase(path);
+		}
 	}
 #endif
 
-	Vjassdoc::parser()->parse(Vjassdoc::optionFiles());
+	int i = 1;
+	
+	BOOST_FOREACH(boost::filesystem::path path, Vjassdoc::m_optionFiles)
+	{
+		std::size_t lines = Vjassdoc::parser()->parse(path);
+		Vjassdoc::m_lines += lines;
+		++Vjassdoc::m_files;	
+		std::cout << boost::format(_("Parsed file \"%1%\" successfully (number %2%, %3% lines).")) % path.string() % i % lines << std::endl;
+		++i;
+	}
+	
+	// parsing new imported files
+	BOOST_FOREACH(const class SourceFile *sourceFile, Vjassdoc::parser()->list(Parser::SourceFiles)->objects())
+	{
+		bool found = false;
+		
+		BOOST_FOREACH(boost::filesystem::path path, Vjassdoc::m_optionFiles)
+		{
+			if (sourceFile->path() == path)
+			{
+				found = true;
+				
+				break;
+			}
+		}
+		
+		if (!found)
+			Vjassdoc::parser()->parse(sourceFile->path());
+	}
+	
+	if (Vjassdoc::optionVerbose())
+		std::cout << _("Initializing parsed objects.") << std::endl;
+	
+	Vjassdoc::parser()->initObjects();
 
 	if (Vjassdoc::optionAlphabetical())
+	{
+		if (Vjassdoc::optionVerbose())
+			std::cout << _("Sorting alphabetically.") << std::endl;
+		
 		Vjassdoc::parser()->sortAlphabetically();
+	}
 
+#ifdef HTML
 	if (Vjassdoc::optionHtml())
-		Vjassdoc::parser()->createHtmlFiles();
+	{
+		if (Vjassdoc::optionVerbose())
+			std::cout << _("Creating HTML files.") << std::endl;
+	
+		Vjassdoc::parser()->createHtmlFiles(Vjassdoc::m_optionDir, Vjassdoc::m_optionTitle, Vjassdoc::m_optionPages, Vjassdoc::m_optionSpecialPages);
+	}
+#endif
 
 	if (Vjassdoc::optionSyntax())
 		Vjassdoc::parser()->showSyntaxErrors();
@@ -175,11 +182,21 @@ void Vjassdoc::run()
 #ifdef SQLITE
 	//create SQL database for search functions
 	if (!Vjassdoc::optionDatabase().empty())
+	{
+		if (Vjassdoc::optionVerbose())
+			std::cout << boost::format(_("Creating database.\nUsing SQLite version %1%.")) % SQLITE_VERSION << std::endl;
+		
 		Vjassdoc::parser()->createDatabase(Vjassdoc::optionDatabase());
+	}
 #endif
 
 	if (!Vjassdoc::optionCompile().empty())
+	{
+		if (Vjassdoc::optionVerbose())
+			std::cout << _("Compiling map script.") << std::endl;
+		
 		Vjassdoc::compiler()->compile();
+	}
 	
 	if (Vjassdoc::optionTime())
 	{
@@ -188,10 +205,10 @@ void Vjassdoc::run()
 		endCpu = clock();
 		Vjassdoc::m_duration = (double)(endMicroseconds - beginMicroseconds) / double(1e6);
 		Vjassdoc::m_cpuDuration = (double)(endCpu - beginCpu) / double(CLOCKS_PER_SEC);
-		printf(_("Duration:\n%f seconds\nCPU duration:\n%f seconds\n"), Vjassdoc::m_duration, Vjassdoc::m_cpuDuration);
+		std::cout << boost::str(boost::format(_("Duration:\n%1% seconds\nCPU duration:\n%2% seconds\n")) % Vjassdoc::m_duration % Vjassdoc::m_cpuDuration) << std::endl;
 	}
 	
-	printf(_("Finished (%d lines, %d files).\n"), Vjassdoc::m_lines, Vjassdoc::m_files);
+	std::cout << boost::format(_("Finished (%1% lines, %2% files).")) % Vjassdoc::m_lines % Vjassdoc::m_files << std::endl;
 }
 
 void Vjassdoc::clear()

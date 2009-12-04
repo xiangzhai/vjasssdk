@@ -28,6 +28,7 @@
 #include "key.hpp"
 #include "textmacro.hpp"
 #include "textmacroinstance.hpp"
+#include "externalcall.hpp"
 #include "type.hpp"
 #include "local.hpp"
 #include "global.hpp"

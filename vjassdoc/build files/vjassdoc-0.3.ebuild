@@ -2,25 +2,36 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="A documentation tool for the scripting languages Jass and vJass."
-SRC_URI="http://cdauth.de/~tamino/${PN}/${PN}-${PV}.tar.bz2"
+DESCRIPTION="Documentation tool for the scripting languages Jass and vJass."
+SRC_URI="http://mesh.dl.sourceforge.net/project/vjasssdk/vjasssdk/${PN}/releases/${PN}-${PV}.7z"
 HOMEPAGE="http://sourceforge.net/projects/vjasssdk/"
 #KEYWORDS="" #Unknown
 SLOT="0"
 LICENSE="GPL-2"
 #IUSE=""
 
-RDEPEND=">=dev-db/sqlite-3.6.13
+RDEPEND="
 	>=sys-devel/gettext-0.17
-	>=dev-libs/boost-1.35.0-r2" #Check the versions
+    >=dev-libs/boost-1.39.0
+	>=sys-libs/glibc-2.9_p20081201-r2
+	sqlite? (
+		>=dev-db/sqlite-3.6.13
+	)
+	kde? (
+        >=kde-base/kdelibs-4.3.1-r1
+    )"
+
 DEPEND="${RDEPEND}"
-DOCS="AUTHORS COPYING ChangeLog NEWS README TODO"
+DOCS="AUTHORS COPYING ChangeLog NEWS README TODO doc/Datenbanken.txt"
 #PDEPEND=""
 #RESTRICT=""
 #PROVIDE=""
 
 src_configure()
 {
+	mycmakeargs="${mycmakeargs}
+        $(cmake-utils_use_with sqlite kde)"
+
 	cmake "${FILESDIR}/${P}" || die "cmake failed"
 }
 

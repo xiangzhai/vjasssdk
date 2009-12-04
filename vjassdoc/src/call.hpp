@@ -30,11 +30,11 @@ class Call : public Object
 {
 	public:
 #ifdef SQLITE
-		static const int maxArguments;
 		static const char *sqlTableName;
-		static unsigned int sqlColumns;
+		static std::size_t sqlColumns;
 		static std::string sqlColumnStatement;
-
+		static const std::size_t sqlMaxArguments;
+		
 		static void initClass();
 #endif
 		Call(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &functionIdentifier, std::list<std::string> *argumentIdentifiers, bool isExecuted, bool isEvaluated);

@@ -28,7 +28,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Function::sqlTableName = "Functions";
-unsigned int Function::sqlColumns;
+std::size_t Function::sqlColumns;
 std::string Function::sqlColumnStatement;
 
 void Function::initClass()

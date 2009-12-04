@@ -25,7 +25,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Key::sqlTableName = "Keys";
-unsigned int Key::sqlColumns;
+std::size_t Key::sqlColumns;
 std::string Key::sqlColumnStatement;
 
 void Key::initClass()

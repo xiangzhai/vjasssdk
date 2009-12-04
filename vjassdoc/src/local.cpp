@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
 #include <sstream>
 
 #include "objects.hpp"
@@ -30,7 +29,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Local::sqlTableName = "Locals";
-unsigned int Local::sqlColumns;
+std::size_t Local::sqlColumns;
 std::string Local::sqlColumnStatement;
 
 void Local::initClass()

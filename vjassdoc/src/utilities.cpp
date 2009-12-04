@@ -18,21 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <string>
-#include <sys/stat.h>
-
 #include "utilities.hpp"
+#include "internationalisation.hpp"
 
 namespace vjassdoc
 {
-
-#ifdef UNIX
-const char *dirSeparator = "/";
-#elif defined WIN32
-const char *dirSeparator = "\\\\";
-#else
-#error You have to define UNIX or WIN32.
-#endif
 
 std::string getToken(const std::string &line, std::string::size_type &index, bool endOfLine)
 {
@@ -64,27 +54,6 @@ std::string getToken(const std::string &line, std::string::size_type &index, boo
 	return line.substr(position, length);
 }
 
-void cutFilePath(std::string &filePath)
-{
-	std::size_t position = filePath.find_last_of(dirSeparator);
-	
-	if (position != std::string::npos)
-		filePath.erase(0, position + 1);
-}
-
-
-bool fileExists(const std::string &fileName)
-{
-	struct stat fileInfo; 
-	int state;
-	state = stat(fileName.c_str(), &fileInfo);
-	
-	if (state == 0)
-		return true;
-	
-	return false;
-}
-
 void createHtmlHeader(std::ostream &ostream, const std::string &title, const std::string &language)
 {
 	ostream
@@ -101,4 +70,42 @@ void createHtmlHeader(std::ostream &ostream, const std::string &title, const std
 	;
 }
 
+std::string booleanToString(bool value)
+{
+	if (value)
+		return _("Yes");
+	
+	return _("No");
+}
+#ifdef SQLITE
+std::string sqlFilteredString(const std::string &value)
+{
+	std::string result;
+	
+	for (std::string::size_type i = 0; i < value.length(); ++i)
+	{
+		char character = value[i];
+		
+		switch (character)
+		{
+			case '\'':
+				result += "\'\'";
+				
+				break;
+			
+			case '\"':
+				result += "\"\"";
+				
+				break;
+			
+			default:
+				result += character;
+				
+				break;
+		}
+	}
+
+	return result;
+}
+#endif
 }

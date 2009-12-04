@@ -23,35 +23,20 @@
 
 #include <ostream>
 #include <functional>
-#include <list>
 #include <string>
 #include <sstream>
 #include <vector>
 
+#include <boost/filesystem.hpp>
+
 namespace vjassdoc
 {
 
-class Comment;
-class Keyword;
-class TextMacro;
-class TextMacroInstance;
-class Type;
-class Local;
-class Global;
-class Member;
-class Parameter;
-class FunctionInterface;
-class Function;
-class Method;
-class Call;
-class Implementation;
-class Interface;
-class Struct;
-class Module;
-class Scope;
-class Library;
-class SourceFile;
-class DocComment;
+class Object
+{
+	class List;
+};
+
 class SyntaxError;
 
 /**
@@ -78,6 +63,7 @@ class Parser
 			Keys,
 			TextMacros,
 			TextMacroInstances,
+			ExternalCalls,
 			Types,
 			Locals,
 			Globals,
@@ -121,23 +107,29 @@ class Parser
 
 		Parser();
 		~Parser();
-		void createInheritanceListPage();
-		void createRequirementListPage();
-		void createUndocumentatedListPage();
+		std::size_t parse(const boost::filesystem::path &path) throw (std::exception);
+		void initObjects();
 		void sortAlphabetically();
-		void createHtmlFiles();
 		void showSyntaxErrors();
-		void parse(const std::list<std::string> &filePaths);
-
+		//void parse(const std::list<boost::filesystem::path> &filePaths);
+#ifdef HTML		
+		void createHtmlInheritanceListPage(std::ostream &ostream);
+		void createHtmlRequirementListPage(std::ostream &ostream);
+		void createHtmlUndocumentatedListPage(std::ostream &ostream);
+		void createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool pages, bool extraPages) throw (std::exception);
+#endif
 #ifdef SQLITE
-		void createDatabase(const std::string &filePath);
-		int addDatabase(const std::string &filePath);
-		void removeDatabase(const int &index);
+		void createDatabase(const boost::filesystem::path &path);
+		/**
+		* @return Returns -1 if adding database fails.
+		*/
+		std::size_t addDatabase(const boost::filesystem::path &path);
+		void removeDatabase(std::size_t);
 		/**
 		* Searches for an object with id @param id in last added database. Each id has to be unique so there only can be one hit.
 		* @return If no object was found it will return 0.
 		*/
-		class Object* searchObjectInLastDatabase(const unsigned int &id);
+		class Object* searchObjectDatabase(std::size_t index, std::size_t id);
 #endif
 
 		/**
@@ -158,13 +150,14 @@ class Parser
 		* @return Returns the user-specific list.
 		* @see Parser::searchObjectInCustomList
 		*/
-		std::list<class Object*> getSpecificList(const enum List &list, const struct Comparator &comparator, const class Object *object = 0);
+		std::list<const class Object*> getSpecificList(enum Parser::List list, const struct Comparator &comparator, const class Object *object = 0);
 		
 		void add(class Comment *comment);
 		void add(class Keyword *keyword);
 		void add(class Key *key);
 		void add(class TextMacro *textMacro);
 		void add(class TextMacroInstance *textMacroInstance);
+		void add(class ExternalCall *externalCall);
 		void add(class Type *type);
 		void add(class Local *local);
 		void add(class Global *global);
@@ -189,9 +182,10 @@ class Parser
 		class Type* booleanType() const;
 		class Type* handleType() const;
 		class Type* codeType() const;
-		class SourceFile* currentSourceFile() const;
+		class File* currentFile() const;
 
 		void add(class SyntaxError *syntaxError);
+		const class List* list(enum Parser::List list) const;
 
 		/**
 		* Parses line @param line from index @param index to the end of line and generates a list of possible objects.
@@ -200,183 +194,148 @@ class Parser
 		* @param index Start index of code line for the parser.
 		* @return A list filled with possible objects.
 		*/
-		std::list<class Object*> autoCompletion(const std::string &line, unsigned int &index);
-	private:
-#ifdef SQLITE
-		struct Database
-		{
-			std::list<enum List> listList;
-			std::list<class Object*> objectList;
-		};
-#endif	
-
-		static const char *title[Parser::MaxLists];
+		std::list<const class Object*> autoCompletion(const std::string &line, std::size_t &index);
+		
+	protected:
+		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::ostream &ostream);
+		void getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::ostream &ostream);
+		
 		class Type *m_integerType;
 		class Type *m_realType;
 		class Type *m_stringType;
 		class Type *m_booleanType;
 		class Type *m_handleType;
 		class Type *m_codeType;
-		std::list<class Comment*> m_comments;
-		std::list<class Keyword*> m_keywords;
-		std::list<class Key*> m_keys;
-		std::list<class TextMacro*> m_textMacros;
-		std::list<class TextMacroInstance*> m_textMacroInstances;
-		std::list<class Type*> m_types;
-		std::list<class Local*> m_locals;
-		std::list<class Global*> m_globals;
-		std::list<class Member*> m_members;
-		std::list<class Parameter*> m_parameters;
-		std::list<class FunctionInterface*> m_functionInterfaces;
-		std::list<class Function*> m_functions;
-		std::list<class Method*> m_methods;
-		std::list<class Call*> m_calls;
-		std::list<class Implementation*> m_implementations;
-		std::list<class Hook*> m_hooks;
-		std::list<class Interface*> m_interfaces;
-		std::list<class Struct*> m_structs;
-		std::list<class Module*> m_modules;
-		std::list<class Scope*> m_scopes;
-		std::list<class Library*> m_libraries;
-		std::list<class SourceFile*> m_sourceFiles;
-		std::list<class DocComment*> m_docComments;
-		class SourceFile *m_currentSourceFile;
-		std::list<class SyntaxError*> m_syntaxErrors;
+		std::vector<class List*> m_lists;
+		std::vector<class SyntaxError*> m_syntaxErrors;
 #ifdef SQLITE
-		std::vector<struct Database*> m_databases;
+		std::vector<class List*> m_databaseLists;
 #endif
-
-		void parseFile(const std::string &path);
-		std::list<class Object*>& getList(enum List list);
-		
-		//HTML
-		std::ostream& addObjectList(std::ostream &output, const enum Parser::List &list);
-		
-		//SQLite
-#ifdef SQLITE
-		static std::string getTableName(const enum Parser::List &list);
-		static unsigned int getTableColumns(const enum Parser::List &list);
-		static std::string getTableCreationStatement(const enum Parser::List &list);
-		static class Object* createObjectByVector(std::vector<const unsigned char*> &columnVector, const enum Parser::List &list);
-#endif
-
-		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::ostream &ostream);
-		void getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::ostream &ostream);
 };
+
+inline bool Parser::Comparator::operator()(const class Object *thisObject, const class Object *otherObject) const
+{
+	return true;
+}
 
 inline void Parser::add(class Comment *comment)
 {
-	this->m_comments.push_back(comment);
+	this->m_lists[Parser::Comments]->add(comment);
 }
 
 inline void Parser::add(class Key *key)
 {
-	this->m_keys.push_back(key);
+	this->m_lists[Parser::Keys]->add(key);
 }
 
 inline void Parser::add(class Keyword *keyword)
 {
-	this->m_keywords.push_back(keyword);
+	this->m_lists[Parser::Keywords]->push_back(keyword);
 }
 
 inline void Parser::add(class TextMacro *textMacro)
 {
-	this->m_textMacros.push_back(textMacro);
+	this->m_lists[Parser::TextMacros]->push_back(textMacro);
 }
 
 inline void Parser::add(class TextMacroInstance *textMacroInstance)
 {
-	this->m_textMacroInstances.push_back(textMacroInstance);
+	this->m_lists[Parser::TextMacroInstances]->push_back(textMacroInstance);
+}
+
+inline void Parser::add(class ExternalCall *externalCall)
+{
+	this->m_lists[Parser::ExternalCalls]->push_back(externalCall);
 }
 
 inline void Parser::add(class Type *type)
 {
-	this->m_types.push_back(type);
+	this->m_lists[Parser::Types]->push_back(type);
 }
 
 inline void Parser::add(class Local *local)
 {
-	this->m_locals.push_back(local);
+	this->m_lists[Parser::Locals]->push_back(local);
 }
 
 inline void Parser::add(class Global *global)
 {
-	this->m_globals.push_back(global);
+	this->m_lists[Parser::Globals]->push_back(global);
 }
 
 inline void Parser::add(class Member *member)
 {
-	this->m_members.push_back(member);
+	this->m_lists[Parser::Members]->push_back(member);
 }
 
 inline void Parser::add(class Parameter *parameter)
 {
-	this->m_parameters.push_back(parameter);
+	this->m_lists[Parser::Parameters]->push_back(parameter);
 }
 
 inline void Parser::add(class FunctionInterface *functionInterface)
 {
-	this->m_functionInterfaces.push_back(functionInterface);
+	this->m_lists[Parser::FunctionInterfaces]->push_back(functionInterface);
 }
 
 inline void Parser::add(class Function *function)
 {
-	this->m_functions.push_back(function);
+	this->m_lists[Parser::Functions]->push_back(function);
 }
 
 inline void Parser::add(class Method *method)
 {
-	this->m_methods.push_back(method);
+	this->m_lists[Parser::Methods]->push_back(method);
 }
 
 inline void Parser::add(class Call *call)
 {
-	this->m_calls.push_back(call);
+	this->m_lists[Parser::Calls]->push_back(call);
 }
 
 inline void Parser::add(class Implementation *implementation)
 {
-	this->m_implementations.push_back(implementation);
+	this->m_lists[Parser::Implementations]->push_back(implementation);
 }
 
 inline void Parser::add(class Hook *hook)
 {
-	this->m_hooks.push_back(hook);
+	this->m_lists[Parser::Hooks]->push_back(hook);
 }
 
 inline void Parser::add(class Interface *interface)
 {
-	this->m_interfaces.push_back(interface);
+	this->m_lists[Parser::Interfaces]->push_back(interface);
 }
 
 inline void Parser::add(class Struct *usedStruct)
 {
-	this->m_structs.push_back(usedStruct);
+	this->m_lists[Parser::Structs]->push_back(usedStruct);
 }
 
 inline void Parser::add(class Module *module)
 {
-	this->m_modules.push_back(module);
+	this->m_lists[Parser::Modules]->push_back(module);
 }
 
 inline void Parser::add(class Scope *scope)
 {
-	this->m_scopes.push_back(scope);
+	this->m_lists[Parser::Scopes]->push_back(scope);
 }
 
 inline void Parser::add(class Library *library)
 {
-	this->m_libraries.push_back(library);
+	this->m_lists[Parser::Libraries]->push_back(library);
 }
 
 inline void Parser::add(class SourceFile *sourceFile)
 {
-	this->m_sourceFiles.push_back(sourceFile);
+	this->m_lists[Parser::SourceFiles]->push_back(sourceFile);
 }
 
 inline void Parser::add(class DocComment *docComment)
 {
-	this->m_docComments.push_back(docComment);
+	this->m_lists[Parser::DocComments]->push_back(docComment);
 }
 
 inline class Type* Parser::integerType() const
@@ -409,14 +368,19 @@ inline class Type* Parser::codeType() const
 	return m_codeType;
 }
 
-inline class SourceFile* Parser::currentSourceFile() const
+inline class File* Parser::currentFile() const
 {
-	return this->m_currentSourceFile;
+	return this->m_currentFile;
 }
 
 inline void Parser::add(class SyntaxError *syntaxError)
 {
 	this->m_syntaxErrors.push_back(syntaxError);
+}
+
+inline const class List* Parser::list(enum Parser::List list) const
+{
+	return this->m_lists[list];
 }
 
 }

@@ -28,6 +28,9 @@
 
 #include <getopt.h>
 
+#include <boost/format.hpp>
+#include <boost/filesystem.hpp>
+
 #include "internationalisation.hpp"
 #include "vjassdoc.hpp"
 #include "parser.hpp"
@@ -55,6 +58,7 @@ int main(int argc, char *argv[])
 		{"nokeywords",              no_argument,             0, 0},
 		{"notextmacros",            no_argument,             0, 0},
 		{"notextmacroinstances",    no_argument,             0, 0},
+		{"noexternalcalls",         no_argument,             0, 0},
 		{"notypes",                 no_argument,             0, 0},
 		{"nolocals",                no_argument,             0, 0},
 		{"noglobals",               no_argument,             0, 0},
@@ -114,6 +118,7 @@ int main(int argc, char *argv[])
 		"nokeys",
 		"notextmacros",
 		"notextmacroinstances",
+		"noexternalcalls",
 		"notypes",
 		"nolocals",
 		"noglobals",
@@ -140,6 +145,7 @@ int main(int argc, char *argv[])
 		true, //keys
 		true, //text macros
 		true, //text macro instances
+		true, //external calls
 		true, //types
 		true, //locals
 		true, //globals
@@ -161,9 +167,9 @@ int main(int argc, char *argv[])
 	};
 	std::string title;
 	std::string dir;
-	std::list<std::string> importDirs;
-	std::list<std::string> databases;
-	std::list<std::string> filePaths;
+	std::list<boost::filesystem::path> importDirs;
+	std::list<boost::filesystem::path> databases;
+	std::list<boost::filesystem::path> filePaths;
 	int optionShortcut;
 	
 	while (true)
@@ -191,8 +197,8 @@ int main(int argc, char *argv[])
 			
 			case 'h':
 			{
-				printf("vjassdoc %s.\n\n", Vjassdoc::version);
 				std::cout <<
+				boost::format(_("vjassdoc %1%.\n\n")) % Vjassdoc::version <<
 				_("Usage: vjassdoc [Options] [Code files]\n\n") <<
 				_("Options:\n") <<
 				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
@@ -208,6 +214,7 @@ int main(int argc, char *argv[])
 				_("\t                            keywords\n") <<
 				_("\t                            textmacros\n") <<
 				_("\t                            textmacroinstances\n") <<
+				_("\t                            externalcalls\n") <<
 				_("\t                            types\n") <<
 				_("\t                            locals\n") <<
 				_("\t                            globals\n") <<
@@ -330,11 +337,11 @@ int main(int argc, char *argv[])
 			case 'I':
 				for (char *path = strtok(optarg, ":"); path != 0;  path = strtok(0, ":"))
 				{
-					for (std::list<std::string>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
+					for (std::list<boost::filesystem::path>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
 					{
-						if (*iterator == path)
+						if (iterator->string() == path)
 						{
-							fprintf(stderr, _("Import directory path \"%s\" has already been added to list.\n"), path);
+							std::cerr << boost::format( _("Import directory path \"%1%\" has already been added to list.")) % path << std::endl;
 							
 							continue;
 						}
@@ -354,11 +361,11 @@ int main(int argc, char *argv[])
 			case 'B':
 				for (char *path = strtok(optarg, ":"); path != 0;  path = strtok(0, ":"))
 				{
-					for (std::list<std::string>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
+					for (std::list<boost::filesystem::path>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
 					{
-						if (*iterator == path)
+						if (iterator->string() == path)
 						{
-							fprintf(stderr, _("Database \"%s\" has already been added to list.\n"), path);
+							std::cerr << boost::format(_("Database \"%1%\" has already been added to list.")) % path << std::endl;
 							
 							continue;
 						}
@@ -378,7 +385,7 @@ int main(int argc, char *argv[])
 						if (parseObjectsOfList[j])
 							parseObjectsOfList[j] = false;
 						else
-							fprintf(stderr, _("Objects of list %d already won't be parsed.\n"), j);
+							std::cerr << boost::format(_("Objects of list %1% already won't be parsed.")) % j << std::endl;
 						
 						break;
 					}
@@ -393,11 +400,11 @@ int main(int argc, char *argv[])
 	{
 		for ( ; optind < argc; ++optind)
 		{
-			for (std::list<std::string>::const_iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
+			for (std::list<boost::filesystem::path>::const_iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
 			{
-				if (*iterator == argv[optind])
+				if (iterator->string() == argv[optind])
 				{
-						fprintf(stderr, _("File path \"%s\" has already been added to list.\n"), argv[optind]);
+						std::cerr << boost::format(_("File path \"%1%\" has already been added to list.")) % argv[optind] << std::endl;
 						
 						continue;
 				}

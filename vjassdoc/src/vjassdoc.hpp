@@ -24,6 +24,8 @@
 #include <string>
 #include <list>
 
+#include <boost/filesystem.hpp>
+
 #include "parser.hpp"
 #include "compiler.hpp"
 
@@ -38,17 +40,13 @@ class Vjassdoc
 		static const char *version;
 		static const bool supportsDatabaseCreation;
 
-		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<std::string> optionImport, std::list<std::string> optionFiles, std::list<std::string> optionDatabases);
-		
-#ifdef SQLITE
-		static void initClasses();
-#endif
+		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<boost::filesystem::path> optionImport, std::list<boost::filesystem::path> optionFiles, std::list<boost::filesystem::path> optionDatabases);
 		static void run();
 		static void clear();
 		static class Parser* parser();
 		static class Compiler* compiler();
-		static unsigned int lines();
-		static unsigned int files();
+		static std::size_t lines();
+		static std::size_t files();
 		static double duration();
 		static double cpuDuration();
 		static bool optionJass();
@@ -68,21 +66,15 @@ class Vjassdoc
 		static bool optionParseObjectsOfList(const enum Parser::List &list);
 		static std::string optionTitle();
 		static std::string optionDir();
-		static std::list<std::string> optionImport();
-		static std::list<std::string> optionFiles();
-		static std::list<std::string> optionDatabases();
-		
-		static void addLines(const unsigned int &addedLines);
-		static void addFile();
-	private:
-		Vjassdoc();
-		Vjassdoc(Vjassdoc&);
-		~Vjassdoc();
+		static std::list<boost::filesystem::path> optionImport();
+		static std::list<boost::filesystem::path> optionFiles();
+		static std::list<boost::filesystem::path> optionDatabases();
 
+	protected:
 		static class Parser *m_parser;
 		static class Compiler *m_compiler;
-		static unsigned int m_lines;
-		static unsigned int m_files;
+		static std::size_t m_lines;
+		static std::size_t m_files;
 		static double m_duration;
 		static double m_cpuDuration;
 		static bool m_optionJass;
@@ -102,9 +94,14 @@ class Vjassdoc
 		static bool m_optionParseObjectsOfList[Parser::MaxLists];
 		static std::string m_optionTitle;
 		static std::string m_optionDir;
-		static std::list<std::string> m_optionImport;
-		static std::list<std::string> m_optionFiles;
-		static std::list<std::string> m_optionDatabases;
+		static std::list<boost::filesystem::path> m_optionImport;
+		static std::list<boost::filesystem::path> m_optionFiles;
+		static std::list<boost::filesystem::path> m_optionDatabases;
+		
+	private:
+		Vjassdoc();
+		Vjassdoc(Vjassdoc&);
+		~Vjassdoc();
 };
 
 inline Parser* Vjassdoc::parser()
@@ -123,12 +120,12 @@ inline Compiler* Vjassdoc::compiler()
 	return Vjassdoc::m_compiler;
 }
 
-inline unsigned int Vjassdoc::lines()
+inline std::size_t Vjassdoc::lines()
 {
 	return Vjassdoc::m_lines;
 }
 
-inline unsigned int Vjassdoc::files()
+inline std::size_t Vjassdoc::files()
 {
 	return Vjassdoc::m_files;
 }
@@ -228,29 +225,19 @@ inline std::string Vjassdoc::optionDir()
 	return Vjassdoc::m_optionDir;
 }
 
-inline std::list<std::string> Vjassdoc::optionImport()
+inline std::list<boost::filesystem::path> Vjassdoc::optionImport()
 {
 	return Vjassdoc::m_optionImport;
 }
 
-inline std::list<std::string> Vjassdoc::optionFiles()
+inline std::list<boost::filesystem::path> Vjassdoc::optionFiles()
 {
 	return Vjassdoc::m_optionFiles;
 }
 
-inline std::list<std::string> Vjassdoc::optionDatabases()
+inline std::list<boost::filesystem::path> Vjassdoc::optionDatabases()
 {
 	return Vjassdoc::m_optionDatabases;
-}
-
-inline void Vjassdoc::addLines(const unsigned int &addedLines)
-{
-	Vjassdoc::m_lines += addedLines;
-}
-
-inline void Vjassdoc::addFile()
-{
-	++Vjassdoc::m_files;
 }
 
 }

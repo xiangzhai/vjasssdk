@@ -29,7 +29,7 @@ namespace vjassdoc
 
 #ifdef SQLITE
 const char *Type::sqlTableName = "Types";
-unsigned int Type::sqlColumns;
+std::size_t Type::sqlColumns;
 std::string Type::sqlColumnStatement;
 
 void Type::initClass()
