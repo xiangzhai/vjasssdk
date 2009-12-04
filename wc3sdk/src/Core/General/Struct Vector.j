@@ -1,9 +1,11 @@
 library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 
-	/// @author Tamino Dauth
-	/// @source http://www.cplusplus.com/reference/stl/list/
+	/**
+	* @author Tamino Dauth
+	* Got some inspiration from @link http://www.cplusplus.com/reference/stl and @link http://www.cplusplus.com/reference/stl/vector.
+	*/
 	//! textmacro A_VECTOR takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, MAXSIZE, STRUCTSPACE
-		
+
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ value returns boolean
 	

@@ -41,6 +41,29 @@ library ALibraryCoreDebugMisc requires ALibraryCoreGeneralPlayer
 			debug call Print($STRUCTNAME$ + ": " + message)
 		debug endmethod
 	//! endtextmacro
+	
+	/**
+	* Useful for getting the causing struct and instance of the debug message.
+	* Displays the string @param message in the following schema: "<structname> - <instanceid>: <message>"
+	* @author Tamino Dauth
+	*/
+	//! textmacro A_ZINC_STRUCT_DEBUG takes STRUCTNAME
+			public method print(string message)
+			{
+				debug
+				{
+					Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message);
+				}
+			}
+			
+			private static method staticPrint(string message)
+			{
+				debug
+				{
+					Print($STRUCTNAME$ + ": " + message);
+				}
+			}
+	//! endtextmacro
 
 	/**
 	* war3err DumpGlobalHT - prints the names and values of all global variables to logs//war3err.txt

@@ -3,7 +3,12 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 	struct ACharactersScheme
 		//static start members
 		private static real m_refreshRate
-		private static integer m_barLength
+		private static boolean m_showPlayerName
+		private static boolean m_showUnitName
+		private static boolean m_showLevel
+		private static integer m_experienceLength
+		private static integer m_hitPointsLength
+		private static integer m_manaLength
 		private static string m_textTitle
 		private static string m_textLevel
 		private static string m_textLeftGame
@@ -13,6 +18,7 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 		private static AMultiboardBar array m_experienceBar[12] //bj_MAX_PLAYERS /// @todo vJass bug
 		private static AMultiboardBar array m_hitPointsBar[12] //bj_MAX_PLAYERS /// @todo vJass bug
 		private static AMultiboardBar array m_manaBar[12] //bj_MAX_PLAYERS /// @todo vJass bug
+		private static boolean array m_destroyed[12] //bj_MAX_PLAYERS /// @todo vJass bug
 		private static integer m_maxPlayers
 		
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ACharactersScheme\"")
@@ -31,47 +37,73 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 			set i = 0
 			loop
 				exitwhen (i == thistype.m_maxPlayers)
-				set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
+				if (thistype.firstColumnExists()) then
+					set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
+				endif
 				set user = Player(i)
 				if ((IsPlayerPlayingUser(user) and ACharacter.playerCharacter(user) != 0) or (ACharacter.shareOnPlayerLeaves() and ACharacter.playerCharacter(user) != 0)) then
 					//refresh name (class - unit name) - level
-					call MultiboardSetItemValue(multiboardItem, GetModifiedPlayerName(user) + " [" + GetUnitName(ACharacter.playerCharacter(user).unit()) + "] - " + thistype.m_textLevel + " " + I2S(GetHeroLevel(ACharacter.playerCharacter(user).unit())))
+					call MultiboardSetItemValue(multiboardItem, thistype.firstColumnString(ACharacter.playerCharacter(user)))
 
 					if (IsUnitAliveBJ(ACharacter.playerCharacter(user).unit())) then
-						if (IsUnitType(ACharacter.playerCharacter(user).unit(), UNIT_TYPE_HERO)) then
-							call thistype.m_experienceBar[i].setValue(GetHeroXP(ACharacter.playerCharacter(user).unit()))
-							call thistype.m_experienceBar[i].setMaxValue(100000) /// @todo Calculate max experience per level
-							call thistype.m_experienceBar[i].refresh()
+						if (thistype.m_experienceLength > 0) then
+							if (IsUnitType(ACharacter.playerCharacter(user).unit(), UNIT_TYPE_HERO)) then
+								call thistype.m_experienceBar[i].setValue(GetHeroXP(ACharacter.playerCharacter(user).unit()))
+								call thistype.m_experienceBar[i].setMaxValue(100000) /// @todo Calculate max experience per level
+								call thistype.m_experienceBar[i].refresh()
+							endif
 						endif
 
-						call thistype.m_hitPointsBar[i].setValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_LIFE))
-						call thistype.m_hitPointsBar[i].setMaxValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_MAX_LIFE))
-						call thistype.m_hitPointsBar[i].refresh()
+						if (thistype.m_hitPointsLength > 0) then
+							call thistype.m_hitPointsBar[i].setValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_LIFE))
+							call thistype.m_hitPointsBar[i].setMaxValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_MAX_LIFE))
+							call thistype.m_hitPointsBar[i].refresh()
+						endif
 
-						call thistype.m_manaBar[i].setValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_MANA))
-						call thistype.m_manaBar[i].setMaxValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_MAX_MANA))
-						call thistype.m_manaBar[i].refresh()
+						if (thistype.m_manaLength > 0) then
+							call thistype.m_manaBar[i].setValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_MANA))
+							call thistype.m_manaBar[i].setMaxValue(GetUnitState(ACharacter.playerCharacter(user).unit(), UNIT_STATE_MAX_MANA))
+							call thistype.m_manaBar[i].refresh()
+						endif
 					else
-						call thistype.m_hitPointsBar[i].setValue(0)
-						call thistype.m_hitPointsBar[i].setMaxValue(1)
-						call thistype.m_hitPointsBar[i].refresh()
-						call thistype.m_manaBar[i].setValue(0)
-						call thistype.m_manaBar[i].setMaxValue(1)
-						call thistype.m_manaBar[i].refresh()
-						
-					endif
-				elseif (thistype.m_hitPointsBar[i] != 0) then
-					call MultiboardSetItemValue(multiboardItem, thistype.m_textLeftGame)
+						if (thistype.m_hitPointsLength > 0) then
+							call thistype.m_hitPointsBar[i].setValue(0)
+							call thistype.m_hitPointsBar[i].setMaxValue(1)
+							call thistype.m_hitPointsBar[i].refresh()
+						endif
 
-					call thistype.m_experienceBar[i].destroy()
-					set thistype.m_experienceBar[i] = 0
-					call thistype.m_hitPointsBar[i].destroy()
-					set thistype.m_hitPointsBar[i] = 0
-					call thistype.m_manaBar[i].destroy()
-					set thistype.m_manaBar[i] = 0
+						if (thistype.m_manaLength > 0) then
+							call thistype.m_manaBar[i].setValue(0)
+							call thistype.m_manaBar[i].setMaxValue(1)
+							call thistype.m_manaBar[i].refresh()
+						endif
+					endif
+				elseif (not thistype.m_destroyed[i]) then
+					if (thistype.firstColumnExists()) then
+						call MultiboardSetItemValue(multiboardItem, thistype.m_textLeftGame)
+					endif
+
+					if (thistype.m_experienceLength > 0) then
+						call thistype.m_experienceBar[i].destroy()
+						set thistype.m_experienceBar[i] = 0
+					endif
+
+					if (thistype.m_hitPointsLength > 0) then
+						call thistype.m_hitPointsBar[i].destroy()
+						set thistype.m_hitPointsBar[i] = 0
+					endif
+
+					if (thistype.m_manaLength > 0) then
+						call thistype.m_manaBar[i].destroy()
+						set thistype.m_manaBar[i] = 0
+					endif
+
+					set thistype.m_destroyed[i] = true
 				endif
-				call MultiboardReleaseItem(multiboardItem)
-				set multiboardItem = null
+				if (thistype.firstColumnExists()) then
+					call MultiboardReleaseItem(multiboardItem)
+					set multiboardItem = null
+				endif
 				set i = i + 1
 			endloop
 		endmethod
@@ -92,9 +124,14 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 			local integer i
 			local player user
 			local multiboarditem multiboardItem
+			local integer column
 			set thistype.m_multiboard = CreateMultiboard()
 			call MultiboardSetTitleText(thistype.m_multiboard, thistype.m_textTitle)
-			call MultiboardSetColumnCount(thistype.m_multiboard, 12) /// @todo Preset correct column count
+			set column = thistype.m_experienceLength + thistype.m_hitPointsLength + thistype.m_manaLength
+			if (thistype.firstColumnExists()) then
+				set column = column + 1
+			endif
+			call MultiboardSetColumnCount(thistype.m_multiboard, column)
 			call MultiboardDisplay(thistype.m_multiboard, false)
 			set i = 0
 			loop
@@ -102,37 +139,69 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 				set user = Player(i)
 				if (ACharacter.playerCharacter(user) != 0) then
 					call MultiboardSetRowCount(thistype.m_multiboard, MultiboardGetRowCount(thistype.m_multiboard) + 1)
-					set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
-					call MultiboardSetItemWidth(multiboardItem, 0.35) /// @todo check it
-					call MultiboardSetItemStyle(multiboardItem, true, false)
-					call MultiboardReleaseItem(multiboardItem)
-					set multiboardItem = null
 
-					set thistype.m_experienceBar[i] = AMultiboardBar.create(thistype.m_multiboard, 1, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
-					call thistype.m_experienceBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-					call thistype.m_experienceBar[i].setAllIcons("Icons\\Interface\\Bars\\Purple.blp", true)
+					if (thistype.firstColumnExists()) then
+						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
+						call MultiboardSetItemWidth(multiboardItem, 0.35) /// @todo check it
+						call MultiboardSetItemStyle(multiboardItem, true, false)
+						call MultiboardReleaseItem(multiboardItem)
+						set multiboardItem = null
+					endif
 
-					set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_experienceBar[i].firstFreeField())
-					//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
-					call MultiboardSetItemStyle(multiboardItem, false, true)
-					call MultiboardReleaseItem(multiboardItem)
-					//set separator icon
-					set multiboardItem = null
+					if (thistype.m_experienceLength > 0) then
+						if (thistype.firstColumnExists()) then
+							set column = 1
+						else
+							set column = 0
+						endif
+						set thistype.m_experienceBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_experienceLength, 0.0, true, 0.0, 0.0, 0, 0)
+						call thistype.m_experienceBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
+						call thistype.m_experienceBar[i].setAllIcons("Icons\\Interface\\Bars\\Purple.blp", true)
+						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_experienceBar[i].firstFreeField())
+						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
+						call MultiboardSetItemStyle(multiboardItem, false, true)
+						call MultiboardReleaseItem(multiboardItem)
+						//set separator icon
+						set multiboardItem = null
+					endif
 
-					set thistype.m_hitPointsBar[i] = AMultiboardBar.create(thistype.m_multiboard, thistype.m_experienceBar[i].firstFreeField() + 1, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
-					call thistype.m_hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-					call thistype.m_hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\Green.blp", true)
+					if (thistype.m_hitPointsLength > 0) then
+						if (thistype.m_experienceLength > 0) then
+							set column = thistype.m_experienceBar[i].firstFreeField() + 1
+						elseif (thistype.firstColumnExists()) then
+							set column = 1
+						else
+							set column = 0
+						endif
+
+						set thistype.m_hitPointsBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_hitPointsLength, 0.0, true, 0.0, 0.0, 0, 0)
+						call thistype.m_hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
+						call thistype.m_hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\Green.blp", true)
+						
+						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_hitPointsBar[i].firstFreeField())
+						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
+						call MultiboardSetItemStyle(multiboardItem, false, true)
+						call MultiboardReleaseItem(multiboardItem)
+						//set separator icon
+						set multiboardItem = null
+					endif
+
+					if (thistype.m_manaLength > 0) then
+						if (thistype.m_hitPointsLength > 0) then
+							set column = thistype.m_hitPointsBar[i].firstFreeField() + 1
+						elseif (thistype.m_experienceLength > 0) then
+							set column = thistype.m_experienceBar[i].firstFreeField() + 1
+						elseif (thistype.firstColumnExists()) then
+							set column = 1
+						else
+							set column = 0
+						endif
+
+						set thistype.m_manaBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
+						call thistype.m_manaBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
+						call thistype.m_manaBar[i].setAllIcons("Icons\\Interface\\Bars\\Blue.blp", true)
+					endif
 					
-					set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_hitPointsBar[i].firstFreeField())
-					//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
-					call MultiboardSetItemStyle(multiboardItem, false, true)
-					call MultiboardReleaseItem(multiboardItem)
-					//set separator icon
-					set multiboardItem = null
-
-					set thistype.m_manaBar[i] = AMultiboardBar.create(thistype.m_multiboard, thistype.m_hitPointsBar[i].firstFreeField() + 1, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
-					call thistype.m_manaBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-					call thistype.m_manaBar[i].setAllIcons("Icons\\Interface\\Bars\\Blue.blp", true)
 					set thistype.m_maxPlayers = i + 1
 				endif
 				set i = i + 1
@@ -145,13 +214,18 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 		* Call this AFTER character creation/character class selection
 		* @param refreshRate Should be bigger than 0.0.
 		*/
-		public static method init takes real refreshRate, integer barLength, string textTitle, string textLevel, string textLeftGame returns nothing
+		public static method init takes real refreshRate, boolean showPlayerName, boolean showUnitName, boolean showLevel, integer experienceLength, integer hitPointsLength, integer manaLength, string textTitle, string textLevel, string textLeftGame returns nothing
 			//static start members
 			set thistype.m_refreshRate = refreshRate
 			debug if (refreshRate <= 0) then
 				debug call thistype.staticPrint("Refresh rate is <= 0")
 			debug endif
-			set thistype.m_barLength = barLength
+			set thistype.m_showPlayerName = showPlayerName
+			set thistype.m_showUnitName = showUnitName
+			set thistype.m_showLevel = showLevel
+			set thistype.m_experienceLength = experienceLength
+			set thistype.m_hitPointsLength = hitPointsLength
+			set thistype.m_manaLength = manaLength
 			set thistype.m_textTitle = textTitle
 			set thistype.m_textLevel = textLevel
 			set thistype.m_textLeftGame = textLeftGame
@@ -186,6 +260,24 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 		public static method minimize takes nothing returns nothing
 			call MultiboardMinimize(thistype.m_multiboard, true)
 			call DisableTrigger(thistype.m_refreshTrigger)
+		endmethod
+
+		private static method firstColumnExists takes nothing returns boolean
+			return thistype.m_showPlayerName or thistype.m_showUnitName or thistype.m_showLevel
+		endmethod
+
+		private static method firstColumnString takes ACharacter character returns string
+			local string text = ""
+			if (thistype.m_showPlayerName) then
+				set text = GetModifiedPlayerName(character.user())
+			endif
+			if (thistype.m_showUnitName) then
+				set text = text + " [" + GetUnitName(character.unit()) + "]"
+			endif
+			if (thistype.m_showLevel) then
+				set text = text + " - " + thistype.m_textLevel + " " + I2S(GetHeroLevel(character.unit()))
+			endif
+			return text
 		endmethod
 	endstruct
 

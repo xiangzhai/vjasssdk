@@ -1,3 +1,16 @@
+2009-12-04 Tamino Dauth <tamino@cdauth.de>
+* Added file "doc/tutorials/de/Ebenen.j".
+* Added file "src/Core/General/Struct List.j".
+
+2009-11-27 Tamino Dauth <tamino@cdauth.de>
+* Added struct ALayer to world system.
+
+2009-11-26 Tamino Dauth <tamino@cdauth.de>
+* Added methods suspendExperience and suspendExperienceForAll to struct ACharacter.
+* Added more parameters to method init of struct ACharactersScheme.
+* Revised struct ACharactersScheme.
+* Revised struct AVector3.
+
 2009-11-22 Tamino Dauth <tamino@cdauth.de>
 * Renamed terrain textures.
 

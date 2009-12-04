@@ -53,7 +53,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		public method length takes nothing returns real
-			return SquareRoot((this.m_x * this.m_x) + (this.m_y * this.m_y) + (this.m_z * this.m_z))
+			return SquareRoot(Pow(this.m_x, 2.0) + Pow(this.m_y, 2.0) + Pow(this.m_z, 2.0))
 		endmethod
 
 		/// Copys all data from vector @param vector.
@@ -88,7 +88,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/// Multiplies all values with the value of @param factor.
-		/// Ist der Betrag des Wertes grer oder gleich 1 oder kleiner als 0, so verlängert sich der Vektor.
+		/// Ist der Betrag des Wertes größer oder gleich 1 oder kleiner als 0, so verlängert sich der Vektor.
 		/// Anderenfalls wird der Vektor kürzer.
 		public method scale takes real factor returns nothing
 			set this.m_x = this.m_x * factor
@@ -106,7 +106,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/// Projects vector @param vector.
-		/// Passt die Richtung des Vektors "this" an die Richtung des Vektors "vector" an ohne dabei die Länge des Vektors "this" zu verändern. 
+		/// Passt die Richtung des Vektors an die Richtung des Vektors @param vector an ohne dabei die Länge des Vektors zu verändern. 
 		public method project takes thistype vector returns nothing
 			local real factor = this.length() / vector.length()
 			set this.m_x = vector.m_x * factor
@@ -123,10 +123,23 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 
-		// Gets the normal vector of the terrain at given coordinates. @param sampleRadius defines
-		// how far apart the reference points will be, if they are further apart, the result will
-		// be an impression of smoother terrain; normaly the value should be between 0 and 128.
-		/// @todo Not tested yet.
+		/**
+		* Sets vector's values to terrain point with x value @param x and y value @param y.
+		* Z value is calculated automatically by using function @function GetTerrainZ.
+		* @author Tamino Dauth
+		*/
+		public method terrainPoint takes real x, real y returns nothing
+			set this.m_x = x
+			set this.m_y = y
+			set this.m_z = GetTerrainZ(x, y)
+		endmethod
+
+		/**
+		* Gets the normal vector of the terrain at given coordinates. @param sampleRadius defines
+		* how far apart the reference points will be, if they are further apart, the result will
+		* be an impression of smoother terrain; normaly the value should be between 0 and 128.
+		* @todo Not tested yet.
+		*/
 		public method terrainNormal takes real x, real y, real sampleRadius returns nothing
 			local real array z
 			local thistype vectorX = thistype.create(0.0, 0.0, 0.0)
@@ -144,13 +157,10 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			//set VectorY.X = 0.00
 			set vectorY.m_y = (2.0 * sampleRadius)
 			set vectorY.m_z =  (z[3] - z[2])
-			//Add
 			call vectorX.add(vectorY)
-			//Copy
-			call this.copy(vectorX)
-			//Destroy
-			call thistype.destroy(vectorX)
 			call thistype.destroy(vectorY)
+			call this.copy(vectorX)
+			call thistype.destroy(vectorX)
 		endmethod
 
 		public static method create takes real x, real y, real z returns thistype
@@ -160,6 +170,26 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_y = y
 			set this.m_z = z
 
+			return this
+		endmethod
+
+		/**
+		* @see Vector3.terrainNormal
+		* @author Tamino Dauth
+		*/
+		public static method createOnTerrain takes real x, real y returns thistype
+			local thistype this = thistype.allocate()
+			call this.terrainPoint(x, y)
+			return this
+		endmethod
+
+		/**
+		* @see Vector3.terrainNormal
+		* @author Tamino Dauth
+		*/
+		public static method createOnTerrainNormal takes real x, real y, real sampleRadius returns thistype
+			local thistype this = thistype.allocate()
+			call this.terrainNormal(x, y, sampleRadius)
 			return this
 		endmethod
 

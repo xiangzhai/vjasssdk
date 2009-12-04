@@ -2,7 +2,7 @@ library ALibraryCoreMathsReal
 
 	/**
 	* @author WaterKnight
-	* @source http://www.inwarcraft.de/
+	* @link http://www.inwarcraft.de/
 	* Siehe RoundTo.
 	*/
 	private function RoundToGetDifference takes real dividend, real divisor returns real
@@ -30,7 +30,7 @@ library ALibraryCoreMathsReal
 
 	/**
 	* @author Shadow1500
-	* @source http://www.hiveworkshop.com/
+	* @link http://www.hiveworkshop.com/
 	* @return Returns the height.
 	*/
 	function JumpParabola takes real distance, real maxDistance, real curve returns real
@@ -53,8 +53,9 @@ library ALibraryCoreMathsReal
 
 	/**
 	* Called ALog since RtC has its own Log function.
+	* @see Log, Logarithm
 	* @author Vexorian
-	* @source http://www.wc3campaigns.net/
+	* @link http://www.wc3campaigns.net/
 	*/
 	function ALog takes real x, integer iterations returns real
 		local real min = -88.0
@@ -75,8 +76,9 @@ library ALibraryCoreMathsReal
 	endfunction
 
 	/**
+	* @see Log, ALog
 	* @author Vexorian
-	* @source http://www.wc3campaigns.net/
+	* @link http://www.wc3campaigns.net/
 	*/
 	function Logarithm takes real base, real x, integer iterations returns real
 		local real min = -88.0

@@ -1,7 +1,7 @@
 library ALibraryCoreEnvironmentTerrainFog
 
 	/// @author dataangel
-	/// @source http://www.wc3jass.com/
+	/// @link http://www.wc3jass.com/
 	/// @state Did not test desync yet.
 	function ResetTerrainFogForPlayer takes player usedPlayer returns nothing
 		local player localPlayer = GetLocalPlayer()

@@ -1,3 +1,9 @@
+2009-12-04 Tamino Dauth <tamino@cdauth.de>
+* Do some benchmarks with AVector and AList ...
+
+2009-11-21 Tamino Dauth <tamino@cdauth.de>
+* Water files in directory "Doodads..." of archive "Ambient" should be moved into "Models/Ambient.." and added for "Die Macht des Feuers" separated.
+
 2009-11-20 Tamino Dauth <tamino@cdauth.de>
 * Files "archives/Creatures/Models/Creatures/Humans/Samureiausbilder.mdx" and "archives/Creatures/Models/Creatures/Humans/Samureiausbilder_Portrait.mdx" miss file "Textures/HeroMusashMiyamoto".
 * Files "archives/Creatures/Models/Creatures/Humans/GepanzerterSamurai.mdx" misses file "Textures/Creatures/Humans/GepanzerterSamurai/Harquebus.blp".
@@ -24,11 +30,11 @@
 * Mehr generische Verlaufblockertexturen (unterschiedliche Größen) zur Verfügung stellen.
 
 2009-10-25 Tamino Dauth <tamino@cdauth.de>
-* AVideo methods which are using TriggerSleepAction calls maybe should be moved into functions.
+* DONE: AVideo methods which are using TriggerSleepAction calls maybe should be moved into functions.
 
 2009-10-16 Tamino Dauth <tamino@cdauth.de>
 * FIXED: Rechter Rucksackgegenstand wird nicht korrekt zurückgesetzt.
-* Report bugs to Vexorian:
+* DONE: Report bugs to Vexorian:
 	- static ifs not bla or not bla doesn't work
 	- comments after static ifs do not work
 	- import macros won't be ignored between static ifs

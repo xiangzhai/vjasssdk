@@ -90,25 +90,25 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	*/
 	struct AVideo
 		//static start members
-		private static integer divident
-		private static real filterDuration
-		private static real waitInterval
-		private static string textPlayerSkips
-		private static string textSkip
+		private static integer m_divident
+		private static real m_filterDuration
+		private static real m_waitInterval
+		private static string m_textPlayerSkips
+		private static string m_textSkip
 		//static members
-		private static real waitTime
-		public static thistype runningVideo /// Do not access.
-		private static boolean skipped
-		private static integer skippingPlayers
-		private static trigger skipTrigger
+		private static real m_waitTime
+		private static thistype m_runningVideo /// Do not access.
+		private static boolean m_skipped
+		private static integer m_skippingPlayers
+		private static trigger m_skipTrigger
 		private static AActorData m_actor //copy of first character
 		private static APlayerSelection array m_playerSelection[12] /// @todo bj_MAX_PLAYERS
 		private static boolean array m_playerHadDialog[12] /// @todo bj_MAX_PLAYERS
 		private static AIntegerVector m_actorData
 		//start members
-		private AVideoInitAction initAction
-		private AVideoPlayAction playAction
-		private AVideoStopAction stopAction
+		private AVideoInitAction m_initAction
+		private AVideoPlayAction m_playAction
+		private AVideoStopAction m_stopAction
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AVideo\"")
 
@@ -116,12 +116,12 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		
 		public method play takes nothing returns nothing
 			local force playersAll
-			debug if (thistype.runningVideo != 0) then
+			debug if (thistype.m_runningVideo != 0) then
 				debug call this.print("Another Video is already running.")
 			debug endif
 
-			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
-			call TriggerSleepAction(thistype.waitTime)
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
+			call TriggerSleepAction(thistype.m_waitTime)
 			/// @todo disable experience gain of all characters?
 			call thistype.savePlayerData()
 			call ClearSelection()
@@ -132,15 +132,15 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set playersAll = GetPlayersAll()
 			call CinematicModeExBJ(true, playersAll, 0.0)
 			set playersAll = null
-			set thistype.runningVideo = this
-			if (this.initAction != 0) then
-				call this.initAction.execute(this)
+			set thistype.m_runningVideo = this
+			if (this.m_initAction != 0) then
+				call this.m_initAction.execute(this)
 			endif
-			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
-			call TriggerSleepAction(thistype.waitTime)
-			call EnableTrigger(thistype.skipTrigger)
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
+			call TriggerSleepAction(thistype.m_waitTime)
+			call EnableTrigger(thistype.m_skipTrigger)
 			//call EnableUserControl(true) //otherwise we could not catch the press event (just the escape key)
-			call this.playAction.execute(this)
+			call this.m_playAction.execute(this)
 		endmethod
 
 		/// You have to call this method at the end of your video action.
@@ -148,10 +148,10 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		public method stop takes nothing returns nothing
 			local force playersAll
 			debug call Print("Stop!")
-			call DisableTrigger(thistype.skipTrigger) 
+			call DisableTrigger(thistype.m_skipTrigger) 
 			call EnableUserControl(false)
-			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
-			call TriggerSleepAction(thistype.waitTime)
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
+			call TriggerSleepAction(thistype.m_waitTime)
 			set playersAll = GetPlayersAll()
 			call CinematicModeExBJ(false, playersAll, 0.0)
 			call EnableUserControl(false)
@@ -164,33 +164,33 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 			call ACharacter.showAll(true)
 			call PauseAllUnits(false)
-			if (this.stopAction != 0) then
-				call this.stopAction.execute(this)
+			if (this.m_stopAction != 0) then
+				call this.m_stopAction.execute(this)
 			endif
-			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
-			call TriggerSleepAction(thistype.waitTime)
+			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
+			call TriggerSleepAction(thistype.m_waitTime)
 			call thistype.restorePlayerData()
 			call EnableUserControl(true)
 
 			call ACharacter.setAllMovable(true)
-			set thistype.runningVideo = 0
-			set thistype.skipped = false
-			set thistype.skippingPlayers = 0
+			set thistype.m_runningVideo = 0
+			set thistype.m_skipped = false
+			set thistype.m_skippingPlayers = 0
 			//No camera pan! Call it manually, please.
 		endmethod
 
 		public static method create takes AVideoInitAction initAction, AVideoPlayAction playAction, AVideoStopAction stopAction returns thistype
 			local thistype this = thistype.allocate()
 			//start members
-			set this.initAction = initAction
-			set this.playAction = playAction
-			set this.stopAction = stopAction
+			set this.m_initAction = initAction
+			set this.m_playAction = playAction
+			set this.m_stopAction = stopAction
 
 			return this
 		endmethod
 		
 		private static method triggerConditionSkip takes nothing returns boolean
-			return thistype.runningVideo != 0
+			return thistype.m_runningVideo != 0
 		endmethod
 
 		private static method triggerActionSkip takes nothing returns nothing
@@ -198,8 +198,8 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			local player triggerPlayer = GetTriggerPlayer()
 			local player user
 			local integer skipablePlayers = 0
-			set thistype.skippingPlayers = thistype.skippingPlayers + 1
-			call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, StringArg(thistype.textPlayerSkips, GetPlayerName(triggerPlayer))) //AClassCharacterCharacter, ALibraryStringConversion
+			set thistype.m_skippingPlayers = thistype.m_skippingPlayers + 1
+			call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, StringArg(thistype.m_textPlayerSkips, GetPlayerName(triggerPlayer)))
 			set triggerPlayer = null
 
 			//Jedes Mal neu berechnen, da Spieler as Spiel auch verlassen haben könnten.
@@ -207,18 +207,18 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
 					set user = Player(i)
-					if (IsPlayerPlayingUser(user)) then //ALibraryGeneralPlayer
+					if (IsPlayerPlayingUser(user)) then
 						set skipablePlayers = skipablePlayers + 1
 					endif
 					set user = null
 				set i = i + 1
 			endloop
 
-			if (thistype.skippingPlayers >= skipablePlayers / 2) then
-				set thistype.skipped = true
-				call DisableTrigger(thistype.skipTrigger) //do not allow skipping at twice!
-				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.textSkip)
-				call thistype.runningVideo.stop()
+			if (thistype.m_skippingPlayers >= skipablePlayers / 2) then
+				set thistype.m_skipped = true
+				call DisableTrigger(thistype.m_skipTrigger) //do not allow skipping at twice!
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.m_textSkip)
+				call thistype.m_runningVideo.stop()
 			endif
 		endmethod
 
@@ -229,22 +229,22 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			local conditionfunc conditionFunction
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
-			set thistype.skipTrigger = CreateTrigger()
-			call DisableTrigger(thistype.skipTrigger) //will be enabled by first running video
+			set thistype.m_skipTrigger = CreateTrigger()
+			call DisableTrigger(thistype.m_skipTrigger) //will be enabled by first running video
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
 				if (IsPlayerPlayingUser(user)) then
-					set triggerEvent = TriggerRegisterKeyEventForPlayer(user, thistype.skipTrigger, AKeyEscape, true) //ALibraryInterfaceMisc, important: If it is the escape key it is the same key as in the character selection.
+					set triggerEvent = TriggerRegisterKeyEventForPlayer(user, thistype.m_skipTrigger, AKeyEscape, true) //important: If it is the escape key it is the same key as in the character selection.
 					set triggerEvent = null
 				endif
 				set user = null
 				set i = i + 1
 			endloop
 			set conditionFunction = Condition(function thistype.triggerConditionSkip)
-			set triggerCondition = TriggerAddCondition(thistype.skipTrigger, conditionFunction)
-			set triggerAction = TriggerAddAction(thistype.skipTrigger, function thistype.triggerActionSkip)
+			set triggerCondition = TriggerAddCondition(thistype.m_skipTrigger, conditionFunction)
+			set triggerAction = TriggerAddAction(thistype.m_skipTrigger, function thistype.triggerActionSkip)
 			set triggerEvent = null
 			set conditionFunction = null
 			set triggerCondition = null
@@ -256,16 +256,16 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			local integer i
 			local player user
 			//static start members
-			set thistype.divident = divident
-			set thistype.filterDuration = filterDuration
-			set thistype.waitInterval = waitInterval
-			set thistype.textPlayerSkips = textPlayerSkips
-			set thistype.textSkip = textSkip
+			set thistype.m_divident = divident
+			set thistype.m_filterDuration = filterDuration
+			set thistype.m_waitInterval = waitInterval
+			set thistype.m_textPlayerSkips = textPlayerSkips
+			set thistype.m_textSkip = textSkip
 			//static members
-			set thistype.waitTime = filterDuration / 2
-			set thistype.runningVideo = 0
-			set thistype.skipped = false
-			set thistype.skippingPlayers = 0
+			set thistype.m_waitTime = filterDuration / 2
+			set thistype.m_runningVideo = 0
+			set thistype.m_skipped = false
+			set thistype.m_skippingPlayers = 0
 			set thistype.m_actor = 0
 			set thistype.m_actorData = AIntegerVector.create()
 			set i = 0
@@ -283,8 +283,8 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 		
 		private static method destroySkipTrigger takes nothing returns nothing
-			call AHashTable.global().destroyTrigger(thistype.skipTrigger)
-			set thistype.skipTrigger = null
+			call AHashTable.global().destroyTrigger(thistype.m_skipTrigger)
+			set thistype.m_skipTrigger = null
 		endmethod
 		
 		public static method cleanUp takes nothing returns nothing
@@ -307,18 +307,22 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		
 		//static members
 
-		public static method wasSkipped takes nothing returns boolean
-			return thistype.skipped
+		public static method runningVideo takes nothing returns thistype
+			return thistype.m_runningVideo
+		endmethod
+		
+		public static method skipped takes nothing returns boolean
+			return thistype.m_skipped
 		endmethod
 		
 		//static methods
 		
 		public static method isRunning takes nothing returns boolean
-			return thistype.runningVideo != 0
+			return thistype.m_runningVideo != 0
 		endmethod
 		
 		public static method actor takes nothing returns unit
-			debug if (thistype.runningVideo == 0) then
+			debug if (thistype.m_runningVideo == 0) then
 				debug call thistype.staticPrint("Running video is 0.")
 			debug endif
 			if (thistype.m_actor == 0) then
@@ -415,33 +419,38 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 	 endstruct
 	 
-	/// Waits until no video is running anymore.
-	/// @param interval Check interval.
+	/**
+	* Waits until no video is running anymore.
+	* @param interval Check interval.
+	*/
 	function waitForVideo takes real interval returns nothing
 		loop
-			exitwhen (AVideo.runningVideo == 0)
+			exitwhen (AVideo.runningVideo() == 0)
 			//call TriggerSleepAction(interval)
 			call PolledWait(interval) // synchron waiting, important for multiplayer games
 		endloop
 	endfunction
 	
-	/// Waits @param seconds seconds in video.
-	/// Note that this function is like @function PolledWait since it has to be synchronos
-	/// @return Returns true if video was skipped
-	/// @see PolledWait
+	/**
+	* Waits @param seconds seconds in video.
+	* Note that this function is like @function PolledWait since it has to be synchronos
+	* @return Returns true if video was skipped
+	* @see PolledWait
+	*/
 	function wait takes real seconds returns boolean
 		local timer whichTimer = CreateTimer()
 		call TimerStart(whichTimer, seconds, false, null)
+		set seconds = TimerGetRemaining(whichTimer) 
 		loop
-			set seconds = TimerGetRemaining(whichTimer) seconds - AVideo.waitInterval()
+			set seconds = seconds - AVideo.waitInterval()
 			exitwhen (seconds <= 0.0)
-			if (thistype.skipped) then
+			if (AVideo.skipped()) then
 				call PauseTimer(whichTimer)
 				call DestroyTimer(whichTimer)
 				set whichTimer = null
 				return true
 			endif
-			call TriggerSleepAction(thistype.waitInterval)
+			call TriggerSleepAction(AVideo.waitInterval())
 		endloop
 		call PauseTimer(whichTimer)
 		call DestroyTimer(whichTimer)

@@ -348,6 +348,10 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			endloop
 		endmethod
 
+		public method suspendExperience takes boolean suspend returns nothing
+			call SuspendHeroXP(this.m_unit, suspend)
+		endmethod
+
 		//methods
 		
 		/**
@@ -992,6 +996,21 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				set user = Player(i)
 				if (thistype.playerCharacter(user) != 0) then
 					call SetUnitToRandomPointOnRect(thistype.playerCharacter(user).unit(), whichRect)
+				endif
+				set user = null
+				set i = i + 1
+			endloop
+		endmethod
+
+		public static method suspendExperienceForAll takes boolean suspend returns nothing
+			local integer i
+			local player user
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (thistype.playerCharacter(user) != 0) then
+					call thistype.playerCharacter(user).suspendExperience(suspend)
 				endif
 				set user = null
 				set i = i + 1
