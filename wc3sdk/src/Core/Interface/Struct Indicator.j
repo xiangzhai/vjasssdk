@@ -150,7 +150,7 @@ library AStructCoreInterfaceIndicator requires optional ALibraryCoreDebugMisc, A
 			else
 				call this.enable(false)
 			endif
-        	set triggeringTrigger = null
+			set triggeringTrigger = null
 		endmethod
 
 		private method reset takes nothing returns nothing
@@ -165,7 +165,7 @@ library AStructCoreInterfaceIndicator requires optional ALibraryCoreDebugMisc, A
 
 		private method createRefreshTrigger takes nothing returns nothing
 			local event triggerEvent
-            local triggeraction triggerAction
+			local triggeraction triggerAction
 			set this.m_refreshTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterTimerEvent(this.m_refreshTrigger, this.m_rate, true)
 			set triggerAction = TriggerAddAction(this.m_refreshTrigger, function AIndicator.triggerActionIndicateObject)

@@ -1,3 +1,14 @@
+2009-12-06 Tamino Dauth <tamino@cdauth.de>
+* Revised struct AMissile.
+
+2009-12-05 Tamino Dauth <tamino@cdauth.de>
+* Fixed various bugs of struct AVector3.
+* Added methods setItem, setDestructable, setNorm, norm, scalarProduct, scalarProduct2 and sum to struct AVector3.
+* Added functions PlaySoundFile, PlaySoundFileAt and PlaySoundFileAtForPlayer.
+* Renamed function PlaySoundPathForPlayer to PlaySoundFileForPlayer.
+* Renamed function PreloadSoundPath to PreloadSoundFile.
+* Revised struct AMissile.
+
 2009-12-04 Tamino Dauth <tamino@cdauth.de>
 * Added file "doc/tutorials/de/Ebenen.j".
 * Added file "src/Core/General/Struct List.j".

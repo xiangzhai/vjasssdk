@@ -45,7 +45,7 @@ library ALibraryCoreMathsReal
 	* As a side note, if x < 0 or x > d then this function will return negative values.
 	* @author moyack
 	* @author Spec
-	* @source http://www.wc3c.net/showthread.php?t=102077
+	* @link http://www.wc3c.net/showthread.php?t=102077
 	*/
 	function ParabolaZ takes real maxHeight, real distance, real x returns real
 		return (4 * maxHeight / distance) * (distance - x) * (x / distance)

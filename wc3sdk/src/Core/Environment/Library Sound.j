@@ -1,43 +1,77 @@
 library ALibraryCoreEnvironmentSound
 
 	/**
-	* Plays a sound for the player @param user.
+	* Plays sound @param whichSound for player @param whichPlayer.
 	* @author Tamino Dauth
-	* @param user Player who the sound is played for.
-	* @param usedSound Played sound.
+	* @param whichPlayer Player who the sound is played for.
+	* @param whichSound Played sound.
 	*/
-	function PlaySoundForPlayer takes player user, sound usedSound returns nothing
+	function PlaySoundForPlayer takes player whichPlayer, sound whichSound returns nothing
 		local player localPlayer = GetLocalPlayer()
-		if (user == localPlayer) then
-			call StartSound(usedSound)
+		if (whichPlayer == localPlayer) then
+			call StartSound(whichSound)
 		endif
 		set localPlayer = null	
 	endfunction
 
-	/// Plays a sound for the player user by its file path.
-	/// Note that sound paths has to be preloaded before they can be played.
-	/// Otherwise the sound will just be played for the second time.
-	/// @author Tamino Dauth
-	/// @param user Player who can hear the sound.
-	/// @param soundPath Played sound file.
-	function PlaySoundPathForPlayer takes player user, string soundPath returns nothing
-		local sound usedSound = CreateSound(soundPath, false, false, true, 12700, 12700, "")
-		call PlaySoundForPlayer(user, usedSound)
-		call KillSoundWhenDone(usedSound)
-		set usedSound = null 
+	/**
+	* Similar to function @function PlaySound.
+	*/
+	function PlaySoundFile takes string filePath returns nothing
+		call PlaySound(filePath)
 	endfunction
 
-	/// Preloads a sound file by its path.
-	/// Note that sound paths has to be preloaded before they can be played.
-	/// Otherwise the sound will just be played for the second time.
-	/// @author Tamino Dauth
-	/// @param soundPath Preloaded sound file.
-	function PreloadSoundPath takes string soundPath returns nothing
-		local sound usedSound = CreateSound(soundPath, false, false, false, 10, 10, "")
-		call SetSoundVolume(usedSound, 0)
-		call StartSound(usedSound)
-		call KillSoundWhenDone(usedSound)
-		set usedSound = null 
+	/**
+	* Plays sound with file path @param filePath at position with coordinates @param x, @param y, @param z.
+	* Note that sound paths has to be preloaded before they can be played first time.
+	* @author Tamino Dauth
+	* @param filePath Path of the played sound file.
+	* @param x x coordinate.
+	* @param y y coordinate.
+	* @param x z coordinate.
+	*/
+	function PlaySoundFileAt takes string filePath, real x, real y, real z returns nothing
+		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
+		call SetSoundPosition(whichSound, x, y, z)
+		call StartSound(whichSound)
+		call KillSoundWhenDone(whichSound)
+		set whichSound = null 
+	endfunction
+
+	/**
+	* Plays sound with file path @param filePath for player @param whichPlayer by its file path.
+	* Note that sound paths has to be preloaded before they can be played first time.
+	* @author Tamino Dauth
+	* @param whichPlayer Player who the sound is played for.
+	* @param filePath Path of the played sound file.
+	*/
+	function PlaySoundFileForPlayer takes player whichPlayer, string filePath returns nothing
+		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
+		call PlaySoundForPlayer(whichPlayer, whichSound)
+		call KillSoundWhenDone(whichSound)
+		set whichSound = null 
+	endfunction
+
+	function PlaySoundFileAtForPlayer takes player whichPlayer, string filePath, real x, real y, real z returns nothing
+		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
+		call SetSoundPosition(whichSound, x, y, z)
+		call PlaySoundForPlayer(whichPlayer, whichSound)
+		call KillSoundWhenDone(whichSound)
+		set whichSound = null 
+	endfunction
+
+	/**
+	* Preloads sound file with file path @param filePath.
+	* Note that sound files has to be preloaded before they can be played first time.
+	* @author Tamino Dauth
+	* @param filePath Preloaded sound file.
+	*/
+	function PreloadSoundFile takes string filePath returns nothing
+		local sound whichSound = CreateSound(filePath, false, false, false, 10, 10, "")
+		call SetSoundVolume(whichSound, 0)
+		call StartSound(whichSound)
+		call KillSoundWhenDone(whichSound)
+		set whichSound = null 
 	endfunction
 
 endlibrary

@@ -1,3 +1,6 @@
+2009-12-05 Tamino Dauth <tamino@cdauth.de>
+* Maybe you should use vectors for struct AMissile. Test missile collision.
+
 2009-12-04 Tamino Dauth <tamino@cdauth.de>
 * Do some benchmarks with AVector and AList ...
 

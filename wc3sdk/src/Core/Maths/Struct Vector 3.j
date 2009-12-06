@@ -46,6 +46,18 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_z = GetUnitZ(usedUnit)
 		endmethod
 
+		public method setItem takes item whichItem returns nothing
+			set this.m_x = GetItemX(whichItem)
+			set this.m_y = GetItemY(whichItem)
+			set this.m_z = GetItemZ(whichItem)
+		endmethod
+
+		public method setDestructable takes destructable whichDestructable returns nothing
+			set this.m_x = GetDestructableX(whichDestructable)
+			set this.m_y = GetDestructableY(whichDestructable)
+			set this.m_z = GetDestructableZ(whichDestructable)
+		endmethod
+
 		//methods
 
 		public method setLength takes real length returns nothing
@@ -54,6 +66,20 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 
 		public method length takes nothing returns real
 			return SquareRoot(Pow(this.m_x, 2.0) + Pow(this.m_y, 2.0) + Pow(this.m_z, 2.0))
+		endmethod
+
+		/**
+		* Similar to @method AVector3.setLength.
+		*/
+		public method setNorm takes real norm returns nothing
+			call this.setLength(norm)
+		endmethod
+
+		/**
+		* Similar to @method AVector3.length.
+		*/
+		public method norm takes nothing returns real
+			return this.length()
 		endmethod
 
 		/// Copys all data from vector @param vector.
@@ -81,32 +107,49 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_z = this.m_z - vector.m_z
 		endmethod
 
-		/// Multiplies each value from vector @param vector and returns the sum of all results.
-		/// Ist das Ergebnis 0, so entsteht ein rechter Winkel, wenn man die beiden Vektoren mit ihren Spitzen aneinander legt.
+		/**
+		* Multiplies each value from vector @param vector and returns the sum of all results.
+		* Doesn't change any vector data!
+		* If the result is 0 there would be a right angle if you put both vectors together.
+		* If the result is bigger than 0 there would be an acute angle if you put both vectors together.
+		* If the result is smaller than 0 there would be an obtuse angle if you put both vectors together.
+		*/
 		public method multiply takes thistype vector returns real
 			return ((this.m_x * vector.m_x) + (this.m_y * vector.m_y) + (this.m_z * vector.m_z))
 		endmethod
 
-		/// Multiplies all values with the value of @param factor.
-		/// Ist der Betrag des Wertes größer oder gleich 1 oder kleiner als 0, so verlängert sich der Vektor.
-		/// Anderenfalls wird der Vektor kürzer.
+		/**
+		* Similar to @method AVector3.multiply.
+		*/
+		public method scalarProduct takes thistype vector returns real
+			return this.multiply(vector)
+		endmethod
+
+		/**
+		* Multiplies all values with the value of @param factor.
+		* If @param factor is smaller than 1 and bigger or equal to 0 the vector will shorten otherwise it will lengthen.
+		*/
 		public method scale takes real factor returns nothing
 			set this.m_x = this.m_x * factor
 			set this.m_y = this.m_y * factor
 			set this.m_z = this.m_z * factor
 		endmethod
 
-		/// Adds scaled vector @param vector which is scaled by value @param factor.
-		/// Note that vector @param vector won't be changed!
-		/// @author peq
+		/**
+		* Adds scaled vector @param vector which is scaled by value @param factor.
+		* Note that vector @param vector won't be changed!
+		* @author peq
+		*/
 		public method addScaled takes thistype vector, real factor returns nothing
 			set this.m_x = this.m_x + vector.m_x * factor
 			set this.m_y = this.m_y + vector.m_y * factor
 			set this.m_z = this.m_z + vector.m_z * factor
 		endmethod
 
-		/// Projects vector @param vector.
-		/// Passt die Richtung des Vektors an die Richtung des Vektors @param vector an ohne dabei die Länge des Vektors zu verändern. 
+		/**
+		* Projects vector on vector @param vector.
+		* Doesn't change the length.
+		*/
 		public method project takes thistype vector returns nothing
 			local real factor = this.length() / vector.length()
 			set this.m_x = vector.m_x * factor
@@ -114,14 +157,16 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_z = vector.m_z * factor
 		endmethod
 
-		/// Rotates a vector through @param angle.
-		/// Only x and y will be changed. Rotation on z axis is not possible yet.		
+		/**
+		* Rotates a vector through @param angle.
+		* Only x and y will be changed. Rotation on z axis is not possible yet.
+		*/
 		public method rotate takes real angle returns nothing
-			local real beta = (Asin(this.m_y / this.length()) - (angle * bj_DEGTORAD))
-			set this.m_x = this.length() * Cos(beta)
-			set this.m_y = this.length() * Sin(beta)
+			local real length = this.length()
+			local real beta = (Asin(this.m_y / length) - (angle * bj_DEGTORAD))
+			set this.m_x = length * Cos(beta)
+			set this.m_y = length * Sin(beta)
 		endmethod
-
 
 		/**
 		* Sets vector's values to terrain point with x value @param x and y value @param y.
@@ -174,7 +219,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* @see Vector3.terrainNormal
+		* @see AVector3.terrainNormal
 		* @author Tamino Dauth
 		*/
 		public static method createOnTerrain takes real x, real y returns thistype
@@ -184,7 +229,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* @see Vector3.terrainNormal
+		* @see AVector3.terrainNormal
 		* @author Tamino Dauth
 		*/
 		public static method createOnTerrainNormal takes real x, real y, real sampleRadius returns thistype
@@ -193,38 +238,47 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			return this
 		endmethod
 
-		/// Returns the product of the two vectors @param vector0 and @vector1 in a new vector instance.
-		public static method product takes thistype vector0, thistype vector1 returns thistype
-			local thistype result = thistype.create(0.0, 0.0, 0.0)
-			call result.copy(vector0)
+		/**
+		* @return Returns sum of the two vectors @param vector0 and @param vector1 in a new vector instance.
+		*/
+		public static method sum takes thistype vector0, thistype vector1 returns thistype
+			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
 			call result.add(vector1)
 			return result
 		endmethod
 
-		/// Returns the difference of the two vectors @param vector0 and @vector1 in a new vector instance.
+		/**
+		* @return Returns difference of the two vectors @param vector0 and @param vector1 in a new vector instance.
+		*/
 		public static method difference takes thistype vector0, thistype vector1 returns thistype
-			local thistype result = thistype.create(0.0, 0.0, 0.0)
-			call result.copy(vector0)
+			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
 			call result.subtract(vector1)
 			return result
 		endmethod
 
-		/// Returns the multiplication of the two vectors @param vector0 and @vector1 in a new vector instance.
-		/// @author Tamino Dauth
-		/// @state untested
-		public method multiplication takes thistype vector0, thistype vector1 returns thistype
-			local thistype result = thistype.create(0.0, 0.0, 0.0)
-			call result.copy(vector0)
-			call result.multiply(vector1)
-			return result
+		/**
+		* @return Returns scalar product of the two vectors @param vector0 and @param vector1.
+		* @author Tamino Dauth
+		* @state untested
+		*/
+		public static method multiplication takes thistype vector0, thistype vector1 returns real
+			return result = vector0.multiply(vector1)
 		endmethod
 
-		/// Returns the projection of the two vectors @param vector0 and @vector1 in a new vector instance.
-		/// @author Tamino Dauth
-		/// @state untested
+		/**
+		* @see AVector3.multiplication
+		*/
+		public static method scalarProduct2 takes thistype vector0, thistype vector1 returns real
+			return thistype.multiplication(vector0, vector1)
+		endmethod
+
+		/**
+		* @return Returns projection of the two vectors @param vector0 and @vector1 in a new vector instance.
+		* @author Tamino Dauth
+		* @todo untested
+		*/
 		public method projection takes thistype vector0, thistype vector1 returns thistype
-			local thistype result = thistype.create(0.0, 0.0, 0.0)
-			call result.copy(vector0)
+			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
 			call result.project(vector1)
 			return result
 		endmethod
