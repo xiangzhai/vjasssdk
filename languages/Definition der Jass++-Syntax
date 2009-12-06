@@ -1,8 +1,6 @@
 Schlüsselwörter:
 if, else, switch, case, break, continue, default, while, do, for
-native, init, threaded, debug, template, package, private, protected, public, enum, class, this, self, super, new, delete, copy, init, big
-execute, executewait, evaluate
-executions, evaluations
+native, init, threaded, debug, template, package, private, protected, public, enum, class, this, self, super, new, delete, copy, init, big, virtual, static, execute, executewait, evaluate, executions, evaluations
 
 Möglicher Zusatz:
 executefast ermöglicht den Aufruf mit ExecuteFunc und Parameterspeicherung.
@@ -44,16 +42,6 @@ integer tes[2] = { 10, 2 };
 
 Es können mehrdimensionale Arrays deklariert werden:
 integer test[2][2] = { { 10, 5 }, { 2, 4 } };
-
-Dabei muss die Dimensionsgröße nicht angegeben werden, falls das Array als "big" deklariert wurde:
-big integer test[][] = { { 10, 34, 2, 34 }, { 32, 2 } };
-ergibt
-test[0][0] == 10
-test[0][1] == 34
-test[0][2] == 2
-test[0][3] == 34
-test[1][0] == 32
-test[1][1] == 2
 
 Da ein Array in Warcraft 3 nur 8192 bzw. 8191 (wird im letzten Feld die Größe gespeichert?) haben kann, gibt es einen entsprechenden Compiler- bzw. Laufzeitfehler, wenn ein Zugriff diese Grenze überrschreitet.
 
@@ -198,6 +186,8 @@ template Templatename<Datentypparameter = [Standardargument] ...>
 }
 
 Vector<integer> myVector = new Vector<integer>;
+
+Der Template-Inhalt können Funktionen oder Klassen sein.
 
 Testblöcke:
 Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
