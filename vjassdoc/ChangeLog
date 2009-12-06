@@ -1,3 +1,7 @@
+2009-12-06 Tamino Dauth <tamino@cdauth.de>
+* Revised ebuild file.
+* Changed classes File and Vjassdoc and added static method Vjassdoc::supportsLanguage.
+
 2009-12-04 Tamino Dauth <tamino@cdauth.de>
 * Restructured the whole program, revised many classes and functions.
 * Added first implementation of -DHTML compilation flag support.

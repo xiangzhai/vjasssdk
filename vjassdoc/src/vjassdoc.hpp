@@ -37,9 +37,20 @@ class Parser;
 class Vjassdoc
 {
 	public:
+		enum Language
+		{
+			Jass,
+			Vjass,
+			Zinc,
+			Cjass,
+			Jasspp
+		};
+			
+	
 		static const char *version;
 		static const bool supportsDatabaseCreation;
 
+		static bool supportsLanguage(enum Language language);
 		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<boost::filesystem::path> optionImport, std::list<boost::filesystem::path> optionFiles, std::list<boost::filesystem::path> optionDatabases);
 		static void run();
 		static void clear();

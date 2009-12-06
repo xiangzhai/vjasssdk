@@ -35,7 +35,7 @@ class SyntaxError
 	
 		SyntaxError(class SourceFile *sourceFile, std::size_t line, const std::string &message);
 		class SourceFile* sourceFile() const;
-		unsigned int line() const;
+		std::size_t line() const;
 		std::string message() const;
 	
 	private:

@@ -8,11 +8,11 @@ HOMEPAGE="http://sourceforge.net/projects/vjasssdk/"
 #KEYWORDS="" #Unknown
 SLOT="0"
 LICENSE="GPL-2"
-#IUSE=""
+IUSE="sqlite kde"
 
 RDEPEND="
 	>=sys-devel/gettext-0.17
-    >=dev-libs/boost-1.39.0
+	>=dev-libs/boost-1.39.0
 	>=sys-libs/glibc-2.9_p20081201-r2
 	sqlite? (
 		>=dev-db/sqlite-3.6.13

@@ -65,6 +65,17 @@ std::list<boost::filesystem::path> Vjassdoc::m_optionImport = std::list<boost::f
 std::list<boost::filesystem::path> Vjassdoc::m_optionFiles = std::list<boost::filesystem::path>();
 std::list<boost::filesystem::path> Vjassdoc::m_optionDatabases = std::list<boost::filesystem::path>();
 
+bool Vjassdoc::supportsLanguage(enum Language language)
+{
+	switch (language)
+	{
+		case Vjassdoc::Cjass:
+			return false;
+	}
+	
+	return true;
+}
+
 void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<boost::filesystem::path> optionImport, std::list<boost::filesystem::path> optionFiles, std::list<boost::filesystem::path> optionDatabases)
 {
 	Vjassdoc::m_optionJass = optionJass;

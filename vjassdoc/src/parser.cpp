@@ -204,7 +204,7 @@ std::size_t Parser::parse(const boost::filesystem::path &path) throw (std::excep
 	class SourceFile *sourceFile = new SourceFile(path.filename(), path->string());
 	this->add(sourceFile);
 	File file;
-	std::size_t lines = file.parse(this, ifstream);
+	std::size_t lines = file.parse(this, sourceFile, ifstream);
 	ifstream.close();
 	
 	return lines;

@@ -29,7 +29,6 @@
 #include <boost/foreach.hpp>
 
 #include "file.hpp"
-#include "vjassdoc.hpp"
 #include "objects.hpp"
 #include "parser.hpp"
 #include "internationalisation.hpp"
@@ -39,101 +38,31 @@
 namespace vjassdoc
 {
 
-const char *File::expressionText[] =
-{
-	//Jass stand-alone expressions
-	"///", //This tool
-	"//",
-	"/**",
-	"*/",
-	"type",
-	"constant",
-	"native",
-	"function",
-	"endfunction",
-	"globals",
-	"endglobals",
-	"local",
-	"set",
-	"call",
-	"if",
-	"else",
-	"elseif",
-	"endif",
-	"return",
-	"loop",
-	"endloop",
-	"exitwhen",
-	//vJass stand-alone expressions
-	"//!",
-	"method", //Operator is not required because the syntax is "method operator..."
-	"endmethod", //Required for function blocks, there can not be custom types
-	"private",
-	"public",
-	"static",
-	"debug",
-	"keyword",
-	"library",
-	"library_once",
-	"endlibrary",
-	"scope",
-	"endscope",
-	"struct",
-	"endstruct",
-	"interface",
-	"endinterface",
-	"delegate",
-	"stub",
-	"module",
-	"endmodule",
-	"implement",
-	"hook",
-	"/*",
-	"*/",
-	"key",
-	//Jass none-start-line expressions
-	"nothing",
-	"takes",
-	"returns",
-	"extends",
-	"array",
-	//vJass none-start-line expressions
-	"import",
-	"zinc",
-	"vjass",
-	"dovjassinit",
-	"inject",
-	"endinject",
-	"novjass",
-	"endnovjass",
-	"zinc",
-	"endzinc",
-	"loaddata",
-	"external",
-	"textmacro",
-	"textmacro_once",
-	"endtextmacro",
-	"runtextmacro", //An instance of the macro
-	"requires",
-	"needs",
-	"uses",
-	"initializer",
-	"defaults",
-	"optional",
-	"super",
-	"thistype",
-	"operator",
-	"execute",
-	"evaluate"
-};
-
-File::File() : m_parser(0), m_notRequiredSpace(File::InvalidExpression), m_isInGlobals(false), m_isInTextMacro(false), m_isInLibrary(false), m_isInScope(false), m_isInInterface(false), m_isInStruct(false), m_isInModule(false), m_isInBlockComment(false), m_isInBlockDocComment(false), m_currentLine(0), m_currentDocComment(0), m_currentTextMacro(0),  m_currentLibrary(0), m_currentScope(0), m_currentInterface(0), m_currentStruct(0), m_currentModule(0), m_currentFunction(0), m_gotDocComment(false)
+File::File() : m_parser(0), m_parser(0), m_language(Vjassdoc::Jass), m_lines(0)
 {
 }
 
-std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
+std::size_t File::parse(class Parser *parser, std::istream &istream)
 {
 	this->m_parser = parser;
+	
+	istream.seekg(0, std::ios_base::end);
+	std::streampos position = ifstream.tellg();
+	istream.seekg(0);
+	char *bytes = new char[position + 3];
+	istream.read(bytes, position + 1);
+	bytes[position + 1] = YY_END_OF_BUFFER_CHAR;
+	bytes[position + 2] = YY_END_OF_BUFFER_CHAR;
+	YY_BUFFER_STATE buffer = yy_scan_bytes(bytes, position + 3);
+	
+	if (stateHandle == 0)
+		return 0;
+	
+	yy_switch_to_buffer(buffer);
+	//yy_delete_buffer(buffer);
+	delete[] bytes;
+	bytes = 0;
+	/*
 	std::string line, token, output;
 	std::string::size_type index;
 	File::Expression expression;
@@ -684,6 +613,7 @@ std::size_t File::parse(class Parser *parser, std::ifstream &ifstream)
 		}
 	}
 
+	*/
 	std::size_t lines = this->m_currentLine;
 	
 	// reset members
