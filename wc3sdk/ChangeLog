@@ -1,3 +1,6 @@
+2009-12-07 Tamino Dauth <tamino@cdauth.de>
+* Added functions IsTerrainDeepWater, IsTerrainShallowWater, IsTerrainLand, IsTerrainPlatform and IsTerrainWalkable.
+
 2009-12-06 Tamino Dauth <tamino@cdauth.de>
 * Revised struct AMissile.
 
