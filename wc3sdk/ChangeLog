@@ -1,3 +1,8 @@
+2009-12-08 Tamino Dauth <tamino@cdauth.de>
+* Revised file "archives/Asl/UI/TriggerData.txt".
+* Added various ambient extra model files.
+* Fixed various syntax errors.
+
 2009-12-07 Tamino Dauth <tamino@cdauth.de>
 * Added functions IsTerrainDeepWater, IsTerrainShallowWater, IsTerrainLand, IsTerrainPlatform and IsTerrainWalkable.
 

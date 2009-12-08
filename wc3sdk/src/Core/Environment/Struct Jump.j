@@ -3,6 +3,9 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 	/// @todo Should be a part of @struct AJump, vJass bug.
 	function interface AJumpAlightAction takes unit usedUnit returns nothing
 
+	/**
+	* @todo Test and fix @struct AMissile first and use vectors for this struct, too afterwards.
+	*/
 	struct AJump
 		//static start members
 		private static real m_refreshRate
@@ -24,7 +27,7 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 		private real m_startY
 		private real m_distance
 		private real m_x
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AJump\"")
 
 		//dynamic members
@@ -38,7 +41,7 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		//start members
-		
+
 		private method refreshPosition takes nothing returns boolean
 			set this.m_x = this.m_x + this.m_speed
 			//debug call this.print("Refresh. Distance is " + R2S(this.m_distance) + " refresh rate is " + R2S(thistype.m_refreshRate))
@@ -49,7 +52,7 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 			//debug call this.print("New x is " + R2S(this.m_x))
 			return this.m_x >= this.m_distance
 		endmethod
-		
+
 		public static method create takes unit usedUnit, real maxHeight, real targetX, real targetY, AJumpAlightAction alightAction returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
@@ -67,22 +70,22 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 			set this.m_startY = GetUnitY(usedUnit)
 			set this.m_distance = GetDistanceBetweenPoints(this.m_startX, this.m_startY, 0.0, targetX, targetY, 0)
 			set this.m_x = 0.0
-			
+
 			call PauseUnit(usedUnit, true)
 			call SetUnitFacing(usedUnit, GetAngleBetweenPoints(this.m_startX, this.m_startY, targetX, targetY))
-			
+
 			if (thistype.m_jumpAnimation != null) then
 				call SetUnitAnimation(usedUnit, thistype.m_jumpAnimation)
 			endif
-			
+
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			call thistype.m_jumps.erase(this.m_index)
 			if (not IsUnitDeadBJ(this.m_unit) and this.m_unit != null) then //could be removed by user function
 				call PauseUnit(this.m_unit, false)
-				
+
 				if (thistype.m_jumpAnimation != null) then
 					call ResetUnitAnimation(this.m_unit)
 				endif
@@ -90,7 +93,7 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 			//start members
 			set this.m_unit = null
 		endmethod
-		
+
 		/// @todo fast creation can cause crashes. behaviour is not change if vector members are erased in this method and not in destructor.
 		private static method timerFunction takes nothing returns nothing
 			local thistype jump
@@ -112,7 +115,7 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 				set i = i - 1
 			endloop
 		endmethod
-		
+
 		public static method init takes real refreshRate, string jumpAnimation returns nothing
 			//static start members
 			set thistype.m_refreshRate = refreshRate
@@ -122,7 +125,7 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 			call TimerStart(thistype.m_timer, thistype.m_refreshRate, true, function thistype.timerFunction)
 			set thistype.m_jumps = AIntegerVector.create()
 		endmethod
-		
+
 		public static method cleanUp takes nothing returns nothing
 			call PauseTimer(thistype.m_timer)
 			call DestroyTimer(thistype.m_timer)
@@ -133,14 +136,14 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 			endloop
 			call thistype.m_jumps.destroy()
 		endmethod
-		
+
 		public static method enable takes nothing returns nothing
 			call ResumeTimer(thistype.m_timer)
 		endmethod
-		
+
 		public static method disable takes nothing returns nothing
 			call PauseTimer(thistype.m_timer)
 		endmethod
 	endstruct
-	
+
 endlibrary

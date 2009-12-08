@@ -254,10 +254,9 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 		//members
 		private AVector3 m_speed
 		private unit m_unit
-		private real m_startDistance
 		private integer m_index
 
-		implement ASystemStruct;
+		implement ASystemStruct
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AMissile\"")
 
@@ -311,10 +310,16 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 			return this.m_isPaused
 		endmethod
 
+		//members
+
+		public method unit takes nothing returns unit
+			return this.m_unit
+		endmethod
+
 		//convenience methods
 
 		public method startFromUnit takes unit whichUnit returns nothing
-			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), 0.0, GetUnitFacing(whichUnit)
+			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), 0.0, GetUnitFacing(whichUnit))
 		endmethod
 
 		public method startFromUnitZ takes unit whichUnit returns nothing
@@ -461,9 +466,9 @@ endif
 					loop
 						exitwhen (i == thistype.m_missiles.size())
 						// collides with missile
-						if (i != this.m_index and thistype.m_missiles[i].m_missileType.collides() and newX == thistype.m_missiles[i].x() and newY == thistype.m_missiles[i].y() and newZ == thistype.m_missiles[i].z()) then
+						if (i != this.m_index and thistype(thistype.m_missiles[i]).m_missileType.collides() and newX == thistype(thistype.m_missiles[i]).x() and newY == thistype(thistype.m_missiles[i]).y() and newZ == thistype(thistype.m_missiles[i]).z()) then
 							debug call this.print("Collision between " + I2S(this) + " and " + I2S(thistype.m_missiles[i]) + ".")
-							call thistype.m_missiles[i].stop()
+							call thistype(thistype.m_missiles[i]).stop()
 							call this.stop()
 							exitwhen (true)
 						endif

@@ -31,15 +31,15 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		public method z takes nothing returns real
 			return this.m_z
 		endmethod
-		
+
 		//convenience methods
-		
+
 		public method setWidget takes widget usedWidget returns nothing
 			set this.m_x = GetWidgetX(usedWidget)
 			set this.m_y = GetWidgetY(usedWidget)
 			set this.m_z = GetWidgetZ(usedWidget)
 		endmethod
-		
+
 		public method setUnit takes unit usedUnit returns nothing
 			set this.m_x = GetUnitX(usedUnit)
 			set this.m_y = GetUnitY(usedUnit)
@@ -262,7 +262,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		* @state untested
 		*/
 		public static method multiplication takes thistype vector0, thistype vector1 returns real
-			return result = vector0.multiply(vector1)
+			return vector0.multiply(vector1)
 		endmethod
 
 		/**

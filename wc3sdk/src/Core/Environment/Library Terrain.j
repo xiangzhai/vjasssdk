@@ -139,7 +139,7 @@ library ALibraryCoreEnvironmentTerrain initializer init requires AStructCoreGene
 	*/
 	function IsTerrainWalkable takes real x, real y, real maxRange returns boolean
 		local rect Find = RectFromPointSize(x, y, 128.0, 128.0)
-		local item Item = CreateItem('wolg', x. y)
+		local item Item = CreateItem('wolg', x, y)
 		local real X
 		local real Y
 		//Hide any items in the area to avoid conflicts with our item
