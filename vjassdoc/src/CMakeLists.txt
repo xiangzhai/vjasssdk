@@ -68,8 +68,16 @@ set(VJASSDOC_H
 	utilities.hpp
 )
 
+execute_process(COMMAND flex -ovjass.yy.c vjass.l WORKING_DIRECTORY src)
+execute_process(COMMAND bison -ovjass.tab.c vjass.y WORKING_DIRECTORY src)
+
+set(VJASSDOC_LANG_SRC
+	vjass.yy.c
+	vjass.tab.c
+)
+
 # library
-add_library(vjassdoclib ${VJASSDOC_SRC})
+add_library(vjassdoclib ${VJASSDOC_LANG_SRC} ${VJASSDOC_SRC})
 target_link_libraries(vjassdoclib ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 if (${FLAGS} MATCHES "SQLITE")
 	target_link_libraries(vjassdoclib sqlite3) #${SQLITE_LIBRARIES}

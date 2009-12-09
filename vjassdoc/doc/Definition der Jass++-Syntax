@@ -1,0 +1,699 @@
+Schlüsselwörter:
+if, else, switch, case, break, continue, default, while, do, for
+native, init, threaded, debug, template, package, private, protected, public, operator, enum, class, this, self, super, new, delete, copy, init, big, virtual, static, execute, executewait, evaluate, executions, evaluations
+
+Möglicher Zusatz:
+executefast ermöglicht den Aufruf mit ExecuteFunc und Parameterspeicherung.
+
+Allgemeine Neuerungen:
+* Blockkommentare (/**/)
+
+Präprozessoren:
+
+#include [ jass | zinc | vjass | jasspp ] "Dateipfad"
+#inject InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
+#endinject
+#initjasspp // Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
+#if (konstanter Ausdruck) Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10) 
+#endif
+#jass
+#endjass
+#zinc
+#endzinc
+#vjass
+#endvjass
+#jasspp
+#endjasspp
+#external Ausdruck Parameter
+
+Vordefinierte Konstanten:
+OS Enthält eine Zeichenkette mit dem Namen des Betriebssystems.
+COMPILER Enthält eine Zeichenkette mit dem Namen des verwendeten Compilers.
+COMPILER_VERSION Enthält eine Zeichenkette mit der Version des verwendeten Compilers.
+WC3_VERSION Enthält eine Zeichenkette mit der Warcraft-3-Version (ist zur Laufzeit aktuell!).
+WC3_TFT_VERSION Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-Version. Falls The Frozen Throne nicht verwendet wird, ist der Wert gleich 0 gesetzt (ist zur Laufzeit aktuell!).
+DEBUG_MODE Enthält entweder true oder false, je nachdem, ob der Debug-Modus aktiviert oder deaktiviert ist.
+FILE_NAME Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
+LINE_NUMBER Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
+
+Dateipfade für die Include-Anweisung:
+Dateipfade müssen wie bei UNIX Systemen geschrieben werden. . steht für das aktuelle und ..
+für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen getrennt.
+~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Basisverzeichnis.
+
+Native Typen:
+
+Notation:
+native Typname : Elterntyp;
+
+Native Funktionen:
+
+Notation:
+native Rückgabetyp Funktionsname(Parametertyp Parametername, ...);
+
+Variablen:
+
+Notation:
+Variablentyp Variablenname[Variablengröße] = Variableninhalt;
+Der Variableninhalt wird bei Arrays wie in C++ eingeschlossen:
+integer tes[2] = { 10, 2 };
+
+Es können mehrdimensionale Arrays deklariert werden:
+integer test[2][2] = { { 10, 5 }, { 2, 4 } };
+
+Da ein Array in Warcraft 3 nur 8192 bzw. 8191 (wird im letzten Feld die Größe gespeichert?) haben kann, gibt es einen entsprechenden Compiler- bzw. Laufzeitfehler, wenn ein Zugriff diese Grenze überrschreitet.
+
+Ist eine Array allerdings als "big" deklariert worden, so erlaubt dies Zugriffe auf einen Index größer als 8191. Allerdings werden die Werte dann
+in der globalen Hashtable gespeichert, was Zugriffe verlangsamt.
+
+Variablen können globale deklariert werden, wenn sie nicht innerhalb eines Gültigkeitsbereiches stehen.
+Funktionen können statische Variablen enthalten:
+static integer test;
+
+0 entspricht ebenfalls dem Wert null in Jass.
+Eine Zeichenkette ist somit auch 0, wenn sie nicht gesetzt wurde.
+Alle Variablen werden automatisch mit 0 oder false initialisiert.
+
+Operatoren:
+
+Für die Typen integer und real:
+Variable = Ausdruck
++Variable
+-Variable
+Variable + Ausdruck
+Variable - Ausdruck
+Variable * Ausdruck
+Variable / Ausdruck
+Variable % Ausdruck
+Variable++
+Variable--
+Variable += Ausdruck
+Variable -= Ausdruck
+Variable *= Ausdruck
+Variable /= Ausdruck
+Variable %= Ausdruck
+Variable == Ausdruck
+Variable != Ausdruck
+Variable >= Ausdruck
+Variable <= Ausdruck
+Variable > Ausdruck
+Variable < Ausdruck
+
+Für den Typ boolean:
+Variable = Ausdruck
+Variable
+!Variable
+Variable == Ausdruck
+Variable != Ausdruck
+
+Für Aufzählungen:
+Variable = Ausdruck
+Variable == Ausdruck
+Variable != Ausdruck
+
+Für Klassen(instanzen):
+new Klassenname()			Entspricht Klassenname.new();
+delete Variable				Entspricht Variable.delete();
+Variable0 = copy Variable1;		Entspricht Variable1.copy(Variable0);
+Variable = Ausdruck
+Variable == Ausdruck
+Variable != Ausdruck
+
+Für Arrays:
+Variable[Indexdimension 1][Indexdimension 2]
+
+Typkonvertierungen:
+Sämtliche Typkonvertierungen müssen explizit vorgenommen werden, insofern es sich nicht
+um eine Kind-zu-Eltern-Konvertierung handelt. Sämtliche Funktions- und
+Klasseninstanzenzeiger können zum Typ integer konvertiert werden (ebenfalls explizit).
+Kindinstanzen können zu Elterninstanzen implizit konvertiert werden. Dies gilt auch für
+native Kindtypen wie z. B. unit zu widget.
+Andersherum muss explizit umgewandelt werden und gilt nur noch für Klasseninstanzen, nicht für
+native Typen.
+Zu Beachten gilt, dass es bei Eltern-zu-Kind-Konvertierungen zu fehlenden Daten für z. B.
+virtuelle Methoden kommen kann. Schlimmer noch wäre ein Zugriff auf ein Instanzelement
+einer ursprünglichen Nichtklasseninstanz, da so auf ein falsches Element einer anderen
+Instanz zugegriffen werden würde. Dies kann selbst zur Laufzeit nicht im Debug-Modus heraus-
+gefunden werden.
+Daher sollte der Compiler bei solchen Konvertierungen eine Warnung ausgeben.
+
+Notation:
+<Konvertierungstyp>(Ausdruck)
+
+Beispiele:
+MyClass myClassValue = new MyClass;
+integer myValue = integer(myClassValue);
+MyParentClass myParentClassValue = myClassValue;
+myClassValue = myParentClassValue; // illegal!
+myClassValue = MyClass(myParentClassValue);
+unit myUnit = null;
+widget myWidget = myUnit;
+myUnit = myWidget; // illegal!
+myUnit = widget(myWidget); // illegal!
+
+Verschachtelte Anweisungen:
+
+if (Ausdruck)
+{
+}
+else if (Ausdruck)
+{
+}
+else (Ausdruck)
+{
+}
+
+switch (Variable)
+{
+    case Ausdruck:
+	break;
+
+    case Ausdruck:
+	break;
+
+    default:
+	break;
+}
+
+Schleifen:
+
+while (Ausdruck)
+{
+}
+
+do
+{
+}
+while (Ausdruck);
+
+for (Ausdruck; Ausdruck; Ausdruck)
+{
+}
+
+Funktionen:
+Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich die Parametertypen unterscheiden.
+Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
+Parameter, welche kein Standardargument besitzen gesetzt werden:
+MyFunction(y = 10, x = 100, 100, 3, 5);
+Parameter mit Standardargumenten erhalten automatisch das Standardargument, insofern sie nicht explizit beim Aufruf gesetzt werden.
+
+Notation:
+[threaded] [init] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...)
+{
+}
+
+Ist eine Funktion "threaded", kann sie von überall aus mit .execute, .executewait, oder .evaluate aufgerufen werden.
+Sie wird somit in einen eigenen Auslöser gespeichert und ihre Parameter mittels einer Hashtable für diesen gespeichert.
+
+Ist eine Funktion "init", so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers aufgerufen.
+Eine "init"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt oder manuell
+aufgerufen wird (einstellbar).
+
+Mittels der Schlüsselwörter executions und evaluations kann herausgefunden werden, wie oft eine Funktion per .execute bzw. .evaluate aufgerufen wurde.
+Zurückgegeben wird die Anzahl als integer.
+Dies ist natürlich nur bei "threaded" Funktionen möglich:
+Functionsname.executions()
+Functionsname.evaluations()
+
+Funktionsvariablen (Funktionszeiger):
+Funktionsvariablen sind Variablen des Typs "<Rückgabetyp> (<Parameter>)". Sie können einen Verweis auf eine beliebige
+"threaded"-Funktion mit dem angegebenen Rückgabetyp und den angegebenen Parametern enthalten.
+Der Verweis ist normalerweise ein Integer-Wert, welcher auf die Funktion in der globalen Hashtable verweist bzw. zu dieser gehört.
+Eine Funktionsvariable kann ebenso auf Methoden einer Klasse verweisen.
+Funktionsvariablen können wie normale "threaded" Funktionen aufgerufen werden:
+integer (integer, integer) functionVariable = MyClass.method0;
+Print(functionVariable.evaluate(0, 10));
+
+Vorlagen (Templates):
+Vorlagen werden mittels einer einfachen Kopie ihres enthaltenen Codes mit den verwendeten Datentypen gespeichert.
+Die Datentypparameter können genau wie bei Funktionsparameter gesetzt werden.
+
+Notation:
+
+template Templatename<Datentypparameter = [Standardargument] ...>
+{
+    Templateinhalt
+}
+
+Vector<integer> myVector = new Vector<integer>;
+
+Der Template-Inhalt können Funktionen oder Klassen sein.
+
+Testblöcke:
+Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
+Analog zu #if (DEBUG_MODE) und #endif.
+
+Notation:
+
+debug
+{
+}
+
+Pakete:
+
+Notation einer Paketdefinition:
+package Name : benötigte Pakete durch Kommata getrennt
+{
+    private Funktion/Variable/Klasse/Aufzählung/Paket
+
+    public Funktion/Variable/Klasse/Aufzählung/Paket
+
+    protected Funktion/Variable/Klasse/Aufzählung/Paket
+}
+
+Fehlt private, public oder protected, ist das Objekt automatisch private. Protected bewirkt, dass das Objekt für die enthaltenen Pakete zugänglich ist.
+
+Notation einer Paketverwendung:
+package Paketname, Paketname.Unterpaketname.Unterunterpaketname, Paketname, Paketname.*;
+
+Wird ein Paket innerhalb eines anderen oder global verwendet, muss bei Verwendung von dessen Inhalt kein Paketname.-Präfix mehr vorangestellt werden.
+Die Paketverwendung gilt entweder global oder innerhalb eines Pakets und all dessen Unterpaketen.
+Wird ein Unterpaket eines Pakets verwendet, so wird das Paket automatisch mitverwendet.
+Wird die Notation Paketname.* verwendet, so werden alle Unterpakete und deren Unterpakete usw. verwendet.
+
+Aufzählungen:
+Wird ein Enumelement gesetzt, so werden alle darauffolgenden Enum-Elemente auf die noch nicht verwendeten nachfolgenden Werte gesetzt.
+
+Notation:
+enum Name
+{
+    Enumelement1,
+    Enumelement2 = 2,
+    Enumelement3
+} globale Instanzen durch Kommate getrennt;
+
+Klassen:
+Existiert kein Präfix wie public, protected oder private vor der Variablen oder Methodendeklaration, ist das Klassenelement automatisch private.
+Statische Methoden erhalten keinen this-Parameter.
+Statische Variablen können mit Klassenname.Variablenname angesprochen werden.
+Der Konstruktor und der Destruktor werden aufgerufen, sobald das Objekt erzeugt oder gelöscht wird.
+Der Kopierkonstruktor wird aufgerufen, sobald das Objekt explizit mittels .copy kopiert wird. Normalerweise wird er automatisch definiert und kopiert den Inhalt
+aller Elemente des kopierten Objekts in das aktuelle Objekt.
+Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klasseneigenschaft oder -methode aufgerufen.
+Mit dem Schlüsselwort super spricht man die Elternklasse an. Mit dem Schlüsselwort self spricht man die eigene Klasse an. Mit dem Schlüsselwort this spricht man die
+verwendete Instanz an.
+Mehrfachvererbung wird unterstützt.
+Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse als "big" deklariert wurde. In diesem Fall werden die Instanzdaten
+in der globalen Hashtable gespeichert.
+Besitzt eine Klasse Array-Elemente, so wird die maximale Anzahl ihrer möglichen Instanzen folgendermaßen beschränkt, wenn sie nicht
+bzw. das Array nicht als "big" deklariert wurde: 8192 / größte Größe eines Array-Elements (mehrdimensionale berücksichtigt).
+Daher muss bei einem Array-Element wie bei allen Nicht-"big"-Arrays die Größe zwingend angegeben werden.
+Eine Nicht-"big"-Klasse kann "big"-Array-Elemente enthalten, allerdings sollte bei diesen eine Warnung erscheinen, wenn ihre maximale Größe
+größer als 8192 ist (mehrdimensionale miteinbezogen!), da so nicht mehr auf alle gleichzeitig verwiesen werden kann.
+
+Abstrakte Klassen:
+Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen können keine
+Instanzen erzeugt werden. Erbt eine Klasse, eine andere abstrakte Klasse, so muss sie sämtliche
+abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
+
+Mehrfachvererbung:
+Überschneiden sich Elemente mehrerer geerbter Klassen, so wird vom Compiler ein Syntax-Fehler ausgegeben.
+
+Notation:
+[ big ] [ abstract ] class Klassenname : public | private | protected Klassenname ...
+{
+    static self new() { } Konstruktor
+    ~delete() { } Destruktor
+    copy(Klassenname other) Kopierkonstruktur
+    static init() { } Initialisierungsmethode
+
+    [public | protected | private | private protected] [abstract] [static] Methode | Variable [ = Startwertzuweisung ] | Aufzählung;
+} globale Instanzen durch Kommata getrennt;
+
+
+Private protected:
+Ist ein Klassenelement "private protected", so kann darauf von Kindklassen und von Klassen des aktuellen Pakets und Klassen aus dessen Unterpaketen
+zugegriffen werden.
+
+Methoden:
+Als virtuell deklarierte Methoden, werden pro Klasseninstanz gespeichert. So wird immer die unterste virtuelle Methode aufgerufen.
+Virtuelle Methoden müssen zwingend threaded sein.
+
+Mit super.Methodenname kann die Elternmethode angesprochen werden.
+
+Abstrakte Methoden besitzen keinen Bezugsrahmen, sondern werden mit einem Semikolon abgeschlossen.
+
+Notation:
+[static | virtual] Funktionsdeklaration
+
+Operatorenüberladung:
+Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen enthält, überlädt die Bedeutung eines Operators für die angegebenen
+Parametertypen.
+Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, private protected).
+
+Standardpaket:
+Es existieren Wrapper für jeden Warcraft-3-Datentyp, sowie zusätzliche Methoden und Klassen. Auf das Wichtigste beschränken!
+
+package jass
+{
+    public package commonj
+    {
+	/*
+	Definition nativer Jass-Typen.
+	*/
+	native boolean;
+	native string;
+	native integer;
+	native real;
+	native code;
+	...
+
+	/*
+	Definition nativer Jass-Funktionen.
+	*/
+	native string I2S(integer i);
+    }
+
+    public package commonai
+    {
+    }
+
+    public package blizzardj
+    {
+    }
+}
+
+package jasspp
+{
+    package jass.*;
+
+    /*
+    Definition spezieller implementationsspezifischer Funktionen.
+    */
+    debug
+    {
+	integer allocateArrayInstance();
+	integer allocateClassInstance();
+	boolean freeArrayInstance(integer index);
+	boolean freeClassInstance(integer index);
+	boolean freeFunctionPrototype(integer index);
+    }
+
+    /*
+    Definitionen globaler Funktionen, welche in der Regel die nativen Typen verwenden.
+    */
+    void Print(string message);
+
+    /*
+    Definitionen der Wrapper-Klassen, welche die Funktionalität der nativen Typen mittels Objektorientierung anbieten.
+    */
+    class Boolean
+    class String
+    class Integer
+    class Real
+    class Code
+    class Handle
+    class Agent : public Handle
+    class Widget : public Agent
+    class Unit : Widget
+    class Item : Widget
+    class Destructable : Widget
+    class Event
+    class Trigger
+    
+    /*
+    Definition eigener Klassen wie z. B. verschiedener Container-Klassen usw.
+    */
+    class List
+    class Vector
+    class Map
+    class Bitset
+
+}
+
+Virtuelle-Maschinen-Implementation:
+Falls es eines Tages möglich sein sollte, eine eigene virtuelle Maschine für Jass bzw. Jass++ zu schreiben, so sollten folgende native Funktionen hinzugefügt werden:
+* native RMin takes real a, real b returns real
+* native RMax takes real a, real b returns real
+* native RAbs takes real a returns real
+* native RSign takes real a returns real
+* native RMod takes real dividend, real divisor returns real
+* native IMin takes integer a, integer b returns integer
+* native IMax takes integer a, integer b returns integer
+* native IAbs takes integer a returns integer
+* native ISign takes integer a returns integer
+* native IMod takes integer dividend, integer divisor returns integer
+* native StringIndex takes string source, string target returns integer
+* native GroupCount takes group whichGroup returns integer
+* native GroupUnit takes group whichGroup, integer index returns unit
+* native ForceCount takes force whichForce returns integer
+* native ForcePlayer takes force whichForce, integer index returns player
+* native EvaluateFunc takes string funcName returns boolean
+* native TriggerRemoveEvent takes trigger whichTrigger, event whichEvent returns nothing
+* native TriggerClearEvents takes trigger whichTrigger returns nothing
+* native TriggerCountEvents takes trigger whichTrigger returns integer
+* native TriggerCountConditions takes trigger whichTrigger returns integer
+* native TriggerCountActions takes trigger whichTrigger returns integer
+* native TriggerSyncStop takes nothing returns nothing
+* native UnitAddBuff takes unit whichUnit, integer buffId returns boolean
+* native UnitRemoveBuff takes unit whichUnit, integer buffId returns boolean
+* native UnitHasBuff takes unit whichUnit, integer buffId returns boolean
+* native TriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, key whichKey, boolean pressed returns event
+* native HasPlayerKeyPressed takes player whichPlayer, key whichKey returns boolean
+* native GetPlayerMouseX takes player whichPlayer returns real
+* native GetPlayerMouseY takes player whichPlayer returns real
+* native GetPlayerPing takes player whichPlayer returns real
+* native SetPlayerMinimap takes player whichPlayer, string filePath returns nothing
+* native EnablePlayerMinimap takes player whichPlayer, boolean enable returns nothing 
+* native IsPlayerMinimapEnabled takes player whichPlayer returns boolean
+* native RemoveTrackable takes trackable whichTrackable returns nothing
+* native TrackableShow takes trackable whichTrackable, boolean show returns nothing
+* native TrackableIsShown takes trackable whichTrackable returns boolean
+* native TrackableSetModelPath takes trackable whichTrackable, string modelPath returns nothing
+* native TrackableModelPath takes trackable whichTrackable returns string
+* native TrackableSetX takes trackable whichTrackable, real x returns nothing
+* native TrackableX takes trackable whichTrackable returns real
+* native TrackableSetY takes trackable whichTrackable, real y returns nothing
+* native TrackableY takes trackable whichTrackable returns real
+* native TrackableSetFacing takes trackable whichTrackable, real facing returns nothing
+* native TrackableFacing takes trackable whichTrackable returns real
+* native QuestRemoveItem takes questitem whichQuestItem returns nothing
+
+Zudem sollte die umständliche Lösung zur Umgehung der Array-Größe mittels Hashtables wegfallen
+und es dem Benutzer erlaubt werden, dynamisch Speicher zu allozieren. Allerdings mit vernünftigen
+Absicherungen und Wertsetzungen bei Fehlschlägen.
+
+Compiler-Implementation:
+
+Schritte:
+1. Syntax überprüfen
+2. Konstante Ausdrücke sammeln (auch in zu importierenden Dateien, Testblöcke ignorieren).
+3. Präprozessoren auswerten und zu ignorierenden und importierenden Code und als vJass-Code, Zinc- oder Jass-Code zu behandelten Code feststellen (am besten Zeilennummern und Datei merken und abfragen, Testblöcke miteinbeziehen!).
+4. Kartenskript erzeugen oder einlesen und Positionen feststellen
+5. Falls "big" Klasseninstanzen, "big" Arrays oder threaded Funktionen verwendet werden, globale Hashtable und Prototypauslöser für Laufzeitinformationen in der Funktion InitJassPP erzeugen lassen und diese nach dem Aufruf der Funktion InitBlizzard in der Funktion main aufrufen lassen.
+6. Vorlagen-Instanzen generieren (Templates) und zum zu behandelten Code hinzufügen
+7. Pakete sortieren
+8. Paketfunktionen und -variablen generieren (auch von Enums)
+9. Klassenmethoden und -variablen generieren (auch von Enums)
+10. Injection-Code in mögliche Funktionen einfügen
+11. Bei aktivierter Option Kartenskript optimieren. Mögliche Optionen:
+	--ormws Entfernt white-space-Zeichen, leere Zeilen und Kommentare
+	--orn Benennt sämtliche Bezeichner zu kürzeren, generierten um
+	--oinline Kopiert den Funktionsinhalt bestimmter Funktionen (z. B. ohne Parameter) in den Code
+
+Klasseninstanzen ohne globale Hashtable:
+Pro Klassenelement wird eine globale Arrayvariable deklariert deren Indexwerte der jeweiligen Instanz gehören. Außerdem wird
+eine Konstante definiert, welche bestimmt, wie viele Instanzen der Klasse erzeugt werden können. Dies hängt unter anderem
+davon ab, ob die Klasse Array-Elemente besitzt.
+Pro virtuelle Methode wird eine globale Arrayvariable deklariert, welcher der Prototypindex bei der Instanzerzeugung zugewiesen wird.
+Bei der Allokation wird in einer globalen Zählervariable nach einer freien Id gesucht und diese verwendet. 0 zählt dabei als leerer Wert.
+Kindklassen erhalten KEINE eigene Zählervariable, da ansonsten das Konzept der virtuellen Methoden nicht funktioniert und nicht auf die Elemente
+der Elternklasse zugegriffen werden könnte, ohne diese neu zu deklarieren.
+globals
+	constant integer __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size
+	boolean array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>
+	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>
+	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>
+endglobals
+
+Allokation:
+
+function __newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
+	local integer i = 0
+	loop
+		exitwhen (id == __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size)
+		if (not __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[i]) then
+			set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[i] = true
+			return i
+		endif
+		set i = i + 1
+	endloop
+#if (DEBUG_MODE)
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to allocate id for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
+#endif
+	return 0
+endfunction
+
+// Existiert auch für Kindklassen.
+function __initMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>[id] = ...
+endfunction
+
+// Existiert auch für Kindklassen.
+function __initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	set  __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[id] = ...
+endfunction
+
+// Existiert auch für Kindklassen.
+function __new__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
+	local integer id = __newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>()
+#if (DEBUG_MODE)
+	if (id == 0) then
+		return
+	endif
+#endif
+	call __initMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls Elemente vorhanden.
+	call __initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls virtuelle Methoden vorhanden.
+endfunction
+
+// Eventuell Variable automatisch auf 0 setzen?
+function __delete__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+#if (DEBUG_MODE)
+	if (id <= 0 or id >= __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to free id " + I2S(id) + " for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
+		return
+	endif
+#endif
+	set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[id] = false
+endfunction
+
+Methoden:
+boolean test(integer a, integer b)
+{
+	return a + b + this.m_x;
+}
+
+wird ersetzt durch
+
+function __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test takes integer this, integer a, integer b returns boolean
+	return a + b + __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>[this]
+endfunction
+
+Threaded Methoden:
+
+threaded void test(integer a, integer b)
+{
+}
+
+wird ersetzt durch
+
+function __FunctionPrototype<n> takes nothing returns nothing
+	local integer this = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("this"))
+	local integer a = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("a"))
+	local integer b = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("b"))
+endfunction
+
+und in der Initialisierungsfunktion mit folgendem initialisiert
+
+local trigger prototypeTrigger = CreateTrigger()
+call TriggerAddAction(prototypeTrigger, function __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test)
+SaveTriggerHandle(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("Trigger"), prototypeTrigger)
+set prototypeTrigger = null
+
+this.myVirtualMethod().execute(a, b)
+
+wird ersetzt durch
+
+call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("this"), this)
+call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("Argument0"), a)
+call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("Argument1"), b)
+call TriggerExecute(LoadTriggerHandle(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this]))), StringHash("Trigger"))
+
+
+
+Globale Hashtable:
+Die globale Hashtable wird für Funktionsparameter von .executewait-, .execute- und .evaluate-Aufrufen, Klasseninstanzen und Arrayinstanzen.
+Sie wird in der main-Funktion der Karte nach dem Aufruf der InitBlizzard-Funktion erzeugt.
+Nach ihr werden sämtliche Prototypauslöser erzeugt.
+
+Kategories "Data":
+	* Label "FunctionPrototypes" Typ integer Wert <Anzahl der Funktionsprototypen> // Eventuell nur im Debug-Modus, wird zur Laufzeit normalerweise nicht benötigt.
+	* Label "ClassInstances" Typ integer Wert <Anzahl der Klasseninstanzen>
+	* Label "ArrayInstances" Typ integer Wert <Anzahl der Array-Instanzen>
+
+// TODO: globale Array-Variable mit Auslösern?
+Kategorie "FunctionPrototype<n>":
+	* Label "Trigger" Typ trigger Wert <Zugehöriger Auslöser>
+	* Label "Argument<n>" Typ <Argument<n>-Typ der Funktion> Wert <Argument<n>-Wert gesetzt durch den letzten Aufruf>
+
+Alle Funktionsprototypinformationen sollten generell in der globalen Hashtable und nicht in Array-Variablen gespeichert werden, da sich
+so Konflikte mit Array-Begrenzungen umgehen bzw. vermeiden lassen.
+Einzige Alternative wäre, für jedes einzelne Prototypargument eine globale Variable generieren zu lassen, allerdings müsste man dabei
+wieder virtuelle Methodenaufrufe beachten, da man bei diesen nicht wüsste, welche die richtigen Argumente wären.
+
+Kategorie "ClassInstance<n>":
+	* Label "Method<Methodenname einer virtuellen Methode>" Typ trigger Wert <Auslöser des Funktionsprototyps>
+	* Label "Member<Elementname>" Typ <Elementtyp> Wert <Elementwert>
+
+Kategorie "ArrayInstance<n>":
+	* Label "Index<Index>" Typ <Arraytyp> Wert <Arraywert des Indexes>
+
+Die Klasseninstanzenelemente (nicht die virtuellen Methoden), sowie die Array-Instanzenwerte werden NUR in der globalen Hashtable gespeichert,
+wenn die jeweilige Klasse bzw. das jeweilige Array als "big" deklariert wurde.
+Ist die Elternklasse einer Klasse "big", so muss die Kindklasse nicht zwingend auch "big" sein oder umgekehrt. Allerdings werden dann sämtliche
+Elemente der "Nicht-big-Klasse" in normalen globalen Arrays gespeichert und können daher nur begrenzt verwendet werden, was wenig Sinn machen würde.
+
+Globale Array-Variablen:
+Ist ein Array oder eine Klasse nicht als "big" deklariert, so werden ihre Instanzelemente nicht in der globalen Hashtable, sondern in 
+
+Ersetzung von threaded Funktionsaufrufen:
+Jede Funktion und Methode, welche threaded ist, erhält beim Kompilieren eine eigene Funktionsprototyp-Id. Für jede Funktionsprototyp-Id
+wird eine Jass-Funktion generiert, welche keine Argumente entgegennimmt, sondern stattdessen die Argumente aus der globalen Hashtable
+in lokale Variablen lädt.
+Diese Funktion wird einem generierten Auslöser als Aktion hinzugefügt.
+Bei jedem Aufruf einer solchen Funktion, werden zunächst alle Parameter in der globalen Hashtable gespeichert und dann der Auslöser entweder
+mittels TriggerEvaluate, TriggerExecute oder TriggerExecuteWait aufgerufen.
+Handelt es sich um eine virtuelle Methode, so wird der generierte Auslöser in der globalen Hashtable als solcher für den Funktionsprototypen gespeichert
+und beim Aufruf mittels der Klasseninstanz ermittelt und verwendet.
+
+Aufruf von init Funktionen:
+"init"-Funktionen besitzen keine Argumente. Sie werden automatisch vor dem Aufruf der Funktion RunInitializationTriggers aufgerufen.
+Dies geschieht normalerweise in unbestimmter Reihenfolge (je nachdem, welche der Compiler zu erst findet und wie er sie sortiert).
+Besitzt eine "init"-Funktion einen Rückgabetyp oder wird manuell von einem anderen Punkt aus aufgerufen, so sollte eine Warnung ausgegeben werden.
+
+Präprozessoren:
+
+Klasseninstanzen:
+Klasseninstanzen sind Variablen des Typs integer. Sie verweisen in der globalen Hashtable auf die Kategorie ihrer Zahl "ClassInstance<Zahl>".
+Wird die Instanz freigegeben, so wird ihre Kategorie in der Hashtable gelöscht. Bei einer dynamischen Erzeugung mittels new, wird von 1 an hochgezählt
+und nach einer noch nicht verwendeten Kategorie gesucht.
+In der Kategorie werden unter den Elementnamen in Form von Labels alle Werte der Klasseninstanz gespeichert:
+Object myObject = new Object();
+speichert folgendermaßen:
+Globale Hashtable
+    * Kategorie: "ClassInstance1"
+	* Label: "m_x" Typ real Wert: 0.0
+	* Label: "m_y" Typ real Wert: 0.0
+
+Der Zugriff auf Hashtables ist zwar langsamer als auf Arrays, jedoch kann die Hashtable praktisch mit unendlich vielen Instanzen gefüllt werden und beschränkt sich nicht
+auf 8192 bzw. 8191.
+
+Testblöcke:
+Der Inhalt von Testblöcken, die mittels debug { } deklariert wurden, wird im Nicht-Debug-Modus nicht kompiliert, sondern einfach ignoriert.
+
+Arrays:
+Bei mehrdimensionalen Arrays wird automatisch entweder die Indexberechnung durchgeführt oder eine Funktion des Standardpakets aufgerufen, welche dieses durchführt und überprüft, ob der Index größer als 8191 ist.
+Dies wird ebenfalls zur Compile-Zeit, insofern möglich, geprüft.
+Wurde das Array als "big" deklariert, so werden sämtliche Lese- und Schreibzugriffe durch Hashtable-modifizierende Funktionsaufrufe ersetzt.
+Außerdem wird bei jedem Setzungsaufruf überprüft, ob das Array bereits in der Hashtable gespeichert wurde und falls nicht, so wird dies vorgenommen.
+Dabei wird eine Funktion aufgerufen, welche eine freie Id für eine Array-Instanz liefert. Sämtliche Lesezugriffe werden durch Funktionsaufrufe mit der
+in der Variable gespeicherten Id vorgenommen, weshalb das Array in Jass kein Array, sondern nur eine integer-Variable mit der jeweiligen Id ist.
+Handelt es sich um eine lokale Variable, so wird am Ende der Funktion automatisch eine Flush-Funktion aufgerufen, insofern das Array nicht bereits vorher auf 0 gesetzt wurde. Setzt man das Array auf 0, so wird es aus der Hashtable geflusht (und in Jass auf 0 gesetzt!).
+Globale Hashtable
+	* Kategorie: "Array<n>"
+		* Label "Index<n>" Typ <Variablentyp> Wert <Wert>
+
+Funktionen:
+Threaded-Funktionen können mit .execute oder .evaluate (falls der Rückgabetyp boolean ist und sie keine TriggerSleepAction-Aufrufe enthält) aufgerufen werden.
+Falls TriggerExecuteWait bewirkt, dass ein Auslöser mit TriggerSleepAction-Aufrufen ausgeführt wird und denn noch gewartet wird, bis dieser ausgeführt wurde, so gibt es zudem noch das Schlüsselwort .executewait.
+Der Code Inhalt wird in einem globalen Auslöser gespeichert.
+Die Parameter werden beim Aufruf in der globalen Hashtable unter der Id des Auslösers bzw. der "Prototypfunktion" gespeichert und beim Aufruf sofort in lokale Variablen geschrieben.
+Der Aufruf erfolgt schließlich mit TriggerExecute, TriggerExecuteWait oder TriggerEvaluate.
+Handelt es sich um eine virtuelle Methode, so muss der jeweilige Auslöser zunächst über die Klasseninstanz herausgefunden werden.
+Mittels der Schlüsselwörter executions und evaluations kann die Anzahl der jeweiligen Aufrufe einer "threaded" Funktion herausgefunden werden.
+Dazu werden diese mit den Funktionen GetTriggerExecCount bzw. GetTriggerEvalCount ersetzt und der Prototypauslöser als Parameter übergeben.
+Wird dies bei einer Nicht-"threaded"-Funktion versucht, so wird ein Compiler-Fehler ausgegeben.
+
+Methoden:
+Da alle Methoden virtuell sind, muss schon beim Kompilieren (anhand der Typenumwandlungen) festgestellt werden, welchen Typ die Variable momentan hat
+und anhand des Typs die richtige Methode aufgerufen werden.
