@@ -1,5 +1,5 @@
 /// Test of all core string functions.
-library ALibraryCoreDebugString requires ALibraryCoreDebugMisc, ACoreString
+library ALibraryCoreDebugString requires AStructCoreDebugBenchmark, ALibraryCoreDebugMisc, ACoreString
 
 	private function GetStringConversionDebug takes nothing returns nothing
 		debug call Print("GetTimeString - " + GetTimeString(120))
@@ -81,12 +81,17 @@ library ALibraryCoreDebugString requires ALibraryCoreDebugMisc, ACoreString
 	endfunction
 
 	function AStringDebug takes nothing returns nothing
+		local ABenchmark benchmark = ABenchmark.create("String debug")
 		local string testString = "Lieber Peter, gestern ging es mir gut."
 		local string testParameter0 = "ging"
 		local string testParameter1 = "auch"
+		call benchmark.start()
 		call GetStringConversionDebug()
 		call GetStringPoolFunctionsDebug(testString, testParameter0)
 		call GetStringMiscFunctionsDebug(testString, testParameter0, testParameter1)
+		call benchmark.stop()
+		call benchmark.show()
+		call benchmark.destroy()
 	endfunction
 
 endlibrary

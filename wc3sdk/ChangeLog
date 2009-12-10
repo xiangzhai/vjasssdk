@@ -1,3 +1,8 @@
+2009-12-10 Tamino Dauth <tamino@cdauth.de>
+* Improved German ALayer tutorial.
+* Revised function MoveSubString.
+* Added various missing code files to SVN repository.
+
 2009-12-09 Tamino Dauth <tamino@cdauth.de>
 * Revised struct ASpawnPoint.
 * Added method isEmpty to vector struct of text macro A_VECTOR.
