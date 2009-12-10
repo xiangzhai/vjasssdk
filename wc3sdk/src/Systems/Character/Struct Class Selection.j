@@ -46,11 +46,11 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		private trigger m_selectTrigger
 		private multiboard m_infoSheet
 		private AClass m_class
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AClassSelection\"")
 
 		//methods
-		
+
 		public method show takes nothing returns nothing
 			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT) then
 				call this.selectRandomClass()
@@ -142,9 +142,9 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				set i = i + 1
 			endloop
 			call SetUnitAnimation(this.m_classUnit, this.m_class.animation())
-			call PlaySoundPathForPlayer(this.m_user, this.m_class.soundPath())
+			call PlaySoundFileForPlayer(this.m_user, this.m_class.soundPath())
 			//call SetCameraTargetControllerNoZForPlayer(this.user, this.classUnit, 0.0, 0.0, false)
-		
+
 			call this.refreshInfoSheet()
 		endmethod
 
@@ -165,7 +165,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			set this.m_class = GetRandomInt(thistype.m_firstClass, thistype.m_lastClass)
 			call this.selectClass()
 		endmethod
-		
+
 		private static method triggerActionPlayerLeaves takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -190,7 +190,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			endif
 			set triggeringTrigger = null
 		endmethod
-		
+
 		private method createLeaveTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
@@ -204,7 +204,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 		private static method triggerActionRefresh takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this") 
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			debug if (thistype.m_cameraSetup != null) then
 				call CameraSetupApplyForPlayer(true, thistype.m_cameraSetup, this.m_user, 0.0)
 			debug else
@@ -361,7 +361,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call this.createInfoSheet()
 			return this
 		endmethod
-		
+
 		private method destroyLeaveTrigger takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(this.m_leaveTrigger)
 			set this.m_leaveTrigger = null
@@ -391,7 +391,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call DestroyMultiboard(this.m_infoSheet)
 			set this.m_infoSheet = null
 		endmethod
-		
+
 		private method removeClassUnit takes nothing returns nothing
 			call RemoveUnit(this.m_classUnit)
 			set this.m_classUnit = null
@@ -402,7 +402,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			set this.m_user = null
 			//static members
 			set thistype.m_stack = thistype.m_stack - 1
-			
+
 			call this.destroyLeaveTrigger()
 			call this.destroyRefreshTrigger()
 			call this.destroyChangePreviousTrigger()
@@ -410,12 +410,12 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call this.destroySelectTrigger()
 			call this.destroyInfoSheet()
 			call this.removeClassUnit()
-			
+
 			if (thistype.m_stack == 0) then
 				call thistype.m_startGameAction.execute()
 			endif
 		endmethod
-		
+
 		public static method init takes camerasetup cameraSetup, real x, real y, real facing, real refreshRate, real rotationAngle, AClass firstClass, AClass lastClass, AClassSelectionStartGameAction startGameAction, string strengthIconPath, string agilityIconPath, string intelligenceIconPath, string textTitle, string textStrength, string textAgility, string textIntelligence, string textAbilities, string textDescription returns nothing
 			//static start members
 			set thistype.m_cameraSetup = cameraSetup

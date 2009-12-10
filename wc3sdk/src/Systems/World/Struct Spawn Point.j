@@ -1,4 +1,116 @@
-library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, ALibraryCoreMathsPoint, ALibraryCoreStringConversion, AStructCoreGeneralHashTable
+library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, ALibraryCoreStringConversion, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralVector
+
+	private struct ASpawnPointMember
+		// dynamic members
+		private unitpool m_unitPool
+		private itempool m_itemPool
+		private real m_x
+		private real m_y
+		private real m_facing
+		// members
+		private unit m_unit
+		private item m_item
+
+		// dynamic members
+
+		public method addUnitType takes integer unitTypeId, real weight returns nothing
+			call UnitPoolAddUnitType(this.m_unitPool, unitTypeId, weight)
+		endmethod
+
+		public method removeUnitType takes integer unitTypeId returns nothing
+			call UnitPoolRemoveUnitType(this.m_unitPool, unitTypeId)
+		endmethod
+
+		public method addItemType takes integer itemTypeId, real weight returns nothing
+			call ItemPoolAddItemType(this.m_itemPool, itemTypeId, weight)
+		endmethod
+
+		public method removeItemType takes integer itemTypeId returns nothing
+			call ItemPoolRemoveItemType(this.m_itemPool, itemTypeId)
+		endmethod
+
+		public method setX takes real x returns nothing
+			set this.m_x = x
+		endmethod
+
+		public method x takes nothing returns real
+			return this.m_x
+		endmethod
+
+		public method setY takes real y returns nothing
+			set this.m_y = y
+		endmethod
+
+		public method y takes nothing returns real
+			return this.m_y
+		endmethod
+
+		public method setFacing takes real facing returns nothing
+			set this.m_facing = facing
+		endmethod
+
+		public method facing takes nothing returns real
+			return this.m_facing
+		endmethod
+
+		// members
+
+		public method unit takes nothing returns unit
+			return this.m_unit
+		endmethod
+
+		public method item takes nothing returns item
+			return this.m_item
+		endmethod
+
+		// methods
+
+		public method placeUnit takes player whichPlayer returns nothing
+			local real facing
+			if (this.m_facing < 0.0) then
+				set facing = GetRandomReal(0.0, 360.0)
+			else
+				set facing = this.m_facing
+			endif
+			set this.m_unit = PlaceRandomUnit(this.m_unitPool, whichPlayer, this.m_x, this.m_y, facing)
+		endmethod
+
+		public method placeItem takes nothing returns nothing
+			set this.m_item = PlaceRandomItem(this.m_itemPool, this.m_x, this.m_y)
+		endmethod
+
+		/**
+		* @param facing If this value is smaller than 0 it will be random (between 0 and 360 degrees).
+		*/
+		public static method create takes real x, real y, real facing returns thistype
+			local thistype this = thistype.allocate()
+			set this.m_unitPool = CreateUnitPool()
+			set this.m_itemPool = CreateItemPool()
+			set this.m_x = x
+			set this.m_y = y
+			set this.m_facing = facing
+			set this.m_unit = null
+			set this.m_item = null
+
+			return this
+		endmethod
+
+		public method onDestroy takes nothing returns nothing
+			call DestroyUnitPool(this.m_unitPool)
+			set this.m_unitPool = null
+			call DestroyItemPool(this.m_itemPool)
+			set this.m_itemPool = null
+			if (this.m_unit != null) then
+				call RemoveUnit(this.m_unit)
+				set this.m_unit = null
+			endif
+			if (this.m_item != null) then
+				call RemoveItem(this.m_item)
+				set this.m_item = null
+			endif
+		endmethod
+	endstruct
+
 
 	/// @struct ASpawnPoint provides the functionality of common creep spawn points, mostly used in RPG maps.
 	struct ASpawnPoint
@@ -11,67 +123,117 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 		private static string m_textDistributeItem
 		//static member
 		private static integer m_dropOwnerId
-		//dynamic members
-		private integer m_count
-		//start members
-		private real m_x
-		private real m_y
-		private real m_range
 		//members
-		private unitpool m_unitPool
-		private itempool m_itemPool
+		private AIntegerVector m_members
+		private AGroup m_group
 		private trigger m_deathTrigger
 		private timer m_spawnTimer
-		private group m_unitGroup
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ASpawnPoint\"")
 
-		//dynamic members
-		
-		public method setCount takes integer count returns nothing
-			set this.m_count = count
+		// convenience methods
+
+		public method setLocation takes integer memberIndex, location whichLocation returns nothing
+			call this.setX(memberIndex, GetLocationX(whichLocation))
+			call this.setY(memberIndex, GetLocationY(whichLocation))
 		endmethod
 
-		public method count takes nothing returns integer
-			return this.m_count
+		public method setRect takes integer memberIndex, rect whichRect returns nothing
+			call this.setX(memberIndex, GetRectCenterX(whichRect))
+			call this.setY(memberIndex, GetRectCenterX(whichRect))
 		endmethod
 
-		//convenience methods
-		
-		public method addExistingUnit takes unit existingUnit returns integer
-			local integer id = this.m_count
-			call GroupAddUnit(this.m_unitGroup, existingUnit)
-			set this.m_count = id + 1
-			return id
+		// methods
+
+		public method addMember takes real x, real y, real facing returns integer
+			local ASpawnPointMember member = ASpawnPointMember.create(x, y, facing)
+			call this.m_members.pushBack(member)
+			return this.m_members.backIndex()
 		endmethod
-		
-		/// Note that after unit @param existingUnit has died there will be spawned a new RANDOM unit from unit pool.
-		/// @param weight Weight of added unit type. This value has no effects if @param addType is false.
-		/// @return Returns the number of the added unit in the unit group.
-		public method addExistingUnitWithType takes unit existingUnit, real weight returns integer
-			local integer id = this.addExistingUnit(existingUnit)
-			call UnitPoolAddUnitType(this.m_unitPool, GetUnitTypeId(existingUnit), weight)
-			return id
+
+		public method removeMember takes integer memberIndex returns nothing
+			call this.m_members.erase(memberIndex)
 		endmethod
-		
-		//removeExistingUnit
-		
-		//methods
-		
-		public method addUnitType takes integer unitTypeId, real weight returns nothing
-			call UnitPoolAddUnitType(this.m_unitPool, unitTypeId, weight)
+
+		public method addUnitType takes integer memberIndex, integer unitTypeId, real weight returns nothing
+			call ASpawnPointMember(this.m_members[memberIndex]).addUnitType(unitTypeId, weight)
 		endmethod
-		
-		public method removeUnitType takes integer unitTypeId returns nothing
-			call UnitPoolRemoveUnitType(this.m_unitPool, unitTypeId)
+
+		public method removeUnitType takes integer memberIndex, integer unitTypeId returns nothing
+			call ASpawnPointMember(this.m_members[memberIndex]).removeUnitType(unitTypeId)
 		endmethod
-		
-		public method addItemType takes integer itemTypeId, real weight returns nothing
-			call ItemPoolAddItemType(this.m_itemPool, itemTypeId, weight)
+
+		public method addItemType takes integer memberIndex, integer itemTypeId, real weight returns nothing
+			call ASpawnPointMember(this.m_members[memberIndex]).addItemType(itemTypeId, weight)
 		endmethod
-		
-		public method removeItemType takes integer itemTypeId returns nothing
-			call ItemPoolRemoveItemType(this.m_itemPool, itemTypeId)
+
+		public method removeItemType takes integer memberIndex, integer itemTypeId returns nothing
+			call ASpawnPointMember(this.m_members[memberIndex]).removeItemType(itemTypeId)
+		endmethod
+
+		public method setX takes integer memberIndex, real x returns nothing
+			call ASpawnPointMember(this.m_members[memberIndex]).setX(x)
+		endmethod
+
+		public method x takes integer memberIndex returns real
+			return ASpawnPointMember(this.m_members[memberIndex]).x()
+		endmethod
+
+		public method setY takes integer memberIndex, real y returns nothing
+			call ASpawnPointMember(this.m_members[memberIndex]).setY(y)
+		endmethod
+
+		public method y takes integer memberIndex returns real
+			return ASpawnPointMember(this.m_members[memberIndex]).y()
+		endmethod
+
+		public method setFacing takes integer memberIndex, real facing returns nothing
+			call ASpawnPointMember(this.m_members[memberIndex]).setFacing(facing)
+		endmethod
+
+		public method facing takes integer memberIndex returns real
+			return ASpawnPointMember(this.m_members[memberIndex]).facing()
+		endmethod
+
+		/**
+		* Adds an existing unit to group. If all units of the group has been died, new units will be spawned.
+		*/
+		public method addUnit takes unit whichUnit returns nothing
+			call this.m_group.units().pushBack(whichUnit)
+		endmethod
+
+		/**
+		* Note that this only works before the group was respawned first time since respawning
+		* units means that the old ones will be removed from game (not like hero revivals).
+		*/
+		public method removeUnit takes unit whichUnit returns nothing
+			call this.m_group.units().remove(whichUnit)
+		endmethod
+
+		public method clearUnits takes nothing returns nothing
+			call this.m_group.units().clear()
+		endmethod
+
+		/**
+		* Note that after unit @param whichUnit has died there will be spawned a new RANDOM unit from unit pool.
+		* @param weight Weight of added unit type. This value has no effects if @param addType is false.
+		* @return Returns the index of the added member.
+		*/
+		public method addUnitWithType takes unit whichUnit, real weight returns integer
+			local integer index = this.addMember(GetUnitX(whichUnit), GetUnitY(whichUnit), GetUnitFacing(whichUnit))
+			call this.addUnitType(index, GetUnitTypeId(whichUnit), weight)
+			call this.addUnit(whichUnit)
+			return index
+		endmethod
+
+		public method removeUnitWithType takes unit whichUnit returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_members.size())
+				call this.removeUnitType(i, GetUnitTypeId(whichUnit))
+				set i = i + 1
+			endloop
+			call this.removeUnit(whichUnit)
 		endmethod
 
 		/// If you want to start a video and there are some spawn points near the scene you can disable them during the video.
@@ -89,65 +251,59 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			endif
 		endmethod
 
+		public method remainingTime takes nothing returns real
+			return TimerGetRemaining(this.m_spawnTimer)
+		endmethod
+
 		public method spawn takes nothing returns nothing
 			local integer i
-			local real angle
-			local real range
-			local real x
-			local real y
-			local real facingAngle
-			local unit createdUnit
-			local effect createdEffect
-			debug if (this.m_unitPool == null) then
-				debug call this.print("Unit pool is null.")
-				debug return
-			debug endif
-			debug if (not IsUnitGroupDeadBJ(this.m_unitGroup)) then
-				debug call this.print("Unit group is not dead yet.")
+			local effect whichEffect
+			debug if (not this.m_group.units().empty()) then
+				debug call this.print("Warning: Unit group is not dead yet.")
 			debug endif
 			set i = 0
 			loop
-				exitwhen (i == this.m_count)
-				set angle = GetRandomReal(0.0, 360.0)
-				set range = GetRandomReal(0.0, this.m_range)
-				set x = GetPolarProjectionX(this.m_x, angle, range)
-				set y = GetPolarProjectionY(this.m_y, angle, range)
-				set facingAngle = GetRandomReal(0.0, 360.0)
-				set createdUnit = PlaceRandomUnit(this.m_unitPool, thistype.m_owner, x, y, facingAngle)
-				call GroupAddUnit(this.m_unitGroup, createdUnit)
-				set createdUnit = null
-				//Need global, faster?
-				if (thistype.m_effectPath != null) then
-					set createdEffect = AddSpecialEffect(thistype.m_effectPath, x, y)
-					call DestroyEffect(createdEffect)
-					set createdEffect = null
+				exitwhen (i == this.m_members.size())
+				call ASpawnPointMember(this.m_members[i]).placeUnit(thistype.m_owner)
+
+				if (ASpawnPointMember(this.m_members[i]).unit() != null) then
+					call this.m_group.units().pushBack(ASpawnPointMember(this.m_members[i]).unit())
+					// need global, faster?
+					if (thistype.m_effectPath != null) then
+						set whichEffect = AddSpecialEffect(thistype.m_effectPath, ASpawnPointMember(this.m_members[i]).x(), ASpawnPointMember(this.m_members[i]).y())
+						call DestroyEffect(whichEffect)
+						set whichEffect = null
+					endif
+				debug else
+					debug call this.print("Warning: Couldn't place unit.")
 				endif
 				set i = i + 1
 			endloop
 		endmethod
 
 		private method dropItem takes unit diedUnit returns nothing
-			local integer change
-			local item droppedItem
-			local player itemOwner
 			local integer i
-			local player user
-			if (this.m_itemPool != null) then
-				set change = GetRandomInt(0, 100)
-				if (change <= thistype.m_dropChance) then
-					set droppedItem = PlaceRandomItem(this.m_itemPool, GetUnitX(diedUnit), GetUnitY(diedUnit))
-					call SetItemDropID(droppedItem, GetUnitTypeId(diedUnit))
-					if (thistype.m_distributeItems) then
-						call thistype.distributeDroppedItem(droppedItem)
+			if (GetRandomInt(0, 100) <= thistype.m_dropChance) then
+				set i = 0
+				loop
+					exitwhen (i == this.m_members.size())
+					if (diedUnit == ASpawnPointMember(this.m_members[i]).unit()) then
+						call ASpawnPointMember(this.m_members[i]).placeItem()
+						if (ASpawnPointMember(this.m_members[i]).item() != null and thistype.m_distributeItems) then // item can be null if member has no item types to place
+							call thistype.distributeDroppedItem(ASpawnPointMember(this.m_members[i]).item())
+						debug else
+							debug call this.print("Warning: Couldn't place item.")
+						endif
+						exitwhen (true)
 					endif
-					set droppedItem = null
-				endif
+					set i = i + 1
+				endloop
 			endif
 		endmethod
 
 		private static method timerFunctionSpawn takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
-			local ASpawnPoint this = AHashTable.global().handleInteger(expiredTimer, "this")
+			local thistype this = AHashTable.global().handleInteger(expiredTimer, "this")
 			call this.spawn()
 			set expiredTimer = null
 		endmethod
@@ -163,8 +319,8 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 		private static method triggerConditionDeath takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local unit triggerUnit = GetTriggerUnit()
-			local ASpawnPoint this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			local boolean result = IsUnitInGroup(triggerUnit, this.m_unitGroup)
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			local boolean result = this.m_group.units().contains(triggerUnit)
 			set triggeringTrigger = null
 			set triggerUnit = null
 			return result
@@ -174,8 +330,9 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local unit triggerUnit = GetTriggerUnit()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			call this.m_group.units().remove(triggerUnit)
 			call this.dropItem(triggerUnit)
-			if (IsUnitGroupDeadBJ(this.m_unitGroup)) then /// @todo maybe you should check it without ForGroup or this bj fucntion
+			if (this.m_group.units().empty()) then
 				call this.startTimer()
 			endif
 			set triggeringTrigger = null
@@ -183,15 +340,21 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		private method createDeathTrigger takes nothing returns nothing
+			local integer i
 			local player user
 			local event triggerEvent
 			local conditionfunc conditionFunction
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_deathTrigger = CreateTrigger()
-			set user = Player(PLAYER_NEUTRAL_AGGRESSIVE)
-			set triggerEvent = TriggerRegisterPlayerUnitEvent(this.m_deathTrigger, user, EVENT_PLAYER_UNIT_DEATH, null)
-			set user = null
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				set triggerEvent = TriggerRegisterPlayerUnitEvent(this.m_deathTrigger, user, EVENT_PLAYER_UNIT_DEATH, null)
+				set user = null
+				set i = i + 1
+			endloop
 			set conditionFunction = Condition(function thistype.triggerConditionDeath)
 			set triggerCondition = TriggerAddCondition(this.m_deathTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_deathTrigger, function thistype.triggerActionDeath)
@@ -207,35 +370,14 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			call AHashTable.global().setHandleInteger(this.m_spawnTimer, "this", this)
 		endmethod
 
-		public static method create takes real x, real y, real range returns thistype
+		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
-			//start members
-			set this.m_x = x
-			set this.m_y = y
-			set this.m_range = range
 			//members
-			set this.m_unitPool = CreateUnitPool()
-			set this.m_itemPool = CreateItemPool()
-			set this.m_unitGroup = CreateGroup()
+			set this.m_members = AIntegerVector.create()
+			set this.m_group = AGroup.create()
 
 			call this.createDeathTrigger()
 			call this.createSpawnTimer()
-			return this
-		endmethod
-		
-		public static method createByExistingUnitWithType takes unit usedUnit, real weight, real x, real y, real range returns thistype
-			local thistype this = thistype.create(x, y, range)
-			call this.addExistingUnitWithType(usedUnit, weight)
-			return this
-		endmethod
-		
-		public static method createByExistingUnitWithTypeAndRect takes unit usedUnit, real weight, rect usedRect, real range returns thistype
-			return thistype.createByExistingUnitWithType(usedUnit, weight, GetRectCenterX(usedRect), GetRectCenterY(usedRect), range)
-		endmethod
-		
-		public static method createByExistingUnitWithTypeAndPosition takes unit usedUnit, real weight, real range returns thistype
-			local thistype this = thistype.create(GetUnitX(usedUnit), GetUnitY(usedUnit), range)
-			call this.addExistingUnitWithType(usedUnit, weight)
 			return this
 		endmethod
 
@@ -248,23 +390,17 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			call AHashTable.global().destroyTimer(this.m_spawnTimer)
 			set this.m_spawnTimer = null
 		endmethod
-		
-		private static method removeUnit takes nothing returns nothing
-			local unit enumUnit = GetEnumUnit()
-			call RemoveUnit(enumUnit)
-			set enumUnit = null
-		endmethod
 
 		/// Removes all contained units.
 		public method onDestroy takes nothing returns nothing
 			//members
-			call DestroyUnitPool(this.m_unitPool)
-			set this.m_unitPool = null
-			call DestroyItemPool(this.m_itemPool)
-			set this.m_itemPool = null
-			call ForGroup(this.m_unitGroup, function thistype.removeUnit)
-			call DestroyGroup(this.m_unitGroup)
-			set this.m_unitGroup = null
+			loop
+				exitwhen (this.m_members.empty())
+				call ASpawnPointMember(this.m_members.back()).destroy()
+				call this.m_members.popBack()
+			endloop
+			call this.m_members.destroy()
+			call this.m_group.destroy()
 
 			call this.destroyDeathTrigger()
 			call this.destroySpawnTimer()
@@ -288,24 +424,24 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			//static members
 			set thistype.m_dropOwnerId = 0
 		endmethod
-		
-		public static method distributeDroppedItem takes item usedItem returns nothing
+
+		public static method distributeDroppedItem takes item whichItem returns nothing
 			local player itemOwner = thistype.getRandomItemOwner()
 			local player user
 			local integer i = 0
-			call SetItemPlayer(usedItem, itemOwner, true)
+			call SetItemPlayer(whichItem, itemOwner, true)
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
 				if (IsPlayerPlayingUser(user)) then
-					call DisplayTimedTextToPlayer(user, 0.0, 0.0, 6.0, StringArg(StringArg(thistype.m_textDistributeItem, GetItemName(usedItem)), GetPlayerName(itemOwner)))
+					call DisplayTimedTextToPlayer(user, 0.0, 0.0, 6.0, StringArg(StringArg(thistype.m_textDistributeItem, GetItemName(whichItem)), GetPlayerName(itemOwner)))
 				endif
 				set user = null
 				set i = i + 1
 			endloop
 			set itemOwner = null
 		endmethod
-		
+
 		private static method getRandomItemOwner takes nothing returns player
 			local player user
 			local integer oldDropId = thistype.m_dropOwnerId

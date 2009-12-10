@@ -76,7 +76,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	endfunction
 
 	/**
-	* Removes string @param removedString from string @param whichString and returns the resulting string. 
+	* Removes string @param removedString from string @param whichString and returns the resulting string.
 	* @param whichString String from which @param subString should be removed.
 	* @param removedString String which should be removed.
 	* @return Returns the new string without the removed string.
@@ -118,9 +118,9 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 		debug call StringPositionDebug(whichString, position + length - 1)
 		debug call StringPositionDebug(whichString, newPosition)
 		debug call StringPositionDebug(whichString, newPosition + length - 1)
-		set subString = SubString(whichString, position, length)
-		set result = RemoveSubString(whichString, position, length)
-		return InsertString(whichString, newPosition + StringLength(whichString) - StringLength(result), subString)
+		set subString = SubString(whichString, position, position + length)
+		set result = RemoveSubString(whichString, position, position + length)
+		return InsertString(result, newPosition, subString)
 	endfunction
 
 	/**
@@ -129,6 +129,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	* @param movedString String which should be moved.
 	* @param newPosition Position to which string @param movedString should be moved.
 	* @return Returns the new string with the moved string.
+	* @todo Doesn't work correctly. Missing rest of string when moving something.
 	*/
 	function MoveString takes string whichString, string movedString, integer newPosition returns string
 		local integer position = FindString(whichString, movedString)
@@ -136,7 +137,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 			debug call Print("MoveString: String \"" + whichString + "\" does not contain string \"" + movedString + "\".")
 			return whichString
 		endif
-		return MoveSubString(whichString, position, StringLength(whichString), newPosition) 
+		return MoveSubString(whichString, position, StringLength(movedString), newPosition)
 	endfunction
 
 	/**
@@ -148,13 +149,13 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 		local integer i = StringLength(whichString)
 		local string result = ""
 		loop
-			exitwhen (i == 1)
+			exitwhen (i == 0)
 			set result = result + SubString(whichString, i - 1, i)
 			set i = i - 1
 		endloop
 		return result
 	endfunction
-	
+
 	/**
 	* Basic case (in)sensitive pattern matching.
 	* Supported wildcard characters:

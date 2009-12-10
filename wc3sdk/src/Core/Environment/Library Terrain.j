@@ -150,7 +150,7 @@ library ALibraryCoreEnvironmentTerrain initializer init requires AStructCoreGene
 		set Y = GetItemY(Item)
 		//Unhide any items hidden at the start
 		loop
-			exitwhen (items.empty)
+			exitwhen (items.empty())
 			call SetItemVisible(items.back(), true)
 			call items.popBack()
 		endloop

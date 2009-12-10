@@ -64,7 +64,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		private trigger array m_stateTrigger[thistype.maxStates]
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AAbstractQuest\"")
-		
+
 		debug private method checkState takes integer state returns boolean
 			debug if ((state <= thistype.stateNotUsed) or (state >= thistype.maxStates)) then
 				debug call this.print("Wrong state: " + I2S(state) + ".")
@@ -159,7 +159,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			debug endif
 			set this.m_stateCondition[state] = stateCondition
 		endmethod
-		
+
 		public method stateCondition takes integer state returns AAbstractQuestStateCondition
 			debug if (not this.checkState(state)) then
 				debug return 0
@@ -173,7 +173,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			debug endif
 			set this.m_stateAction[state] = stateAction
 		endmethod
-		
+
 		public method stateAction takes integer state returns AAbstractQuestStateAction
 			debug if (not this.checkState(state)) then
 				debug return 0
@@ -188,11 +188,11 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		public method reward takes integer reward returns integer
 			return this.m_reward
 		endmethod
-		
+
 		public method setPing takes boolean ping returns nothing
 			set this.m_ping = ping
 		endmethod
-		
+
 		public method ping takes nothing returns boolean
 			return this.m_ping
 		endmethod
@@ -253,51 +253,51 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		public method character takes nothing returns ACharacter
 			return this.m_character
 		endmethod
-		
+
 		public method title takes nothing returns string
 			return this.m_title
 		endmethod
 
 		//convenience methods
-		
+
 		public method setPingLocation takes location usedLocation returns nothing
 			set this.m_pingX = GetLocationX(usedLocation)
 			set this.m_pingY = GetLocationY(usedLocation)
 		endmethod
-		
+
 		public method setPingRect takes rect usedRect returns nothing
 			set this.m_pingX = GetRectCenterX(usedRect)
 			set this.m_pingY = GetRectCenterY(usedRect)
 		endmethod
-		
+
 		public method setPingWidget takes widget usedWidget returns nothing
 			set this.m_pingX = GetWidgetX(usedWidget)
 			set this.m_pingY = GetWidgetY(usedWidget)
 		endmethod
-		
+
 		public method setPingUnit takes unit usedUnit returns nothing
 			set this.m_pingX = GetUnitX(usedUnit)
 			set this.m_pingY = GetUnitY(usedUnit)
 		endmethod
-		
+
 		public method setPingDestructable takes destructable usedDestructable returns nothing
 			set this.m_pingX = GetDestructableX(usedDestructable)
 			set this.m_pingY = GetDestructableY(usedDestructable)
 		endmethod
-		
+
 		public method setPingItem takes item usedItem returns nothing
 			set this.m_pingX = GetItemX(usedItem)
 			set this.m_pingY = GetItemY(usedItem)
 		endmethod
-		
+
 		public method setPingColour takes real red, real green, real blue returns nothing
 			set this.m_pingRed = red
 			set this.m_pingGreen = green
 			set this.m_pingBlue = blue
 		endmethod
-		
+
 		//methods
-		
+
 		public method getModifiedTitle takes nothing returns string
 			if (this.m_state == thistype.stateNew) then
 				return StringArg(thistype.textStateNew, this.m_title)
@@ -325,7 +325,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		private method displayMessage takes nothing returns nothing
 			if (this.m_character != 0) then
 				call this.m_character.displayMessage(ACharacter.messageTypeInfo, this.getModifiedTitle())
-				call PlaySoundPathForPlayer(this.m_character.user(), this.getSoundPath())
+				call PlaySoundFileForPlayer(this.m_character.user(), this.getSoundPath())
 			else
 				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.getModifiedTitle())
 				call PlaySound(this.getSoundPath())
@@ -437,7 +437,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			set triggeringTrigger = null
 			return result
 		endmethod
-	
+
 		private static method triggerActionRunQuestState takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -457,7 +457,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			call this.setState(state)
 			set triggeringTrigger = null
 		endmethod
-		
+
 		/// Condition and action definition must be above!!!!!!!!!!!!!!!!!!!!!!
 		private method createStateTrigger takes integer state returns nothing
 			local conditionfunc conditionFunction
@@ -507,10 +507,10 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		public method onDestroy takes nothing returns nothing
 			//static members
 			call thistype.m_abstractQuests.erase(this.m_index)
-			
+
 			call this.destroyStateTriggers()
 		endmethod
-		
+
 		private static method timerFunctionPing takes nothing returns nothing
 			local thistype abstractQuest
 			local player user
@@ -557,16 +557,16 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			endif
 
 			if (stateNewSoundPath != null) then
-				call PreloadSoundPath(stateNewSoundPath)
+				call PreloadSoundFile(stateNewSoundPath)
 			endif
 			if (stateCompletedSoundPath != null) then
-				call PreloadSoundPath(stateCompletedSoundPath)
+				call PreloadSoundFile(stateCompletedSoundPath)
 			endif
 			if (stateFailedSoundPath != null) then
-				call PreloadSoundPath(stateFailedSoundPath)
+				call PreloadSoundFile(stateFailedSoundPath)
 			endif
 		endmethod
-		
+
 		public static method cleanUp takes nothing returns nothing
 			loop
 				exitwhen (thistype.m_abstractQuests.empty())
@@ -579,7 +579,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 				set thistype.m_pingTimer = null
 			endif
 		endmethod
-		
+
 		public static method enablePing takes nothing returns nothing
 			if (thistype.pingRate != 0.0) then
 				call ResumeTimer(thistype.m_pingTimer)
@@ -587,7 +587,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 				debug call thistype.staticPrint("There is no ping timer.")
 			endif
 		endmethod
-		
+
 		public static method disablePing takes nothing returns nothing
 			if (thistype.pingRate != 0.0) then
 				call PauseTimer(thistype.m_pingTimer)

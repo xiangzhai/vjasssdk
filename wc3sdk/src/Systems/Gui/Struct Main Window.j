@@ -2,10 +2,10 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 
 	/// @todo Should be a static function interface of @struct AMainWindow, vJass bug.
 	function interface AMainWindowOnShowCondition takes AMainWindow mainWindow returns boolean
-	
+
 	/// @todo Should be a static function interface of @struct AMainWindow, vJass bug.
 	function interface AMainWindowOnShowAction takes AMainWindow mainWindow returns nothing
-	
+
 	/// @todo Should be a static function interface of @struct AMainWindow, vJass bug.
 	function interface AMainWindowOnHideCondition takes AMainWindow mainWindow returns boolean
 
@@ -42,55 +42,55 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		private fogmodifier m_blackMaskModifier
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AMainWindow\"")
-		
+
 		//dynamic members
-		
+
 		/// The @param onShowCondition will be checked before the main window should be displayed.
 		/// If it returns false the main window won't be displayed.
 		public method setOnShowCondition takes AMainWindowOnShowAction onShowCondition returns nothing
 			set this.m_onShowCondition = onShowCondition
 		endmethod
-		
+
 		public method onShowCondition takes nothing returns AMainWindowOnShowCondition
 			return this.m_onShowCondition
 		endmethod
-		
+
 		public method setOnShowAction takes AMainWindowOnShowAction onShowAction returns nothing
 			set this.m_onShowAction = onShowAction
 		endmethod
-		
+
 		public method onShowAction takes nothing returns AMainWindowOnShowAction
 			return this.m_onShowAction
 		endmethod
-		
+
 		public method setOnHideCondition takes AMainWindowOnHideCondition onHideCondition returns nothing
 			set this.m_onHideCondition = onHideCondition
 		endmethod
-		
+
 		public method onHideCondition takes nothing returns AMainWindowOnHideCondition
 			return this.m_onHideCondition
 		endmethod
-		
+
 		public method setOnHideAction takes AMainWindowOnHideAction onHideAction returns nothing
 			set this.m_onHideAction = onHideAction
 		endmethod
-		
+
 		public method onHideAction takes nothing returns AMainWindowOnHideAction
 			return this.m_onHideAction
 		endmethod
-		
+
 		public method setTooltipX takes real tooltipX returns nothing
 			set this.m_tooltipX = tooltipX
 		endmethod
-		
+
 		public method tooltipX takes nothing returns real
 			return this.m_tooltipX
 		endmethod
-		
+
 		public method setTooltipY takes real tooltipY returns nothing
 			set this.m_tooltipY = tooltipY
 		endmethod
-		
+
 		public method tooltipY takes nothing returns real
 			return this.m_tooltipY
 		endmethod
@@ -100,11 +100,11 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		public method gui takes nothing returns AGui
 			return this.m_gui
 		endmethod
-		
+
 		public method x takes nothing returns real
 			return this.m_x
 		endmethod
-		
+
 		public method y takes nothing returns real
 			return this.m_y
 		endmethod
@@ -118,7 +118,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		endmethod
 
 		//members
-		
+
 		public method index takes nothing returns integer
 			return this.m_index
 		endmethod
@@ -126,15 +126,15 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		public method isShown takes nothing returns boolean
 			return this.m_isShown
 		endmethod
-		
+
 		//convenience methods
-		
+
 		public method user takes nothing returns player
 			return this.m_gui.user()
 		endmethod
 
 		//methods
-		
+
 		public method getX takes real x returns real
 			return (this.m_x + x)
 		endmethod
@@ -142,7 +142,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		public method getY takes real y returns real
 			return (this.m_y - y)
 		endmethod
-		
+
 		public method enableShortcut takes nothing returns nothing
 			debug if (this.m_shortcut == -1) then
 				debug call this.print("Main window does not use a shortcut.")
@@ -150,7 +150,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			debug endif
 			call EnableTrigger(this.m_shortcutTrigger)
 		endmethod
-		
+
 		public method disableShortcut takes nothing returns nothing
 			debug if (this.m_shortcut == -1) then
 				debug call this.print("Main window does not use a shortcut.")
@@ -168,7 +168,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			call SetTextTagPos(this.m_tooltip, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 0.0)
 			call ShowTextTagForPlayer(this.user(), this.m_tooltip, true)
 			if (thistype.tooltipSoundPath != null) then
-				call PlaySoundPathForPlayer(this.user(), thistype.tooltipSoundPath)
+				call PlaySoundFileForPlayer(this.user(), thistype.tooltipSoundPath)
 			endif
 		endmethod
 
@@ -217,7 +217,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			if (this.m_onHideCondition != 0 and not this.m_onHideCondition.evaluate(this)) then
 				return
 			endif
-			
+
 			call ResetCameraBoundsToMapRectForPlayer(this.user())
 			call ResetToGameCameraForPlayer(this.user(), 0.0)
 			call FogModifierStop(this.m_visibilityModifier)
@@ -237,23 +237,23 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 			set this.m_isShown = false
 			call this.m_gui.resetShownMainWindow()
-			
+
 			if (this.m_onHideAction != 0) then
 				call this.m_onHideAction.execute(this)
 			endif
 		endmethod
-		
+
 		/// Friend relationship to @struct AWidget, do not use.
 		public method dockWidget takes AWidget usedWidget returns integer
 			call this.m_widgets.pushBack(usedWidget)
 			return this.m_widgets.backIndex()
 		endmethod
-		
+
 		/// Friend relationship to @struct AWidget, do not use.
 		public method undockWidgetByIndex takes integer index returns nothing
 			call this.m_widgets.erase(index)
 		endmethod
-		
+
 		private static method triggerActionPressShortcut takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -264,7 +264,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 			set triggeringTrigger = null
 		endmethod
-		
+
 		private method createShortcutTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
@@ -302,7 +302,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_visibilityModifier = CreateFogModifierRect(this.user(), FOG_OF_WAR_VISIBLE, this.m_fogModifierRect, true, false)
 			set this.m_blackMaskModifier = CreateFogModifierRect(this.user(), FOG_OF_WAR_MASKED, this.m_fogModifierRect, true, false)
 			call FogModifierStart(this.m_blackMaskModifier)
-			
+
 			if (shortcut != -1) then
 				debug if (not KeyIsValid(shortcut)) then
 					debug call this.print("Shortcut has no valid key value.")
@@ -311,7 +311,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 			return this
 		endmethod
-		
+
 		public static method createByRect takes AGui gui, rect usedRect, boolean useShortcuts, integer shortcut returns AMainWindow
 			return thistype.create(gui, GetRectMinX(usedRect), GetRectMaxY(usedRect), GetRectWidthBJ(usedRect), GetRectHeightBJ(usedRect), useShortcuts, shortcut)
 		endmethod
@@ -329,9 +329,9 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_visibilityModifier = null
 			call DestroyFogModifier(this.m_blackMaskModifier)
 			set this.m_blackMaskModifier = null
-			
+
 			if (this.m_shortcut != -1) then
-				call AHashTable.global().destroyTrigger(this.m_shortcutTrigger) 
+				call AHashTable.global().destroyTrigger(this.m_shortcutTrigger)
 				set this.m_shortcutTrigger = null
 			endif
 
@@ -350,7 +350,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set thistype.tooltipSoundPath = tooltipSoundPath
 
 			if (tooltipSoundPath != null) then
-				call PreloadSoundPath(tooltipSoundPath) //ALibraryEnvironmentSound
+				call PreloadSoundFile(tooltipSoundPath) //ALibraryEnvironmentSound
 			endif
 		endmethod
 	endstruct

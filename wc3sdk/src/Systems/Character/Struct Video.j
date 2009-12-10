@@ -5,27 +5,27 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		private unit m_unit
 		//members
 		private unit m_actor
-		
+
 		//start members
-		
+
 		public method unit takes nothing returns unit
 			return this.m_unit
 		endmethod
-		
+
 		//members
-		
+
 		public method actor takes nothing returns unit
 			return this.m_actor
 		endmethod
-		
+
 		//methods
-		
+
 		public method restore takes nothing returns nothing
 			call RemoveUnit(this.m_actor)
 			set this.m_actor = null
 			call ShowUnit(this.m_unit, true)
 		endmethod
-		
+
 		public method restoreOnActorsLocation takes nothing returns nothing
 			call BJDebugMsg("restore on actors location")
 			call SetUnitX(this.m_unit, GetUnitX(this.m_actor))
@@ -33,7 +33,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call SetUnitFacing(this.m_unit, GetUnitFacing(this.m_actor))
 			call this.restore()
 		endmethod
-		
+
 		public static method create takes unit oldUnit returns thistype
 			local thistype this = thistype.allocate()
 			//local player newOwner = Player(PLAYER_NEUTRAL_PASSIVE) // set passive owner so unit won't attack or be attacked
@@ -56,7 +56,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			//set newOwner = null
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			//start members
 			set this.m_unit = null
@@ -67,13 +67,13 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 		endmethod
 	endstruct
-	
+
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoInitAction takes AVideo video returns nothing
 
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoPlayAction takes AVideo video returns nothing
-	
+
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoStopAction takes AVideo video returns nothing
 
@@ -113,7 +113,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AVideo\"")
 
 		//methods
-		
+
 		public method play takes nothing returns nothing
 			local force playersAll
 			debug if (thistype.m_runningVideo != 0) then
@@ -148,7 +148,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		public method stop takes nothing returns nothing
 			local force playersAll
 			debug call Print("Stop!")
-			call DisableTrigger(thistype.m_skipTrigger) 
+			call DisableTrigger(thistype.m_skipTrigger)
 			call EnableUserControl(false)
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
@@ -188,7 +188,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 			return this
 		endmethod
-		
+
 		private static method triggerConditionSkip takes nothing returns boolean
 			return thistype.m_runningVideo != 0
 		endmethod
@@ -281,12 +281,12 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 			call thistype.createSkipTrigger()
 		endmethod
-		
+
 		private static method destroySkipTrigger takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(thistype.m_skipTrigger)
 			set thistype.m_skipTrigger = null
 		endmethod
-		
+
 		public static method cleanUp takes nothing returns nothing
 			//static members
 			loop
@@ -295,32 +295,32 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				call thistype.m_actorData.popBack()
 			endloop
 			call thistype.m_actorData.destroy()
-		
+
 			call thistype.destroySkipTrigger()
 		endmethod
-		
+
 		//static start members
-		
+
 		public static method waitInterval takes nothing returns real
-			return thistype.waitInterval
+			return thistype.m_waitInterval
 		endmethod
-		
+
 		//static members
 
 		public static method runningVideo takes nothing returns thistype
 			return thistype.m_runningVideo
 		endmethod
-		
+
 		public static method skipped takes nothing returns boolean
 			return thistype.m_skipped
 		endmethod
-		
+
 		//static methods
-		
+
 		public static method isRunning takes nothing returns boolean
 			return thistype.m_runningVideo != 0
 		endmethod
-		
+
 		public static method actor takes nothing returns unit
 			debug if (thistype.m_runningVideo == 0) then
 				debug call thistype.staticPrint("Running video is 0.")
@@ -330,43 +330,43 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 			return thistype.m_actor.actor()
 		endmethod
-		
+
 		public static method saveUnitActor takes unit actor returns integer
 			local AActorData data = AActorData.create(actor)
 			call thistype.m_actorData.pushBack(data)
 			return thistype.m_actorData.backIndex()
 		endmethod
-		
+
 		public static method unitActor takes integer index returns unit
 			return AActorData(thistype.m_actorData[index]).actor()
 		endmethod
-		
+
 		public static method restoreUnitActor takes integer index returns nothing
 			call AActorData(thistype.m_actorData[index]).restore()
 			call AActorData(thistype.m_actorData[index]).destroy()
 			call thistype.m_actorData.erase(index)
 		endmethod
-		
+
 		public static method restoreUnitActorOnActorLocation takes integer index returns nothing
 			call AActorData(thistype.m_actorData[index]).restoreOnActorsLocation()
 			call AActorData(thistype.m_actorData[index]).destroy()
 			call thistype.m_actorData.erase(index)
 		endmethod
-		
+
 		public static method restoreUnitActors takes nothing returns nothing
 			loop
 				exitwhen (thistype.m_actorData.empty())
 				call thistype.restoreUnitActor(thistype.m_actorData.backIndex())
 			endloop
 		endmethod
-		
+
 		public static method restoreUnitActorsOnActorsLocations takes nothing returns nothing
 			loop
 				exitwhen (thistype.m_actorData.empty())
 				call thistype.restoreUnitActorOnActorLocation(thistype.m_actorData.backIndex())
 			endloop
 		endmethod
-		
+
 		public static method setActorsMoveSpeed takes real moveSpeed returns nothing
 			local integer i = 0
 			loop
@@ -375,7 +375,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		private static method savePlayerData takes nothing returns nothing
 			local player user
 			local integer i = 0
@@ -398,7 +398,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		private static method restorePlayerData takes nothing returns nothing
 			local player user
 			local integer i = 0
@@ -418,7 +418,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endloop
 		endmethod
 	 endstruct
-	 
+
 	/**
 	* Waits until no video is running anymore.
 	* @param interval Check interval.
@@ -430,7 +430,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call PolledWait(interval) // synchron waiting, important for multiplayer games
 		endloop
 	endfunction
-	
+
 	/**
 	* Waits @param seconds seconds in video.
 	* Note that this function is like @function PolledWait since it has to be synchronos
@@ -440,7 +440,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	function wait takes real seconds returns boolean
 		local timer whichTimer = CreateTimer()
 		call TimerStart(whichTimer, seconds, false, null)
-		set seconds = TimerGetRemaining(whichTimer) 
+		set seconds = TimerGetRemaining(whichTimer)
 		loop
 			set seconds = seconds - AVideo.waitInterval()
 			exitwhen (seconds <= 0.0)

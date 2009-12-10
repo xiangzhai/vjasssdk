@@ -5,7 +5,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 
 	/// @todo Should be a static method of @struct AWidget, vJass bug.
 	function interface AWidgetOnTrackAction takes AWidget usedWidget returns nothing
-	
+
 	/// @todo Should be a static method of @struct AWidget, vJass bug.
 	/// Use this method as track action if you want to have the generic tooltip.
 	/// You can also use another track action and call this method in your custom action.
@@ -107,15 +107,15 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		public method sizeY takes nothing returns real
 			return this.m_sizeY
 		endmethod
-		
+
 		//members
-		
+
 		public method index takes nothing returns integer
 			return this.m_index
 		endmethod
-		
+
 		//convenience methods
-		
+
 		public method gui takes nothing returns AGui
 			return this.m_mainWindow.gui()
 		endmethod
@@ -173,7 +173,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_onHitAction.execute(this)
 			if (thistype.onHitSoundPath != null) then
-				call PlaySoundPathForPlayer(this.user(), thistype.onHitSoundPath)
+				call PlaySoundFileForPlayer(this.user(), thistype.onHitSoundPath)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -196,7 +196,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_onTrackAction.execute(this)
 			if (thistype.onTrackSoundPath != null) then
-				call PlaySoundPathForPlayer(this.user(), thistype.onTrackSoundPath)
+				call PlaySoundFileForPlayer(this.user(), thistype.onTrackSoundPath)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -244,7 +244,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 
 		private method destroyOnHitTrigger takes nothing returns nothing
 			if (this.m_onHitAction != 0) then
-				call AHashTable.global().destroyTrigger(this.m_onHitTrigger) 
+				call AHashTable.global().destroyTrigger(this.m_onHitTrigger)
 				set this.m_onHitTrigger = null
 			endif
 		endmethod
@@ -267,10 +267,10 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			set thistype.onTrackSoundPath = onTrackSoundPath
 
 			if (onHitSoundPath != null) then
-				call PreloadSoundPath(onHitSoundPath)
+				call PreloadSoundFile(onHitSoundPath)
 			endif
 			if (onTrackSoundPath != null) then
-				call PreloadSoundPath(onTrackSoundPath)
+				call PreloadSoundFile(onTrackSoundPath)
 			endif
 		endmethod
 

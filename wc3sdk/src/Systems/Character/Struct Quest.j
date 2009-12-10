@@ -18,7 +18,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		public method questItem takes integer index returns AQuestItem
 			return this.m_questItems[index]
 		endmethod
-		
+
 		public method setIconPath takes string iconPath returns nothing
 			debug if (not thistype.useQuestLog) then
 				debug call this.print("setIconPath() was called (quest log is disabled).")
@@ -26,7 +26,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			set this.m_iconPath = iconPath
 			call QuestSetIconPath(this.m_questLogQuest, iconPath)
 		endmethod
-		
+
 		public method iconPath takes nothing returns string
 			return this.m_iconPath
 		endmethod
@@ -104,7 +104,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			local player user = this.character().user()
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, this.title())
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, message)
-			call PlaySoundPathForPlayer(user, thistype.updateSoundPath)
+			call PlaySoundFileForPlayer(user, thistype.updateSoundPath)
 			set user = null
 		endmethod
 
@@ -128,13 +128,13 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			endif
 			return result
 		endmethod
-		
+
 		/// Friend relationship to @struct AQuestItem, do not use.
 		public method addQuestItem takes AQuestItem questItem returns integer
 			call this.m_questItems.pushBack(questItem)
 			return this.m_questItems.backIndex()
 		endmethod
-		
+
 		/// Friend relationship to @struct AQuestItem, do not use.
 		public method removeQuestItemByIndex takes integer index returns nothing
 			call this.m_questItems.erase(index)
@@ -163,7 +163,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 				set this.m_questLogQuest = null
 			endif
 		endmethod
-	
+
 		//Alle QuestItems werden auch zerstört
 		private method destroyQuestItems takes nothing returns nothing
 			loop

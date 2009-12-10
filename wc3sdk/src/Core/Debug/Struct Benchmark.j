@@ -1,4 +1,4 @@
-library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGeneralVector
+library AStructCoreDebugBenchmark requires AModuleCoreGeneralSystemStruct, AStructCoreGeneralAsl, AStructCoreGeneralVector
 
 	/**
 	* This struct can be used for time measurement of important code parts.
@@ -13,7 +13,7 @@ library AStructCoreDebugBenchmark requires AStructCoreGeneralAsl, AStructCoreGen
 		private static ADestructableVector m_destructables
 		private static AEffectVector m_effects
 		//dynamic members
-		private string m_name
+		private string m_identifier
 		//members
 		private boolean m_isRunning
 		private real m_time
@@ -23,29 +23,31 @@ else
 		private timer m_timer
 endif
 		private integer m_index
-		
+
+		implement ASystemStruct
+
 		//dynamic members
-		
-		public method setName takes string name returns nothing
-			set this.m_name = name
+
+		public method setIdentifier takes string identifier returns nothing
+			set this.m_identifier = identifier
 		endmethod
-		
-		public method name takes nothing returns string
-			return this.m_name
+
+		public method identifier takes nothing returns string
+			return this.m_identifier
 		endmethod
-		
+
 		//members
-		
+
 		public method isRunning takes nothing returns boolean
 			return this.m_isRunning
 		endmethod
-		
+
 		public method time takes nothing returns real
 			return this.m_time
 		endmethod
-		
+
 		//methods
-		
+
 		/// @todo When timer ends it should be started again and elapsed time should be added to member variable.
 		public method start takes nothing returns nothing
 			set this.m_isRunning = true
@@ -56,7 +58,7 @@ else
 			call TimerStart(this.m_timer, 99999.0, false, null)
 endif
 		endmethod
-		
+
 		public method stop takes nothing returns nothing
 			set this.m_isRunning = false
 static if (A_JAPI) then
@@ -68,15 +70,15 @@ else
 			call PauseTimer(this.m_timer)
 endif
 		endmethod
-		
+
 		public method show takes nothing returns nothing
-			debug call Print(this.m_name + ": " + R2S(this.m_time))
+			debug call Print(this.m_identifier + ": " + R2S(this.m_time))
 		endmethod
-		
-		public static method create takes string name returns thistype
+
+		public static method create takes string identifier returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
-			set this.m_name = name
+			set this.m_identifier = identifier
 			//members
 			set this.m_isRunning = false
 			set this.m_time = 0
@@ -90,7 +92,7 @@ endif
 			set this.m_index = thistype.m_benchmarks.backIndex()
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			//static members
 			call thistype.m_benchmarks.erase(this.m_index)
@@ -104,7 +106,11 @@ else
 			set this.m_timer = null
 endif
 		endmethod
-		
+
+		private static method onInit takes nothing returns nothing
+			call thistype.setName("ABenchmark")
+		endmethod
+
 		public static method init takes nothing returns nothing
 			//static members
 			set thistype.m_benchmarks = AIntegerVector.create()
@@ -114,9 +120,11 @@ static if (A_DEBUG_HANDLES) then
 			set thistype.m_destructables = ADestructableVector.create()
 			set thistype.m_effects = AEffectVector.create()
 endif
+			call thistype.initialize()
 		endmethod
-		
+
 		public static method cleanUp takes nothing returns nothing
+			call thistype.uninitialize()
 			//static members
 			loop
 				exitwhen (thistype.m_benchmarks.empty())
@@ -130,12 +138,12 @@ static if (A_DEBUG_HANDLES) then
 			call thistype.m_effects.destroy()
 endif
 		endmethod
-		
+
 		public static method showBenchmarks takes nothing returns nothing
 			local integer i = 0
 			loop
 				exitwhen (i == thistype.m_benchmarks.size())
-				call thistype(thistype.m_benchmarks[i]).show() 
+				call thistype(thistype.m_benchmarks[i]).show()
 				set i = i + 1
 			endloop
 		endmethod
@@ -184,7 +192,7 @@ endif
 static if (A_DEBUG_HANDLES) then
 		private static method createUnit takes player id, integer unitid, real x, real y, real face returns nothing
 			local unit whichUnit
-			if (thistype.m_units != 0) then //native can be called before ABenchmarks initialization!
+			if (thistype.initialized()) then //native can be called before ABenchmarks initialization!
 				set whichUnit = CreateUnit(id, unitid, x, y, face)
 				call thistype.m_units.pushBack(whichUnit)
 				call RemoveUnit(whichUnit)
@@ -194,14 +202,14 @@ static if (A_DEBUG_HANDLES) then
 		endmethod
 
 		private static method removeUnit takes unit whichUnit returns nothing
-			if (thistype.m_units != 0) then //native can be called before ABenchmarks initialization!
+			if (thistype.initialized()) then //native can be called before ABenchmarks initialization!
 				call thistype.m_units.remove(whichUnit)
 			endif
 		endmethod
 
 		private static method createItem takes integer itemid, real x, real y returns nothing
 			local item whichItem
-			if (thistype.m_items != 0) then
+			if (thistype.initialized()) then
 				set whichItem = CreateItem(itemid, x, y)
 				call thistype.m_items.pushBack(whichItem)
 				call RemoveItem(whichItem)
@@ -211,14 +219,14 @@ static if (A_DEBUG_HANDLES) then
 		endmethod
 
 		private static method removeItem takes item whichItem returns nothing
-			if (thistype.m_items != 0) then
+			if (thistype.initialized()) then
 				call thistype.m_items.remove(whichItem)
 			endif
 		endmethod
 
 		private static method createDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns nothing
 			local destructable whichDestructable
-			if (thistype.m_destructables != 0) then
+			if (thistype.initialized()) then
 				set whichDestructable = CreateDestructable(objectid, x, y, face, scale, variation)
 				call thistype.m_destructables.pushBack(whichDestructable)
 				call RemoveDestructable(whichDestructable)
@@ -228,7 +236,7 @@ static if (A_DEBUG_HANDLES) then
 		endmethod
 
 		private static method removeDestructable takes destructable d returns nothing
-			if (thistype.m_destructables != 0) then
+			if (thistype.initialized()) then
 				call thistype.m_destructables.remove(d)
 			endif
 		endmethod

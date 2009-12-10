@@ -319,11 +319,11 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 		//convenience methods
 
 		public method startFromUnit takes unit whichUnit returns nothing
-			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), 0.0, GetUnitFacing(whichUnit))
+			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), 0.0)
 		endmethod
 
 		public method startFromUnitZ takes unit whichUnit returns nothing
-			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), GetUnitZ(whichUnit), GetUnitFacing(whichUnit))
+			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), GetUnitZ(whichUnit))
 		endmethod
 
 		/// Makes the missile unpaused which means that it will be moved next time when the periodic trigger moves all unpaused missiles.
@@ -384,9 +384,9 @@ endif
 			debug endif
 			if (this.m_targetWidget != null) then
 
-				set angle = GetAngleBetweenPoints(x, y, z,  GetWidgetX(this.m_targetWidget), GetWidgetY(this.m_targetWidget), GetWidgetZ(this.m_targetWidget))
+				set angle = GetAngleBetweenPoints(x, y, GetWidgetX(this.m_targetWidget), GetWidgetY(this.m_targetWidget))
 			else
-				set angle = GetAngleBetweenPoints(x, y, z, this.m_targetX, this.m_targetY, this.m_targetZ)
+				set angle = GetAngleBetweenPoints(x, y, this.m_targetX, this.m_targetY)
 			endif
 			set this.m_speed = AVector3.create(this.m_missileType.speed(), this.m_missileType.speed(), this.m_missileType.speed())
 			call this.m_speed.rotate(angle)
@@ -440,25 +440,33 @@ endif
 			local real newY
 			local real newZ
 			local integer i
-			set newX = currentX + this.m_missileType.speed()
-			set newY = currentY + this.m_missileType.speed()
+			local boolean collided = false
 
-			if (RectContainsCoords(mapRect, newX, newY) and IsTerrainPathable(newX, newY, PATHING_TYPE_WALKABILITY)) then //not?!
-				if (this.m_missileType.targetSeeking()) then
-					if (this.m_targetWidget != null) then
-						//set currentDistance = GetDistanceBetweenPoints(currentX, currentY, 0.0, GetWidgetX(this.m_targetWidget), GetWidgetY(this.m_targetWidget), 0.0)
-						set angle = Atan2(GetWidgetY(this.m_targetWidget) - currentY, GetWidgetX(this.m_targetWidget) - currentX)
-					else
-						//set currentDistance = GetDistanceBetweenPoints(currentX, currentY, 0.0, this.m_targetX, this.m_targetY, 0.0)
-						set angle = Atan2(this.m_targetY - currentY, this.m_targetX - currentX)
-					endif
-					call this.m_speed.rotate(angle)
-					call SetUnitFacing(this.m_unit, angle)
+			if (this.m_missileType.targetSeeking()) then
+				if (this.m_targetWidget != null) then
+					//set currentDistance = GetDistanceBetweenPoints(currentX, currentY, 0.0, GetWidgetX(this.m_targetWidget), GetWidgetY(this.m_targetWidget), 0.0)
+					set angle = GetAngleBetweenPoints(currentX, currentY, GetWidgetX(this.m_targetWidget), GetWidgetY(this.m_targetWidget))
+				else
+					//set currentDistance = GetDistanceBetweenPoints(currentX, currentY, 0.0, this.m_targetX, this.m_targetY, 0.0)
+					set angle = GetAngleBetweenPoints(currentX, currentY, this.m_targetX, this.m_targetY)
 				endif
+				call this.m_speed.rotate(angle)
+				call SetUnitFacing(this.m_unit, angle)
+			endif
+			/// @todo Doesn't work if it's target seeking, Z value has to be shortend.
+			set newX = GetPolarProjectionX(currentX, angle, this.m_missileType.speed())
+			set newY = GetPolarProjectionY(currentY, angle, this.m_missileType.speed())
+
+			debug call this.print("Move")
+
+			if (RectContainsCoords(mapRect, newX, newY) and not IsTerrainPathable(newX, newY, PATHING_TYPE_WALKABILITY)) then //not?!
+				debug call this.print("Is pathable and on map.")
 				call this.m_speed.setZ(this.m_speed.z() - thistype.m_gravitationalAcceleration)
 				set newZ = GetUnitZ(this.m_unit) + this.m_speed.z()
+				debug call this.print("New X " + R2S(newX) + ", new Y " + R2S(newY) + ", new Z " + R2S(newZ) + ".")
 				// hits ground
 				if (newZ <= GetTerrainZ(newX, newY)) then
+					debug call this.print("Hit ground")
 					call this.stop()
 				elseif (this.m_missileType.collides()) then
 					/// @todo Check for things, maybe other missiles?
@@ -468,24 +476,29 @@ endif
 						// collides with missile
 						if (i != this.m_index and thistype(thistype.m_missiles[i]).m_missileType.collides() and newX == thistype(thistype.m_missiles[i]).x() and newY == thistype(thistype.m_missiles[i]).y() and newZ == thistype(thistype.m_missiles[i]).z()) then
 							debug call this.print("Collision between " + I2S(this) + " and " + I2S(thistype.m_missiles[i]) + ".")
+							set collided = true
 							call thistype(thistype.m_missiles[i]).stop()
 							call this.stop()
 							exitwhen (true)
 						endif
 						set i = i + 1
 					endloop
-				// hits target widget
-				elseif (this.m_targetWidget != null) then
-					if (newX == GetWidgetX(this.m_targetWidget) and newY == GetWidgetY(this.m_targetWidget) and newZ == GetWidgetZ(this.m_targetWidget)) then
+				endif
+
+				if (not collided) then
+					debug call this.print("Not collided.")
+					// hits target widget
+					if (this.m_targetWidget != null and newX == GetWidgetX(this.m_targetWidget) and newY == GetWidgetY(this.m_targetWidget) and newZ == GetWidgetZ(this.m_targetWidget)) then
 						call this.stop()
+					// hits target point
+					elseif (newX == this.m_targetX and newY == this.m_targetY and newZ == this.m_targetZ) then
+						call this.stop()
+					else
+						call SetUnitX(this.m_unit, newX)
+						call SetUnitY(this.m_unit, newY)
+						call SetUnitZ(this.m_unit, newZ)
+						debug call this.print("2 New X " + R2S(newX) + ", new Y " + R2S(newY) + ", new Z " + R2S(newZ) + ".")
 					endif
-				// hits target point
-				elseif (newX == this.m_targetX and newY == this.m_targetY and newZ == this.m_targetZ) then
-					call this.stop()
-				else
-					call SetUnitX(this.m_unit, newX)
-					call SetUnitY(this.m_unit, newY)
-					call SetUnitZ(this.m_unit, newZ)
 				endif
 			// out of map rect
 			else

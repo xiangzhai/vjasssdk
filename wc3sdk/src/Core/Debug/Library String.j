@@ -17,7 +17,7 @@ library ALibraryCoreDebugString requires ALibraryCoreDebugMisc, ACoreString
 		debug call Print("GetRandomNumeralCharacter - Result is \"" + GetRandomNumeralCharacter() + "\".")
 		debug call Print("GetRandomSpecialCharacter - Result is \"" + GetRandomSpecialCharacter() + "\".")
 		debug call Print("GetRandomString - Result is \"" + GetRandomString(23, true, true, true) + "\".")
-		if (not IsStringFromCharacterPool(testString, testParameter0)) then
+		if (IsStringFromCharacterPool(testString, testParameter0)) then
 			debug call Print("IsStringFromCharacterPool - Result is true.")
 		else
 			debug call Print("IsStringFromCharacterPool - Result is false.")

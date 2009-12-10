@@ -1,3 +1,9 @@
+2009-12-09 Tamino Dauth <tamino@cdauth.de>
+* Revised struct ASpawnPoint.
+* Added method isEmpty to vector struct of text macro A_VECTOR.
+* Fixed function ReverseString
+* Revised struct AMissile.
+
 2009-12-08 Tamino Dauth <tamino@cdauth.de>
 * Revised file "archives/Asl/UI/TriggerData.txt".
 * Added various ambient extra model files.

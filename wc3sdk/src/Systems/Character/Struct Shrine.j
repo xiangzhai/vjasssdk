@@ -30,7 +30,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		public method revivalRect takes nothing returns rect
 			return this.m_revivalRect
 		endmethod
-		
+
 		public method facing takes nothing returns real
 			return this.m_facing
 		endmethod
@@ -50,7 +50,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 				set this.m_discoverEffect = CreateSpecialEffectForPlayer(user, thistype.effectPath, GetDestructableX(this.m_destructable), GetDestructableY(this.m_destructable))
 			endif
 			if (thistype.soundPath != null) then
-				call PlaySoundPathForPlayer(user, thistype.soundPath)
+				call PlaySoundFileForPlayer(user, thistype.soundPath)
 			endif
 			if (showMessage) then
 				call character.displayMessage(ACharacter.messageTypeInfo, thistype.textMessage)
@@ -189,7 +189,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 			set thistype.textMessage = textMessage
 
 			if (soundPath != null) then
-				call PreloadSoundPath(soundPath)
+				call PreloadSoundFile(soundPath)
 			endif
 		endmethod
 	endstruct
