@@ -1,6 +1,6 @@
 Schlüsselwörter:
 if, else, switch, case, break, continue, default, while, do, for
-native, init, threaded, debug, template, package, private, protected, public, operator, enum, class, this, self, super, new, delete, copy, init, big, virtual, static, execute, executewait, evaluate, executions, evaluations
+const, native, init, threaded, debug, template, package, private, protected, public, operator, enum, class, this, self, super, new, delete, copy, init, virtual, static, execute, executewait, evaluate, executions, evaluations, waits, wait, reset
 
 Möglicher Zusatz:
 executefast ermöglicht den Aufruf mit ExecuteFunc und Parameterspeicherung.
@@ -49,30 +49,33 @@ native Typname : Elterntyp;
 Native Funktionen:
 
 Notation:
-native Rückgabetyp Funktionsname(Parametertyp Parametername, ...);
+native [const] Rückgabetyp Funktionsname(Parametertyp Parametername, ...);
 
 Variablen:
 
 Notation:
-Variablentyp Variablenname[Variablengröße] = Variableninhalt;
+[const] Variablentyp Variablenname[Variablengröße] = Variableninhalt;
+ 
+Konstante Variablen müssen bei ihrer Deklaration definiert werden und ihr Inhalt ist
+dauerhaft konstant.
 Der Variableninhalt wird bei Arrays wie in C++ eingeschlossen:
 integer tes[2] = { 10, 2 };
 
 Es können mehrdimensionale Arrays deklariert werden:
 integer test[2][2] = { { 10, 5 }, { 2, 4 } };
 
-Da ein Array in Warcraft 3 nur 8192 bzw. 8191 (wird im letzten Feld die Größe gespeichert?) haben kann, gibt es einen entsprechenden Compiler- bzw. Laufzeitfehler, wenn ein Zugriff diese Grenze überrschreitet.
+Da ein Array in Warcraft 3 nur 8192 bzw. 8191 (wird im letzten Feld die Größe gespeichert?) haben kann, werden vom Compiler bei größeren Größenangaben
+weitere globale Variablen erstellt.
+Eventuell sollte der Compiler einen Hinweis anzeigen.
 
-Ist eine Array allerdings als "big" deklariert worden, so erlaubt dies Zugriffe auf einen Index größer als 8191. Allerdings werden die Werte dann
-in der globalen Hashtable gespeichert, was Zugriffe verlangsamt.
-
-Variablen können globale deklariert werden, wenn sie nicht innerhalb eines Gültigkeitsbereiches stehen.
-Funktionen können statische Variablen enthalten:
+Variablen können global deklariert werden, wenn sie nicht innerhalb eines Gültigkeitsbereiches stehen.
+Funktionen und Methoden können statische Variablen enthalten:
 static integer test;
+static const integer test = 10;
 
 0 entspricht ebenfalls dem Wert null in Jass.
 Eine Zeichenkette ist somit auch 0, wenn sie nicht gesetzt wurde.
-Alle Variablen werden automatisch mit 0 oder false initialisiert.
+(Überdenken: Alle Variablen werden automatisch mit 0 oder false initialisiert.)
 
 Operatoren:
 
@@ -198,22 +201,32 @@ MyFunction(y = 10, x = 100, 100, 3, 5);
 Parameter mit Standardargumenten erhalten automatisch das Standardargument, insofern sie nicht explizit beim Aufruf gesetzt werden.
 
 Notation:
-[threaded] [init] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...)
+[threaded] [init] [const] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...)
 {
 }
 
 Ist eine Funktion "threaded", kann sie von überall aus mit .execute, .executewait, oder .evaluate aufgerufen werden.
 Sie wird somit in einen eigenen Auslöser gespeichert und ihre Parameter mittels einer Hashtable für diesen gespeichert.
 
-Ist eine Funktion "init", so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers aufgerufen.
-Eine "init"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt oder manuell
-aufgerufen wird (einstellbar).
+Mittels der Schlüsselwörter executions und evaluations kann herausgefunden werden, wie oft eine "threaded" Funktion per .execute, .executewait oder .evaluate aufgerufen wurde.
+Zurückgegeben wird die Anzahl als integer:
+Funktionsname.executions()
+Funktionsname.evaluations()
 
-Mittels der Schlüsselwörter executions und evaluations kann herausgefunden werden, wie oft eine Funktion per .execute bzw. .evaluate aufgerufen wurde.
-Zurückgegeben wird die Anzahl als integer.
-Dies ist natürlich nur bei "threaded" Funktionen möglich:
-Functionsname.executions()
-Functionsname.evaluations()
+Mittels der Schlüsselwörter waits und wait kann eine "threaded" Funktion darauf überprüft werden, ob ihr Thread gerade wartet bzw.
+das Warten aktiviert oder deaktiviert werden:
+Funktionsname.waits() // Liefert einen Boolean-Wert.
+Funktionsname.wait(false) // Funktion wartet nicht mehr bei TriggerSleepAction-Aufrufen.
+
+Mittels des Schlüsselwortes reset kann eine "threaded" Funktion zurückgesetzt werden:
+Funktionsname.reset() // Setzt den Thread der Funktion zurück.
+
+Ist eine Funktion "init", so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers aufgerufen.
+Eine "init"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt, manuell
+aufgerufen wird oder "threaded" ist (einstellbar, "threaded" ist ebenfalls eher unnötig).
+
+Ist eine Funktion "const", so muss sie einen Konstanten Wert zurückgeben. Beim Kompilieren, wird
+sie normalerweise als "constant" Jass-Funktion erzeugt.
 
 Funktionsvariablen (Funktionszeiger):
 Funktionsvariablen sind Variablen des Typs "<Rückgabetyp> (<Parameter>)". Sie können einen Verweis auf eine beliebige
@@ -293,13 +306,9 @@ Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klassenei
 Mit dem Schlüsselwort super spricht man die Elternklasse an. Mit dem Schlüsselwort self spricht man die eigene Klasse an. Mit dem Schlüsselwort this spricht man die
 verwendete Instanz an.
 Mehrfachvererbung wird unterstützt.
-Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse als "big" deklariert wurde. In diesem Fall werden die Instanzdaten
-in der globalen Hashtable gespeichert.
-Besitzt eine Klasse Array-Elemente, so wird die maximale Anzahl ihrer möglichen Instanzen folgendermaßen beschränkt, wenn sie nicht
-bzw. das Array nicht als "big" deklariert wurde: 8192 / größte Größe eines Array-Elements (mehrdimensionale berücksichtigt).
-Daher muss bei einem Array-Element wie bei allen Nicht-"big"-Arrays die Größe zwingend angegeben werden.
-Eine Nicht-"big"-Klasse kann "big"-Array-Elemente enthalten, allerdings sollte bei diesen eine Warnung erscheinen, wenn ihre maximale Größe
-größer als 8192 ist (mehrdimensionale miteinbezogen!), da so nicht mehr auf alle gleichzeitig verwiesen werden kann.
+Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert. In diesem Fall werden die Instanzdaten
+in der globalen Hashtable oder in zusätzlichen globalen Variablen gespeichert.
+Große Array-Elemente werden wie normale große Arrays behandelt (siehe Arrays).
 
 Abstrakte Klassen:
 Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen können keine
@@ -308,16 +317,17 @@ abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
 
 Mehrfachvererbung:
 Überschneiden sich Elemente mehrerer geerbter Klassen, so wird vom Compiler ein Syntax-Fehler ausgegeben.
+Eventuell könnte man hier noch spezielle Überschreibungsregeln festlegen.
 
 Notation:
-[ big ] [ abstract ] class Klassenname : public | private | protected Klassenname ...
+[ abstract ] class Klassenname [ [Maximalgröße] ] : public | private | protected Klassenname ...
 {
     static self new() { } Konstruktor
     ~delete() { } Destruktor
     copy(Klassenname other) Kopierkonstruktur
     static init() { } Initialisierungsmethode
 
-    [public | protected | private | private protected] [abstract] [static] Methode | Variable [ = Startwertzuweisung ] | Aufzählung;
+    [public | protected | private | private protected] [static] Methode | Variable [ = Startwertzuweisung ] | Aufzählung;
 } globale Instanzen durch Kommata getrennt;
 
 
@@ -328,13 +338,19 @@ zugegriffen werden.
 Methoden:
 Als virtuell deklarierte Methoden, werden pro Klasseninstanz gespeichert. So wird immer die unterste virtuelle Methode aufgerufen.
 Virtuelle Methoden müssen zwingend threaded sein.
+Achtung: Virtuelle Methoden sollten nicht im Konstruktor aufgerufen werden, da sie durch die Konstruktoren erst überschrieben
+und der Klasseninstanz zugewiesen werden. Der Compiler sollte in diesem Fall eine Warnung ausgeben.
+
+Abstrakte Methoden müssen allesamt implementiert werden. Abstrakte-Methoden-Implementationen müssen virtuell sein.
 
 Mit super.Methodenname kann die Elternmethode angesprochen werden.
 
 Abstrakte Methoden besitzen keinen Bezugsrahmen, sondern werden mit einem Semikolon abgeschlossen.
 
+Methoden, die mit dem Postfix "const" deklariert wurden, erhalten das Argument this als konstante Variable.
+
 Notation:
-[static | virtual] Funktionsdeklaration
+[static | virtual | abstract] Funktionsdeklaration [const]
 
 Operatorenüberladung:
 Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen enthält, überlädt die Bedeutung eines Operators für die angegebenen
@@ -476,20 +492,104 @@ Absicherungen und Wertsetzungen bei Fehlschlägen.
 Compiler-Implementation:
 
 Schritte:
-1. Syntax überprüfen
-2. Konstante Ausdrücke sammeln (auch in zu importierenden Dateien, Testblöcke ignorieren).
-3. Präprozessoren auswerten und zu ignorierenden und importierenden Code und als vJass-Code, Zinc- oder Jass-Code zu behandelten Code feststellen (am besten Zeilennummern und Datei merken und abfragen, Testblöcke miteinbeziehen!).
-4. Kartenskript erzeugen oder einlesen und Positionen feststellen
-5. Falls "big" Klasseninstanzen, "big" Arrays oder threaded Funktionen verwendet werden, globale Hashtable und Prototypauslöser für Laufzeitinformationen in der Funktion InitJassPP erzeugen lassen und diese nach dem Aufruf der Funktion InitBlizzard in der Funktion main aufrufen lassen.
-6. Vorlagen-Instanzen generieren (Templates) und zum zu behandelten Code hinzufügen
+1. Konstante Ausdrücke sammeln (auch in zu importierenden Dateien)
+2. Präprozessoren (auch Injections) auswerten und zu ignorierenden, importierenden Code und als vJass-Code, Zinc- oder Jass-Code zu behandelten Code feststellen (am besten Zeilennummern und Datei merken und abfragen, Testblöcke miteinbeziehen!).
+3. Code einlesen
+4. Syntax überprüfen
+5. Vorlagen-Instanzen generieren (Templates) und zum zu behandelten Code hinzufügen
+6. Kartenskript erzeugen oder einlesen und Positionen feststellen
 7. Pakete sortieren
-8. Paketfunktionen und -variablen generieren (auch von Enums)
-9. Klassenmethoden und -variablen generieren (auch von Enums)
-10. Injection-Code in mögliche Funktionen einfügen
-11. Bei aktivierter Option Kartenskript optimieren. Mögliche Optionen:
+8. Hashtable erzeugen/Laufzeitglobale erzeugen
+9. Paket- und Klassenvariablen generieren (auch von Enums)
+10. Zugriffsfunktionen generieren
+11. Funktionen generieren (auch mit gleichem Namen und richtigen Bezeichnern usw.)
+12. Methoden generieren (auch mit gleichem Namen und richtigen Bezeichnern usw.)
+13. InitJassPP generieren
+14. Bei aktivierter Option Kartenskript optimieren. Mögliche Optionen:
 	--ormws Entfernt white-space-Zeichen, leere Zeilen und Kommentare
 	--orn Benennt sämtliche Bezeichner zu kürzeren, generierten um
 	--oinline Kopiert den Funktionsinhalt bestimmter Funktionen (z. B. ohne Parameter) in den Code
+
+8. Hashtable erzeugen/Laufzeitglobale erzeugen
+Ist der Hashtable-Modus aktiviert, so wird eine globale Variable namens __hashtable des Typs hashtable in das Kartenskript
+eingefügt.
+Anderenfalls werden:
+1. sämtliche Prototypfunktionsauslöser-, Prototypfunktionsargument- und Prototypfunktionsrückgabewert-Globalen ins Kartenskript eingefügt
+2. sämtliche 
+
+13. InitJassPP generieren
+Falls der Hashtable-Modus aktiviert ist, Klassen mit Maximalgrößen über JASS_MAX_ARRAY_SIZE, Arrays mit Maximalgrößen über
+JASS_MAX_ARRAY_SIZE oder irgendeine Art von Funktionsprototyp existiert (durch "virtual" bzw. "threaded" Methoden/Funktionen),
+wird die Funktion InitJassPP generiert, in welcher entweder die Hashtable erzeugt und gefüllt wird oder alle Prototypfunktionsauslöser in globale Variablen geschrieben werden.
+Die Funktion wird nach der Funktion InitBlizzard in der Funktion main des Kartenskripts aufgerufen.
+
+10. Zugriffsfunktionen generieren
+
+Funktionsnamenersetzung aufgrund gleicher Namen:
+
+Threaded Funktionen/Funktionsprototypen (gehört zu 8.):
+Pro "threaded" Funktion bzw. Methode wird ein globaler Auslöser erzeugt, der den Funktionsinhalt
+enthält, allerdings keine Parameter entgegen nimmt. Die Parameter werden in lokale Variablen aus
+globalen Parametervariablengeladen bzw. vor dem
+Aufruf gesetzt.
+Die Prototypauslöser werden in einem oder mehreren Arrays gespeichert und wie Klassenelemente indiziert,
+insofern keine globale Hashtable verwendet wird. Für die Prototypargumente existieren pro Argumenttyp
+und der maximal benötigten Anzahl dieser in einer Funktion ebenfalls globale Variablen.
+Prototypfunktionen sind statisch und werden normalerweise nicht zur Laufzeit verändert, weshalb
+man keine Index-Auswertungsfunktionen braucht, da der Compiler stets die richtigen Variablen
+einfügen sollte.
+Achtung: Der Compiler muss beim Verwenden einer neuen globalen Variable, immer die Größe
+der bereits verwendeten Arrays abziehen (siehe Klassenelementezugriff).
+
+globals
+	trigger array __prototypeFunctionTriggers0
+	trigger array __prototypeFunctionTriggers1
+	<Parametertyp0> array __prototypeFunctionArguments0__<Parametertyp0>
+	<Parametertyp0> array __prototypeFunctionArguments1__<Parametertyp0>
+	<Parametertyp1> array __prototypeFunctionArguments0__<Parametertyp1>
+	<Parametertyp1> array __prototypeFunctionArguments1__<Parametertyp1>
+	<Rückgabetyp0> array __prototypeFunctionReturnValues0__<Rückgabetyp0>
+endglobals
+
+function __prototypeFunction<Prototypnummer> takes nothing returns nothing
+	local <Parametertyp0> <Parametername0> = __prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>]
+	local <Parametertyp1> <Parametername1> = __prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>]
+	set __prototypeFunctionReturnValues0__<Rückgabetyp0> = <Parametername0> * <Parametername1>
+endfunction
+
+// Kann auch ohne Funktion in den Code kopiert werden.
+function __init__PrototypeFunction<Prototypnummer> takes nothing returns nothing
+	set __prototypeFunctionTriggers0[<Prototypnummer>] = CreateTrigger()
+	call TriggerAddAction(__prototypeFunctionTriggers0[<Prototypnummer>], function __prototypeFunction<Prototypnummer>)
+endfunction
+
+// Kann auch ohne Funktion in den Code kopiert werden.
+// Für den Debug-Modus.
+function __free__PrototypeFunction<Prototypnummer> takes nothing returns nothing
+	call TriggerClearActions(__prototypeFunctionTriggers0[<Prototypnummer>])
+	call DestroyTrigger(__prototypeFunctionTriggers0[<Prototypnummer>])
+	set __prototypeFunctionTriggers0[<Prototypnummer>] = null
+endfunction
+
+// Kann auch ohne Funktion in den Code kopiert werden.
+// Für .evaluations.
+function __evaluations__prototypeFunction<Prototypnummer> takes nothing returns integer
+	return GetTriggerEvalCount(__prototypeFunctionTriggers0[<Prototypnummer>])
+endfunction
+
+// Kann auch ohne Funktion in den Code kopiert werden.
+// Für .executions.
+function __executions__prototypeFunction<Prototypnummer> takes nothing returns integer
+	return GetTriggerExecCount(__prototypeFunctionTriggers0[<Prototypnummer>])
+endfunction
+
+function testEvaluation takes nothing returns nothing
+	local <Rückgabetyp0> result
+	set __prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>] = <Parameter0>
+	set __prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>] = <Parameter1>
+	call TriggerEvaluate(__prototypeFunctionTriggers0[<Prototypnummer>])
+	set result = __prototypeFunctionReturnValues0__<Rückgabetyp0>
+endfunction
 
 Klasseninstanzen ohne globale Hashtable:
 Pro Klassenelement wird eine globale Arrayvariable deklariert deren Indexwerte der jeweiligen Instanz gehören. Außerdem wird
@@ -499,11 +599,17 @@ Pro virtuelle Methode wird eine globale Arrayvariable deklariert, welcher der Pr
 Bei der Allokation wird in einer globalen Zählervariable nach einer freien Id gesucht und diese verwendet. 0 zählt dabei als leerer Wert.
 Kindklassen erhalten KEINE eigene Zählervariable, da ansonsten das Konzept der virtuellen Methoden nicht funktioniert und nicht auf die Elemente
 der Elternklasse zugegriffen werden könnte, ohne diese neu zu deklarieren.
+Wurde die Klasse als "big" deklariertt und wird keine globale Hashtable verwendet, so wird je nach Größe pro 8192 (8191?)-Block eine globale
+Array-Variable für jedes Element und jede virtuelle Methode erzeugt. Außerdem werden Zugriffsfunktionen für die virtuellen Methoden und Elemente
+generiert, welche bei Zugriffen anstatt eines normalen Zugriffs verwendet werden (automatische Ersetzung):
 globals
 	constant integer __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size
-	boolean array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>
-	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>
-	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>
+	boolean array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0
+	boolean array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1
+	<Elementtyp> array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0
+	<Elementtyp> array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1
+	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>0
+	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>1
 endglobals
 
 Allokation:
@@ -511,11 +617,23 @@ Allokation:
 function __newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
 	local integer i = 0
 	loop
-		exitwhen (id == __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size)
-		if (not __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[i]) then
-			set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[i] = true
-			return i
-		endif
+		exitwhen (i == IMax(1, __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size / JASS_MAX_ARRAY_SIZE))
+		set j = 0
+		loop
+			exitwhen (id == IMin(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size, JASS_MAX_ARRAY_SIZE))
+			if (i == 0) then // Benutze Array-Variable 0
+				if (not __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[j]) then
+					set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0[j] = true
+					return i * j
+				endif
+			elseif (i == 1) then // Benutze Array-Variable 1
+				if (not __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[j]) then
+					set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1[j] = true
+					return i * j
+				endif
+			endif
+			set j = j + 1
+		endloop
 		set i = i + 1
 	endloop
 #if (DEBUG_MODE)
@@ -524,14 +642,70 @@ function __newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klasse
 	return 0
 endfunction
 
+// Eventuell Variable automatisch auf 0 setzen?
+function __deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+#if (DEBUG_MODE)
+	if (id <= 0 or id >= __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to free id " + I2S(id) + " for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
+		return
+	endif
+#endif
+	if (id < JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 0
+		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0[id] = false
+	elseif (id < 2 * JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 1
+		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1[id] = false
+	endif
+endfunction
+
+// Die Elementzugriffsfunktionen gelten ebenso für virtuelle Methoden
+
+function __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id, <Elementtyp> value returns nothing
+#if (DEBUG_MODE)
+	if (id < 0 or __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to set member <Elementname> of type <Elementtyp> for instance " + I2S(id) + " of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")		
+		return
+	endif
+#endif
+	if (id < JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 0
+		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0[id] = value
+	elseif (id < 2 * JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 1
+		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1[id] = value
+	endif
+endfunction
+
+function __member__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns <Elementtyp>
+#if (DEBUG_MODE)
+	if (id < 0 or __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to get member <Elementname> of type <Elementtyp> for instance " + I2S(id) + " of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")		
+		return <Elementtypnullwert>
+	endif
+#endif
+	if (id < JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 0
+		return __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0[id]
+	elseif (id < 2 * JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 1
+		return __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1[id]
+	endif
+	return <Elementtypnullwert>
+endfunction
+
 // Existiert auch für Kindklassen.
 function __initMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>[id] = ...
+	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Startwert>)
 endfunction
 
 // Existiert auch für Kindklassen.
 function __initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	set  __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[id] = ...
+	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Funktionsprototyp-Id der virtuellen Methode>)
+endfunction
+
+// Existiert auch für Kindklassen.
+function __resetMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Nullwert>)
+endfunction
+
+// Existiert auch für Kindklassen.
+function __resetVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, 0)
 endfunction
 
 // Existiert auch für Kindklassen.
@@ -546,18 +720,22 @@ function __new__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>
 	call __initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls virtuelle Methoden vorhanden.
 endfunction
 
-// Eventuell Variable automatisch auf 0 setzen?
+// Existiert auch für Kindklassen. Eventuell Variable automatisch auf 0 setzen?
 function __delete__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call __deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id)
 #if (DEBUG_MODE)
 	if (id <= 0 or id >= __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to free id " + I2S(id) + " for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
 		return
 	endif
 #endif
-	set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[id] = false
+	call __resetMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls Elemente vorhanden.
+	call __resetVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls virtuelle Methoden vorhanden.
 endfunction
 
 Methoden:
+Methoden werden wie Funktionen nach ihren unterschiedlichen Parametern in Bezeichner durchnummeriert.
+
 boolean test(integer a, integer b)
 {
 	return a + b + this.m_x;
@@ -565,10 +743,11 @@ boolean test(integer a, integer b)
 
 wird ersetzt durch
 
-function __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test takes integer this, integer a, integer b returns boolean
-	return a + b + __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>[this]
+function __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test0 takes integer this, integer a, integer b returns boolean
+	return a + b + __member__m_x__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(this)
 endfunction
 
+/*
 Threaded Methoden:
 
 threaded void test(integer a, integer b)
@@ -598,7 +777,7 @@ call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen
 call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("Argument0"), a)
 call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("Argument1"), b)
 call TriggerExecute(LoadTriggerHandle(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this]))), StringHash("Trigger"))
-
+*/
 
 
 Globale Hashtable:
