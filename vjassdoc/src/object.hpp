@@ -37,14 +37,19 @@ class Library;
 class Object
 {
 	public:
-		class List
+		class List : public std::list<class Object*>
 		{
 			public:
 				List();
 				virtual ~List();
-				
-				void add(class Object *object);
-				std::list<class Object*>& objects() const;
+				/**
+				* Adds @param object to back of list.
+				*/
+				List& operator<<(class Object *object);
+				/**
+				* Extracts last object of list into @param object and removes it from list.
+				*/
+				List& operator>>(class Object* &object);
 			
 #ifdef HTML
 				virtual std::string htmlCategoryName() const = 0;
@@ -66,8 +71,6 @@ class Object
 				virtual std::string sqlColumnDataType(std::size_t column) const throw (std::exception);
 				virtual std::string sqlColumnName(std::size_t column) const throw (std::exception);
 #endif
-				
-				std::list<class Object*> m_objects;
 				
 			private:
 				List(const List&);

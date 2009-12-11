@@ -29,24 +29,33 @@ namespace vjassdoc
 class Call : public Object
 {
 	public:
-#ifdef SQLITE
-		static const char *sqlTableName;
-		static std::size_t sqlColumns;
-		static std::string sqlColumnStatement;
-		static const std::size_t sqlMaxArguments;
-		
-		static void initClass();
+		class List : public Object::List
+		{		
+#ifdef HTML
+				virtual std::string htmlCategoryName() const;
+				virtual std::string htmlFolderName() const;
 #endif
-		Call(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &functionIdentifier, std::list<std::string> *argumentIdentifiers, bool isExecuted, bool isEvaluated);
+
+			protected:
+#ifdef SQLITE
+				virtual std::string sqlTableName() const;
+				virtual std::size_t sqlColumns() const;
+				virtual std::string sqlColumnDataType(std::size_t column) const throw (std::exception);
+				virtual std::string sqlColumnName(std::size_t column) const throw (std::exception);
+#endif
+		};
+#ifdef SQLITE
+		static const std::size_t sqlMaxArguments;
+#endif
+		Call(const std::string &identifier, class SourceFile *sourceFile, std::size_t line, class DocComment *docComment, const std::string &functionIdentifier, std::list<std::string> *argumentIdentifiers, bool isExecuted, bool isEvaluated);
 #ifdef SQLITE
 		Call(std::vector<const unsigned char*> &columnVector);
 #endif
 		virtual ~Call();
 		virtual void init();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
-#ifdef SQLITE
-		virtual std::string sqlStatement() const;
+#ifdef HTML
+		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
+		virtual void writeHtmlPageContent(std::ostream &ostream) const;
 #endif
 		
 		std::string functionIdentifier() const;

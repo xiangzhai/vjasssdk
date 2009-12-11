@@ -68,8 +68,8 @@ set(VJASSDOC_H
 	utilities.hpp
 )
 
-execute_process(COMMAND flex -ovjass.yy.c vjass.l WORKING_DIRECTORY src)
-execute_process(COMMAND bison -ovjass.tab.c vjass.y WORKING_DIRECTORY src)
+execute_process(COMMAND flex vjass.l WORKING_DIRECTORY src)
+execute_process(COMMAND bison -d vjass.y WORKING_DIRECTORY src)
 
 set(VJASSDOC_LANG_SRC
 	vjass.yy.c

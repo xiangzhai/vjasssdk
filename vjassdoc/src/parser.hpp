@@ -29,6 +29,8 @@
 
 #include <boost/filesystem.hpp>
 
+#include "exception.hpp"
+
 namespace vjassdoc
 {
 
@@ -107,7 +109,18 @@ class Parser
 
 		Parser();
 		~Parser();
-		std::size_t parse(const boost::filesystem::path &path) throw (std::exception);
+		
+		/**
+		* Error code is hold by thrown exception of method Parser.parse.
+		*/
+		enum ParseErrorCode
+		{
+			DoubleParseError,
+			FilePathError,
+			FileStreamError
+		};
+		
+		std::size_t parse(const boost::filesystem::path &path) throw (class Exception);
 		void initObjects();
 		void sortAlphabetically();
 		void showSyntaxErrors();
@@ -182,7 +195,10 @@ class Parser
 		class Type* booleanType() const;
 		class Type* handleType() const;
 		class Type* codeType() const;
-		class File* currentFile() const;
+		/**
+		* @return Returns current parsed code file.
+		*/
+		class File* file() const;
 
 		void add(class SyntaxError *syntaxError);
 		const class List* list(enum Parser::List list) const;
@@ -206,6 +222,7 @@ class Parser
 		class Type *m_booleanType;
 		class Type *m_handleType;
 		class Type *m_codeType;
+		class File *m_file;
 		std::vector<class List*> m_lists;
 		std::vector<class SyntaxError*> m_syntaxErrors;
 #ifdef SQLITE
@@ -368,9 +385,9 @@ inline class Type* Parser::codeType() const
 	return m_codeType;
 }
 
-inline class File* Parser::currentFile() const
+inline class File* Parser::file() const
 {
-	return this->m_currentFile;
+	return this->m_file;
 }
 
 inline void Parser::add(class SyntaxError *syntaxError)

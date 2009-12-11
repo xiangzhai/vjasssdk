@@ -24,6 +24,8 @@
 #include <ostream>
 #include <list>
 
+#include "vjassdoc.hpp"
+
 namespace vjassdoc
 {
 
@@ -32,15 +34,24 @@ class FunctionPrototype;
 class Compiler
 {
 	public:
-		void compile(std::ostream &ostream);
+		void compile(std::ostream &ostream, enum Vjassdoc::Language language);
 	
 	protected:
+		/**
+		* Writes "the global hashtable". Jass++ only.
+		*/
+		void writeHashtableGlobal(std::ostream &ostream);
 		void writeGlobals(std::ostream &ostream);
-		void writeMembers(std::ostream &ostream);
-		/// Writes triggers of methods for TriggerEvaluate() and TriggerExecute().
-		void writeFunctionPrototypeGlobals(std::ostream &ostream);
-		void writeMethodPrototypeGlobals(std::ostream &ostream);
-		void writeLibraries(std::ostream &ostream);
+		void writeFunctions(std::ostream &ostream);
+		
+		
+		/**
+		* Jass++
+		* Writes all globals (including member, function prototype and array globals etc.)
+		*/
+		void writePackageGlobals(std::ostream &ostream);
+		void writePackageFunctions(std::ostream);
+		
 		
 		std::list<class FunctionPrototype*> m_prototypes;
 };

@@ -43,8 +43,8 @@ main()
 %token FSTRINGDONE
 %token UNITTYPEINT
 
-%token DocComment
-%token Comment
+%token LineDocComment
+%token LineComment
 %token BlockComment
 %token BlockDocComment
 %token NewLine
@@ -166,6 +166,20 @@ IncreaseLine				: NewLine
 					}
 					;
 
+DocComment				: LineDocComment IncreaseLine
+					| BlockDocComment /* increase lines please */
+					{
+					}
+					;
+
+
+Comment					: LineComment IncreaseLine
+					| BlockComment /* increase lines please */
+					{
+						Vjassdoc::parser()->add(new vjassdoc::Comment($1, Vjassdoc::parser()->file()->sourceFile(), Vjassdoc::parser()->line(), Vjassdoc::parser()->docComment());
+					}
+					;
+
 IntegerOperator				: MultiplicationOperator
 					| DivisionOperator
 					| PlusOperator
@@ -261,7 +275,7 @@ LocalDeclaration			: LocalKeyword Identifier Identifier IncreaseLine
 					| LocalKeyword Identifier Identifier SetOperator Value IncreaseLine
 					;
 
-LocalsDeclaration			: LocalDeclaration LocalsDeclaration
+LocalsDeclarations			: LocalDeclaration LocalsDeclarations
 					| IncreaseLine
 					;
 
@@ -333,7 +347,7 @@ FunctionBody				: Statement FunctionBody
 					| IncreaseLine
 					;
 
-FunctionDeclaration			: VjassScopePrefix FunctionKeyword FunctionIdentifierLine IncreaseLine LocalsDeclaration FunctionBody EndfunctionKeyword IncreaseLine
+FunctionDeclaration			: VjassScopePrefix FunctionKeyword FunctionIdentifierLine IncreaseLine LocalsDeclarations FunctionBody EndfunctionKeyword IncreaseLine
 					;
 					
 
@@ -361,7 +375,7 @@ MethodPrefix				: PublicKeyword StaticKeyword ConstantKeyword
 					|
 					;
 
-MethodDeclaration			: MethodPrefix MethodKeyword FunctionIdentifierLine IncreaseLine FunctionHeader FunctionBody EndmethodKeyword
+MethodDeclaration			: MethodPrefix MethodKeyword FunctionIdentifierLine IncreaseLine LocalsDeclarations FunctionBody EndmethodKeyword
 					;
 
 Implementation				: ImplementKeyword OptionalKeyword Identifier
@@ -382,7 +396,7 @@ StructBody				: MemberDeclaration IncreaseLine StructBody
 					| IncreaseLine
 					;
 
-StructDeclaration			: StructKeyword StructDeclarationIdentifier IncreaseLine StructBody EndStructKeyword IncreaseLine
+StructDeclaration			: StructKeyword StructDeclarationIdentifier IncreaseLine StructBody EndstructKeyword IncreaseLine
 					;
 
 

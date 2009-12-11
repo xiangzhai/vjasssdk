@@ -38,7 +38,7 @@
 namespace vjassdoc
 {
 
-File::File() : m_parser(0), m_parser(0), m_language(Vjassdoc::Jass), m_lines(0)
+File::File() : m_parser(0), m_parser(0), m_language(Vjassdoc::Jass), m_lines(0), m_docComment(0)
 {
 }
 

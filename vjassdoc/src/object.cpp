@@ -34,21 +34,27 @@ Object::List::List()
 {
 }
 
-List::~List()
+Object::List::~List()
 {
 	BOOST_FOREACH(class Object *object, this->m_objects)
 			delete object;
 }
 
-void Object::List::add(class Object *object)
+List& Object::List::operator<<(class Object *object)
 {
-	this->m_objects.push_back(object);
+	this->push_back(object);
+	
+	return *this;
 }
 
-std::list<class Object*>& Object::List::objects() const
+List& Object::List::operator>>(class Object* &object)
 {
-	return this->m_objects;
+	object = this->m_back();
+	this->pop_back();
+	
+	return *this;
 }
+
 #ifdef HTML
 void Object::List::writeHtmlList(std::ostream &ostream)
 {

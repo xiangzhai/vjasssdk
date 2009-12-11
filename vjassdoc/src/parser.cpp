@@ -138,6 +138,7 @@ Parser::Parser() :
 		m_booleanType(new Type("boolean", 0, 0, 0, "", "")),
 		m_handleType(new Type("handle", 0, 0, 0, "", "")),
 		m_codeType(new Type("code", 0, 0, 0, "", "")),
+		m_file(0),
 		m_lists(std::vector<class Object::List*>(Parser::MaxLists))
 {
 	this->m_lists[Parser::Comments] = new Comment::List();
@@ -191,20 +192,25 @@ Parser::~Parser()
 	// do not delete database lists since they're saved in this->m_lists, too
 }
 
-std::size_t Parser::parse(const boost::filesystem::path &path) throw (std::exception)
+std::size_t Parser::parse(const boost::filesystem::path &path) throw (class Exception)
 {
+	if (this->m_file != 0)
+		throw Exception(Parser::DoubleParseError, _("Trying to parse during parsing."));
+	
 	if (!boost::filesystem::exists(path))
-		throw std::exception();
+		throw Exception(Parser::FilePathError, boost::str(boost::format(_("File path \"%1%\" does not exist.")) % path.string()));
 
 	std::ifstream ifstream(path.string().c_str());
 	
 	if (!ifstream)
-		throw std::exception();
+		throw Exception(Parser::FileStreamError, boost::str(boost::format(_("Unable to open file stream for file path \"%1%\".")) % path.string()));
 	
 	class SourceFile *sourceFile = new SourceFile(path.filename(), path->string());
 	this->add(sourceFile);
-	File file;
-	std::size_t lines = file.parse(this, sourceFile, ifstream);
+	this->m_file = new File();
+	std::size_t lines = this->m_file->parse(this, sourceFile, ifstream);
+	delete this->m_file;
+	this->m_file = 0;
 	ifstream.close();
 	
 	return lines;

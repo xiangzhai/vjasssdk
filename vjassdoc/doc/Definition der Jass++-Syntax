@@ -263,6 +263,9 @@ debug
 }
 
 Pakete:
+In Jass++ müssen sämtliche Objekte wie Funktionen, Variablen, Klassen, Aufzählungen, Vorlagen usw.
+in Paketen enthalten sein. Es gibt keine globalen Objekte außer den Paketen selbst.
+Eine Ausnahme bilden native Typen, Funktionen und reine Jass-Funktionen.
 
 Notation einer Paketdefinition:
 package Name : benötigte Pakete durch Kommata getrennt
@@ -357,37 +360,39 @@ Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und
 Parametertypen.
 Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, private protected).
 
+Kompatibilität zu Jass:
+Jass-Funktionen und -Variablen, die innerhalb der #jass und #endjass-Präprozessoranweisungen
+deklariert wurden, können von Jass++-Code normal aufgerufen werden. Dabei gilt zu beachten,
+dass die Typumwandlungsregeln von Jass++ bei der Parameterübergabe gelten.
+Native Funktionen und Typen können ebenfalls durch eine reine Jass-Deklaration verwendet werden
+und müssen nicht erst mit den Jass++-Sprachelementen deklariert werden. Diese eignen sich eher
+zur Deklaration neuer Typen und nativer Funktionen, insofern es dem Entwickler möglich ist, dies
+z. B. mit Hilfe des Werkzeugs Grimoire zu bewerkstelligen.
+Aus Jass heraus kann ebenfalls mittels der #jasspp- und #pjass-Präprozessoranweisungen Jass++-Code
+verwendet werden, allerdings sollten die zu Jass kompilierten Jass++-Funktionen und -Variablen
+aus Jass-Code heraus nicht verwendbar sein.
+Es gilt hierbei noch anzumerken, dass die Verwendung von Jass++-Code in globalen Jass-Funktionen
+aufgrund der Paketsortierung zu größeren Problemen führen kann, da Jass-Funktionen vor sämtlichen
+Paket-Funktionen deklariert werden.
+
+Kompatibilität zu vJass:
+Momentan ist noch nicht geplant Jass++- und vJass-Code kombinierbar zu machen.
+Code zwischen den Präprozessoranweisungen #vjass und #endjass wird daher bei einer Jass++-
+Kompilierung ignoriert.
+
+Kompatibilität zu Zinc:
+Momentan ist noch nicht geplant Jass++- und Zinc-Code kombinierbar zu machen.
+Code zwischen den Präprozessoranweisungen #zinc und #endzinc wird daher bei einer Jass++-
+Kompilierung ignoriert.
+
+Kompatibilität zu CJass:
+Momentan ist noch nicht geplant Jass++- und CJass-Code kombinierbar zu machen.
+Code zwischen den Präprozessoranweisungen #cjass und #endcjass wird daher bei einer Jass++-
+Kompilierung ignoriert.
+
+
 Standardpaket:
 Es existieren Wrapper für jeden Warcraft-3-Datentyp, sowie zusätzliche Methoden und Klassen. Auf das Wichtigste beschränken!
-
-package jass
-{
-    public package commonj
-    {
-	/*
-	Definition nativer Jass-Typen.
-	*/
-	native boolean;
-	native string;
-	native integer;
-	native real;
-	native code;
-	...
-
-	/*
-	Definition nativer Jass-Funktionen.
-	*/
-	native string I2S(integer i);
-    }
-
-    public package commonai
-    {
-    }
-
-    public package blizzardj
-    {
-    }
-}
 
 package jasspp
 {
@@ -499,9 +504,14 @@ Schritte:
 5. Vorlagen-Instanzen generieren (Templates) und zum zu behandelten Code hinzufügen
 6. Kartenskript erzeugen oder einlesen und Positionen feststellen
 7. Pakete sortieren
-8. Hashtable erzeugen/Laufzeitglobale erzeugen
+8. Globale Hashtable erzeugen/Laufzeitglobale erzeugen
+8.1 Globale Hashtable
+8.2 Laufzeitglobale
 9. Paket- und Klassenvariablen generieren (auch von Enums)
 10. Zugriffsfunktionen generieren
+10.1 Zugriffsfunktionen für globale Hashtable
+10.2 Zugriffsfunktionen für Laufzeitglobale
+10.3 Zugriffsfunktionen für Funktionen/Methoden mit gleichem Namen
 11. Funktionen generieren (auch mit gleichem Namen und richtigen Bezeichnern usw.)
 12. Methoden generieren (auch mit gleichem Namen und richtigen Bezeichnern usw.)
 13. InitJassPP generieren
@@ -510,11 +520,37 @@ Schritte:
 	--orn Benennt sämtliche Bezeichner zu kürzeren, generierten um
 	--oinline Kopiert den Funktionsinhalt bestimmter Funktionen (z. B. ohne Parameter) in den Code
 
-8. Hashtable erzeugen/Laufzeitglobale erzeugen
+8. Globale Hashtable erzeugen/Laufzeitglobale erzeugen
+
+8.1 Globale Hashtable
 Ist der Hashtable-Modus aktiviert, so wird eine globale Variable namens __hashtable des Typs hashtable in das Kartenskript
 eingefügt.
-Anderenfalls werden:
-1. sämtliche Prototypfunktionsauslöser-, Prototypfunktionsargument- und Prototypfunktionsrückgabewert-Globalen ins Kartenskript eingefügt
+Die globale Hashtable wird für Funktionsparameter von .executewait-, .execute- und .evaluate-Aufrufen, Klasseninstanzen und Arrayinstanzen verwendet.
+Sie wird in der main-Funktion der Karte nach dem Aufruf der InitBlizzard-Funktion in der Funktion InitJassPP erzeugt.
+Nach ihr werden sämtliche Prototypauslöser erzeugt.
+
+Kategorie "Data":
+	* Label "FunctionPrototypes" Typ integer Wert <Anzahl der Funktionsprototypen> // Eventuell nur im Debug-Modus, wird zur Laufzeit normalerweise nicht benötigt.
+	* Label "ClassInstances" Typ integer Wert <Anzahl der Klasseninstanzen>
+	* Label "ArrayInstances" Typ integer Wert <Anzahl der Array-Instanzen>
+
+// TODO: globale Array-Variable mit Auslösern?
+Kategorie "FunctionPrototype<n>":
+	* Label "Trigger" Typ trigger Wert <Zugehöriger Auslöser>
+	* Label "Argument<n>" Typ <Argument<n>-Typ der Funktion> Wert <Argument<n>-Wert gesetzt durch den letzten Aufruf>
+
+Kategorie "ClassInstance<n>":
+	* Label "MethodFunctionPrototype<Name der virtuellen Methoden>" Typ integer Wert <Nummer des Funktionsprototypes der virtuellen Methode>
+	* Label "Member<Elementname>" Typ <Elementtyp> Wert <Elementwert>
+
+Kategorie "ArrayInstance<n>":
+	* Label "Index<Index>" Typ <Arraytyp> Wert <Arraywert des Indexes>
+
+Wurden bei einer Klasse oder einem Array Maximalgrößen angegeben, so werden diese innerhalb der generierten Zugriffsfunktionen (siehe 10.1 Zugriffsfunktionen für globale Hashtable)
+überprüft und entsprechend verfahren, wenn das Maximum erreicht wurde.
+
+8.2 Laufzeitglobale
+1. sämtliche Prototypfunktionsauslöser-, Prototypfunktionsargument- und Prototypfunktionsrückgabewert-Globalen ins Kartenskript einfügen
 2. sämtliche 
 
 13. InitJassPP generieren
@@ -525,9 +561,12 @@ Die Funktion wird nach der Funktion InitBlizzard in der Funktion main des Karten
 
 10. Zugriffsfunktionen generieren
 
-Funktionsnamenersetzung aufgrund gleicher Namen:
 
-Threaded Funktionen/Funktionsprototypen (gehört zu 8.):
+10.1 Zugriffsfunktionen für globale Hashtable
+
+
+10.2 Zugriffsfunktionen für Laufzeitglobale
+Threaded Funktionen/Funktionsprototypen:
 Pro "threaded" Funktion bzw. Methode wird ein globaler Auslöser erzeugt, der den Funktionsinhalt
 enthält, allerdings keine Parameter entgegen nimmt. Die Parameter werden in lokale Variablen aus
 globalen Parametervariablengeladen bzw. vor dem
@@ -779,39 +818,15 @@ call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen
 call TriggerExecute(LoadTriggerHandle(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this]))), StringHash("Trigger"))
 */
 
+10.3 Zugriffsfunktionen für Funktionen/Methoden mit gleichem Namen
 
-Globale Hashtable:
-Die globale Hashtable wird für Funktionsparameter von .executewait-, .execute- und .evaluate-Aufrufen, Klasseninstanzen und Arrayinstanzen.
-Sie wird in der main-Funktion der Karte nach dem Aufruf der InitBlizzard-Funktion erzeugt.
-Nach ihr werden sämtliche Prototypauslöser erzeugt.
+11. Funktionen generieren
+Jass-Funktionen, die zwischen den Präprozessoranweisungen #jass und #endjass deklariert wurden,
+werden vor sämtlichen in Jass++-Paketen enthaltenen Funktionen in das Kartenskript geschrieben.
+Daher sind sie aus Jass++ allesamt verwendbar. Dabei werden sie in der Einlesereihenfolge des Parsers
+gelassen.
 
-Kategories "Data":
-	* Label "FunctionPrototypes" Typ integer Wert <Anzahl der Funktionsprototypen> // Eventuell nur im Debug-Modus, wird zur Laufzeit normalerweise nicht benötigt.
-	* Label "ClassInstances" Typ integer Wert <Anzahl der Klasseninstanzen>
-	* Label "ArrayInstances" Typ integer Wert <Anzahl der Array-Instanzen>
-
-// TODO: globale Array-Variable mit Auslösern?
-Kategorie "FunctionPrototype<n>":
-	* Label "Trigger" Typ trigger Wert <Zugehöriger Auslöser>
-	* Label "Argument<n>" Typ <Argument<n>-Typ der Funktion> Wert <Argument<n>-Wert gesetzt durch den letzten Aufruf>
-
-Alle Funktionsprototypinformationen sollten generell in der globalen Hashtable und nicht in Array-Variablen gespeichert werden, da sich
-so Konflikte mit Array-Begrenzungen umgehen bzw. vermeiden lassen.
-Einzige Alternative wäre, für jedes einzelne Prototypargument eine globale Variable generieren zu lassen, allerdings müsste man dabei
-wieder virtuelle Methodenaufrufe beachten, da man bei diesen nicht wüsste, welche die richtigen Argumente wären.
-
-Kategorie "ClassInstance<n>":
-	* Label "Method<Methodenname einer virtuellen Methode>" Typ trigger Wert <Auslöser des Funktionsprototyps>
-	* Label "Member<Elementname>" Typ <Elementtyp> Wert <Elementwert>
-
-Kategorie "ArrayInstance<n>":
-	* Label "Index<Index>" Typ <Arraytyp> Wert <Arraywert des Indexes>
-
-Die Klasseninstanzenelemente (nicht die virtuellen Methoden), sowie die Array-Instanzenwerte werden NUR in der globalen Hashtable gespeichert,
-wenn die jeweilige Klasse bzw. das jeweilige Array als "big" deklariert wurde.
-Ist die Elternklasse einer Klasse "big", so muss die Kindklasse nicht zwingend auch "big" sein oder umgekehrt. Allerdings werden dann sämtliche
-Elemente der "Nicht-big-Klasse" in normalen globalen Arrays gespeichert und können daher nur begrenzt verwendet werden, was wenig Sinn machen würde.
-
+ALT:
 Globale Array-Variablen:
 Ist ein Array oder eine Klasse nicht als "big" deklariert, so werden ihre Instanzelemente nicht in der globalen Hashtable, sondern in 
 

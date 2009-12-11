@@ -39,13 +39,13 @@ UNITTYPEINT	['][a-zA-Z0-9][a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[']
 
 {STRINGSTART}({STILLSTRINGA}|{STILLSTRINGB})*{STRINGDONE} { return StringLiteral; }
 {FSTRINGSTART}({FSTILLSTRINGA}|{FSTILLSTRINGB})*{FSTRINGDONE} { printf( "Non valid escape sequences in string\n" ); }
-{LDC} return DocComment;
+{LDC} { return LineDocComment; }
 {VPP} { return VjassPreprocessor; }
 {JPP} { return JassppPreprocessor; }
-{LC} { return Comment; }
+{LC} { return LineComment; }
 {DCSTART}.*{CEND} { return BlockDocComment; }
 {CSTART}.*{CEND} { return BlockComment; }
-{NEWLINE}			return NewLine;
+{NEWLINE}			{ return NewLine; }
 
 "true"|"false"			return BooleanLiteral;
 

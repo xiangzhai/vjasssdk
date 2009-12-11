@@ -30,6 +30,7 @@ namespace vjassdoc
 
 class Parser;
 class SourceFile;
+class DocComment;
 
 /**
 * A Jass or vJass code file which is treated by a @class Parser instance.
@@ -60,12 +61,24 @@ class File
 		*/
 		void addLines(std::size_t lines);
 		std::size_t lines() const;
+		/**
+		* Similar to File.lines.
+		*/
+		std::size_t line() const;
+		/**
+		* Since documentation comments are object related there should be a current
+		* documentation comment which is related to the next added parsed object.
+		*/
+		void setDocComment(class DocComment *docComment);
+		void clearDocComment();
+		class DocComment* docComment() const;
 		
 	protected:
 		class Parser *m_parser;
 		class SourceFile *m_sourceFile;
 		enum Vjassdoc::Language m_language;
 		std::size_t m_lines;
+		class DocComment *m_docComment;
 };
 
 inline class Parser* File::parser() const
@@ -96,6 +109,26 @@ inline void File::addLines(std::size_t lines)
 inline std::size_t File::lines() const
 {
 	return this->m_lines;
+}
+
+inline std::size_t File::line() const
+{
+	return this->m_lines;
+}
+
+inline void File::setDocComment(class DocComment *docComment)
+{
+	this->m_docComment = docComment;
+}
+
+inline void File::clearDocComment()
+{
+	this->m_docComment = 0;
+}
+
+inline class DocComment* File::docComment() const
+{
+	return this->m_docComment;
 }
 
 }

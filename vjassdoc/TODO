@@ -1,3 +1,8 @@
+2009-12-11 Tamino Dauth <tamino@cdauth.de>
+* Move parse object class into language related folders (Zinc, Jass, vJass, Jass++).
+* Add compilation methods to parse objects and to class Compiler.
+* Class Parser should always be able to parse and hold all different languages. Compiler should only be able to compile one kind of language.
+
 2009-12-04 Tamino Dauth <tamino@cdauth.de>
 * Revised EVERYTHING HAHAHAHAHA!!!!!1111einseinself
 
