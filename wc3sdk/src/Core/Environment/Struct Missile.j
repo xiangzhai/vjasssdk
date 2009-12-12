@@ -453,7 +453,6 @@ endif
 				call this.m_speed.rotate(angle)
 				call SetUnitFacing(this.m_unit, angle)
 			endif
-			/// @todo Doesn't work if it's target seeking, Z value has to be shortend.
 			set newX = GetPolarProjectionX(currentX, angle, this.m_missileType.speed())
 			set newY = GetPolarProjectionY(currentY, angle, this.m_missileType.speed())
 
@@ -461,6 +460,7 @@ endif
 
 			if (RectContainsCoords(mapRect, newX, newY) and not IsTerrainPathable(newX, newY, PATHING_TYPE_WALKABILITY)) then //not?!
 				debug call this.print("Is pathable and on map.")
+				/// @todo Doesn't work if it's target seeking, Z value has to be shortend much more if target gets nearer to missile position?
 				call this.m_speed.setZ(this.m_speed.z() - thistype.m_gravitationalAcceleration)
 				set newZ = GetUnitZ(this.m_unit) + this.m_speed.z()
 				debug call this.print("New X " + R2S(newX) + ", new Y " + R2S(newY) + ", new Z " + R2S(newZ) + ".")

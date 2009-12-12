@@ -7,9 +7,6 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 	function interface AClassSelectionStartGameAction takes nothing returns nothing
 
 	struct AClassSelection
-		//static constant members
-		private static constant integer maxInfoSheetItems = 4 + 12 + 1 + 8 //4 + AClass.maxAbilities + 1 + AClass.maxDescriptionLines
-		private static constant integer maxInfoSheetIconItems = 4 + 12 //4 + AClass.maxAbilities
 		//static start members
 		private static camerasetup m_cameraSetup
 		private static real m_x
@@ -63,57 +60,73 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			endif
 		endmethod
 
-		//get new test
 		private method refreshInfoSheet takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
+			call MultiboardClear(this.m_infoSheet)
+			call MultiboardSetColumnCount(this.m_infoSheet, 1)
+			call MultiboardSetRowCount(this.m_infoSheet, 3 + 1 + this.m_class.abilities() + 1 + this.m_class.descriptionLines())
 			call MultiboardSetTitleText(this.m_infoSheet, IntegerArg(IntegerArg(StringArg(thistype.m_textTitle, GetUnitName(this.m_classUnit)), this.m_class), thistype.m_lastClass - thistype.m_firstClass + 1))
 			//strength
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
+			call MultiboardSetItemStyle(multiboardItem, true, true)
+			call MultiboardSetItemIcon(multiboardItem, thistype.m_strengthIconPath)
 			call MultiboardSetItemValue(multiboardItem, thistype.m_textStrength + ": " + I2S(GetHeroStr(this.m_classUnit, false)))
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//agility
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 1, 0)
+			call MultiboardSetItemStyle(multiboardItem, true, true)
+			call MultiboardSetItemIcon(multiboardItem, thistype.m_agilityIconPath)
 			call MultiboardSetItemValue(multiboardItem, thistype.m_textAgility + ": " + I2S(GetHeroAgi(this.m_classUnit, false)))
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//intelligence
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 2, 0)
+			call MultiboardSetItemStyle(multiboardItem, true, true)
+			call MultiboardSetItemIcon(multiboardItem, thistype.m_intelligenceIconPath)
 			call MultiboardSetItemValue(multiboardItem, thistype.m_textIntelligence + ": " + I2S(GetHeroInt(this.m_classUnit, false)))
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
-			//abilities
-			set i = 4
-			loop
-				exitwhen(i == thistype.maxInfoSheetIconItems)
-				set multiboardItem = MultiboardGetItem(this.m_infoSheet, i, 0)
-				if (this.m_class.ability(i - 4) != 0) then
-					call MultiboardSetItemIcon(multiboardItem, this.m_class.abilityIconPath(i - 4))
-					call MultiboardSetItemValue(multiboardItem, GetObjectName(this.m_class.ability(i - 4)))
+
+			if (this.m_class.abilities() > 0) then
+				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3, 0)
+				call MultiboardSetItemStyle(multiboardItem, false, true)
+				call MultiboardSetItemValue(multiboardItem, thistype.m_textAbilities)
+				call MultiboardReleaseItem(multiboardItem)
+				set multiboardItem = null
+
+				set i = 0
+				loop
+					exitwhen(i == this.m_class.abilities())
+					set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + i, 0)
 					call MultiboardSetItemStyle(multiboardItem, true, true)
-				else
-					call MultiboardSetItemStyle(multiboardItem, false, false)
-				endif
+					call MultiboardSetItemIcon(multiboardItem, this.m_class.abilityIconPath(i))
+					call MultiboardSetItemValue(multiboardItem, GetObjectName(this.m_class.ability(i)))
+					call MultiboardReleaseItem(multiboardItem)
+					set multiboardItem = null
+					set i = i + 1
+				endloop
+			endif
+
+			if (this.m_class.descriptionLines() > 0) then
+				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + this.m_class.abilities(), 0)
+				call MultiboardSetItemStyle(multiboardItem, false, true)
+				call MultiboardSetItemValue(multiboardItem, thistype.m_textDescription)
 				call MultiboardReleaseItem(multiboardItem)
 				set multiboardItem = null
-				set i = i + 1
-			endloop
-			//description
-			set i = thistype.maxInfoSheetIconItems + 1
-			loop
-				exitwhen(i == thistype.maxInfoSheetItems)
-				set multiboardItem = MultiboardGetItem(this.m_infoSheet, i, 0)
-				if (StringLength(this.m_class.descriptionLine(i - thistype.maxInfoSheetIconItems + 1)) > 0) then
-					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i - thistype.maxInfoSheetIconItems + 1))
-					call MultiboardSetItemStyle(multiboardItem, true, false)
-				else
-					call MultiboardSetItemStyle(multiboardItem, false, false)
-				endif
-				call MultiboardReleaseItem(multiboardItem)
-				set multiboardItem = null
-				set i = i + 1
-			endloop
+
+				set i = 0
+				loop
+					exitwhen(i == this.m_class.descriptionLines())
+					set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + this.m_class.abilities() + 1, 0)
+					call MultiboardSetItemStyle(multiboardItem, false, true)
+					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i))
+					call MultiboardReleaseItem(multiboardItem)
+					set multiboardItem = null
+					set i = i + 1
+				endloop
+			endif
 		endmethod
 
 		private method createUnit takes nothing returns nothing
@@ -291,53 +304,8 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			set triggerAction = null
 		endmethod
 
-		//release test
 		private method createInfoSheet takes nothing returns nothing
-			local integer i
-			local multiboarditem multiboardItem
 			set this.m_infoSheet = CreateMultiboard()
-			call MultiboardSetColumnCount(this.m_infoSheet, 1)
-			call MultiboardSetRowCount(this.m_infoSheet, thistype.maxInfoSheetItems)
-			set i = 0
-			loop
-				exitwhen (i == thistype.maxInfoSheetItems)
-				set multiboardItem = MultiboardGetItem(this.m_infoSheet, i, 0)
-				if (i < thistype.maxInfoSheetIconItems) then
-					call MultiboardSetItemStyle(multiboardItem, true, true)
-				else
-					call MultiboardSetItemStyle(multiboardItem, true, false)
-				endif
-				call MultiboardReleaseItem(multiboardItem)
-				set multiboardItem = null
-				set i = i + 1
-			endloop
-			call MultiboardSetItemsWidth(this.m_infoSheet, 0.20)
-
-			//strength
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
-			call MultiboardSetItemIcon(multiboardItem, thistype.m_strengthIconPath)
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
-			//agility
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 1, 0)
-			call MultiboardSetItemIcon(multiboardItem, thistype.m_agilityIconPath)
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
-			//intelligence
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 2, 0)
-			call MultiboardSetItemIcon(multiboardItem, thistype.m_intelligenceIconPath)
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
-			//abilities
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3, 0)
-			call MultiboardSetItemValue(multiboardItem, thistype.m_textAbilities + ": ")
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
-			//description
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, thistype.maxInfoSheetIconItems, 0)
-			call MultiboardSetItemValue(multiboardItem, thistype.m_textDescription + ": ")
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
 		endmethod
 
 		public static method create takes player user, real startX, real startY, real startFacing, AClassSelectionSelectClassAction selectClassAction returns thistype

@@ -1,3 +1,12 @@
+2009-12-12 Tamino Dauth <tamino@cdauth.de>
+* Added experience function parameter to struct's ACharactersScheme initializer.
+* Revised structs AClass and AClassSelection for easier configuration of class abilities and description.
+* Fixed various syntax errors.
+
+2009-12-11 Tamino Dauth <tamino@cdauth.de>
+* Added more parameters to ACharactersScheme's initializer.
+* Added functions SetUnitPositionRect, SetUnitPositionRectFacing and SetUnitFacingToFaceUnit.
+
 2009-12-10 Tamino Dauth <tamino@cdauth.de>
 * Improved German ALayer tutorial.
 * Revised function MoveSubString.

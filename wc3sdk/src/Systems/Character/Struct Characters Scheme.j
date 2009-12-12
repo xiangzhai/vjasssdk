@@ -1,4 +1,7 @@
-library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, AStructCoreInterfaceMultiboardBar, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceMultiboard, AStructSystemsCharacterCharacter
+library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSystemStruct, optional ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, AStructCoreInterfaceMultiboardBar, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceMultiboard, AStructSystemsCharacterCharacter
+
+	/// @todo Should be contained by @struct ACharactersScheme, vJass bug.
+	function interface ACharactersSchemeMaxExperience takes unit hero returns integer
 
 	struct ACharactersScheme
 		//static start members
@@ -6,8 +9,13 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 		private static boolean m_showPlayerName
 		private static boolean m_showUnitName
 		private static boolean m_showLevel
+		private static string m_whitespaceBarFilePath
+		private static string m_experienceBarFilePath
 		private static integer m_experienceLength
+		private static ACharactersSchemeMaxExperience m_experienceFormula
+		private static string m_hitPointsBarFilePath
 		private static integer m_hitPointsLength
+		private static string m_manaBarFilePath
 		private static integer m_manaLength
 		private static string m_textTitle
 		private static string m_textLevel
@@ -20,7 +28,9 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 		private static AMultiboardBar array m_manaBar[12] //bj_MAX_PLAYERS /// @todo vJass bug
 		private static boolean array m_destroyed[12] //bj_MAX_PLAYERS /// @todo vJass bug
 		private static integer m_maxPlayers
-		
+
+		implement ASystemStruct
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ACharactersScheme\"")
 
 		private static method create takes nothing returns thistype
@@ -28,6 +38,10 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 		endmethod
 
 		private method onDestroy takes nothing returns nothing
+		endmethod
+
+		private static method onInit takes nothing returns nothing
+			call thistype.setName("ACharactersScheme")
 		endmethod
 
 		private static method triggerActionRefresh takes nothing returns nothing
@@ -49,7 +63,7 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 						if (thistype.m_experienceLength > 0) then
 							if (IsUnitType(ACharacter.playerCharacter(user).unit(), UNIT_TYPE_HERO)) then
 								call thistype.m_experienceBar[i].setValue(GetHeroXP(ACharacter.playerCharacter(user).unit()))
-								call thistype.m_experienceBar[i].setMaxValue(100000) /// @todo Calculate max experience per level
+								call thistype.m_experienceBar[i].setMaxValue(thistype.m_experienceFormula.evaluate(ACharacter.playerCharacter(user).unit()))
 								call thistype.m_experienceBar[i].refresh()
 							endif
 						endif
@@ -155,8 +169,8 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 							set column = 0
 						endif
 						set thistype.m_experienceBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_experienceLength, 0.0, true, 0.0, 0.0, 0, 0)
-						call thistype.m_experienceBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-						call thistype.m_experienceBar[i].setAllIcons("Icons\\Interface\\Bars\\Purple.blp", true)
+						call thistype.m_experienceBar[i].setAllIcons(thistype.m_whitespaceBarFilePath, false) //empty icons
+						call thistype.m_experienceBar[i].setAllIcons(thistype.m_experienceBarFilePath, true)
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_experienceBar[i].firstFreeField())
 						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
 						call MultiboardSetItemStyle(multiboardItem, false, true)
@@ -175,9 +189,9 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 						endif
 
 						set thistype.m_hitPointsBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_hitPointsLength, 0.0, true, 0.0, 0.0, 0, 0)
-						call thistype.m_hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-						call thistype.m_hitPointsBar[i].setAllIcons("Icons\\Interface\\Bars\\Green.blp", true)
-						
+						call thistype.m_hitPointsBar[i].setAllIcons(thistype.m_whitespaceBarFilePath, false) //empty icons
+						call thistype.m_hitPointsBar[i].setAllIcons(thistype.m_hitPointsBarFilePath, true)
+
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_hitPointsBar[i].firstFreeField())
 						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
 						call MultiboardSetItemStyle(multiboardItem, false, true)
@@ -198,10 +212,10 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 						endif
 
 						set thistype.m_manaBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
-						call thistype.m_manaBar[i].setAllIcons("Icons\\Interface\\Bars\\White.blp", false) //empty icons
-						call thistype.m_manaBar[i].setAllIcons("Icons\\Interface\\Bars\\Blue.blp", true)
+						call thistype.m_manaBar[i].setAllIcons(thistype.m_whitespaceBarFilePath, false) //empty icons
+						call thistype.m_manaBar[i].setAllIcons(thistype.m_manaBarFilePath, true)
 					endif
-					
+
 					set thistype.m_maxPlayers = i + 1
 				endif
 				set i = i + 1
@@ -213,8 +227,9 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 		* Call this after a trigger sleep action, multiboard is created!
 		* Call this AFTER character creation/character class selection
 		* @param refreshRate Should be bigger than 0.0.
+		* @param experienceFormula Function which returns the maximum experience of a hero.
 		*/
-		public static method init takes real refreshRate, boolean showPlayerName, boolean showUnitName, boolean showLevel, integer experienceLength, integer hitPointsLength, integer manaLength, string textTitle, string textLevel, string textLeftGame returns nothing
+		public static method init takes real refreshRate, boolean showPlayerName, boolean showUnitName, boolean showLevel, string whitespaceBarFilePath, string experienceBarFilePath, integer experienceLength, ACharactersSchemeMaxExperience experienceFormula, string hitPointsBarFilePath, integer hitPointsLength, string manaBarFilePath, integer manaLength, string textTitle, string textLevel, string textLeftGame returns nothing
 			//static start members
 			set thistype.m_refreshRate = refreshRate
 			debug if (refreshRate <= 0) then
@@ -223,8 +238,13 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 			set thistype.m_showPlayerName = showPlayerName
 			set thistype.m_showUnitName = showUnitName
 			set thistype.m_showLevel = showLevel
+			set thistype.m_whitespaceBarFilePath = whitespaceBarFilePath
+			set thistype.m_experienceBarFilePath = experienceBarFilePath
 			set thistype.m_experienceLength = experienceLength
+			set thistype.m_experienceFormula = experienceFormula
+			set thistype.m_hitPointsBarFilePath = hitPointsBarFilePath
 			set thistype.m_hitPointsLength = hitPointsLength
+			set thistype.m_manaBarFilePath = manaBarFilePath
 			set thistype.m_manaLength = manaLength
 			set thistype.m_textTitle = textTitle
 			set thistype.m_textLevel = textLevel
@@ -232,13 +252,14 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 			//static members
 			call thistype.createRefreshTrigger()
 			call thistype.createMultiboard()
+			call thistype.initialize()
 		endmethod
 
 		public static method show takes nothing returns nothing
 			call EnableTrigger(thistype.m_refreshTrigger)
 			call MultiboardDisplay(thistype.m_multiboard, true)
 		endmethod
-		
+
 		public static method showForPlayer takes player user returns nothing
 			call ShowMultiboardForPlayer(user, thistype.m_multiboard, true)
 		endmethod
@@ -247,7 +268,7 @@ library AStructSystemsCharacterCharactersScheme requires optional ALibraryCoreDe
 			call MultiboardDisplay(thistype.m_multiboard, false)
 			call DisableTrigger(thistype.m_refreshTrigger)
 		endmethod
-		
+
 		public static method hideForPlayer takes player user returns nothing
 			call ShowMultiboardForPlayer(user, thistype.m_multiboard, false)
 		endmethod

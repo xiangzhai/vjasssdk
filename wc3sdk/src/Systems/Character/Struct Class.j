@@ -1,17 +1,13 @@
-/// Why should it be contained by ACharacter?
-library AStructSystemsCharacterClass
+library AStructSystemsCharacterClass requires AStructCoreGeneralVector
 
 	struct AClass
-		//static constant members
-		public static constant integer maxAbilities = 12 //For class selection
-		public static constant integer maxDescriptionLines = 8 //For class selection
 		//static start members
 		private static integer m_startLevel
 		private static integer m_startSkillPoints
 		//dynamic members
-		private string array m_abilityIconPath[thistype.maxAbilities] //for character class selection
-		private integer array m_ability[thistype.maxAbilities] //for character class selection
-		private string array m_descriptionLine[thistype.maxDescriptionLines] //for character class selection
+		private AStringVector m_abilityIconPaths // for character class selection
+		private AIntegerVector m_abilities // for character class selection
+		private AStringVector m_descriptionLines // for character class selection
 		//start members
 		private integer m_unitType
 		private string m_animation
@@ -19,54 +15,69 @@ library AStructSystemsCharacterClass
 
 		//dynamic members
 
-		public method setAbilityIconPath takes integer number, string abilityIconPath returns nothing
-			set this.m_abilityIconPath[number] = abilityIconPath
+		public method addAbilityIconPath takes string abilityIconPath returns integer
+			call this.m_abilityIconPaths.pushBack(abilityIconPath)
+			return this.m_abilityIconPaths.backIndex()
 		endmethod
 
-		public method abilityIconPath takes integer number returns string
-			return this.m_abilityIconPath[number]
+		public method abilityIconPath takes integer index returns string
+			return this.m_abilityIconPaths[index]
 		endmethod
 
-		public method setAbility takes integer number, integer usedAbility returns nothing
-			set this.m_ability[number] = usedAbility
+		public method abilityIconPaths takes nothing returns integer
+			return this.m_abilityIconPaths.size()
 		endmethod
 
-		public method ability takes integer number returns integer
-			return this.m_ability[number]
+		public method addAbility takes integer whichAbility returns integer
+			call this.m_abilities.pushBack(whichAbility)
+			return this.m_abilities.backIndex()
 		endmethod
 
-		public method setDescriptionLine takes integer number, string descriptionLine returns nothing
-			set this.m_descriptionLine[number] = descriptionLine
+		public method ability takes integer index returns integer
+			return this.m_abilities[index]
 		endmethod
 
-		public method descriptionLine takes integer number returns string
-			return this.m_descriptionLine[number]
+		public method abilities takes nothing returns integer
+			return this.m_abilities.size()
+		endmethod
+
+		public method addDescriptionLine takes string descriptionLine returns integer
+			call this.m_descriptionLines.pushBack(descriptionLine)
+			return this.m_descriptionLines.backIndex()
+		endmethod
+
+		public method descriptionLine takes integer index returns string
+			return this.m_descriptionLines[index]
+		endmethod
+
+		public method descriptionLines takes nothing returns integer
+			return this.m_descriptionLines.size()
 		endmethod
 
 		//start members
 
-		/// Friend relation to AClassSelection, don't use.
+		/// Friend relation to @struct AClassSelection, don't use.
 		public method unitType takes nothing returns integer
 			return this.m_unitType
 		endmethod
 
-		/// Friend relation to AClassSelection, don't use.
+		/// Friend relation to @struct AClassSelection, don't use.
 		public method animation takes nothing returns string
 			return this.m_animation
 		endmethod
 
-		/// Friend relation to AClassSelection, don't use.
+		/// Friend relation to @struct AClassSelection, don't use.
 		public method soundPath takes nothing returns string
 			return this.m_soundPath
 		endmethod
 
 		//methods
 
-		public method containsAbility takes integer usedAbility returns boolean
+		public method containsAbility takes integer whichAbility returns boolean
 			local integer i = 0
 			loop
-				exitwhen (i == thistype.maxAbilities)
-				if (this.m_ability[i] == usedAbility) then
+				exitwhen (i == this.m_abilities.size())
+				if (this.m_abilities[i] == whichAbility) then
 					return true
 				endif
 				set i = i + 1
@@ -74,22 +85,33 @@ library AStructSystemsCharacterClass
 			return false
 		endmethod
 
-		public method generateUnit takes player user, real x, real y, real facing returns unit
-			local unit usedUnit = CreateUnit(user, this.m_unitType, x, y, facing)
-			call SetHeroLevelBJ(usedUnit, thistype.m_startLevel, false)
-			call UnitModifySkillPoints(usedUnit, (thistype.m_startSkillPoints - GetHeroSkillPoints(usedUnit))) //Setzt die Fähigkeiten-Punkte
-			return usedUnit
+		public method generateUnit takes player whichPlayer, real x, real y, real facing returns unit
+			local unit whichUnit = CreateUnit(whichPlayer, this.m_unitType, x, y, facing)
+			call SetHeroLevelBJ(whichUnit, thistype.m_startLevel, false)
+			call UnitModifySkillPoints(whichUnit, (thistype.m_startSkillPoints - GetHeroSkillPoints(whichUnit))) // sets the skill points
+			return whichUnit
 		endmethod
 
 		/// @param unitType Should be the type of a hero
 		public static method create takes integer unitType, string animation, string soundPath returns thistype
 			local thistype this = thistype.allocate()
+			//dynamic members
+			set this.m_abilityIconPaths = AStringVector.create()
+			set this.m_abilities = AIntegerVector.create()
+			set this.m_descriptionLines = AStringVector.create()
 			//start members
 			set this.m_unitType = unitType
 			set this.m_animation = animation
 			set this.m_soundPath = soundPath
 
 			return this
+		endmethod
+
+		public method onDestroy takes nothing returns nothing
+			//dynamic members
+			call this.m_abilityIconPaths.destroy()
+			call this.m_abilities.destroy()
+			call this.m_descriptionLines.destroy()
 		endmethod
 
 		public static method init takes integer startLevel, integer startSkillPoints returns nothing

@@ -112,15 +112,13 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	* @return Returns the new string with the moved string.
 	*/
 	function MoveSubString takes string whichString, integer position, integer length, integer newPosition returns string
-		local string subString = ""
-		local string result = ""
+		local string result
 		debug call StringPositionDebug(whichString, position)
 		debug call StringPositionDebug(whichString, position + length - 1)
 		debug call StringPositionDebug(whichString, newPosition)
 		debug call StringPositionDebug(whichString, newPosition + length - 1)
-		set subString = SubString(whichString, position, position + length)
 		set result = RemoveSubString(whichString, position, position + length)
-		return InsertString(result, newPosition, subString)
+		return InsertString(result, newPosition, SubString(whichString, position, position + length))
 	endfunction
 
 	/**

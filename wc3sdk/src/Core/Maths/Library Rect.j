@@ -37,7 +37,7 @@ library ALibraryCoreMathsRect
 		else
 			set maxX = x4
 		endif
-	
+
 		if (x1 <= x2 and x1 <= x3 and x1 <= x4) then
 			set minX = x1
 		elseif (x2 <= x1 and x2 <= x3 and x2 <= x4) then
@@ -57,7 +57,7 @@ library ALibraryCoreMathsRect
 		else
 			set maxY = y4
 		endif
-	
+
 		if (y1 <= y2 and y1 <= y3 and y1 <= y4) then
 			set minY = y1
 		elseif (y2 <= y1 and y2 <= y3 and y2 <= y4) then
@@ -82,7 +82,7 @@ library ALibraryCoreMathsRect
 		loop
 			set firstUnit = FirstOfGroup(usedGroup)
 			exitwhen (firstUnit == null)
-	
+
 			set firstUnitX = GetUnitX(firstUnit)
 			set firstUnitY = GetUnitY(firstUnit)
 

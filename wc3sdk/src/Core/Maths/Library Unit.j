@@ -90,9 +90,9 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 		endif
 		return false
 	endfunction
-	
+
 	/// @author Grater
-	/// @source http://www.wc3jass.com/
+	/// @link http://www.wc3jass.com/
 	function FindClosestUnit takes group g, real x, real y returns unit
 		local real dx
 		local real dy
@@ -126,22 +126,22 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 		set tempGroup = null
 		return closest
 	endfunction
-	
+
 	/// @author Grater
-	/// @source http://www.wc3jass.com/
+	/// @link http://www.wc3jass.com/
 	function FindClosestUnitByLocation takes group g, location loc returns unit
 		return FindClosestUnit(g, GetLocationX(loc), GetLocationY(loc))
 	endfunction
-	
+
 	/// @author Tamino Dauth
 	function FindClosestUnitByRect takes group usedGroup, rect usedRect returns unit
 		return FindClosestUnit(usedGroup, GetRectCenterX(usedRect), GetRectCenterY(usedRect))
 	endfunction
-	
+
 	/**
 	* IsUnitOnRect returns true if the unit's collision circle
 	* ------------ interesects with a rect.
-	*              
+	*
 	* Useful for example, in a "enter rect" event
 	* it will return true, unlike blizz' RectContainsUnit
 	*
@@ -149,8 +149,8 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 	* @author Vexorian
 	*/
 	function IsUnitOnRect takes unit u, rect r returns boolean
-		local real x =GetUnitX(u)
-		local real y =GetUnitY(u)
+		local real x = GetUnitX(u)
+		local real y = GetUnitY(u)
 		local real mx = GetRectMaxX(r)
 		local real nx = GetRectMinX(r)
 		local real my = GetRectMaxY(r)
@@ -170,20 +170,44 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 		endif
 		return IsUnitInRangeXY(u,x,y,0.0)
 	endfunction
-	
+
 	/// @author Tamino Dauth
 	function SetUnitFacingToFaceRectTimed takes unit whichUnit, rect whichRect, real duration returns nothing
 		call SetUnitFacingTimed(whichUnit, GetAngleBetweenPoints(GetUnitX(whichUnit), GetUnitY(whichUnit), GetRectCenterX(whichRect), GetRectCenterY(whichRect)), duration)
 	endfunction
-	
+
+	/**
+	* @author Tamino Dauth
+	* @see SetUnitFacingToFaceUnitTimed
+	*/
+	function SetUnitFacingToFaceUnit takes unit whichUnit, unit target returns nothing
+		call SetUnitFacing(whichUnit, GetAngleBetweenUnits(whichUnit, target))
+	endfunction
+
+	/**
+	* @author Tamino Dauth
+	* @see SetUnitPositionLoc
+	*/
+	function SetUnitPositionRect takes unit whichUnit, rect whichRect returns nothing
+		call SetUnitPosition(whichUnit, GetRectCenterX(whichRect), GetRectCenterY(whichRect))
+	endfunction
+
+	/**
+	* @author Tamino Dauth
+	* @see SetUnitPositionLocFacingBJ
+	*/
+	function SetUnitPositionRectFacing takes unit whichUnit, rect whichRect, real facing returns nothing
+		call SetUnitPositionRect(whichUnit, whichRect)
+		call SetUnitFacing(whichUnit, facing)
+	endfunction
+
 	/// @author Tamino Dauth
 	function SetUnitToRandomPointOnRect takes unit whichUnit, rect whichRect returns nothing
 		local real minX = RMinBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
 		local real maxX = RMaxBJ(GetRectMinX(whichRect), GetRectMaxX(whichRect))
 		local real minY = RMinBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
 		local real maxY = RMaxBJ(GetRectMinY(whichRect), GetRectMaxY(whichRect))
-		call SetUnitX(whichUnit, GetRandomReal(minX, maxX))
-		call SetUnitY(whichUnit, GetRandomReal(minY, maxY))
+		call SetUnitPosition(whichUnit, GetRandomReal(minX, maxX), GetRandomReal(minY, maxY))
 	endfunction
 
 endlibrary
