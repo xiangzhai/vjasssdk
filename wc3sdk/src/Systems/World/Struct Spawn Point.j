@@ -332,7 +332,9 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_group.units().remove(triggerUnit)
 			call this.dropItem(triggerUnit)
+			debug call this.print("Unit " + GetUnitName(triggerUnit) + " was contained by spawn point.")
 			if (this.m_group.units().empty()) then
+				debug call this.print("Starting spawn point timer.")
 				call this.startTimer()
 			endif
 			set triggeringTrigger = null

@@ -210,4 +210,20 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 		call SetUnitPosition(whichUnit, GetRandomReal(minX, maxX), GetRandomReal(minY, maxY))
 	endfunction
 
+	/**
+	* @author Tamino Dauth
+	* @see IssuePointOrder
+	*/
+	function IssueRectOrder takes unit whichUnit, string order, rect whichRect returns boolean
+		return IssuePointOrder(whichUnit, order, GetRectCenterX(whichRect), GetRectCenterY(whichRect))
+	endfunction
+
+	/**
+	* @author Tamino Dauth
+	* @see IssuePointOrderById
+	*/
+	function IssueRectOrderById takes unit whichUnit, integer order, rect whichRect returns boolean
+		return IssuePointOrderById(whichUnit, order, GetRectCenterX(whichRect), GetRectCenterY(whichRect))
+	endfunction
+
 endlibrary

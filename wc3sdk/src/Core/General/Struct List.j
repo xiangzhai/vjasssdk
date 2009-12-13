@@ -1,7 +1,4 @@
-//! zinc
-
 library AStructCoreGeneralList
-{
 
 	/**
 	* @author Tamino Dauth
@@ -10,277 +7,344 @@ library AStructCoreGeneralList
 	//! textmacro A_LIST takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, STRUCTSPACE, ELEMENTSPACE, ITERATORSPACE
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ type $NAME$UnaryPredicate extends function($ELEMENTTYPE$ value) -> boolean
+		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ value returns boolean
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ type $NAME$BinaryPredicate extends function($ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1) -> boolean
+		$STRUCTPREFIX$ function interface $NAME$BinaryPredicate takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns boolean
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ type $NAME$UnaryFunction extends function($ELEMENTTYPE$ element) //Rückgabewert wurde vorerst rausgenommen, bis ich weiß, was er bringt
+		$STRUCTPREFIX$ function interface $NAME$UnaryFunction takes $ELEMENTTYPE$ element returns nothing //Rückgabewert wurde vorerst rausgenommen, bis ich weiß, was er bringt
 
 		/// Generator.
 		/// Allows filling some elements with the return value.
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ type $NAME$Generator extends function() -> $ELEMENTTYPE$
+		$STRUCTPREFIX$ function interface $NAME$Generator takes nothing returns $ELEMENTTYPE$
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ type $NAME$BinaryOperation extends function($ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1) -> $ELEMENTTYPE$
+		$STRUCTPREFIX$ function interface $NAME$BinaryOperation  takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns $ELEMENTTYPE$
 
 		private struct $NAME$Node[$ELEMENTSPACE$]
-		{
-			private thistype m_next;
-			private thistype m_previous;
-			private $ELEMENTTYPE$ m_data;
+			private thistype m_next
+			private thistype m_previous
+			private $ELEMENTTYPE$ m_data
 
-			public method setNext($ELEMENTTYPE$ next)
-			{
-				this.m_next = next;
-			}
+			public method setNext takes thistype next returns nothing
+				set this.m_next = next
+			endmethod
 
-			public method next() -> $ELEMENTTYPE$
-			{
-				return this.m_next;
-			}
+			public method next takes nothing returns thistype
+				return this.m_next
+			endmethod
 
-			public method setPrevious($ELEMENTTYPE$ previous)
-			{
-				this.m_previous = previous;
-			}
+			public method setPrevious takes thistype previous returns nothing
+				set this.m_previous = previous
+			endmethod
 
-			public method previous() -> $ELEMENTTYPE
-			{
-				return this.m_previous;
-			}
+			public method previous takes nothing returns thistype
+				return this.m_previous
+			endmethod
 
-			public method setData($ELEMENTTYPE$ data)
-			{
-				this.m_data = data;
-			}
+			public method setData takes $ELEMENTTYPE$ data returns nothing
+				set this.m_data = data
+			endmethod
 
-			public method data() -> $ELEMENTTYPE$
-			{
-				return this.m_data;
-			}
+			public method data takes nothing returns $ELEMENTTYPE$
+				return this.m_data
+			endmethod
 
-			public static method create() -> thistype
-			{
-				thistype this = thistype.allocate();
-				this.m_next = 0;
-				this.m_previous = 0;
-				this.m_data = $NULLVALUE$;
+			public static method create takes nothing returns thistype
+				local thistype this = thistype.allocate()
+				set this.m_next = 0
+				set this.m_previous = 0
+				set this.m_data = $NULLVALUE$
 
-				return this;
-			}
+				return this
+			endmethod
 
-			public method onDestroy()
-			{
-				this.m_data = $NULLVALUE$;
-			}
-		}
+			public method onDestroy takes nothing returns nothing
+				set this.m_data = $NULLVALUE$
+			endmethod
+		endstruct
 
 		$STRUCTPREFIX$ struct $NAME$Iterator[$ITERATORSPACE$]
-		{
-			private $NAME$Node m_node;
+			private $NAME$Node m_node
 
 			/// Required by list struct.
-			public method setNode($NAME$Node node)
-			{
-				this.m_node = node;
-			}
+			public method setNode takes $NAME$Node node returns nothing
+				set this.m_node = node
+			endmethod
 
 			/// Required by list struct.
-			public method node() -> $NAME$Node
-			{
-				return this.m_node;
-			}
+			public method node takes nothing returns $NAME$Node
+				return this.m_node
+			endmethod
 
-			public method isValid() -> boolean
-			{
-				return !this.m_node == 0;
-			}
+			public method isValid takes nothing returns boolean
+				return not (this.m_node == 0)
+			endmethod
 
-			public method hasNext() -> boolean
-			{
-				return this.m_node != 0 && this.m_node.next() != 0;
-			}
+			public method hasNext takes nothing returns boolean
+				return this.m_node != 0 and this.m_node.next() != 0
+			endmethod
 
-			public method hasPrevious() -> boolean
-			{
-				return this.m_node != 0 && this.m_node.previous() != 0;
-			}
+			public method hasPrevious takes nothing returns boolean
+				return this.m_node != 0 and this.m_node.previous() != 0
+			endmethod
 
 			/// Similar to C++'s ++ iterators operator.
-			public method next()
-			{
-				if (this.m_node == 0)
-				{
-					return;
-				}
+			public method next takes nothing returns nothing
+				if (this.m_node == 0) then
+					return
+				endif
 
-				this.m_node = this.m_node.next();
-			}
+				set this.m_node = this.m_node.next()
+			endmethod
 
 			/// Similar to C++'s -- iterators operator.
-			public method previous()
-			{
-				if (this.m_node == 0)
-				{
-					return;
-				}
+			public method previous takes nothing returns nothing
+				if (this.m_node == 0) then
+					return
+				endif
 
-				this.m_node = this.m_node.next();
-			}
+				set this.m_node = this.m_node.next()
+			endmethod
 
 			/**
 			* @todo If you want to implement toBack and toFront (like Qt does) you'll have to save parent struct instance ...
 			*/
 
-			public static method create() -> thistype
-			{
-				thistype this = thistype.allocate();
-				this.m_node = 0;
+			public static method create takes nothing returns thistype
+				local thistype this = thistype.allocate()
+				set this.m_node = 0
 
-				return this;
-			}
+				return this
+			endmethod
 
-			public method operator==(thistype iterator) -> boolean
-			{
-				return this.m_node == iterator.m_node;
-			}
-		}
+			public method operator== takes thistype iterator returns boolean
+				return this.m_node == iterator.m_node
+			endmethod
+		endstruct
 
 
 		$STRUCTPREFIX$ struct $NAME$[$STRUCTSPACE$]
 			//members
-			private $NAME$Node m_front;
-			private $NAME$Node m_back;
-			private integer m_size;
+			private $NAME$Node m_front
+			private $NAME$Node m_back
+			private integer m_size
 
-			public method begin() -> $NAME$Iterator
-			{
-				$NAME$Iterator begin = $NAME$Iterator.create();
-				begin.setNode(this.m_front);
+			public method begin takes nothing returns $NAME$Iterator
+				local $NAME$Iterator begin = $NAME$Iterator.create()
+				call begin.setNode(this.m_front)
 
-				return begin;
-			}
+				return begin
+			endmethod
 
 			/// Does not reference the past-end element rather than the last one.
-			public method end() -> $NAME$Iterator
-			{
-				$NAME$Iterator end = $NAME$Iterator.create();
-				end.setNode(this.m_back);
+			public method end takes nothing returns $NAME$Iterator
+				local $NAME$Iterator end = $NAME$Iterator.create()
+				call end.setNode(this.m_back)
 
-				return end;
-			}
+				return end
+			endmethod
 
-			public method size() -> integer
-			{
-				return this.m_size;
-			}
+			public method size takes nothing returns integer
+				return this.m_size
+			endmethod
 
 			/**
 			* @return Returns the first element value of list.
 			*/
-			public method front() -> $ELEMENTTYPE$
-			{
-				if (this.m_front == 0)
-				{
-					return $NULLVALUE$;
-				}
+			public method front takes nothing returns $ELEMENTTYPE$
+				if (this.m_front == 0) then
+					return $NULLVALUE$
+				endif
 
-				return this.m_front.data();
-			}
+				return this.m_front.data()
+			endmethod
 
 			/**
 			* @return Returns the last element value of list.
 			*/
-			public method back() -> $ELEMENTTYPE$
-			{
-				if (this.m_back == 0)
-				{
-					return $NULLVALUE$;
-				}
+			public method back takes nothing returns $ELEMENTTYPE$
+				if (this.m_back == 0) then
+					return $NULLVALUE$
+				endif
 
-				return this.m_back.data();
-			}
+				return this.m_back.data()
+			endmethod
 
-			public method empty() -> boolean
-			{
-				return this.m_size == 0;
-			}
+			public method empty takes nothing returns boolean
+				return this.m_size == 0
+			endmethod
 
-			public method eraseNumber($NAME$Iterator first, $NAME$Iterator last)
-			{
-				$NAME$Node node;
+			/**
+			* Inserts a new element at the beginning of the list, right before its current first element. The content of this new element is initialized to @param value.
+			* This effectively increases the list size by one.
+			*/
+			public method pushFront takes $ELEMENTTYPE$ value returns nothing
+				local $NAME$Node node = this.m_front
+				set this.m_front = $NAME$Node.create()
+				call this.m_front.setData(value)
+				if (node != 0) then
+					call this.m_front.setNext(node)
+					call node.setPrevious(this.m_front)
+				else
+					set this.m_back = this.m_front
+				endif
+				set this.m_size = this.m_size + 1
+			endmethod
 
-				do
-				{
-					if (first.node() == this.m_back)
-					{
-						this.m_back = first.node().previous();
-					}
-					else if (first.node().next() != 0)
-					{
-						first.node().next().setPrevious(first.node().previous());
-					}
-
-					if (first.node() == this.m_front)
-					{
-						this.m_front = first.node().next();
-					}
-					else if (first.node().previous() != 0)
-					{
-						first.node().previous().setNext(first.node().next());
-					}
-
-					if (first == last)
-					{
-						first.node().destroy();
-					}
+			/**
+			* Removes the first element in the list container, effectively reducing the list size by one.
+			* This doesn't call the removed element's destructor!
+			*/
+			public method popFront takes nothing returns nothing
+				local $NAME$Node node = this.m_front
+				if (node != 0) then
+					if (node.next() != 0) then
+						call node.next().setPrevious(0)
 					else
-					{
-						node = first.node().next();
-						first.node().destroy();
-						first.setNode(node);
-					}
+						set this.m_back = 0
+					endif
+					set this.m_front = node.next() // could be 0!
+					call node.destroy()
+					set this.m_size = this.m_size - 1
+				endif
+			endmethod
 
-					this.m_size -= 1;
-				}
-				while (first.isValid());
-			}
+			/**
+			* Adds a new element at the end of the list, right after its current last
+			* element. The content of this new element is initialized to @param value.
+			* This effectively increases the list size by one.
+			*/
+			public method pushBack takes $ELEMENTTYPE$ value returns nothing
+				local $NAME$Node node = this.m_back
+				set this.m_back = $NAME$Node.create()
+				call this.m_back.setData(value)
+				if (node != 0) then
+					call this.m_back.setPrevious(node)
+					call node.setNext(this.m_back)
+				else
+					set this.m_front = this.m_back
+				endif
+				set this.m_size = this.m_size + 1
+			endmethod
+
+			/**
+			* Removes the last element in the list container, effectively reducing the list size by one.
+			* This calls the removed element's destructor.
+			*/
+			public method popBack takes nothing returns nothing
+				local $NAME$Node node = this.m_back
+				if (node != 0) then
+					if (node.previous() != 0) then
+						call node.previous().setNext(0)
+					else
+						set this.m_front = 0
+					endif
+					set this.m_back = node.previous() // could be 0!
+					call node.destroy()
+					set this.m_size = this.m_size - 1
+				endif
+			endmethod
+
+			/**
+			* The list container is extended by inserting new elements before the element at position @param position with value @param value.
+			* This effectively increases the container size by @param number.
+			*/
+			public method insertNumber takes $NAME$Iterator position, integer number,  $ELEMENTTYPE$ value returns nothing
+				local $NAME$Node node = position.node().previous()
+				local $NAME$Node tmpNode
+				local integer i = 0
+
+				loop
+					exitwhen (i == number)
+					set tmpNode = $NAME$Node.create()
+					call tmpNode.setData(value)
+					call tmpNode.setPrevious(node)
+					call tmpNode.setNext(position.node()) // this call actually can be removed
+					if (node != 0) then
+						call node.setNext(tmpNode)
+					else
+						set this.m_front = tmpNode
+					endif
+					set this.m_size = this.m_size + 1
+					set i = i + 1
+				endloop
+				set this.m_size = this.m_size + i
+				if (i > 0) then
+					call position.node().setPrevious(tmpNode)
+				endif
+			endmethod
+
+			public method insert takes $NAME$Iterator position, $ELEMENTTYPE$ value returns nothing
+				call this.insertNumber(position, 1, value)
+			endmethod
+
+			/// No reverse erasing.
+			public method eraseNumber takes $NAME$Iterator first, $NAME$Iterator last returns nothing
+				local $NAME$Node node = first.node()
+				local $NAME$Node tmpNode
+
+				loop
+					exitwhen (node == last.node().next() or not (node == 0))
+					if (node == this.m_front) then
+						set this.m_front = node.next()
+					elseif (node == this.m_back) then
+						set this.m_back = node.previous()
+					endif
+					if (node.next() != 0) then
+						call node.next().setPrevious(node.previous())
+					endif
+					if (node.previous() != 0) then
+						call node.previous().setNext(node.next())
+					endif
+					set tmpNode = node
+					set node = node.next()
+					call tmpNode.destroy()
+					set this.m_size = this.m_size -1
+				endloop
+			endmethod
+
+			public method erase takes $NAME$Iterator position returns nothing
+				call this.eraseNumber(position, position)
+			endmethod
 
 			/// All the elements in the list container are dropped: they are removed from the list container, leaving it with a size of 0.
-			public method clear()
-			{
-				$NAME$Iterator first = this.begin();
-				$NAME$Iterator last = this.end();
-				this.eraseNumber(first, last)
-				first.destroy();
-				last.destroy();
-			}
+			public method clear takes nothing returns nothing
+				local $NAME$Iterator first = this.begin()
+				local $NAME$Iterator last = this.end()
+				call this.eraseNumber(first, last)
+				call first.destroy()
+				call last.destroy()
+			endmethod
 
-			public static method create() -> thistype
-			{
-				thistype this = thistype.allocate();
-				this.m_front = 0;
-				this.m_back = 0;
+			public static method create takes nothing returns thistype
+				local thistype this = thistype.allocate()
+				set this.m_front = 0
+				set this.m_back = 0
 
-				return this;
-			}
+				return this
+			endmethod
 
 			/// List will be cleared before destruction.
-			public method onDestroy()
-			{
-				this.clear();
-			}
+			public method onDestroy takes nothing returns nothing
+				call this.clear()
+			endmethod
 
-			public static constant method maxInstances() -> integer
-			{
-				return $STRUCTSPACE$;
-			}
-		}
+			public static constant method maxInstances takes nothing returns integer
+				return $STRUCTSPACE$
+			endmethod
+		endstruct
 
 	//! endtextmacro
-}
 
-//! endzinc
+	/**
+	* default lists, Jass data types
+	* max instances = required struct space / biggest array member size
+	* 400000 is struct space maximum
+	* max instances = 50000 / 100 = 500
+	*/
+	//! runtextmacro A_LIST("", "AIntegerList", "integer", "0", "50000", "50000", "50000")
+
+endlibrary

@@ -11,6 +11,8 @@
 //===========================================================================
 
 //! import "Import Asl.j"
+//! import "Import Dmdf.j"
+//! import "Talras/Import.j"
 
 //***************************************************************************
 //*
@@ -19,6 +21,13 @@
 //***************************************************************************
 
 globals
+	constant boolean A_RTC = false
+	constant boolean A_JAPI = false
+	constant boolean A_SYSTEMS = true
+	constant boolean A_OBJECTS = false
+	constant boolean A_DEBUG_HANDLES = false
+	constant boolean A_NET = false
+	constant boolean A_FPS_MOVEMENT = false
     // Generated
 endglobals
 

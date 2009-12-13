@@ -103,7 +103,7 @@ library ALibrarySystemsBonusModBonusMod requires AStructCoreGeneralHashTable, op
 	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV7", "Sight range +1280", "1280")
 	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV8", "Sight range +2560", "2560")
 	//! runtextmacro A_BONUS_MOD_SIGHT_RANGE("AZV9", "Sight range -5120", "-5120")
-	
+
 	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU0", "Life regeneration +1", "1")
 	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU1", "Life regeneration +2", "2")
 	//! runtextmacro A_BONUS_MOD_LIFE_REGENERATION("AZU2", "Life regeneration +4", "4")
@@ -150,7 +150,7 @@ library ALibrarySystemsBonusModBonusMod requires AStructCoreGeneralHashTable, op
 		private integer array abilityId
 		private AHashTable hashTable
 	endglobals
-		
+
 	private function Ix takes integer x, integer y returns integer
 		return (x * IxLimit + y)
 	endfunction
@@ -169,7 +169,7 @@ library ALibrarySystemsBonusModBonusMod requires AStructCoreGeneralHashTable, op
 			debug call Print("ABonusMod error: Wrong type, value " + I2S(bonusType) + ".")
 		debug endif
 	debug endfunction
-	
+
 	/**
 	* @param whichUnit Unit which is checked for bonus.
 	* @param bonusType Property type which is checked for.
@@ -358,7 +358,7 @@ library ALibrarySystemsBonusModBonusMod requires AStructCoreGeneralHashTable, op
 	function AUnitRemoveBonus takes unit whichUnit, integer bonusType, integer amount returns boolean
 		return AUnitAddBonus(whichUnit, bonusType, -amount)
 	endfunction
-	
+
 	/**
 	* So here you set each of the bonus abilities, 0 is damage, 1 armor, 2 health, and 3 mana
 	* The second numbers are the powers (2^1 is 1, 2^2=4, 2^3=8, ...

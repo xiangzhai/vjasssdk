@@ -61,11 +61,21 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		endmethod
 
 		private method refreshInfoSheet takes nothing returns nothing
+			local integer count = 3
 			local integer i
 			local multiboarditem multiboardItem
 			call MultiboardClear(this.m_infoSheet)
 			call MultiboardSetColumnCount(this.m_infoSheet, 1)
-			call MultiboardSetRowCount(this.m_infoSheet, 3 + 1 + this.m_class.abilities() + 1 + this.m_class.descriptionLines())
+
+			if (this.m_class.abilities() > 0) then
+				set count = count + 1 + this.m_class.abilities()
+			endif
+
+			if (this.m_class.descriptionLines() > 0) then
+				set count = count + 1 + this.m_class.descriptionLines()
+			endif
+
+			call MultiboardSetRowCount(this.m_infoSheet, count)
 			call MultiboardSetTitleText(this.m_infoSheet, IntegerArg(IntegerArg(StringArg(thistype.m_textTitle, GetUnitName(this.m_classUnit)), this.m_class), thistype.m_lastClass - thistype.m_firstClass + 1))
 			//strength
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
@@ -91,7 +101,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 			if (this.m_class.abilities() > 0) then
 				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3, 0)
-				call MultiboardSetItemStyle(multiboardItem, false, true)
+				call MultiboardSetItemStyle(multiboardItem, true, false)
 				call MultiboardSetItemValue(multiboardItem, thistype.m_textAbilities)
 				call MultiboardReleaseItem(multiboardItem)
 				set multiboardItem = null
@@ -111,7 +121,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 			if (this.m_class.descriptionLines() > 0) then
 				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + this.m_class.abilities(), 0)
-				call MultiboardSetItemStyle(multiboardItem, false, true)
+				call MultiboardSetItemStyle(multiboardItem, true, false)
 				call MultiboardSetItemValue(multiboardItem, thistype.m_textDescription)
 				call MultiboardReleaseItem(multiboardItem)
 				set multiboardItem = null
@@ -119,8 +129,8 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				set i = 0
 				loop
 					exitwhen(i == this.m_class.descriptionLines())
-					set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + this.m_class.abilities() + 1, 0)
-					call MultiboardSetItemStyle(multiboardItem, false, true)
+					set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + this.m_class.abilities() + 1 + i, 0)
+					call MultiboardSetItemStyle(multiboardItem, true, false)
 					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i))
 					call MultiboardReleaseItem(multiboardItem)
 					set multiboardItem = null
@@ -306,6 +316,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 		private method createInfoSheet takes nothing returns nothing
 			set this.m_infoSheet = CreateMultiboard()
+			call MultiboardSetItemsWidth(this.m_infoSheet, 0.20)
 		endmethod
 
 		public static method create takes player user, real startX, real startY, real startFacing, AClassSelectionSelectClassAction selectClassAction returns thistype

@@ -4,14 +4,18 @@ library AStructCoreDebugBenchmark requires AModuleCoreGeneralSystemStruct, AStru
 	* This struct can be used for time measurement of important code parts.
 	* If you're using the japi it uses specific watch natives for exact time measures.
 	* Otherwise it uses the default Warcraft @type timer.
+	* @todo Debugging handles doesn't work for handles which are created during map initialization since @method ABenchmark.onInit and @method ABenchmark.init are called later.
 	*/
 	struct ABenchmark
 		//static members
 		private static AIntegerVector m_benchmarks
+//static if (A_DEBUG_HANDLES) then
+		private static boolean m_suspend
 		private static AUnitVector m_units
 		private static AItemVector m_items
 		private static ADestructableVector m_destructables
 		private static AEffectVector m_effects
+//endif
 		//dynamic members
 		private string m_identifier
 		//members
@@ -115,6 +119,7 @@ endif
 			//static members
 			set thistype.m_benchmarks = AIntegerVector.create()
 static if (A_DEBUG_HANDLES) then
+			set thistype.m_suspend = false
 			set thistype.m_units = AUnitVector.create()
 			set thistype.m_items = AItemVector.create()
 			set thistype.m_destructables = ADestructableVector.create()
@@ -189,54 +194,64 @@ static if (A_DEBUG_HANDLES) then
 endif
 		endmethod
 
+		public static method clearAll takes nothing returns nothing
+			loop
+				exitwhen (thistype.m_benchmarks.empty())
+				call thistype(thistype.m_benchmarks.back()).destroy()
+			endloop
+		endmethod
+
 static if (A_DEBUG_HANDLES) then
 		private static method createUnit takes player id, integer unitid, real x, real y, real face returns nothing
 			local unit whichUnit
-			if (thistype.initialized()) then //native can be called before ABenchmarks initialization!
+			if (thistype.initialized() and not thistype.m_suspend) then
+				set thistype.m_suspend = true
 				set whichUnit = CreateUnit(id, unitid, x, y, face)
 				call thistype.m_units.pushBack(whichUnit)
 				call RemoveUnit(whichUnit)
 				set whichUnit = null
+				set thistype.m_suspend = false
 			endif
-			//return thistype.m_units.back()
 		endmethod
 
 		private static method removeUnit takes unit whichUnit returns nothing
-			if (thistype.initialized()) then //native can be called before ABenchmarks initialization!
+			if (thistype.initialized() and not thistype.m_suspend) then
 				call thistype.m_units.remove(whichUnit)
 			endif
 		endmethod
 
 		private static method createItem takes integer itemid, real x, real y returns nothing
 			local item whichItem
-			if (thistype.initialized()) then
+			if (thistype.initialized() and not thistype.m_suspend) then
+				set thistype.m_suspend = true
 				set whichItem = CreateItem(itemid, x, y)
 				call thistype.m_items.pushBack(whichItem)
 				call RemoveItem(whichItem)
 				set whichItem = null
+				set thistype.m_suspend = false
 			endif
-			//return thistype.m_items.back()
 		endmethod
 
 		private static method removeItem takes item whichItem returns nothing
-			if (thistype.initialized()) then
+			if (thistype.initialized() and not thistype.m_suspend) then
 				call thistype.m_items.remove(whichItem)
 			endif
 		endmethod
 
 		private static method createDestructable takes integer objectid, real x, real y, real face, real scale, integer variation returns nothing
 			local destructable whichDestructable
-			if (thistype.initialized()) then
+			if (thistype.initialized() and not thistype.m_suspend) then
+				set thistype.m_suspend = true
 				set whichDestructable = CreateDestructable(objectid, x, y, face, scale, variation)
 				call thistype.m_destructables.pushBack(whichDestructable)
 				call RemoveDestructable(whichDestructable)
 				set whichDestructable = null
+				set thistype.m_suspend = false
 			endif
-			//return thistype.m_destructables.back()
 		endmethod
 
 		private static method removeDestructable takes destructable d returns nothing
-			if (thistype.initialized()) then
+			if (thistype.initialized() and not thistype.m_suspend) then
 				call thistype.m_destructables.remove(d)
 			endif
 		endmethod

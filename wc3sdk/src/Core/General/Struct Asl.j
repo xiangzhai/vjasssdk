@@ -13,13 +13,12 @@ library AStructCoreGeneralAsl requires optional ALibraryCoreDebugMisc, ALibraryC
 		endmethod
 
 		public static method init takes nothing returns nothing
-			debug call Print(tr("Initializing Advanced Script Library"))
-			debug call Print(StringArg(tr("Version: %s"), thistype.version))
-			debug call Print(StringArg(tr("Maintainer: %s"), thistype.maintainer))
-			debug call Print(StringArg(tr("Website: %s"), thistype.website))
+static if (DEBUG_MODE) then
+			call thistype.showInformation()
+endif
 		endmethod
 
-		//static members
+		// static constant members
 
 		public static constant method useRtc takes nothing returns boolean
 			return A_RTC
@@ -36,6 +35,17 @@ library AStructCoreGeneralAsl requires optional ALibraryCoreDebugMisc, ALibraryC
 		public static constant method useDebugHandles takes nothing returns boolean
 			return A_DEBUG_HANDLES
 		endmethod
+
+		// static methods
+
+static if (DEBUG_MODE) then
+		public static method showInformation takes nothing returns nothing
+			call Print("Advanced Script Library")
+			call Print(StringArg(tr("Version: %s"), thistype.version))
+			call Print(StringArg(tr("Maintainer: %s"), thistype.maintainer))
+			call Print(StringArg(tr("Website: %s"), thistype.website))
+		endmethod
+endif
 	endstruct
 
 endlibrary

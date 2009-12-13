@@ -1,4 +1,17 @@
 2009-12-12 Tamino Dauth <tamino@cdauth.de>
+* Added functions IssueRectOrder and IssueRectOrderById.
+* Converted content of file "src/Systems/World/Struct Layer.j" from Zinc to vJass code.
+* Converted content of file "src/Core/General/Struct List.j" from Zinc to vJass code.
+* AContinueRoutineLoop considers now if routine data is enabled.
+* Added functions GetHeroStrBonus, GetHeroAgiBonus, GetHeroIntBonus.
+* Improved debug utilities.
+* Added file "src/Core/Debug/Library List.j".
+* Improved text macro A_LIST.
+* Added default list AIntegerList.
+* Added method clearAll to struct ABenchmark.
+* Added debugging cheat "clearbenchmarks".
+
+2009-12-12 Tamino Dauth <tamino@cdauth.de>
 * Added experience function parameter to struct's ACharactersScheme initializer.
 * Revised structs AClass and AClassSelection for easier configuration of class abilities and description.
 * Fixed various syntax errors.

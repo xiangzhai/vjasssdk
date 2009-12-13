@@ -1,3 +1,6 @@
+2009-12-13 Tamino Dauth <tamino@cdauth.de>
+* Fix game crash which is caused by ALibrarySystemsDebugUtilities.
+
 2009-12-09 Tamino Dauth <tamino@cdauth.de>
 * Fix missile target seeking mode.
 * Fix debug handle mode.
@@ -13,7 +16,7 @@
 * Do some benchmarks with AVector and AList ...
 
 2009-11-21 Tamino Dauth <tamino@cdauth.de>
-* Water files in directory "Doodads..." of archive "Ambient" should be moved into "Models/Ambient.." and added for "Die Macht des Feuers" separated.
+* Water files in directory "Doodads..." of archive "Ambient" should be moved into "Models/Ambient.." and added for "Die Macht des Feuers" separately.
 
 2009-11-20 Tamino Dauth <tamino@cdauth.de>
 * Files "archives/Creatures/Models/Creatures/Humans/Samureiausbilder.mdx" and "archives/Creatures/Models/Creatures/Humans/Samureiausbilder_Portrait.mdx" miss file "Textures/HeroMusashMiyamoto".
@@ -21,13 +24,13 @@
 
 2009-11-09 Tamino Dauth <tamino@cdauth.de>
 * Einheiten bei Charakterklassenauswahl richten (Anzeige pro Spieler).
-* Character class descriptions should be added by using struct AStringVector.
+* DONE: Character class descriptions should be added by using struct AStringVector.
 * Test structs AMissile and AJump.
-* Add experience support to struct ACharacterScheme.
-* Add struct options to init method of struct ACharacterScheme (show options).
+* DONE: Add experience support to struct ACharacterScheme.
+* DONE: Add struct options to init method of struct ACharacterScheme (show options).
 * Implement room follow person camera from Wc3C.net.
-* Add struct ABuff to character system (instance per unit per spell cast, ASpell should get a buff vector).
-* AVideo: TriggerSleepAction vs. PolledWait (if you use timers you can't use one single video action).
+* DONE: Add struct ABuff to character system (instance per unit per spell cast, ASpell should get a buff vector).
+* DONE: AVideo: TriggerSleepAction vs. PolledWait (if you use timers you can't use one single video action).
 
 2009-11-07 Tamino Dauth <tamino@cdauth.de>
 * Add struct AEquipmentType for inventory.
