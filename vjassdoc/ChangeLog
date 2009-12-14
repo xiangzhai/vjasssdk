@@ -1,3 +1,13 @@
+2009-12-14 Tamino Dauth <tamino@cdauth.de>
+* Added first switch, case, default, throw, catch, try and finalize definitions to Jass++ documentation.
+
+2009-12-13 Tamino Dauth <tamino@cdauth.de>
+* Added class vjassdoc::Language.
+* Added Mdlx and model natives to Jass++ documentation.
+
+2009-12-12 Tamino Dauth <tamino@cdauth.de>
+* Added friend keyword to Jass++ documentation.
+
 2009-12-11 Tamino Dauth <tamino@cdauth.de>
 * Added class Exception.
 * Revised vJass Bison grammar file.

@@ -26,6 +26,10 @@
 #include <boost/format.hpp>
 
 #include "vjassdoc.hpp"
+#include "jass/jass.hpp"
+#include "jasspp/jasspp.hpp"
+#include "zinc/zinc.hpp"
+#include "vjass/vjass.hpp"
 #include "internationalisation.hpp"
 #include "objects.hpp"
 
@@ -40,6 +44,7 @@ const bool Vjassdoc::supportsDatabaseCreation = false;
 #endif
 class Parser *Vjassdoc::m_parser = 0;
 class Compiler *Vjassdoc::m_compiler = 0;
+std::list<class Language*> Vjassdoc::m_languages;
 std::size_t Vjassdoc::m_lines = 0;
 std::size_t Vjassdoc::m_files = 0;
 double Vjassdoc::m_duration = 0.0;
@@ -65,15 +70,12 @@ std::list<boost::filesystem::path> Vjassdoc::m_optionImport = std::list<boost::f
 std::list<boost::filesystem::path> Vjassdoc::m_optionFiles = std::list<boost::filesystem::path>();
 std::list<boost::filesystem::path> Vjassdoc::m_optionDatabases = std::list<boost::filesystem::path>();
 
-bool Vjassdoc::supportsLanguage(enum Language language)
+void Vjassdoc::init()
 {
-	switch (language)
-	{
-		case Vjassdoc::Cjass:
-			return false;
-	}
-	
-	return true;
+	Vjassdoc::m_languages.push_back(new Jass);
+	Vjassdoc::m_languages.push_back(new Jasspp);
+	Vjassdoc::m_languages.push_back(new Zinc);
+	Vjassdoc::m_languages.push_back(new Vjass);
 }
 
 void Vjassdoc::configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<boost::filesystem::path> optionImport, std::list<boost::filesystem::path> optionFiles, std::list<boost::filesystem::path> optionDatabases)

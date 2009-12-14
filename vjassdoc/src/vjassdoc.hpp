@@ -33,29 +33,21 @@ namespace vjassdoc
 {
 
 class Parser;
+class Language;
 
 class Vjassdoc
 {
 	public:
-		enum Language
-		{
-			Jass,
-			Vjass,
-			Zinc,
-			Cjass,
-			Jasspp
-		};
-			
-	
 		static const char *version;
 		static const bool supportsDatabaseCreation;
 
-		static bool supportsLanguage(enum Language language);
+		static void init();
 		static void configure(bool optionJass, bool optionDebug, bool optionPrivate, bool optionTextmacros, bool optionFunctions, bool optionHtml, bool optionPages, bool optionSpecialpages, bool optionSyntax, const std::string &optionCompile, const std::string &optionDatabase, bool optionVerbose, bool optionTime, bool optionAlphabetical, bool optionParseObjectsOfList[Parser::MaxLists], const std::string &optionTitle, const std::string &optionDir, std::list<boost::filesystem::path> optionImport, std::list<boost::filesystem::path> optionFiles, std::list<boost::filesystem::path> optionDatabases);
 		static void run();
 		static void clear();
 		static class Parser* parser();
 		static class Compiler* compiler();
+		static const std::list<class Language*>& languages();
 		static std::size_t lines();
 		static std::size_t files();
 		static double duration();
@@ -84,6 +76,7 @@ class Vjassdoc
 	protected:
 		static class Parser *m_parser;
 		static class Compiler *m_compiler;
+		static std::list<class Language*> m_languages;
 		static std::size_t m_lines;
 		static std::size_t m_files;
 		static double m_duration;
@@ -129,6 +122,11 @@ inline Compiler* Vjassdoc::compiler()
 		Vjassdoc::m_compiler = new Compiler();
 
 	return Vjassdoc::m_compiler;
+}
+
+inline const std::list<class Language*>& Vjassdoc::languages()
+{
+	return Vjassdoc::m_languages;
 }
 
 inline std::size_t Vjassdoc::lines()
