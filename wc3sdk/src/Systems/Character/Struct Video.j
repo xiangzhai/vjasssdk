@@ -147,7 +147,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		/// Since there is an execution of the action, TriggerSleepAction functions will be ignored, so this method could not be called by the play method.
 		public method stop takes nothing returns nothing
 			local force playersAll
-			debug call Print("Stop!")
 			call DisableTrigger(thistype.m_skipTrigger)
 			call EnableUserControl(false)
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)

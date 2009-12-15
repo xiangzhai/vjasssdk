@@ -53,7 +53,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				call this.selectRandomClass()
 			else
 				call ClearScreenMessagesForPlayer(this.m_user)
-				call SetUserInterfaceForPlayer(this.m_user, false, true)
+				//call SetUserInterfaceForPlayer(this.m_user, false, true)
 				call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
 				call MultiboardMinimize(this.m_infoSheet, false)
 				call this.createUnit()
@@ -176,7 +176,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or (GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT and ACharacter.shareOnPlayerLeaves())) then
 				call character.shareControl(true)
 			endif
-			call SetUserInterfaceForPlayer(this.m_user, false, false)
+			//call SetUserInterfaceForPlayer(this.m_user, false, false)
 			call ResetToGameCameraForPlayer(this.m_user, 0.0)
 			//call PanCameraToForPlayer(this.m_user, this.m_startX, this.m_startY) ///WAAAAA
 			call character.setClass(this.m_class)

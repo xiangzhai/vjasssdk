@@ -108,16 +108,17 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	* @param whichString String in which the sub string should be moved.
 	* @param position Start position of the sub string.
 	* @param length Length of the sub string.
-	* @param newPosition Position to which the sub string should be moved.
+	* @param newPosition Position in @param whichString with sub string contained to which the sub string should be moved.
 	* @return Returns the new string with the moved string.
 	*/
 	function MoveSubString takes string whichString, integer position, integer length, integer newPosition returns string
 		local string result
 		debug call StringPositionDebug(whichString, position)
 		debug call StringPositionDebug(whichString, position + length - 1)
-		debug call StringPositionDebug(whichString, newPosition)
-		debug call StringPositionDebug(whichString, newPosition + length - 1)
-		set result = RemoveSubString(whichString, position, position + length)
+		set result = RemoveSubString(whichString, position, length)
+		set newPosition = newPosition - length
+		debug call StringPositionDebug(result, newPosition)
+		debug call StringPositionDebug(result, newPosition + length - 1)
 		return InsertString(result, newPosition, SubString(whichString, position, position + length))
 	endfunction
 

@@ -1,5 +1,4 @@
-//! import "Systems/Debug/Struct System Debugger.j"
 //! import "Systems/Debug/Library Utilities.j"
 
-library ASystemsDebug requires AStructSystemsDebugSystemDebugger, ALibrarySystemsDebugUtilities
+library ASystemsDebug requires ALibrarySystemsDebugUtilities
 endlibrary

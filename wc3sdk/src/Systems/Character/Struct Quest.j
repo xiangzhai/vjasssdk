@@ -2,8 +2,8 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 
 	struct AQuest extends AAbstractQuest
 		//static start members
-		private static boolean useQuestLog
-		private static string updateSoundPath
+		private static boolean m_useQuestLog
+		private static string m_updateSoundPath
 		//dynamic members
 		private AIntegerVector m_questItems
 		private string m_iconPath
@@ -20,7 +20,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		endmethod
 
 		public method setIconPath takes string iconPath returns nothing
-			debug if (not thistype.useQuestLog) then
+			debug if (not thistype.m_useQuestLog) then
 				debug call this.print("setIconPath() was called (quest log is disabled).")
 			debug endif
 			set this.m_iconPath = iconPath
@@ -34,7 +34,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		/// No flash, just when you change the state!
 		/// Description also is not used as start property because you do not always use the quest log.
 		public method setDescription takes string description returns nothing
-			debug if (not thistype.useQuestLog) then
+			debug if (not thistype.m_useQuestLog) then
 				debug call this.print("setDescription() was called (quest log is disabled).")
 			debug endif
 			set this.m_description = description
@@ -70,7 +70,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 					set i = i + 1
 				endloop
 			endif
-			if (thistype.useQuestLog) then
+			if (thistype.m_useQuestLog) then
 				if (this.character() == 0) then
 					set title = this.title()
 				else
@@ -104,7 +104,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			local player user = this.character().user()
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, this.title())
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, message)
-			call PlaySoundFileForPlayer(user, thistype.updateSoundPath)
+			call PlaySoundFileForPlayer(user, thistype.m_updateSoundPath)
 			set user = null
 		endmethod
 
@@ -141,7 +141,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		endmethod
 
 		private method createQuestLogQuest takes nothing returns nothing
-			if (thistype.useQuestLog) then
+			if (thistype.m_useQuestLog) then
 				set this.m_questLogQuest = CreateQuest()
 				call QuestSetDiscovered(this.m_questLogQuest, false) //hide quest before setting state
 				call QuestSetRequired(this.m_questLogQuest, this.character() == 0)
@@ -158,7 +158,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		endmethod
 
 		private method destroyQuestLogQuest takes nothing returns nothing
-			if (thistype.useQuestLog) then
+			if (thistype.m_useQuestLog) then
 				call DestroyQuest(this.m_questLogQuest)
 				set this.m_questLogQuest = null
 			endif
@@ -181,15 +181,15 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		//init is already used
 		public static method init0 takes boolean useQuestLog, string updateSoundPath returns nothing
 			//static start members
-			set thistype.useQuestLog = useQuestLog
-			set thistype.updateSoundPath = updateSoundPath
+			set thistype.m_useQuestLog = useQuestLog
+			set thistype.m_updateSoundPath = updateSoundPath
 		endmethod
 
 		//static start members
 
 		//AQuestItem need access
 		public static method isQuestLogUsed takes nothing returns boolean
-			return thistype.useQuestLog
+			return thistype.m_useQuestLog
 		endmethod
 	endstruct
 

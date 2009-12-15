@@ -26,11 +26,11 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		//members
 		private AIntegerVector m_abilities
 		private ABooleanVector m_permanent
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AItemType\"")
 
 		//start members
-		
+
 		public method itemType takes nothing returns integer
 			return this.m_itemType
 		endmethod
@@ -38,29 +38,29 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		public method equipmentType takes nothing returns integer
 			return this.m_equipmentType
 		endmethod
-		
+
 		public method requiredLevel takes nothing returns integer
 			return this.m_requiredLevel
 		endmethod
-		
+
 		public method requiredStrength takes nothing returns integer
 			return this.m_requiredStrength
 		endmethod
-		
+
 		public method requiredAgility takes nothing returns integer
 			return this.m_requiredAgility
 		endmethod
-		
+
 		public method requiredIntelligence takes nothing returns integer
 			return this.m_requiredIntelligence
 		endmethod
-		
+
 		public method requiredClass takes nothing returns AClass
 			return this.m_requiredClass
 		endmethod
 
 		//methods
-		
+
 		public method addAbility takes integer abilityId, boolean permanent returns integer
 			call this.m_abilities.pushBack(abilityId)
 			call this.m_permanent.pushBack(permanent)
@@ -75,7 +75,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 				call character.displayMessage(ACharacter.messageTypeError, thistype.textStrength)
 				return false
 			elseif (GetHeroAgi(character.unit(), true) < this.m_requiredAgility) then
-				call character.displayMessage(ACharacter.messageTypeError, thistype.textAgility) 
+				call character.displayMessage(ACharacter.messageTypeError, thistype.textAgility)
 				return false
 			elseif (GetHeroInt(character.unit(), true) < this.m_requiredIntelligence) then
 				call character.displayMessage(ACharacter.messageTypeError, thistype.textIntelligence)
@@ -86,7 +86,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			endif
 			return true
 		endmethod
-		
+
 		public method addAllAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
@@ -96,7 +96,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public method removeAllAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
@@ -105,31 +105,31 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public method addPermanentAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_abilities.size())
 				if (this.m_permanent[i]) then
-					debug call this.print("Adding permanent ability " + GetObjectName(this.m_abilities[i]) + " to unit " + GetUnitName(who))
+					//debug call this.print("Adding permanent ability " + GetObjectName(this.m_abilities[i]) + " to unit " + GetUnitName(who))
 					call UnitAddAbility(who, this.m_abilities[i])
 				endif
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public method removePermanentAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_abilities.size())
 				if (this.m_permanent[i]) then
-					debug call this.print("Removing permanent ability " + GetObjectName(this.m_abilities[i]) + " from unit " + GetUnitName(who))
+					//debug call this.print("Removing permanent ability " + GetObjectName(this.m_abilities[i]) + " from unit " + GetUnitName(who))
 					call UnitRemoveAbility(who, this.m_abilities[i])
 				endif
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public method addUsableAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
@@ -140,7 +140,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public method removeUsableAbilities takes unit who returns nothing
 			local integer i = 0
 			loop
@@ -179,7 +179,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			//members
 			call this.m_abilities.destroy()
 			call this.m_permanent.destroy()
-			
+
 			call AHashTable.global().removeInteger("AItemTypes", I2Hexadecimal(this.m_itemType))
 		endmethod
 
@@ -193,7 +193,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		endmethod
 
 		public static method getItemTypeOfItemTypeId takes integer itemTypeId returns thistype
-			debug call thistype.staticPrint("Getting item type of item type id " + I2S(itemTypeId))
+			//debug call thistype.staticPrint("Getting item type of item type id " + I2S(itemTypeId))
 			return AHashTable.global().integer("AItemTypes", I2S(itemTypeId))
 		endmethod
 

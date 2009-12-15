@@ -20,7 +20,7 @@
 * list - Runs list debug.
 * @todo Causes crash in debug mode!!!
 */
-library ALibrarySystemsDebugUtilities initializer init requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
+library ALibrarySystemsDebugUtilities initializer initFunction requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
 
 	private function help takes nothing returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
@@ -65,7 +65,7 @@ endif
 	/// @todo Add some information.
 	private function info takes nothing returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
-		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer) //ALibraryInterfaceSelection
+		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
 static if (DEBUG_MODE) then
 			call Print(StringArg(tr("Name: %s"), GetUnitName(selectedUnit)))
@@ -98,7 +98,7 @@ endif
 			if (IsUnitType(hero, UNIT_TYPE_HERO)) then
 				call SetHeroLevelBJ(hero, S2I(SubString(message, StringLength("setlevel") + 1, StringLength(message))), true)
 			else
-				call Print("Unit is not a hero.")
+				debug call Print("Unit is not a hero.")
 			endif
 			set hero = null
 		endif
@@ -159,7 +159,7 @@ endif
 	endfunction
 
 	private function clearbenchmarks takes nothing returns nothing
-		call ABenchmark.clearAll()
+		//call ABenchmark.clearAll()
 	endfunction
 
 static if (A_DEBUG_HANDLES) then
@@ -176,7 +176,7 @@ static if (A_DEBUG_HANDLES) then
 	endfunction
 endif
 
-	private function init takes nothing returns nothing
+	private function initFunction takes nothing returns nothing
 static if (DEBUG_MODE) then
 		call ACheat.create("help", true, help)
 		call ACheat.create("version", true, showVersion)

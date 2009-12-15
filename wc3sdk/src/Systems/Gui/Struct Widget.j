@@ -6,20 +6,13 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 	/// @todo Should be a static method of @struct AWidget, vJass bug.
 	function interface AWidgetOnTrackAction takes AWidget usedWidget returns nothing
 
-	/// @todo Should be a static method of @struct AWidget, vJass bug.
-	/// Use this method as track action if you want to have the generic tooltip.
-	/// You can also use another track action and call this method in your custom action.
-	function onTrackActionShowTooltip takes AWidget usedWidget returns nothing
-		call usedWidget.mainWindow().showTooltip(usedWidget)
-	endfunction
-
 	struct AWidget
 		//static start members
 		private static string onHitSoundPath
 		private static string onTrackSoundPath
 		//dynamic members
 		private boolean m_shown
-		private integer m_shortcut //Wenn das Tastenkürzel gedrückt wird, wird auch die onHitFunction ausgeführt. Die Tastenkürzel werden über eine ausgewählte Einheit mit entsprechenden Fähigkeiten gesteuert.
+		private integer m_shortcut // Wenn das Tastenkürzel gedr?ckt wird, wird auch die onHitFunction ausgeführt. Die Tastenkürzel werden über eine ausgewählte Einheit mit entsprechenden Fähigkeiten gesteuert.
 		private string m_tooltip
 		private real m_tooltipSize
 		//start members
@@ -275,8 +268,16 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		endmethod
 
 		public static method getTrackablePathBySize takes real sizeX, real sizeY returns string
-			//I need a list of models, which has the specific sizes of trackables
+			/// @todo I need a list of models, which has the specific sizes of trackables
 			return "units\\nightelf\\Wisp\\Wisp.mdx"
+		endmethod
+
+		/**
+		* Use this method as track action if you want to have the generic tooltip.
+		* You can also use another track action and call this method in your custom action.
+		*/
+		public static method onTrackActionShowTooltip takes AWidget whichWidget returns nothing
+			call whichWidget.m_mainWindow.showTooltip(whichWidget)
 		endmethod
 	endstruct
 

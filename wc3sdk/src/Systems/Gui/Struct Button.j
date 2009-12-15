@@ -1,6 +1,6 @@
-library AStructSystemsGuiButton requires AStructSystemsGuiWidget
+library AStructSystemsGuiButton requires AStructSystemsGuiImage
 
-	struct AButton extends AWidget
+	struct AButton extends AImage
 	endstruct
 
 endlibrary

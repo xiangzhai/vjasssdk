@@ -15,51 +15,51 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 		private boolean m_exactMatch
 		private ACheatOnCheatAction m_action
 		//members
-		private trigger cheatTrigger
-		
+		private trigger m_cheatTrigger
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ACheat\"")
-		
+
 		//start members
-		
+
 		public method cheat takes nothing returns string
 			return this.m_cheat
 		endmethod
-		
+
 		public method exactMatch takes nothing returns boolean
 			return this.m_exactMatch
 		endmethod
-		
+
 		//methods
-		
+
 		private static method triggerActionCheat takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local ACheat this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_action.execute()
 			set triggeringTrigger = null
 		endmethod
-		
+
 		private method createCheatTrigger takes nothing returns nothing
 			local integer i
 			local player user
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.cheatTrigger = CreateTrigger()
+			set this.m_cheatTrigger = CreateTrigger()
 			set i = 0
 			loop
 					exitwhen (i == bj_MAX_PLAYERS)
 					set user = Player(i)
 					if (IsPlayerPlayingUser(user)) then
-						set triggerEvent = TriggerRegisterPlayerChatEvent(this.cheatTrigger, user, this.m_cheat, this.m_exactMatch)
+						set triggerEvent = TriggerRegisterPlayerChatEvent(this.m_cheatTrigger, user, this.m_cheat, this.m_exactMatch)
 						set triggerEvent = null
 					endif
 					set user = null
 					set i = i + 1
 			endloop
-			set triggerAction = TriggerAddAction(this.cheatTrigger, function ACheat.triggerActionCheat)
+			set triggerAction = TriggerAddAction(this.m_cheatTrigger, function thistype.triggerActionCheat)
 			set triggerAction = null
-			call AHashTable.global().setHandleInteger(this.cheatTrigger, "this", this)
+			call AHashTable.global().setHandleInteger(this.m_cheatTrigger, "this", this)
 		endmethod
-		
+
 		/**
 		* @param cheat The string the player has to enter into the chat.
 		* @param exactMatch If this value is false user does not have to enter the exact string of @param cheat to run the cheat. For example if the cheat string is "setlevel" "setlevel 1000" does also work.
@@ -77,14 +77,14 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 			set this.m_cheat = cheat
 			set this.m_exactMatch = exactMatch
 			set this.m_action = action
-			
+
 			call this.createCheatTrigger()
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
-			call AHashTable.global().destroyTrigger(this.cheatTrigger)
-			set this.cheatTrigger = null
+			call AHashTable.global().destroyTrigger(this.m_cheatTrigger)
+			set this.m_cheatTrigger = null
 		endmethod
 	endstruct
 

@@ -2,12 +2,12 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 
 	/// @todo Should be a part of @struct ATalk, vJass bug.
 	function interface ATalkStartAction takes ATalk talk returns nothing
-	
+
 	/// @todo Should be a static method of @struct ATalk, vJass bug.
 	private function AInfoActionBackToStartPage takes AInfo info returns nothing
 		call info.talk().showStartPage()
 	endfunction
-	
+
 	/// @todo Should be a static method of @struct ATalk, vJass bug.
 	private function AInfoActionExit takes AInfo info returns nothing
 		call info.talk().close()
@@ -22,14 +22,13 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 	* Note that only one character owner can use one talk at the same time. There is no support for several character owners talking to the same NPC, yet.
 	*/
 	struct ATalk
-		public static constant integer maxInfos = 100
 		//static start members
-		private static string order
-		private static real maxDistance
-		private static string effectPath
-		private static string textErrorMessage
-		private static string textExit
-		private static string textBack
+		private static string m_order
+		private static real m_maxDistance
+		private static string m_effectPath
+		private static string m_textErrorMessage
+		private static string m_textExit
+		private static string m_textBack
 		//start members
 		private unit m_unit
 		private ATalkStartAction m_startAction
@@ -39,22 +38,22 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		private boolean m_isEnabled
 		private trigger m_orderTrigger
 		private effect m_effect
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ATalk\"")
-		
+
 		//start members
-		
+
 		/// @return Returns the NPC's unit.
 		public method unit takes nothing returns unit
 			return this.m_unit
 		endmethod
-		
+
 		public method startAction takes nothing returns ATalkStartAction
 			return this.m_startAction
 		endmethod
-		
+
 		//members
-		
+
 		/// @return Returns the character which is talking currently to the NPC.
 		public method character takes nothing returns ACharacter
 			return this.m_character
@@ -63,9 +62,9 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		public method isEnabled takes nothing returns boolean
 			return this.m_isEnabled
 		endmethod
-		
+
 		//convenience methods
-		
+
 		/**
 		* Shows the talk's Warcraft 3 dialog.
 		* If no info has been added start page is shown automatically.
@@ -77,22 +76,43 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 				call AGui.playerGui(this.m_character.user()).dialog().show()
 			endif
 		endmethod
-		
-		public method showAll takes nothing returns nothing
-			local integer i = 0
+
+		/**
+		* Shows a range of infos and a Warcraft 3 dialog.
+		*/
+		public method showRange takes integer first, integer last returns nothing
+			local integer i = first
+static if (DEBUG_MODE) then
+			if (first <= 0 or first >= this.m_infos.size()) then
+				call this.print("Wrong first value " + I2S(first) + ".")
+			endif
+			if (last <= 0 or last >= this.m_infos.size()) then
+				call this.print("Wrong last value " + I2S(last) + ".")
+			endif
+endif
 			loop
-				exitwhen (i == this.m_infos.size())
+				exitwhen (i > last)
 				call AInfo(this.m_infos[i]).show()
 				set i = i + 1
 			endloop
 			call this.show()
 		endmethod
-		
+
+		public method showUntil takes integer last returns nothing
+			call this.showRange(0, last)
+		endmethod
+
+		public method showAll takes nothing returns nothing
+			call this.showUntil(this.m_infos.backIndex())
+		endmethod
+
 		public method hide takes nothing returns nothing
 			call AGui.playerGui(this.m_character.user()).dialog().hide()
 		endmethod
-		
-		/// You do not have to clear the dialog in the start action!
+
+		/**
+		* You do not have to clear the dialog anywhere since @struct AInfo clears it whenever an info is runned!
+		*/
 		public method clear takes nothing returns nothing
 			local integer i = 0
 			loop
@@ -102,34 +122,34 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			endloop
 			call AGui.playerGui(this.m_character.user()).dialog().clear()
 		endmethod
-		
+
 		public method addInfo takes boolean permanent, boolean important, AInfoCondition condition, AInfoAction action, string description returns AInfo
 			return AInfo.create(this, permanent, important, condition, action, description)
 		endmethod
-		
+
 		public method addBackButton takes AInfoAction action returns AInfo
-			return AInfo.create(this, true, false, 0, action, ATalk.textBack)
+			return AInfo.create(this, true, false, 0, action, thistype.m_textBack)
 		endmethod
-		
+
 		public method addBackToStartPageButton takes nothing returns AInfo
-			return AInfo.create(this, true, false, 0, AInfoActionBackToStartPage, ATalk.textBack)
+			return AInfo.create(this, true, false, 0, AInfoActionBackToStartPage, thistype.m_textBack)
 		endmethod
-		
+
 		public method addExitButton takes  nothing returns AInfo
-			return AInfo.create(this, true, false, 0, AInfoActionExit, ATalk.textExit)
+			return AInfo.create(this, true, false, 0, AInfoActionExit, thistype.m_textExit)
 		endmethod
-		
+
 		public method showStartPage takes nothing returns nothing
 			call this.m_startAction.execute(this) //create buttons
 		endmethod
-		
+
 		/// @returns Returns if info with index @param index has already been shown to the character which is talking currently to the NPC.
 		public method infoHasBeenShown takes integer index returns boolean
 			return AInfo(this.m_infos[index]).hasBeenShownToCharacter(this.m_character.userId())
 		endmethod
-		
+
 		//methods
-		
+
 		/// Usually you don't have to call this method since talks will be activated by a specific unit order.
 		public method openForCharacter takes ACharacter character returns nothing
 			debug if (this.m_character != 0) then
@@ -151,10 +171,9 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).enable(character.unit(), 0.0)
 			call AGui.playerGui(character.user()).dialog().clear()
 			call AGui.playerGui(character.user()).dialog().setMessage(GetUnitName(this.m_unit))
-			//call this.clear()
 			call this.m_startAction.execute(this) //create buttons
 		endmethod
-		
+
 		public method close takes nothing returns nothing
 			local player characterUser = this.m_character.user()
 			call AGui.playerGui(characterUser).dialog().clear()
@@ -175,30 +194,30 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		public method enable takes nothing returns nothing
 			set this.m_isEnabled = true
 			call EnableTrigger(this.m_orderTrigger)
-			if (thistype.effectPath != null) then
-				set this.m_effect = AddSpecialEffectTarget(thistype.effectPath, this.m_unit, "overhead")
+			if (thistype.m_effectPath != null) then
+				set this.m_effect = AddSpecialEffectTarget(thistype.m_effectPath, this.m_unit, "overhead")
 			endif
 		endmethod
 
 		public method disable takes nothing returns nothing
 			set this.m_isEnabled = false
 			call DisableTrigger(this.m_orderTrigger)
-			if (thistype.effectPath != null) then
+			if (thistype.m_effectPath != null) then
 				call DestroyEffect(this.m_effect)
 				set this.m_effect = null
 			endif
 		endmethod
-		
+
 		/// Used by @struct AInfo.
 		public method showInfo takes integer index returns boolean
 			return AInfo(this.m_infos[index]).show()
 		endmethod
-		
+
 		/// Used by @function ADialogButtonAction.
 		public method runInfo takes integer index returns nothing
 			call AInfo(this.m_infos[index]).run()
 		endmethod
-		
+
 		public method getInfoByDialogButtonIndex takes integer dialogButtonIndex returns AInfo
 			local integer i = 0
 			loop
@@ -210,18 +229,18 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			endloop
 			return 0
 		endmethod
-		
+
 		/// Friend relationship to @struct AInfo, do not use.
 		public method addInfoInstance takes AInfo info returns integer
 			call this.m_infos.pushBack(info)
 			return this.m_infos.backIndex()
 		endmethod
-		
+
 		/// Friend relationship to @struct AInfo, do not use.
 		public method removeInfoInstanceByIndex takes integer index returns nothing
 			call this.m_infos.erase(index)
 		endmethod
-		
+
 		private static method triggerConditionOpen takes nothing returns boolean
 			local trigger triggeringTrigger
 			local unit triggerUnit
@@ -229,19 +248,19 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			local unit orderTargetUnit
 			local thistype this
 			local boolean result = false
-			if (GetIssuedOrderId() == OrderId(ATalk.order)) then //Rechtsklick
+			if (GetIssuedOrderId() == OrderId(thistype.m_order)) then // right click
 				set triggerUnit = GetTriggerUnit()
 				set owner = GetOwningPlayer(triggerUnit)
 				// Is character, if there is shared control or controller is computer player talks can not be used.
 				if (GetPlayerSlotState(owner) != PLAYER_SLOT_STATE_LEFT and GetPlayerController(owner) != MAP_CONTROL_COMPUTER and triggerUnit == ACharacter.playerCharacter(owner).unit()) then
 					set triggeringTrigger = GetTriggeringTrigger()
 					set this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-					set orderTargetUnit = GetOrderTargetUnit() 
+					set orderTargetUnit = GetOrderTargetUnit()
 					if (orderTargetUnit == this.m_unit) then
-						if (GetDistanceBetweenUnits(triggerUnit, orderTargetUnit, 0.0, 0.0) <= ATalk.maxDistance) then //Z value is not checked
+						if (GetDistanceBetweenUnits(triggerUnit, orderTargetUnit, 0.0, 0.0) <= thistype.m_maxDistance) then //Z value is not checked
 							set result = (this.m_character == 0)
 							if (not result) then
-								call ACharacter.playerCharacter(owner).displayMessage(ACharacter.messageTypeError, ATalk.textErrorMessage)
+								call ACharacter.playerCharacter(owner).displayMessage(ACharacter.messageTypeError, thistype.m_textErrorMessage)
 							endif
 						endif
 					endif
@@ -278,13 +297,13 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			set triggerCondition = null
 			set triggerAction = null
 		endmethod
-		
+
 		private method createEffect takes nothing returns nothing
-			if (thistype.effectPath != null) then
-				set this.m_effect = AddSpecialEffectTarget(thistype.effectPath, this.m_unit, "overhead")
+			if (thistype.m_effectPath != null) then
+				set this.m_effect = AddSpecialEffectTarget(thistype.m_effectPath, this.m_unit, "overhead")
 			endif
 		endmethod
-		
+
 		public static method create takes unit usedUnit, ATalkStartAction startAction returns thistype
 			local thistype this = thistype.allocate()
 			//start members
@@ -294,19 +313,19 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_infos = AIntegerVector.create()
 			set this.m_character = 0
 			set this.m_isEnabled = true
-		
+
 			call this.createOrderTrigger()
 			call this.createEffect()
 			return this
 		endmethod
-		
+
 		private method destroyOrderTrigger takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(this.m_orderTrigger)
 			set this.m_orderTrigger = null
 		endmethod
 
 		private method destroyEffect takes nothing returns nothing
-			if (thistype.effectPath != null) then
+			if (thistype.m_effectPath != null) then
 				call DestroyEffect(this.m_effect)
 				set this.m_effect = null
 			endif
@@ -323,7 +342,7 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		public method onDestroy takes nothing returns nothing
 			//start members
 			set this.m_unit = null
-		
+
 			call this.destroyInfos()
 			call this.destroyOrderTrigger()
 			call this.destroyEffect()
@@ -331,12 +350,12 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 
 		public static method init takes string order, real maxDistance, string effectPath, string textErrorMessage, string textExit, string textBack returns nothing
 			//static start members
-			set thistype.order = order
-			set thistype.maxDistance = maxDistance
-			set thistype.effectPath = effectPath
-			set thistype.textErrorMessage = textErrorMessage
-			set thistype.textExit = textExit
-			set thistype.textBack = textBack
+			set thistype.m_order = order
+			set thistype.m_maxDistance = maxDistance
+			set thistype.m_effectPath = effectPath
+			set thistype.m_textErrorMessage = textErrorMessage
+			set thistype.m_textExit = textExit
+			set thistype.m_textBack = textBack
 		endmethod
 	endstruct
 

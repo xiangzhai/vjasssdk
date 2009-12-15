@@ -769,6 +769,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 	* max instances = required struct space / biggest array member size
 	* 400000 is struct space maximum
 	* max instances = 50000 / 100 = 500
+	* Use AIntegerVector for all struct types to save code space.
 	*/
 	//! runtextmacro A_VECTOR("", "AIntegerVector", "integer", "0", "100", "50000")
 	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "100", "50000")
@@ -782,6 +783,4 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 	//! runtextmacro A_VECTOR("", "ADestructableVector", "destructable", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "ARectVector", "rect", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "AWeatherEffectVector", "weathereffect", "null", "100", "50000")
-
-	// use AIntegerVector for struct types.
 endlibrary

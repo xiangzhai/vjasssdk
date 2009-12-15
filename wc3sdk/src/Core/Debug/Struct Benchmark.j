@@ -198,6 +198,7 @@ endif
 			loop
 				exitwhen (thistype.m_benchmarks.empty())
 				call thistype(thistype.m_benchmarks.back()).destroy()
+				call thistype.m_benchmarks.popBack()
 			endloop
 		endmethod
 

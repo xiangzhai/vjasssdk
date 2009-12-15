@@ -23,6 +23,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		private AMainWindowOnHideAction m_onHideAction
 		private real m_tooltipX
 		private real m_tooltipY
+		private string m_tooltipBackgroundImageFilePath
 		//start members
 		private AGui m_gui
 		private real m_x
@@ -36,6 +37,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		private boolean m_isShown
 		private AIntegerVector m_widgets
 		private texttag m_tooltip
+		private image m_tooltipBackground
 		private trigger m_shortcutTrigger
 		private rect m_fogModifierRect
 		private fogmodifier m_visibilityModifier
@@ -93,6 +95,14 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 
 		public method tooltipY takes nothing returns real
 			return this.m_tooltipY
+		endmethod
+
+		public method setTooltipBackgroundImageFilePath takes string tooltipBackgroundImageFilePath returns nothing
+			set this.m_tooltipBackgroundImageFilePath = tooltipBackgroundImageFilePath
+		endmethod
+
+		public method tooltipBackgroundImageFilePath takes nothing returns string
+			return this.m_tooltipBackgroundImageFilePath
 		endmethod
 
 		//start members
@@ -167,6 +177,11 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			call SetTextTagTextBJ(this.m_tooltip, usedWidget.tooltip(), usedWidget.tooltipSize())
 			call SetTextTagPos(this.m_tooltip, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 0.0)
 			call ShowTextTagForPlayer(this.user(), this.m_tooltip, true)
+
+			if (this.m_tooltipBackgroundImageFilePath != null) then // each time create a new image, since path could be changed
+				set this.m_tooltipBackground = CreateImageForPlayer(this.user(), this.m_tooltipBackgroundImageFilePath, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 10.0, 50.0, 50.0) /// @todo Setup correct size to tooltip text, should be higher than normal images
+				call ShowImage(this.m_tooltipBackground, true)
+			endif
 			if (thistype.tooltipSoundPath != null) then
 				call PlaySoundFileForPlayer(this.user(), thistype.tooltipSoundPath)
 			endif
@@ -175,6 +190,10 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		public method hideTooltip takes nothing returns nothing
 			if (this.m_tooltip != null) then
 				call ShowTextTagForPlayer(this.user(), this.m_tooltip, false)
+			endif
+			if (this.m_tooltipBackground != null) then
+				call DestroyImage(this.m_tooltipBackground)
+				set this.m_tooltipBackground = null
 			endif
 		endmethod
 
@@ -286,6 +305,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_onHideAction = 0
 			set this.m_tooltipX = 0.0
 			set this.m_tooltipY = 0.0
+			set this.m_tooltipBackgroundImageFilePath = null
 			//start members
 			set this.m_gui = gui
 			set this.m_x = x //insert a debug if the coordinates are out of map range
@@ -297,6 +317,8 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			//members
 			set this.m_index = gui.dockMainWindow(this)
 			set this.m_widgets = AIntegerVector.create()
+			set this.m_tooltip = null
+			set this.m_tooltipBackground = null
 			set this.m_isShown = false
 			set this.m_fogModifierRect = RectFromPointSize(this.m_x + this.m_sizeX / 2.0, this.m_y - this.m_sizeY / 2.0, this.m_sizeX, this.m_sizeY)
 			set this.m_visibilityModifier = CreateFogModifierRect(this.user(), FOG_OF_WAR_VISIBLE, this.m_fogModifierRect, true, false)
@@ -322,6 +344,10 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			if (this.m_tooltip != null) then
 				call DestroyTextTag(this.m_tooltip)
 				set this.m_tooltip = null
+			endif
+			if (this.m_tooltipBackground != null) then
+				call DestroyImage(this.m_tooltipBackground)
+				set this.m_tooltipBackground = null
 			endif
 			call RemoveRect(this.m_fogModifierRect)
 			set this.m_fogModifierRect = null

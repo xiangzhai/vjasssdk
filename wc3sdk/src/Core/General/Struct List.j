@@ -4,7 +4,7 @@ library AStructCoreGeneralList
 	* @author Tamino Dauth
 	* Got some inspiration from @link http://www.cplusplus.com/reference/stl and @link http://www.cplusplus.com/reference/stl/list.
 	*/
-	//! textmacro A_LIST takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, STRUCTSPACE, ELEMENTSPACE, ITERATORSPACE
+	//! textmacro A_LIST takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, STRUCTSPACE, NODESPACE, ITERATORSPACE
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ value returns boolean
@@ -23,7 +23,7 @@ library AStructCoreGeneralList
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$BinaryOperation  takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns $ELEMENTTYPE$
 
-		private struct $NAME$Node[$ELEMENTSPACE$]
+		private struct $NAME$Node[$NODESPACE$]
 			private thistype m_next
 			private thistype m_previous
 			private $ELEMENTTYPE$ m_data
@@ -343,8 +343,12 @@ library AStructCoreGeneralList
 	* default lists, Jass data types
 	* max instances = required struct space / biggest array member size
 	* 400000 is struct space maximum
-	* max instances = 50000 / 100 = 500
+	* max instances = 8192 / 1 = 8192 since there is no array member
 	*/
-	//! runtextmacro A_LIST("", "AIntegerList", "integer", "0", "50000", "50000", "50000")
+	//! runtextmacro A_LIST("", "AIntegerList", "integer", "0", "8192", "40000", "8192")
+	//! runtextmacro A_LIST("", "AStringList", "string", "null", "8192", "40000", "8192")
+	//! runtextmacro A_LIST("", "ABooleanList", "boolean", "false", "8192", "40000", "8192")
+	//! runtextmacro A_LIST("", "ARealList", "real", "0.0", "8192", "40000", "8192")
+	//! runtextmacro A_LIST("", "AHandleList", "handle", "null", "8192", "40000", "8192")
 
 endlibrary

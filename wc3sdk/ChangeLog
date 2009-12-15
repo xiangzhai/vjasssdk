@@ -1,4 +1,16 @@
-2009-12-12 Tamino Dauth <tamino@cdauth.de>
+2009-12-15 Tamino Dauth <tamino@cdauth.de>
+* AButton extends AImage instead of AWidget now.
+* Added possibility to define a background image file for tooltips in main windows.
+* Dropped deprecated struct ASystemDebugger.
+
+2009-12-14 Tamino Dauth <tamino@cdauth.de>
+* Added methods showRange and showRangeUntil to struct ATalk.
+* Improved struct ATalkLog.
+* Improved and revised text macro A_STACK.
+* Added default Jass type A_STACK and A_LIST instances.
+* Fixed clearAll method of ABenchmark.
+
+2009-12-13 Tamino Dauth <tamino@cdauth.de>
 * Added functions IssueRectOrder and IssueRectOrderById.
 * Converted content of file "src/Systems/World/Struct Layer.j" from Zinc to vJass code.
 * Converted content of file "src/Core/General/Struct List.j" from Zinc to vJass code.

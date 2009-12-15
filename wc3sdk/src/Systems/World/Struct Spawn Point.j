@@ -316,11 +316,16 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			call TimerStart(this.m_spawnTimer, thistype.m_time, false, function thistype.timerFunctionSpawn)
 		endmethod
 
-		private static method triggerConditionDeath takes nothing returns boolean
+		private static method filterFunctionDeath takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local unit triggerUnit = GetTriggerUnit()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local boolean result = this.m_group.units().contains(triggerUnit)
+			debug if (result) then
+				debug call this.print("Contains")
+			debug else
+				debug call this.print("Does not contain")
+			debug endif
 			set triggeringTrigger = null
 			set triggerUnit = null
 			return result
@@ -342,28 +347,25 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		private method createDeathTrigger takes nothing returns nothing
+			local filterfunc filterFunction
 			local integer i
 			local player user
 			local event triggerEvent
-			local conditionfunc conditionFunction
-			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_deathTrigger = CreateTrigger()
+			set filterFunction = Filter(function thistype.filterFunctionDeath)
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
-				set triggerEvent = TriggerRegisterPlayerUnitEvent(this.m_deathTrigger, user, EVENT_PLAYER_UNIT_DEATH, null)
+				set triggerEvent = TriggerRegisterPlayerUnitEvent(this.m_deathTrigger, user, EVENT_PLAYER_UNIT_DEATH, filterFunction)
 				set user = null
+				set triggerEvent = null
 				set i = i + 1
 			endloop
-			set conditionFunction = Condition(function thistype.triggerConditionDeath)
-			set triggerCondition = TriggerAddCondition(this.m_deathTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_deathTrigger, function thistype.triggerActionDeath)
 			call AHashTable.global().setHandleInteger(this.m_deathTrigger, "this", this)
-			set triggerEvent = null
-			set conditionFunction = null
-			set triggerCondition = null
+			set filterFunction = null
 			set triggerAction = null
 		endmethod
 

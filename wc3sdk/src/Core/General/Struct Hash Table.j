@@ -7,14 +7,14 @@ library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 		private static AHashTable m_global
 		//members
 		private hashtable m_hashTable
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AHashTable\"")
-		
+
 		//! textmacro AHashTableOperationMacro takes TYPE, TYPENAME, METHODTYPENAME
 			public method set$TYPENAME$ takes string key, string label, $TYPE$ value returns nothing
 				call Save$METHODTYPENAME$(this.m_hashTable, StringHash(key), StringHash(label), value)
 			endmethod
-			
+
 			public method $TYPE$ takes string key, string label returns $TYPE$
 				return Load$METHODTYPENAME$(this.m_hashTable, StringHash(key), StringHash(label))
 			endmethod
@@ -30,7 +30,7 @@ library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 			public method setHandle$TYPENAME$ takes handle usedHandle, string label, $TYPE$ value returns nothing
 				call Save$METHODTYPENAME$(this.m_hashTable, GetHandleId(usedHandle), StringHash(label), value)
 			endmethod
-			
+
 			public method handle$TYPENAME$ takes handle usedHandle, string label returns $TYPE$
 				return Load$METHODTYPENAME$(this.m_hashTable, GetHandleId(usedHandle), StringHash(label))
 			endmethod
@@ -48,12 +48,12 @@ library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 		//! runtextmacro AHashTableOperationMacro("boolean", "Boolean", "Boolean")
 		//! runtextmacro AHashTableOperationMacro("real", "Real", "Real")
 		//! runtextmacro AHashTableOperationMacro("string", "String", "Str")
-		
+
 		//! textmacro AHashTableHandleOperationMacro takes TYPE, TYPENAME, METHODTYPENAME
 			public method set$TYPENAME$ takes string key, string label, $TYPE$ value returns nothing
 				call Save$TYPENAME$Handle(this.m_hashTable, StringHash(key), StringHash(label), value)
 			endmethod
-			
+
 			public method $METHODTYPENAME$ takes string key, string label returns $TYPE$
 				return Load$TYPENAME$Handle(this.m_hashTable, StringHash(key), StringHash(label))
 			endmethod
@@ -65,11 +65,11 @@ library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 			public method remove$TYPENAME$ takes string key, string label returns nothing
 				call RemoveSavedHandle(this.m_hashTable, StringHash(key), StringHash(label))
 			endmethod
-			
+
 			public method setHandle$TYPENAME$ takes handle usedHandle, string label, $TYPE$ value returns nothing
 				call Save$TYPENAME$Handle(this.m_hashTable, GetHandleId(usedHandle), StringHash(label), value)
 			endmethod
-			
+
 			public method handle$TYPENAME$ takes handle usedHandle, string label returns $TYPE$
 				return Load$TYPENAME$Handle(this.m_hashTable, GetHandleId(usedHandle), StringHash(label))
 			endmethod
@@ -82,7 +82,7 @@ library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 				call RemoveSavedHandle(this.m_hashTable, GetHandleId(usedHandle), StringHash(label))
 			endmethod
 		//! endtextmacro
-		
+
 		//! runtextmacro AHashTableHandleOperationMacro("player", "Player", "player")
 		//! runtextmacro AHashTableHandleOperationMacro("widget", "Widget", "widget")
 		//! runtextmacro AHashTableHandleOperationMacro("destructable", "Destructable", "destructable")
@@ -157,18 +157,18 @@ library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			//members
-			call FlushParentHashtable(this.m_hashTable)
+			call this.flush()
 			set this.m_hashTable = null
 		endmethod
-		
+
 		private static method onInit takes nothing returns nothing
 			//static members
 			set AHashTable.m_global = 0
 		endmethod
-		
+
 		/**
 		* Global hash table is used by Advanced Script Library itself.
 		*/

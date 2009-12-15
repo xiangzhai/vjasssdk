@@ -110,7 +110,7 @@ library AStructCoreEnvironmentJump requires optional ALibraryCoreDebugMisc, AStr
 				elseif (IsUnitDeadBJ(jump.m_unit)) then
 					call jump.destroy()
 					//do not increase i, jump was removed from vector
-					debug call thistype.staticPrint("Is Dead!")
+					//debug call thistype.staticPrint("Is Dead!")
 				endif
 				set i = i - 1
 			endloop

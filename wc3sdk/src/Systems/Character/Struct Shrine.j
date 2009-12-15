@@ -2,9 +2,9 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 
 	struct AShrine
 		//static start members
-		private static string effectPath
-		private static string soundPath
-		private static string textMessage
+		private static string m_effectPath
+		private static string m_soundPath
+		private static string m_textMessage
 		//start members
 		private destructable m_destructable
 		private rect m_discoverRect
@@ -40,20 +40,20 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		public method enableForCharacter takes ACharacter character, boolean showMessage returns nothing
 			local player user = character.user()
 			if (ACharacter.playerCharacter(user).shrine() != 0) then
-				call ACharacter.playerCharacter(user).shrine().disableForCharacter(ACharacter.playerCharacter(user)) //disable old
+				call ACharacter.playerCharacter(user).shrine().disableForCharacter(ACharacter.playerCharacter(user)) // disable old
 			endif
 			call character.setShrine(this)
 			call character.revival().setX(GetRandomReal(GetRectMinX(this.m_revivalRect), GetRectMaxX(this.m_revivalRect)))
 			call character.revival().setY(GetRandomReal(GetRectMinY(this.m_revivalRect), GetRectMaxY(this.m_revivalRect)))
 			call character.revival().setFacing(this.m_facing)
-			if (thistype.effectPath != null) then
-				set this.m_discoverEffect = CreateSpecialEffectForPlayer(user, thistype.effectPath, GetDestructableX(this.m_destructable), GetDestructableY(this.m_destructable))
+			if (thistype.m_effectPath != null) then
+				set this.m_discoverEffect = CreateSpecialEffectForPlayer(user, thistype.m_effectPath, GetDestructableX(this.m_destructable), GetDestructableY(this.m_destructable))
 			endif
-			if (thistype.soundPath != null) then
-				call PlaySoundFileForPlayer(user, thistype.soundPath)
+			if (thistype.m_soundPath != null) then
+				call PlaySoundFileForPlayer(user, thistype.m_soundPath)
 			endif
 			if (showMessage) then
-				call character.displayMessage(ACharacter.messageTypeInfo, thistype.textMessage)
+				call character.displayMessage(ACharacter.messageTypeInfo, thistype.m_textMessage)
 			endif
 			set user = null
 		endmethod
@@ -61,7 +61,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		private method disableForCharacter takes ACharacter character returns nothing
 			debug if (character.shrine() == this) then
 				call character.setShrine(0)
-				if (thistype.effectPath != null) then
+				if (thistype.m_effectPath != null) then
 					call DestroyEffect(this.m_discoverEffect)
 					set this.m_discoverEffect = null
 				endif
@@ -81,14 +81,10 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 			local player owner = GetOwningPlayer(triggerUnit)
 			local thistype this
 			local boolean result = false
-			debug call Print("Shrine Condition")
 			if (triggerUnit == ACharacter.playerCharacter(owner).unit()) then
 				set triggeringTrigger = GetTriggeringTrigger()
 				set this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 				set result = ACharacter.playerCharacter(owner).shrine() != this
-				//if (ACharacter.playerCharacter(owner).shrine() != this) then
-					//set result = ACharacter.playerCharacter(owner).isMovable()
-				//endif
 				set triggeringTrigger = null
 			endif
 			set triggerUnit = null
@@ -162,7 +158,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		private method destroyDiscoverEffect takes nothing returns nothing
-			if (thistype.effectPath != null) then
+			if (thistype.m_effectPath != null) then
 				if (this.m_discoverEffect != null) then
 					call DestroyEffect(this.m_discoverEffect)
 					set this.m_discoverEffect = null
@@ -184,9 +180,9 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		/// @param soundPath If this value is null there is no sound.
 		public static method init takes string effectPath, string soundPath, string textMessage returns nothing
 			//static start members
-			set thistype.effectPath = effectPath
-			set thistype.soundPath = soundPath
-			set thistype.textMessage = textMessage
+			set thistype.m_effectPath = effectPath
+			set thistype.m_soundPath = soundPath
+			set thistype.m_textMessage = textMessage
 
 			if (soundPath != null) then
 				call PreloadSoundFile(soundPath)

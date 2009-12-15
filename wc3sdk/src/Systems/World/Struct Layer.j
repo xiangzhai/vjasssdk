@@ -1,7 +1,9 @@
 library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibraryCoreMathsHandle, ALibraryCoreMathsUnit
 
+	/// @todo Should be contained by @struct ALayer, vJass bug.
 	function interface ALayerOnEnterFunction takes unit whichUnit returns nothing
 
+	/// @todo Should be contained by @struct ALayer, vJass bug.
 	function interface ALayerOnLeaveFunction takes unit whichUnit returns nothing
 
 	struct ALayer
