@@ -18,14 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "color1.hpp"
+#ifndef WC3LIB_VM_TYPE_HPP
+#define WC3LIB_VM_TYPE_HPP
+
+#include <string>
 
 namespace wc3lib
 {
-
-namespace mdlx
+    
+namespace vm
 {
+    
+class Type
+{
+    protected:
+	std::string m_name;
+	class Type *m_parentType;
+};
 
 }
 
 }
+
+#endif

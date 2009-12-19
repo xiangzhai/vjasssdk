@@ -15,8 +15,6 @@ set(wc3lib_MDLX_SRC
 	cameras.cpp
 	collisionshape.cpp
 	collisionshapes.cpp
-	color1.cpp
-	color1s.cpp
 	emissionrate.cpp
 	emissionrates.cpp
 	event.cpp
@@ -46,6 +44,8 @@ set(wc3lib_MDLX_SRC
 	layers.cpp
 	lengths.cpp
 	light.cpp
+	lightambientcolor.cpp
+	lightambientcolors.cpp
 	lights.cpp
 	material.cpp
 	materialalpha.cpp
@@ -143,8 +143,6 @@ set(wc3lib_MDLX_H
 	camerarotationlengths.hpp
 	cameras.hpp
 	collisionshape.hpp
-	color1.hpp
-	color1s.hpp
 	event.hpp
 	events.hpp
 	eventtrack.hpp

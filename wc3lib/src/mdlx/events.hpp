@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_EVENTS_HPP
 #define WC3LIB_MDLX_EVENTS_HPP
 
-#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {

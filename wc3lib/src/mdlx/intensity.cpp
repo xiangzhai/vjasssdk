@@ -26,6 +26,10 @@ namespace wc3lib
 namespace mdlx
 {
 
+Intensity::Intensity(class Intensities *intensities) : MdxAlpha(intensities)
+{
+}
+
 }
 
 }

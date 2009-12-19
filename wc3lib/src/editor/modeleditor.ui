@@ -83,7 +83,7 @@
     </widget>
    </item>
    <item row="0" column="2" rowspan="3">
-    <widget class="QOgreWdiget" name="rendererWidget" native="true">
+    <widget class="wc3lib::editor::ModelView" name="rendererWidget" native="true">
      <property name="minimumSize">
       <size>
        <width>400</width>
@@ -102,9 +102,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>QOgreWdiget</class>
+   <class>wc3lib::editor::ModelView</class>
    <extends>QWidget</extends>
-   <header>qogre/QOgreWidget.h</header>
+   <header>modelview.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

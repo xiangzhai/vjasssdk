@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "intensities.hpp"
+#include "intensity.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Intensities::Intensities(class Light *light) : MdxBlock("KLAI"), m_light(light)
+Intensities::Intensities(class Light *light) : MdxAlphas("KLAI"), m_light(light)
 {
 }
 
@@ -34,28 +35,17 @@ Intensities::~Intensities()
 {
 }
 
-void Intensities::readMdl(std::fstream &fstream) throw (class Exception)
+void Intensities::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Intensities::writeMdl(std::fstream &fstream) throw (class Exception)
+void Intensities::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 Intensities::readMdx(std::fstream &fstream) throw (class Exception)
+class MdxAlpha* Intensities::createNewMember()
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Intensities::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new Intensity(this);
 }
 
 }

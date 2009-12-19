@@ -23,6 +23,7 @@
 
 #include <istream>
 #include <ostream>
+#include <list>
 
 #include "../exception.hpp"
 
@@ -34,6 +35,10 @@ namespace slk
 
 class SlkEntry;
 
+/**
+* Default class for SLK files like CliffTypes.slk.
+* @todo Should use a Bison file which defines the possible syntax for these files.
+*/
 class Slk
 {
 	public:
@@ -44,10 +49,11 @@ class Slk
 		std::streamsize write(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		virtual class SlkEntry* slkEntry(int column) = 0;
+		virtual class SlkEntry* slkEntry(std::size_t column) = 0;
 
-		int m_lines;
-		int m_columns;
+		std::size_t m_lines;
+		std::size_t m_columns;
+		std::list<class SlkEntry*> m_entries;
 };
 
 }

@@ -42,7 +42,7 @@ class Geosets : public MdxBlock
 		virtual ~Geosets();
 
 		class Mdlx* mdlx() const;		
-		std::list<class Geoset*> geosets() const;
+		const std::list<class Geoset*>& geosets() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
@@ -60,7 +60,7 @@ inline class Mdlx* Geosets::mdlx() const
 	return this->m_mdlx;
 }
 
-inline std::list<class Geoset*> Geosets::geosets() const
+inline const std::list<class Geoset*>& Geosets::geosets() const
 {
 	return this->m_geosets;
 }

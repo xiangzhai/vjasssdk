@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'modeleditor.ui'
 **
-** Created: Thu Nov 26 19:53:33 2009
+** Created: Sat Dec 5 12:22:44 2009
 **      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -20,7 +20,7 @@
 #include <QtGui/QTreeWidget>
 #include <QtGui/QWidget>
 #include "ktabwidget.h"
-#include "qogre/QOgreWidget.h"
+#include "modelview.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -38,7 +38,7 @@ public:
     KTabWidget *ktabwidget;
     QWidget *animations;
     QWidget *textures;
-    QOgreWdiget *rendererWidget;
+    wc3lib::editor::ModelView *rendererWidget;
 
     void setupUi(QWidget *ModelEditor)
     {
@@ -89,7 +89,7 @@ public:
 
         gridLayout->addWidget(groupBox_2, 0, 3, 3, 1);
 
-        rendererWidget = new QOgreWdiget(ModelEditor);
+        rendererWidget = new wc3lib::editor::ModelView(ModelEditor);
         rendererWidget->setObjectName(QString::fromUtf8("rendererWidget"));
         rendererWidget->setMinimumSize(QSize(400, 800));
 

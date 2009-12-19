@@ -49,13 +49,25 @@ class Blp
 		class MipMap
 		{
 			public:
+				MipMap();
+				
 				void scale(dword newWidth, dword newHeight);
-			
-				/// @todo Make private, separated file, member methods
+				
+				void setWidth(dword width);
+				dword width() const;
+				void setHeight(dword height);
+				dword height() const;
+				
+				void addIndex(byte index);
+				const std::list<byte>& indices() const;
+				void addAlpha(byte alpha);
+				const std::list<byte>& alphas() const;
+				
+			protected:
 				dword m_width;
 				dword m_height;
-				std::list<byte> m_indexList; //[mip map width * mip map height];
-				std::list<byte> m_alphaList; //[mip map width * mip map height];
+				std::list<byte> m_indices; //[mip map width * mip map height];
+				std::list<byte> m_alphas; //[mip map width * mip map height];
 		};
 
 		enum Format
@@ -165,6 +177,46 @@ class Blp
                 std::list<color> m_palette; // uncompressed 1 and 2 only use 256 different colors.
 		std::list<class MipMap*> m_mipMaps;
 };
+
+inline void Blp::MipMap::setWidth(dword width)
+{
+	this->m_width = width;
+}
+
+inline dword Blp::MipMap::width() const
+{
+	return this->m_width;
+}
+
+inline void Blp::MipMap::setHeight(dword height)
+{
+	this->m_height = height;
+}
+
+inline dword Blp::MipMap::height() const
+{
+	return this->m_height;
+}
+
+inline void Blp::MipMap::addIndex(byte index)
+{
+	this->m_indices.push_back(index);
+}
+
+inline const std::list<byte>& Blp::MipMap::indices() const
+{
+	return this->m_indices;
+}
+
+inline void Blp::MipMap::addAlpha(byte alpha)
+{
+	this->m_alphas.push_back(alpha);
+}
+
+inline const std::list<byte>& Blp::MipMap::alphas() const
+{
+	return this->m_alphas;
+}
 
 inline void Blp::setCompression(dword compression)
 {

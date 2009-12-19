@@ -22,9 +22,18 @@
 #define WC3LIB_EDITOR_EDITOR_HPP
 
 #include <kmainwindow.h>
+#include <boost/filesystem.hpp>
 
 namespace wc3lib
 {
+	
+namespace mpq
+{
+
+class Mpq;
+class MpqFile;	
+
+}
 
 namespace editor
 {
@@ -52,6 +61,14 @@ class Editor : public KMainWindow
 	public:
 		Editor(QWidget *parent, Qt::WindowFlags f);
 		~Editor();
+		
+		/**
+		* Each time a file has to searched for, all editor MPQ archives will be checked for in the ordering of their priority.
+		* Higher priority means it will be searched through befor MPQ archives with less priority.
+		*/
+		void addMpq(class Mpq *mpq, std::size_t priority);
+		
+		const class mpq::MpqFile* loadMpqFile(const boost::filesystem::path &path);
 	
 	public slots:
 		void newMap();
@@ -68,6 +85,8 @@ class Editor : public KMainWindow
 		void showTextureEditor();
 		
 	protected:
+		std::list<class mpq::Mpq*> m_mpqs;
+		std::list<std::size_t> m_mpqsPriorities;
 		class TerrainEditor *m_terrainEditor;
 		class TriggerEditor *m_triggerEditor;
 		class SoundEditor *m_soundEditor;

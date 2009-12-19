@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+
 #include "particleemitter2.hpp"
 #include "particleemitter2s.hpp"
 #include "translation1s.hpp"
@@ -84,7 +86,7 @@ long32 ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	bytes += this->m_translations->readMdx(istream);
 	/// @todo Missing rotations
-	bytes += this->m_rotations->readMdx(istream); //(KGRT) // +bit12(XYQuad)	+bit9(LineEmitter)
+	bytes += this->m_rotations->readMdx(istream);
 	bytes += this->m_scalings->readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_speed), sizeof(this->m_speed));
 	bytes += istream.gcount();	

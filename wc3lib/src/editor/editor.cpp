@@ -21,6 +21,7 @@
 #include <kmenu.h>
 #include <kaction.h>
 #include <kmenubar.h>
+#include <boost/foreach.hpp>
 
 #include "editor.hpp"
 #include "terraineditor.hpp"
@@ -35,6 +36,8 @@
 #include "modeleditor.hpp"
 #include "textureeditor.hpp"
 #include "newmapdialog.hpp"
+#include "../mpq/mpq.hpp"
+#include "../mpq/mpqfile.hpp"
 
 namespace wc3lib
 {
@@ -87,6 +90,44 @@ Editor::~Editor()
 	
 	if (this->m_newMapDialog != 0)
 		delete this->m_newMapDialog;
+}
+
+void Editor::addMpq(class Mpq *mpq, std::size_t priority)
+{
+	std::list<class mpq::Mpq*>::const_iterator mpqIterator = this->m_mpqs.begin();
+	std::list<std::size_t>::const_iterator priorityIterator = this->m_mpqsPriorities.begin();
+	
+	while (mpqIterator != this->m_mpqs.end())
+	{
+		if (*priorityIterator < priority)
+		{
+			this->m_mpqs.insert(mpqIterator,mpq);
+			this->m_mpqsPriorities.insert(priorityIterator, priority);
+			
+			return;
+		}
+		
+		++mpqIterator;
+		++priorityIterator;
+	}
+	
+	this->m_mpqs.push_back(mpq);
+	this->m_mpqsPriorities.push_back(priority);
+}
+
+const class mpq::MpqFile* Editor::loadMpqFile(const boost::filesystem::path &path)
+{
+	const class mpq::MpqFile *result = 0;
+	
+	BOOST_FOREACH(const class mpq::Mpq *mpq, this->m_mpqs)
+	{
+		result = mpq->findFile(path);
+		
+		if (result != 0)
+			break;
+	}
+	
+	return result;
 }
 
 void Editor::showTerrainEditor()

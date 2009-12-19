@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_AMBIENTCOLORS_HPP
 #define WC3LIB_MDLX_AMBIENTCOLORS_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxscalings.hpp"
 
 namespace wc3lib
 {
@@ -38,35 +33,22 @@ class Light;
 class AmbientColor;
 
 //KLBC
-class AmbientColors : public MdxBlock
+class AmbientColors : public MdxScalings
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
 		AmbientColors(class Light *light);
 		virtual ~AmbientColors();
 
 		class Light* light() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class AmbientColor*> colors() const;
+		const std::list<class AmbientColor*>& colors() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
+		virtual class MdxScaling* createNewMember();
+
 		class Light *m_light;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class AmbientColor*> m_colors;
 };
 
 inline class Light* AmbientColors::light() const
@@ -74,19 +56,9 @@ inline class Light* AmbientColors::light() const
 	return this->m_light;
 }
 
-inline long32 AmbientColors::lineType() const
+inline const std::list<class AmbientColor*>& AmbientColors::colors() const
 {
-	return this->m_lineType;
-}
-
-inline long32 AmbientColors::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class AmbientColor*> AmbientColors::colors() const
-{
-	return this->m_colors;
+	return reinterpret_cast<const std::list<class AmbientColor*>&>(this->m_scalings);
 }
 
 }

@@ -30,12 +30,12 @@
 #include <OgreMemoryMacros.h>
 
 
-Ogre::Root *QOgreWidget::theOgreRoot = 0;
-std::vector <Ogre::RenderWindow *> QOgreWidget::theRenderWindowList = std::vector <Ogre::RenderWindow*>();
+Ogre::Root *QOgreWidget::m_ogreRoot = 0;
+std::vector <Ogre::RenderWindow *> QOgreWidget::m_renderWindowList = std::vector <Ogre::RenderWindow*>();
 
 QOgreWidget::QOgreWidget (QWidget* parent, Qt::WFlags f) :
     QWidget (parent, f),
-   m_RenderWindow (0)
+   m_renderWindow (0)
 {
     std::cout  << __FILE__ << ":" << __LINE__ << std::endl;
     showEvent (0);
@@ -43,7 +43,7 @@ QOgreWidget::QOgreWidget (QWidget* parent, Qt::WFlags f) :
 
 QOgreWidget::~QOgreWidget()
 {
-    if (theOgreRoot) delete theOgreRoot;
+    if (m_ogreRoot) delete m_ogreRoot;
 }
 void QOgreWidget::showEvent (QShowEvent *event)
 {
@@ -71,8 +71,8 @@ void QOgreWidget::showEvent (QShowEvent *event)
 #else
     params["parentWindowHandle"] = Ogre::StringConverter::toString((unsigned long)q_parent->winId());
 #endif
-    if (!theOgreRoot) {
-        theOgreRoot = new Ogre::Root();
+    if (!m_ogreRoot) {
+        m_ogreRoot = new Ogre::Root();
         /// TODO: Does this really belong in the base widget?
         ///  and if it does, should I also faithfully include 
         ///  methods for setting up the scene, the camera, the viewport?
@@ -80,13 +80,13 @@ void QOgreWidget::showEvent (QShowEvent *event)
         //setupResources();
 
         configure();
-        theOgreRoot->initialise (false);
+        m_ogreRoot->initialise (false);
     }
 
 
-    m_renderWindow = theOgreRoot->createRenderWindow (
+    m_renderWindow = m_ogreRoot->createRenderWindow (
                 "View" + Ogre::StringConverter::toString((unsigned long)this), width(), height(), false, &params);
-    theRenderWindowList.push_back (m_renderWindow);
+    m_renderWindowList.push_back (m_renderWindow);
 
     WId window_id;
 #if !defined(Q_WS_WIN)
@@ -108,8 +108,8 @@ void QOgreWidget::timerEvent( QTimerEvent * )
 
 void QOgreWidget::update() {
     Ogre::Root::getSingletonPtr()->_fireFrameStarted();
-    for (unsigned int i=0; i < theRenderWindowList.size(); ++i) {
-        theRenderWindowList[i]->update();
+    for (unsigned int i=0; i < m_renderWindowList.size(); ++i) {
+        m_renderWindowList[i]->update();
     }
     Ogre::Root::getSingletonPtr()->_fireFrameEnded();
 }
@@ -118,11 +118,10 @@ void QOgreWidget::paintEvent (QPaintEvent *e)
     update();
 }
 
-
-void QOgreWidget::configure (void) {
-		if (!theOgreRoot->restoreConfig()) {
-			theOgreRoot->showConfigDialog ();
-		}
+void QOgreWidget::configure(void) 
+{
+	if (!m_ogreRoot->restoreConfig())
+		m_ogreRoot->showConfigDialog();
 }
 QSize QOgreWidget::minimumSizeHint() const
 {

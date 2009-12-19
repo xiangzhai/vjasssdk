@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_AMBIENTCOLOR_HPP
 #define WC3LIB_MDLX_AMBIENTCOLOR_HPP
 
-#include "scaling0.hpp"
+#include "mdxscaling.hpp"
+#include "ambientcolors.hpp"
 
 namespace wc3lib
 {
@@ -29,9 +30,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-class AmbientColor : public Scaling0
+class AmbientColor : public MdxScaling
 {
+	public:
+		AmbientColor(class AmbientColors *colors);
+
+		class AmbientColors* colors() const;
 };
+
+inline class AmbientColors* AmbientColor::colors() const
+{
+	return dynamic_cast<class AmbientColors*>(this->m_scalings);
+}
 
 }
 

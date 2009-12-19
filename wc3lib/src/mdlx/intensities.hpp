@@ -21,12 +21,7 @@
 #ifndef WC3LIB_MDLX_INTENSITIES_HPP
 #define WC3LIB_MDLX_INTENSITIES_HPP
 
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -38,35 +33,22 @@ class Light;
 class Intensity;
 
 //KLAI	// [Intensity]:   KMTA;
-class Intensities : public MdxBlock
+class Intensities : public MdxAlphas
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
 		Intensities(class Light *light);
 		virtual ~Intensities();
 
 		class Light* light() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Intensity*> intensities() const;
+		const std::list<class Intensity*>& intensities() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
+		virtual class MdxAlpha* createNewMember();
+
 		class Light *m_light;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Intensity*> m_intensities;
 };
 
 inline class Light* Intensities::light() const
@@ -74,19 +56,9 @@ inline class Light* Intensities::light() const
 	return this->m_light;
 }
 
-inline long32 Intensities::lineType() const
+inline const std::list<class Intensity*>& Intensities::intensities() const
 {
-	return this->m_lineType;
-}
-
-inline long32 Intensities::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Intensity*> Intensities::intensities() const
-{
-	return this->m_intensities;
+	//return reinterpret_cast<const std::list<class Intensity*> >(this->m_alphas);
 }
 
 }

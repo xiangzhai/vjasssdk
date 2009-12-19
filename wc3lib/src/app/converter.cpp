@@ -26,7 +26,10 @@
 #include <fstream>
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/thread.hpp>
 
 #include <getopt.h>
 
@@ -401,6 +404,210 @@ static bool addFilePath(const boost::filesystem::path &path, std::list<boost::fi
 	return true;
 }
 
+static void convertFile(const boost::filesystem::path &path, const boost::filesystem::path &dirPath, enum Format inputFormat, enum Format outputFormat, bool verbose) throw (boost::thread_interrupted)
+{
+	std::ios_base::openmode openMode = std::ifstream::in;
+		
+	if (isFormatBinary(inputFormat))
+		openMode |= std::ifstream::binary;
+	
+	if (verbose)
+		std::cout << boost::format(_("Reading file \"%1%\".")) % path.string() << std::endl;
+	
+	std::ifstream ifstream(path.string().c_str(), openMode);
+	
+	if (!ifstream)
+	{
+		std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % path.string() << std::endl;
+		
+		throw boost::thread_interrupted();
+	}
+	
+	class mdlx::Mdlx mdlx;
+	class blp::Blp blp;
+	
+	try
+	{
+		switch (inputFormat)
+		{
+			case Blp:
+			{
+				blp::dword bytes = blp.readBlp(ifstream);
+				std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}		
+#ifdef JPEG
+			case Jpeg:
+			{
+				blp::dword bytes = blp.readJpeg(ifstream);
+				std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif
+#ifdef TGA
+			case Tga:
+			{
+				blp::dword bytes = blp.readTga(ifstream);
+				std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif
+#ifdef PNG
+			case Png:
+			{
+				blp::dword bytes = blp.readPng(ifstream);
+				std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif
+			case Mdl:
+				mdlx.readMdl(ifstream);
+				std::cout << _("Read MDL file successfully.") << std::endl;
+				
+				break;
+			
+			case Mdx:
+			{
+				mdlx::long32 bytes = mdlx.readMdx(ifstream);
+				std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				
+				break;
+			}
+#ifdef BLEND					
+			case Blend:
+			{
+				mdlx::long32 bytes = mdlx.readBlend(ifstream);
+				std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+				
+				break;
+			}
+#endif
+#ifdef MAX					
+			case Max:
+			{
+				mdlx::long32 bytes = mdlx.readMax(ifstream);
+				std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				
+				break;
+			}
+#endif			
+		}			
+	}
+	catch (class Exception &exception)
+	{
+		std::cerr << boost::format(_("Error while reading file \"%1%\":\n\"%2%\"")) % path.string() % exception.what() << std::endl;
+		std::cerr << _("Skiping file.") << std::endl;
+		
+		throw boost::thread_interrupted();
+	}
+	
+	ifstream.close();
+	
+	openMode = std::ofstream::out;
+	
+	if (isFormatBinary(outputFormat))
+		openMode |= std::ofstream::binary;
+	
+	boost::filesystem::path filePath = path.string();
+
+	if (!dirPath.string().empty())
+		filePath = dirPath / filePath.filename();
+
+	filePath.replace_extension(getFormatExtension(outputFormat));
+	boost::filesystem::ofstream ofstream(filePath, openMode);
+	
+	if (!ofstream)
+	{
+		std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % filePath << std::endl;
+		
+		throw boost::thread_interrupted();
+	}
+	
+	try
+	{
+		
+		switch (outputFormat)
+		{
+			case Blp:
+			{
+				blp::dword bytes = blp.writeBlp(ofstream);
+				std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#ifdef JPEG					
+			case Jpeg:
+			{
+				blp::dword bytes = blp.writeJpeg(ofstream);
+				std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif
+#ifdef TGA					
+			case Tga:
+			{
+				blp::dword bytes = blp.writeTga(ofstream);
+				std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif
+#ifdef PNG					
+			case Png:
+			{
+				blp::dword bytes = blp.writePng(ofstream);
+				std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif				
+			case Mdl:
+				mdlx.writeMdl(ofstream);
+				std::cout << _("Wrote MDL file successfully.") << std::endl;
+				
+				break;
+			
+			case Mdx:
+				mdlx::long32 bytes = mdlx.writeMdx(ofstream);
+				std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+#ifdef BLEND					
+			case Blend:
+			{
+				mdlx::long32 bytes = mdlx.writeBlend(ofstream);
+				std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif
+#ifdef MAX					
+			case Max:
+			{
+				mdlx::long32 bytes = mdlx.writeMax(ofstream);
+				std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+				break;
+			}
+#endif
+		}
+	}
+	catch (class Exception &exception)
+	{
+		std::cerr << boost::format(_("Error while writing file \"%1%\":\n\"%1%\"")) % filePath % exception.what() << std::endl;
+		std::cerr << _("Skiping file.") << std::endl;
+		
+		throw boost::thread_interrupted();
+	}
+	
+	ofstream.close();
+}
+
 int main(int argc, char *argv[])
 {
 	// Set the current locale.
@@ -415,6 +622,7 @@ int main(int argc, char *argv[])
 		{"help",        no_argument,             0, 'h'},
 		{"iformat",     required_argument,       0, 'i'},
 		{"oformat",     required_argument,       0, 'o'},
+		{"dir",         required_argument,       0, 'D'},
 		{"recursive",   no_argument,             0, 'R'},
 		{"verbose",     no_argument,             0, 'V'}, /// @todo Probably reserved for --version, too
 		{0, 0, 0, 0}
@@ -422,6 +630,7 @@ int main(int argc, char *argv[])
 	
 	enum Format optionIformat = InvalidFormat;
 	enum Format optionOformat = InvalidFormat;
+	boost::filesystem::path optionDir;
 	bool optionRecursive = false;
 	bool optionVerbose = false;
 	std::list<boost::filesystem::path> optionFiles;
@@ -430,7 +639,7 @@ int main(int argc, char *argv[])
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "vhi:o:RV", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "vhi:o:D:RV", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -457,12 +666,15 @@ int main(int argc, char *argv[])
 				std::cout <<
 				_("converter\n") <<
 				_("\nUsage:\n") <<
-				_("\tconverter [-io] <input files>\n") <<
+				_("\tconverter [-vhioRV] <input files/directories>\n") <<
 				_("\nOptions:\n") <<
 				_("\t-v, --version             Shows the current version of mdlxtest.\n") <<
 				_("\t-h, --help                Shows this text.\n") <<
 				_("\t-i, --iformat <arg>       <arg> has to be replaced by input files format.\n") <<
 				_("\t-o, --oformat <arg>       <arg> has to be replaced by output files format.\n") <<
+				_("\t-D  --dir <arg>           <arg> has to be replaced by output directory.\n") <<
+				_("\t-R, --recursive           If some of the input files are directories they will be iterated recursively and searched for other files with the input format extension.\n") <<
+				_("\t-V  --verbose             Enables verbose mode and shows more detailed output information.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
 				
@@ -494,6 +706,20 @@ int main(int argc, char *argv[])
 				
 				optionOformat = getFormatByExpression(optarg);
 				
+				break;
+			}
+
+			case 'D':
+			{
+				if (!boost::filesystem::is_directory(optarg))
+				{
+					std::cerr << boost::format(_("Invalid directory \"%1%\".")) % optarg << std::endl;
+
+					return EXIT_FAILURE;
+				}
+
+				optionDir = optarg;
+
 				break;
 			}
 			
@@ -564,213 +790,26 @@ int main(int argc, char *argv[])
 	}
 	
 
-	for (std::list<boost::filesystem::path>::iterator iterator = optionFiles.begin(); iterator != optionFiles.end(); ++iterator)
+	/// @todo If it's multithreaded make sure that there aren't doubled file paths
+	BOOST_FOREACH(boost::filesystem::path path, optionFiles)
 	{
 		std::cout << "Loop" << std::endl;
 		
-		std::ios_base::openmode openMode = std::ifstream::in;
-		
-		if (isFormatBinary(optionIformat))
-			openMode |= std::ifstream::binary;
-		
-		if (optionVerbose)
-			std::cout << boost::format(_("Reading file \"%1%\".")) % iterator->string() << std::endl;
-		
-		std::ifstream ifstream(iterator->string().c_str(), openMode);
-		
-		if (!ifstream)
-		{
-			std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % iterator->string() << std::endl;
-			
-			continue;
-		}
-		
-		class mdlx::Mdlx mdlx;
-		class blp::Blp blp;
-		
 		try
 		{
-			switch (optionIformat)
-			{
-				case Blp:
-				{
-					blp::dword bytes = blp.readBlp(ifstream);
-					std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}		
-#ifdef JPEG
-				case Jpeg:
-				{
-					blp::dword bytes = blp.readJpeg(ifstream);
-					std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif
-#ifdef TGA
-				case Tga:
-				{
-					blp::dword bytes = blp.readTga(ifstream);
-					std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif
-#ifdef PNG
-				case Png:
-				{
-					blp::dword bytes = blp.readPng(ifstream);
-					std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif
-				case Mdl:
-					mdlx.readMdl(ifstream);
-					std::cout << _("Read MDL file successfully.") << std::endl;
-					
-					break;
-				
-				case Mdx:
-				{
-					mdlx::long32 bytes = mdlx.readMdx(ifstream);
-					std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-					
-					break;
-				}
-#ifdef BLEND					
-				case Blend:
-				{
-					mdlx::long32 bytes = mdlx.readBlend(ifstream);
-					std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
-					
-					break;
-				}
-#endif
-#ifdef MAX					
-				case Max:
-				{
-					mdlx::long32 bytes = mdlx.readMax(ifstream);
-					std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-					
-					break;
-				}
-#endif			
-			}			
+			boost::thread thread = boost::thread(convertFile, path, optionDir, optionIformat, optionOformat, optionVerbose);
 		}
-		catch (class Exception &exception)
-		{
-			std::cerr << boost::format(_("Error while reading file \"%1%\":\n\"%2%\"")) % iterator->string() % exception.what() << std::endl;
-			std::cerr << _("Skiping file.") << std::endl;
-			
-			continue;
-		}
-		
-		ifstream.close();
-		
-		openMode = std::ofstream::out;
-		
-		if (isFormatBinary(optionOformat))
-			openMode |= std::ofstream::binary;
-		
-		std::string extension = getFormatExtension(optionOformat);
-		std::string filePath = iterator->string();
-		std::string::size_type index = filePath.find_last_of('.');
-		
-		// remove old extension
-		if (index != std::string::npos && filePath.substr(index).length() <= 3)
-			filePath.erase(index);
-		
-		filePath += extension;
-		std::ofstream ofstream(filePath.c_str(), openMode);
-		
-		if (!ofstream)
-		{
-			std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % filePath << std::endl;
-			
-			continue;
-		}
-		
-		try
+		catch (boost::thread_interrupted &threadInterrupted)
 		{
 			
-			switch (optionOformat)
-			{
-				case Blp:
-				{
-					blp::dword bytes = blp.writeBlp(ofstream);
-					std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#ifdef JPEG					
-				case Jpeg:
-				{
-					blp::dword bytes = blp.writeJpeg(ofstream);
-					std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif
-#ifdef TGA					
-				case Tga:
-				{
-					blp::dword bytes = blp.writeTga(ofstream);
-					std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif
-#ifdef PNG					
-				case Png:
-				{
-					blp::dword bytes = blp.writePng(ofstream);
-					std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif				
-				case Mdl:
-					mdlx.writeMdl(ofstream);
-					std::cout << _("Wrote MDL file successfully.") << std::endl;
-					
-					break;
-				
-				case Mdx:
-					mdlx::long32 bytes = mdlx.writeMdx(ofstream);
-					std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-#ifdef BLEND					
-				case Blend:
-				{
-					mdlx::long32 bytes = mdlx.writeBlend(ofstream);
-					std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif
-#ifdef MAX					
-				case Max:
-				{
-					mdlx::long32 bytes = mdlx.writeMax(ofstream);
-					std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-					break;
-				}
-#endif
-			}
 		}
-		catch (class Exception &exception)
+		catch (...)
 		{
-			std::cerr << boost::format(_("Error while writing file \"%1%\":\n\"%1%\"")) % filePath % exception.what() << std::endl;
-			std::cerr << _("Skiping file.") << std::endl;
+			std::cerr << _("Unknown exception. Canceling.") << std::endl;
 			
-			continue;
+			break;
 		}
 		
-		ofstream.close();
 	}
 
 	return EXIT_SUCCESS;

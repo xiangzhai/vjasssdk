@@ -1,0 +1,12 @@
+Vorwort:
+SimpleJass soll es dem Entwickler ermöglichen über das Schreiben verständlicher Texte,
+seine verschiedenste Abläufe für Warcraft 3 The Frozen Throne zu entwickeln.
+Dabei wird sprachähnlicher, auch für Nichtprogrammierer verständlicher Code verwendet.
+
+Sätze:
+Sätze werden in Teilobjekteunterteilt:
+	Adjektiv: definierte Bezeichnereigenschaften
+	Subjekt: Bezeichner
+	Verb: definierte Routinen
+	Adverb: definierte Routineneigenschaften
+

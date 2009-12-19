@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ambientintensities.hpp"
+#include "ambientintensity.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-AmbientIntensities::AmbientIntensities(class Light *light) : MdxBlock("KLBI"), m_light(light)
+AmbientIntensities::AmbientIntensities(class Light *light) : MdxAlphas("KLBI"), m_light(light)
 {
 }
 
@@ -34,22 +35,17 @@ AmbientIntensities::~AmbientIntensities()
 {
 }
 
-void AmbientIntensities::readMdl(std::fstream &fstream) throw (class Exception)
+void AmbientIntensities::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void AmbientIntensities::writeMdl(std::fstream &fstream) throw (class Exception)
+void AmbientIntensities::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 AmbientIntensities::readMdx(std::fstream &fstream) throw (class Exception)
+class MdxAlpha* AmbientIntensities::createNewMember()
 {
-	return 0;
-}
-
-long32 AmbientIntensities::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	return 0;
+	return new AmbientIntensity(this);
 }
 
 }

@@ -47,19 +47,23 @@ void CollisionShapes::writeMdl(std::ostream &ostream) throw (class Exception)
 
 long32 CollisionShapes::readMdx(std::istream &istream) throw (class Exception)
 {
+	std::cout << "Test." << std::endl;
 	long32 bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nbytes;
-	istream.read(reinterpret_cast<char*>(nbytes), sizeof(nbytes));
+	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
+		std::cout << "Test 2" << std::endl;
 		class CollisionShape *collisionShape = new CollisionShape(this);
+		std::cout << "Test 3" << std::endl;
 		long32 readBytes = collisionShape->readMdx(istream);
+		std::cout << "Test 4" << std::endl;
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_collisionShapes.push_back(collisionShape);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,47 +18,54 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "color1s.hpp"
-#include "color1.hpp"
+#ifndef VJASSDOC_SCOPE_HPP
+#define VJASSDOC_SCOPE_HPP
 
-namespace wc3lib
+#include "object.hpp"
+
+namespace vjassdoc
 {
 
-namespace mdlx
+class Scope : public Object
 {
+	public:
+#ifdef SQLITE
+		static const char *sqlTableName;
+		static unsigned int sqlColumns;
+		static std::string sqlColumnStatement;
 
-Color1s::Color1s(class Light *light) : MdxBlock("KLAC"), m_light(light)
+		static void initClass();
+#endif
+		Scope(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, bool isPrivate, const std::string initializerExpression);
+		Scope(std::vector<const unsigned char*> &columnVector);
+		virtual void init();
+		virtual void pageNavigation(std::ofstream &file) const;
+		virtual void page(std::ofstream &file) const;
+#ifdef SQLITE
+		virtual std::string sqlStatement() const;
+#endif
+		virtual class Library* library() const;
+		bool isPrivate() const;
+		class Function* initializer() const; //Function, Method (static)
+
+	protected:
+		std::string initializerExpression;
+
+		class Library *m_library;
+		bool m_isPrivate;
+		class Function *m_initializer; //Function is the parent class of Method, so it can be a method, too.
+};
+
+inline bool Scope::isPrivate() const
 {
+	return this->m_isPrivate;
 }
 
-Color1s::~Color1s()
+inline class Function* Scope::initializer() const
 {
-	for (std::list<class Color1*>::iterator iterator = this->m_colors.begin(); iterator != this->m_colors.end(); ++iterator)
-		delete *iterator;
-}
-
-void Color1s::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Color1s::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Color1s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Color1s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return this->m_initializer;
 }
 
 }
 
-}
+#endif

@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_AMBIENTINTENSITY_HPP
 
 #include "mdxalpha.hpp"
+#include "ambientintensities.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +32,16 @@ namespace mdlx
 
 class AmbientIntensity : public MdxAlpha
 {
+	public:
+		AmbientIntensity(class AmbientIntensities *intesities);
+
+		class AmbientIntensities* intensities() const;
 };
+
+inline class AmbientIntensities* AmbientIntensity::intensities() const
+{
+	return dynamic_cast<class AmbientIntensities*>(this->m_alphas);
+}
 
 }
 

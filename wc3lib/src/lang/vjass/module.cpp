@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,23 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_COLOR1_HPP
-#define WC3LIB_MDLX_COLOR1_HPP
+#include <sstream>
 
-#include "scaling0.hpp"
+#include "objects.hpp"
+#include "internationalisation.hpp"
 
-namespace wc3lib
+namespace vjassdoc
 {
 
-namespace mdlx
-{
+#ifdef SQLITE
+const char *Module::sqlTableName = "Modules";
+unsigned int Module::sqlColumns;
+std::string Module::sqlColumnStatement;
 
-class Color1 : public Scaling0
+void Module::initClass()
 {
-};
-
+	Module::sqlColumns = Interface::sqlColumns;
+	Module::sqlColumnStatement = Interface::sqlColumnStatement;
 }
-
-}
-
 #endif
+
+Module::Module(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate) : Interface(identifier, sourceFile, line, docComment, library, scope, isPrivate)
+{
+}
+
+#ifdef SQLITE
+Module::Module(std::vector<const unsigned char*> &columnVector) : Interface(columnVector)
+{
+}
+#endif
+
+void Module::pageNavigation(std::ofstream &file) const
+{
+	Interface::pageNavigation(file);
+}
+
+void Module::page(std::ofstream &file) const
+{
+	Interface::page(file);
+}
+
+}

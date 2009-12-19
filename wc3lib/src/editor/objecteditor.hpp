@@ -25,7 +25,14 @@
 
 namespace wc3lib
 {
+
+namespace slk
+{
 	
+class Data;
+
+}
+
 namespace editor
 {
 
@@ -33,6 +40,11 @@ class ObjectEditor : public SubEditor
 {
 	public:
 		ObjectEditor(class Editor *editor);
+		~ObjectEditor();
+		
+		
+	protected:
+		class slk::Data *m_data;
 };
 
 }

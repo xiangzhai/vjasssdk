@@ -1,3 +1,10 @@
+2009-12-05 Tamino Dauth <tamino@cdauth.de>
+* Blp ignores 0 bytes but writes (paletted, alphas) exactly the same byte number.
+
+2009-11-29 Tamino Dauth <tamino@cdauth.de>
+* Wc3C.net quote "the jpeg-blps are using IJL_OTHER color space".
+* Add language files for FDF, SLK, MDL and various .txt UI files.
+
 2009-11-25 Tamino Dauth <tamino@cdauth.de>
 * DONE: Maybe rename Blp::Uncompressed to Blp::PalettedCompressed.
 * DONE: Add constant member Blp::maxCompressedPaletteSize.
@@ -7,11 +14,11 @@
 * BLP2 uses another specification or BaerWeiss.blp is BlpUncompressed2, fix BlpUncompressed1 and BlpUncompressed2 diffences recognition.
 
 2009-11-17 Tamino Dauth <tamino@cdauth.de>
-* Use Boost libraries image classes to read and write images with the BLP library.
+* DEPRECATED (since they're using file paths): Use Boost libraries image classes to read and write images with the BLP library.
 * Allow JPEG compression option.
 
 2009-11-15 Tamino Dauth <tamino@cdauth.de>
-* Fix particle emitter 2 or translation 1 reading methods.
+* Fix particle emitter 2's translation 1 reading, missing rotation tag for following rotations.
 
 2009-11-14 Tamino Dauth <tamino@cdauth.de>
 * Class Blp should read JPEG mip maps by using Open JPEG.

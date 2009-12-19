@@ -1,8 +1,38 @@
+2009-12-19 Tamino Dauth <tamino@cdauth.de>
+* Added folder "src/lang" with sub project for scripting languages (replacing vjassdoc project).
+* Renamed folder "src/test" to "src/apps" for all applications.
+* Added file "src/apps/jassc.cpp" for Jass compiler application.
+
+2009-12-18 Tamino Dauth <tamino@cdauth.de>
+* Improved class blp::Blp::MipMap.
+* Implemented first multithreading ability into converter tool.
+
+2009-12-09 Tamino Dauth <tamino@cdauth.de>
+* Added classes slk::Data, slk::DataEntry and slk::DataSubEntry.
+* Added methods editor::Editor::addMpq and editor::Editor::loadMpqFile.
+* Revised class editor::ObjectEditor.
+
+2009-12-05 Tamino Dauth <tamino@cdauth.de>
+* Revised class blp::Blp.
+
+2009-12-04 Tamino Dauth <tamino@cdauth.de>
+* Added class mdlx::OgreMdlx.
+
+2009-11-29 Tamino Dauth <tamino@cdauth.de>
+* Added VM directory and class.
+* Renamed class mdlx::Color1 to mdlx::LightAmbientColor.
+* Renamed class mdlx::Color1s to mdlx::LightAmbientColors.
+* Implemented readMdx method of class mdlx::LightAmbientColor.
+* Added option --dir to program converter.
+* Improved converter.
+* Improved readMdx method of several MDLX classes.
+
 2009-11-28 Tamino Dauth <tamino@cdauth.de>
 * Improved class mpq::Mpq and added various private classes.
 * Renamed class mdlx::Visibility0 to mdlx::AttachmentVisibility.
 * Renamed class mdlx::Visibility0s to mdlx::AttachmentVisibilities.
 * Revised cmake files.
+* Added SLK directory and class.
 
 2009-11-26 Tamino Dauth <tamino@cdauth.de>
 * Revised and added various editor classes and UIs.

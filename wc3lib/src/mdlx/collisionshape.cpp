@@ -54,6 +54,7 @@ long32 CollisionShape::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
 	bytes += istream.gcount();
+	std::cout << "test 1" << std::endl;
 	
 	if (this->m_shape == Box)
 	{

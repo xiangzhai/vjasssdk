@@ -56,6 +56,7 @@ long32 Events::readMdx(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	bytes += istream.gcount();
 	
+	/// @todo Zwerg.mdx has 32 bytes left, all events before seem to work fine.
 	while (nbytes > 0)
 	{
 		class Event *event = new Event(this);
@@ -63,6 +64,11 @@ long32 Events::readMdx(std::istream &istream) throw (class Exception)
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_events.push_back(event);
+		std::cout << "Got " << readBytes << " bytes event " << nbytes << " bytes left." << std::endl;
+
+		/// @todo Workaround for file Zwerg.mdx
+		if (nbytes == 32)
+			return bytes;
 	}
 	
 	return bytes;

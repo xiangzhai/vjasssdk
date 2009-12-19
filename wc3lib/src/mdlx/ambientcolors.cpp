@@ -27,36 +27,25 @@ namespace wc3lib
 namespace mdlx
 {
 
-AmbientColors::AmbientColors(class Light *light) : MdxBlock("KLBC"), m_light(light)
+AmbientColors::AmbientColors(class Light *light) : MdxScalings("KLBC"), m_light(light)
 {
 }
 
 AmbientColors::~AmbientColors()
 {
-	for (std::list<class AmbientColor*>::iterator iterator = this->m_colors.begin(); iterator != this->m_colors.end(); ++iterator)
-		delete *iterator;
 }
 
-void AmbientColors::readMdl(std::fstream &fstream) throw (class Exception)
+void AmbientColors::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void AmbientColors::writeMdl(std::fstream &fstream) throw (class Exception)
+void AmbientColors::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 AmbientColors::readMdx(std::fstream &fstream) throw (class Exception)
+class MdxScaling* AmbientColors::createNewMember()
 {
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 AmbientColors::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new AmbientColor(this);
 }
 
 }

@@ -56,8 +56,8 @@ class QOgreWidget : public QWidget
 		virtual void setupResources (void) = 0;
 		virtual void configure (void);
 
-		static Ogre::Root *theOgreRoot;
-		static std::vector <Ogre::RenderWindow *> theRenderWindowList;
+		static Ogre::Root *m_ogreRoot;
+		static std::vector <Ogre::RenderWindow *> m_renderWindowList;
 
 		Ogre::RenderWindow *m_renderWindow;
 

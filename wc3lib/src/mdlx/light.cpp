@@ -22,7 +22,7 @@
 #include "lights.hpp"
 #include "intensities.hpp"
 #include "visibility1s.hpp"
-#include "color1s.hpp"
+#include "lightambientcolors.hpp"
 #include "ambientcolors.hpp"
 #include "ambientintensities.hpp"
 
@@ -32,25 +32,62 @@ namespace wc3lib
 namespace mdlx
 {
 
-Light::Light(class Lights *lights) : Object(lights->mdlx()), m_lights(lights), m_intensities(new Intensities(this)), m_visibilities(new Visibility1s(this)), m_colors(new Color1s(this)), m_ambientColors(new AmbientColors(this)), m_ambientIntensities(new AmbientIntensities(this))
+Light::Light(class Lights *lights) : Object(lights->mdlx()), m_lights(lights), m_intensities(new Intensities(this)), m_visibilities(new Visibility1s(this)), m_colors(new LightAmbientColors(this)), m_ambientColors(new AmbientColors(this)), m_ambientIntensities(new AmbientIntensities(this))
 {
 }
 
 Light::~Light()
 {
+	delete this->m_intensities;
+	delete this->m_visibilities;
+	delete this->m_colors;
+	delete this->m_ambientColors;
+	delete this->m_ambientIntensities;
 }
 
-void Light::readMdl(std::fstream &fstream) throw (class Exception)
+void Light::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Light::writeMdl(std::fstream &fstream) throw (class Exception)
+void Light::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
 long32 Light::readMdx(std::istream &istream) throw (class Exception)
 {
-	return 0;
+	long32 nbytesi;
+	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	long32 bytes = istream.gcount();
+	bytes += Object::readMdx(istream);
+	istream.read(reinterpret_cast<char*>(&this->m_type), sizeof(this->m_type));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_attStart), sizeof(this->m_attStart));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_attEnd), sizeof(this->m_attEnd));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_colorRed), sizeof(this->m_colorRed));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_colorGreen), sizeof(this->m_colorGreen));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_colorBlue), sizeof(this->m_colorBlue));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_intensity), sizeof(this->m_intensity));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_ambColorRed), sizeof(this->m_ambColorRed));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_ambColorGreen), sizeof(this->m_ambColorGreen));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_ambColorBlue), sizeof(this->m_ambColorBlue));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_ambIntensity), sizeof(this->m_ambIntensity));
+	bytes += istream.gcount();
+	bytes += this->m_intensities->readMdx(istream);
+	bytes += this->m_visibilities->readMdx(istream);
+	bytes += this->m_colors->readMdx(istream);
+	bytes += this->m_ambientColors->readMdx(istream);
+	bytes += this->m_ambientIntensities->readMdx(istream);
+
+	return bytes;
 }
 
 long32 Light::writeMdx(std::ostream &ostream) throw (class Exception)

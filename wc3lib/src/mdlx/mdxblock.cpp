@@ -20,9 +20,11 @@
 
 //#include <cstdio>
 #include <cstring>
-#include <iostream> //debug
+
+#include <boost/format.hpp>
 
 #include "mdxblock.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -47,7 +49,7 @@ long32 MdxBlock::readMdx(std::istream &istream) throw (class Exception)
 	std::istream::pos_type position = istream.tellg();
 	istream.read(identifier, sizeof(identifier));
 	bytes += istream.gcount();
-	//std::cout << "Read bytes: " << istream.gcount() << std::endl;
+	std::cout << "Read bytes: " << istream.gcount() << " and block name " << identifier << std::endl;
 
 	if (memcmp(identifier, this->m_blockName, sizeof(this->m_blockName)) != 0)
 	{
@@ -60,12 +62,7 @@ long32 MdxBlock::readMdx(std::istream &istream) throw (class Exception)
 			return 0;
 		}
 		else
-		{
-			char message[50];
-			sprintf(message, "Unexptected identifier \"%s\". Missing \"%s\" block name.", identifier, this->m_blockName);
-			
-			throw Exception(message);
-		}
+			throw Exception(boost::str(boost::format(_("Unexptected identifier \"%s\". Missing \"%s\" block name.")) % identifier % this->m_blockName));
 	}
 	
 	this->m_exists = true;

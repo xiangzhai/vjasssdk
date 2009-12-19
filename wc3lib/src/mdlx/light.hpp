@@ -32,7 +32,7 @@ namespace mdlx
 class Lights;
 class Intensities;
 class Visibility1s;
-class Color1s;
+class LightAmbientColors;
 class AmbientColors;
 class AmbientIntensities;
 
@@ -63,12 +63,12 @@ class Light : public Object
 		float32 ambIntensity() const;
 		class Intensities* intensities() const;
 		class Visibility1s* visibilities() const;
-		class Color1s* colors() const;
+		class LightAmbientColors* colors() const;
 		class AmbientColors* ambientColors() const;
 		class AmbientIntensities* ambientIntensities() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 		virtual long32 readMdx(std::istream &istream) throw (class Exception);
 		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
 
@@ -84,7 +84,7 @@ class Light : public Object
 		float32 m_ambIntensity;
 		class Intensities *m_intensities; //(KLAI)
 		class Visibility1s *m_visibilities; //(KLAV)
-		class Color1s *m_colors; //(KLAC)
+		class LightAmbientColors *m_colors; //(KLAC)
 		class AmbientColors *m_ambientColors; //(KLBC)
 		class AmbientIntensities *m_ambientIntensities; //(KLBI)
 };
@@ -159,7 +159,7 @@ inline class Visibility1s* Light::visibilities() const
 	return this->m_visibilities;
 }
 
-inline class Color1s* Light::colors() const
+inline class LightAmbientColors* Light::colors() const
 {
 	return this->m_colors;
 }

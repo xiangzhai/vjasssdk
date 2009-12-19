@@ -80,18 +80,18 @@ bool BlpIOHandler::read(QImage *image)
 
 	this->m_blp->setPalette(palette);
 	struct blp::Blp::MipMap *mipMap = new blp::Blp::MipMap;
-	mipMap->m_width = image->width();
-	mipMap->m_height = image->height();
+	mipMap->setWidth(image->width());
+	mipMap->setHeight(image->height());
 	QImage alphaChannel = image->alphaChannel();
 	
 	for (int i = 0; i < image->width(); ++i)
 	{
 		for (int j = 0; j < image->height(); ++j)
 		{
-			mipMap->m_indexList.push_back(image->pixel(i, j));
+			mipMap->addIndex(image->pixel(i, j));
 			
 			if (image->hasAlphaChannel())
-				mipMap->m_alphaList.push_back(alphaChannel.pixel(i, j));
+				mipMap->addAlpha(alphaChannel.pixel(i, j));
 		}
 	}
 	

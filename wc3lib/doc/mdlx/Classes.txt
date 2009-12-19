@@ -20,10 +20,11 @@ KP2W				-				ParticleEmitter2Widths		ParticleEmitter2			ParticleEmitter2Widths
 CAMS				-				Cameras				Mdlx					Cameras				
 -				-				CollisionShape			CollisionShapes				CollisionShape
 CLID				-				CollisionShapes			Mdlx					CollisionShapes
--				-				AttachmentVisibility			AttachmentVisibilities			AttachmentVisibility
-								-				-	KATV				-				AttachmentVisibilities			Mdlx (various classes Attachment, Mdlx - Object)
+-				-				LightAmbientColor		LightAmbientColors			LightAmbientColor
+KLAC				-				LightAmbientColors		Light					LightAmbientColors
+-				-				AttachmentVisibility		AttachmentVisibilities			AttachmentVisibility
+KATV				-				AttachmentVisibilities		Mdlx (various classes Attachment, Mdlx - Object)
 
-Color1s					KLAC			Light					LightAmbientColors
 EmissionRates				KP2E			ParticleEmitter2			ParticleEmitter2EmissionRates
 Event					-			Events					Event
 Events					EVTS			Mdlx					Events

@@ -18,79 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_COLOR1S_HPP
-#define WC3LIB_MDLX_COLOR1S_HPP
-
-#include <fstream>
-#include <list>
-
-#include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "lightambientcolor.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-class Light;
-class Color1;
-
-//KLAC
-class Color1s : public MdxBlock
+	
+LightAmbientColor::LightAmbientColor(class LightAmbientColors *colors) : MdxScaling(colors)
 {
-	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
-		Color1s(class Light *light);
-		virtual ~Color1s();
-
-		class Light* light() const;
-		long32 lineType() const;
-		long32 globalSequenceId() const;
-		std::list<class Color1*> colors() const;
-
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
-		virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
-		virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
-
-	protected:
-		class Light *m_light;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
-		long32 m_globalSequenceId; // 0xFFFFFFFF if none
-		std::list<class Color1*> m_colors;
-};
-
-inline class Light* Color1s::light() const
-{
-	return this->m_light;
-}
-
-inline long32 Color1s::lineType() const
-{
-	return this->m_lineType;
-}
-
-inline long32 Color1s::globalSequenceId() const
-{
-	return this->m_globalSequenceId;
-}
-
-inline std::list<class Color1*> Color1s::colors() const
-{
-	return this->m_colors;
 }
 
 }
 
 }
-
-#endif

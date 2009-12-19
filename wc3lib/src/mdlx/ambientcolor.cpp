@@ -26,6 +26,10 @@ namespace wc3lib
 namespace mdlx
 {
 
+AmbientColor::AmbientColor(class AmbientColors *colors) : MdxScaling(colors)
+{
+}
+
 }
 
 }
