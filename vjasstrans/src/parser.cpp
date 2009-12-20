@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 
 #include <boost/tokenizer.hpp>
+#include <boost/format.hpp>
 
 #include "parser.hpp"
 #include "string.hpp"
@@ -35,38 +36,46 @@
 
 namespace vjasstrans
 {
-	
+
+/// Returns true if a string has been found.
 static bool getNextTranslationFunctionCall(const std::string &line, const std::string &translationFunction, std::string::size_type &position, std::string::size_type &length, const bool ignoreReplacedValues = true)
 {
-	std::cout << "Checking line " << line << " with position " << position << std::endl;
+	//std::cout << "Checking line " << line << " with position " << position << std::endl;
 	std::string searchedString = translationFunction + "(\""; // not static! translation function can be changed by main call
-	std::cout << "Searched string is " << searchedString << std::endl;
+	//std::cout << "Searched string is " << searchedString << std::endl;
 	position = line.find(searchedString, position);
 	
 	if (position == std::string::npos)
 		return false;
 	
 	position += searchedString.length();
-	std::cout << "Set position" << std::endl;
+	//std::cout << "Set position with current value " << position << std::endl;
+	
+	if (position >= line.length())
+		return false;
 	
 	do
 	{
 		length = line.find("\"", position);
+		
+		if (length == std::string::npos)
+			return false;
+		else if (line[length - 1] == '\\') // escape sequence
+			position = length + 1;
+		else
+			break;
 	}
-	while (length != std::string::npos && line[length - 1] == '\\');
-	
-	if (length == std::string::npos)
-		return false;
+	while (true);
 	
 	length = length - position;
-	std::cout << "Set length " << std::endl;
+	//std::cout << "Set length to " << length << std::endl;
 	
 	static const char *replacedValueSchema = "STRING_";
 	
 	if (ignoreReplacedValues && line.substr(position, strlen(replacedValueSchema)) == replacedValueSchema)
 		return false;
 	
-	std::cout << "Returning true" << std::endl;
+	//std::cout << "Returning true" << std::endl;
 	
 	return true;
 }
@@ -77,7 +86,7 @@ static bool checkForStringConflict(std::list<class String*> &strings, class Stri
 	{
 		if ((*iterator)->defaultString() == string->defaultString())
 		{
-			fprintf(stdout, _("Detected string conflict:\nString 0: \"%s\"\nString 0 translation: \"%s\"\nString 1: \"%s\"\nString 1 translation: \"%s\"\nEnter 0 to use string 0 or 1 to use string 1.\n"));
+			std::cerr << boost::format(_("Detected string conflict:\nString 0: \"%1%\"\nString 0 translation: \"%2%\"\nString 1: \"%3%\"\nString 1 translation: \"%4%\"\nEnter 0 to use string 0 or 1 to use string 1.\n")) % (*iterator)->idString() % (*iterator)->valueString() % string->idString() % string->valueString() << std::endl;
 			int value;
 			std::cin >> value;
 			
@@ -124,7 +133,7 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 		std::string::size_type length = 0;
 		
 		while (getNextTranslationFunctionCall(line, translationFunction, position, length, true))
-		{			
+		{
 			std::string defaultString = line.substr(position, length);
 			int id = 0;
 			std::list<int> usedIds;
@@ -175,7 +184,8 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 				
 				std::stringstream sstream;
 				sstream << "STRING_" << id;
-				strings.push_back(new String(filePath, i, sstream.str(), defaultString, ""));
+				std::string valueString = optionFill ? defaultString : "";
+				strings.push_back(new String(filePath, i, sstream.str(), defaultString, valueString));
 				
 				if (replace)
 					line.replace(position, length, sstream.str());
@@ -254,7 +264,7 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 			}
 			else if ((*iterator).length() > 7 && (*iterator).substr(0, 7)  == "STRING_")
 			{
-				std::cout << "Length is bigger than 7." << std::endl;
+				//std::cout << "Length is bigger than 7." << std::endl;
 				std::string idString = *iterator;
 				std::size_t index = line.find_last_of("/*");
 		
@@ -308,7 +318,7 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 				std::string valueString = line.substr(index, length);
 				class String *string = new String("", 0, idString, defaultString, valueString);
 				checkForStringConflict(strings, string);
-				std::cout << "Adding string from fdf file" << std::endl;
+				//std::cout << "Adding string from fdf file" << std::endl;
 			}
 		}
 	}
@@ -348,7 +358,7 @@ bool Parser::writeFdf(const std::string &filePath, const std::list<class String*
 		if (i != strings.size() - 1)
 			fstream << ',';
 
-		fstream << "\t/* " << (*iterator)->defaultString() << " */" << std::endl;
+		fstream << " /* " << (*iterator)->defaultString() << " */" << std::endl;
 	}
 
 	fstream << '}' << std::endl;
@@ -401,7 +411,7 @@ bool Parser::readWts(const std::string &filePath, std::list<class String*> &stri
 		else
 		{
 			fprintf(stderr, _("Error at line %i: Missing default string line.\n"), i);
-			std::cout << "Line: " << line << " and sub string " << line.substr(2) << std::endl;
+			//std::cout << "Line: " << line << " and sub string " << line.substr(2) << std::endl;
 			
 			break;
 		}

@@ -5,8 +5,7 @@ set(SRC
 )
 
 add_executable(vjasstrans ${SRC})
-target_link_libraries(vjasstrans gettextlib)
-# todo: link with boost library?
+target_link_libraries(vjasstrans ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
 #install
 

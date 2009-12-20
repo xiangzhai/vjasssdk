@@ -1,3 +1,7 @@
+2009-12-20 Tamino Dauth <tamino@cdauth.de>
+* Fixed escape sequence detection.
+* Added option --fill.
+
 2009-10-06 Tamino Dauth <tamino@cdauth.de>
 * Improved parsing.
 * Doubled strings will be detected much better now.

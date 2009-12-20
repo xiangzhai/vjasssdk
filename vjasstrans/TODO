@@ -1,3 +1,6 @@
+2009-11-29 Tamino Dauth <tamino@cdauth.de>
+* Use opt_get and boost libraries instead of POSIX.
+
 2009-10-06 Tamino Dauth <tamino@cdauth.de>
 * Reading fdf files does not work correctly since { character seems to be ignored by boost tokenizer -.-.
 * Check string conflict search.

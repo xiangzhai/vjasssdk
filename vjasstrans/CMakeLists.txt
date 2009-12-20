@@ -1,20 +1,28 @@
-cmake_minimum_required(VERSION 2.6.4)
+cmake_minimum_required(VERSION 2.6)
 
 project(vjasstrans)
 
 find_package(Gettext REQUIRED)
+
+if (GETTEXT_FOUND)
+	message(STATUS "Gettext has been found.")
+	include_directories(${GETTEXT_INCLUDE_DIR})
+else (GETTEXT_FOUND)
+	message(STATUS "Gettext has not been found.")
+	# cancel
+endif (GETTEXT_FOUND)
+
 find_package(Boost REQUIRED)
-# todo: require boost tokenizer component only.
 
-if (UNIX)
-	add_definitions(-DUNIX=1)
-elseif (WIN32)
-	add_definitions(-DWIN32=1)
-else (UNIX)
-	message("Warning: Unknown operating system.")
-endif (UNIX)
+if (Boost_FOUND)
+	message(STATUS "Boost has been found.")
+	include_directories(${Boost_INCLUDE_DIR})
+else (Boost_FOUND)
+	message(STATUS "Boost has not been found.")
+	# cancel
+endif (Boost_FOUND)
 
-add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/local\")
+add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")
 
 include_directories(src)
 add_subdirectory(src)

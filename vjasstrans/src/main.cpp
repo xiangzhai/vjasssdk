@@ -50,6 +50,7 @@ static void addDirectory(const std::string &directoryPath, std::list<std::string
 	if (dir == NULL)
 	{
 		fprintf(stderr, _("Error while opening directory \"%s\".\n"), directoryPath.c_str());
+		
 		return;
 	}
 	
@@ -61,6 +62,7 @@ static void addDirectory(const std::string &directoryPath, std::list<std::string
 	if (entries == -1)
 	{
 		fprintf(stderr, _("Error while reading directory \"%s\".\n"), directoryPath.c_str());
+		
 		return;
 	}
 	
@@ -74,6 +76,7 @@ static void addDirectory(const std::string &directoryPath, std::list<std::string
 			if (stat(path.c_str(), &fileInfo) == -1)
 			{
 				fprintf(stderr, _("Error while reading file \"%s\".\n"), path.c_str());
+				
 				continue;
 			}
 			
@@ -127,8 +130,11 @@ int main(int argc, char *argv[])
 	else if (strcmp(argv[1], "--help") == 0)
 	{
 		std::cout <<
-		_("vjasstrans options:\n") <<
+		_("Usage:\n") <<
+		_("vjasstrans [options] <files or directories>\n\n") <<
+		_("Options:\n") <<
 		_("--version                   Shows the current version of vjasstrans.\n") <<
+		_("--fill                      Fills string values with default strings when adding them from code files.\n") <<
 		_("--replace                   Replaces all translated strings by STRING_<id> in code files.\n") <<
 		_("--recursive                 Parses all source files in sub directories.\n") <<
 		_("--fdf                       Creates file with all parsed strings.\n") <<
@@ -151,6 +157,10 @@ int main(int argc, char *argv[])
 	
 	for (int i = 1; i < argc; ++i)
 	{
+		if (strcmp(argv[i], "--fill") == 0)
+		{
+			optionFill = true;
+		}
 		if (strcmp(argv[i], "--replace") == 0)
 		{
 			optionReplace = true;
@@ -180,6 +190,7 @@ int main(int argc, char *argv[])
 			if (++i == argc)
 			{
 				std::cerr << "Missing argument of option --trans." << std::endl;
+				
 				return EXIT_FAILURE;
 			}
 			
@@ -190,6 +201,7 @@ int main(int argc, char *argv[])
 			if (++i == argc)
 			{
 				std::cerr << "Missing argument of option --wtspath." << std::endl;
+				
 				return EXIT_FAILURE;
 			}
 			
@@ -200,6 +212,7 @@ int main(int argc, char *argv[])
 			if (++i == argc)
 			{
 				std::cerr << "Missing argument of option --fdfpath." << std::endl;
+				
 				return EXIT_FAILURE;
 			}
 			
@@ -214,9 +227,9 @@ int main(int argc, char *argv[])
 	{
 		struct stat fileInfo;
 		
-		if (stat((*iterator).c_str(), &fileInfo) != 0)
+		if (stat(iterator->c_str(), &fileInfo) != 0)
 		{
-			fprintf(stderr, "File or directory \"%s\" does not exist.\n", (*iterator).c_str());
+			fprintf(stderr, "File or directory \"%s\" does not exist.\n", iterator->c_str());
 			//filePaths.erase(iterator); /// @todo 
 		}
 		// is directory
@@ -224,7 +237,7 @@ int main(int argc, char *argv[])
 		{
 			if (optionRecursive)
 				addDirectory(*iterator, filePaths);
-			
+		
 			//filePaths.erase(iterator);
 		}
 	}

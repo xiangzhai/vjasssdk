@@ -24,6 +24,7 @@ namespace vjasstrans
 {
 
 const char *version = "0.1";
+bool optionFill = false;
 bool optionReplace = false;
 bool optionRecursive = false;
 bool optionFdf = false;
