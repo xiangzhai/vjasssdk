@@ -26,6 +26,7 @@ globals
 	constant boolean A_SYSTEMS = true
 	constant boolean A_OBJECTS = false
 	constant boolean A_DEBUG_HANDLES = false
+	constant boolean A_DEBUG_NATIVES = false
 	constant boolean A_NET = false
 	constant boolean A_FPS_MOVEMENT = false
     // Generated
