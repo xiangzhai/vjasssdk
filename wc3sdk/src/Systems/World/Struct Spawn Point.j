@@ -1,4 +1,4 @@
-library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, ALibraryCoreGeneralPlayer, ALibraryCoreStringConversion, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralVector
+library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreStringConversion, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralVector
 
 	private struct ASpawnPointMember
 		// dynamic members
@@ -116,7 +116,8 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 	struct ASpawnPoint
 		//static start members
 		private static real m_time
-		private static string m_effectPath
+		private static string m_effectFilePath
+		private static string m_soundFilePath
 		private static integer m_dropChance
 		private static boolean m_distributeItems
 		private static player m_owner
@@ -269,10 +270,13 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 				if (ASpawnPointMember(this.m_members[i]).unit() != null) then
 					call this.m_group.units().pushBack(ASpawnPointMember(this.m_members[i]).unit())
 					// need global, faster?
-					if (thistype.m_effectPath != null) then
-						set whichEffect = AddSpecialEffect(thistype.m_effectPath, ASpawnPointMember(this.m_members[i]).x(), ASpawnPointMember(this.m_members[i]).y())
+					if (thistype.m_effectFilePath != null) then
+						set whichEffect = AddSpecialEffect(thistype.m_effectFilePath, ASpawnPointMember(this.m_members[i]).x(), ASpawnPointMember(this.m_members[i]).y())
 						call DestroyEffect(whichEffect)
 						set whichEffect = null
+					endif
+					if (thistype.m_soundFilePath != null) then
+						call PlaySoundFileAt(thistype.m_soundFilePath, ASpawnPointMember(this.m_members[i]).x(), ASpawnPointMember(this.m_members[i]).y(), GetUnitZ(ASpawnPointMember(this.m_members[i]).unit()))
 					endif
 				debug else
 					debug call this.print("Warning: Couldn't place unit.")
@@ -409,21 +413,27 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 
 		/**
 		* Initializes the spawn point system. Please call this method before using anything of this system.
-		* @param time The time which has to elapse before the unit respawns.
-		* @param effectPath The path of the effect which is shown when the unit respawns. If this value is null there won't be shown any effect.
+		* @param time Time which has to elapse before the units respawn.
+		* @param effectFilePath File fath of the effect which is shown when the units respawn. If this value is null there won't be shown any effect.
+		* @param soundPath File path of the sound which is played when the units respawn. If this value is null there won't be played any sound.
 		* @param dropChance The chance (percentaged) for dropping items.
 		* @param owner The player who owns all spawn point units.
 		*/
-		public static method init takes real time, string effectPath, integer dropChance, boolean distributeItems, player owner, string textDistributeItem returns nothing
+		public static method init takes real time, string effectFilePath, string soundFilePath, integer dropChance, boolean distributeItems, player owner, string textDistributeItem returns nothing
 			//static start members
 			set thistype.m_time = time
-			set thistype.m_effectPath = effectPath
+			set thistype.m_effectFilePath = effectFilePath
+			set thistype.m_soundFilePath = soundFilePath
 			set thistype.m_dropChance = dropChance
 			set thistype.m_distributeItems = distributeItems
 			set thistype.m_owner = owner
 			set thistype.m_textDistributeItem = textDistributeItem
 			//static members
 			set thistype.m_dropOwnerId = 0
+
+			if (thistype.m_soundFilePath != null) then
+				call PreloadSoundFile(thistype.m_soundFilePath)
+			endif
 		endmethod
 
 		public static method distributeDroppedItem takes item whichItem returns nothing

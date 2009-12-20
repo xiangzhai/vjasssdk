@@ -194,8 +194,13 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			call ShowTextTagForPlayer(this.gui().player(), this.m_tooltip, true)
 
 			if (this.m_tooltipBackgroundImageFilePath != null) then // each time create a new image, since path could be changed
-				set this.m_tooltipBackground = CreateImageForPlayer(this.gui().player(), this.m_tooltipBackgroundImageFilePath, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 10.0, 50.0, 50.0) /// @todo Setup correct size to tooltip text, should be higher than normal images
+				if (this.m_tooltipBackground != null) then
+					call DestroyImage(this.m_tooltipBackground)
+					set this.m_tooltipBackground = null
+				endif
+				set this.m_tooltipBackground = CreateImageForPlayer(this.gui().player(), this.m_tooltipBackgroundImageFilePath, x, y, 5.0, 50.0, 50.0) /// @todo Setup correct size to tooltip text, should be higher than normal images
 				call ShowImage(this.m_tooltipBackground, true)
+
 			endif
 			if (thistype.m_tooltipSoundPath != null) then
 				call PlaySoundFileForPlayer(this.gui().player(), thistype.m_tooltipSoundPath)

@@ -3,13 +3,13 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 	struct AGroup
 		//members
 		private AUnitVector m_units
-		
+
 		//members
-		
+
 		public method units takes nothing returns AUnitVector
 			return this.m_units
 		endmethod
-		
+
 		//methods
 
 		public method fillGroup takes group whichGroup returns nothing
@@ -30,7 +30,7 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			call this.fillGroup(whichGroup)
 			return whichGroup
 		endmethod
-		
+
 		/**
 		* Adds all units of group @param whichGroup to the group.
 		* @param destroy If this value is true group @param whichGroup will be destroyed after it has been added.
@@ -72,6 +72,29 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			return true
 		endmethod
 
+		public method hasAlliesOfPlayer takes player whichPlayer returns boolean
+			local player owner
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				set owner = GetOwningPlayer(this.m_units[i])
+				if (IsPlayerAlly(owner, whichPlayer)) then
+					set owner = null
+					return true
+				endif
+				set i = i + 1
+				set owner = null
+			endloop
+			return false
+		endmethod
+
+		public method hasAlliesOfUnit takes unit whichUnit returns boolean
+			local player owner = GetOwningPlayer(whichUnit)
+			local boolean result = this.hasAlliesOfPlayer(owner)
+			set owner = null
+			return result
+		endmethod
+
 		public method removeAlliesOfPlayer takes player whichPlayer returns nothing
 			local player owner
 			local integer i = 0
@@ -91,6 +114,29 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			local player owner = GetOwningPlayer(whichUnit)
 			call this.removeAlliesOfPlayer(owner)
 			set owner = null
+		endmethod
+
+		public method hasEnemiesOfPlayer takes player whichPlayer returns boolean
+			local player owner
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				set owner = GetOwningPlayer(this.m_units[i])
+				if (not IsPlayerAlly(owner, whichPlayer)) then
+					set owner = null
+					return true
+				endif
+				set i = i + 1
+				set owner = null
+			endloop
+			return false
+		endmethod
+
+		public method hasEnemiesOfUnit takes unit whichUnit returns boolean
+			local player owner = GetOwningPlayer(whichUnit)
+			local boolean result = this.hasEnemiesOfPlayer(owner)
+			set owner = null
+			return result
 		endmethod
 
 		public method removeEnemiesOfPlayer takes player whichPlayer returns nothing
@@ -113,14 +159,14 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			call this.removeEnemiesOfPlayer(owner)
 			set owner = null
 		endmethod
-		
+
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
 			//members
 			set this.m_units = AUnitVector.create()
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			//members
 			call this.m_units.destroy()

@@ -1,6 +1,8 @@
 2009-12-20 Tamino Dauth <tamino@cdauth.de>
 * Fixed struct ASpawnPoint.
 * Released version 1.1.
+* Added soundFilePath parameter to ASpawnPoint's initializer.
+* Added methods hasAlliesOfPlayer, hasAlliesOfUnit, hasEnemiesOfPlayer and hasEnemiesOfUnit to struct AGroup.
 
 2009-12-19 Tamino Dauth <tamino@cdauth.de>
 * Improved struct ALayout.
