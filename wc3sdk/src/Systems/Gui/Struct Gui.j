@@ -48,7 +48,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		private AGuiOnPressShortcutAction array m_onPressShortcutAction[thistype.m_maxShortcuts]
 		private integer array m_onPressShortcutActionId[thistype.m_maxShortcuts]
 		//start members
-		private player m_user
+		private player m_player
 		//members
 		private AIntegerVector m_mainWindows
 		private AMainWindow m_shownMainWindow
@@ -63,8 +63,10 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 
 		//dynamic members
 
-		/// Each shortcut (including special shortcuts) can have its own action.
-		/// Additionally you can add shortcuts to widgets that they'll get the widgets action automatically.
+		/**
+		* Each shortcut (including special shortcuts) can have its own action.
+		* Additionally you can add shortcuts to widgets that they'll get the widgets action automatically.
+		*/
 		public method setOnPressShortcutAction takes integer shortcut, AGuiOnPressShortcutAction onPressShortcutAction, integer id returns nothing
 			if ((shortcut >= 0) and (shortcut < thistype.m_maxSpecialShortcuts)) then
 				call this.createSpecialShortcutTrigger(shortcut)
@@ -73,30 +75,32 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			set this.m_onPressShortcutActionId[shortcut] = id
 		endmethod
 
-		/// Convenience method.
-		/// Assigns a function to a shortcut. The function gets the AGui instance as argument.
+		/**
+		* Convenience method.
+		* Assigns a function to a shortcut. The function gets the AGui instance as argument.
+		*/
 		public method setOnPressGuiShortcutAction takes integer shortcut, AGuiOnPressGuiShortcutAction onPressGuiShortcutAction returns nothing
 			call this.setOnPressShortcutAction(shortcut, onPressGuiShortcutAction, this)
 		endmethod
 
 		//start members
 
-		public method user takes nothing returns player
-			return this.m_user
+		public method player takes nothing returns player
+			return this.m_player
 		endmethod
-		
+
 		//members
-		
+
 		public method shownMainWindow takes nothing returns AMainWindow
 			return this.m_shownMainWindow
 		endmethod
-		
+
 		public method dialog takes nothing returns ADialog
 			return this.m_dialog
 		endmethod
-		
+
 		//convenience methods
-		
+
 		/// @return Returns if a dialog or main window is shown to the user.
 		public method isShown takes nothing returns boolean
 			return this.m_shownMainWindow != 0 or this.m_dialog.isDisplayed()
@@ -122,7 +126,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			local integer i
 			call PauseUnit(this.m_shortcutHandler, false)
 			call ShowUnit(this.m_shortcutHandler, true)
-			call SelectUnitForPlayerSingle(this.m_shortcutHandler, this.m_user)
+			call SelectUnitForPlayerSingle(this.m_shortcutHandler, this.m_player)
 			call EnableTrigger(this.m_shortcutHandleTrigger)
 			call this.enableSpecialShortcutTriggers()
 			set i = 0
@@ -140,10 +144,10 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			local integer i
 			call PauseUnit(this.m_shortcutHandler, true)
 			call ShowUnit(this.m_shortcutHandler, false)
-			call SelectUnitRemoveForPlayer(this.m_shortcutHandler, this.m_user)
+			call SelectUnitRemoveForPlayer(this.m_shortcutHandler, this.m_player)
 			call DisableTrigger(this.m_shortcutHandleTrigger)
 			call this.disableSpecialShortcutTriggers()
-			
+
 			set i = 0
 			loop
 				exitwhen (i == thistype.m_maxShortcuts)
@@ -164,7 +168,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			call this.m_dialog.addDialogButton(thistype.m_textOk, thistype.m_shortcutOk, 0)
 			call this.m_dialog.show()
 		endmethod
-		
+
 		/**
 		* If you dock a main window it will be destroyed when the GUI will be destroyed.
 		* @return Container index.
@@ -174,7 +178,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			call this.m_mainWindows.pushBack(mainWindow)
 			return this.m_mainWindows.backIndex()
 		endmethod
-		
+
 		/**
 		* Undocks a main window from GUI. If a main window is undocked there won't be any relationships between it and the GUI anymore.
 		* @todo Friend relation to @struct AMainWindow. In general you do not need to use this method.
@@ -190,7 +194,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			endif
 			set this.m_shownMainWindow = mainWindow
 		endmethod
-		
+
 		/// @todo Friend relation to @struct AMainWindow, do not use!
 		public method resetShownMainWindow takes nothing returns nothing
 			set this.m_shownMainWindow = 0
@@ -228,14 +232,14 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_leaveTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterPlayerEvent(this.m_leaveTrigger, this.m_user, EVENT_PLAYER_LEAVE)
+			set triggerEvent = TriggerRegisterPlayerEvent(this.m_leaveTrigger, this.m_player, EVENT_PLAYER_LEAVE)
 			set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionPlayerLeaves)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
 		private method createShortcutHandler takes nothing returns nothing
-			set this.m_shortcutHandler = CreateUnit(this.m_user, thistype.m_shortcutHandlerUnitType, thistype.m_shortcutHandlerX, thistype.m_shortcutHandlerY, 0.0)
+			set this.m_shortcutHandler = CreateUnit(this.m_player, thistype.m_shortcutHandlerUnitType, thistype.m_shortcutHandlerX, thistype.m_shortcutHandlerY, 0.0)
 			call SetUnitInvulnerable(this.m_shortcutHandler, true)
 			call ShowUnit(this.m_shortcutHandler, false)
 		endmethod
@@ -277,7 +281,6 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local integer shortcut = AHashTable.global().handleInteger(triggeringTrigger, "shortcut")
-			debug call Print("SHORTCUT " + I2S(shortcut))
 			call this.m_onPressShortcutAction[shortcut].execute(this)
 			set triggeringTrigger = null
 		endmethod
@@ -292,23 +295,23 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			if (this.m_specialShortcutHandleTrigger[shortcut] == null) then
 				set this.m_specialShortcutHandleTrigger[shortcut] = CreateTrigger()
 				if (shortcut == thistype.shortcutArrowUpDown) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_UP_DOWN)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_UP_DOWN)
 				elseif (shortcut == thistype.shortcutArrowDownDown) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_DOWN_DOWN)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_DOWN_DOWN)
 				elseif (shortcut == thistype.shortcutArrowLeftDown) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_LEFT_DOWN)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_LEFT_DOWN)
 				elseif (shortcut == thistype.shortcutArrowRightDown) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_RIGHT_DOWN)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_RIGHT_DOWN)
 				elseif (shortcut == thistype.shortcutArrowUpUp) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_UP_UP)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_UP_UP)
 				elseif (shortcut == thistype.shortcutArrowDownUp) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_DOWN_UP)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_DOWN_UP)
 				elseif (shortcut == thistype.shortcutArrowLeftUp) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_LEFT_UP)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_LEFT_UP)
 				elseif (shortcut == thistype.shortcutArrowRightUp) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_ARROW_RIGHT_UP)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_ARROW_RIGHT_UP)
 				elseif (shortcut == thistype.shortcutEscape) then
-					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_user, EVENT_PLAYER_END_CINEMATIC)
+					set triggerEvent = TriggerRegisterPlayerEvent(this.m_specialShortcutHandleTrigger[shortcut], this.m_player, EVENT_PLAYER_END_CINEMATIC)
 				endif
 				set triggerAction = TriggerAddAction(this.m_specialShortcutHandleTrigger[shortcut], function thistype.triggerActionOnPressSpecialShortcut)
 				call AHashTable.global().setHandleInteger(this.m_specialShortcutHandleTrigger[shortcut], "this", this)
@@ -321,15 +324,15 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		/// Don't use the constructor.
 		/// Use @method getPlayerGui.
 		/// Shortcuts will be disabled first.
-		private static method create takes player user returns thistype
+		private static method create takes player whichPlayer returns thistype
 			local thistype this = thistype.allocate()
 			//start members
-			set this.m_user = user
+			set this.m_player = whichPlayer
 			//members
 			set this.m_mainWindows = AIntegerVector.create()
 			set this.m_shownMainWindow = 0
-			set this.m_playerSelection = APlayerSelection.create(user)
-			set this.m_dialog = ADialog.create(user)
+			set this.m_playerSelection = APlayerSelection.create(whichPlayer)
+			set this.m_dialog = ADialog.create(whichPlayer)
 
 			call this.createLeaveTrigger()
 			call this.createShortcutHandler()
@@ -337,7 +340,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			call this.disableShortcuts()
 			return this
 		endmethod
-		
+
 		private method destroyLeaveTrigger takes nothing returns nothing
 			call DestroyTrigger(this.m_leaveTrigger)
 			set this.m_leaveTrigger = null
@@ -391,12 +394,24 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		* @param shortcutOk The shortcut which is used for the Ok text.
 		*/
 		public static method init takes integer shortcutHandlerUnitType, real shortcutHandlerX, real shortcutHandlerY, string textOk, integer shortcutOk returns nothing
-			//static start members
+			local integer i
+			// static start members
 			set thistype.m_shortcutHandlerUnitType = shortcutHandlerUnitType
 			set thistype.m_shortcutHandlerX = shortcutHandlerX
 			set thistype.m_shortcutHandlerY = shortcutHandlerY
 			set thistype.m_textOk = textOk
 			set thistype.m_shortcutOk = shortcutOk
+			// static members
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				if (IsPlayerPlayingUser(Player(i))) then
+					set thistype.m_playerGui[i] = thistype.create(Player(i))
+				else
+					set thistype.m_playerGui[i] = 0
+				endif
+				set i = i + 1
+			endloop
 		endmethod
 
 		//static dynamic members
@@ -411,41 +426,38 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 
 		//static methods
 
-		public static method playerGui takes player user returns thistype
-			if (thistype.m_playerGui[GetPlayerId(user)] == 0) then
-				set thistype.m_playerGui[GetPlayerId(user)] = thistype.create(user) //If you forget [GetPlayerId(user)] there is a jasshelper error
-			endif
-			return thistype.m_playerGui[GetPlayerId(user)]
+		public static method playerGui takes player whichPlayer returns thistype
+			return thistype.m_playerGui[GetPlayerId(whichPlayer)]
 		endmethod
 
 		//static convenience methods
-		
+
 		public static method setOnPressGuiShortcutActionForAll takes integer shortcut, AGuiOnPressGuiShortcutAction onPressGuiShortcutAction returns nothing
 			local integer i
-			local player user
+			local player whichPlayer
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					call thistype.playerGui(user).setOnPressGuiShortcutAction(shortcut, onPressGuiShortcutAction)
+				set whichPlayer = Player(i)
+				if (IsPlayerPlayingUser(whichPlayer)) then
+					call thistype.playerGui(whichPlayer).setOnPressGuiShortcutAction(shortcut, onPressGuiShortcutAction)
 				endif
-				set user = null
+				set whichPlayer = null
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public static method showInfoDialogToAll takes string text returns nothing
 			local integer i
-			local player user
+			local player whichPlayer
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					call thistype.playerGui(user).showInfoDialog(text)
+				set whichPlayer = Player(i)
+				if (IsPlayerPlayingUser(whichPlayer)) then
+					call thistype.playerGui(whichPlayer).showInfoDialog(text)
 				endif
-				set user = null
+				set whichPlayer = null
 				set i = i + 1
 			endloop
 		endmethod

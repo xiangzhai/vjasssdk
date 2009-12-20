@@ -1,3 +1,21 @@
+2009-12-20 Tamino Dauth <tamino@cdauth.de>
+* Fixed struct ASpawnPoint.
+* Released version 1.1.
+
+2009-12-19 Tamino Dauth <tamino@cdauth.de>
+* Improved struct ALayout.
+* Removed methods user from structs AWidget and AMainWindow.
+* Removed method gui from struct AWidget.
+* Renamed method user of struct AGui to player.
+* Fixed unnecessary debug message of function InsertString and revised it.
+* Fixed function MoveSubString.
+* Added option A_DEBUG_NATIVES support.
+* Renamed method user of struct ACharacter to player.
+* Dropped convenience methods user and unit of struct AAbstractCharacterSystem.
+
+2009-12-18 Tamino Dauth <tamino@cdauth.de>
+* Improved struct ALayout.
+
 2009-12-15 Tamino Dauth <tamino@cdauth.de>
 * AButton extends AImage instead of AWidget now.
 * Added possibility to define a background image file for tooltips in main windows.

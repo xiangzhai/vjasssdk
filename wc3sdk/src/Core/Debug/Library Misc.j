@@ -35,13 +35,20 @@ endif
 	* @author Tamino Dauth
 	*/
 	//! textmacro A_STRUCT_DEBUG takes STRUCTNAME
+static if (DEBUG_MODE) then
 		public method print takes string message returns nothing //stub
-			debug call Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message)
+			call Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message)
 		endmethod
 
-		private static method staticPrint takes string message returns nothing
-			debug call Print($STRUCTNAME$ + ": " + message)
+		public method printMethodError takes string methodName, string message returns nothing
+			call Print($STRUCTNAME$ + " - " + I2S(this) + ": Method error in method \"" + methodName + "\": " + message)
 		endmethod
+
+
+		private static method staticPrint takes string message returns nothing
+			call Print($STRUCTNAME$ + ": " + message)
+		endmethod
+endif
 	//! endtextmacro
 
 	/**
@@ -105,7 +112,7 @@ endif
 	function DebugPlayer takes integer number returns nothing
 		if (number < 0 or number >= bj_MAX_PLAYER_SLOTS) then
 			debug call PrintFunctionError("Player", "Invalid parameter number, value " + I2S(number) + ". Setting number to 0 to avoid game crash.")
-			set number = 0
+			//set number = 0
 		endif
 		//return Player(number)
 	endfunction
@@ -171,7 +178,7 @@ endif
 		debug call PrintFunctionError("SetImageRender", "Does not work, use SetImageRenderAlways instead.")
 	endfunction
 
-static if (DEBUG_MODE) then
+static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 	hook Player DebugPlayer
 	hook InitGameCache DebugInitGameCache
 	//debug hook DestroyTimer SCOPE_PRIVATEDestroyTimer

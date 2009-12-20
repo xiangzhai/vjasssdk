@@ -101,7 +101,7 @@ library AStructCoreInterfaceArrowKeys
 		public method horizontalQuickPress takes nothing returns integer
 			return this.m_horizontalQuickPress
 		endmethod
-		
+
 		public method setUpQuickPress takes boolean upQuickPress returns nothing
 			set this.m_upQuickPress = upQuickPress
 		endmethod
@@ -191,7 +191,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyPressDown takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_down = true
 			set this.m_vertical = -1
 			set this.m_downQuickPress = true
@@ -204,7 +204,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyReleaseDown takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_down = false
 			if (thistype.m_resumePreviousKey and this.m_up) then
 				set this.m_vertical = 1
@@ -219,7 +219,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyPressUp takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_up = true
 			set this.m_vertical = 1
 			set this.m_upQuickPress = true
@@ -232,7 +232,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyReleaseUp takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_up = false
 			if (thistype.m_resumePreviousKey and this.m_down) then
 				set this.m_vertical = -1
@@ -247,7 +247,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyPressLeft takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_left = true
 			set this.m_horizontal = -1
 			set this.m_leftQuickPress = true
@@ -260,7 +260,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyReleaseLeft takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_left = false
 			if (thistype.m_resumePreviousKey and this.m_right) then
 				set this.m_horizontal = 1
@@ -275,7 +275,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyPressRight takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_right = true
 			set this.m_horizontal = 1
 			set this.m_rightQuickPress = true
@@ -288,7 +288,7 @@ library AStructCoreInterfaceArrowKeys
 
 		private static method triggerActionKeyReleaseRight takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			local thistype this = thistype.playerArrowKeys(triggerPlayer)
+			local thistype this = thistype.m_playerArrowKeys[GetPlayerId(triggerPlayer)]
 			set this.m_right = false
 			if (thistype.m_resumePreviousKey and this.m_left) then
 				set this.m_horizontal = -1
@@ -363,7 +363,7 @@ library AStructCoreInterfaceArrowKeys
 				set triggerEvent = TriggerRegisterPlayerEvent(thistype.m_releaseRightTrigger, user, EVENT_PLAYER_ARROW_RIGHT_UP)
 				set triggerEvent = null
 				set user = null
-				set thistype.m_playerArrowKeys[i] = 0
+				set thistype.m_playerArrowKeys[i] = thistype.create(user)
 				set i = i + 1
 			endloop
 		endmethod
@@ -415,7 +415,7 @@ library AStructCoreInterfaceArrowKeys
 		public static method onReleaseUpAction takes nothing returns AArrowKeysOnPressAction
 			return thistype.m_onReleaseUpAction
 		endmethod
-		
+
 		public static method setOnPressDownAction takes AArrowKeysOnPressAction onPressDownAction returns nothing
 			set thistype.m_onPressDownAction = onPressDownAction
 		endmethod
@@ -447,7 +447,7 @@ library AStructCoreInterfaceArrowKeys
 		public static method onReleaseLeftAction takes nothing returns AArrowKeysOnPressAction
 			return thistype.m_onReleaseLeftAction
 		endmethod
-		
+
 		public static method setOnPressRightAction takes AArrowKeysOnPressAction onPressRightAction returns nothing
 			set thistype.m_onPressRightAction = onPressRightAction
 		endmethod
@@ -467,9 +467,6 @@ library AStructCoreInterfaceArrowKeys
 		//static methods
 
 		public static method playerArrowKeys takes player user returns thistype
-			if (thistype.m_playerArrowKeys[GetPlayerId(user)] == 0) then
-				set thistype.m_playerArrowKeys[GetPlayerId(user)] = thistype.create(user)
-			endif
 			return thistype.m_playerArrowKeys[GetPlayerId(user)]
 		endmethod
     endstruct

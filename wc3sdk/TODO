@@ -1,5 +1,16 @@
+2009-12-19 Tamino Dauth <tamino@cdauth.de>
+* Maybe add some members like minSizeX or maxSizeX to struct AWidget for ALayout.
+* AImage.setFile - CreateImageForPlayer or ShowImage do crash the game in debug mode.
+* AThirdPersonCamera: when should it be created?
+* Call all evaluates explicity that users can use [forcemethodevaluate] without getting any problems.
+
+2009-12-14 Tamino Dauth <tamino@cdauth.de>
+* DEPRECATED: Remove size members from struct AWidget (beside from AImage).
+* DONE: Add size parameters to ALayout, improve ALayout.
+* Add struct AImageBar to GUI system.
+
 2009-12-13 Tamino Dauth <tamino@cdauth.de>
-* Fix game crash which is caused by ALibrarySystemsDebugUtilities.
+* DONE: Fix game crash which is caused by ALibrarySystemsDebugUtilities.
 
 2009-12-09 Tamino Dauth <tamino@cdauth.de>
 * Fix missile target seeking mode.

@@ -1,4 +1,4 @@
-library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
+library ALibraryCoreGeneralUnit requires AStructCoreGeneralHashTable, ALibraryCoreGeneralItem
 
 	/**
 	* Sicheres Iterieren per FirstOfGroup
@@ -259,7 +259,7 @@ library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
 		local group whichGroup
 		local AGroup unitGroup
 		set whichGroup = CreateGroup()
-		set unitGroup = AGroup.create()
+		set unitGroup = AGroup.create.evaluate() // can't require struct AGroup, requirement cycle
 		set i = 0
 		loop
 			exitwhen (i == bj_MAX_PLAYER_SLOTS)
@@ -270,24 +270,24 @@ library ALibraryCoreGeneralUnit requires ALibraryCoreGeneralItem
 			endif
 			// Enumerate and unpause every unit owned by the player.
 			call GroupEnumUnitsOfPlayer(whichGroup, whichPlayer, null)
-			call unitGroup.addGroup(whichGroup, false, true)
+			call unitGroup.addGroup.evaluate(whichGroup, false, true)
 			set i = i + 1
 		endloop
 		call DestroyGroup(whichGroup)
 		set whichGroup = null
 		set i = 0
 		loop
-			exitwhen (i == unitGroup.units().size())
-			if (pause and not IsUnitPaused(unitGroup.units()[i])) then
-				call PauseUnit(unitGroup.units()[i], true)
-				call AHashTable.global().setHandleBoolean(unitGroup.units()[i], "PauseAllUnits:IsPaused", true)
-			elseif (not pause and AHashTable.global().hasHandleBoolean(unitGroup.units()[i], "PauseAllUnits:IsPaused")) then
-				call PauseUnit(unitGroup.units()[i], false)
-				call AHashTable.global().removeHandleBoolean(unitGroup.units()[i], "PauseAllUnits:IsPaused")
+			exitwhen (i == unitGroup.units.evaluate().size.evaluate())
+			if (pause and not IsUnitPaused(unitGroup.units.evaluate()[i])) then
+				call PauseUnit(unitGroup.units.evaluate()[i], true)
+				call AHashTable.global().setHandleBoolean(unitGroup.units.evaluate()[i], "PauseAllUnits:IsPaused", true)
+			elseif (not pause and AHashTable.global().hasHandleBoolean(unitGroup.units.evaluate()[i], "PauseAllUnits:IsPaused")) then
+				call PauseUnit(unitGroup.units.evaluate()[i], false)
+				call AHashTable.global().removeHandleBoolean(unitGroup.units.evaluate()[i], "PauseAllUnits:IsPaused")
 			endif
 			set i = i + 1
 		endloop
-		call unitGroup.destroy()
+		call unitGroup.destroy.evaluate()
 	endfunction
 
 	private function hookFunctionRemoveUnit takes unit whichUnit returns nothing

@@ -1,152 +1,139 @@
 library AStructSystemsGuiLayout requires optional ALibraryCoreDebugMisc, AStructSystemsGuiWidget, AStructSystemsGuiButton, AStructSystemsGuiText, AStructSystemsGuiImage
 
-	/// Note that this struct repesents a static layout!
+	private struct ALayoutMemberData
+		private integer m_data
+		private boolean m_isLayout
+
+		public method data takes nothing returns integer
+			return this.m_data
+		endmethod
+
+		/**
+		* @return If it returns true @method ALayoutMemberData.data returns a @struct ALayout instance otherwise it returns a @struct AWidgetData instance.
+		*/
+		public method isLayout takes nothing returns boolean
+			return this.m_isLayout
+		endmethod
+
+		public static method create takes integer data, boolean isLayout returns thistype
+			local thistype this = thistype.allocate()
+			set this.m_data = data
+			set this.m_isLayout = isLayout
+			return this
+		endmethod
+	endstruct
+
+	/**
+	* Note that this struct repesents a static layout!
+	* Either call @method ALayout.orderHorizontally or @method ALayout.orderVertically to order all contained widgets and layouts.
+	* Do this before showing any of them to set their right position.
+	* After they were shown first time you shouldn't change their x and y values since widgets are static (because of trackables).
+	* Besides you should note that layouts use @method AWidget.sizeX and @method AWidget.sizeY to get widget's size.
+	* @todo Untested!
+	*/
 	struct ALayout
-		//private static constant members
-		private static constant integer maxSizeX = 1000
-		private static constant integer maxSizeY = 1000
-		//start members
-		private AMainWindow mainWindow
-		private boolean horizontal
-		//members
-		private boolean array usedX[ALayout.maxSizeX]
-		private boolean array usedY[ALayout.maxSizeY]
-		private integer nextX
-		private integer nextY
+		// start members
+		private AMainWindow m_mainWindow
+		private real m_x
+		private real m_y
+		// members
+		private real m_sizeX
+		private real m_sizeY
+		private AIntegerVector m_members
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ALayout\"")
 
-		public method createWidget takes integer sizeX, integer sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AWidget
-			if (not this.prepareForNext(sizeX, sizeY)) then
-				debug call this.print("Was unable to get place for new widget.")
-				return 0
+		// start members
+
+		public method mainWindow takes nothing returns AMainWindow
+			return this.m_mainWindow
+		endmethod
+
+		public method x takes nothing returns real
+			return this.m_x
+		endmethod
+
+		public method y takes nothing returns real
+			return this.m_y
+		endmethod
+
+		// members
+
+		public method sizeX takes nothing returns real
+			return this.m_sizeX
+		endmethod
+
+		public method sizeY takes nothing returns real
+			return this.m_sizeY
+		endmethod
+
+		// methods
+
+		public method addWidget takes AWidget whichWidget returns nothing
+static if (DEBUG_MODE) then
+			if (whichWidget.mainWindow() != this.m_mainWindow) then
+				call this.print("Widget " + I2S(whichWidget) + " has not the same main window (id " + I2S(whichWidget.mainWindow()) + ").")
 			endif
-			return AWidget.create(this.mainWindow, this.nextX, this.nextY, sizeX, sizeY, onHitAction, onTrackAction)
+endif
+			call this.m_members.pushBack(ALayoutMemberData.create(whichWidget, false))
 		endmethod
 
-		public method createButton takes integer sizeX, integer sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AButton
-			if (not this.prepareForNext(sizeX, sizeY)) then
-				debug call this.print("Was unable to get place for new button.")
-				return 0
+		public method addLayout takes ALayout whichLayout returns nothing
+static if (DEBUG_MODE) then
+			if (whichLayout.mainWindow() != this.m_mainWindow) then
+				call this.print("Layout " + I2S(whichLayout) + " has not the same main window (id " + I2S(whichLayout.mainWindow()) + ").")
 			endif
-			return AButton.create(this.mainWindow, this.nextX, this.nextY, sizeX, sizeY, onHitAction, onTrackAction)
+endif
+			call this.m_members.pushBack(ALayoutMemberData.create(whichLayout, true))
 		endmethod
 
-		public method createText takes integer sizeX, integer sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AText
-			if (not this.prepareForNext(sizeX, sizeY)) then
-				debug call this.print("Was unable to get place for new text.")
-				return 0
-			endif
-			return AButton.create(this.mainWindow, this.nextX, this.nextY, sizeX, sizeY, onHitAction, onTrackAction)
-		endmethod
-
-		public method createImage takes string file, integer sizeX, integer sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AImage
-			if (not this.prepareForNext(sizeX, sizeY)) then
-				debug call this.print("Was unable to get place for new image.")
-				return 0
-			endif
-			return AImage.create(file, this.mainWindow, this.nextX, this.nextY, sizeX, sizeY, onHitAction, onTrackAction)
-		endmethod
-
-		private method checkForPlace takes integer x, integer y, integer sizeX, integer sizeY returns boolean
-			local integer i = x
-			local integer j
-			local integer exitValue0 = x + sizeX
-			local integer exitValue1 = y + sizeY
-			loop
-				exitwhen (i == exitValue0)
-				set j = y
-				loop
-					exitwhen (j == exitValue1)
-					if (this.usedX[i] or this.usedY[j]) then
-						return false
-					endif
-					set j = j + 1
-				endloop
-				set i = i + 1
-			endloop
-			return true
-		endmethod
-
-		private method reservePlace takes integer x, integer y, integer sizeX, integer sizeY returns nothing
-			local integer i = x
-			loop
-				exitwhen (i == sizeX)
-				set j = y
-				loop
-					exitwhen (j == sizeY)
-					set this.usedX[i] = true
-					set this.usedY[j] = true
-					set j = j + 1
-				endloop
-				set i = i + 1
-			endloop
-		endmethod
-
-		private method prepareForNext takes integer sizeX, integer sizeY returns boolean
+		public method orderHorizontally takes nothing returns nothing
+			local real x = this.m_x
+			local real y = this.m_y
 			local integer i = 0
-			local integer j
-			local boolean found = false
-			if (this.horizontal) then
-				loop
-					exitwhen (found or i == this.mainWindow.getSizeX())
-					set j = 0
-					loop
-						exitwhen (j == this.mainWindow.getSizeY())
-						if (not this.usedX[i] and not this.usedY[j]) then
-							set found = checkForPlace(i, j, sizeX, sizeY)
-							exitwhen (found) //exiting boths loops?
-						endif
-						set j = j + 1
-						endloop
-					endif
-					set i = i + 1
-				endloop
-			else
-				loop
-					exitwhen (found or i == this.mainWindow.getSizeY())
-					set j = 0
-					loop
-						exitwhen (j == this.mainWindow.getSizeX())
-						if (not this.usedX[j] and not this.usedY[i]) then
-							set found = checkForPlace(i, j, sizeX, sizeY)
-							exitwhen (found) //exiting boths loops?
-						endif
-						set j = j + 1
-						endloop
-					endif
-					set i = i + 1
-				endloop
-			endif
-
-			//if (not found) then
-				//set this.nextX = -1.0
-				//set this.nextY = -1.0
-			if (this.horizontal) then
-				set this.nextX = i
-				set this.nextY = j
-			else
-				set this.nextX = j
-				set this.nextY = i
-			endif
-			call reservePlace(this.nextX, this.nextY, sizeX, sizeY)
-			return found
+			loop
+				exitwhen (i == this.m_members.size())
+				if (ALayoutMemberData(this.m_members[i]).isLayout()) then
+					set thistype(ALayoutMemberData(this.m_members[i]).data()).m_x = x
+					call thistype(ALayoutMemberData(this.m_members[i]).data()).orderHorizontally()
+					set x = x + thistype(ALayoutMemberData(this.m_members[i]).data()).sizeX()
+					set this.m_sizeY = RMaxBJ(this.m_sizeY, thistype(ALayoutMemberData(this.m_members[i]).data()).sizeY())
+				else
+					call AWidget(ALayoutMemberData(this.m_members[i]).data()).setX(x)
+					call AWidget(ALayoutMemberData(this.m_members[i]).data()).setX(y)
+					set x = x + AWidget(ALayoutMemberData(this.m_members[i]).data()).sizeX()
+					set this.m_sizeY = RMaxBJ(this.m_sizeY, AWidget(ALayoutMemberData(this.m_members[i]).data()).sizeY())
+				endif
+				set i = i + 1
+			endloop
+			set this.m_sizeX = x - this.m_x
 		endmethod
 
+		public method orderVertically takes nothing returns nothing
+			debug call this.printMethodError("orderVertically", "Not implemented yet.")
+		endmethod
 
-		public static method create takes AMainWindow mainWindow, boolean horizontal returns ALayout
-			local ALayout this = ALayout.allocate()
+		/**
+		* @param X Relative x coordinate to the main window one's.
+		* @param Y Relative y coordinate to the main window one's.
+		*/
+		public static method create takes AMainWindow mainWindow, real x, real y returns thistype
+			local thistype this = thistype.allocate()
 			//start members
-			set this.mainWindow = mainWindow
-			set this.horizontal = horizontal
-
-			debug if (mainWindow.getSizeX() > ALayout.maxSizeX) then
-				debug call this.print("Size x is smaller than the size of its main window.")
-			debug elseif (mainWindow.getSizeY() > ALayout.maxSizeY) then
-				debug call this.print("Size y is smaller than the size of its main window.")
-			debug endif
+			set this.m_mainWindow = mainWindow
+			set this.m_x = x
+			set this.m_y = y
+			// members
+			set this.m_sizeX = 0.0
+			set this.m_sizeY = 0.0
+			set this.m_members = AIntegerVector.create()
 
 			return this
+		endmethod
+
+		public method onDestroy takes nothing returns nothing
+			// members
+			call this.m_members.destroy()
 		endmethod
 	endstruct
 

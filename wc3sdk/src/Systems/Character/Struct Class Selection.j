@@ -53,9 +53,9 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				call this.selectRandomClass()
 			else
 				call ClearScreenMessagesForPlayer(this.m_user)
-				//call SetUserInterfaceForPlayer(this.m_user, false, true)
-				call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
-				call MultiboardMinimize(this.m_infoSheet, false)
+				call SetUserInterfaceForPlayer(this.m_user, false, true)
+				//call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
+				//call MultiboardMinimize(this.m_infoSheet, false)
 				call this.createUnit()
 			endif
 		endmethod
@@ -64,7 +64,11 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			local integer count = 3
 			local integer i
 			local multiboarditem multiboardItem
-			call MultiboardClear(this.m_infoSheet)
+			//call MultiboardClear(this.m_infoSheet) // clears not everything?!
+			call DestroyMultiboard(this.m_infoSheet)
+			set this.m_infoSheet = null
+			set this.m_infoSheet = CreateMultiboard()
+			call MultiboardSetItemsWidth(this.m_infoSheet, 0.40) /// @todo Increase size if description has large lines.
 			call MultiboardSetColumnCount(this.m_infoSheet, 1)
 
 			if (this.m_class.abilities() > 0) then
@@ -137,6 +141,8 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 					set i = i + 1
 				endloop
 			endif
+			call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
+			call MultiboardMinimize(this.m_infoSheet, false)
 		endmethod
 
 		private method createUnit takes nothing returns nothing
@@ -151,8 +157,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call PauseUnit(this.m_classUnit, true)
 			call SetUnitPathing(this.m_classUnit, false)
 			//refresh position
-			call SetUnitX(this.m_classUnit, thistype.m_x)
-			call SetUnitY(this.m_classUnit, thistype.m_y)
+			call SetUnitPosition(this.m_classUnit, thistype.m_x, thistype.m_y)
 			//Für andere Spieler unsichtbar machen
 			set i = 0
 			loop
@@ -176,9 +181,8 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or (GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT and ACharacter.shareOnPlayerLeaves())) then
 				call character.shareControl(true)
 			endif
-			//call SetUserInterfaceForPlayer(this.m_user, false, false)
+			call SetUserInterfaceForPlayer(this.m_user, false, false)
 			call ResetToGameCameraForPlayer(this.m_user, 0.0)
-			//call PanCameraToForPlayer(this.m_user, this.m_startX, this.m_startY) ///WAAAAA
 			call character.setClass(this.m_class)
 			call this.m_selectClassAction.execute(character, this.m_class)
 			call this.destroy()
@@ -316,7 +320,6 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 		private method createInfoSheet takes nothing returns nothing
 			set this.m_infoSheet = CreateMultiboard()
-			call MultiboardSetItemsWidth(this.m_infoSheet, 0.20)
 		endmethod
 
 		public static method create takes player user, real startX, real startY, real startFacing, AClassSelectionSelectClassAction selectClassAction returns thistype

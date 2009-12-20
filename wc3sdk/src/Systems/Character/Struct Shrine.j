@@ -38,7 +38,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		//methods
 
 		public method enableForCharacter takes ACharacter character, boolean showMessage returns nothing
-			local player user = character.user()
+			local player user = character.player()
 			if (ACharacter.playerCharacter(user).shrine() != 0) then
 				call ACharacter.playerCharacter(user).shrine().disableForCharacter(ACharacter.playerCharacter(user)) // disable old
 			endif

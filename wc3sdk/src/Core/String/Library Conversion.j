@@ -1,6 +1,6 @@
 library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 
-	/** 
+	/**
 	* Converts an ASCII char to an integer.
 	* ASCII is the American Keyboard Standard.
 	* Conversion of a char to ASCII works with the integer type: 'a' = 97.
@@ -153,7 +153,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	//! runtextmacro AStringArgumentMacro("integer", "Integer", "i", "I2S")
 	//! runtextmacro AStringArgumentMacro("real", "Real", "r", "R2S")
 	//! runtextmacro AStringArgumentMacro("string", "String", "s", "")
-	
+
 	/// @param width Width of argument string in characters (if it is too short there will be inserted space characters).
 	function RealArgW takes string whichString, real value, integer width, integer precision returns string
 			local string result = whichString
@@ -217,11 +217,11 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 			set result = result + SubString(whichString, i - maxLineLength, i) + "|n"
 			set i = i + maxLineLength
 		endloop
-		
+
 		if (i != StringLength(whichString)) then
 			set result = result + SubString(whichString, i - maxLineLength, StringLength(whichString))
 		endif
-		
+
 		return result
 	endfunction
 

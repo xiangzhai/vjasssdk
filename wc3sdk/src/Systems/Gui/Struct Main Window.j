@@ -14,8 +14,8 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 
 	struct AMainWindow
 		//static start members
-		private static camerasetup cameraSetup
-		private static string tooltipSoundPath
+		private static camerasetup m_cameraSetup
+		private static string m_tooltipSoundPath
 		//dynamic members
 		private AMainWindowOnShowCondition m_onShowCondition
 		private AMainWindowOnShowAction m_onShowAction
@@ -81,6 +81,9 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			return this.m_onHideAction
 		endmethod
 
+		/**
+		* @param tooltipX If this value is less than 0.0 tooltip x will be set to corresponding widget's x.
+		*/
 		public method setTooltipX takes real tooltipX returns nothing
 			set this.m_tooltipX = tooltipX
 		endmethod
@@ -89,6 +92,9 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			return this.m_tooltipX
 		endmethod
 
+		/**
+		* @param tooltipY If this value is less than 0.0 tooltip y will be set to corresponding widget's y.
+		*/
 		public method setTooltipY takes real tooltipY returns nothing
 			set this.m_tooltipY = tooltipY
 		endmethod
@@ -137,20 +143,14 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			return this.m_isShown
 		endmethod
 
-		//convenience methods
-
-		public method user takes nothing returns player
-			return this.m_gui.user()
-		endmethod
-
 		//methods
 
 		public method getX takes real x returns real
-			return (this.m_x + x)
+			return this.m_x + x
 		endmethod
 
 		public method getY takes real y returns real
-			return (this.m_y - y)
+			return this.m_y - y
 		endmethod
 
 		public method enableShortcut takes nothing returns nothing
@@ -169,27 +169,42 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			call DisableTrigger(this.m_shortcutTrigger)
 		endmethod
 
-		public method showTooltip takes AWidget usedWidget returns nothing
+		public method showTooltip takes AWidget whichWidget returns nothing
+			local real x
+			local real y
 			if (this.m_tooltip == null) then
 				set this.m_tooltip = CreateTextTag()
 				call SetTextTagVisibility(this.m_tooltip, false)
 			endif
-			call SetTextTagTextBJ(this.m_tooltip, usedWidget.tooltip(), usedWidget.tooltipSize())
-			call SetTextTagPos(this.m_tooltip, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 0.0)
-			call ShowTextTagForPlayer(this.user(), this.m_tooltip, true)
+			call SetTextTagTextBJ(this.m_tooltip, whichWidget.tooltip(), whichWidget.tooltipSize())
+
+			if (this.m_tooltipX < 0.0) then
+				set x = this.getX(whichWidget.x())
+			else
+				set x = this.getX(this.m_tooltipX)
+			endif
+
+			if (this.m_tooltipY < 0.0) then
+				set y = this.getY(whichWidget.y())
+			else
+				set y = this.getY(this.m_tooltipY)
+			endif
+
+			call SetTextTagPos(this.m_tooltip, x, y, 0.0)
+			call ShowTextTagForPlayer(this.gui().player(), this.m_tooltip, true)
 
 			if (this.m_tooltipBackgroundImageFilePath != null) then // each time create a new image, since path could be changed
-				set this.m_tooltipBackground = CreateImageForPlayer(this.user(), this.m_tooltipBackgroundImageFilePath, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 10.0, 50.0, 50.0) /// @todo Setup correct size to tooltip text, should be higher than normal images
+				set this.m_tooltipBackground = CreateImageForPlayer(this.gui().player(), this.m_tooltipBackgroundImageFilePath, this.getX(this.m_tooltipX), this.getY(this.m_tooltipY), 10.0, 50.0, 50.0) /// @todo Setup correct size to tooltip text, should be higher than normal images
 				call ShowImage(this.m_tooltipBackground, true)
 			endif
-			if (thistype.tooltipSoundPath != null) then
-				call PlaySoundFileForPlayer(this.user(), thistype.tooltipSoundPath)
+			if (thistype.m_tooltipSoundPath != null) then
+				call PlaySoundFileForPlayer(this.gui().player(), thistype.m_tooltipSoundPath)
 			endif
 		endmethod
 
 		public method hideTooltip takes nothing returns nothing
 			if (this.m_tooltip != null) then
-				call ShowTextTagForPlayer(this.user(), this.m_tooltip, false)
+				call ShowTextTagForPlayer(this.gui().player(), this.m_tooltip, false)
 			endif
 			if (this.m_tooltipBackground != null) then
 				call DestroyImage(this.m_tooltipBackground)
@@ -209,10 +224,10 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			call this.m_gui.savePlayerData()
 			call FogModifierStop(this.m_blackMaskModifier)
 			call FogModifierStart(this.m_visibilityModifier)
-			call ClearScreenMessagesForPlayer(this.user())
-			call CameraSetupApplyForPlayer(false, thistype.cameraSetup, this.user(), 0.0)
-			call PanCameraToTimedForPlayer(this.user(), x, y, 0.0)
-			call SetCameraBoundsToPointForPlayer(this.user(), x, y) /// @todo DEBUG
+			call ClearScreenMessagesForPlayer(this.gui().player())
+			call CameraSetupApplyForPlayer(false, thistype.m_cameraSetup, this.gui().player(), 0.0)
+			call PanCameraToTimedForPlayer(this.gui().player(), x, y, 0.0)
+			call SetCameraBoundsToPointForPlayer(this.gui().player(), x, y) /// @todo DEBUG
 			//widgets
 			set i = 0
 			loop
@@ -237,8 +252,8 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 				return
 			endif
 
-			call ResetCameraBoundsToMapRectForPlayer(this.user())
-			call ResetToGameCameraForPlayer(this.user(), 0.0)
+			call ResetCameraBoundsToMapRectForPlayer(this.gui().player())
+			call ResetToGameCameraForPlayer(this.gui().player(), 0.0)
 			call FogModifierStop(this.m_visibilityModifier)
 			call FogModifierStart(this.m_blackMaskModifier)
 			call this.m_gui.loadPlayerData() /// @todo DESYNC
@@ -288,14 +303,18 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_shortcutTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_shortcutTrigger, this.m_shortcut, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.gui().player(), this.m_shortcutTrigger, this.m_shortcut, true)
 			set triggerAction = TriggerAddAction(this.m_shortcutTrigger, function thistype.triggerActionPressShortcut)
 			call AHashTable.global().setHandleInteger(this.m_shortcutTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
-		/// @param shortcut If this value is -1 main window won't have any shortcut.
+		/**
+		* @param x Top left edge x.
+		* @param y Top left edge y.
+		* @param shortcut If this value is -1 main window won't have any shortcut.
+		*/
 		public static method create takes AGui gui, real x, real y, real sizeX, real sizeY, boolean useShortcuts, integer shortcut returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
@@ -303,13 +322,23 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_onShowAction = 0
 			set this.m_onHideCondition = 0
 			set this.m_onHideAction = 0
-			set this.m_tooltipX = 0.0
-			set this.m_tooltipY = 0.0
+			set this.m_tooltipX = -1.0
+			set this.m_tooltipY = -1.0
 			set this.m_tooltipBackgroundImageFilePath = null
 			//start members
 			set this.m_gui = gui
+static if (DEBUG_MODE) then
+			if (not RectContainsCoords(GetPlayableMapRect(), x, y)) then
+				call this.print("X and y aren't contained by playable map rect.")
+			endif
+endif
 			set this.m_x = x //insert a debug if the coordinates are out of map range
 			set this.m_y = y
+static if (DEBUG_MODE) then
+			if (not RectContainsCoords(GetPlayableMapRect(), x + sizeX, y - sizeY)) then
+				call this.print("X size and y size aren't contained by playable map rect.")
+			endif
+endif
 			set this.m_sizeX = sizeX
 			set this.m_sizeY = sizeY
 			set this.m_useShortcuts = useShortcuts
@@ -321,14 +350,16 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_tooltipBackground = null
 			set this.m_isShown = false
 			set this.m_fogModifierRect = RectFromPointSize(this.m_x + this.m_sizeX / 2.0, this.m_y - this.m_sizeY / 2.0, this.m_sizeX, this.m_sizeY)
-			set this.m_visibilityModifier = CreateFogModifierRect(this.user(), FOG_OF_WAR_VISIBLE, this.m_fogModifierRect, true, false)
-			set this.m_blackMaskModifier = CreateFogModifierRect(this.user(), FOG_OF_WAR_MASKED, this.m_fogModifierRect, true, false)
+			set this.m_visibilityModifier = CreateFogModifierRect(this.gui().player(), FOG_OF_WAR_VISIBLE, this.m_fogModifierRect, true, false)
+			set this.m_blackMaskModifier = CreateFogModifierRect(this.gui().player(), FOG_OF_WAR_MASKED, this.m_fogModifierRect, true, false)
 			call FogModifierStart(this.m_blackMaskModifier)
 
 			if (shortcut != -1) then
-				debug if (not KeyIsValid(shortcut)) then
-					debug call this.print("Shortcut has no valid key value.")
-				debug endif
+static if (DEBUG_MODE) then
+				if (not KeyIsValid(shortcut)) then
+					call this.print("Shortcut has no valid key value.")
+				endif
+endif
 				call this.createShortcutTrigger()
 			endif
 			return this
@@ -369,11 +400,13 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			call this.m_widgets.destroy()
 		endmethod
 
-		/// @param cameraSetup The camera setup which is used as the players view on the main window.
-		/// @param tooltipSoundPath The path of the sound which is played when player drags the cursor over the related object. If this value is null there won't be played any sound.
+		/**
+		* @param cameraSetup The camera setup which is used as the players view on the main window.
+		* @param tooltipSoundPath Path of the sound which is played when player drags the cursor over the related object (which has its own tooltip). If this value is null there won't be played any sound.
+		*/
 		public static method init takes camerasetup cameraSetup, string tooltipSoundPath returns nothing
-			set thistype.cameraSetup = cameraSetup
-			set thistype.tooltipSoundPath = tooltipSoundPath
+			set thistype.m_cameraSetup = cameraSetup
+			set thistype.m_tooltipSoundPath = tooltipSoundPath
 
 			if (tooltipSoundPath != null) then
 				call PreloadSoundFile(tooltipSoundPath) //ALibraryEnvironmentSound

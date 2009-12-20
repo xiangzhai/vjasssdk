@@ -3,9 +3,9 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 
 	/**
 	* Adds a dynamic third person camera to the game.
-	* Its main purpose is to enable the user a highly configurable camera without the usual 
-	* limitations of third person cameras. Using this camera you can basically use any kind 
-	* of terrain on your map without caring about the cam falling below the terrain or 
+	* Its main purpose is to enable the user a highly configurable camera without the usual
+	* limitations of third person cameras. Using this camera you can basically use any kind
+	* of terrain on your map without caring about the cam falling below the terrain or
 	* clipping parts of the terrain.
 	* Note that you have to initialize @struct AArrowKeys before initializing this struct.
 	* @author Opossum
@@ -57,43 +57,43 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 		private unit m_unit
 		private boolean m_isEnabled
 		private timer m_firstPan
-		
+
 		//dynamic members
-		
+
 		public method setCamAoa takes real camAoa returns nothing
 			set this.m_camAoa = camAoa
 		endmethod
-		
+
 		public method camAoa takes nothing returns real
 			return this.m_camAoa
 		endmethod
-		
+
 		public method setCamRot takes real camRot returns nothing
 			set this.m_camRot = camRot
 		endmethod
-		
+
 		public method camRot takes nothing returns real
 			return this.m_camRot
 		endmethod
-		
+
 		//start members
-		
+
 		public method player takes nothing returns player
 			return this.m_player
 		endmethod
-		
+
 		//members
-		
+
 		public method unit takes nothing returns unit
 			return this.m_unit
 		endmethod
-		
+
 		public method isEnabled takes nothing returns boolean
 			return this.m_isEnabled
 		endmethod
-		
+
 		//methods
-		
+
 		public method enable takes unit whichUnit, real firstPan returns nothing
 			set this.m_unit = whichUnit
 			set this.m_isEnabled = true
@@ -105,7 +105,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 				endif
 			endif
 		endmethod
-		
+
 		public method disable takes nothing returns nothing
 			if (TimerGetRemaining(this.m_firstPan) > 0.0) then
 				call PauseTimer(this.m_firstPan)
@@ -113,25 +113,25 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			set this.m_unit = null
 			set this.m_isEnabled = false
 		endmethod
-		
+
 		public method pause takes nothing returns nothing
 			call PauseTimer(this.m_firstPan)
 			set this.m_isEnabled = false
 		endmethod
-		
+
 		public method resume takes nothing returns nothing
 			call ResumeTimer(this.m_firstPan)
 			set this.m_isEnabled = true
 		endmethod
-		
+
 		public method resetCamAoa takes nothing returns nothing
 			set this.m_camAoa = thistype.defaultAoa
 		endmethod
-		
+
 		public method resetCamRot takes nothing returns nothing
 			set this.m_camRot = thistype.defaultRot
 		endmethod
-		
+
 		private method applyCam takes real duration returns nothing
 			local real aoa = GetCameraField(CAMERA_FIELD_ANGLE_OF_ATTACK) - 2 * bj_PI
 			local real offset = thistype.interpolateOffset(aoa)
@@ -145,7 +145,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			local real r = thistype.terrainSampling
 			local real dx
 			local real dy
-			
+
 			if (thistype.m_useArrowKeys) then
 				if (thistype.inverted) then
 					set this.m_camRot = thistype.cappedReal(this.m_camRot + (AArrowKeys.playerArrowKeys(this.m_player).horizontal() + AArrowKeys.playerArrowKeys(this.m_player).horizontalQuickPress()) * thistype.rotInterval, -thistype.maxRot, thistype.maxRot)
@@ -156,24 +156,24 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 				set this.m_camAoa = thistype.cappedReal(this.m_camAoa - (AArrowKeys.playerArrowKeys(this.m_player).vertical() + AArrowKeys.playerArrowKeys(this.m_player).verticalQuickPress()) * thistype.aoaInterval, thistype.minAoa, thistype.maxAoa)
 				call AArrowKeys.playerArrowKeys(this.m_player).setVerticalQuickPress(0)
 			endif
-			
+
 			call SetCameraField(CAMERA_FIELD_ROTATION, GetUnitFacing(this.m_unit) + this.m_camRot, duration)
 			call SetCameraField(CAMERA_FIELD_FIELD_OF_VIEW, thistype.fieldOfView, duration)
 			call SetCameraField(CAMERA_FIELD_FARZ, thistype.farZ, duration)
 			call SetCameraField(CAMERA_FIELD_TARGET_DISTANCE, thistype.interpolateDistance(aoa), duration)
-			
+
 			call PanCameraToTimed(GetUnitX(this.m_unit) + offset * Cos(bj_DEGTORAD*GetUnitFacing(this.m_unit)), GetUnitY(this.m_unit) + offset * Sin(bj_DEGTORAD*GetUnitFacing(this.m_unit)), duration)
-			
+
 			set newx = GetCameraTargetPositionX()
 			set newy = GetCameraTargetPositionY()
 			set maxd = thistype.cliffDistance + GetCameraField(CAMERA_FIELD_TARGET_DISTANCE)
 			set dx = -Cos(GetCameraField(CAMERA_FIELD_ROTATION))*r
 			set dy = -Sin(GetCameraField(CAMERA_FIELD_ROTATION))*r
-			
+
 			call MoveLocation(thistype.m_location, newx, newy)
 			set tarz = GetCameraTargetPositionZ()
 			call SetCameraField(CAMERA_FIELD_ZOFFSET, GetCameraField(CAMERA_FIELD_ZOFFSET) + GetLocationZ(thistype.m_location) + thistype.zOffset + GetUnitFlyHeight(this.m_unit) - tarz, duration)
-				
+
 			loop
 				exitwhen (r > maxd)
 				set newx = newx + dx
@@ -191,7 +191,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			endif
 			call SetCameraField(CAMERA_FIELD_ANGLE_OF_ATTACK, newaoa, duration)
 		endmethod
-		
+
 		private static method create takes player usedPlayer returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
@@ -204,7 +204,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			set this.m_firstPan = CreateTimer()
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			//start members
 			set this.m_player = null
@@ -214,7 +214,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			call DestroyTimer(this.m_firstPan)
 			set this.m_firstPan = null
 		endmethod
-		
+
 		private static method timerFunctionRefresh takes nothing returns nothing
 			local player localPlayer = GetLocalPlayer()
 			local integer playerId = GetPlayerId(localPlayer)
@@ -226,7 +226,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 				endif
 			endif
 		endmethod
-		
+
 		public static method init takes boolean useArrowKeys returns nothing
 			//static start members
 			set thistype.m_useArrowKeys = useArrowKeys
@@ -239,7 +239,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			set thistype.m_timer = CreateTimer()
 			call TimerStart(thistype.m_timer, thistype.timeout, true, function thistype.timerFunctionRefresh)
 		endmethod
-		
+
 		public static method cleanUp takes nothing returns nothing
 			call PauseTimer(thistype.m_timer)
 			call RemoveLocation(thistype.m_location)
@@ -247,14 +247,14 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			call DestroyTimer(thistype.m_timer)
 			set thistype.m_timer = null
 		endmethod
-		
+
 		public static method playerThirdPersonCamera takes player user returns thistype
 			if (thistype.m_playerThirdPersonCamera[GetPlayerId(user)] == 0) then
 				set thistype.m_playerThirdPersonCamera[GetPlayerId(user)] = thistype.create(user)
 			endif
 			return thistype.m_playerThirdPersonCamera[GetPlayerId(user)]
 		endmethod
-		
+
 		/// Functions for distance and offset. These are linear mathematical functions y = mx+t.
 		private static method interpolateDistance takes real angleOfAttack returns real
 			if (angleOfAttack <= thistype.distanceAoaMax * bj_DEGTORAD) then
@@ -273,7 +273,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			endif
 			return thistype.m_offsetM * angleOfAttack + thistype.m_offsetT
 		endmethod
-		
+
 		 private static method cappedReal takes real r, real lowBound, real highBound returns real
 			if r < lowBound then
 				return lowBound

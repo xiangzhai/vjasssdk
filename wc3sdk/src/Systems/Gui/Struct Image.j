@@ -2,31 +2,32 @@ library AStructSystemsGuiImage requires ALibraryCoreInterfaceImage, AStructSyste
 
 	/// Uses the default Jass type @type image to treat images in GUIs.
 	struct AImage extends AWidget
-		//dynamic members
+		// dynamic members
 		private string m_file
 		private integer m_red
 		private integer m_green
 		private integer m_blue
 		private integer m_alpha
-		//members
+		// members
 		private image m_image
 
-		//dynamic members
-		
+		// dynamic members
+
+		/// @todo Bugged in debug mode, causes game crash!
 		public method setFile takes string file returns nothing
 			set this.m_file = file
-			if (this.m_image != null) then //file is not dynamic :-(
+			if (this.m_image != null) then // file is not dynamic :-(
 				call DestroyImage(this.m_image)
 				set this.m_image = null
 			endif
-			set this.m_image = CreateImageForPlayer(this.user(), file, this.mainWindow().getX(this.x()), this.mainWindow().getY(this.y()), 5.0, this.sizeX(), this.sizeY()) //0.0 instead of 5.0
+			set this.m_image = CreateImageForPlayer(this.mainWindow().gui().player(), file, this.mainWindow().getX(this.x()), this.mainWindow().getY(this.y()), 0.0, this.sizeX(), this.sizeY())
 			call ShowImage(this.m_image, this.isShown())
 		endmethod
-		
+
 		public method file takes nothing returns string
 			return this.m_file
 		endmethod
-			
+
 		public method setColour takes integer red, integer green, integer blue, integer alpha returns nothing
 			set this.m_red = red
 			set this.m_green = green
@@ -67,9 +68,9 @@ library AStructSystemsGuiImage requires ALibraryCoreInterfaceImage, AStructSyste
 			endif
 		endmethod
 
-		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AImage
-			local AImage this = AImage.allocate(mainWindow, x, y, sizeX, sizeY, onHitAction, onTrackAction)
-			//members
+		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, string modelFilePath, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns thistype
+			local thistype this = thistype.allocate(mainWindow, x, y, sizeX, sizeY, modelFilePath, onHitAction, onTrackAction)
+			// members
 			set this.m_image = null
 
 			return this

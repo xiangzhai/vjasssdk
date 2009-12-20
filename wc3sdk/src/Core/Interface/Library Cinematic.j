@@ -11,7 +11,7 @@ library ALibraryCoreInterfaceCinematic
 		set localPlayer = null
 		set playerColour = null
 	endfunction
-	
+
 	/**
 	* @author Tamino Dauth
 	* @state untested
@@ -28,7 +28,7 @@ library ALibraryCoreInterfaceCinematic
 		call SetCinematicScene(unitType, playerColor, name, text, time, time)
 		set playerColor = null
 	endfunction
-	
+
 	/**
 	* @author Tamino Dauth
 	* @state untested
@@ -38,7 +38,7 @@ library ALibraryCoreInterfaceCinematic
 		call TransmissionFromUnitType(GetUnitTypeId(usedUnit), owner, GetUnitName(usedUnit), text, playedSound)
 		set owner = null
 	endfunction
-	
+
 	/**
 	* Shows a transmission with text @param text and sound @param playedSound from unit @param usedUnit for player @param usedPlayer.
 	* @param playedSound If this value is null sound duration will be @global bj_NOTHING_SOUND_DURATION.
@@ -65,14 +65,14 @@ library ALibraryCoreInterfaceCinematic
 		set owner = null
 		set playerColor = null
 	endfunction
-	
+
 	function GetSimpleTransmissionDuration takes sound playedSound returns real
 		if (playedSound != null) then
 			return GetSoundDurationBJ(playedSound)
 		endif
 		return bj_NOTHING_SOUND_DURATION
 	endfunction
-	
+
 	//here it's the same
 	//you don't have to use fucking player forces
 	//we want to use players only!
@@ -92,10 +92,7 @@ library ALibraryCoreInterfaceCinematic
 			call ShowInterface(show, 0.0)
 			call EnableUserControl(control)
 		endif
-		//if (user == localPlayer) then
-			//call EnableUserControl(control) //test
-		//endif
-		set localPlayer = null		
+		set localPlayer = null
 	endfunction
 
 endlibrary

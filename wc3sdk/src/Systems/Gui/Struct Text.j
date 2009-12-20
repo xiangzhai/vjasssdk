@@ -28,7 +28,7 @@ library AStructSystemsGuiText requires ALibraryCoreInterfaceTextTag, AStructSyst
 			set this.m_heightOffset = heightOffset
 			call SetTextTagPos(this.m_textTag, this.mainWindow().getX(this.x()), this.mainWindow().getY(this.y()), heightOffset)
 		endmethod
-		
+
 		public method heightOffset takes nothing returns real
 			return this.m_heightOffset
 		endmethod
@@ -41,11 +41,11 @@ library AStructSystemsGuiText requires ALibraryCoreInterfaceTextTag, AStructSyst
 			set this.m_size = size
 			call SetTextTagTextBJ(this.m_textTag, text, size)
 		endmethod
-		
+
 		public method text takes nothing returns string
 			return this.m_text
 		endmethod
-		
+
 		public method size takes nothing returns real
 			return this.m_size
 		endmethod
@@ -57,7 +57,7 @@ library AStructSystemsGuiText requires ALibraryCoreInterfaceTextTag, AStructSyst
 			set this.m_alpha = alpha
 			call SetTextTagColor(this.m_textTag, red, green, blue, alpha)
 		endmethod
-		
+
 		public method red takes nothing returns integer
 			return this.m_red
 		endmethod
@@ -79,7 +79,7 @@ library AStructSystemsGuiText requires ALibraryCoreInterfaceTextTag, AStructSyst
 			set this.m_angle = angle
 			call SetTextTagVelocityBJ(this.m_textTag, speed, angle)
 		endmethod
-		
+
 		public method speed takes nothing returns real
 			return this.m_speed
 		endmethod
@@ -96,7 +96,7 @@ library AStructSystemsGuiText requires ALibraryCoreInterfaceTextTag, AStructSyst
 		public method fadepoint takes nothing returns real
 			return this.m_fadepoint
 		endmethod
-		
+
 		//Unterbricht die Bewegung.
 		public method setSuspended takes boolean suspended returns nothing
 			set this.m_suspended = suspended
@@ -111,23 +111,23 @@ library AStructSystemsGuiText requires ALibraryCoreInterfaceTextTag, AStructSyst
 
 		public stub method show takes nothing returns nothing
 			call super.show()
-			call ShowTextTagForPlayer(this.user(), this.m_textTag, true)
+			call ShowTextTagForPlayer(this.mainWindow().gui().player(), this.m_textTag, true)
 		endmethod
 
 		public stub method hide takes nothing returns nothing
 			call super.hide()
-			call ShowTextTagForPlayer(this.user(), this.m_textTag, false)
+			call ShowTextTagForPlayer(this.mainWindow().gui().player(), this.m_textTag, false)
 		endmethod
 
-		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AText
-			local AText this = AText.allocate(mainWindow, x, y, sizeX, sizeY, onHitAction, onTrackAction)
+		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, string modelFilePath, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns AText
+			local AText this = AText.allocate(mainWindow, x, y, sizeX, sizeY, modelFilePath, onHitAction, onTrackAction)
 			//dynamic members
 			set this.m_heightOffset = 0.0
 			//members
 			set this.m_textTag = CreateTextTag()
 			call SetTextTagPos(this.m_textTag, mainWindow.getX(x), mainWindow.getY(y), this.m_heightOffset) //Members x and y were set in the allocate method.
 			call SetTextTagVisibility(this.m_textTag, false)
-			
+
 			return this
 		endmethod
 

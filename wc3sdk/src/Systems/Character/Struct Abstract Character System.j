@@ -20,29 +20,19 @@ library AStructSystemsCharacterAbstractCharacterSystem
 		public method character takes nothing returns ACharacter
 			return this.m_character
 		endmethod
-		
+
 		//members
-		
+
 		public method isEnabled takes nothing returns boolean
 			return this.m_isEnabled
 		endmethod
-		
+
 		public method setEnableAgain takes boolean enableAgain returns nothing
 			set this.m_enableAgain = enableAgain
 		endmethod
-		
+
 		public method enableAgain takes nothing returns boolean
 			return this.m_enableAgain
-		endmethod
-
-		//convenience methods
-
-		public method user takes nothing returns player
-			return this.m_character.user()
-		endmethod
-
-		public method unit takes nothing returns unit
-			return this.m_character.unit()
 		endmethod
 
 		//methods
@@ -54,7 +44,7 @@ library AStructSystemsCharacterAbstractCharacterSystem
 		public stub method disable takes nothing returns nothing
 			set this.m_isEnabled = false
 		endmethod
-		
+
 		/// @todo Friend relation to @struct ACharacter, do not use!
 		/// Is called when character unit is changed. Change all registered specific unit events.
 		public stub method changedUnit takes nothing returns nothing

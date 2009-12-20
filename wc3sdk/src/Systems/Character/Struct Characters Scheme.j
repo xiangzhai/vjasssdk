@@ -48,16 +48,20 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 			local integer i
 			local multiboarditem multiboardItem
 			local player user
+			local string columnString
 			set i = 0
 			loop
 				exitwhen (i == thistype.m_maxPlayers)
-				if (thistype.firstColumnExists()) then
-					set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
-				endif
 				set user = Player(i)
 				if ((IsPlayerPlayingUser(user) and ACharacter.playerCharacter(user) != 0) or (ACharacter.shareOnPlayerLeaves() and ACharacter.playerCharacter(user) != 0)) then
-					//refresh name (class - unit name) - level
-					call MultiboardSetItemValue(multiboardItem, thistype.firstColumnString(ACharacter.playerCharacter(user)))
+					if (thistype.firstColumnExists()) then
+						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
+						set columnString = thistype.firstColumnString(ACharacter.playerCharacter(user))
+						call MultiboardSetItemValue(multiboardItem, columnString)
+						call MultiboardSetItemWidth(multiboardItem, StringLength(columnString) * 0.003)
+						call MultiboardReleaseItem(multiboardItem)
+						set multiboardItem = null
+					endif
 
 					if (IsUnitAliveBJ(ACharacter.playerCharacter(user).unit())) then
 						if (thistype.m_experienceLength > 0) then
@@ -94,7 +98,11 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 					endif
 				elseif (not thistype.m_destroyed[i]) then
 					if (thistype.firstColumnExists()) then
+						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
 						call MultiboardSetItemValue(multiboardItem, thistype.m_textLeftGame)
+						call MultiboardSetItemWidth(multiboardItem, StringLength(thistype.m_textLeftGame) * 0.003)
+						call MultiboardReleaseItem(multiboardItem)
+						set multiboardItem = null
 					endif
 
 					if (thistype.m_experienceLength > 0) then
@@ -113,10 +121,6 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 					endif
 
 					set thistype.m_destroyed[i] = true
-				endif
-				if (thistype.firstColumnExists()) then
-					call MultiboardReleaseItem(multiboardItem)
-					set multiboardItem = null
 				endif
 				set i = i + 1
 			endloop
@@ -140,13 +144,13 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 			local multiboarditem multiboardItem
 			local integer column
 			set thistype.m_multiboard = CreateMultiboard()
+			call MultiboardDisplay(thistype.m_multiboard, false)
 			call MultiboardSetTitleText(thistype.m_multiboard, thistype.m_textTitle)
 			set column = thistype.m_experienceLength + thistype.m_hitPointsLength + thistype.m_manaLength
 			if (thistype.firstColumnExists()) then
 				set column = column + 1
 			endif
 			call MultiboardSetColumnCount(thistype.m_multiboard, column)
-			call MultiboardDisplay(thistype.m_multiboard, false)
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
@@ -156,7 +160,6 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 
 					if (thistype.firstColumnExists()) then
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
-						call MultiboardSetItemWidth(multiboardItem, 0.35) /// @todo check it
 						call MultiboardSetItemStyle(multiboardItem, true, false)
 						call MultiboardReleaseItem(multiboardItem)
 						set multiboardItem = null
@@ -173,6 +176,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 						call thistype.m_experienceBar[i].setAllIcons(thistype.m_experienceBarFilePath, true)
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_experienceBar[i].firstFreeField())
 						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
+						//call MultiboardReleaseItem(multiboardItem)
 						call MultiboardSetItemStyle(multiboardItem, false, true)
 						call MultiboardReleaseItem(multiboardItem)
 						//set separator icon
@@ -194,6 +198,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_hitPointsBar[i].firstFreeField())
 						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
+						//call MultiboardReleaseItem(multiboardItem)
 						call MultiboardSetItemStyle(multiboardItem, false, true)
 						call MultiboardReleaseItem(multiboardItem)
 						//set separator icon
@@ -290,7 +295,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 		private static method firstColumnString takes ACharacter character returns string
 			local string text = ""
 			if (thistype.m_showPlayerName) then
-				set text = GetModifiedPlayerName(character.user())
+				set text = GetModifiedPlayerName(character.player())
 			endif
 			if (thistype.m_showUnitName) then
 				set text = text + " [" + GetUnitName(character.unit()) + "]"

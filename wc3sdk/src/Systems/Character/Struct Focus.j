@@ -1,6 +1,7 @@
 /// Do not use this library, it is unfinished!
 library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterAbstractCharacterSystem
 
+	/// @todo Untested!
 	struct AFocus extends AAbstractCharacterSystem
 		//static start members
 		private static real refreshRate
@@ -17,29 +18,29 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		private unit worker
 		private unit target
 		private boolean fixedTarget
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AFocus\"")
 
 		public method enable takes nothing returns nothing
 			call super.enable()
 			call EnableTrigger(this.focusTrigger)
-			call ShowTextTagForPlayer(this.user(), this.textTag, true)
+			call ShowTextTagForPlayer(this.character().player(), this.textTag, true)
 			call EnableTrigger(this.workerTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
 			call super.disable()
 			call DisableTrigger(this.focusTrigger)
-			call ShowTextTagForPlayer(this.user(), this.textTag, false)
+			call ShowTextTagForPlayer(this.character().player(), this.textTag, false)
 			call DisableTrigger(this.workerTrigger)
 		endmethod
 
 		private method isTargetInFocus takes nothing returns boolean
-			if (GetDistanceBetweenUnits(this.unit(), this.target, 0.0, 0.0) > AFocus.range) then
+			if (GetDistanceBetweenUnits(this.character().unit(), this.target, 0.0, 0.0) > AFocus.range) then
 			//Optional kann man auch mit Z-Wert (Extrafunktion) überprfen lassen, würde aber mehr Speicher ziehen
 				return false
 			//Erst überprfen
-			elseif (GetAngleBetweenUnits(this.unit(), this.target) > AFocus.angle) then
+			elseif (GetAngleBetweenUnits(this.character().unit(), this.target) > AFocus.angle) then
 				return false
 			endif
 			return true
@@ -52,8 +53,8 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 			loop
 				set first = FirstOfGroup(usedGroup)
 				exitwhen (first == null)
-				if (this.unit() != first) then //Darf sich nicht selbst anvisieren
-					if ((nearest == null) or (GetDistanceBetweenUnits(this.unit(), first, 0.0, 0.0) < GetDistanceBetweenUnits(this.unit(), nearest, 0.0, 0.0))) then //ALibraryMathsHandle
+				if (this.character().unit() != first) then //Darf sich nicht selbst anvisieren
+					if ((nearest == null) or (GetDistanceBetweenUnits(this.character().unit(), first, 0.0, 0.0) < GetDistanceBetweenUnits(this.character().unit(), nearest, 0.0, 0.0))) then //ALibraryMathsHandle
 						set nearest = first
 					endif
 				endif
@@ -64,7 +65,7 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		private method getTargetName takes nothing returns string
-			local integer state = GetUnitAllianceStateToUnit(this.unit(), this.target)
+			local integer state = GetUnitAllianceStateToUnit(this.character().unit(), this.target)
 			local string colour
 			if (state == bj_ALLIANCE_UNALLIED) then
 				set colour = "|c00ff0000"
@@ -80,23 +81,23 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 			if (AFocus.showText) then
 				call SetTextTagTextBJ(this.textTag, this.getTargetName(), 12.0)
 				call SetTextTagPos(this.textTag, GetUnitX(this.target), GetUnitY(this.target), (GetUnitFlyHeight(this.target) + 70.0))
-				call ShowTextTagForPlayer(this.user(), this.textTag, true)
+				call ShowTextTagForPlayer(this.character().player(), this.textTag, true)
 			endif
 		endmethod
 
 		private method indicateTheTarget takes real red, real green, real blue, real alpha returns nothing
 			if (AFocus.indicateTarget) then
-				call SetUnitVertexColourForPlayer(this.user(), this.target, red, green, blue, alpha)
+				call SetUnitVertexColourForPlayer(this.character().player(), this.target, red, green, blue, alpha)
 			endif
 		endmethod
 
 		private method getNewTarget takes nothing returns nothing
-			local real x1 = GetUnitX(this.unit())
-			local real y1 = GetUnitY(this.unit())
-			local real x3 = GetUnitPolarProjectionX(this.unit(), (GetUnitFacing(this.unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real y3 = GetUnitPolarProjectionY(this.unit(), (GetUnitFacing(this.unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real x4 = GetUnitPolarProjectionX(this.unit(), (GetUnitFacing(this.unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real y4 = GetUnitPolarProjectionY(this.unit(), (GetUnitFacing(this.unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real x1 = GetUnitX(this.character().unit())
+			local real y1 = GetUnitY(this.character().unit())
+			local real x3 = GetUnitPolarProjectionX(this.character().unit(), (GetUnitFacing(this.character().unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real y3 = GetUnitPolarProjectionY(this.character().unit(), (GetUnitFacing(this.character().unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real x4 = GetUnitPolarProjectionX(this.character().unit(), (GetUnitFacing(this.character().unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real y4 = GetUnitPolarProjectionY(this.character().unit(), (GetUnitFacing(this.character().unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
 			local group targetGroup = GetGroupInRectByCoordinates(x1, y1, x1, y1, x3, y3, x4, y4)
 			debug if (IsUnitGroupEmptyBJ(targetGroup)) then
 				debug call Print("Group is empty")
@@ -107,7 +108,7 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 			call DestroyGroup(targetGroup)
 			set targetGroup = null
 			if (this.target == null) then
-				call ShowTextTagForPlayer(this.user(), this.textTag, false)
+				call ShowTextTagForPlayer(this.character().player(), this.textTag, false)
 				return
 			endif
 			call this.showTargetText()
@@ -150,7 +151,7 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		private method createWorkerTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			//set this.worker = CreateUnit(this.getCharacter().user(), AFocus.workerUnitType, 
+			//set this.worker = CreateUnit(this.getCharacter().user(), AFocus.workerUnitType,
 
 			set this.workerTrigger = CreateTrigger()
 			//Noch ausarbeiten

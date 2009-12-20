@@ -29,7 +29,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		private ATalk m_talk //No system
 		private AShrine m_shrine //No system
 		//start members
-		private player m_user
+		private player m_player
 		private unit m_unit
 		//members
 		private trigger m_leaveTrigger
@@ -43,7 +43,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		private AInventory m_inventory
 		private ATalkLog m_talkLog
 		private AIntegerVector m_spells
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ACharacter\"")
 
 		//dynamic members
@@ -87,7 +87,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		/**
 		* @return Returns class of the character. Classes are used by class selection which allows user to choose between different classes/unit types which are during the game.
 		* @see AClass
-		* @see AClassSelection 
+		* @see AClassSelection
 		*/
 		public method class takes nothing returns AClass
 			return this.m_class
@@ -116,12 +116,11 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		//start members
 
 		/**
-		* Each character has its own owner. This must be a human playing player.
-		* Each human playing player can own exact one character.
+		* Each character has its own owner. Each playing player can own exact one character.
 		* @return Returns character's owning player
 		*/
-		public method user takes nothing returns player
-			return this.m_user
+		public method player takes nothing returns player
+			return this.m_player
 		endmethod
 
 		/**
@@ -137,15 +136,15 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public method view takes nothing returns AView
 			return this.m_view
 		endmethod
-		
+
 		public method focus takes nothing returns AFocus
 			return this.m_focus
 		endmethod
-		
+
 		public method movement takes nothing returns AMovement
 			return this.m_movement
 		endmethod
-		
+
 		public method fight takes nothing returns AFight
 			return this.m_fight
 		endmethod
@@ -155,11 +154,11 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public method revival takes nothing returns ARevival
 			return this.m_revival
 		endmethod
-		
+
 		public method inventory takes nothing returns AInventory
 			return this.m_inventory
 		endmethod
-		
+
 		public method talkLog takes nothing returns ATalkLog
 			return this.m_talkLog
 		endmethod
@@ -167,11 +166,11 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public method spellCount takes nothing returns integer
 			return this.m_spells.size()
 		endmethod
-		
+
 		//convenience methods
 
 		public method name takes nothing returns string
-			return GetPlayerName(this.m_user)
+			return GetPlayerName(this.m_player)
 		endmethod
 
 		/**
@@ -181,7 +180,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		* @param message The message text.
 		*/
 		public method displayMessage takes integer messageType, string message returns nothing
-			call DisplayTimedTextToPlayer(this.m_user, 0.0, 0.0, 6.0, message)
+			call DisplayTimedTextToPlayer(this.m_player, 0.0, 0.0, 6.0, message)
 		endmethod
 
 		/// Displays a message to the owners of all other characters.
@@ -192,7 +191,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
-				if (user != this.m_user) then
+				if (user != this.m_player) then
 					call thistype.playerCharacter(user).displayMessage(messageType, message)
 				endif
 				set user = null
@@ -207,7 +206,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public method addSkillPoints takes integer skillPoints returns boolean
 			return UnitModifySkillPoints(this.m_unit, skillPoints)
 		endmethod
-		
+
 		public method removeSkillPoints takes integer skillPoints returns boolean
 			return UnitModifySkillPoints(this.m_unit, -skillPoints)
 		endmethod
@@ -229,107 +228,107 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		endmethod
 
 		public method addGold takes integer gold returns nothing
-			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD) + gold)
+			call SetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_GOLD) + gold)
 		endmethod
-		
+
 		public method removeGold takes integer gold returns nothing
-			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD) - gold)
+			call SetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_GOLD, GetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_GOLD) - gold)
 		endmethod
-		
+
 		public method gold takes nothing returns integer
-			return GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_GOLD)
+			return GetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_GOLD)
 		endmethod
 
 		public method addLumber takes integer lumber returns nothing
-			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER) + lumber)
+			call SetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_LUMBER, GetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_LUMBER) + lumber)
 		endmethod
-		
+
 		public method removeLumber takes integer lumber returns nothing
-			call SetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER, GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER) - lumber)
+			call SetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_LUMBER, GetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_LUMBER) - lumber)
 		endmethod
-		
+
 		public method lumber takes nothing returns integer
-			return GetPlayerState(this.m_user, PLAYER_STATE_RESOURCE_LUMBER)
+			return GetPlayerState(this.m_player, PLAYER_STATE_RESOURCE_LUMBER)
 		endmethod
-		
+
 		public method showCinematicFilter takes real duration, blendmode blendMode, string texture, real red0, real green0, real blue0, real transparency0, real red1, real green1, real blue1, real transparency1 returns nothing
-			call ShowGenericCinematicFilterForPlayer(this.m_user, duration, blendMode, texture, red0, green0, blue0, transparency0, red1, green1, blue1, transparency1)
+			call ShowGenericCinematicFilterForPlayer(this.m_player, duration, blendMode, texture, red0, green0, blue0, transparency0, red1, green1, blue1, transparency1)
 		endmethod
 
 		public method showBlackScreenCinematicFilter takes real duration returns nothing
-			call ShowBlackScreenCinematicFilterForPlayer(this.m_user, duration)
+			call ShowBlackScreenCinematicFilterForPlayer(this.m_player, duration)
 		endmethod
-		
+
 		public method setX takes real x returns nothing
 			call SetUnitX(this.m_unit, x)
 		endmethod
-		
+
 		public method setY takes real y returns nothing
 			call SetUnitY(this.m_unit, y)
 		endmethod
-		
+
 		public method setPosition takes real x, real y returns nothing
 			call SetUnitX(this.m_unit, x)
 			call SetUnitY(this.m_unit, y)
 		endmethod
-		
+
 		public method setLocation takes location usedLocation returns nothing
 			call this.setX(GetLocationX(usedLocation))
 			call this.setY(GetLocationY(usedLocation))
 		endmethod
-		
+
 		public method setRect takes rect usedRect returns nothing
 			call this.setX(GetRectCenterX(usedRect))
 			call this.setY(GetRectCenterY(usedRect))
 		endmethod
-		
+
 		public method setFacing takes real facing returns nothing
 			call SetUnitFacing(this.m_unit, facing)
 		endmethod
-		
+
 		public method show takes boolean show returns nothing
 			call ShowUnit(this.m_unit, show)
 		endmethod
 
 		public method select takes boolean single returns nothing
 			if (single) then
-				call ClearSelectionForPlayer(this.m_user)
+				call ClearSelectionForPlayer(this.m_player)
 			endif
-			call SelectUnitAddForPlayer(this.m_unit, this.m_user)
+			call SelectUnitAddForPlayer(this.m_unit, this.m_player)
 		endmethod
-		
+
 		public method panCamera takes nothing returns nothing
-			call PanCameraToForPlayer(this.m_user, GetUnitX(this.m_unit), GetUnitY(this.m_unit))
+			call PanCameraToForPlayer(this.m_player, GetUnitX(this.m_unit), GetUnitY(this.m_unit))
 		endmethod
-		
+
 		public method panCameraSmart takes nothing returns nothing
-			call SmartCameraPanWithZForPlayer(this.m_user, GetUnitX(this.m_unit), GetUnitY(this.m_unit), 0.0, 0.0)
+			call SmartCameraPanWithZForPlayer(this.m_player, GetUnitX(this.m_unit), GetUnitY(this.m_unit), 0.0, 0.0)
 		endmethod
-		
+
 		public method setCamera takes nothing returns nothing
-			call SetCameraPositionForPlayer(this.m_user, GetUnitX(this.m_unit), GetUnitY(this.m_unit))
+			call SetCameraPositionForPlayer(this.m_player, GetUnitX(this.m_unit), GetUnitY(this.m_unit))
 		endmethod
-		
+
 		public method setCameraBoundsToRect takes rect usedRect returns nothing
-			call SetCameraBoundsToRectForPlayerBJ(this.m_user, usedRect)
+			call SetCameraBoundsToRectForPlayerBJ(this.m_player, usedRect)
 		endmethod
-		
+
 		public method resetCameraBoundsToMapRect takes nothing returns nothing
-			call ResetCameraBoundsToMapRectForPlayer(this.m_user)
+			call ResetCameraBoundsToMapRectForPlayer(this.m_player)
 		endmethod
 
 		public method userId takes nothing returns integer
-			return GetPlayerId(this.m_user)
+			return GetPlayerId(this.m_player)
 		endmethod
-		
+
 		public method level takes nothing returns integer
 			return GetHeroLevel(this.m_unit)
 		endmethod
-		
+
 		public method skillPoints takes nothing returns integer
 			return GetHeroSkillPoints(this.m_unit)
 		endmethod
-		
+
 		public method copy takes integer stateMethod returns unit
 			return CopyUnit(this.m_unit, GetUnitX(this.m_unit), GetUnitY(this.m_unit), GetUnitFacing(this.m_unit), stateMethod)
 		endmethod
@@ -339,9 +338,9 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			local integer i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
-				if (i != GetPlayerId(this.m_user)) then
+				if (i != GetPlayerId(this.m_player)) then
 					set whichPlayer = Player(i)
-					call SetPlayerAlliance(this.m_user, whichPlayer, ALLIANCE_SHARED_CONTROL, share)
+					call SetPlayerAlliance(this.m_player, whichPlayer, ALLIANCE_SHARED_CONTROL, share)
 					set whichPlayer = null
 				endif
 				set i = i + 1
@@ -353,7 +352,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		endmethod
 
 		//methods
-		
+
 		/**
 		* Refresh events (without death events, there won't be any revival).
 		* Only use this method when replacing the character's unit for some time.
@@ -361,7 +360,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public method replaceUnit takes unit newUnit returns nothing
 			set this.m_unit = newUnit
 		endmethod
-		
+
 		/// Friend relation to @struct ASpell, don't use.
 		public method addSpell takes ASpell spell returns nothing
 			call this.m_spells.pushBack(spell)
@@ -371,11 +370,11 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public method removeSpell takes ASpell spell returns nothing
 			call this.m_spells.remove(spell)
 		endmethod
-		
+
 		public method spell takes integer index returns ASpell
 			return this.m_spells[index]
 		endmethod
-		
+
 		public method spellByAbilityId takes integer abilityId returns ASpell
 			local integer i = 0
 			loop
@@ -458,7 +457,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_leaveTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterPlayerEvent(this.m_leaveTrigger, this.m_user, EVENT_PLAYER_LEAVE)
+			set triggerEvent = TriggerRegisterPlayerEvent(this.m_leaveTrigger, this.m_player, EVENT_PLAYER_LEAVE)
 			if (thistype.m_destroyOnPlayerLeaves) then
 				set triggerAction = TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionDestroyCharacter)
 			elseif (thistype.m_shareOnPlayerLeaves) then
@@ -510,7 +509,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		private static method create takes player user, unit usedUnit returns thistype
 			local thistype this = thistype.allocate()
 			//start members
-			set this.m_user = user
+			set this.m_player = user
 			set this.m_unit = usedUnit
 			call AHashTable.global().setHandleInteger(usedUnit, "ACharacter", this)
 			//dynamic members
@@ -576,7 +575,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		//Automatic destruction when player leaves
 		private method onDestroy takes nothing returns nothing
 			//start members
-			set this.m_user = null
+			set this.m_player = null
 			//members
 			loop
 				exitwhen (this.m_spells.empty())
@@ -635,11 +634,11 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				debug call thistype.staticPrint("You're using destroy on death and use revival system options at the same time.")
 			debug endif
 		endmethod
-		
+
 		public static method removeUnitOnDestruction takes nothing returns boolean
 			return thistype.m_removeUnitOnDestruction
 		endmethod
-		
+
 		public static method destroyOnPlayerLeaves takes nothing returns boolean
 			return thistype.m_destroyOnPlayerLeaves
 		endmethod
@@ -647,35 +646,35 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public static method shareOnPlayerLeaves takes nothing returns boolean
 			return thistype.m_shareOnPlayerLeaves
 		endmethod
-		
+
 		public static method destroyOnDeath takes nothing returns boolean
 			return thistype.m_destroyOnDeath
 		endmethod
-		
+
 		public static method useViewSystem takes nothing returns boolean
 			return thistype.m_useViewSystem
 		endmethod
-		
+
 		public static method useFocusSystem takes nothing returns boolean
 			return thistype.m_useFocusSystem
 		endmethod
-		
+
 		public static method useMovementSystem takes nothing returns boolean
 			return thistype.m_useMovementSystem
 		endmethod
-		
+
 		public static method useFightSystem takes nothing returns boolean
 			return thistype.m_useFightSystem
 		endmethod
-		
+
 		public static method useRevivalSystem takes nothing returns boolean
 			return thistype.m_useRevivalSystem
 		endmethod
-		
+
 		public static method useInventorySystem takes nothing returns boolean
 			return thistype.m_useInventorySystem
 		endmethod
-		
+
 		public static method useTalkLogSystem takes nothing returns boolean
 			return thistype.m_useTalkLogSystem
 		endmethod
@@ -704,18 +703,18 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public static method destroyPlayerCharacter takes player user returns nothing
 			call thistype.destroy(thistype.m_playerCharacter[GetPlayerId(user)])
 		endmethod
-		
+
 		//static convenience methods
-		
+
 		/// @todo You could also check it by only comparing with the units owner character unit.
 		public static method getCharacterByUnit takes unit usedUnit returns thistype
-			return AHashTable.global().handleInteger(usedUnit, "ACharacter")		
+			return AHashTable.global().handleInteger(usedUnit, "ACharacter")
 		endmethod
-		
+
 		public static method isUnitCharacter takes unit usedUnit returns boolean
 			return thistype.getCharacterByUnit(usedUnit) != 0
 		endmethod
-		
+
 		public static method getFirstCharacter takes nothing returns thistype
 			local integer i
 			local player user
@@ -767,7 +766,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public static method countAllPlaying takes nothing returns integer
 			local integer i
 			local player user
@@ -904,7 +903,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public static method allUnitsAreInRect takes rect usedRect returns boolean
 			local integer i
 			local player user
@@ -922,7 +921,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			endloop
 			return true
 		endmethod
-		
+
 		public static method panCameraToAll takes nothing returns nothing
 			local integer i
 			local player user
@@ -937,7 +936,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public static method panCameraSmartToAll takes nothing returns nothing
 			local integer i
 			local player user
@@ -952,7 +951,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public static method showAll takes boolean show returns nothing
 			local integer i
 			local player user
@@ -967,7 +966,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public static method enableShrineForAll takes AShrine shrine, boolean showMessage returns nothing
 			local integer i
 			local player user
@@ -986,7 +985,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public static method setToRandomPointOnRectForAll takes rect whichRect returns nothing
 			local integer i
 			local player user

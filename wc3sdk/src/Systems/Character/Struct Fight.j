@@ -14,7 +14,7 @@ library AStructSystemsCharacterFight requires optional ALibraryCoreDebugMisc, AS
 		private timer m_timer
 		private boolean m_hasOrdered
 		private boolean m_canOrder
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AFight\"")
 
 		public method enable takes nothing returns nothing
@@ -78,7 +78,7 @@ library AStructSystemsCharacterFight requires optional ALibraryCoreDebugMisc, AS
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			if (not thistype.m_useFps) then
-				set triggerEvent = TriggerRegisterUnitEvent(this.m_fightTrigger, this.unit(), EVENT_UNIT_ISSUED_ORDER)
+				set triggerEvent = TriggerRegisterUnitEvent(this.m_fightTrigger, this.character().unit(), EVENT_UNIT_ISSUED_ORDER)
 				set conditionFunction = Condition(function thistype.triggerConditionOrder)
 				set triggerCondition = TriggerAddCondition(this.m_fightTrigger, conditionFunction)
 				set triggerEvent = null

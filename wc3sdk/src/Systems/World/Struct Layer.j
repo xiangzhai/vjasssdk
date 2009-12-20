@@ -6,6 +6,9 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 	/// @todo Should be contained by @struct ALayer, vJass bug.
 	function interface ALayerOnLeaveFunction takes unit whichUnit returns nothing
 
+	/**
+	* @todo Untested!
+	*/
 	struct ALayer
 		private real m_height
 		private ALayerOnEnterFunction m_onEnterFunction

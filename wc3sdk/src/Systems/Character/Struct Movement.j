@@ -62,7 +62,7 @@ else
 		private trigger array m_startMovementTrigger[thistype.maxMovementTriggers]
 endif
 		private boolean array m_state[thistype.maxStates]
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AMovement\"")
 
 		public method enable takes nothing returns nothing
@@ -96,9 +96,9 @@ endif
 		endmethod
 
 		private method moveForward takes nothing returns nothing
-			local real facing = GetUnitFacing(this.unit())
-			local real x = GetUnitX(this.unit())
-			local real y = GetUnitY(this.unit())
+			local real facing = GetUnitFacing(this.character().unit())
+			local real x = GetUnitX(this.character().unit())
+			local real y = GetUnitY(this.character().unit())
 			set x = x + thistype.speed * Cos(facing * bj_DEGTORAD)
 			set y = y + thistype.speed * Sin(facing * bj_DEGTORAD)
 			call this.moveToPoint(x, y)
@@ -106,9 +106,9 @@ endif
 		endmethod
 
 		private method moveBackward takes nothing returns nothing
-			local real facing = GetUnitFacing(this.unit())
-			local real x = GetUnitX(this.unit())
-			local real y = GetUnitY(this.unit())
+			local real facing = GetUnitFacing(this.character().unit())
+			local real x = GetUnitX(this.character().unit())
+			local real y = GetUnitY(this.character().unit())
 			set x = x - thistype.speed * Cos(facing * bj_DEGTORAD)
 			set y = y - thistype.speed * Sin(facing * bj_DEGTORAD)
 			call this.moveToPoint(x, y)
@@ -116,59 +116,59 @@ endif
 		endmethod
 
 		private method moveRightForward takes nothing returns nothing
-			local real facing = GetUnitFacing(this.unit())
-			local real x = GetUnitX(this.unit())
-			local real y = GetUnitY(this.unit())
+			local real facing = GetUnitFacing(this.character().unit())
+			local real x = GetUnitX(this.character().unit())
+			local real y = GetUnitY(this.character().unit())
 			set x = x + thistype.speed * Cos((facing - thistype.angle) * bj_DEGTORAD)
 			set y = y + thistype.speed * Sin((facing - thistype.angle) * bj_DEGTORAD)
 			call this.moveToPoint(x, y)
 		endmethod
 
 		private method moveRightBackward takes nothing returns nothing
-			local real facing = GetUnitFacing(this.unit())
-			local real x = GetUnitX(this.unit())
-			local real y = GetUnitY(this.unit())
+			local real facing = GetUnitFacing(this.character().unit())
+			local real x = GetUnitX(this.character().unit())
+			local real y = GetUnitY(this.character().unit())
 			set x = x - thistype.speed * Cos((facing + thistype.angle) * bj_DEGTORAD)
 			set y = y - thistype.speed * Sin((facing + thistype.angle) * bj_DEGTORAD)
 			call this.moveToPoint(x, y)
 		endmethod
 
 		private method moveLeftForward takes nothing returns nothing
-			local real facing = GetUnitFacing(this.unit())
-			local real x = GetUnitX(this.unit())
-			local real y = GetUnitY(this.unit())
+			local real facing = GetUnitFacing(this.character().unit())
+			local real x = GetUnitX(this.character().unit())
+			local real y = GetUnitY(this.character().unit())
 			set x = x + thistype.speed * Cos((facing + thistype.angle) * bj_DEGTORAD)
 			set y = y + thistype.speed * Sin((facing + thistype.angle) * bj_DEGTORAD)
 			call this.moveToPoint(x, y)
 		endmethod
 
 		private method moveLeftBackward takes nothing returns nothing
-			local real facing = GetUnitFacing(this.unit())
-			local real x = GetUnitX(this.unit())
-			local real y = GetUnitY(this.unit())
+			local real facing = GetUnitFacing(this.character().unit())
+			local real x = GetUnitX(this.character().unit())
+			local real y = GetUnitY(this.character().unit())
 			set x = x - thistype.speed * Cos((facing - thistype.angle) * bj_DEGTORAD)
 			set y = y - thistype.speed * Sin((facing - thistype.angle) * bj_DEGTORAD)
 			call this.moveToPoint(x, y)
 		endmethod
 
 		private method turnRight takes nothing returns nothing
-			local real facingAngle = GetUnitFacing(this.unit()) - thistype.angle
-			call SetUnitFacingTimed(this.unit(), facingAngle, thistype.refreshRate + 0.5)
+			local real facingAngle = GetUnitFacing(this.character().unit()) - thistype.angle
+			call SetUnitFacingTimed(this.character().unit(), facingAngle, thistype.refreshRate + 0.5)
 		endmethod
-		
+
 		private method turnLeft takes nothing returns nothing
-			local real facingAngle = GetUnitFacing(this.unit()) + thistype.angle
-			call SetUnitFacingTimed(this.unit(), facingAngle, thistype.refreshRate + 0.5)
+			local real facingAngle = GetUnitFacing(this.character().unit()) + thistype.angle
+			call SetUnitFacingTimed(this.character().unit(), facingAngle, thistype.refreshRate + 0.5)
 		endmethod
-		
+
 		private method stop takes nothing returns nothing
-			call IssueImmediateOrder(this.unit(), "holdposition")
+			call IssueImmediateOrder(this.character().unit(), "holdposition")
 		endmethod
-		
+
 		private static method triggerConditionIsAlive takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			local boolean result = not IsUnitDeadBJ(this.unit())
+			local boolean result = not IsUnitDeadBJ(this.character().unit())
 			set triggeringTrigger = null
 			return result
 		endmethod
@@ -282,7 +282,7 @@ endif
 static if (not A_FPS_MOVEMENT) then
 			//forward
 			set this.m_startMovementTrigger[0] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[0], AKeyUp, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[0], AKeyUp, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[0], function thistype.triggerActionMoveForward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[0], "this", this)
 			set triggerEvent = null
@@ -290,7 +290,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop forward
 			set this.m_startMovementTrigger[1] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[1], AKeyUp, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[1], AKeyUp, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[1], function thistype.triggerActionStopMovingForward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[1], "this", this)
 			set triggerEvent = null
@@ -298,7 +298,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//backward
 			set this.m_startMovementTrigger[2] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[2], AKeyDown, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[2], AKeyDown, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[2], function thistype.triggerActionMoveBackward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[2], "this", this)
 			set triggerEvent = null
@@ -306,7 +306,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop backward
 			set this.m_startMovementTrigger[3] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[3], AKeyDown, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[3], AKeyDown, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[3], function thistype.triggerActionStopMovingBackward)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[3], "this", this)
 			set triggerEvent = null
@@ -314,7 +314,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//right
 			set this.m_startMovementTrigger[4] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[4], AKeyRight, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[4], AKeyRight, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[4], function thistype.triggerActionTurnRight)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[4], "this", this)
 			set triggerEvent = null
@@ -322,15 +322,15 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop right
 			set this.m_startMovementTrigger[5] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[5], AKeyRight, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[5], AKeyRight, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[5], function thistype.triggerActionStopTurningRight)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[5], "this", this)
 			set triggerEvent = null
 			set triggerAction = null
-			
+
 			//left
 			set this.m_startMovementTrigger[6] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[6], AKeyLeft, true)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[6], AKeyLeft, true)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[6], function thistype.triggerActionTurnLeft)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[6], "this", this)
 			set triggerEvent = null
@@ -338,7 +338,7 @@ static if (not A_FPS_MOVEMENT) then
 
 			//stop left
 			set this.m_startMovementTrigger[7] = CreateTrigger()
-			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.user(), this.m_startMovementTrigger[7], AKeyLeft, false)
+			set triggerEvent = TriggerRegisterKeyEventForPlayer(this.character().player(), this.m_startMovementTrigger[7], AKeyLeft, false)
 			set triggerAction = TriggerAddAction(this.m_startMovementTrigger[7], function thistype.triggerActionStopTurningLeft)
 			call AHashTable.global().setHandleInteger(this.m_startMovementTrigger[7], "this", this)
 			set triggerEvent = null

@@ -74,7 +74,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 				if (this.character() == 0) then
 					set title = this.title()
 				else
-					set user = this.character().user()
+					set user = this.character().player()
 					set playerColor = GetPlayerColor(user)
 					set title = "|cff" + PlayerColorToString(playerColor) + this.title() + "|r"
 					set user = null
@@ -101,7 +101,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		endmethod
 
 		public method displayUpdateMessage takes string message returns nothing
-			local player user = this.character().user()
+			local player user = this.character().player()
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, this.title())
 			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, message)
 			call PlaySoundFileForPlayer(user, thistype.m_updateSoundPath)

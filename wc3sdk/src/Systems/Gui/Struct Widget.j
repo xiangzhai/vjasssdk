@@ -8,8 +8,8 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 
 	struct AWidget
 		//static start members
-		private static string onHitSoundPath
-		private static string onTrackSoundPath
+		private static string m_onHitSoundPath
+		private static string m_onTrackSoundPath
 		//dynamic members
 		private boolean m_shown
 		private integer m_shortcut // Wenn das Tastenkürzel gedr?ckt wird, wird auch die onHitFunction ausgeführt. Die Tastenkürzel werden über eine ausgewählte Einheit mit entsprechenden Fähigkeiten gesteuert.
@@ -21,6 +21,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		private real m_y
 		private real m_sizeX
 		private real m_sizeY
+		private string m_modelFilePath
 		private AWidgetOnHitAction m_onHitAction
 		private AWidgetOnTrackAction m_onTrackAction
 		//members
@@ -79,14 +80,24 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			return this.m_tooltipSize
 		endmethod
 
-		//start members
+		// start members
 
 		public method mainWindow takes nothing returns AMainWindow
 			return this.m_mainWindow
 		endmethod
 
+		/// Friend relation to @struct ALayout, do not use since widgets are static!
+		public method setX takes real x returns nothing
+			set this.m_x = x
+		endmethod
+
 		public method x takes nothing returns real
 			return this.m_x
+		endmethod
+
+		/// Friend relation to @struct ALayout, do not use since widgets are static!
+		public method setY takes real y returns nothing
+			set this.m_y = y
 		endmethod
 
 		public method y takes nothing returns real
@@ -101,20 +112,14 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			return this.m_sizeY
 		endmethod
 
+		public method modelFilePath takes nothing returns string
+			return this.m_modelFilePath
+		endmethod
+
 		//members
 
 		public method index takes nothing returns integer
 			return this.m_index
-		endmethod
-
-		//convenience methods
-
-		public method gui takes nothing returns AGui
-			return this.m_mainWindow.gui()
-		endmethod
-
-		public method user takes nothing returns player
-			return this.m_mainWindow.user()
 		endmethod
 
 		//methods
@@ -157,7 +162,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 
 		private method createTrackable takes nothing returns nothing
 			if ((this.m_onHitAction != 0) or (this.m_onTrackAction != 0)) then
-				set this.m_trackable = CreateTrackableForPlayer(this.user(), thistype.getTrackablePathBySize(this.m_sizeX, this.m_sizeY), this.m_mainWindow.getX(this.m_x), this.m_mainWindow.getY(this.m_y), 0.0)
+				set this.m_trackable = CreateTrackableForPlayer(this.m_mainWindow.gui().player(), this.m_modelFilePath, this.m_mainWindow.getX(this.m_x), this.m_mainWindow.getY(this.m_y), 0.0)
 			endif
 		endmethod
 
@@ -165,8 +170,8 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_onHitAction.execute(this)
-			if (thistype.onHitSoundPath != null) then
-				call PlaySoundFileForPlayer(this.user(), thistype.onHitSoundPath)
+			if (thistype.m_onHitSoundPath != null) then
+				call PlaySoundFileForPlayer(this.m_mainWindow.gui().player(), thistype.m_onHitSoundPath)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -188,8 +193,8 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.m_onTrackAction.execute(this)
-			if (thistype.onTrackSoundPath != null) then
-				call PlaySoundFileForPlayer(this.user(), thistype.onTrackSoundPath)
+			if (thistype.m_onTrackSoundPath != null) then
+				call PlaySoundFileForPlayer(this.m_mainWindow.gui().player(), thistype.m_onTrackSoundPath)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -207,7 +212,10 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			endif
 		endmethod
 
-		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns thistype
+		/**
+		* @param modelFilePath Model file path for the trackable model. If there aren't any onHitActions or onTrackActions this value could be null.
+		*/
+		public static method create takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY, string modelFilePath, AWidgetOnHitAction onHitAction, AWidgetOnTrackAction onTrackAction returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
 			set this.m_shown = false
@@ -217,6 +225,7 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			set this.m_y = y
 			set this.m_sizeX = sizeX
 			set this.m_sizeY = sizeY
+			set this.m_modelFilePath = modelFilePath
 			set this.m_onHitAction = onHitAction
 			set this.m_onTrackAction = onTrackAction
 			//members
@@ -226,6 +235,10 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			call this.createOnHitTrigger()
 			call this.createOnTrackTrigger()
 			return this
+		endmethod
+
+		public static method createSimple takes AMainWindow mainWindow, real x, real y, real sizeX, real sizeY returns thistype
+			return thistype.create(mainWindow, x, y, sizeX, sizeY, null, 0, 0)
 		endmethod
 
 		private method destroyTrackable takes nothing returns nothing
@@ -256,8 +269,8 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		endmethod
 
 		public static method init takes string onHitSoundPath, string onTrackSoundPath returns nothing
-			set thistype.onHitSoundPath = onHitSoundPath
-			set thistype.onTrackSoundPath = onTrackSoundPath
+			set thistype.m_onHitSoundPath = onHitSoundPath
+			set thistype.m_onTrackSoundPath = onTrackSoundPath
 
 			if (onHitSoundPath != null) then
 				call PreloadSoundFile(onHitSoundPath)
@@ -265,11 +278,6 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			if (onTrackSoundPath != null) then
 				call PreloadSoundFile(onTrackSoundPath)
 			endif
-		endmethod
-
-		public static method getTrackablePathBySize takes real sizeX, real sizeY returns string
-			/// @todo I need a list of models, which has the specific sizes of trackables
-			return "units\\nightelf\\Wisp\\Wisp.mdx"
 		endmethod
 
 		/**

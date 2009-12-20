@@ -70,10 +70,10 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		* If no info has been added start page is shown automatically.
 		*/
 		public method show takes nothing returns nothing
-			if (AGui.playerGui(this.m_character.user()).dialog().dialogButtons() == 0) then
+			if (AGui.playerGui(this.m_character.player()).dialog().dialogButtons() == 0) then
 				call this.showStartPage()
 			else
-				call AGui.playerGui(this.m_character.user()).dialog().show()
+				call AGui.playerGui(this.m_character.player()).dialog().show()
 			endif
 		endmethod
 
@@ -107,7 +107,7 @@ endif
 		endmethod
 
 		public method hide takes nothing returns nothing
-			call AGui.playerGui(this.m_character.user()).dialog().hide()
+			call AGui.playerGui(this.m_character.player()).dialog().hide()
 		endmethod
 
 		/**
@@ -120,7 +120,7 @@ endif
 				call AInfo(this.m_infos[i]).hide()
 				set i = i + 1
 			endloop
-			call AGui.playerGui(this.m_character.user()).dialog().clear()
+			call AGui.playerGui(this.m_character.player()).dialog().clear()
 		endmethod
 
 		public method addInfo takes boolean permanent, boolean important, AInfoCondition condition, AInfoAction action, string description returns AInfo
@@ -157,7 +157,7 @@ endif
 				debug return
 			debug endif
 			set this.m_character = character
-			call SetUserInterfaceForPlayer(character.user(), false, true)
+			call SetUserInterfaceForPlayer(character.player(), false, true)
 			call character.setTalk(this)
 			call character.setMovable(false)
 			call PauseUnit(this.m_unit, true) //Disables routines or something else
@@ -165,17 +165,17 @@ endif
 			call SetUnitFacing(this.m_unit, GetAngleBetweenUnits(this.m_unit, character.unit()))
 			call SetUnitLookAt(character.unit(), "bone_head", this.m_unit, 0.0, 0.0, GetUnitFlyHeight(this.m_unit) + 90.0)
 			call SetUnitLookAt(this.m_unit, "bone_head", character.unit(), 0.0, 0.0, GetUnitFlyHeight(character.unit()) + 90.0)
-			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).resetCamAoa()
-			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).resetCamRot()
-			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).disable()
-			call AThirdPersonCamera.playerThirdPersonCamera(character.user()).enable(character.unit(), 0.0)
-			call AGui.playerGui(character.user()).dialog().clear()
-			call AGui.playerGui(character.user()).dialog().setMessage(GetUnitName(this.m_unit))
+			call AThirdPersonCamera.playerThirdPersonCamera(character.player()).resetCamAoa()
+			call AThirdPersonCamera.playerThirdPersonCamera(character.player()).resetCamRot()
+			call AThirdPersonCamera.playerThirdPersonCamera(character.player()).disable()
+			call AThirdPersonCamera.playerThirdPersonCamera(character.player()).enable(character.unit(), 0.0)
+			call AGui.playerGui(character.player()).dialog().clear()
+			call AGui.playerGui(character.player()).dialog().setMessage(GetUnitName(this.m_unit))
 			call this.m_startAction.execute(this) //create buttons
 		endmethod
 
 		public method close takes nothing returns nothing
-			local player characterUser = this.m_character.user()
+			local player characterUser = this.m_character.player()
 			call AGui.playerGui(characterUser).dialog().clear()
 			call ResetUnitLookAt(this.m_character.unit())
 			call ResetUnitLookAt(this.m_unit)

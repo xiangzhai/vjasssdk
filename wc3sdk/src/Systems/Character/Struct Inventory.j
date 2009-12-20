@@ -369,7 +369,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method enableRucksack takes nothing returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item leftArrowItem
 			local item rightArrowItem
 			set this.m_rucksackIsEnabled = true
@@ -389,7 +389,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method disableRucksack takes nothing returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item leftArrowItem
 			local item rightArrowItem
 			set this.m_rucksackIsEnabled = false
@@ -410,7 +410,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local AItemType itemType = AItemType.getItemTypeOfItem(usedItem)
 			local integer equipmentType = itemType.equipmentType()
 			local player itemPlayer = GetItemPlayer(usedItem)
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item equippedItem
 			local string itemName
 			if (not this.m_rucksackIsEnabled and UnitHasItem(characterUnit, usedItem)) then //already picked up
@@ -419,7 +419,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				call EnableTrigger(this.m_dropTrigger)
 			endif
 
-			if (itemPlayer != this.user() and IsPlayerPlayingUser(itemPlayer)) then
+			if (itemPlayer != this.character().player() and IsPlayerPlayingUser(itemPlayer)) then
 				call this.character().displayMessage(ACharacter.messageTypeError, tr("Gegenstand gehört einem anderen Benutzer.")) /// @todo use static string member
 				set itemPlayer = null
 				return
@@ -457,7 +457,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private method addItemToRucksack takes item usedItem, boolean dontMoveToEquipment, boolean showAddMessage returns nothing
 			local integer i
 			local player itemPlayer = GetItemPlayer(usedItem)
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local string itemName
 			if (this.m_rucksackIsEnabled and UnitHasItem(characterUnit, usedItem)) then //already picked up
 				call DisableTrigger(this.m_dropTrigger)
@@ -467,7 +467,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			endif
 			set characterUnit = null
 
-			if (itemPlayer != this.user() and IsPlayerPlayingUser(itemPlayer)) then
+			if (itemPlayer != this.character().player() and IsPlayerPlayingUser(itemPlayer)) then
 				call this.character().displayMessage(ACharacter.messageTypeError, tr("Gegenstand gehört einem anderen Benutzer.")) /// @todo use static string member
 				set itemPlayer = null
 				return
@@ -503,12 +503,12 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				call this.showEquipmentItem(equipmentType)
 			elseif (this.m_rucksackIsEnabled) then
 				set itemType = AItemType.getItemTypeOfItemTypeId(inventoryItemData.itemTypeId())
-				call itemType.addPermanentAbilities(this.unit())
+				call itemType.addPermanentAbilities(this.character().unit())
 			endif
 		endmethod
 
 		private method setEquipmentItemByItem takes integer equipmentType, item usedItem, boolean add returns nothing
-			local AInventoryItemData inventoryItemData = AInventoryItemData.create(usedItem, this.unit())
+			local AInventoryItemData inventoryItemData = AInventoryItemData.create(usedItem, this.character().unit())
 			call DisableTrigger(this.m_dropTrigger)
 			call RemoveItem(usedItem)
 			call EnableTrigger(this.m_dropTrigger)
@@ -517,7 +517,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method clearEquipmentItem takes integer equipmentType, boolean drop returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item slotItem
 			local AItemType itemType
 
@@ -545,7 +545,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method showEquipmentItem takes integer equipmentType returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item slotItem
 			local AItemType itemType = AItemType.getItemTypeOfItemTypeId(this.m_equipmentItemData[equipmentType].itemTypeId())
 			call itemType.removePermanentAbilities(characterUnit)
@@ -561,7 +561,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method hideEquipmentItem takes integer equipmentType returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item slotItem = UnitItemInSlot(characterUnit, equipmentType)
 			local AItemType itemType = AItemType.getItemTypeOfItem(slotItem)
 			call thistype.clearItemIndex(slotItem)
@@ -612,7 +612,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method setRucksackItemByItem takes integer index, item usedItem, boolean add returns nothing
-			local AInventoryItemData inventoryItemData = AInventoryItemData.create(usedItem, this.unit())
+			local AInventoryItemData inventoryItemData = AInventoryItemData.create(usedItem, this.character().unit())
 			call DisableTrigger(this.m_dropTrigger)
 			call RemoveItem(usedItem)
 			call EnableTrigger(this.m_dropTrigger)
@@ -624,7 +624,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local unit characterUnit
 			local item slotItem
 			if (this.m_rucksackIsEnabled and this.m_rucksackPage == this.itemRucksackPage(index)) then
-				set characterUnit = this.unit()
+				set characterUnit = this.character().unit()
 				set slotItem = UnitItemInSlot(characterUnit, this.rucksackItemSlot(index))
 				if (slotItem != null) then
 					call thistype.clearItemIndex(slotItem)
@@ -644,7 +644,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method showRucksackItem takes integer index returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local integer slot = this.rucksackItemSlot(index)
 			local item slotItem
 			local AItemType itemType = AItemType.getItemTypeOfItemTypeId(this.m_rucksackItemData[index].itemTypeId())
@@ -667,7 +667,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			if (this.m_rucksackPage != this.itemRucksackPage(index)) then
 				return
 			endif
-			set characterUnit = this.unit()
+			set characterUnit = this.character().unit()
 			set slot = this.rucksackItemSlot(index)
 			set slotItem = UnitItemInSlot(characterUnit, slot)
 			call SetItemCharges(slotItem, this.m_rucksackItemData[index].charges())
@@ -676,7 +676,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method hideRucksackItem takes integer index returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local integer slot = this.rucksackItemSlot(index)
 			local item slotItem = UnitItemInSlot(characterUnit, slot)
 			call thistype.clearItemIndex(slotItem)
@@ -712,7 +712,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set i = i + 1
 			endloop
 
-			set rightArrowItem = UnitItemInSlot(this.unit(), thistype.maxRucksackItemsPerPage + 1)
+			set rightArrowItem = UnitItemInSlot(this.character().unit(), thistype.maxRucksackItemsPerPage + 1)
 			call SetItemCharges(rightArrowItem, page)
 			set rightArrowItem = null
 		endmethod
@@ -746,7 +746,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method resetItemSlots takes integer currentSlot, integer oldSlot returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item currentItem = UnitItemInSlot(characterUnit, currentSlot)
 			local AInventoryItemData currentItemData = 0
 			local integer currentItemIndex
@@ -755,7 +755,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer otherItemIndex
 			call DisableTrigger(this.m_dropTrigger)
 			if (currentItem != null) then
-				set currentItemData = AInventoryItemData.create(currentItem, this.unit())
+				set currentItemData = AInventoryItemData.create(currentItem, this.character().unit())
 				if (currentItemData.itemTypeId() != thistype.leftArrowItemType and currentItemData.itemTypeId() != thistype.rightArrowItemType) then
 					set currentItemIndex = thistype.itemIndex(currentItem)
 				endif
@@ -763,7 +763,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set currentItem = null
 			endif
 			if (otherItem != null) then
-				set otherItemData = AInventoryItemData.create(otherItem, this.unit())
+				set otherItemData = AInventoryItemData.create(otherItem, this.character().unit())
 				if (otherItemData.itemTypeId() != thistype.leftArrowItemType and otherItemData.itemTypeId() != thistype.rightArrowItemType) then
 					set otherItemIndex = thistype.itemIndex(otherItem)
 				endif
@@ -796,7 +796,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method moveRucksackItemToPage takes item slotItem, boolean next returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local integer oldIndex = this.itemIndex(slotItem)
 			local integer oldSlot = this.rucksackItemSlot(oldIndex)
 			local integer i
@@ -873,7 +873,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		private method moveRucksackItem takes item movedItem, integer slot returns nothing
-			local unit characterUnit = this.unit()
+			local unit characterUnit = this.character().unit()
 			local item targetItem
 			local integer oldIndex = this.itemIndex(movedItem)
 			local integer newIndex = this.slotRucksackIndex(slot)
@@ -894,7 +894,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set characterUnit = null
 				return
 			endif
-			set targetItem = UnitItemInSlot(this.unit(), this.rucksackItemSlot(oldIndex))
+			set targetItem = UnitItemInSlot(this.character().unit(), this.rucksackItemSlot(oldIndex))
 			//move
 			if (targetItem == null) then
 				set this.m_rucksackItemData[newIndex] = this.m_rucksackItemData[oldIndex]
@@ -954,7 +954,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_openTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_openTrigger, this.unit(), EVENT_UNIT_SPELL_CAST)
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_openTrigger, this.character().unit(), EVENT_UNIT_SPELL_CAST)
 			set conditionFunction = Condition(function thistype.triggerConditionOpen)
 			set triggerCondition = TriggerAddCondition(this.m_openTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_openTrigger, function thistype.triggerActionOpen)
@@ -1019,7 +1019,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_orderTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_orderTrigger, this.unit(), EVENT_UNIT_ISSUED_TARGET_ORDER)
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_orderTrigger, this.character().unit(), EVENT_UNIT_ISSUED_TARGET_ORDER)
 			set conditionFunction = Condition(function thistype.triggerConditionOrder)
 			set triggerCondition = TriggerAddCondition(this.m_orderTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_orderTrigger, function thistype.triggerActionOrder)
@@ -1052,7 +1052,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_pickupTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_pickupTrigger, this.unit(), EVENT_UNIT_PICKUP_ITEM) //pawn?
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_pickupTrigger, this.character().unit(), EVENT_UNIT_PICKUP_ITEM) //pawn?
 			set conditionFunction = Condition(function thistype.triggerConditionIsNoPowerup)
 			set triggerCondition = TriggerAddCondition(this.m_pickupTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_pickupTrigger, function thistype.triggerActionPickup)
@@ -1076,7 +1076,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					call RemoveItem(usedItem)
 					set usedItem = null
 					call DisableTrigger(this.m_pickupTrigger)
-					call UnitAddItemToSlotById(this.unit(), thistype.leftArrowItemType, thistype.maxRucksackItemsPerPage)
+					call UnitAddItemToSlotById(this.character().unit(), thistype.leftArrowItemType, thistype.maxRucksackItemsPerPage)
 					call EnableTrigger(this.m_pickupTrigger)
 					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textDropPageItem)
 				elseif (GetItemTypeId(usedItem) == thistype.rightArrowItemType) then
@@ -1084,9 +1084,9 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					call RemoveItem(usedItem)
 					set usedItem = null
 					call DisableTrigger(this.m_pickupTrigger)
-					call UnitAddItemToSlotById(this.unit(), thistype.rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
+					call UnitAddItemToSlotById(this.character().unit(), thistype.rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
 					call EnableTrigger(this.m_pickupTrigger)
-					set usedItem = UnitItemInSlot(this.unit(), thistype.maxRucksackItemsPerPage + 1)
+					set usedItem = UnitItemInSlot(this.character().unit(), thistype.maxRucksackItemsPerPage + 1)
 					call SetItemCharges(usedItem, this.m_rucksackPage)
 					set usedItem = null
 					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textDropPageItem)
@@ -1123,7 +1123,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_dropTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_dropTrigger, this.unit(), EVENT_UNIT_DROP_ITEM)
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_dropTrigger, this.character().unit(), EVENT_UNIT_DROP_ITEM)
 			set conditionFunction = Condition(function thistype.triggerConditionIsNoPowerup)
 			set triggerCondition = TriggerAddCondition(this.m_dropTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_dropTrigger, function thistype.triggerActionDrop)
@@ -1169,7 +1169,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_useTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_useTrigger, this.unit(), EVENT_UNIT_USE_ITEM)
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_useTrigger, this.character().unit(), EVENT_UNIT_USE_ITEM)
 			set triggerAction = TriggerAddAction(this.m_useTrigger, function thistype.triggerActionUse)
 			call AHashTable.global().setHandleInteger(this.m_useTrigger, "this", this)
 			set triggerEvent = null
@@ -1182,8 +1182,8 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set this.m_rucksackPage = 0
 			set this.m_rucksackIsEnabled = false
 
-			if (GetUnitAbilityLevel(this.unit(), thistype.openRucksackAbilityId) == 0) then
-				call UnitAddAbility(this.unit(), thistype.openRucksackAbilityId)
+			if (GetUnitAbilityLevel(this.character().unit(), thistype.openRucksackAbilityId) == 0) then
+				call UnitAddAbility(this.character().unit(), thistype.openRucksackAbilityId)
 			endif
 
 			call this.createOpenTrigger()
@@ -1236,7 +1236,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				endif
 				set i = i + 1
 			endloop
-			call UnitRemoveAbility(this.unit(), thistype.openRucksackAbilityId)
+			call UnitRemoveAbility(this.character().unit(), thistype.openRucksackAbilityId)
 
 			call this.destroyOpenTrigger()
 			call this.destroyOrderTrigger()

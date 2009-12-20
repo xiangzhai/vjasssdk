@@ -325,7 +325,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		private method displayMessage takes nothing returns nothing
 			if (this.m_character != 0) then
 				call this.m_character.displayMessage(ACharacter.messageTypeInfo, this.getModifiedTitle())
-				call PlaySoundFileForPlayer(this.m_character.user(), this.getSoundPath())
+				call PlaySoundFileForPlayer(this.m_character.player(), this.getSoundPath())
 			else
 				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.getModifiedTitle())
 				call PlaySound(this.getSoundPath())
@@ -520,7 +520,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 				set abstractQuest = thistype.m_abstractQuests[i]
 				if (abstractQuest.m_ping and abstractQuest.m_state == thistype.stateNew) then
 					if (abstractQuest.m_character != 0) then
-						set user = abstractQuest.m_character.user()
+						set user = abstractQuest.m_character.player()
 						call PingMinimapExForPlayer(user, abstractQuest.m_pingX, abstractQuest.m_pingY, abstractQuest.m_pingDuration, abstractQuest.m_pingRed, abstractQuest.m_pingGreen, abstractQuest.m_pingBlue, true)
 						set user = null
 					else

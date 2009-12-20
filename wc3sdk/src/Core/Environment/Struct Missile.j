@@ -1,4 +1,4 @@
-library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, AModuleCoreGeneralSystemStruct, AStructCoreGeneralVector, AStructCoreMathsVector3, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint, ALibraryCoreInterfaceSelection
+library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, AModuleCoreGeneralSystemStruct, AStructCoreGeneralVector, AStructCoreMathsVector3, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint, ALibraryCoreMathsUnit, ALibraryCoreInterfaceSelection
 
 	/// OnCollisionFunction functions can be set by method @method AMissileType.setOnCollisionFunction and will be called when missile collides.
 	function interface AMissileTypeOnCollisionFunction takes AMissile missile returns nothing

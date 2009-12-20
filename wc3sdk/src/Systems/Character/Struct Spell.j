@@ -7,7 +7,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 
 	/// @todo vJass bug, should be a part of @struct ASpell.
 	function interface ASpellCastCondition takes ASpell spell returns boolean
-	
+
 	/// @todo vJass bug, should be a part of @struct ASpell.
 	function interface ASpellCastAction takes ASpell spell returns nothing
 
@@ -22,59 +22,59 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 		//members
 		private trigger m_upgradeTrigger
 		private trigger m_castTrigger
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ASpell\"")
 
 		//start members
-		
+
 		public method ability takes nothing returns integer
 			return this.m_ability
 		endmethod
-		
+
 		public method upgradeAction takes nothing returns ASpellUpgradeAction
 			return this.m_upgradeAction
 		endmethod
-		
+
 		public method castCondition takes nothing returns ASpellCastCondition
 			return this.m_castCondition
 		endmethod
-		
+
 		public method castAction takes nothing returns ASpellCastAction
 			return this.m_castAction
 		endmethod
-		
+
 		//convenience methods
-		
+
 		public method name takes nothing returns string
 			return GetObjectName(this.m_ability)
 		endmethod
-		
+
 		public method increaseLevel takes nothing returns nothing
-			call IncUnitAbilityLevel(this.unit(), this.m_ability)
+			call IncUnitAbilityLevel(this.character().unit(), this.m_ability)
 		endmethod
-		
+
 		public method decreaseLevel takes nothing returns nothing
-			call DecUnitAbilityLevel(this.unit(), this.m_ability)
+			call DecUnitAbilityLevel(this.character().unit(), this.m_ability)
 		endmethod
-		
+
 		public method setLevel takes integer level returns nothing
-			call SetUnitAbilityLevel(this.unit(), this.m_ability, level)
+			call SetUnitAbilityLevel(this.character().unit(), this.m_ability, level)
 		endmethod
-		
+
 		public method level takes nothing returns integer
-			return GetUnitAbilityLevel(this.unit(), this.m_ability)
+			return GetUnitAbilityLevel(this.character().unit(), this.m_ability)
 		endmethod
-		
+
 		public method add takes nothing returns boolean
-			return UnitAddAbility(this.unit(), this.m_ability)
+			return UnitAddAbility(this.character().unit(), this.m_ability)
 		endmethod
-		
+
 		public method remove takes nothing returns boolean
-			return UnitRemoveAbility(this.unit(), this.m_ability)
+			return UnitRemoveAbility(this.character().unit(), this.m_ability)
 		endmethod
-		
+
 		//methods
-		
+
 		//Make it available
 		public method enable takes nothing returns nothing
 			call EnableTrigger(this.m_upgradeTrigger)
@@ -85,7 +85,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			call DisableTrigger(this.m_upgradeTrigger)
 			call DisableTrigger(this.m_castTrigger)
 		endmethod
-		
+
 		private static method triggerConditionRightAbility takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -108,7 +108,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_upgradeTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_upgradeTrigger, this.unit(), EVENT_UNIT_HERO_SKILL)
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_upgradeTrigger, this.character().unit(), EVENT_UNIT_HERO_SKILL)
 			set conditionFunction = Condition(function thistype.triggerConditionRightAbility)
 			set triggerCondition = TriggerAddCondition(this.m_upgradeTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_upgradeTrigger, function thistype.triggerActionUpgrade)
@@ -118,7 +118,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			set triggerCondition = null
 			set triggerAction = null
 		endmethod
-		
+
 		private static method triggerConditionCast takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -127,9 +127,9 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 				set result = (this.m_castCondition == 0 or this.m_castCondition.evaluate(this))
 				if (not result) then
 					//taken from wc3jass.com
-					call PauseUnit(this.unit(), true)
-					call IssueImmediateOrder(this.unit(), "stop")
-					call PauseUnit(this.unit(), false)
+					call PauseUnit(this.character().unit(), true)
+					call IssueImmediateOrder(this.character().unit(), "stop")
+					call PauseUnit(this.character().unit(), false)
 				endif
 			endif
 			set triggeringTrigger = null
@@ -149,7 +149,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			local triggercondition triggerCondition
 			local triggeraction triggerAction
 			set this.m_castTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_castTrigger, this.unit(), EVENT_UNIT_SPELL_CAST)
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_castTrigger, this.character().unit(), EVENT_UNIT_SPELL_CAST)
 			set conditionFunction = Condition(function thistype.triggerConditionCast)
 			set triggerCondition = TriggerAddCondition(this.m_castTrigger, conditionFunction)
 			set triggerAction = TriggerAddAction(this.m_castTrigger, function thistype.triggerActionCast)
@@ -169,7 +169,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			set this.m_upgradeAction = upgradeAction
 			set this.m_castCondition = castCondition
 			set this.m_castAction = castAction
-			
+
 			call character.addSpell(this)
 
 			if (upgradeAction != 0) then
@@ -180,12 +180,12 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			endif
 			return this
 		endmethod
-		
+
 		private method destroyUpgradeTrigger takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(this.m_upgradeTrigger)
 			set this.m_upgradeTrigger = null
 		endmethod
-		
+
 		private method destroyCastTrigger takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(this.m_castTrigger)
 			set this.m_castTrigger = null
@@ -201,22 +201,22 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 				call this.destroyCastTrigger()
 			endif
 		endmethod
-		
+
 		public static method enemyTargetLoopCondition takes unit target returns boolean
 			return IsUnitDeadBJ(target) or IsUnitSpellImmune(target)
 		endmethod
-		
+
 		public static method enemyTargetLoopConditionResistant takes unit target returns boolean
 			return thistype.enemyTargetLoopCondition(target) or IsUnitSpellResistant(target)
 		endmethod
-		
+
 		public static method allyTargetLoopCondition takes unit target returns boolean
 			return IsUnitDeadBJ(target)
 		endmethod
-		
+
 		/// @todo Add IsUnitStunned
 		public static method allyChannelLoopCondition takes unit target returns boolean
-			return IsUnitDeadBJ(target)// or 
+			return IsUnitDeadBJ(target)// or
 		endmethod
 	endstruct
 

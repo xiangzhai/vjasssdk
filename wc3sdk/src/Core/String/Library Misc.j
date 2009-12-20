@@ -1,8 +1,8 @@
 library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 
-	debug function StringPositionDebug takes string whichString, integer position returns nothing
+	debug function StringPositionDebug takes string functionName, string whichString, integer position returns nothing
 		debug if ((position < 0) or (position >= StringLength(whichString))) then
-			debug call Print("StringPositionDebug: Wrong position value: " + I2S(position) + ".")
+			debug call PrintFunctionError(functionName, "Wrong position value: " + I2S(position) + ".")
 		debug endif
 	debug endfunction
 
@@ -16,7 +16,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	function FindString takes string whichString, string searchedString returns integer
 		local integer i
 		debug if (StringLength(whichString) < StringLength(searchedString)) then
-			debug call Print("FindString: Used string is lesser than searched string.")
+			debug call PrintFunctionError("FindString", "Used string is lesser than searched string.")
 		debug endif
 		set i = 0
 		loop
@@ -38,7 +38,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	*/
 	function ReplaceSubString takes string whichString, integer position, string replacingString returns string
 		local string result = ""
-		debug call StringPositionDebug(whichString, position)
+		debug call StringPositionDebug("ReplaceSubString", whichString, position)
 		set result = SubString(whichString, 0, position) + replacingString
 		if (position + StringLength(replacingString) < StringLength(whichString)) then
 			set result = result + SubString(whichString, position + StringLength(replacingString), StringLength(whichString))
@@ -70,8 +70,8 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	* @return Returns the new string without the sub string string.
 	*/
 	function RemoveSubString takes string whichString, integer position, integer length returns string
-		debug call StringPositionDebug(whichString, position)
-		debug call StringPositionDebug(whichString, position + length - 1)
+		debug call StringPositionDebug("RemoveSubString", whichString, position)
+		debug call StringPositionDebug("RemoveSubString", whichString, position + length - 1)
 		return SubString(whichString, 0, position) + SubString(whichString, position + length, StringLength(whichString))
 	endfunction
 
@@ -84,7 +84,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	function RemoveString takes string whichString, string removedString returns string
 		local integer position = FindString(whichString, removedString)
 		if (position == -1) then
-			debug call Print("RemoveString: String \"" + whichString + "\" does not contain string \"" + removedString + "\".")
+			debug call PrintFunctionError("RemoveString", "String \"" + whichString + "\" does not contain string \"" + removedString + "\".")
 			return whichString
 		endif
 		return RemoveSubString(whichString, position, StringLength(removedString))
@@ -93,13 +93,17 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	/**
 	* Inserts string @param insertedString into string @param whichString at position @param position and returns the resulting string.
 	* @param whichString String into which string @param insertedString should be inserted.
-	* @param position Position where string @param insertedString should be inserted.
+	* @param position Position where string @param insertedString should be inserted. If this value is bigger or equal to length of string @param whichString string @param insertedString will be added to string @param whichString.
 	* @param insertedString String which should be inserted into string @param whichString at position @param position.
 	* @return Returns the new string with the inserted string.
 	*/
 	function InsertString takes string whichString, integer position, string insertedString returns string
-		local string result = ""
-		debug call StringPositionDebug(whichString, position)
+		if (position >= StringLength(whichString)) then
+			return whichString + insertedString
+		debug elseif (position < 0) then
+			debug call PrintFunctionError("InsertString", "Wrong position value: " + I2S(position) + ".")
+			debug return whichString
+		endif
 		return SubString(whichString, 0, position) + insertedString + SubString(whichString, position, StringLength(whichString))
 	endfunction
 
@@ -113,12 +117,14 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	*/
 	function MoveSubString takes string whichString, integer position, integer length, integer newPosition returns string
 		local string result
-		debug call StringPositionDebug(whichString, position)
-		debug call StringPositionDebug(whichString, position + length - 1)
+		debug call StringPositionDebug("MoveSubString", whichString, position)
+		debug call StringPositionDebug("MoveSubString", whichString, position + length - 1)
 		set result = RemoveSubString(whichString, position, length)
-		set newPosition = newPosition - length
-		debug call StringPositionDebug(result, newPosition)
-		debug call StringPositionDebug(result, newPosition + length - 1)
+		if (newPosition >= position + length) then
+			set newPosition = newPosition - length
+		endif
+		debug call StringPositionDebug("MoveSubString", result, newPosition)
+		debug call StringPositionDebug("MoveSubString", result, newPosition + length - 1)
 		return InsertString(result, newPosition, SubString(whichString, position, position + length))
 	endfunction
 
@@ -133,7 +139,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	function MoveString takes string whichString, string movedString, integer newPosition returns string
 		local integer position = FindString(whichString, movedString)
 		if (position == -1) then
-			debug call Print("MoveString: String \"" + whichString + "\" does not contain string \"" + movedString + "\".")
+			debug call PrintFunctionError("MoveString", "String \"" + whichString + "\" does not contain string \"" + movedString + "\".")
 			return whichString
 		endif
 		return MoveSubString(whichString, position, StringLength(movedString), newPosition)

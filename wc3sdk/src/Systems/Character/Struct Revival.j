@@ -72,10 +72,10 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 				endif
 			endif
 		endmethod
-		
+
 		private method revive takes nothing returns nothing
-			call ReviveHero(this.unit(), this.m_x, this.m_y, true)
-			call SetUnitFacing(this.unit(), this.m_facing)
+			call ReviveHero(this.character().unit(), this.m_x, this.m_y, true)
+			call SetUnitFacing(this.character().unit(), this.m_facing)
 		endmethod
 
 		private static method timerFunctionRevival takes nothing returns nothing
@@ -105,7 +105,7 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 			call AHashTable.global().setHandleInteger(this.m_timer, "this", this)
 			if (thistype.m_showDialog) then
 				set this.m_timerDialog = CreateTimerDialog(this.m_timer)
-				call TimerDialogSetTitle(this.m_timerDialog, GetModifiedPlayerName(this.user()))
+				call TimerDialogSetTitle(this.m_timerDialog, GetModifiedPlayerName(this.character().player()))
 				//call TimerDialogDisplay(this.timerDialog, false) //test
 			endif
 		endmethod
@@ -126,7 +126,7 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_revivalTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterUnitEvent(this.m_revivalTrigger, this.unit(), EVENT_UNIT_DEATH) //TriggerRegisterDeathEvent(this.revivalTrigger, this.unit())
+			set triggerEvent = TriggerRegisterUnitEvent(this.m_revivalTrigger, this.character().unit(), EVENT_UNIT_DEATH) //TriggerRegisterDeathEvent(this.revivalTrigger, this.character().unit())
 			set triggerAction = TriggerAddAction(this.m_revivalTrigger, function thistype.triggerActionRevival)
 			call AHashTable.global().setHandleInteger(this.m_revivalTrigger, "this", this)
 			set triggerEvent = null
