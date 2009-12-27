@@ -1,3 +1,6 @@
+2009-12-27 Tamino Dauth <tamino@cdauth.de>
+* Revised some language classes.
+
 2009-12-19 Tamino Dauth <tamino@cdauth.de>
 * Added folder "src/lang" with sub project for scripting languages (replacing vjassdoc project).
 * Renamed folder "src/test" to "src/apps" for all applications.

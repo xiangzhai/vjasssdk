@@ -18,24 +18,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_FILE_HPP
-#define VJASSDOC_FILE_HPP
+#ifndef WC3LIB_LANG_FILE_HPP
+#define WC3LIB_LANG_FILE_HPP
 
 #include <istream>
 
-#include "vjassdoc.hpp"
-
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 class Parser;
 class SourceFile;
+class Language;
 class DocComment;
 
 /**
-* A Jass or vJass code file which is treated by a @class Parser instance.
-* This class knows the whole Jass and vJass syntax and is able to parse it.
-* Parsing runs automatically after creation of an instance in constructor.
+* A Code file which is treated by a @class Parser instance.
+* This class is able to handle the whole scripting languages syntax and to parse it.
 */
 class File
 {
@@ -46,16 +47,16 @@ class File
 		*/
 		std::string::size_type parse(class Parser *parser, class SourceFile *sourceFile, std::istream &istream);
 		
-		class Parser* parser() const;
-		class SourceFile* sourceFile() const;
+		const class Parser* parser() const;
+		const class SourceFile* sourceFile() const;
 		/**
 		* Required by Bison parser.
 		*/
-		void setLanguage(enum Vjassdoc::Language language);
+		void setLanguage(class Language *language);
 		/**
 		* Returns the current interpreted language in file.
 		*/
-		enum Vjassdoc::Language language() const;
+		const class Language* language() const;
 		/**
 		* Required by Bison parser.
 		*/
@@ -71,32 +72,32 @@ class File
 		*/
 		void setDocComment(class DocComment *docComment);
 		void clearDocComment();
-		class DocComment* docComment() const;
+		const class DocComment* docComment() const;
 		
 	protected:
 		class Parser *m_parser;
 		class SourceFile *m_sourceFile;
-		enum Vjassdoc::Language m_language;
+		class Language *m_language;
 		std::size_t m_lines;
 		class DocComment *m_docComment;
 };
 
-inline class Parser* File::parser() const
+inline const class Parser* File::parser() const
 {
 	return this->m_parser;
 }
 
-inline class SourceFile* File::sourceFile() const
+inline const class SourceFile* File::sourceFile() const
 {
 	return this->m_sourceFile;
 }
 
-inline void File::setLanguage(enum Vjassdoc::Language language)
+inline void File::setLanguage(class Language *language)
 {
 	this->m_language = language;
 }
 
-inline enum Vjassdoc::Language File::language() const
+inline const class Language* File::language() const
 {
 	return this->m_language;
 }
@@ -126,9 +127,11 @@ inline void File::clearDocComment()
 	this->m_docComment = 0;
 }
 
-inline class DocComment* File::docComment() const
+inline const class DocComment* File::docComment() const
 {
 	return this->m_docComment;
+}
+
 }
 
 }

@@ -86,7 +86,10 @@ Objektorientierung-Schlüsselwörter:
 private protected, operator, class, this, self, super, new, delete, copy, init, virtual, static, friend, abstract
 
 Threading-Schlüsselwöter:
-threaded, execute, executewait, evaluate, calls, sleeps, sleepon, sleepoff, reset, sleep
+threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
+
+Save- und Load-Schlüsselwörter:
+Warcract-spezifisch: store, restore, flush, save, load, remove
 
 Möglicher Zusatz:
 executefast ermöglicht den Aufruf mit ExecuteFunc und Parameterspeicherung, jedoch könnte
@@ -281,8 +284,10 @@ executewait Variable(<Parameter)
 Variable.executewait(<Parameter>)
 evaluate Variable(<Parameter)
 Variable.evaluate(<Parameter>)
-calls Variable
-Variable.calls
+executions Variable
+Variable.executions
+evaluations Variable
+Variable.evaluations
 sleeps Variable
 Variable.sleeps
 sleepon Variable
@@ -443,13 +448,23 @@ Notation:
 }
 
 Ist eine Funktion "threaded", kann sie von überall aus mit .execute, .executewait, oder .evaluate aufgerufen werden.
-Letzteres ist jedoch nur möglich, falls sie einen anderen Rückgabetyp als "void" besitzt.
+Rückgabewerte können nur bei .evaluate zurückgegeben werden.
+.evaluate erzeugt keinen neuen Thread, es wird daher gewartet, bis der Funktionsaufruf abgearbeitet wurde. Funktionen, die mit
+.evaluate aufgerufen werden, dürfen keine sleep-Anweisungen bzw. TriggerSleepAction-Aufrufe enthalten.
+Bei .execute und .executewait dagegen, läuft der Code unmittelbar nach dem Aufruf weiter. Der Funktionsaufruf findet in einem eigenen
+Thread statt.
+.execute und .executewait bewirken eigentlich das Gleiche, insofern TriggerExecute und TriggerExecuteWait das Gleiche bewirken.
+Der Rückgabewert von Funktionen, die mit .execute bzw. .executewait aufgerufen wurden, dürfen nicht verwendet werden (zeitliche Differenz!).
 
-Mittels der Schlüsselwörter "calls" kann herausgefunden werden, wie oft eine "threaded" Funktion per .execute, .executewait und .evaluate aufgerufen wurde (zählt für alle drei gemeinsam).
+Mittels der Schlüsselwörter "executions" und "evaluations" kann herausgefunden werden, wie oft eine "threaded" Funktion per .execute und .executewait 
+bzw. .evaluate aufgerufen wurde.
 Zurückgegeben wird die Anzahl als integer.
 
 Notation:
-<Funktionsname>.calls
+<Funktionsname>.executions
+<Funktionsname>.evaluations
+executions <Funktionsname>
+evaluations <Funktionsname>
  
 Mittels des Schlüsselwortes "sleep", kann in einer "threaded"-Funktion gewartet werden.
 
@@ -458,13 +473,20 @@ sleep(<real-Ausdruck>)
 
 Mittels der Schlüsselwörter "sleeps", "sleepon" und "sleepoff" kann eine "threaded" Funktion darauf überprüft werden, ob ihr Thread gerade wartet bzw.
 das Warten aktiviert oder deaktiviert werden.
+Die Aktivierung und Deaktivierung des Wartens bezieht sich NUR auf alle laufenden .execute- und .executewait-Aufrufe der Funktion.
+Sämtliche Aufrufe nach der Aktivierung bzw. Deaktivierung sind davon ausgeschlossen.
+Dies liegt am Verhalten der nativen Jass-Funktion TriggerWaitOnSleeps.
+Test-Anmerkung:
+IsTriggerWaitOnSleeps gibt nur true zurück, falls explizit TriggerWaitOnSleeps(<Auslöser>, true) aufgerufen wurde. Am Verhalten des Auslösers
+scheint sich aber nichts zu ändern.
 
 Notation:
 sleeps <Funktionsname>// Liefert einen Boolean-Wert.
 sleepon <Funktionsname> // Funktion wartet bei "sleep"-Anweisungen.
 sleepoff <Funktionsname> // Funktion wartet nicht bei "sleep"-Anweisungen.
 
-Mittels des Schlüsselwortes "reset" kann eine "threaded" Funktion zurückgesetzt werden.
+Mittels des Schlüsselwortes "reset" kann eine "threaded" Funktion zurückgesetzt werden. Dies bewirkt, dass sie bei der nächsten sleep-Anweisung 
+abbricht. Dies gilt für sämtliche execute- und executewait-Aufrufe der Funktion.
 
 Notation:
 reset <Funktionsname> // Setzt den Thread der Funktion zurück.
@@ -627,8 +649,12 @@ Normalerweise wird er automatisch definiert und kopiert den Inhalt aller Element
 Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klasseneigenschaft oder -methode aufgerufen.
 Mit dem Schlüsselwort super spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
 Bezugsrahmen, angesprochen werden. Da sie normalerweise kein äußerer Bezugsrahmen sind, funktioniert die Verwendung des .-Operators nicht.
-Mit dem Schlüsselwort self spricht man die eigene Klasse an. Diese kann allerdings auch, wie bei gewöhnlichen Bezugsrahmen, über ihren
-Namen oder den .-Operator angesprochen werden. Mit dem Schlüsselwort this spricht man die verwendete Instanz an.
+Mit dem Schlüsselwort self spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
+die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren statischen Methoden aufruft, insofern sie selbst z. B. zu einer
+der Elternklassen und nicht zur Klasse für die der Aufruf galt gehört.
+Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Bezugsrahmen, über ihren Namen oder den .-Operator angesprochen werden.
+In diesem Fall wird ebenfalls überprüft, ob es sich um eine virtuelle statische Methode handelt und die der korrekten Klasse aufgerufen.
+Mit dem Schlüsselwort this spricht man die verwendete Instanz an.
 Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert.
 In diesem Fall werden die Instanzdaten in der globalen Hashtable oder in zusätzlichen globalen Variablen gespeichert.
 Falls die angegebene Maximalgröße den Wert 8192 übersteigt, sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
@@ -642,7 +668,7 @@ abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
 Mehrfachvererbung:
 Überschneiden sich Elemente mehrerer geerbter Klassen, so wird vom Compiler eine Warnung ausgegeben.
 Handelt es sich um Elementvariablen, so wird lediglich die erste Elementvariable der geerbten Klassen belegt.
-Bei den Methoden werden sämtliche Elternmethoden der geerbten Klassen von links nach rechts hintereinander aufgerufen.
+Bei den Methoden wird ebenfalls die Methode der zu erst geerbten Klasse (von unten nach oben, von links nach rechts) aufgerufen.
 
 Notation:
 [ abstract ] class Klassenname [ [Maximalgröße] ] : public | private | protected Klassenname ...
@@ -700,6 +726,11 @@ der Methode aufgerufen werden.
 
 Virtuelle Methoden bewirken, dass diese auch aufgerufen werden, wenn das Objekt zu einem Elterntyp konvertiert wurde, da pro
 Objekt Verweise auf die entsprechenden Methoden gespeichert werden. Dies gilt für statische und nicht statische virtuelle Methoden.
+Bei virtuellen statischen Methoden kommt noch die Besonderheit hinzu, dass bei einem Aufruf der statischen Methode Kindklasse::statischeMethode(),
+welche jedoch in der Kindklasse nicht neu definiert wurde, weshalb automatisch die der Elternklasse aufgerufen wird, von der statischen Methode
+überprüft werden muss, von welcher Klasse aus sie aufgerufen wurde, damit sie bei virtuellen statischen Methoden die richtigen der Kindklasse und
+nicht die der Elternklasse aufruft.
+Virtuelle Methoden müssen in jedem Fall "threaded" sein!
 
 Notation:
 [static] [virtual | abstract] Funktionsdeklaration [const]
@@ -743,6 +774,29 @@ usw. von links nach rechts.
 Notation:
 delete <Variable>
 <Variable>.delete()
+ 
+Save- und Load-Möglichkeiten:
+Mit Hilfe der Schlüsselwörter store, restore und flush, kann eine Klasseninstanz in einem Spiel-Cache verwaltet werden.
+Dabei muss dem Schlüsselwort der Spiel-Cache, ein Mission-Key und ein Label-Präfix für sämtliche Werte übergeben werden.
+Zu beachten gilt, dass Elemente der Instanz, welche nicht den Typ integer, real, boolean, string oder unit haben,
+nicht in einem Spiel-Cache gespeichert werden können, weshalb man für solche Klasseninstanzen, die Hashtable-Schlüsselwörter
+verwenden muss.
+In eine Hashtable kann jeder native Datentyp aus Warcraft 3 gespeichert werden, weshalb sämtliche Klasseninstanzelemente
+problemlos gespeichert und geladen werden können.
+Mit dem Schlüsselwort "remove", können die Elemente wieder aus der Hashtable entfernt werden. Für Spiel-Cache-Elemente
+muss das Schlüsselwort "flush" verwendet werden.
+Bei Hashtable-Aufrufen wird neben der verwendeten Hashtable nur ein Parent-Key übergeben. Als Child-Key wewird einfach die
+Nummer des jeweiligen Elements genommen. Dabei wird von der Deklarationsreihenfolge in der Klassendeklaration ausgegangen.
+Vor allem die Spiel-Cache-Schlüsselwörter können von Nutzen sein, wenn man eine Kampagne erstellen möchte, in welcher
+in weiteren Karten, die Daten der alten geladen werden sollen.
+
+Notation:
+<Variablenname>.store(<Spiel-Cache>, <Mission-Key>, <Label-Präfix>)
+<Variablenname>.restore(<Spiel-Cache>, <Mission-Key>, <Label-Präfix>)
+<Variablenname>.flush(<Spiel-Cache>, <Mission-Key>, <Label-Präfix>)
+<Variablenname>.save(<Hashtable>, <Parent-Key>)
+<Variablenname>.load(<Hashtable>, <Parent-Key>)
+<Variablenname>.remove(<Hashtable>, <Parent-Key>)
 
 Operatorenüberladung:
 Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen enthält, überlädt die Bedeutung eines 

@@ -18,14 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
 #include <sstream>
 
 #include "objects.hpp"
 #include "internationalisation.hpp"
 #include "utilities.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 #ifdef SQLITE
@@ -450,5 +452,7 @@ std::string DocComment::sqlStatement() const
 	return sstream.str();
 }
 #endif
+
+}
 
 }

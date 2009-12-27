@@ -25,6 +25,7 @@
 #include <list>
 #include <ostream>
 
+#include "../exception.hpp"
 #include "parser.hpp"
 
 namespace wc3lib
@@ -53,8 +54,8 @@ class Object
 				List& operator>>(class Object* &object);
 			
 #ifdef HTML
-				virtual std::string htmlCategoryName() const = 0;
-				virtual std::string htmlFolderName() const = 0;
+				virtual const std::string& htmlCategoryName() const = 0;
+				virtual const std::string& htmlFolderName() const = 0;
 				void writeHtmlList(std::ostream &ostream);
 				void writeHtmlPages() throw (std::exception);
 #endif
@@ -69,8 +70,8 @@ class Object
 #ifdef SQLITE
 				virtual std::string sqlTableName() const;
 				virtual std::size_t sqlColumns() const;
-				virtual std::string sqlColumnDataType(std::size_t column) const throw (std::exception);
-				virtual std::string sqlColumnName(std::size_t column) const throw (std::exception);
+				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (class Exception);
+				virtual const std::string& sqlColumnName(std::size_t column) const throw (class Exception);
 #endif
 				
 			private:
@@ -81,7 +82,7 @@ class Object
 		typedef const unsigned char* SqlValueDataType;
 #endif
 #ifdef HTML
-		static std::string objectHtmlPageLink(const class Object *object, const std::string &identifier = "-"); //should use the id
+		static const std::string& objectHtmlPageLink(const class Object *object, const std::string &identifier = "-"); //should use the id
 #endif
 	
 		Object(const std::string &identifier, class SourceFile *sourceFile, std::size_t line);
@@ -92,16 +93,16 @@ class Object
 
 		virtual void init() = 0; //Some Objects has to be initialized after finding all objects of all files.
 #ifdef SQLITE
-		virtual std::string sqlValue(std::size_t column) const = 0;
+		virtual const std::string& sqlValue(std::size_t column) const = 0;
 #endif
 #ifdef HTML
 		virtual void writeHtmlPageNavigation(std::ostream &ostream) const = 0;
 		virtual void writeHtmlPageContent(std::ostream &ostream) const = 0;
 
 		boost::filesystem::path htmlPagePath() const;
-		std::string htmlPageLink() const;
+		const std::string& htmlPageLink() const;
 #endif
-		std::string identifier() const;
+		const std::string& identifier() const;
 		const class SourceFile* sourceFile() const;
 		std::size_t line() const;
 #ifdef SQLITE
@@ -119,7 +120,7 @@ class Object
 
 	protected:
 #ifdef HTML
-		virtual std::string htmlPageName() const = 0;
+		virtual const std::string& htmlPageName() const = 0;
 #endif
 		std::string m_identifier;
 		class SourceFile *m_sourceFile;
@@ -133,7 +134,7 @@ class Object
 };
 
 #ifdef HTML
-inline std::string Object::objectHtmlPageLink(const class Object *object, const std::string &identifier)
+inline const std::string& Object::objectHtmlPageLink(const class Object *object, const std::string &identifier)
 {
 	if (object == 0)
 		return identifier;
@@ -146,7 +147,7 @@ inline boost::filesystem::path Object::htmlPagePath() const
 	return boost::filesystem::path(this->htmlFolderName()) / this->htmlPageName();
 }
 
-inline std::string Object::htmlPageLink() const
+inline const std::string& Object::htmlPageLink() const
 {
 	std::ostringstream sstream;
 	sstream << "<a href=\"" << this->htmlPagePath().string() << ".html\">";
@@ -162,7 +163,7 @@ inline std::string Object::htmlPageLink() const
 }
 #endif
 
-inline std::string Object::identifier() const
+inline const std::string& Object::identifier() const
 {
 	return this->m_identifier;
 }

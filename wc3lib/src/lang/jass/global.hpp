@@ -18,14 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_GLOBAL_HPP
-#define VJASSDOC_GLOBAL_HPP
-
-#include <cstdlib>
+#ifndef WC3LIB_LANG_JASS_GLOBAL_HPP
+#define WC3LIB_LANG_JASS_GLOBAL_HPP
 
 #include "object.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
+{
+	
+namespace jass
 {
 
 class Global : public Object

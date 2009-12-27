@@ -35,63 +35,24 @@ mehr Code im generierten Kartenskript.
 Bei einer globalen Hashtable ist es dagegen möglich nahezu beliebig viele Daten zu speichert, ohne besondere neue Variablen zu generieren.
 Es fallen sogar eigens deklarierte Variablen weg, da ihre Daten in der Hashtable gespeichert werden.
 
+2. Kompilierungsschritte
 
-!!!!!!!!!!!!!!!!!Veraltete Definitionen!!!!!!!!!!:
+2.1 Validierung
 
-8. Globale Hashtable erzeugen/Laufzeitglobale erzeugen
-
-8.1 Globale Hashtable
-Ist der Hashtable-Modus aktiviert, so wird eine globale Variable namens jasspp__hashtable des Typs hashtable in das Kartenskript
-eingefügt.
-Die globale Hashtable wird für Funktionsparameter von .executewait-, .execute- und .evaluate-Aufrufen, Klasseninstanzen und Arrayinstanzen verwendet.
-Sie wird in der main-Funktion der Karte nach dem Aufruf der InitBlizzard-Funktion in der Funktion InitJassPP erzeugt.
-Nach ihr werden sämtliche Prototypauslöser erzeugt.
-
-Kategorie "Data":
-	* Label "FunctionPrototypes" Typ integer Wert <Anzahl der Funktionsprototypen> // Eventuell nur im Debug-Modus, wird zur Laufzeit normalerweise nicht benötigt.
-	* Label "ClassInstances" Typ integer Wert <Anzahl der Klasseninstanzen>
-	* Label "ArrayInstances" Typ integer Wert <Anzahl der Array-Instanzen>
-
-// TODO: globale Array-Variable mit Auslösern?
-Kategorie "FunctionPrototype<n>":
-	* Label "Trigger" Typ trigger Wert <Zugehöriger Auslöser>
-	* Label "Argument<n>" Typ <Argument<n>-Typ der Funktion> Wert <Argument<n>-Wert gesetzt durch den letzten Aufruf>
-
-Kategorie "ClassInstance<n>":
-	* Label "MethodFunctionPrototype<Name der virtuellen Methoden>" Typ integer Wert <Nummer des Funktionsprototypes der virtuellen Methode>
-	* Label "Member<Elementname>" Typ <Elementtyp> Wert <Elementwert>
-
-Kategorie "ArrayInstance<n>":
-	* Label "Index<Index>" Typ <Arraytyp> Wert <Arraywert des Indexes>
-
-Wurden bei einer Klasse oder einem Array Maximalgrößen angegeben, so werden diese innerhalb der generierten Zugriffsfunktionen (siehe 10.1 Zugriffsfunktionen für globale Hashtable)
-überprüft und entsprechend verfahren, wenn das Maximum erreicht wurde.
-
-8.2 Laufzeitglobale
-1. sämtliche Prototypfunktionsauslöser-, Prototypfunktionsargument- und Prototypfunktionsrückgabewert-Globalen ins Kartenskript einfügen
-2. sämtliche 
-
-13. InitJassPP generieren
-Falls der Hashtable-Modus aktiviert ist, Klassen mit Maximalgrößen über JASS_MAX_ARRAY_SIZE, Arrays mit Maximalgrößen über
-JASS_MAX_ARRAY_SIZE oder irgendeine Art von Funktionsprototyp existiert (durch "virtual" bzw. "threaded" Methoden/Funktionen),
-wird die Funktion InitJassPP generiert, in welcher entweder die Hashtable erzeugt und gefüllt wird oder alle Prototypfunktionsauslöser in globale Variablen geschrieben werden.
-Die Funktion wird nach der Funktion InitBlizzard in der Funktion main des Kartenskripts aufgerufen.
-
-10. Zugriffsfunktionen generieren
+Es muss sichergestellt sein, dass sämtliche Funktionen des Typs "code" vor ihrer Verwendung (z. B. beim Hinzufügen als Auslöseraktion) deklariert
+wurden (dies hat der JassHelper bisher nicht übernommen).
 
 
-10.1 Zugriffsfunktionen für globale Hashtable
+10. Funktionsgenerierung
 
-
-10.2 Zugriffsfunktionen für Laufzeitglobale
 Threaded Funktionen/Funktionsprototypen:
 Pro "threaded" Funktion bzw. Methode wird ein globaler Auslöser erzeugt, der den Funktionsinhalt
 enthält, allerdings keine Parameter entgegen nimmt. Die Parameter werden in lokale Variablen aus
-globalen Parametervariablengeladen bzw. vor dem
-Aufruf gesetzt.
+globalen Parametervariablen geladen bzw. vor dem Aufruf gesetzt.
 Die Prototypauslöser werden in einem oder mehreren Arrays gespeichert und wie Klassenelemente indiziert,
 insofern keine globale Hashtable verwendet wird. Für die Prototypargumente existieren pro Argumenttyp
 und der maximal benötigten Anzahl dieser in einer Funktion ebenfalls globale Variablen.
+Für den Rückgabewert existiert ebenfalls pro verwendetem Rückgabetyp eine globale Variable.
 Prototypfunktionen sind statisch und werden normalerweise nicht zur Laufzeit verändert, weshalb
 man keine Index-Auswertungsfunktionen braucht, da der Compiler stets die richtigen Variablen
 einfügen sollte.
@@ -101,54 +62,83 @@ der bereits verwendeten Arrays abziehen (siehe Klassenelementezugriff).
 globals
 	trigger array jasspp__prototypeFunctionTriggers0
 	trigger array jasspp__prototypeFunctionTriggers1
-	<Parametertyp0> array jasspp__prototypeFunctionArguments0__<Parametertyp0>
-	<Parametertyp0> array jasspp__prototypeFunctionArguments1__<Parametertyp0>
-	<Parametertyp1> array jasspp__prototypeFunctionArguments0__<Parametertyp1>
-	<Parametertyp1> array jasspp__prototypeFunctionArguments1__<Parametertyp1>
-	<Rückgabetyp0> array jasspp__prototypeFunctionReturnValues0__<Rückgabetyp0>
+	<Parametertyp0> jasspp__prototypeFunctionArgument0__<Parametertyp0>
+	<Parametertyp1> jasspp__prototypeFunctionArgument0__<Parametertyp1>
+	<Rückgabetyp0> jasspp__prototypeFunctionReturnValue0__<Rückgabetyp0>
+	<Rückgabetyp1> jasspp__prototypeFunctionReturnValue0__<Rückgabetyp1>
 endglobals
 
-function jasspp__prototypeFunction<Prototypnummer> takes nothing returns nothing
-	local <Parametertyp0> <Parametername0> = jasspp__prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>]
-	local <Parametertyp1> <Parametername1> = jasspp__prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>]
-	set jasspp__prototypeFunctionReturnValues0__<Rückgabetyp0> = <Parametername0> * <Parametername1>
+function jasspp__prototypeFunctionCondition<Prototypnummer> takes nothing returns boolean
+	local <Parametertyp0> <Parametername0> = jasspp__prototypeFunctionArgument0__<Parametertyp0>
+	local <Parametertyp1> <Parametername1> = jasspp__prototypeFunctionArgument0__<Parametertyp1>
+	set jasspp__prototypeFunctionReturnValue0__<Rückgabetyp0> = <Parametername0> * <Parametername1> // Beispielrechnung
+	return true
+endfunction
+
+// Man kann genauso gut nur die erste Funktion verwenden, dann wird der Rückgabewert unnötigerweise gesetzt, was eigentlich nicht weiter schlimm ist.
+function jasspp__prototypeFunctionAction<Prototypnummer> takes nothing returns nothing
+	local <Parametertyp0> <Parametername0> = jasspp__prototypeFunctionArgument0__<Parametertyp0>
+	local <Parametertyp1> <Parametername1> = jasspp__prototypeFunctionArgument0__<Parametertyp1>
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
-function jasspp__init__PrototypeFunction<Prototypnummer> takes nothing returns nothing
-	set jasspp__prototypeFunctionTriggers0[<Prototypnummer>] = CreateTrigger()
-	call TriggerAddAction(__prototypeFunctionTriggers0[<Prototypnummer>], function jasspp__prototypeFunction<Prototypnummer>)
+function jasspp__allocate__PrototypeFunction<Prototypnummer> takes nothing returns nothing
+	set jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>] = CreateTrigger()
+	call TriggerAddCondition(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>], Condition(function jasspp__prototypeFunctionCondition<Prototypnummer>))
+	call TriggerAddAction(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>], function jasspp__prototypeFunctionAction<Prototypnummer>)
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
 // Für den Debug-Modus.
 function jasspp__free__PrototypeFunction<Prototypnummer> takes nothing returns nothing
-	call TriggerClearActions(__prototypeFunctionTriggers0[<Prototypnummer>])
-	call DestroyTrigger(__prototypeFunctionTriggers0[<Prototypnummer>])
-	set jasspp__prototypeFunctionTriggers0[<Prototypnummer>] = null
+	call TriggerClearActions(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
+	call DestroyTrigger(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
+	set jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>] = null
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
 // Für .evaluations.
 function jasspp__evaluations__prototypeFunction<Prototypnummer> takes nothing returns integer
-	return GetTriggerEvalCount(__prototypeFunctionTriggers0[<Prototypnummer>])
+	return GetTriggerEvalCount(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
 // Für .executions.
 function jasspp__executions__prototypeFunction<Prototypnummer> takes nothing returns integer
-	return GetTriggerExecCount(__prototypeFunctionTriggers0[<Prototypnummer>])
+	return GetTriggerExecCount(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
 endfunction
 
-function testEvaluation takes nothing returns nothing
-	local <Rückgabetyp0> result
-	set jasspp__prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>] = <Parameter0>
-	set jasspp__prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>] = <Parameter1>
-	call TriggerEvaluate(__prototypeFunctionTriggers0[<Prototypnummer>])
-	set result = jasspp__prototypeFunctionReturnValues0__<Rückgabetyp0>
+// Wird für Funktionsvariablen aller Art benötigt (z. B. virtuelle Methoden)
+function jasspp__getPrototypeFunctionTrigger takes integer index returns trigger
+	if (index > 0 and index < JASS_MAX_ARRAY_SIZE) then // 0 ist für Nullzeiger reserviert
+		return jasspp__prototypeFunctionTriggers0[index]
+	elseif (index < 2 * JASS_MAX_ARRAY_SIZE) then
+		return jasspp__prototypeFunctionTriggers1[index]
+#if (DEBUG_MODE)
+	else
+		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to get prototype function trigger for index " + I2S(index) + ". Maximum size is $MAXIMALE ANZAHL DER PROTOTYPFUNKTIOEN$.")
+#endif
+	endif
+	return null
 endfunction
 
-Klasseninstanzen ohne globale Hashtable:
+// Wird statt der eigentlichen Funktion bei .evaluate aufgerufen.
+function jasspp__prototypeFunction<Prototypnummer> takes <Parametertyp0> <Parametername0>, <Parametertyp1> <Paramtername1> returns <Rückgabetyp0>
+	set jasspp__prototypeFunctionArgument0__<Parametertyp0> = <Parameter0>
+	set jasspp__prototypeFunctionArgument0__<Parametertyp1> = <Parameter1>
+	call TriggerEvaluate(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
+	return jasspp__prototypeFunctionReturnValue0__<Rückgabetyp0>
+endfunction
+
+// Wird statt der eigentlichen Funktion bei .execute aufgerufen.
+function jasspp__prototypeFunction<Prototypnummer> takes <Parametertyp0> <Parametername0>, <Parametertyp1> <Paramtername1> returns nothing
+	set jasspp__prototypeFunctionArgument0__<Parametertyp0> = <Parameter0>
+	set jasspp__prototypeFunctionArgument0__<Parametertyp1> = <Parameter1>
+	call TriggerExecute(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
+endfunction
+
+13. Klassengenerierung
+
 Pro Klassenelement wird eine globale Arrayvariable deklariert deren Indexwerte der jeweiligen Instanz gehören. Außerdem wird
 eine Konstante definiert, welche bestimmt, wie viele Instanzen der Klasse erzeugt werden können. Dies hängt unter anderem
 davon ab, ob die Klasse Array-Elemente besitzt.
@@ -172,8 +162,8 @@ endglobals
 
 Allokation:
 
-// fixen, 0-Zeiger beachten!
-function jasspp__newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
+// fixen, 0-Zeiger beachten! Wird nur für die erste Elternklasse definiert!
+function jasspp__allocate__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
 	local integer i = 0
 	loop
 		exitwhen (i == IMax(1, jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size / JASS_MAX_ARRAY_SIZE))
@@ -201,8 +191,8 @@ function jasspp__newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<
 	return 0
 endfunction
 
-// Eventuell Variable automatisch auf 0 setzen?
-function jasspp__deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+// Eventuell Variable automatisch auf 0 setzen? Wird nur für die erste Elternklasse definiert!
+function jasspp__free__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
 #if (DEBUG_MODE)
 	if (id <= 0 or id >= jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to free id " + I2S(id) + " for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
@@ -269,7 +259,7 @@ endfunction
 
 // Existiert auch für Kindklassen.
 function jasspp__new__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
-	local integer id = jasspp__newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>()
+	local integer id = jasspp__allocate__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>()
 #if (DEBUG_MODE)
 	if (id == 0) then
 		return
@@ -281,7 +271,7 @@ endfunction
 
 // Existiert auch für Kindklassen. Eventuell Variable automatisch auf 0 setzen?
 function jasspp__delete__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	call jasspp__deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id)
+	call jasspp__free__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id)
 #if (DEBUG_MODE)
 	if (id <= 0 or id >= jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to free id " + I2S(id) + " for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
@@ -306,37 +296,13 @@ function jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname
 	return a + b + jasspp__member__m_x__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(this)
 endfunction
 
-/*
-Threaded Methoden:
+14. InitJassPP generieren
 
-threaded void test(integer a, integer b)
-{
-}
+Falls der Hashtable-Modus aktiviert ist, Klassen mit Maximalgrößen über JASS_MAX_ARRAY_SIZE, Arrays mit Maximalgrößen über
+JASS_MAX_ARRAY_SIZE oder irgendeine Art von Funktionsprototyp existiert (durch "virtual" bzw. "threaded" Methoden/Funktionen),
+wird die Funktion InitJassPP generiert, in welcher entweder die Hashtable erzeugt und gefüllt wird oder alle Prototypfunktionsauslöser in globale Variablen geschrieben werden.
+Die Funktion wird nach der Funktion InitBlizzard in der Funktion main des Kartenskripts aufgerufen.
 
-wird ersetzt durch
-
-function jasspp__FunctionPrototype<n> takes nothing returns nothing
-	local integer this = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("this"))
-	local integer a = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("a"))
-	local integer b = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("b"))
-endfunction
-
-und in der Initialisierungsfunktion mit folgendem initialisiert
-
-local trigger prototypeTrigger = CreateTrigger()
-call TriggerAddAction(prototypeTrigger, function jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test)
-SaveTriggerHandle(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("Trigger"), prototypeTrigger)
-set prototypeTrigger = null
-
-this.myVirtualMethod().execute(a, b)
-
-wird ersetzt durch
-
-call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("this"), this)
-call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("Argument0"), a)
-call SaveInteger(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this])), StringHash("Argument1"), b)
-call TriggerExecute(LoadTriggerHandle(__hashtable, StringHash("FunctionPrototype" + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>[this]))), StringHash("Trigger"))
-*/
 
 10.3 Zugriffsfunktionen für Funktionen/Methoden mit gleichem Namen
 
@@ -628,6 +594,34 @@ void test()
 	{
 	}
 }
+
+4. Die globale Hashtable erzeugen
+Ist der Hashtable-Modus aktiviert, so wird eine globale Variable namens jasspp__hashtable des Typs hashtable in das Kartenskript
+eingefügt.
+Die globale Hashtable wird für Funktionsparameter von .executewait-, .execute- und .evaluate-Aufrufen, Klasseninstanzen und Arrayinstanzen.
+Sie wird in der main-Funktion der Karte nach dem Aufruf der InitBlizzard-Funktion in der Funktion InitJassPP erzeugt.
+Nach ihr werden sämtliche Prototypauslöser erzeugt.
+
+Kategorie "Data":
+	* Label "FunctionPrototypes" Typ integer Wert <Anzahl der Funktionsprototypen> // Eventuell nur im Debug-Modus, wird zur Laufzeit normalerweise nicht benötigt.
+	* Label "ClassInstances" Typ integer Wert <Anzahl der Klasseninstanzen>
+	* Label "ArrayInstances" Typ integer Wert <Anzahl der Array-Instanzen>
+
+// TODO: globale Array-Variable mit Auslösern?
+Kategorie "FunctionPrototype<n>":
+	* Label "Trigger" Typ trigger Wert <Zugehöriger Auslöser>
+	* Label "Argument<n>" Typ <Argument<n>-Typ der Funktion> Wert <Argument<n>-Wert gesetzt durch den letzten Aufruf>
+	* Label "ReturnValue" Type <Rückgabewerttyp der Funktion> Wert <Rückgabewert gesetzt durch die aufgerufene Funktion>
+
+Kategorie "ClassInstance<n>":
+	* Label "MethodFunctionPrototype<Name der virtuellen Methoden>" Typ integer Wert <Nummer des Funktionsprototypen der virtuellen Methode>
+	* Label "Member<Elementname>" Typ <Elementtyp> Wert <Elementwert>
+
+Kategorie "ArrayInstance<n>":
+	* Label "Index<Index>" Typ <Arraytyp> Wert <Arraywert des Indexes>
+
+Wurden bei einer Klasse oder einem Array Maximalgrößen angegeben, so werden diese innerhalb der generierten Zugriffsfunktionen (siehe 10.1 Zugriffsfunktionen für globale Hashtable)
+überprüft und entsprechend verfahren, wenn das Maximum erreicht wurde.
 
 5. Anwendung
 

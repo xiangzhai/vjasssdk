@@ -31,14 +31,18 @@
 #include "file.hpp"
 #include "objects.hpp"
 #include "parser.hpp"
+#include "language.hpp"
 #include "internationalisation.hpp"
 #include "syntaxerror.hpp"
 #include "utilities.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
-File::File() : m_parser(0), m_parser(0), m_language(Vjassdoc::Jass), m_lines(0), m_docComment(0)
+File::File() : m_parser(0), m_parser(0), m_language(Language::jass()), m_lines(0), m_docComment(0)
 {
 }
 

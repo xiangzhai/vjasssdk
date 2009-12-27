@@ -18,57 +18,46 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_FUNCTION_HPP
-#define VJASSDOC_FUNCTION_HPP
+#ifndef WC3LIB_LANG_JASS_FUNCTION_HPP
+#define WC3LIB_LANG_JASS_FUNCTION_HPP
 
-#include "functioninterface.hpp"
+#include "../object.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
-class Function : public FunctionInterface
+namespace jass
+{
+
+class Function : public Object
 {
 	public:
-#ifdef SQLITE
-		static const char *sqlTableName;
-		static std::size_t sqlColumns;
-		static std::string sqlColumnStatement;
-
-		static void initClass();
-#endif
-		Function(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, class Library *library, class Scope *scope, bool isPrivate, std::list<class Parameter*> parameters, const std::string &returnTypeExpression, bool isPublic, bool isConstant, bool isNative);
-#ifdef SQLITE
-		Function(std::vector<const unsigned char*> &columnVector);
+		Function(const std::string &identifier, class SourceFile *sourceFile, std::size_t line, const std::string &returnTypeExpression, std::list<std::string> parameterTypeExpressions, std::list<std::string> parameterIdentifiers);
+#ifdef SQLITE		
+		Function(std::vector<Object::SqlValueDataType> &columnVector);
 #endif
 		virtual void init();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
 #ifdef SQLITE
-		virtual std::string sqlStatement() const;
+		virtual std::string sqlValue(std::size_t column) const;
 #endif
-		bool isPublic() const;
-		bool isConstant() const;
-		bool isNative() const;
+#ifdef HTML
+		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
+		virtual void writeHtmlPageContent(std::ostream &ostream) const;
+#endif
 
 	protected:
-		bool m_isPublic;
-		bool m_isConstant;
-		bool m_isNative;
+		std::string m_returnTypeExpression;
+		class ReturnType *m_returnType;
+		std::list<std::string> m_paramaterTypeExpressions;
+		std::list<class Type*> m_parameterTypes;
+		std::list<std::string> m_parameterIdentifiers;
 };
 
-inline bool Function::isPublic() const
-{
-	return this->m_isPublic;
 }
 
-inline bool Function::isConstant() const
-{
-	return this->m_isConstant;
-}
-
-inline bool Function::isNative() const
-{
-	return this->m_isNative;
 }
 
 }

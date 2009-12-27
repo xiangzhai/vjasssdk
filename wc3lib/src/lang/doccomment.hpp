@@ -18,42 +18,66 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_DOCCOMMENT_HPP
-#define VJASSDOC_DOCCOMMENT_HPP
+#ifndef WC3LIB_LANG_DOCCOMMENT_HPP
+#define WC3LIB_LANG_DOCCOMMENT_HPP
 
 #include <list>
 
 #include "object.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 class DocComment : public Object
 {
 	public:
-#ifdef SQLITE
-		static const char *sqlTableName;
-		static std::size_t sqlColumns;
-		static std::string sqlColumnStatement;
+		class List : public Object::List
+		{
+			public:
+				List();
+				virtual ~List();			
+#ifdef HTML
+				virtual const std::string& htmlCategoryName() const = 0;
+				virtual const std::string& htmlFolderName() const = 0;
+#endif
 
-		static void initClass();
+				
+			protected:
+#ifdef SQLITE
+				virtual std::string sqlTableName() const;
+				virtual std::size_t sqlColumns() const;
+				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (class Exception);
+				virtual const std::string& sqlColumnName(std::size_t column) const throw (class Exception);
 #endif
+		};
+
 		DocComment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line);
-#ifdef SQLITE
-		DocComment(std::vector<const unsigned char*> &columnVector);
+#ifdef SQLITE		
+		DocComment(std::vector<Object::SqlValueDataType> &columnVector);
 #endif
+		virtual ~Object();
+
 		virtual void init();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
 #ifdef SQLITE
-		virtual std::string sqlStatement() const;
+		virtual const std::string& sqlValue(std::size_t column) const;
+#endif
+#ifdef HTML
+		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
+		virtual void writeHtmlPageContent(std::ostream &ostream) const;
+#endif
+
+#ifdef SQLITE
+		virtual const std::string& sqlStatement() const;
 #endif
 		void setObject(class Object *object); //Just used by the Object class.
-		std::string briefDescription() const;
-		class Object *object() const;
-		std::list<std::string> authors() const;
-		std::list<class Object*> seeObjects() const;
-		std::list<std::string> todos() const;
+		const std::string& briefDescription() const;
+		const class Object* object() const;
+		const std::list<std::string>& authors() const;
+		const std::list<class Object*>& seeObjects() const;
+		const std::list<std::string>& todos() const;
 
 	protected:
 		enum Keyword
@@ -185,6 +209,11 @@ class DocComment : public Object
 			VarKeyword,
 			MaxKeywords
 		};
+		
+#ifdef HTML
+		virtual const std::string& htmlPageName() const;
+#endif
+		
 #ifdef SQLITE
 		static const std::size_t sqlMaxAuthors;
 		static const std::size_t sqlMaxSeeObjects;
@@ -205,29 +234,31 @@ inline void DocComment::setObject(class Object *object)
 	this->m_object = object;
 }
 
-inline std::string DocComment::briefDescription() const
+inline const std::string& DocComment::briefDescription() const
 {
 	return this->m_briefDescription;
 }
 
-inline class Object* DocComment::object() const
+inline const class Object* DocComment::object() const
 {
 	return this->m_object;
 }
 
-inline std::list<std::string> DocComment::authors() const
+inline const std::list<std::string>& DocComment::authors() const
 {
 	return this->m_authors;
 }
 
-inline std::list<class Object*> DocComment::seeObjects() const
+inline const std::list<class Object*>& DocComment::seeObjects() const
 {
 	return this->m_seeObjects;
 }
 
-inline std::list<std::string> DocComment::todos() const
+inline const std::list<std::string>& DocComment::todos() const
 {
 	return this->m_todos;
+}
+
 }
 
 }

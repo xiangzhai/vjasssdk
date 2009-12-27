@@ -18,21 +18,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_COMPILER_HPP
-#define VJASSDOC_COMPILER_HPP
+#ifndef WC3LIB_LANG_COMPILER_HPP
+#define WC3LIB_LANG_COMPILER_HPP
 
 #include <ostream>
 #include <list>
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
+class Language;
 class FunctionPrototype;
 
 class Compiler
 {
 	public:
-		void compile(std::ostream &ostream, enum Vjassdoc::Language language);
+		void compile(std::ostream &ostream, const class Language *language);
 	
 	protected:
 		void sortPackages() const;
@@ -56,6 +60,8 @@ class Compiler
 		
 		std::list<class FunctionPrototype*> m_prototypes;
 };
+
+}
 
 }
 

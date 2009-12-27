@@ -28,7 +28,10 @@
 #include "object.hpp"
 #include "../internationalisation.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 void Compiler::compile(std::ostream &ostream)
@@ -134,6 +137,8 @@ void Compiler::writeLibraries(std::ostream &ostream)
 	
 	// write all functions and methods and text macro instances in the right order.
 	// text macros and preprocessors should be called before.
+}
+
 }
 
 }

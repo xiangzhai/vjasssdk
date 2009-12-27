@@ -18,12 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_COMMENT_HPP
-#define VJASSDOC_COMMENT_HPP
+#ifndef WC3LIB_LANG_JASS_COMMENT_HPP
+#define WC3LIB_LANG_JASS_COMMENT_HPP
 
 #include "object.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
+{
+	
+namespace jass
 {
 
 class Comment : public Object
@@ -51,6 +57,9 @@ class Comment : public Object
 #endif
 		virtual ~Comment();
 		virtual void init();
+#ifdef SQLITE
+		virtual std::string sqlValue(std::size_t column) const;
+#endif
 #ifdef HTML
 		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
 		virtual void writeHtmlPageContent(std::ostream &ostream) const;

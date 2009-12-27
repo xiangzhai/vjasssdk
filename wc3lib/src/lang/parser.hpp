@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_PARSER_HPP
-#define VJASSDOC_PARSER_HPP
+#ifndef WC3LIB_LANG_PARSER_HPP
+#define WC3LIB_LANG_PARSER_HPP
 
 #include <ostream>
 #include <functional>
@@ -31,7 +31,10 @@
 
 #include "../exception.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 class Object
@@ -42,13 +45,13 @@ class Object
 class SyntaxError;
 
 /**
-* Provides methods for parsing Jass and vJass files. The Parser class has the ability to create a simple HTML
-* API documentation and/or a SQLite3 database.
-* It contains a list for each Object child class.
-* @class File is the class which handles real specific Jass and vJass parsing. Parser does create one or several File instances by getting all file paths from class @class Vjassdoc.
+* Provides methods for parsing code files. The Parser class has the ability to create a simple HTML
+* API documentation and/or an SQLite3 database.
+* It contains lists which hold all parsed objects.
+* @class File is the class which treats real specific code/syntax parsing. Parser does create one single @class File instance by getting a single file path.
 * After parsing all of those files it is able to create an HTML documentation and an SQLite3 database.
 * Besides it provides several search functions which are required for object initialization which usually is runned after parsing for each parsed object.
-* @see Vjassdoc, File
+* @see File
 */
 class Parser
 {
@@ -109,8 +112,10 @@ class Parser
 		std::list<const class Object*> autoCompletion(const std::string &line, std::size_t &index);
 		
 	protected:
+#ifdef HTML
 		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::ostream &ostream);
 		void getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::ostream &ostream);
+#endif
 		
 		class Type *m_integerType;
 		class Type *m_realType;
@@ -119,7 +124,7 @@ class Parser
 		class Type *m_handleType;
 		class Type *m_codeType;
 		class File *m_file;
-		std::vector<class Language::List*> m_lists;
+		std::vector<class Language::List*> m_lists; // holds all parsed objects
 		std::vector<class SyntaxError*> m_syntaxErrors;
 #ifdef SQLITE
 		std::vector<class List*> m_databaseLists;
@@ -294,6 +299,8 @@ inline void Parser::add(class SyntaxError *syntaxError)
 inline const class List* Parser::list(enum Parser::List list) const
 {
 	return this->m_lists[list];
+}
+
 }
 
 }
