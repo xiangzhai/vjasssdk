@@ -30,9 +30,9 @@ namespace wc3lib
 class Exception : public std::exception
 {
 	public:
-		Exception(const std::string &what) throw();
-		virtual ~Exception() throw();
-		const char* what() const throw();
+		Exception(const std::string &what) throw ();
+		virtual ~Exception() throw ();
+		const char* what() const throw ();
 
 	private:
 		std::string m_what;

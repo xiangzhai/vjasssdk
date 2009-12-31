@@ -27,11 +27,11 @@ Exception::Exception(const std::string &what) throw () : m_what(what)
 {
 }
 
-Exception::~Exception() throw()
+Exception::~Exception() throw ()
 {
 }
 
-const char* Exception::what() const throw()
+const char* Exception::what() const throw ()
 {
 	return this->m_what.c_str();
 }

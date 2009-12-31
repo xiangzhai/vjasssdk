@@ -18,14 +18,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_SYNTAXERROR_HPP
-#define VJASSDOC_SYNTAXERROR_HPP
+#ifndef WC3LIB_LANG_SYNTAXERROR_HPP
+#define WC3LIB_LANG_SYNTAXERROR_HPP
 
 #include <string>
 
 #include "sourcefile.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 class SyntaxError
@@ -36,7 +39,7 @@ class SyntaxError
 		SyntaxError(class SourceFile *sourceFile, std::size_t line, const std::string &message);
 		class SourceFile* sourceFile() const;
 		std::size_t line() const;
-		std::string message() const;
+		const std::string& message() const;
 	
 	private:
 		class SourceFile *m_sourceFile;
@@ -54,14 +57,16 @@ inline class SourceFile* SyntaxError::sourceFile() const
 	return this->m_sourceFile;
 }
 
-inline unsigned int SyntaxError::line() const
+inline std::size_t SyntaxError::line() const
 {
 	return this->m_line;
 }
 
-inline std::string SyntaxError::message() const
+inline const std::string& SyntaxError::message() const
 {
 	return this->m_message;
+}
+
 }
 
 }

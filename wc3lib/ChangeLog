@@ -1,3 +1,7 @@
+2009-12-31 Tamino Dauth <tamino@cdauth.de>
+* Improved class map::Environment.
+* Added option --readonly and w3e support to application "converter".
+
 2009-12-27 Tamino Dauth <tamino@cdauth.de>
 * Revised some language classes.
 

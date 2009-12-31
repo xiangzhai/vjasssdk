@@ -20,11 +20,16 @@
 
 #include "syntaxerror.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 SyntaxError::SyntaxError(class SourceFile *sourceFile, unsigned int line, const std::string &message) : m_sourceFile(sourceFile), m_line(line), m_message(message)
 {
+}
+
 }
 
 }

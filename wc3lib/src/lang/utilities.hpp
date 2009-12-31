@@ -18,26 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_UTILITIES_HPP
-#define VJASSDOC_UTILITIES_HPP
+#ifndef WC3LIB_LANG_UTILITIES_HPP
+#define WC3LIB_LANG_UTILITIES_HPP
 
 #include <string>
 #include <ostream>
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
-extern std::string getToken(const std::string &line, std::string::size_type &index, bool endOfLine = false);
+extern const std::string& getToken(const std::string &line, std::string::size_type &index, bool endOfLine = false);
 extern void createHtmlHeader(std::ostream &ostream, const std::string &title, const std::string &language = _("en"));
 /**
 * Converts boolean value to a localized string.
 * This method has been written for showing boolean members of classes in a HTML file.
 * Instead of 0 and 1 it returns the strings 'No' and 'Yes' in the local language.
 */
-extern std::string booleanToString(bool value);
+extern const std::string& booleanToString(bool value);
 #ifdef SQLITE
-extern std::string sqlFilteredString(const std::string &value);
+extern const std::string& sqlFilteredString(const std::string &value);
 #endif
+
+}
 
 }
 

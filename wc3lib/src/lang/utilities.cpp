@@ -21,10 +21,13 @@
 #include "utilities.hpp"
 #include "internationalisation.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
-std::string getToken(const std::string &line, std::string::size_type &index, bool endOfLine)
+const std::string& getToken(const std::string &line, std::string::size_type &index, bool endOfLine)
 {
 	if (index >= line.length() || line.empty()) //important
 		return std::string();
@@ -70,7 +73,7 @@ void createHtmlHeader(std::ostream &ostream, const std::string &title, const std
 	;
 }
 
-std::string booleanToString(bool value)
+const std::string& booleanToString(bool value)
 {
 	if (value)
 		return _("Yes");
@@ -78,7 +81,7 @@ std::string booleanToString(bool value)
 	return _("No");
 }
 #ifdef SQLITE
-std::string sqlFilteredString(const std::string &value)
+const std::string& sqlFilteredString(const std::string &value)
 {
 	std::string result;
 	

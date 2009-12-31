@@ -789,6 +789,8 @@ Bei Hashtable-Aufrufen wird neben der verwendeten Hashtable nur ein Parent-Key �
 Nummer des jeweiligen Elements genommen. Dabei wird von der Deklarationsreihenfolge in der Klassendeklaration ausgegangen.
 Vor allem die Spiel-Cache-Schlüsselwörter können von Nutzen sein, wenn man eine Kampagne erstellen möchte, in welcher
 in weiteren Karten, die Daten der alten geladen werden sollen.
+Array-Elemente werden mit dem jeweiligen Index als Postfix im Spiel-Cache und wie als ein separates Element in der Hashtable 
+gespeichert.
 
 Notation:
 <Variablenname>.store(<Spiel-Cache>, <Mission-Key>, <Label-Präfix>)

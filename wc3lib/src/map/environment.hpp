@@ -21,30 +21,64 @@
 #ifndef WC3LIB_MAP_ENVIRONMENT_HPP
 #define WC3LIB_MAP_ENVIRONMENT_HPP
 
+#include <istream>
+#include <ostream>
+
+#include "../exception.hpp"
+
 namespace wc3lib
 {
 
 namespace map
 {
+	
+class Tilepoint;
 
 class Environment
 {
 	public:
-		struct Header
+		static const int currentVersion = 11;
+		static const int maxTilesets = 16;
+	
+		enum MainTileset
 		{
-			char fileId[4]; //: file ID = "W3E!"
-			int formatVersion; //: w3e format version [0B 00 00 00]h = version 11
-			char mainTileset; //: main tileset [TS]
-			int customTilesetsFlag; //: custom tilesets flag (1 = using cutom, 0 = not using custom tilesets)
-			int groundTilesetsNumber; //: number a of ground tilesets used (Little Endian) (note: should not be greater than 16 because of tilesets indexing in tilepoints definition)
-			char groundTilesetsIds[4][]; //[4][a]: ground tilesets IDs (tilesets table)
-			int cliffTilesetsNumber; //: number b of cliff tilesets used (Little Endian) (note: should not be greater than 16 because of tilesets indexing in tilepoints definition)
-			char cliffTilesetsIds[4][]; //[4][b]: cliff tilesets IDs (cliff tilesets table)
-			int maxX //: width of the map + 1 = Mx
-			int maxY; //: height of the map + 1 = My
-			float centerOffsetX; //: center offeset of the map X
-			float centerOffsetY; //: center offeset of the map Y
+			Ashenvale,
+			Barrens,
+			Felwood,
+			Dungeon,
+			LordaeronFall,
+			Underground,
+			LordaeronSummer,
+			Northrend,
+			VillageFall,
+			Village,
+			LordaeronWinter,
+			Dalaran,
+			Cityscape,
+			SunkenRuins,
+			Icecrown,
+			DalaranRuins,
+			Outland,
+			BlackCitadel
 		};
+		
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		
+	protected:
+		static enum MainTileset convertCharToMainTileset(char value);
+		
+		int m_version;
+		enum MainTileset m_mainTileset;
+		bool m_customized;
+		std::list<std::string> m_groundTilesets;
+		std::list<std::string> m_cliffTilesets;
+		int m_maxX;
+		int m_maxY;
+		float m_centerOffsetX;
+		float m_centerOffsetY;
+		std::list<class Tilepoint> m_tilepoints;
+		
 };
 
 }

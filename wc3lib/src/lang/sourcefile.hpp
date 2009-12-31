@@ -18,64 +18,90 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_SOURCEFILE_HPP
-#define VJASSDOC_SOURCEFILE_HPP
+#ifndef WC3LIB_LANG_SOURCEFILE_HPP
+#define WC3LIB_LANG_SOURCEFILE_HPP
 
 #include "object.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 class SourceFile : public Object
 {
 	public:
-#ifdef SQLITE
-		static const char *sqlTableName;
-		static unsigned int sqlColumns;
-		static std::string sqlColumnStatement;
+public:
+		class List : public Object::List
+		{
+			public:
+				List();
+				virtual ~List();			
+#ifdef HTML
+				virtual const std::string& htmlCategoryName() const;
+				virtual const std::string& htmlFolderName() const;
+#endif
 
-		static void initClass();
-#endif
-		SourceFile(const std::string &identifier, const std::string &path);
+				
+			protected:
 #ifdef SQLITE
-		SourceFile(std::vector<const unsigned char*> &columnVector);
+				virtual std::string sqlTableName() const;
+				virtual std::size_t sqlColumns() const;
+				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (class Exception);
+				virtual const std::string& sqlColumnName(std::size_t column) const throw (class Exception);
 #endif
+		};
+
+		SourceFile(const boost::filesystem::path &path);
+#ifdef SQLITE		
+		SourceFile(std::vector<Object::SqlValueDataType> &columnVector);
+#endif
+		virtual ~SourceFile();
+
 		virtual void init();
-		virtual void pageNavigation(std::ofstream &file) const;
-		virtual void page(std::ofstream &file) const;
 #ifdef SQLITE
-		virtual std::string sqlStatement() const;
+		virtual const std::string& sqlValue(std::size_t column) const;
 #endif
-		std::string path() const;
-		std::string lineLink(const unsigned int &line, const std::string &text) const;
+#ifdef HTML
+		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
+		virtual void writeHtmlPageContent(std::ostream &ostream) const;
+#endif
+
+#ifdef SQLITE
+		virtual const std::string& sqlStatement() const;
+#endif
+		const boost::filesystem::path& path() const;
+		
+		const std::string& lineLink(const std::size_t &line, const std::string &text) const;
 		
 		/**
 		* @param sourceFileName If this value is true, the name of source file will be shown as link. Otherwise the line will be shown.
 		*/
-		static std::string sourceFileLineLink(const class Object *object, const bool &sourceFileName = true, const std::string &identifier = "-");
+		static const std::string& sourceFileLineLink(const class Object *object, const bool &sourceFileName = true, const std::string &identifier = "-");
 
 	protected:
 		//Do not use
 		class SourceFile* sourceFile() const;
-		unsigned int line() const;
-		class DocComment* docComment() const;
+		std::size_t line() const;
 
-		std::string m_path;
+		boost::filesystem::path m_path;
 };
 
-inline std::string SourceFile::path() const
+inline const boost::filesystem::path& SourceFile::path() const
 {
 	return this->m_path;
 }
 
-inline std::string SourceFile::lineLink(const unsigned int &line, const std::string &text) const
+inline const std::string& SourceFile::lineLink(const std::size_t &line, const std::string &text) const
 {
 	std::ostringstream sstream;
 	sstream << "<a href=\"" << this->id() << ".html#" << line << "\">" << text << "</a>";
+	
 	return sstream.str();
 }
 
-inline std::string SourceFile::sourceFileLineLink(const class Object *object, const bool &sourceFileName, const std::string &identifier)
+inline const std::string& SourceFile::sourceFileLineLink(const class Object *object, const bool &sourceFileName, const std::string &identifier)
 {
 	if (object->sourceFile() == 0)
 		return identifier;
@@ -85,6 +111,7 @@ inline std::string SourceFile::sourceFileLineLink(const class Object *object, co
 	
 	std::ostringstream sstream;
 	sstream << object->line();
+	
 	return object->sourceFile()->lineLink(object->line(), sstream.str());
 }
 

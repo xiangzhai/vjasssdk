@@ -58,7 +58,7 @@ class DocComment : public Object
 #ifdef SQLITE		
 		DocComment(std::vector<Object::SqlValueDataType> &columnVector);
 #endif
-		virtual ~Object();
+		virtual ~DocComment();
 
 		virtual void init();
 #ifdef SQLITE

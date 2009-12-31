@@ -63,6 +63,7 @@ enum Format
 #ifdef MAX
 	Max,
 #endif
+	W3e,
 	MaxFormats,
 	InvalidFormat
 };
@@ -82,11 +83,12 @@ static const char *formatExpression[MaxFormats] =
 	"mdl",
 	"mdx",
 #ifdef BLEND
-	"blend"
+	"blend",
 #endif
 #ifdef MAX
-	, "3ds"
+	"3ds",
 #endif
+	"w3e"
 };
 
 static const char *formatExtension[MaxFormats] =
@@ -104,11 +106,12 @@ static const char *formatExtension[MaxFormats] =
 	"mdl",
 	"mdx",
 #ifdef BLEND
-	"blend"
+	"blend",
 #endif
 #ifdef MAX	
-	, "3ds"
+	"3ds",
 #endif
+	"w3e"
 };	
 
 static const bool formatIsBinary[MaxFormats] =
@@ -129,13 +132,14 @@ static const bool formatIsBinary[MaxFormats] =
 	true,	
 #endif
 #ifdef MAX
-	true
+	true,
 #endif
+	true // w3e
 };
 
 static const bool formatConvertibility[MaxFormats][MaxFormats] =
 {
-	// blp   jpeg   tga    png    mdl    mdx,   blend  3ds
+	// blp   jpeg   tga    png    mdl    mdx,   blend,  3ds, w3e
 	{
 		true,
 #ifdef JPEG
@@ -150,11 +154,12 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		false,
 		false,
 #ifdef BLEND
-		false
+		false,
 #endif
 #ifdef MAX
-		,false
+		false,
 #endif
+		false
 	},
 #ifdef JPEG
 	{
@@ -171,11 +176,12 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		false,
 		false,
 #ifdef BLEND
-		false
+		false,
 #endif
 #ifdef MAX
-		,false
+		false
 #endif
+		false
 	},
 #endif
 #ifdef TGA
@@ -193,11 +199,12 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		false,
 		false,
 #ifdef BLEND
-		false
+		false,
 #endif
 #ifdef MAX
-		,false
+		false,
 #endif
+		false
 	},
 #endif
 #ifdef PNG
@@ -215,11 +222,12 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		false,
 		false,
 #ifdef BLEND
-		false
+		false,
 #endif
 #ifdef MAX
-		,false
+		false,
 #endif
+		false
 	},
 #endif
 	// mdl
@@ -237,10 +245,10 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		true,
 		true,
 #ifdef BLEND
-		true
+		true,
 #endif
 #ifdef MAX
-		,true
+		true,
 #endif
 	},
 	// mdx
@@ -258,11 +266,12 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		true,
 		true,
 #ifdef BLEND
-		true
+		true,
 #endif
 #ifdef MAX
-		,true
+		true,
 #endif
+		false
 	},
 #ifdef BLEND
 	{
@@ -279,15 +288,16 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		true,
 		true,
 #ifdef BLEND
-		true
+		true,
 #endif
 #ifdef MAX
-		,true
+		true,
 #endif
-	}
+		false
+	},
 #endif
 #ifdef MAX
-	,{
+	{
 		false,
 #ifdef JPEG
 		false,
@@ -301,13 +311,36 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 		true,
 		true,
 #ifdef BLEND
-		true
+		true,
 #endif
 #ifdef MAX
-		,true
+		true,
 #endif
+		false
+	},
+#endif
+// w3e
+	{
+		false,
+#ifdef JPEG
+		false,
+#endif
+#ifdef TGA
+		false,
+#endif
+#ifdef PNG
+		false,
+#endif
+		false,
+		false,
+#ifdef BLEND
+		false,
+#endif
+#ifdef MAX
+		false,
+#endif
+		true
 	}
-#endif
 };
 
 static inline std::string getFormatExpression(enum Format format)
@@ -404,7 +437,7 @@ static bool addFilePath(const boost::filesystem::path &path, std::list<boost::fi
 	return true;
 }
 
-static void convertFile(const boost::filesystem::path &path, const boost::filesystem::path &dirPath, enum Format inputFormat, enum Format outputFormat, bool verbose) throw (boost::thread_interrupted)
+static void convertFile(const boost::filesystem::path &path, const boost::filesystem::path &dirPath, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (boost::thread_interrupted)
 {
 	std::ios_base::openmode openMode = std::ifstream::in;
 		
@@ -506,6 +539,9 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 	}
 	
 	ifstream.close();
+	
+	if (readonly)
+		return;
 	
 	openMode = std::ofstream::out;
 	
@@ -625,6 +661,7 @@ int main(int argc, char *argv[])
 		{"dir",         required_argument,       0, 'D'},
 		{"recursive",   no_argument,             0, 'R'},
 		{"verbose",     no_argument,             0, 'V'}, /// @todo Probably reserved for --version, too
+		{"readonly",    no_argument,             0, 'O'},
 		{0, 0, 0, 0}
 	};
 	
@@ -633,13 +670,14 @@ int main(int argc, char *argv[])
 	boost::filesystem::path optionDir;
 	bool optionRecursive = false;
 	bool optionVerbose = false;
+	bool optionReadonly = false;
 	std::list<boost::filesystem::path> optionFiles;
 	int optionShortcut;
 	
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "vhi:o:D:RV", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "vhi:o:D:RVO", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -675,6 +713,7 @@ int main(int argc, char *argv[])
 				_("\t-D  --dir <arg>           <arg> has to be replaced by output directory.\n") <<
 				_("\t-R, --recursive           If some of the input files are directories they will be iterated recursively and searched for other files with the input format extension.\n") <<
 				_("\t-V  --verbose             Enables verbose mode and shows more detailed output information.\n") <<
+				_("\t-O  --readonly            Enables read-only mode. Output format is not necessary in read-only mode. This mode can be useful if you just want to try some format reading.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
 				
@@ -736,6 +775,13 @@ int main(int argc, char *argv[])
 				
 				break;
 			}
+			
+			case 'O':
+			{
+				optionReadonly = true;
+				
+				break;
+			}
 		}
 	}
 	
@@ -768,14 +814,14 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	if (optionOformat == InvalidFormat)
+	if (optionOformat == InvalidFormat && !optionReadonly)
 	{
 		std::cerr << _("Output format was not defined.") << std::endl;
 		
 		return EXIT_FAILURE;
 	}
 	
-	if (!checkFormatConvertibility(optionIformat, optionOformat))
+	if (!optionReadonly && !checkFormatConvertibility(optionIformat, optionOformat))
 	{
 		std::cerr << boost::format(_("Format \"%1%\" can not be converted into format \"%2%\".")) % getFormatExpression(optionIformat) % getFormatExpression(optionOformat) << std::endl;
 		
@@ -797,7 +843,7 @@ int main(int argc, char *argv[])
 		
 		try
 		{
-			boost::thread thread = boost::thread(convertFile, path, optionDir, optionIformat, optionOformat, optionVerbose);
+			boost::thread thread = boost::thread(convertFile, path, optionDir, optionIformat, optionOformat, optionVerbose, optionReadonly);
 		}
 		catch (boost::thread_interrupted &threadInterrupted)
 		{

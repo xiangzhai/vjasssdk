@@ -1,6 +1,14 @@
 Virtuelle-Maschine-Implementation:
 Falls es eines Tages möglich sein sollte, eine eigene virtuelle Maschine für Jass bzw. Jass++ zu schreiben, so sollten folgende native Funktionen hinzugefügt werden:
 
+Bitwise-API:
+* native BitAnd takes integer a, integer b returns integer
+* native BitOr takes integer a, integer b returns integer
+* native BitXor takes integer a, integer b returns integer
+* native BitSHL takes integer value, integer shift returns integer
+* native BitSHR takes integer value, integer shift returns integer
+* native BitNot takes integer value returns integer
+
 Math-API:
 * native RMin takes real a, real b returns real
 * native RMax takes real a, real b returns real
@@ -98,13 +106,19 @@ Local code, no net traffic. Use GetLocalPlayer() to create player-specific funct
 * type filelocale extends handle // Kopierung.
 * constant native ConvertFileCompression takes integer i returns filecompression
 * constant native ConvertFileLocale takes integer i returns filelocale
-* native CreateFile takes string filePath, filecompression fileCompression, filelocale fileLocale returns file // MPQ-Dateien.
-* native CreateLocalFile takes string filePath returns file
+/**
+* Parameter filePath enthält einen relativen Pfad zu einem Standardverzeichnis, in welchem alle erzeugten Dateien abgelegt werden!
+*/
+* native CreateLocalFile takes string filePath returns file // lokales Dateisystem.
+* native CreateLocalDirectory takes string directoryPath returns file // lokales Dateisystem.
 * native OpenFile takes string filePath, filelocale preferedFileLocale returns file // MPQ-Dateien.
 * native OpenLocalFile takes string filePath returns file // lokale Dateien in einem speziellen Verzeichnis?
 * native CloseFile takes file whichFile returns boolean
+* native IsFileDirectory takes file whichFile returns boolean
 * native GetFileName takes file whichFile returns string
 * native GetFilePath takes file whichFile returns string
+* native GetFileDirectoryEntries file whichFile returns integer // gibt 0 zurück, falls die Datei kein Verzeichnis ist
+* native GetFileDirectoryEntry file whichFile, integer index returns string
 * native GetFileDirectoryPath takes file whichFile returns string
 * native GetFileSize takes file whichFile returns integer // Größe in Bytes.
 * native GetFileCompressedSize takes file whichFile returns integer // Komprimierte Größe in MPQs.
@@ -149,7 +163,12 @@ Der Typ "mdlx" stellt nur eine nicht veränderbare Referenz auf eine Modeldatei 
 * native SetModelScalingX takes model whichModel, real factor returns nothing
 * native SetModelScalingY takes model whichModel, real factor returns nothing
 * native SetModelScalingZ takes model whichModel, real factor returns nothing
+* native PlayModelAnimation takes model whichModel, integer animationIndex returns boolean
+* native PlayModelAnimationByName takes model whichModel, string animationName returns boolean
 ...
+
+Container-API:
+
 
 Zudem sollte die umständliche Lösung zur Umgehung der Array-Größe mittels Hashtables wegfallen
 und es dem Benutzer erlaubt werden, dynamisch Speicher zu allozieren. Allerdings mit vernünftigen
