@@ -1,3 +1,15 @@
+2009-12-30 Tamino Dauth <tamino@cdauth.de>
+* Improved various store and restore methods.
+* Revised initializer of struct ACharactersScheme and added methods for modifying its bar icons.
+* Added several icon files from Wc3C.net for display of multiboard bars.
+
+2009-12-28 Tamino Dauth <tamino@cdauth.de>
+* Added methods store and restore to several character system structs for storing and restoring characters to and from game caches.
+* Added function PlaySoundFileOnUnit.
+
+2009-12-23 Tamino Dauth <tamino@cdauth.de>
+* Added methods enable and disable to struct AWeather.
+
 2009-12-20 Tamino Dauth <tamino@cdauth.de>
 * Fixed struct ASpawnPoint.
 * Released version 1.1.

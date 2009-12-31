@@ -4,23 +4,19 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 	function interface ACharactersSchemeMaxExperience takes unit hero returns integer
 
 	struct ACharactersScheme
-		//static start members
+		// static start members
 		private static real m_refreshRate
 		private static boolean m_showPlayerName
 		private static boolean m_showUnitName
 		private static boolean m_showLevel
-		private static string m_whitespaceBarFilePath
-		private static string m_experienceBarFilePath
 		private static integer m_experienceLength
 		private static ACharactersSchemeMaxExperience m_experienceFormula
-		private static string m_hitPointsBarFilePath
 		private static integer m_hitPointsLength
-		private static string m_manaBarFilePath
 		private static integer m_manaLength
 		private static string m_textTitle
 		private static string m_textLevel
 		private static string m_textLeftGame
-		//static members
+		// static members
 		private static trigger m_refreshTrigger
 		private static multiboard m_multiboard
 		private static AMultiboardBar array m_experienceBar[12] //bj_MAX_PLAYERS /// @todo vJass bug
@@ -172,8 +168,6 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 							set column = 0
 						endif
 						set thistype.m_experienceBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_experienceLength, 0.0, true, 0.0, 0.0, 0, 0)
-						call thistype.m_experienceBar[i].setAllIcons(thistype.m_whitespaceBarFilePath, false) //empty icons
-						call thistype.m_experienceBar[i].setAllIcons(thistype.m_experienceBarFilePath, true)
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_experienceBar[i].firstFreeField())
 						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
 						//call MultiboardReleaseItem(multiboardItem)
@@ -193,8 +187,6 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 						endif
 
 						set thistype.m_hitPointsBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_hitPointsLength, 0.0, true, 0.0, 0.0, 0, 0)
-						call thistype.m_hitPointsBar[i].setAllIcons(thistype.m_whitespaceBarFilePath, false) //empty icons
-						call thistype.m_hitPointsBar[i].setAllIcons(thistype.m_hitPointsBarFilePath, true)
 
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_hitPointsBar[i].firstFreeField())
 						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
@@ -217,8 +209,6 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 						endif
 
 						set thistype.m_manaBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
-						call thistype.m_manaBar[i].setAllIcons(thistype.m_whitespaceBarFilePath, false) //empty icons
-						call thistype.m_manaBar[i].setAllIcons(thistype.m_manaBarFilePath, true)
 					endif
 
 					set thistype.m_maxPlayers = i + 1
@@ -234,7 +224,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 		* @param refreshRate Should be bigger than 0.0.
 		* @param experienceFormula Function which returns the maximum experience of a hero.
 		*/
-		public static method init takes real refreshRate, boolean showPlayerName, boolean showUnitName, boolean showLevel, string whitespaceBarFilePath, string experienceBarFilePath, integer experienceLength, ACharactersSchemeMaxExperience experienceFormula, string hitPointsBarFilePath, integer hitPointsLength, string manaBarFilePath, integer manaLength, string textTitle, string textLevel, string textLeftGame returns nothing
+		public static method init takes real refreshRate, boolean showPlayerName, boolean showUnitName, boolean showLevel, integer experienceLength, ACharactersSchemeMaxExperience experienceFormula, integer hitPointsLength, integer manaLength, string textTitle, string textLevel, string textLeftGame returns nothing
 			//static start members
 			set thistype.m_refreshRate = refreshRate
 			debug if (refreshRate <= 0) then
@@ -243,13 +233,9 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 			set thistype.m_showPlayerName = showPlayerName
 			set thistype.m_showUnitName = showUnitName
 			set thistype.m_showLevel = showLevel
-			set thistype.m_whitespaceBarFilePath = whitespaceBarFilePath
-			set thistype.m_experienceBarFilePath = experienceBarFilePath
 			set thistype.m_experienceLength = experienceLength
 			set thistype.m_experienceFormula = experienceFormula
-			set thistype.m_hitPointsBarFilePath = hitPointsBarFilePath
 			set thistype.m_hitPointsLength = hitPointsLength
-			set thistype.m_manaBarFilePath = manaBarFilePath
 			set thistype.m_manaLength = manaLength
 			set thistype.m_textTitle = textTitle
 			set thistype.m_textLevel = textLevel
@@ -258,6 +244,102 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 			call thistype.createRefreshTrigger()
 			call thistype.createMultiboard()
 			call thistype.initialize()
+		endmethod
+
+		public static method setExperienceBarValueIconForCharacter takes ACharacter character, integer length, string valueIcon returns nothing
+			debug if (GetPlayerId(character.player()) >= thistype.m_maxPlayers) then
+				debug call thistype.staticPrint("Character " + I2S(character) + " is not contained.")
+			debug endif
+			call thistype.m_experienceBar[GetPlayerId(character.player())].setValueIcon(length, valueIcon)
+		endmethod
+
+		public static method setExperienceBarEmptyIconForCharacter takes ACharacter character, integer length, string emptyIcon returns nothing
+			debug if (GetPlayerId(character.player()) >= thistype.m_maxPlayers) then
+				debug call thistype.staticPrint("Character " + I2S(character) + " is not contained.")
+			debug endif
+			call thistype.m_experienceBar[GetPlayerId(character.player())].setEmptyIcon(length, emptyIcon)
+		endmethod
+
+		public static method setExperienceBarValueIcon takes integer length, string valueIcon returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_maxPlayers)
+				call thistype.m_experienceBar[i].setValueIcon(length, valueIcon)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public static method setExperienceBarEmptyIcon takes integer length, string emptyIcon returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_maxPlayers)
+				call thistype.m_experienceBar[i].setEmptyIcon(length, emptyIcon)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public static method setHitPointsBarValueIconForCharacter takes ACharacter character, integer length, string valueIcon returns nothing
+			debug if (GetPlayerId(character.player()) >= thistype.m_maxPlayers) then
+				debug call thistype.staticPrint("Character " + I2S(character) + " is not contained.")
+			debug endif
+			call thistype.m_hitPointsBar[GetPlayerId(character.player())].setValueIcon(length, valueIcon)
+		endmethod
+
+		public static method setHitPointsBarEmptyIconForCharacter takes ACharacter character, integer length, string emptyIcon returns nothing
+			debug if (GetPlayerId(character.player()) >= thistype.m_maxPlayers) then
+				debug call thistype.staticPrint("Character " + I2S(character) + " is not contained.")
+			debug endif
+			call thistype.m_hitPointsBar[GetPlayerId(character.player())].setEmptyIcon(length, emptyIcon)
+		endmethod
+
+		public static method setHitPointsBarValueIcon takes integer length, string valueIcon returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_maxPlayers)
+				call thistype.m_hitPointsBar[i].setValueIcon(length, valueIcon)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public static method setHitPointsBarEmptyIcon takes integer length, string emptyIcon returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_maxPlayers)
+				call thistype.m_hitPointsBar[i].setEmptyIcon(length, emptyIcon)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public static method setManaBarValueIconForCharacter takes ACharacter character, integer length, string valueIcon returns nothing
+			debug if (GetPlayerId(character.player()) >= thistype.m_maxPlayers) then
+				debug call thistype.staticPrint("Character " + I2S(character) + " is not contained.")
+			debug endif
+			call thistype.m_manaBar[GetPlayerId(character.player())].setValueIcon(length, valueIcon)
+		endmethod
+
+		public static method setManaBarEmptyIconForCharacter takes ACharacter character, integer length, string emptyIcon returns nothing
+			debug if (GetPlayerId(character.player()) >= thistype.m_maxPlayers) then
+				debug call thistype.staticPrint("Character " + I2S(character) + " is not contained.")
+			debug endif
+			call thistype.m_manaBar[GetPlayerId(character.player())].setEmptyIcon(length, emptyIcon)
+		endmethod
+
+		public static method setManaBarValueIcon takes integer length, string valueIcon returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_maxPlayers)
+				call thistype.m_manaBar[i].setValueIcon(length, valueIcon)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public static method setManaBarEmptyIcon takes integer length, string emptyIcon returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == thistype.m_maxPlayers)
+				call thistype.m_manaBar[i].setEmptyIcon(length, emptyIcon)
+				set i = i + 1
+			endloop
 		endmethod
 
 		public static method show takes nothing returns nothing

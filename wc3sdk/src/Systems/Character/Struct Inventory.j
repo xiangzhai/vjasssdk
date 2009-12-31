@@ -118,6 +118,30 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			return (this.m_itemType == ITEM_TYPE_CHARGED and this.m_charges > 1) or (this.m_itemType != ITEM_TYPE_CHARGED and this.m_charges > 0)
 		endmethod
 
+		public method store takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			call StoreInteger(cache, missionKey, labelPrefix + "ItemTypeId", this.m_itemTypeId)
+			call StoreInteger(cache, missionKey, labelPrefix + "Charges", this.m_charges)
+			call StoreInteger(cache, missionKey, labelPrefix + "DropId", this.m_dropId)
+			call StoreBoolean(cache, missionKey, labelPrefix + "Invulnerable", this.m_invulnerable)
+			call StoreReal(cache, missionKey, labelPrefix + "Life", this.m_life)
+			call StoreBoolean(cache, missionKey, labelPrefix + "Pawnable", this.m_pawnable)
+			call StoreInteger(cache, missionKey, labelPrefix + "PlayerId", GetPlayerId(this.m_player))
+			call StoreInteger(cache, missionKey, labelPrefix + "UserData", this.m_userData)
+			call StoreBoolean(cache, missionKey, labelPrefix + "Visible", this.m_visible)
+		endmethod
+
+		public method restore takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			set this.m_itemTypeId = GetStoredInteger(cache, missionKey, labelPrefix + "ItemTypeId")
+			set this.m_charges = GetStoredInteger(cache, missionKey, labelPrefix + "Charges")
+			set this.m_dropId = GetStoredInteger(cache, missionKey, labelPrefix + "DropId")
+			set this.m_invulnerable = GetStoredBoolean(cache, missionKey, labelPrefix + "Invulnerable")
+			set this.m_life = GetStoredReal(cache, missionKey, labelPrefix + "Life")
+			set this.m_pawnable = GetStoredBoolean(cache, missionKey, labelPrefix + "Pawnable")
+			set this.m_player = Player(GetStoredInteger(cache, missionKey, labelPrefix + "PlayerId"))
+			set this.m_userData = GetStoredInteger(cache, missionKey, labelPrefix + "UserData")
+			set this.m_visible = GetStoredBoolean(cache, missionKey, labelPrefix + "Visible")
+		endmethod
+
 		public static method create takes item usedItem, unit usedUnit returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
@@ -132,6 +156,12 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set this.m_visible = IsItemVisible(usedItem)
 			//members
 			set this.m_itemType = GetItemType(usedItem)
+			return this
+		endmethod
+
+		public static method createRestored takes gamecache cache, string missionKey, string labelPrefix returns thistype
+			local thistype this = thistype.allocate()
+			call this.restore(cache, missionKey, labelPrefix)
 			return this
 		endmethod
 
@@ -264,8 +294,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			return this.m_rucksackPage * thistype.maxRucksackItemsPerPage + slot
 		endmethod
 
-		/// Shows the current page in the inventory of the character's unit
-		/// In general you do not have to call this method. The system handles itself.
+		/**
+		* Shows the current page in the inventory of the character's unit
+		* In general you do not have to call this method. The system handles itself.
+		*/
 		public method enable takes nothing returns nothing
 			call super.enable()
 			if (this.m_rucksackIsEnabled) then
@@ -281,7 +313,9 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call EnableTrigger(this.m_dropTrigger)
 		endmethod
 
-		/// Usually you do not have to call this method. The system handles itself.
+		/**
+		* Usually you do not have to call this method. The system handles itself.
+		*/
 		public method disable takes nothing returns nothing
 			call super.disable()
 			if (this.m_rucksackIsEnabled) then
@@ -342,6 +376,64 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				endloop
 				set i = i - 1
 			endloop
+		endmethod
+
+		public stub method store takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			local integer i
+			call super.store(cache, missionKey, labelPrefix)
+			set i = 0
+			loop
+				exitwhen (i == thistype.maxEquipmentTypes)
+				if (this.m_equipmentItemData[i] != 0) then
+					call StoreBoolean(cache, missionKey, labelPrefix + "EquipmentItemData" + I2S(i) + "Exists", true)
+					call this.m_equipmentItemData[i].store(cache, missionKey, labelPrefix + "EquipmentItemData" + I2S(i))
+				endif
+				set i = i + 1
+			endloop
+			set i = 0
+			loop
+				exitwhen (i == thistype.maxRucksackItems)
+				if (this.m_rucksackItemData[i] != 0) then
+					call StoreBoolean(cache, missionKey, labelPrefix + "RucksackItemData" + I2S(i) + "Exists", true)
+					call this.m_rucksackItemData[i].store(cache, missionKey, labelPrefix + "RucksackItemData" + I2S(i))
+				endif
+				set i = i + 1
+			endloop
+			call StoreInteger(cache, missionKey, labelPrefix + "RucksackPage", this.m_rucksackPage)
+			call StoreBoolean(cache, missionKey, labelPrefix + "RucksackIsEnabled", this.m_rucksackIsEnabled)
+		endmethod
+
+		public stub method restore takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			local integer i
+			call super.restore(cache, missionKey, labelPrefix)
+			set i = 0
+			call this.disable()
+			loop
+				exitwhen (i == thistype.maxEquipmentTypes)
+				if (this.m_equipmentItemData[i] != 0) then // clear old
+					call this.m_equipmentItemData[i].destroy()
+					set this.m_equipmentItemData[i] = 0
+				endif
+				if (HaveStoredBoolean(cache, missionKey, labelPrefix + "EquipmentItemData" + I2S(i) + "Exists")) then
+					set this.m_equipmentItemData[i] = AInventoryItemData.createRestored(cache, missionKey, labelPrefix + "EquipmentItemData" + I2S(i))
+				endif
+				set i = i + 1
+			endloop
+			set i = 0
+			loop
+				exitwhen (i == thistype.maxRucksackItems)
+				if (this.m_rucksackItemData[i] != 0) then // clear old
+					call this.m_rucksackItemData[i].destroy()
+					set this.m_rucksackItemData[i] = 0
+				endif
+				if (HaveStoredBoolean(cache, missionKey, labelPrefix + "RucksackItemData" + I2S(i) + "Exists")) then
+					set this.m_rucksackItemData[i] = AInventoryItemData.createRestored(cache, missionKey, labelPrefix + "RucksackItemData" + I2S(i))
+				endif
+				set i = i + 1
+			endloop
+			set this.m_rucksackPage = GetStoredInteger(cache, missionKey, labelPrefix + "RucksackPage")
+			set this.m_rucksackIsEnabled = GetStoredBoolean(cache, missionKey, labelPrefix + "RucksackIsEnabled")
+			call this.enable()
 		endmethod
 
 		private method enableEquipment takes nothing returns nothing

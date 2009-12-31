@@ -11,7 +11,7 @@ library ALibraryCoreEnvironmentSound
 		if (whichPlayer == localPlayer) then
 			call StartSound(whichSound)
 		endif
-		set localPlayer = null	
+		set localPlayer = null
 	endfunction
 
 	/**
@@ -35,7 +35,15 @@ library ALibraryCoreEnvironmentSound
 		call SetSoundPosition(whichSound, x, y, z)
 		call StartSound(whichSound)
 		call KillSoundWhenDone(whichSound)
-		set whichSound = null 
+		set whichSound = null
+	endfunction
+
+	function PlaySoundFileOnUnit takes string filePath, unit whichUnit returns nothing
+		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
+		call AttachSoundToUnit(whichSound, whichUnit)
+		call StartSound(whichSound)
+		call KillSoundWhenDone(whichSound)
+		set whichSound = null
 	endfunction
 
 	/**
@@ -49,7 +57,7 @@ library ALibraryCoreEnvironmentSound
 		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
 		call PlaySoundForPlayer(whichPlayer, whichSound)
 		call KillSoundWhenDone(whichSound)
-		set whichSound = null 
+		set whichSound = null
 	endfunction
 
 	function PlaySoundFileAtForPlayer takes player whichPlayer, string filePath, real x, real y, real z returns nothing
@@ -57,7 +65,7 @@ library ALibraryCoreEnvironmentSound
 		call SetSoundPosition(whichSound, x, y, z)
 		call PlaySoundForPlayer(whichPlayer, whichSound)
 		call KillSoundWhenDone(whichSound)
-		set whichSound = null 
+		set whichSound = null
 	endfunction
 
 	/**
@@ -71,7 +79,7 @@ library ALibraryCoreEnvironmentSound
 		call SetSoundVolume(whichSound, 0)
 		call StartSound(whichSound)
 		call KillSoundWhenDone(whichSound)
-		set whichSound = null 
+		set whichSound = null
 	endfunction
 
 endlibrary

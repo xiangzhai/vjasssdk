@@ -156,9 +156,9 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call SetUnitInvulnerable(this.m_classUnit, true)
 			call PauseUnit(this.m_classUnit, true)
 			call SetUnitPathing(this.m_classUnit, false)
-			//refresh position
+			// refresh position
 			call SetUnitPosition(this.m_classUnit, thistype.m_x, thistype.m_y)
-			//Für andere Spieler unsichtbar machen
+			// Für andere Spieler unsichtbar machen
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)

@@ -1,3 +1,9 @@
+2009-12-30 Tamino Dauth <tamino@cdauth.de>
+* Add store and restore methods to all character system structs.
+
+2009-12-24 Tamino Dauth <tamino@cdauth.de>
+* DEPRECATED: Add struct APlayerInterfaceData which holds all interface data and use it for AVideo and AGui to restore everything (what's about enabled cinematic mode).
+
 2009-12-19 Tamino Dauth <tamino@cdauth.de>
 * Maybe add some members like minSizeX or maxSizeX to struct AWidget for ALayout.
 * AImage.setFile - CreateImageForPlayer or ShowImage do crash the game in debug mode.

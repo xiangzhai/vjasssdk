@@ -4,6 +4,8 @@ library AStructSystemsCharacterAbstractCharacterSystem
 		public method enable takes nothing returns nothing
 		public method disable takes nothing returns nothing
 		public method changedUnit takes nothing returns nothing
+		public method store takes gamecache cache, string missionKey, string keyPrefix returns nothing
+		public method restore takes gamecache cache, string missionKey, string keyPrefix returns nothing
 		//static method create takes ACharacter character returns ACharacterSystemInterface
 	endinterface
 
@@ -48,6 +50,24 @@ library AStructSystemsCharacterAbstractCharacterSystem
 		/// @todo Friend relation to @struct ACharacter, do not use!
 		/// Is called when character unit is changed. Change all registered specific unit events.
 		public stub method changedUnit takes nothing returns nothing
+		endmethod
+
+		/**
+		* @todo Friend relation to @struct ACharacter, do not use!
+		* This method is called when @method ACharacter.store is called.
+		*/
+		public stub method store takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			call StoreBoolean(cache, missionKey, labelPrefix + "EnableAgain", this.m_enableAgain)
+			call StoreBoolean(cache, missionKey, labelPrefix + "IsEnabled", this.m_isEnabled)
+		endmethod
+
+		/**
+		* @todo Friend relation to @struct ACharacter, do not use!
+		* This method is called when @method ACharacter.restore is called.
+		*/
+		public stub method restore takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			set this.m_enableAgain = GetStoredBoolean(cache, missionKey, labelPrefix + "EnableAgain")
+			set this.m_isEnabled = GetStoredBoolean(cache, missionKey, labelPrefix + "IsEnabled")
 		endmethod
 
 		public static method create takes ACharacter character returns thistype

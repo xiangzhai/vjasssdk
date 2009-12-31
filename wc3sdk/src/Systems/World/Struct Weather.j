@@ -37,52 +37,52 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 		private timer m_changeTimer
 		private ARectVector m_rects
 		private AWeatherEffectVector m_weatherEffects
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AWeather\"")
-		
+
 		//dynamic mebers
-		
+
 		public method setMinimumChangeTime takes real minimumChangeTime returns nothing
 			set this.m_minimumChangeTime = minimumChangeTime
 		endmethod
-		
+
 		public method minimumChangeTime takes nothing returns real
 			return this.m_minimumChangeTime
 		endmethod
-		
+
 		public method setMaximumChangeTime takes real minimumChangeTime returns nothing
 			set this.m_maximumChangeTime = minimumChangeTime
 		endmethod
-		
+
 		public method maximumChangeTime takes nothing returns real
 			return this.m_maximumChangeTime
 		endmethod
-		
+
 		public method setChangeSky takes boolean changeSky returns nothing
 			set this.m_changeSky = changeSky
 		endmethod
-		
+
 		public method changeSky takes nothing returns boolean
 			return this.m_changeSky
 		endmethod
-		
+
 		public method setWeatherTypeAllowed takes integer weatherType, boolean allowed returns nothing
 			set this.m_isWeatherTypeAllowed[weatherType] = allowed
 		endmethod
-		
+
 		public method isWeatherTypeAllowed takes integer weatherType returns boolean
 			return this.m_isWeatherTypeAllowed[weatherType]
 		endmethod
-		
+
 		//methods
-		
+
 		/// Rects are not removed by this struct!
 		public method addRect takes rect usedRect returns integer
 			call this.m_rects.pushBack(usedRect)
 			call this.m_weatherEffects.pushBack(null)
 			return this.m_rects.backIndex()
 		endmethod
-		
+
 		public method removeRect takes rect usedRect returns nothing
 			local integer index = this.m_rects.find(usedRect)
 			if (index == -1) then
@@ -90,7 +90,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 			endif
 			call this.removeRectByIndex(index)
 		endmethod
-		
+
 		public method removeRectByIndex takes integer index returns nothing
 			call this.m_rects.erase(index)
 			if (this.m_weatherEffects[index] != null) then
@@ -99,7 +99,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 			endif
 			call this.m_weatherEffects.erase(index)
 		endmethod
-		
+
 		public method setAllWeatherTypesAllowed takes boolean allowed returns nothing
 			local integer i = 0
 			loop
@@ -108,7 +108,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public method setEnabled takes boolean enabled returns nothing
 			local integer i = 0
 			loop
@@ -124,7 +124,15 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 				call PauseTimer(this.m_changeTimer)
 			endif
 		endmethod
-		
+
+		public method enable takes nothing returns nothing
+			call this.setEnabled(true)
+		endmethod
+
+		public method disable takes nothing returns nothing
+			call this.setEnabled(false)
+		endmethod
+
 		public method changeWeather takes integer weatherType returns nothing
 			local integer i = 0
 			loop
@@ -143,7 +151,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 				call SetSkyModel(thistype.m_skyModelFile[weatherType])
 			endif
 		endmethod
-		
+
 		private static method timerFunctionChangeWeather takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
 			local thistype this = AHashTable.global().handleInteger(expiredTimer, "this")
@@ -162,12 +170,12 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 			call this.start() //start again with new time
 			set expiredTimer = null
 		endmethod
-		
+
 		/// Make sure that you've set minimum and maximum change time before!
 		public method start takes nothing returns nothing
 			call TimerStart(this.m_changeTimer, GetRandomReal(this.m_minimumChangeTime, this.m_maximumChangeTime), false, function thistype.timerFunctionChangeWeather)
 		endmethod
-		
+
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
@@ -181,7 +189,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 
 			return this
 		endmethod
-		
+
 		private method removeWeatherEffects takes nothing returns nothing
 			local integer i = 0
 			loop
@@ -194,7 +202,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 			endloop
 			call this.m_weatherEffects.destroy()
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			//members
 			call RemoveRegion(this.m_region)
@@ -204,7 +212,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 			call this.m_rects.destroy() // DO NOT REMOVE RECTS, there were set by user
 			call this.removeWeatherEffects()
 		endmethod
-		
+
 		/// @todo Set all sky types (maybe add custom skies)
 		public static method init takes nothing returns nothing
 			//static start members

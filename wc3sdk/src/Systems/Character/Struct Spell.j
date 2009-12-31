@@ -75,6 +75,22 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 
 		//methods
 
+		public stub method store takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			call super.store(cache, missionKey, labelPrefix)
+			call StoreInteger(cache, missionKey, labelPrefix + "Ability", this.m_ability)
+			call StoreInteger(cache, missionKey, labelPrefix + "UpgradeAction", this.m_upgradeAction)
+			call StoreInteger(cache, missionKey, labelPrefix + "CastCondition", this.m_castCondition)
+			call StoreInteger(cache, missionKey, labelPrefix + "CastAction", this.m_castAction)
+		endmethod
+
+		public stub method restore takes gamecache cache, string missionKey, string labelPrefix returns nothing
+			call super.restore(cache, missionKey, labelPrefix)
+			set this.m_ability = GetStoredInteger(cache, missionKey, labelPrefix + "Ability")
+			set this.m_upgradeAction = GetStoredInteger(cache, missionKey, labelPrefix + "UpgradeAction")
+			set this.m_castCondition = GetStoredInteger(cache, missionKey, labelPrefix + "CastCondition")
+			set this.m_castAction = GetStoredInteger(cache, missionKey, labelPrefix + "CastAction")
+		endmethod
+
 		//Make it available
 		public method enable takes nothing returns nothing
 			call EnableTrigger(this.m_upgradeTrigger)
@@ -178,6 +194,11 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			if (castAction != 0) then
 				call this.createCastTrigger()
 			endif
+			return this
+		endmethod
+
+		public static method createRestored takes ACharacter character, gamecache cache, string missionKey, string labelPrefix returns thistype
+			local thistype this = thistype.allocate(character)
 			return this
 		endmethod
 

@@ -149,8 +149,10 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			return this.m_fight
 		endmethod
 
-		/// Friend relation to AShrine.
-		/// Use it to setup the time.
+		/**
+		* Friend relation to @struct AShrine.
+		* Use it to setup the time.
+		*/
 		public method revival takes nothing returns ARevival
 			return this.m_revival
 		endmethod
@@ -361,6 +363,92 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			set this.m_unit = newUnit
 		endmethod
 
+		/**
+		* Call this method to store the whole character data into game cache @param cache on key @param missionKey.
+		*/
+		public method store takes gamecache cache, string missionKey returns nothing
+			local integer i
+			call StoreInteger(cache, missionKey, "Class", integer(this.m_class))
+			// don't store is movable, talk, shrine and player
+			call StoreUnit(cache, missionKey, "Unit", this.m_unit)
+			if (thistype.m_useViewSystem) then
+				call this.m_view.store(cache, missionKey, "View")
+			endif
+			if (thistype.m_useFocusSystem) then
+				call this.m_focus.store(cache, missionKey, "Focus")
+			endif
+			if (thistype.m_useMovementSystem) then
+				call this.m_movement.store(cache, missionKey, "Movement")
+			endif
+			if (thistype.m_useFightSystem) then
+				call this.m_fight.store(cache, missionKey, "Fight")
+			endif
+			if (thistype.m_useRevivalSystem) then
+				call this.m_revival.store(cache, missionKey, "Revival")
+			endif
+			if (thistype.m_useInventorySystem) then
+				call this.m_inventory.store(cache, missionKey, "Inventory")
+			endif
+			if (thistype.m_useTalkLogSystem) then
+				call this.m_talkLog.store(cache, missionKey, "TalkLog")
+			endif
+			call StoreInteger(cache, missionKey, "SpellsCount", this.m_spells.size())
+			set i = 0
+			loop
+				exitwhen (i == this.m_spells.size())
+				call ASpell(this.m_spells[i]).store(cache, missionKey, "Spell" + I2S(i))
+				set i = i + 1
+			endloop
+		endmethod
+
+		/**
+		* Call this method to restore the whole character data into game cache @param cache on key @param missionKey.
+		*/
+		public method restore takes gamecache cache, string missionKey, real x, real y, real facing returns nothing
+			local integer i
+			local integer spellsCount
+			set this.m_class = AClass(GetStoredInteger(cache, missionKey, "Class"))
+			// don't restore is movable, talk, shrine and player
+			call RemoveUnit(this.m_unit)
+			set this.m_unit = null
+			set this.m_unit = RestoreUnit(cache, missionKey, "Unit", this.m_player, x, y, facing)
+			/// @todo call refresh unit actions
+			if (thistype.m_useViewSystem) then
+				call this.m_view.restore(cache, missionKey, "View")
+			endif
+			if (thistype.m_useFocusSystem) then
+				call this.m_focus.restore(cache, missionKey, "Focus")
+			endif
+			if (thistype.m_useMovementSystem) then
+				call this.m_movement.restore(cache, missionKey, "Movement")
+			endif
+			if (thistype.m_useFightSystem) then
+				call this.m_fight.restore(cache, missionKey, "Fight")
+			endif
+			if (thistype.m_useRevivalSystem) then
+				call this.m_revival.restore(cache, missionKey, "Revival")
+			endif
+			if (thistype.m_useInventorySystem) then
+				call this.m_inventory.restore(cache, missionKey, "Inventory")
+			endif
+			if (thistype.m_useTalkLogSystem) then
+				call this.m_talkLog.restore(cache, missionKey, "TalkLog")
+			endif
+			// clear old
+			loop
+				exitwhen (this.m_spells.empty())
+				call ASpell(this.m_spells.back()).destroy()
+				call this.m_spells.popBack()
+			endloop
+			set spellsCount = GetStoredInteger(cache, missionKey, "SpellsCount")
+			set i = 0
+			loop
+				exitwhen (i == spellsCount)
+				call this.m_spells.pushBack(ASpell.createRestored(this, cache, missionKey, "Spell" + I2S(i)))
+				set i = i + 1
+			endloop
+		endmethod
+
 		/// Friend relation to @struct ASpell, don't use.
 		public method addSpell takes ASpell spell returns nothing
 			call this.m_spells.pushBack(spell)
@@ -404,6 +492,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				call this.m_revival.enable()
 			endif
 			/*
+			inventory and talk log systems aren't movable systems!
 			if (thistype.m_useInventorySystem and this.m_inventory.enableAgain()) then
 				call this.m_inventory.enable()
 			endif
@@ -430,6 +519,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				call this.m_revival.disable()
 			endif
 			/*
+			inventory and talk log systems aren't movable systems!
 			if (thistype.m_useInventorySystem and this.m_inventory.isEnabled()) then
 				call this.m_inventory.disable()
 			endif
