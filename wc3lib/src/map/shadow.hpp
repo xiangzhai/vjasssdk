@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MAP_SHADOW_HPP
 #define WC3LIB_MAP_SHADOW_HPP
 
-#include <fstream>
+#include <istream>
+#include <ostream>
 
 #include "../exception.hpp"
 
@@ -36,18 +37,20 @@ class W3m;
 /**
 * Each byte set the shadow status of 1/16 of a tileset.
 * It means that each tileset is divided in 16 parts (4*4).
+* @note You should refresh the shadow map if you change map size!
 */
 class Shadow
 {
 	public:
 		Shadow(class W3m *w3m);
+		~Shadow();
 
-		void read(std::fstream &fstream) throw (class Exception);
-		void write(std::fstream &fstream) throw (class Exception);
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) throw (class Exception);
 
-		bool containsShadow(int x, int y, int point);
+		bool containsShadow(int32 x, int32 y, int32 point);
 
-	private:
+	protected:
 		class W3m *m_w3m;
 
 		/**
@@ -55,7 +58,7 @@ class Shadow
 		00h = no shadow
 		FFh = shadow
 		*/
-		char *m_data;
+		char8 *m_data;
 };
 
 inline bool Shadow::containsShadow(int x, int y, int point)

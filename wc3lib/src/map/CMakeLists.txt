@@ -1,6 +1,9 @@
 set(wc3lib_MAP_SRC
 	w3g.cpp
 	w3m.cpp
+	environment.cpp
+	tilepoint.cpp
+	shadow.cpp
 )
 
 set(wc3lib_MAP_H

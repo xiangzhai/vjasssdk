@@ -20,7 +20,10 @@
 
 #include "language.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
 {
 
 Language::Language()
@@ -29,6 +32,8 @@ Language::Language()
 
 Language::~Language()
 {
+}
+
 }
 
 }

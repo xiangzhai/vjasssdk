@@ -29,6 +29,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include "language.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -36,11 +37,6 @@ namespace wc3lib
 	
 namespace lang
 {
-
-class Object
-{
-	class List;
-};
 
 class SyntaxError;
 
@@ -88,19 +84,20 @@ class Parser
 #ifdef SQLITE
 		void createDatabase(const boost::filesystem::path &path);
 		/**
-		* @return Returns -1 if adding database fails.
+		* @return Returns -1 if adding database fails otherwise an unique index will be associated with the added database.
 		*/
 		std::size_t addDatabase(const boost::filesystem::path &path);
-		void removeDatabase(std::size_t);
+		void removeDatabase(std::size_t index);
 #endif
+
+		void addSyntaxError(class SyntaxError *syntaxError);
 		
 		/**
 		* @return Returns current parsed code file.
 		*/
-		class File* file() const;
-
-		void add(class SyntaxError *syntaxError);
-		const class List* list(enum Parser::List list) const;
+		const class File& file() const;
+		const std::vector<class Language*>& languages() const;
+		const std::vector<class SyntaxError*>& syntaxErrors() const;
 
 		/**
 		* Parses line @param line from index @param index to the end of line and generates a list of possible objects.
@@ -112,23 +109,21 @@ class Parser
 		std::list<const class Object*> autoCompletion(const std::string &line, std::size_t &index);
 		
 	protected:
+		friend class Compiler;
+		
 #ifdef HTML
 		void getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::ostream &ostream);
 		void getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::ostream &ostream);
 #endif
 		
-		class Type *m_integerType;
-		class Type *m_realType;
-		class Type *m_stringType;
-		class Type *m_booleanType;
-		class Type *m_handleType;
-		class Type *m_codeType;
 		class File *m_file;
-		std::vector<class Language::List*> m_lists; // holds all parsed objects
+		std::vector<class Language*> m_languages; // languages hold all parsed objects
 		std::vector<class SyntaxError*> m_syntaxErrors;
+/*
 #ifdef SQLITE
 		std::vector<class List*> m_databaseLists;
 #endif
+*/
 };
 
 inline bool Parser::Comparator::operator()(const class Object *thisObject, const class Object *otherObject) const
@@ -136,169 +131,24 @@ inline bool Parser::Comparator::operator()(const class Object *thisObject, const
 	return true;
 }
 
-inline void Parser::add(class Comment *comment)
-{
-	this->m_lists[Parser::Comments]->add(comment);
-}
-
-inline void Parser::add(class Key *key)
-{
-	this->m_lists[Parser::Keys]->add(key);
-}
-
-inline void Parser::add(class Keyword *keyword)
-{
-	this->m_lists[Parser::Keywords]->push_back(keyword);
-}
-
-inline void Parser::add(class TextMacro *textMacro)
-{
-	this->m_lists[Parser::TextMacros]->push_back(textMacro);
-}
-
-inline void Parser::add(class TextMacroInstance *textMacroInstance)
-{
-	this->m_lists[Parser::TextMacroInstances]->push_back(textMacroInstance);
-}
-
-inline void Parser::add(class ExternalCall *externalCall)
-{
-	this->m_lists[Parser::ExternalCalls]->push_back(externalCall);
-}
-
-inline void Parser::add(class Type *type)
-{
-	this->m_lists[Parser::Types]->push_back(type);
-}
-
-inline void Parser::add(class Local *local)
-{
-	this->m_lists[Parser::Locals]->push_back(local);
-}
-
-inline void Parser::add(class Global *global)
-{
-	this->m_lists[Parser::Globals]->push_back(global);
-}
-
-inline void Parser::add(class Member *member)
-{
-	this->m_lists[Parser::Members]->push_back(member);
-}
-
-inline void Parser::add(class Parameter *parameter)
-{
-	this->m_lists[Parser::Parameters]->push_back(parameter);
-}
-
-inline void Parser::add(class FunctionInterface *functionInterface)
-{
-	this->m_lists[Parser::FunctionInterfaces]->push_back(functionInterface);
-}
-
-inline void Parser::add(class Function *function)
-{
-	this->m_lists[Parser::Functions]->push_back(function);
-}
-
-inline void Parser::add(class Method *method)
-{
-	this->m_lists[Parser::Methods]->push_back(method);
-}
-
-inline void Parser::add(class Call *call)
-{
-	this->m_lists[Parser::Calls]->push_back(call);
-}
-
-inline void Parser::add(class Implementation *implementation)
-{
-	this->m_lists[Parser::Implementations]->push_back(implementation);
-}
-
-inline void Parser::add(class Hook *hook)
-{
-	this->m_lists[Parser::Hooks]->push_back(hook);
-}
-
-inline void Parser::add(class Interface *interface)
-{
-	this->m_lists[Parser::Interfaces]->push_back(interface);
-}
-
-inline void Parser::add(class Struct *usedStruct)
-{
-	this->m_lists[Parser::Structs]->push_back(usedStruct);
-}
-
-inline void Parser::add(class Module *module)
-{
-	this->m_lists[Parser::Modules]->push_back(module);
-}
-
-inline void Parser::add(class Scope *scope)
-{
-	this->m_lists[Parser::Scopes]->push_back(scope);
-}
-
-inline void Parser::add(class Library *library)
-{
-	this->m_lists[Parser::Libraries]->push_back(library);
-}
-
-inline void Parser::add(class SourceFile *sourceFile)
-{
-	this->m_lists[Parser::SourceFiles]->push_back(sourceFile);
-}
-
-inline void Parser::add(class DocComment *docComment)
-{
-	this->m_lists[Parser::DocComments]->push_back(docComment);
-}
-
-inline class Type* Parser::integerType() const
-{
-	return this->m_integerType;
-}
-
-inline class Type* Parser::realType() const
-{
-	return m_realType;
-}
-
-inline class Type* Parser::stringType() const
-{
-	return m_stringType;
-}
-
-inline class Type* Parser::booleanType() const
-{
-	return m_booleanType;
-}
-
-inline class Type* Parser::handleType() const
-{
-	return m_handleType;
-}
-
-inline class Type* Parser::codeType() const
-{
-	return m_codeType;
-}
-
-inline class File* Parser::file() const
-{
-	return this->m_file;
-}
-
-inline void Parser::add(class SyntaxError *syntaxError)
+inline void Parser::addSyntaxError(class SyntaxError *syntaxError)
 {
 	this->m_syntaxErrors.push_back(syntaxError);
 }
 
-inline const class List* Parser::list(enum Parser::List list) const
+inline const class File& Parser::file() const
 {
-	return this->m_lists[list];
+	return *this->m_file;
+}
+
+inline const std::vector<class Language*>& Parser::languages() const
+{
+	return this->m_languages;
+}
+
+inline const std::vector<class SyntaxError*>& Parser::syntaxErrors() const
+{
+	return this->m_syntaxErrors;
 }
 
 }

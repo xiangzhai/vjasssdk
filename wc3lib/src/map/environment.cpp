@@ -21,6 +21,7 @@
 #include <boost/format.hpp>
 
 #include "environment.hpp"
+#include "tilepoint.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -29,25 +30,13 @@ namespace wc3lib
 namespace map
 {
 	
-struct Header
+Environment::Environment(class W3m *w3m) : m_w3m(w3m)
 {
-	char fileId[4]; //: file ID = "W3E!"
-	int formatVersion; //: w3e format version [0B 00 00 00]h = version 11
-	char mainTileset; //: main tileset [TS]
-	int customTilesetsFlag; //: custom tilesets flag (1 = using cutom, 0 = not using custom tilesets)
-	int groundTilesetsNumber; //: number a of ground tilesets used (Little Endian) (note: should not be greater than 16 because of tilesets indexing in tilepoints definition)
-	char groundTilesetsIds[4][]; //[4][a]: ground tilesets IDs (tilesets table)
-	int cliffTilesetsNumber; //: number b of cliff tilesets used (Little Endian) (note: should not be greater than 16 because of tilesets indexing in tilepoints definition)
-	char cliffTilesetsIds[4][]; //[4][b]: cliff tilesets IDs (cliff tilesets table)
-	int maxX; //: width of the map + 1 = Mx
-	int maxY; //: height of the map + 1 = My
-	float centerOffsetX; //: center offeset of the map X
-	float centerOffsetY; //: center offeset of the map Y
-};
+}
 	
 std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 {
-	char fileId[4];
+	char8 fileId[4];
 	istream.read(fileId, sizeof(fileId));
 	std::streamsize bytes = istream.gcount();
 	
@@ -60,16 +49,71 @@ std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 	if (this->m_version != Environment::currentVersion)
 		std::cout << boost::str(boost::format(_("Environment: Expected version %1%. Got unknown %2%.")) % Environment::currentVersion % this->m_version) << std::endl;
 	
-	char mainTileset;
+	char8 mainTileset;
 	istream.get(mainTileset);
+	bytes += istream.gcount();
 	this->m_mainTileset = Environment::convertCharToMainTileset(mainTileset);
 	
-	/// @todo Continue development.
+	int32 customTilesetsFlag;
+	istream.read(reinterpret_cast<char*>(&customTilesetsFlag), sizeof (customTilesetsFlag));
+	bytes += istream.gcount();
+	this->m_customized = customTilesetsFlag;
 	
+	int32 groundTilesetsNumber;
+	istream.read(reinterpret_cast<char*>(&groundTilesetsNumber), sizeof(groundTilesetsNumber));
+	bytes += istream.gcount();
+	
+	if (groundTilesetsNumber > Environment::maxTilesets)
+		throw Exception(boost::str(boost::format(_("Environment: Ground tilesets are limited to %1% however %2% are used.")) % Environment::maxTilesets % groundTilesetsNumber));
+	
+	for (std::size_t i = 0; i < groundTilesetsNumber; ++i)
+	{
+		int32 groundTilesetId;
+		istream.read(reinterpret_cast<char*>(&groundTilesetId), sizeof(groundTilesetId));
+		bytes += istream.gcount();
+		this->m_groundTilesetsIds.push_back(groundTilesetId);
+	}
+	
+	int32 cliffTilesetsNumber;
+	istream.read(reinterpret_cast<char*>(&cliffTilesetsNumber), sizeof(cliffTilesetsNumber));
+	bytes += istream.gcount();
+	
+	if (cliffTilesetsNumber > Environment::maxTilesets)
+		throw Exception(boost::str(boost::format(_("Environment: Cliff tilesets are limited to %1% however %2% are used.")) % Environment::maxTilesets % cliffTilesetsNumber));
+	
+	for (std::size_t i = 0; i < cliffTilesetsNumber; ++i)
+	{
+		int32 cliffTilesetId;
+		istream.read(reinterpret_cast<char*>(&cliffTilesetId), sizeof(cliffTilesetId));
+		bytes += istream.gcount();
+		this->m_cliffTilesetsIds.push_back(cliffTilesetId);
+	}
+	
+	istream.read(reinterpret_cast<char*>(&this->m_maxX), sizeof(this->m_maxX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_maxY), sizeof(this->m_maxY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_centerOffsetX), sizeof(this->m_centerOffsetX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_centerOffsetY), sizeof(this->m_centerOffsetY));
+	bytes += istream.gcount();
+	
+	// The first tilepoint defined in the file stands for the lower left corner of the map when looking from the top, then it goes line by line (horizontal).
+	for (std::size_t y = 0; y < this->m_maxY; ++y)
+	{
+		for (std::size_t x = 0; x < this->m_maxX; ++x)
+		{
+			class Tilepoint *tilepoint = new Tilepoint(this);
+			bytes += tilepoint->read(istream);
+		}
+	}
+	
+	return bytes;
 }
 
 std::streamsize Environment::write(std::ostream &ostream) throw (class Exception)
 {
+	return 0;
 }
 
 enum MainTileset Environment::convertCharToMainTileset(char value)

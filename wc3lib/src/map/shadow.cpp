@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2009 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,30 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "jass.hpp"
+#include "shadow.hpp"
+#include "w3m.hpp"
 
 namespace wc3lib
 {
 	
-namespace lang
+namespace map
 {
+
+Shadow::Shadow(class W3m *w3m) : m_w3m(w3m), m_data(new char8[16 * w3m->width() * w3m->height()])
+{
+}
+
+Shadow::~Shadow()
+{
+	delete[] this->m_data;
+}
+
+std::streamsize Shadow::read(std::istream &istream) throw (class Exception)
+{
+	istream.read(this->m_data, sizeof(this->m_data));
 	
-namespace jass
-{
-
-const std::string& Jass::name() const
-{
-	return "Jass";
+	return istream.gcount();
 }
 
-
-bool Jass::compatibleTo(const class Language &language) const
+std::streamsize Shadow::write(std::ostream &ostream) throw (class Exception)
 {
-	return false;
+	ostream.write(this->m_data, sizeof(this->m_data));
+	
+	return sizeof(this->m_data);
 }
-
-}
-
+	
 }
 
 }

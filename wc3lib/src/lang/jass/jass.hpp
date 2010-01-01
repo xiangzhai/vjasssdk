@@ -35,8 +35,8 @@ namespace jass
 class Jass : public Language
 {
 	public:
-		virtual const std::string& name() const = 0;
-		virtual bool compatibleTo(const Language &language) const = 0;
+		virtual const std::string& name() const;
+		virtual bool compatibleTo(const class Language &language) const;
 		
 		class Type* integerType() const;
 		class Type* realType() const;

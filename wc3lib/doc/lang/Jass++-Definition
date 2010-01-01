@@ -28,9 +28,70 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 27. Klassen
 28. Das Standardpaket
 
-Vorwort:
+1. Vorwort
 
-Laufzeit und Kompilierung:
+Limitierungen von Jass:
+Jass ist eine funktionale Skriptsprache und bietet daher keine Möglichkeiten der generischen, objektorientierten
+oder modularen Programmierung. Zudem wird nicht, wie z. B. in C, zwischen Deklaration und Definition streng unterschieden,
+sondern ist eine Deklaration in jedem Fall auch eine Definition.
+Außer dem Aufruf von Auslöser-Aktionen und -Bedingungen und dem Aufruf von Funktionen mittels ExecuteFunc gibt es keine
+Möglichkeit, eine Funktion vor ihrer Definition aufzurufen. Zudem beschränken sich beide Varianten auf parameterlose
+Funktionen.
+Zusätzlich besitzt die Skriptsprache Jass ein Array-Größen-Limit von 8192 (2^13), Arrays können nicht als Parameter
+übergeben werden, es gibt keine Funktionszeiger, Variablen des Types "code" können nicht als Array deklariert werden,
+es kann nur ein globals-Block existieren, es kann kein direkter Einfluss auf automatisch generierte Funktionen
+des Kartenskripts bzw. Blizzards genommen werden, auch wenn diese Fähigkeit nicht unbedingt zur Sprache selbst gehören muss,
+die Syntax ist etwas unschön, da keine geschweiften Klammern, for- und while-Schleifen, sowie erweiterte Operatoren verwendet
+werden können, es gibt keine Ausnahmebehandlung, es können unvermeidbare Speicherlecks entstehen und zu guter Letzt
+gibt es keine Blockkommentare in Jass.
+
+Das Problem:
+Möchte man nun die Skriptsprache Jass verbessern bzw. erweitern, so müsste man verständlicherweise ihren Interpreter umschreiben.
+In der Theorie lassen sich zwar viele neue Fähigkeiten planen, jedoch scheitert man an der Umsetzung, da der Quell-Code des Interpreters
+bzw. derer von ganz Warcraft 3 The Frozen Throne nicht frei verfügbar ist. Nun hat man sicherlich die Option, die gesamte Warcraft-3-The-
+Frozen-Throne-Engine neu zu schreiben und könnte im Zuge dessen den Interpreter anders schreiben und somit die Skriptsprache Jass verbessern,
+jedoch halte ich dies für keine sinnvolle Idee, falls man nicht ein ganzes Programmiererteam hinter sich stehen hat.
+Die zweite Option ist eine Erweiterung der Syntax von Jass, welche jederzeit in reinen Jass-Code konvertiert werden kann.
+Dazu muss man "nur" einen Compiler bzw. Precompiler für die eigene Skriptsprache schreiben, welcher die Syntax dieser kennt und zu Jass konvertieren
+kann.
+Diese Option wurde bisher bei allen mir bekannten Skritpsprachenerweiterungen, welche genau genommen nur drei, ja eigentlich nur zwei sind, gewählt.
+
+Die Lösung:
+Zum Einen wäre da Vexorians vJass, welches sich mit großem Erfolg verbreitet hat und grob alle wichtigen Mängel von Jass behebt.
+Zum Anderen wären da cJass und Zinc. Ich fasse diese beiden Sprachen zusammen, da sie mehr einen Zusatz zu vJass darstellen.
+Sie erweitern lediglich die Syntax um einige Fähigkeiten und sind beidesamt kompatibel zu vJass.
+Vexorian hat nicht nur die beiden Sprachen vJass und Zinc entwickelt, sondern auch den dazugehörigen Precompiler, den JassHelper,
+welcher meines Wissens nach in Pascal bzw. Delphi geschrieben ist.
+Für cJass existiert ebenfalls ein, in Assembler geschriebener, Precompiler.
+Wo liegt nun also das Problem, wenn es bereits diese Spracherweiterungen gibt?
+Die Antwort ist ganz einfach: Zinc und cJass haben jeweils ihre eigenen Arten einer Syntaxerweiterung über die man sich bereits teil-
+weise streiten kann, da sie sehr von der Syntax herkömmlicher Sprachen abweicht.
+vJass dagegen ist das eigentliche Ziel meiner Kritik, da diese Spracherweiterung erst die eigentlichen und wirklich notwendigen Fähigkeiten
+mit sich bringt. Objektorientierung, Modularisierung, Funktionszeiger, Executions und Evaluations, und inzwischen auch namenlose bzw. Lambda-Funktionen.
+Viele davon gefallen mir und ich bin daher inzwischen auch ein langjähriger Benutzer vJass'.
+Womit ich jedoch eigentlich unzufrieden bin ist zum einen der Mangel an weiteren notwendigen und praktischen Erweiterungen, sowie des Programms
+JassHelper, welches nicht einmal plattformübergreifend ist, die teilweise wirklich unschöne Syntax und die daraus resultierende Erweiterung Zinc bzw.
+die Trennung der beiden Sprachen und zu schlechter Letzt die mangelnde Fehlerbehebung bei aufkommenden Fehlern.
+Der Code des JassHelpers ist frei verfügbar, das ist mir wohl bewusst, jedoch bin ich 1. nicht so mit Pascal und dessen Syntax vertraut, halte 2.
+den Code für mehr als unübersichtlich und bin 3. nicht gerade motiviert, eine Windows-Anwendung weiterzuentwickeln, welche eine Sprache interpretiert
+und kompiliert, an deren Syntax ich einiges auszusetzen habe.
+Zudem interessiere ich mich inzwischen sehr für Programmiersprachen, weshalb die Entwicklung einer eigenen Sprache, hoffentlich auch einen gewissen
+Lerneffekt bei mir auslösen wird.
+
+Jass++:
+Ich bin ein Fan der Programmiersprache C++. Daher der Name Jass++. Ob er passend oder unpassend ist, ist mir relativ egal, es ist nur ein Bezeichner.
+Jass++ soll alles abdecken, was mir persönlich und eventuell auch anderen in Jass fehlt.
+Genau wie vJass, muss es in Jass-Code umgewandelt werden, weshalb ein Precompiler benötigt wird. Ein solcher wird momentan von mir selbst entwickelt.
+Neben der Sprachsyntaxdefinition existiert auch eine Compiler-Definition, welche mehr eine Empfehlung an mich selbst und andere, die einen Precompiler
+für die Sprache schreiben wollen, ist.
+Jass++ soll einerseits speziell auf Warcraft 3 The Frozen Throne und die Merkmale von Jass zugeschnitten sein und andererseits die Mächtigkeit einer
+umfangreichen, modernen Programmiersprache mit sich bringen.
+Dabei werden zum Teil einzigartige und zum Teil altbekannte Syntaxelemente unterstützt.
+Zudem, und dies halte ich persönlich für eine sehr wichtige Eigenschaft der Sprache, soll sie so gut wie möglich zu bestehenden Spracherweiterungen
+von Jass kompatibel sein und zumindest deren getrennte Behandlung erlauben.
+
+2. Laufzeit und Kompilierung
+
 Im Gegensatz zu Jass ist Jass++ keine reine Interpreter-Sprache mehr, da sie zunächst zu Jass-Code
 umgewandelt werden muss. Daher wird in den nachfolgenden Inhalten oft zwischen der Lauf- und der Kompilier-
 zeit unterschied. Mit der Kompilierzeit ist jene Zeit gemeint, in welcher der Jass++-Code zu Jass-Code
@@ -38,7 +99,7 @@ umgewandelt wird. Mit der Laufzeit dagegen ist jene Zeit gemeint, in der der ber
 Jass++-Code ausgeführt wird. Dies wird in der Regel von Warcraft 3 The Frozen Throne bzw. dess Engine
 bewerkstelligt, könnte jedoch theoretisch auch von einer anderen, selbst gebauten getan werden.
 
-Kompatibilität zu anderen Sprachen:
+3. Kompatibilität zu anderen Sprachen
 
 Kompatibilität zu Jass:
 Jass-Funktionen und -Variablen, die innerhalb der #jass und #endjass-Präprozessoranweisungen
@@ -70,7 +131,7 @@ Momentan ist noch nicht geplant Jass++- und CJass-Code kombinierbar zu machen.
 Code zwischen den Präprozessoranweisungen #cjass und #endcjass wird daher bei einer Jass++-
 Kompilierung ignoriert.
 
-Schlüsselwörter:
+4. Schlüsselwörter
 
 Prozedual-Schlüsselwörter:
 Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const
@@ -96,13 +157,13 @@ executefast ermöglicht den Aufruf mit ExecuteFunc und Parameterspeicherung, jed
 der Aufruf nicht mittels calls abgerufen werden und es gäbe eventuell weitere Nachteile
 (Geschwindigkeit).
 
-Blockkommentare
+5. Blockkommentare
 Blockkommentare zwischen einer "/*"- und einer "*/"-Zeichenfolge sind in Jass++ (auch über mehrere Zeilen hinweg) möglich.
 
 Notation:
 /*<Blockkommentarinhalt>*/
 
-Präprozessoren:
+6. Präprozessoren
 
 #include [ jass | zinc | vjass | jasspp ] "Dateipfad"
 #inject InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
@@ -374,14 +435,16 @@ else (Ausdruck)
 {
 }
 
+Switch-Verzweigungen können anders als in herkömmlichen Sprachen jede Art von Datentyp behandeln.
+
 switch (Variable)
 {
-	case Ausdruck
+	case (konstanter Ausdruck)
 	{
 		break;
 	}
 
-	case Ausdruck // Ein Ausdruck kann auch aus mehreren durch Kommate getrennten Werten bestehen: 1,10,2
+	case (konstanter Ausdruck) // Ein Ausdruck kann auch aus mehreren durch Kommate getrennten Werten bestehen: 1,10,2
 	{
 		break;
 	}
@@ -394,10 +457,10 @@ switch (Variable)
 
 Schleifen:
 
-while (Ausdruck)
+while (<Ausdruck>)
 {
 }
-case <Anzahl> // Schleife wurde <Anzahl> mal durchlaufen. Die Anzahl muss ein konstanter Ganzzahlausdruck sein.
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
 {
 }
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
@@ -408,7 +471,7 @@ do
 {
 }
 while (Ausdruck);
-case <Anzahl> // Schleife wurde <Anzahl> mal durchlaufen. Die Anzahl muss ein konstanter Ganzzahlausdruck sein.
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
 {
 }
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
@@ -418,7 +481,7 @@ default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 for (Ausdruck; Ausdruck; Ausdruck)
 {
 }
-case <Anzahl> // Schleife wurde <Anzahl> mal durchlaufen. Die Anzahl muss ein konstanter Ganzzahlausdruck sein.
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <Anzahl> mal durchlaufen.
 {
 }
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
@@ -428,7 +491,7 @@ default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 foreach (<Variablenname>; <Variablenname einer Array-Variable>)
 {
 }
-case <Anzahl> // Schleife wurde <Anzahl> mal durchlaufen. Die Anzahl muss ein konstanter Ganzzahlausdruck sein.
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
 {
 }
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
@@ -639,7 +702,7 @@ enum Name
     Enumelement3
 } globale Instanzen durch Kommate getrennt;
 
-Klassen:
+27. Klassen
 Existiert kein Präfix wie "public", "protected" oder "private" vor der Variablen oder Methodendeklaration, ist das
 Klassenelement automatisch "private". Statische Methoden erhalten keinen this-Parameter.
 Statische Variablen können mit Klassenname.Variablenname angesprochen werden.

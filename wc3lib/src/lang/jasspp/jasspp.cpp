@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "jass.hpp"
+#include "jasspp.hpp"
 
 namespace wc3lib
 {
@@ -26,17 +26,20 @@ namespace wc3lib
 namespace lang
 {
 	
-namespace jass
+namespace jasspp
 {
 
-const std::string& Jass::name() const
+const std::string& Jasspp::name() const
 {
-	return "Jass";
+	return "Jass++";
 }
 
 
-bool Jass::compatibleTo(const class Language &language) const
+bool Jasspp::compatibleTo(const class Language &language) const
 {
+	if (language.name() == "Jass" || language.name() == "vJass" || language.name() == "Zinc")
+		return true;
+	
 	return false;
 }
 

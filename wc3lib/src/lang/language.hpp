@@ -22,12 +22,9 @@
 #define WC3LIB_LANG_LANGUAGE_HPP
 
 #include <string>
+#include <iostream>
 
 #include "object.hpp"
-#include "jass/jass.hpp"
-#include "vjass/vjass.hpp"
-#include "zinc/zinc.hpp"
-#include "jasspp/jasspp.hpp"
 
 namespace wc3lib
 {
@@ -35,65 +32,30 @@ namespace wc3lib
 namespace lang
 {
 
-class Language
+
+class Language : public std::list<class Object::List*>
 {
-	public:
-		static class jass::Jass* jass();
-		static class vjass::Vjass* vjass();
-		static class zinc::Zinc* zinc();
-		static class jasspp::Jasspp* jasspp();
-		
+	public:		
 		Language();
 		virtual ~Language();
 		
+		/**
+		* @return Returns the real name of the language.
+		*/
 		virtual const std::string& name() const = 0;
+		/**
+		* @return Returns if the language is compatible to language @param language. Compatible means that the language can treat code of the other language as well as its own!
+		*/		
 		virtual bool compatibleTo(const Language &language) const = 0;
 		/**
-		* Initializes all objects and their links to each other.
+		* Prepares all objects and their links to each other. Afterwards they should be compilable.
 		*/
-		virtual void initObjects() = 0;
-		
-	protected:
-		static class jass::Jass *m_jass;
-		static class vjass::Vjass *m_vjass;
-		static class zinc::Zinc *m_zinc;
-		static class jasspp::Jasspp *m_jasspp;
-		
-		class Object::List m_list;
+		virtual void prepareObjects() = 0;
+		/**
+		* Writes objects into map script stream.
+		*/
+		virtual void writeObjects(std::iostream &iostream) = 0;
 };
-
-inline class jass::Jass* Language::jass()
-{
-	if (Language::m_jass == 0)
-		Language::m_jass = new jass::Jass;
-	
-	return Language::m_jass;
-}
-
-inline class vjass::Vjass* Language::vjass()
-{
-	if (Language::m_vjass == 0)
-		Language::m_vjass = new vjass::Vjass;
-				    
-	return Language::m_vjass;
-}
-
-
-inline class zinc::Zinc* Language::zinc()
-{
-	if (Language::m_zinc == 0)
-		Language::m_zinc = new zinc::Zinc;
-	
-	return Language::m_zinc;
-}
-
-inline class jasspp::Jasspp* Language::jasspp()
-{
-	if (Language::m_jasspp == 0)
-		Language::m_jasspp = new jasspp::Jasspp;
-	
-	return Language::m_jasspp;
-}
 
 }
 

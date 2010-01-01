@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2009 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,28 +18,45 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "jass.hpp"
+#include "tilepoint.hpp"
 
 namespace wc3lib
 {
 	
-namespace lang
+namespace map
 {
 	
-namespace jass
+Tilepoint::Tilepoint(class Environment *environment) : m_environment(environment)
 {
-
-const std::string& Jass::name() const
-{
-	return "Jass";
 }
 
-
-bool Jass::compatibleTo(const class Language &language) const
+std::streamsize Tilepoint::read(std::istream &istream) throw (class Exception)
 {
-	return false;
-}
-
+	istream.read(reinterpret_cast<char*>(&this->m_groundHeight), sizeof(this->m_groundHeight));
+	std::streamsize bytes = istream.gcount();
+	short16 waterLevel;
+	istream.read(reinterpret_cast<char*>(&waterLevel), sizeof(waterLevel));
+	bytes += istream.gcount();
+	this->m_flags = (waterLevel & 0xC000); // extract boundary flag
+	this->m_waterLevel = (waterLevel & 0x3FFF); // extract water level
+	
+	std::bitset<4> flags;
+	istream >> flags;
+	this->m_flags |= flags;
+	
+	istream >> this->m_groundTextureType;
+	
+	++bytes; // 2* 4 bits
+	
+	istream.read(reinterpret_cast<char*>(&this->m_textureDetails), sizeof (this->m_textureDetails));
+	bytes += istream.gcount();
+	
+	istream >> this->m_cliffTextureType;
+	istream >> this->m_layerHeight;
+	
+	++bytes; // 2* 4 bits
+	
+	return bytes;
 }
 
 }

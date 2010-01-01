@@ -1,6 +1,7 @@
 2009-12-31 Tamino Dauth <tamino@cdauth.de>
-* Improved class map::Environment.
+* Revised new Jass natives list.
 * Added option --readonly and w3e support to application "converter".
+* Improved classes map::Environment, map::Tilepoint, map::W3m and map::Shadow.
 
 2009-12-27 Tamino Dauth <tamino@cdauth.de>
 * Revised some language classes.

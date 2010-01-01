@@ -21,8 +21,11 @@
 #ifndef WC3LIB_MAP_W3M_HPP
 #define WC3LIB_MAP_W3M_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
+#include "environment.hpp"
+#include "platform.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -65,17 +68,26 @@ class W3m
 			ShowWaterWavesOnRollingShores = 0x1000 //: 1=show water waves on rolling shores
 		};
 
+		W3m();
+		virtual ~W3m();
+		
 		virtual std::streamsize read(class mpq::Mpq *mpq) throw (class Exception);
+		/**
+		* @param istream has to contain the map MPQ archive.
+		*/
 		virtual std::streamsize read(std::istream &istream) throw (class Exception);
 		/**
 		* Creates an MPQ archive with map header and all required files.
 		*/
 		virtual std::streamsize write(std::ostream &ostream) throw (class Exception);
 
-	private:
+		int32 width() const;
+		int32 height() const;
+		
+	protected:
 		std::string m_name;
-		int m_flags;
-		int m_maxPlayers;
+		int32 m_flags;
+		int32 m_maxPlayers;
 	
 		class Environment *m_environment;
 		class Shadow *m_shadow;
@@ -100,7 +112,21 @@ w3x
 		class Skin *m_skin;
 		class Extra *m_extra;
 */
+		
+		bool m_hasSignature;
+		char8 m_authentification[256];
+		
 };
+
+inline int32 W3m::width() const
+{
+	this->m_environment->mapWidth();
+}
+
+inline int32 W3m::height() const
+{
+	this->m_environment->mapHeight();
+}
 
 }
 

@@ -24,6 +24,7 @@
 #include <istream>
 #include <ostream>
 
+#include "platform.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -31,14 +32,15 @@ namespace wc3lib
 
 namespace map
 {
-	
+
+class W3m;
 class Tilepoint;
 
 class Environment
 {
 	public:
-		static const int currentVersion = 11;
-		static const int maxTilesets = 16;
+		static const int32 currentVersion = 11;
+		static const int32 maxTilesets = 16;
 	
 		enum MainTileset
 		{
@@ -62,24 +64,40 @@ class Environment
 			BlackCitadel
 		};
 		
+		Environment(class W3m *w3m);
+		
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		
+		int32 mapWidth() const;
+		int32 mapHeigth() const;
 		
 	protected:
 		static enum MainTileset convertCharToMainTileset(char value);
 		
-		int m_version;
+		class W3m *m_w3m;
+		int32 m_version;
 		enum MainTileset m_mainTileset;
 		bool m_customized;
-		std::list<std::string> m_groundTilesets;
-		std::list<std::string> m_cliffTilesets;
-		int m_maxX;
-		int m_maxY;
-		float m_centerOffsetX;
-		float m_centerOffsetY;
-		std::list<class Tilepoint> m_tilepoints;
+		std::list<int32> m_groundTilesetsIds;
+		std::list<int32> m_cliffTilesetsIds;
+		int32 m_maxX;
+		int32 m_maxY;
+		float32 m_centerOffsetX;
+		float32 m_centerOffsetY;
+		std::list<class Tilepoint*> m_tilepoints;
 		
 };
+
+inline int32 Environment::mapWidth() const
+{
+	return this->m_maxX - 1;
+}
+
+inline int32 Environment::mapHeigth() const
+{
+	return this->m_maxY - 1;
+}
 
 }
 

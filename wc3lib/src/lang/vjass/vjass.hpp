@@ -18,7 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "jass.hpp"
+#ifndef WC3LIB_LANG_VJASS_VJASS_HPP
+#define WC3LIB_LANG_VJASS_VJASS_HPP
+
+#include "../language.hpp"
 
 namespace wc3lib
 {
@@ -26,22 +29,20 @@ namespace wc3lib
 namespace lang
 {
 	
-namespace jass
+namespace vjass
 {
 
-const std::string& Jass::name() const
+class Vjass : public Language
 {
-	return "Jass";
-}
-
-
-bool Jass::compatibleTo(const class Language &language) const
-{
-	return false;
-}
+	public:
+		virtual const std::string& name() const;
+		virtual bool compatibleTo(const class Language &language) const;
+};
 
 }
 
 }
 
 }
+
+#endif

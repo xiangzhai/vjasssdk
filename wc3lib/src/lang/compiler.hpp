@@ -21,8 +21,9 @@
 #ifndef WC3LIB_LANG_COMPILER_HPP
 #define WC3LIB_LANG_COMPILER_HPP
 
-#include <ostream>
-#include <list>
+#include <iostream>
+
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,34 +32,41 @@ namespace lang
 {
 
 class Language;
-class FunctionPrototype;
 
 class Compiler
 {
 	public:
-		void compile(std::ostream &ostream, const class Language *language);
+		void compile(std::iostream &iostream, const class Parser &parser) throw (class Exception);
+		/**
+		* This method should only be called on Jass files. It removes unnecessary white-space characters and comments.
+		* Besides functions are inlined and identifiers are shortend.
+		*/
+		void optimize(std::iostream &iostream) throw (class Exception);
 	
 	protected:
-		void sortPackages() const;
+		
+		/*
 		void generateFunctionPrototypes();
 		
 		/**
 		* Writes "the global hashtable". Jass++ only.
 		*/
+		/*
 		void writeHashtableGlobal(std::ostream &ostream);
 		void writeGlobals(std::ostream &ostream);
 		void writeFunctions(std::ostream &ostream);
-		
 		
 		/**
 		* Jass++
 		* Writes all globals (including member, function prototype and array globals etc.)
 		*/
+		/*
 		void writePackageGlobals(std::ostream &ostream);
 		void writePackageFunctions(std::ostream);
 		
 		
 		std::list<class FunctionPrototype*> m_prototypes;
+		*/
 };
 
 }

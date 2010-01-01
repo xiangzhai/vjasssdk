@@ -21,27 +21,62 @@
 #ifndef WC3LIB_MAP_TILEPOINT_HPP
 #define WC3LIB_MAP_TILEPOINT_HPP
 
+#include <istream>
+#include <ostream>
+#include <bitset>
+
+#include "platform.hpp"
+#include "../exception.hpp"
+
 namespace wc3lib
 {
 
 namespace map
 {
+	
+class Environment;
 
 class Tilepoint
 {
 	public:
-		struct Block
+		enum Flags
 		{
-			short groundHeight;
-			short waterLevel;
-			short flags; //4 bit: flags*(see notes)
-			short groundTextureType; //4bit: ground texture type (grass, dirt, rocks,...)
-			char textureDetails; //1byte: texture details (of the tile of which the tilepoint is the bottom left corner) (rocks, holes, bones,...). It appears that only a part of this byte is used for details. It needs more investigations
-			short cliffTextureType; //4bit: cliff texture type
-			short layerHeight; //4bit: layer height
+			ShadowBoundary = 0x4000,
+			Ramp = 0x0010,
+			Blight = 0x0020,
+			Water = 0x0040,
+			CameraBoundary = 0x0080
 		};
+	
+		Tilepoint(class Environment *environment);
+		
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		
+		short16 worldEditorHeight(short16 layer, short16 groundZeroLevel, short16 layerZeroLevel) const;
+		float32 worldEditorWaterLevel(short16 groundZeroLevel, float32 waterZeroLevel) const;
+		
+	protected:
+		class Environment *m_environment;
+		short16 m_groundHeight;
+		short16 m_waterLevel;
+		enum Tilepoint::Flags m_flags;
+		std::bitset<4> m_groundTextureType;
+		char8 m_textureDetails;
+		std::bitset<4> m_cliffTextureType;
+		std::bitset<4> m_layerHeight;
 
 };
+	
+inline short16 Tilepoint::worldEditorHeight(short16 layer, short16 groundZeroLevel, short16 layerZeroLevel) const
+{
+	return (this->m_groundHeight - groundZeroLevel + (layer - layerZeroLevel) * this->m_layerHeight) / 4;
+}
+
+inline float32 Tilepoint::worldEditorWaterLevel(short16 groundZeroLevel, float32 waterZeroLevel) const
+{
+	return (this->m_waterLevel - groundZeroLevel) / 4 + waterZeroLevel;
+}
 
 }
 

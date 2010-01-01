@@ -334,16 +334,16 @@ Code:
 integer a = 10;
 switch (a)
 {
-	case 0,10
+	case (0, 10)
 	{
 		break;
 	}
 
-	case 100
+	case (100)
 	{
 	}
 
-	case 1000
+	case (1000)
 	{
 		break;
 	}
@@ -376,7 +376,7 @@ while (test)
 	continue;
 	break;
 }
-case 100
+case (100)
 {
 }
 default
@@ -434,7 +434,7 @@ for (i = 0; i < 100; i++)
 {
 	break;
 }
-case 10
+case (10)
 {
 }
 default
@@ -584,7 +584,7 @@ void test()
 		if (i == 4)
 			break;
 	}
-	case 10 // 10 mal durchlaufen
+	case (10) // 10 mal durchlaufen
 	{
 	}
 	default // Bis zum Schluss durchlaufen
