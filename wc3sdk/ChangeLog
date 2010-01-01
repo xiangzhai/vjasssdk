@@ -1,3 +1,9 @@
+2009-01-01 Tamino Dauth <tamino@cdauth.de>
+* Added several human and orc creatures models.
+* Fixed AClassSelection user interface bug.
+* Fixed ACharactersScheme free unallocated instance bug.
+* Added global damage detection system which is based on struct ADamageRecorder.
+
 2009-12-30 Tamino Dauth <tamino@cdauth.de>
 * Improved various store and restore methods.
 * Revised initializer of struct ACharactersScheme and added methods for modifying its bar icons.

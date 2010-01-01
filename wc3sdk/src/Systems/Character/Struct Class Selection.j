@@ -181,7 +181,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or (GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT and ACharacter.shareOnPlayerLeaves())) then
 				call character.shareControl(true)
 			endif
-			call SetUserInterfaceForPlayer(this.m_user, false, false)
+			call SetUserInterfaceForPlayer(this.m_user, true, true)
 			call ResetToGameCameraForPlayer(this.m_user, 0.0)
 			call character.setClass(this.m_class)
 			call this.m_selectClassAction.execute(character, this.m_class)

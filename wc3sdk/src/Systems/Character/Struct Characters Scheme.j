@@ -212,6 +212,8 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 					endif
 
 					set thistype.m_maxPlayers = i + 1
+				else
+					set thistype.m_destroyed[i] = true
 				endif
 				set i = i + 1
 			endloop

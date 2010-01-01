@@ -36,17 +36,20 @@ endif
 	*/
 	//! textmacro A_STRUCT_DEBUG takes STRUCTNAME
 static if (DEBUG_MODE) then
-		public method print takes string message returns nothing //stub
+		private method print takes string message returns nothing //stub
 			call Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message)
 		endmethod
 
-		public method printMethodError takes string methodName, string message returns nothing
+		private method printMethodError takes string methodName, string message returns nothing
 			call Print($STRUCTNAME$ + " - " + I2S(this) + ": Method error in method \"" + methodName + "\": " + message)
 		endmethod
 
-
 		private static method staticPrint takes string message returns nothing
 			call Print($STRUCTNAME$ + ": " + message)
+		endmethod
+
+		private static method staticMethodErrorPrint takes string methodName, string message returns nothing
+			call Print($STRUCTNAME$ + ": Method error in method \"" + methodName + "\": " + message)
 		endmethod
 endif
 	//! endtextmacro
