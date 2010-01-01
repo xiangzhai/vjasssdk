@@ -9,7 +9,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 	*/
 	struct ADamageRecorder
 		// static initialization members
-		private ADamageRecorderOnDamageAction m_globalDamageDetectionAction
+		private ADamageRecorderOnDamageAction m_globalDamageDetectionOnAction
 		// static members
 		private static trigger m_globalDamageDetectionEnterTrigger
 		private static trigger m_globalDamageDetectionLeaveTrigger
