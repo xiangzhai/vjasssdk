@@ -9,7 +9,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 	*/
 	struct ADamageRecorder
 		// static initialization members
-		private ADamageRecorderOnDamageAction m_globalDamageDetectionOnAction
+		private static ADamageRecorderOnDamageAction m_globalDamageDetectionOnDamageAction
 		// static members
 		private static trigger m_globalDamageDetectionEnterTrigger
 		private static trigger m_globalDamageDetectionLeaveTrigger
@@ -212,7 +212,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 
 		public static method registerGlobalUnit takes unit whichUnit returns nothing
 			local thistype this
-			debug if (not thistype.m_globalDamageDetection) then
+			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
 				debug call thistype.staticMethodErrorPrint("registerGlobalUnit", "Global damage detection is not enabled.")
 				debug return
 			debug endif
@@ -222,7 +222,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		endmethod
 
 		public static method isGlobalUnitRegistered takes unit whichUnit returns boolean
-			debug if (not thistype.m_globalDamageDetection) then
+			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
 				debug call thistype.staticMethodErrorPrint("isGlobalUnitRegistered", "Global damage detection is not enabled.")
 				debug return false
 			debug endif
@@ -230,7 +230,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		endmethod
 
 		public static method unregisterGlobalUnit takes unit whichUnit returns nothing
-			debug if (not thistype.m_globalDamageDetection) then
+			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
 				debug call thistype.staticMethodErrorPrint("unregisterGlobalUnit", "Global damage detection is not enabled.")
 				debug return
 			debug endif
@@ -239,7 +239,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		endmethod
 
 		public static method globalUnitDamageRecorder takes unit whichUnit returns thistype
-			debug if (not thistype.m_globalDamageDetection) then
+			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
 				debug call thistype.staticMethodErrorPrint("globalUnitDamageRecorder", "Global damage detection is not enabled.")
 				debug return 0
 			debug endif
