@@ -35,6 +35,7 @@ Kraehe.blp						Blizzard Entertainment		http://xgm.ru/
 KuhBraun.blp						Blizzard Entertainment		http://xgm.ru/
 KuhSchwarz.blp						Blizzard Entertainment		http://xgm.ru/
 KuhWeiss.blp						Blizzard Entertainment		http://xgm.ru/
+LindormrDragon.blp					olofmoleman, Jigrael		http://www.hiveworkshop.com/
 RatteBraun.blp						Blizzard Entertainment		http://xgm.ru/
 RatteSchwarz.blp					Blizzard Entertainment		http://xgm.ru/
 RatteWeiss.blp						Blizzard Entertainment		http://xgm.ru/
