@@ -53,3 +53,5 @@ TeufelshundHautLila.blp			Blizzard Entertainment		http://xgm.ru/
 TeufelshundHautRot.blp			Blizzard Entertainment		http://xgm.ru/
 TeufelshundHautWeiss.blp		Blizzard Entertainment		http://xgm.ru/
 Teufelsschwein.blp			Blizzard Entertainment		http://xgm.ru/
+Zauberin0.blp				dickxunder			http://hiveworkshop.com/
+Zauberin1.blp				dickxunder			http://hiveworkshop.com/
