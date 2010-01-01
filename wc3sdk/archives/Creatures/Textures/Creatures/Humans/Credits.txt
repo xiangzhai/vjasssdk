@@ -1,4 +1,4 @@
-Name					Author					Source
+File					Authors					Source
 Armbrustschuetze.blp			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 ArmbrustschuetzeSchild.blp		Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Attentaeter.blp				���					http://www.xgm.ru/
@@ -9,10 +9,11 @@ BerittenerSamurai2.blp			Black_Stan				http://www.xgm.ru/
 BerittenerSamurai2Harquebus.blp		Black_Stan				http://www.xgm.ru/
 BerittenerSamurai2Katana.blp		Black_Stan				http://www.xgm.ru/
 BerittenerSamurai2Stoff.blp		Black_Stan				http://www.xgm.ru/
+Captain.blp				jigrael					http://www.wc3c.net/
 DunklerZauberer.blp			SirRozhka, RUS DooM			http://www.xgm.ru/
 DunklerZaubererHaare.blp		SirRozhka, RUS DooM			http://www.xgm.ru/
 DunklerZaubererRobe.blp			SirRozhka, RUS DooM			http://www.xgm.ru/
-GeistlicheSchwertkaempferin.blp		jigrael					http://www.wc3campaigns.net/
+GeistlicheSchwertkaempferin.blp		jigrael					http://www.wc3c.net/
 GepanzerterSamurai.blp			Black_Stan				http://www.xgm.ru/
 GepanzerterSamuraiHarquebus.blp		Black_Stan				http://www.xgm.ru/
 GepanzerterSamuraiKatana.blp		Black_Stan				http://www.xgm.ru/
@@ -21,15 +22,17 @@ HerrenloserSamurai.blp			Black_Stan				http://www.xgm.ru/
 JungeBraun.blp				Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 JungeOlive.blp				Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 JungePfirsich.blp			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
+King.blp				falcoknight				http://www.wc3c.net/
 MaedchenBauernhofkleid.blp		Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 MaedchenSchmutzigesKleid.blp		Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 MaedchenStadtkleid.blp			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Moench.blp				Ket					http://www.xgm.ru/
+Myrmidon.blp				jigrael					http://www.wc3c.net/
 Ninja.blp				Black_Stan				http://www.xgm.ru/
 NinjaKatana.blp				Black_Stan				http://www.xgm.ru/
 Ninjaschuelerin.blp			Black_Stan				http://www.xgm.ru/
 NinjaschuelerinKatana.blp		Black_Stan				http://www.xgm.ru/
-Nordmann2.blp				Olof Moleman				http://www.wc3campaigns.net/
+Nordmann2.blp				Olof Moleman				http://www.wc3c.net/
 Paladin.blp				DeathBringer				http://www.xgm.ru/
 Pfarrer.blp				���					http://www.xgm.ru/
 Ritter2Diener.blp			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
@@ -61,7 +64,7 @@ SchiffSegeldeck.blp			Alibek, Wolverine			http://www.xgm.ru/
 SchwerGepanzerterSamurai.blp		Black_Stan				http://www.xgm.ru/
 SchwerGepanzerterSamuraiKatana.blp	Black_Stan				http://www.xgm.ru/
 SchwerGepanzerterSamuraiStoff.blp	Black_Stan				http://www.xgm.ru/
-Waldlaeufer.blp				Whitehorn				http://www.wc3campaigns.net/
+Waldlaeufer.blp				Whitehorn				http://www.wc3c.net/
 Warrior0.blp				Miseracord				http://www.hiveworkshop.com/
 Warrior1.blp				Miseracord				http://www.hiveworkshop.com/
 Warrior2.blp				Miseracord				http://www.hiveworkshop.com/
