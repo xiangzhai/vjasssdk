@@ -1,5 +1,0 @@
-ShoreLine0.mdx - Wasserflaeche.mdx
-ShoreLineWave0.mdx - Wasserflaeche.mdx
-ShoreLinewave1.mdx - Wasserflaeche.mdx
-Die Dateien ersetzen das Standardwasser.
-Die Dateien wurden vorerst rausgenommen, da die Anzeige nicht richtig funktioniert.
