@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,34 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VJASSDOC_OBJECTS_HPP
-#define VJASSDOC_OBJECTS_HPP
+#include <iostream>
 
-/// All objects of the scripting languages Jass and vJass.
-#include "object.hpp"
-#include "comment.hpp"
-#include "keyword.hpp"
-#include "key.hpp"
-#include "textmacro.hpp"
-#include "textmacroinstance.hpp"
-#include "externalcall.hpp"
-#include "type.hpp"
-#include "local.hpp"
-#include "global.hpp"
-#include "member.hpp"
-#include "parameter.hpp"
-#include "functioninterface.hpp"
-#include "function.hpp"
-#include "method.hpp"
-#include "call.hpp"
-#include "implementation.hpp"
-#include "hook.hpp"
-#include "interface.hpp"
-#include "struct.hpp"
-#include "module.hpp"
-#include "scope.hpp"
-#include "library.hpp"
-#include "sourcefile.hpp"
-#include "doccomment.hpp"
+#include <kapplication.h>
 
-#endif
+#include "../editor/editor.hpp"
+
+namespace wc3lib
+{
+
+namespace app
+{
+	
+namespace editor
+{
+	
+int main(int argc, char *argv[])
+{
+	class KApplication app;
+	
+	class wc3lib::editor::Editor editor;
+	editor.show();
+	
+	return app.exec();
+}
+
+}
+
+}
+
+}

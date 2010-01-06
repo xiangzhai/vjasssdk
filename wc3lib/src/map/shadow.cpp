@@ -27,7 +27,7 @@ namespace wc3lib
 namespace map
 {
 
-Shadow::Shadow(class W3m *w3m) : m_w3m(w3m), m_data(new char8[16 * w3m->width() * w3m->height()])
+Shadow::Shadow(class W3m *w3m) : m_w3m(w3m), m_data(new char8[Shadow::shadowPointsPerTileset * w3m->width() * w3m->height()])
 {
 }
 

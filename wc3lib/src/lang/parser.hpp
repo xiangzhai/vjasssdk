@@ -29,7 +29,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "language.hpp"
+#include "object.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -38,6 +38,7 @@ namespace wc3lib
 namespace lang
 {
 
+class Language;
 class SyntaxError;
 
 /**
@@ -71,15 +72,18 @@ class Parser
 		};
 		
 		std::size_t parse(const boost::filesystem::path &path) throw (class Exception);
-		void initObjects();
-		void sortAlphabetically();
-		void showSyntaxErrors();
+		void prepareObjects();
+		void sortObjectsAlphabetically();
+		void showSyntaxErrors(std::ostream &ostream);
 		//void parse(const std::list<boost::filesystem::path> &filePaths);
-#ifdef HTML		
+#ifdef HTML
+		/**
+		* @todo Implement the first two methods in the languages classes.
+		*/
 		void createHtmlInheritanceListPage(std::ostream &ostream);
 		void createHtmlRequirementListPage(std::ostream &ostream);
 		void createHtmlUndocumentatedListPage(std::ostream &ostream);
-		void createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool pages, bool extraPages) throw (std::exception);
+		void createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool pages, bool extraPages, bool showGeneratedHint) throw (class Exception);
 #endif
 #ifdef SQLITE
 		void createDatabase(const boost::filesystem::path &path);
@@ -97,7 +101,15 @@ class Parser
 		*/
 		const class File& file() const;
 		const std::vector<class Language*>& languages() const;
+		const class Language& currentLanguage() const;
 		const std::vector<class SyntaxError*>& syntaxErrors() const;
+		
+		/**
+		* Searches for object with identifier @param identifier in all languages lists.
+		* @return If no object was found it returns 0.
+		*/
+		class Object* findObject(const std::string &identifier);
+		class Object* findObject(const class Language &language, const std::string &identifier);
 
 		/**
 		* Parses line @param line from index @param index to the end of line and generates a list of possible objects.
@@ -109,6 +121,7 @@ class Parser
 		std::list<const class Object*> autoCompletion(const std::string &line, std::size_t &index);
 		
 	protected:
+		friend class File;
 		friend class Compiler;
 		
 #ifdef HTML
@@ -118,6 +131,7 @@ class Parser
 		
 		class File *m_file;
 		std::vector<class Language*> m_languages; // languages hold all parsed objects
+		class Language *m_currentLanguage;
 		std::vector<class SyntaxError*> m_syntaxErrors;
 /*
 #ifdef SQLITE
@@ -144,6 +158,11 @@ inline const class File& Parser::file() const
 inline const std::vector<class Language*>& Parser::languages() const
 {
 	return this->m_languages;
+}
+
+const class Language& Parser::currentLanguage() const
+{
+	return *this->m_currentLanguage;
 }
 
 inline const std::vector<class SyntaxError*>& Parser::syntaxErrors() const

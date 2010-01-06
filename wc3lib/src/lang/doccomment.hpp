@@ -37,24 +37,24 @@ class DocComment : public Object
 		class List : public Object::List
 		{
 			public:
-				List();
+				List(class Language *language);
 				virtual ~List();			
 #ifdef HTML
-				virtual const std::string& htmlCategoryName() const = 0;
-				virtual const std::string& htmlFolderName() const = 0;
+				virtual const std::string& htmlCategoryName() const;
+				virtual const std::string& htmlFolderName() const;
 #endif
 
 				
 			protected:
 #ifdef SQLITE
-				virtual std::string sqlTableName() const;
+				virtual const std::string& sqlTableName() const;
 				virtual std::size_t sqlColumns() const;
 				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (class Exception);
 				virtual const std::string& sqlColumnName(std::size_t column) const throw (class Exception);
 #endif
 		};
 
-		DocComment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line);
+		DocComment(class Object::List *list, class SourceFile *sourceFile, std::size_t line);
 #ifdef SQLITE		
 		DocComment(std::vector<Object::SqlValueDataType> &columnVector);
 #endif
@@ -80,153 +80,24 @@ class DocComment : public Object
 		const std::list<std::string>& todos() const;
 
 	protected:
-		enum Keyword
-		{
-			CommentKeyword,
-			KeywordKeyword,
-			TextMacroKeyword,
-			TextMacroInstanceKeyword,
-			TypeKeyword,
-			LocalKeyword,
-			GlobalKeyword,
-			MemberKeyword,
-			ParameterKeyword,
-			FunctionInterfaceKeyword,
-			FunctionKeyword,
-			MethodKeyword,
-			ImplementationKeyword,
-			InterfaceKeyword,
-			StructKeyword,
-			ModuleKeyword,
-			ScopeKeyword,
-			LibraryKeyword,
-			SourceFileKeyword,
-			DocCommentKeyword,
-			ArgKeyword,
-			AttentionKeyword,
-			AuthorKeyword,
-			CallgraphKeyword,
-			CodeKeyword,
-			DotKeyword,
-			ElseKeyword,
-			EndcodeKeyword,
-			EndcondKeyword,
-			EnddotKeyword,
-			EndhtmlonlyKeyword,
-			EndifKeyword,
-			EndlatexonlyKeyword,
-			EndlinkKeyword,
-			EndmanonlyKeyword,
-			EndverbatimKeyword,
-			EndxmlonlyKeyword,
-			FBracket0Keyword, //[
-			FBracket1Keyword, //]
-			F$Keyword,
-			HideinitializerKeyword,
-			HtmlonlyKeyword,
-			InternalKeyword,
-			InvariantKeyword,
-			TildKeyword, //~
-			AtKeyword,
-			$Keyword,
-			BackslashKeyword,
-			SharpKeyword,
-			LatexonlyKeyword,
-			LiKeyword,
-			ManonlyKeyword,
-			NKeyword,
-			NosubgroupingKeyword,
-			NoteKeyword,
-			OnlyKeyword,
-			PostKeyword,
-			PreKeyword,
-			RemarksKeyword,
-			ReturnKeyword,
-			ReturnsKeyword,
-			SaKeyword,
-			SeeKeyword,
-			ShowinitializerKeyword,
-			SinceKeyword,
-			TestKeyword,
-			TodoKeyword,
-			VerbatimKeyword,
-			WarningKeyword,
-			XmlonlyKeyword,
-			AddtogroupKeyword,
-			AKeyword,
-			AnchorKeyword,
-			BKeyword,
-			CKeyword,
-			CondKeyword,
-			CopydocKeyword,
-			DefKeyword,
-			DontincludeKeyword,
-			DotfileKeyword,
-			EKeyword,
-			ElseifKeyword,
-			EmKeyword,
-			ExampleKeyword,
-			FileKeyword,
-			HtmlincludeKeyword,
-			IfKeyword,
-			IfnotKeyword,
-			IncludeKeyword,
-			LinkKeyword,
-			PKeyword,
-			PackageKeyword,
-			RefKeyword,
-			RelatesalsoKeyword,
-			RelatesKeyword,
-			RetvalKeyword,
-			VerbincludeKeyword,
-			VersionKeyword,
-			XrefitemKeyword,
-			ParamKeyword,
-			ImageKeyword,
-			DefgroupKeyword,
-			PageKeyword,
-			ParagraphKeyword,
-			SectionKeyword,
-			SubsectionKeyword,
-			SubsubsectionKeyword,
-			WeakgroupKeyword,
-			AddindexKeyword,
-			BriefKeyword,
-			BugKeyword,
-			DateKeyword,
-			DeprecatedKeyword,
-			FnKeyword,
-			IngroupKeyword,
-			LineKeyword,
-			MainpageKeyword,
-			NameKeyword,
-			OverloadKeyword,
-			ParKeyword,
-			ShortKeyword,
-			SkipKeyword,
-			SkiplineKeyword,
-			UntilKeyword,
-			VarKeyword,
-			MaxKeywords
-		};
-		
 #ifdef HTML
 		virtual const std::string& htmlPageName() const;
 #endif
-		
+
 #ifdef SQLITE
 		static const std::size_t sqlMaxAuthors;
 		static const std::size_t sqlMaxSeeObjects;
 #endif
-		static const char *keyword[DocComment::MaxKeywords];
 	
 		std::string m_briefDescription;
 		class Object *m_object;
 		std::list<std::string> m_authors;
 		std::list<class Object*> m_seeObjects;
 		std::list<std::string> m_todos;
-	
-		class DocComment* docComment() const; //Do not use
+		
+		private:
+			std::string m_identifier;
+			const std::string& identifer() const;
 };
 
 inline void DocComment::setObject(class Object *object)

@@ -31,165 +31,26 @@
 
 #include "parser.hpp"
 #include "internationalisation.hpp"
-#include "objects.hpp"
-#include "vjassdoc.hpp"
 #include "file.hpp"
 #include "syntaxerror.hpp"
 #include "utilities.hpp"
 
-namespace vjassdoc
+namespace wc3lib
 {
-
-class Object* Parser::searchObjectInCustomList(const std::list<class Object*> &objectList, const std::string &identifier, const enum Parser::SearchMode &searchMode, const class Object *object)
+	
+namespace lang
 {
-	if (objectList.size() == 0)
-		return 0;
-
-	class Object *resultObject = 0;
-	bool checkContainer = false;
-	bool checkScope = false;
-	bool checkLibrary = false;
-	
-	if ((object != 0 && object->container() != 0) || searchMode & CheckContainer)
-		checkContainer = true;
-	
-	if ((object != 0 && object->scope() != 0) || searchMode & CheckScope)
-		checkScope = true;
-	
-	if ((object != 0 && object->library() != 0) || searchMode & checkLibrary)
-		checkLibrary = true;
-
-	for (std::list<class Object*>::const_iterator iterator = objectList.begin(); iterator != objectList.end(); ++iterator)
-	{
-		if ((*iterator)->identifier() == identifier)
-		{
-			if (resultObject == 0 && searchMode == Unspecified)
-			{
-				resultObject = *iterator;
-				
-				if (checkContainer)
-				{
-					if (resultObject->container() == object->container())
-						checkContainer = false;
-				}
-				
-				if (checkScope)
-				{
-					if (resultObject->scope() == object->scope())
-						checkScope = false;
-				}
-				
-				if (checkLibrary)
-				{
-					if (resultObject->library() == object->library())
-						checkLibrary = false;
-				}
-				
-				//found the object
-				if (!checkContainer && !checkScope && !checkLibrary)
-					break;
-				
-				continue;
-			}
-			
-			
-			if (checkContainer)
-			{
-				if ((*iterator)->container() == object->container())
-				{
-					checkContainer = false;
-					resultObject = *iterator;
-					
-					continue;
-				}
-			}
-			
-			if (checkScope)
-			{
-				if ((*iterator)->scope() == object->container())
-				{
-					checkScope = false;
-					resultObject = *iterator;
-					
-					continue;
-				}
-			}
-			
-			if (checkLibrary)
-			{
-				if ((*iterator)->library() == object->library())
-				{
-					checkLibrary = false;
-					resultObject = *iterator;
-					
-					continue;
-				}
-			}
-		}
-	}
-
-	return resultObject;
-}
 
 Parser::Parser() :
-		m_integerType(new Type("integer", 0, 0, 0, "", "")),
-		m_realType(new Type("real", 0, 0, 0, "", "")),
-		m_stringType(new Type("string", 0, 0, 0, "", "")),
-		m_booleanType(new Type("boolean", 0, 0, 0, "", "")),
-		m_handleType(new Type("handle", 0, 0, 0, "", "")),
-		m_codeType(new Type("code", 0, 0, 0, "", "")),
 		m_file(0),
-		m_lists(std::vector<class Object::List*>(Parser::MaxLists))
+		m_currentLanguage(0)
 {
-	this->m_lists[Parser::Comments] = new Comment::List();
-	this->m_lists[Parser::Keywords] = new Keyword::List();
-	this->m_lists[Parser::Keys] = new Key::List();
-	this->m_lists[Parser::TextMacros] = new TextMacro::List();
-	this->m_lists[Parser::TextMacroInstances] = new TextMacroInstance::List();
-	this->m_lists[Parser::ExternalCalls] = new ExternalCall::List();
-	this->m_lists[Parser::Types] = new Type::List();
-	this->m_lists[Parser::Locals] = new Local::List();
-	this->m_lists[Parser::Globals] = new Global::List();
-	this->m_lists[Parser::Members] = new Member::List();
-	this->m_lists[Parser::Parameters] = new Parameter::List();
-	this->m_lists[Parser::FunctionInterfaces] = new FunctionInterface::List();
-	this->m_lists[Parser::Functions] = new Function::List();
-	this->m_lists[Parser::Methods] = new Method::List();
-	this->m_lists[Parser::Calls] = new Call::List();
-	this->m_lists[Parser::Implementations] = new Implementation::List();
-	this->m_lists[Parser::Hooks] = new Hook::List();
-	this->m_lists[Parser::Interfaces] = new Interface::List();
-	this->m_lists[Parser::Structs] = new Struct::List();
-	this->m_lists[Parser::Modules] = new Module::List();
-	this->m_lists[Parser::Scopes] = new Scope::List();
-	this->m_lists[Parser::Libraries] = new Library::List();
-	this->m_lists[Parser::SourceFiles] = new SourceFile::List();
-	this->m_lists[Parser::DocComments] = new DocComment::List();
-	
-	//add default types
-	if (Vjassdoc::optionVerbose())
-		std::cout << _("Adding default Jass types.") << std::endl;
-
-	this->add(m_integerType);
-	this->add(m_realType);
-	this->add(m_stringType);
-	this->add(m_booleanType);
-	this->add(m_handleType);
-	this->add(m_codeType);
 }
 
-//Default Jass types are in lists!
 Parser::~Parser()
 {
-
-	BOOST_FOREACH(class Object::List *list, this->m_lists)
-			delete list;
-	
 	BOOST_FOREACH(class SyntaxError *syntaxError, this->m_syntaxErrors)
 			delete syntaxError;
-		
-	
-	// do not delete database lists since they're saved in this->m_lists, too
 }
 
 std::size_t Parser::parse(const boost::filesystem::path &path) throw (class Exception)
@@ -216,44 +77,29 @@ std::size_t Parser::parse(const boost::filesystem::path &path) throw (class Exce
 	return lines;
 }
 
-void Parser::initObjects()
+void Parser::prepareObjects()
 {
-	//objects should be initialized before using them
-	for (std::size_t i = 0; i < Parser::MaxLists; ++i)
-	{
-		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
-			continue;
-
-		BOOST_FOREACH(const class Object *object, this->m_lists[i]->objects())
-		{
-			/// @todo Init database objects separated?
-
-			object->init();
-		}
-	}
+	BOOST_FOREACH(class Language *language, this->m_languages)
+		language->prepareObjects();
 }
 
 
-void Parser::sortAlphabetically()
+void Parser::sortObjectsAlphabetically()
 {
-	for (std::size_t i = 0; i < Parser::MaxLists; ++i)
-	{
-		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
-			continue;
-
-		this->m_lists[i].objects().sort(Object::AlphabeticalComparator());
-	}
+	BOOST_FOREACH(class Language *language, this->m_languages)
+		language->sort(Object::AlphabeticalComparator());
 }
 
-void Parser::showSyntaxErrors()
+void Parser::showSyntaxErrors(std::ostream &ostream)
 {
 	/// @todo compare all object identifiers with Jass and vJass keywords.
-	std::cout << boost::format(_("%1% syntax errors.")) % this->m_syntaxErrors.size() << std::endl;
+	ostream << boost::format(_("%1% syntax errors.")) % this->m_syntaxErrors.size() << std::endl;
 	this->m_syntaxErrors.sort(SyntaxError::Comparator);
 	
 	BOOST_FOREACH(class SyntaxError *syntaxError, this->m_syntaxErrors)
-		std::cout << boost::format(_("File %1%, line %2%: %3%")) % syntaxError->sourceFile()->identifier() % syntaxError->line() % syntaxError->message() << std::endl;
+		ostream << boost::format(_("File %1%, line %2%: %3%")) % syntaxError->sourceFile()->identifier() % syntaxError->line() % syntaxError->message() << std::endl;
 }
+
 #ifdef HTML
 void Parser::createInheritanceListPage(std::ostream &ostream)
 {	
@@ -370,33 +216,28 @@ void Parser::createUndocumentatedListPage(std::ostream &ostream)
 	;
 }
 
-void Parser::createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool pages, bool extraPages) throw (std::exception)
+void Parser::createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool pages, bool extraPages, bool showGeneratedHint) throw (class Exception)
 {
-	std::ofstream fstream((dirPath / "index.html").string().c_str());
+	std::ofstream ofstream((dirPath / "index.html").string().c_str());
 	
 	if (!fstream)
-	//{
-		//fstream.close();
-		//std::cerr << _("Was unable to create file \"index.html\".") << std::endl;
-		
-		throw std::exception();
-	//}
+		throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\".")) % (dirPath / "index.html").str()));
 	
-	createHtmlHeader(fstream, title);
-	fstream
+	createHtmlHeader(ofstream, title);
+	ofstream
 	<< "\t<body>\n"
 	<< "\t\t<h1>" << title << "</h1>\n"
-	<< "\t\t<p>" << boost::format(_("Generated by vjassdoc %1%.")) % Vjassdoc::version << "</p>\n"
+	;
+	
+	if (showGeneratedHint)
+		ofstream << "\t\t<p>" << boost::format(_("Generated by wc3lib %1%.")) % wc3libVersion << "</p>\n"
+	
+	ofstream
 	<< "\t\t<ul>\n"
 	<< std::endl;
 
-	for (std::size_t i = 0; i < Parser::MaxLists; ++i)
-	{
-		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->m_lists[i->.objects().empty())
-			continue;
-
-		fstream << "\t\t\t<li><a href=\"#" << this->m_lists[i]->htmlCategoryName() << "\">" << boost::str(boost::format(_("%1% (%2%)")) % this->m_lists[i]->htmlCategoryName() % this->m_lists[i]->objects().size()) << "</a></li>" << std::endl;
-	}
+	BOOST_FOREACH(class Language *language, this->m_languages)
+		language->writeObjectsCategories(ofstream, "\t\t\t");
 
 	if (extraPages)
 	{
@@ -411,7 +252,7 @@ void Parser::createHtmlFiles(const boost::filesystem::path &dirPath, const std::
 		;
 	}
 	
-	fstream << "\t\t</ul>\n";
+	ofstream << "\t\t</ul>\n";
 
 	for (std::size_t i = 0; i < Parser::MaxLists; ++i)
 	{

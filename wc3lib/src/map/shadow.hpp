@@ -49,21 +49,27 @@ class Shadow
 		std::streamsize write(std::ostream &ostream) throw (class Exception);
 
 		bool containsShadow(int32 x, int32 y, int32 point);
+		//bool tilesetContains
+		
+		static const int32 shadowPointsPerTileset = 16;
 
 	protected:
 		class W3m *m_w3m;
 
 		/**
 		1byte can have 2 values:
-		00h = no shadow
-		FFh = shadow
+		0x00 = no shadow
+		0xFF = shadow
 		*/
 		char8 *m_data;
 };
 
-inline bool Shadow::containsShadow(int x, int y, int point)
+inline bool Shadow::containsShadow(int32 x, int32 y, int32 point)
 {
-	return (this->m_data[x * y][point] == 0xFFh);
+	if (point >= Shadow::shadowPointsPerTileset)
+		return false;
+	
+	return (this->m_data[x * y * point] == 0xFF);
 }
 
 }

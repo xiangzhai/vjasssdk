@@ -47,6 +47,12 @@ class Language : public std::list<class Object::List*>
 		* @return Returns if the language is compatible to language @param language. Compatible means that the language can treat code of the other language as well as its own!
 		*/		
 		virtual bool compatibleTo(const Language &language) const = 0;
+#ifdef HTML
+		/**
+		* Writes all objects categories entries (<objects category name> (number of objects)) into output stream @param ostream by using string prefix @param prefix for each entry.
+		*/		
+		virtual void writeObjectsCategories(std::ostream &ostream, const std::string &prefix = "") const = 0;
+#endif
 		/**
 		* Prepares all objects and their links to each other. Afterwards they should be compilable.
 		*/

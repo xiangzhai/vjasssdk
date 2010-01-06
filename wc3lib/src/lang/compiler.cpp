@@ -22,6 +22,7 @@
 
 #include "compiler.hpp"
 #include "parser.hpp"
+#include "language.hpp"
 
 namespace wc3lib
 {
@@ -31,8 +32,11 @@ namespace lang
 
 void Compiler::compile(std::iostream &iostream, const class Parser &parser) throw (class Exception)
 {
-	BOOST_FOREACH(class Language *language, parser.languages())
-		language.compile(ostream);
+	BOOST_FOREACH(class Language *language, parser.m_languages)
+		language->prepareObjects();
+	
+	BOOST_FOREACH(class Language *language, parser.m_languages)
+		language->writeObjects(iostream);
 }
 
 void Compiler::optimize(std::iostream &iostream) throw (class Exception)

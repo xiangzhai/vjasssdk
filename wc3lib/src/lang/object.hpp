@@ -34,6 +34,7 @@ namespace wc3lib
 namespace lang
 {
 
+class Language;
 class SourceFile;
 
 class Object
@@ -42,7 +43,7 @@ class Object
 		class List : public std::list<class Object*>
 		{
 			public:
-				List();
+				List(class Language *language);
 				virtual ~List();
 				/**
 				* Adds @param object to back of list.
@@ -68,12 +69,13 @@ class Object
 				
 			protected:
 #ifdef SQLITE
-				virtual std::string sqlTableName() const;
+				virtual const std::string& sqlTableName() const;
 				virtual std::size_t sqlColumns() const;
 				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (class Exception);
 				virtual const std::string& sqlColumnName(std::size_t column) const throw (class Exception);
 #endif
 				
+				class Language *m_language;
 			private:
 				List(const List&);
 		};
@@ -85,7 +87,7 @@ class Object
 		static const std::string& objectHtmlPageLink(const class Object *object, const std::string &identifier = "-"); //should use the id
 #endif
 	
-		Object(const std::string &identifier, class SourceFile *sourceFile, std::size_t line);
+		Object(class Object::List *list, const std::string &identifier, class SourceFile *sourceFile, std::size_t line);
 #ifdef SQLITE		
 		Object(std::vector<Object::SqlValueDataType> &columnVector);
 #endif
@@ -122,6 +124,7 @@ class Object
 #ifdef HTML
 		virtual const std::string& htmlPageName() const = 0;
 #endif
+		class Object::List *m_list;
 		std::string m_identifier;
 		class SourceFile *m_sourceFile;
 		std::size_t m_line;

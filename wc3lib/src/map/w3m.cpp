@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <cstring>
+
 #include "w3m.hpp"
 #include "shadow.hpp"
 #include "mpq/mpq.hpp"
@@ -102,7 +104,7 @@ std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 	delete mpq;
 	mpq = 0;
 	
-	this->m_m_hasSignature = false;
+	this->m_hasSignature = false;
 	
 	if (!istream.eof())
 	{

@@ -23,6 +23,8 @@
 
 #include <istream>
 #include <ostream>
+#include <list>
+#include <vector>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -70,7 +72,9 @@ class Environment
 		std::streamsize write(std::ostream &ostream) throw (class Exception);
 		
 		int32 mapWidth() const;
-		int32 mapHeigth() const;
+		int32 mapHeight() const;
+		
+		const class Tilepoint* tilepoint(int32 x, int32 y) const;
 		
 	protected:
 		static enum MainTileset convertCharToMainTileset(char value);
@@ -85,7 +89,7 @@ class Environment
 		int32 m_maxY;
 		float32 m_centerOffsetX;
 		float32 m_centerOffsetY;
-		std::list<class Tilepoint*> m_tilepoints;
+		std::vector<class Tilepoint*> m_tilepoints;
 		
 };
 
@@ -94,9 +98,18 @@ inline int32 Environment::mapWidth() const
 	return this->m_maxX - 1;
 }
 
-inline int32 Environment::mapHeigth() const
+inline int32 Environment::mapHeight() const
 {
 	return this->m_maxY - 1;
+}
+
+inline const class Tilepoint* Environment::tilepoint(int32 x, int32 y) const
+{
+	if (x < 0 || y < 0 || x > this->m_maxX || y > this->m_maxY)
+		return 0;
+	
+	return this->m_tilepoints[x * y];
+
 }
 
 }

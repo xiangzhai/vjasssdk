@@ -32,11 +32,10 @@ namespace lang
 class SourceFile : public Object
 {
 	public:
-public:
 		class List : public Object::List
 		{
 			public:
-				List();
+				List(class Language *language);
 				virtual ~List();			
 #ifdef HTML
 				virtual const std::string& htmlCategoryName() const;
@@ -46,7 +45,7 @@ public:
 				
 			protected:
 #ifdef SQLITE
-				virtual std::string sqlTableName() const;
+				virtual const std::string& sqlTableName() const;
 				virtual std::size_t sqlColumns() const;
 				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (class Exception);
 				virtual const std::string& sqlColumnName(std::size_t column) const throw (class Exception);
@@ -72,16 +71,21 @@ public:
 		virtual const std::string& sqlStatement() const;
 #endif
 		const boost::filesystem::path& path() const;
-		
+#ifdef HTML
 		const std::string& lineLink(const std::size_t &line, const std::string &text) const;
 		
 		/**
 		* @param sourceFileName If this value is true, the name of source file will be shown as link. Otherwise the line will be shown.
 		*/
 		static const std::string& sourceFileLineLink(const class Object *object, const bool &sourceFileName = true, const std::string &identifier = "-");
+#endif
 
 	protected:
-		//Do not use
+#ifdef HTML
+		virtual const std::string& htmlPageName() const;
+#endif
+		
+		// do not use
 		class SourceFile* sourceFile() const;
 		std::size_t line() const;
 
@@ -93,10 +97,11 @@ inline const boost::filesystem::path& SourceFile::path() const
 	return this->m_path;
 }
 
+#ifdef HTML
 inline const std::string& SourceFile::lineLink(const std::size_t &line, const std::string &text) const
 {
 	std::ostringstream sstream;
-	sstream << "<a href=\"" << this->id() << ".html#" << line << "\">" << text << "</a>";
+	sstream << "<a href=\"" << this->htmlPageLink() << "#" << line << "\">" << text << "</a>";
 	
 	return sstream.str();
 }
@@ -113,6 +118,9 @@ inline const std::string& SourceFile::sourceFileLineLink(const class Object *obj
 	sstream << object->line();
 	
 	return object->sourceFile()->lineLink(object->line(), sstream.str());
+}
+#endif
+
 }
 
 }

@@ -29,7 +29,6 @@
 #include <boost/foreach.hpp>
 
 #include "file.hpp"
-#include "objects.hpp"
 #include "parser.hpp"
 #include "language.hpp"
 #include "internationalisation.hpp"
@@ -42,13 +41,14 @@ namespace wc3lib
 namespace lang
 {
 
-File::File() : m_parser(0), m_parser(0), m_language(Language::jass()), m_lines(0), m_docComment(0)
+File::File() : m_parser(0), m_language(0), m_lines(0), m_docComment(0)
 {
 }
 
-std::size_t File::parse(class Parser *parser, std::istream &istream)
+std::size_t File::parse(class Parser *parser, class SourceFile *sourceFile, std::istream &istream)
 {
 	this->m_parser = parser;
+	this->m_language = parser->m_currentLanguage;
 	
 	istream.seekg(0, std::ios_base::end);
 	std::streampos position = ifstream.tellg();

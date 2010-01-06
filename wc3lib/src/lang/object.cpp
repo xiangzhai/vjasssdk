@@ -29,7 +29,7 @@ namespace wc3lib
 namespace lang
 {
 
-Object::List::List()
+Object::List::List(class Language *language) : m_language(language)
 {
 }
 
@@ -138,7 +138,7 @@ std::string Object::List::sqlColumnName(std::size_t column) const throw (std::ex
 }
 #endif
 
-Object::Object(const std::string &identifier, class SourceFile *sourceFile, std::size_t line) : m_identifier(identifier), m_sourceFile(sourceFile), m_line(line)
+Object::Object(class Object::List *list, const std::string &identifier, class SourceFile *sourceFile, std::size_t line) : m_list(list), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line)
 {
 }
 
