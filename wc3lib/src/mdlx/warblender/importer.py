@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 import math
@@ -29,7 +30,7 @@ class Importer(Converter):
 	def toBlender(self, model):
 		self.model = model
 		self.meshes = []
-		self.armature = Blender.Armature.Armature(self.model.MODL.Name + ".Armature")
+		self.armature = Blender.Armature.Armature(self.armatureName())
 
 		sys.stderr.write("Converting model %s to Blender data structures..\n" % (repr(self.model.MODL.Name)))
 		self.loadTextures()
@@ -37,6 +38,10 @@ class Importer(Converter):
 		self.loadMeshes()
 		self.loadBones()
 		self.loadSequences()
+		#self.loadVertexGroups()
+		self.loadLights()
+		self.loadParticleEmitters()
+		self.loadParticleEmitters2()
 		sys.stderr.write("Done converting model %s.\n" % (repr(self.model.MODL.Name)))
 
 		self.armature = None
@@ -44,11 +49,26 @@ class Importer(Converter):
 		self.scene = None
 		self.model = None
 
+	def armatureName(self):
+		return self.model.MODL.Name + '.Armature'
+
+	def textureName(self, textureNumber):
+		return self.model.MODL.Name + '.Tex' + str(textureNumber)
+
+	def materialName(self, materialNumber):
+		return self.model.MODL.Name + '.Mat' + str(materialNumber)
+
+	def meshName(self, geosetNumber):
+		return self.model.MODL.Name + '.Mesh' + str(geosetNumber)
+
+	def lampName(self, lightNumber):
+		return self.model.MODL.Name + '.Lamp' + str(lightNumber)
+
 	def loadTextures(self):
 		(filepath, dummy) = os.path.split(self.model.filename)
 		self.textures = []
 		for texnr in range(self.model.TEXS.ntexs):
-			tex = Blender.Texture.New(self.model.MODL.Name + '.Tex' + str(texnr))
+			tex = Blender.Texture.New(self.textureName(texnr))
 			tex.setType('Image')
 			tex.setImageFlags('InterPol', 'UseAlpha', 'MipMap')
 			texturefile = self.model.TEXS.textures[texnr].TexturePath;
@@ -58,10 +78,14 @@ class Importer(Converter):
 				(texturefile, dummy) = os.path.splitext(texturefile)
 				texturefile = os.path.join(filepath, texturefile + ".png")
 				sys.stderr.write("texture %d: PNG texture file (%s)\n" % (texnr, texturefile))
+
 				try:
 					tex.setImage(Blender.Image.Load(texturefile))
 				except IOError:
+					sys.stderr.write("Unable to assign texture file.\n")
+
 					pass
+
 				self.textures.append(tex)
 			else:
 				sys.stderr.write("texture %d: None\n" % texnr)
@@ -71,7 +95,7 @@ class Importer(Converter):
 	def loadMaterials(self):
 		self.materials = []
 		for matnr in range(self.model.MTLS.nmtls):
-			mat = Blender.Material.New(self.model.MODL.Name + ".Mat" + str(matnr))
+			mat = Blender.Material.New(self.materialName(matnr))
 			mat.setRGBCol(self.teamcolour)
 			mat.setMode('Shadeless', 'ZTransp')
 			setTexFace = 1
@@ -90,7 +114,7 @@ class Importer(Converter):
 					# set 'texture blending mode' to 'add'
 					mapto = mapto | Blender.Texture.MapTo.ALPHA
 				elif lay.FilterMode == 5:
-					# modulate ??					
+					# modulate ??
 					pass
 				tex = self.textures[self.model.MTLS.materials[matnr].LAYS.layers[laynr].TextureID]
 				if tex!=None:
@@ -104,7 +128,7 @@ class Importer(Converter):
 	def loadMeshes(self):
 		for geoset_i in range(len(self.model.GEOS.geosets)):
 			geoset = self.model.GEOS.geosets[geoset_i]
-			myMeshObject = Blender.Object.New('Mesh', self.model.MODL.Name + ".Mesh" + str(geoset_i))
+			myMeshObject = Blender.Object.New('Mesh', self.meshName(geoset_i))
 			#mymesh = Blender.NMesh.New(self.model.MODL.Name + str(geoset_i))
 			mymesh = myMeshObject.getData()
 			sys.stderr.write("mesh %d: %d NRMS\n" % (geoset_i, geoset.NRMS.nvrts))
@@ -130,7 +154,7 @@ class Importer(Converter):
 				nrverts += 1
 			sys.stderr.write("mesh %d: %d verts\n" % (geoset_i, nrverts))
 			sys.stderr.write("Mesh added to Blender.\n")
-		
+
 			# faces
 			nrfaces = 0
 			for i in range(geoset.PVTX.nvrts / 3):
@@ -138,7 +162,7 @@ class Importer(Converter):
 				v2 = geoset.PVTX.vertices[3 * i + 1]
 				v3 = geoset.PVTX.vertices[3 * i + 2]
 				face = Blender.NMesh.Face([mymesh.verts[v1], mymesh.verts[v2], mymesh.verts[v3]])
-	
+
 				uv_v1 = (geoset.UVAS.UVBS[0].vertices[v1].x, 1-geoset.UVAS.UVBS[0].vertices[v1].y);
 				uv_v2 = (geoset.UVAS.UVBS[0].vertices[v2].x, 1-geoset.UVAS.UVBS[0].vertices[v2].y);
 				uv_v3 = (geoset.UVAS.UVBS[0].vertices[v3].x, 1-geoset.UVAS.UVBS[0].vertices[v3].y);
@@ -153,12 +177,12 @@ class Importer(Converter):
 			self.meshes.append(myMeshObject)
 
 	def loadBones(self):
-		#sys.stderr.write("Ordering bones..\n")
-		#boneOrder = []
-		#for bone_id in range(wbNrBones):
-			#if bone_id not in boneOrder:
-				#self.boneInsert(bone_id, boneOrder)
-		#sys.stderr.write("Bone order: %s\n" % str(boneOrder))
+		sys.stderr.write("Ordering bones..\n")
+		boneOrder = []
+		for bone_id in range(len(self.model.bones)):
+			if bone_id not in boneOrder:
+				self.boneInsert(bone_id, boneOrder)
+		sys.stderr.write("Bone order: %s\n" % str(boneOrder))
 
 		wbBoneVertices = [[] for x in self.model.bones]
 		wbBoneChildren = [[] for x in self.model.bones]
@@ -166,11 +190,11 @@ class Importer(Converter):
 		# populate wbBoneVertices for bone tail calculations,
 		#   and blMeshObjArray for armature parenting
 		for geoset_i in range(len(self.model.GEOS.geosets)):
-			blMeshObj = Blender.Object.Get(self.model.MODL.Name + ".Mesh" + str(geoset_i))
+			blMeshObj = Blender.Object.Get(self.meshName(geoset_i))
 			blMeshObjArray.append(blMeshObj)
 			blMesh = blMeshObj.getData()
 			wbGeoset = self.model.GEOS.geosets[geoset_i]
-			wbGroups = [[] for x in range(wbNrBones)]
+			wbGroups = [[] for x in range(len(self.model.bones))]
 			# construct the group arrays
 			for vert_id in range(wbGeoset.GNDX.nvgrps):
 				groupid = wbGeoset.GNDX.vertexGroups[vert_id]
@@ -178,7 +202,7 @@ class Importer(Converter):
 				for boneingroup in group:
 					wbGroups[boneingroup].append(vert_id)
 			# assign vertices to Blender's vertex groups
-			for bone_id in range(wbNrBones):
+			for bone_id in range(len(self.model.bones)):
 				if len(wbGroups[bone_id]) > 0:
 					blMesh.addVertGroup(self.model.bones[bone_id].Name)
 					blMesh.assignVertsToGroup(self.model.bones[bone_id].Name, wbGroups[bone_id], 1.0, 'replace')
@@ -190,52 +214,62 @@ class Importer(Converter):
 
 		#bones = {}
 		wbBoneHeads = [[] for x in self.model.bones]
-		index = 0
 		# create the bones and set the bone head
-		for wbBone in self.model.bones:
-			wbPivt = self.model.PIVT.pivpts[wbBone.ObjectID]
+		for index in boneOrder:
+			wbBone = self.model.BONE.bones[index]
+			wbPivt = self.model.PIVT.pivpts[wbBone.OBJ.ObjectID]
+			wbBoneKey = wbBone.OBJ.Name
 
-			if wbBone.Parent != -1:
-				self.armature.bones[index].setParent(self.armature.bones[wbBone.Parent])
+			if wbBone.OBJ.Parent != -1:
+				self.armature.bones[wbBoneKey].setParent(self.armature.bones[self.model.BONE.bones[wbBone.Parent].OBJ.Name])
 				wbBoneChildren[wbBone.Parent].append(index)
-			else:
-				parentTail = [0, 0, 0]
-			head = [wbPivt.x, wbPivt.y, wbPivt.z]
-			self.armature.bones[index].setHead(head[0], head[1], head[2])
-			self.armature.bones[index].hasIK(1)
-			if wbBone.skinnable:
-				self.armature.bones[index].setBoneclass((SKINNABLE))
-			else:
-				self.armature.bones[index].setBoneclass((UNSKINNABLE))
-			sys.stderr.write("Adding Blender bone '" + name + "\n")
-			wbBoneHeads[index] = head
-			index += 1
+			#else:
+				#parentTail = [0, 0, 0]
+
+			myEditBone = Blender.Armature.Editbone()
+			self.armature.makeEditable()
+			self.armature.bones[wbBoneKey] = myEditBone
+			self.armature.bones[wbBoneKey].head = Blender.Mathutils.Vector([wbPivt.x, wbPivt.y, wbPivt.z])
+			#self.armature.bones[wbBoneKey].hasIK(1)
+
+			#if wbBone.skinnable:
+			#	self.armature.bones[wbBoneKey].setBoneclass((SKINNABLE))
+			#else:
+			#	self.armature.bones[wbBoneKey].setBoneclass((UNSKINNABLE))
+
+			sys.stderr.write("Adding Blender bone '" + wbBoneKey + "\n")
+
 		# set the bone tails
-		index = 0
-		for wbBone in self.model.bones:
+		for index in boneOrder:
+			wbBone = self.model.BONE.bones[index]
+			wbBoneKey = wbBone.OBJ.Name
+
 			if len(wbBoneChildren[index])>0:
 				# average the heads of all children
 				avg = [0.0, 0.0, 0.0]
-				for child in wbBoneChildren[index]:
-					avg = map(add, avg, wbBoneHeads[child])
+
+				for childIndex in wbBoneChildren[index]:
+					childKey = self.model.BONE.bones[childIndex].OBJ.Name
+					avg = map(add, avg, self.armature.bones[childKey].head)
+
 				avg = [x/len(wbBoneChildren[index]) for x in avg]
-				self.armature.bones[index].setTail(avg[0], avg[1], avg[2])
+				self.armature.bones[wbBoneKey].tail = Blender.Mathutils.Vector([avg[0], avg[1], avg[2]])
 			elif len(wbBoneVertices[index]) > 0:
 				# average all the points belonging to this bone and
 				# tail = mirror of head through this middle point
 				avg = [0.0, 0.0, 0.0]
+
 				for vert in wbBoneVertices[index]:
 					avg = map(add, avg, vert)
+
 				avg = [x/len(wbBoneVertices[index]) for x in avg]
-				self.armature.bones[index].setTail(avg[0], avg[1], avg[2])
-			index += 1
+				self.armature.bones[wbBoneKey].tail = Blender.Mathutils.Vector([avg[0], avg[1], avg[2]])
 
 
 		# create scene object
-		blArmObj = Blender.Object.New(self.armature.name)
-		blArmObj.link(self.armature)
+		blArmObj = self.scene.objects.new(self.armature)
+		#blArmObj.link(self.armature)
 		blArmObj.makeParent(blMeshObjArray)
-		self.scene.link(blArmObj)
 
 	def loadVertexGroups(self):
 		self.groups = {}
@@ -259,27 +293,33 @@ class Importer(Converter):
 		if parentID != -1 and parentID not in boneOrder:
 			self.boneInsert(parentID, boneOrder)
 		boneOrder.append(boneIndex)
-	
+
 	def loadSequences(self):
 		# <DEBUG>
-		file = open(Blender.Get('datadir') + "/warblender.modelKeyFrames.txt", 'w')
-		keys = self.model.keyFrames.keys()
-		keys.sort()
-		for item in keys:
-			file.write(str(item) + ": " + str([obj.Name for obj in self.model.keyFrames[item]]) + "\n")
-		file.close()
+		#file = open(Blender.Get('datadir') + "/warblender.modelKeyFrames.txt", 'w')
+		#keys = self.model.keyFrames.keys()
+		#keys.sort()
+
+		#for item in keys:
+		#	file.write(str(item) + ": " + str([obj.Name for obj in self.model.keyFrames[item]]) + "\n")
+
+		#file.close()
 		# </DEBUG>
 		for wbSeq in self.model.SEQS.seqs:
 			blAct = Blender.Armature.NLA.NewAction(wbSeq.Name)
 			sys.stderr.write("New action from sequence '" + wbSeq.Name + "'\n")
 			startTime = wbSeq.IntStart # start time of action in MDX time scale
 			endTime = wbSeq.IntEnd
-			wbActBones = self.model.keyFrames[startTime]
-			#for name in [bone.Name for bone in self.model.keyFrames[end]]:
-			#	sys.stderr.write("Bone in list: " + name + "\n")
-			for wbBone in wbActBones:
-				sys.stderr.write("bone name: " + wbBone.Name + "\n")
-				self.makeBoneIpo(blAct, wbBone, startTime, endTime, wbSeq.NoLooping)
+
+			if (self.model.keyFrames.has_key(startTime)):
+				wbActBones = self.model.keyFrames[startTime]
+				#for name in [bone.Name for bone in self.model.keyFrames[end]]:
+				#	sys.stderr.write("Bone in list: " + name + "\n")
+				for wbBone in wbActBones:
+					sys.stderr.write("bone name: " + wbBone.Name + "\n")
+					self.makeBoneIpo(blAct, wbBone, startTime, endTime, wbSeq.NoLooping)
+			else:
+				sys.stderr.write("Warning: Missing key frame bones of sequence " + wbSeq.Name + ".")
 
 	def wbTime2blFrame(self, animTime, startTime):
 		""" translates animTime from MDX time scale to Blender time scale, wrt to origin startTime """
@@ -337,19 +377,19 @@ class Importer(Converter):
 			xcurve = ipo.addCurve('QuatX')
 			xcurve.setInterpolation('Linear')
 			xcurve.setExtrapolation(Xpo)
-        
+
 			ycurve = ipo.addCurve('QuatY')
 			ycurve.setInterpolation('Linear')
 			ycurve.setExtrapolation(Xpo)
-        
+
 			zcurve = ipo.addCurve('QuatZ')
 			zcurve.setInterpolation('Linear')
 			zcurve.setExtrapolation(Xpo)
-        
+
 			wcurve = ipo.addCurve('QuatW')
 			wcurve.setInterpolation('Linear')
 			wcurve.setExtrapolation(Xpo)
-        
+
 			startFrame = k.keyFrames[startTime] # index of the starting frame in the wb bone's KG(TR|RT|SC) data
 			endFrame = k.keyFrames[endTime]
 			for framei in range(startFrame, endFrame + 1):
@@ -364,10 +404,10 @@ class Importer(Converter):
 					axis = [frame.a, frame.b, frame.c]
 				else:
 					axis = [frame.a, frame.c, frame.b]
-					
+
 				# Past this point, axis contains the right-handed axis, compensated for the Blender bug
 				# FIXME When the Blender bug is fixed, axis = [a, b, -c]
-        
+
 				# FIXME Do stuff here to translate the quaternion from left-handedness to right-handedness
 				quat_vals = [frame.d]
 				quat_vals[len(quat_vals):] = axis
@@ -383,7 +423,7 @@ class Importer(Converter):
 			xc = ipo.getCurve('SizeX')
 			print [i.getPoints() for i in xc.getPoints()]
 
-		
+
 			xcurve = ipo.addCurve('SizeX')
 			xcurve.setInterpolation('Linear')
 			xcurve.setExtrapolation(Xpo)
@@ -429,26 +469,29 @@ class Importer(Converter):
 			xcurve.addBezier((self.wbTime2blFrame(frame.Frame, start), mat.x))
 			ycurve.addBezier((self.wbTime2blFrame(frame.Frame, start), -1*mat.z))
 			zcurve.addBezier((self.wbTime2blFrame(frame.Frame, start), mat.y))
-	
+
 	# new
 	# @author Tamino Dauth
 	def loadLights(self):
-		sys.stderr.write("loading %i lights\n" % len(self.model.LITE.lights))
-		
-		for wbLamp in self.model.LITE.lights
+		sys.stderr.write("loading %i lights\n" % self.model.LITE.nlits)
+
+		for lightnr in range(self.model.LITE.nlits):
+			wbLamp = self.model.LITE.lights[lightnr]
+			object = Blender.Object.New(self.lampName(lightnr))
 			blLamp = Blender.Lamp.New()
+			object.link(blLamp)
 			blLamp.setName(wbLamp.OBJ.Name)
 			#(0:Omnidirectional;1:Directional;2:Ambient)
-			if (wbLamp.Type == 0)
+			if wbLamp.Type == 0:
 				blLamp.setType('Lamp')
-			else if (wbLamp.Type == 1)
+			elif wbLamp.Type == 1:
 				blLamp.setType('Spot')
-			else if (wbLamp.Type == 2)
+			elif wbLamp.Type == 2:
 				blLamp.setType('Area')
-			else
+			#else:
 				# todo throw exception
-				
-			#light.AttStart 
+
+			#light.AttStart
 			#light.AttEnd
 			blLamp.R = wbLamp.ColR
 			blLamp.G = wbLamp.ColB
@@ -458,9 +501,10 @@ class Importer(Converter):
 			#light.AmbColG
 			#light.AmbColB
 			#light.AmbColIntensity
-			
-
+			self.scene.link(object)
 
 	def loadParticleEmitters(self):
-	
+		sys.stderr.write("loading %i particle emitters\n" % self.model.PREM.nprems)
+
 	def loadParticleEmitters2(self):
+		sys.stderr.write("loading %i particle emitters 2\n" % self.model.PRE2.npre2s)

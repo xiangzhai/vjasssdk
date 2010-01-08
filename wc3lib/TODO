@@ -1,6 +1,8 @@
 2010-01-06 Tamino Dauth <tamino@cdauth.de>
 * Improve warblend python scripts (add light support, ambient values?).
 * Each MDLX object which can have a parent object is able to define its own customized translation, rotation and scaling (see MDL format specification), otherwise it will be inherited???
+* Editor should get path brush tool like W3ZMapEdit has.
+* Editor terrain (tile point) editor should be much more advanced than in normal WE (flags and layer should be choosable).
 
 2009-12-05 Tamino Dauth <tamino@cdauth.de>
 * Blp ignores 0 bytes but writes (paletted, alphas) exactly the same byte number.
