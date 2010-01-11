@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+
 #include "geosetanimation.hpp"
 #include "geosetanimationalphas.hpp"
 #include "geosetanimationcolors.hpp"
@@ -76,12 +78,7 @@ long32 GeosetAnimation::readMdx(std::istream &istream) throw (class Exception)
 	std::cout << "After colors" << std::endl;
 	
 	if (nbytesi != bytes)
-	{
-		char message[50];
-		sprintf(message, _("Geoset animation: File byte count isn't equal to real byte count:\nFile byte count %d.\nReal byte count %d.\n"), nbytesi, bytes);
-	
-		throw Exception(message);
-	}
+		throw Exception(boost::str(boost::format(_("Geoset animation: File byte count isn't equal to real byte count:\nFile byte count %1%.\nReal byte count %2%.\n")) % nbytesi % bytes));
 	
 	return bytes;
 }

@@ -41,6 +41,10 @@ MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional), m_e
 	*/
 }
 
+MdxBlock::~MdxBlock()
+{
+}
+
 /// @todo Consider optional like in Python script.
 long32 MdxBlock::readMdx(std::istream &istream) throw (class Exception)
 {

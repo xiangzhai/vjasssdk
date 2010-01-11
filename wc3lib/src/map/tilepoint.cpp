@@ -30,6 +30,7 @@ Tilepoint::Tilepoint(class Environment *environment) : m_environment(environment
 {
 }
 
+/// @todo Missing one byte?
 std::streamsize Tilepoint::read(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_groundHeight), sizeof(this->m_groundHeight));
@@ -37,24 +38,18 @@ std::streamsize Tilepoint::read(std::istream &istream) throw (class Exception)
 	short16 waterLevel;
 	istream.read(reinterpret_cast<char*>(&waterLevel), sizeof(waterLevel));
 	bytes += istream.gcount();
-	this->m_flags = (waterLevel & 0xC000); // extract boundary flag
 	this->m_waterLevel = (waterLevel & 0x3FFF); // extract water level
-	
-	std::bitset<4> flags;
-	istream >> flags;
-	this->m_flags |= flags;
+	this->m_flags = Tilepoint::Flags(waterLevel & 0xC000); // extract boundary flag
 	
 	istream >> this->m_groundTextureType;
-	
-	++bytes; // 2* 4 bits
 	
 	istream.read(reinterpret_cast<char*>(&this->m_textureDetails), sizeof (this->m_textureDetails));
 	bytes += istream.gcount();
 	
 	istream >> this->m_cliffTextureType;
-	istream >> this->m_layerHeight;
-	
 	++bytes; // 2* 4 bits
+	
+	istream >> this->m_layerHeight;
 	
 	return bytes;
 }

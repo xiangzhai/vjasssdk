@@ -27,6 +27,9 @@ class Importer(Converter):
 		self.meshes = None
 		self.armature = None
 
+	def armatureName(self):
+		return self.model.MODL.Name + '.Armature'
+
 	def toBlender(self, model):
 		self.model = model
 		self.meshes = []
@@ -48,9 +51,6 @@ class Importer(Converter):
 		self.meshes = None
 		self.scene = None
 		self.model = None
-
-	def armatureName(self):
-		return self.model.MODL.Name + '.Armature'
 
 	def textureName(self, textureNumber):
 		return self.model.MODL.Name + '.Tex' + str(textureNumber)
@@ -478,8 +478,7 @@ class Importer(Converter):
 		for lightnr in range(self.model.LITE.nlits):
 			wbLamp = self.model.LITE.lights[lightnr]
 			object = Blender.Object.New(self.lampName(lightnr))
-			blLamp = Blender.Lamp.New()
-			object.link(blLamp)
+			blLamp = Blender.Lamp.New(object)
 			blLamp.setName(wbLamp.OBJ.Name)
 			#(0:Omnidirectional;1:Directional;2:Ambient)
 			if wbLamp.Type == 0:
@@ -505,6 +504,21 @@ class Importer(Converter):
 
 	def loadParticleEmitters(self):
 		sys.stderr.write("loading %i particle emitters\n" % self.model.PREM.nprems)
+
+		for premnr in range(self.model.PREM.nprems):
+			wbParticle = self.model.PREM.particleemitters[premnr]
+			object = Blender.Object.New(self.particleName(premnr))
+			blParticle = Blender.Particle.New(object)
+			blParticle.setName(wbParticle.Name)
+
+			# do not inherit translation, rotation and scaling
+			if wbParticle.Parent == -1:
+			# inherit translation, rotation and scaling
+			else:
+				#blParticle.setParent(
+
+
+			bl.Particle.type = 'EMITTER'
 
 	def loadParticleEmitters2(self):
 		sys.stderr.write("loading %i particle emitters 2\n" % self.model.PRE2.npre2s)

@@ -1,3 +1,8 @@
+2010-01-11 Tamino Dauth <tamino@cdauth.de>
+* Write methods should be const.
+* Enable Boost threading exception handling (-fexceptions).
+* Separate class instances in converter application.
+
 2010-01-06 Tamino Dauth <tamino@cdauth.de>
 * Improve warblend python scripts (add light support, ambient values?).
 * Each MDLX object which can have a parent object is able to define its own customized translation, rotation and scaling (see MDL format specification), otherwise it will be inherited???

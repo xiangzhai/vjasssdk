@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <cstring>
+#include <sstream>
 
 #include "w3m.hpp"
 #include "shadow.hpp"
@@ -87,7 +88,7 @@ std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 	if (mpqFile == 0)
 		throw Exception(_("W3m: Missing file \"war3map.w3e\"."));
 	
-	std::iostream iostream;
+	std::stringstream iostream;
 	mpqFile->write(iostream);
 	bytes += this->m_environment->read(iostream);
 	iostream.flush();
@@ -96,7 +97,7 @@ std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 	
 	if (mpqFile == 0)
 		throw Exception(_("W3m: Missing file \"war3map.shd\"."));
-	
+
 	mpqFile->write(iostream);
 	bytes += this->m_shadow->read(iostream);
 	iostream.flush();
@@ -106,7 +107,7 @@ std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 	
 	this->m_hasSignature = false;
 	
-	if (!istream.eof())
+	if (!iostream.eof())
 	{
 		char8 signId[4];
 		istream.read(signId, sizeof(signId));

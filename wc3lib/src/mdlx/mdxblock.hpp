@@ -36,6 +36,7 @@ class MdxBlock
 {
 	public:
 		MdxBlock(byte blockName[4], bool optional = true);
+		virtual ~MdxBlock();
 
 		const byte* blockName() const;
 		bool optional() const;

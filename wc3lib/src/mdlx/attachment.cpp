@@ -22,6 +22,7 @@
 #include <cstring>
 
 #include <boost/tokenizer.hpp>
+#include <boost/format.hpp>
 
 #include "attachment.hpp"
 #include "attachments.hpp"
@@ -145,13 +146,8 @@ long32 Attachment::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	bytes += this->m_visibilities->readMdx(istream);
 	
-	if (bytes != nbytesi)
-	{
-		char message[50];
-		sprintf(message, _("Attachment: File byte count is not equal to real byte count.\nFile byte count: %d.\nReal byte count: %d.\n"), nbytesi, bytes);
-		
-		throw Exception(message);
-	}
+	if (bytes != nbytesi)	
+		throw Exception(boost::str(boost::format(_("Attachment: File byte count is not equal to real byte count.\nFile byte count: %1%.\nReal byte count: %2%.\n")) % nbytesi % bytes));
 	
 	return bytes;
 }

@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+
 #include "geosetanimations.hpp"
 #include "geosetanimation.hpp"
 #include "../internationalisation.hpp"
@@ -58,12 +60,7 @@ long32 GeosetAnimations::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	
 	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geoset animations: Byte count error, %d bytes.\n"), nbytes);
-		
-		throw Exception(message);
-	}
+		throw Exception(boost::str(boost::format( _("Geoset animations: Byte count error, %1% bytes.\n")) % nbytes));
 	
 	while (nbytes > 0)
 	{

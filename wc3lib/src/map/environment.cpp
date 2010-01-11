@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream>
+#include <cstring>
+
 #include <boost/format.hpp>
 
 #include "environment.hpp"
@@ -116,7 +119,7 @@ std::streamsize Environment::write(std::ostream &ostream) throw (class Exception
 	return 0;
 }
 
-enum MainTileset Environment::convertCharToMainTileset(char value)
+enum Environment::MainTileset Environment::convertCharToMainTileset(char value)
 {
 	switch (value)
 	{

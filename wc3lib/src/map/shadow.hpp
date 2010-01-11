@@ -24,6 +24,7 @@
 #include <istream>
 #include <ostream>
 
+#include "platform.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib

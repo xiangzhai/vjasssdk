@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+
 #include "bones.hpp"
 #include "bone.hpp"
 #include "../internationalisation.hpp"
@@ -57,12 +59,7 @@ long32 Bones::readMdx(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
 	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Bones: Byte count error, %d bytes.\n"), nbytes);
-		
-		throw Exception(message);
-	}
+		throw Exception(boost::str(boost::format(_("Bones: Byte count error, %1% bytes.\n")) % nbytes));
 	
 	while (nbytes > 0)
 	{

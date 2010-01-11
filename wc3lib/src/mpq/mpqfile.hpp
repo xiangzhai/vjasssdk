@@ -23,6 +23,8 @@
 
 #include <iostream>
 
+#include "../exception.hpp"
+
 namespace wc3lib
 {
 
@@ -46,7 +48,7 @@ class MpqFile
 		void remove();
 		void rename(const std::string &newName);
 		std::streamsize read(std::istream &istream);
-		std::streamsize write(std::ostream &ostream); //extract
+		std::streamsize write(std::ostream &ostream) const throw (class Exception); //extract
 		/// @return Returns file size in bytes.
 		std::size_t size() const;
 		/// @return Returns compressed file size in bytes.

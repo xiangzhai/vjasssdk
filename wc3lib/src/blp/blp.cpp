@@ -175,7 +175,7 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 	std::list<dword> mipMapOffsets;
 	std::list<dword> mipMapSizes;
 	
-	for (int i = 0; i < Blp::maxMipMaps; ++i)
+	for (std::size_t i = 0; i < Blp::maxMipMaps; ++i)
 	{
 		// header data
 		dword offset;

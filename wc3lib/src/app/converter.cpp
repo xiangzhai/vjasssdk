@@ -33,11 +33,14 @@
 
 #include <getopt.h>
 
+#include "../exception.hpp"
 #include "../internationalisation.hpp"
 #include "../blp/blp.hpp"
 #include "../blp/platform.hpp"
 #include "../mdlx/mdlx.hpp"
 #include "../mdlx/platform.hpp"
+#include "../map/environment.hpp"
+#include "../map/platform.hpp"
 
 using namespace wc3lib;
 
@@ -458,6 +461,7 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 	
 	class mdlx::Mdlx mdlx;
 	class blp::Blp blp;
+	class map::Environment environment(0); /// @todo Warning: Environment shouldn't be read without map parent instance.
 	
 	try
 	{
@@ -528,6 +532,13 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 				break;
 			}
 #endif			
+			case W3e:
+			{
+				std::streamsize bytes = environment.read(ifstream);
+				std::cout << boost::format(_("Read environment file successfully. %1%\n")) % formatBytes(bytes) << std::endl;
+				
+				break;
+			}
 		}			
 	}
 	catch (class Exception &exception)
@@ -537,7 +548,7 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 		
 		throw boost::thread_interrupted();
 	}
-	
+		
 	ifstream.close();
 	
 	if (readonly)
@@ -565,7 +576,6 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 	
 	try
 	{
-		
 		switch (outputFormat)
 		{
 			case Blp:
@@ -609,10 +619,12 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 				break;
 			
 			case Mdx:
+			{
 				mdlx::long32 bytes = mdlx.writeMdx(ofstream);
 				std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
 			
 				break;
+			}
 #ifdef BLEND					
 			case Blend:
 			{
@@ -630,12 +642,19 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 			
 				break;
 			}
-#endif
+#endif	
+			case W3e:
+			{
+				std::streamsize bytes = environment.write(ofstream);
+				std::cout << boost::format(_("Wrote environment file successfully. %1%\n")) % formatBytes(bytes) << std::endl;
+				
+				break;
+			}
 		}
 	}
 	catch (class Exception &exception)
 	{
-		std::cerr << boost::format(_("Error while writing file \"%1%\":\n\"%1%\"")) % filePath % exception.what() << std::endl;
+		//std::cerr << (boost::format(_("Error while writing file \"%1%\":\n\"%1%\"")) % filePath % exception.what()) << std::endl;
 		std::cerr << _("Skiping file.") << std::endl;
 		
 		throw boost::thread_interrupted();
