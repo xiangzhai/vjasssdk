@@ -177,7 +177,7 @@ Mpq::~Mpq()
 		delete file;
 }
 
-std::streamsize Mpq::read(std::istream &istream, enum Mode mode) throw (class Exception)
+std::streamsize Mpq::readMpq(std::istream &istream, enum Mode mode) throw (class Exception)
 {
 	struct Header header;
 	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
@@ -209,11 +209,12 @@ std::streamsize Mpq::read(std::istream &istream, enum Mode mode) throw (class Ex
 
 	/// @todo Read file !header! data and add @class MpqFile instances to member m_files
 	
-	return 0;
+	return bytes;
 	
 }
 
-std::streamsize Mpq::write(std::ostream &ostream, enum Format format) const
+/// @todo Write with format this->m_format!
+std::streamsize Mpq::writeMpq(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

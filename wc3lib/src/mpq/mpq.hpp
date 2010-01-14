@@ -41,8 +41,8 @@ class Mpq
 	public:
 		enum Mode
 		{
-			Read,
-			Write
+			Read = 1 << 0,
+			Write = 1 << 1
 		};
 
 		enum Format
@@ -57,16 +57,20 @@ class Mpq
 
 		Mpq();
 		~Mpq();
-
-		/**
-		* @return Returns MPQ's size in bytes.
-		*/
-		std::streamsize read(std::istream &istream, enum Mode mode) throw (class Exception);
 		
 		/**
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize write(std::ostream &ostream, enum Format format) const;
+		std::streamsize readMpq(std::istream &istream, enum Mode mode) throw (class Exception);
+		/**
+		* @return Returns MPQ's size in bytes.
+		*/
+		std::streamsize writeMpq(std::ostream &ostream) const throw (class Exception);
+		
+#ifdef TAR
+		std::streamsize readTar(std::istream &istream, enum Mode mode) throw (class Exception);
+		std::streamsize writeTar(std::istream &istream, enum Mode mode) throw (class Exception);		
+#endif
 		
 		const class MpqFile* findFile(const std::string &path) const;
 		const class MpqFile* findFileByName(const std::string &name) const;

@@ -1,0 +1,12 @@
+Compilation flags for native format conversion support:
+	BLP:
+		- JPEG
+		- PNG
+		- TGA
+
+	MDLX:
+		- BLEND
+		- MAX
+
+	MPQ:
+		- TAR

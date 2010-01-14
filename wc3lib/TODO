@@ -1,3 +1,6 @@
+2010-01-14 Tamino Dauth <tamino@cdauth.de>
+* Use std::streamsize (in case of need by conversion) for all byte returns of read methods.
+
 2010-01-11 Tamino Dauth <tamino@cdauth.de>
 * Write methods should be const.
 * Enable Boost threading exception handling (-fexceptions).

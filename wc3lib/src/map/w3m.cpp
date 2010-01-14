@@ -72,7 +72,7 @@ std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 	bytes += byteCount;
 	
 	class mpq::Mpq *mpq = new mpq::Mpq;
-	bytes += mpq->read(istream, mpq::Mpq::Read); // starts reading after header's position
+	bytes += mpq->readMpq(istream, mpq::Mpq::Read); // starts reading after header's position
 	const class mpq::MpqFile *mpqFile = mpq->findFile("(listfile)");
 	
 	if (mpqFile == 0)
