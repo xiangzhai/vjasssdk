@@ -137,6 +137,9 @@ Prozedual-Schlüsselwörter:
 Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const
 Warcract-spezifisch: native, mapinit, debug
 
+Funktional-Schlüsselwörter:
+Standard: return
+
 Generik-Schlüsselwörter:
 template
 

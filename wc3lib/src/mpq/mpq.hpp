@@ -25,6 +25,8 @@
 #include <list>
 #include <string>
 
+#include <boost/foreach.hpp>
+
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -96,14 +98,27 @@ class Mpq
 
 				std::streamsize read(std::istream &istream) throw (class Exception);
 
+				/**
+				* @todo Check size, flags and required properties.
+				*/
+				bool check() const;
+						
 			protected:
+				friend class Mpq;
+				
+				static uint32 hashKey;
+				
 				class Mpq *m_mpq;
 				int32 m_blockOffset;
 				int32 m_blockSize;
 				int32 m_fileSize;
 				Flags m_flags;
 		};
-
+		
+		bool checkBlocks() const;
+		class Block* firstEmptyBlock() const;
+		class Block* firstUnusedBlock() const;
+		
 		enum Format m_format;
 		std::list<class Block*> m_blocks;
 		std::list<class MpqFile*> m_files;
@@ -112,6 +127,45 @@ class Mpq
 inline const std::list<class MpqFile*>& Mpq::files() const
 {
 	return this->m_files;
+}
+
+inline bool Mpq::checkBlocks() const
+{
+	BOOST_FOREACH(class Block *block, this->m_blocks)
+	{
+		if (!block->check())
+			return false;
+	}
+	
+	return true;
+}
+
+/**
+* Empty space entries should have BlockOffset and BlockSize nonzero, and FileSize and Flags zero.
+*/
+inline class Mpq::Block* Mpq::firstEmptyBlock() const
+{
+	BOOST_FOREACH(class Mpq::Block *block, this->m_blocks)
+	{
+		if (block->m_blockOffset > 0 && block->m_blockSize > 0 && block->m_fileSize == 0 && block->m_flags == 0)
+			return block;
+	}
+	
+	return 0;
+}
+
+/**
+* Unused block table entries should have BlockSize, FileSize, and Flags zero.
+*/
+inline class Mpq::Block* Mpq::firstUnusedBlock() const
+{
+	BOOST_FOREACH(class Mpq::Block *block, this->m_blocks)
+	{
+		if (block->m_blockSize == 0 && block->m_fileSize == 0 && block->m_flags == 0)
+			return block;
+	}
+	
+	return 0;
 }
 
 }

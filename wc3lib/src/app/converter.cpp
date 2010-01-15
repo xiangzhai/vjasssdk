@@ -29,7 +29,7 @@
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
 
 #include <getopt.h>
 
@@ -507,295 +507,275 @@ static bool addFilePath(const boost::filesystem::path &path, std::list<boost::fi
 	return true;
 }
 
-static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (boost::thread_interrupted, class Exception)
+static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	class blp::Blp blp;
 	
-	try
+	switch (inputFormat)
 	{
-		switch (inputFormat)
+		case Blp:
 		{
-			case Blp:
-			{
-				blp::dword bytes = blp.readBlp(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
+			blp::dword bytes = blp.readBlp(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
+		}
 #ifdef JPEG
-			case Jpeg:
-			{
-				blp::dword bytes = blp.readJpeg(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
+		case Jpeg:
+		{
+			blp::dword bytes = blp.readJpeg(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
+		}
 #endif
 #ifdef TGA			
-			case Tga:
-			{
-				blp::dword bytes = blp.readTga(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
-				
-				break;
-			}
+		case Tga:
+		{
+			blp::dword bytes = blp.readTga(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+			
+			break;
+		}
 #endif
 #ifdef PNG					
-			case Png:
-			{
-				blp::dword bytes = blp.readPng(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
-#endif			
-				
-			default:
-				throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input BLP format.\nUsed input format is %2%.")) % path.string() % inputFormat));
+		case Png:
+		{
+			blp::dword bytes = blp.readPng(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
 		}
+#endif			
+			
+		default:
+			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input BLP format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
 	
 	if (readonly)
 		return;
 	
-	try
+	switch (outputFormat)
 	{
-		switch (outputFormat)
+		case Blp:
 		{
-			case Blp:
-			{
-				blp::dword bytes = blp.writeBlp(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
+			blp::dword bytes = blp.writeBlp(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
+		}
 #ifdef JPEG
-			case Jpeg:
-			{
-				blp::dword bytes = blp.writeJpeg(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
+		case Jpeg:
+		{
+			blp::dword bytes = blp.writeJpeg(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
+		}
 #endif
 #ifdef TGA			
-			case Tga:
-			{
-				blp::dword bytes = blp.writeTga(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
-				
-				break;
-			}
+		case Tga:
+		{
+			blp::dword bytes = blp.writeTga(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+			
+			break;
+		}
 #endif
 #ifdef PNG					
-			case Png:
-			{
-				blp::dword bytes = blp.writePng(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
-#endif			
-				
-			default:
-				throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output BLP format.\nUsed input format is %2%.")) % path.string() % inputFormat));
+		case Png:
+		{
+			blp::dword bytes = blp.writePng(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
 		}
+#endif			
+			
+		default:
+			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output BLP format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
 }
 
-static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (boost::thread_interrupted, class Exception)
+static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	class mdlx::Mdlx mdlx;
 	
-	try
+	switch (inputFormat)
 	{
-		switch (inputFormat)
-		{
-			case Mdl:
-				mdlx.readMdl(ifstream);
-				
-				if (verbose)
-					std::cout << _("Read MDL file successfully.") << std::endl;
-				
-				break;
+		case Mdl:
+			mdlx.readMdl(ifstream);
 			
-			case Mdx:
-			{
-				mdlx::long32 bytes = mdlx.readMdx(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
+			if (verbose)
+				std::cout << _("Read MDL file successfully.") << std::endl;
+			
+			break;
+		
+		case Mdx:
+		{
+			mdlx::long32 bytes = mdlx.readMdx(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
+		}
 #ifdef BLEND					
-			case Blend:
-			{
-				mdlx::long32 bytes = mdlx.readBlend(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
-				
-				break;
-			}
+		case Blend:
+		{
+			mdlx::long32 bytes = mdlx.readBlend(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+			
+			break;
+		}
 #endif
 #ifdef MAX					
-			case Max:
-			{
-				mdlx::long32 bytes = mdlx.readMax(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
-#endif			
-				
-			default:
-				throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input MDLX format.\nUsed input format is %2%.")) % path.string() % inputFormat));
+		case Max:
+		{
+			mdlx::long32 bytes = mdlx.readMax(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
 		}
+#endif			
+			
+		default:
+			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input MDLX format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
 	
 	if (readonly)
 		return;
 	
-	try
+	switch (outputFormat)
 	{
-		switch (outputFormat)
-		{
-			case Mdl:
-				mdlx.writeMdl(ofstream);
-				
-				if (verbose)
-					std::cout << _("Wrote MDL file successfully.") << std::endl;
-				
-				break;
+		case Mdl:
+			mdlx.writeMdl(ofstream);
 			
-			case Mdx:
-			{
-				mdlx::long32 bytes = mdlx.writeMdx(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
+			if (verbose)
+				std::cout << _("Wrote MDL file successfully.") << std::endl;
+			
+			break;
+		
+		case Mdx:
+		{
+			mdlx::long32 bytes = mdlx.writeMdx(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
+		}
 #ifdef BLEND					
-			case Blend:
-			{
-				mdlx::long32 bytes = mdlx.writeBlend(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
-				
-				break;
-			}
+		case Blend:
+		{
+			mdlx::long32 bytes = mdlx.writeBlend(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+			
+			break;
+		}
 #endif
 #ifdef MAX					
-			case Max:
-			{
-				mdlx::long32 bytes = mdlx.writeMax(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
-#endif			
-				
-			default:
-				throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output MDLX format.\nUsed output format is %2%.")) % path.string() % outputFormat));
+		case Max:
+		{
+			mdlx::long32 bytes = mdlx.writeMax(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
 		}
-		
+#endif			
+			
+		default:
+			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output MDLX format.\nUsed output format is %2%.")) % path.string() % outputFormat));
 	}
 }
 
-static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (boost::thread_interrupted, class Exception)
+static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	class mpq::Mpq mpq;
 	
-	try
+	switch (inputFormat)
 	{
-		switch (inputFormat)
+		case Mpq:
 		{
-			case Mpq:
-			{
-				std::streamsize bytes = mpq.readMpq(ifstream, mpq::Mpq::Read);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read MPQ file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
-#ifdef TAR
-			case Tar:
-			{
-				std::streamsize bytes = mpq.readTar(ifstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Read TAR file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
-#endif
-				
-			default:
-				throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input MPQ format.\nUsed input format is %2%.")) % path.string() % inputFormat));
+			std::streamsize bytes = mpq.readMpq(ifstream, mpq::Mpq::Read);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read MPQ file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
 		}
+#ifdef TAR
+		case Tar:
+		{
+			std::streamsize bytes = mpq.readTar(ifstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Read TAR file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
+		}
+#endif
+			
+		default:
+			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input MPQ format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
 	
 	if (readonly)
 		return;
 	
-	try
+	switch (outputFormat)
 	{
-		switch (outputFormat)
+		case Mpq:
 		{
-			case Mpq:
-			{
-				std::streamsize bytes = mpq.writeMpq(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote MPQ file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
-				
-				break;
-			}
-#ifdef TAR					
-			case Tar:
-			{
-				std::streamsize bytes = mpq.writeTar(ofstream);
-				
-				if (verbose)
-					std::cout << boost::format(_("Wrote TAR file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
-				
-				break;
-			}
-#endif
-				
-			default:
-				throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output MPQ format.\nUsed output format is %2%.")) % path.string() % outputFormat));
+			std::streamsize bytes = mpq.writeMpq(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote MPQ file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+			
+			break;
 		}
-		
+#ifdef TAR					
+		case Tar:
+		{
+			std::streamsize bytes = mpq.writeTar(ofstream);
+			
+			if (verbose)
+				std::cout << boost::format(_("Wrote TAR file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+			
+			break;
+		}
+#endif
+			
+		default:
+			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output MPQ format.\nUsed output format is %2%.")) % path.string() % outputFormat));
 	}
 }
 
-static void convertFile(const boost::filesystem::path &path, const boost::filesystem::path &dirPath, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (boost::thread_interrupted)
+static void convertFile(const boost::filesystem::path &path, const boost::filesystem::path &dirPath, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	std::ios_base::openmode openMode = std::ifstream::in;
 		
@@ -808,11 +788,7 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 	std::ifstream ifstream(path.string().c_str(), openMode);
 	
 	if (!ifstream)
-	{
-		std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % path.string() << std::endl;
-		
-		throw boost::thread_interrupted();
-	}
+		throw Exception(boost::str(boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % path.string()));
 	
 	boost::filesystem::ofstream ofstream;
 	
@@ -832,59 +808,45 @@ static void convertFile(const boost::filesystem::path &path, const boost::filesy
 		ofstream.open(filePath, openMode);
 		
 		if (!ofstream)
-		{
-			std::cerr << boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % filePath << std::endl;
-			
-			throw boost::thread_interrupted();
-		}
+			throw Exception(boost::str(boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % filePath));
 	}
 	
-	try
+	switch (inputFormat)
 	{
-		switch (inputFormat)
-		{
-			case Blp:
+		case Blp:
 #ifdef JPEG
-			case Jpeg:
+		case Jpeg:
 #endif
 #ifdef TGA
-			case Tga:
+		case Tga:
 #endif
 #ifdef PNG
-			case Png:
+		case Png:
 #endif
-				convertBlp(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
-			
-				break;	
+			convertBlp(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
+		
+			break;	
 
-			case Mdl:
-			case Mdx:
+		case Mdl:
+		case Mdx:
 #ifdef BLEND
-			case Blend:
+		case Blend:
 #endif
 #ifdef MAX
-			case Max:
+		case Max:
 #endif
-				convertMdlx(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
-			
-				break;
-				
-			case Mpq:
-#ifdef TAR
-			case Tar:
-#endif
-				convertMpq(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
-				
-				break;
-		}			
-	}
-	catch (Exception &exception)
-	{
-		std::cerr << boost::format(_("Error while reading file \"%1%\":\n\"%2%\"")) % path.string() % exception.what() << std::endl;
-		std::cerr << _("Skiping file.") << std::endl;
+			convertMdlx(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
 		
-		throw boost::thread_interrupted();
-	}
+			break;
+			
+		case Mpq:
+#ifdef TAR
+		case Tar:
+#endif
+			convertMpq(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
+			
+			break;
+	}			
 		
 	ifstream.close();
 	
@@ -1091,6 +1053,19 @@ int main(int argc, char *argv[])
 		
 		try
 		{
+			convertFile(path, optionDir, optionIformat, optionOformat, optionVerbose, optionReadonly);
+		}
+		catch (const class Exception &exception)
+		{
+			std::cerr << exception.what() << std::endl;
+			std::cerr << _("Skipping file.") << std::endl;
+			
+			continue;
+		}
+		
+		/*
+		try
+		{
 			boost::thread thread = boost::thread(convertFile, path, optionDir, optionIformat, optionOformat, optionVerbose, optionReadonly);
 		}
 		catch (boost::thread_interrupted &threadInterrupted)
@@ -1103,7 +1078,7 @@ int main(int argc, char *argv[])
 			
 			break;
 		}
-		
+		*/
 	}
 
 	return EXIT_SUCCESS;

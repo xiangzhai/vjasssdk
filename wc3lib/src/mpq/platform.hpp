@@ -29,9 +29,11 @@ namespace wc3lib
 namespace mpq
 {
 
+typedef int8_t byte;
 typedef int8_t int8;
 typedef int16_t int16;
 typedef int32_t int32;
+typedef uint32_t uint32; // used for various encryption and hash functions
 typedef int64_t int64;
 //typedef int2048 int2048; /// @todo WTF?!?!?!!
 

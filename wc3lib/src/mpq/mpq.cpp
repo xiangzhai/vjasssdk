@@ -21,7 +21,6 @@
 #include <cstring>
 
 #include <boost/format.hpp>
-#include <boost/foreach.hpp>
 
 #include "mpq.hpp"
 #include "mpqfile.hpp"
@@ -34,18 +33,18 @@ namespace mpq
 {
 
 // The encryption and hashing functions use a number table in their procedures. This table must be initialized before the functions are called the first time.
-static void InitializeCryptTable(int32 dwCryptTable[0x500])
+static void InitializeCryptTable(uint32 dwCryptTable[0x500])
 {
-    int32 seed   = 0x00100001;
-    int32 index1 = 0;
-    int32 index2 = 0;
-    int   i;
+    uint32 seed   = 0x00100001;
+    uint32 index1 = 0;
+    uint32 index2 = 0;
+    int16   i;
 
     for (index1 = 0; index1 < 0x100; index1++)
     {
         for (index2 = index1, i = 0; i < 5; i++, index2 += 0x100)
         {
-            int32 temp1, temp2;
+            uint32 temp1, temp2;
 
             seed  = (seed * 125 + 3) % 0x2AAAAB;
             temp1 = (seed & 0xFFFF) << 0x10;
@@ -58,15 +57,15 @@ static void InitializeCryptTable(int32 dwCryptTable[0x500])
     }
 }
 
-static void EncryptData(const int32 dwCryptTable[0x500], void *lpbyBuffer, int32 dwLength, int32 dwKey)
+static void EncryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLength, uint32 dwKey)
 {
     assert(lpbyBuffer);
 
-    int32 *lpdwBuffer = (int32 *)lpbyBuffer;
-    int32 seed = 0xEEEEEEEE;
-    int32 ch;
+    uint32 *lpdwBuffer = (uint32 *)lpbyBuffer;
+    uint32 seed = 0xEEEEEEEE;
+    uint32 ch;
 
-    dwLength /= sizeof(int32);
+    dwLength /= sizeof(uint32);
 
     while(dwLength-- > 0)
     {
@@ -80,15 +79,15 @@ static void EncryptData(const int32 dwCryptTable[0x500], void *lpbyBuffer, int32
     }
 }
 
-static void DecryptData(const int32 dwCryptTable[0x500], void *lpbyBuffer, int32 dwLength, int32 dwKey)
+static void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLength, uint32 dwKey)
 {
     assert(lpbyBuffer);
 
-    int32 *lpdwBuffer = (int32 *)lpbyBuffer;
-    int32 seed = 0xEEEEEEEEL;
-    int32 ch;
+    uint32 *lpdwBuffer = (uint32 *)lpbyBuffer;
+    uint32 seed = 0xEEEEEEEEL;
+    uint32 ch;
 
-    dwLength /= sizeof(int32);
+    dwLength /= sizeof(uint32);
 
     while(dwLength-- > 0)
     {
@@ -100,6 +99,34 @@ static void DecryptData(const int32 dwCryptTable[0x500], void *lpbyBuffer, int32
 
 		*lpdwBuffer++ = ch;
     }
+}
+
+enum HashType
+{
+	TableOffset = 0,
+	NameA = 1,
+	NameB = 2,
+	FileKey = 3
+};
+
+// Based on code from StormLib.
+uint32 HashString(const int32 dwCryptTable[0x500], const char *lpszString, HashType dwHashType)
+{
+    assert(lpszString);
+    
+    uint32  seed1 = 0x7FED7FEDL;
+    uint32  seed2 = 0xEEEEEEEEL;
+    int16    ch;
+
+    while (*lpszString != 0)
+    {
+        ch = toupper(*lpszString++);
+
+        seed1 = dwCryptTable[(dwHashType * 0x100) + ch] ^ (seed1 + seed2);
+        seed2 = ch + seed1 + seed2 + (seed2 << 5) + 3;
+    }
+    
+    return seed1;
 }
 
 struct Header
@@ -196,10 +223,18 @@ std::streamsize Mpq::readMpq(std::istream &istream, enum Mode mode) throw (class
 	else
 		throw Exception(boost::str(boost::format(_("Unknown MPQ format \"%1%\".")) % header.formatVersion));
 	
-	/// @todo The block table is encrypted, using the hash of "(block table)" as the key.
-	istream.seekg(header.blockTableOffset);
+	// According to the StormLib this value is sometimes changed by map creators to protect their maps. As in the StormLib this value is ignored.
+	if (header.headerSize != sizeof(header))
+		std::cerr << boost::format(_("Warning: MPQ header size is not equal to real header size.\nContained header size: %1%.\nReal header size: %2%.")) % header.headerSize % sizeof(header) << std::endl;
 
-	for (int i = 0; i < header.blockTableEntries; ++i)
+	std::streampos ignoredBytes = istream.tellg();	
+	istream.seekg(header.blockTableOffset);
+	ignoredBytes = istream.tellg() - ignoredBytes;
+	
+	if (ignoredBytes > 0)
+		std::cout << boost::format(_("Ignoring %1% bytes from MPQ header to first block table entry.")) % ignoredBytes << std::endl;
+
+	for (std::size_t i = 0; i < header.blockTableEntries; ++i)
 	{
 		class Mpq::Block *block = new Block(this);
 		bytes += block->read(istream);
@@ -253,6 +288,12 @@ std::streamsize Mpq::Block::read(std::istream &istream) throw (class Exception)
 
 	if (bytes != sizeof(entry))
 		throw Exception(_("Error while reading block table entry."));
+	
+	/// @todo The block table is encrypted, using the hash of "(block table)" as the key.
+	/// @todo Do we have to decrypt the whole table at once?
+	uint32 cryptTable[0x500];
+	InitializeCryptTable(cryptTable);
+	DecryptData(cryptTable, reinterpret_cast<void*>(&entry), sizeof(entry), Mpq::Block::hashKey);
 
 	this->m_blockOffset = entry.blockOffset;
 	this->m_blockSize = entry.blockSize;
