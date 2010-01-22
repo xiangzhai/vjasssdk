@@ -47,7 +47,7 @@ class Renderer
 	public:
 		void start();
 	
-	private:
+	protected:
 		class Ogre::Root *m_root;
 		class Ogre::RenderWindow *m_renderWindow;
 		class Ogre::SceneManager *m_sceneManager; //class Ogre::DefaultSceneManager *m_defaultSceneManager;

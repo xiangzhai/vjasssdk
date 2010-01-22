@@ -30,7 +30,9 @@
 #include "blp.hpp"
 #include "../internationalisation.hpp"
 
+#ifdef JPEG
 #include <openjpeg.h>
+#endif
 //#include <jpeglib.h>
 
 namespace wc3lib
@@ -208,6 +210,7 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 	if (this->m_compression == Blp::Jpeg)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
+#ifdef JPEG
 		dword jpegHeaderSize;
 		istream.read(reinterpret_cast<char*>(&jpegHeaderSize), sizeof(jpegHeaderSize));
 		bytes += istream.gcount();
@@ -318,6 +321,9 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 			++offset;
 			++size;
 		}
+#else
+		throw Exception(_("Compiled without JPEG support."));
+#endif
 	}
 	else if (this->m_compression == Blp::Paletted)
 	{
@@ -528,6 +534,10 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	if (this->m_compression == Blp::Jpeg)
 	{
 		std::cout << "Detected JPEG compression mode. Not implemented yet." << std::endl;
+#ifdef JPEG
+#else
+		throw Exception(_("Compiled without JPEG support."));
+#endif
 	}
 	else if (this->m_compression == Blp::Paletted)
 	{

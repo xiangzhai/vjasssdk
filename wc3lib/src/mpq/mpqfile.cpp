@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "mpqfile.hpp"
 
 namespace wc3lib
@@ -26,7 +28,22 @@ namespace wc3lib
 namespace mpq
 {
 
-MpqFile::MpqFile(class Mpq *mpq) : m_mpq(mpq)
+void MpqFile::remove() throw (class Exception)
+{
+	this->m_hash->clear();
+}
+	
+std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
+{
+	return 0;
+}
+
+std::streamsize MpqFile::write(std::ostream &ostream) const throw (class Exception)
+{
+	return 0;
+}
+
+MpqFile::MpqFile(class Mpq *mpq, class Hash *hash) : m_mpq(mpq), m_hash(hash), m_size(0), m_compressedSize(0), m_locale(MpqFile::Neutral), m_platform(MpqFile::Default), m_path("")
 {
 }
 

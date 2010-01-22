@@ -21,8 +21,19 @@
 #ifndef WC3LIB_EDITOR_MPQEDITOR_HPP
 #define WC3LIB_EDITOR_MPQEDITOR_HPP
 
+#include <list>
+
+#include "subeditor.hpp"
+
 namespace wc3lib
 {
+	
+namespace mpq
+{
+
+class Mpq;
+
+}
 	
 namespace editor
 {
@@ -31,6 +42,18 @@ class MpqEditor : public SubEditor
 {
 	public:
 		MpqEditor(class Editor *editor);
+		
+	public slots:
+		void newMpqArchive();
+		void openMpqArchive();
+		void closeMpqArchive();
+		
+		void addFiles();
+		void extractFiles(); // selected files
+		void removeFiles();
+		
+	protected:
+		std::list<class mpq::Mpq> m_mpqArchives;
 };
 
 }

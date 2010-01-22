@@ -1,3 +1,8 @@
+find_library(Ogre REQUIRED)
+include_directories(${Ogre_INCLUDE_DIR})
+message("Include dir" ${Ogre_INCLUDE_DIR})
+include_directories(/usr/include/OGRE)
+
 set(wc3lib_MDLX_SRC                            
 	ambientcolor.cpp
 	ambientcolors.cpp
@@ -65,6 +70,7 @@ set(wc3lib_MDLX_SRC
 	normal.cpp
 	normals.cpp
 	object.cpp
+	ogremdlx.cpp
 	particleemitter2.cpp
 	particleemitter2latitude.cpp
 	particleemitter2latitudes.cpp
@@ -164,6 +170,7 @@ set(wc3lib_MDLX_H
 	mdxscaling.cpp
 	mdxscalings.cpp
 	object.hpp
+	ogremdlx.hpp
 	particleemitter2.hpp
 	particleemitter2latitude.hpp
 	particleemitter2latitudes.hpp
@@ -191,9 +198,6 @@ set(wc3lib_MDLX_H
 #if (BLEND)
 	add_subdirectory(readblend)
 #endif (BLEND)
-
-# custom include path, Gentoo Linux
-include_directories(/usr/include/boost-1_35)
 
 add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})
 #target_link_libraries(wc3libblp gettextlib)

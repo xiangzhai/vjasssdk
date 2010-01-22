@@ -92,27 +92,35 @@ Editor::~Editor()
 		delete this->m_newMapDialog;
 }
 
-void Editor::addMpq(class Mpq *mpq, std::size_t priority)
+std::size_t Editor::addMpq(const class Mpq *mpq, std::size_t priority)
 {
 	std::list<class mpq::Mpq*>::const_iterator mpqIterator = this->m_mpqs.begin();
 	std::list<std::size_t>::const_iterator priorityIterator = this->m_mpqsPriorities.begin();
+	std::size_t i = 0;
 	
 	while (mpqIterator != this->m_mpqs.end())
 	{
 		if (*priorityIterator < priority)
 		{
-			this->m_mpqs.insert(mpqIterator,mpq);
+			/*
+			this->m_mpqs.insert(mpqIterator, mpq);
 			this->m_mpqsPriorities.insert(priorityIterator, priority);
+			*/
 			
-			return;
+			return i;
 		}
 		
 		++mpqIterator;
 		++priorityIterator;
+		++i;
 	}
 	
+	/*
 	this->m_mpqs.push_back(mpq);
 	this->m_mpqsPriorities.push_back(priority);
+	*/
+	
+	return i;
 }
 
 const class mpq::MpqFile* Editor::loadMpqFile(const boost::filesystem::path &path)

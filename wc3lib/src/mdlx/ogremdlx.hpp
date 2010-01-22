@@ -23,6 +23,8 @@
 
 #include <OgreMesh.h>
 
+#include "../exception.hpp"
+
 namespace wc3lib
 {
 	
@@ -36,7 +38,7 @@ class OgreMdlx
 	public:
 		OgreMdlx(class Mdlx *mdlx);
 		
-		void refresh(class Ogre::MeshManager *meshManager);
+		void refresh(class Ogre::MeshManager *meshManager) throw (class Exception);
 		
 	protected:
 		class Mdlx *m_mdlx;

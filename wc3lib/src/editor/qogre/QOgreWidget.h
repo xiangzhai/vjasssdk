@@ -53,8 +53,8 @@ class QOgreWidget : public QWidget
             bool initializeWindow = true,
             bool destroyOldWindow = true);*/
 
-		virtual void setupResources (void) = 0;
-		virtual void configure (void);
+		virtual void setupResources(void) = 0;
+		virtual void configure(void);
 
 		static Ogre::Root *m_ogreRoot;
 		static std::vector <Ogre::RenderWindow *> m_renderWindowList;

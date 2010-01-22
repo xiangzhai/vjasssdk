@@ -21,7 +21,10 @@
 #ifndef WC3LIB_EDITOR_EDITOR_HPP
 #define WC3LIB_EDITOR_EDITOR_HPP
 
+#include <list>
+
 #include <kmainwindow.h>
+
 #include <boost/filesystem.hpp>
 
 namespace wc3lib
@@ -59,14 +62,15 @@ class Editor : public KMainWindow
 	Q_OBJECT
 	
 	public:
-		Editor(QWidget *parent, Qt::WindowFlags f);
+		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
 		~Editor();
 		
 		/**
 		* Each time a file has to searched for, all editor MPQ archives will be checked for in the ordering of their priority.
 		* Higher priority means it will be searched through befor MPQ archives with less priority.
+		* @return Returns the MPQ's position in editor MPQ list.
 		*/
-		void addMpq(class Mpq *mpq, std::size_t priority);
+		std::size_t addMpq(const class Mpq *mpq, std::size_t priority);
 		
 		const class mpq::MpqFile* loadMpqFile(const boost::filesystem::path &path);
 	

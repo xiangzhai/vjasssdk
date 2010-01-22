@@ -38,7 +38,14 @@ class Rotation0s;
 class Scaling0s;
 class AttachmentVisibilities;
 
-/// No MDX block!
+/**
+* No MDX block!
+* Object types can have parent relationships and inherit rotation, scaling and translation of their parent.
+* Note that @fn Object.translations, @fn Object.rotations and @fn Object.scalings won't return 0
+* if the object does inherit any of them.
+* Use @fn Object.hasParent, @fn Object.inheritsTranslation, @fn Object.inheritsRotation and @fn Object.inheritsScaling to
+* check if there is any parent inheritance relationship.
+*/
 class Object
 {
 	public:
@@ -46,6 +53,15 @@ class Object
 		enum Type
 		{
 			Helper = 0,
+			Bone = 256,
+			Light = 512,
+			EventObject = 1024,
+			Attachment = 2048,
+			CollisionShape = 8192
+		};
+		
+		enum TypeAddition
+		{
 			DontInheritTranslation = 1,
 			DontInheritRotation = 2,
 			DontInheritScaling = 4,
@@ -53,22 +69,7 @@ class Object
 			BillboardedLockX = 16,
 			BillboardedLockY = 32,
 			BillboardedLockZ = 64,
-			CameraAnchored = 128,
-			Bone = 256,
-			Light = 512,
-			EventObject = 1024,
-			Attachment = 2048,
-			ParticleEmitter = 4096,
-			CollisionShape = 8192,
-			RibbonEmitter = 16384,
-			Unshaded = 32768,
-			EmitterUsesMdl = 32768,
-			SortPrimitivesFarZ = 65536,
-			EmitterUsesTga = 65536,
-			LineEmitter = 131072,
-			Unfogged = 262144,
-			ModelSpace = 524288,
-			XyQuad = 1048576
+			CameraAnchored = 128
 		};
 
 		Object(class Mdlx *mdlx);
@@ -81,8 +82,15 @@ class Object
 		long32 objectId() const;
 		void setParent(long32 parent);
 		long32 parent() const;
-		void setType(long32 type);
-		long32 type() const;
+		
+		/**
+		* Type additions will be hold.
+		*/
+		void setType(enum Type type);
+		enum Type type() const;
+		void addTypeAddition(enum TypeAddition typeAddition);
+		enum TypeAddition typeAddition() const;
+		
 		void setTranslations(class Translation1s *translations);
 		class Translation1s* translations() const;
 		void setRotations(class Rotation0s *rotations);
@@ -96,13 +104,18 @@ class Object
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 		virtual long32 readMdx(std::istream &istream) throw (class Exception);
 		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		
+		bool hasParent() const;
+		bool inheritsTranslation() const;
+		bool inheritsRotation() const;
+		bool inheritsScaling() const;
 
 	protected:
 		class Mdlx *m_mdlx;
 		ascii m_name[0x50];
 		long32 m_objectId;
 		long32 m_parent;
-		long32 m_type; //use enum
+		long32 m_type;
 		class Translation1s *m_translations; //(KGTR)
 		class Rotation0s *m_rotations; //(KGRT)
 		class Scaling0s *m_scalings; //(KGSC)
@@ -146,14 +159,38 @@ inline long32 Object::parent() const
 	return this->m_parent;
 }
 
-inline void Object::setType(long32 type)
+inline void Object::setType(enum Object::Type type)
 {
-	this->m_type = type;
+	enum TypeAddition typeAddition = this->typeAddition();
+	this->m_type = type + typeAddition;
 }
 
-inline long32 Object::type() const
+inline enum Object::Type Object::type() const
 {
-	return this->m_type;
+	if (this->m_type < Object::Bone)
+		return Object::Helper;
+	else if (this->m_type < Object::Light)
+		return Object::Bone;
+	else if (this->m_type < Object::EventObject)
+		return Object::Light;
+	else if (this->m_type < Object::Attachment)
+		return Object::EventObject;
+	else if (this->m_type < Object::CollisionShape)
+		return Object::Attachment;
+	
+	return Object::CollisionShape;
+}
+
+inline void Object::addTypeAddition(enum Object::TypeAddition typeAddition)
+{
+	this->m_type += long32(typeAddition);
+}
+
+inline enum Object::TypeAddition Object::typeAddition() const
+{
+	enum Object::Type type = this->type();
+	
+	return Object::TypeAddition(this->m_type - long32(type));
 }
 
 inline void Object::setTranslations(class Translation1s *translations)
@@ -194,6 +231,26 @@ inline void Object::setVisibilties(class AttachmentVisibilities *visibilities)
 inline class AttachmentVisibilities* Object::visibilities() const
 {
 	return this->m_visibilities;
+}
+
+inline bool Object::hasParent() const
+{
+	return this->m_parent != 0xFFFFFFFF;
+}
+
+inline bool Object::inheritsTranslation() const
+{
+	return !(this->typeAddition() & Object::DontInheritTranslation);
+}
+
+inline bool Object::inheritsRotation() const
+{
+	return !(this->typeAddition() & Object::DontInheritRotation);
+}
+
+inline bool Object::inheritsScaling() const
+{
+	return !(this->typeAddition() & Object::DontInheritScaling);
 }
 
 }

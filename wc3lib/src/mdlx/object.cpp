@@ -65,10 +65,17 @@ long32 Object::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_type), sizeof(this->m_type));
 	bytes += istream.gcount();
+	
 	/// @todo All those blocks seem to be optional, model Krieger.mdx doesn contain them for its bones.
-	bytes += this->m_translations->readMdx(istream);
-	bytes += this->m_rotations->readMdx(istream);
-	bytes += this->m_scalings->readMdx(istream);
+	if (!this->inheritsTranslation())
+		bytes += this->m_translations->readMdx(istream);
+	
+	if (!this->inheritsRotation())
+		bytes += this->m_rotations->readMdx(istream);
+	
+	if (!this->inheritsScaling())
+		bytes += this->m_scalings->readMdx(istream);
+	
 	bytes += this->m_visibilities->readMdx(istream);
 	/*	
 	if (bytes != nbytesi)

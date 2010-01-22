@@ -18,7 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cstdio>
+#include <iostream>
+
+#include <boost/format.hpp>
 
 #include "layer.hpp"
 #include "layers.hpp"
@@ -88,7 +90,7 @@ long32 Layer::readMdx(std::istream &istream) throw (class Exception)
 	std::cout << "After texture ids with " << bytes << " bytes." << std::endl;
 	
 	if (nbytesi != bytes)
-		fprintf(stderr, _("Layer: Real byte count is not equal to file byte count.\nReal byte count %d.\nFile byte count %d.\n"), bytes, nbytesi);
+		std::cerr << boost::format(_("Layer: Real byte count is not equal to file byte count.\nReal byte count %1%.\nFile byte count %2%.")) % bytes % nbytesi << std::endl;
 	
 	return bytes;
 }

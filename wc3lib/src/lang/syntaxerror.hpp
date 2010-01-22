@@ -41,7 +41,7 @@ class SyntaxError
 		std::size_t line() const;
 		const std::string& message() const;
 	
-	private:
+	protected:
 		class SourceFile *m_sourceFile;
 		std::size_t m_line;
 		std::string m_message;

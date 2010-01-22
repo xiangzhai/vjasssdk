@@ -48,11 +48,11 @@ class Object
 				/**
 				* Adds @param object to back of list.
 				*/
-				List& operator<<(class Object *object);
+				class List& operator<<(class Object *object);
 				/**
 				* Extracts last object of list into @param object and removes it from list.
 				*/
-				List& operator>>(class Object* &object);
+				class List& operator>>(class Object* &object);
 			
 #ifdef HTML
 				virtual const std::string& htmlCategoryName() const = 0;

@@ -21,7 +21,7 @@ set(wc3lib_MAP_H
 )
 
 add_library(wc3libmap SHARED ${wc3lib_MAP_SRC})
-#target_link_libraries(wc3libblp gettextlib)
+target_link_libraries(wc3libmap wc3libmpq gettextlib)
 
 #install
 

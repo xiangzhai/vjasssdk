@@ -1,3 +1,8 @@
+2010-01-22 Tamino Dauth <tamino@cdauth.de>
+* Compression mode should be choosable for newly created MpqFile instances!
+* File block and hash data should be written into MPQ archive file when it's modified.
+* Check out if it's possible to add new blocks and hashes to an MPQ archive (or fixed number). MPQ Editor says that hash table size is the maximum of files which can be added and it's fixed!
+
 2010-01-15 Tamino Dauth <tamino@cdauth.de>
 * Apparently the StormLib loads the whole block and hash table into system memory .
 * Decrypt the whole block table at once?!

@@ -32,8 +32,8 @@ namespace map
 */
 class W3g
 {
-public:
-    W3g();
+	public:
+	    W3g();
 };
 
 }

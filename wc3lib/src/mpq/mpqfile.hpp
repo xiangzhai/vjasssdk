@@ -21,7 +21,11 @@
 #ifndef WC3LIB_MPQ_MPQFILE_HPP
 #define WC3LIB_MPQ_MPQFILE_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
+#include <list>
+
+#include <boost/filesystem.hpp>
 
 #include "../exception.hpp"
 
@@ -30,6 +34,8 @@ namespace wc3lib
 
 namespace mpq
 {
+
+class Mpq;
 
 /**
 * @brief Abstract class for mpq file handlers.
@@ -41,31 +47,79 @@ class MpqFile
 		{
 			Neutral
 		};
+		
+		enum Platform
+		{
+			Default
+		};
 
-		MpqFile(class Mpq *mpq);
-		~MpqFile();
-
-		void remove();
-		void rename(const std::string &newName);
-		std::streamsize read(std::istream &istream);
-		std::streamsize write(std::ostream &ostream) const throw (class Exception); //extract
+		void remove() throw (class Exception);
+		void rename(const std::string &newName, bool overwriteExisting = false) throw (class Exception);
+		void move(const boost::filesystem::path &newPath, bool overwriteExisting = false) throw (class Exception);
+		/**
+		* Reads the whole file data, not the header data.
+		*/
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		/**
+		* Writes the whole file data, not the header data.
+		*/
+		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 		/// @return Returns file size in bytes.
 		std::size_t size() const;
 		/// @return Returns compressed file size in bytes.
 		std::size_t compressedSize() const;
 		enum Locale locale() const;
-		std::string path() const;
-		std::string name() const;
-		bool isDir() const;
+		/**
+		* @return Returns the file path. Note that MPQ archives without list file don't have any information about the file paths.
+		*/
+		const boost::filesystem::path& path() const;
 
-	private:
+	protected:
+		friend class Mpq;
+		
+		class Sector
+		{
+			public:
+				Sector(class MpqFile *mpqFile);
+			
+				std::streamsize read(std::istream &istream) throw (class Exception);
+				//std::streamsize write(std::ostream &ostream) throw (class Exception);
+				
+			protected:
+				enum Compression
+				{
+					ImaAdpcmMono = 0x40, // IMA ADPCM mono
+					ImaAdpcmStereo = 0x80, // IMA ADPCM stereo
+					Huffman = 0x01, // Huffman encoded
+					Deflated = 0x02, // Deflated (see ZLib)
+					Imploded = 0x08, // Imploded (see PKWare Data Compression Library)
+					Bzip2Compressed = 0x10 // BZip2 compressed (see BZip2)
+				};
+				
+				class MpqFile *m_mpqFile;
+				int32 m_sectorOffset;
+				enum Compression m_compression;
+		};
+		
+		static int16 localeToInt(enum Locale locale);
+		static enum Locale intToLocale(int16 value);
+		static int8 platformToInt(enum Platform platform);
+		static enum Platform intToPlatform(int8 value);
+		
+		/**
+		* MPQ files are created by @class Mpq only.
+		*/
+		MpqFile(class Mpq *mpq, class Hash *hash);
+		~MpqFile();
+		
 		class Mpq *m_mpq;
+		class Mpq::Hash *m_hash;
 		std::size_t m_size; /// @todo  Get correct size type from MPQ specification
 		std::size_t m_compressedSize;
 		enum Locale m_locale;
-		std::string m_path;
-		std::string m_name;
-		bool m_isDir;
+		enum Platform m_platform;
+		boost::filesystem::path m_path;
+		std::list<class Sector*> m_sectors;
 };
 
 inline std::size_t MpqFile::size() const
@@ -83,19 +137,9 @@ inline enum MpqFile::Locale MpqFile::locale() const
 	return this->m_locale;
 }
 
-inline std::string MpqFile::path() const
+inline const boost::filesystem::path& MpqFile::path() const
 {
 	return this->m_path;
-}
-
-inline std::string MpqFile::name() const
-{
-	return this->m_name;
-}
-
-inline bool MpqFile::isDir() const
-{
-	return this->m_isDir;
 }
 
 }

@@ -37,6 +37,15 @@ typedef uint32_t uint32; // used for various encryption and hash functions
 typedef int64_t int64;
 //typedef int2048 int2048; /// @todo WTF?!?!?!!
 
+/// Windows-like file time. Redefined for compatibility.
+struct FILETIME
+{ 
+	uint32_t lowDateTime;
+	uint32_t highDateTime;
+};
+
+typedef int16_t MD5; // 128 bit
+
 }
 
 }

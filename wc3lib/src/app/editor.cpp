@@ -18,33 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream>
-
 #include <kapplication.h>
 
 #include "../editor/editor.hpp"
 
-namespace wc3lib
-{
-
-namespace app
-{
-	
-namespace editor
-{
+using namespace wc3lib::editor;
 	
 int main(int argc, char *argv[])
 {
 	class KApplication app;
 	
-	class wc3lib::editor::Editor editor;
+	class Editor editor;
 	editor.show();
 	
 	return app.exec();
-}
-
-}
-
-}
-
 }
