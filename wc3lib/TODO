@@ -1,3 +1,13 @@
+2010-01-23 Tamino Dauth <tamino@cdauth.de>
+* New application tilesetter should allow user to modify tile data by changing data of each tilepoint of an user-defined w3e file.
+	The tool is required since "Die Macht des Feuers" needs it for its first map (which has some corrupted tileset data).
+	Command list: 
+		* open
+		* close
+		* save
+		* show <all|header|tilepoints| ...>
+		* set <version|maintileset|customized|goundtilesetids|clifftilesetids|maxx|maxy|centeroffsetx|centeroffsety|waterlevel|flags|groundtexturetype|texturedetails|clifftexturetype|layerheight>
+
 2010-01-22 Tamino Dauth <tamino@cdauth.de>
 * Compression mode should be choosable for newly created MpqFile instances!
 * File block and hash data should be written into MPQ archive file when it's modified.

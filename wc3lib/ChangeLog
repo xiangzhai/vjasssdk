@@ -1,6 +1,7 @@
 2010-01-23 Tamino Dauth <tamino@cdauth.de>
 * Improved MPQ read functionality.
 * Added lib data for MPQ files decompression algorithm.
+* Added new application "tilesetter".
 
 2010-01-22 Tamino Dauth <tamino@cdauth.de>
 * Improved MPQ read functionality.
