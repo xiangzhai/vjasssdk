@@ -44,74 +44,6 @@ class MpqFile;
 class Mpq
 {
 	public:
-		enum Format
-		{
-			Mpq1, // original format
-			Mpq2 // Burning Crusade, large files
-		};
-		
-		enum ExtendedAttributes
-		{
-			FileCrc32s = 0x00000001,
-			FileTimeStamps = 0x00000002,
-			FileMd5s = 0x00000004
-		};
-
-		static const char identifier[4];
-		static const int16 formatVersion1Identifier;
-		static const int16 formatVersion2Identifier;
-		static const int32 extendedAttributesVersion;
-
-		/**
-		* Does not read the MPQ archive data!
-		* Use @fn Mpq.readMpq to do this.
-		*/
-		Mpq(const boost::filesystem::path &path);
-		~Mpq();
-		
-		/**
-		* @return Returns MPQ's size in bytes.
-		*/
-		std::streamsize readMpq(std::istream &istream) throw (class Exception);
-		/**
-		* Writes the whole MPQ archive into output stream @param ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
-		* If you change some data of the opened MPQ archive it's written directly into the corresponding file (the whole archive is not loaded into memory!).
-		* @return Returns MPQ's size in bytes.
-		*/
-		std::streamsize writeMpq(std::ostream &ostream) const throw (class Exception);
-		
-#ifdef TAR
-		std::streamsize readTar(std::istream &istream, enum Mode mode) throw (class Exception);
-		std::streamsize writeTar(std::istream &istream, enum Mode mode) throw (class Exception);		
-#endif
-		
-		bool check() const;
-		bool fix() const;
-		std::size_t unusedSpace() const;
-		std::size_t blockCount() const;
-		std::size_t hashCount() const;
-		
-		const class MpqFile* findFile(const boost::filesystem::path &path) const;
-		const class MpqFile* findFileByName(const std::string &name) const;
-		/**
-		* Note that the MPQ archive has no information about file paths if there is no "(listfile)" file. This function is the best way to get your required file.
-		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.		
-		*/
-		const class MpqFile* findFileByHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
-		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, bool overwriteExisting = false, std::size_t reservedSpace = 0) throw (class Exception);
-		
-		/**
-		* @return Returns the size of the whole MPQ archive file.
-		*/
-		std::size_t size() const;
-		const boost::filesystem::path& path() const;
-		enum Format format() const;
-		enum ExtendedAttributes extendedAttributes() const;
-		const std::list<class MpqFile*>& files() const;
-
-	protected:
-		friend class MpqFile;
-		
 		class Block
 		{
 			public:
@@ -226,6 +158,80 @@ class Mpq
 				bool m_deleted; // can not be true if m_block is 0
 		};
 		
+	
+		enum Format
+		{
+			Mpq1, // original format
+			Mpq2 // Burning Crusade, large files
+		};
+		
+		enum ExtendedAttributes
+		{
+			FileCrc32s = 0x00000001,
+			FileTimeStamps = 0x00000002,
+			FileMd5s = 0x00000004
+		};
+		
+		static bool hasStrongDigitalSignature(std::istream &istream);
+		static std::streamsize strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception);
+
+		static const char identifier[4];
+		static const int16 formatVersion1Identifier;
+		static const int16 formatVersion2Identifier;
+		static const int32 extendedAttributesVersion;
+
+		/**
+		* Does not read the MPQ archive data!
+		* Use @fn Mpq.readMpq to do this.
+		*/
+		Mpq(const boost::filesystem::path &path);
+		~Mpq();
+		
+		/**
+		* @return Returns MPQ's size in bytes.
+		*/
+		std::streamsize readMpq(std::istream &istream) throw (class Exception);
+		/**
+		* Writes the whole MPQ archive into output stream @param ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
+		* If you change some data of the opened MPQ archive it's written directly into the corresponding file (the whole archive is not loaded into memory!).
+		* @return Returns MPQ's size in bytes.
+		*/
+		std::streamsize writeMpq(std::ostream &ostream) const throw (class Exception);
+		
+#ifdef TAR
+		std::streamsize readTar(std::istream &istream, enum Mode mode) throw (class Exception);
+		std::streamsize writeTar(std::istream &istream, enum Mode mode) throw (class Exception);		
+#endif
+		
+		bool check() const;
+		bool fix() const;
+		std::size_t unusedSpace() const;
+		
+		const class MpqFile* findFile(const boost::filesystem::path &path) const;
+		const class MpqFile* findFileByName(const std::string &name) const;
+		/**
+		* Note that the MPQ archive has no information about file paths if there is no "(listfile)" file. This function is the best way to get your required file.
+		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.		
+		*/
+		const class MpqFile* findFileByHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
+		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, bool overwriteExisting = false, std::size_t reservedSpace = 0) throw (class Exception);
+		
+		/**
+		* @return Returns the size of the whole MPQ archive file.
+		*/
+		std::size_t size() const;
+		const boost::filesystem::path& path() const;
+		enum Format format() const;
+		enum ExtendedAttributes extendedAttributes() const;
+		bool hasStrongDigitalSignature() const;
+		const char* strongDigitalSignature() const;
+		const std::list<class Block*>& blocks() const;
+		const std::list<class Hash*>& hashes() const;
+		const std::list<class MpqFile*>& files() const;
+
+	protected:
+		friend class MpqFile;
+		
 		static const uint32* cryptTable();
 
 		bool checkBlocks() const;
@@ -260,6 +266,7 @@ class Mpq
 		boost::filesystem::path m_path;
 		enum Format m_format;
 		enum ExtendedAttributes m_extendedAttributes;
+		char *m_strongDigitalSignature;
 		std::list<class Block*> m_blocks;
 		std::list<class Hash*> m_hashes;
 		std::list<class MpqFile*> m_files;
@@ -282,16 +289,6 @@ inline bool Mpq::fix() const
 	return false;
 }
 
-inline std::size_t Mpq::blockCount() const
-{
-	return this->m_blocks.size();
-}
-
-inline std::size_t Mpq::hashCount() const
-{
-	return this->m_hashes.size();
-}
-
 inline std::size_t Mpq::size() const
 {
 	return this->m_size;
@@ -310,6 +307,26 @@ inline enum Mpq::Format Mpq::format() const
 inline enum Mpq::ExtendedAttributes Mpq::extendedAttributes() const
 {
 	return this->m_extendedAttributes;
+}
+
+inline bool Mpq::hasStrongDigitalSignature() const
+{
+	return this->m_strongDigitalSignature != 0;
+}
+
+inline const char* Mpq::strongDigitalSignature() const
+{
+	return this->m_strongDigitalSignature;
+}
+
+inline const std::list<class Block*>& Mpq::blocks() const
+{
+	return this->m_blocks;
+}
+
+inline const std::list<class Hash*>& Mpq::hashes() const
+{
+	return this->m_hashes;
 }
 
 inline const std::list<class MpqFile*>& Mpq::files() const

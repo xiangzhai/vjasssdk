@@ -15,7 +15,7 @@ if (GETTEXT_FOUND)
 	include_directories(${GETTEXT_INCLUDE_DIR})
 endif (GETTEXT_FOUND)
 
-include_directories(src)
+include_directories(src lib)
 add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")
 #add_definitions(-DJPEG -DTGA -DPNG -DBLEND -DMAX) # test
 

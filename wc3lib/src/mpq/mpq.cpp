@@ -202,12 +202,15 @@ const int16 Mpq::format2Identifier = 0x0001;
 const int32 Mpq::extendedAttributesVersion = 100;
 const std::size_t Mpq::headerSize = sizeof(struct Header);
 
-Mpq::Mpq(const boost::filesystem::path &path) : m_path(path), m_size(boost::filesystem::file_size(path))
+Mpq::Mpq(const boost::filesystem::path &path) : m_path(path), m_size(boost::filesystem::file_size(path)), m_strongDigitalSignature(0)
 {
 }
 
 Mpq::~Mpq()
 {
+	if (this->m_strongDigitalSignature != 0)
+		delete[] this->m_strongDigitalSignature;
+	
 	BOOST_FOREACH(class Block *block, this->m_blocks)
 		delete block;
 	
@@ -351,18 +354,100 @@ std::streamsize Mpq::readMpq(std::istream &istream) throw (class Exception)
 			mpqFile->m_platform = MpqFile::intToPlatform(hash->m_platform);
 			//mpqFile->m_path = // path can only be set if there is a listfile file or if we're able to convert its hash into file path
 			
-			// sector offset table
-			if (!(hash->m_block->m_flags & Mpq::Block::IsSingleUnit))
+			// seek to file data beginning
+			istream.seekg(mpqFile->m_hash->m_block->m_blockOffset);
+			/// @todo Decrypt and unimplode data?
+			
+			/*
+			sector offset table
+			This table is not present if this information can be calculated.
+			*/
+			if (!(hash->m_block->m_flags & Mpq::Block::IsSingleUnit) || (!(hash->m_block->m_flags & Mpq::Block::IsCompressed) && !(hash->m_block->m_flags & Mpq::Block::IsImploded)))
 			{
+				int32 sectors = 0; /// @todo How to get this value?
+				
+				for (std::size_t i = 0; i < sectors; ++i)
+				{
+					class MpqFile::Sector *sector = new Sector(mpqFile);
+					istream.read(reinterpret_cast<char*>(&sector->m_sectorOffset), sizeof(sector->m_sectorOffset));
+					bytes += istream.gcount();
+					mpqFile->m_sectors.push_back(sector);
+				}
+				
+				// The last entry contains the file size, making it possible to easily calculate the size of any given sector.
+				istream.read(reinterpret_cast<char*>(&mpqFile->m_size), sizeof(mpqFile->m_size));
+				bytes += istream.gcount();
+				int32 size = mpqFile->m_size;
+				
+				// calculate sector size, not required but maybe useful at some point
+				for (std::list<class MpqFile::Sector*>::reverse_iterator iterator = mpqFile->m_sectors.rbegin(); iterator != mpqFile->m_sectors.rend(); ++iterator)
+				{
+					(*iterator)->m_sectorSize = size - (*iterator)->m_sectorOffset;
+					size = (*iterator)->m_sectorOffset;
+				}
+			}
+			// If the file is not compressed/imploded, then the size and offset of all sectors is known, based on the archive's SectorSizeShift. If the file is stored as a single unit compressed/imploded, then the SectorOffsetTable is omitted, as the single file "sector" corresponds to BlockSize and FileSize, as mentioned previously. However, the SectorOffsetTable will be present if the file is compressed/imploded and the file is not stored as a single unit, even if there is only a single sector in the file (the size of the file is less than or equal to the archive's sector size).
+			else
+			{
+				int32 sectors = 0;
+				
+				if (hash->m_block->m_flags & Mpq::Block::IsSingleUnit)
+					sectors = 1;
+				else
+					sectors = hash->m_block->m_blockSize / header.sectorSizeShift;
+				
+				int32 newOffset = 0;
+				int32 lastSize = hash->m_block->m_blockSize % header.sectorSizeShift;
+				
+				for (std::size_t i = 0; i < sectors; ++i)
+				{
+					class MpqFile::Sector *sector = new Sector(mpqFile);
+					sector->m_sectorOffset = newOffset;
+					
+					if (hash->m_block->m_flags & Mpq::Block::IsSingleUnit)
+						sector->m_sectorSize = hash->m_block->m_blockSize;
+					else
+						sector->m_sectorSize = header.sectorSizeShift;
+					
+					mpqFile->m_sectors.push_back(sector);
+					
+					newOffset += header.sectorSizeShift;
+				}
+				
+				// the last sector may contain less than this, depending on the size of the entire file's data.
+				if (!(hash->m_block->m_flags & Mpq::Block::IsSingleUnit) && lastSize > 0)
+				{
+					class MpqFile::Sector *sector = new Sector(mpqFile);
+					sector->m_sectorOffset = newOffset;
+					sector->m_sectorSize = lastSize;
+					mpqFile->m_sectors.push_back(sector);
+				}
+				
+			}
+			
+			BOOST_FOREACH(class MpqFile::Sector *sector, mpqFile->m_sectors)
+			{
+				if (mpqFile->m_hash->m_block->m_flags & Mpq::Block::IsCompressed)
+				{
+					byte compression;
+					istream.read(reinterpret_cast<char*>(&compression), sizeof(compression));
+					bytes += istream.gcount();
+					sector->setCompression(compression);
+					istream.seekg(sector->m_sectorSize - 1, std::ios_base::cur); // skip sector data
+				}
+				else
+				{
+					sector->setCompression(0);
+					istream.seekg(sector->m_sectorSize, std::ios_base::cur); // skip sector data
+				}
 			}
 			
 			this->m_files.push_back(mpqFile);
 		}
 	}
-
 	
-	/// @todo Skip file data (sectors)
-	
+	/// @todo Single "(attributes)" file?
+	/*
 	// extended block attributes
 	struct ExtendedAttributes extendedAttributes;
 	istream.read(reinterpret_cast<char*>(&extendedAttributes), sizeof(extendedAttributes));
@@ -390,6 +475,18 @@ std::streamsize Mpq::readMpq(std::istream &istream) throw (class Exception)
 		BOOST_FOREACH(class Block *block, this->m_blocks)
 			bytes += istream.read(reinterpret_cast<char*>(&block->m_md5), sizeof(block->m_md5));
 	}
+	*/
+	
+	/// @todo Read "(signature)" file.
+	//The strong digital signature is stored immediately after the archive, in the containing file
+	/// @todo Read strong digital signature.
+	if (Mpq::hasStrongDigitalSignature(istream))
+	{
+		this->m_strongDigitalSignature = new char[256];
+		bytes += strongDigitalSignature(istream, this->m_strongDigitalSignature);
+	}
+	else
+		this->m_strongDigitalSignature = 0;
 	
 	return bytes;
 	

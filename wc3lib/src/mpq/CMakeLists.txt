@@ -4,6 +4,7 @@ set(wc3lib_MPQ_SRC
 )
 
 set(wc3lib_MPQ_H
+	algorithm.hpp
 	mpqfile.hpp
 	mpq.hpp
 	platform.hpp

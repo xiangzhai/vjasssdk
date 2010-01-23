@@ -43,6 +43,34 @@ class Mpq;
 class MpqFile
 {
 	public:
+		class Sector
+		{
+			public:
+				Sector(class MpqFile *mpqFile);
+			
+				std::streamsize read(std::istream &istream) throw (class Exception);
+				//std::streamsize write(std::ostream &ostream) throw (class Exception);
+				
+			protected:
+				enum Compression
+				{
+					Uncompressed = 0,
+					ImaAdpcmMono = 0x40, // IMA ADPCM mono
+					ImaAdpcmStereo = 0x80, // IMA ADPCM stereo
+					Huffman = 0x01, // Huffman encoded
+					Deflated = 0x02, // Deflated (see ZLib)
+					Imploded = 0x08, // Imploded (see PKWare Data Compression Library)
+					Bzip2Compressed = 0x10 // BZip2 compressed (see BZip2)
+				};
+				
+				void setCompression(byte value);
+				
+				class MpqFile *m_mpqFile;
+				int32 m_sectorOffset;
+				int32 m_sectorSize; // not required, added by wc3lib
+				enum Compression m_compression;
+		};
+	
 		enum Locale
 		{
 			Neutral
@@ -73,33 +101,10 @@ class MpqFile
 		* @return Returns the file path. Note that MPQ archives without list file don't have any information about the file paths.
 		*/
 		const boost::filesystem::path& path() const;
+		const std::list<class Sector*>& sectors() const;
 
 	protected:
 		friend class Mpq;
-		
-		class Sector
-		{
-			public:
-				Sector(class MpqFile *mpqFile);
-			
-				std::streamsize read(std::istream &istream) throw (class Exception);
-				//std::streamsize write(std::ostream &ostream) throw (class Exception);
-				
-			protected:
-				enum Compression
-				{
-					ImaAdpcmMono = 0x40, // IMA ADPCM mono
-					ImaAdpcmStereo = 0x80, // IMA ADPCM stereo
-					Huffman = 0x01, // Huffman encoded
-					Deflated = 0x02, // Deflated (see ZLib)
-					Imploded = 0x08, // Imploded (see PKWare Data Compression Library)
-					Bzip2Compressed = 0x10 // BZip2 compressed (see BZip2)
-				};
-				
-				class MpqFile *m_mpqFile;
-				int32 m_sectorOffset;
-				enum Compression m_compression;
-		};
 		
 		static int16 localeToInt(enum Locale locale);
 		static enum Locale intToLocale(int16 value);
@@ -140,6 +145,11 @@ inline enum MpqFile::Locale MpqFile::locale() const
 inline const boost::filesystem::path& MpqFile::path() const
 {
 	return this->m_path;
+}
+
+inline const std::list<class MpqFile::Sector*>& MpqFile::sectors() const
+{
+	return this->m_sectors;
 }
 
 }
