@@ -196,6 +196,102 @@ struct StrongDigitalSignature
 //	int2048 signature; //int2048, little-endian format
 };
 
+Mpq::Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffset(0), m_blockSize(0), m_fileSize(0) m_flags(Mpq::Block::None)
+{
+}
+
+std::streamsize Mpq::Block::read(std::istream &istream) throw (class Exception)
+{
+	struct BlockTableEntry entry;
+	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
+	std::streamsize bytes = istream.gcount();
+
+	if (bytes != sizeof(entry))
+		throw Exception(_("Error while reading block table entry."));
+
+	this->m_blockOffset = entry.blockOffset;
+	this->m_blockSize = entry.blockSize;
+	this->m_fileSize = entry.fileSize;
+	this->m_flags = static_cast<enum Mpq::Block::Flags>(entry.fileSize);
+
+	return bytes;
+}
+
+Mpq::Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_block(0)
+{
+}
+
+std::streamsize Mpq::Hash::read(std::istream &istream) throw (class Exception)
+{
+	struct HashTableEntry entry;
+	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
+	std::streamsize bytes = istream.gcount();
+	
+	if (bytes != sizeof(entry))
+		throw Exception(_("Error while reading hash table entry."));
+	
+	this->m_filePathHashA = entry.filePathHashA;
+	this->m_filePathHashB = entry.filePathHashB;
+	this->m_language = entry.language;
+	this->m_platform = entry.platform;
+	
+	if (entry.fileBlockIndex == Mpq::Hash::blockIndexDeleted)
+		this->m_deleted = true;
+	else if (entry.fileBlockIndex != Mpq::Hash::blockIndexEmpty)
+	{
+		int32 index = 0;
+		
+		BOOST_FOREACH(class Mpq::Block *block, this->m_mpq->m_blocks)
+		{
+			if (index == entry.fileBlockIndex)
+			{
+				this->m_block = block;
+				
+				break;
+			}
+			
+			++index;
+		}
+		
+		if (this->m_block == 0)
+			throw Exception(_("Error while searching for corresponding block of hash table entry."));
+	}
+	// otherwise it's empty
+	
+	return bytes;
+}
+
+/// @todo Clear or write file hash and block data!
+void Mpq::Hash::clear()
+{
+	// If the next entry is empty, mark this one as empty; otherwise, mark this as deleted.
+	for (std::list<class Mpq::Hash*>::const_iterator iterator = this->m_mpq->m_hashes.begin(); iterator != this->m_mpq->m_hashes.end(); ++iterator)
+	{
+		if (*iterator == this)
+		{
+			if (iterator + 1 != this->m_mpq->m_hashes.end() && !(*(iterator + 1))->empty())
+				this->m_deleted = true;
+			
+			break;
+		}
+	}
+	
+	// If the block occupies space, mark the block as free space; otherwise, clear the block table entry.
+	if (this->m_block->m_blockSize > 0)
+	{
+		this->m_block->m_fileSize = 0;
+		this->m_block->m_flags = Mpq::Block::None;
+	}
+	else
+	{
+		/// @todo Change file size?
+		this->m_mpq->m_blocks.remove(this->m_block);
+		delete this->m_block;
+	}
+		
+	this->m_block = 0;
+}
+
 const char Mpq::identifier[4] = { 'M', 'P', 'Q',  0x1 };
 const int16 Mpq::format1Identifier = 0x0000;
 const int16 Mpq::format2Identifier = 0x0001;
@@ -221,7 +317,7 @@ Mpq::~Mpq()
 		delete file;
 }
 
-std::streamsize Mpq::readMpq(std::istream &istream) throw (class Exception)
+std::streamsize Mpq::readMpq(const std::istream &istream, const std::istream *listfileIstream) throw (class Exception)
 {
 	struct Header header;
 	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
@@ -339,6 +435,15 @@ std::streamsize Mpq::readMpq(std::istream &istream) throw (class Exception)
 	
 	delete[] encryptedBytes;
 	encryptedBytes = 0;
+	
+	/// @todo If file "(listfile)" exists and listfileIstream is 0, add path properties if possible.
+	if (listfileIstream == 0)
+	{
+	}
+	/// @todo Read @param listfileIstream and set path properties.
+	else
+	{
+	}
 	
 	//this->findFile("(listfile)"); listfile contains file paths
 	
@@ -538,11 +643,13 @@ const class MpqFile* Mpq::findFileByHash(const boost::filesystem::path &path, en
 	{
 		if (!(*iterator)->deleted())
 		{
-			if ((*iterator)->m_filePathHashA == nameHashA 
-				&& (*iterator)->m_filePathHashB == nameHashB
-				&& (*iterator)->m_language == language
-				&& (*iterator)->m_platform == realPlatform)
+			if ((*iterator)->m_filePathHashA == nameHashA && (*iterator)->m_filePathHashB == nameHashB && (*iterator)->m_language == language && (*iterator)->m_platform == realPlatform)
+			{
+				if ((*iterator)->m_path != path) // path has not been set yet
+					(*iterator)->m_path = path;
+				
 				return const_cast<const class MpqFile*>((*iterator)->m_mpqFile);
+			}
 		}
 			
 		++iterator;
@@ -651,102 +758,6 @@ const uint32* Mpq::cryptTable()
 	}
 	
 	return const_cast<const uint32*>(cryptTable);
-}
-
-Mpq::Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffset(0), m_blockSize(0), m_fileSize(0) m_flags(Mpq::Block::None)
-{
-}
-
-std::streamsize Mpq::Block::read(std::istream &istream) throw (class Exception)
-{
-	struct BlockTableEntry entry;
-	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
-	std::streamsize bytes = istream.gcount();
-
-	if (bytes != sizeof(entry))
-		throw Exception(_("Error while reading block table entry."));
-
-	this->m_blockOffset = entry.blockOffset;
-	this->m_blockSize = entry.blockSize;
-	this->m_fileSize = entry.fileSize;
-	this->m_flags = static_cast<enum Mpq::Block::Flags>(entry.fileSize);
-
-	return bytes;
-}
-
-Mpq::Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_block(0)
-{
-}
-
-std::streamsize Mpq::Hash::read(std::istream &istream) throw (class Exception)
-{
-	struct HashTableEntry entry;
-	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
-	std::streamsize bytes = istream.gcount();
-	
-	if (bytes != sizeof(entry))
-		throw Exception(_("Error while reading hash table entry."));
-	
-	this->m_filePathHashA = entry.filePathHashA;
-	this->m_filePathHashB = entry.filePathHashB;
-	this->m_language = entry.language;
-	this->m_platform = entry.platform;
-	
-	if (entry.fileBlockIndex == Mpq::Hash::blockIndexDeleted)
-		this->m_deleted = true;
-	else if (entry.fileBlockIndex != Mpq::Hash::blockIndexEmpty)
-	{
-		int32 index = 0;
-		
-		BOOST_FOREACH(class Mpq::Block *block, this->m_mpq->m_blocks)
-		{
-			if (index == entry.fileBlockIndex)
-			{
-				this->m_block = block;
-				
-				break;
-			}
-			
-			++index;
-		}
-		
-		if (this->m_block == 0)
-			throw Exception(_("Error while searching for corresponding block of hash table entry."));
-	}
-	// otherwise it's empty
-	
-	return bytes;
-}
-
-/// @todo Clear or write file hash and block data!
-void Mpq::Hash::clear()
-{
-	// If the next entry is empty, mark this one as empty; otherwise, mark this as deleted.
-	for (std::list<class Mpq::Hash*>::const_iterator iterator = this->m_mpq->m_hashes.begin(); iterator != this->m_mpq->m_hashes.end(); ++iterator)
-	{
-		if (*iterator == this)
-		{
-			if (iterator + 1 != this->m_mpq->m_hashes.end() && !(*(iterator + 1))->empty())
-				this->m_deleted = true;
-			
-			break;
-		}
-	}
-	
-	// If the block occupies space, mark the block as free space; otherwise, clear the block table entry.
-	if (this->m_block->m_blockSize > 0)
-	{
-		this->m_block->m_fileSize = 0;
-		this->m_block->m_flags = Mpq::Block::None;
-	}
-	else
-	{
-		/// @todo Change file size?
-		this->m_mpq->m_blocks.remove(this->m_block);
-		delete this->m_block;
-	}
-		
-	this->m_block = 0;
 }
 
 }

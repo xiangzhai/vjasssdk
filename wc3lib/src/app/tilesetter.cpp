@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 		char shortName;
 		char *help;
 		std::size_t argCount;
-		bool (*callbackFunction)(const struct Command &command, void *argParameters[], std::size_t argParameterCounts[]);
+		bool (*callbackFunction)(const struct Command &command, const std::list<std::string> &argParameters);
 	} commands[commandsCount] =
 		{
 			
@@ -83,6 +83,14 @@ int main(int argc, char *argv[])
 			if (command == commands[i].name || (command.size() == 1 && command[0] == commands[i].shortName))
 			{
 				found = true;
+				std::list<std::string> arguments;
+				
+				for (std::size_t i = 0; i < commands[i].argCount; ++i)
+				{
+					//char *
+				}
+
+				//bool (*callbackFunction)(const struct Command &command, const std::list<std::string> &argParameters);
 				
 				/// @todo Call callback function with arguments or show help!
 				

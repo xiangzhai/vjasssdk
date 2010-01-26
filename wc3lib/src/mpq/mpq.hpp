@@ -52,7 +52,8 @@ class Mpq
 					None = 0x0,
 					IsFile = 0x80000000,
 					IsSingleUnit = 0x01000000,
-					IsEncrypted = 0x00020000,
+					UsesEncryptionKey = 0x00020000,
+					IsEncrypted = 0x00010000,
 					IsCompressed = 0x00000200,
 					IsImploded = 0x00000100
 				};
@@ -167,6 +168,7 @@ class Mpq
 		
 		enum ExtendedAttributes
 		{
+			None = 0x0,
 			FileCrc32s = 0x00000001,
 			FileTimeStamps = 0x00000002,
 			FileMd5s = 0x00000004
@@ -190,7 +192,7 @@ class Mpq
 		/**
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize readMpq(std::istream &istream) throw (class Exception);
+		std::streamsize readMpq(const std::istream &istream, const std::istream *listfileIstream = 0) throw (class Exception);
 		/**
 		* Writes the whole MPQ archive into output stream @param ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
 		* If you change some data of the opened MPQ archive it's written directly into the corresponding file (the whole archive is not loaded into memory!).
@@ -205,6 +207,26 @@ class Mpq
 		
 		bool check() const;
 		bool fix() const;
+		/**
+		* @return Returns true if the archive contains a "(listfile)" file.
+		*/
+		bool containsListfileFile() const;
+		/**
+		* Creates a "(listfile)" file if there isn't any yet.
+		* @return Returns false if there is already a "(listfile)" file.
+		*/
+		bool createListfileFile();
+		const class MpqFile* listfileFile() const;
+		/**
+		* @return Returns true if the archive contains a "(attributes)" file. This can also be checked by checking if @fn Mpq.extendedAttributes() does not return @enum Mpq.None.
+		*/
+		bool containsAttributesFile() const;
+		const class MpqFile* attributesFile() const;
+		/**
+		* Creates a "(listfile)" if there isn't already one. All file entries which do have corresponding file paths will be added to this file.
+		* @return If the file does already exist it returns 0.
+		*/
+		const class MpqFile* createListfile() throw (class Exception);
 		std::size_t unusedSpace() const;
 		
 		const class MpqFile* findFile(const boost::filesystem::path &path) const;
@@ -214,7 +236,12 @@ class Mpq
 		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.		
 		*/
 		const class MpqFile* findFileByHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
-		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, bool overwriteExisting = false, std::size_t reservedSpace = 0) throw (class Exception);
+		/**
+		* Addes a new file to the MPQ archive with path @param path, locale @param locale and platform @param platform.
+		* @param istream This input stream is used for reading the initial file data.
+		* @todo Replace reservedSpace by size of istream?
+		*/
+		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream = 0, bool overwriteExisting = false, std::size_t reservedSpace = 0) throw (class Exception);
 		
 		/**
 		* @return Returns the size of the whole MPQ archive file.
@@ -274,6 +301,8 @@ class Mpq
 
 inline bool Mpq::check() const
 {
+	/// @todo Check format, size, extended attributes and signature.
+	
 	if (!this->checkBlocks())
 		return false;
 	
@@ -287,6 +316,49 @@ inline bool Mpq::check() const
 inline bool Mpq::fix() const
 {
 	return false;
+}
+
+inline bool Mpq::containsListfileFile() const
+{
+	return this->listfileFile() != 0;
+}
+
+inline const class MpqFile* Mpq::createListfileFile() throw (class Exception)
+{
+	if (this->containsListfileFile())
+		return 0;
+	
+	std::list<std::string> entries;
+	
+	BOOST_FOREACH(const class MpqFile *mpqFile, this->m_mpqFiles)
+	{
+		if (!mpqFile->m_path.empty() && mpqFile->m_path.string() != "(attributes)") /// @todo Exclude directories?
+			entries.push_back(mpqFile->m_path.string();
+	}
+	
+	entries.sort(); /// @todo Sort alphabetically?
+	std::stringstream sstream;
+	
+	BOOST_FOREACH(std::string entry, entries)
+		sstream << entry << std::endl;	
+			
+	return this->addFile("(listfile)", MpqFile::Neutral, MpqFile::Default, sstream);
+}
+
+inline const class MpqFile* Mpq::listfileFile() const
+{
+	return this->findFileByHash("(listfile)", MpqFile::Neutral, MpqFile::Default);
+}
+
+
+inline bool Mpq::containsAttributesFile() const
+{
+	return this->attributesFile() != 0;
+}
+
+inline const class MpqFile* Mpq::attributesFile() const
+{
+	return this->findFileByHash("(attributes)", MpqFile::Neutral, MpqFile::Default);
 }
 
 inline std::size_t Mpq::size() const

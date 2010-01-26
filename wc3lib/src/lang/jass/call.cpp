@@ -20,59 +20,95 @@
 
 #include <sstream>
 
-#include "objects.hpp"
-#include "internationalisation.hpp"
+#include "call.hpp"
+#include "../../internationalisation.hpp"
 
-namespace vjassdoc
+namespace wc3lib
 {
+	
+namespace lang
+{
+	
+namespace jass
+{
+	
+#ifdef HTML
+const std::string& Call::List::htmlCategoryName() const
+{
+	return _("Calls");
+}
 
+const std::string& Call::List::htmlFolderName() const
+{
+	return "calls";
+}
+#endif
 #ifdef SQLITE
-const char *Call::sqlTableName = "Calls";
-std::size_t Call::sqlColumns;
-std::string Call::sqlColumnStatement;
-std::size_t Call::sqlMaxArguments;
-
-void Call::initClass()
+const std::string& Call::List::sqlTableName() const
 {
-	Call::sqlColumns = Object::sqlColumns + 2 + 2 * Call::sqlMaxArguments + 2;
-	Call::sqlColumnStatement = Object::sqlColumnStatement +
-	",FunctionIdentifier VARCHAR(255)"
-	",Function INT";
-	std::ostringstream sstream;
+	return "Calls";
+}
+
+std::size_t Call::List::sqlColumns() const
+{
 	
-	for (int i = 0; i < Call::sqlMaxArguments; ++i)
-		sstream << ",ArgumentIdentifier" << i << " VARCHAR(255)";
+	return Object::List::sqlColumns() + 2 + 2 * sqlMaxArguments;
+}
+
+const std::string& Call::List::sqlColumnDataType(std::size_t column) const throw (class Exception)
+{
+	if (column == 4)
+		return "VARCHAR(256)";
+	else if (column == 5)
+		return "INTEGER";
+	else if (column >= 6 && column <= 5 + Call::sqlMaxArguments)
+		return "VARCHAR(256)";
+	else if (column >= 6 + Call::sqlMaxArguments && column <= 6 + 2 * Call::sqlMaxArguments - 1)
+		return "INTEGER";
 	
-	for (int i = 0; i < Call::sqlMaxArguments; ++i)
-		sstream << ",Argument" << i << " INT";
+	return Object::List::sqlColumnDataType(column);
+}
+
+const std::string& Call::List::sqlColumnName(std::size_t column) const throw (class Exception)
+{
+	if (column == 4)
+		return "FunctionIdentifier";
+	else if (column == 5)
+		return "Function";
+	else if (column >= 6 && column <= 5 + sqlMaxArguments)
+	{
+		std::istringstream isstream("ArgumentIdentifier");
+		isstream << column - 5;
+		
+		return isstream.str();
+	}
+	else if (column >= 6 + sqlMaxArguments && column <= 6 + 2 * Call::sqlMaxArguments - 1)
+	{
+		std::istringstream isstream("Argument");
+		isstream << column - (5 + sqlMaxArguments);
+		
+		return isstream.str();
+	}
 	
-	Call::sqlColumnStatement += sstream.str();
-	Call::sqlColumnStatement +=
-	",IsExecuted BOOLEAN"
-	",IsEvaluated BOOLEAN"
-	;
+	return Object::List::sqlColumnName(column);
 }
 #endif
 
-Call::Call(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment, const std::string &functionIdentifier, std::list<std::string> *argumentIdentifiers, bool isExecuted, bool isEvaluated) : Object(identifier, sourceFile, line, docComment), m_functionIdentifier(functionIdentifier), m_function(0), m_argumentIdentifiers(argumentIdentifiers), m_arguments(0), m_isExecuted(isExecuted), m_isEvaluated(isEvaluated)
+#ifdef SQLITE
+const std::size_t Call::sqlMaxArguments = 20;
+#endif
+
+Call::Call(class Object::List *list, const std::string &identifier, class SourceFile *sourceFile, std::size_t line, const std::string &functionIdentifier, const std::list<std::string> &argumentIdentifiers) : Object(list, identifier, sourceFile, line), m_functionIdentifier(functionIdentifier), m_function(0), m_argumentIdentifiers(argumentIdentifiers)
 {
+	for (std::size_t i = 0; i < argumentIdentifiers.size(); ++i)
+		this->m_arguments.push_back(0);
 }
 
 #ifdef SQLITE
-Call::Call(std::vector<const unsigned char*> &columnVector) : Object(columnVector)
+Call::Call(std::vector<Object::SqlValueDataType> &columnVector) : Object(columnVector)
 {
-	this->prepareVector();
 }
 #endif
-
-Call::~Call()
-{
-	if (this->m_argumentIdentifiers != 0)
-		delete this->m_argumentIdentifiers;
-	
-	if (this->m_arguments != 0)
-		delete this->m_arguments;
-}
 
 void Call::init()
 {
@@ -84,43 +120,73 @@ void Call::init()
 	if (this->m_function != 0)
 		this->m_functionIdentifier.clear();
 	
-	this->m_arguments = new std::list<class Object*>;
+	std::list<std::string>::const_iterator argumentIdentifier = this->m_argumentIdentifiers.begin();
+	std::list<class Object*>::const_iterator argument = this->m_arguments.begin();
 	
-	bool foundAll = true;
-	
-	for (std::list<std::string>::const_iterator iterator = this->m_argumentIdentifiers->begin(); iterator != this->m_argumentIdentifiers->end(); ++iterator)
+	while (argumentIdentifier != this->m_argumentIdentifiers.end())
 	{
-		class Object *object = this->searchObjectInList(*iterator, Parser::Locals);
+		class Object *object = this->searchObjectInList(*argumentIdentifier, Parser::Locals);
 		
 		/// @todo Call arguments can be many different Object child classes.
 		
-		if (object == 0)
-			foundAll = false;
-	}
-	
-	if (foundAll)
-	{
-		delete this->m_argumentIdentifiers;
-		this->m_argumentIdentifiers = 0;
-	}
+		if (object != 0)
+			*argument = object;
 		
+		++argumentIdentifier;
+		++argument;
+	}
 }
 
-void Call::pageNavigation(std::ofstream &file) const
+#ifdef SQLITE
+const std::string& Call::sqlValue(std::size_t column) const
 {
-	file
+	if (column == 4)
+		return sqlFilteredString(this->m_functionIdentifier);
+	else if (column == 5)
+		return Object::sqlObjectId(this->m_function);
+	else if (column >= 6 && column <= 5 + sqlMaxArguments)
+	{
+		std::list<std::string>::const_iterator argumentIdentifier = this->m_argumentIdentifiers.begin();
+		
+		for (std::size_t i = 0; argumentIdentifier != this->m_argumentIdentifiers.end() && i < Call::sqlMaxArguments; ++argumentIdentifier, ++i)
+		{
+			if (column == i + 6)
+				return sqlFilteredString(*argumentIdentifier);
+		}
+		
+		return "";
+	}
+	else if (column >= 6 + sqlMaxArguments && column <= 6 + 2 * Call::sqlMaxArguments - 1)
+	{
+		std::list<class Object*>::const_iterator argument = this->m_arguments.begin();
+		
+		for (std::size_t i = 0; argument != this->m_arguments.end() && i < Call::sqlMaxArguments; ++argument, ++i)
+		{
+			if (column == i + 6 + Call::sqlMaxArguments)
+				return Object::sqlObjectId(*argument);
+		}
+		
+		return "";
+	}
+	
+	return Object::sqlValue(column);
+}
+#endif
+
+#ifdef HTML
+void Call::writeHtmlPageNavigation(std::ostream &ostream) const
+{
+	ostream
 	<< "\t\t\t<li><a href=\"#Description\">"	<< _("Description") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Source File\">"	<< _("Source File") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Function\">"		<< _("Function") << "</a></li>\n"
 	<< "\t\t\t<li><a href=\"#Arguments\">"		<< _("Arguments") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Execution\">"		<< _("Execution") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Evaluation\">"		<< _("Evaluation") << "</a></li>\n"
 	;
 }
 
-void Call::page(std::ofstream &file) const
+void Call::writeHtmlPageContent(std::ostream &ostream) const
 {
-	file
+	ostream
 	<< "\t\t<h2><a name=\"Description\">" << _("Description") << "</a></h2>\n"
 	<< "\t\t<p>\n"
 	<< "\t\t" << Object::objectPageLink(this->docComment()) << "\n"
@@ -130,36 +196,31 @@ void Call::page(std::ofstream &file) const
 	<< "\t\t<h2><a name=\"Function\">" << _("Function") << "</a></h2>\n"
 	<< "\t\t" << Object::objectLink(this->function()) << '\n'
 	;
-}
-
-#ifdef SQLITE
-std::string Call::sqlStatement() const
-{
-	std::ostringstream sstream;
-	sstream
-	<< "FunctionIdentifier=\"" << Object::sqlFilteredString(this->m_functionIdentifier) << "\", "
-	<< "Function=" << Object::objectId(this->m_function) << ", "
-	;
-	int i = 0;
 	
-	for (std::list<std::string>::const_iterator iterator = this->m_argumentIdentifiers->begin(); iterator != this->m_argumentIdentifiers->end() && i < Call::maxArguments; ++iterator, ++i)
-		sstream << ", ArgumentIdentifier" << i << ' ' << *iterator;
-	
-	for ( ; i < Call::maxArguments; ++i)
-		sstream << ", ArgumentIdentifier" << i << " NULL"; 
-	
-	i = 0;
-	
-	for (std::list<class Object*>::const_iterator iterator = this->m_arguments->begin(); iterator != this->m_arguments->end() && i < Call::maxArguments; ++iterator, ++i)
-		sstream << ",Argument" << i << ' ' << (*iterator)->id();
-	
-	sstream
-	<< ",IsExecuted " << this->m_isExecuted
-	<< ",IsEvaluated " << this->m_isEvaluated
-	;
-
-	return sstream.str();
+	if (!this->m_argumentIdentifiers.empty())
+	{
+		ostream << "\t\t<ul>\n";
+		std::list<std::string>::const_iterator argumentIdentifier = this->m_argumentIdentifiers.begin();
+		std::list<class Object*>::const_iterator argument = this->m_arguments.begin();
+		
+		do
+		{
+			ostream << "\t\t\t<li>" << Object::objectLink(*argument, argumentIdentifier) << "</li>\n";
+			
+			++argumentIdentifier;
+			++argument;
+		}
+		while (argumentIdentifier != this->m_argumentIdentifiers.end());
+		
+		ostream << "\t\t</ul>" << std::endl;
+	}
+	else
+		ostream << "\t\t<p>-</p>" << std::endl;
 }
 #endif
+
+}
+
+}
 
 }

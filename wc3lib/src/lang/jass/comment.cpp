@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,30 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <sstream>
+#include "comment.hpp"
+#include "../../internationalisation.hpp"
 
-#include "objects.hpp"
-#include "internationalisation.hpp"
-
-namespace vjassdoc
+namespace wc3lib
+{
+	
+namespace lang
+{
+	
+namespace jass
 {
 	
 #ifdef HTML
-std::string Comment::List::htmlCategoryName() const
+const std::string& Comment::List::htmlCategoryName() const
 {
 	return _("Comments");
 }
 
-std::string Comment::List::htmlFolderName() const
+const std::string& Comment::List::htmlFolderName() const
 {
-	return _("comments");
+	return "comments";
 }
 #endif
 
 #ifdef SQLITE
-std::string Comment::List::sqlTableName() const
+const std::string& Comment::List::sqlTableName() const
 {
-	return _("Comments");
+	return "Comments";
 }
 
 std::size_t Comment::List::sqlColumns() const
@@ -49,18 +53,18 @@ std::size_t Comment::List::sqlColumns() const
 	return Object::List::sqlColumns();
 }
 
-std::string Comment::List::sqlColumnDataType(std::size_t column) const throw (std::exception)
+const std::string& Comment::List::sqlColumnDataType(std::size_t column) const throw (std::exception)
 {
 	return Object::List::sqlColumnDataType(column);
 }
 
-std::string Comment::List::sqlColumnName(std::size_t column) const throw (std::exception)
+const std::string& Comment::List::sqlColumnName(std::size_t column) const throw (std::exception)
 {
 	return Object::List::sqlColumnName(column);
 }
 #endif
 
-Comment::Comment(const std::string &identifier, class SourceFile *sourceFile, unsigned int line, class DocComment *docComment) : Object(identifier, sourceFile, line, docComment)
+Comment::Comment(const std::string &identifier, class SourceFile *sourceFile, std::size_t line) : Object(identifier, sourceFile, line)
 {
 }
 
@@ -77,6 +81,13 @@ Comment::~Comment()
 void Comment::init()
 {
 }
+
+#ifdef SQLITE
+const std::string& Comment::sqlValue(std::size_t column) const
+{
+	return Object::sqlValue(column);
+}
+#endif
 
 void Comment::writeHtmlPageNavigation(std::ostream &ostream) const
 {
@@ -101,6 +112,10 @@ void Comment::writeHtmlPageContent(std::ostream &ostream) const
 	<< "\t\t<h2><a name=\"Source File\">" << _("Source File") << "</a></h2>\n"
 	<< "\t\t" << SourceFile::sourceFileLineLink(this) << '\n'
 	;
+}
+
+}
+
 }
 
 }

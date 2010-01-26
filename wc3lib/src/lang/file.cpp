@@ -31,9 +31,9 @@
 #include "file.hpp"
 #include "parser.hpp"
 #include "language.hpp"
-#include "internationalisation.hpp"
 #include "syntaxerror.hpp"
-#include "utilities.hpp"
+#include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {

@@ -24,6 +24,7 @@
 #include <string>
 #include <list>
 #include <ostream>
+#include <sstream>
 
 #include "../exception.hpp"
 #include "parser.hpp"
@@ -121,6 +122,9 @@ class Object
 		};
 
 	protected:
+#ifdef SQLITE
+		const std::string& sqlObjectId(const class Object *object);
+#endif
 #ifdef HTML
 		virtual const std::string& htmlPageName() const = 0;
 #endif
@@ -135,6 +139,19 @@ class Object
 	private:
 		Object(const Object&);
 };
+
+#ifdef SQLITE
+const std::string& Object::sqlObjectId(const class Object *object)
+{
+	if (object == 0)
+		return "0";
+	
+	std::istringstream isstream;
+	isstream << object->id();
+	
+	return isstream.str();
+}
+#endif
 
 #ifdef HTML
 inline const std::string& Object::objectHtmlPageLink(const class Object *object, const std::string &identifier)

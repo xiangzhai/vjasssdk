@@ -1,3 +1,8 @@
+2010-01-26 Tamino Dauth <tamino@cdauth.de>
+* Improved Jass language code files.
+* Improved and added several methods to class mpq::Mpq.
+* Improved warblender scripts.
+
 2010-01-23 Tamino Dauth <tamino@cdauth.de>
 * Improved MPQ read functionality.
 * Added lib data for MPQ files decompression algorithm.

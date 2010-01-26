@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -38,40 +38,36 @@ class Comment : public Object
 		class List : public Object::List
 		{		
 #ifdef HTML
-				virtual std::string htmlCategoryName() const;
-				virtual std::string htmlFolderName() const;
+				virtual const std::string& htmlCategoryName() const;
+				virtual const std::string& htmlFolderName() const;
 #endif
 
 			protected:
 #ifdef SQLITE
-				virtual std::string sqlTableName() const;
+				virtual const std::string& sqlTableName() const;
 				virtual std::size_t sqlColumns() const;
-				virtual std::string sqlColumnDataType(std::size_t column) const throw (std::exception);
-				virtual std::string sqlColumnName(std::size_t column) const throw (std::exception);
+				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (std::exception);
+				virtual const std::string& sqlColumnName(std::size_t column) const throw (std::exception);
 #endif
 		};
 	
-		Comment(const std::string &identifier, class SourceFile *sourceFile, std::size_t line, class DocComment *docComment);
+		Comment(const std::string &identifier, class SourceFile *sourceFile, std::size_t line);
 #ifdef SQLITE
 		Comment(std::vector<Object::SqlValueDataType> &columnVector);
 #endif
 		virtual ~Comment();
 		virtual void init();
 #ifdef SQLITE
-		virtual std::string sqlValue(std::size_t column) const;
+		virtual const std::string& sqlValue(std::size_t column) const;
 #endif
 #ifdef HTML
 		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
 		virtual void writeHtmlPageContent(std::ostream &ostream) const;
 #endif
-		
-	protected:
-		virtual std::string htmlPageName() const;
 };
 
-inline virtual std::string Comment::htmlPageName() const
-{
-	return this->m_identifier;
+}
+
 }
 
 }

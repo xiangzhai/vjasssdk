@@ -42,9 +42,9 @@ class Importer(Converter):
 		self.loadBones()
 		self.loadSequences()
 		#self.loadVertexGroups()
-		self.loadLights()
-		self.loadParticleEmitters()
-		self.loadParticleEmitters2()
+		#self.loadLights()
+		#self.loadParticleEmitters()
+		#self.loadParticleEmitters2()
 		sys.stderr.write("Done converting model %s.\n" % (repr(self.model.MODL.Name)))
 
 		self.armature = None
@@ -128,53 +128,51 @@ class Importer(Converter):
 	def loadMeshes(self):
 		for geoset_i in range(len(self.model.GEOS.geosets)):
 			geoset = self.model.GEOS.geosets[geoset_i]
-			myMeshObject = Blender.Object.New('Mesh', self.meshName(geoset_i))
-			#mymesh = Blender.NMesh.New(self.model.MODL.Name + str(geoset_i))
-			mymesh = myMeshObject.getData()
+			mymesh = Blender.Mesh.New()
+			sys.stderr.write("mesh name \"%s\"\n" % self.meshName(geoset_i))
 			sys.stderr.write("mesh %d: %d NRMS\n" % (geoset_i, geoset.NRMS.nvrts))
 
-			mymesh.setMaterials([self.materials[geoset.MaterialID]]);
-			mymesh.hasFaceUV(1);
+			#mymesh.hasFaceUV(1);
+
+			normalVertices = []
 
 			# vertices
-			nrverts = 0
 			for vert_i in range(len(geoset.VRTX.vertices)):
 				vert = geoset.VRTX.vertices[vert_i]
 				x = vert.x
 				y = vert.y
 				z = vert.z
-				v = Blender.NMesh.Vert(x, y, z)
-				v.no[0] = geoset.NRMS.vertices[vert_i].x
-				v.no[1] = geoset.NRMS.vertices[vert_i].y
-				v.no[2] = geoset.NRMS.vertices[vert_i].z
+				mymesh.verts.extend(Blender.Mathutils.Vector([x,y,z]))
+				mymesh.verts[vert_i].no[0] = geoset.NRMS.vertices[vert_i].x
+				mymesh.verts[vert_i].no[0] = geoset.NRMS.vertices[vert_i].y
+				mymesh.verts[vert_i].no[0] = geoset.NRMS.vertices[vert_i].z
+				
 				#if HAS_TEX==1:
 				#	v.uvco[0] = geoset.UVAS.UVBS[0].vertices[vert_i].x;
 				#	v.uvco[1] = geoset.UVAS.UVBS[0].vertices[vert_i].y;
-				mymesh.verts.append(v)
-				nrverts += 1
-			sys.stderr.write("mesh %d: %d verts\n" % (geoset_i, nrverts))
+
+			sys.stderr.write("mesh %d: %d verts\n" % (geoset_i, len(mymesh.verts)))
 			sys.stderr.write("Mesh added to Blender.\n")
 
 			# faces
-			nrfaces = 0
 			for i in range(geoset.PVTX.nvrts / 3):
 				v1 = geoset.PVTX.vertices[3 * i]
 				v2 = geoset.PVTX.vertices[3 * i + 1]
 				v3 = geoset.PVTX.vertices[3 * i + 2]
-				face = Blender.NMesh.Face([mymesh.verts[v1], mymesh.verts[v2], mymesh.verts[v3]])
+				mymesh.faces.extend([mymesh.verts[v1], mymesh.verts[v2], mymesh.verts[v3]])
 
-				uv_v1 = (geoset.UVAS.UVBS[0].vertices[v1].x, 1-geoset.UVAS.UVBS[0].vertices[v1].y);
-				uv_v2 = (geoset.UVAS.UVBS[0].vertices[v2].x, 1-geoset.UVAS.UVBS[0].vertices[v2].y);
-				uv_v3 = (geoset.UVAS.UVBS[0].vertices[v3].x, 1-geoset.UVAS.UVBS[0].vertices[v3].y);
-				face.uv = [uv_v1, uv_v2, uv_v3];
-				face.mode = face.mode | Blender.NMesh.FaceModes['TEX'];
-				face.mat = 0;
-				mymesh.faces.append(face)
-				nrfaces += 1
-			sys.stderr.write("mesh %d: %d faces\n" % (geoset_i, nrfaces))
+				uv_v1 = Blender.Mathutils.Vector(geoset.UVAS.UVBS[0].vertices[v1].x, 1-geoset.UVAS.UVBS[0].vertices[v1].y);
+				uv_v2 = Blender.Mathutils.Vector(geoset.UVAS.UVBS[0].vertices[v2].x, 1-geoset.UVAS.UVBS[0].vertices[v2].y);
+				uv_v3 = Blender.Mathutils.Vector(geoset.UVAS.UVBS[0].vertices[v3].x, 1-geoset.UVAS.UVBS[0].vertices[v3].y);
+				mymesh.faces[i].uv = [uv_v1, uv_v2, uv_v3];
+				mymesh.faces[i].mode = mymesh.faces[i].mode | Blender.Mesh.FaceModes['TEX'];
+				mymesh.faces[i].mat = 0;
+				
+			sys.stderr.write("mesh %d: %d faces\n" % (geoset_i, len(mymesh.faces)))
 			mymesh.update()
-			self.scene.link(myMeshObject)
-			self.meshes.append(myMeshObject)
+			blMeshObj = self.scene.objects.new(mymesh, self.meshName(geoset_i))
+			blMeshObj.setMaterials([self.materials[geoset.MaterialID]]);
+			self.meshes.append(blMeshObj)
 
 	def loadBones(self):
 		sys.stderr.write("Ordering bones..\n")
@@ -190,7 +188,7 @@ class Importer(Converter):
 		# populate wbBoneVertices for bone tail calculations,
 		#   and blMeshObjArray for armature parenting
 		for geoset_i in range(len(self.model.GEOS.geosets)):
-			blMeshObj = Blender.Object.Get(self.meshName(geoset_i))
+			blMeshObj = self.meshes[geoset_i]
 			blMeshObjArray.append(blMeshObj)
 			blMesh = blMeshObj.getData()
 			wbGeoset = self.model.GEOS.geosets[geoset_i]
@@ -512,9 +510,9 @@ class Importer(Converter):
 			blParticle.setName(wbParticle.Name)
 
 			# do not inherit translation, rotation and scaling
-			if wbParticle.Parent == -1:
+			#if wbParticle.Parent == -1:
 			# inherit translation, rotation and scaling
-			else:
+			#else:
 				#blParticle.setParent(
 
 
