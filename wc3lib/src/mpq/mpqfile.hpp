@@ -38,7 +38,7 @@ namespace mpq
 class Mpq;
 
 /**
-* @brief Abstract class for mpq file handlers.
+* @brief Abstract class for mpq file access. Combines hash and block table data of file.
 */
 class MpqFile
 {
@@ -71,11 +71,13 @@ class MpqFile
 				enum Compression m_compression;
 		};
 	
+		/// @todo Define all locales.
 		enum Locale
 		{
 			Neutral
 		};
 		
+		/// There seems to be only one platform.
 		enum Platform
 		{
 			Default

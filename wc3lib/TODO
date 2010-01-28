@@ -1,3 +1,10 @@
+2010-01-28 Tamino Dauth <tamino@cdauth.de>
+* Add custom cmake modules for finding packages OGRE and openjpeg/jpeglib.
+* Add man page.
+* Write latex specification of Jass++
+* Improve compiler suggestion of Jass++.
+* Write latex specification of SimpleJass.
+
 2010-01-23 Tamino Dauth <tamino@cdauth.de>
 * New application tilesetter should allow user to modify tile data by changing data of each tilepoint of an user-defined w3e file.
 	The tool is required since "Die Macht des Feuers" needs it for its first map (which has some corrupted tileset data).

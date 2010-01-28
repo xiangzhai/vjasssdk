@@ -195,15 +195,17 @@ set(wc3lib_MDLX_H
 	visibility3s.hpp
 )
 
+# todo only if -DBLEND is set
 #if (BLEND)
 	add_subdirectory(readblend)
 #endif (BLEND)
 
 add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})
-#target_link_libraries(wc3libblp gettextlib)
-if (BLEND)
+target_link_libraries(wc3libmdlx ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
+# todo only if -DBLEND is set
+#if (BLEND)
 	target_link_libraries(wc3libmdlx wc3libmdlxreadblend)
-endif (BLEND)
+#endif (BLEND)
 
 #install
 

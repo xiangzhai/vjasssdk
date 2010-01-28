@@ -45,6 +45,7 @@ Blp::MipMap::MipMap()
 {
 }
 
+/// @todo Implement.
 void Blp::MipMap::scale(dword newWidth, dword newHeight)
 {
 }

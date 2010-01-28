@@ -13,6 +13,7 @@ set(wc3lib_VM_H
 )
 
 add_library(wc3libvm SHARED ${wc3lib_VM_SRC})
+target_link_libraries(wc3libvm ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
 #install
 

@@ -17,8 +17,6 @@ target_link_libraries(jassc wc3lib ${Boost_LIBRARIES})
 add_executable(tilesetter tilesetter.cpp)
 target_link_libraries(tilesetter wc3lib ${Boost_LIBRARIES})
 
-message("Boost libraries ${Boost_LIBRARIES}") # test
-
 #install
 
 install(TARGETS converter jassc tilesetter DESTINATION bin/wc3lib)

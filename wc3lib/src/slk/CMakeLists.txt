@@ -7,6 +7,7 @@ set(wc3lib_SLK_H
 )
 
 add_library(wc3libslk SHARED ${wc3lib_SLK_SRC})
+target_link_libraries(wc3libslk ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
 #install
 

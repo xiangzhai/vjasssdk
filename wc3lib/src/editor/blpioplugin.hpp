@@ -1,6 +1,3 @@
-#ifndef WC3LIB_EDITOR_BLPIOPLUGIN_HPP
-#define WC3LIB_EDITOR_BLPIOPLUGIN_HPP
-
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
@@ -20,6 +17,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+#ifndef WC3LIB_EDITOR_BLPIOPLUGIN_HPP
+#define WC3LIB_EDITOR_BLPIOPLUGIN_HPP
+
 
 #include <QImageIOPlugin>
 

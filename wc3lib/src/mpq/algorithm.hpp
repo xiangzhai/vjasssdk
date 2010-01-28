@@ -21,6 +21,10 @@
 #ifndef WC3LIB_MPQ_ALGORITHM_HPP
 #define WC3LIB_MPQ_ALGORITHM_HPP
 
+/**
+* @file Includes all possible compression algorithm used in MPQ archives.
+*/
+
 #include "huffman/huff.h"
 #include "zlib/zlib.h"
 #include "pklib/pklib.h"

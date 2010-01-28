@@ -6,7 +6,6 @@ include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 link_directories(${KDE4_LIB_DIR})
 include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR} ${Ogre_INCLUDE_DIR})
-message("OGRE include dir" ${Ogre_INCLUDE_DIR})
 include_directories(/usr/include/OGRE)
 
 set(wc3lib_EDITOR_SRC
@@ -50,7 +49,8 @@ set(wc3lib_EDITOR_UI
 QT4_WRAP_UI(wc3lib_EDITOR_UI_H ${wc3lib_EDITOR_UI})
 
 add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
-target_link_libraries(wc3libeditor wc3libblp wc3libmpq wc3libmdlx OgreMain ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
+# todo use OGRE_LIBRARIES from custom cmake module
+target_link_libraries(wc3libeditor wc3libblp wc3libmpq wc3libmdlx ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} OgreMain ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 #wc3libeditorqogre
 
 #install
