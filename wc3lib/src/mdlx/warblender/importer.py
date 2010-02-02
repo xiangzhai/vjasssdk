@@ -41,8 +41,7 @@ class Importer(Converter):
 		self.loadMeshes()
 		self.loadBones()
 		self.loadSequences()
-		#self.loadVertexGroups()
-		#self.loadLights()
+		self.loadLights()
 		#self.loadParticleEmitters()
 		#self.loadParticleEmitters2()
 		sys.stderr.write("Done converting model %s.\n" % (repr(self.model.MODL.Name)))
@@ -169,6 +168,25 @@ class Importer(Converter):
 				mymesh.faces[i].mat = 0;
 				
 			sys.stderr.write("mesh %d: %d faces\n" % (geoset_i, len(mymesh.faces)))
+			
+			# vertex groups
+			#self.groups = {}
+			#for vertexIndex in range(len(geoset.GNDX.vertexGroups)):
+			#	sys.stderr.write("Vertex group count %i of group %i. Matrices count %i" % geoset.GNDX.vertexGroups[vertexIndex] % vertexIndex % len(geoset.MATS.matrices))
+			#	objectList = geoset.MATS.matrices[geoset.MTGC.groupCount[geoset.GNDX.vertexGroups[vertexIndex]]]
+			#	sys.stderr.write("objectList: %s\n" % type(objectList))
+			#	boneNames = [self.BONE.bones[objectIndex].OBJ.Name for objectIndex in objectList]
+			#	
+			#	for name in boneNames:
+			#		if self.groups.has_key(name):
+			#			self.groups[name].append(vertexIndex)
+			#		else:
+			#			self.groups[name] = [vertexIndex]
+			#
+			#for grp_name, grp in self.groups:
+			#	mymesh.addVertGroup(grp_name)
+			#	mymesh.assignVertsToGroup(grp_name, grp, 1.0, 'replace')
+			
 			mymesh.update()
 			blMeshObj = self.scene.objects.new(mymesh, self.meshName(geoset_i))
 			blMeshObj.setMaterials([self.materials[geoset.MaterialID]]);
@@ -268,21 +286,6 @@ class Importer(Converter):
 		blArmObj = self.scene.objects.new(self.armature)
 		#blArmObj.link(self.armature)
 		blArmObj.makeParent(blMeshObjArray)
-
-	def loadVertexGroups(self):
-		self.groups = {}
-		for vrt_i in range(len(geoset.GNDX.vertexGroups)):
-			objList = geoset.MATS.matrices[geoset.MTGC.groupCount[geoset.GNDX.vertexGroups[vrt_i]]]
-			sys.stderr.write("objList: %s\n" % type(objList))
-			boneNames = [self.BONE.bones[obj_i].OBJ.Name for obj_i in objList]
-			for name in boneNames:
-				if GROUPS.has_key(name):
-					self.groups[name].append(vrt_i)
-				else:
-					self.groups[name] = [vrt_i]
-		for grp_name, grp in self.groups:
-			mymesh.addVertGroup(grp_name)
-			mymesh.assignVertsToGroup(grp_name, grp, 1.0, 'replace')
 
 	def boneInsert(self, boneIndex, boneOrder):
 		#sys.stderr.write("boneIndex: %s\n" % str(boneIndex))

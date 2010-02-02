@@ -64,19 +64,19 @@ long32 Layer::readMdx(std::istream &istream) throw (class Exception)
 	std::cout << "filterMode is " << this->m_filterMode << std::endl;
 	
 	if (this->m_filterMode < 0 || this->m_filterMode > 5)
-		fprintf(stderr, _("Layer: Warning, unknown filter mode.\nFilter mode %d.\n"), this->m_filterMode);
+		std::cerr << boost::format(_("Layer: Warning, unknown filter mode.\nFilter mode %1%.")) % this->m_filterMode << std::endl;
 	
 	istream.read(reinterpret_cast<char*>(&this->m_shading), sizeof(this->m_shading)); //+1:unshaded;+2:SphereEnvMap;+16:twosided;
 	bytes += istream.gcount();
 	
 	if (this->m_shading != 1 && this->m_shading != 2 && this->m_shading != 16)
-		fprintf(stderr, _("Layer: Warning, unknown shading.\nShading %d.\n"), this->m_shading);
+		std::cerr << boost::format(_("Layer: Warning, unknown shading.\nShading %1%.")) % this->m_shading << std::endl;
 	
 	istream.read(reinterpret_cast<char*>(&this->m_textureId), sizeof(this->m_textureId)); //  +32:unfogged;+64:NoDepthTest;+128:NoDepthSet)
 	bytes += istream.gcount();
 	
 	if (this->m_textureId != 32 && this->m_textureId != 64 && this->m_textureId != 128)
-		fprintf(stderr, _("Layer: Warning, unknown texture id.\nTexture id %d.\n"), this->m_textureId);
+		std::cerr << boost::format(_("Layer: Warning, unknown texture id.\nTexture id %1%.")) % this->m_textureId << std::endl;
 	
 	istream.read(reinterpret_cast<char*>(&this->m_tvertexAnimationId), sizeof(this->m_tvertexAnimationId)); // 0xFFFFFFFF if none
 	bytes += istream.gcount();

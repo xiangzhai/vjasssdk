@@ -11,7 +11,7 @@ set(wc3lib_MPQ_H
 )
 
 add_library(wc3libmpq SHARED ${wc3lib_MPQ_SRC})
-target_link_libraries(${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(wc3libmpq ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
 #install
 

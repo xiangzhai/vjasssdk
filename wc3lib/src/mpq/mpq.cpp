@@ -196,7 +196,7 @@ struct StrongDigitalSignature
 //	int2048 signature; //int2048, little-endian format
 };
 
-Mpq::Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffset(0), m_blockSize(0), m_fileSize(0) m_flags(Mpq::Block::None)
+Mpq::Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffset(0), m_blockSize(0), m_fileSize(0), m_flags(Mpq::Block::None)
 {
 }
 
@@ -298,7 +298,7 @@ const int16 Mpq::format2Identifier = 0x0001;
 const int32 Mpq::extendedAttributesVersion = 100;
 const std::size_t Mpq::headerSize = sizeof(struct Header);
 
-Mpq::Mpq(const boost::filesystem::path &path) : m_path(path), m_size(boost::filesystem::file_size(path)), m_strongDigitalSignature(0)
+Mpq::Mpq(const boost::filesystem::path &path) : m_size(boost::filesystem::file_size(path)), m_path(path), m_strongDigitalSignature(0)
 {
 }
 
@@ -317,7 +317,7 @@ Mpq::~Mpq()
 		delete file;
 }
 
-std::streamsize Mpq::readMpq(const std::istream &istream, const std::istream *listfileIstream) throw (class Exception)
+std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfileIstream) throw (class Exception)
 {
 	struct Header header;
 	istream.read(reinterpret_cast<char*>(&header), sizeof(header));

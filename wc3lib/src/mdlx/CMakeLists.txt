@@ -1,8 +1,3 @@
-find_library(Ogre REQUIRED)
-include_directories(${Ogre_INCLUDE_DIR})
-message("Include dir" ${Ogre_INCLUDE_DIR})
-include_directories(/usr/include/OGRE)
-
 set(wc3lib_MDLX_SRC                            
 	ambientcolor.cpp
 	ambientcolors.cpp

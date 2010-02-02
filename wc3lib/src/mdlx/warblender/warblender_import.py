@@ -15,11 +15,13 @@ from warblender.importer import Importer
 def loadMDX(filename):
 	r = mdx.Reader()
 	mdxModel = None
+	
 	try:
 		mdxModel = r.loadFile(filename)
 	except mdx.MDXFileFormatError:
 		Blender.Draw.Text("Could not read model file")
 		raise
+	
 	imp = Importer()
 	imp.toBlender(mdxModel)
 

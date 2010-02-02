@@ -52,6 +52,9 @@ class MpqFile
 				//std::streamsize write(std::ostream &ostream) throw (class Exception);
 				
 			protected:
+				friend class Mpq;
+				friend class MpqFile;
+				
 				enum Compression
 				{
 					Uncompressed = 0,
@@ -116,7 +119,7 @@ class MpqFile
 		/**
 		* MPQ files are created by @class Mpq only.
 		*/
-		MpqFile(class Mpq *mpq, class Hash *hash);
+		MpqFile(class Mpq *mpq, class Mpq::Hash *hash);
 		~MpqFile();
 		
 		class Mpq *m_mpq;

@@ -1,5 +1,9 @@
+2010-02-01 Tamino Dauth <tamino@cdauth.de>
+* Revised Jass++ definition.
+
 2010-01-28 Tamino Dauth <tamino@cdauth.de>
 * Revised various cmake files.
+* Improved MPQ library.
 
 2010-01-26 Tamino Dauth <tamino@cdauth.de>
 * Improved Jass language code files.

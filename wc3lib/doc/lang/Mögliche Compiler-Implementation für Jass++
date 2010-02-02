@@ -639,5 +639,5 @@ Optionen:
 	--map <file> Erweitert ein Kartenskript um den zu Jass-Code kompilierten Code.
 	--mapscript <file> Kompiliert oder erweitert ein Jass-Kartenskript aus dem eingelesen Code.
 	--script <file> Kompiliert ein Jass-Skript aus dem eingelesen Code.
-	--optimize Optimiert den Code beim Kompilieren.
+	--optimize <options> Optimiert den Code beim Kompilieren.
 	--language <lang> Setzt den Startwert der Skriptsprache (standardmäßig jass, mögliche Einträge: jass, vjass, zinc, jasspp, cjass).

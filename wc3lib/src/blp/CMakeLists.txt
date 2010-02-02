@@ -7,9 +7,6 @@ set(wc3lib_BLP_H
 	platform.hpp
 )
 
-# todo: is only required when using -DJPEG
-find_library(OPENJPEG_LIBS openjpeg)
-
 add_library(wc3libblp SHARED ${wc3lib_BLP_SRC})
 target_link_libraries(wc3libblp ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} ${OPENJPEG_LIBS})
 

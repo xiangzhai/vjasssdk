@@ -9,24 +9,27 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 8. Deklaration nativer Typen
 9. Deklaration nativer Funktionen
 10. Bezeichner (identifiers)
-11. Gültigkeitsbereiche (scopes)
-12. Variablen
-13. Operatoren
-14. Typen
-15. Typkonvertierungen
-16. Verzweigungen
-17. Schleifen
-18. Funktionen
-19. Funktionsvariablen (Funktionszeiger)
-20. Lambda-Funktionen
-21. Ausnahmebehandlung
-22. Finally
-23. Pseudonyme (aliases)
-24. Vorlagen (templates)
-25. Pakete (packages)
-26. Aufzählungen (enums)
-27. Klassen
-28. Das Standardpaket
+11. Literale
+12. Gültigkeitsbereiche (scopes)
+13. Variablen
+14. Operatoren
+15. Typen
+16. Typkonvertierungen
+17. Verzweigungen
+18. Schleifen
+19. Funktionen
+20. Funktionsvariablen (Funktionszeiger)
+21. Lambda-Funktionen
+22. Funktionsaufrufe
+23. Ausnahmebehandlung
+24. Finally
+25. Pseudonyme (aliases)
+26. Vorlagen (templates)
+27. Pakete (packages)
+28. Aufzählungen (enums)
+29. Klassen
+30. Das Jass-Paket
+31. Das Standardpaket
 
 1. Vorwort
 
@@ -109,7 +112,7 @@ Native Funktionen und Typen können ebenfalls durch eine reine Jass-Deklaration 
 und müssen nicht erst mit den Jass++-Sprachelementen deklariert werden. Diese eignen sich eher
 zur Deklaration neuer Typen und nativer Funktionen, insofern es dem Entwickler möglich ist, dies
 z. B. mit Hilfe des Werkzeugs Grimoire zu bewerkstelligen.
-Aus Jass heraus kann ebenfalls mittels der #jasspp- und #pjass-Präprozessoranweisungen Jass++-Code
+Aus Jass heraus kann ebenfalls mittels der #jasspp- und #endjasspp-Präprozessoranweisungen Jass++-Code
 verwendet werden, allerdings sollten die zu Jass kompilierten Jass++-Funktionen und -Variablen
 aus Jass-Code heraus nicht verwendbar sein.
 Es gilt hierbei noch anzumerken, dass die Verwendung von Jass++-Code in globalen Jass-Funktionen
@@ -137,17 +140,20 @@ Prozedual-Schlüsselwörter:
 Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const
 Warcract-spezifisch: native, mapinit, debug
 
+Operator-Schlüsselwörter:
+Warcraft-spezifisch: id, hash, length
+
 Funktional-Schlüsselwörter:
 Standard: return
 
 Generik-Schlüsselwörter:
-template
+Standard: template
 
 Modularisierung-Schlüsselwörter:
-package, private, protected, public
+Standard: package, private, protected, public
 
 Objektorientierung-Schlüsselwörter:
-private protected, operator, class, this, self, super, new, delete, copy, init, virtual, static, friend, abstract
+Standard: private protected, operator, class, this, self, super, new, delete, copy, init, virtual, static, friend, abstract
 
 Threading-Schlüsselwöter:
 threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
@@ -193,11 +199,15 @@ WC3_TFT_VERSION Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-
 DEBUG_MODE Enthält entweder true oder false, je nachdem, ob der Debug-Modus aktiviert oder deaktiviert ist.
 FILE_NAME Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
 LINE_NUMBER Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
+OPTIMIZATION_INLINE_FUNCTIONS Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
+OPTIMIZATION_REMOVE_WHITE_SPACES Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
+OPTIMIZATION_REMOVE_CONSTANTS Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
+TODO: Hier noch weitere Optimierungsoptionen hinzufügen.
 
 Dateipfade für die Include-Anweisung:
 Dateipfade müssen wie bei UNIX Systemen geschrieben werden. . steht für das aktuelle und ..
 für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen getrennt.
-~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Basisverzeichnis.
+~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Wurzelverzeichnis.
   
 Testblöcke:
 Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
@@ -227,10 +237,26 @@ Notation:
 native [const] Rückgabetyp Funktionsname(Parametertyp Parametername, ...);
 
 Bezeichner (identifiers):
-Ein Bezeichner ist ein vom Entwickler definierter Name, welches ein bestimmtes Code-Element bezeichnet und darauf verweist.
+Ein Bezeichner ist ein vom Entwickler definierter Name, welcher ein bestimmtes Code-Element bezeichnet und darauf verweist.
 Für Bezeichner gelten bestimmte Regeln bezüglich ihrer Definition. Bezeichner dürfen in Jass++ anders als in Jass nicht mit
 dem Präfix "jasspp" beginnen, da dieses für den Compiler reserviert ist (theoretisch könnte dieser auch sämtliche Bezeichner ersetzen,
-um so dagegen vorzugehen, jedoch wird es vorläufig trotzdem reserviert). Ansonsten gelten dieselben Regeln wie in Jass.
+um so dagegen vorzugehen, jedoch wird es vorläufig trotzdem reserviert). Ansonsten gelten dieselben Regeln wie in Jass (z. B. keine Unterstriche am Anfang).
+
+Literale:
+Ein Literal ist ein sich selbst erklärender Ausdruck. Für folgende native Typen gelten folgende Literalnotationsregeln:
+
+Kopierbasierte Typen:
+* string : "<Literal>" | null
+* integer : 0<Oktalliteral> | 0%<Binärliteral> | 0x<Hexadezimalliteral> | <Dezimalliteral> | '<Id-Literal>' | null
+* real : <Fließkommaliteral> | null
+* boolean : true | false | null
+* handle (und Nicht-agent-Kindtypen): null
+
+Referenzbasierte Typen:
+* code : 0
+* agent (und Kindtypen) : 0
+* Klassenobjekte : 0
+* Funktionszeiger : 0
 
 Gültigkeitsbereiche (scopes):
 Gültigkeitsbereiche definieren, innerhalb welches Bereiches eine Deklaration ihre Gültigkeit hat. Außerhalb dieses Bereiches
@@ -293,9 +319,8 @@ Klassen, Funktionen und Methoden können statische Variablen enthalten:
 static integer test;
 static const integer test = 10;
 
-Der Wert 0 entspricht ebenfalls dem Wert null aus Jass.
-Eine Zeichenkette ist somit auch 0, wenn sie nicht gesetzt wurde.
-(Überdenken: Alle Variablen werden automatisch mit 0 oder false initialisiert.)
+Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
+dagegen 0 (siehe Abschnitt Literale).
 
 Operatoren:
 
@@ -325,12 +350,49 @@ Variable <= Ausdruck
 Variable > Ausdruck
 Variable < Ausdruck
 
+Für den Typ integer:
+real(Variable)						Entspricht I2R(Variable)
+string(Variable)					Entspricht I2S(Variable)
+
+Für den Typ real:
+integer(Variable)					Entspricht R2I(Variable)
+string(Variable)					Entspricht R2S(Variable)
+string(Variable, <Ganzzahlausdruck>, <Ganzzahlausdruck>)Entspricht R2SW(Variable, <Ganzzahlausdruck>, <Ganzzahlausdruck>)
+
 Für den Typ boolean:
 Variable = Ausdruck
 Variable
 !Variable
 Variable == Ausdruck
 Variable != Ausdruck
+
+Für den Typ string:
+Variable = Ausdruck
+Variable + Ausdruck
+Variable - Ausdruck				Entfernt eine Teilzeichenkette
+Variable += Ausdruck
+Variable -= Ausdruck				Entfernt eine Teilzeichenkette
+Variable == Ausdruck
+Variable != Ausdruck
+Variable >= Ausdruck				Die Vergleichsoperatoren beziehen sich in diesem Fall auf die Wertigkeit des Unicode-Zeichens (Warcraft 3 TFT verwendet kein ASCII)
+Variable <= Ausdruck
+Variable > Ausdruck
+Variable < Ausdruck
+hash Variable					Entspricht Variable.hash und StringHash(Variable)
+Variable[Index]					Entspricht SubString(Variable, index, index + 1)
+length Variable					Entspricht Variable.length und StringLength(Variable)
+integer(Variable)				Entspricht S2I(Variable)
+real(Variable)					Entspricht S2R(Variable)
+
+Für den Typ code:
+Variable = Ausdruck
+
+Für den Typ handle:
+Variable = Ausdruck
+Variable == Ausdruck
+Variable != Ausdruck
+integer(Variable)				Entspricht GetHandleId(Variable)
+id Variable					Entspricht Variable.id und GetHandleId(Variable)
 
 Für Arrays:
 size Variable
@@ -340,6 +402,8 @@ Für Aufzählungen:
 Variable = Ausdruck
 Variable == Ausdruck
 Variable != Ausdruck
+size Aufzählungsbezeichner
+Aufzählungsbezeichner.size
 
 Für Funktionszeiger:
 execute Variable(<Parameter)
@@ -360,22 +424,31 @@ sleepoff Variable
 Variable.sleepoff
 reset Variable
 Variable.reset
+integer(Variable)				Liefert die interne Ganzzahl des Funktionsprototypen.
+id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl des Funktionsprototypen.
 
-Für "threaded" Funktionen:
+Innerhalb von "threaded" Funktionen:
 sleep <real-Ausdruck>
+id						Liefert die interne Ganzzahl des Funktionsprototypen.
 
 Für Klassen(instanzen):
 <Klassenname>.<Enum | statische Methode | statisches Element>
 <Variable>.<Elementname | Methodenname>
-new <Klassenname>				Entspricht Klassenname.new();
-delete <Variable>				Entspricht Variable.delete();
-copy Variable					Entspricht Variable.copy();
+new <Klassenname>				Entspricht Klassenname.new()
+delete <Variable>				Entspricht Variable.delete()
+copy Variable					Entspricht Variable.copy()
 Variable = Ausdruck
 Variable == Ausdruck
 Variable != Ausdruck
+integer(Variable)				Liefert die interne Ganzzahl der Klasseninstanz.
+id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Klasseninstanz.
 
 Für Arrays:
-Variable[Indexdimension 1][Indexdimension 2]
+Variable[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
+
+Für große Arrays:
+integer(Variable)				Liefert die interne Ganzzahl der Array-Instanz.
+id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Array-Instanz.
 
 Typen:
 In Jass++ können sämtliche Typen aus Jass ohne besondere Einschränkungen (bis auf const-Deklarationen) verwendet werden.
@@ -391,7 +464,7 @@ dass die Funktionen, auf welche sie zeigen nicht mit den Schlüsselwörtern exec
 bzw. diese auf sie angewandt werden dürfen.
 
 Notation:
-<Bezeichner> [const]
+<Typbezeichner> [const]
 
 Typkonvertierungen:
 Sämtliche Typkonvertierungen müssen explizit vorgenommen werden, insofern es sich nicht
@@ -517,6 +590,7 @@ Ist eine Funktion "threaded", kann sie von überall aus mit .execute, .executewa
 Rückgabewerte können nur bei .evaluate zurückgegeben werden.
 .evaluate erzeugt keinen neuen Thread, es wird daher gewartet, bis der Funktionsaufruf abgearbeitet wurde. Funktionen, die mit
 .evaluate aufgerufen werden, dürfen keine sleep-Anweisungen bzw. TriggerSleepAction-Aufrufe enthalten.
+Der Compiler sollte in diesem Fall eine Fehlermeldung ausgeben.
 Bei .execute und .executewait dagegen, läuft der Code unmittelbar nach dem Aufruf weiter. Der Funktionsaufruf findet in einem eigenen
 Thread statt.
 .execute und .executewait bewirken eigentlich das Gleiche, insofern TriggerExecute und TriggerExecuteWait das Gleiche bewirken.
@@ -571,6 +645,7 @@ Funktionsvariablen sind Variablen des Typs "<Rückgabetyp> (<Parameter>)". Sie k
 Der Verweis ist normalerweise ein Integer-Wert, welcher je nach Kompilierung des Codes unterschiedlich auf die Funktion verweisen kann.
 Eine Funktionsvariable kann ebenso auf Methoden einer Klasse verweisen, welche ebenfalls als "threaded" deklariert sein müssen.
 Funktionsvariablen können wie normale "threaded" Funktionen aufgerufen werden.
+Des Weiteren gilt es zu beachten, dass Funktionsvariablen ebenfalls als "const" deklariert werden können (siehe Abschnitt Typen).
 
 Notation:
 <Rückgabetyp> (Parametertyp1, Parametertyp2, ... ParametertypN) <Variablenname> [= Funktionsname | "threaded" Lambda-Funktionsdefinition];
@@ -612,6 +687,17 @@ void test()
 	timer testTimer = CreateTimer();
 	TimerStart(testTimer, 2.0, true, { Print("Timer function runs!"); });
 }
+
+Funktionsaufrufe:
+
+Notation:
+<Funktionsname | Funktionsvariable>[<.execute | .executefast | .evaluate>](<Parameterwert> ...);
+<Funktionsname>[<.execute | .executefast | .evaluate>](<Parametername> = <Parameterwert>);
+
+Zweitere Notation ist nur bei Funktionen, jedoch nicht bei Funktionsvariablen anwendbar. Sie erlaubt eine explizite Definition der
+übergebenen Parameterwerte.
+Des Weiteren gilt es zu beachten, dass Standardparameterwerte bei Funktionsvariablen ihre Gültigkeit verlieren. Bei ihnen müssen
+sämtliche Parameterwerte explizit angegeben werden.
 
 Ausnahmebehandlungen:
 Ausnahmen können von einer beliebigen Funktion geworfen werden, die als "throw" Funktion deklariert wurde.
@@ -704,6 +790,8 @@ enum Name
     Enumelement2 = 2,
     Enumelement3
 } globale Instanzen durch Kommate getrennt;
+
+Der size-Operator kann verwendet werden, um den Wert x + 1 zu erhalten, wobei x für das Aufzählungselement mit dem höchsten Wert steht.
 
 27. Klassen
 Existiert kein Präfix wie "public", "protected" oder "private" vor der Variablen oder Methodendeklaration, ist das
@@ -871,6 +959,25 @@ Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und
 Operators für die angegebenen Parametertypen.
 Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, private protected).
 
+Das Jass-Paket:
+Das Jass-Paket deklariert sowohl native Typen und Funktionen als auch nicht native Funktionen und Variablen der Dateien "common.j", common.ai" und "Blizzard.j".
+Als Alternative können jene drei Dateien auch mittels #include jass <Dateipfad> eingebunden werden.
+
+package jass
+{
+	package commonj
+	{
+	}
+	
+	package commonai
+	{
+	}
+	
+	package Blizzardj
+	{
+	}
+}
+
 Das Standardpaket:
 Es existieren Wrapper für jeden Warcraft-3-Datentyp, sowie zusätzliche Methoden und Klassen. Auf das Wichtigste beschränken!
 
@@ -898,19 +1005,20 @@ package jasspp
     /*
     Definitionen der Wrapper-Klassen, welche die Funktionalität der nativen Typen mittels Objektorientierung anbieten.
     */
-    class Boolean
-    class String
-    class Integer
-    class Real
-    class Code
-    class Handle
-    class Agent : public Handle
-    class Widget : public Agent
-    class Unit : Widget
-    class Item : Widget
-    class Destructable : Widget
-    class Event
-    class Trigger
+    public class Boolean
+    public class String
+    public class Integer
+    public class Real
+    public class Code
+    public class Handle
+    public class Agent : public Handle
+    public class Widget : public Agent
+    public class Unit : public Widget
+    public class Item : public Widget
+    public class Destructable : public Widget
+    public class Event
+    public class Trigger
+    public class HashTable
     
     /*
     Definition eigener Klassen wie z. B. verschiedener Container-Klassen usw.

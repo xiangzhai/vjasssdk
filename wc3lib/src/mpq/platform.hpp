@@ -35,6 +35,7 @@ typedef int16_t int16;
 typedef int32_t int32;
 typedef uint32_t uint32; // used for various encryption and hash functions
 typedef int64_t int64;
+typedef uint64_t uint64; // used for large offsets
 
 /// Windows-like file time. Redefined for compatibility.
 struct FILETIME

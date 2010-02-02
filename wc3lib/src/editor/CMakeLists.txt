@@ -1,13 +1,3 @@
-find_package(Qt4 REQUIRED)
-find_package(KDE4 REQUIRED)
-find_library(Ogre REQUIRED)
-
-include(${QT_USE_FILE})
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-link_directories(${KDE4_LIB_DIR})
-include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR} ${Ogre_INCLUDE_DIR})
-include_directories(/usr/include/OGRE)
-
 set(wc3lib_EDITOR_SRC
 	aieditor.cpp
 	blpiohandler.cpp
