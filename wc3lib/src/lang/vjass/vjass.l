@@ -103,29 +103,29 @@ UNITTYPEINT	['][a-zA-Z0-9][a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[']
 "keyword"			return KeywordKeyword;
 "library"			return LibraryKeyword;
 "library_once"			return Library_onceKeyword;
-"endlibrary" { return EndlibraryKeyword; }
-"scope" { return ScopeKeyword; }
-"endscope" { return EndscopeKeyword; }
-"struct" { return StructKeyword; }
-"endstruct" { return EndstructKeyword; }
-"interface" { return InterfaceKeyword; }
-"endinterface" { return EndinterfaceKeyword; }
-"delegate" { return DelegateKeyword; }
-"stub" { return StubKeyword; }
-"module" { return ModuleKeyword; }
-"endmodule" { return EndmoduleKeyword; }
-"implement" { return ImplementKeyword; }
-"hook" { return HookKeyword; }
-"key" { return KeyKeyword; }
-"import" { return ImportKeyword; }
-"dovjassinit" { return DovjassinitKeyword; }
-"inject" { return InjectKeyword; }
-"endinject" { return EndinjectKeyword; }
-"novjass" { return NovjassKeyword; }
-"endnovjass"		return EndnovjassKeyword;
-"vjass"			return VjassKeyword;
-"endvjass"		return EndvjassKeyword;
-"zinc" { return ZincKeyword; }
+"endlibrary"			return EndlibraryKeyword;
+"scope"				return ScopeKeyword;
+"endscope"			return EndscopeKeyword;
+"struct"			return StructKeyword;
+"endstruct"			return EndstructKeyword;
+"interface"			return InterfaceKeyword;
+"endinterface"			return EndinterfaceKeyword;
+"delegate"			return DelegateKeyword;
+"stub"				return StubKeyword;
+"module"			return ModuleKeyword;
+"endmodule"			return EndmoduleKeyword;
+"implement"			return ImplementKeyword;
+"hook"				return HookKeyword;
+"key"				return KeyKeyword;
+"import"			return ImportKeyword;
+"dovjassinit"			return DovjassinitKeyword;
+"inject"			return InjectKeyword;
+"endinject"			return EndinjectKeyword;
+"novjass"			return NovjassKeyword;
+"endnovjass"			return EndnovjassKeyword;
+"vjass"				return VjassKeyword;
+"endvjass"			return EndvjassKeyword;
+"zinc"				return ZincKeyword;
 "endzinc" { return EndzincKeyword; }
 "externalblock" { return ExternalblockKeyword; }
 "endexternalblock" { return EndexternalblockKeyword; }
@@ -147,10 +147,6 @@ UNITTYPEINT	['][a-zA-Z0-9][a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[']
 "execute" { return ExecuteKeyword; }
 "evaluate" return EvaluateKeyword;
 "global" return GlobalKeyword;
-
-"jaspp"				return JassppKeyword;
-"endjasspp"			return EndjassppKeyword;
-"include"			return IncludeKeyword;
 
 {REALDIGIT} { return RealLiteral; }
 

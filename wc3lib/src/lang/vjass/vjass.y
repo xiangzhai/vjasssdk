@@ -154,10 +154,6 @@ main()
 %token EvaluateKeyword
 %token GlobalKeyword
 
-%token JassppKeyword;
-%token EndjassppKeyword;
-%token IncludeKeyword;
-
 %%
 
 IncreaseLine				: NewLine

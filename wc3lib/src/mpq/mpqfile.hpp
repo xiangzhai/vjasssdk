@@ -37,6 +37,8 @@ namespace mpq
 
 class Mpq;
 
+class Mpq::Hash;
+
 /**
 * @brief Abstract class for mpq file access. Combines hash and block table data of file.
 */

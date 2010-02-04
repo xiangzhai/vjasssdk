@@ -11,6 +11,7 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 10. Bezeichner (identifiers)
 11. Literale
 12. Gültigkeitsbereiche (scopes)
+Qualifizierer-Gültigkeitsbereiche:
 13. Variablen
 14. Operatoren
 15. Typen
@@ -135,9 +136,11 @@ Code zwischen den Präprozessoranweisungen #cjass und #endcjass wird daher bei e
 Kompilierung ignoriert.
 
 4. Schlüsselwörter
+Im Folgenden wird zwischen Standard, was auf gängige Programmiersprachen verweist, und Warcraft-spezifisch, was auf Warcraft-spezifische
+Eigenschaften verweist, unterschieden.
 
 Prozedual-Schlüsselwörter:
-Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const
+Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const, alias
 Warcract-spezifisch: native, mapinit, debug
 
 Operator-Schlüsselwörter:
@@ -165,6 +168,10 @@ Möglicher Zusatz:
 executefast ermöglicht den Aufruf mit ExecuteFunc und Parameterspeicherung, jedoch könnte
 der Aufruf nicht mittels calls abgerufen werden und es gäbe eventuell weitere Nachteile
 (Geschwindigkeit).
+
+Zusammenfassung der Qualifizierer:
+Standard: enum, const, template, package, private, protected, public, class, init, virtual, static, friend, abstract
+Warcraft-spezifisch: native, mapinit, debug, threaded
 
 5. Blockkommentare
 Blockkommentare zwischen einer "/*"- und einer "*/"-Zeichenfolge sind in Jass++ (auch über mehrere Zeilen hinweg) möglich.
@@ -212,6 +219,7 @@ für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen
 Testblöcke:
 Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
 Analog zu #if (DEBUG_MODE) und #endif.
+Testblöcke sind nach der unten aufgezeigten Form ein Qualifizierer-Gültigkeitsbereich.
 
 Notation:
 
@@ -286,6 +294,44 @@ void test()
 	}
 }
 
+Qualifizierer-Gültigkeitsbereiche:
+Unter Qualifizierer-Gültigkeitsbereichen versteht man in Jass++ Gültigkeitsbereiche ohne Namen,
+welche nicht als eine weitere Überdeckungsschicht gelten, jedoch sämtliche enthaltenen Code-Elemente (der ersten Ebene)
+als etwas Bestimmtes qualifzieren.
+Dabei muss die Qualifizierung eines eingeschlossenen definierten Objekts von der Syntax gestattet sein.
+Mit folgenden Schlüsselwörtern können solche Qualifizierer-Gültigkeitsbereiche definiert werden:
+Siehe dazu "Zusammenfassung der Qualifizierer" im Abschnitt "Schlüsselwörter".
+
+Die Schlüsselwörter können auch in Kombination verwendet werden, falls dies die Syntax der Sprache
+erlaubt.
+Außerdem können sämtliche (auch selbst definierte) Typen als Qualifizierer verwendet werden.
+Des Weiteren gilt es zu beachten, dass manche Qualifizierer eventuell auch eine andere Art der Zusammenfassung erlauben
+(z. B. Trennung durch Kommata).
+In einem solchen Fall steht es dem Entwickler frei, sich zwischen den beiden Varianten zu entscheiden.
+Rückgabetypen, Parameter, angeforderte Pakete, geerbte Klassen oder Array-Größen können nicht auf eine
+solche Weise für einge Gruppe von Code-Elementen definiert werden!
+
+Notation:
+<Qualifizierer1> <Qualifizierer2> ... <Qualifizierern>
+{
+	<Code-Element-Definition>
+}
+
+Beispiele:
+static const integer
+{
+	ich = 10;
+	du = 10;
+	er = 12;
+}
+
+debug mapinit
+{
+	void bla() {};
+	void bla2() {};
+	void bla3() {};
+}
+
 Variablen:
 Variablen existieren, falls nicht anders angegeben, vom Programmstart bis zum Programmende. Lokale Variablen in Funktionen, sowie Elementvariablen
 von Klassen leben vom Funktionsaufruf bis zum Ende des Funktionsablaufes bzw. von der Erzeugung der Klasseninstanz bis zur Löschung dieser.
@@ -324,8 +370,8 @@ dagegen 0 (siehe Abschnitt Literale).
 
 Operatoren:
 
-Für Bezugsrahmen:
-[<Bezeichner des Bezugsrahmens>].<Bezeichner eines im Bezugsrahmen deklarierten Elements>
+Für Gültigkeitsbereiche:
+[<Bezeichner des Gültigkeitsbereiches>].<Bezeichner eines im Gültigkeitsbereich deklarierten Elements>
 
 Für die Typen integer und real:
 Variable = Ausdruck
@@ -832,7 +878,7 @@ Notation:
 	copy(Klassenname other) Kopierkonstruktur
 	static init() { } Initialisierungsmethode
 
-	[public | protected | private | private protected] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>
+	[public | protected | private | private protected] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>;
 	[public | protected | private | private protected] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
 } globale Instanzen durch Kommata getrennt;
 

@@ -1,3 +1,8 @@
+2010-02-04 Tamino Dauth <tamino@cdauth.de>
+* Improved application tilesetter.
+* Tried some cmake exception handling definitions.
+* Revised Jass++ definition.
+
 2010-02-01 Tamino Dauth <tamino@cdauth.de>
 * Revised Jass++ definition.
 

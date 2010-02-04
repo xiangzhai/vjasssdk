@@ -23,8 +23,8 @@
 
 #include "w3m.hpp"
 #include "shadow.hpp"
-#include "mpq/mpq.hpp"
-#include "mpq/mpqfile.hpp"
+//#include "mpq/mpq.hpp"
+//#include "mpq/mpqfile.hpp"
 #include "blp/blp.hpp"
 #include "../internationalisation.hpp"
 
@@ -59,7 +59,7 @@ std::streamsize W3m::read(class mpq::Mpq *mpq) throw (class Exception)
 }
 
 std::streamsize W3m::read(std::istream &istream) throw (class Exception)
-{
+{/*
 	std::streamsize bytes = 0;
 	struct Header header;
 	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
@@ -123,6 +123,9 @@ std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 	}
 	
 	return bytes;
+	*/
+	
+	return 0;
 }
 
 std::streamsize W3m::write(std::ostream &ostream) throw (class Exception)

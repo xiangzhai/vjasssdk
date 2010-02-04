@@ -19,12 +19,48 @@
  ***************************************************************************/
 
 #include <iostream>
+#include <fstream>
 #include <cstring>
 
 #include <boost/format.hpp>
 
 #include "../internationalisation.hpp"
 #include "../map/environment.hpp"
+
+using namespace wc3lib::map;
+
+static struct Command
+{
+	std::string name;
+	char shortName;
+	std::string help;
+	std::size_t argCount;
+	bool (*callbackFunction)(const struct Command &command, const std::list<std::string> &argParameters);
+};
+
+static class Environment *openedEnvironment = 0;
+
+bool commandOpen(const struct Command &command, const std::list<std::string> &argParameters)
+{
+	class Environment *environment = new Environment(0);
+	std::ifstream ifstream(argParameters.front());
+	
+	try
+	{
+		std::cout << boost::format(_("Read %1% bytes.")) % environment->read(ifstream) << std::endl;
+	}
+	catch (class Exception &exception)
+	{
+		delete environment;
+		std::cerr << boost::format(_("Error while reading environment file \"%1%\".")) % argParameters.front() << std::endl;
+		
+		return false;
+	}
+	
+	openedEnvironment = environment;
+	
+	return true;
+}
 
 int main(int argc, char *argv[])
 {
@@ -49,20 +85,18 @@ int main(int argc, char *argv[])
 	"59 Temple Place - Suite 330, Boston, MA  02111-1307, USA."
 	) << std::endl;
 	
-	static const std::size_t commandsCount = 10;
+	std::list<struct Command> commands;
 	
-	struct Command
+	struct Command openCommand =
 	{
-		char *name;
-		char shortName;
-		char *help;
-		std::size_t argCount;
-		bool (*callbackFunction)(const struct Command &command, const std::list<std::string> &argParameters);
-	} commands[commandsCount] =
-		{
-			
-		}
-	;
+		.name = "open",
+		.shortName = 'o',
+		.help = _("Opens a .w3e environment file."),
+		.argCount = 1,
+		.call = 0
+	};
+	
+	commands.push_back(openCommand);
 	
 	std::cout << _("Usage 1: <command name/command short name> <argument1> <argument2> ... <argumentn>") << std::endl;
 	std::cout << _("Usage 2: <command name/command short name> help") << std::endl;
@@ -75,24 +109,49 @@ int main(int argc, char *argv[])
 	do
 	{
 		std::getline(std::cin, input);
-		std::string command(strtok(input.c_str(), " "));
+		std::string commandName(strtok(input.c_str(), " "));
 		bool found = false;
 		
-		for (std::size_t i = 0; i < commandsCount; ++i)
+		BOOST_FOREACH(struct Command &command, commands)
 		{
-			if (command == commands[i].name || (command.size() == 1 && command[0] == commands[i].shortName))
+			if (commandName == command.name || (commandName.size() == 1 && commandName[0] == command.shortName))
 			{
 				found = true;
+				bool run = true;
 				std::list<std::string> arguments;
 				
-				for (std::size_t i = 0; i < commands[i].argCount; ++i)
+				for (std::size_t i = 0; i < command.argCount < 1 ? 1 : command.argCount; ++i)
 				{
-					//char *
+					std::string argument(strtok(input.c_str(), " ");
+					
+					if (argument.empty())
+					{
+						run = false;
+						std::cerr << boost::format(_("Error: Missing argument %1%.")) % i + 1 << std::endl;
+						
+						break;
+					}
+					else if (i == 0 && argument == "help")
+					{
+						run = false;
+						std::cout << boost::format(_("Command help:\n%1%")) % command.help << std::endl;
+						
+						break;
+					}
+					
+					arguments.push_back(argument);
 				}
 
-				//bool (*callbackFunction)(const struct Command &command, const std::list<std::string> &argParameters);
-				
-				/// @todo Call callback function with arguments or show help!
+				if (run)
+				{
+					if (command.callbackFunction != 0)
+					{
+						if (!command.callbackFunction(command, arguments))
+							std::cerr << _("Error occured while program was running command.") << std::endl;
+					}
+					else
+						std::cerr << _("Command has no function.") << std::endl;
+				}
 				
 				break;
 			}
@@ -102,6 +161,9 @@ int main(int argc, char *argv[])
 			std::cout << _("Unknown command.") << std::endl;
 	}
 	while (input != "quit" && input != "q");
+	
+	if (openedEnvironment != 0)
+		delete openedEnvironment;
 	
 	return EXIT_SUCCESS;
 }

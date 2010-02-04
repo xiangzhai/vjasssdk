@@ -120,12 +120,12 @@ w3x
 
 inline int32 W3m::width() const
 {
-	this->m_environment->mapWidth();
+	return this->m_environment->mapWidth();
 }
 
 inline int32 W3m::height() const
 {
-	this->m_environment->mapHeight();
+	return this->m_environment->mapHeight();
 }
 
 }
