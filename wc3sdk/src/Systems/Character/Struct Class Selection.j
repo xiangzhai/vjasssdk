@@ -26,15 +26,15 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		private static string m_textIntelligence
 		private static string m_textAbilities
 		private static string m_textDescription
-		//static members
+		// static members
 		private static integer m_stack //required for the start game action
-		//start members
+		// construction members
 		private player m_user
 		private real m_startX
 		private real m_startY
 		private real m_startFacing
 		private AClassSelectionSelectClassAction m_selectClassAction
-		//members
+		// members
 		private unit m_classUnit
 		private trigger m_leaveTrigger
 		private trigger m_refreshTrigger
@@ -324,15 +324,15 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 		public static method create takes player user, real startX, real startY, real startFacing, AClassSelectionSelectClassAction selectClassAction returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_user = user
 			set this.m_startFacing = startFacing
 			set this.m_startX = startX
 			set this.m_startY = startY
 			set this.m_selectClassAction = selectClassAction
-			//members
+			// members
 			set this.m_class = thistype.m_firstClass
-			//static members
+			// static members
 			set thistype.m_stack = thistype.m_stack + 1
 
 			call this.createLeaveTrigger()
@@ -380,9 +380,9 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		endmethod
 
 		private method onDestroy takes nothing returns nothing
-			//start members
+			// construction members
 			set this.m_user = null
-			//static members
+			// static members
 			set thistype.m_stack = thistype.m_stack - 1
 
 			call this.destroyLeaveTrigger()
@@ -393,7 +393,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call this.destroyInfoSheet()
 			call this.removeClassUnit()
 
-			if (thistype.m_stack == 0) then
+			if (thistype.m_stack == 0 and thistype.m_startGameAction != 0) then
 				call thistype.m_startGameAction.execute()
 			endif
 		endmethod

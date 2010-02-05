@@ -1,6 +1,5 @@
 library AStructSystemsCharacterBuff requires AModuleCoreGeneralSystemStruct, AStructCoreGeneralHashTable, AStructCoreGeneralVector
 
-	
 	struct ABuff
 		implement ASystemStruct
 
@@ -11,6 +10,13 @@ library AStructSystemsCharacterBuff requires AModuleCoreGeneralSystemStruct, ASt
 		//members
 		private AUnitVector m_targets
 		private integer m_index
+
+		/**
+		* Use this method to check whether specific buff effects should be removed from unit.
+		*/
+		public method count takes unit whichUnit returns integer
+			return AHashTable.global().handleInteger(whichUnit, "ABuff" + I2S(this) + "Count")
+		endmethod
 
 		public method add takes unit whichUnit returns integer
 			local integer count = this.count(whichUnit)
@@ -33,13 +39,6 @@ library AStructSystemsCharacterBuff requires AModuleCoreGeneralSystemStruct, ASt
 				call AHashTable.global().removeHandleInteger(whichUnit, "ABuff" + I2S(this) + "Count")
 				call UnitRemoveAbility(whichUnit, this.m_buffId)
 			endif
-		endmethod
-
-		/**
-		* Use this method to check whether specific buff effects should be removed from unit.
-		*/
-		public method count takes unit whichUnit returns integer
-			return AHashTable.global().handleInteger(whichUnit, "ABuff" + I2S(this) + "Count")
 		endmethod
 
 		public static method create takes integer buffId returns thistype

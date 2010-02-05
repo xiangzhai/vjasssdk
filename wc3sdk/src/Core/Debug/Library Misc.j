@@ -24,8 +24,20 @@ static if (DEBUG_MODE) then
 		call Cheat("DebugMsg: " + message) //JNGP
 	endfunction
 
+	function PrintIf takes boolean condition, string message returns nothing
+		if (condition) then
+			call Print(message)
+		endif
+	endfunction
+
 	function PrintFunctionError takes string functionName, string message returns nothing
 		call Print("Function error in function \"" + functionName + "\": " + message)
+	endfunction
+
+	function PrintFunctionErrorIf takes boolean condition, string functionName, string message returns nothing
+		if (condition) then
+			call PrintFunctionError(functionName, message)
+		endif
 	endfunction
 endif
 
@@ -40,16 +52,40 @@ static if (DEBUG_MODE) then
 			call Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message)
 		endmethod
 
+		public method printIf takes boolean condition, string message returns nothing
+			if (condition) then
+				call this.print(message)
+			endif
+		endmethod
+
 		public method printMethodError takes string methodName, string message returns nothing
 			call Print($STRUCTNAME$ + " - " + I2S(this) + ": Method error in method \"" + methodName + "\": " + message)
+		endmethod
+
+		public method printMethodErrorIf takes boolean condition, string methodName, string message returns nothing
+			if (condition) then
+				call this.printMethodError(methodName, message)
+			endif
 		endmethod
 
 		private static method staticPrint takes string message returns nothing
 			call Print($STRUCTNAME$ + ": " + message)
 		endmethod
 
-		private static method staticMethodErrorPrint takes string methodName, string message returns nothing
+		private static method staticPrintIf takes boolean condition, string message returns nothing
+			if (condition) then
+				call thistype.staticPrint(message)
+			endif
+		endmethod
+
+		private static method staticPrintMethodError takes string methodName, string message returns nothing
 			call Print($STRUCTNAME$ + ": Method error in method \"" + methodName + "\": " + message)
+		endmethod
+
+		private static method staticPrintMethodErrorIf takes boolean condition, string methodName, string message returns nothing
+			if (condition) then
+				call thistype.staticPrintMethodError(methodName, message)
+			endif
 		endmethod
 endif
 	//! endtextmacro

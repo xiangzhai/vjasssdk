@@ -168,18 +168,11 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 							set column = 0
 						endif
 						set thistype.m_experienceBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_experienceLength, 0.0, true, 0.0, 0.0, 0, 0)
-						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_experienceBar[i].firstFreeField())
-						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
-						//call MultiboardReleaseItem(multiboardItem)
-						call MultiboardSetItemStyle(multiboardItem, false, true)
-						call MultiboardReleaseItem(multiboardItem)
-						//set separator icon
-						set multiboardItem = null
 					endif
 
 					if (thistype.m_hitPointsLength > 0) then
 						if (thistype.m_experienceLength > 0) then
-							set column = thistype.m_experienceBar[i].firstFreeField() + 1
+							set column = thistype.m_experienceBar[i].firstFreeField()
 						elseif (thistype.firstColumnExists()) then
 							set column = 1
 						else
@@ -187,21 +180,13 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 						endif
 
 						set thistype.m_hitPointsBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_hitPointsLength, 0.0, true, 0.0, 0.0, 0, 0)
-
-						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, thistype.m_hitPointsBar[i].firstFreeField())
-						//call MultiboardSetItemWidth(multiboardItem, 0.08) /// @todo check it
-						//call MultiboardReleaseItem(multiboardItem)
-						call MultiboardSetItemStyle(multiboardItem, false, true)
-						call MultiboardReleaseItem(multiboardItem)
-						//set separator icon
-						set multiboardItem = null
 					endif
 
 					if (thistype.m_manaLength > 0) then
 						if (thistype.m_hitPointsLength > 0) then
-							set column = thistype.m_hitPointsBar[i].firstFreeField() + 1
+							set column = thistype.m_hitPointsBar[i].firstFreeField()
 						elseif (thistype.m_experienceLength > 0) then
-							set column = thistype.m_experienceBar[i].firstFreeField() + 1
+							set column = thistype.m_experienceBar[i].firstFreeField()
 						elseif (thistype.firstColumnExists()) then
 							set column = 1
 						else
@@ -345,11 +330,13 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 		endmethod
 
 		public static method show takes nothing returns nothing
+			call thistype.triggerActionRefresh()
 			call EnableTrigger(thistype.m_refreshTrigger)
 			call MultiboardDisplay(thistype.m_multiboard, true)
 		endmethod
 
 		public static method showForPlayer takes player user returns nothing
+			call thistype.triggerActionRefresh()
 			call ShowMultiboardForPlayer(user, thistype.m_multiboard, true)
 		endmethod
 

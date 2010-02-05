@@ -82,7 +82,7 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 			local timer expiredTimer = GetExpiredTimer()
 			local thistype this = AHashTable.global().handleInteger(expiredTimer, "this")
 			call this.revive()
-			call this.end()
+			call this.end.evaluate()
 			set expiredTimer = null
 		endmethod
 

@@ -60,12 +60,22 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 
 		//methods
 
-		public method setLength takes real length returns nothing
-			call this.scale((length / this.length()))
+		/**
+		* Multiplies all values with the value of @param factor.
+		* If @param factor is smaller than 1 and bigger or equal to 0 the vector will shorten otherwise it will lengthen.
+		*/
+		public method scale takes real factor returns nothing
+			set this.m_x = this.m_x * factor
+			set this.m_y = this.m_y * factor
+			set this.m_z = this.m_z * factor
 		endmethod
 
 		public method length takes nothing returns real
 			return SquareRoot(Pow(this.m_x, 2.0) + Pow(this.m_y, 2.0) + Pow(this.m_z, 2.0))
+		endmethod
+
+		public method setLength takes real length returns nothing
+			call this.scale((length / this.length()))
 		endmethod
 
 		/**
@@ -126,16 +136,6 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Multiplies all values with the value of @param factor.
-		* If @param factor is smaller than 1 and bigger or equal to 0 the vector will shorten otherwise it will lengthen.
-		*/
-		public method scale takes real factor returns nothing
-			set this.m_x = this.m_x * factor
-			set this.m_y = this.m_y * factor
-			set this.m_z = this.m_z * factor
-		endmethod
-
-		/**
 		* Adds scaled vector @param vector which is scaled by value @param factor.
 		* Note that vector @param vector won't be changed!
 		* @author peq
@@ -187,8 +187,8 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		*/
 		public method terrainNormal takes real x, real y, real sampleRadius returns nothing
 			local real array z
-			local thistype vectorX = thistype.create(0.0, 0.0, 0.0)
-			local thistype vectorY = thistype.create(0.0, 0.0, 0.0)
+			local thistype vectorX = thistype.create.evaluate(0.0, 0.0, 0.0)
+			local thistype vectorY = thistype.create.evaluate(0.0, 0.0, 0.0)
 			//Z
 			set z[0] = GetTerrainZ((x - sampleRadius), y)
 			set z[1] = GetTerrainZ((x + sampleRadius), y)

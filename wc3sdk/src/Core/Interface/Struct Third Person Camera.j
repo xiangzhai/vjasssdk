@@ -101,7 +101,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			if (GetLocalPlayer() == this.m_player) then
 				call StopCamera()
 				if (whichUnit != null) then
-					call this.applyCam(firstPan)
+					call this.applyCam.evaluate(firstPan)
 				endif
 			endif
 		endmethod
@@ -134,7 +134,7 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 
 		private method applyCam takes real duration returns nothing
 			local real aoa = GetCameraField(CAMERA_FIELD_ANGLE_OF_ATTACK) - 2 * bj_PI
-			local real offset = thistype.interpolateOffset(aoa)
+			local real offset = thistype.interpolateOffset.evaluate(aoa)
 			local real newaoa
 			local real maxd
 			local real tarz
@@ -148,19 +148,19 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 
 			if (thistype.m_useArrowKeys) then
 				if (thistype.inverted) then
-					set this.m_camRot = thistype.cappedReal(this.m_camRot + (AArrowKeys.playerArrowKeys(this.m_player).horizontal() + AArrowKeys.playerArrowKeys(this.m_player).horizontalQuickPress()) * thistype.rotInterval, -thistype.maxRot, thistype.maxRot)
+					set this.m_camRot = thistype.cappedReal.evaluate(this.m_camRot + (AArrowKeys.playerArrowKeys(this.m_player).horizontal() + AArrowKeys.playerArrowKeys(this.m_player).horizontalQuickPress()) * thistype.rotInterval, -thistype.maxRot, thistype.maxRot)
 				else
-					set this.m_camRot = thistype.cappedReal(this.m_camRot - (AArrowKeys.playerArrowKeys(this.m_player).horizontal() + AArrowKeys.playerArrowKeys(this.m_player).horizontalQuickPress()) * thistype.rotInterval, -thistype.maxRot, thistype.maxRot)
+					set this.m_camRot = thistype.cappedReal.evaluate(this.m_camRot - (AArrowKeys.playerArrowKeys(this.m_player).horizontal() + AArrowKeys.playerArrowKeys(this.m_player).horizontalQuickPress()) * thistype.rotInterval, -thistype.maxRot, thistype.maxRot)
 				endif
 				call AArrowKeys.playerArrowKeys(this.m_player).setHorizontalQuickPress(0)
-				set this.m_camAoa = thistype.cappedReal(this.m_camAoa - (AArrowKeys.playerArrowKeys(this.m_player).vertical() + AArrowKeys.playerArrowKeys(this.m_player).verticalQuickPress()) * thistype.aoaInterval, thistype.minAoa, thistype.maxAoa)
+				set this.m_camAoa = thistype.cappedReal.evaluate(this.m_camAoa - (AArrowKeys.playerArrowKeys(this.m_player).vertical() + AArrowKeys.playerArrowKeys(this.m_player).verticalQuickPress()) * thistype.aoaInterval, thistype.minAoa, thistype.maxAoa)
 				call AArrowKeys.playerArrowKeys(this.m_player).setVerticalQuickPress(0)
 			endif
 
 			call SetCameraField(CAMERA_FIELD_ROTATION, GetUnitFacing(this.m_unit) + this.m_camRot, duration)
 			call SetCameraField(CAMERA_FIELD_FIELD_OF_VIEW, thistype.fieldOfView, duration)
 			call SetCameraField(CAMERA_FIELD_FARZ, thistype.farZ, duration)
-			call SetCameraField(CAMERA_FIELD_TARGET_DISTANCE, thistype.interpolateDistance(aoa), duration)
+			call SetCameraField(CAMERA_FIELD_TARGET_DISTANCE, thistype.interpolateDistance.evaluate(aoa), duration)
 
 			call PanCameraToTimed(GetUnitX(this.m_unit) + offset * Cos(bj_DEGTORAD*GetUnitFacing(this.m_unit)), GetUnitY(this.m_unit) + offset * Sin(bj_DEGTORAD*GetUnitFacing(this.m_unit)), duration)
 

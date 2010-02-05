@@ -65,9 +65,9 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			call PauseUnit(this.m_unit, not movable)
 			call SetUnitInvulnerable(this.m_unit, not movable)
 			if (movable) then
-				call this.enableMovableSystems()
+				call this.enableMovableSystems.evaluate()
 			else
-				call this.disableMovableSystems()
+				call this.disableMovableSystems.evaluate()
 			endif
 		endmethod
 
@@ -194,7 +194,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
 				if (user != this.m_player) then
-					call thistype.playerCharacter(user).displayMessage(messageType, message)
+					call thistype.playerCharacter.evaluate(user).displayMessage(messageType, message)
 				endif
 				set user = null
 				set i = i + 1
@@ -387,7 +387,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				call this.m_revival.store(cache, missionKey, "Revival")
 			endif
 			if (thistype.m_useInventorySystem) then
-				call this.m_inventory.store(cache, missionKey, "Inventory")
+				call this.m_inventory.store.evaluate(cache, missionKey, "Inventory")
 			endif
 			if (thistype.m_useTalkLogSystem) then
 				call this.m_talkLog.store(cache, missionKey, "TalkLog")
@@ -429,7 +429,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				call this.m_revival.restore(cache, missionKey, "Revival")
 			endif
 			if (thistype.m_useInventorySystem) then
-				call this.m_inventory.restore(cache, missionKey, "Inventory")
+				call this.m_inventory.restore.evaluate(cache, missionKey, "Inventory")
 			endif
 			if (thistype.m_useTalkLogSystem) then
 				call this.m_talkLog.restore(cache, missionKey, "TalkLog")
@@ -444,7 +444,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			set i = 0
 			loop
 				exitwhen (i == spellsCount)
-				call this.m_spells.pushBack(ASpell.createRestored(this, cache, missionKey, "Spell" + I2S(i)))
+				call this.m_spells.pushBack(ASpell.createRestored.evaluate(this, cache, missionKey, "Spell" + I2S(i)))
 				set i = i + 1
 			endloop
 		endmethod
@@ -467,7 +467,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_spells.size())
-				if (ASpell(this.m_spells[i]).ability() == abilityId) then
+				if (ASpell(this.m_spells[i]).ability.evaluate() == abilityId) then
 					return ASpell(this.m_spells[i])
 				endif
 				set i = i + 1
@@ -477,19 +477,19 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 
 		private method enableMovableSystems takes nothing returns nothing
 			if (thistype.m_useViewSystem and this.m_view.enableAgain()) then
-				call this.m_view.enable()
+				call this.m_view.enable.evaluate()
 			endif
 			if (thistype.m_useFocusSystem and this.m_focus.enableAgain()) then
-				call this.m_focus.enable()
+				call this.m_focus.enable.evaluate()
 			endif
 			if (thistype.m_useMovementSystem and this.m_movement.enableAgain()) then
-				call this.m_movement.enable()
+				call this.m_movement.enable.evaluate()
 			endif
 			if (thistype.m_useFightSystem and this.m_fight.enableAgain()) then
-				call this.m_fight.enable()
+				call this.m_fight.enable.evaluate()
 			endif
 			if (thistype.m_useRevivalSystem and this.m_revival.enableAgain()) then
-				call this.m_revival.enable()
+				call this.m_revival.enable.evaluate()
 			endif
 			/*
 			inventory and talk log systems aren't movable systems!
@@ -504,19 +504,19 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 
 		private method disableMovableSystems takes nothing returns nothing
 			if (thistype.m_useViewSystem and this.m_view.isEnabled()) then
-				call this.m_view.disable()
+				call this.m_view.disable.evaluate()
 			endif
 			if (thistype.m_useFocusSystem and this.m_focus.isEnabled()) then
-				call this.m_focus.disable()
+				call this.m_focus.disable.evaluate()
 			endif
 			if (thistype.m_useMovementSystem and this.m_movement.isEnabled()) then
-				call this.m_movement.disable()
+				call this.m_movement.disable.evaluate()
 			endif
 			if (thistype.m_useFightSystem and this.m_fight.isEnabled()) then
-				call this.m_fight.disable()
+				call this.m_fight.disable.evaluate()
 			endif
 			if (thistype.m_useRevivalSystem and this.m_revival.isEnabled()) then
-				call this.m_revival.disable()
+				call this.m_revival.disable.evaluate()
 			endif
 			/*
 			inventory and talk log systems aren't movable systems!
@@ -572,25 +572,25 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 
 		private method createSystems takes nothing returns nothing
 			if (thistype.m_useViewSystem) then
-				set this.m_view = AView.create(this)
+				set this.m_view = AView.create.evaluate(this)
 			endif
 			if (thistype.m_useFocusSystem) then
-				set this.m_focus = AFocus.create(this)
+				set this.m_focus = AFocus.create.evaluate(this)
 			endif
 			if (thistype.m_useMovementSystem) then
-				set this.m_movement = AMovement.create(this)
+				set this.m_movement = AMovement.create.evaluate(this)
 			endif
 			if (thistype.m_useFightSystem) then
-				set this.m_fight = AFight.create(this)
+				set this.m_fight = AFight.create.evaluate(this)
 			endif
 			if (thistype.m_useRevivalSystem) then
-				set this.m_revival = ARevival.create(this)
+				set this.m_revival = ARevival.create.evaluate(this)
 			endif
 			if (thistype.m_useInventorySystem) then
-				set this.m_inventory = AInventory.create(this)
+				set this.m_inventory = AInventory.create.evaluate(this)
 			endif
 			if (thistype.m_useTalkLogSystem) then
-				set this.m_talkLog = ATalkLog.create(this)
+				set this.m_talkLog = ATalkLog.create.evaluate(this)
 			endif
 		endmethod
 
@@ -1069,7 +1069,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				exitwhen (i == bj_MAX_PLAYERS)
 				set user = Player(i)
 				if (thistype.playerCharacter(user) != 0) then
-					call shrine.enableForCharacter(thistype.playerCharacter(user), showMessage)
+					call shrine.enableForCharacter.evaluate(thistype.playerCharacter(user), showMessage)
 				endif
 				set user = null
 				set i = i + 1

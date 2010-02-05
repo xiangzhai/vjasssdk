@@ -20,7 +20,7 @@ library AStructCoreInterfaceIndicator requires optional ALibraryCoreDebugMisc, A
 		private trigger m_refreshTrigger //= null
 		private real m_elapsedTime //= 0.00 //Vergangene Zeit
 		private boolean m_firstTime //= true
-		
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AIndicator\"")
 
 		//dynamic member methods
@@ -99,7 +99,7 @@ library AStructCoreInterfaceIndicator requires optional ALibraryCoreDebugMisc, A
 
 		public method disable takes nothing returns nothing
 			call DisableTrigger(this.m_refreshTrigger)
-			call this.reset()
+			call this.reset.evaluate()
 		endmethod
 
 		//private methods

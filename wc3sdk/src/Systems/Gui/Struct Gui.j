@@ -69,7 +69,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		*/
 		public method setOnPressShortcutAction takes integer shortcut, AGuiOnPressShortcutAction onPressShortcutAction, integer id returns nothing
 			if ((shortcut >= 0) and (shortcut < thistype.m_maxSpecialShortcuts)) then
-				call this.createSpecialShortcutTrigger(shortcut)
+				call this.createSpecialShortcutTrigger.evaluate(shortcut)
 			endif
 			set this.m_onPressShortcutAction[shortcut] = onPressShortcutAction
 			set this.m_onPressShortcutActionId[shortcut] = id
@@ -119,7 +119,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		endmethod
 
 		public method showMainWindowByIndex takes integer index returns nothing
-			call AMainWindow(this.m_mainWindows[index]).show()
+			call AMainWindow(this.m_mainWindows[index]).show.evaluate()
 		endmethod
 
 		public method enableShortcuts takes nothing returns nothing
@@ -128,7 +128,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			call ShowUnit(this.m_shortcutHandler, true)
 			call SelectUnitForPlayerSingle(this.m_shortcutHandler, this.m_player)
 			call EnableTrigger(this.m_shortcutHandleTrigger)
-			call this.enableSpecialShortcutTriggers()
+			call this.enableSpecialShortcutTriggers.evaluate()
 			set i = 0
 			loop
 				exitwhen (i == thistype.m_maxShortcuts)
@@ -146,7 +146,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			call ShowUnit(this.m_shortcutHandler, false)
 			call SelectUnitRemoveForPlayer(this.m_shortcutHandler, this.m_player)
 			call DisableTrigger(this.m_shortcutHandleTrigger)
-			call this.disableSpecialShortcutTriggers()
+			call this.disableSpecialShortcutTriggers.evaluate()
 
 			set i = 0
 			loop
@@ -190,7 +190,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		/// @todo Friend relation to @struct AMainWindow, do not use!
 		public method hideShownMainWindowAndSetNew takes AMainWindow mainWindow returns nothing
 			if (this.m_shownMainWindow != 0) then
-				call this.m_shownMainWindow.hide()
+				call this.m_shownMainWindow.hide.evaluate()
 			endif
 			set this.m_shownMainWindow = mainWindow
 		endmethod

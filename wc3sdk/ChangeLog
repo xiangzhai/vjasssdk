@@ -1,4 +1,24 @@
-2009-01-01 Tamino Dauth <tamino@cdauth.de>
+2010-02-05 Tamino Dauth <tamino@cdauth.de>
+* Init video actions is called by .evaluate now.
+
+2010-02-03 Tamino Dauth <tamino@cdauth.de>
+* Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
+
+2010-02-01 Tamino Dauth <tamino@cdauth.de>
+* Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
+* Improved struct APvp.
+
+2010-01-31 Tamino Dauth <tamino@cdauth.de>
+* Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
+* Added functions PrintIf, PrintFunctionErrorIf and methods of text macro A_STRUCT_DEBUG printIf, printMethodErrorIf and staticPrintMethodErrorIf.
+
+2010-01-30 Tamino Dauth <tamino@cdauth.de>
+* Added several grassland texture pathes to the preload function.
+
+2010-01-02 Tamino Dauth <tamino@cdauth.de>
+* Improved struct ACharactersScheme.
+
+2010-01-01 Tamino Dauth <tamino@cdauth.de>
 * Added several human and orc creatures models.
 * Fixed AClassSelection user interface bug.
 * Fixed ACharactersScheme free unallocated instance bug.

@@ -78,74 +78,6 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 				return this.empty()
 			endmethod
 
-			public method resize takes integer size, $ELEMENTTYPE$ newContent returns nothing
-				local integer i
-				if (size < this.m_size) then
-					set i = this.m_size
-					loop
-						exitwhen (i == size)
-						call this.popBack()
-						set i = i - 1
-					endloop
-				elseif (size > this.m_size) then
-					set i = size
-					loop
-						exitwhen (i == this.m_size)
-						call this.pushBack(newContent)
-						set i = i + 1
-					endloop
-				//else
-					//do nothing
-				endif
-			endmethod
-
-			/// Assigns new content to the container, dropping all the elements contained in the container object before the call and replacing them by those specified by the parameters:
-			public method assign takes integer number, $ELEMENTTYPE$ content returns nothing
-				//push back number times with content content
-				local integer i = 0
-				call this.clear()
-				loop
-					exitwhen (i == number)
-					call this.pushBack(content)
-					set i = i + 1
-				endloop
-			endmethod
-
-			/**
-			* Inserts a new element at the beginning of the list, right before its current first element. The content of this new element is initialized to @param value.
-			* This effectively increases the list size by one.
-			*/
-			public method pushFront takes $ELEMENTTYPE$ value returns nothing
-				call this.insert(0, value)
-			endmethod
-
-			/**
-			* Removes the first element in the list container, effectively reducing the list size by one.
-			* This doesn't call the removed element's destructor!
-			*/
-			public method popFront takes nothing returns nothing
-				call this.erase(0)
-			endmethod
-
-			/**
-			* Adds a new element at the end of the list, right after its current last
-			* element. The content of this new element is initialized to @param value.
-			* This effectively increases the list size by one.
-			*/
-			public method pushBack takes $ELEMENTTYPE$ value returns nothing
-				set this.m_element[this.m_size] = value
-				set this.m_size = this.m_size + 1
-			endmethod
-
-			/**
-			* Removes the last element in the list container, effectively reducing the list size by one.
-			* This calls the removed element's destructor.
-			*/
-			public method popBack takes nothing returns nothing
-				set this.m_element[this.m_size - 1] = $NULLVALUE$
-				set this.m_size = this.m_size - 1
-			endmethod
-
 			/**
 			* The list container is extended by inserting new elements before the element at position @param position with value @param value.
 			* This effectively increases the container size by @param number.
@@ -160,8 +92,8 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 				debug elseif (number <= 0 or position + number > this.m_size) then
 					debug call Print("Wrong number: " + I2S(number) + ".")
 					debug return
-				debug elseif (this.m_size + number > thistype.maxSize()) then
-					debug call Print("Size would be too high: " + I2S(this.m_size + number) + ". Maximum size is: " + I2S(thistype.maxSize()) + ".")
+				debug elseif (this.m_size + number > thistype.maxSize.evaluate()) then
+					debug call Print("Size would be too high: " + I2S(this.m_size + number) + ". Maximum size is: " + I2S(thistype.maxSize.evaluate()) + ".")
 					debug return
 				debug endif
 				loop
@@ -209,6 +141,85 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			endmethod
 
 			/**
+			* Inserts a new element at the beginning of the list, right before its current first element. The content of this new element is initialized to @param value.
+			* This effectively increases the list size by one.
+			*/
+			public method pushFront takes $ELEMENTTYPE$ value returns nothing
+				call this.insert(0, value)
+			endmethod
+
+			/**
+			* Removes the first element in the list container, effectively reducing the list size by one.
+			* This doesn't call the removed element's destructor!
+			*/
+			public method popFront takes nothing returns nothing
+				call this.erase(0)
+			endmethod
+
+			/**
+			* Adds a new element at the end of the list, right after its current last
+			* element. The content of this new element is initialized to @param value.
+			* This effectively increases the list size by one.
+			*/
+			public method pushBack takes $ELEMENTTYPE$ value returns nothing
+				set this.m_element[this.m_size] = value
+				set this.m_size = this.m_size + 1
+			endmethod
+
+			/**
+			* Removes the last element in the list container, effectively reducing the list size by one.
+			* This calls the removed element's destructor.
+			*/
+			public method popBack takes nothing returns nothing
+				set this.m_element[this.m_size - 1] = $NULLVALUE$
+				set this.m_size = this.m_size - 1
+			endmethod
+
+			public method resize takes integer size, $ELEMENTTYPE$ newContent returns nothing
+				local integer i
+				if (size < this.m_size) then
+					set i = this.m_size
+					loop
+						exitwhen (i == size)
+						call this.popBack()
+						set i = i - 1
+					endloop
+				elseif (size > this.m_size) then
+					set i = size
+					loop
+						exitwhen (i == this.m_size)
+						call this.pushBack(newContent)
+						set i = i + 1
+					endloop
+				//else
+					//do nothing
+				endif
+			endmethod
+
+			/// All the elements in the vector container are dropped: they are removed from the vector container, leaving it with a size of 0.
+			public method clear takes nothing returns nothing
+				local integer i = 0
+				loop
+					exitwhen (i == this.m_size)
+					set this.m_element[i] = $NULLVALUE$
+					set i = i + 1
+				endloop
+				set this.m_size = 0
+			endmethod
+
+			/// Assigns new content to the container, dropping all the elements contained in the container object before the call and replacing them by those specified by the parameters:
+			public method assign takes integer number, $ELEMENTTYPE$ content returns nothing
+				//push back number times with content content
+				local integer i = 0
+				call this.clear()
+				loop
+					exitwhen (i == number)
+					call this.pushBack(content)
+					set i = i + 1
+				endloop
+			endmethod
+
+			/**
 			* Exchanges the content of the vector by the content of @param vector, which is another vector object containing elements of the same type. Sizes may differ.
 			* After the call to this member function, the elements in this container are those which were in @param vector before the call, and the elements of @param vector are those which were in this.
 			*/
@@ -226,17 +237,6 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 					set vector.m_element[i] = tempValue
 					set i = i + 1
 				endloop
-			endmethod
-
-			/// All the elements in the vector container are dropped: they are removed from the vector container, leaving it with a size of 0.
-			public method clear takes nothing returns nothing
-				local integer i = 0
-				loop
-					exitwhen (i == this.m_size)
-					set this.m_element[i] = $NULLVALUE$
-					set i = i + 1
-				endloop
-				set this.m_size = 0
 			endmethod
 
 			/**
@@ -406,7 +406,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			* The comparisons are perfomed using function @param binaryPredicate, which performs weak strict ordering (this basically means the comparison operation has to be transitive and irreflexive).
 			*/
 			public method sortNumber takes integer position, integer number, $NAME$BinaryPredicate binaryPredicate returns nothing
-				debug if (not this.debugCheckPositionAndNumber(position, number)) then
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
 					debug return
 				debug endif
 				call this.quickSort(position, position + number - 1, binaryPredicate)
@@ -423,7 +423,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 				local integer exitValue = position + (number / 2)
 				local $ELEMENTTYPE$ temp
 				local integer swapindex
-				debug if (not this.debugCheckPositionAndNumber(position, number)) then
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
 					debug return
 				debug endif
 				loop
@@ -452,8 +452,9 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			*/
 			public method copyNumber takes integer position0, integer number0, $NAME$ vector, integer position1 returns integer
 				local integer exitValue = position0 + number0
-				debug call this.debugCheckPositionAndNumber(position0, number0)
-				debug call vector.debugCheckPositionAndNumber(position1, number0)
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position0, number0) or not vector.debugCheckPositionAndNumber.evaluate(position1, number0)) then
+					debug return
+				debug endif
 				loop
 					exitwhen (position0 == exitValue)
 					set vector.m_element[position1] = this.m_element[position0]
@@ -483,7 +484,9 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			public method findNumber takes integer position, integer number, $ELEMENTTYPE$ value returns integer
 				local integer i = position
 				local integer exitValue = position + number
-				debug call this.debugCheckPositionAndNumber(position, number)
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
+					debug return -1
+				debug endif
 				loop
 					exitwhen (i == exitValue)
 					if (this.m_element[i] == value) then
@@ -501,7 +504,9 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			public method findEndNumber takes integer position, integer number, $ELEMENTTYPE$ value returns integer
 				local integer i = position + number - 1
 				local integer exitValue = position - 1
-				debug call this.debugCheckPositionAndNumber(position, number)
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
+					debug return -1
+				debug endif
 				loop
 					exitwhen (i == exitValue)
 					if (this.m_element[i] == value) then
@@ -521,7 +526,9 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			public method findIfNumber takes integer position, integer number, $NAME$UnaryPredicate unaryPredicate returns integer
 				local integer i = position
 				local integer exitValue = position + number
-				debug call this.debugCheckPositionAndNumber(position, number)
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
+					debug return -1
+				debug endif
 				loop
 					exitwhen (i == exitValue)
 					if (unaryPredicate.evaluate(this.m_element[i])) then
@@ -547,7 +554,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			public method forEachNumber takes integer position, integer number, $NAME$UnaryFunction unaryFunction returns nothing
 				local integer i = position
 				local integer exitValue = position + number
-				debug if (not this.debugCheckPositionAndNumber(position, number)) then
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
 					debug return
 				debug endif
 				loop
@@ -565,7 +572,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			public method generateNumber takes integer position, integer number, $NAME$Generator generator returns nothing
 				local integer i = position
 				local integer exitValue = position + number
-				debug if (not this.debugCheckPositionAndNumber(position, number)) then
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
 					debug return
 				debug endif
 				loop

@@ -105,14 +105,14 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		private static APlayerSelection array m_playerSelection[12] /// @todo bj_MAX_PLAYERS
 		private static boolean array m_playerHadDialog[12] /// @todo bj_MAX_PLAYERS
 		private static AIntegerVector m_actorData
-		//start members
+		// construction members
 		private AVideoInitAction m_initAction
 		private AVideoPlayAction m_playAction
 		private AVideoStopAction m_stopAction
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AVideo\"")
 
-		//methods
+		// methods
 
 		public method play takes nothing returns nothing
 			local force playersAll
@@ -134,7 +134,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set playersAll = null
 			set thistype.m_runningVideo = this
 			if (this.m_initAction != 0) then
-				call this.m_initAction.execute(this)
+				call this.m_initAction.evaluate(this)
 			endif
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
@@ -180,7 +180,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 		public static method create takes AVideoInitAction initAction, AVideoPlayAction playAction, AVideoStopAction stopAction returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_initAction = initAction
 			set this.m_playAction = playAction
 			set this.m_stopAction = stopAction
@@ -432,7 +432,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 	/**
 	* Waits @param seconds seconds in video.
-	* Note that this function is like @function PolledWait since it has to be synchronos
+	* Note that this function is like @function PolledWait since it has to be synchronos.
 	* @return Returns true if video was skipped
 	* @see PolledWait
 	*/

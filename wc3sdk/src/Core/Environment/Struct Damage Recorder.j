@@ -45,12 +45,16 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		//members
 
 		public method damageSource takes integer index returns unit
-			debug call this.checkIndex(index)
+			debug if (not this.checkIndex.evaluate(index)) then
+				debug return null
+			debug endif
 			return this.m_damageSources[index]
 		endmethod
 
 		public method damageAmount takes integer index returns real
-			debug call this.checkIndex(index)
+			debug if (not this.checkIndex.evaluate(index)) then
+				debug return 0.0
+			debug endif
 			return this.m_damageAmounts[index]
 		endmethod
 
@@ -100,10 +104,12 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			endif
 		endmethod
 
-		debug private method checkIndex takes integer index returns nothing
+		debug private method checkIndex takes integer index returns boolean
 			debug if (index < 0 or index >= this.m_damageSources.size()) then
 				debug call this.print("Wrong index: " + I2S(index) + ".")
+				debug return false
 			debug endif
+			debug return true
 		debug endmethod
 
 		private static method triggerActionDamaged takes nothing returns nothing
@@ -168,7 +174,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		endmethod
 
 		private static method groupFunctionRegister takes nothing returns nothing
-			call thistype.registerGlobalUnit(GetEnumUnit())
+			call thistype.registerGlobalUnit.evaluate(GetEnumUnit())
 		endmethod
 
 		private static method registerAllUnitsInPlayableMap takes nothing returns nothing
@@ -180,11 +186,11 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		endmethod
 
 		private static method triggerActionEnter takes nothing returns nothing
-			call thistype.registerGlobalUnit(GetTriggerUnit())
+			call thistype.registerGlobalUnit.evaluate(GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionLeave takes nothing returns nothing
-			call thistype.unregisterGlobalUnit(GetTriggerUnit())
+			call thistype.unregisterGlobalUnit.evaluate(GetTriggerUnit())
 		endmethod
 
 		/**
@@ -213,7 +219,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		public static method registerGlobalUnit takes unit whichUnit returns nothing
 			local thistype this
 			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
-				debug call thistype.staticMethodErrorPrint("registerGlobalUnit", "Global damage detection is not enabled.")
+				debug call thistype.staticPrintMethodError("registerGlobalUnit", "Global damage detection is not enabled.")
 				debug return
 			debug endif
 			set this = thistype.create(whichUnit)
@@ -223,7 +229,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 
 		public static method isGlobalUnitRegistered takes unit whichUnit returns boolean
 			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
-				debug call thistype.staticMethodErrorPrint("isGlobalUnitRegistered", "Global damage detection is not enabled.")
+				debug call thistype.staticPrintMethodError("isGlobalUnitRegistered", "Global damage detection is not enabled.")
 				debug return false
 			debug endif
 			return AHashTable.global().hasHandleInteger(whichUnit, "GlobalDamageRecorder")
@@ -231,7 +237,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 
 		public static method unregisterGlobalUnit takes unit whichUnit returns nothing
 			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
-				debug call thistype.staticMethodErrorPrint("unregisterGlobalUnit", "Global damage detection is not enabled.")
+				debug call thistype.staticPrintMethodError("unregisterGlobalUnit", "Global damage detection is not enabled.")
 				debug return
 			debug endif
 			call thistype(AHashTable.global().handleInteger(whichUnit, "GlobalDamageRecorder")).destroy()
@@ -240,7 +246,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 
 		public static method globalUnitDamageRecorder takes unit whichUnit returns thistype
 			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
-				debug call thistype.staticMethodErrorPrint("globalUnitDamageRecorder", "Global damage detection is not enabled.")
+				debug call thistype.staticPrintMethodError("globalUnitDamageRecorder", "Global damage detection is not enabled.")
 				debug return 0
 			debug endif
 			return thistype(AHashTable.global().handleInteger(whichUnit, "GlobalDamageRecorder"))

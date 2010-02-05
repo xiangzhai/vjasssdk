@@ -2,7 +2,7 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 
 	function interface AVoteResultAction takes AVote vote returns nothing
 
-	/// @todo Maybe votes shouldn't be started for all playing players (player groups/forces).
+	/// @todo Maybe votes shouldn't be started for all playing players (use player groups/forces instead).
 	struct AVote
 		//static start members
 		private static real m_messageDuration
@@ -17,19 +17,19 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 		private AStringVector m_choices
 		private AIntegerVector m_choiceVotes
 		private boolean array m_playerHasVoted[12] /// @todo bj_MAX_PLAYERS
-		
+
 		//start members
-		
+
 		public method message takes nothing returns string
 			return this.m_message
 		endmethod
-		
+
 		//method
 
 		private static method dialogButtonActionVote takes ADialogButton dialogButton returns nothing
 			call thistype.m_activeVote.addVote(dialogButton.dialog().player(), dialogButton.index())
 		endmethod
-		
+
 		public method start takes nothing returns nothing
 			local player user
 			local integer i = 0
@@ -53,13 +53,13 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 				set i = i + 1
 			endloop
 		endmethod
-		
+
 		public method addChoice takes string choice returns integer
 			call this.m_choices.pushBack(choice)
 			call this.m_choiceVotes.pushBack(0)
 			return this.m_choices.backIndex()
 		endmethod
-		
+
 		public method addVote takes player user, integer choice returns boolean
 			local integer i
 			local player playingPlayer
@@ -101,7 +101,7 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 			call this.m_resultAction.execute(this)
 			return true
 		endmethod
-		
+
 		public method result takes nothing returns integer
 			local integer result = 0
 			local integer i = 1
@@ -114,7 +114,7 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 			endloop
 			return result
 		endmethod
-		
+
 		public static method create takes string message, AVoteResultAction resultAction returns thistype
 			local thistype this = thistype.allocate()
 			//start members
@@ -123,10 +123,10 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 			//members
 			set this.m_choices = AStringVector.create()
 			set this.m_choiceVotes = AIntegerVector.create()
-			
+
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
 			//members
 			call this.m_choices.destroy()
@@ -141,7 +141,7 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 			//statc members
 			set thistype.m_activeVote = 0
 		endmethod
-		
+
 		public static method activeVote takes nothing returns thistype
 			return thistype.m_activeVote
 		endmethod

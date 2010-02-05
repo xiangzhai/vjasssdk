@@ -135,13 +135,13 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 		// convenience methods
 
 		public method setLocation takes integer memberIndex, location whichLocation returns nothing
-			call this.setX(memberIndex, GetLocationX(whichLocation))
-			call this.setY(memberIndex, GetLocationY(whichLocation))
+			call this.setX.evaluate(memberIndex, GetLocationX(whichLocation))
+			call this.setY.evaluate(memberIndex, GetLocationY(whichLocation))
 		endmethod
 
 		public method setRect takes integer memberIndex, rect whichRect returns nothing
-			call this.setX(memberIndex, GetRectCenterX(whichRect))
-			call this.setY(memberIndex, GetRectCenterX(whichRect))
+			call this.setX.evaluate(memberIndex, GetRectCenterX(whichRect))
+			call this.setY.evaluate(memberIndex, GetRectCenterX(whichRect))
 		endmethod
 
 		// methods
@@ -294,7 +294,7 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 					if (diedUnit == ASpawnPointMember(this.m_members[i]).unit()) then
 						call ASpawnPointMember(this.m_members[i]).placeItem()
 						if (ASpawnPointMember(this.m_members[i]).item() != null and thistype.m_distributeItems) then // item can be null if member has no item types to place
-							call thistype.distributeDroppedItem(ASpawnPointMember(this.m_members[i]).item())
+							call thistype.distributeDroppedItem.evaluate(ASpawnPointMember(this.m_members[i]).item())
 						debug else
 							debug call this.print("Warning: Couldn't place item.")
 						endif
@@ -437,7 +437,7 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		public static method distributeDroppedItem takes item whichItem returns nothing
-			local player itemOwner = thistype.getRandomItemOwner()
+			local player itemOwner = thistype.getRandomItemOwner.evaluate()
 			local player user
 			local integer i = 0
 			call SetItemPlayer(whichItem, itemOwner, true)

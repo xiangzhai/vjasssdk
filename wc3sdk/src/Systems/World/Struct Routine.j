@@ -140,9 +140,9 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		private static method triggerActionTarget takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.destroyTargetTrigger() // destroys this trigger
-			if (this.m_routine.targetAction() != 0) then
-				call this.m_routine.targetAction().execute(this)
+			call this.destroyTargetTrigger.evaluate() // destroys this trigger
+			if (this.m_routine.targetAction.evaluate() != 0) then
+				call this.m_routine.targetAction.evaluate().execute(this)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -168,24 +168,24 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			if (not IsUnitPaused(this.m_unit)) then
-				if (thistype.unitHasNextRoutineUnitData(this.m_unit)) then
-					call thistype.clearNextRoutineUnitDataOfUnit(this.m_unit)
+				if (thistype.unitHasNextRoutineUnitData.evaluate(this.m_unit)) then
+					call thistype.clearNextRoutineUnitDataOfUnit.evaluate(this.m_unit)
 				endif
-				call thistype.setCurrentRoutineUnitDataForUnit(this.m_unit, this)
-				if (this.m_routine.startAction() != 0) then
-					call this.m_routine.startAction().execute(this)
+				call thistype.setCurrentRoutineUnitDataForUnit.evaluate(this.m_unit, this)
+				if (this.m_routine.startAction.evaluate() != 0) then
+					call this.m_routine.startAction.evaluate().execute(this)
 				endif
-				if (this.m_routine.hasTarget()) then
+				if (this.m_routine.hasTarget.evaluate()) then
 					if (RectContainsUnit(this.m_targetRect, this.m_unit)) then
-						if (this.m_routine.targetAction() != 0) then
-							call this.m_routine.targetAction().execute(this)
+						if (this.m_routine.targetAction.evaluate() != 0) then
+							call this.m_routine.targetAction.evaluate().execute(this)
 						endif
 					else
 						call this.createTargetTrigger()
 					endif
 				endif
 			else
-				call thistype.setNextRoutineUnitDataForUnit(this.m_unit, this)
+				call thistype.setNextRoutineUnitDataForUnit.evaluate(this.m_unit, this)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -204,12 +204,12 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		private static method triggerActionEnd takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call thistype.clearCurrentRoutineUnitDataOfUnit(this.m_unit)
-			if (this.m_routine.hasTarget() and this.m_targetTrigger != null) then
-				call this.destroyTargetTrigger()
+			call thistype.clearCurrentRoutineUnitDataOfUnit.evaluate(this.m_unit)
+			if (this.m_routine.hasTarget.evaluate() and this.m_targetTrigger != null) then
+				call this.destroyTargetTrigger.evaluate()
 			endif
-			if (this.m_routine.endAction() != 0) then
-				call this.m_routine.endAction().execute(this)
+			if (this.m_routine.endAction.evaluate() != 0) then
+				call this.m_routine.endAction.evaluate().execute(this)
 			endif
 			set triggeringTrigger = null
 		endmethod
@@ -264,6 +264,38 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			endif
 		endmethod
 
+		public static method currentRoutineUnitDataOfUnit takes unit whichUnit returns thistype
+			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
+		endmethod
+
+		public static method unitHasCurrentRoutineUnitData takes unit whichUnit returns boolean
+			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
+		endmethod
+
+		public static method nextRoutineUnitDataOfUnit takes unit whichUnit returns thistype
+			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
+		endmethod
+
+		public static method unitHasNextRoutineUnitData takes unit whichUnit returns boolean
+			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
+		endmethod
+
+		public static method enableCurrentRoutineUnitDataOfUnit takes unit whichUnit returns boolean
+			local boolean result = thistype.unitHasCurrentRoutineUnitData(whichUnit)
+			if (result) then
+				call thistype.currentRoutineUnitDataOfUnit(whichUnit).enable()
+			endif
+			return result
+		endmethod
+
+		public static method disableCurrentRoutineUnitDataOfUnit takes unit whichUnit returns boolean
+			local boolean result = thistype.unitHasCurrentRoutineUnitData(whichUnit)
+			if (result) then
+				call thistype.currentRoutineUnitDataOfUnit(whichUnit).disable()
+			endif
+			return result
+		endmethod
+
 		public static method hookPauseUnit takes unit whichUnit, boolean flag returns nothing
 			local thistype this
 
@@ -291,15 +323,15 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			// unpause
 			else
 				if (this.isInTime()) then
-					if (this.m_routine.hasTarget()) then
+					if (this.m_routine.hasTarget.evaluate()) then
 						if (this.m_targetTrigger != null) then
 							call EnableTrigger(this.m_endTrigger)
 							if (this.m_targetTrigger != null) then
 								call EnableTrigger(this.m_targetTrigger)
 							endif
 							call IssueRectOrder(this.m_unit, "move", this.m_targetRect)
-						elseif (this.m_routine.isLoop() and this.m_routine.targetAction() != 0) then
-							call this.m_routine.targetAction().execute(this)
+						elseif (this.m_routine.isLoop.evaluate() and this.m_routine.targetAction.evaluate() != 0) then
+							call this.m_routine.targetAction.evaluate().execute(this)
 						endif
 					endif
 				// not in time
@@ -309,55 +341,23 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 					endif
 
 					set this = thistype.nextRoutineUnitDataOfUnit(whichUnit)
-					call thistype.clearNextRoutineUnitDataOfUnit(whichUnit)
-					call thistype.setCurrentRoutineUnitDataForUnit(whichUnit, this)
-					if (this.m_routine.startAction() != 0) then
-						call this.m_routine.startAction().execute(this)
+					call thistype.clearNextRoutineUnitDataOfUnit.evaluate(whichUnit)
+					call thistype.setCurrentRoutineUnitDataForUnit.evaluate(whichUnit, this)
+					if (this.m_routine.startAction.evaluate() != 0) then
+						call this.m_routine.startAction.evaluate().execute(this)
 					endif
 				endif
 			endif
 		endmethod
 
 		public static method hookRemoveUnit takes unit whichUnit returns nothing
-			call ARoutine.removeUnitFromAll(whichUnit)
+			call ARoutine.removeUnitFromAll.evaluate(whichUnit)
 			if (thistype.unitHasCurrentRoutineUnitData(whichUnit)) then
-				call thistype.clearCurrentRoutineUnitDataOfUnit(whichUnit)
+				call thistype.clearCurrentRoutineUnitDataOfUnit.evaluate(whichUnit)
 			endif
 			if (thistype.unitHasNextRoutineUnitData(whichUnit)) then
-				call thistype.clearNextRoutineUnitDataOfUnit(whichUnit)
+				call thistype.clearNextRoutineUnitDataOfUnit.evaluate(whichUnit)
 			endif
-		endmethod
-
-		public static method enableCurrentRoutineUnitDataOfUnit takes unit whichUnit returns boolean
-			local boolean result = thistype.unitHasCurrentRoutineUnitData(whichUnit)
-			if (result) then
-				call thistype.currentRoutineUnitDataOfUnit(whichUnit).enable()
-			endif
-			return result
-		endmethod
-
-		public static method disableCurrentRoutineUnitDataOfUnit takes unit whichUnit returns boolean
-			local boolean result = thistype.unitHasCurrentRoutineUnitData(whichUnit)
-			if (result) then
-				call thistype.currentRoutineUnitDataOfUnit(whichUnit).disable()
-			endif
-			return result
-		endmethod
-
-		public static method currentRoutineUnitDataOfUnit takes unit whichUnit returns thistype
-			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
-		endmethod
-
-		public static method unitHasCurrentRoutineUnitData takes unit whichUnit returns boolean
-			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:currentRoutineUnitData")
-		endmethod
-
-		public static method nextRoutineUnitDataOfUnit takes unit whichUnit returns thistype
-			return AHashTable.global().handleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
-		endmethod
-
-		public static method unitHasNextRoutineUnitData takes unit whichUnit returns boolean
-			return AHashTable.global().hasHandleInteger(whichUnit, "ARoutineUnitData:nextRoutineUnitData")
 		endmethod
 
 		private static method setCurrentRoutineUnitDataForUnit takes unit whichUnit, thistype routineUnitData returns nothing

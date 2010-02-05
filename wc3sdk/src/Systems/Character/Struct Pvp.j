@@ -1,62 +1,40 @@
-library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreStringConversion
+library AStructSystemsCharacterPvp requires ALibraryCoreInterfaceLeaderboard, ALibraryCoreStringConversion, AStructCoreGeneralHashTable, AStructCoreGeneralVector
 
-	function interface APvpOnEnterAction takes APvp pvp, unit usedUnit returns nothing
-	
-	function interface APvpOnLeaveAction takes APvp pvp, unit usedUnit returns nothing
-	
-	function interface APvpOnScoreAction takes APvp pvp, unit scoringUnit, unit dyingUnit, integer newScores returns nothing
-	
-	/// @todo Finish this struct. Strings should be constant values, add init method, add config options for scoring.
+	/// @todo Add config options for scoring.
 	struct APvp
-		//static start members
+		// static initialization members
 		private static boolean m_useLeaderboard
-		//dynamic members
+		private static string m_leaderboardLabelText
+		private static string m_enterText
+		private static string m_leaveText
+		private static string m_killText
+		// dynamic members
 		private ARealVector m_startX
 		private ARealVector m_startY
 		private ARealVector m_startFacing
-		//members
+		// members
 		private AUnitVector m_units
 		private AIntegerVector m_unitScores
 		private leaderboard m_leaderboard
 		private trigger m_killTrigger
-		
-		public method unitEnters takes unit usedUnit returns integer
-			local player owner
-			if (this.m_units.size() == this.m_startX.size()) then
-				return -1
+
+		public method addStartPosition takes real x, real y, real facing returns integer
+			call this.m_startX.pushBack(x)
+			call this.m_startY.pushBack(y)
+			call this.m_startFacing.pushBack(facing)
+			return this.m_startFacing.backIndex()
+		endmethod
+
+		public method removeStartPosition takes integer index returns boolean
+			if (index < 0 or index >= this.m_startX.size()) then
+				return false
 			endif
-			call this.m_units.pushBack(usedUnit)
-			call SetUnitX(usedUnit, this.m_startX[this.m_units.backIndex()])
-			call SetUnitY(usedUnit, this.m_startY[this.m_units.backIndex()])
-			call SetUnitFacing(usedUnit, this.m_startFacing[this.m_units.backIndex()])
-			set owner = GetOwningPlayer(usedUnit)
-			call LeaderboardAddItem(this.m_leaderboard, GetUnitName(usedUnit), 0, owner)
-			set owner = null
-			call this.showMessage(StringArg(tr("%s hat die Arena betreten."), GetUnitName(usedUnit)))
-			return this.m_units.backIndex()
+			call this.m_startX.erase(index)
+			call this.m_startY.erase(index)
+			call this.m_startFacing.erase(index)
+			return true
 		endmethod
-		
-		public method unitLeaves takes unit usedUnit returns nothing
-			local integer index = this.m_units.find(usedUnit)
-			call this.m_units.erase(index)
-			call LeaderboardRemoveItem(this.m_leaderboard, index)
-			call this.showMessage(StringArg(tr("%s hat die Arena verlassen."), GetUnitName(usedUnit)))
-		endmethod
-		
-		/// Unnecessary since @method unitLeaves uses index, too.
-		public method unitLeavesByIndex takes integer index returns nothing
-		endmethod
-		
-		public method pause takes boolean pause returns nothing
-			local integer i = 0
-			loop
-				exitwhen (i == this.m_units.size())
-				call PauseUnit(this.m_units[i], pause)
-				call SetUnitInvulnerable(this.m_units[i], pause)
-				set i = i + 1
-			endloop
-		endmethod
-		
+
 		/// @todo Use of player vector would be much easier.
 		public method showMessage takes string message returns nothing
 			local integer i = 0
@@ -87,7 +65,75 @@ library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStruct
 				set i = i + 1
 			endloop
 		endmethod
-		
+
+		/**
+		* Note that there has to be a seperated start position for each entered unit.
+		*/
+		public stub method unitEnters takes unit whichUnit returns integer
+			if (this.m_units.size() == this.m_startX.size()) then
+				return -1
+			endif
+			call this.m_units.pushBack(whichUnit)
+			call SetUnitX(whichUnit, this.m_startX[this.m_units.backIndex()])
+			call SetUnitY(whichUnit, this.m_startY[this.m_units.backIndex()])
+			call SetUnitFacing(whichUnit, this.m_startFacing[this.m_units.backIndex()])
+			if (thistype.m_useLeaderboard) then
+				call LeaderboardAddItem(this.m_leaderboard, GetUnitName(whichUnit), 0, GetOwningPlayer(whichUnit))
+				call ShowLeaderboardForPlayer(GetOwningPlayer(whichUnit), this.m_leaderboard, true)
+			endif
+			call this.showMessage(StringArg(thistype.m_enterText, GetUnitName(whichUnit)))
+			return this.m_units.backIndex()
+		endmethod
+
+		public method unitLeavesByIndex takes integer index returns nothing
+			local string name = GetUnitName(this.m_units[index])
+			local player owner = GetOwningPlayer(this.m_units[index])
+			local integer i
+			local boolean hideLeaderboard
+			call this.m_units.erase(index)
+			if (thistype.m_useLeaderboard) then
+				call LeaderboardRemoveItem(this.m_leaderboard, index)
+				set hideLeaderboard = true
+				set i = 0
+				loop
+					exitwhen (i == this.m_units.size())
+					if (GetOwningPlayer(this.m_units[i]) == owner) then
+						set hideLeaderboard = false
+						exitwhen (true)
+					endif
+					set i = i + 1
+				endloop
+				if (hideLeaderboard) then
+					call ShowLeaderboardForPlayer(owner, this.m_leaderboard, false)
+				endif
+			endif
+			call this.showMessage(StringArg(thistype.m_leaveText, name))
+			set owner = null
+		endmethod
+
+		public stub method unitLeaves takes unit whichUnit returns nothing
+			local integer index = this.m_units.find(whichUnit)
+			if (index != -1) then
+				call this.unitLeavesByIndex(index)
+			endif
+		endmethod
+
+		public method pause takes boolean pause returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				call PauseUnit(this.m_units[i], pause)
+				call SetUnitInvulnerable(this.m_units[i], pause)
+				set i = i + 1
+			endloop
+		endmethod
+
+		/**
+		* Virtual method. Reimplement to handle kills.
+		*/
+		public stub method kill takes unit killingUnit, unit killedUnit returns nothing
+		endmethod
+
 		private static method triggerActionKill takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -98,16 +144,19 @@ library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStruct
 				set killedUnit = GetTriggerUnit()
 				if (this.m_units.contains(killedUnit)) then
 					set this.m_unitScores[killerIndex] = this.m_unitScores[killerIndex] + 1
-					call LeaderboardSetItemValue(this.m_leaderboard, killerIndex, this.m_unitScores[killerIndex])
-					call LeaderboardSortItemsByValue(this.m_leaderboard, true)
-					call this.showMessage(StringArg(StringArg(tr("%s hat %s getötet."), GetUnitName(killingUnit)), GetUnitName(killedUnit)))
+					if (thistype.m_useLeaderboard) then
+						call LeaderboardSetItemValue(this.m_leaderboard, killerIndex, this.m_unitScores[killerIndex])
+						call LeaderboardSortItemsByValue(this.m_leaderboard, true)
+					endif
+					call this.showMessage(StringArg(StringArg(thistype.m_killText, GetUnitName(killingUnit)), GetUnitName(killedUnit)))
+					call this.kill(killingUnit, killedUnit)
 				endif
 				set killedUnit = null
 			endif
 			set killingUnit = null
 			set triggeringTrigger = null
 		endmethod
-		
+
 		private method createKillTrigger takes nothing returns nothing
 			local triggeraction triggerAction
 			set this.m_killTrigger = CreateTrigger()
@@ -116,26 +165,54 @@ library AStructSystemsCharacterPvp requires AStructCoreGeneralHashTable, AStruct
 			call AHashTable.global().setHandleInteger(this.m_killTrigger, "this", this)
 			set triggerAction = null
 		endmethod
-		
+
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
-			//members
+			// dynamic members
+			set this.m_startX = ARealVector.create()
+			set this.m_startY = ARealVector.create()
+			set this.m_startFacing = ARealVector.create()
+			// members
 			set this.m_units = AUnitVector.create()
 			set this.m_unitScores = AIntegerVector.create()
-			set this.m_leaderboard = CreateLeaderboard()
+			if (thistype.m_useLeaderboard) then
+				set this.m_leaderboard = CreateLeaderboard()
+				call LeaderboardSetLabel(this.m_leaderboard, thistype.m_leaderboardLabelText)
+				call LeaderboardDisplay(this.m_leaderboard, false)
+			endif
 			call this.createKillTrigger()
-			
+
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
-			//members
+			// dynamic members
+			call this.m_startX.destroy()
+			call this.m_startY.destroy()
+			call this.m_startFacing.destroy()
+			// members
 			call this.m_units.destroy()
 			call this.m_unitScores.destroy()
-			call DestroyLeaderboard(this.m_leaderboard)
-			set this.m_leaderboard = null
+			if (thistype.m_useLeaderboard) then
+				call DestroyLeaderboard(this.m_leaderboard)
+				set this.m_leaderboard = null
+			endif
 			call AHashTable.global().destroyTrigger(this.m_killTrigger)
 			set this.m_killTrigger = null
+		endmethod
+
+		/**
+		* @param enterText tr("%s hat die Arena betreten.")
+		* @param leaveText tr("%s hat die Arena verlassen.")
+		* @param killText tr("%s hat %s getötet.")
+		*/
+		public static method init takes boolean useLeaderboard, string leaderboardLabelText, string enterText, string leaveText, string killText returns nothing
+			// static initialization members
+			set thistype.m_useLeaderboard = useLeaderboard
+			set thistype.m_leaderboardLabelText = leaderboardLabelText
+			set thistype.m_enterText = enterText
+			set thistype.m_leaveText = leaveText
+			set thistype.m_killText = killText
 		endmethod
 	endstruct
 

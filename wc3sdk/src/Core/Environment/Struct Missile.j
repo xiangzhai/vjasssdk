@@ -39,7 +39,7 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 		* @param speed Distance per second (without gravitational acceleration).
 		*/
 		public method setSpeed takes real speed returns nothing
-			set this.m_speed = speed * AMissile.refreshTime()
+			set this.m_speed = speed * AMissile.refreshTime.evaluate()
 		endmethod
 
 		public method speed takes nothing returns real
@@ -132,20 +132,6 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 			set this.m_owner = null
 		endmethod
 	endstruct
-
-	private function ADamageMissileTypeOnDeathFunctionDamage takes AMissile missile returns nothing
-		local ADamageMissileType this = ADamageMissileType(missile.missileType())
-		if (this.damage() <= 0.0) then
-			return
-		endif
-		if (this.damageRange() > 0.0) then
-			call UnitDamagePoint(this.damageSource(), 0.0, this.damageRange(), GetUnitX(missile.unit()), GetUnitY(missile.unit()), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
-		//cause area damage to units who aren't allies of the source unit
-		elseif (missile.targetWidget() != null) then
-			call UnitDamageTarget(this.damageSource(), missile.targetWidget(), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
-		//cause single target damage if missile hits widget otherwise show floating text?
-		endif
-	endfunction
 
 	struct ADamageMissileType extends AMissileType
 		//dynamic members
@@ -319,11 +305,11 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 		//convenience methods
 
 		public method startFromUnit takes unit whichUnit returns nothing
-			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), 0.0)
+			call this.start.evaluate(GetUnitX(whichUnit), GetUnitY(whichUnit), 0.0)
 		endmethod
 
 		public method startFromUnitZ takes unit whichUnit returns nothing
-			call this.start(GetUnitX(whichUnit), GetUnitY(whichUnit), GetUnitZ(whichUnit))
+			call this.start.evaluate(GetUnitX(whichUnit), GetUnitY(whichUnit), GetUnitZ(whichUnit))
 		endmethod
 
 		/// Makes the missile unpaused which means that it will be moved next time when the periodic trigger moves all unpaused missiles.
@@ -632,5 +618,19 @@ endif
 		endmethod
 		*/
 	endstruct
+
+	private function ADamageMissileTypeOnDeathFunctionDamage takes AMissile missile returns nothing
+		local ADamageMissileType this = ADamageMissileType(missile.missileType.evaluate())
+		if (this.damage() <= 0.0) then
+			return
+		endif
+		if (this.damageRange() > 0.0) then
+			call UnitDamagePoint(this.damageSource(), 0.0, this.damageRange(), GetUnitX(missile.unit()), GetUnitY(missile.unit()), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+		//cause area damage to units who aren't allies of the source unit
+		elseif (missile.targetWidget() != null) then
+			call UnitDamageTarget(this.damageSource(), missile.targetWidget(), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+		//cause single target damage if missile hits widget otherwise show floating text?
+		endif
+	endfunction
 
 endlibrary

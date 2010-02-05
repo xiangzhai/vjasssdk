@@ -1,4 +1,4 @@
-library ALibraryCoreDebugInterface requires ALibraryCoreDebugMisc
+library ALibraryCoreDebugInterface requires ALibraryCoreDebugMisc, AStructCoreInterfaceMultiboardBar
 
 	globals
 		private multiboard array usedMultiboard

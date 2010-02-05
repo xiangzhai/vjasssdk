@@ -83,14 +83,6 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 			return this.m_rects.backIndex()
 		endmethod
 
-		public method removeRect takes rect usedRect returns nothing
-			local integer index = this.m_rects.find(usedRect)
-			if (index == -1) then
-				return
-			endif
-			call this.removeRectByIndex(index)
-		endmethod
-
 		public method removeRectByIndex takes integer index returns nothing
 			call this.m_rects.erase(index)
 			if (this.m_weatherEffects[index] != null) then
@@ -98,6 +90,14 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 				set this.m_weatherEffects[index] = null
 			endif
 			call this.m_weatherEffects.erase(index)
+		endmethod
+
+		public method removeRect takes rect usedRect returns nothing
+			local integer index = this.m_rects.find(usedRect)
+			if (index == -1) then
+				return
+			endif
+			call this.removeRectByIndex(index)
 		endmethod
 
 		public method setAllWeatherTypesAllowed takes boolean allowed returns nothing
@@ -167,7 +167,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 				set i = i + 1
 			endloop
 			call this.changeWeather(possibleWeatherTypes[GetRandomInt(0, maxPossibleWeatherTypes - 1)])
-			call this.start() //start again with new time
+			call this.start.evaluate() //start again with new time
 			set expiredTimer = null
 		endmethod
 

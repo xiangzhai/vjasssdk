@@ -1,3 +1,6 @@
+2010-01-31 Tamino Dauth <tamino@cdauth.de>
+* [noimplicitthis] should be enabled.
+
 2009-12-30 Tamino Dauth <tamino@cdauth.de>
 * Add store and restore methods to all character system structs.
 
@@ -33,7 +36,7 @@
 * Do some benchmarks with AVector and AList ...
 
 2009-11-21 Tamino Dauth <tamino@cdauth.de>
-* Water files in directory "Doodads..." of archive "Ambient" should be moved into "Models/Ambient.." and added for "Die Macht des Feuers" separately.
+* DONE: Water files in directory "Doodads..." of archive "Ambient" should be moved into "Models/Ambient.." and added for "Die Macht des Feuers" separately.
 
 2009-11-20 Tamino Dauth <tamino@cdauth.de>
 * Files "archives/Creatures/Models/Creatures/Humans/Samureiausbilder.mdx" and "archives/Creatures/Models/Creatures/Humans/Samureiausbilder_Portrait.mdx" miss file "Textures/HeroMusashMiyamoto".

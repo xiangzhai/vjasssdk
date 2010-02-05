@@ -14,7 +14,7 @@ library AStructCoreGeneralAsl requires optional ALibraryCoreDebugMisc, ALibraryC
 
 		public static method init takes nothing returns nothing
 static if (DEBUG_MODE) then
-			call thistype.showInformation()
+			call thistype.showInformation.evaluate()
 endif
 		endmethod
 
