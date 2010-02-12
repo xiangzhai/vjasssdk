@@ -11,26 +11,29 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 10. Bezeichner (identifiers)
 11. Literale
 12. Gültigkeitsbereiche (scopes)
-Qualifizierer-Gültigkeitsbereiche:
-13. Variablen
-14. Operatoren
-15. Typen
-16. Typkonvertierungen
-17. Verzweigungen
-18. Schleifen
-19. Funktionen
-20. Funktionsvariablen (Funktionszeiger)
-21. Lambda-Funktionen
-22. Funktionsaufrufe
-23. Ausnahmebehandlung
-24. Finally
-25. Pseudonyme (aliases)
-26. Vorlagen (templates)
-27. Pakete (packages)
-28. Aufzählungen (enums)
-29. Klassen
-30. Das Jass-Paket
-31. Das Standardpaket
+13. Qualifizierer-Gültigkeitsbereiche
+14. Variablen
+15. Operatoren
+16. Typen
+17. Typkonvertierungen
+18. Verzweigungen
+19. Schleifen
+20. Deklarationsvoraussetzungen
+21. Funktionen
+22. Funktionsvariablen (Funktionszeiger)
+23. Lambda-Funktionen
+24. Funktionsaufrufe
+25. Ausnahmebehandlung
+26. Finally
+27. Pseudonyme (aliases)
+28. Vorlagen (templates)
+29. Pakete (packages)
+30. Aufzählungen (enums)
+31. Klassen
+32. Methoden
+33. Operatorenüberladung
+34. Das Jass-Paket
+35. Das Standardpaket
 
 1. Vorwort
 
@@ -136,6 +139,7 @@ Code zwischen den Präprozessoranweisungen #cjass und #endcjass wird daher bei e
 Kompilierung ignoriert.
 
 4. Schlüsselwörter
+
 Im Folgenden wird zwischen Standard, was auf gängige Programmiersprachen verweist, und Warcraft-spezifisch, was auf Warcraft-spezifische
 Eigenschaften verweist, unterschieden.
 
@@ -147,7 +151,7 @@ Operator-Schlüsselwörter:
 Warcraft-spezifisch: id, hash, length
 
 Funktional-Schlüsselwörter:
-Standard: return
+Standard: operator, return
 
 Generik-Schlüsselwörter:
 Standard: template
@@ -156,7 +160,7 @@ Modularisierung-Schlüsselwörter:
 Standard: package, private, protected, public
 
 Objektorientierung-Schlüsselwörter:
-Standard: private protected, operator, class, this, self, super, new, delete, copy, init, virtual, static, friend, abstract
+Standard: private protected, class, this, self, super, new, delete, copy, init, virtual, static, friend, abstract
 
 Threading-Schlüsselwöter:
 threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
@@ -173,7 +177,11 @@ Zusammenfassung der Qualifizierer:
 Standard: enum, const, template, package, private, protected, public, class, init, virtual, static, friend, abstract
 Warcraft-spezifisch: native, mapinit, debug, threaded
 
+Bezeichnerspezifizierungsschlüsselwörter:
+Standard: enum, package, class
+
 5. Blockkommentare
+
 Blockkommentare zwischen einer "/*"- und einer "*/"-Zeichenfolge sind in Jass++ (auch über mehrere Zeilen hinweg) möglich.
 
 Notation:
@@ -216,18 +224,19 @@ Dateipfade müssen wie bei UNIX Systemen geschrieben werden. . steht für das ak
 für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen getrennt.
 ~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Wurzelverzeichnis.
   
-Testblöcke:
+7. Testblöcke
+
 Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
 Analog zu #if (DEBUG_MODE) und #endif.
 Testblöcke sind nach der unten aufgezeigten Form ein Qualifizierer-Gültigkeitsbereich.
 
 Notation:
-
 debug
 {
 }
 
-Deklaration nativer Typen:
+8. Deklaration nativer Typen
+
 Es gibt kopierbasierte und referenzbasierte native Typen. Der Typ "agent" wird von sämtlichen referenzbasierten nativen Typen erweitert.
 Referenzbasierte Werte werden beim Übergeben an eine andere Variable (auch an Paramter) nicht kopiert, sondern lediglich ihre Referenz,
 was bewirkt, dass die andere Variable mit demselben globalen Objekt arbeitet, wie die eine.
@@ -235,7 +244,8 @@ was bewirkt, dass die andere Variable mit demselben globalen Objekt arbeitet, wi
 Notation:
 native Typname : Elterntyp;
 
-Deklaration nativer Funktionen:
+9. Deklaration nativer Funktionen
+
 Native Funktionen werden wie native Typen lediglich deklariert und nicht definiert. Die Definition erfolgt in der verwendeten Engine und kann
 undefiniert bleiben, solange der Compiler weiß, wie die Funktion aufzurufen ist.
 Native Funktionen aus Jass sollten mittels der Jass++-Syntax erneut bzw. ein einziges Mal deklariert werden, da man sie bei solchen Deklarationen
@@ -244,13 +254,16 @@ um konstante Parameter usw. erweitern kann.
 Notation:
 native [const] Rückgabetyp Funktionsname(Parametertyp Parametername, ...);
 
-Bezeichner (identifiers):
+10. Bezeichner (identifiers)
+
 Ein Bezeichner ist ein vom Entwickler definierter Name, welcher ein bestimmtes Code-Element bezeichnet und darauf verweist.
 Für Bezeichner gelten bestimmte Regeln bezüglich ihrer Definition. Bezeichner dürfen in Jass++ anders als in Jass nicht mit
 dem Präfix "jasspp" beginnen, da dieses für den Compiler reserviert ist (theoretisch könnte dieser auch sämtliche Bezeichner ersetzen,
 um so dagegen vorzugehen, jedoch wird es vorläufig trotzdem reserviert). Ansonsten gelten dieselben Regeln wie in Jass (z. B. keine Unterstriche am Anfang).
+Außerdem kann dem Bezeichner in bestimmten Fällen ein Schlüsselwortpräfix vorangestellt werden, welches die Art des Objekts genauer spezifiziert (siehe dazu Abschnitt "Schlüsselwörter").
 
-Literale:
+11. Literale
+
 Ein Literal ist ein sich selbst erklärender Ausdruck. Für folgende native Typen gelten folgende Literalnotationsregeln:
 
 Kopierbasierte Typen:
@@ -266,7 +279,8 @@ Referenzbasierte Typen:
 * Klassenobjekte : 0
 * Funktionszeiger : 0
 
-Gültigkeitsbereiche (scopes):
+12. Gültigkeitsbereiche (scopes)
+
 Gültigkeitsbereiche definieren, innerhalb welches Bereiches eine Deklaration ihre Gültigkeit hat. Außerhalb dieses Bereiches
 kann die Deklaration nur über den Bezeichner, insofern ein solcher existiert, des Gültigkeitsbereiches bzw. den .-Operator erreicht werden.
 In bestimmten Fällen geschieht dies implizit (Methodenaufruf, Pseudonyme, Paketverwendung usw.).
@@ -294,7 +308,8 @@ void test()
 	}
 }
 
-Qualifizierer-Gültigkeitsbereiche:
+Qualifizierer-Gültigkeitsbereiche
+
 Unter Qualifizierer-Gültigkeitsbereichen versteht man in Jass++ Gültigkeitsbereiche ohne Namen,
 welche nicht als eine weitere Überdeckungsschicht gelten, jedoch sämtliche enthaltenen Code-Elemente (der ersten Ebene)
 als etwas Bestimmtes qualifzieren.
@@ -332,7 +347,8 @@ debug mapinit
 	void bla3() {};
 }
 
-Variablen:
+Variablen
+
 Variablen existieren, falls nicht anders angegeben, vom Programmstart bis zum Programmende. Lokale Variablen in Funktionen, sowie Elementvariablen
 von Klassen leben vom Funktionsaufruf bis zum Ende des Funktionsablaufes bzw. von der Erzeugung der Klasseninstanz bis zur Löschung dieser.
 Variablen, die als "static" deklariert wurden, existieren ebenfalls vom Programmstart bis zum Programmende.
@@ -368,7 +384,7 @@ static const integer test = 10;
 Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
 dagegen 0 (siehe Abschnitt Literale).
 
-Operatoren:
+Operatoren
 
 Für Gültigkeitsbereiche:
 [<Bezeichner des Gültigkeitsbereiches>].<Bezeichner eines im Gültigkeitsbereich deklarierten Elements>
@@ -440,6 +456,18 @@ Variable != Ausdruck
 integer(Variable)				Entspricht GetHandleId(Variable)
 id Variable					Entspricht Variable.id und GetHandleId(Variable)
 
+Für Paketdeklarationen:
+<Paketbezeichner> : <Deklarationsvoraussetzungen>
+
+Für Funktionsdeklarationen:
+<Rückgabetyp> <Funktionsname><Parameterliste> : <Deklarationsvoraussetzungen>
+
+Für Aufzählungsdeklarationen:
+<Aufzählungsbezeichner> : <Deklarationsvoraussetzungen>
+
+Für Klassendeklarationen:
+<Klassenbezeichner> : <Erbung> : <Deklarationsvoraussetzungen>
+
 Für Arrays:
 size Variable
 Variable.size
@@ -496,7 +524,8 @@ Für große Arrays:
 integer(Variable)				Liefert die interne Ganzzahl der Array-Instanz.
 id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Array-Instanz.
 
-Typen:
+Typen
+
 In Jass++ können sämtliche Typen aus Jass ohne besondere Einschränkungen (bis auf const-Deklarationen) verwendet werden.
 Eigene Typen können ausschließlich mittels Klassen definiert werden. Alle anderen Typen sind native Typen.
 Ein Variablentyp kann als Postfix das Schlüsselwort "const" erhalten, insofern er referenzbasiert ist.
@@ -545,7 +574,7 @@ myUnit = widget(myWidget); // illegal!
 Unit const myUnit = myOtherNonConstantUnit;
 Unit myUnit= myOtherConstantUnit; // illegal!
 
-Verzweigungen:
+Verzweigungen
 
 if (Ausdruck)
 {
@@ -559,14 +588,14 @@ else (Ausdruck)
 
 Switch-Verzweigungen können anders als in herkömmlichen Sprachen jede Art von Datentyp behandeln.
 
-switch (Variable)
+switch (<Variable>)
 {
-	case (konstanter Ausdruck)
+	case (<konstanter Ausdruck>)
 	{
 		break;
 	}
 
-	case (konstanter Ausdruck) // Ein Ausdruck kann auch aus mehreren durch Kommate getrennten Werten bestehen: 1,10,2
+	case (<konstanter Ausdruck>) // Ein Ausdruck kann auch aus mehreren durch Kommate getrennten Werten bestehen: 1,10,2
 	{
 		break;
 	}
@@ -577,7 +606,7 @@ switch (Variable)
 	}
 }
 
-Schleifen:
+Schleifen
 
 while (<Ausdruck>)
 {
@@ -592,7 +621,7 @@ default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 do
 {
 }
-while (Ausdruck);
+while (<Ausdruck>);
 case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
 {
 }
@@ -600,7 +629,7 @@ default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 {
 }
 
-for (Ausdruck; Ausdruck; Ausdruck)
+for (<Ausdruck>; <Ausdruck>; <Ausdruck>)
 {
 }
 case (<konstanter Ganzzahlausdruck>) // Schleife wurde <Anzahl> mal durchlaufen.
@@ -620,15 +649,36 @@ default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 {
 }
 
-Funktionen:
-Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich die Parametertypen unterscheiden.
+Deklarationsvoraussetzungen
+
+Funktionen, Pakete, Aufzählungen und Klassen können bei ihrer Deklaration eben solche voraussetzen.
+Dazu wird der :-Operator verwendet. Dies stellt sicher, dass die Voraussetzungen vor dem jeweiligen
+Code-Objekt deklariert werden. Sollte es dabei zu Kreisabhängigkeiten kommen, indem sich z. B. zwei
+Code-Objekte gegenseitig voraussetzen, so muss der Compiler eine Fehlermeldung ausgeben.
+Ansonsten muss er sicherstellen, dass die Objekte in der richtigen Reihenfolge deklariert werden.
+Deklarationsvoraussetzungen sind notwendig, da Funktionen in Jass erst nach ihrer Deklaration im Skript
+verwendet werden können.
+Eine Umgehung dieser Beschränkung kann mit den Schlüsselwörtern execute und evaluate erreicht werden
+(siehe dazu Abschnitt "Funktionen").
+Es gilt noch anzumerken, dass der :-Operator bei Klassen ebenfalls zur Erbung verwendet wird, was
+zu Verwirrung führen kann. Die geerbten Klassen werden zu erst angegeben und danach die Deklarations-
+voraussetzungen.
+Des Weiteren werden geerbte Klassen implizit als Deklarationsvoraussetzung angegeben.
+Aufzählungen brauchen in der Regel höchstens Voraussetzungen, wenn das Paket oder die Klasse Ganzzahl-Konstanten enthält.
+
+Notation:
+<Funktionsdeklaration|Paketdeklaration|Aufzählungsdeklaration|Klassendeklaration> : <Bezeichner1>, <Bezeichner2>, ... <Bezeichnern>
+
+Funktionen
+
+Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich mindestens die Parametertypen, die Parameteranzahl oder der Rückgabetyp m unterscheiden.
 Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
 Parameter, welche kein Standardargument besitzen gesetzt werden:
 MyFunction(y = 10, x = 100, 100, 3, 5);
 Parameter mit Standardargumenten erhalten automatisch das Standardargument, insofern sie nicht explizit beim Aufruf gesetzt werden.
 
 Notation:
-[threaded] [mapinit] [const] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...) [throw (Typen getrennt durch Kommata)]
+[threaded] [mapinit] [const] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...) [<Deklarationsvoraussetzungen>] [throw (Typen getrennt durch Kommata)]
 {
 }
 
@@ -685,7 +735,8 @@ Ist eine Funktion als "const" deklariert, so muss sie einen global konstanten We
 sie normalerweise als "constant" Jass-Funktion erzeugt. Global konstant bedeutet in diesem Zusammenhang, dass der Wert
 zur Laufzeit immer je nach übergebenen Parametern derselbe ist.
 
-Funktionsvariablen (Funktionszeiger):
+Funktionsvariablen (Funktionszeiger)
+
 Funktionsvariablen sind Variablen des Typs "<Rückgabetyp> (<Parameter>)". Sie können einen Verweis auf eine beliebige
 "threaded"-Funktion mit dem angegebenen Rückgabetyp und den angegebenen Parametern oder eine "threaded" Lambda-Funktion enthalten.
 Der Verweis ist normalerweise ein Integer-Wert, welcher je nach Kompilierung des Codes unterschiedlich auf die Funktion verweisen kann.
@@ -700,7 +751,8 @@ Beispiel:
 integer (integer, integer) functionVariable = MyClass.method0;
 Print(functionVariable.evaluate(0, 10));
 
-Lambda-Funktionen:
+Lambda-Funktionen
+
 Lambda-Funktionen sind namenlose Funktionen, sozusagen Funktionen, bei denen nur der Code-Inhalt angegeben werden muss.
 In Jass++ ist es möglich Lambda-Funktionen zu deklarieren, welche keinen Rückgabewert haben und keine Parameter entgegennehmen.
 Lambda-Funktionen können entweder in Variablen des Typs code oder in Funktionsvariablen gespeichert werden. Bei letzterer Variablenart
@@ -734,7 +786,7 @@ void test()
 	TimerStart(testTimer, 2.0, true, { Print("Timer function runs!"); });
 }
 
-Funktionsaufrufe:
+Funktionsaufrufe
 
 Notation:
 <Funktionsname | Funktionsvariable>[<.execute | .executefast | .evaluate>](<Parameterwert> ...);
@@ -745,60 +797,67 @@ Zweitere Notation ist nur bei Funktionen, jedoch nicht bei Funktionsvariablen an
 Des Weiteren gilt es zu beachten, dass Standardparameterwerte bei Funktionsvariablen ihre Gültigkeit verlieren. Bei ihnen müssen
 sämtliche Parameterwerte explizit angegeben werden.
 
-Ausnahmebehandlungen:
+Ausnahmebehandlung
+
 Ausnahmen können von einer beliebigen Funktion geworfen werden, die als "throw" Funktion deklariert wurde.
 Die Ausnahme kann mittels eines try-catch-Blocks aufgefangen werden.
 
 Notation:
 try
 {
-	Anweisungen
+	<Anweisungen>
 }
-catch (Typ Variablenname)
+catch (<Typ> <Variablenname>)
 {
 }
 default // Alle anderen Ausnahmen
 {
 }
 
-Finally:
-Finally-Blöcke werden in jedem Fall vor der return-, (throw-, macht das Sinn?)  continue- oder break-Anweisung einer Funktion oder Schleife oder
-am Ende eines try-Blocks abgearbeitet:
+Finally
 
+Finally-Blöcke werden in jedem Fall vor der return-, (throw-, macht das Sinn?)  continue- oder break-Anweisung einer Funktion oder Schleife oder
+am Ende eines try-Blocks abgearbeitet.
+
+Notation:
 <Funktionsdefinition | Schleifendefinition | Try-Block>
 finally // Wird exakt vor der return-, (throw-,) continue- oder break-Anweisung oder am Ende des try-Blocks abgearbeitet
 {
 }
 
-Pseudonyme (aliases):
+Pseudonyme (aliases)
+
 Das Schlüsselwort "alias" ermöglicht es einem einen anderen Bezeichner für einen bestehenden zu definieren. Dieser gilt innerhalb
 des Gültigkeitsbereiches, in welchem sich die Pseudonymdefinition befindet und in Klassen bzw. Paketen je nach Präfix für alle privaten,
 geschützten, privat geschützten oder öffentlichen Elemente.
 
 Notation:
-
 [private | public | protected | private protected] alias <Bezeichner> <Neuer Bezeichner>;
 
 
-Vorlagen (templates):
+Vorlagen (templates)
+
 Vorlagen werden mittels einer einfachen Kopie ihres enthaltenen Codes mit den verwendeten Datentypen gespeichert.
 Die Datentypparameter können genau wie bei Funktionsparameter gesetzt werden.
 
 Notation:
-
-template Templatename<Datentypparameter = [Standardargument] ...>
+template <Vorlagenbezeichner>< <Datentypparameterbezeichner> [= Standardargument] ...>
 {
-    Templateinhalt
+    <Vorlageninhalt>
 }
 
+<Vorlagenbezeichner>< <Datentypparameterbezeichner> = <Parameterwert> ... >
+<Vorlagenbezeichner>< <Parameterwert> ... >
+
+Beispiel:
 Vector<integer> myVector = new Vector<integer>;
 
-Der Template-Inhalt können Funktionen oder Klassen sein.
+Der Vorlageninhalt können Funktionen, Klassen oder Pakete sein.
 
-Pakete (packages):
+Pakete (packages)
 
 Notation einer Paketdefinition:
-package Name : benötigte Pakete durch Kommata getrennt
+package Name [Deklarationsvoraussetzungen]
 {
 	private | public | protected Funktion/Variable/Klasse/Aufzählung/Paket/friend <Paketname> | <Klassenname> | <Funktionsname>
 }
@@ -826,11 +885,12 @@ Wird die Notation Paketname.* verwendet, so werden alle Unterpakete und deren Un
 Sämtliche verwendete Paketnamen werden durch Kommata getrennt.
 Im Grunde genommen ist eine Paketverwendungsanweisung nichts Anderes als ein erweiteretes Pseudonym.
 
-Aufzählungen (enums):
+Aufzählungen (enums)
+
 Wird ein Enumelement gesetzt, so werden alle darauffolgenden Enum-Elemente auf die noch nicht verwendeten nachfolgenden Werte gesetzt.
 
 Notation:
-enum Name
+enum Name [Deklarationsvoraussetzungen]
 {
     Enumelement1,
     Enumelement2 = 2,
@@ -839,7 +899,8 @@ enum Name
 
 Der size-Operator kann verwendet werden, um den Wert x + 1 zu erhalten, wobei x für das Aufzählungselement mit dem höchsten Wert steht.
 
-27. Klassen
+Klassen
+
 Existiert kein Präfix wie "public", "protected" oder "private" vor der Variablen oder Methodendeklaration, ist das
 Klassenelement automatisch "private". Statische Methoden erhalten keinen this-Parameter.
 Statische Variablen können mit Klassenname.Variablenname angesprochen werden.
@@ -870,18 +931,6 @@ Mehrfachvererbung:
 Handelt es sich um Elementvariablen, so wird lediglich die erste Elementvariable der geerbten Klassen belegt.
 Bei den Methoden wird ebenfalls die Methode der zu erst geerbten Klasse (von unten nach oben, von links nach rechts) aufgerufen.
 
-Notation:
-[ abstract ] class Klassenname [ [Maximalgröße] ] : public | private | protected Klassenname ...
-{
-	new() { } Konstruktor
-	~delete() { } Destruktor
-	copy(Klassenname other) Kopierkonstruktur
-	static init() { } Initialisierungsmethode
-
-	[public | protected | private | private protected] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>;
-	[public | protected | private | private protected] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
-} globale Instanzen durch Kommata getrennt;
-
 Protected:
 Ist ein Klassenelement "protected", so kann darauf von Kindklassen und von Klassen bzw. Funktionen des aktuellen Pakets und Klassen bzw. Funktionen 
 aus dessen Unterpaketen zugegriffen werden.
@@ -893,6 +942,18 @@ Friend:
 Wird ein Paket, eine Klasse oder eine Funktion als friend einer bestimmten Deklarationsart (public, protected, private oder private protected) 
 deklariert, so erhält diese(s) Zugriff auf die Klassenelemente, die ebenfalls so deklariert wurden.
 Dies gilt auch für die Kindklassen (Überprüfen, ob es anders mehr Sinn machen würde).
+
+Notation:
+[ abstract ] class Klassenname [ [Maximalgröße] ] : public | private | protected Klassenname ... [Deklarationsvoraussetzungen]
+{
+	new() { } Konstruktor
+	~delete() { } Destruktor
+	copy(Klassenname other) Kopierkonstruktur
+	static init() { } Initialisierungsmethode
+
+	[public | protected | private | private protected] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>;
+	[public | protected | private | private protected] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
+} globale Instanzen durch Kommata getrennt;
 
 Methoden:
 Als virtuell deklarierte Methoden, werden pro Klasseninstanz gespeichert. So wird immer die unterste virtuelle Methode aufgerufen.
@@ -1000,12 +1061,15 @@ Notation:
 <Variablenname>.load(<Hashtable>, <Parent-Key>)
 <Variablenname>.remove(<Hashtable>, <Parent-Key>)
 
-Operatorenüberladung:
+Operatorenüberladung
+
 Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen enthält, überlädt die Bedeutung eines 
 Operators für die angegebenen Parametertypen.
 Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, private protected).
+Folgende Operatoren können nach folgenden Schemata überladen werden:
 
-Das Jass-Paket:
+Das Jass-Paket
+
 Das Jass-Paket deklariert sowohl native Typen und Funktionen als auch nicht native Funktionen und Variablen der Dateien "common.j", common.ai" und "Blizzard.j".
 Als Alternative können jene drei Dateien auch mittels #include jass <Dateipfad> eingebunden werden.
 
@@ -1024,7 +1088,8 @@ package jass
 	}
 }
 
-Das Standardpaket:
+Das Standardpaket
+
 Es existieren Wrapper für jeden Warcraft-3-Datentyp, sowie zusätzliche Methoden und Klassen. Auf das Wichtigste beschränken!
 
 package jasspp

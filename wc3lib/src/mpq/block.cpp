@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,65 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_VJASS_VJASS_HPP
-#define WC3LIB_LANG_VJASS_VJASS_HPP
-
-#include "../language.hpp"
+#include "block.hpp"
+#include "mpq.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
 	
-namespace lang
-{
-	
-namespace vjass
+namespace mpq
 {
 
-class Vjass : public Language
+Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffset(0), m_blockSize(0), m_fileSize(0), m_flags(Block::None)
 {
-	public:
-		Vjass();
-		virtual const std::string& name() const;
-		virtual bool compatibleTo(const class Language &language) const;
-
-		void setForceMethodEvaluate(bool forceMethodEvaluate);		
-		bool forceMethodEvaluate() const;
-		void setNoImplicitThis(bool noImplicitThis);
-		bool noImplicitThis() const;
-		
-		class Object::List& externalCalls();
-		class Object::List& functionInterfaces();
-		class Object::List& hooks();
-		
-	protected:
-		bool m_forceMethodEvaluate;
-		bool m_noImplicitThis;
-};
-
-inline void Vjass::setForceMethodEvaluate(bool forceMethodEvaluate)
-{
-	this->m_forceMethodEvaluate = forceMethodEvaluate;
 }
 
-inline bool Vjass::forceMethodEvaluate() const
+std::streamsize Block::read(std::istream &istream) throw (class Exception)
 {
-	return this->m_forceMethodEvaluate;
-}
+	struct BlockTableEntry entry;
+	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
+	std::streamsize bytes = istream.gcount();
 
-inline void Vjass::setNoImplicitThis(bool noImplicitThis)
-{
-	this->m_noImplicitThis = noImplicitThis;
-}
+	if (bytes != sizeof(entry))
+		throw Exception(_("Error while reading block table entry."));
 
-inline bool Vjass::noImplicitThis() const
-{
-	return this->m_noImplicitThis;
+	this->m_blockOffset = entry.blockOffset;
+	this->m_blockSize = entry.blockSize;
+	this->m_fileSize = entry.fileSize;
+	this->m_flags = static_cast<enum Block::Flags>(entry.fileSize);
+
+	return bytes;
 }
 
 }
 
 }
-
-}
-
-#endif

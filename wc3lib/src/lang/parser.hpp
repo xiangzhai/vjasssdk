@@ -30,6 +30,8 @@
 #include <boost/filesystem.hpp>
 
 #include "object.hpp"
+#include "syntaxerror.hpp"
+#include "file.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -95,6 +97,7 @@ class Parser
 #endif
 
 		void addSyntaxError(class SyntaxError *syntaxError);
+		void addSyntaxError(const std::string &message);
 		
 		/**
 		* @return Returns current parsed code file.
@@ -150,6 +153,11 @@ inline void Parser::addSyntaxError(class SyntaxError *syntaxError)
 	this->m_syntaxErrors.push_back(syntaxError);
 }
 
+inline void Parser::addSyntaxError(const std::string &message)
+{
+	this->addSyntaxError(new SyntaxError(this->m_file->sourceFile(), this->m_file->lines() - 1, message));
+}
+	
 inline const class File& Parser::file() const
 {
 	return *this->m_file;

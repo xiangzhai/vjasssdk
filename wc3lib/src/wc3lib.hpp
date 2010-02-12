@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,65 +18,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_VJASS_VJASS_HPP
-#define WC3LIB_LANG_VJASS_VJASS_HPP
+#ifndef WC3LIB_WC3LIB_HPP
+#define WC3LIB_WC3LIB_HPP
 
-#include "../language.hpp"
+/// @todo Add all include files!
 
-namespace wc3lib
-{
-	
-namespace lang
-{
-	
-namespace vjass
-{
+#include "exception.hpp"
+#include "internationalisation.hpp"
+#include "utilities.hpp"
 
-class Vjass : public Language
-{
-	public:
-		Vjass();
-		virtual const std::string& name() const;
-		virtual bool compatibleTo(const class Language &language) const;
+#include "blp/blp.hpp"
+#include "blp/platform.hpp"
 
-		void setForceMethodEvaluate(bool forceMethodEvaluate);		
-		bool forceMethodEvaluate() const;
-		void setNoImplicitThis(bool noImplicitThis);
-		bool noImplicitThis() const;
-		
-		class Object::List& externalCalls();
-		class Object::List& functionInterfaces();
-		class Object::List& hooks();
-		
-	protected:
-		bool m_forceMethodEvaluate;
-		bool m_noImplicitThis;
-};
+#include "mdlx/mdlx.hpp"
+#include "mdlx/platform.hpp"
 
-inline void Vjass::setForceMethodEvaluate(bool forceMethodEvaluate)
-{
-	this->m_forceMethodEvaluate = forceMethodEvaluate;
-}
-
-inline bool Vjass::forceMethodEvaluate() const
-{
-	return this->m_forceMethodEvaluate;
-}
-
-inline void Vjass::setNoImplicitThis(bool noImplicitThis)
-{
-	this->m_noImplicitThis = noImplicitThis;
-}
-
-inline bool Vjass::noImplicitThis() const
-{
-	return this->m_noImplicitThis;
-}
-
-}
-
-}
-
-}
+#include "mpq/algorithm.hpp"
+#include "mpq/block.hpp"
+#include "mpq/hash.hpp"
+#include "mpq/mpq.hpp"
+#include "mpq/mpqfile.hpp"
+#include "mpq/platform.hpp"
+#include "mpq/sector.hpp"
 
 #endif

@@ -1,13 +1,19 @@
 set(wc3lib_MPQ_SRC
+	block.cpp
+	hash.cpp
 	mpq.cpp
 	mpqfile.cpp
+	sector.cpp
 )
 
 set(wc3lib_MPQ_H
 	algorithm.hpp
+	block.hpp
+	hash.hpp
 	mpqfile.hpp
 	mpq.hpp
 	platform.hpp
+	sector.hpp
 )
 
 add_library(wc3libmpq SHARED ${wc3lib_MPQ_SRC})

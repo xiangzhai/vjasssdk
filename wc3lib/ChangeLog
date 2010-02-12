@@ -1,3 +1,11 @@
+2010-02-12 Tamino Dauth <tamino@cdauth.de>
+* Added various operators to class mpq::Mpq.
+* Added directory "src/app/examples".
+* Revised Jass++ specification.
+
+2010-02-06 Tamino Dauth <tamino@cdauth.de>
+* Seperated classes mpq::Hash, mpq::Block and mpq::Sector.
+
 2010-02-04 Tamino Dauth <tamino@cdauth.de>
 * Improved application tilesetter.
 * Tried some cmake exception handling definitions.

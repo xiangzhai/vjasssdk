@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,65 +18,24 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_VJASS_VJASS_HPP
-#define WC3LIB_LANG_VJASS_VJASS_HPP
-
-#include "../language.hpp"
+#include "sector.hpp"
+#include "mpqfile.hpp"
 
 namespace wc3lib
 {
 	
-namespace lang
+namespace mpq
 {
+
+Sector::Sector(class MpqFile *mpqFile) : m_mpqFile(mpqFile)
+{
+}
 	
-namespace vjass
+std::streamsize Sector::read(std::istream &istream) throw (class Exception)
 {
-
-class Vjass : public Language
-{
-	public:
-		Vjass();
-		virtual const std::string& name() const;
-		virtual bool compatibleTo(const class Language &language) const;
-
-		void setForceMethodEvaluate(bool forceMethodEvaluate);		
-		bool forceMethodEvaluate() const;
-		void setNoImplicitThis(bool noImplicitThis);
-		bool noImplicitThis() const;
-		
-		class Object::List& externalCalls();
-		class Object::List& functionInterfaces();
-		class Object::List& hooks();
-		
-	protected:
-		bool m_forceMethodEvaluate;
-		bool m_noImplicitThis;
-};
-
-inline void Vjass::setForceMethodEvaluate(bool forceMethodEvaluate)
-{
-	this->m_forceMethodEvaluate = forceMethodEvaluate;
-}
-
-inline bool Vjass::forceMethodEvaluate() const
-{
-	return this->m_forceMethodEvaluate;
-}
-
-inline void Vjass::setNoImplicitThis(bool noImplicitThis)
-{
-	this->m_noImplicitThis = noImplicitThis;
-}
-
-inline bool Vjass::noImplicitThis() const
-{
-	return this->m_noImplicitThis;
+	return 0;
 }
 
 }
 
 }
-
-}
-
-#endif

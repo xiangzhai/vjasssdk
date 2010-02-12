@@ -23,6 +23,8 @@
 
 #include <istream>
 
+#include <FlexLexer.h>
+
 namespace wc3lib
 {
 	
@@ -38,7 +40,7 @@ class DocComment;
 * A Code file which is treated by a @class Parser instance.
 * This class is able to handle the whole scripting languages syntax and to parse it.
 */
-class File
+class File : public yyFlexLexer
 {
 	public:
 		File();

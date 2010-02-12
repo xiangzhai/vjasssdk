@@ -64,6 +64,12 @@ bool commandOpen(const struct Command &command, const std::list<std::string> &ar
 
 int main(int argc, char *argv[])
 {
+	// Set the current locale.
+	setlocale(LC_ALL, "");
+	// Set the text message domain.
+	bindtextdomain("tilesetter", LOCALE_DIR);
+	textdomain("tilesetter");
+	
 	std::cout << boost::format(_("Tilesetter version %1%")) % version << std::endl;
 	std::cout << _(
 	"Copyright (C) 2009 by Tamino Dauth\n"

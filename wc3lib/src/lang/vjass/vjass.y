@@ -1,10 +1,14 @@
 %{
 
-#include "vjassdoc.hpp"
+#include "vjass.hpp"
+ 
+using namespace wc3lib::lang;
+ 
+class Parser *parser = 0;
  
 void yyerror(const char *str)
 {
-	Vjassdoc::parser->()->add(new SyntaxError(Vjassdoc::parser()->currentFile()->sourceFile(), Vjassdoc::parser()->currentFile()->lines(), str));
+	parser->addSyntaxError(str);
 }
  
 int yywrap()
@@ -158,7 +162,7 @@ main()
 
 IncreaseLine				: NewLine
 					{
-						Vjassdoc::parser()->currentFile()->addLines(1);
+						parser->currentFile()->addLines(1);
 					}
 					;
 
@@ -172,7 +176,7 @@ DocComment				: LineDocComment IncreaseLine
 Comment					: LineComment IncreaseLine
 					| BlockComment /* increase lines please */
 					{
-						Vjassdoc::parser()->add(new vjassdoc::Comment($1, Vjassdoc::parser()->file()->sourceFile(), Vjassdoc::parser()->line(), Vjassdoc::parser()->docComment());
+						parser->add(new jass::Comment($1, parser->file()->sourceFile(), parser->line());
 					}
 					;
 

@@ -126,27 +126,27 @@ UNITTYPEINT	['][a-zA-Z0-9][a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[']
 "vjass"				return VjassKeyword;
 "endvjass"			return EndvjassKeyword;
 "zinc"				return ZincKeyword;
-"endzinc" { return EndzincKeyword; }
-"externalblock" { return ExternalblockKeyword; }
-"endexternalblock" { return EndexternalblockKeyword; }
-"loaddata" { return LoaddataKeyword; }
-"external" { return ExternalKeyword; }
-"textmacro" { return TextmacroKeyword; }
-"textmacro_once" { return TextmacroonceKeyword; }
-"endtextmacro" { return EndtextmacroKeyword; }
-"runtextmacro" { return RuntextmacroKeyword; }
-"requires" return RequiresKeyword;
-"needs" { return NeedsKeyword; }
-"uses" { return UsesKeyword; }
-"initializer" { return InitializerKeyword; }
-"defaults" { return DefaultsKeyword; }
-"optional" { return OptionalKeyword; }
-"super" { return SuperKeyword; }
-"thistype" { return ThistypeKeyword; }
-"operator" { return OperatorKeyword; }
-"execute" { return ExecuteKeyword; }
-"evaluate" return EvaluateKeyword;
-"global" return GlobalKeyword;
+"endzinc"			return EndzincKeyword;
+"externalblock"			return ExternalblockKeyword;
+"endexternalblock"		return EndexternalblockKeyword;
+"loaddata"			return LoaddataKeyword;
+"external"			return ExternalKeyword;
+"textmacro"			return TextmacroKeyword;
+"textmacro_once"		return TextmacroonceKeyword;
+"endtextmacro"			return EndtextmacroKeyword;
+"runtextmacro"			return RuntextmacroKeyword;
+"requires"			return RequiresKeyword;
+"needs"				return NeedsKeyword;
+"uses"				return UsesKeyword;
+"initializer"			return InitializerKeyword;
+"defaults"			return DefaultsKeyword;
+"optional"			return OptionalKeyword;
+"super"				return SuperKeyword;
+"thistype"			return ThistypeKeyword;
+"operator"			return OperatorKeyword;
+"execute"			return ExecuteKeyword;
+"evaluate"			return EvaluateKeyword;
+"global"			return GlobalKeyword;
 
 {REALDIGIT} { return RealLiteral; }
 

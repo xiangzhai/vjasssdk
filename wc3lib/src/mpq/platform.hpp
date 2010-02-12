@@ -46,6 +46,72 @@ struct FILETIME
 
 typedef int16_t MD5; // 128 bit
 
+struct Header
+{
+	char magic[4];
+	int32 headerSize;
+	int32 archiveSize;
+	int16 formatVersion;
+	int8 sectorSizeShift;
+	int32 hashTableOffset;
+	int32 blockTableOffset;
+	int32 hashTableEntries;
+	int32 blockTableEntries;
+};
+
+struct ExtendedHeader // MPQ format 2
+{
+	int64 extendedBlockTableOffset;
+	int16 hashTableOffsetHigh;
+	int16 blockTableOffsetHigh;
+};
+
+struct HashTableEntry
+{
+	int32 filePathHashA;
+	int32 filePathHashB;
+	int16 language;
+	int8 platform;
+	int32 fileBlockIndex;
+};
+
+struct BlockTableEntry
+{
+	int32 blockOffset;
+	int32 blockSize;
+	int32 fileSize;
+	int32 flags;
+};
+
+struct ExtendedBlockTableEntry
+{
+	int16 extendedBlockOffset;
+};
+
+struct FileData
+{
+	int32 *sectorOffsetTable;
+};
+
+struct ExtendedAttributes
+{
+	int32 version;
+	int32 attributesPresent;
+};
+
+struct WeakDigitalSignature
+{	
+	int32 unknown0;
+	int32 unknown1;
+};
+
+struct StrongDigitalSignature
+{
+	char magic[4];
+	char signature[256];
+//	int2048 signature; //int2048, little-endian format
+};
+
 }
 
 }

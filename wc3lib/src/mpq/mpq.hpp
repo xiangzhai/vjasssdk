@@ -24,12 +24,14 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include <ctime>
+#include <sstream>
 
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 #include "platform.hpp"
+#include "hash.hpp"
+#include "block.hpp"
 #include "mpqfile.hpp"
 #include "../exception.hpp"
 
@@ -39,127 +41,9 @@ namespace wc3lib
 namespace mpq
 {
 
-class MpqFile;
-
 class Mpq
 {
 	public:
-		class Block
-		{
-			public:
-				enum Flags
-				{
-					None = 0x0,
-					IsFile = 0x80000000,
-					IsSingleUnit = 0x01000000,
-					UsesEncryptionKey = 0x00020000,
-					IsEncrypted = 0x00010000,
-					IsCompressed = 0x00000200,
-					IsImploded = 0x00000100
-				};
-
-				Block(class Mpq *mpq);
-
-				std::streamsize read(std::istream &istream) throw (class Exception);
-
-				/**
-				* @todo Check size, flags and required properties.
-				*/
-				bool check() const;
-				bool empty() const
-				{
-					return this->m_blockOffset > 0 && this->m_blockSize > 0 && this->m_fileSize == 0 && this->m_flags == Mpq::Block::None;
-				};
-				bool unused() const
-				{
-					return this->m_blockSize == 0 && this->m_fileSize == 0 && this->m_flags == Mpq::Block::None;
-				};
-				uint64 largeOffset() const
-				{
-					return ((uint64)this->m_extendedBlockOffset << 32) + (uint64)this->m_blockOffset;
-				};
-				bool time(time_t &time)
-				{
-					// The FILETIME represents a 64-bit integer: the number of 100 ns units since January 1, 1601
-					uint64 nTime = ((uint64)this->m_fileTime.highDateTime << 32) + this->m_fileTime.lowDateTime;
-				
-					if (nTime < EPOCH_OFFSET)
-						return false;
-				
-					nTime -= EPOCH_OFFSET;	// Convert the time base from 01/01/1601 to 01/01/1970
-					nTime /= 10000000ULL;	// Convert 100 ns to sec
-				
-					time = (time_t)nTime;
-				
-					// Test for overflow (FILETIME is 64 bits, time_t is 32 bits)
-					if ((nTime - (uint64)time) > 0)
-						return false;
-				
-					return true;
-				};
-				void setFileTime(const time_t &time)
-				{
-					uint64 nTime = (uint64)time;
-					
-					nTime *= 10000000ULL;
-					nTime += EPOCH_OFFSET;
-				
-					this->m_fileTime.lowDateTime = (uint32_t)nTime;
-					this->m_fileTime.highDateTime = (uint32_t)(nTime >> 32);
-				}
-						
-			protected:
-				friend class Mpq;
-				
-				static const uint64 EPOCH_OFFSET = 116444736000000000ULL; // Number of 100 ns units between 01/01/1601 and 01/01/1970
-				
-				class Mpq *m_mpq;
-				int32 m_blockOffset;
-				int16 m_extendedBlockOffset;
-				int32 m_blockSize;
-				int32 m_fileSize;
-				Flags m_flags;
-				// extended attributes
-				int32 m_crc32;
-				FILETIME m_fileTime;
-				MD5 m_md5;
-		};
-		
-		class Hash
-		{
-			public:
-				Hash(class Mpq *mpq);
-				
-				std::streamsize read(std::istream &istream) throw (class Exception);
-				void clear();
-				
-				bool check() const;
-				bool deleted() const
-				{
-					return this->m_deleted;
-				};
-				bool empty() const
-				{
-					return !this->m_deleted && this->m_block == 0;
-				};
-				
-			protected:
-				friend class Mpq;
-				
-				static const int32 blockIndexDeleted = 0xFFFFFFFE;
-				static const int32 blockIndexEmpty = 0xFFFFFFFF;
-				
-				class Mpq *m_mpq;
-				class MpqFile *m_mpqFile;
-				int32 m_filePathHashA;
-				int32 m_filePathHashB;
-				int16 m_language; // enum?
-				int8 m_platform;
-				class Block *m_block; // if this value is 0 it has never been used
-				bool m_deleted; // can not be true if m_block is 0
-		};
-		
-	
 		enum Format
 		{
 			Mpq1, // original format
@@ -262,20 +146,26 @@ class Mpq
 		* operator<< // operator for one file, existing files won't be overwritten.
 		* operator<< // operator for one archive, existing files won't be overwritten.
 		* operator>> // global operator for std::ostream
-		* Use these operators for size comparisons (Bytes) of archives:
-		* operator>
-		* operator<
-		* operator>=
-		* operator<=
-		* operator==
-		* operator!=
 		*/
+		class Mpq& operator<<(const class MpqFile &mpqFile) throw (class Exception);
+		class Mpq& operator<<(const class Mpq &mpq) throw (class Exception);
+		class Mpq& operator>>(class Mpq &mpq) throw (class Exception);
+		/**
+		* Compares MPQ archive's sizes.
+		*/
+		bool operator>(const class MpqFile &mpqFile);
+		bool operator<(const class MpqFile &mpqFile);
+		bool operator>=(const class MpqFile &mpqFile);
+		bool operator<=(const class MpqFile &mpqFile);
+		bool operator==(const class MpqFile &mpqFile);
+		bool operator!=(const class MpqFile &mpqFile);	
 
 	protected:
 		friend class MpqFile;
 		
 		static const uint32* cryptTable();
 
+		Mpq(const Mpq &mpq);
 		bool checkBlocks() const;
 		bool checkHashes() const;
 		/**
@@ -301,6 +191,8 @@ class Mpq
 		*/
 		void nextBlockOffsets(int32 &blockOffset, int16 &extendedBlockOffset) const;
 		
+		class Mpq& operator=(const class Mpq &mpq);
+		
 		/// This value is required for getting the first block offset (relative to the beginning of archive).
 		static const std::size_t headerSize;
 		
@@ -313,6 +205,50 @@ class Mpq
 		std::list<class Hash*> m_hashes;
 		std::list<class MpqFile*> m_files;
 };
+
+inline std::ostream& operator<<(std::ostream &ostream, const class Mpq &mpq) throw (class Exception)
+{
+	mpq.writeMpq(ostream);
+	
+	return ostream;
+}
+
+inline std::istream& operator>>(std::istream &istream, class Mpq &mpq) throw (class Exception)
+{
+	mpq.readMpq(istream);
+	
+	return istream;
+}
+
+inline bool operator>(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+{
+	return mpqFile1.m_size > mpqFile2.m_size;
+}
+
+inline bool operator<(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+{
+	return mpqFile1.m_size < mpqFile2.m_size;
+}
+
+inline bool Mpq::operator>=(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+{
+	return mpqFile1.m_size >= mpqFile2.m_size;
+}
+
+inline bool Mpq::operator<=(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+{
+	return mpqFile1.m_size <= mpqFile2.m_size;
+}
+
+inline bool Mpq::operator==(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+{
+	return mpqFile1.m_size == mpqFile2.m_size;
+}
+
+inline bool Mpq::operator!=(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+{
+	return mpqFile1.m_size != mpqFile2.m_size;
+}
 
 inline bool Mpq::check() const
 {
@@ -453,9 +389,9 @@ inline bool Mpq::checkHashes() const
 	return true;
 }
 
-inline class Mpq::Block* Mpq::firstEmptyBlock() const
+inline class Block* Mpq::firstEmptyBlock() const
 {
-	BOOST_FOREACH(class Mpq::Block *block, this->m_blocks)
+	BOOST_FOREACH(class Block *block, this->m_blocks)
 	{
 		if (block->empty())
 			return block;
@@ -464,9 +400,9 @@ inline class Mpq::Block* Mpq::firstEmptyBlock() const
 	return 0;
 }
 
-inline class Mpq::Block* Mpq::firstUnusedBlock() const
+inline class Block* Mpq::firstUnusedBlock() const
 {
-	BOOST_FOREACH(class Mpq::Block *block, this->m_blocks)
+	BOOST_FOREACH(class Block *block, this->m_blocks)
 	{
 		if (block->unused())
 			return block;
@@ -475,12 +411,12 @@ inline class Mpq::Block* Mpq::firstUnusedBlock() const
 	return 0;
 }
 
-inline class Mpq::Block* Mpq::lastOffsetBlock() const
+inline class Block* Mpq::lastOffsetBlock() const
 {
 	uint64 offset = 0;
-	class Mpq::Block *result = 0;
+	class Block *result = 0;
 	
-	BOOST_FOREACH(class Mpq::Block *block, this->m_blocks)
+	BOOST_FOREACH(class Block *block, this->m_blocks)
 	{
 		uint64 newOffset = block->largeOffset();
 		
@@ -492,9 +428,9 @@ inline class Mpq::Block* Mpq::lastOffsetBlock() const
 }
 	
 
-inline class Mpq::Hash* Mpq::firstEmptyHash() const
+inline class Hash* Mpq::firstEmptyHash() const
 {
-	BOOST_FOREACH(class Mpq::Hash *hash, this->m_hashes)
+	BOOST_FOREACH(class Hash *hash, this->m_hashes)
 	{
 		if (hash->empty())
 			return hash;
@@ -503,9 +439,9 @@ inline class Mpq::Hash* Mpq::firstEmptyHash() const
 	return 0;
 }
 
-inline class Mpq::Hash* Mpq::firstDeletedHash() const
+inline class Hash* Mpq::firstDeletedHash() const
 {
-	BOOST_FOREACH(class Mpq::Hash *hash, this->m_hashes)
+	BOOST_FOREACH(class Hash *hash, this->m_hashes)
 	{
 		if (hash->deleted())
 			return hash;
@@ -516,7 +452,7 @@ inline class Mpq::Hash* Mpq::firstDeletedHash() const
 
 inline uint64 Mpq::nextBlockOffset() const
 {
-	class Mpq::Block *block = this->lastOffsetBlock();
+	class Block *block = this->lastOffsetBlock();
 	
 	if (block == 0)
 		return Mpq::headerSize;

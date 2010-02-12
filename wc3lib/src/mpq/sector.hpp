@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,62 +18,53 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_VJASS_VJASS_HPP
-#define WC3LIB_LANG_VJASS_VJASS_HPP
+#ifndef WC3LIB_MPQ_SECTOR_HPP
+#define WC3LIB_MPQ_SECTOR_HPP
 
-#include "../language.hpp"
+#include <istream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 	
-namespace lang
+namespace mpq
 {
 	
-namespace vjass
-{
+class Mpq;
+class MpqFile;
 
-class Vjass : public Language
+class Sector
 {
 	public:
-		Vjass();
-		virtual const std::string& name() const;
-		virtual bool compatibleTo(const class Language &language) const;
-
-		void setForceMethodEvaluate(bool forceMethodEvaluate);		
-		bool forceMethodEvaluate() const;
-		void setNoImplicitThis(bool noImplicitThis);
-		bool noImplicitThis() const;
+		Sector(class MpqFile *mpqFile);
 		
-		class Object::List& externalCalls();
-		class Object::List& functionInterfaces();
-		class Object::List& hooks();
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		//std::streamsize write(std::ostream &ostream) throw (class Exception);
 		
 	protected:
-		bool m_forceMethodEvaluate;
-		bool m_noImplicitThis;
+		friend class Mpq;
+		friend class MpqFile;
+		
+		enum Compression
+		{
+			Uncompressed = 0,
+			ImaAdpcmMono = 0x40, // IMA ADPCM mono
+			ImaAdpcmStereo = 0x80, // IMA ADPCM stereo
+			Huffman = 0x01, // Huffman encoded
+			Deflated = 0x02, // Deflated (see ZLib)
+			Imploded = 0x08, // Imploded (see PKWare Data Compression Library)
+			Bzip2Compressed = 0x10 // BZip2 compressed (see BZip2)
+		};
+		
+		void setCompression(byte value);
+		
+		class MpqFile *m_mpqFile;
+		int32 m_sectorOffset;
+		int32 m_sectorSize; // not required, added by wc3lib
+		enum Compression m_compression;
 };
-
-inline void Vjass::setForceMethodEvaluate(bool forceMethodEvaluate)
-{
-	this->m_forceMethodEvaluate = forceMethodEvaluate;
-}
-
-inline bool Vjass::forceMethodEvaluate() const
-{
-	return this->m_forceMethodEvaluate;
-}
-
-inline void Vjass::setNoImplicitThis(bool noImplicitThis)
-{
-	this->m_noImplicitThis = noImplicitThis;
-}
-
-inline bool Vjass::noImplicitThis() const
-{
-	return this->m_noImplicitThis;
-}
-
-}
 
 }
 

@@ -29,6 +29,10 @@ namespace lang
 namespace vjass
 {
 
+Vjass::Vjass() : m_forceMethodEvaluate(false), m_noImplicitThis(false)
+{
+}
+	
 const std::string& Vjass::name() const
 {
 	return "vJass";

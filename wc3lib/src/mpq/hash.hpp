@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,61 +18,60 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_VJASS_VJASS_HPP
-#define WC3LIB_LANG_VJASS_VJASS_HPP
+#ifndef WC3LIB_MPQ_HASH_HPP
+#define WC3LIB_MPQ_HASH_HPP
 
-#include "../language.hpp"
+#include <istream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 	
-namespace lang
+namespace mpq
 {
 	
-namespace vjass
-{
+class Mpq;
+class MpqFile;
+class Block;
 
-class Vjass : public Language
+class Hash
 {
 	public:
-		Vjass();
-		virtual const std::string& name() const;
-		virtual bool compatibleTo(const class Language &language) const;
-
-		void setForceMethodEvaluate(bool forceMethodEvaluate);		
-		bool forceMethodEvaluate() const;
-		void setNoImplicitThis(bool noImplicitThis);
-		bool noImplicitThis() const;
+		Hash(class Mpq *mpq);
 		
-		class Object::List& externalCalls();
-		class Object::List& functionInterfaces();
-		class Object::List& hooks();
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		void clear();
+		
+		bool check() const;
+		bool deleted() const;
+		bool empty() const;
 		
 	protected:
-		bool m_forceMethodEvaluate;
-		bool m_noImplicitThis;
+		friend class Mpq;
+		
+		static const int32 blockIndexDeleted = 0xFFFFFFFE;
+		static const int32 blockIndexEmpty = 0xFFFFFFFF;
+		
+		class Mpq *m_mpq;
+		class MpqFile *m_mpqFile;
+		int32 m_filePathHashA;
+		int32 m_filePathHashB;
+		int16 m_language; // enum?
+		int8 m_platform;
+		class Block *m_block; // if this value is 0 it has never been used
+		bool m_deleted; // can not be true if m_block is 0
 };
 
-inline void Vjass::setForceMethodEvaluate(bool forceMethodEvaluate)
+inline bool Hash::deleted() const
 {
-	this->m_forceMethodEvaluate = forceMethodEvaluate;
+	return this->m_deleted;
 }
 
-inline bool Vjass::forceMethodEvaluate() const
+inline bool Hash::empty() const
 {
-	return this->m_forceMethodEvaluate;
-}
-
-inline void Vjass::setNoImplicitThis(bool noImplicitThis)
-{
-	this->m_noImplicitThis = noImplicitThis;
-}
-
-inline bool Vjass::noImplicitThis() const
-{
-	return this->m_noImplicitThis;
-}
-
+	return !this->m_deleted && this->m_block == 0;
 }
 
 }

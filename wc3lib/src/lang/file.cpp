@@ -41,7 +41,7 @@ namespace wc3lib
 namespace lang
 {
 
-File::File() : m_parser(0), m_language(0), m_lines(0), m_docComment(0)
+File::File() : yyFlexLexer(), m_parser(0), m_language(0), m_lines(0), m_docComment(0)
 {
 }
 
@@ -52,20 +52,28 @@ std::size_t File::parse(class Parser *parser, class SourceFile *sourceFile, std:
 	
 	istream.seekg(0, std::ios_base::end);
 	std::streampos position = ifstream.tellg();
-	istream.seekg(0);
-	char *bytes = new char[position + 3];
-	istream.read(bytes, position + 1);
-	bytes[position + 1] = YY_END_OF_BUFFER_CHAR;
-	bytes[position + 2] = YY_END_OF_BUFFER_CHAR;
-	YY_BUFFER_STATE buffer = yy_scan_bytes(bytes, position + 3);
+	struct yy_buffer_state *bufferState = this->yy_create_buffer(&istream, position + 1);
 	
-	if (stateHandle == 0)
-		return 0;
+	if (bufferState == 0)
+		throw Exception(_("Error while creating buffer."));
 	
-	yy_switch_to_buffer(buffer);
-	//yy_delete_buffer(buffer);
-	delete[] bytes;
-	bytes = 0;
+	this->yy_switch_to_buffer(bufferState);
+	
+	/// @todo Parse
+	
+	while (true)
+	{
+		if (this->yylex() == 0)
+		{
+			this->yy_delete_buffer(bufferState);
+			
+			throw Exception(_("Parsing error!"));
+		}
+	}
+	
+	this->yy_delete_buffer(bufferState);
+	bufferState = 0;
+	
 	std::size_t lines = this->m_lines;
 	
 	// reset members

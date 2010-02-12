@@ -27,6 +27,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include "mpq.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -34,10 +35,10 @@ namespace wc3lib
 
 namespace mpq
 {
-
+	
 class Mpq;
-
-class Mpq::Hash;
+class Hash;
+class Sector;
 
 /**
 * @brief Abstract class for mpq file access. Combines hash and block table data of file.
@@ -45,37 +46,6 @@ class Mpq::Hash;
 class MpqFile
 {
 	public:
-		class Sector
-		{
-			public:
-				Sector(class MpqFile *mpqFile);
-			
-				std::streamsize read(std::istream &istream) throw (class Exception);
-				//std::streamsize write(std::ostream &ostream) throw (class Exception);
-				
-			protected:
-				friend class Mpq;
-				friend class MpqFile;
-				
-				enum Compression
-				{
-					Uncompressed = 0,
-					ImaAdpcmMono = 0x40, // IMA ADPCM mono
-					ImaAdpcmStereo = 0x80, // IMA ADPCM stereo
-					Huffman = 0x01, // Huffman encoded
-					Deflated = 0x02, // Deflated (see ZLib)
-					Imploded = 0x08, // Imploded (see PKWare Data Compression Library)
-					Bzip2Compressed = 0x10 // BZip2 compressed (see BZip2)
-				};
-				
-				void setCompression(byte value);
-				
-				class MpqFile *m_mpqFile;
-				int32 m_sectorOffset;
-				int32 m_sectorSize; // not required, added by wc3lib
-				enum Compression m_compression;
-		};
-	
 		/// @todo Define all locales.
 		enum Locale
 		{
@@ -121,11 +91,11 @@ class MpqFile
 		/**
 		* MPQ files are created by @class Mpq only.
 		*/
-		MpqFile(class Mpq *mpq, class Mpq::Hash *hash);
+		MpqFile(class Mpq *mpq, class Hash *hash);
 		~MpqFile();
 		
 		class Mpq *m_mpq;
-		class Mpq::Hash *m_hash;
+		class Hash *m_hash;
 		std::size_t m_size; /// @todo  Get correct size type from MPQ specification
 		std::size_t m_compressedSize;
 		enum Locale m_locale;
@@ -154,7 +124,7 @@ inline const boost::filesystem::path& MpqFile::path() const
 	return this->m_path;
 }
 
-inline const std::list<class MpqFile::Sector*>& MpqFile::sectors() const
+inline const std::list<class Sector*>& MpqFile::sectors() const
 {
 	return this->m_sectors;
 }

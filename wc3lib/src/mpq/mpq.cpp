@@ -130,168 +130,6 @@ uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum
     return seed1;
 }
 
-struct Header
-{
-	char magic[4];
-	int32 headerSize;
-	int32 archiveSize;
-	int16 formatVersion;
-	int8 sectorSizeShift;
-	int32 hashTableOffset;
-	int32 blockTableOffset;
-	int32 hashTableEntries;
-	int32 blockTableEntries;
-};
-
-struct ExtendedHeader // MPQ format 2
-{
-	int64 extendedBlockTableOffset;
-	int16 hashTableOffsetHigh;
-	int16 blockTableOffsetHigh;
-};
-
-struct BlockTableEntry
-{
-	int32 blockOffset;
-	int32 blockSize;
-	int32 fileSize;
-	int32 flags;
-};
-
-struct ExtendedBlockTableEntry
-{
-	int16 extendedBlockOffset;
-};
-
-struct HashTableEntry
-{
-	int32 filePathHashA;
-	int32 filePathHashB;
-	int16 language;
-	int8 platform;
-	int32 fileBlockIndex;
-};
-
-struct FileData
-{
-	int32 *sectorOffsetTable;
-};
-
-struct ExtendedAttributes
-{
-	int32 version;
-	int32 attributesPresent;
-};
-
-struct WeakDigitalSignature
-{	
-	int32 unknown0;
-	int32 unknown1;
-};
-
-struct StrongDigitalSignature
-{
-	char magic[4];
-	char signature[256];
-//	int2048 signature; //int2048, little-endian format
-};
-
-Mpq::Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffset(0), m_blockSize(0), m_fileSize(0), m_flags(Mpq::Block::None)
-{
-}
-
-std::streamsize Mpq::Block::read(std::istream &istream) throw (class Exception)
-{
-	struct BlockTableEntry entry;
-	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
-	std::streamsize bytes = istream.gcount();
-
-	if (bytes != sizeof(entry))
-		throw Exception(_("Error while reading block table entry."));
-
-	this->m_blockOffset = entry.blockOffset;
-	this->m_blockSize = entry.blockSize;
-	this->m_fileSize = entry.fileSize;
-	this->m_flags = static_cast<enum Mpq::Block::Flags>(entry.fileSize);
-
-	return bytes;
-}
-
-Mpq::Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_block(0)
-{
-}
-
-std::streamsize Mpq::Hash::read(std::istream &istream) throw (class Exception)
-{
-	struct HashTableEntry entry;
-	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
-	std::streamsize bytes = istream.gcount();
-	
-	if (bytes != sizeof(entry))
-		throw Exception(_("Error while reading hash table entry."));
-	
-	this->m_filePathHashA = entry.filePathHashA;
-	this->m_filePathHashB = entry.filePathHashB;
-	this->m_language = entry.language;
-	this->m_platform = entry.platform;
-	
-	if (entry.fileBlockIndex == Mpq::Hash::blockIndexDeleted)
-		this->m_deleted = true;
-	else if (entry.fileBlockIndex != Mpq::Hash::blockIndexEmpty)
-	{
-		int32 index = 0;
-		
-		BOOST_FOREACH(class Mpq::Block *block, this->m_mpq->m_blocks)
-		{
-			if (index == entry.fileBlockIndex)
-			{
-				this->m_block = block;
-				
-				break;
-			}
-			
-			++index;
-		}
-		
-		if (this->m_block == 0)
-			throw Exception(_("Error while searching for corresponding block of hash table entry."));
-	}
-	// otherwise it's empty
-	
-	return bytes;
-}
-
-/// @todo Clear or write file hash and block data!
-void Mpq::Hash::clear()
-{
-	// If the next entry is empty, mark this one as empty; otherwise, mark this as deleted.
-	for (std::list<class Mpq::Hash*>::const_iterator iterator = this->m_mpq->m_hashes.begin(); iterator != this->m_mpq->m_hashes.end(); ++iterator)
-	{
-		if (*iterator == this)
-		{
-			if (iterator + 1 != this->m_mpq->m_hashes.end() && !(*(iterator + 1))->empty())
-				this->m_deleted = true;
-			
-			break;
-		}
-	}
-	
-	// If the block occupies space, mark the block as free space; otherwise, clear the block table entry.
-	if (this->m_block->m_blockSize > 0)
-	{
-		this->m_block->m_fileSize = 0;
-		this->m_block->m_flags = Mpq::Block::None;
-	}
-	else
-	{
-		/// @todo Change file size?
-		this->m_mpq->m_blocks.remove(this->m_block);
-		delete this->m_block;
-	}
-		
-	this->m_block = 0;
-}
-
 const char Mpq::identifier[4] = { 'M', 'P', 'Q',  0x1 };
 const int16 Mpq::format1Identifier = 0x0000;
 const int16 Mpq::format2Identifier = 0x0001;
@@ -744,6 +582,25 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 	/// @todo Write file data/free reserved space in MPQ.
 		
 	return hash->m_mpqFile;
+}
+
+class Mpq& Mpq::operator<<(const class MpqFile &mpqFile) throw (class Exception)
+{
+	/// @todo Copy all file data, existing files won't be overwritten.
+	
+	return *this;
+}
+
+class Mpq& Mpq::operator<<(const class Mpq &mpq) throw (class Exception)
+{
+	/// @todo Copy all file data of the other MPQ, existing files won't be overwritten.
+	
+	return *this;
+}
+
+class Mpq& Mpq::operator>>(class Mpq &mpq) throw (class Exception)
+{
+	/// @todo Copy all file data into the other MPQ, existing files won't be overwritten.
 }
 
 const uint32* Mpq::cryptTable()

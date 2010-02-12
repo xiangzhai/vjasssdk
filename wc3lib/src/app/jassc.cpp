@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -31,9 +31,8 @@
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 
-#include "internationalisation.hpp"
-#include "vjassdoc.hpp"
-#include "parser.hpp"
+#include "../lang/parser.hpp"
+#include "../internationalisation.hpp"
 
 using namespace vjassdoc;
 
@@ -42,140 +41,49 @@ int main(int argc, char *argv[])
 	// Set the current locale.
 	setlocale(LC_ALL, "");
 	// Set the text message domain.
-	bindtextdomain("vjassdoc", LOCALE_DIR);
-	textdomain("vjassdoc");
+	bindtextdomain("jassc", LOCALE_DIR);
+	textdomain("jassc");
 	
 	static struct option options[] =
 	{
 		{"version",                 no_argument,             0, 'V'},
 		{"help",                    no_argument,             0, 'h'},
-		{"jass",                    no_argument,             0, 'j'},
-		{"debug",                   no_argument,             0, 'd'},
-		{"private",                 no_argument,             0, 'p'},
-		{"textmacros",              no_argument,             0, 'm'},
-		{"functions",               no_argument,             0, 'f'},
-		{"nocomments",              no_argument,             0, 0},
-		{"nokeywords",              no_argument,             0, 0},
-		{"notextmacros",            no_argument,             0, 0},
-		{"notextmacroinstances",    no_argument,             0, 0},
-		{"noexternalcalls",         no_argument,             0, 0},
-		{"notypes",                 no_argument,             0, 0},
-		{"nolocals",                no_argument,             0, 0},
-		{"noglobals",               no_argument,             0, 0},
-		{"nomembers",               no_argument,             0, 0},
-		{"noparameters",            no_argument,             0, 0},
-		{"nofunctioninterfaces",    no_argument,             0, 0},
-		{"nofunctions",             no_argument,             0, 0},
-		{"nomethods",               no_argument,             0, 0},
-		{"nocalls",                 no_argument,             0, 0},
-		{"noimplementations",       no_argument,             0, 0},
-		{"nohooks",                 no_argument,             0, 0},
-		{"nointerfaces",            no_argument,             0, 0},
-		{"nostructs",               no_argument,             0, 0},
-		{"nomodules",               no_argument,             0, 0},
-		{"noscopes",                no_argument,             0, 0},
-		{"nolibraries",             no_argument,             0, 0},
-		{"nosourcefiles",           no_argument,             0, 0},
-		{"nodoccomments",           no_argument,             0, 0},
-		{"html",                    no_argument,             0, 'l'},
-		{"pages",                   no_argument,             0, 'g'},
-		{"specialpages",            no_argument,             0, 's'},
-		{"syntax",                  no_argument,             0, 'x'},
-		{"compile",                 required_argument,       0, 'C'},
-#ifdef SQLITE
-		{"database",                required_argument,       0, 'L'},
+		{"recursive",               required_argument,       0, 'R'},
+		{"include",                 required_argument,       0, 'I'},
+		{"showerrors",              no_argument,             0, 's'},
+		{"verify",                  no_argument,             0, 'v'},
+#ifdef HTML
+		{"html",                    required_argument,       0, 'H'},
 #endif
-		{"verbose",                 no_argument,             0, 'v'},
-		{"time",                    no_argument,             0, 't'},
-		{"alphabetical",            no_argument,             0, 'a'},
-		{"title",                   required_argument,       0, 'T'},
-		{"importdirs",              required_argument,       0, 'I'},
-		{"dir",                     required_argument,       0, 'D'},
 #ifdef SQLITE
-		{"databases",               required_argument,       0, 'B'},
+		{"sqlite",                  required_argument,       0, 'L'},
 #endif
+		{"map",                     required_argument,       0, 'M'},
+		{"mapscript",               required_argument,       0, 'T'},
+		{"script",                  required_argument,       0, 'P'},
+		{"optimize",                required_argument,       0, 'O'},
+		{"language",                required_argument,       0, 'A'},
 		{0, 0, 0, 0}
 	};
 	
-	bool jass = false;
-	bool debug = false;
-	bool parsePrivate = false;
-	bool textmacros = false;
-	bool functions = false;
-	bool html = false;
-	bool pages = false;
-	bool specialPages = false;
-	bool syntax = false;
-	std::string compileFilePath;
-	std::string databaseFilePath;
-	bool verbose = false;
-	bool time = false;
-	bool alphabetical = false;
-	static const char* objectListOption[Parser::MaxLists] =
-	{
-		"nocomments",
-		"nokeywords",
-		"nokeys",
-		"notextmacros",
-		"notextmacroinstances",
-		"noexternalcalls",
-		"notypes",
-		"nolocals",
-		"noglobals",
-		"nomembers",
-		"noparameters",
-		"nofunctioninterfaces",
-		"nofunctions",
-		"nomethods",
-		"nocalls",
-		"noimplementations",
-		"nohooks",
-		"nointerfaces",
-		"nostructs",
-		"nomodules",
-		"noscopes",
-		"nolibraries",
-		"nosourcefiles",
-		"nodoccomments"
-	};
-	bool parseObjectsOfList[Parser::MaxLists] =
-	{
-		true, //comments
-		true, //keywords
-		true, //keys
-		true, //text macros
-		true, //text macro instances
-		true, //external calls
-		true, //types
-		true, //locals
-		true, //globals
-		true, //members
-		true, //parameters
-		true, //function interfaces
-		true, //functions
-		true, //methods
-		true, //calls
-		true, //implementations
-		true, //hooks
-		true, //interfaces
-		true, //structs
-		true, //modules
-		true, //scopes
-		true, //libraries
-		true, //source files
-		true //doc comments
-	};
-	std::string title;
-	std::string dir;
-	std::list<boost::filesystem::path> importDirs;
-	std::list<boost::filesystem::path> databases;
-	std::list<boost::filesystem::path> filePaths;
+	static const char *version = "0.1";
+	boost::filesystem::path recursivePath;
+	std::list<boost::filesystem::path> includeDirs;
+	bool showErrors = false;
+	bool verify = false;
+	boost::filesystem::path htmlPath;
+	boost::filesystem::path sqlitePath;
+	boost::filesystem::path mapPath;
+	boost::filesystem::path mapScriptPath;
+	boost::filesystem::path scriptPath;
+	std::string optimize;
+	std::string language;
 	int optionShortcut;
 	
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "VhjdpmflgsxC:L:vtaT:I:D:B:", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "VhR:I:svH:L:M:T:P:O:A:", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -184,13 +92,13 @@ int main(int argc, char *argv[])
 		{
 			case 'V':
 			{
-				printf("vjassdoc %s.\n", Vjassdoc::version);
-				std::cout << _(
+				std::cout << boost::format(_(
+				"jassc %1%.\n"
 				"Copyright © 2008, 2009 Tamino Dauth\n"
 				"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
 				"This is free software: you are free to change and redistribute it.\n"
 				"There is NO WARRANTY, to the extent permitted by law."
-				) << std::endl;
+				)) % version << std::endl;
 				
 				return EXIT_SUCCESS;
 			}
@@ -198,7 +106,7 @@ int main(int argc, char *argv[])
 			case 'h':
 			{
 				std::cout <<
-				boost::format(_("vjassdoc %1%.\n\n")) % Vjassdoc::version <<
+				boost::format(_("jassc %1%.\n\n")) % version <<
 				_("Usage: vjassdoc [Options] [Code files]\n\n") <<
 				_("Options:\n") <<
 				_("\t-V --version                Shows the current version of vjassdoc.\n") <<

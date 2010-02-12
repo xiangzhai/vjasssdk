@@ -33,7 +33,10 @@ namespace lang
 {
 
 
-class Language : public std::list<class Object::List*>
+/**
+* Each language instance is a list of language object lists.
+*/
+class Language : public std::list<class Object::List>
 {
 	public:		
 		Language();
