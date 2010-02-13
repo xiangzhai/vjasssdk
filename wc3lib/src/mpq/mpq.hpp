@@ -150,15 +150,6 @@ class Mpq
 		class Mpq& operator<<(const class MpqFile &mpqFile) throw (class Exception);
 		class Mpq& operator<<(const class Mpq &mpq) throw (class Exception);
 		class Mpq& operator>>(class Mpq &mpq) throw (class Exception);
-		/**
-		* Compares MPQ archive's sizes.
-		*/
-		bool operator>(const class MpqFile &mpqFile);
-		bool operator<(const class MpqFile &mpqFile);
-		bool operator>=(const class MpqFile &mpqFile);
-		bool operator<=(const class MpqFile &mpqFile);
-		bool operator==(const class MpqFile &mpqFile);
-		bool operator!=(const class MpqFile &mpqFile);	
 
 	protected:
 		friend class MpqFile;
@@ -220,34 +211,34 @@ inline std::istream& operator>>(std::istream &istream, class Mpq &mpq) throw (cl
 	return istream;
 }
 
-inline bool operator>(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+inline bool operator>(const class Mpq &mpq1, const class Mpq &mpq2)
 {
-	return mpqFile1.m_size > mpqFile2.m_size;
+	return mpq1.size() > mpq2.size();
 }
 
-inline bool operator<(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+inline bool operator<(const class Mpq &mpq1, const class Mpq &mpq2)
 {
-	return mpqFile1.m_size < mpqFile2.m_size;
+	return mpq1.size() < mpq2.size();
 }
 
-inline bool Mpq::operator>=(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+inline bool operator>=(const class Mpq &mpq1, const class Mpq &mpq2)
 {
-	return mpqFile1.m_size >= mpqFile2.m_size;
+	return mpq1.size() >= mpq2.size();
 }
 
-inline bool Mpq::operator<=(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+inline bool operator<=(const class Mpq &mpq1, const class Mpq &mpq2)
 {
-	return mpqFile1.m_size <= mpqFile2.m_size;
+	return mpq1.size() <= mpq2.size();
 }
 
-inline bool Mpq::operator==(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+inline bool operator==(const class Mpq &mpq1, const class Mpq &mpq2)
 {
-	return mpqFile1.m_size == mpqFile2.m_size;
+	return mpq1.size() == mpq2.size();
 }
 
-inline bool Mpq::operator!=(const class MpqFile &mpqFile1, const class MpqFile &mpqFile2)
+inline bool operator!=(const class Mpq &mpq1, const class Mpq &mpq2)
 {
-	return mpqFile1.m_size != mpqFile2.m_size;
+	return mpq1.size() != mpq2.size();
 }
 
 inline bool Mpq::check() const

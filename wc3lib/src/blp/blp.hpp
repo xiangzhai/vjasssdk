@@ -33,9 +33,6 @@ namespace wc3lib
 namespace blp
 {
 
-class BlpJpeg;
-class BlpUncompressed1;
-
 /**
 * @brief Provides access to the BLP format.
 * A full mipmap chain must be present. The last mipmap must be 1x1 (no larger).

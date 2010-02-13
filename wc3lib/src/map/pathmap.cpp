@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,81 +18,65 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MAP_PATHMAP_HPP
-#define WC3LIB_MAP_PATHMAP_HPP
+#include <cstring>
 
-#include <istream>
-#include <ostream>
+#include <boost/format.hpp>
 
-#include "../exception.hpp"
+#include "pathmap.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
-
+	
 namespace map
 {
-	
-class W3m;
 
-class Pathmap
+static struct Header
 {
-	public:
-		enum Data
-		{
-			Walk = 0x02,
-			Fly = 0x04,
-			Build = 0x08,
-			Blight = 0x20,
-			Water = 0x40,
-			Unknown = 0x80
-		};
-		
-		Pathmap(class W3m *w3m);
-		~Pathmap();
-		
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::istream &istream) throw (class Exception);
-		
-		int32 fileVersion() const;
-		int32 width() const;
-		int32 height() const;
-		enum Data data(std::size_t width, size_t height) const throw (class Exception);
-		
-		static const char8 identifier[4] = { 'M', 'P', '3', 'W' };
-
-	protected:
-		class W3m *m_w3m;
-		int32 m_fileVersion;
-		int32 m_width;
-		int32 m_height;
-		enum Data *m_data;
+	char8 fileId[4]; //[4]: file ID = 'MP3W'
+	int32 fileVersion; //: file version = 0
+	int32 width; //: path map width (=map_width*4)
+	int32 height; //: path map height (=map_height*4)
 };
 
-inline int32 Pathmap::fileVersion() const
+Pathmap::Pathmap(class W3m *w3m) : m_w3m(w3m), m_fileVersion(0), m_width(0), m_height(0), m_data(0)
 {
-	return this->m_fileVersion;
 }
 
-inline int32 Pathmap::width() const
+Pathmap::~Pathmap()
 {
-	return this->m_width;
+	if (this->m_data != 0)
+		delete[] this->m_data;
 }
 
-inline int32 Pathmap::height() const
+std::streamsize Pathmap::read(std::istream &istream) throw (class Exception)
 {
-	return this->m_height;
-}
-
-inline enum Pathmap::Data Pathmap::data(std::size_t width, size_t height) const throw (class Exception)
-{
-	if (this->m_data == 0 || width >= this->m_width || height >= this->m_height)
-		throw Exception();
+	struct Header header;
+	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
+	std::streamsize bytes = istream.gcount();
 	
-	return this->m_data[width][height];
+	if (memcmp(header.fileId, Pathmap::identifier, sizeof(header.fileId)) != 0)
+		throw Exception(boost::format(_("Pathmap: Unknown file id \"%1%\". Expected \"%2%\".")) % header.fileId % Pathmap::identifier);
+	
+	this->m_fileVersion = header.fileVersion;
+	this->m_width = header.width;
+	this->m_height = header.height;
+	
+	if (this->m_data != 0)
+		delete[] this->m_data;
+	
+	this->m_data = new Pathmap::Data[header.width][header.height];
+	istream.read(reinterpret_cast<char*>(&this->m_data), header.width * header.height);
+	bytes += istream.gcount();
+	
+	return bytes;
+}
+
+std::streamsize Pathmap::write(std::istream &istream) throw (class Exception)
+{
+	return 0;
 }
 
 }
 
 }
-
-#endif
