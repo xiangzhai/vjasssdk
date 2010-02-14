@@ -1,3 +1,5 @@
+WC3LIB_ENABLE_EXCEPTIONS()
+
 set(wc3lib_MAP_SRC
 	w3g.cpp
 	w3m.cpp

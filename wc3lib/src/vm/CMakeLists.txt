@@ -1,3 +1,5 @@
+WC3LIB_ENABLE_EXCEPTIONS()
+
 set(wc3lib_VM_SRC
 	vm.cpp
 )

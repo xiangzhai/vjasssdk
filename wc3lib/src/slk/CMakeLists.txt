@@ -1,3 +1,5 @@
+WC3LIB_ENABLE_EXCEPTIONS()
+
 set(wc3lib_SLK_SRC
 	slk.cpp
 )

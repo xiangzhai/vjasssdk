@@ -61,11 +61,6 @@ class Mpq
 		static bool hasStrongDigitalSignature(std::istream &istream);
 		static std::streamsize strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception);
 
-		static const char identifier[4];
-		static const int16 formatVersion1Identifier;
-		static const int16 formatVersion2Identifier;
-		static const int32 extendedAttributesVersion;
-
 		/**
 		* Does not read the MPQ archive data!
 		* Use @fn Mpq.readMpq to do this.
@@ -151,8 +146,14 @@ class Mpq
 		class Mpq& operator<<(const class Mpq &mpq) throw (class Exception);
 		class Mpq& operator>>(class Mpq &mpq) throw (class Exception);
 
+		static const byte identifier[4];
+		static const int16 formatVersion1Identifier;
+		static const int16 formatVersion2Identifier;
+		static const int32 extendedAttributesVersion;
 	protected:
 		friend class MpqFile;
+		friend class Hash;
+		friend class Block;
 		
 		static const uint32* cryptTable();
 

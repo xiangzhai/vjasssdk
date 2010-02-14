@@ -1,3 +1,7 @@
+2010-02-14 Tamino Dauth <tamino@cdauth.de>
+* Added cmake macro WC3LIB_ENABLE_EXCEPTIONS.
+* Revised Jass++ specification.
+
 2010-02-13 Tamino Dauth <tamino@cdauth.de>
 * Improved class map::Pathmap.
 

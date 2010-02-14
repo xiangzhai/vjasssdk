@@ -25,6 +25,7 @@
 #include <boost/format.hpp>
 
 #include "mpq.hpp"
+#include "sector.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -32,6 +33,14 @@ namespace wc3lib
 
 namespace mpq
 {
+	
+enum HashType
+{
+	TableOffset = 0,
+	NameA = 1,
+	NameB = 2,
+	FileKey = 3
+};
 
 // The encryption and hashing functions use a number table in their procedures. This table must be initialized before the functions are called the first time.
 static void InitializeCryptTable(uint32 dwCryptTable[0x500])
@@ -102,14 +111,6 @@ static void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint
     }
 }
 
-enum HashType
-{
-	TableOffset = 0,
-	NameA = 1,
-	NameB = 2,
-	FileKey = 3
-};
-
 // Based on code from StormLib.
 uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum HashType dwHashType)
 {
@@ -130,9 +131,9 @@ uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum
     return seed1;
 }
 
-const char Mpq::identifier[4] = { 'M', 'P', 'Q',  0x1 };
-const int16 Mpq::format1Identifier = 0x0000;
-const int16 Mpq::format2Identifier = 0x0001;
+const byte Mpq::identifier[4] = { 'M', 'P', 'Q',  0x1 };
+const int16 Mpq::formatVersion1Identifier = 0x0000;
+const int16 Mpq::formatVersion2Identifier = 0x0001;
 const int32 Mpq::extendedAttributesVersion = 100;
 const std::size_t Mpq::headerSize = sizeof(struct Header);
 
@@ -176,7 +177,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 	
 	// Number of entries in the hash table. Must be a power of two, and must be less than 2^16 for the original MoPaQ format, or less than 2^20 for the Burning Crusade format.
 	if ((this->m_format == Mpq::Mpq1 && header.hashTableEntries >= pow(2, 16)) || (this->m_format == Mpq::Mpq2 && header.hashTableEntries >= pow(2, 20)))
-		std::cerr << boost::format(_("Warning: There are too many MPQ hash table entries in MPQ file \"%1%\".\nEntries: %2%.")) % this->m_path.string() % header.hashTableEntries() << std::endl;
+		std::cerr << boost::format(_("Warning: There are too many MPQ hash table entries in MPQ file \"%1%\".\nEntries: %2%.")) % this->m_path.string() % header.hashTableEntries << std::endl;
 	
 	// According to the StormLib this value is sometimes changed by map creators to protect their maps. As in the StormLib this value is ignored.
 	if (header.headerSize != sizeof(header))
@@ -212,7 +213,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 		
 		for (std::size_t i = 0; i < header.blockTableEntries; ++i)
 		{
-			class Mpq::Block *block = new Block(this);
+			class Block *block = new Block(this);
 			bytes += block->read(sstream);
 			this->m_blocks.push_back(block);
 		}
@@ -233,10 +234,11 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 	{
 		istream.seekg(extendedHeader.extendedBlockTableOffset);
 		
-		BOOST_FOREACH(class Mpq::Block *block, this->m_blocks)
+		BOOST_FOREACH(class Block *block, this->m_blocks)
 		{
 			struct ExtendedBlockTableEntry extendedBlockTableEntry;
-			bytes += istream.read(reinterpret_cast<char*>(&extendedBlockTableEntry), sizeof(extendedBlockTableEntry));
+			istream.read(reinterpret_cast<char*>(&extendedBlockTableEntry), sizeof(extendedBlockTableEntry));
+			bytes += istream.gcount();
 			block->m_extendedBlockOffset = extendedBlockTableEntry.extendedBlockOffset;
 		}
 	}
@@ -261,7 +263,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 		
 		for (std::size_t i = 0; i < header.hashTableEntries; ++i)
 		{
-			class Mpq::Hash *hash = new Hash(this);
+			class Hash *hash = new Hash(this);
 			bytes += hash->read(sstream);
 			this->m_hashes.push_back(hash);
 		}
@@ -286,7 +288,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 	//this->findFile("(listfile)"); listfile contains file paths
 	
 	// file data / add file instances
-	BOOST_FOREACH(class Mpq::Hash *hash, this->m_hashes)
+	BOOST_FOREACH(class Hash *hash, this->m_hashes)
 	{
 		if (!hash->empty() && !hash->deleted())
 		{
@@ -305,13 +307,13 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 			sector offset table
 			This table is not present if this information can be calculated.
 			*/
-			if (!(hash->m_block->m_flags & Mpq::Block::IsSingleUnit) || (!(hash->m_block->m_flags & Mpq::Block::IsCompressed) && !(hash->m_block->m_flags & Mpq::Block::IsImploded)))
+			if (!(hash->m_block->m_flags & Block::IsSingleUnit) || (!(hash->m_block->m_flags & Block::IsCompressed) && !(hash->m_block->m_flags & Block::IsImploded)))
 			{
 				int32 sectors = 0; /// @todo How to get this value?
 				
 				for (std::size_t i = 0; i < sectors; ++i)
 				{
-					class MpqFile::Sector *sector = new Sector(mpqFile);
+					class Sector *sector = new Sector(mpqFile);
 					istream.read(reinterpret_cast<char*>(&sector->m_sectorOffset), sizeof(sector->m_sectorOffset));
 					bytes += istream.gcount();
 					mpqFile->m_sectors.push_back(sector);
@@ -323,10 +325,10 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 				int32 size = mpqFile->m_size;
 				
 				// calculate sector size, not required but maybe useful at some point
-				for (std::list<class MpqFile::Sector*>::reverse_iterator iterator = mpqFile->m_sectors.rbegin(); iterator != mpqFile->m_sectors.rend(); ++iterator)
+				BOOST_REVERSE_FOREACH(class Sector *sector, mpqFile->m_sectors)
 				{
-					(*iterator)->m_sectorSize = size - (*iterator)->m_sectorOffset;
-					size = (*iterator)->m_sectorOffset;
+					sector->m_sectorSize = size - sector->m_sectorOffset;
+					size = sector->m_sectorOffset;
 				}
 			}
 			// If the file is not compressed/imploded, then the size and offset of all sectors is known, based on the archive's SectorSizeShift. If the file is stored as a single unit compressed/imploded, then the SectorOffsetTable is omitted, as the single file "sector" corresponds to BlockSize and FileSize, as mentioned previously. However, the SectorOffsetTable will be present if the file is compressed/imploded and the file is not stored as a single unit, even if there is only a single sector in the file (the size of the file is less than or equal to the archive's sector size).
@@ -334,7 +336,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 			{
 				int32 sectors = 0;
 				
-				if (hash->m_block->m_flags & Mpq::Block::IsSingleUnit)
+				if (hash->m_block->m_flags & Block::IsSingleUnit)
 					sectors = 1;
 				else
 					sectors = hash->m_block->m_blockSize / header.sectorSizeShift;
@@ -344,10 +346,10 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 				
 				for (std::size_t i = 0; i < sectors; ++i)
 				{
-					class MpqFile::Sector *sector = new Sector(mpqFile);
+					class Sector *sector = new Sector(mpqFile);
 					sector->m_sectorOffset = newOffset;
 					
-					if (hash->m_block->m_flags & Mpq::Block::IsSingleUnit)
+					if (hash->m_block->m_flags & Block::IsSingleUnit)
 						sector->m_sectorSize = hash->m_block->m_blockSize;
 					else
 						sector->m_sectorSize = header.sectorSizeShift;
@@ -358,9 +360,9 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 				}
 				
 				// the last sector may contain less than this, depending on the size of the entire file's data.
-				if (!(hash->m_block->m_flags & Mpq::Block::IsSingleUnit) && lastSize > 0)
+				if (!(hash->m_block->m_flags & Block::IsSingleUnit) && lastSize > 0)
 				{
-					class MpqFile::Sector *sector = new Sector(mpqFile);
+					class Sector *sector = new Sector(mpqFile);
 					sector->m_sectorOffset = newOffset;
 					sector->m_sectorSize = lastSize;
 					mpqFile->m_sectors.push_back(sector);
@@ -368,9 +370,9 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 				
 			}
 			
-			BOOST_FOREACH(class MpqFile::Sector *sector, mpqFile->m_sectors)
+			BOOST_FOREACH(class Sector *sector, mpqFile->m_sectors)
 			{
-				if (mpqFile->m_hash->m_block->m_flags & Mpq::Block::IsCompressed)
+				if (mpqFile->m_hash->m_block->m_flags & Block::IsCompressed)
 				{
 					byte compression;
 					istream.read(reinterpret_cast<char*>(&compression), sizeof(compression));
@@ -456,7 +458,7 @@ const class MpqFile* Mpq::findFileByName(const std::string &name) const
 {
 	BOOST_FOREACH(const class MpqFile *mpqFile, this->m_files)
 	{
-		if (mpqFile->name() == name)
+		if (mpqFile->path().filename() == name)
 			return mpqFile;
 	}
 	
@@ -469,13 +471,13 @@ const class MpqFile* Mpq::findFileByHash(const boost::filesystem::path &path, en
 		return 0;
 		
 	// Compute the hashes to compare the hash table entry against
-	uint32 nameHashA = HashString(Mpq::cryptTable(), path.string().c_str(), HashType.NameA);
-	uint32 nameHashB = HashString(Mpq::cryptTable(), path.string().c_str(), HashType.NameB);	
+	uint32 nameHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
+	uint32 nameHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);	
 	int16 language = MpqFile::localeToInt(locale);
 	int8 realPlatform = MpqFile::platformToInt(platform);
 	
 	// Check each entry in the hash table till a termination point is reached
-	std::list<class Mpq::Hash*>::const_iterator iterator = this->m_hashes.begin();
+	std::list<class Hash*>::const_iterator iterator = this->m_hashes.begin();
 	
 	do
 	{
@@ -483,8 +485,8 @@ const class MpqFile* Mpq::findFileByHash(const boost::filesystem::path &path, en
 		{
 			if ((*iterator)->m_filePathHashA == nameHashA && (*iterator)->m_filePathHashB == nameHashB && (*iterator)->m_language == language && (*iterator)->m_platform == realPlatform)
 			{
-				if ((*iterator)->m_path != path) // path has not been set yet
-					(*iterator)->m_path = path;
+				if ((*iterator)->m_mpqFile->m_path != path) // path has not been set yet
+					(*iterator)->m_mpqFile->m_path = path;
 				
 				return const_cast<const class MpqFile*>((*iterator)->m_mpqFile);
 			}
@@ -497,9 +499,9 @@ const class MpqFile* Mpq::findFileByHash(const boost::filesystem::path &path, en
 	return 0;
 }
 
-class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, bool overwriteExisting, std::size_t reservedSpace) throw (class Exception)
+class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream, bool overwriteExisting, std::size_t reservedSpace) throw (class Exception)
 {
-	class MpqFile *mpqFile = this->findFileByHash(path, locale, platform);
+	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFileByHash(path, locale, platform));
 	
 	if (mpqFile != 0)
 	{
@@ -510,7 +512,7 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 		mpqFile->remove();
 	}
 	
-	class Mpq::Block *block = 0;
+	class Block *block = 0;
 	
 	if (reservedSpace == 0)
 	{
@@ -538,20 +540,20 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 	if (block == 0)
 	{
 		newBlock = true;
-		block = new Mpq::Block(this);
+		block = new Block(this);
 		this->nextBlockOffsets(block->m_blockOffset, block->m_extendedBlockOffset);
 		
-		if (this->m_format != Mpq::Mpq2 && block->m_extendedOffset > 0)
+		if (this->m_format != Mpq::Mpq2 && block->m_extendedBlockOffset > 0)
 			throw Exception(_("Extended block offset can not be used in MPQ format 1."));
 		
 		block->m_blockSize = reservedSpace;
 		block->m_fileSize = reservedSpace;
-		block->m_flags = Mpq::Block::IsFile; /// @todo Set right flags (user-defined).
+		block->m_flags = Block::IsFile; /// @todo Set right flags (user-defined).
 		this->m_blocks.push_back(block);
 		
 	}
 	
-	class Mpq::Hash *hash = this->firstDeletedHash();
+	class Hash *hash = this->firstDeletedHash();
 		
 	if (hash == 0)
 		hash = this->firstEmptyHash();
@@ -568,8 +570,8 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 	}
 	
 	hash->m_block = block;
-	hash->m_filePathHashA = HashString(Mpq::cryptTable(), path.string(), HashType.NameA);
-	hash->m_filePathHashB = HashString(Mpq::cryptTable(), path.string(), HashType.NameB);
+	hash->m_filePathHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
+	hash->m_filePathHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);
 	hash->m_language = MpqFile::localeToInt(locale);
 	hash->m_platform = MpqFile::platformToInt(platform);
 	hash->m_mpqFile = new MpqFile(this, hash);
@@ -580,6 +582,9 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 		;
 	
 	/// @todo Write file data/free reserved space in MPQ.
+	
+	if (istream != 0)
+		;
 		
 	return hash->m_mpqFile;
 }
@@ -601,6 +606,8 @@ class Mpq& Mpq::operator<<(const class Mpq &mpq) throw (class Exception)
 class Mpq& Mpq::operator>>(class Mpq &mpq) throw (class Exception)
 {
 	/// @todo Copy all file data into the other MPQ, existing files won't be overwritten.
+
+	return *this;
 }
 
 const uint32* Mpq::cryptTable()

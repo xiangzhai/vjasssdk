@@ -1,3 +1,5 @@
+WC3LIB_ENABLE_EXCEPTIONS()
+
 set(wc3lib_EDITOR_SRC
 	aieditor.cpp
 	blpiohandler.cpp
@@ -40,7 +42,7 @@ QT4_WRAP_UI(wc3lib_EDITOR_UI_H ${wc3lib_EDITOR_UI})
 
 add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
 # todo use OGRE_LIBRARIES from custom cmake module
-target_link_libraries(wc3libeditor wc3libblp wc3libmpq wc3libmdlx ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} OgreMain ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
+target_link_libraries(wc3libeditor wc3libcore wc3libblp wc3libmpq wc3libmdlx ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} OgreMain ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 #wc3libeditorqogre
 
 #install

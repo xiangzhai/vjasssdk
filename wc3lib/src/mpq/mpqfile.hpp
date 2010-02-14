@@ -27,7 +27,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "mpq.hpp"
+#include "platform.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -127,6 +127,26 @@ inline const boost::filesystem::path& MpqFile::path() const
 inline const std::list<class Sector*>& MpqFile::sectors() const
 {
 	return this->m_sectors;
+}
+
+inline int16 MpqFile::localeToInt(enum MpqFile::Locale locale)
+{
+	return int16(locale);
+}
+
+inline enum MpqFile::Locale MpqFile::intToLocale(int16 value)
+{
+	return MpqFile::Locale(value);
+}
+
+inline int8 MpqFile::platformToInt(enum MpqFile::Platform platform)
+{
+	return int8(platform);
+}
+
+inline enum MpqFile::Platform intToPlatform(int8 value)
+{
+	return MpqFile::Platform(value);
 }
 
 }

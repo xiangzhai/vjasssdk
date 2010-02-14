@@ -671,7 +671,9 @@ Notation:
 
 Funktionen
 
-Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich mindestens die Parametertypen, die Parameteranzahl oder der Rückgabetyp m unterscheiden.
+Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich mindestens die Parametertypen oder die Parameteranzahl unterscheiden.
+Unterscheidet sich lediglich der Rückgabetyp, so gelten beide Definition nicht als unterschiedlich, da im Falle eines Aufrufes ohne eine Speicherung
+des Rückgabetyps nicht sichergestellt werden könnte, welche Version der Funktion aufgerufen werden sollte.
 Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
 Parameter, welche kein Standardargument besitzen gesetzt werden:
 MyFunction(y = 10, x = 100, 100, 3, 5);

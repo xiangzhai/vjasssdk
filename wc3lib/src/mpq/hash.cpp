@@ -32,11 +32,11 @@ namespace wc3lib
 namespace mpq
 {
 
-Mpq::Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_block(0)
+Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_block(0)
 {
 }
 
-std::streamsize Mpq::Hash::read(std::istream &istream) throw (class Exception)
+std::streamsize Hash::read(std::istream &istream) throw (class Exception)
 {
 	struct HashTableEntry entry;
 	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
@@ -50,13 +50,13 @@ std::streamsize Mpq::Hash::read(std::istream &istream) throw (class Exception)
 	this->m_language = entry.language;
 	this->m_platform = entry.platform;
 	
-	if (entry.fileBlockIndex == Mpq::Hash::blockIndexDeleted)
+	if (entry.fileBlockIndex == Hash::blockIndexDeleted)
 		this->m_deleted = true;
-	else if (entry.fileBlockIndex != Mpq::Hash::blockIndexEmpty)
+	else if (entry.fileBlockIndex != Hash::blockIndexEmpty)
 	{
 		int32 index = 0;
 		
-		BOOST_FOREACH(class Mpq::Block *block, this->m_mpq->m_blocks)
+		BOOST_FOREACH(class Block *block, this->m_mpq->m_blocks)
 		{
 			if (index == entry.fileBlockIndex)
 			{
@@ -77,14 +77,17 @@ std::streamsize Mpq::Hash::read(std::istream &istream) throw (class Exception)
 }
 
 /// @todo Clear or write file hash and block data!
-void Mpq::Hash::clear()
+void Hash::clear()
 {
 	// If the next entry is empty, mark this one as empty; otherwise, mark this as deleted.
-	for (std::list<class Mpq::Hash*>::const_iterator iterator = this->m_mpq->m_hashes.begin(); iterator != this->m_mpq->m_hashes.end(); ++iterator)
+	for (std::list<class Hash*>::const_iterator iterator = this->m_mpq->m_hashes.begin(); iterator != this->m_mpq->m_hashes.end(); ++iterator)
 	{
 		if (*iterator == this)
 		{
-			if (iterator + 1 != this->m_mpq->m_hashes.end() && !(*(iterator + 1))->empty())
+			std::list<class Hash*>::const_iterator nextIterator(iterator);
+			++nextIterator;
+			
+			if (nextIterator != this->m_mpq->m_hashes.end() && !(*nextIterator)->empty())
 				this->m_deleted = true;
 			
 			break;
@@ -95,7 +98,7 @@ void Mpq::Hash::clear()
 	if (this->m_block->m_blockSize > 0)
 	{
 		this->m_block->m_fileSize = 0;
-		this->m_block->m_flags = Mpq::Block::None;
+		this->m_block->m_flags = Block::None;
 	}
 	else
 	{

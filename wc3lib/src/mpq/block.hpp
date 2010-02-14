@@ -65,6 +65,7 @@ class Block
 				
 	protected:
 		friend class Mpq;
+		friend class Hash;
 		
 		static const uint64 EPOCH_OFFSET = 116444736000000000ULL; // Number of 100 ns units between 01/01/1601 and 01/01/1970
 		

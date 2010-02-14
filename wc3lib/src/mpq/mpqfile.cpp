@@ -21,6 +21,8 @@
 #include <boost/foreach.hpp>
 
 #include "mpqfile.hpp"
+#include "hash.hpp"
+#include "sector.hpp"
 
 namespace wc3lib
 {
