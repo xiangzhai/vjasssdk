@@ -505,7 +505,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local unit characterUnit = this.character().unit()
 			local item equippedItem
 			local string itemName
-			if (not this.m_rucksackIsEnabled and UnitHasItem(characterUnit, usedItem)) then //already picked up
+			if (not this.m_rucksackIsEnabled and UnitHasItem(characterUnit, usedItem)) then // already picked up
 				call DisableTrigger(this.m_dropTrigger)
 				call UnitDropItemPoint(characterUnit, usedItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
 				call EnableTrigger(this.m_dropTrigger)
@@ -580,7 +580,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set i = i + 1
 			endloop
 
-			//equip
+			// equip
 			if (not dontMoveToEquipment) then
 				call this.equipItem(usedItem, true, false, true)
 			else
@@ -969,7 +969,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local item targetItem
 			local integer oldIndex = this.itemIndex(movedItem)
 			local integer newIndex = this.slotRucksackIndex(slot)
-			//equip
+			// equip
 			if (oldIndex == newIndex) then
 				//debug call this.print("Same index: Equip.")
 				set movedItem = null
@@ -987,11 +987,11 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				return
 			endif
 			set targetItem = UnitItemInSlot(this.character().unit(), this.rucksackItemSlot(oldIndex))
-			//move
+			// move
 			if (targetItem == null) then
 				set this.m_rucksackItemData[newIndex] = this.m_rucksackItemData[oldIndex]
 				call thistype.setItemIndex(movedItem, newIndex)
-				//destack
+				// destack
 				if (this.m_rucksackItemData[oldIndex].isCharged()) then
 					call this.m_rucksackItemData[oldIndex].setCharges(this.m_rucksackItemData[oldIndex].charges() - 1)
 					if (this.m_rucksackItemData[oldIndex].itemType() == ITEM_TYPE_CHARGED) then
@@ -1001,7 +1001,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					endif
 					call this.showRucksackItem(oldIndex)
 					call this.refreshRucksackItemCharges(newIndex)
-				//normal movement
+				// normal movement
 				else
 					call this.m_rucksackItemData[newIndex].setCharges(this.m_rucksackItemData[oldIndex].charges())
 					//clear old, do not destroy since data was moved to new index!
@@ -1009,7 +1009,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				endif
 				call RemoveItem(targetItem)
 				set targetItem = null
-			//stack
+			// stack
 			elseif (GetItemTypeId(movedItem) == GetItemTypeId(targetItem)) then
 				call thistype.setItemIndex(movedItem, newIndex)
 				call this.m_rucksackItemData[newIndex].setCharges(this.m_rucksackItemData[newIndex].charges() + IMaxBJ(1, this.m_rucksackItemData[oldIndex].charges()))

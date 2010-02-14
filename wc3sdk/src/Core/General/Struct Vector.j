@@ -453,7 +453,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			public method copyNumber takes integer position0, integer number0, $NAME$ vector, integer position1 returns integer
 				local integer exitValue = position0 + number0
 				debug if (not this.debugCheckPositionAndNumber.evaluate(position0, number0) or not vector.debugCheckPositionAndNumber.evaluate(position1, number0)) then
-					debug return
+					debug return 0
 				debug endif
 				loop
 					exitwhen (position0 == exitValue)

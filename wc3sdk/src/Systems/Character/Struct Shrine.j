@@ -37,6 +37,18 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 
 		//methods
 
+		private method disableForCharacter takes ACharacter character returns nothing
+			debug if (character.shrine() == this) then
+				call character.setShrine(0)
+				if (thistype.m_effectPath != null) then
+					call DestroyEffect(this.m_discoverEffect)
+					set this.m_discoverEffect = null
+				endif
+			debug else
+				debug call this.print("Is not the shrine of character " + I2S(character) + ".")
+			debug endif
+		endmethod
+
 		public method enableForCharacter takes ACharacter character, boolean showMessage returns nothing
 			local player user = character.player()
 			if (ACharacter.playerCharacter(user).shrine() != 0) then
@@ -56,18 +68,6 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 				call character.displayMessage(ACharacter.messageTypeInfo, thistype.m_textMessage)
 			endif
 			set user = null
-		endmethod
-
-		private method disableForCharacter takes ACharacter character returns nothing
-			debug if (character.shrine() == this) then
-				call character.setShrine(0)
-				if (thistype.m_effectPath != null) then
-					call DestroyEffect(this.m_discoverEffect)
-					set this.m_discoverEffect = null
-				endif
-			debug else
-				debug call this.print("Is not the shrine of character " + I2S(character) + ".")
-			debug endif
 		endmethod
 
 		private method createDiscoverRegion takes nothing returns nothing

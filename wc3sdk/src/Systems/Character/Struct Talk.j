@@ -1,17 +1,7 @@
-library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle, AStructSystemsCharacterCharacter
+library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle, AStructSystemsCharacterCharacter, AStructSystemsCharacterInfo
 
 	/// @todo Should be a part of @struct ATalk, vJass bug.
 	function interface ATalkStartAction takes ATalk talk returns nothing
-
-	/// @todo Should be a static method of @struct ATalk, vJass bug.
-	private function AInfoActionBackToStartPage takes AInfo info returns nothing
-		call info.talk().showStartPage()
-	endfunction
-
-	/// @todo Should be a static method of @struct ATalk, vJass bug.
-	private function AInfoActionExit takes AInfo info returns nothing
-		call info.talk().close()
-	endfunction
 
 	/**
 	* Talks are a kind of dialogs with NPCs which are implemented by using the Warcraft 3 dialog natives.
@@ -63,7 +53,11 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 			return this.m_isEnabled
 		endmethod
 
-		//convenience methods
+		//methods
+
+		public method showStartPage takes nothing returns nothing
+			call this.m_startAction.execute(this) //create buttons
+		endmethod
 
 		/**
 		* Shows the talk's Warcraft 3 dialog.
@@ -83,10 +77,10 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 		public method showRange takes integer first, integer last returns nothing
 			local integer i = first
 static if (DEBUG_MODE) then
-			if (first <= 0 or first >= this.m_infos.size()) then
+			if (first < 0 or first >= this.m_infos.size()) then
 				call this.print("Wrong first value " + I2S(first) + ".")
 			endif
-			if (last <= 0 or last >= this.m_infos.size()) then
+			if (last < 0 or last >= this.m_infos.size()) then
 				call this.print("Wrong last value " + I2S(last) + ".")
 			endif
 endif
@@ -131,24 +125,26 @@ endif
 			return AInfo.create(this, true, false, 0, action, thistype.m_textBack)
 		endmethod
 
+		private static method infoActionBackToStartPage takes AInfo info returns nothing
+			call info.talk().showStartPage()
+		endmethod
+
 		public method addBackToStartPageButton takes nothing returns AInfo
-			return AInfo.create(this, true, false, 0, AInfoActionBackToStartPage, thistype.m_textBack)
+			return AInfo.create(this, true, false, 0, thistype.infoActionBackToStartPage, thistype.m_textBack)
+		endmethod
+
+		private static method infoActionExit takes AInfo info returns nothing
+			call info.talk().close()
 		endmethod
 
 		public method addExitButton takes  nothing returns AInfo
-			return AInfo.create(this, true, false, 0, AInfoActionExit, thistype.m_textExit)
-		endmethod
-
-		public method showStartPage takes nothing returns nothing
-			call this.m_startAction.execute(this) //create buttons
+			return AInfo.create(this, true, false, 0, thistype.infoActionExit, thistype.m_textExit)
 		endmethod
 
 		/// @returns Returns if info with index @param index has already been shown to the character which is talking currently to the NPC.
 		public method infoHasBeenShown takes integer index returns boolean
 			return AInfo(this.m_infos[index]).hasBeenShownToCharacter(this.m_character.userId())
 		endmethod
-
-		//methods
 
 		/// Usually you don't have to call this method since talks will be activated by a specific unit order.
 		public method openForCharacter takes ACharacter character returns nothing

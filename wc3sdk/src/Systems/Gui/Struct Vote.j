@@ -26,38 +26,17 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 
 		//method
 
-		private static method dialogButtonActionVote takes ADialogButton dialogButton returns nothing
-			call thistype.m_activeVote.addVote(dialogButton.dialog().player(), dialogButton.index())
-		endmethod
-
-		public method start takes nothing returns nothing
-			local player user
-			local integer i = 0
-			local integer j
-			set thistype.m_activeVote = this
+		public method result takes nothing returns integer
+			local integer result = 0
+			local integer i = 1
 			loop
-				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					set this.m_playerHasVoted[GetPlayerId(user)] = false
-					call AGui.playerGui(user).dialog().clear()
-					call AGui.playerGui(user).dialog().setMessage(this.m_message)
-					set j = 0
-					loop
-						exitwhen (j == this.m_choices.size())
-						call AGui.playerGui(user).dialog().addDialogButton(this.m_choices[j], 0, thistype.dialogButtonActionVote)
-						set j = j + 1
-					endloop
-					call AGui.playerGui(user).dialog().show()
+				exitwhen (i == this.m_choiceVotes.size())
+				if (this.m_choiceVotes[i] > this.m_choiceVotes[result]) then
+					set result = i
 				endif
 				set i = i + 1
 			endloop
-		endmethod
-
-		public method addChoice takes string choice returns integer
-			call this.m_choices.pushBack(choice)
-			call this.m_choiceVotes.pushBack(0)
-			return this.m_choices.backIndex()
+			return result
 		endmethod
 
 		public method addVote takes player user, integer choice returns boolean
@@ -102,17 +81,38 @@ library AStructSystemsGuiVote requires AStructCoreGeneralVector, ALibraryCoreGen
 			return true
 		endmethod
 
-		public method result takes nothing returns integer
-			local integer result = 0
-			local integer i = 1
+		private static method dialogButtonActionVote takes ADialogButton dialogButton returns nothing
+			call thistype.m_activeVote.addVote(dialogButton.dialog().player(), dialogButton.index())
+		endmethod
+
+		public method start takes nothing returns nothing
+			local player user
+			local integer i = 0
+			local integer j
+			set thistype.m_activeVote = this
 			loop
-				exitwhen (i == this.m_choiceVotes.size())
-				if (this.m_choiceVotes[i] > this.m_choiceVotes[result]) then
-					set result = i
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (IsPlayerPlayingUser(user)) then
+					set this.m_playerHasVoted[GetPlayerId(user)] = false
+					call AGui.playerGui(user).dialog().clear()
+					call AGui.playerGui(user).dialog().setMessage(this.m_message)
+					set j = 0
+					loop
+						exitwhen (j == this.m_choices.size())
+						call AGui.playerGui(user).dialog().addDialogButton(this.m_choices[j], 0, thistype.dialogButtonActionVote)
+						set j = j + 1
+					endloop
+					call AGui.playerGui(user).dialog().show()
 				endif
 				set i = i + 1
 			endloop
-			return result
+		endmethod
+
+		public method addChoice takes string choice returns integer
+			call this.m_choices.pushBack(choice)
+			call this.m_choiceVotes.pushBack(0)
+			return this.m_choices.backIndex()
 		endmethod
 
 		public static method create takes string message, AVoteResultAction resultAction returns thistype

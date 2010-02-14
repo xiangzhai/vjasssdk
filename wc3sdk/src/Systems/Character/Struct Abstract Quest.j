@@ -73,7 +73,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			debug return true
 		debug endmethod
 
-		//dynamic members
+		// dynamic members
 
 		public stub method setState takes integer state returns nothing
 			debug if (this.checkState(state)) then
@@ -103,7 +103,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call EnableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage()
+					call this.displayMessage.evaluate()
 				elseif (state == thistype.stateCompleted) then
 					if (this.m_stateTrigger[thistype.stateNew] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateNew])
@@ -114,8 +114,8 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage()
-					call this.distributeRewards()
+					call this.displayMessage.evaluate()
+					call this.distributeRewards.evaluate()
 				elseif (state == thistype.stateFailed) then
 					if (this.m_stateTrigger[thistype.stateNew] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateNew])
@@ -126,7 +126,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage()
+					call this.displayMessage.evaluate()
 				endif
 				if (this.m_stateAction[state] != 0) then
 					call this.m_stateAction[state].execute(this) //call custom function
@@ -147,7 +147,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 				debug return
 			debug endif
 			if (this.m_stateTrigger[state] == null) then
-				call this.createStateTrigger(state)
+				call this.createStateTrigger.evaluate(state)
 			//else
 			endif
 			call stateEvent.execute(this, this.m_stateTrigger[state])

@@ -190,6 +190,20 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 			return this.m_weaponType
 		endmethod
 
+		private static method onDeathFunctionDamage takes AMissile missile returns nothing
+			local ADamageMissileType this = ADamageMissileType(missile.missileType.evaluate())
+			if (this.damage() <= 0.0) then
+				return
+			endif
+			if (this.damageRange() > 0.0) then
+				call UnitDamagePoint(this.damageSource(), 0.0, this.damageRange(), GetUnitX(missile.unit()), GetUnitY(missile.unit()), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+			//cause area damage to units who aren't allies of the source unit
+			elseif (missile.targetWidget() != null) then
+				call UnitDamageTarget(this.damageSource(), missile.targetWidget(), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+			//cause single target damage if missile hits widget otherwise show floating text?
+			endif
+		endmethod
+
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
 			//dynamic members
@@ -200,7 +214,7 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 			set this.m_damageType = DAMAGE_TYPE_NORMAL
 			set this.m_weaponType = WEAPON_TYPE_WHOKNOWS
 
-			call this.setOnDeathFunction(ADamageMissileTypeOnDeathFunctionDamage)
+			call this.setOnDeathFunction(thistype.onDeathFunctionDamage)
 			return this
 		endmethod
 
@@ -618,19 +632,5 @@ endif
 		endmethod
 		*/
 	endstruct
-
-	private function ADamageMissileTypeOnDeathFunctionDamage takes AMissile missile returns nothing
-		local ADamageMissileType this = ADamageMissileType(missile.missileType.evaluate())
-		if (this.damage() <= 0.0) then
-			return
-		endif
-		if (this.damageRange() > 0.0) then
-			call UnitDamagePoint(this.damageSource(), 0.0, this.damageRange(), GetUnitX(missile.unit()), GetUnitY(missile.unit()), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
-		//cause area damage to units who aren't allies of the source unit
-		elseif (missile.targetWidget() != null) then
-			call UnitDamageTarget(this.damageSource(), missile.targetWidget(), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
-		//cause single target damage if missile hits widget otherwise show floating text?
-		endif
-	endfunction
 
 endlibrary

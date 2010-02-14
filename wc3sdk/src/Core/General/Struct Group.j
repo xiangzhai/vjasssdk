@@ -72,6 +72,37 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			return true
 		endmethod
 
+		public method hasUnitsOfPlayer takes player whichPlayer returns boolean
+			local player owner
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				set owner = GetOwningPlayer(this.m_units[i])
+				if (owner == whichPlayer) then
+					set owner = null
+					return true
+				endif
+				set i = i + 1
+				set owner = null
+			endloop
+			return false
+		endmethod
+
+		public method removeUnitsOfPlayer takes player whichPlayer returns nothing
+			local player owner
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				set owner = GetOwningPlayer(this.m_units[i])
+				if (owner == whichPlayer) then
+					call this.m_units.erase(i)
+				else
+					set i = i + 1
+				endif
+				set owner = null
+			endloop
+		endmethod
+
 		public method hasAlliesOfPlayer takes player whichPlayer returns boolean
 			local player owner
 			local integer i = 0

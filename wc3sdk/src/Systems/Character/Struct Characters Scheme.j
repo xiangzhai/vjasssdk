@@ -40,6 +40,24 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 			call thistype.setName("ACharactersScheme")
 		endmethod
 
+		private static method firstColumnExists takes nothing returns boolean
+			return thistype.m_showPlayerName or thistype.m_showUnitName or thistype.m_showLevel
+		endmethod
+
+		private static method firstColumnString takes ACharacter character returns string
+			local string text = ""
+			if (thistype.m_showPlayerName) then
+				set text = GetModifiedPlayerName(character.player())
+			endif
+			if (thistype.m_showUnitName) then
+				set text = text + " [" + GetUnitName(character.unit()) + "]"
+			endif
+			if (thistype.m_showLevel) then
+				set text = text + " - " + thistype.m_textLevel + " " + I2S(GetHeroLevel(character.unit()))
+			endif
+			return text
+		endmethod
+
 		private static method triggerActionRefresh takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
@@ -154,7 +172,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 				if (ACharacter.playerCharacter(user) != 0) then
 					call MultiboardSetRowCount(thistype.m_multiboard, MultiboardGetRowCount(thistype.m_multiboard) + 1)
 
-					if (thistype.firstColumnExists()) then
+					if (thistype.firstColumnExists.evaluate()) then
 						set multiboardItem = MultiboardGetItem(thistype.m_multiboard, i, 0)
 						call MultiboardSetItemStyle(multiboardItem, true, false)
 						call MultiboardReleaseItem(multiboardItem)
@@ -357,24 +375,6 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 		public static method minimize takes nothing returns nothing
 			call MultiboardMinimize(thistype.m_multiboard, true)
 			call DisableTrigger(thistype.m_refreshTrigger)
-		endmethod
-
-		private static method firstColumnExists takes nothing returns boolean
-			return thistype.m_showPlayerName or thistype.m_showUnitName or thistype.m_showLevel
-		endmethod
-
-		private static method firstColumnString takes ACharacter character returns string
-			local string text = ""
-			if (thistype.m_showPlayerName) then
-				set text = GetModifiedPlayerName(character.player())
-			endif
-			if (thistype.m_showUnitName) then
-				set text = text + " [" + GetUnitName(character.unit()) + "]"
-			endif
-			if (thistype.m_showLevel) then
-				set text = text + " - " + thistype.m_textLevel + " " + I2S(GetHeroLevel(character.unit()))
-			endif
-			return text
 		endmethod
 	endstruct
 

@@ -114,6 +114,48 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 		// methods
 
+		private static method savePlayerData takes nothing returns nothing
+			local player user
+			local integer i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (IsPlayerPlayingUser(user)) then
+					if (thistype.m_playerSelection[i] == 0) then
+						set thistype.m_playerSelection[i] = APlayerSelection.create(user)
+					endif
+					call thistype.m_playerSelection[i].save()
+					if (AGui.playerGui(user).dialog().isDisplayed()) then
+						set thistype.m_playerHadDialog[i] = true
+						call AGui.playerGui(user).dialog().hide()
+					else
+						set thistype.m_playerHadDialog[i] = false
+					endif
+				endif
+				set user = null
+				set i = i + 1
+			endloop
+		endmethod
+
+		private static method restorePlayerData takes nothing returns nothing
+			local player user
+			local integer i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (IsPlayerPlayingUser(user)) then
+					if (thistype.m_playerHadDialog[i]) then
+						call AGui.playerGui(user).dialog().show()
+					endif
+				endif
+				if (thistype.m_playerSelection[i] != 0) then
+					call thistype.m_playerSelection[i].restore()
+				endif
+				set user = null
+				set i = i + 1
+			endloop
+		endmethod
+
 		public method play takes nothing returns nothing
 			local force playersAll
 			debug if (thistype.m_runningVideo != 0) then
@@ -371,48 +413,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			loop
 				exitwhen (i == thistype.m_actorData.size())
 				call SetUnitMoveSpeed(AActorData(thistype.m_actorData[i]).actor(), moveSpeed)
-				set i = i + 1
-			endloop
-		endmethod
-
-		private static method savePlayerData takes nothing returns nothing
-			local player user
-			local integer i = 0
-			loop
-				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					if (thistype.m_playerSelection[i] == 0) then
-						set thistype.m_playerSelection[i] = APlayerSelection.create(user)
-					endif
-					call thistype.m_playerSelection[i].save()
-					if (AGui.playerGui(user).dialog().isDisplayed()) then
-						set thistype.m_playerHadDialog[i] = true
-						call AGui.playerGui(user).dialog().hide()
-					else
-						set thistype.m_playerHadDialog[i] = false
-					endif
-				endif
-				set user = null
-				set i = i + 1
-			endloop
-		endmethod
-
-		private static method restorePlayerData takes nothing returns nothing
-			local player user
-			local integer i = 0
-			loop
-				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					if (thistype.m_playerHadDialog[i]) then
-						call AGui.playerGui(user).dialog().show()
-					endif
-				endif
-				if (thistype.m_playerSelection[i] != 0) then
-					call thistype.m_playerSelection[i].restore()
-				endif
-				set user = null
 				set i = i + 1
 			endloop
 		endmethod

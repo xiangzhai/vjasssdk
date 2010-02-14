@@ -30,6 +30,42 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		private trigger m_onHitTrigger
 		private trigger m_onTrackTrigger
 
+		private method enableOnHitTrigger takes nothing returns nothing
+			if (this.m_onHitAction != 0) then
+				call EnableTrigger(this.m_onHitTrigger)
+			endif
+		endmethod
+
+		private method enableOnTrackTrigger takes nothing returns nothing
+			if (this.m_onTrackAction != 0) then
+				call EnableTrigger(this.m_onTrackTrigger)
+			endif
+		endmethod
+
+		public stub method show takes nothing returns nothing
+			call this.enableOnHitTrigger()
+			call this.enableOnTrackTrigger()
+			set this.m_shown = true
+		endmethod
+
+		private method disableOnHitTrigger takes nothing returns nothing
+			if (this.m_onHitAction != 0) then
+				call DisableTrigger(this.m_onHitTrigger)
+			endif
+		endmethod
+
+		private method disableOnTrackTrigger takes nothing returns nothing
+			if (this.m_onTrackAction != 0) then
+				call DisableTrigger(this.m_onTrackTrigger)
+			endif
+		endmethod
+
+		public stub method hide takes nothing returns nothing
+			call this.disableOnHitTrigger()
+			call this.disableOnTrackTrigger()
+			set this.m_shown = false
+		endmethod
+
 		//dynamic members
 
 		public method setShown takes boolean shown returns nothing
@@ -123,42 +159,6 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 		endmethod
 
 		//methods
-
-		public stub method show takes nothing returns nothing
-			call this.enableOnHitTrigger()
-			call this.enableOnTrackTrigger()
-			set this.m_shown = true
-		endmethod
-
-		public stub method hide takes nothing returns nothing
-			call this.disableOnHitTrigger()
-			call this.disableOnTrackTrigger()
-			set this.m_shown = false
-		endmethod
-
-		private method enableOnHitTrigger takes nothing returns nothing
-			if (this.m_onHitAction != 0) then
-				call EnableTrigger(this.m_onHitTrigger)
-			endif
-		endmethod
-
-		private method enableOnTrackTrigger takes nothing returns nothing
-			if (this.m_onTrackAction != 0) then
-				call EnableTrigger(this.m_onTrackTrigger)
-			endif
-		endmethod
-
-		private method disableOnHitTrigger takes nothing returns nothing
-			if (this.m_onHitAction != 0) then
-				call DisableTrigger(this.m_onHitTrigger)
-			endif
-		endmethod
-
-		private method disableOnTrackTrigger takes nothing returns nothing
-			if (this.m_onTrackAction != 0) then
-				call DisableTrigger(this.m_onTrackTrigger)
-			endif
-		endmethod
 
 		private method createTrackable takes nothing returns nothing
 			if ((this.m_onHitAction != 0) or (this.m_onTrackAction != 0)) then
