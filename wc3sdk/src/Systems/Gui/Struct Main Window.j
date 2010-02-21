@@ -1,4 +1,4 @@
-library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceMisc, ALibraryCoreEnvironmentSound, ALibraryCoreMathsRect, AStructSystemsGuiGui, AStructSystemsGuiWidget
+library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceMisc, ALibraryCoreEnvironmentSound, ALibraryCoreMathsRect, AStructSystemsGuiGui
 
 	/// @todo Should be a static function interface of @struct AMainWindow, vJass bug.
 	function interface AMainWindowOnShowCondition takes AMainWindow mainWindow returns boolean
@@ -176,16 +176,16 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 				set this.m_tooltip = CreateTextTag()
 				call SetTextTagVisibility(this.m_tooltip, false)
 			endif
-			call SetTextTagTextBJ(this.m_tooltip, whichWidget.tooltip(), whichWidget.tooltipSize())
+			call SetTextTagTextBJ(this.m_tooltip, whichWidget.tooltip.evaluate(), whichWidget.tooltipSize.evaluate())
 
 			if (this.m_tooltipX < 0.0) then
-				set x = this.getX(whichWidget.x())
+				set x = this.getX(whichWidget.x.evaluate())
 			else
 				set x = this.getX(this.m_tooltipX)
 			endif
 
 			if (this.m_tooltipY < 0.0) then
-				set y = this.getY(whichWidget.y())
+				set y = this.getY(whichWidget.y.evaluate())
 			else
 				set y = this.getY(this.m_tooltipY)
 			endif
@@ -237,7 +237,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set i = 0
 			loop
 				exitwhen (i == this.m_widgets.size())
-				call AWidget(this.m_widgets[i]).show()
+				call AWidget(this.m_widgets[i]).show.evaluate()
 				set i = i + 1
 			endloop
 
@@ -267,7 +267,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set i = 0
 			loop
 				exitwhen (i == this.m_widgets.size())
-				call AWidget(this.m_widgets[i]).hide()
+				call AWidget(this.m_widgets[i]).hide.evaluate()
 				set i = i + 1
 			endloop
 
@@ -399,7 +399,7 @@ endif
 
 			loop
 				exitwhen (this.m_widgets.empty())
-				call AWidget(this.m_widgets.back()).destroy()
+				call AWidget(this.m_widgets.back()).destroy.evaluate()
 				/// @todo don't pop back, is in destructor, check for errors
 			endloop
 			call this.m_widgets.destroy()

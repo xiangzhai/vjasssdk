@@ -1,4 +1,4 @@
-library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit, AStructSystemsCharacterVideo
+library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit, AStructSystemsCharacterCharacter, AStructSystemsCharacterTalk, AStructSystemsCharacterVideo
 
 	/// @todo Shoud be a static member of @struct AInfo, vJass bug.
 	function interface AInfoCondition takes AInfo info returns boolean
@@ -81,6 +81,16 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 
 		//methods
 
+		public method run takes nothing returns nothing
+			local unit self = this.m_talk.character().unit()
+			local player user = GetOwningPlayer(self)
+			set this.m_hasBeenShownToCharacter[GetPlayerId(user)] = true
+			call this.m_action.execute(this)
+			set self = null
+			set user = null
+		endmethod
+
+
 		private static method dialogButtonActionRunInfo takes ADialogButton dialogButton returns nothing
 			local ATalk talk = ACharacter.playerCharacter(dialogButton.dialog().player()).talk()
 			local thistype info = talk.getInfoByDialogButtonIndex(dialogButton.index())
@@ -114,15 +124,6 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 
 		public method hide takes nothing returns nothing
 			set this.m_dialogButton = 0
-		endmethod
-
-		public method run takes nothing returns nothing
-			local unit self = this.m_talk.character().unit()
-			local player user = GetOwningPlayer(self)
-			set this.m_hasBeenShownToCharacter[GetPlayerId(user)] = true
-			call this.m_action.execute(this)
-			set self = null
-			set user = null
 		endmethod
 
 		public static method create takes ATalk talk, boolean permanent, boolean important, AInfoCondition condition, AInfoAction action, string description returns thistype

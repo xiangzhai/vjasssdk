@@ -1,4 +1,4 @@
-library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibraryCoreEnvironmentSound, AStructSystemsGuiGui
+library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibraryCoreEnvironmentSound, AStructSystemsGuiGui, AStructSystemsGuiMainWindow
 
 	/// @todo Should be a static method of @struct AWidget, vJass bug.
 	function interface AWidgetOnHitAction takes AWidget usedWidget returns nothing

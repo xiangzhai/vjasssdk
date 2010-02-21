@@ -133,100 +133,6 @@ library AStructCoreEnvironmentMissile requires optional ALibraryCoreDebugMisc, A
 		endmethod
 	endstruct
 
-	struct ADamageMissileType extends AMissileType
-		//dynamic members
-		private real m_damage
-		private real m_damageRange
-		private unit m_damageSource
-		private attacktype m_attackType
-		private damagetype m_damageType
-		private weapontype m_weaponType
-
-		public method setDamage takes real damage returns nothing
-			set this.m_damage = damage
-		endmethod
-
-		public method damage takes nothing returns real
-			return this.m_damage
-		endmethod
-
-		public method setDamageRange takes real damageRange returns nothing
-			set this.m_damageRange = damageRange
-		endmethod
-
-		public method damageRange takes nothing returns real
-			return this.m_damageRange
-		endmethod
-
-		public method setDamageSource takes unit damageSource returns nothing
-			set this.m_damageSource = damageSource
-		endmethod
-
-		public method damageSource takes nothing returns unit
-			return this.m_damageSource
-		endmethod
-
-		public method setAttackType takes attacktype attackType returns nothing
-			set this.m_attackType = attackType
-		endmethod
-
-		public method attackType takes nothing returns attacktype
-			return this.m_attackType
-		endmethod
-
-		public method setDamageType takes damagetype damageType returns nothing
-			set this.m_damageType = damageType
-		endmethod
-
-		public method damageType takes nothing returns damagetype
-			return this.m_damageType
-		endmethod
-
-		public method setWeaponType takes weapontype weaponType returns nothing
-			set this.m_weaponType = weaponType
-		endmethod
-
-		public method weaponType takes nothing returns weapontype
-			return this.m_weaponType
-		endmethod
-
-		private static method onDeathFunctionDamage takes AMissile missile returns nothing
-			local ADamageMissileType this = ADamageMissileType(missile.missileType.evaluate())
-			if (this.damage() <= 0.0) then
-				return
-			endif
-			if (this.damageRange() > 0.0) then
-				call UnitDamagePoint(this.damageSource(), 0.0, this.damageRange(), GetUnitX(missile.unit()), GetUnitY(missile.unit()), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
-			//cause area damage to units who aren't allies of the source unit
-			elseif (missile.targetWidget() != null) then
-				call UnitDamageTarget(this.damageSource(), missile.targetWidget(), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
-			//cause single target damage if missile hits widget otherwise show floating text?
-			endif
-		endmethod
-
-		public static method create takes nothing returns thistype
-			local thistype this = thistype.allocate()
-			//dynamic members
-			set this.m_damage = 0.0
-			set this.m_damageRange = 0.0
-			set this.m_damageSource = null
-			set this.m_attackType = ATTACK_TYPE_NORMAL
-			set this.m_damageType = DAMAGE_TYPE_NORMAL
-			set this.m_weaponType = WEAPON_TYPE_WHOKNOWS
-
-			call this.setOnDeathFunction(thistype.onDeathFunctionDamage)
-			return this
-		endmethod
-
-		public method onDestroy takes nothing returns nothing
-			//dynamic members
-			set this.m_damageSource = null
-			set this.m_attackType = null
-			set this.m_damageType = null
-			set this.m_weaponType = null
-		endmethod
-	endstruct
-
 	/**
 	* Provides the functionality of a single physical missile which can have a specific missile type, a widget source and target or three coordinate values (x, y and z).
 	* @todo Incompleted!
@@ -631,6 +537,100 @@ endif
 			return thistype.createCircle(GetUnitX(usedUnit), GetUnitY(usedUnit), GetUnitZ(usedUnit), distance, count, start, owner, unitType, speed, damage, damageRange, damageSource, attackType, damageType, weaponType, collides, deathEffectPath, deathSoundPath)
 		endmethod
 		*/
+	endstruct
+
+	struct ADamageMissileType extends AMissileType
+		//dynamic members
+		private real m_damage
+		private real m_damageRange
+		private unit m_damageSource
+		private attacktype m_attackType
+		private damagetype m_damageType
+		private weapontype m_weaponType
+
+		public method setDamage takes real damage returns nothing
+			set this.m_damage = damage
+		endmethod
+
+		public method damage takes nothing returns real
+			return this.m_damage
+		endmethod
+
+		public method setDamageRange takes real damageRange returns nothing
+			set this.m_damageRange = damageRange
+		endmethod
+
+		public method damageRange takes nothing returns real
+			return this.m_damageRange
+		endmethod
+
+		public method setDamageSource takes unit damageSource returns nothing
+			set this.m_damageSource = damageSource
+		endmethod
+
+		public method damageSource takes nothing returns unit
+			return this.m_damageSource
+		endmethod
+
+		public method setAttackType takes attacktype attackType returns nothing
+			set this.m_attackType = attackType
+		endmethod
+
+		public method attackType takes nothing returns attacktype
+			return this.m_attackType
+		endmethod
+
+		public method setDamageType takes damagetype damageType returns nothing
+			set this.m_damageType = damageType
+		endmethod
+
+		public method damageType takes nothing returns damagetype
+			return this.m_damageType
+		endmethod
+
+		public method setWeaponType takes weapontype weaponType returns nothing
+			set this.m_weaponType = weaponType
+		endmethod
+
+		public method weaponType takes nothing returns weapontype
+			return this.m_weaponType
+		endmethod
+
+		private static method onDeathFunctionDamage takes AMissile missile returns nothing
+			local ADamageMissileType this = ADamageMissileType(missile.missileType())
+			if (this.damage() <= 0.0) then
+				return
+			endif
+			if (this.damageRange() > 0.0) then
+				call UnitDamagePoint(this.damageSource(), 0.0, this.damageRange(), GetUnitX(missile.unit()), GetUnitY(missile.unit()), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+				//cause area damage to units who aren't allies of the source unit
+			elseif (missile.targetWidget.evaluate() != null) then
+				call UnitDamageTarget(this.damageSource(), missile.targetWidget(), this.damage(), true, false, this.attackType(), this.damageType(), this.weaponType())
+				//cause single target damage if missile hits widget otherwise show floating text?
+			endif
+		endmethod
+
+		public static method create takes nothing returns thistype
+			local thistype this = thistype.allocate()
+			//dynamic members
+			set this.m_damage = 0.0
+			set this.m_damageRange = 0.0
+			set this.m_damageSource = null
+			set this.m_attackType = ATTACK_TYPE_NORMAL
+			set this.m_damageType = DAMAGE_TYPE_NORMAL
+			set this.m_weaponType = WEAPON_TYPE_WHOKNOWS
+
+			call this.setOnDeathFunction(thistype.onDeathFunctionDamage)
+			return this
+		endmethod
+
+		public method onDestroy takes nothing returns nothing
+			//dynamic members
+			set this.m_damageSource = null
+			set this.m_attackType = null
+			set this.m_damageType = null
+			set this.m_weaponType = null
+		endmethod
 	endstruct
 
 endlibrary

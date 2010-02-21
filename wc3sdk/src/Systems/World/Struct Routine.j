@@ -398,19 +398,21 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 	* If the assigned unit is paused, routine won't be runned until unit gets unpaused.
 	*/
 	struct ARoutine
-		//static members
+		// static members
 		private static AIntegerVector m_routines
-		//start members
+		// construction members
 		private boolean m_hasTarget
 		private boolean m_isLoop
 		private ARoutineAction m_startAction
 		private ARoutineAction m_endAction
 		private ARoutineAction m_targetAction
-		//members
+		// members
 		private AIntegerVector m_unitData
 		private integer m_index
 
-		//start members
+		//! runtextmacro A_STRUCT_DEBUG("\"ARoutine\"")
+
+		// construction members
 
 		public method hasTarget takes nothing returns boolean
 			return this.m_hasTarget
@@ -432,7 +434,51 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			return this.m_targetAction
 		endmethod
 
-		//methods
+		// methods
+
+		public method hasUnit takes unit whichUnit returns boolean
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_unitData.size())
+				if (ARoutineUnitData(this.m_unitData[i]).unit() == whichUnit) then
+					return true
+				endif
+				set i = i + 1
+			endloop
+			return false
+		endmethod
+
+		public method isEnabledForUnit takes unit whichUnit returns boolean
+			local integer i = 0
+			debug if (not this.hasUnit(whichUnit)) then
+				debug call this.printMethodError("isEnabledForUnit", "Unit " + GetUnitName(whichUnit) + " does not use this routine.")
+				debug return false
+			debug endif
+			loop
+				exitwhen (i == this.m_unitData.size())
+				if (ARoutineUnitData(this.m_unitData[i]).unit() == whichUnit) then
+					return ARoutineUnitData(this.m_unitData[i]).isEnabled()
+				endif
+				set i = i + 1
+			endloop
+			return false
+		endmethod
+
+		public method isInTimeForUnit takes unit whichUnit returns boolean
+			local integer i = 0
+			debug if (not this.hasUnit(whichUnit)) then
+				debug call this.printMethodError("isInTimeForUnit", "Unit " + GetUnitName(whichUnit) + " does not use this routine.")
+				debug return false
+			debug endif
+			loop
+				exitwhen (i == this.m_unitData.size())
+				if (ARoutineUnitData(this.m_unitData[i]).unit() == whichUnit) then
+					return ARoutineUnitData(this.m_unitData[i]).isInTime()
+				endif
+				set i = i + 1
+			endloop
+			return false
+		endmethod
 
 		public method addUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay, rect targetRect returns integer
 			local ARoutineUnitData routineUnitData = ARoutineUnitData.create(this, whichUnit, startTimeOfDay, endTimeOfDay, targetRect)
@@ -494,13 +540,13 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 
 		public static method create takes boolean hasTarget, boolean isLoop, ARoutineAction startAction, ARoutineAction endAction, ARoutineAction targetAction returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_hasTarget = hasTarget
 			set this.m_isLoop = isLoop
 			set this.m_startAction = startAction
 			set this.m_endAction = endAction
 			set this.m_targetAction = targetAction
-			//members
+			// members
 			set this.m_unitData = AIntegerVector.create()
 			call thistype.m_routines.pushBack(this)
 			set this.m_index = thistype.m_routines.backIndex()
@@ -509,7 +555,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			loop
 				exitwhen (this.m_unitData.empty())
 				call this.removeUnitByIndex(this.m_unitData.backIndex())
@@ -519,7 +565,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		public static method init takes nothing returns nothing
-			//static members
+			// static members
 			set thistype.m_routines = AIntegerVector.create()
 		endmethod
 

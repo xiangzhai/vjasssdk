@@ -1,3 +1,5 @@
+This file is deprecated since we should optimize declaration positions (using JassHelper option [forcemethodevaluate])
+
 library A<Struct/Library><Module Name: Core/Objects/Systems><Sub Module Name><Name>
 
 	//text macro calls

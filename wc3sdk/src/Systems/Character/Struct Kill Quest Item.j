@@ -1,4 +1,4 @@
-library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversion, AStructSystemsCharacterQuest
+library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversion, AStructSystemsCharacterQuest, AStructSystemsCharacterQuestItem
 
 	/// @state untested
 	struct AKillQuestItem extends AQuestItem
@@ -10,23 +10,23 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 		private integer m_count
 		//members
 		private integer m_killed
-		
+
 		//start members
-		
+
 		public method unitTypeId takes nothing returns integer
 			return this.m_unitTypeId
 		endmethod
-		
+
 		public method targetUnitTypeId takes nothing returns integer
 			return this.m_targetUnitTypeId
 		endmethod
-		
+
 		public method count takes nothing returns integer
 			return this.m_count
 		endmethod
-		
+
 		//members
-		
+
 		public method killed takes nothing returns integer
 			return this.m_killed
 		endmethod
@@ -34,7 +34,7 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 		private method stateEventCompleted takes thistype questItem, trigger whichTrigger returns nothing
 			call TriggerRegisterAnyUnitEventBJ(whichTrigger, EVENT_PLAYER_UNIT_DEATH)
 		endmethod
-		
+
 		private method stateConditionCompleted takes thistype questItem returns boolean
 			local unit killer
 			local unit triggerUnit
@@ -55,7 +55,7 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 			endif
 			return questItem.m_killed == questItem.m_count
 		endmethod
-		
+
 		/**
 		* @param unitTypeId If this value is 0 all unit types can kill the target unit type.
 		* @param targetUnitTypeId If this value is 0 all unit types can be killed by an unit-type unit.
@@ -68,12 +68,12 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 			set this.m_count = count
 			//members
 			set this.m_killed = 0
-			
+
 			call this.setStateEvent(AAbstractQuest.stateCompleted, thistype.stateEventCompleted)
 			call this.setStateCondition(AAbstractQuest.stateCompleted, thistype.stateConditionCompleted)
 			return this
 		endmethod
-		
+
 		public static method init0 takes string message returns nothing
 			//static start members
 			set thistype.message = message

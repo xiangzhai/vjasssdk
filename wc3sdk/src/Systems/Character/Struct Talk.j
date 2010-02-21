@@ -1,4 +1,4 @@
-library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle, AStructSystemsCharacterCharacter, AStructSystemsCharacterInfo
+library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle, AStructSystemsCharacterCharacter
 
 	/// @todo Should be a part of @struct ATalk, vJass bug.
 	function interface ATalkStartAction takes ATalk talk returns nothing
@@ -86,7 +86,7 @@ static if (DEBUG_MODE) then
 endif
 			loop
 				exitwhen (i > last)
-				call AInfo(this.m_infos[i]).show()
+				call AInfo(this.m_infos[i]).show.evaluate()
 				set i = i + 1
 			endloop
 			call this.show()
@@ -111,39 +111,31 @@ endif
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_infos.size())
-				call AInfo(this.m_infos[i]).hide()
+				call AInfo(this.m_infos[i]).hide.evaluate()
 				set i = i + 1
 			endloop
 			call AGui.playerGui(this.m_character.player()).dialog().clear()
 		endmethod
 
 		public method addInfo takes boolean permanent, boolean important, AInfoCondition condition, AInfoAction action, string description returns AInfo
-			return AInfo.create(this, permanent, important, condition, action, description)
+			return AInfo.create.evaluate(this, permanent, important, condition, action, description)
 		endmethod
 
 		public method addBackButton takes AInfoAction action returns AInfo
-			return AInfo.create(this, true, false, 0, action, thistype.m_textBack)
+			return AInfo.create.evaluate(this, true, false, 0, action, thistype.m_textBack)
 		endmethod
 
 		private static method infoActionBackToStartPage takes AInfo info returns nothing
-			call info.talk().showStartPage()
+			call info.talk.evaluate().showStartPage()
 		endmethod
 
 		public method addBackToStartPageButton takes nothing returns AInfo
-			return AInfo.create(this, true, false, 0, thistype.infoActionBackToStartPage, thistype.m_textBack)
-		endmethod
-
-		private static method infoActionExit takes AInfo info returns nothing
-			call info.talk().close()
-		endmethod
-
-		public method addExitButton takes  nothing returns AInfo
-			return AInfo.create(this, true, false, 0, thistype.infoActionExit, thistype.m_textExit)
+			return AInfo.create.evaluate(this, true, false, 0, thistype.infoActionBackToStartPage, thistype.m_textBack)
 		endmethod
 
 		/// @returns Returns if info with index @param index has already been shown to the character which is talking currently to the NPC.
 		public method infoHasBeenShown takes integer index returns boolean
-			return AInfo(this.m_infos[index]).hasBeenShownToCharacter(this.m_character.userId())
+			return AInfo(this.m_infos[index]).hasBeenShownToCharacter.evaluate(this.m_character.userId())
 		endmethod
 
 		/// Usually you don't have to call this method since talks will be activated by a specific unit order.
@@ -187,6 +179,14 @@ endif
 			set characterUser = null
 		endmethod
 
+		private static method infoActionExit takes AInfo info returns nothing
+			call info.talk.evaluate().close()
+		endmethod
+
+		public method addExitButton takes  nothing returns AInfo
+			return AInfo.create.evaluate(this, true, false, 0, thistype.infoActionExit, thistype.m_textExit)
+		endmethod
+
 		public method enable takes nothing returns nothing
 			set this.m_isEnabled = true
 			call EnableTrigger(this.m_orderTrigger)
@@ -206,19 +206,19 @@ endif
 
 		/// Used by @struct AInfo.
 		public method showInfo takes integer index returns boolean
-			return AInfo(this.m_infos[index]).show()
+			return AInfo(this.m_infos[index]).show.evaluate()
 		endmethod
 
 		/// Used by @function ADialogButtonAction.
 		public method runInfo takes integer index returns nothing
-			call AInfo(this.m_infos[index]).run()
+			call AInfo(this.m_infos[index]).run.evaluate()
 		endmethod
 
 		public method getInfoByDialogButtonIndex takes integer dialogButtonIndex returns AInfo
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_infos.size())
-				if (AInfo(this.m_infos[i]).isShown() and AInfo(this.m_infos[i]).dialogButtonIndex() == dialogButtonIndex) then
+				if (AInfo(this.m_infos[i]).isShown.evaluate() and AInfo(this.m_infos[i]).dialogButtonIndex.evaluate() == dialogButtonIndex) then
 					return AInfo(this.m_infos[i])
 				endif
 				set i = i + 1
@@ -330,7 +330,7 @@ endif
 		private method destroyInfos takes nothing returns nothing
 			loop
 				exitwhen (this.m_infos.empty())
-				call AInfo(this.m_infos.back()).destroy()
+				call AInfo(this.m_infos.back()).destroy.evaluate()
 			endloop
 			call this.m_infos.destroy()
 		endmethod

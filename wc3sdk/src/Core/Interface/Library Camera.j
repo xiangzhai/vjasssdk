@@ -1,4 +1,11 @@
-library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibraryCoreMathsPoint
+library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
+
+	/**
+	* @author Tamino Dauth
+	*/
+	function PanCameraToUnitTimedWithZ takes unit whichUnit, real duration returns nothing
+		call PanCameraToTimedWithZ(GetUnitX(whichUnit), GetUnitY(whichUnit), GetUnitZ(whichUnit), duration)
+	endfunction
 
 	/**
 	* Similar to @function RotateCameraAroundLocBJ but does not use location.
@@ -57,9 +64,9 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 				// User is close enough, so don't touch the camera.
 			endif
 		endif
-		set localPlayer = null 
+		set localPlayer = null
 	endfunction
-	
+
 	/**
 	* Similar to @function SmartCameraPanForPlayer but does not use one single player.
 	* @author Tamino Dauth

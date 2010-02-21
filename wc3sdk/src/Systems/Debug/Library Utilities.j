@@ -122,6 +122,7 @@ endif
 		local unit copiedUnit
 		if (selectedUnit != null) then
 			set copiedUnit = CopyUnit(selectedUnit, GetUnitX(selectedUnit), GetUnitY(selectedUnit), GetUnitFacing(selectedUnit), bj_UNIT_STATE_METHOD_ABSOLUTE)
+			debug call Print("Copying unit.")
 			set copiedUnit = null
 		endif
 		set triggerPlayer = null
@@ -144,7 +145,7 @@ endif
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		local real damageAmount
 		if (selectedUnit != null) then
-			set damageAmount = S2R(SubString(GetEventPlayerChatString(), StringLength("damage"), StringLength(GetEventPlayerChatString())))
+			set damageAmount = S2R(SubString(GetEventPlayerChatString(), StringLength("damage") + 1, StringLength(GetEventPlayerChatString())))
 			debug call Print("Damage amount is " + R2S(damageAmount) + ".")
 			if (damageAmount > 0.0) then
 				call UnitDamageTargetBJ(selectedUnit, selectedUnit, damageAmount, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
