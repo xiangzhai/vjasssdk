@@ -1,9 +1,12 @@
 library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreGeneralPlayer, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceMultiboard, AStructSystemsCharacterCharacter, AStructSystemsCharacterClass
 
-	/// @todo Should be a part of @struct AClassSelection, vJass bug.
+	/// @todo Should be part of @struct AClassSelection, vJass bug.
 	function interface AClassSelectionSelectClassAction takes ACharacter character, AClass class returns nothing
 
-	/// @todo Should be a part of @struct AClassSelection, vJass bug.
+	/// @todo Should be part of @struct AClassSelection, vJass bug.
+	function interface AClassSelectionCharacterCreationAction takes AClassSelection classSelection, unit whichUnit returns ACharacter
+
+	/// @todo Should be part of @struct AClassSelection, vJass bug.
 	function interface AClassSelectionStartGameAction takes nothing returns nothing
 
 	struct AClassSelection
@@ -16,6 +19,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		private static real m_rotationAngle
 		private static AClass m_firstClass
 		private static AClass m_lastClass
+		private static AClassSelectionCharacterCreationAction m_characterCreationAction
 		private static AClassSelectionStartGameAction m_startGameAction
 		private static string m_strengthIconPath
 		private static string m_agilityIconPath
@@ -46,8 +50,37 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AClassSelection\"")
 
+		// construction members
+
+		public method player takes nothing returns player
+			return this.m_user
+		endmethod
+
+		public method startX takes nothing returns real
+			return this.m_startX
+		endmethod
+
+		public method startY takes nothing returns real
+			return this.m_startY
+		endmethod
+
+		public method startFacing takes nothing returns real
+			return this.m_startFacing
+		endmethod
+
+		// methods
+
 		private method selectClass takes nothing returns nothing
-			local ACharacter character = ACharacter.setPlayerCharacter(this.m_user, this.m_class.generateUnit(this.m_user, this.m_startX, this.m_startY, this.m_startFacing))
+			local ACharacter character = 0
+			local unit whichUnit = this.m_class.generateUnit(this.m_user, this.m_startX, this.m_startY, this.m_startFacing)
+
+			if (thistype.m_characterCreationAction != 0) then
+				set character = thistype.m_characterCreationAction.evaluate(this, whichUnit)
+				call ACharacter.setPlayerCharacterByCharacter(character)
+			else
+				set character = ACharacter.setPlayerCharacter(this.m_user, whichUnit)
+			endif
+
 			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or (GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT and ACharacter.shareOnPlayerLeaves())) then
 				call character.shareControl(true)
 			endif
@@ -396,7 +429,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			endif
 		endmethod
 
-		public static method init takes camerasetup cameraSetup, real x, real y, real facing, real refreshRate, real rotationAngle, AClass firstClass, AClass lastClass, AClassSelectionStartGameAction startGameAction, string strengthIconPath, string agilityIconPath, string intelligenceIconPath, string textTitle, string textStrength, string textAgility, string textIntelligence, string textAbilities, string textDescription returns nothing
+		public static method init takes camerasetup cameraSetup, real x, real y, real facing, real refreshRate, real rotationAngle, AClass firstClass, AClass lastClass, AClassSelectionCharacterCreationAction characterCreationAction, AClassSelectionStartGameAction startGameAction, string strengthIconPath, string agilityIconPath, string intelligenceIconPath, string textTitle, string textStrength, string textAgility, string textIntelligence, string textAbilities, string textDescription returns nothing
 			//static start members
 			set thistype.m_cameraSetup = cameraSetup
 			set thistype.m_x = x
@@ -406,6 +439,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			set thistype.m_rotationAngle = rotationAngle
 			set thistype.m_firstClass = firstClass
 			set thistype.m_lastClass = lastClass
+			set thistype.m_characterCreationAction = characterCreationAction
 			set thistype.m_startGameAction = startGameAction
 			set thistype.m_strengthIconPath = strengthIconPath
 			set thistype.m_agilityIconPath = agilityIconPath

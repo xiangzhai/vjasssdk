@@ -594,9 +594,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			endif
 		endmethod
 
-		/// @todo Should be private, vJass bug
-		//Private, every player only can have one character
-		private static method create takes player user, unit usedUnit returns thistype
+		public static method create takes player user, unit usedUnit returns thistype
 			local thistype this = thistype.allocate()
 			//start members
 			set this.m_player = user
@@ -780,6 +778,14 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			local thistype character = thistype.create(user, usedUnit)
 			set thistype.m_playerCharacter[GetPlayerId(user)] = character
 			return character
+		endmethod
+
+		/**
+		* Should not be used.
+		* Used by @struct ClassSelection only.
+		*/
+		public static method setPlayerCharacterByCharacter takes ACharacter character returns nothing
+			set thistype.m_playerCharacter[GetPlayerId(character.player())] = character
 		endmethod
 
 		/// @param user The owner of the character.

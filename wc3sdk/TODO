@@ -1,3 +1,6 @@
+2010-02-27 Tamino Dauth <tamino@cdauth.de>
+* Changing dialog pages seems to clear the dialog title.
+
 2010-02-14 Tamino Dauth <tamino@cdauth.de>
 * Fix AWeather (DMdF crashes).
 

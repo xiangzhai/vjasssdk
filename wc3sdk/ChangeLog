@@ -1,3 +1,6 @@
+2010-02-26 Tamino Dauth <tamino@cdauth.de>
+* Revised structs ACharacter and AClassSelection that user can implement custom ACharacter child structs.
+
 2010-02-22 Tamino Dauth <tamino@cdauth.de>
 * Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
 

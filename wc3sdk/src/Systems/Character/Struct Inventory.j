@@ -118,6 +118,14 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			return (this.m_itemType == ITEM_TYPE_CHARGED and this.m_charges > 1) or (this.m_itemType != ITEM_TYPE_CHARGED and this.m_charges > 0)
 		endmethod
 
+		public method realCharges takes nothing returns integer
+			if (this.m_itemType == ITEM_TYPE_CHARGED) then
+				return this.m_charges
+			endif
+
+			return this.m_charges + 1
+		endmethod
+
 		public method store takes gamecache cache, string missionKey, string labelPrefix returns nothing
 			call StoreInteger(cache, missionKey, labelPrefix + "ItemTypeId", this.m_itemTypeId)
 			call StoreInteger(cache, missionKey, labelPrefix + "Charges", this.m_charges)
@@ -202,14 +210,29 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AInventory\"")
 
-		//members
-
 		public method equipmentItemData takes integer equipmentType returns AInventoryItemData
 			debug if (equipmentType >= thistype.maxEquipmentTypes or equipmentType < 0) then
 				debug call this.print("Wrong equipment type: " + I2S(equipmentType) + ".")
 				debug return 0
 			debug endif
 			return this.m_equipmentItemData[equipmentType]
+		endmethod
+
+		public method setRucksackItemCharges takes integer index, integer charges returns integer
+			if (this.m_rucksackItemData[index] == 0) then
+				return 0
+			endif
+
+			call this.m_rucksackItemData[index].setCharges(charges)
+
+			if (this.m_rucksackItemData[index].isCharged()) then
+				call this.refreshRucksackItemCharges(index)
+				return this.m_rucksackItemData[index].charges()
+			else
+				call this.clearRucksackItem(index, false)
+			endif
+
+			return 0
 		endmethod
 
 		public method rucksackItemData takes integer index returns AInventoryItemData
@@ -219,8 +242,6 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			debug endif
 			return this.m_rucksackItemData[index]
 		endmethod
-
-		//convenience methods
 
 		public method allEquipmentItems takes nothing returns integer
 			local integer result = 0
