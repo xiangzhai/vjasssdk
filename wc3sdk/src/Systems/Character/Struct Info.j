@@ -247,9 +247,8 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		call AThirdPersonCamera.playerThirdPersonCamera(user).enable(listener, 0.0)
 		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), speakerOwner, GetUnitName(speaker), text, duration, duration)
 		if (info.talk().character().talkLog() != 0) then
-			call info.talk().character().talkLog().addMessage(info.talk(), text) //log message
+			call info.talk().character().talkLog().addSpeech(info, toCharacter, text, usedSound)
 		endif
-		call waitForVideo(1.0) // do not show any speeches during video
 		if (AInfo.m_skipKey == -1) then
 			call TriggerSleepAction(duration)
 		else
@@ -267,6 +266,7 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 				set duration = duration - AInfo.m_skipCheckRate
 			endloop
 		endif
+		call waitForVideo(1.0) // do not show any speeches during video
 		call StopSound(usedSound, true, false) //stop sound since speech could have been skipped by player
 		call ResetUnitAnimation(speaker)
 		call ResetUnitAnimation(listener)
@@ -275,6 +275,18 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		set speaker = null
 		set listener = null
 		set speakerOwner = null
+	endfunction
+
+	function speech2 takes AInfo info, boolean toCharacter, string text, string soundFilePath returns nothing
+		local sound whichSound = CreateSound(soundFilePath, false, false, true, 12700, 12700, "")
+		if (toCharacter) then
+			call SetSoundPosition(whichSound, GetUnitX(info.talk().unit()), GetUnitY(info.talk().unit()), GetUnitZ(info.talk().unit()))
+		else
+			call SetSoundPosition(whichSound, GetUnitX(info.talk().character().unit()), GetUnitY(info.talk().character().unit()), GetUnitZ(info.talk().character().unit()))
+		endif
+		call speech(info, toCharacter, text, whichSound)
+		call KillSoundWhenDone(whichSound)
+		set whichSound = null
 	endfunction
 
 endlibrary

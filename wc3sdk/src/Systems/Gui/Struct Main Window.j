@@ -217,7 +217,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 		endmethod
 
-		public method show takes nothing returns nothing
+		public stub method show takes nothing returns nothing
 			local real x
 			local real y
 			local integer i
@@ -251,7 +251,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 		endmethod
 
-		public method hide takes nothing returns nothing
+		public stub method hide takes nothing returns nothing
 			local integer i
 			if (this.m_onHideCondition != 0 and not this.m_onHideCondition.evaluate(this)) then
 				return

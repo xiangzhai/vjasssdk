@@ -1,3 +1,6 @@
+2010-03-06 Tamino Dauth <tamino@cdauth.de>
+* One unit can't be registered several times on one routine type.
+
 2010-02-27 Tamino Dauth <tamino@cdauth.de>
 * Changing dialog pages seems to clear the dialog title.
 
