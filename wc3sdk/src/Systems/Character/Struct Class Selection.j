@@ -182,8 +182,6 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		endmethod
 
 		private method createUnit takes nothing returns nothing
-			local integer i
-			local player user
 			if (this.m_classUnit != null) then
 				call RemoveUnit(this.m_classUnit)
 				set this.m_classUnit = null
@@ -194,17 +192,8 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call SetUnitPathing(this.m_classUnit, false)
 			// refresh position
 			call SetUnitPosition(this.m_classUnit, thistype.m_x, thistype.m_y)
-			// Für andere Spieler unsichtbar machen
-			set i = 0
-			loop
-				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (user != this.m_user and IsPlayerPlayingUser(user)) then
-					  call UnitShareVision(this.m_classUnit, user, false)
-				endif
-				set user = null
-				set i = i + 1
-			endloop
+			call ShowUnit(this.m_classUnit, false)
+			call ShowUnitForPlayer(this.m_user, this.m_classUnit, true)
 			call SetUnitAnimation(this.m_classUnit, this.m_class.animation())
 			call PlaySoundFileForPlayer(this.m_user, this.m_class.soundPath())
 			//call SetCameraTargetControllerNoZForPlayer(this.user, this.classUnit, 0.0, 0.0, false)

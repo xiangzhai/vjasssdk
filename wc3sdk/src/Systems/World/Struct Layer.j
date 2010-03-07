@@ -78,7 +78,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call RegionClearRect(this.m_region, whichRect)
 		endmethod
 
-		public method unitEnters takes unit whichUnit returns nothing
+		public stub method unitEnters takes unit whichUnit returns nothing
 			call this.m_units.pushBack(whichUnit)
 			call MakeUnitFlyable(whichUnit)
 			call SetUnitFlyHeight(whichUnit, this.m_height, 0.0)
@@ -88,7 +88,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			endif
 		endmethod
 
-		public method unitLeaves takes unit whichUnit returns nothing
+		public stub method unitLeaves takes unit whichUnit returns nothing
 			call this.m_units.remove(whichUnit)
 			call SetUnitFlyHeight(whichUnit, 0.0, 0.0)
 

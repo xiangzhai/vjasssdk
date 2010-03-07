@@ -23,8 +23,8 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 		constant integer AShortcut8 = 56
 		constant integer AShortcut9 = 57
 		// small letters
-		constant integer AShortcutA = 65 
-		constant integer AShortcutB = 66 
+		constant integer AShortcutA = 65
+		constant integer AShortcutB = 66
 		constant integer AShortcutC = 67
 		constant integer AShortcutD = 68
 		constant integer AShortcutE = 69
@@ -52,7 +52,7 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 		//dialogs
 		constant integer AMaxDialogButtons = 12 /// @todo 16?
 	endglobals
-	
+
 	debug function KeyIsValid takes integer key returns boolean
 		debug return key >= AKeyEscape and key <= AKeyLeft
 	debug endfunction
@@ -109,7 +109,7 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 			debug call Print("GetBar: Invalid maxValue parameter with value " + R2S(maxValue) + ".")
 			debug return null
 		debug endif
-		set colouredPart = R2I(value * I2R(length) / maxValue) 
+		set colouredPart = R2I(value * I2R(length) / maxValue)
 		//coloured part exists
 		if (colouredPart > 0.0) then
 			set result = "|c00" + colour
@@ -130,12 +130,22 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 	/// @todo test please
 	function SetUnitVertexColourForPlayer takes player whichPlayer, unit whichUnit, real red, real green, real blue, real transparency returns nothing
 		local player localPlayer = GetLocalPlayer()
-		if (whichPlayer == localPlayer) then 
+		if (whichPlayer == localPlayer) then
 			call SetUnitVertexColorBJ(whichUnit, red, green, blue, transparency)
 		endif
 		set localPlayer = null
 	endfunction
-	
+
+	/**
+	* @author Tamino Dauth
+	* @todo test please
+	*/
+	function ShowUnitForPlayer takes player whichPlayer, unit whichUnit, boolean show returns nothing
+		if (whichPlayer == GetLocalPlayer()) then
+			call ShowUnit(whichUnit, show)
+		endif
+	endfunction
+
 	globals
 		private sound error
 	endglobals
