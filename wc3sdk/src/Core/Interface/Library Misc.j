@@ -151,7 +151,7 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 	endglobals
 
 	/// @author Vexorian
-	/// @source http://www.wc3c.net/showthread.php?t=101260
+	/// @link http://www.wc3c.net/showthread.php?t=101260
 	function SimError takes player whichPlayer, string message returns nothing
 		local player localPlayer = GetLocalPlayer()
 		set message = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n|cffffcc00" + message + "|r"

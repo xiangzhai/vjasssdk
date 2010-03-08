@@ -197,6 +197,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private static string textAddItemToRucksack
 		private static string textUnableToMoveRucksackItem
 		private static string textDropPageItem
+		private static string textMovePageItem
 		//members
 		private AInventoryItemData array m_equipmentItemData[thistype.maxEquipmentTypes]
 		private AInventoryItemData array m_rucksackItemData[thistype.maxRucksackItems]
@@ -1118,8 +1119,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				//debug call this.print("Rucksack is enabled.")
 				if (GetItemTypeId(usedItem) == thistype.leftArrowItemType and newSlot != thistype.maxRucksackItemsPerPage) then
 					call this.resetItemSlots(newSlot, AInventory.maxRucksackItemsPerPage)
+					call ACharacter.displayMessage(ACharacter.messageTypeError, thistype.textMovePageItem)
 				elseif (GetItemTypeId(usedItem) == thistype.rightArrowItemType and newSlot != thistype.maxRucksackItemsPerPage + 1) then
 					call this.resetItemSlots(newSlot, thistype.maxRucksackItemsPerPage + 1)
+					call ACharacter.displayMessage(ACharacter.messageTypeError, thistype.textMovePageItem)
 				//move item previous - player drops an item on the next page item
 				elseif (GetItemTypeId(usedItem) != thistype.leftArrowItemType and newSlot == thistype.maxRucksackItemsPerPage) then
 					call this.moveRucksackItemToPage(usedItem, false)
@@ -1380,7 +1383,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call this.destroyUseTrigger()
 		endmethod
 
-		public static method init takes integer leftArrowItemType, integer rightArrowItemType, integer openRucksackAbilityId, string textUnableToEquipItem, string textEquipItem, string textUnableToAddRucksackItem, string textAddItemToRucksack, string textUnableToMoveRucksackItem, string textDropPageItem returns nothing
+		public static method init takes integer leftArrowItemType, integer rightArrowItemType, integer openRucksackAbilityId, string textUnableToEquipItem, string textEquipItem, string textUnableToAddRucksackItem, string textAddItemToRucksack, string textUnableToMoveRucksackItem, string textDropPageItem, string textMovePageItem returns nothing
 			//static start members
 			set thistype.leftArrowItemType = leftArrowItemType
 			set thistype.rightArrowItemType = rightArrowItemType
@@ -1391,6 +1394,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set thistype.textAddItemToRucksack = textAddItemToRucksack
 			set thistype.textUnableToMoveRucksackItem = textUnableToMoveRucksackItem
 			set thistype.textDropPageItem = textDropPageItem
+			set thistype.textMovePageItem = textMovePageItem
 		endmethod
 	endstruct
 

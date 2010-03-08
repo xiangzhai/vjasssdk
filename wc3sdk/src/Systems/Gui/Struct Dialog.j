@@ -36,7 +36,9 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 
 		public method setMessage takes string message returns nothing
 			set this.m_message = message
-			call DialogSetMessage(this.m_dialog, message) //InsertLineBreaks(message, 10)
+			if (this.m_isDisplayed) then
+				call DialogSetMessage(this.m_dialog, message) //InsertLineBreaks(message, 10)
+			endif
 		endmethod
 
 		public method message takes nothing returns string
@@ -48,6 +50,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			local integer exitValue
 			set this.m_isDisplayed = displayed
 			if (displayed) then
+				call DialogSetMessage(this.m_dialog, this.m_message) //InsertLineBreaks(message, 10)
 				set i = this.m_currentPage * thistype.maxPageButtons
 				set exitValue = (this.m_currentPage + 1) * thistype.maxPageButtons
 				loop
@@ -103,7 +106,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			return this.m_maxPageNumber
 		endmethod
 
-		//convenience methos
+		// methods
 
 		public method show takes nothing returns nothing
 			call this.setDisplayed(true)
@@ -113,7 +116,15 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			call this.setDisplayed(false)
 		endmethod
 
-		//methods
+		public method showOnPage takes integer pageNumber returns boolean
+			local boolean result = pageNumber > this.m_maxPageNumber or pageNumber < 0
+			if (result) then
+				set pageNumber = 0
+			endif
+			set this.m_currentPage = pageNumber
+			call this.show()
+			return result
+		endmethod
 
 		public method addExtendedDialogButton takes string text, integer shortcut, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns ADialogButton
 			return ADialogButton.create(this, text, shortcut, isQuitButton, doScoreScreen, action)

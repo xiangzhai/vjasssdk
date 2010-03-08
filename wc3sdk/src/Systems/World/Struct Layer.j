@@ -128,7 +128,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 		private static method eventFilterEnter takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return not this.m_units.contains(GetTriggerUnit())
+			return not this.m_units.contains(GetFilterUnit())
 		endmethod
 
 		private static method triggerActionEnter takes nothing returns nothing
@@ -139,7 +139,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 		private static method eventFilterLeave takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return this.m_units.contains(GetTriggerUnit())
+			return this.m_units.contains(GetFilterUnit())
 		endmethod
 
 		private static method triggerActionLeave takes nothing returns nothing
@@ -150,7 +150,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 		private static method eventFilterBounds takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return this.m_units.contains(GetTriggerUnit()) and not IsUnitInRegion(this.m_exit, GetTriggerUnit())
+			return this.m_units.contains(GetFilterUnit()) and not IsUnitInRegion(this.m_exit, GetFilterUnit())
 		endmethod
 
 		private static method triggerActionBounds takes nothing returns nothing

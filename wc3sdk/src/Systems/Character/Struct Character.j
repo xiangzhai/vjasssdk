@@ -1,4 +1,4 @@
-library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceCamera, ALibraryCoreMathsUnit, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceMisc, ALibraryCoreMathsUnit, AStructSystemsCharacterAbstractCharacterSystem
 
 	/**
 	* This struct represents a single RPG character. Each player can own exactly one character.
@@ -182,7 +182,11 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		* @param message The message text.
 		*/
 		public method displayMessage takes integer messageType, string message returns nothing
-			call DisplayTimedTextToPlayer(this.m_player, 0.0, 0.0, 6.0, message)
+			if (messageType == thistype.messageTypeInfo) then
+				call DisplayTimedTextToPlayer(this.m_player, 0.0, 0.0, 6.0, message)
+			else
+				call SimError(this.m_player, message)
+			endif
 		endmethod
 
 		/// Displays a message to the owners of all other characters.

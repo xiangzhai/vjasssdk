@@ -1,3 +1,10 @@
+2010-03-08 Tamino Dauth <tamino@cdauth.de>
+* Added parameter to initializer of struct AInventory.
+* ACharacter.messageTypeError uses function SimError now.
+* Fixed various bugs of struct ALayer.
+* Added method showOnPage to struct ADialog.
+* Fixed clearing dialog title when changing dialog page bug.
+
 2010-03-06 Tamino Dauth <tamino@cdauth.de>
 * Added function speech2.
 * Revised struct ATalkLog.
