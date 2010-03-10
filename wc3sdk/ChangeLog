@@ -1,3 +1,7 @@
+2010-03-10 Tamino Dauth <tamino@cdauth.de>
+* Added text macro "A_MAP".
+* Improved text macro "A_LIST".
+
 2010-03-08 Tamino Dauth <tamino@cdauth.de>
 * Added parameter to initializer of struct AInventory.
 * ACharacter.messageTypeError uses function SimError now.

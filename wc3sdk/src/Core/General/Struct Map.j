@@ -1,19 +1,20 @@
-library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
+library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 
 	/**
 	* @author Tamino Dauth
-	* Got some inspiration from @link http://www.cplusplus.com/reference/stl and @link http://www.cplusplus.com/reference/stl/list.
+	* Got some inspiration from @link http://www.cplusplus.com/reference/stl and @link http://www.cplusplus.com/reference/stl/map.
+	* Note that maps of the ASL aren't sorted automatically.
 	*/
-	//! textmacro A_LIST takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, STRUCTSPACE, NODESPACE, ITERATORSPACE
+	//! textmacro A_MAP takes STRUCTPREFIX, NAME, ELEMENTTYPE, KEYTYPE, NULLVALUE, KEYNULLVALUE, STRUCTSPACE, NODESPACE, ITERATORSPACE
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ value returns boolean
+		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ value, $KEYTYPE$ key returns boolean
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ function interface $NAME$BinaryPredicate takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns boolean
+		$STRUCTPREFIX$ function interface $NAME$BinaryPredicate takes $ELEMENTTYPE$ value0, $KEYTYPE$ key0, $ELEMENTTYPE$ value1, $KEYTYPE$ key1 returns boolean
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ function interface $NAME$UnaryFunction takes $ELEMENTTYPE$ value returns nothing //Rückgabewert wurde vorerst rausgenommen, bis ich weiß, was er bringt
+		$STRUCTPREFIX$ function interface $NAME$UnaryFunction takes $ELEMENTTYPE$ value, $KEYTYPE$ key returns nothing
 
 		/// Generator.
 		/// Allows filling some elements with the return value.
@@ -21,11 +22,12 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 		$STRUCTPREFIX$ function interface $NAME$Generator takes nothing returns $ELEMENTTYPE$
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
-		$STRUCTPREFIX$ function interface $NAME$BinaryOperation  takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns $ELEMENTTYPE$
+		$STRUCTPREFIX$ function interface $NAME$BinaryOperation  takes $ELEMENTTYPE$ value0, $KEYTYPE$ key0, $ELEMENTTYPE$ value1, $KEYTYPE$ key1 returns $ELEMENTTYPE$
 
 		private struct $NAME$Node[$NODESPACE$]
 			private thistype m_next
 			private thistype m_previous
+			private $KEYTYPE$ m_key
 			private $ELEMENTTYPE$ m_data
 
 			public method setNext takes thistype next returns nothing
@@ -44,6 +46,14 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				return this.m_previous
 			endmethod
 
+			public method setKey takes $KEYTYPE$ key returns nothing
+				set this.m_key = key
+			endmethod
+
+			public method key takes nothing returns $KEYTYPE$
+				return this.m_key
+			endmethod
+
 			public method setData takes $ELEMENTTYPE$ data returns nothing
 				set this.m_data = data
 			endmethod
@@ -56,12 +66,14 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				local thistype this = thistype.allocate()
 				set this.m_next = 0
 				set this.m_previous = 0
+				set this.m_key = $KEYNULLVALUE$
 				set this.m_data = $NULLVALUE$
 
 				return this
 			endmethod
 
 			public method onDestroy takes nothing returns nothing
+				set this.m_key = $KEYNULLVALUE$
 				set this.m_data = $NULLVALUE$
 			endmethod
 		endstruct
@@ -109,7 +121,21 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				set this.m_node = this.m_node.next()
 			endmethod
 
-			public method setData takes $ELEMENTTYPE$ data returns nothing
+			public method setKey takes $KEYTYPE$ key returns nothing
+				if (this.m_node == 0) then
+					return
+				endif
+				call this.m_node.setKey(key)
+			endmethod
+
+			public method key takes nothing returns $KEYTYPE$
+				if (this.m_node == 0) then
+					return $KEYNULLVALUE$
+				endif
+				return this.m_node.key()
+			endmethod
+
+			public method setData takes $ELEMENTTYPE data returns nothing
 				if (this.m_node == 0) then
 					return
 				endif
@@ -140,7 +166,7 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 		endstruct
 
 		$STRUCTPREFIX$ struct $NAME$[$STRUCTSPACE$]
-			//members
+			// members
 			private $NAME$Node m_front
 			private $NAME$Node m_back
 			private integer m_size
@@ -164,6 +190,14 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				return this.m_size
 			endmethod
 
+			public method frontKey takes nothing returns $KEYTYPE$
+				if (this.m_front == 0) then
+					return $KEYNULLVALUE$
+				endif
+
+				return this.m_front.key()
+			endmethod
+
 			/**
 			* @return Returns the first element value of list.
 			*/
@@ -173,6 +207,14 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				endif
 
 				return this.m_front.data()
+			endmethod
+
+			public method backKey takes nothing returns $KEYTYPE$
+				if (this.m_back == 0) then
+					return $KEYNULLVALUE$
+				endif
+
+				return this.m_back.key()
 			endmethod
 
 			/**
@@ -191,106 +233,68 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 			endmethod
 
 			/**
-			* Inserts a new element at the beginning of the list, right before its current first element. The content of this new element is initialized to @param value.
-			* This effectively increases the list size by one.
+			* Searches the container for an element with a value of x and returns an iterator to it if
+			* found, otherwise it returns 0.
 			*/
-			public method pushFront takes $ELEMENTTYPE$ value returns nothing
+			public method find takes $KEYTYPE$ key returns $NAME$Iterator
 				local $NAME$Node node = this.m_front
-				set this.m_front = $NAME$Node.create()
-				call this.m_front.setData(value)
-				if (node != 0) then
-					call this.m_front.setNext(node)
-					call node.setPrevious(this.m_front)
-				else
-					set this.m_back = this.m_front
-				endif
-				set this.m_size = this.m_size + 1
-			endmethod
-
-			/**
-			* Removes the first element in the list container, effectively reducing the list size by one.
-			* This doesn't call the removed element's destructor!
-			*/
-			public method popFront takes nothing returns nothing
-				local $NAME$Node node = this.m_front
-				if (node != 0) then
-					if (node.next() != 0) then
-						call node.next().setPrevious(0)
-					else
-						set this.m_back = 0
-					endif
-					set this.m_front = node.next() // could be 0!
-					call node.destroy()
-					set this.m_size = this.m_size - 1
-				endif
-			endmethod
-
-			/**
-			* Adds a new element at the end of the list, right after its current last
-			* element. The content of this new element is initialized to @param value.
-			* This effectively increases the list size by one.
-			*/
-			public method pushBack takes $ELEMENTTYPE$ value returns nothing
-				local $NAME$Node node = this.m_back
-				set this.m_back = $NAME$Node.create()
-				call this.m_back.setData(value)
-				if (node != 0) then
-					call this.m_back.setPrevious(node)
-					call node.setNext(this.m_back)
-				else
-					set this.m_front = this.m_back
-				endif
-				set this.m_size = this.m_size + 1
-			endmethod
-
-			/**
-			* Removes the last element in the list container, effectively reducing the list size by one.
-			* This calls the removed element's destructor.
-			*/
-			public method popBack takes nothing returns nothing
-				local $NAME$Node node = this.m_back
-				if (node != 0) then
-					if (node.previous() != 0) then
-						call node.previous().setNext(0)
-					else
-						set this.m_front = 0
-					endif
-					set this.m_back = node.previous() // could be 0!
-					call node.destroy()
-					set this.m_size = this.m_size - 1
-				endif
-			endmethod
-
-			/**
-			* The list container is extended by inserting new elements before the element at position @param position with value @param value.
-			* This effectively increases the container size by @param number.
-			*/
-			public method insertNumber takes $NAME$Iterator position, integer number,  $ELEMENTTYPE$ value returns nothing
-				local $NAME$Node node = position.node().previous()
-				local $NAME$Node tmpNode
-				local integer i = 0
-
 				loop
-					exitwhen (i == number)
-					set tmpNode = $NAME$Node.create()
-					call tmpNode.setData(value)
-					call tmpNode.setPrevious(node)
-					call tmpNode.setNext(position.node()) // this call actually can be removed
-					if (node != 0) then
-						call node.setNext(tmpNode)
-					else
-						set this.m_front = tmpNode
+					exitwhen (node == 0)
+					if (node.key() == key) then
+						return $NAME$Iterator.create().setNode(node)
 					endif
-					set i = i + 1
+					set node = node.next()
 				endloop
-				set this.m_size = this.m_size + i
-				if (i > 0) then
-					call position.node().setPrevious(tmpNode)
-				endif
+				return 0
 			endmethod
 
-			public method insert takes $NAME$Iterator position, $ELEMENTTYPE$ value returns nothing
-				call this.insertNumber(position, 1, value)
+			/**
+			* Searches the container for an element with a key of @param key and returns the number of
+			* elements having that key. Because map containers do not allow for duplicate keys,
+			* this means that the function actually returns 1 if an element with that key is found
+			* and zero otherwise.
+			*/
+			public method count takes $KEYTYPE$ key returns integer
+				local $NAME$Node node = this.m_front
+				loop
+					exitwhen (node == 0)
+					if (node.key() == key) then
+						return 1
+					endif
+					set node = node.next()
+				endloop
+				return 0
+			endmethod
+
+			/**
+			* The list container is extended by inserting a new element before the element at position @param position with value @param value and key @param key.
+			* This effectively increases the container size by @param number.
+			* The element can't be inserted if key @param key is already used by another one.
+			* @param position If this value is 0 or less the new inserted element will become front and back (only element in map) if map is empty. Otherwise it won't be added.
+			*/
+			public method insert takes $NAME$Iterator position, $KEYTYPE$ key, $ELEMENTTYPE$ value returns nothing
+				local $NAME$Node node
+				if (this.count(key) > 0 or (position < 0 and not this.empty())) then
+					return
+				endif
+				set node = $NAME$Node.create()
+				call node.setKey(key)
+				call node.setData(value)
+				if (position > 0) then
+					if (position.node().previous() != 0) then
+						call node.setPrevious(position.node().previous())
+					else
+						set this.m_front = node
+					endif
+
+
+					call node.setNext(position.node())
+					call position.node().setPrevious(node)
+				else
+					set this.m_front = node
+					set this.m_back = node
+				endif
+				set this.m_size = this.m_size + 1
 			endmethod
 
 			/// No reverse erasing.
@@ -331,13 +335,6 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				call last.destroy()
 			endmethod
 
-			public method operator< takes thistype other returns boolean
-				debug if (this == other) then
-					debug call Print("Same list.")
-				debug endif
-				return this.m_size < other.m_size
-			endmethod
-
 			public static method create takes nothing returns thistype
 				local thistype this = thistype.allocate()
 				set this.m_front = 0
@@ -352,6 +349,35 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				call this.clear()
 			endmethod
 
+			public method operator[]= takes $KEYTYPE$ key, $ELEMENTTYPE$ value returns nothing
+				local $NAME$Iterator iterator = this.find(key)
+				if (iterator == 0) then
+					set iterator = this.begin()
+					call this.insert(iterator, key, value)
+					call iterator.destroy()
+				else
+					call iterator.setData(value)
+					call iterator.destroy()
+				endif
+			endmethod
+
+			public method operator[] takes $KEYTYPE$ key returns $ELEMENTTYPE$
+				local $NAME$Iterator iterator = this.find(key)
+				local $ELEMENTTYPE$ result = $NULLVALUE$
+				if (iterator != 0) then
+					set result = iterator.data()
+					call iterator.destroy()
+				endif
+				return result
+			endmethod
+
+			public method operator< takes thistype other returns boolean
+				debug if (this == other) then
+					debug call Print("Same map.")
+				debug endif
+				return this.m_size < other.m_size
+			endmethod
+
 			public static constant method maxInstances takes nothing returns integer
 				return $STRUCTSPACE$
 			endmethod
@@ -360,15 +386,11 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 	//! endtextmacro
 
 	/**
-	* default lists, Jass data types
+	* default maps, Jass data types
 	* max instances = required struct space / biggest array member size
 	* 400000 is struct space maximum
 	* max instances = 8192 / 1 = 8192 since there is no array member
 	*/
-	//! runtextmacro A_LIST("", "AIntegerList", "integer", "0", "8192", "40000", "8192")
-	//! runtextmacro A_LIST("", "AStringList", "string", "null", "8192", "40000", "8192")
-	//! runtextmacro A_LIST("", "ABooleanList", "boolean", "false", "8192", "40000", "8192")
-	//! runtextmacro A_LIST("", "ARealList", "real", "0.0", "8192", "40000", "8192")
-	//! runtextmacro A_LIST("", "AHandleList", "handle", "null", "8192", "40000", "8192")
+	//! runtextmacro A_MAP("", "AIntegerStringMap", "integer", "string", "0", "null", "8192", "40000", "8192")
 
 endlibrary

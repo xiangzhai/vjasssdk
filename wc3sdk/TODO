@@ -1,3 +1,6 @@
+2010-03-10 Tamino Dauth <tamino@cdauth.de>
+* Improved text macros A_LIST and A_MAP.
+
 2010-03-08 Tamino Dauth <tamino@cdauth.de>
 * Add GUI systems structs (creating new branch): AStyle, AFrame, AWindow, AArrowButton, AListView and AScrollButtons (AStyle should be associated with AMainWindow instances).
 
