@@ -966,18 +966,18 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			endif
 
 			loop
-				//reached old index, remove dropped slot item and show it again. show error message.
+				// reached old index, remove dropped slot item and show it again. show error message.
 				if (i == oldIndex) then
 					//call RemoveItem(slotItem) //do not disable drop triggers, item is dropped
 					call this.showRucksackItem(oldIndex)
 					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textUnableToMoveRucksackItem)
 					exitwhen (true)
-				//found stack place
+				// found stack place
 				elseif (this.m_rucksackItemData[i].itemTypeId() == this.m_rucksackItemData[oldIndex].itemTypeId()) then
 					call this.m_rucksackItemData[i].setCharges(this.m_rucksackItemData[i].charges() + 1)
 					call this.clearRucksackItem(oldIndex, false)
 					exitwhen (true)
-				//found a free place
+				// found a free place
 				elseif (this.m_rucksackItemData[i] == 0) then
 					call this.setRucksackItem(i, this.m_rucksackItemData[oldIndex], this.m_rucksackIsEnabled and this.itemRucksackPage(i) == this.m_rucksackPage)
 					set this.m_rucksackItemData[oldIndex] = 0
@@ -1119,10 +1119,10 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				//debug call this.print("Rucksack is enabled.")
 				if (GetItemTypeId(usedItem) == thistype.leftArrowItemType and newSlot != thistype.maxRucksackItemsPerPage) then
 					call this.resetItemSlots(newSlot, AInventory.maxRucksackItemsPerPage)
-					call ACharacter.displayMessage(ACharacter.messageTypeError, thistype.textMovePageItem)
+					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textMovePageItem)
 				elseif (GetItemTypeId(usedItem) == thistype.rightArrowItemType and newSlot != thistype.maxRucksackItemsPerPage + 1) then
 					call this.resetItemSlots(newSlot, thistype.maxRucksackItemsPerPage + 1)
-					call ACharacter.displayMessage(ACharacter.messageTypeError, thistype.textMovePageItem)
+					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textMovePageItem)
 				//move item previous - player drops an item on the next page item
 				elseif (GetItemTypeId(usedItem) != thistype.leftArrowItemType and newSlot == thistype.maxRucksackItemsPerPage) then
 					call this.moveRucksackItemToPage(usedItem, false)
