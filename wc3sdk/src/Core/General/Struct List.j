@@ -322,6 +322,37 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				call this.eraseNumber(position, position)
 			endmethod
 
+			/**
+			* Searches the container for an element with a value of @param value and returns an iterator to it
+			* if found, otherwise it returns 0.
+			*/
+			public method find takes $ELEMENTTYPE$ value returns $NAME$Iterator
+				local $NAME$Node node = this.m_front
+				local $NAME$Iterator result = 0
+				loop
+					exitwhen (node == 0)
+					if (node.data() == value) then
+						set result = $NAME$Iterator.create()
+						call result.setNode(node)
+						exitwhen (true)
+					endif
+					set node = node.next()
+				endloop
+				return result
+			endmethod
+
+			public method contains takes $ELEMENTTYPE$ value returns boolean
+				local $NAME$Node node = this.m_front
+				loop
+					exitwhen (node == 0)
+					if (node.data() == value) then
+						return true
+					endif
+					set node = node.next()
+				endloop
+				return false
+			endmethod
+
 			/// All the elements in the list container are dropped: they are removed from the list container, leaving it with a size of 0.
 			public method clear takes nothing returns nothing
 				local $NAME$Iterator first = this.begin()
@@ -370,5 +401,7 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 	//! runtextmacro A_LIST("", "ABooleanList", "boolean", "false", "8192", "40000", "8192")
 	//! runtextmacro A_LIST("", "ARealList", "real", "0.0", "8192", "40000", "8192")
 	//! runtextmacro A_LIST("", "AHandleList", "handle", "null", "8192", "40000", "8192")
+
+	//! runtextmacro A_LIST("", "APlayerList", "player", "null", "8192", "40000", "8192")
 
 endlibrary

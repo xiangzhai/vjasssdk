@@ -38,32 +38,37 @@ library ALibraryCoreInterfaceTextTag
 
 	/// @author Tamino Dauth
 	function ShowGoldTextTagForPlayer takes player user, real x, real y, integer gold returns nothing
-		call ShowFadingTextTagForPlayer(user, "+" + I2S(gold), 0.025, x, y, 255, 255, 220, 0, 0.03, 1.0, 2.0)
+		call ShowFadingTextTagForPlayer(user, "+" + I2S(gold), 0.025, x, y, 255, 220, 0, 255, 0.03, 1.0, 2.0)
 	endfunction
 
 	/// @author Tamino Dauth
 	function ShowLumberTextTagForPlayer takes player user, real x, real y, integer lumber returns nothing
-		call ShowFadingTextTagForPlayer(user, "+" + I2S(lumber), 0.025, x, y, 255, 0, 200, 80, 0.03, 1.0, 2.0)
+		call ShowFadingTextTagForPlayer(user, "+" + I2S(lumber), 0.025, x, y, 0, 200, 80, 255, 0.03, 1.0, 2.0)
 	endfunction
 
 	/// @author Tamino Dauth
 	function ShowBountyTextTagForPlayer takes player user, real x, real y, integer bounty returns nothing
-		call ShowFadingTextTagForPlayer(user, "+" + I2S(bounty), 0.025, x, y, 255, 255, 220, 0, 0.03, 2.0, 3.0)
+		call ShowFadingTextTagForPlayer(user, "+" + I2S(bounty), 0.025, x, y, 255, 220, 0, 255, 0.03, 2.0, 3.0)
 	endfunction
 
 	/// @author Tamino Dauth
 	function ShowMissTextTagForPlayer takes player user, real x, real y returns nothing
-		call ShowFadingTextTagForPlayer(user, GetLocalizedString("MISS") + "!", 0.025, x, y, 255, 255, 0, 0, 0.03, 1.0, 3.0)
+		call ShowFadingTextTagForPlayer(user, GetLocalizedString("MISS") + "!", 0.025, x, y, 255, 0, 0, 255, 0.03, 1.0, 3.0)
 	endfunction
 
 	/// @author Tamino Dauth
 	function ShowCriticalStrikeTextTagForPlayer takes player user, real x, real y, integer damage returns nothing
-		call ShowFadingTextTagForPlayer(user, I2S(damage) + "!", 0.025, x, y, 255, 255, 0, 0, 0.04, 2.0, 5.0)
+		call ShowFadingTextTagForPlayer(user, I2S(damage) + "!", 0.025, x, y, 255, 0, 0, 255, 0.04, 2.0, 5.0)
+	endfunction
+
+	/// @author Tamino Dauth
+	function ShowShadowStrikeTextTagForPlayer takes player whichPlayer, real x, real y, integer damage returns nothing
+		call ShowFadingTextTagForPlayer(whichPlayer, I2S(damage) + "!", 0.025, x, y, 160, 255, 0, 255, 0.04, 2.0, 5.0)
 	endfunction
 
 	/// @author Tamino Dauth
 	function ShowManaBurnTextTagForPlayer takes player user, real x, real y, integer damage returns nothing
-		call ShowFadingTextTagForPlayer(user, "-" + I2S(damage), 0.025, x, y, 255, 82, 82, 255, 0.04, 2.0, 5.0)
+		call ShowFadingTextTagForPlayer(user, "-" + I2S(damage), 0.025, x, y, 82, 82 ,255 ,255, 0.04, 2.0, 5.0)
 	endfunction
 
 	/// @author Tamino Dauth

@@ -1,4 +1,4 @@
-library AStructSystemsCharacterPvp requires ALibraryCoreInterfaceLeaderboard, ALibraryCoreStringConversion, AStructCoreGeneralHashTable, AStructCoreGeneralVector
+library AStructSystemsCharacterPvp requires ALibraryCoreInterfaceLeaderboard, ALibraryCoreStringConversion, AStructCoreGeneralHashTable, AStructCoreGeneralList, AStructCoreGeneralVector
 
 	/// @todo Add config options for scoring.
 	struct APvp
@@ -38,32 +38,22 @@ library AStructSystemsCharacterPvp requires ALibraryCoreInterfaceLeaderboard, AL
 		/// @todo Use of player vector would be much easier.
 		public method showMessage takes string message returns nothing
 			local integer i = 0
-			local integer j
-			local player array owners
-			local integer ownerSize
+			local APlayerList owners = APlayerList.create()
 			local player owner
 			loop
 				exitwhen (i == this.m_units.size())
 				set owner = GetOwningPlayer(this.m_units[i])
-				set j = 0
-				loop
-					exitwhen (j == ownerSize or owners[j] == owner)
-					set j = j + 1
-				endloop
-				if (j == ownerSize) then
-					set owners[ownerSize] = owner
-					set ownerSize = ownerSize + 1
+				if (not owners.contains(owner)) then
+					call owners.pushBack(owner)
 				endif
-				set owner = null
 				set i = i + 1
 			endloop
-			set i = 0
 			loop
-				exitwhen (i == ownerSize)
-				call DisplayTimedTextToPlayer(owners[i], 0.0, 0.0, 6.0, message)
-				set owners[i] = null
-				set i = i + 1
+				exitwhen (owners.empty())
+				call DisplayTimedTextToPlayer(owners.back(), 0.0, 0.0, 6.0, message)
+				call owners.popBack()
 			endloop
+			call owners.destroy()
 		endmethod
 
 		/**

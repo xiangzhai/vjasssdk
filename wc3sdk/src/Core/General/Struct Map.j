@@ -4,6 +4,24 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 	* @author Tamino Dauth
 	* Got some inspiration from @link http://www.cplusplus.com/reference/stl and @link http://www.cplusplus.com/reference/stl/map.
 	* Note that maps of the ASL aren't sorted automatically.
+	* Maps are containers which contain pairs of values and their corresponding keys.
+	* When creating a new instance of A_MAP user can define element and key type.
+	* E. g. you can create your custom unit map with string keys for accessing units by name:
+	* @code
+	* library MyLibrary initializer init
+	* //! runtextmacro A_MAP("private", "MyUnitMap", "unit", "string", "null", "null", 8192, 20000, 8192)
+	* globals
+	* MyUnitMap units = MyUnitMap.create()
+	* endglobals
+	*
+	* function init takes nothing returns nothing
+	* call MyUnit["Peter"] = gg_unit_n0001
+	* call MyUnit["Heinz"] = gg_unit_n0001
+	* call MyUnit["Franz"] = gg_unit_n0001
+	* endfunction
+	* @endcode
+	* By using methods @method $STRUCTNAME$.findKey and @method $STRUCTNAME$.findValue user can get iterator
+	* which can be used to iterate all contained map elements.
 	*/
 	//! textmacro A_MAP takes STRUCTPREFIX, NAME, ELEMENTTYPE, KEYTYPE, NULLVALUE, KEYNULLVALUE, STRUCTSPACE, NODESPACE, ITERATORSPACE
 
@@ -135,7 +153,7 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 				return this.m_node.key()
 			endmethod
 
-			public method setData takes $ELEMENTTYPE data returns nothing
+			public method setData takes $ELEMENTTYPE$ data returns nothing
 				if (this.m_node == 0) then
 					return
 				endif
@@ -233,19 +251,37 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 			endmethod
 
 			/**
-			* Searches the container for an element with a value of x and returns an iterator to it if
+			* Searches the container for key @param key x and returns an iterator to it if
 			* found, otherwise it returns 0.
 			*/
-			public method find takes $KEYTYPE$ key returns $NAME$Iterator
+			public method findKey takes $KEYTYPE$ key returns $NAME$Iterator
 				local $NAME$Node node = this.m_front
+				local $NAME$Iterator result = 0
 				loop
 					exitwhen (node == 0)
 					if (node.key() == key) then
-						return $NAME$Iterator.create().setNode(node)
+						set result = $NAME$Iterator.create()
+						call result.setNode(node)
+						exitwhen (true)
 					endif
 					set node = node.next()
 				endloop
-				return 0
+				return result
+			endmethod
+
+			public method findValue takes $ELEMENTTYPE$ value returns $NAME$Iterator
+				local $NAME$Node node = this.m_front
+				local $NAME$Iterator result = 0
+				loop
+					exitwhen (node == 0)
+					if (node.data() == value) then
+						set result = $NAME$Iterator.create()
+						call result.setNode(node)
+						exitwhen (true)
+					endif
+					set node = node.next()
+				endloop
+				return result
 			endmethod
 
 			/**
@@ -254,7 +290,7 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 			* this means that the function actually returns 1 if an element with that key is found
 			* and zero otherwise.
 			*/
-			public method count takes $KEYTYPE$ key returns integer
+			public method countKeys takes $KEYTYPE$ key returns integer
 				local $NAME$Node node = this.m_front
 				loop
 					exitwhen (node == 0)
@@ -266,6 +302,35 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 				return 0
 			endmethod
 
+			public method containsKey takes $KEYTYPE$ key returns boolean
+				return this.countKeys(key) == 1
+			endmethod
+
+			public method countValues takes $ELEMENTTYPE$ value returns integer
+				local $NAME$Node node = this.m_front
+				local integer result = 0
+				loop
+					exitwhen (node == 0)
+					if (node.data() == value) then
+						set result = result + 1
+					endif
+					set node = node.next()
+				endloop
+				return result
+			endmethod
+
+			public method containsValue takes $ELEMENTTYPE$ value returns boolean
+				local $NAME$Node node = this.m_front
+				loop
+					exitwhen (node == 0)
+					if (node.data() == value) then
+						return true
+					endif
+					set node = node.next()
+				endloop
+				return false
+			endmethod
+
 			/**
 			* The list container is extended by inserting a new element before the element at position @param position with value @param value and key @param key.
 			* This effectively increases the container size by @param number.
@@ -274,7 +339,7 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 			*/
 			public method insert takes $NAME$Iterator position, $KEYTYPE$ key, $ELEMENTTYPE$ value returns nothing
 				local $NAME$Node node
-				if (this.count(key) > 0 or (position < 0 and not this.empty())) then
+				if (this.containsKey(key) or (position < 0 and not this.empty())) then
 					return
 				endif
 				set node = $NAME$Node.create()
@@ -350,7 +415,7 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 			endmethod
 
 			public method operator[]= takes $KEYTYPE$ key, $ELEMENTTYPE$ value returns nothing
-				local $NAME$Iterator iterator = this.find(key)
+				local $NAME$Iterator iterator = this.findKey(key)
 				if (iterator == 0) then
 					set iterator = this.begin()
 					call this.insert(iterator, key, value)
@@ -362,13 +427,15 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 			endmethod
 
 			public method operator[] takes $KEYTYPE$ key returns $ELEMENTTYPE$
-				local $NAME$Iterator iterator = this.find(key)
-				local $ELEMENTTYPE$ result = $NULLVALUE$
-				if (iterator != 0) then
-					set result = iterator.data()
-					call iterator.destroy()
-				endif
-				return result
+				local $NAME$Node node = this.m_front
+				loop
+					exitwhen (node == 0)
+					if (node.key() == key) then
+						return node.data()
+					endif
+					set node = node.next()
+				endloop
+				return $NULLVALUE$
 			endmethod
 
 			public method operator< takes thistype other returns boolean
