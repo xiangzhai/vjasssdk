@@ -36,9 +36,6 @@ class Translation1 : public MdxScaling
 		Translation1(class Translation1s *translations);
 		
 		class Translation1s* translations() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 };
 
 inline class Translation1s* Translation1::translations() const

@@ -25,6 +25,7 @@
 #include <ostream>
 #include <list>
 #include <vector>
+#include <string>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -76,6 +77,9 @@ class Environment
 		
 		const class Tilepoint* tilepoint(int32 x, int32 y) const;
 		
+		static char* tilesetIdToCString(int32 tilesetId);
+		static std::string tilesetIdToString(int32 tilesetId);
+		
 	protected:
 		static enum MainTileset convertCharToMainTileset(char value);
 		
@@ -111,6 +115,18 @@ inline const class Tilepoint* Environment::tilepoint(int32 x, int32 y) const
 	return this->m_tilepoints[x * y];
 
 }
+
+ char* tilesetIdToCString(int32 tilesetId);
+
+static std::string tilesetIdToString(int32 tilesetId);
+{
+	unsigned char output[5];
+	memcpy(reinterpret_cast<void*>(output), reinterpret_cast<const void*>(&tilesetId), 4);
+	output[4] = '\0';
+	
+	return (char*)output;
+}
+
 
 }
 

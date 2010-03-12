@@ -61,7 +61,7 @@ inline class Mdlx* ParticleEmitters::mdlx() const
 
 inline const std::list<class ParticleEmitter*>& ParticleEmitters::particleEmitters() const
 {
-	//return this->m_particleEmitters;
+	return reinterpret_cast<const std::list<class ParticleEmitter*>&>(*&this->m_particleEmitters);
 }
 
 }

@@ -18,7 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "translation3s.hpp"
+#include "cameratargettranslations.hpp"
+#include "cameratargettranslation.hpp"
 
 namespace wc3lib
 {
@@ -26,34 +27,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-Translation3s::Translation3s(class Camera *camera) : MdxBlock("KTTR"), m_camera(camera)
+CameraTargetTranslations::CameraTargetTranslations(class Camera *camera) : MdxScalings("KTTR"), m_camera(camera)
 {
 }
 
-Translation3s::~Translation3s()
+class MdxScaling* CameraTargetTranslations::createNewMember()
 {
-}
-
-void Translation3s::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Translation3s::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Translation3s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Translation3s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new CameraTargetTranslation(this);
 }
 
 }

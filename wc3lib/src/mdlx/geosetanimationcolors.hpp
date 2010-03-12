@@ -58,7 +58,7 @@ inline class GeosetAnimation* GeosetAnimationColors::geosetAnimation() const
 
 inline const std::list<class GeosetAnimationColor*>& GeosetAnimationColors::geosetAnimationColors() const
 {
-	//return this->m_geosetAnimationColors;
+	return reinterpret_cast<const std::list<class GeosetAnimationColor*>&>(*&this->m_scalings);
 }
 
 }

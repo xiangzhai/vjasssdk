@@ -51,7 +51,7 @@ class PrimitiveType : public GroupMdxBlockMember
 
 inline class PrimitiveTypes* PrimitiveType::primitiveTypes() const
 {
-	//return dynamic_cast<class PrimitiveTypes*>(this->m_parent);
+	return dynamic_cast<class PrimitiveTypes*>(this->m_parent);
 }
 
 inline long32 PrimitiveType::value() const

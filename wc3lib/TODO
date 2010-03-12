@@ -1,3 +1,12 @@
+2010-03-12 Tamino Dauth <tamino@cdauth.de>
+* Camera seems to be documentated wrongly (ordering of translations and rotation lengths).
+
+2010-02-27 Tamino Dauth <tamino@cdauth.de>
+* Use <boost/cstdint.hpp> instead of <stdint.h> since the second one is C99.
+
+2010-02-15 Tamino Dauth <tamino@cdauth.de>
+* Revise classes map::Environment and map::Tilepoint (add class Tileset for tileset ids).
+
 2010-01-28 Tamino Dauth <tamino@cdauth.de>
 * Add custom cmake modules for finding packages OGRE and openjpeg/jpeglib.
 * Add man page.

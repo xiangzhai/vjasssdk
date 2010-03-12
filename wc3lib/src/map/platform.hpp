@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MAP_PLATFORM_HPP
 #define WC3LIB_MAP_PLATFORM_hPP
 
-#include <stdint.h>
+#include <boost/cstdint.hpp>
 
 namespace wc3lib
 {

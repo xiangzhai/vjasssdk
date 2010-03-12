@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "attachments.hpp"
 #include "attachment.hpp"
 
@@ -33,8 +35,8 @@ Attachments::Attachments(class Mdlx *mdlx) : MdxBlock("ATCH"), m_mdlx(mdlx)
 
 Attachments::~Attachments()
 {
-	for (std::list<class Attachment*>::iterator iterator = this->m_attachments.begin(); iterator != this->m_attachments.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class Attachment *attachment, this->m_attachments)
+		delete attachment;
 }
 
 void Attachments::readMdl(std::istream &istream) throw (class Exception)

@@ -51,8 +51,8 @@ std::size_t File::parse(class Parser *parser, class SourceFile *sourceFile, std:
 	this->m_language = parser->m_currentLanguage;
 	
 	istream.seekg(0, std::ios_base::end);
-	std::streampos position = ifstream.tellg();
-	struct yy_buffer_state *bufferState = this->yy_create_buffer(&istream, position + 1);
+	std::streampos position = istream.tellg();
+	struct yy_buffer_state *bufferState = this->yy_create_buffer(&istream, int(position) + 1);
 	
 	if (bufferState == 0)
 		throw Exception(_("Error while creating buffer."));
@@ -79,7 +79,7 @@ std::size_t File::parse(class Parser *parser, class SourceFile *sourceFile, std:
 	// reset members
 	this->m_parser = 0;
 	this->m_sourceFile = 0;
-	this->m_language = Language::jass();
+	this->m_language = 0;
 	this->m_lines = 0;
 	this->m_docComment = 0;
 	

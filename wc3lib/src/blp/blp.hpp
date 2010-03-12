@@ -21,7 +21,8 @@
 #ifndef WC3LIB_BLP_BLP_HPP
 #define WC3LIB_BLP_BLP_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 #include <list>
 
 #include "platform.hpp"

@@ -60,7 +60,7 @@ inline class Mdlx* PivotPoints::mdlx() const
 
 inline const std::list<class PivotPoint*>& PivotPoints::pivotPoints() const
 {
-	//return this->m_pivotPoints;
+	return reinterpret_cast<const std::list<class PivotPoint*>&>(*&this->m_pivotPoints);
 }
 
 }

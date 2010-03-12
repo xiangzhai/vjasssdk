@@ -22,6 +22,7 @@
 #include <sstream>
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
@@ -81,6 +82,7 @@ struct Blp2Header
 
 Blp::Blp()
 {
+	this->clear();
 }
 
 Blp::~Blp()
@@ -90,14 +92,24 @@ Blp::~Blp()
 
 void Blp::clear()
 {
-	for (std::list<struct MipMap*>::iterator iterator = this->m_mipMaps.begin(); iterator != this->m_mipMaps.end(); ++iterator)
-		delete *iterator;
+	this->m_version = Blp::Blp0;
+	this->m_compression = Blp::Paletted;
+	this->m_flags = Blp::NoAlpha;
+	this->m_width = 0;
+	this->m_height = 0;
+	this->m_pictureType = 5;
+	this->m_pictureSubType = 0;
+	
+	BOOST_FOREACH(class Blp::MipMap *mipMap, this->m_mipMaps)
+		delete mipMap;
 }
 
 dword Blp::read(std::istream &istream, enum Format format) throw (class Exception)
 {
 	switch (format)
 	{
+		case Blp::BlpFormat:
+			return this->readBlp(istream);
 #ifdef JPEG
 		case Blp::JpegFormat:
 			return this->readJpeg(istream);
@@ -111,6 +123,31 @@ dword Blp::read(std::istream &istream, enum Format format) throw (class Exceptio
 			return this->readPng(istream);
 #endif	
 			
+		default:
+			throw Exception(_("Unknown format."));
+	}
+	
+	return 0;
+}
+
+dword Blp::write(std::ostream &ostream, enum Format format) throw (class Exception)
+{
+	switch (format)
+	{
+		case Blp::BlpFormat:
+			return this->writeBlp(ostream);
+#ifdef JPEG
+		case Blp::JpegFormat:
+			return this->writeJpeg(ostream);
+#endif
+#ifdef TGA
+		case Blp::TgaFormat:
+			return this->writeTga(ostream);
+#endif
+#ifdef PNG
+		case Blp::PngFormat:
+			return this->writePng(ostream);
+#endif	
 		default:
 			throw Exception(_("Unknown format."));
 	}
@@ -420,32 +457,6 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 	
 	return bytes;
 }
-
-dword Blp::write(std::ostream &ostream, enum Format format) throw (class Exception)
-{
-	switch (format)
-	{
-		case Blp::BlpFormat:
-			return this->writeBlp(ostream);
-#ifdef JPEG
-		case Blp::JpegFormat:
-			return this->writeJpeg(ostream);
-#endif
-#ifdef TGA
-		case Blp::TgaFormat:
-			return this->writeTga(ostream);
-#endif
-#ifdef PNG
-		case Blp::PngFormat:
-			return this->writePng(ostream);
-#endif	
-		default:
-			throw Exception(_("Unknown format."));
-	}
-	
-	return 0;
-}
-
 
 dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 {

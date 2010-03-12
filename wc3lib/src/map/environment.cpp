@@ -108,6 +108,7 @@ std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 		{
 			class Tilepoint *tilepoint = new Tilepoint(this);
 			bytes += tilepoint->read(istream);
+			this->m_tilepoints.push_back(tilepoint);
 		}
 	}
 	

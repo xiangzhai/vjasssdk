@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_CAMERA_HPP
 #define WC3LIB_MDLX_CAMERA_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -35,9 +36,9 @@ namespace mdlx
 class Cameras;
 class Translation0s;
 class CameraRotationLengths;
-class Translation3s;
+class CameraTargetTranslations;
 
-//not a child of class Object!
+// not a child of class Object!
 class Camera
 {
 	public:
@@ -56,9 +57,9 @@ class Camera
 		float32	targetX() const;
 		float32 targetY() const;
 		float32 targetZ() const;
-		class Translation0s* targetTranslations() const;
+		class Translation0s* translations() const;
 		class CameraRotationLengths* rotationLengths() const;
-		class Translation3s* translations() const;
+		class CameraTargetTranslations* targetTranslations() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
@@ -74,9 +75,9 @@ class Camera
 		float32 m_farClip;
 		float32 m_nearClip;
 		float32	m_targetX, m_targetY, m_targetZ;
-		class Translation0s *m_targetTranslations; //(KCTR)
+		class Translation0s *m_translations; //(KCTR)
 		class CameraRotationLengths *m_rotationLengths; //(KCRL)
-		class Translation3s *m_translations; //(KTTR)
+		class CameraTargetTranslations *m_targetTranslations; //(KTTR)
 		//(BKCT) ?????????????????????????????????????????????????????????????????
 };
 
@@ -135,9 +136,9 @@ inline float32 Camera::targetZ() const
 	return this->m_targetZ;
 }
 
-inline class Translation0s* Camera::targetTranslations() const
+inline class Translation0s* Camera::translations() const
 {
-	return this->m_targetTranslations;
+	return this->m_translations;
 }
 
 inline class CameraRotationLengths* Camera::rotationLengths() const
@@ -145,9 +146,9 @@ inline class CameraRotationLengths* Camera::rotationLengths() const
 	return this->m_rotationLengths;
 }
 
-inline class Translation3s* Camera::translations() const
+inline class CameraTargetTranslations* Camera::targetTranslations() const
 {
-	return this->m_translations;
+	return this->m_targetTranslations;
 }
 
 }

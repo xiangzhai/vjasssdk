@@ -58,7 +58,7 @@ inline class Light* LightAmbientColors::light() const
 
 inline const std::list<class LightAmbientColor*>& LightAmbientColors::colors() const
 {
-	//return reinterpret_cast<const std::list<class LightAmbientColor*> >(this->m_scalings);
+	return reinterpret_cast<const std::list<class LightAmbientColor*>&>(*&this->m_scalings);
 }
 
 }

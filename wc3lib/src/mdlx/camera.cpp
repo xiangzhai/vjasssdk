@@ -18,11 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+
 #include "camera.hpp"
 #include "cameras.hpp"
-#include "translation3s.hpp"
-#include "camerarotationlengths.hpp"
 #include "translation0s.hpp"
+#include "camerarotationlengths.hpp"
+#include "cameratargettranslations.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -30,15 +33,15 @@ namespace wc3lib
 namespace mdlx
 {
 
-Camera::Camera(class Cameras *cameras) : m_cameras(cameras), m_targetTranslations(new Translation0s(cameras->mdlx())), m_rotationLengths(new CameraRotationLengths(this)), m_translations(new Translation3s(this))
+Camera::Camera(class Cameras *cameras) : m_cameras(cameras), m_translations(new Translation0s(this)), m_rotationLengths(new CameraRotationLengths(this)), m_targetTranslations(new CameraTargetTranslations(this))
 {
 }
 
 Camera::~Camera()
 {
-	delete this->m_targetTranslations;
-	delete this->m_rotationLengths;
 	delete this->m_translations;
+	delete this->m_rotationLengths;
+	delete this->m_targetTranslations;
 }
 
 void Camera::readMdl(std::istream &istream) throw (class Exception)
@@ -51,10 +54,43 @@ void Camera::writeMdl(std::ostream &ostream) throw (class Exception)
 
 long32 Camera::readMdx(std::istream &istream) throw (class Exception)
 {
+	long32 nbytesi;
+	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
+	long32 bytes = istream.gcount();
+	istream.read(this->m_name, sizeof(this->m_name));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_positionX), sizeof(this->m_positionX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_positionY), sizeof(this->m_positionY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_positionZ), sizeof(this->m_positionZ));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_fieldOfView), sizeof(this->m_fieldOfView));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_farClip), sizeof(this->m_farClip));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_nearClip), sizeof(this->m_nearClip));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_targetX), sizeof(this->m_targetX));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_targetY), sizeof(this->m_targetY));
+	bytes += istream.gcount();
+	istream.read(reinterpret_cast<char*>(&this->m_targetZ), sizeof(this->m_targetZ));
+	bytes += istream.gcount();
+	bytes += this->m_translations->readMdx(istream);
+	bytes += this->m_rotationLengths->readMdx(istream);
+	bytes += this->m_targetTranslations->readMdx(istream);
+	//(BKCT) ?????????????????????????????????????????????????????????????????
+	
+	if (bytes != nbytesi)	
+		throw Exception(boost::str(boost::format(_("Camera: File byte count is not equal to real byte count.\nFile byte count: %1%.\nReal byte count: %2%.\n")) % nbytesi % bytes));
+	
+	return bytes;
 }
 
 long32 Camera::writeMdx(std::ostream &ostream) throw (class Exception)
 {
+	return 0;
 }
 
 }

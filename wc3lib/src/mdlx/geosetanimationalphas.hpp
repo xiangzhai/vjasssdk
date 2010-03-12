@@ -56,7 +56,7 @@ inline class GeosetAnimation* GeosetAnimationAlphas::geosetAnimation() const
 
 inline const std::list<class GeosetAnimationAlpha*>& GeosetAnimationAlphas::geosetAnimationAlphas() const
 {
-	//return reinterpret_cast<const std::list<class GeosetAnimationAlpha*> >(this->m_alphas);
+	return reinterpret_cast<const std::list<class GeosetAnimationAlpha*>&>(*&this->m_alphas);
 }
 
 }

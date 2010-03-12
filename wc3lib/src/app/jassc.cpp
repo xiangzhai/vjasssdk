@@ -32,9 +32,10 @@
 #include <boost/filesystem.hpp>
 
 #include "../lang/parser.hpp"
+#include "../lang/compiler.hpp"
 #include "../internationalisation.hpp"
 
-using namespace vjassdoc;
+using namespace wc3lib::lang;
 
 int main(int argc, char *argv[])
 {
@@ -71,8 +72,12 @@ int main(int argc, char *argv[])
 	std::list<boost::filesystem::path> includeDirs;
 	bool showErrors = false;
 	bool verify = false;
+#ifdef HTML
 	boost::filesystem::path htmlPath;
+#endif
+#ifdef SQLITE
 	boost::filesystem::path sqlitePath;
+#endif
 	boost::filesystem::path mapPath;
 	boost::filesystem::path mapScriptPath;
 	boost::filesystem::path scriptPath;
@@ -107,57 +112,25 @@ int main(int argc, char *argv[])
 			{
 				std::cout <<
 				boost::format(_("jassc %1%.\n\n")) % version <<
-				_("Usage: vjassdoc [Options] [Code files]\n\n") <<
+				_("Usage: jassc [Options] [Code files]\n\n") <<
 				_("Options:\n") <<
 				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
 				_("\t-h --help                   Shows this text.\n") <<
-				_("\t-j --jass                   vJass code will be ignored.\n") <<
-				_("\t-d --debug                  Lines starting with the vJass keyword \'debug\' won't be ignored.\n") <<
-				_("\t-p --private                Private objects will be parsed.\n") <<
-				_("\t-m --textmacros             Code between text macro statements will be parsed (Warning: There can be many parsing errors!).\n") <<
-				_("\t-f --functions              Code between function/method statements will be parsed.\n") <<
-				_("\t--no<object type name>      Objects of type <object type name> won't added to the output files.\n") <<
-				_("\t                            The following object type names are available:\n") <<
-				_("\t                            comments\n") <<
-				_("\t                            keywords\n") <<
-				_("\t                            textmacros\n") <<
-				_("\t                            textmacroinstances\n") <<
-				_("\t                            externalcalls\n") <<
-				_("\t                            types\n") <<
-				_("\t                            locals\n") <<
-				_("\t                            globals\n") <<
-				_("\t                            members\n") <<
-				_("\t                            parameters\n") <<
-				_("\t                            functioninterfaces\n") <<
-				_("\t                            functions\n") <<
-				_("\t                            methods\n") <<
-				_("\t                            calls\n") <<
-				_("\t                            implementations\n") <<
-				_("\t                            hooks\n") <<
-				_("\t                            interfaces\n") <<
-				_("\t                            structs\n") <<
-				_("\t                            modules\n") <<
-				_("\t                            scopes\n") <<
-				_("\t                            libraries\n") <<
-				_("\t                            sourcefiles\n") <<
-				_("\t                            doccomments\n") <<
-				_("\t-l --html                   Creates a simple HTML API documentation.\n") <<
-				_("\t-g --pages                  Creates an HTML file for each parsed object.\n") <<
-				_("\t-s --specialpages           Creates additional HTML files containing more information about all parsed objects.\n") <<
-				_("\t-x --syntax                 Checks syntax. Not implemented yet!\n") <<
-				_("\t-C --compile <arg>          Uses file <arg> to create a map Jass script.\n") <<
+				_("\t-R --recursive <arg>        --\n") <<
+				_("\t-I --include <arg>          --\n") <<
+				_("\t-s --showerrors             --\n") <<
+				_("\t-v --verify                 --\n") <<
+#ifdef HTML
+				_("\t-H --html <arg>             --\n") <<
+#endif
 #ifdef SQLITE
-				_("\t-L --database <arg>         Uses file <arg> to create an SQLite3 database which contains all parsed objects.\n") <<
+				_("\t-L --sqlite <arg>           --\n") <<
 #endif
-				_("\t-v --verbose                Shows more information about the process.\n") <<
-				_("\t-t --time                   Detects the elapsed time and shows it at the end of the process.\n") <<
-				_("\t-a --alphabetical           All objects will be aranged in alphabetical order.\n") <<
-				_("\t-T --title <arg>            <arg> has to be replaced by the title which is used for the API documentation.\n") <<
-				_("\t-I --importdirs <args>      <args> has to be replaced by one or more import directories (Used for the //! import macro in vJass).\n") <<
-				_("\t-D --dir <arg>              <arg> has to be replaced by the output directory path.\n") <<
-#ifdef SQLITE			
-				_("\t-B --databases <args>       <args> has to be replaced by the SQLite3 databases which should be added to the output.\n") <<
-#endif
+				_("\t-M --map <arg>              --\n") <<
+				_("\t-T --mapscript <arg>        --\n") <<
+				_("\t-P --script <arg>           --\n") <<
+				_("\t-O --optimize <arg>         --\n") <<
+				_("\t-A --language <arg>         --\n") <<
 				std::endl <<
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
@@ -166,143 +139,10 @@ int main(int argc, char *argv[])
 				return EXIT_SUCCESS;
 			}
 			
-			case 'j':
-				jass = true;
-				
-				break;
-
-			case 'd':
-				debug = true;
-				
-				break;
-			
-			case 'p':
-				parsePrivate = true;
-				
-				break;
-			
-			case 'm':
-				textmacros = true;
-				
-				break;
-			
-			case 'f':
-				functions = true;
-				
-				break;
-			
-			case 'l':
-				html = true;
-				
-				break;
-			
-			case 'g':
-				pages = true;
-				
-				break;
-			
-			case 's':
-				specialPages = true;
-				
-				break;
-			
-			case 'x':
-				syntax = true;
-				
-				break;
-				
-			case 'C':
-				compileFilePath = optarg;
-				
-				break;
-#ifdef SQLITE					
-			case 'L':
-				databaseFilePath = optarg;
-				
-				break;
-#endif
-			
-			case 'v':
-				verbose = true;
-				
-				break;
-			
-			case 't':
-				time = true;
-				
-				break;
-			
-			case 'a':
-				alphabetical = true;
-				
-				break;
-			
-			case 'T':
-				title = optarg;
-				
-				break;
-
-			case 'I':
-				for (char *path = strtok(optarg, ":"); path != 0;  path = strtok(0, ":"))
-				{
-					for (std::list<boost::filesystem::path>::const_iterator iterator = importDirs.begin(); iterator != importDirs.end(); ++iterator)
-					{
-						if (iterator->string() == path)
-						{
-							std::cerr << boost::format( _("Import directory path \"%1%\" has already been added to list.")) % path << std::endl;
-							
-							continue;
-						}
-					}
-
-					importDirs.push_back(path);
-				}
-				
-				break;
-			
-			case 'D':
-				dir = optarg;
-				
-				break;
-			
-#ifdef SQLITE			
-			case 'B':
-				for (char *path = strtok(optarg, ":"); path != 0;  path = strtok(0, ":"))
-				{
-					for (std::list<boost::filesystem::path>::const_iterator iterator = databases.begin(); iterator != databases.end(); ++iterator)
-					{
-						if (iterator->string() == path)
-						{
-							std::cerr << boost::format(_("Database \"%1%\" has already been added to list.")) % path << std::endl;
-							
-							continue;
-						}
-					}
-		
-					databases.push_back(path);
-				}
-				
-				break;
-#endif
-				
-			default:
-				for (int j = 0; j < Parser::MaxLists; ++j)
-				{
-					if (strcmp(options[optionIndex].name, objectListOption[j]) == 0)
-					{					
-						if (parseObjectsOfList[j])
-							parseObjectsOfList[j] = false;
-						else
-							std::cerr << boost::format(_("Objects of list %1% already won't be parsed.")) % j << std::endl;
-						
-						break;
-					}
-				}
-				
-				break;
-		}
+			/// @todo Parse options
 	}
-		
+	
+	std::list<boost::filesystem::path> filePaths;
 	
 	if (optind < argc)
 	{
@@ -329,20 +169,36 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	if (pages && !html)
-		std::cerr << _("Warning: Although there won't be created any HTML files you have used the --pages option.") << std::endl;
-
-	if (title.empty())
-		title = _("vJass API Documentation");
-
-	Vjassdoc::configure(jass, debug, parsePrivate, textmacros, functions, html, pages, specialPages, syntax, compileFilePath, databaseFilePath, verbose, time, alphabetical, parseObjectsOfList, title, dir, importDirs, filePaths, databases);
-
-#ifdef SQLITE
-	Vjassdoc::initClasses();
+	class Parser parser();
+	parser.setCurrentLanguage( ); /// @todo Set current language by option or jass.
+	std::size_t lines = parser.parse(filePaths);
+	std::cout << boost::format(_("Parsed %1% files with %2% lines at all.")) % paths.size() % lines << std::endl;
+	
+	if (verify)
+		parser.prepareObjects();
+	
+	if (showErrors)
+		parser.showSyntaxErrors(std::cout);
+	
+	if (
+#ifdef HTML
+		!htmlPath.empty() ||
 #endif
-
-	Vjassdoc::run();
-	Vjassdoc::clear();
+#ifdef SQLITE
+		!sqlitePath.empty() ||
+#endif
+		!mapPath.empty() || !mapScriptPath.empty() || !scriptPath.empty()
+	)
+	{
+		if (!verify)
+			parser.prepareObjects();
+		
+		class Compiler compiler;
+		
+		if (
+	}
+	std::string optimize;
+	std::string language;
 
 	return EXIT_SUCCESS;
 }

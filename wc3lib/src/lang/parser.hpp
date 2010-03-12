@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2008 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -25,7 +25,8 @@
 #include <functional>
 #include <string>
 #include <sstream>
-#include <vector>
+#include <list>
+#include <map>
 
 #include <boost/filesystem.hpp>
 
@@ -42,6 +43,7 @@ namespace lang
 
 class Language;
 class SyntaxError;
+class Compiler;
 
 /**
 * Provides methods for parsing code files. The Parser class has the ability to create a simple HTML
@@ -64,31 +66,15 @@ class Parser
 		~Parser();
 		
 		/**
-		* Error code is hold by thrown exception of method Parser.parse.
+		* Parses a single source file with given path @param path and adds it to the object list of language @param initialSourceFileLanguage.
+		* @param initialSourceFileLanguage If this value is 0 parser's current language is used.
 		*/
-		enum ParseErrorCode
-		{
-			DoubleParseError,
-			FilePathError,
-			FileStreamError
-		};
-		
-		std::size_t parse(const boost::filesystem::path &path) throw (class Exception);
+		std::size_t parse(const boost::filesystem::path &path, class Language *initialSourceFileLanguage = 0) throw (class Exception);
+		std::size_t parse(const std::list<boost::filesystem::path> &paths, class Language *initialSourceFileLanguage = 0) throw (class Exception);
 		void prepareObjects();
 		void sortObjectsAlphabetically();
 		void showSyntaxErrors(std::ostream &ostream);
-		//void parse(const std::list<boost::filesystem::path> &filePaths);
-#ifdef HTML
-		/**
-		* @todo Implement the first two methods in the languages classes.
-		*/
-		void createHtmlInheritanceListPage(std::ostream &ostream);
-		void createHtmlRequirementListPage(std::ostream &ostream);
-		void createHtmlUndocumentatedListPage(std::ostream &ostream);
-		void createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool pages, bool extraPages, bool showGeneratedHint) throw (class Exception);
-#endif
 #ifdef SQLITE
-		void createDatabase(const boost::filesystem::path &path);
 		/**
 		* @return Returns -1 if adding database fails otherwise an unique index will be associated with the added database.
 		*/
@@ -103,9 +89,13 @@ class Parser
 		* @return Returns current parsed code file.
 		*/
 		const class File& file() const;
-		const std::vector<class Language*>& languages() const;
+		const std::map<std::string, class Language*>& languages() const;
+		/**
+		* Use this to set the parser's initial scripting language (used for source files etc.).
+		*/
+		void setCurrentLanguage(class Language *language);
 		const class Language& currentLanguage() const;
-		const std::vector<class SyntaxError*>& syntaxErrors() const;
+		const std::list<class SyntaxError*>& syntaxErrors() const;
 		
 		/**
 		* Searches for object with identifier @param identifier in all languages lists.
@@ -133,12 +123,12 @@ class Parser
 #endif
 		
 		class File *m_file;
-		std::vector<class Language*> m_languages; // languages hold all parsed objects
+		std::map<std::string, class Language*> m_languages; // languages hold all parsed objects
 		class Language *m_currentLanguage;
-		std::vector<class SyntaxError*> m_syntaxErrors;
+		std::list<class SyntaxError*> m_syntaxErrors;
 /*
 #ifdef SQLITE
-		std::vector<class List*> m_databaseLists;
+		std::list<class List*> m_databaseLists;
 #endif
 */
 };
@@ -155,7 +145,7 @@ inline void Parser::addSyntaxError(class SyntaxError *syntaxError)
 
 inline void Parser::addSyntaxError(const std::string &message)
 {
-	this->addSyntaxError(new SyntaxError(this->m_file->sourceFile(), this->m_file->lines() - 1, message));
+	this->addSyntaxError(new SyntaxError(this->m_file->m_sourceFile, this->m_file->lines() - 1, message));
 }
 	
 inline const class File& Parser::file() const
@@ -163,17 +153,29 @@ inline const class File& Parser::file() const
 	return *this->m_file;
 }
 
-inline const std::vector<class Language*>& Parser::languages() const
+inline const std::map<std::string, class Language*>& Parser::languages() const
 {
 	return this->m_languages;
 }
 
-const class Language& Parser::currentLanguage() const
+inline void Parser::setCurrentLanguage(class Language *language)
+{
+	this->m_currentLanguage = language;
+	
+	if (this->m_languages.find(language->name()) == this->m_languages.end())
+	{
+		/// @todo Implement map
+		this->m_languages.
+		this->m_languages.insert(this->m_languages.find(language->name()), language);
+	
+}
+
+inline const class Language& Parser::currentLanguage() const
 {
 	return *this->m_currentLanguage;
 }
 
-inline const std::vector<class SyntaxError*>& Parser::syntaxErrors() const
+inline const std::list<class SyntaxError*>& Parser::syntaxErrors() const
 {
 	return this->m_syntaxErrors;
 }

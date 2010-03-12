@@ -45,12 +45,14 @@ OgreMdlx::OgreMdlx(class Mdlx *mdlx) : m_mdlx(mdlx), m_mesh(0)
 {
 }
 
-void OgreMdlx::refresh(class Ogre::MeshManager *meshManager) throw (class Exception)
+void OgreMdlx::refresh() throw (class Exception)
 {
+	class Ogre::MeshManager *meshManager = Ogre::MeshManager::getSingletonPtr();
+	
 	if (this->m_mesh.isNull())
 		this->m_mesh = meshManager->createManual(this->m_mdlx->model()->name(), "MDLX");
-	//else if (this->m_mesh->
 	
+	//else if (this->m_mesh->
 	this->m_mesh->_setBoundingSphereRadius(this->m_mdlx->model()->boundsRadius());
 	this->m_mesh->_setBounds(Ogre::AxisAlignedBox(
 		this->m_mdlx->model()->minExtX(),

@@ -31,14 +31,6 @@ Translation1::Translation1(class Translation1s *translations) : MdxScaling(trans
 {
 }
 
-void Translation1::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Translation1::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
 }
 
 }

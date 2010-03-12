@@ -21,6 +21,9 @@
 #include <OGRE/Ogre.h>
 
 #include "modelview.hpp"
+#include "ogremdlx.hpp"
+#include "mdlx.hpp"
+#include "model.hpp"
 #include "qogre/ExampleFrameListener.h"
 
 namespace wc3lib
@@ -103,10 +106,25 @@ void ModelView::show()
         theOgreRoot->addFrameListener(this->m_frameListener);
 }
 
-void ModelView::addOgreMdlx(class mdlx::OgreMdlx *ogreMdlx, Ogre::Vector3 position)
+void ModelView::addOgreMdlx(class mdlx::OgreMdlx *ogreMdlx)
 {
+	ogreMdlx->refresh();
+	
 	this->m_models.push_back(ogreMdlx);
-	/// @todo Move to vector.
+}
+
+Ogre::Entity* ModelView::createOgreMdlxEntity(class mdlx::OgreMdlx *ogreMdlx, const Ogre::Vector3 &position)
+{
+	Ogre::SceneNode *sceneNode = this->m_sceneManager->createSceneNode("Scene node");
+	sceneNode->setPosition(position);
+	Ogre::Entity *entity = this->m_sceneManager->createEntity("entity", ogreMdlx->mdlx()->model()->name());
+	sceneNode->attachObject(entity);
+}
+
+Ogre::Entity* ModelView::createOgreMdlx(class mdlx::Mdlx *mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx)
+{
+	ogreMdlx = new mdlx::OgreMdlx(mdlx);
+	return this->createOgreMdlxEntity(ogreMdlx, position);
 }
 
 void ModelView::resizeEvent(QResizeEvent *event)

@@ -23,6 +23,10 @@
 
 #endif
 
+#ifdef __cplusplus
+extern "C" { 
+#endif
+
 /*
 PLEASE NOTE: This license applies to abs-file.h ONLY; The version of
 PhysicsFS itself which you are using may have been released under a
@@ -199,7 +203,6 @@ static int MY_PUTS(const char *s, MY_FILETYPE *const fp) {
 
 #else /* !USE_PHYSFS */
 
-//#define USE_POSIX_FILES 1
 #ifdef USE_POSIX_FILES
 #define MY_FILETYPE FILE
 #define MY_READ(p,s,n,fp) fread(p,s,n,fp)
@@ -231,10 +234,6 @@ static long MY_FILELENGTH(FILE *fp) {
 #else
 #include <string.h>
 
-#ifdef __cplusplus
-extern "C" { 
-#endif
-
 #define	MY_FILETYPE char
 
 
@@ -249,12 +248,12 @@ void	MY_CLOSE(MY_FILETYPE* fp);
 int	MY_TELL(MY_FILETYPE* fp);
 int	MY_ATEOF(MY_FILETYPE* fp);
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif //USE_POSIX_FILES
 
 #endif /* USE_PHYSFS */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _ABS_FILE_H */

@@ -40,7 +40,7 @@ class EmissionRate : public MdxAlpha
 
 inline class EmissionRates* EmissionRate::emissionRates() const
 {
-	//return dynamic_cast<class EmissionRates*>(this->m_alphas);
+	return dynamic_cast<class EmissionRates*>(this->m_alphas);
 
 }
 

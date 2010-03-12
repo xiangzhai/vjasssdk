@@ -18,13 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "translation3.hpp"
+#ifndef WC3LIB_MDLX_CAMERATARGETTRANSLATION_HPP
+#define WC3LIB_MDLX_CAMERATARGETTRANSLATION_HPP
+
+#include "mdxscaling.hpp"
+#include "cameratargettranslations.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
+
+class CameraTargetTranslation : public MdxScaling
+{
+	public:
+		CameraTargetTranslation(class CameraTargetTranslations *translations);
+		
+		class CameraTargetTranslations* translations() const;
+};
+
+inline class CameraTargetTranslations* CameraTargetTranslation::translations() const
+{
+	return dynamic_cast<class CameraTargetTranslations*>(this->m_scalings);
 }
 
 }
+
+}
+
+#endif

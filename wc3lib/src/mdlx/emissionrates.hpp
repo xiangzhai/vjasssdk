@@ -22,7 +22,6 @@
 #define WC3LIB_MDLX_EMISSIONRATES_HPP
 
 #include "mdxalphas.hpp"
-#include "emissionrate.hpp"
 
 namespace wc3lib
 {
@@ -58,7 +57,7 @@ inline class Mdlx* EmissionRates::mdlx() const
 
 inline const std::list<class EmissionRate*>& EmissionRates::emissionRates() const
 {
-	//return reinterpret_cast<std::list<class EmissionRate*>&>(this->m_alphas);
+	return reinterpret_cast<const std::list<class EmissionRate*>&>(*&this->m_alphas);
 }
 
 }

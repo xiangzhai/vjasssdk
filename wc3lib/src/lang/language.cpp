@@ -28,6 +28,7 @@ namespace lang
 
 Language::Language()
 {
+	this->push_back(SourceFile::List(this));
 }
 
 Language::~Language()

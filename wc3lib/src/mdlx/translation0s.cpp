@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "translation0s.hpp"
+#include "translation0.hpp"
 
 namespace wc3lib
 {
@@ -26,34 +27,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-Translation0s::Translation0s(class Mdlx *mdlx) : MdxBlock("KCTR"), m_mdlx(mdlx)
+Translation0s::Translation0s(class Camera *camera) : MdxScalings("KCTR"), m_camera(camera)
 {
 }
 
-Translation0s::~Translation0s()
+class MdxScaling* Translation0s::createNewMember()
 {
-}
-
-void Translation0s::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void Translation0s::writeMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-long32 Translation0s::readMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::readMdx(fstream);
-	
-	return bytes;
-}
-
-long32 Translation0s::writeMdx(std::fstream &fstream) throw (class Exception)
-{
-	long32 bytes = MdxBlock::writeMdx(fstream);
-	
-	return bytes;
+	return new Translation0(this);
 }
 
 }

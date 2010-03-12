@@ -15,6 +15,8 @@ set(wc3lib_MDLX_SRC
 	camerarotationlength.cpp
 	camerarotationlengths.cpp
 	cameras.cpp
+	cameratargettranslation.cpp
+	cameratargettranslations.cpp
 	collisionshape.cpp
 	collisionshapes.cpp
 	emissionrate.cpp
@@ -121,8 +123,6 @@ set(wc3lib_MDLX_SRC
 	translation1s.cpp
 	translation2.cpp
 	translation2s.cpp
-	translation3.cpp
-	translation3s.cpp
 	version.cpp
 	vertex.cpp
 	vertices.cpp
@@ -145,6 +145,8 @@ set(wc3lib_MDLX_H
 	camerarotationlength.hpp
 	camerarotationlengths.hpp
 	cameras.hpp
+	cameratargettranslation.hpp
+	cameratargettranslations.hpp
 	collisionshape.hpp
 	event.hpp
 	events.hpp
@@ -194,14 +196,14 @@ set(wc3lib_MDLX_H
 
 # todo only if -DBLEND is set
 #if (BLEND)
-	add_subdirectory(readblend)
+	#add_subdirectory(readblend)
 #endif (BLEND)
 
 add_library(wc3libmdlx SHARED ${wc3lib_MDLX_SRC})
-target_link_libraries(wc3libmdlx ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(wc3libmdlx wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} OgreMain)
 # todo only if -DBLEND is set
 #if (BLEND)
-	target_link_libraries(wc3libmdlx wc3libmdlxreadblend)
+	#target_link_libraries(wc3libmdlx wc3libmdlxreadblend)
 #endif (BLEND)
 
 #install

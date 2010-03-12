@@ -26,11 +26,8 @@
 #define _READBLEND_H
 
 #include <stdlib.h>
-//#include <stdint.h>
 #include <math.h>
 #include <stdlib.h>//size_t for MSVC 6.0
-
-//#include <cfloat>
 #include <float.h>
 
 #include "abs-file.h"
@@ -442,7 +439,7 @@ typedef struct _bObj{
   float rotphr[3]; /* pitch/head/roll rotation component of transform (use for normals) */
   float location[3]; /* location component of transform */
   unsigned char transflags; /* NOT DECODED YET, RAW BYTE */
-  float		mass;//used for rigid body dynamics
+  float		mass; //used for rigid body dynamics
   int gameflag; //used to detect object type (static, ghost, dynamic, rigid body, soft body)
   int boundtype; //used to detect collision shape type
   

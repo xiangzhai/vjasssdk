@@ -22,6 +22,8 @@
 #define WC3LIB_LANG_COMPILER_HPP
 
 #include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "../exception.hpp"
 
@@ -31,19 +33,32 @@ namespace wc3lib
 namespace lang
 {
 
+class Parser;
 class Language;
 
 class Compiler
 {
 	public:
+		Compiler();
+		~Compiler();
+	
 		void compile(std::iostream &iostream, const class Parser &parser) throw (class Exception);
 		/**
 		* This method should only be called on Jass files. It removes unnecessary white-space characters and comments.
 		* Besides functions are inlined and identifiers are shortend.
 		*/
 		void optimize(std::iostream &iostream) throw (class Exception);
+		
+#ifdef HTML
+		void createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool showGeneratedHint = false) throw (class Exception);
+#endif
+#ifdef SQLITE
+		void createDatabase(const boost::filesystem::path &path);
+#endif
 	
-	protected:
+	//protected:
+		Compiler(const Compiler &);
+		Compiler& operator=(const Compiler &);
 		
 		/*
 		void generateFunctionPrototypes();

@@ -58,7 +58,7 @@ inline class Light* AmbientIntensities::light() const
 
 inline const std::list<class AmbientIntensity*>& AmbientIntensities::intensities() const
 {
-	//return reinterpret_cast<const std::list<class AmbientIntensity*> >(this->m_alphas);
+	return reinterpret_cast<const std::list<class AmbientIntensity*>&>(*&this->m_alphas);
 }
 
 }

@@ -53,6 +53,7 @@ class File : public yyFlexLexer
 		const class SourceFile* sourceFile() const;
 		/**
 		* Required by Bison parser.
+		* @todo Replace and set in class function if possbile.
 		*/
 		void setLanguage(class Language *language);
 		/**
@@ -77,6 +78,8 @@ class File : public yyFlexLexer
 		const class DocComment* docComment() const;
 		
 	protected:
+		friend class Parser;
+		
 		class Parser *m_parser;
 		class SourceFile *m_sourceFile;
 		class Language *m_language;

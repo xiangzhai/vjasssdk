@@ -24,7 +24,10 @@
 #include <string>
 #include <iostream>
 
+#include <boost/filesystem.hpp>
+
 #include "object.hpp"
+#include "sourcefile.hpp"
 
 namespace wc3lib
 {
@@ -52,9 +55,10 @@ class Language : public std::list<class Object::List>
 		virtual bool compatibleTo(const Language &language) const = 0;
 #ifdef HTML
 		/**
-		* Writes all objects categories entries (<objects category name> (number of objects)) into output stream @param ostream by using string prefix @param prefix for each entry.
+		* Writes all objects categories entries (<objects category name> (number of objects)) and their corresponding object identifiers lists into output stream @param ostream by using string prefix @param prefix for each entry.
 		*/		
-		virtual void writeObjectsCategories(std::ostream &ostream, const std::string &prefix = "") const = 0;
+		virtual void htmlWriteObjectsCategories(std::ostream &ostream, const std::string &prefix = "") const = 0;
+		virtual void htmlWriteObjectsPages(const boost::filesystem::path &dirPath) const = 0;
 #endif
 		/**
 		* Prepares all objects and their links to each other. Afterwards they should be compilable.
@@ -64,7 +68,16 @@ class Language : public std::list<class Object::List>
 		* Writes objects into map script stream.
 		*/
 		virtual void writeObjects(std::iostream &iostream) = 0;
+		
+		/**
+		* Every language can have source files.
+		*/
+		class SourceFile::List& sourceFiles();
 };
+
+inline class SourceFile::List& Language::sourceFiles()
+{
+	return dynamic_cast<class SourceFile::List&>(this->front());
 
 }
 

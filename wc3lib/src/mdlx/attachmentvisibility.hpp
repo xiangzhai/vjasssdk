@@ -36,15 +36,15 @@ class AttachmentVisibility : public MdxAlpha
 		AttachmentVisibility(class AttachmentVisibilities *visibilities);
 		virtual ~AttachmentVisibility();
 
-		const class AttachmentVisibilities* visibilities() const;
+		class AttachmentVisibilities* visibilities() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 };
 
-inline const class AttachmentVisibilities* AttachmentVisibility::visibilities() const
+inline class AttachmentVisibilities* AttachmentVisibility::visibilities() const
 {
-	//return dynamic_cast<const class AttachmentVisibilities*>(this->m_alphas);
+	return dynamic_cast<class AttachmentVisibilities*>(this->m_alphas);
 }
 
 }

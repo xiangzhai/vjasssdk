@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "primitivetypes.hpp"
+#include "primitivetype.hpp"
 
 namespace wc3lib
 {
@@ -34,11 +35,11 @@ PrimitiveTypes::~PrimitiveTypes()
 {
 }
 
-void PrimitiveTypes::readMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveTypes::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PrimitiveTypes::writeMdl(std::fstream &fstream) throw (class Exception)
+void PrimitiveTypes::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 

@@ -946,7 +946,7 @@ deklariert, so erhält diese(s) Zugriff auf die Klassenelemente, die ebenfalls s
 Dies gilt auch für die Kindklassen (Überprüfen, ob es anders mehr Sinn machen würde).
 
 Notation:
-[ abstract ] class Klassenname [ [Maximalgröße] ] : public | private | protected Klassenname ... [Deklarationsvoraussetzungen]
+[ abstract ] class Klassenname [ [Maximalgröße] ] (public | private | protected Klassenname, ...) [Deklarationsvoraussetzungen]
 {
 	new() { } Konstruktor
 	~delete() { } Destruktor

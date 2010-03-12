@@ -25,6 +25,10 @@ namespace wc3lib
 
 namespace mdlx
 {
+	
+Translation0::Translation0(class Translation0s *translations) : MdxScaling(translations)
+{
+}
 
 }
 

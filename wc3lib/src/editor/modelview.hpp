@@ -43,6 +43,7 @@ namespace mdlx
 {
 
 class OgreMdlx;
+class Mdlx;
 
 }
 	
@@ -57,8 +58,10 @@ class ModelView : public QOgreWidget
 		
 		virtual void show();
 		
-		void addOgreMdlx(class mdlx::OgreMdlx *ogreMdlx, Ogre::Vector3 position);
-	
+		void addOgreMdlx(class mdlx::OgreMdlx *ogreMdlx);
+		Ogre::Entity* createOgreMdlxEntity(class mdlx::OgreMdlx *ogreMdlx, const Ogre::Vector3 &position);
+		Ogre::Entity* createOgreMdlx(class mdlx::Mdlx *mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx);
+		
 	protected:
 		virtual void resizeEvent(QResizeEvent *event);
 		

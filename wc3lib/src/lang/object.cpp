@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2008 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -35,20 +35,20 @@ Object::List::List(class Language *language) : m_language(language)
 
 Object::List::~List()
 {
-	BOOST_FOREACH(class Object *object, this->m_objects)
+	BOOST_FOREACH(class Object *object, *this)
 			delete object;
 }
 
-List& Object::List::operator<<(class Object *object)
+Object::List& Object::List::operator<<(class Object *object)
 {
 	this->push_back(object);
 	
 	return *this;
 }
 
-List& Object::List::operator>>(class Object* &object)
+Object::List& Object::List::operator>>(class Object* &object)
 {
-	object = this->m_back();
+	object = this->back();
 	this->pop_back();
 	
 	return *this;

@@ -38,12 +38,19 @@ class OgreMdlx
 	public:
 		OgreMdlx(class Mdlx *mdlx);
 		
-		void refresh(class Ogre::MeshManager *meshManager) throw (class Exception);
+		class Mdlx* mdlx() const;
+		
+		void refresh() throw (class Exception);
 		
 	protected:
 		class Mdlx *m_mdlx;
 		class Ogre::MeshPtr m_mesh;
 };
+
+inline class Mdlx* OgreMdlx::mdlx() const
+{
+	return this->m_mdlx;
+}
 
 }
 

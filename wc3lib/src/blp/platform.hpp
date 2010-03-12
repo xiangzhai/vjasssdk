@@ -21,7 +21,7 @@
 #ifndef WC3LIB_BLP_PLATFORM_HPP
 #define WC3LIB_BLP_PLATFORM_HPP
 
-#include <stdint.h>
+#include <boost/cstdint.hpp>
 
 namespace wc3lib
 {

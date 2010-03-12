@@ -99,8 +99,8 @@ Translation1				-			Translation1s
 Translation1s				KGTR			Mdlx (various classes)
 Translation2				-			Translation2s				TextureAnimationTranslation
 Translation2s				KTAT			TextureAnimation			TextureAnimationTranslations
-Translation3				-			Translation3s				CameraTextureTranslation?!
-Translation3s				KTTR			Camera					CameraTextureTranslations?!
+Translation3				-			Translation3s				CameraTargetTranslation?!
+Translation3s				KTTR			Camera					CameraTargetTranslations?!
 Version					VERS			Mdlx
 Vertex					-			Vertices
 Vertices				VRTX			Geoset

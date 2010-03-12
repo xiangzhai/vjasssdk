@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
+ *   Copyright (C) 2008 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,17 +22,18 @@
 #include <sstream>
 #include <algorithm>
 #include <fstream>
-#ifdef SQLITE
-#include <sqlite3.h>
-#endif
 #include <sstream>
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
+
+#ifdef SQLITE
+#include <sqlite3.h>
+#endif
 
 #include "parser.hpp"
+#include "language.hpp"
 #include "internationalisation.hpp"
-#include "file.hpp"
-#include "syntaxerror.hpp"
 #include "utilities.hpp"
 
 namespace wc3lib
@@ -41,9 +42,7 @@ namespace wc3lib
 namespace lang
 {
 
-Parser::Parser() :
-		m_file(0),
-		m_currentLanguage(0)
+Parser::Parser() : m_file(0), m_currentLanguage(0)
 {
 }
 
@@ -53,10 +52,16 @@ Parser::~Parser()
 			delete syntaxError;
 }
 
-std::size_t Parser::parse(const boost::filesystem::path &path) throw (class Exception)
+std::size_t Parser::parse(const boost::filesystem::path &path, class Language *initialSourceFileLanguage) throw (class Exception)
 {
 	if (this->m_file != 0)
-		throw Exception(Parser::DoubleParseError, _("Trying to parse during parsing."));
+		throw Exception(_("Trying to parse during parsing."));
+	
+	if (initialSourceFileLanguage == 0)
+		initialSourceFileLanguage = this->m_currentLanguage;
+	
+	if (initialSourceFileLanguage == 0)
+		throw Exception(_("Intial language is missing."));
 	
 	if (!boost::filesystem::exists(path))
 		throw Exception(Parser::FilePathError, boost::str(boost::format(_("File path \"%1%\" does not exist.")) % path.string()));
@@ -64,15 +69,26 @@ std::size_t Parser::parse(const boost::filesystem::path &path) throw (class Exce
 	std::ifstream ifstream(path.string().c_str());
 	
 	if (!ifstream)
-		throw Exception(Parser::FileStreamError, boost::str(boost::format(_("Unable to open file stream for file path \"%1%\".")) % path.string()));
+		throw Exception(boost::str(boost::format(_("Unable to open file stream for file path \"%1%\".")) % path.string()));
 	
-	class SourceFile *sourceFile = new SourceFile(path.filename(), path->string());
-	this->add(sourceFile);
+	class SourceFile *sourceFile = new SourceFile(path.filename(), path.string());
+	
+	initialSourceFileLanguage->push_back(sourceFile);
 	this->m_file = new File();
 	std::size_t lines = this->m_file->parse(this, sourceFile, ifstream);
 	delete this->m_file;
 	this->m_file = 0;
 	ifstream.close();
+	
+	return lines;
+}
+
+std::size_t Parser::parse(const std::list<boost::filesystem::path> &paths, class Language *initialSourceFileLanguage) throw (class Exception)
+{
+	std::size_t lines = 0;
+	
+	BOOST_FOREACH(const boost::filesystem::path &path, paths)
+		lines += this->parse(paths, initialSourceFileLanguage);
 	
 	return lines;
 }
@@ -100,349 +116,7 @@ void Parser::showSyntaxErrors(std::ostream &ostream)
 		ostream << boost::format(_("File %1%, line %2%: %3%")) % syntaxError->sourceFile()->identifier() % syntaxError->line() % syntaxError->message() << std::endl;
 }
 
-#ifdef HTML
-void Parser::createInheritanceListPage(std::ostream &ostream)
-{	
-	createHtmlHeader(ostream, _("Inheritance List"));
-	ostream
-	<< "\t<body>\n"
-	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
-	<< "\t\t<h1>" << _("Inheritance List") << "</h1>\n"
-	<< "\t\t<ul>\n"
-	<< "\t\t\t<li><a href=\"#Interfaces\">"	<< _("Interfaces") << "</a></li>\n"
-	<< "\t\t\t<li><a href=\"#Structs\">" << _("Structs") << "</a></li>\n"
-	<< "\t\t</ul>\n"
-	<< "\t\t<h2><a name=\"Interfaces\">" << _("Interfaces") << "</a></h2>\n"
-	;
-
-	if (!this->m_lists[Parser::Interfaces].objects().empty())
-	{
-		ostream << "\t\t<ul>\n";
-
-		BOOST_FOREACH(const class Interface *interface, this->m_lists[Parser::Interfaces].objects())
-		{
-			ostream << "\t\t\t<li>" << interface->pageLink() << '\n';
-			this->getStructInheritanceList(interface, "\t\t\t\t", ostream);
-			ostream << "\t\t\t</li>\n";
-		}
-
-		ostream << "\t\t</ul>\n";
-	}
-	else
-		ostream << "\t\t<p>-</p>\n";
-
-	ostream
-	<< "\t\t<h2><a name=\"Structs\">" << _("Structs") << "</a></h2>\n";
-
-	if (!!this->m_lists[Parser::Structs].objects().empty())
-	{
-		ostream << "\t\t<ul>\n";
-
-		BOOST_FOREACH(const class Struct *whichStruct, this->m_lists[Parser::Structs].objects())
-		{
-			if (whichStruct->extension() == 0)
-			{
-				ostream << "\t\t\t<li>" << whichStruct->pageLink() << '\n';
-				this->getStructInheritanceList(whichStruct, "\t\t\t\t", ostream);
-				ostream << "\t\t\t</li>\n";
-			}
-		}
-
-		ostream << "\t\t</ul>\n";
-	}
-	else
-		ostream << "\t\t<p>-</p>\n";
-
-	ostream
-	<< "\t</body>\n"
-	<< "</html>\n"
-	;
-}
-
-void Parser::createRequirementListPage(std::ostream &ostream)
-{
-	createHtmlHeader(ostream, _("Requirement List"));
-	ostream
-	<< "\t<body>\n"
-	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
-	<< "\t\t<h1>" << _("Requirement List") << "</h1>\n"
-	<< "\t\t<ul>\n"
-	;
-
-	BOOST_FOREACH(const class Library *library, this->m_lists[Parser::Libraries].objects())
-	{
-		//requirement has to be 0
-		if (library->requirement() != 0)
-			continue;
-
-		ostream << "\t\t\t<li>" << library->pageLink() << '\n';
-		this->getLibraryRequirementList(library, "\t\t\t\t", ostream);
-		ostream << "\t\t\t</li>\n";
-	}
-
-	ostream
-	<< "\t\t</ul>\n"
-	<< "\t</body>\n"
-	<< "</html>\n"
-	;
-}
-
-void Parser::createUndocumentatedListPage(std::ostream &ostream)
-{
-	createHtmlHeader(ostream, _("Undocumentated Objects"));
-	ostream
-	<< "\t<body>\n"
-	<< "\t\t<a href=\"index.html\">" << _("Return to start page") << "</a>\n"
-	<< "\t\t<h1>" << _("Undocumentated Objects") << "</h1>\n"
-	<< "\t\t<ul>\n"
-	;
-	
-	for (std::size_t i = 0; i < Parser::MaxLists; ++i)
-	{
-		if (Parser::List(i) == Parser::SourceFiles || Parser::List(i) == Parser::DocComments || !Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
-			continue;
-	
-		BOOST_FOREACH(const class Object *object, this->m_lists[i].objects())
-		{
-			if (object->docComment() == 0)
-				ostream << "\t\t\t<li>" << Object::objectPageLink(object) << "</li>\n";
-		}
-	}
-
-	ostream
-	<< "\t\t</ul>\n"
-	<< "\t</body>\n"
-	<< "</html>\n"
-	;
-}
-
-void Parser::createHtmlFiles(const boost::filesystem::path &dirPath, const std::string &title, bool pages, bool extraPages, bool showGeneratedHint) throw (class Exception)
-{
-	std::ofstream ofstream((dirPath / "index.html").string().c_str());
-	
-	if (!fstream)
-		throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\".")) % (dirPath / "index.html").str()));
-	
-	createHtmlHeader(ofstream, title);
-	ofstream
-	<< "\t<body>\n"
-	<< "\t\t<h1>" << title << "</h1>\n"
-	;
-	
-	if (showGeneratedHint)
-		ofstream << "\t\t<p>" << boost::format(_("Generated by wc3lib %1%.")) % wc3libVersion << "</p>\n"
-	
-	ofstream
-	<< "\t\t<ul>\n"
-	<< std::endl;
-
-	BOOST_FOREACH(class Language *language, this->m_languages)
-		language->writeObjectsCategories(ofstream, "\t\t\t");
-
-	if (extraPages)
-	{
-		fstream
-		<< "\t\t\t<li>" << "<a href=\"inheritancelist.html\">" << _("Inheritance List") << "</a></li>\n"
-		<< "\t\t\t<li>" << "<a href=\"requirementlist.html\">" << _("Requirement List") << "</a></li>\n"
-		<< "\t\t\t<li>" << "<a href=\"undocumentated.html\">" << _("Undocumented Objects") << "</a></li>\n"
-		//<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
-		//<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
-		//<< "\t\t\t<li>" << "<a href=\"#States\">" << _("States") << "</a></li>\n"
-		//<< "\t\t\t<li>" << "<a href=\"#Sources\">" << _("Sources") << "</a></li>\n"
-		;
-	}
-	
-	ofstream << "\t\t</ul>\n";
-
-	for (std::size_t i = 0; i < Parser::MaxLists; ++i)
-	{
-		if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->m_lists[i]->objects().empty())
-			continue;
-
-		this->m_lists[i]->writeHtmlList(fstream);
-	}
-
-	if (extraPages)
-	{
-		this->createInheritanceListPage(fstream);
-		//this->createRequirementListPage(fstream); /// @todo Bugged
-		this->createUndocumentatedListPage(fstream);
-		/// @todo Implement these special pages:
-/*
-		<< "\t\t\t<li>" << "<a href=\"#Authors\">" << _("Authors") << "</a></li>\n"
-		<< "\t\t\t<li>" << "<a href=\"#Todos\">" << _("Todos") << "</a></li>\n"
-		<< "\t\t\t<li>" << "<a href=\"#States\">" << _("States") << "</a></li>\n"
-		<< "\t\t\t<li>" << "<a href=\"#Sources\">" << _("Sources") << "</a></li>\n"
-*/
-	}
-	
-	fstream
-	<< "\t</body>" << std::endl
-	<< "</html>";	
-	fstream.close();
-	
-	//create pages
-	if (pages)
-	{
-		for (std::size_t i = 0; i < Parser::MaxLists; ++i)
-		{
-			if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)))
-				continue;
-			
-			if (!boost::filesystem::create_directory(dirPath / this->m_lists[i]->htmlFolderName()))
-				throw std::exception();
-			
-			BOOST_FOREACH(const class Object *object, this->m_lists[i]->objects())
-			{
-				std::ostringstream sstream;
-				std::ofstream fout((dirPath / object->htmlPagePath()).string().c_str());
-				
-				if (!fout)
-					throw std::exception();
-				
-				createHtmlHeader(fout, object->identifier());
-				fout
-				<< "\t<body>\n"
-				<< "\t\t<a href=\"../index.html\">" << _("Return to start page") << "</a>\n"
-				<< "\t\t<h1>" << object->identifier() << "</h1>\n"
-				<< "\t\t<ul>\n"
-				;
-				object->writeHtmlPageNavigation(fout);
-				fout << "\t\t</ul>\n";
-				object->writeHtmlPageContent(fout);
-				fout
-				<< "\t</body>\n"
-				<< "</html>\n";
-				fout.close();
-			}
-		}
-	}
-}
-#endif
 #ifdef SQLITE
-void Parser::createDatabase(const boost::filesystem::path &path)
-{
-	if (boost::filesystem::exists(path))
-	{
-		std::cout << boost::format(_("Database \"%1%\" does already exist. Do you want to replace it by the newer one?")) % path << std::endl;
-		std::cout << _("Answer possiblities: y, yes, n, no.") << std::endl;
-		
-		std::string answer;
-		
-		do
-		{
-			std::cin >> answer;
-			
-			if (answer == _("y") || answer == _("yes"))
-			{
-				if (!boost::filesystem::remove(path))
-				{
-					std::cout << _("Was unable to replace old database.") << std::endl;
-					
-					return;
-				}
-				
-				break;
-			}
-			else if (answer == _("n") || answer == _("no"))
-			{
-				std::cout << _("Canceled database creation.") << std::endl;
-				
-				return;
-			}
-			else
-				std::cout << _("Unknown answer.") << std::endl;
-		}
-		while (true);
-	}
-	
-	sqlite3 *database;
-	int state = sqlite3_open(path.string().c_str(), &database);
-	
-	if (state == SQLITE_OK)
-	{
-		char *message = 0;
-		state = sqlite3_exec(database, "BEGIN TRANSACTION", 0, 0, &message);
-		
-		if (state != SQLITE_OK)
-		{
-			std::cerr << boost::str(boost::format(_("Was unable to begin transaction.\nState: %1%.\nMessage: %2%")) % state % message) << std::endl;
-			sqlite3_free(message);
-		}
-	
-		for (int i = 0; i < Parser::MaxLists; ++i)
-		{
-			if (!Vjassdoc::optionParseObjectsOfList(Parser::List(i)) || this->getList(Parser::List(i)).empty())
-				continue;
-
-			state = sqlite3_exec(database, this->getTableCreationStatement(Parser::List(i)).c_str(), 0, 0, &message);
-
-			if (state != SQLITE_OK)
-			{
-				/// @todo test output
-				std::cout << "Table list " << i << std::endl;
-				std::cout << "Table creation statement: " << this->getTableCreationStatement(Parser::List(i)).c_str() << std::endl;
-				
-				fprintf(stderr, _("Was unable to create table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), Parser::getTableName(Parser::List(i)).c_str(), i, state, message);
-				sqlite3_free(message);
-			}
-
-			std::list<class Object*> list = this->getList(Parser::List(i));
-
-			for (std::list<class Object*>::iterator iterator = list.begin(); iterator != list.end(); ++iterator)
-			{
-				std::ostringstream sstream;
-				sstream << "INSERT INTO " << Parser::getTableName(Parser::List(i)) << " (Id) VALUES (" << (*iterator)->id() << ')';
-				
-				state = sqlite3_exec(database, sstream.str().c_str(), 0, 0, &message);
-
-				//std::cerr << "Execution " << sstream.str().c_str() << std::endl;
-
-				if (state != SQLITE_OK)
-				{
-					fprintf(stderr, _("Was unable to insert id of list %d into table \"%s\".\nState: %d.\nMessage: %s\n"), i, Parser::getTableName(Parser::List(i)).c_str(), state, message);
-					sqlite3_free(message);
-				}
-		
-				sstream.str("");
-				sstream.clear();
-
-				//std::cout << "Before update of object " << (*iterator)->identifier() << std::endl;
-				sstream << "UPDATE " << Parser::getTableName(Parser::List(i)).c_str() << " SET " << (*iterator)->sqlStatement() << " WHERE Id=" << (*iterator)->id();
-				//std::cout << "After update" << std::endl;
-				//std::cout << "Execution command: " << sstream.str().c_str() << std::endl; //NOTE debug
-
-
-				state = sqlite3_exec(
-						database, /* An open database */
-						sstream.str().c_str(), /* SQL to be evaluated */ //FIXME
-						0, //int (*callback)(void*,int,char**,char**), /* Callback function */
-						0, //void *, /* 1st argument to callback */
-						&message /* Error msg written here */
-				);
-				
-				if (state != SQLITE_OK)
-				{
-					fprintf(stderr, _("Was unable to run execution \"%s\" of table \"%s\" from list %d.\nState: %d.\nMessage: %s\n"), sstream.str().c_str(), Parser::getTableName(Parser::List(i)).c_str(), i, state, message);
-					sqlite3_free(message);
-				}
-			}
-		}
-		
-		state = sqlite3_exec(database, "COMMIT", 0, 0, &message);
-		
-		if (state != SQLITE_OK)
-		{
-			fprintf(stderr, _("Was unable to commit.\nState: %d.\nMessage: %s\n"), state, message);
-			sqlite3_free(message);
-		}
-	}
-	else
-		fprintf(stderr, _("Was unable to create database. State %d.\n"), state);
-	
-	sqlite3_close(database);
-}
-
 std::size_t Parser::addDatabase(const boost::filesystem::path &path)
 {
 	std::size_t result = -1;

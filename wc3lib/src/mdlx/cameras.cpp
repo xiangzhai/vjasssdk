@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "cameras.hpp"
 #include "camera.hpp"
 
@@ -33,8 +35,8 @@ Cameras::Cameras(class Mdlx *mdlx) : MdxBlock("CAMS"), m_mdlx(mdlx)
 
 Cameras::~Cameras()
 {
-	for (std::list<class Camera*>::iterator iterator = this->m_cameras.begin(); iterator != this->m_cameras.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class Camera *camera, this->m_cameras)
+		delete camera;
 }
 
 void Cameras::readMdl(std::istream &istream) throw (class Exception)

@@ -21,10 +21,7 @@
 #ifndef WC3LIB_MDLX_ATTACHMENTVISIBILITIES_HPP
 #define WC3LIB_MDLX_ATTACHMENTVISIBILITIES_HPP
 
-#include <list>
-
 #include "mdxalphas.hpp"
-#include "attachmentvisibility.hpp"
 
 namespace wc3lib
 {
@@ -59,7 +56,7 @@ inline class Mdlx* AttachmentVisibilities::mdlx() const
 
 inline const std::list<class AttachmentVisibility*>& AttachmentVisibilities::visibilities() const
 {
-	//return reinterpret_cast<const std::list<class AttachmentVisibility*> >(&this->m_alphas);
+	return reinterpret_cast<const std::list<class AttachmentVisibility*>&>(*&this->m_alphas);
 }
 
 }

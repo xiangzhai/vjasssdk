@@ -1,3 +1,14 @@
+2010-03-12 Tamino Dauth <tamino@cdauth.de>
+* Improved various MDLX classes.
+* Renamed class Translation3 to CameraTargetTranslation.
+* Renamde class Translation3s to CameraTargetTranslations.
+
+2010-02-27 Tamino Dauth <tamino@cdauth.de>
+* Replaced <stdint> include statements in platform headers by <boost/cstdint.hpp>.
+
+2010-02-17 Tamino Dauth <tamino@cdauth.de>
+* Improved language classes.
+
 2010-02-14 Tamino Dauth <tamino@cdauth.de>
 * Added cmake macro WC3LIB_ENABLE_EXCEPTIONS.
 * Revised Jass++ specification.
