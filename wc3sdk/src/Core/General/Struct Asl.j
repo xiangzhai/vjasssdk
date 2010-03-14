@@ -1,7 +1,7 @@
 library AStructCoreGeneralAsl requires optional ALibraryCoreDebugMisc, ALibraryCoreStringConversion
 
 	struct Asl
-		public static constant string version = "1.1"
+		public static constant string version = "1.2"
 		public static constant string maintainer = "Tamino Dauth"
 		public static constant string website = "http://sourceforge.net/projects/vjasssdk/"
 

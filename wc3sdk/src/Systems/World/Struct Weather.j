@@ -40,7 +40,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AWeather\"")
 
-		//dynamic mebers
+		// dynamic mebers
 
 		public method setMinimumChangeTime takes real minimumChangeTime returns nothing
 			set this.m_minimumChangeTime = minimumChangeTime
@@ -74,7 +74,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 			return this.m_isWeatherTypeAllowed[weatherType]
 		endmethod
 
-		//methods
+		// methods
 
 		/// Rects are not removed by this struct!
 		public method addRect takes rect usedRect returns integer
@@ -215,7 +215,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 
 		/// @todo Set all sky types (maybe add custom skies)
 		public static method init takes nothing returns nothing
-			//static start members
+			// static start members
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainHeavy] = 'RAhr'
 			set thistype.m_skyModelFile[thistype.weatherTypeAshenvaleRainHeavy] = ""
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainLight] = 'RAlr'

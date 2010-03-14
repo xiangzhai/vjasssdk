@@ -10,6 +10,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		public static constant integer messageTypeInfo = 0
 		public static constant integer messageTypeError = 1
 		//static start members
+		private static boolean m_doAlwaysAddExperience
 		private static boolean m_removeUnitOnDestruction
 		private static boolean m_destroyOnPlayerLeaves
 		private static boolean m_shareOnPlayerLeaves
@@ -218,7 +219,15 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		endmethod
 
 		public method addExperience takes integer experience, boolean showEffect returns nothing
+			local boolean suspend = false
+			if (thistype.m_doAlwaysAddExperience and IsSuspendedXP(this.m_unit)) then
+				call SuspendHeroXP(this.m_unit, false)
+				set suspend = true
+			endif
 			call AddHeroXP(this.m_unit, experience, showEffect)
+			if (suspend) then
+				call SuspendHeroXP(this.m_unit, true)
+			endif
 		endmethod
 
 		public method addStrength takes integer strength returns nothing
@@ -705,8 +714,9 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		* @see AInventory
 		* @see ATalkLog
 		*/
-		public static method init takes  boolean removeUnitOnDestruction, boolean destroyOnPlayerLeaves, boolean shareOnPlayerLeaves, boolean destroyOnDeath, boolean useViewSystem, boolean useFocusSystem, boolean useMovementSystem, boolean useFightSystem, boolean useRevivalSystem, boolean useInventorySystem, boolean useTalkLogSystem returns nothing
-			//static start members
+		public static method init takes boolean doAlwaysAddExperience, boolean removeUnitOnDestruction, boolean destroyOnPlayerLeaves, boolean shareOnPlayerLeaves, boolean destroyOnDeath, boolean useViewSystem, boolean useFocusSystem, boolean useMovementSystem, boolean useFightSystem, boolean useRevivalSystem, boolean useInventorySystem, boolean useTalkLogSystem returns nothing
+			// static start members
+			set thistype.m_doAlwaysAddExperience = doAlwaysAddExperience
 			set thistype.m_removeUnitOnDestruction = removeUnitOnDestruction
 			set thistype.m_destroyOnPlayerLeaves = destroyOnPlayerLeaves
 			set thistype.m_shareOnPlayerLeaves = shareOnPlayerLeaves
@@ -725,6 +735,10 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			debug if (destroyOnDeath and useRevivalSystem) then
 				debug call thistype.staticPrint("You're using destroy on death and use revival system options at the same time.")
 			debug endif
+		endmethod
+
+		public static method doAlwaysAddExperience takes nothing returns boolean
+			return thistype.m_doAlwaysAddExperience
 		endmethod
 
 		public static method removeUnitOnDestruction takes nothing returns boolean

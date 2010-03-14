@@ -9,6 +9,7 @@
 * copy - Copies selected unit of cheating player.
 * giveall - Resets hit points, mana and all ability cooldowns of selected unit of cheating player.
 * damage - Damages selected unit.
+* xp - Adds experience to selected hero.
 * benchmarks - Shows all benchmarks.
 * clearbenchmarks - Clears all benchmarks.
 * units - Shows all units.
@@ -33,6 +34,7 @@ static if (DEBUG_MODE) then
 		call Print("copy")
 		call Print("giveall")
 		call Print("damage <damage>")
+		call Print("xp <experience>")
 		call Print("benchmarks")
 		call Print("clearbenchmarks")
 endif
@@ -97,7 +99,7 @@ endif
 		if (hero != null) then
 			if (IsUnitType(hero, UNIT_TYPE_HERO)) then
 				call SetHeroLevelBJ(hero, S2I(SubString(message, StringLength("setlevel") + 1, StringLength(message))), true)
-			else
+			debug else
 				debug call Print("Unit is not a hero.")
 			endif
 			set hero = null
@@ -155,6 +157,23 @@ endif
 		set triggerPlayer = null
 	endfunction
 
+	private function xp takes nothing returns nothing
+		local player triggerPlayer = GetTriggerPlayer()
+		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
+		local integer experience
+		if (selectedUnit != null) then
+			if (IsUnitType(selectedUnit, UNIT_TYPE_HERO)) then
+				set experience = S2I(SubString(GetEventPlayerChatString(), StringLength("xp") + 1, StringLength(GetEventPlayerChatString())))
+				call AddHeroXP(selectedUnit, xp, true)
+				debug call Print("Added " + I2S(xp) + " experience.")
+			debug else
+				debug call Print("Unit is not a hero.")
+			endif
+			set selectedUnit = null
+		endif
+		set triggerPlayer = null
+	endfunction
+
 	private function benchmarks takes nothing returns nothing
 		call ABenchmark.showBenchmarks()
 	endfunction
@@ -188,6 +207,7 @@ static if (DEBUG_MODE) then
 		call ACheat.create("copy", true, copy)
 		call ACheat.create("giveall", true, giveall)
 		call ACheat.create("damage", false, damage)
+		call ACheat.create("xp", false, xp)
 		call ACheat.create("benchmarks", true, benchmarks)
 		call ACheat.create("clearbenchmarks", true, clearbenchmarks)
 endif

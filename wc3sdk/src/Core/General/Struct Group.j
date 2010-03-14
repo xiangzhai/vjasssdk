@@ -10,7 +10,7 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			return this.m_units
 		endmethod
 
-		//methods
+		// methods
 
 		public method fillGroup takes group whichGroup returns nothing
 			local integer i = 0
@@ -58,6 +58,140 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 					set i = i + 1
 				endloop
 			endif
+		endmethod
+
+		public method addUnitsOfType takes string unitTypeName, boolexpr filter returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsOfType(whichGroup, unitTypeName, filter)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsOfPlayer takes player whichPlayer, boolexpr filter returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsOfPlayer(whichGroup, whichPlayer, filter)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsOfTypeCounted takes string unitTypeName, boolexpr filter, integer countLimit returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsOfTypeCounted(whichGroup, unitTypeName, filter, countLimit)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsInRect takes rect whichRect, boolexpr filter returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsInRect(whichGroup, whichRect, filter)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsInRectCounted takes rect whichRect, boolexpr filter, integer countLimit returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsInRectCounted(whichGroup, whichRect, filter, countLimit)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsInRange takes real x, real y, real radius, boolexpr filter returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsInRange(whichGroup, x, y, radius, filter)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsInRangeOfLocation takes location whichLocation, real radius, boolexpr filter returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsInRangeOfLoc(whichGroup, whichLocation, radius, filter)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsInRangeCounted takes real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsInRangeCounted(whichGroup, x, y, radius, filter, countLimit)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsInRangeOfLocationCounted takes location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsInRangeOfLocCounted(whichGroup, whichLocation, radius, filter, countLimit)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method addUnitsSelected takes player whichPlayer, boolexpr filter returns nothing
+			local group whichGroup = CreateGroup()
+			call GroupEnumUnitsSelected(whichGroup, whichPlayer, filter)
+			call this.addGroup(whichGroup, true, false)
+			set whichGroup = null
+		endmethod
+
+		public method immediateOrder takes string order returns boolean
+			local group whichGroup = this.group()
+			local boolean result = GroupImmediateOrder(whichGroup, order)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
+		endmethod
+
+		public method immediateOrderById takes integer order returns boolean
+			local group whichGroup = this.group()
+			local boolean result = GroupImmediateOrderById(whichGroup, order)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
+		endmethod
+
+		public method pointOrder takes string order, real x, real y returns boolean
+			local group whichGroup = this.group()
+			local boolean result = GroupPointOrder(whichGroup, order, x, y)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
+		endmethod
+
+		public method locationOrder takes string order, location whichLocation returns boolean
+			local group whichGroup = CreateGroup()
+			local boolean result = GroupPointOrderLoc(whichGroup, order, whichLocation)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
+		endmethod
+
+		public method pointOrderById takes integer order, real x, real y returns boolean
+			local group whichGroup = CreateGroup()
+			local boolean result = GroupPointOrderById(whichGroup, order, x, y)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
+		endmethod
+
+		public method locationOrderById takes integer order, location whichLocation returns boolean
+			local group whichGroup = CreateGroup()
+			local boolean result = GroupPointOrderByIdLoc(whichGroup, order, whichLocation)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
+		endmethod
+
+		public method targetOrder takes string order, widget targetWidget returns boolean
+			local group whichGroup = CreateGroup()
+			local boolean result = GroupTargetOrder(whichGroup, order, targetWidget)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
+		endmethod
+
+		public method targetOrderById takes integer order, widget targetWidget returns boolean
+			local group whichGroup = CreateGroup()
+			local boolean result = GroupTargetOrderById(whichGroup, order, targetWidget)
+			call DestroyGroup(whichGroup)
+			set whichGroup = null
+			return result
 		endmethod
 
 		public method isDead takes nothing returns boolean

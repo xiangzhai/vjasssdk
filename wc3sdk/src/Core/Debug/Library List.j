@@ -19,13 +19,14 @@ library ALibraryCoreDebugList requires ALibraryCoreDebugMisc, AStructCoreDebugBe
 
 	private function mapInsertionsSpeedTest takes nothing returns ABenchmark
 		local ABenchmark benchmark = ABenchmark.create("Map insertions speed test")
-		local AIntegerStringMap map = AIntegerStringMap.create()
-		local AIntegerStringMapIterator iterator
+		local AUnitMap map = AUnitMap.create()
+		local AUnitMapIterator iterator
+		local integer i = 0
 		call benchmark.start()
 		loop
 			exitwhen (map.size() == insertions)
 			set iterator = map.begin()
-			call map.insert(iterator, "Key", 10)
+			call map.insert(iterator, "Key" + I2S(i), null)
 			call iterator.destroy()
 		endloop
 		call benchmark.stop()

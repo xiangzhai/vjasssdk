@@ -1,3 +1,11 @@
+2010-03-14 Tamino Dauth <tamino@cdauth.de>
+* Added various methods to struct AGroup.
+
+2010-03-13 Tamino Dauth <tamino@cdauth.de>
+* Fixed item drop location of struct ASpawnPoint.
+* Added cheat "xp".
+* Added experience option to struct ACharacter.
+
 2010-03-12 Tamino Dauth <tamino@cdauth.de>
 * Improved text macro A_MAP.
 * Fixed values of text tag functions.
