@@ -293,29 +293,36 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				call this.insertNumber(position, 1, value)
 			endmethod
 
-			/// No reverse erasing.
-			public method eraseNumber takes $NAME$Iterator first, $NAME$Iterator last returns nothing
-				local $NAME$Node node = first.node()
+			private method eraseNumberNode takes $NAME$Node first, $NAME$Node last returns nothing
 				local $NAME$Node tmpNode
-
 				loop
-					exitwhen (node == last.node().next() or not (node == 0))
-					if (node == this.m_front) then
-						set this.m_front = node.next()
-					elseif (node == this.m_back) then
-						set this.m_back = node.previous()
+					exitwhen (first == 0)
+					if (first == this.m_front) then
+						set this.m_front = first.next()
+					elseif (first == this.m_back) then
+						set this.m_back = first.previous()
 					endif
-					if (node.next() != 0) then
-						call node.next().setPrevious(node.previous())
+					if (first.next() != 0) then
+						call first.next().setPrevious(first.previous())
 					endif
-					if (node.previous() != 0) then
-						call node.previous().setNext(node.next())
+					if (first.previous() != 0) then
+						call first.previous().setNext(first.next())
 					endif
-					set tmpNode = node
-					set node = node.next()
-					call tmpNode.destroy()
+					if (first == last) then
+						call first.destroy()
+						set first = 0
+					else
+						set tmpNode = first
+						set first = first.next()
+						call tmpNode.destroy()
+					endif
 					set this.m_size = this.m_size -1
 				endloop
+			endmethod
+
+			/// No reverse erasing.
+			public method eraseNumber takes $NAME$Iterator first, $NAME$Iterator last returns nothing
+				call this.eraseNumberNode(first.node(), last.node())
 			endmethod
 
 			public method erase takes $NAME$Iterator position returns nothing
@@ -351,6 +358,57 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 					set node = node.next()
 				endloop
 				return false
+			endmethod
+
+			/**
+			* Removes from the list all the elements with a specific value.
+			* This reduces the list size by the amount of elements removed.
+			*
+			* Unlike member function @method List.erase, which erases elements by their
+			* position (iterator), this function (@method List.remove) removes elements by their value.
+			*
+			* A similar function, @method List.removeIf, exists, which allows for a condition other than a plain value comparison to be performed on each element in order to determine the elements to be removed.
+			*
+			* @param value Value of the elements to be removed.
+			*/
+			public method remove takes $ELEMENTTYPE$ value returns nothing
+				local $NAME$Iterator iterator
+				loop
+					set iterator = this.find(value)
+					exitwhen (iterator == 0)
+					call this.erase(iterator)
+					call iterator.destroy()
+				endloop
+			endmethod
+
+			/**
+			Remove elements fulfilling condition
+			* Removes from the list all the elements for which predicate @param predicate
+			* returns true.
+			* This reduces the list size by the amount of elements removed.
+			*
+			* Predicate @param predicate can be implemented as any typed expression *
+			* taking one argument of the same type as the list and returning a @type boolean
+			*
+			* The function calls predicate(i.data()) for each element (where i is an iterator to that element).
+			* Any of the elements in the list for which this returns true, is removed from the container.
+			*
+			* @param predicate Unary predicate that, taking a value of the same type as those contained in the list object, returns true for those values to be removed from the container, and false for those remaining.
+			*/
+			public method removeIf takes $NAME$UnaryPredicate predicate returns nothing
+				local $NAME$Iterator iterator = this.begin()
+				local $NAME$Iterator tmpIterator
+				loop
+					exitwhen (not iterator.isValid())
+					if (predicate.evaluate(iterator.data())) then
+						set tmpIterator = iterator
+						call iterator.next()
+						call this.erase(tmpIterator)
+					else
+						call iterator.next()
+					endif
+				endloop
+				call iterator.destroy()
 			endmethod
 
 			/// All the elements in the list container are dropped: they are removed from the list container, leaving it with a size of 0.

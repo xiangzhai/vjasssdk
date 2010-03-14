@@ -362,29 +362,36 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 				set this.m_size = this.m_size + 1
 			endmethod
 
-			/// No reverse erasing.
-			public method eraseNumber takes $NAME$Iterator first, $NAME$Iterator last returns nothing
-				local $NAME$Node node = first.node()
+			private method eraseNumberNode takes $NAME$Node first, $NAME$Node last returns nothing
 				local $NAME$Node tmpNode
-
 				loop
-					exitwhen (node == last.node().next() or not (node == 0))
-					if (node == this.m_front) then
-						set this.m_front = node.next()
-					elseif (node == this.m_back) then
-						set this.m_back = node.previous()
+					exitwhen (first == 0)
+					if (first == this.m_front) then
+						set this.m_front = first.next()
+					elseif (first == this.m_back) then
+						set this.m_back = first.previous()
 					endif
-					if (node.next() != 0) then
-						call node.next().setPrevious(node.previous())
+					if (first.next() != 0) then
+						call first.next().setPrevious(first.previous())
 					endif
-					if (node.previous() != 0) then
-						call node.previous().setNext(node.next())
+					if (first.previous() != 0) then
+						call first.previous().setNext(first.next())
 					endif
-					set tmpNode = node
-					set node = node.next()
-					call tmpNode.destroy()
+					if (first == last) then
+						call first.destroy()
+						set first = 0
+					else
+						set tmpNode = first
+						set first = first.next()
+						call tmpNode.destroy()
+					endif
 					set this.m_size = this.m_size -1
 				endloop
+			endmethod
+
+			/// No reverse erasing.
+			public method eraseNumber takes $NAME$Iterator first, $NAME$Iterator last returns nothing
+				call this.eraseNumberNode(first.node(), last.node())
 			endmethod
 
 			public method erase takes $NAME$Iterator position returns nothing

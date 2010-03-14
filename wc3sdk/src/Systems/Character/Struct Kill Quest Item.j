@@ -2,16 +2,16 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 
 	/// @state untested
 	struct AKillQuestItem extends AQuestItem
-		//static start members
+		// static construction members
 		private static string message
-		//start members
+		// construction members
 		private integer m_unitTypeId
 		private integer m_targetUnitTypeId
 		private integer m_count
-		//members
+		// members
 		private integer m_killed
 
-		//start members
+		// construction members
 
 		public method unitTypeId takes nothing returns integer
 			return this.m_unitTypeId
@@ -25,7 +25,7 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 			return this.m_count
 		endmethod
 
-		//members
+		// members
 
 		public method killed takes nothing returns integer
 			return this.m_killed
@@ -62,11 +62,11 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 		*/
 		public static method create takes AQuest usedQuest, string description, integer unitTypeId, integer targetUnitTypeId, integer count returns thistype
 			local thistype this = thistype.allocate(usedQuest, description)
-			//start members
+			// construction members
 			set this.m_unitTypeId = unitTypeId
 			set this.m_targetUnitTypeId = targetUnitTypeId
 			set this.m_count = count
-			//members
+			// members
 			set this.m_killed = 0
 
 			call this.setStateEvent(AAbstractQuest.stateCompleted, thistype.stateEventCompleted)
@@ -75,7 +75,7 @@ library AStructSystemsCharacterKillQuestItem requires ALibraryCoreStringConversi
 		endmethod
 
 		public static method init0 takes string message returns nothing
-			//static start members
+			// static construction members
 			set thistype.message = message
 		endmethod
 	endstruct

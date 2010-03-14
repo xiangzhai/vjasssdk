@@ -96,9 +96,12 @@ endif
 		local player triggerPlayer = GetTriggerPlayer()
 		local string message = GetEventPlayerChatString()
 		local unit hero = GetFirstSelectedUnitOfPlayer(triggerPlayer)
+		local integer level
 		if (hero != null) then
 			if (IsUnitType(hero, UNIT_TYPE_HERO)) then
-				call SetHeroLevelBJ(hero, S2I(SubString(message, StringLength("setlevel") + 1, StringLength(message))), true)
+				set level = S2I(SubString(message, StringLength("setlevel") + 1, StringLength(message)))
+				call SetHeroLevelBJ(hero, level, true)
+				debug call Print("Set level to " + I2S(level) + ".")
 			debug else
 				debug call Print("Unit is not a hero.")
 			endif
@@ -137,6 +140,7 @@ endif
 			call SetUnitLifePercentBJ(selectedUnit, 100.0)
 			call SetUnitManaPercentBJ(selectedUnit, 100.0)
 			call UnitResetCooldown(selectedUnit)
+			debug call Print("Gave all.")
 			set selectedUnit = null
 		endif
 		set triggerPlayer = null

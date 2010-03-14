@@ -1,5 +1,10 @@
 library AModuleCoreGeneralSystemStruct requires optional ALibraryCoreDebugMisc
 
+	/**
+	* Implement this module if you want to check if your struct has already been initialized.
+	* This is only useful for structs which do have public static init methods which have to be
+	* called before using the struct itself.
+	*/
 	module ASystemStruct
 		private static string m_name
 		private static boolean m_initialized

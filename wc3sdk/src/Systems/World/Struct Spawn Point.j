@@ -1,4 +1,4 @@
-library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreStringConversion, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralVector
+library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointInterface, optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, ALibraryCoreGeneralPlayer, ALibraryCoreStringConversion, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralVector
 
 	private struct ASpawnPointMember
 		// dynamic members
@@ -113,7 +113,7 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 
 
 	/// @struct ASpawnPoint provides the functionality of common creep spawn points, mostly used in RPG maps.
-	struct ASpawnPoint
+	struct ASpawnPoint extends ASpawnPointInterface
 		//static start members
 		private static real m_time
 		private static string m_effectFilePath
@@ -237,31 +237,55 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			call this.removeUnit(whichUnit)
 		endmethod
 
+		public method remainingTime takes nothing returns real
+			if (this.m_spawnTimer == null) then
+				return 0.0
+			endif
+			return TimerGetRemaining(this.m_spawnTimer)
+		endmethod
+
+		public method runs takes nothing returns boolean
+			return this.remainingTime() > 0.0
+		endmethod
+
+		public method pause takes nothing returns boolean
+			if (not this.runs()) then
+				return false
+			endif
+			call PauseTimer(this.m_spawnTimer)
+			return true
+		endmethod
+
+		public method resume takes nothing returns boolean
+			if (not this.runs()) then
+				return false
+			endif
+			call ResumeTimer(this.m_spawnTimer)
+			return true
+		endmethod
+
+		public method isEnabled takes nothing returns boolean
+			return IsTriggerEnabled(this.m_deathTrigger)
+		endmethod
+
 		/// If you want to start a video and there are some spawn points near the scene you can disable them during the video.
 		public method enable takes nothing returns nothing
 			call EnableTrigger(this.m_deathTrigger)
-			if (TimerGetRemaining(this.m_spawnTimer) > 0.0) then
-				call PauseTimerBJ(false, this.m_spawnTimer)
-			endif
+			call this.resume()
 		endmethod
 
 		public method disable takes nothing returns nothing
 			call DisableTrigger(this.m_deathTrigger)
-			if (TimerGetRemaining(this.m_spawnTimer) > 0.0) then
-				call PauseTimerBJ(true, this.m_spawnTimer)
-			endif
+			call this.pause()
 		endmethod
 
-		public method remainingTime takes nothing returns real
-			return TimerGetRemaining(this.m_spawnTimer)
-		endmethod
-
-		public method spawn takes nothing returns nothing
+		public method spawn takes nothing returns boolean
 			local integer i
 			local effect whichEffect
-			debug if (not this.m_group.units().empty()) then
+			if (not this.m_group.units().empty()) then
 				debug call this.print("Warning: Unit group is not dead yet.")
-			debug endif
+				return false
+			endif
 			set i = 0
 			loop
 				exitwhen (i == this.m_members.size())
@@ -283,6 +307,7 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 				endif
 				set i = i + 1
 			endloop
+			return true
 		endmethod
 
 		private method dropItem takes unit diedUnit returns nothing
@@ -313,10 +338,14 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		private method startTimer takes nothing returns nothing
-			debug if (TimerGetRemaining(this.m_spawnTimer) > 0.0) then
+			debug if (this.runs()) then
 				debug call this.print("Timer has arleady been started.")
 				debug return
 			debug endif
+			if (this.m_spawnTimer == null) then
+				set this.m_spawnTimer = CreateTimer()
+				call AHashTable.global().setHandleInteger(this.m_spawnTimer, "this", this)
+			endif
 			call TimerStart(this.m_spawnTimer, thistype.m_time, false, function thistype.timerFunctionSpawn)
 		endmethod
 
@@ -370,30 +399,15 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			set triggerAction = null
 		endmethod
 
-		private method createSpawnTimer takes nothing returns nothing
-			set this.m_spawnTimer = CreateTimer()
-			call AHashTable.global().setHandleInteger(this.m_spawnTimer, "this", this)
-		endmethod
-
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
 			//members
 			set this.m_members = AIntegerVector.create()
 			set this.m_group = AGroup.create()
+			set this.m_spawnTimer = null
 
 			call this.createDeathTrigger()
-			call this.createSpawnTimer()
 			return this
-		endmethod
-
-		private method destroyDeathTrigger takes nothing returns nothing
-			call AHashTable.global().destroyTrigger(this.m_deathTrigger)
-			set this.m_deathTrigger = null
-		endmethod
-
-		private method destroySpawnTimer takes nothing returns nothing
-			call AHashTable.global().destroyTimer(this.m_spawnTimer)
-			set this.m_spawnTimer = null
 		endmethod
 
 		/// Removes all contained units.
@@ -407,8 +421,13 @@ library AStructSystemsWorldSpawnPoint requires optional ALibraryCoreDebugMisc, A
 			call this.m_members.destroy()
 			call this.m_group.destroy()
 
-			call this.destroyDeathTrigger()
-			call this.destroySpawnTimer()
+			call AHashTable.global().destroyTrigger(this.m_deathTrigger)
+			set this.m_deathTrigger = null
+
+			if (this.m_spawnTimer != null) then
+				call AHashTable.global().destroyTimer(this.m_spawnTimer)
+				set this.m_spawnTimer = null
+			endif
 		endmethod
 
 		/**

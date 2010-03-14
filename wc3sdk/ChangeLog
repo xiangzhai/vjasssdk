@@ -1,5 +1,10 @@
 2010-03-14 Tamino Dauth <tamino@cdauth.de>
 * Added various methods to struct AGroup.
+* Addded struct AItemSpawnPoint and interface ASpawnPointInterface.
+* Added methods remove and removeIf to struct of text macro A_LIST.
+* Fixed method erase of text macros A_LIST and A_MAP.
+* Revised total damage calculation of struct ADamageRecorder.
+* Added functions CreateCorpseAtRect and CreateCorpsesAtPoint.
 
 2010-03-13 Tamino Dauth <tamino@cdauth.de>
 * Fixed item drop location of struct ASpawnPoint.

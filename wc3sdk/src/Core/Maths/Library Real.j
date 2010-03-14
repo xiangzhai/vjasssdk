@@ -37,7 +37,7 @@ library ALibraryCoreMathsReal
 		local real t = (distance * 2) / maxDistance - 1
 		return (- t * t + 1) * (maxDistance / curve)
 	endfunction
-	
+
 	/**
 	* This function takes as a parameters the distance that the parabolic movement should move (d)
 	* and the maximum height the projectile will flight (h).
@@ -96,6 +96,11 @@ library ALibraryCoreMathsReal
 			endif
 		endloop
 		return mid
+	endfunction
+
+	/// @author Tamino Dauth
+	function GetRandomFacing takes nothing returns real
+		return GetRandomReal(0.0, 360.0)
 	endfunction
 
 endlibrary

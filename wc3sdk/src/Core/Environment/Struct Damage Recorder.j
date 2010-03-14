@@ -6,6 +6,9 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 	/**
 	* Provides damage recording functionality for a single target.
 	* The user is able to get all damage.
+	* Note that total damage is saved separately since vector maximum could be reached very fast.
+	* If the vector maximum is reached, front of the vectors will be discarded and get lost but
+	* total damage should be still correct.
 	*/
 	struct ADamageRecorder
 		// static initialization members
@@ -20,6 +23,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		// members
 		private AUnitVector m_damageSources
 		private ARealVector m_damageAmounts
+		private real m_totalDamage
 		private trigger m_damageTrigger
 
 		implement ASystemStruct
@@ -36,7 +40,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			return this.m_onDamageAction
 		endmethod
 
-		//start members
+		// construction members
 
 		public method target takes nothing returns unit
 			return this.m_target
@@ -62,19 +66,11 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			return this.m_damageSources.size()
 		endmethod
 
-		//methods
-
-		/// Adds all damage amounts and returns the result.
 		public method totalDamage takes nothing returns real
-			local real result = 0.0
-			local integer i = 0
-			loop
-				exitwhen (i == this.m_damageSources.size())
-				set result = result + this.m_damageAmounts[i]
-				set i = i + 1
-			endloop
-			return result
+			return this.m_totalDamage
 		endmethod
+
+		//methods
 
 		public method enable takes nothing returns nothing
 			debug if (IsTriggerEnabled(this.m_damageTrigger)) then
@@ -115,11 +111,13 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		private static method triggerActionDamaged takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			debug if (this.m_damageSources.size() >= AIntegerVector.maxSize()) then
-				debug call this.print("Damage source maximum has already been reached.")
-			debug endif
+			if (this.m_damageSources.size() == AIntegerVector.maxSize()) then
+				call this.m_damageSources.popFront()
+				call this.m_damageAmounts.popFront()
+			endif
 			call this.m_damageSources.pushBack(GetEventDamageSource())
 			call this.m_damageAmounts.pushBack(GetEventDamage())
+			set this.m_totalDamage = this.m_totalDamage + GetEventDamage()
 			if (this.m_onDamageAction != 0) then
 				call this.m_onDamageAction.execute(this)
 			endif

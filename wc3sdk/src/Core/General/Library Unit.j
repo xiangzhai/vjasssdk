@@ -229,12 +229,21 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralHashTable, ALibraryCo
 	/// @author Tamino Dauth
 	function CreateUnitsAtPoint takes integer count, integer unitTypeId, player whichPlayer, real x, real y, real face returns group
 		local group unitGroup = CreateGroup()
-		local unit groupMember
 		loop
 			set count = count - 1
 			exitwhen (count < 0)
-			set groupMember = CreateUnit(whichPlayer, unitTypeId, x, y, face)
-			call GroupAddUnit(unitGroup, groupMember)
+			call GroupAddUnit(unitGroup,  CreateUnit(whichPlayer, unitTypeId, x, y, face))
+		endloop
+		return unitGroup
+	endfunction
+
+	/// @author Tamino Dauth
+	function CreateCorpsesAtPoint takes integer count, integer unitTypeId, player whichPlayer, real x, real y, real face returns group
+		local group unitGroup = CreateGroup()
+		loop
+			set count = count - 1
+			exitwhen (count < 0)
+			call GroupAddUnit(unitGroup, CreateCorpse(whichPlayer, unitTypeId, x, y, face))
 		endloop
 		return unitGroup
 	endfunction
@@ -242,6 +251,11 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralHashTable, ALibraryCo
 	/// @author Tamino Dauth
 	function CreateUnitAtRect takes player whichPlayer, integer unitTypeId, rect whichRect, real facing returns unit
 		return CreateUnit(whichPlayer, unitTypeId, GetRectCenterX(whichRect), GetRectCenterY(whichRect), facing)
+	endfunction
+
+	/// @author Tamino Dauth
+	function CreateCorpseAtRect takes player whichPlayer, integer unitTypeId, rect whichRect, real facing returns unit
+		return CreateCorpse(whichPlayer, unitTypeId, GetRectCenterX(whichRect), GetRectCenterY(whichRect), facing)
 	endfunction
 
 	/**
