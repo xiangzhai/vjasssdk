@@ -14,18 +14,18 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 	/// This struct represents exactly one spell which is owned by a character.
 	/// @author Tamino Dauth
 	struct ASpell extends AAbstractCharacterSystem
-		//start members
+		// construction members
 		private integer m_ability
 		private ASpellUpgradeAction m_upgradeAction
 		private ASpellCastCondition m_castCondition
 		private ASpellCastAction m_castAction
-		//members
+		// members
 		private trigger m_upgradeTrigger
 		private trigger m_castTrigger
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ASpell\"")
 
-		//start members
+		// construction members
 
 		public method ability takes nothing returns integer
 			return this.m_ability
@@ -43,7 +43,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			return this.m_castAction
 		endmethod
 
-		//convenience methods
+		// convenience methods
 
 		public method name takes nothing returns string
 			return GetObjectName(this.m_ability)
@@ -102,6 +102,22 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			call DisableTrigger(this.m_castTrigger)
 		endmethod
 
+		public stub method onUpgradeAction takes nothing returns nothing
+			if (this.m_upgradeAction != 0) then
+				call this.m_upgradeAction.execute(this, GetLearnedSkillLevel())
+			endif
+		endmethod
+
+		public stub method onCastCondition takes nothing returns boolean
+			return (this.m_castCondition == 0 or this.m_castCondition.evaluate(this))
+		endmethod
+
+		public stub method onCastAction takes nothing returns nothing
+			if (this.m_castAction != 0) then
+				call this.m_castAction.execute(this)
+			endif
+		endmethod
+
 		private static method triggerConditionRightAbility takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -113,7 +129,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 		private static method triggerActionUpgrade takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.m_upgradeAction.execute(this, GetLearnedSkillLevel())
+			call this.onUpgradeAction()
 			set triggeringTrigger = null
 		endmethod
 
@@ -140,12 +156,13 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local boolean result = (GetSpellAbilityId() == this.m_ability)
 			if (result) then
-				set result = (this.m_castCondition == 0 or this.m_castCondition.evaluate(this))
+				set result = this.onCastCondition()
 				if (not result) then
+					debug call Print("Pause/stop unit since spell condition is false")
 					//taken from wc3jass.com
-					call PauseUnit(this.character().unit(), true)
+					//call PauseUnit(this.character().unit(), true)
 					call IssueImmediateOrder(this.character().unit(), "stop")
-					call PauseUnit(this.character().unit(), false)
+					//call PauseUnit(this.character().unit(), false)
 				endif
 			endif
 			set triggeringTrigger = null
@@ -155,7 +172,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 		private static method triggerActionCast takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.m_castAction.execute(this)
+			call this.onCastAction()
 			set triggeringTrigger = null
 		endmethod
 

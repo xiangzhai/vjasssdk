@@ -156,6 +156,24 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endloop
 		endmethod
 
+		public stub method onInitAction takes nothing returns nothing
+			if (this.m_initAction != 0) then
+				call this.m_initAction.evaluate(this)
+			endif
+		endmethod
+
+		public stub method onPlayAction takes nothing returns nothing
+			if (this.m_playAction != 0) then
+				call this.m_playAction.execute(this)
+			endif
+		endmethod
+
+		public stub method onStopAction takes nothing returns nothing
+			if (this.m_stopAction != 0) then
+				call this.m_stopAction.execute(this)
+			endif
+		endmethod
+
 		public method play takes nothing returns nothing
 			local force playersAll
 			debug if (thistype.m_runningVideo != 0) then
@@ -175,14 +193,12 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call CinematicModeExBJ(true, playersAll, 0.0)
 			set playersAll = null
 			set thistype.m_runningVideo = this
-			if (this.m_initAction != 0) then
-				call this.m_initAction.evaluate(this)
-			endif
+			call this.onInitAction()
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			call EnableTrigger(thistype.m_skipTrigger)
 			//call EnableUserControl(true) //otherwise we could not catch the press event (just the escape key)
-			call this.m_playAction.execute(this)
+			call this.onPlayAction()
 		endmethod
 
 		/// You have to call this method at the end of your video action.
@@ -205,9 +221,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 			call ACharacter.showAll(true)
 			call PauseAllUnits(false)
-			if (this.m_stopAction != 0) then
-				call this.m_stopAction.execute(this)
-			endif
+			call this.onStopAction()
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			call thistype.restorePlayerData()

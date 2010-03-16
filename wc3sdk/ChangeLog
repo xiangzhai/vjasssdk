@@ -1,3 +1,6 @@
+2010-03-16 Tamino Dauth <tamino@cdauth.de>
+* Added various stub event methods to structs ASpell and AVideo.
+
 2010-03-14 Tamino Dauth <tamino@cdauth.de>
 * Added various methods to struct AGroup.
 * Addded struct AItemSpawnPoint and interface ASpawnPointInterface.
