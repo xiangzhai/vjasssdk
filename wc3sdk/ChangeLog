@@ -1,3 +1,7 @@
+2010-03-17 Tamino Dauth <tamino@cdauth.de>
+* Revised structs AAbstractQuest and AQuest and added dynamic widget and method overwriting support.
+* Revised routines system and added multiple times of day per unit support.
+
 2010-03-16 Tamino Dauth <tamino@cdauth.de>
 * Added various stub event methods to structs ASpell and AVideo.
 

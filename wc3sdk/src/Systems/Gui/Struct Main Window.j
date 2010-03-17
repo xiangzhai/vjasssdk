@@ -217,11 +217,24 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 		endmethod
 
-		public stub method show takes nothing returns nothing
+		public stub method onShowCheck takes nothing returns boolean
+			if (this.m_onShowCondition != 0) then
+				return this.m_onShowCondition.evaluate(this)
+			endif
+			return true
+		endmethod
+
+		public stub method onShow takes nothing returns nothing
+			if (this.m_onShowAction != 0) then
+				call this.m_onShowAction.execute(this)
+			endif
+		endmethod
+
+		public method show takes nothing returns nothing
 			local real x
 			local real y
 			local integer i
-			if (this.m_onShowCondition != 0 and not this.m_onShowCondition.evaluate(this)) then
+			if (not this.onShowCheck()) then
 				return
 			endif
 			set x = this.m_x + (this.m_sizeX / 2.0)
@@ -246,14 +259,25 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 			set this.m_isShown = true
 			call this.m_gui.hideShownMainWindowAndSetNew(this)
-			if (this.m_onShowAction != 0) then
-				call this.m_onShowAction.execute(this)
+			call this.onShow()
+		endmethod
+
+		public stub method onHideCheck takes nothing returns boolean
+			if (this.m_onHideCondition != 0) then
+				return this.m_onHideCondition.evaluate(this)
+			endif
+			return true
+		endmethod
+
+		public stub method onHide takes nothing returns nothing
+			if (this.m_onHideAction != 0) then
+				call this.m_onHideAction.execute(this)
 			endif
 		endmethod
 
-		public stub method hide takes nothing returns nothing
+		public method hide takes nothing returns nothing
 			local integer i
-			if (this.m_onHideCondition != 0 and not this.m_onHideCondition.evaluate(this)) then
+			if (not this.onHideCheck()) then
 				return
 			endif
 
@@ -276,10 +300,7 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			endif
 			set this.m_isShown = false
 			call this.m_gui.resetShownMainWindow()
-
-			if (this.m_onHideAction != 0) then
-				call this.m_onHideAction.execute(this)
-			endif
+			call this.onHide()
 		endmethod
 
 		/// Friend relationship to @struct AWidget, do not use.

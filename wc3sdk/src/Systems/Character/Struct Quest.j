@@ -1,19 +1,23 @@
 library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, AStructCoreGeneralVector, ALibraryCoreStringConversion, AStructSystemsCharacterAbstractQuest
 
 	struct AQuest extends AAbstractQuest
-		//static start members
+		// static construction members
 		private static boolean m_useQuestLog
 		private static string m_updateSoundPath
+		private static string m_textQuestNew
+		private static string m_textQuestCompleted
+		private static string m_textQuestFailed
+		private static string m_textQuestUpdate
 		//dynamic members
 		private AIntegerVector m_questItems
 		private string m_iconPath
 		private string m_description
-		//members
+		// members
 		private quest m_questLogQuest
 
 		///! runtextmacro optional A_STRUCT_DEBUG("\"AQuest\"")
 
-		//dynamic members
+		// dynamic members
 
 		public method questItem takes integer index returns AQuestItem
 			return this.m_questItems[index]
@@ -45,21 +49,39 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			return this.m_description
 		endmethod
 
-		//members
+		// members
 
 		/// Used by AQuestItem, do not use.
 		public method questLogQuest takes nothing returns quest
 			return this.m_questLogQuest
 		endmethod
 
-		//methods
+		// methods
 
 		public stub method setState takes integer state returns nothing
 			local integer i
 			local player user
 			local playercolor playerColor
-			local string title
+			local string title = null
+
+			if (state == AAbstractQuest.stateNew and thistype.m_textQuestNew != null) then
+				set title = thistype.m_textQuestNew
+			elseif (state == AAbstractQuest.stateCompleted and thistype.m_textQuestCompleted != null) then
+				set title = thistype.m_textQuestCompleted
+			elseif (state == AAbstractQuest.stateFailed and thistype.m_textQuestFailed != null) then
+				set title = thistype.m_textQuestFailed
+			endif
+
+			if (title != null) then
+				if (this.character() != 0) then
+					call this.character().displayMessage(ACharacter.messageTypeInfo, title)
+				else
+					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, title)
+				endif
+			endif
+
 			call super.setState(state)
+
 			if (state == AAbstractQuest.stateCompleted or state == AAbstractQuest.stateFailed) then
 				set i = 0
 				loop
@@ -101,18 +123,32 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		endmethod
 
 		public method displayUpdateMessage takes string message returns nothing
-			local player user = this.character().player()
-			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, this.title())
-			call DisplayTimedTextToPlayer(user, 0.0, 0.0, 20.0, message)
-			call PlaySoundFileForPlayer(user, thistype.m_updateSoundPath)
-			set user = null
+			if (this.character() != 0) then
+				if (thistype.m_textQuestUpdate != null) then
+					call this.character().displayMessage(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
+				endif
+				call this.character().displayMessage(ACharacter.messageTypeInfo, this.title())
+				call this.character().displayMessage(ACharacter.messageTypeInfo, message)
+				if (thistype.m_updateSoundPath != null) then
+					call PlaySoundFileForPlayer(this.character().player(), thistype.m_updateSoundPath)
+				endif
+			else
+				if (thistype.m_textQuestUpdate != null) then
+					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
+				endif
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.title())
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, message)
+				if (thistype.m_updateSoundPath != null) then
+					call PlaySound(thistype.m_updateSoundPath)
+				endif
+			endif
 		endmethod
 
-		//Wenn alle QuestItems den gleichen State haben, erhält das Quest ebenfalls diesen State
+		// if all quest items have an equal state quest does also get their state
 		public method checkQuestItemsForState takes integer state returns boolean
 			local integer i
 			local boolean result = true
-			//Hat noch nicht den State
+			// does not already have the same state
 			if (this.state() != state) then
 				set i = 0
 				loop
@@ -143,14 +179,14 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		private method createQuestLogQuest takes nothing returns nothing
 			if (thistype.m_useQuestLog) then
 				set this.m_questLogQuest = CreateQuest()
-				call QuestSetDiscovered(this.m_questLogQuest, false) //hide quest before setting state
+				call QuestSetDiscovered(this.m_questLogQuest, false) // hide quest before setting state
 				call QuestSetRequired(this.m_questLogQuest, this.character() == 0)
 			endif
 		endmethod
 
 		public static method create takes ACharacter character, string title returns thistype
 			local thistype this = thistype.allocate(character, title)
-			//dynamic members
+			// dynamic members
 			set this.m_questItems = AIntegerVector.create()
 
 			call this.createQuestLogQuest()
@@ -164,7 +200,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			endif
 		endmethod
 
-		//Alle QuestItems werden auch zerstört
+		// all quest items will be destroyed, too
 		private method destroyQuestItems takes nothing returns nothing
 			loop
 				exitwhen (this.m_questItems.empty())
@@ -178,16 +214,20 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			call this.destroyQuestItems()
 		endmethod
 
-		//init is already used
-		public static method init0 takes boolean useQuestLog, string updateSoundPath returns nothing
-			//static start members
+		/// init is already used by struct @struct AAbstractQuest (@method AAbstractQuest.init)
+		public static method init0 takes boolean useQuestLog, string updateSoundPath, string textQuestNew, string textQuestCompleted, string textQuestFailed, string textQuestUpdate returns nothing
+			// static  construction members
 			set thistype.m_useQuestLog = useQuestLog
 			set thistype.m_updateSoundPath = updateSoundPath
+			set thistype.m_textQuestNew = textQuestNew
+			set thistype.m_textQuestCompleted = textQuestCompleted
+			set thistype.m_textQuestFailed = textQuestFailed
+			set thistype.m_textQuestUpdate = textQuestUpdate
 		endmethod
 
-		//static start members
+		// static construction members
 
-		//AQuestItem need access
+		// AQuestItem need access
 		public static method isQuestLogUsed takes nothing returns boolean
 			return thistype.m_useQuestLog
 		endmethod

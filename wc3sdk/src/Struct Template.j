@@ -91,4 +91,6 @@ library A<Struct/Library><Module Name: Core/Objects/Systems><Sub Module Name><Na
 
 	//library initializer (usually private)
 
+	//hooks
+
 endlibrary

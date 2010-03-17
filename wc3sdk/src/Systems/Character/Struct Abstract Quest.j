@@ -10,7 +10,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 	function interface AAbstractQuestStateAction takes AAbstractQuest abstractQuest returns nothing
 
 	struct AAbstractQuest
-		//static constant members
+		// static constant members
 		public static constant integer stateNotUsed = -1
 		public static constant integer stateNew = 0
 		public static constant integer stateCompleted = 1
@@ -25,26 +25,26 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		public static constant integer rewardLumber = 7
 		private static constant integer maxStates = 3
 		private static constant integer maxRewards = 8
-		//static start members
-		private static real pingRate
-		private static string stateNewSoundPath
-		private static string stateCompletedSoundPath
-		private static string stateFailedSoundPath
-		private static string textStateNew
-		private static string textStateCompleted
-		private static string textStateFailed
-		private static string textRewardLevels
-		private static string textRewardSkillPoints
-		private static string textRewardExperience
-		private static string textRewardStrength
-		private static string textRewardAgility
-		private static string textRewardIntelligence
-		private static string textRewardGold
-		private static string textRewardLumber
-		//static members
+		// static construction members
+		private static real m_pingRate
+		private static string m_stateNewSoundPath
+		private static string m_stateCompletedSoundPath
+		private static string m_stateFailedSoundPath
+		private static string m_textStateNew
+		private static string m_textStateCompleted
+		private static string m_textStateFailed
+		private static string m_textRewardLevels
+		private static string m_textRewardSkillPoints
+		private static string m_textRewardExperience
+		private static string m_textRewardStrength
+		private static string m_textRewardAgility
+		private static string m_textRewardIntelligence
+		private static string m_textRewardGold
+		private static string m_textRewardLumber
+		// static members
 		private static AIntegerVector m_abstractQuests
 		private static timer m_pingTimer
-		//dynamic members
+		// dynamic members
 		private integer m_state /// Should be setted by state method.
 		private AAbstractQuestStateCondition array m_stateCondition[thistype.maxStates]
 		private AAbstractQuestStateAction array m_stateAction[thistype.maxStates]
@@ -56,10 +56,11 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		private real m_pingRed
 		private real m_pingGreen
 		private real m_pingBlue
-		//start members
+		private widget m_pingWidget
+		// construction members
 		private ACharacter m_character
 		private string m_title
-		//members
+		// members
 		private integer m_index
 		private trigger array m_stateTrigger[thistype.maxStates]
 
@@ -75,13 +76,160 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 
 		// dynamic members
 
-		public stub method setState takes integer state returns nothing
-			debug if (this.checkState(state)) then
-				if (this.m_stateTrigger[state] == null) then
-					if (this.m_stateCondition[state] != 0 and not this.m_stateCondition[state].evaluate(this)) then
-						return
-					endif
+		public method modifiedTitle takes nothing returns string
+			if (this.m_state == thistype.stateNew) then
+				return StringArg(thistype.m_textStateNew, this.m_title)
+			elseif (this.m_state == thistype.stateCompleted) then
+				return StringArg(thistype.m_textStateCompleted, this.m_title)
+			elseif (this.m_state == thistype.stateFailed) then
+				return StringArg(thistype.m_textStateFailed, this.m_title)
+			debug else
+				debug call this.print("Unknown state (in getModifiedTitle()): " + I2S(this.m_state))
+			endif
+			return this.m_title
+		endmethod
+
+		private method soundPath takes nothing returns string
+			if (this.m_state == thistype.stateNew) then
+				return thistype.m_stateNewSoundPath
+			elseif (this.m_state == thistype.stateCompleted) then
+				return thistype.m_stateCompletedSoundPath
+			else
+				return thistype.m_stateFailedSoundPath
+			endif
+			return ""
+		endmethod
+
+		private method displayMessage takes nothing returns nothing
+			if (this.m_character != 0) then
+				call this.m_character.displayMessage(ACharacter.messageTypeInfo, this.modifiedTitle())
+				call PlaySoundFileForPlayer(this.m_character.player(), this.soundPath())
+			else
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.modifiedTitle())
+				call PlaySound(this.soundPath())
+			endif
+		endmethod
+
+		private method displayRewardMessage takes integer reward returns nothing
+			local string message
+			if (reward == thistype.rewardLevel) then
+				set message = thistype.m_textRewardLevels
+			elseif (reward == thistype.rewardSkillPoints) then
+				set message = thistype.m_textRewardSkillPoints
+			elseif (reward == thistype.rewardExperience) then
+				set message = thistype.m_textRewardExperience
+			elseif (reward == thistype.rewardStrength) then
+				set message = thistype.m_textRewardStrength
+			elseif (reward == thistype.rewardAgility) then
+				set message = thistype.m_textRewardAgility
+			elseif (reward == thistype.rewardIntelligence) then
+				set message = thistype.m_textRewardIntelligence
+			elseif (reward == thistype.rewardGold) then
+				set message = thistype.m_textRewardGold
+			elseif (reward == thistype.rewardLumber) then
+				set message = thistype.m_textRewardLumber
+			debug else
+				debug call this.print("Unknown reward: " + I2S(reward))
+			endif
+
+			set message = IntegerArg(message, this.m_reward[reward])
+
+			if (this.m_character != 0) then
+				call this.m_character.displayMessage(ACharacter.messageTypeInfo, message)
+			else
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, message)
+			endif
+		endmethod
+
+		private method distributeRewards takes nothing returns nothing
+			local integer i
+			if (this.m_character != 0) then
+				if (this.m_reward[thistype.rewardLevel] != 0) then
+					call this.m_character.addLevels(this.m_reward[thistype.rewardLevel], true)
 				endif
+				if (this.m_reward[thistype.rewardSkillPoints] != 0) then
+					call this.m_character.addSkillPoints(this.m_reward[thistype.rewardSkillPoints])
+				endif
+				if (this.m_reward[thistype.rewardExperience] != 0) then
+					call this.m_character.addExperience(this.m_reward[thistype.rewardExperience], true)
+				endif
+				if (this.m_reward[thistype.rewardStrength] != 0) then
+					call this.m_character.addStrength(this.m_reward[thistype.rewardStrength])
+				endif
+				if (this.m_reward[thistype.rewardAgility] != 0) then
+					call this.m_character.addAgility(this.m_reward[thistype.rewardAgility])
+				endif
+				if (this.m_reward[thistype.rewardIntelligence] != 0) then
+					call this.m_character.addIntelligence(this.m_reward[thistype.rewardIntelligence])
+				endif
+				if (this.m_reward[thistype.rewardGold] != 0) then
+					call this.m_character.addGold(this.m_reward[thistype.rewardGold])
+				endif
+				if (this.m_reward[thistype.rewardLumber] != 0) then
+					call this.m_character.addLumber(this.m_reward[thistype.rewardLumber])
+				endif
+			else
+				if (this.m_reward[thistype.rewardLevel] != 0) then
+					call ACharacter.addLevelsToAll(this.m_reward[thistype.rewardLevel], true)
+				endif
+				if (this.m_reward[thistype.rewardSkillPoints] != 0) then
+					call ACharacter.addSkillPointsToAll(this.m_reward[thistype.rewardSkillPoints])
+				endif
+				if (this.m_reward[thistype.rewardExperience] != 0) then
+					call ACharacter.addExperienceToAll(this.m_reward[thistype.rewardExperience], true)
+				endif
+				if (this.m_reward[thistype.rewardStrength] != 0) then
+					call ACharacter.addStrengthToAll(this.m_reward[thistype.rewardStrength])
+				endif
+				if (this.m_reward[thistype.rewardAgility] != 0) then
+					call ACharacter.addAgilityToAll(this.m_reward[thistype.rewardAgility])
+				endif
+				if (this.m_reward[thistype.rewardIntelligence] != 0) then
+					call ACharacter.addIntelligenceToAll(this.m_reward[thistype.rewardIntelligence])
+				endif
+				if (this.m_reward[thistype.rewardGold] != 0) then
+					call ACharacter.addGoldToAll(this.m_reward[thistype.rewardGold])
+				endif
+				if (this.m_reward[thistype.rewardLumber] != 0) then
+					call ACharacter.addLumberToAll(this.m_reward[thistype.rewardLumber])
+				endif
+			endif
+			set i = 0
+			loop
+				exitwhen(i == thistype.maxRewards)
+				if (this.m_reward[i] != 0) then
+					call this.displayRewardMessage(i)
+				endif
+				set i = i + 1
+			endloop
+		endmethod
+
+		/**
+		* Reimplement this method to use your custom condition or
+		* define a custom function by using method @method AAbstractQuest.setStateCondition.
+		*/
+		public stub method onStateCondition takes integer state returns boolean
+			if (this.m_stateTrigger[state] == null) then
+				if (this.m_stateCondition[state] != 0 and not this.m_stateCondition[state].evaluate(this)) then
+					return false
+				endif
+			endif
+			return true
+		endmethod
+
+		/**
+		* Reimplement this method to use your custom action or
+		* define a custom function by using method @method AAbstractQuest.setStateAction.
+		*/
+		public stub method onStateAction takes integer state returns nothing
+			if (this.m_stateAction[state] != 0) then
+				call this.m_stateAction[state].execute(this) //call custom function
+			endif
+		endmethod
+
+		// used by state trigger
+		private method setStateWithoutCondition takes integer state returns nothing
+			debug if (this.checkState(state)) then
 				set this.m_state = state
 				if (state == thistype.stateNotUsed) then
 					if (this.m_stateTrigger[thistype.stateNew] != null) then
@@ -103,7 +251,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call EnableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage.evaluate()
+					call this.displayMessage()
 				elseif (state == thistype.stateCompleted) then
 					if (this.m_stateTrigger[thistype.stateNew] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateNew])
@@ -114,8 +262,8 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage.evaluate()
-					call this.distributeRewards.evaluate()
+					call this.displayMessage()
+					call this.distributeRewards()
 				elseif (state == thistype.stateFailed) then
 					if (this.m_stateTrigger[thistype.stateNew] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateNew])
@@ -126,11 +274,18 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage.evaluate()
+					call this.displayMessage()
 				endif
-				if (this.m_stateAction[state] != 0) then
-					call this.m_stateAction[state].execute(this) //call custom function
+				call this.onStateAction(state)
+			debug endif
+		endmethod
+
+		public stub method setState takes integer state returns nothing
+			debug if (this.checkState(state)) then
+				if (not this.onStateCondition(state)) then
+					return
 				endif
+				call this.setStateWithoutCondition(state)
 			debug endif
 		endmethod
 
@@ -138,7 +293,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			return this.m_state
 		endmethod
 
-		//call first setStateEvent then setStateCondition and at least setStateAction
+		// call first setStateEvent then setStateCondition and at least setStateAction
 		public method setStateEvent takes integer state, AAbstractQuestStateEvent stateEvent returns nothing
 			local conditionfunc conditionFunction
 			local triggercondition triggerCondition
@@ -248,7 +403,19 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			return this.m_pingBlue
 		endmethod
 
-		//start members
+		/**
+		* If you set any ping widget to abstract quest instance, it will be pinged dynamically at its current position.
+		* If you want to use its initial position use @function GetWidgetX and @function GetWidgetY in methods @method AAbstractQuest.setPingX and @method AAbstractQuest.setPingY.
+		*/
+		public method setPingWidget takes widget pingWidget returns nothing
+			set this.m_pingWidget = pingWidget
+		endmethod
+
+		public method pingWidget takes nothing returns widget
+			return this.m_pingWidget
+		endmethod
+
+		// construction members
 
 		public method character takes nothing returns ACharacter
 			return this.m_character
@@ -258,36 +425,48 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			return this.m_title
 		endmethod
 
-		//convenience methods
+		// convenience methods
 
 		public method setPingLocation takes location usedLocation returns nothing
 			set this.m_pingX = GetLocationX(usedLocation)
 			set this.m_pingY = GetLocationY(usedLocation)
 		endmethod
 
-		public method setPingRect takes rect usedRect returns nothing
+		public method setPingCoordinatesFromRect takes rect usedRect returns nothing
 			set this.m_pingX = GetRectCenterX(usedRect)
 			set this.m_pingY = GetRectCenterY(usedRect)
 		endmethod
 
-		public method setPingWidget takes widget usedWidget returns nothing
+		public method setPingCoordinatesFromWidget takes widget usedWidget returns nothing
 			set this.m_pingX = GetWidgetX(usedWidget)
 			set this.m_pingY = GetWidgetY(usedWidget)
 		endmethod
 
-		public method setPingUnit takes unit usedUnit returns nothing
+		public method setPingCoordinatesFromUnit takes unit usedUnit returns nothing
 			set this.m_pingX = GetUnitX(usedUnit)
 			set this.m_pingY = GetUnitY(usedUnit)
 		endmethod
 
-		public method setPingDestructable takes destructable usedDestructable returns nothing
+		public method setPingCoordinatesFromDestructable takes destructable usedDestructable returns nothing
 			set this.m_pingX = GetDestructableX(usedDestructable)
 			set this.m_pingY = GetDestructableY(usedDestructable)
 		endmethod
 
-		public method setPingItem takes item usedItem returns nothing
+		public method setPingCoordinatesFromItem takes item usedItem returns nothing
 			set this.m_pingX = GetItemX(usedItem)
 			set this.m_pingY = GetItemY(usedItem)
+		endmethod
+
+		public method setPingUnit takes unit pingUnit returns nothing
+			call this.setPingWidget(pingUnit)
+		endmethod
+
+		public method setPingDestructable takes destructable whichDestructable returns nothing
+			call this.setPingWidget(whichDestructable)
+		endmethod
+
+		public method setPingItem takes item whichItem returns nothing
+			call this.setPingWidget(whichItem)
 		endmethod
 
 		public method setPingColour takes real red, real green, real blue returns nothing
@@ -296,144 +475,13 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			set this.m_pingBlue = blue
 		endmethod
 
-		//methods
-
-		public method getModifiedTitle takes nothing returns string
-			if (this.m_state == thistype.stateNew) then
-				return StringArg(thistype.textStateNew, this.m_title)
-			elseif (this.m_state == thistype.stateCompleted) then
-				return StringArg(thistype.textStateCompleted, this.m_title)
-			elseif (this.m_state == thistype.stateFailed) then
-				return StringArg(thistype.textStateFailed, this.m_title)
-			debug else
-				debug call this.print("Unknown state (in getModifiedTitle()): " + I2S(this.m_state))
-			endif
-			return this.m_title
-		endmethod
-
-		private method getSoundPath takes nothing returns string
-			if (this.m_state == thistype.stateNew) then
-				return thistype.stateNewSoundPath
-			elseif (this.m_state == thistype.stateCompleted) then
-				return thistype.stateCompletedSoundPath
-			else
-				return thistype.stateFailedSoundPath
-			endif
-			return ""
-		endmethod
-
-		private method displayMessage takes nothing returns nothing
-			if (this.m_character != 0) then
-				call this.m_character.displayMessage(ACharacter.messageTypeInfo, this.getModifiedTitle())
-				call PlaySoundFileForPlayer(this.m_character.player(), this.getSoundPath())
-			else
-				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.getModifiedTitle())
-				call PlaySound(this.getSoundPath())
-			endif
-		endmethod
-
-		private method displayRewardMessage takes integer reward returns nothing
-			local string message
-			if (reward == thistype.rewardLevel) then
-				set message = thistype.textRewardLevels
-			elseif (reward == thistype.rewardSkillPoints) then
-				set message = thistype.textRewardSkillPoints
-			elseif (reward == thistype.rewardExperience) then
-				set message = thistype.textRewardExperience
-			elseif (reward == thistype.rewardStrength) then
-				set message = thistype.textRewardStrength
-			elseif (reward == thistype.rewardAgility) then
-				set message = thistype.textRewardAgility
-			elseif (reward == thistype.rewardIntelligence) then
-				set message = thistype.textRewardIntelligence
-			elseif (reward == thistype.rewardGold) then
-				set message = thistype.textRewardGold
-			elseif (reward == thistype.rewardLumber) then
-				set message = thistype.textRewardLumber
-			debug else
-				debug call this.print("Unknown reward: " + I2S(reward))
-			endif
-
-			set message = IntegerArg(message, this.m_reward[reward])
-
-			if (this.m_character != 0) then
-				call this.m_character.displayMessage(ACharacter.messageTypeInfo, message)
-			else
-				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, message)
-			endif
-		endmethod
-
-		private method distributeRewards takes nothing returns nothing
-			local integer i
-			if (this.m_character != 0) then
-				if (this.m_reward[thistype.rewardLevel] != 0) then
-					call this.m_character.addLevels(this.m_reward[thistype.rewardLevel], true)
-				endif
-				if (this.m_reward[thistype.rewardSkillPoints] != 0) then
-					call this.m_character.addSkillPoints(this.m_reward[thistype.rewardSkillPoints])
-				endif
-				if (this.m_reward[thistype.rewardExperience] != 0) then
-					call this.m_character.addExperience(this.m_reward[thistype.rewardExperience], true)
-				endif
-				if (this.m_reward[thistype.rewardStrength] != 0) then
-					call this.m_character.addStrength(this.m_reward[thistype.rewardStrength])
-				endif
-				if (this.m_reward[thistype.rewardAgility] != 0) then
-					call this.m_character.addAgility(this.m_reward[thistype.rewardAgility])
-				endif
-				if (this.m_reward[thistype.rewardIntelligence] != 0) then
-					call this.m_character.addIntelligence(this.m_reward[thistype.rewardIntelligence])
-				endif
-				if (this.m_reward[thistype.rewardGold] != 0) then
-					call this.m_character.addGold(this.m_reward[thistype.rewardGold])
-				endif
-				if (this.m_reward[thistype.rewardLumber] != 0) then
-					call this.m_character.addLumber(this.m_reward[thistype.rewardLumber])
-				endif
-			else
-				if (this.m_reward[thistype.rewardLevel] != 0) then
-					call ACharacter.addLevelsToAll(this.m_reward[thistype.rewardLevel], true)
-				endif
-				if (this.m_reward[thistype.rewardSkillPoints] != 0) then
-					call ACharacter.addSkillPointsToAll(this.m_reward[thistype.rewardSkillPoints])
-				endif
-				if (this.m_reward[thistype.rewardExperience] != 0) then
-					call ACharacter.addExperienceToAll(this.m_reward[thistype.rewardExperience], true)
-				endif
-				if (this.m_reward[thistype.rewardStrength] != 0) then
-					call ACharacter.addStrengthToAll(this.m_reward[thistype.rewardStrength])
-				endif
-				if (this.m_reward[thistype.rewardAgility] != 0) then
-					call ACharacter.addAgilityToAll(this.m_reward[thistype.rewardAgility])
-				endif
-				if (this.m_reward[thistype.rewardIntelligence] != 0) then
-					call ACharacter.addIntelligenceToAll(this.m_reward[thistype.rewardIntelligence])
-				endif
-				if (this.m_reward[thistype.rewardGold] != 0) then
-					call ACharacter.addGoldToAll(this.m_reward[thistype.rewardGold])
-				endif
-				if (this.m_reward[thistype.rewardLumber] != 0) then
-					call ACharacter.addLumberToAll(this.m_reward[thistype.rewardLumber])
-				endif
-			endif
-			set i = 0
-			loop
-				exitwhen(i == thistype.maxRewards)
-				if (this.m_reward[i] != 0) then
-					call this.displayRewardMessage(i)
-				endif
-				set i = i + 1
-			endloop
-		endmethod
+		// methods
 
 		private static method triggerConditionRunQuestState takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local integer state = AHashTable.global().handleInteger(triggeringTrigger, "state")
-			local boolean result = true
-			if (this.m_stateCondition[state] != 0) then
-				set result = this.m_stateCondition[state].evaluate(this)
-			endif
+			local boolean result = this.onStateCondition(state)
 			set triggeringTrigger = null
 			return result
 		endmethod
@@ -454,11 +502,10 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 				debug call this.print("Is not AQuest and AQuestItem!")
 			endif
 			*/
-			call this.setState(state)
+			call this.setStateWithoutCondition(state) // condition has already been checked
 			set triggeringTrigger = null
 		endmethod
 
-		/// Condition and action definition must be above!!!!!!!!!!!!!!!!!!!!!!
 		private method createStateTrigger takes integer state returns nothing
 			local conditionfunc conditionFunction
 			local triggercondition triggerCondition
@@ -479,14 +526,15 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 
 		public static method create takes ACharacter character, string title returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_state = thistype.stateNotUsed
-			//start members
+			set this.m_pingWidget = null
+			// construction members
 			set this.m_character = character
 			set this.m_title = title
-			//static members
+			// static members
 			call thistype.m_abstractQuests.pushBack(this)
-			//members
+			// members
 			set this.m_index = thistype.m_abstractQuests.backIndex()
 
 			return this
@@ -505,7 +553,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//static members
+			// static members
 			call thistype.m_abstractQuests.erase(this.m_index)
 
 			call this.destroyStateTriggers()
@@ -514,17 +562,26 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		private static method timerFunctionPing takes nothing returns nothing
 			local thistype abstractQuest
 			local player user
+			local real x
+			local real y
 			local integer i = thistype.m_abstractQuests.backIndex()
 			loop
 				exitwhen (i < 0)
 				set abstractQuest = thistype.m_abstractQuests[i]
 				if (abstractQuest.m_ping and abstractQuest.m_state == thistype.stateNew) then
+					if (abstractQuest.m_pingWidget != null) then
+						set x = GetWidgetX(abstractQuest.m_pingWidget)
+						set y = GetWidgetY(abstractQuest.m_pingWidget)
+					else
+						set x = abstractQuest.m_pingX
+						set y = abstractQuest.m_pingY
+					endif
 					if (abstractQuest.m_character != 0) then
 						set user = abstractQuest.m_character.player()
-						call PingMinimapExForPlayer(user, abstractQuest.m_pingX, abstractQuest.m_pingY, abstractQuest.m_pingDuration, abstractQuest.m_pingRed, abstractQuest.m_pingGreen, abstractQuest.m_pingBlue, true)
+						call PingMinimapExForPlayer(user, x, y, abstractQuest.m_pingDuration, abstractQuest.m_pingRed, abstractQuest.m_pingGreen, abstractQuest.m_pingBlue, true)
 						set user = null
 					else
-						call PingMinimapEx(abstractQuest.m_pingX, abstractQuest.m_pingY, abstractQuest.m_pingDuration, PercentTo255(abstractQuest.m_pingRed), PercentTo255(abstractQuest.m_pingGreen), PercentTo255(abstractQuest.m_pingBlue), true)
+						call PingMinimapEx(x, y, abstractQuest.m_pingDuration, PercentTo255(abstractQuest.m_pingRed), PercentTo255(abstractQuest.m_pingGreen), PercentTo255(abstractQuest.m_pingBlue), true)
 					endif
 				endif
 				set i = i - 1
@@ -533,27 +590,27 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 
 		/// @param pingRate If this value is 0.0 or smaller there won't be any pings.
 		public static method init takes real pingRate, string stateNewSoundPath, string stateCompletedSoundPath, string stateFailedSoundPath, string textStateNew, string textStateCompleted, string textStateFailed, string textRewardLevels, string textRewardSkillPoints, string textRewardExperience, string textRewardStrength, string textRewardAgility, string textRewardIntelligence, string textRewardGold, string textRewardLumber returns nothing
-			//static start members
-			set thistype.pingRate = pingRate
-			set thistype.stateNewSoundPath = stateNewSoundPath
-			set thistype.stateCompletedSoundPath = stateCompletedSoundPath
-			set thistype.stateFailedSoundPath = stateFailedSoundPath
-			set thistype.textStateNew = textStateNew
-			set thistype.textStateCompleted = textStateCompleted
-			set thistype.textStateFailed = textStateFailed
-			set thistype.textRewardLevels = textRewardLevels
-			set thistype.textRewardSkillPoints = textRewardSkillPoints
-			set thistype.textRewardExperience = textRewardExperience
-			set thistype.textRewardStrength = textRewardStrength
-			set thistype.textRewardAgility = textRewardAgility
-			set thistype.textRewardIntelligence = textRewardIntelligence
-			set thistype.textRewardGold = textRewardGold
-			set thistype.textRewardLumber = textRewardLumber
-			//static members
+			// static construction members
+			set thistype.m_pingRate = pingRate
+			set thistype.m_stateNewSoundPath = stateNewSoundPath
+			set thistype.m_stateCompletedSoundPath = stateCompletedSoundPath
+			set thistype.m_stateFailedSoundPath = stateFailedSoundPath
+			set thistype.m_textStateNew = textStateNew
+			set thistype.m_textStateCompleted = textStateCompleted
+			set thistype.m_textStateFailed = textStateFailed
+			set thistype.m_textRewardLevels = textRewardLevels
+			set thistype.m_textRewardSkillPoints = textRewardSkillPoints
+			set thistype.m_textRewardExperience = textRewardExperience
+			set thistype.m_textRewardStrength = textRewardStrength
+			set thistype.m_textRewardAgility = textRewardAgility
+			set thistype.m_textRewardIntelligence = textRewardIntelligence
+			set thistype.m_textRewardGold = textRewardGold
+			set thistype.m_textRewardLumber = textRewardLumber
+			// static members
 			set thistype.m_abstractQuests = AIntegerVector.create()
-			if (thistype.pingRate > 0.0) then
+			if (thistype.m_pingRate > 0.0) then
 				set thistype.m_pingTimer = CreateTimer()
-				call TimerStart(thistype.m_pingTimer, thistype.pingRate, true, function thistype.timerFunctionPing)
+				call TimerStart(thistype.m_pingTimer, thistype.m_pingRate, true, function thistype.timerFunctionPing)
 			endif
 
 			if (stateNewSoundPath != null) then
@@ -572,16 +629,16 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 				exitwhen (thistype.m_abstractQuests.empty())
 				call thistype(thistype.m_abstractQuests.back()).destroy()
 			endloop
-			//static members
+			// static members
 			call thistype.m_abstractQuests.destroy()
-			if (thistype.pingRate > 0.0) then
+			if (thistype.m_pingRate > 0.0) then
 				call DestroyTimer(thistype.m_pingTimer)
 				set thistype.m_pingTimer = null
 			endif
 		endmethod
 
 		public static method enablePing takes nothing returns nothing
-			if (thistype.pingRate != 0.0) then
+			if (thistype.m_pingRate != 0.0) then
 				call ResumeTimer(thistype.m_pingTimer)
 			debug else
 				debug call thistype.staticPrint("There is no ping timer.")
@@ -589,7 +646,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		endmethod
 
 		public static method disablePing takes nothing returns nothing
-			if (thistype.pingRate != 0.0) then
+			if (thistype.m_pingRate != 0.0) then
 				call PauseTimer(thistype.m_pingTimer)
 			debug else
 				debug call thistype.staticPrint("There is no ping timer.")

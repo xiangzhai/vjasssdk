@@ -1,16 +1,16 @@
 library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc, AStructSystemsCharacterAbstractQuest, AStructSystemsCharacterQuest
 
 	struct AQuestItem extends AAbstractQuest
-		//start members
+		// construction members
 		private AQuest m_quest
-		//members
+		// members
 		private questitem m_questItem
 		private integer m_index
 
 		///! runtextmacro optional A_STRUCT_DEBUG("\"AQuestItem\"")
-		
-		//start members
-		
+
+		// construction members
+
 		public method quest takes nothing returns AQuest
 			return this.m_quest
 		endmethod
@@ -38,9 +38,9 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 			debug if (usedQuest <= 0) then
 				debug call this.print("Invalid used quest.")
 			debug endif
-			//start members
+			// construction members
 			set this.m_quest = usedQuest
-			//members
+			// members
 			if (AQuest.isQuestLogUsed()) then
 				set this.m_questItem = null
 			endif
