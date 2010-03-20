@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_TEXTUREANIMATION_HPP
 #define WC3LIB_MDLX_TEXTUREANIMATION_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -33,7 +34,7 @@ namespace mdlx
 {
 
 class TextureAnimations;
-class Translation2s;
+class TextureAnimationTranslations;
 class Rotation1s;
 class Scaling1s;
 
@@ -44,7 +45,7 @@ class TextureAnimation
 		virtual ~TextureAnimation();
 
 		class TextureAnimations* textureAnimations() const;
-		class Translation2s* translations() const;
+		class TextureAnimationTranslations* translations() const;
 		class Rotation1s* rotations() const;
 		class Scaling1s* scalings() const;
 
@@ -55,7 +56,7 @@ class TextureAnimation
 
 	protected:
 		class TextureAnimations *m_textureAnimations;
-		class Translation2s *m_translations; //(KTAT) // Might be optional
+		class TextureAnimationTranslations *m_translations; //(KTAT) // Might be optional
 		class Rotation1s *m_rotations; //(KTAR)
 		class Scaling1s *m_scalings; //(KTAS)
 };
@@ -65,7 +66,7 @@ inline class TextureAnimations* TextureAnimation::textureAnimations() const
 	return this->m_textureAnimations;
 }
 
-inline class Translation2s* TextureAnimation::translations() const
+inline class TextureAnimationTranslations* TextureAnimation::translations() const
 {
 	return this->m_translations;
 }

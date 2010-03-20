@@ -8,12 +8,17 @@
 /* xx.xx.xx  1.00  Lad  The first version of huffman.h                       */
 /* 03.05.03  2.00  Lad  Added compression                                    */
 /* 08.12.03  2.01  Dan  High-memory handling (> 0x80000000)                  */
+/* 20.03.10  2.02  Tamino Dauth  Replaced StormLib include statements        */
 /*****************************************************************************/
  
 #ifndef __HUFFMAN_H__
 #define __HUFFMAN_H__
 
-#include "../StormPort.h"
+#include <boost/cstdint.hpp>
+
+typedef int16_t DWORD_PTR;
+typedef int16_t INT_PTR;
+
  
 //-----------------------------------------------------------------------------
 // Defines
@@ -66,7 +71,7 @@ struct THTreeItem
     public:
     
     THTreeItem * Call1501DB70(THTreeItem * pLast);
-    THTreeItem * GetPrevItem(LONG_PTR value);
+    THTreeItem * GetPrevItem(INT_PTR value);
     void         ClearItemLinks();
     void         RemoveItem();
  

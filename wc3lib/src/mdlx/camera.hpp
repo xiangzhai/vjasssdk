@@ -34,7 +34,7 @@ namespace mdlx
 {
 
 class Cameras;
-class Translation0s;
+class CameraTranslations;
 class CameraRotationLengths;
 class CameraTargetTranslations;
 
@@ -57,7 +57,7 @@ class Camera
 		float32	targetX() const;
 		float32 targetY() const;
 		float32 targetZ() const;
-		class Translation0s* translations() const;
+		class CameraTranslations* translations() const;
 		class CameraRotationLengths* rotationLengths() const;
 		class CameraTargetTranslations* targetTranslations() const;
 
@@ -75,7 +75,7 @@ class Camera
 		float32 m_farClip;
 		float32 m_nearClip;
 		float32	m_targetX, m_targetY, m_targetZ;
-		class Translation0s *m_translations; //(KCTR)
+		class CameraTranslations *m_translations; //(KCTR)
 		class CameraRotationLengths *m_rotationLengths; //(KCRL)
 		class CameraTargetTranslations *m_targetTranslations; //(KTTR)
 		//(BKCT) ?????????????????????????????????????????????????????????????????
@@ -136,7 +136,7 @@ inline float32 Camera::targetZ() const
 	return this->m_targetZ;
 }
 
-inline class Translation0s* Camera::translations() const
+inline class CameraTranslations* Camera::translations() const
 {
 	return this->m_translations;
 }

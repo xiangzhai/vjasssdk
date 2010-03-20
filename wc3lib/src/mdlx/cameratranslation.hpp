@@ -18,101 +18,30 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MPQ_PLATFORM_HPP
-#define WC3LIB_MPQ_PLATFORM_HPP
+#ifndef WC3LIB_MDLX_CAMERATRANSLATION_HPP
+#define WC3LIB_MDLX_CAMERATRANSLATION_HPP
 
-#include <boost/cstdint.hpp>
+#include "mdxscaling.hpp"
+#include "cameratranslations.hpp"
 
 namespace wc3lib
 {
 
-namespace mpq
+namespace mdlx
 {
-
-typedef int8_t byte;
-typedef int8_t int8;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef uint32_t uint32; // used for various encryption and hash functions
-typedef int64_t int64;
-typedef uint64_t uint64; // used for large offsets
-
-typedef int32 CRC32;
-
-/// Windows-like file time. Redefined for compatibility.
-struct FILETIME
-{ 
-	uint32_t lowDateTime;
-	uint32_t highDateTime;
-};
-
-typedef int16_t MD5; // 128 bit
-
-struct Header
+	
+class CameraTranslation : public MdxScaling
 {
-	char magic[4];
-	int32 headerSize;
-	int32 archiveSize;
-	int16 formatVersion;
-	int8 sectorSizeShift;
-	int32 hashTableOffset;
-	int32 blockTableOffset;
-	int32 hashTableEntries;
-	int32 blockTableEntries;
+	public:
+		CameraTranslation(class CameraTranslations *translations);
+		
+		class CameraTranslations* translations() const;
 };
 
-struct ExtendedHeader // MPQ format 2
+inline class CameraTranslations* CameraTranslation::translations() const
 {
-	int64 extendedBlockTableOffset;
-	int16 hashTableOffsetHigh;
-	int16 blockTableOffsetHigh;
-};
-
-struct HashTableEntry
-{
-	int32 filePathHashA;
-	int32 filePathHashB;
-	int16 language;
-	int8 platform;
-	int32 fileBlockIndex;
-};
-
-struct BlockTableEntry
-{
-	int32 blockOffset;
-	int32 blockSize;
-	int32 fileSize;
-	int32 flags;
-};
-
-struct ExtendedBlockTableEntry
-{
-	int16 extendedBlockOffset;
-};
-
-struct FileData
-{
-	int32 *sectorOffsetTable;
-};
-
-struct ExtendedAttributesHeader
-{
-	int32 version;
-	int32 attributesPresent;
-};
-
-struct WeakDigitalSignature
-{	
-	int32 unknown0;
-	int32 unknown1;
-};
-
-struct StrongDigitalSignature
-{
-	char magic[4];
-	char signature[256];
-//	int2048 signature; //int2048, little-endian format
-};
+	return dynamic_cast<class CameraTranslations*>(this->m_scalings);
+}
 
 }
 

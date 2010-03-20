@@ -27,18 +27,10 @@
 #include "internationalisation.hpp"
 #include "utilities.hpp"
 
-#include "blp/blp.hpp"
-#include "blp/platform.hpp"
+#include "blp.hpp"
 
-#include "mdlx/mdlx.hpp"
-#include "mdlx/platform.hpp"
+#include "mdlx.hpp"
 
-#include "mpq/algorithm.hpp"
-#include "mpq/block.hpp"
-#include "mpq/hash.hpp"
-#include "mpq/mpq.hpp"
-#include "mpq/mpqfile.hpp"
-#include "mpq/platform.hpp"
-#include "mpq/sector.hpp"
+#include "mpq.hpp"
 
 #endif

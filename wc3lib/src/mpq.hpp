@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,30 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "translation2.hpp"
+#ifndef WC3LIB_MPQ_HPP
+#define WC3LIB_MPQ_HPP
 
-namespace wc3lib
-{
+#include "mpq/algorithm.hpp"
+#include "mpq/block.hpp"
+#include "mpq/hash.hpp"
+#include "mpq/mpq.hpp"
+#include "mpq/mpqfile.hpp"
+#include "mpq/platform.hpp"
+#include "mpq/sector.hpp"
 
-namespace mdlx
-{
-	
-Translation2::Translation2(class Translation2s *translations) : MdxScaling(translations)
-{
-}
-
-Translation2::~Translation2()
-{
-}
-
-void Translation2::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Translation2::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
-}
-
-}
+#endif

@@ -36,6 +36,11 @@ std::streamsize Sector::read(std::istream &istream) throw (class Exception)
 	return 0;
 }
 
+void Sector::setCompression(byte value)
+{
+	this->m_compression = static_cast<enum Compression>(value);
+}
+
 }
 
 }

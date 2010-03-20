@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,33 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TRANSLATION0_HPP
-#define WC3LIB_MDLX_TRANSLATION0_HPP
-
-#include "mdxscaling.hpp"
-#include "translation0s.hpp"
-
-namespace wc3lib
-{
-
-namespace mdlx
-{
-	
-class Translation0 : public MdxScaling
-{
-	public:
-		Translation0(class Translation0s *translations);
-		
-		class Translation0s* translations() const;
-};
-
-class Translation0s* Translation0::translations() const
-{
-	return dynamic_cast<class Translation0s*>(this->m_scalings);
-}
-
-}
-
-}
+#ifndef WC3LIB_EDITOR_HPP
+#define WC3LIB_EDITOR_HPP
 
 #endif

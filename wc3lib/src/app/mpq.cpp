@@ -19,76 +19,43 @@
  ***************************************************************************/
 
 #include <iostream>
-#include <string>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <vector>
-#include <list>
+#include <fstream>
+
+#include "../mpq.hpp"
+#include "../internationalisation.hpp"
 
 #include <getopt.h>
 
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 
-#include "../lang/parser.hpp"
-#include "../lang/compiler.hpp"
-#include "../internationalisation.hpp"
-
-using namespace wc3lib::lang;
+using namespace wc3lib::mpq;
 
 int main(int argc, char *argv[])
 {
 	// Set the current locale.
 	setlocale(LC_ALL, "");
 	// Set the text message domain.
-	bindtextdomain("jassc", LOCALE_DIR);
-	textdomain("jassc");
+	bindtextdomain("mpq", LOCALE_DIR);
+	textdomain("mpq");
 	
 	static struct option options[] =
 	{
 		{"version",                 no_argument,             0, 'V'},
 		{"help",                    no_argument,             0, 'h'},
-		{"recursive",               required_argument,       0, 'R'},
-		{"include",                 required_argument,       0, 'I'},
-		{"showerrors",              no_argument,             0, 's'},
-		{"verify",                  no_argument,             0, 'v'},
-#ifdef HTML
-		{"html",                    required_argument,       0, 'H'},
-#endif
-#ifdef SQLITE
-		{"sqlite",                  required_argument,       0, 'L'},
-#endif
-		{"map",                     required_argument,       0, 'M'},
-		{"mapscript",               required_argument,       0, 'T'},
-		{"script",                  required_argument,       0, 'P'},
-		{"optimize",                required_argument,       0, 'O'},
-		{"language",                required_argument,       0, 'A'},
+		{"info",		    no_argument,             0, 'i'},
 		{0, 0, 0, 0}
 	};
 	
 	static const char *version = "0.1";
-	boost::filesystem::path recursivePath;
-	std::list<boost::filesystem::path> includeDirs;
-	bool showErrors = false;
-	bool verify = false;
-#ifdef HTML
-	boost::filesystem::path htmlPath;
-#endif
-#ifdef SQLITE
-	boost::filesystem::path sqlitePath;
-#endif
-	boost::filesystem::path mapPath;
-	boost::filesystem::path mapScriptPath;
-	boost::filesystem::path scriptPath;
-	std::string optimize;
-	std::string language;
+	std::list<boost::filesystem::path> filePaths;
+	bool optionInfo = false;
 	int optionShortcut;
 	
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "VhR:I:svH:L:M:T:P:O:A:", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "Vhi", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -98,8 +65,8 @@ int main(int argc, char *argv[])
 			case 'V':
 			{
 				std::cout << boost::format(_(
-				"jassc %1%.\n"
-				"Copyright © 2009 Tamino Dauth\n"
+				"mpq %1%.\n"
+				"Copyright © 2010 Tamino Dauth\n"
 				"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>\n"
 				"This is free software: you are free to change and redistribute it.\n"
 				"There is NO WARRANTY, to the extent permitted by law."
@@ -111,26 +78,12 @@ int main(int argc, char *argv[])
 			case 'h':
 			{
 				std::cout <<
-				boost::format(_("jassc %1%.\n\n")) % version <<
-				_("Usage: jassc [Options] [Code files]\n\n") <<
+				boost::format(_("mpq %1%.\n\n")) % version <<
+				_("Usage: mpq [Options] [MPQ files]\n\n") <<
 				_("Options:\n") <<
 				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
 				_("\t-h --help                   Shows this text.\n") <<
-				_("\t-R --recursive <arg>        --\n") <<
-				_("\t-I --include <arg>          --\n") <<
-				_("\t-s --showerrors             --\n") <<
-				_("\t-v --verify                 --\n") <<
-#ifdef HTML
-				_("\t-H --html <arg>             --\n") <<
-#endif
-#ifdef SQLITE
-				_("\t-L --sqlite <arg>           --\n") <<
-#endif
-				_("\t-M --map <arg>              --\n") <<
-				_("\t-T --mapscript <arg>        --\n") <<
-				_("\t-P --script <arg>           --\n") <<
-				_("\t-O --optimize <arg>         --\n") <<
-				_("\t-A --language <arg>         --\n") <<
+				_("\t-i --info                   Shows some information about all read MPQ archives.\n") <<
 				std::endl <<
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
@@ -139,18 +92,22 @@ int main(int argc, char *argv[])
 				return EXIT_SUCCESS;
 			}
 			
-			/// @todo Parse options
+			case 'i':
+			{
+				optionInfo = true;
+				
+				break;
+			}
+		}
 	}
-	
-	std::list<boost::filesystem::path> filePaths;
-	
+		
 	if (optind < argc)
 	{
 		for ( ; optind < argc; ++optind)
 		{
 			bool found = false;
 			
-			BOOST_FPREACH(const boost::filesystem::path &path, filePaths)
+			BOOST_FOREACH(const boost::filesystem::path &path, filePaths)
 			{
 				if (path == argv[optind])
 				{
@@ -173,36 +130,42 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	class Parser parser();
-	parser.setCurrentLanguage( ); /// @todo Set current language by option or jass.
-	std::size_t lines = parser.parse(filePaths);
-	std::cout << boost::format(_("Parsed %1% files with %2% lines at all.")) % paths.size() % lines << std::endl;
-	
-	if (verify)
-		parser.prepareObjects();
-	
-	if (showErrors)
-		parser.showSyntaxErrors(std::cout);
-	
-	if (
-#ifdef HTML
-		!htmlPath.empty() ||
-#endif
-#ifdef SQLITE
-		!sqlitePath.empty() ||
-#endif
-		!mapPath.empty() || !mapScriptPath.empty() || !scriptPath.empty()
-	)
+	if (optionInfo)
 	{
-		if (!verify)
-			parser.prepareObjects();
-		
-		class Compiler compiler;
-		
-		if (
+		BOOST_FOREACH(const boost::filesystem::path &path, filePaths)
+		{
+			std::ifstream istream(path.string().c_str());
+			class Mpq mpq(path);
+			std::streamsize size = mpq.readMpq(istream);
+			std::cout
+			<< mpq.path().string() << std::endl
+			<< "Size: " << mpq.size() << std::endl
+			<< "Hashes: " << mpq.hashes().size() << std::endl
+			<< "Blocks: " << mpq.blocks().size() << std::endl
+			<< "Files: " << mpq.files().size() << std::endl
+			<< "Format: " << mpq.format() << std::endl
+			<< "Unused space: " << mpq.unusedSpace() << std::endl
+			<< "Strong digital signature: " << mpq.hasStrongDigitalSignature() << std::endl
+			<< "Contains listfile file: " << mpq.containsListfileFile() << std::endl
+			<< "Contains attributes file: " << mpq.containsAttributesFile() << std::endl
+			<< "Contains signature file: " << mpq.containsSignatureFile() << std::endl
+			;
+				
+			if (mpq.extendedAttributes() != Mpq::None)
+			{
+				std::cout << "Extended attributes:" << std::endl;
+				
+				if (mpq.extendedAttributes() & Mpq::FileCrc32s)
+					std::cout << "* File CRC32s" << std::endl;
+				
+				if (mpq.extendedAttributes() & Mpq::FileTimeStamps)
+					std::cout << "* File time stamps" << std::endl;
+				
+				if (mpq.extendedAttributes() & Mpq::FileMd5s)
+					std::cout << "* File MD5s" << std::endl;
+			}
+		}
 	}
-	std::string optimize;
-	std::string language;
-
+	
 	return EXIT_SUCCESS;
 }

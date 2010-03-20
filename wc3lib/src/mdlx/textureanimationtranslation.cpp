@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "translation0.hpp"
+#include "textureanimationtranslation.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +26,19 @@ namespace wc3lib
 namespace mdlx
 {
 	
-Translation0::Translation0(class Translation0s *translations) : MdxScaling(translations)
+TextureAnimationTranslation::TextureAnimationTranslation(class TextureAnimationTranslations *translations) : MdxScaling(translations)
+{
+}
+
+TextureAnimationTranslation::~TextureAnimationTranslation()
+{
+}
+
+void TextureAnimationTranslation::readMdl(std::istream &istream) throw (class Exception)
+{
+}
+
+void TextureAnimationTranslation::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 

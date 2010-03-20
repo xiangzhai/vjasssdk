@@ -17,6 +17,8 @@ set(wc3lib_MDLX_SRC
 	cameras.cpp
 	cameratargettranslation.cpp
 	cameratargettranslations.cpp
+	cameratranslation.cpp
+	cameratranslations.cpp
 	collisionshape.cpp
 	collisionshapes.cpp
 	emissionrate.cpp
@@ -117,12 +119,10 @@ set(wc3lib_MDLX_SRC
 	texturepatches.cpp
 	texturevertex.cpp
 	texturevertices.cpp
-	translation0.cpp
-	translation0s.cpp
 	translation1.cpp
 	translation1s.cpp
-	translation2.cpp
-	translation2s.cpp
+	textureanimationtranslation.cpp
+	textureanimationtranslations.cpp
 	version.cpp
 	vertex.cpp
 	vertices.cpp
@@ -186,6 +186,8 @@ set(wc3lib_MDLX_H
 	ribbonemitterheightsbelow.hpp
 	ribbonemittervisibility.hpp
 	ribbonemittervisibilities.hpp
+	textureanimationtranslation.hpp
+	textureanimationtranslations.hpp
 	visibility1.hpp
 	visibility1s.hpp
 	visibility2.hpp

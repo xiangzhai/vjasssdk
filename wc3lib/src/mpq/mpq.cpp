@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream>
 #include <cstring>
 #include <cmath>
 #include <sstream>
@@ -582,11 +583,64 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 		;
 	
 	/// @todo Write file data/free reserved space in MPQ.
-	
 	if (istream != 0)
 		;
+	
+	/// @todo Write meta data/extended attributes
+	if (this->extendedAttributes() & Mpq::FileCrc32s)
+		//block->m_crc32;
+		;
+		
+	if (this->extendedAttributes() & Mpq::FileTimeStamps)
+		block->setFileTime(time(0));
+		
+	if (this->extendedAttributes() & Mpq::FileMd5s)
+		//block->m_md5 = ;
+		;
+	
+	// delete old (attributes) file/refresh
+	if (this->containsAttributesFile())
+		const_cast<class MpqFile*>(this->attributesFile())->remove();
+	
+	this->createAttributesFile();
 		
 	return hash->m_mpqFile;
+}
+
+bool Mpq::removeFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform)
+{
+	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFileByHash(path, locale, platform));
+	
+	if (mpqFile == 0)
+		return false;
+	
+	mpqFile->remove();
+	
+	return true;
+}
+
+bool Mpq::removeFile(const boost::filesystem::path &path)
+{
+	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(path));
+	
+	if (mpqFile == 0)
+		return false;
+	
+	mpqFile->remove();
+	
+	return true;
+}
+
+bool Mpq::removeFile(const std::string &name)
+{
+	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFileByName(name));
+	
+	if (mpqFile == 0)
+		return false;
+	
+	mpqFile->remove();
+	
+	return true;
 }
 
 class Mpq& Mpq::operator<<(const class MpqFile &mpqFile) throw (class Exception)

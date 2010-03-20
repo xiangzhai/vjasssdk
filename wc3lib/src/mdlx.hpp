@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,24 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "translation0s.hpp"
-#include "translation0.hpp"
+#ifndef WC3LIB_MDLX_HPP
+#define WC3LIB_MDLX_HPP
 
-namespace wc3lib
-{
+#include "mdlx/mdlx.hpp"
+#include "mdlx/platform.hpp"
 
-namespace mdlx
-{
-
-Translation0s::Translation0s(class Camera *camera) : MdxScalings("KCTR"), m_camera(camera)
-{
-}
-
-class MdxScaling* Translation0s::createNewMember()
-{
-	return new Translation0(this);
-}
-
-}
-
-}
+#endif

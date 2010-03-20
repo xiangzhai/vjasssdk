@@ -1,3 +1,6 @@
+2010-03-20 Tamino Dauth <tamino@cdauth.de>
+* Add MPQ file direct read- and writing capability.
+
 2010-03-12 Tamino Dauth <tamino@cdauth.de>
 * Camera seems to be documentated wrongly (ordering of translations and rotation lengths).
 

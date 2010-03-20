@@ -144,7 +144,7 @@ inline int8 MpqFile::platformToInt(enum MpqFile::Platform platform)
 	return int8(platform);
 }
 
-inline enum MpqFile::Platform intToPlatform(int8 value)
+inline enum MpqFile::Platform MpqFile::intToPlatform(int8 value)
 {
 	return MpqFile::Platform(value);
 }

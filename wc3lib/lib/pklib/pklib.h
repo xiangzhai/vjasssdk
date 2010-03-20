@@ -6,12 +6,16 @@
 /*   Date    Ver   Who  Comment                                              */
 /* --------  ----  ---  -------                                              */
 /* 31.03.03  1.00  Lad  The first version of pkware.h                        */
+/* 20.03.10  1.01  Tamino Dauth  Replaced StormLib include statements        */
 /*****************************************************************************/
 
 #ifndef __PKLIB_H__
 #define __PKLIB_H__
 
-#include "../StormPort.h"
+#include <boost/cstdint.hpp>
+
+typedef int16_t DWORD_PTR;
+typedef int16_t INT_PTR;
 
 //-----------------------------------------------------------------------------
 // Defines

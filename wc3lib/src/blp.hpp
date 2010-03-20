@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,16 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MPQ_ALGORITHM_HPP
-#define WC3LIB_MPQ_ALGORITHM_HPP
+#ifndef WC3LIB_BLP_HPP
+#define WC3LIB_BLP_HPP
 
-/**
-* @file Includes all possible compression algorithm used in MPQ archives.
-*/
-
-#include <huffman/huff.h>
-#include <zlib/zlib.h>
-#include <pklib/pklib.h>
-#include <bzip2/bzlib.h>
+#include "blp/blp.hpp"
+#include "blp/platform.hpp"
 
 #endif

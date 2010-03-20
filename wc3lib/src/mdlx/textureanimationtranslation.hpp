@@ -18,14 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TRANSLATION0S_HPP
-#define WC3LIB_MDLX_TRANSLATION0S_HPP
+#ifndef WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATION_HPP
+#define WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATION_HPP
 
-#include <istream>
-#include <ostream>
-#include <list>
-
-#include "mdxscalings.hpp"
+#include "mdxscaling.hpp"
+#include "textureanimationtranslations.hpp"
 
 namespace wc3lib
 {
@@ -33,37 +30,21 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Camera;
-class Translation0;
-
-/**
-* KCTR, like KGSC (Scalings)
-* Camera translations.
-*/
-class Translation0s : public MdxScalings
+class TextureAnimationTranslation : public MdxScaling
 {
 	public:
-		Translation0s(class Camera *camera);
-		virtual ~Translation0s();
+		TextureAnimationTranslation(class TextureAnimationTranslations *translations);
+		virtual ~TextureAnimationTranslation();
 
-		class Camera* camera() const;
-		
-		const std::list<class Translation0*>& translations() const;
+		class TextureAnimationTranslations* translations() const;
 
-	protected:
-		virtual class MdxScaling* createNewMember();
-		
-		class Camera *m_camera;
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 };
 
-inline class Camera* Translation0s::camera() const
+inline class TextureAnimationTranslations* TextureAnimationTranslation::translations() const
 {
-	return this->m_camera;
-}
-
-inline const std::list<class Translation0*>& Translation0s::translations() const
-{
-	return reinterpret_cast<const std::list<class Translation0*>&>(*&this->m_scalings);
+	return dynamic_cast<class TextureAnimationTranslations*>(this->m_scalings);
 }
 
 }
@@ -71,4 +52,3 @@ inline const std::list<class Translation0*>& Translation0s::translations() const
 }
 
 #endif
-

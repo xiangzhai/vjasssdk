@@ -18,11 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TRANSLATION2_HPP
-#define WC3LIB_MDLX_TRANSLATION2_HPP
-
-#include "mdxscaling.hpp"
-#include "translation2s.hpp"
+#include "cameratranslations.hpp"
+#include "cameratranslation.hpp"
 
 namespace wc3lib
 {
@@ -30,25 +27,19 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Translation2 : public MdxScaling
+CameraTranslations::CameraTranslations(class Camera *camera) : MdxScalings("KCTR"), m_camera(camera)
 {
-	public:
-		Translation2(class Translation2s *translations);
-		virtual ~Translation2();
+}
 
-		class Translation2s* translations() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-};
-
-inline class Translation2s* Translation2::translations() const
+CameraTranslations::~CameraTranslations()
 {
-	return dynamic_cast<class Translation2s*>(this->m_scalings);
+}
+
+class MdxScaling* CameraTranslations::createNewMember()
+{
+	return new CameraTranslation(this);
 }
 
 }
 
 }
-
-#endif

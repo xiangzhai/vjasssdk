@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MPQ_MPQ_HPP
 #define WC3LIB_MPQ_MPQ_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 #include <list>
 #include <string>
 #include <sstream>
@@ -91,8 +92,9 @@ class Mpq
 		*/
 		bool containsListfileFile() const;
 		/**
-		* Creates a "(listfile)" if there isn't already one. All file entries which do have corresponding file paths will be added to this file.
-		* @return If the file does already exist it returns 0.
+		* Creates a "(listfile)" file if there isn't already one. All file entries which do have corresponding file paths will be added to this file.
+		* @return Returns the file instance of the created file. If it does already exist the instance to the current file will be returned (note that it won't be refreshed by this method!).
+		* @see Mpq::containsListfileFile, Mpq::listfileFile
 		*/
 		const class MpqFile* createListfileFile() throw (class Exception);
 		const class MpqFile* listfileFile() const;
@@ -100,11 +102,20 @@ class Mpq
 		* @return Returns true if the archive contains a "(attributes)" file. This can also be checked by checking if @fn Mpq.extendedAttributes() does not return @enum Mpq.None.
 		*/
 		bool containsAttributesFile() const;
+		/**
+		* Creates an "(attributes)" file if there isn't already one. The extended attributes of all block entries will be added to the file.
+		* @return Returns the file instance of the created file. If it does already exist the instance to the current file will be returned (note that it won't be refreshed by this method!).
+		* @see Mpq::containsAttributesFile, Mpq::attributesFile
+		*/
+		const class MpqFile* createAttributesFile() throw (class Exception);
 		const class MpqFile* attributesFile() const;
 		
 		bool containsSignatureFile() const;
 		const class MpqFile* signatureFile() const;
 
+		/**
+		  * @return Returns unused block space of the archive.
+		  */
 		std::size_t unusedSpace() const;
 		
 		const class MpqFile* findFile(const boost::filesystem::path &path) const;
@@ -120,10 +131,13 @@ class Mpq
 		* @todo Replace reservedSpace by size of istream?
 		*/
 		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream = 0, bool overwriteExisting = false, std::size_t reservedSpace = 0) throw (class Exception);
+		bool removeFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
+		bool removeFile(const boost::filesystem::path &path);
+		bool removeFile(const std::string &name);
 		
 		/**
-		* @return Returns the size of the whole MPQ archive file.
-		*/
+		 * @return Returns the size of the whole MPQ archive file.
+		 */
 		std::size_t size() const;
 		const boost::filesystem::path& path() const;
 		enum Format format() const;
@@ -150,6 +164,7 @@ class Mpq
 		static const int16 formatVersion1Identifier;
 		static const int16 formatVersion2Identifier;
 		static const int32 extendedAttributesVersion;
+		
 	protected:
 		friend class MpqFile;
 		friend class Hash;
@@ -198,6 +213,18 @@ class Mpq
 		std::list<class MpqFile*> m_files;
 };
 
+/// @todo Implement.
+inline bool Mpq::hasStrongDigitalSignature(std::istream &istream)
+{
+	return false;
+}
+
+/// @todo Implement.
+inline std::streamsize Mpq::strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception)
+{
+	return 0;
+}
+
 inline std::ostream& operator<<(std::ostream &ostream, const class Mpq &mpq) throw (class Exception)
 {
 	mpq.writeMpq(ostream);
@@ -245,6 +272,8 @@ inline bool operator!=(const class Mpq &mpq1, const class Mpq &mpq2)
 inline bool Mpq::check() const
 {
 	/// @todo Check format, size, extended attributes and signature.
+	if (this->extendedAttributes() != Mpq::None && !this->containsAttributesFile())
+		return false;
 	
 	if (!this->checkBlocks())
 		return false;
@@ -269,13 +298,13 @@ inline bool Mpq::containsListfileFile() const
 inline const class MpqFile* Mpq::createListfileFile() throw (class Exception)
 {
 	if (this->containsListfileFile())
-		return 0;
+		return this->listfileFile();
 	
 	std::list<std::string> entries;
 	
 	BOOST_FOREACH(const class MpqFile *mpqFile, this->m_files)
 	{
-		if (!mpqFile->m_path.empty() && mpqFile->m_path.string() != "(attributes)") /// @todo Exclude directories?
+		if (!mpqFile->m_path.empty() && mpqFile->m_path.string() != "(attributes)") /// @todo Exclude directories and file (signature)?
 			entries.push_back(mpqFile->m_path.string());
 	}
 	
@@ -299,6 +328,38 @@ inline bool Mpq::containsAttributesFile() const
 	return this->attributesFile() != 0;
 }
 
+inline const class MpqFile* Mpq::createAttributesFile() throw (class Exception)
+{
+	if (this->containsAttributesFile())
+		return 0;
+	
+	struct ExtendedAttributesHeader extendedAttributesHeader;
+	extendedAttributesHeader.version = Mpq::extendedAttributesVersion;
+	extendedAttributesHeader.attributesPresent = this->extendedAttributes();
+	std::stringstream stream;
+	stream.write(reinterpret_cast<char*>(&extendedAttributesHeader), sizeof(extendedAttributesHeader));
+		
+	if (this->extendedAttributes() & Mpq::FileCrc32s)
+	{
+		BOOST_FOREACH(const class Block *block, this->m_blocks)
+			stream.write(reinterpret_cast<const char*>(&block->m_crc32), sizeof(block->m_crc32));
+	}
+	
+	if (this->extendedAttributes() & Mpq::FileTimeStamps)
+	{
+		BOOST_FOREACH(const class Block *block, this->m_blocks)
+			stream.write(reinterpret_cast<const char*>(&block->m_fileTime), sizeof(block->m_fileTime));
+	}
+	
+	if (this->extendedAttributes() & Mpq::FileMd5s)
+	{
+		BOOST_FOREACH(const class Block *block, this->m_blocks)
+			stream.write(reinterpret_cast<const char*>(&block->m_md5), sizeof(block->m_md5));
+	}
+	
+	return this->addFile("(attributes)", MpqFile::Neutral, MpqFile::Default, &stream);
+}
+
 inline const class MpqFile* Mpq::attributesFile() const
 {
 	return this->findFileByHash("(attributes)", MpqFile::Neutral, MpqFile::Default);
@@ -307,6 +368,19 @@ inline const class MpqFile* Mpq::attributesFile() const
 inline bool Mpq::containsSignatureFile() const
 {
 	return this->signatureFile() != 0;
+}
+
+inline std::size_t Mpq::unusedSpace() const
+{
+	std::size_t result = 0;
+	
+	BOOST_FOREACH(const class Block *block, this->m_blocks)
+	{
+		if (block->empty())
+			result += block->m_blockSize;
+	}
+	
+	return result;
 }
 
 inline const class MpqFile* Mpq::signatureFile() const

@@ -49,6 +49,18 @@ std::streamsize Block::read(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
+std::streamsize Block::write(std::ostream &ostream) throw (class Exception)
+{
+	struct BlockTableEntry entry;
+	entry.blockOffset = this->m_blockOffset;
+	entry.blockSize = this->m_blockSize;
+	entry.fileSize = this->m_fileSize;
+	entry.flags = static_cast<int32>(this->m_flags);
+	ostream.write(reinterpret_cast<char*>(&entry), sizeof(entry));
+	
+	return sizeof(entry);
+}
+
 }
 
 }

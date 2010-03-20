@@ -22,7 +22,7 @@
 
 #include "camera.hpp"
 #include "cameras.hpp"
-#include "translation0s.hpp"
+#include "cameratranslations.hpp"
 #include "camerarotationlengths.hpp"
 #include "cameratargettranslations.hpp"
 #include "../internationalisation.hpp"
@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Camera::Camera(class Cameras *cameras) : m_cameras(cameras), m_translations(new Translation0s(this)), m_rotationLengths(new CameraRotationLengths(this)), m_targetTranslations(new CameraTargetTranslations(this))
+Camera::Camera(class Cameras *cameras) : m_cameras(cameras), m_translations(new CameraTranslations(this)), m_rotationLengths(new CameraRotationLengths(this)), m_targetTranslations(new CameraTargetTranslations(this))
 {
 }
 

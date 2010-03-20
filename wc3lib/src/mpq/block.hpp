@@ -52,6 +52,7 @@ class Block
 		Block(class Mpq *mpq);
 
 		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) throw (class Exception);
 
 		/**
 		* @todo Check size, flags and required properties.
@@ -76,7 +77,7 @@ class Block
 		int32 m_fileSize;
 		Flags m_flags;
 		// extended attributes
-		int32 m_crc32;
+		CRC32 m_crc32;
 		FILETIME m_fileTime;
 		MD5 m_md5;
 };

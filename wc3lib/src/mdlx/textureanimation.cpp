@@ -18,9 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+
 #include "textureanimation.hpp"
 #include "textureanimations.hpp"
-#include "translation2s.hpp"
+#include "textureanimationtranslations.hpp"
 #include "rotation1s.hpp"
 #include "scaling1s.hpp"
 #include "../internationalisation.hpp"
@@ -31,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimation::TextureAnimation(class TextureAnimations *textureAnimations) : m_textureAnimations(textureAnimations), m_translations(new Translation2s(this)), m_rotations(new Rotation1s(this)), m_scalings(new Scaling1s(this))
+TextureAnimation::TextureAnimation(class TextureAnimations *textureAnimations) : m_textureAnimations(textureAnimations), m_translations(new TextureAnimationTranslations(this)), m_rotations(new Rotation1s(this)), m_scalings(new Scaling1s(this))
 {
 }
 
@@ -87,12 +89,7 @@ long32 TextureAnimation::readMdx(std::istream &istream) throw (class Exception)
 	bytes += this->m_scalings->readMdx(istream);
 	
 	if (nbytesi != bytes)
-	{
-		char message[50];
-		sprintf(message, _("Texture Animation: Error, file byte count and real byte count aren't equal.\nFile byte count: %d bytes.\nReal byte count: %d.\n"), nbytesi, bytes);
-		
-		throw Exception(message);
-	}
+		throw Exception(boost::str(boost::format(_("Texture Animation: Error, file byte count and real byte count aren't equal.\nFile byte count: %1% bytes.\nReal byte count: %2%.")) % nbytesi % bytes));
 	
 	return bytes;
 }

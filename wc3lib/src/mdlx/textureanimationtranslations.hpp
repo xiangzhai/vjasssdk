@@ -18,8 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "translation2s.hpp"
-#include "translation2.hpp"
+#ifndef WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATIONS_HPP
+#define WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATIONS_HPP
+
+#include "mdxscalings.hpp"
 
 namespace wc3lib
 {
@@ -27,27 +29,41 @@ namespace wc3lib
 namespace mdlx
 {
 
-Translation2s::Translation2s(class TextureAnimation *textureAnimation) : MdxScalings("KTAT"), m_textureAnimation(textureAnimation)
+class TextureAnimation;
+class TranslationAnimationTranslation;
+
+/// KTAT, like KGSC (Scalings)
+class TextureAnimationTranslations : public MdxScalings
 {
-}
+	public:
+		TextureAnimationTranslations(class TextureAnimation *textureAnimation);
+		virtual ~TextureAnimationTranslations();
 
-Translation2s::~Translation2s()
+		class TextureAnimation* textureAnimation() const;
+		const std::list<class TextureAnimationTranslation*>& translations() const;
+
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+
+	protected:
+		virtual class MdxScaling* createNewMember();
+		
+		class TextureAnimation *m_textureAnimation;
+};
+
+inline class TextureAnimation* TextureAnimationTranslations::textureAnimation() const
 {
+	return this->m_textureAnimation;
 }
 
-void Translation2s::readMdl(std::istream &istream) throw (class Exception)
+inline const std::list<class TextureAnimationTranslation*>& TextureAnimationTranslations::translations() const
 {
-}
-
-void Translation2s::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
-class MdxScaling* Translation2s::createNewMember()
-{
-	return new Translation2(this);
+	return reinterpret_cast<const std::list<class TextureAnimationTranslation*>&>(this->m_scalings);
 }
 
 }
 
 }
+
+#endif
+

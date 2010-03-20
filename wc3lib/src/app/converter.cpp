@@ -715,13 +715,13 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 
 static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
-	class mpq::Mpq mpq;
+	class mpq::Mpq mpq(path);
 	
 	switch (inputFormat)
 	{
 		case Mpq:
 		{
-			std::streamsize bytes = mpq.readMpq(ifstream, mpq::Mpq::Read);
+			std::streamsize bytes = mpq.readMpq(ifstream);
 			
 			if (verbose)
 				std::cout << boost::format(_("Read MPQ file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
