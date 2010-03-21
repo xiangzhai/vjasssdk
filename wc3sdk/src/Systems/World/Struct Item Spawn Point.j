@@ -157,7 +157,7 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 		private static method timerFunctionRespawnCheck takes nothing returns nothing
 			local AIntegerListIterator iterator = thistype.m_itemSpawnPoints.begin()
 			loop
-				exitwhen (not iterator.hasNext())
+				exitwhen (not iterator.isValid())
 				if (not thistype(iterator.data()).runs() and thistype(iterator.data()).m_isEnabled and (thistype(iterator.data()).m_item == null or IsItemOwned(thistype(iterator.data()).m_item) or GetWidgetLife(thistype(iterator.data()).m_item) <= 0.0 or GetDistanceBetweenPoints(GetItemX(thistype(iterator.data()).m_item), GetItemY(thistype(iterator.data()).m_item), 0.0, thistype(iterator.data()).m_x, thistype(iterator.data()).m_y, 0.0) > thistype.m_removalRange)) then
 					call thistype(iterator.data()).respawn()
 				endif

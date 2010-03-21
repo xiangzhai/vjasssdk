@@ -10,16 +10,16 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 	* Note that you can use @function GetEventPlayerChatString() to read the whole entered chat string.
 	*/
 	struct ACheat
-		//start members
+		// construction members
 		private string m_cheat
 		private boolean m_exactMatch
 		private ACheatOnCheatAction m_action
-		//members
+		// members
 		private trigger m_cheatTrigger
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ACheat\"")
 
-		//start members
+		// construction members
 
 		public method cheat takes nothing returns string
 			return this.m_cheat
@@ -29,7 +29,7 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 			return this.m_exactMatch
 		endmethod
 
-		//methods
+		// methods
 
 		private static method triggerActionCheat takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
@@ -65,15 +65,15 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 		* @param exactMatch If this value is false user does not have to enter the exact string of @param cheat to run the cheat. For example if the cheat string is "setlevel" "setlevel 1000" does also work.
 		* @param action The function which will be called when player enters cheat string.
 		*/
-		public static method create takes string cheat, boolean exactMatch, ACheatOnCheatAction action returns ACheat
-			local ACheat this = ACheat.allocate()
+		public static method create takes string cheat, boolean exactMatch, ACheatOnCheatAction action returns thistype
+			local thistype this = thistype.allocate()
 			debug if (cheat == null) then
 				debug call this.print("cheat is empty.")
 			debug endif
 			debug if (action == 0) then
 				debug call this.print("action is 0.")
 			debug endif
-			//start members
+			// construction members
 			set this.m_cheat = cheat
 			set this.m_exactMatch = exactMatch
 			set this.m_action = action

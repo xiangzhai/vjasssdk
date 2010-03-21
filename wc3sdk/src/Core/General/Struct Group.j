@@ -1,10 +1,13 @@
 library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreGeneralUnit
 
+	/// @todo Should be contained by @struct AGroup, vJass bug.
+	function interface AGroupForFunction takes unit whichUnit returns nothing
+
 	struct AGroup
-		//members
+		// members
 		private AUnitVector m_units
 
-		//members
+		// members
 
 		public method units takes nothing returns AUnitVector
 			return this.m_units
@@ -29,6 +32,10 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			local group whichGroup = CreateGroup()
 			call this.fillGroup(whichGroup)
 			return whichGroup
+		endmethod
+
+		public method forGroup takes AGroupForFunction forFunction returns nothing
+			call this.m_units.forEach(forFunction)
 		endmethod
 
 		/**

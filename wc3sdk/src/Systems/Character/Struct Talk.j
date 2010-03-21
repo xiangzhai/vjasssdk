@@ -1,4 +1,4 @@
-library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle, AStructSystemsCharacterCharacter
+library AStructSystemsCharacterTalk requires optional AModuleCoreSystemStruct, ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralList, AStructCoreGeneralVector, ALibraryCoreInterfaceMisc, ALibraryCoreMathsHandle, AStructSystemsCharacterCharacter
 
 	/// @todo Should be a part of @struct ATalk, vJass bug.
 	function interface ATalkStartAction takes ATalk talk returns nothing
@@ -12,26 +12,31 @@ library AStructSystemsCharacterTalk requires optional ALibraryCoreDebugMisc, ASt
 	* Note that only one character owner can use one talk at the same time. There is no support for several character owners talking to the same NPC, yet.
 	*/
 	struct ATalk
-		//static start members
+		// static construction members
 		private static string m_order
 		private static real m_maxDistance
 		private static string m_effectPath
+		private static boolean m_disableEffectsInCinematicMode
 		private static string m_textErrorMessage
 		private static string m_textExit
 		private static string m_textBack
-		//start members
+		// static members
+		private static AIntegerList m_talks
+		// construction members
 		private unit m_unit
 		private ATalkStartAction m_startAction
-		//members
+		// members
 		private AIntegerVector m_infos
 		private ACharacter m_character
 		private boolean m_isEnabled
 		private trigger m_orderTrigger
 		private effect m_effect
 
+		implement ASystemStruct
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ATalk\"")
 
-		//start members
+		// construction members
 
 		/// @return Returns the NPC's unit.
 		public method unit takes nothing returns unit
@@ -302,13 +307,17 @@ endif
 
 		public static method create takes unit usedUnit, ATalkStartAction startAction returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_unit = usedUnit
 			set this.m_startAction = startAction
-			//members
+			// members
 			set this.m_infos = AIntegerVector.create()
 			set this.m_character = 0
 			set this.m_isEnabled = true
+
+			if (thistype.m_effectPath != null and thistype.m_disableEffectsInCinematicMode) then
+				call thistype.m_talks.pushBack(this)
+			endif
 
 			call this.createOrderTrigger()
 			call this.createEffect()
@@ -333,10 +342,13 @@ endif
 				call AInfo(this.m_infos.back()).destroy.evaluate()
 			endloop
 			call this.m_infos.destroy()
+			if (thistype.m_effectPath != null and thistype.m_disableEffectsInCinematicMode) then
+				call thistype.m_talks.remove(this)
+			endif
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//start members
+			// construction members
 			set this.m_unit = null
 
 			call this.destroyInfos()
@@ -344,14 +356,48 @@ endif
 			call this.destroyEffect()
 		endmethod
 
-		public static method init takes string order, real maxDistance, string effectPath, string textErrorMessage, string textExit, string textBack returns nothing
-			//static start members
+		private static method onInit takes nothing returns nothing
+			call thistype.setName("ATalk")
+		endmethod
+
+		public static method init takes string order, real maxDistance, string effectPath, boolean disableEffectsInCinematicMode, string textErrorMessage, string textExit, string textBack returns nothing
+			// static construction members
 			set thistype.m_order = order
 			set thistype.m_maxDistance = maxDistance
 			set thistype.m_effectPath = effectPath
+			set thistype.m_disableEffectsInCinematicMode = disableEffectsInCinematicMode
 			set thistype.m_textErrorMessage = textErrorMessage
 			set thistype.m_textExit = textExit
 			set thistype.m_textBack = textBack
+
+			if (thistype.m_effectPath != null and thistype.m_disableEffectsInCinematicMode) then
+				set thistype.m_talks = AIntegerList.create()
+			endif
+			call thistype.initialize()
+		endmethod
+
+		public static method disableEffectsInCinematicMode takes nothing returns boolean
+			return thistype.m_disableEffectsInCinematicMode
+		endmethod
+
+		public static method hideAllEffects takes nothing returns nothing
+			local AIntegerListIterator iterator = thistype.m_talks.begin()
+			loop
+				exitwhen (not iterator.isValid())
+				call thistype(iterator.data()).destroyEffect()
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+		endmethod
+
+		public static method showAllEffects takes nothing returns nothing
+			local AIntegerListIterator iterator = thistype.m_talks.begin()
+			loop
+				exitwhen (not iterator.isValid())
+				call thistype(iterator.data()).createEffect()
+				call iterator.next()
+			endloop
+			call iterator.destroy()
 		endmethod
 	endstruct
 

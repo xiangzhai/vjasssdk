@@ -1,19 +1,19 @@
 library AStructSystemsCharacterClass requires AStructCoreGeneralVector
 
 	struct AClass
-		//static start members
+		// static construction members
 		private static integer m_startLevel
 		private static integer m_startSkillPoints
-		//dynamic members
+		// dynamic members
 		private AStringVector m_abilityIconPaths // for character class selection
 		private AIntegerVector m_abilities // for character class selection
 		private AStringVector m_descriptionLines // for character class selection
-		//start members
+		// construction members
 		private integer m_unitType
 		private string m_animation
 		private string m_soundPath
 
-		//dynamic members
+		// dynamic members
 
 		public method addAbilityIconPath takes string abilityIconPath returns integer
 			call this.m_abilityIconPaths.pushBack(abilityIconPath)
@@ -54,7 +54,7 @@ library AStructSystemsCharacterClass requires AStructCoreGeneralVector
 			return this.m_descriptionLines.size()
 		endmethod
 
-		//start members
+		// construction members
 
 		/// Friend relation to @struct AClassSelection, don't use.
 		public method unitType takes nothing returns integer
@@ -71,7 +71,7 @@ library AStructSystemsCharacterClass requires AStructCoreGeneralVector
 			return this.m_soundPath
 		endmethod
 
-		//methods
+		// methods
 
 		public method containsAbility takes integer whichAbility returns boolean
 			local integer i = 0
@@ -95,11 +95,11 @@ library AStructSystemsCharacterClass requires AStructCoreGeneralVector
 		/// @param unitType Should be the type of a hero
 		public static method create takes integer unitType, string animation, string soundPath returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_abilityIconPaths = AStringVector.create()
 			set this.m_abilities = AIntegerVector.create()
 			set this.m_descriptionLines = AStringVector.create()
-			//start members
+			// construction members
 			set this.m_unitType = unitType
 			set this.m_animation = animation
 			set this.m_soundPath = soundPath
@@ -108,14 +108,14 @@ library AStructSystemsCharacterClass requires AStructCoreGeneralVector
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//dynamic members
+			// dynamic members
 			call this.m_abilityIconPaths.destroy()
 			call this.m_abilities.destroy()
 			call this.m_descriptionLines.destroy()
 		endmethod
 
 		public static method init takes integer startLevel, integer startSkillPoints returns nothing
-			//static start members
+			// static construction members
 			set thistype.m_startLevel = startLevel
 			set thistype.m_startSkillPoints = startSkillPoints
 		endmethod

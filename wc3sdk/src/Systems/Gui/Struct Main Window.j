@@ -1,4 +1,4 @@
-library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceMisc, ALibraryCoreEnvironmentSound, ALibraryCoreMathsRect, AStructSystemsGuiGui
+library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceMisc, ALibraryCoreEnvironmentSound, ALibraryCoreMathsRect, AStructSystemsGuiGui, AStructSystemsGuiStyle
 
 	/// @todo Should be a static function interface of @struct AMainWindow, vJass bug.
 	function interface AMainWindowOnShowCondition takes AMainWindow mainWindow returns boolean
@@ -13,10 +13,10 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 	function interface AMainWindowOnHideAction takes AMainWindow mainWindow returns nothing
 
 	struct AMainWindow
-		//static start members
+		// static construction members
 		private static camerasetup m_cameraSetup
 		private static string m_tooltipSoundPath
-		//dynamic members
+		// dynamic members
 		private AMainWindowOnShowCondition m_onShowCondition
 		private AMainWindowOnShowAction m_onShowAction
 		private AMainWindowOnHideCondition m_onHideCondition
@@ -24,15 +24,16 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		private real m_tooltipX
 		private real m_tooltipY
 		private string m_tooltipBackgroundImageFilePath
-		//start members
+		// construction members
 		private AGui m_gui
+		private AStyle m_style
 		private real m_x
 		private real m_y
 		private real m_sizeX
 		private real m_sizeY
 		private boolean m_useShortcuts
 		private integer m_shortcut
-		//members
+		// members
 		private integer m_index
 		private boolean m_isShown
 		private AIntegerVector m_widgets
@@ -111,10 +112,14 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			return this.m_tooltipBackgroundImageFilePath
 		endmethod
 
-		//start members
+		// construction members
 
 		public method gui takes nothing returns AGui
 			return this.m_gui
+		endmethod
+
+		public method style takes nothing returns AStyle
+			return this.m_style
 		endmethod
 
 		public method x takes nothing returns real
@@ -341,9 +346,9 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 		* @param y Top left edge y.
 		* @param shortcut If this value is -1 main window won't have any shortcut.
 		*/
-		public static method create takes AGui gui, real x, real y, real sizeX, real sizeY, boolean useShortcuts, integer shortcut returns thistype
+		public static method create takes AGui gui, AStyle style, real x, real y, real sizeX, real sizeY, boolean useShortcuts, integer shortcut returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_onShowCondition  = 0
 			set this.m_onShowAction = 0
 			set this.m_onHideCondition = 0
@@ -351,8 +356,9 @@ library AStructSystemsGuiMainWindow requires optional ALibraryCoreDebugMisc, ASt
 			set this.m_tooltipX = -1.0
 			set this.m_tooltipY = -1.0
 			set this.m_tooltipBackgroundImageFilePath = null
-			//start members
+			// construction members
 			set this.m_gui = gui
+			set this.m_style = style
 static if (DEBUG_MODE) then
 			if (not RectContainsCoords(GetPlayableMapRect(), x, y)) then
 				call this.print("X and y aren't contained by playable map rect.")
@@ -369,7 +375,7 @@ endif
 			set this.m_sizeY = sizeY
 			set this.m_useShortcuts = useShortcuts
 			set this.m_shortcut = shortcut
-			//members
+			// members
 			set this.m_index = gui.dockMainWindow(this)
 			set this.m_widgets = AIntegerVector.create()
 			set this.m_tooltip = null
@@ -391,13 +397,13 @@ endif
 			return this
 		endmethod
 
-		public static method createByRect takes AGui gui, rect usedRect, boolean useShortcuts, integer shortcut returns AMainWindow
-			return thistype.create(gui, GetRectMinX(usedRect), GetRectMaxY(usedRect), GetRectWidthBJ(usedRect), GetRectHeightBJ(usedRect), useShortcuts, shortcut)
+		public static method createByRect takes AGui gui,  AStyle style, rect usedRect, boolean useShortcuts, integer shortcut returns AMainWindow
+			return thistype.create(gui, style, GetRectMinX(usedRect), GetRectMaxY(usedRect), GetRectWidthBJ(usedRect), GetRectHeightBJ(usedRect), useShortcuts, shortcut)
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
 			call this.m_gui.undockMainWindowByIndex(this.m_index)
-			//members
+			// members
 			if (this.m_tooltip != null) then
 				call DestroyTextTag(this.m_tooltip)
 				set this.m_tooltip = null

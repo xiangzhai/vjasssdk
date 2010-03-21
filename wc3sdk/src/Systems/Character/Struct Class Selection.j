@@ -96,16 +96,58 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call this.selectClass()
 		endmethod
 
+		private method mostLineCharacters takes AStringVector initialVector returns integer
+			local AStringVector vector = AStringVector.createByOther(initialVector)
+			local integer result = 0
+			local integer i
+			call vector.pushBack(thistype.m_textAbilities)
+			call vector.pushBack(thistype.m_textDescription)
+			set i = 0
+			loop
+				exitwhen (i == vector.size())
+				if (StringLength(vector[i]) > result) then
+					set result = StringLength(vector[i])
+				endif
+				set i = i + 1
+			endloop
+			call vector.destroy()
+			return result
+		endmethod
+
 		private method refreshInfoSheet takes nothing returns nothing
 			local integer count = 3
 			local integer i
 			local multiboarditem multiboardItem
+			local string strengthText = IntegerArg(thistype.m_textStrength, GetHeroStr(this.m_classUnit, false))
+			local string agilityText = IntegerArg(thistype.m_textAgility, GetHeroAgi(this.m_classUnit, false))
+			local string intelligenceText = IntegerArg(thistype.m_textIntelligence, GetHeroInt(this.m_classUnit, false))
+			local AStringVector strings = AStringVector.create()
+			local integer index
+
+			call strings.pushBack(strengthText)
+			call strings.pushBack(agilityText)
+			call strings.pushBack(intelligenceText)
+
+			set i = 0
+			loop
+				exitwhen(i == this.m_class.abilities())
+				call strings.pushBack(GetObjectName(this.m_class.ability(i)))
+				set i = i + 1
+			endloop
+			set i = 0
+			loop
+				exitwhen(i == this.m_class.descriptionLines())
+				call strings.pushBack(this.m_class.descriptionLine(i))
+				set i = i + 1
+			endloop
+
 			//call MultiboardClear(this.m_infoSheet) // clears not everything?!
 			call DestroyMultiboard(this.m_infoSheet)
 			set this.m_infoSheet = null
 			set this.m_infoSheet = CreateMultiboard()
-			call MultiboardSetItemsWidth(this.m_infoSheet, 0.40) /// @todo Increase size if description has large lines.
+			call MultiboardSetItemsWidth(this.m_infoSheet, this.mostLineCharacters(strings) * 0.005)
 			call MultiboardSetColumnCount(this.m_infoSheet, 1)
+			call strings.destroy()
 
 			if (this.m_class.abilities() > 0) then
 				set count = count + 1 + this.m_class.abilities()
@@ -121,21 +163,21 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
 			call MultiboardSetItemStyle(multiboardItem, true, true)
 			call MultiboardSetItemIcon(multiboardItem, thistype.m_strengthIconPath)
-			call MultiboardSetItemValue(multiboardItem, thistype.m_textStrength + ": " + I2S(GetHeroStr(this.m_classUnit, false)))
+			call MultiboardSetItemValue(multiboardItem, strengthText)
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//agility
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 1, 0)
 			call MultiboardSetItemStyle(multiboardItem, true, true)
 			call MultiboardSetItemIcon(multiboardItem, thistype.m_agilityIconPath)
-			call MultiboardSetItemValue(multiboardItem, thistype.m_textAgility + ": " + I2S(GetHeroAgi(this.m_classUnit, false)))
+			call MultiboardSetItemValue(multiboardItem, agilityText)
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 			//intelligence
 			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 2, 0)
 			call MultiboardSetItemStyle(multiboardItem, true, true)
 			call MultiboardSetItemIcon(multiboardItem, thistype.m_intelligenceIconPath)
-			call MultiboardSetItemValue(multiboardItem, thistype.m_textIntelligence + ": " + I2S(GetHeroInt(this.m_classUnit, false)))
+			call MultiboardSetItemValue(multiboardItem, intelligenceText)
 			call MultiboardReleaseItem(multiboardItem)
 			set multiboardItem = null
 
@@ -160,7 +202,12 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			endif
 
 			if (this.m_class.descriptionLines() > 0) then
-				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + this.m_class.abilities(), 0)
+				if (this.m_class.abilities() > 0) then
+					set index = 3 + 1 + this.m_class.abilities()
+				else
+					set index = 3
+				endif
+				set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 				call MultiboardSetItemStyle(multiboardItem, true, false)
 				call MultiboardSetItemValue(multiboardItem, thistype.m_textDescription)
 				call MultiboardReleaseItem(multiboardItem)
@@ -169,7 +216,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				set i = 0
 				loop
 					exitwhen(i == this.m_class.descriptionLines())
-					set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + this.m_class.abilities() + 1 + i, 0)
+					set multiboardItem = MultiboardGetItem(this.m_infoSheet, index + 1 + i, 0)
 					call MultiboardSetItemStyle(multiboardItem, true, false)
 					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i))
 					call MultiboardReleaseItem(multiboardItem)

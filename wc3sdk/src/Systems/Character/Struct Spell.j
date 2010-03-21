@@ -158,7 +158,6 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			if (result) then
 				set result = this.onCastCondition()
 				if (not result) then
-					debug call Print("Pause/stop unit since spell condition is false")
 					//taken from wc3jass.com
 					//call PauseUnit(this.character().unit(), true)
 					call IssueImmediateOrder(this.character().unit(), "stop")

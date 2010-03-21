@@ -75,8 +75,8 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 			set this.m_unit = PlaceRandomUnit(this.m_unitPool, whichPlayer, this.m_x, this.m_y, facing)
 		endmethod
 
-		public method placeItem takes real x, real y returns nothing
-			set this.m_item = PlaceRandomItem(this.m_itemPool, this.m_x, this.m_y)
+		public method placeItem takes nothing returns nothing
+			set this.m_item = PlaceRandomItem(this.m_itemPool, GetUnitX(this.m_unit), GetUnitY(this.m_unit))
 		endmethod
 
 		/**
@@ -317,7 +317,7 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 				loop
 					exitwhen (i == this.m_members.size())
 					if (diedUnit == ASpawnPointMember(this.m_members[i]).unit()) then
-						call ASpawnPointMember(this.m_members[i]).placeItem(GetUnitX(diedUnit), GetUnitY(diedUnit))
+						call ASpawnPointMember(this.m_members[i]).placeItem()
 						if (ASpawnPointMember(this.m_members[i]).item() != null and thistype.m_distributeItems) then // item can be null if member has no item types to place
 							call thistype.distributeDroppedItem.evaluate(ASpawnPointMember(this.m_members[i]).item())
 						debug else

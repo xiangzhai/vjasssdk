@@ -209,10 +209,8 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		* define a custom function by using method @method AAbstractQuest.setStateCondition.
 		*/
 		public stub method onStateCondition takes integer state returns boolean
-			if (this.m_stateTrigger[state] == null) then
-				if (this.m_stateCondition[state] != 0 and not this.m_stateCondition[state].evaluate(this)) then
-					return false
-				endif
+			if (this.m_stateCondition[state] != 0 and not this.m_stateCondition[state].evaluate(this)) then
+				return false
 			endif
 			return true
 		endmethod

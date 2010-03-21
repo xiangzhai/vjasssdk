@@ -697,6 +697,15 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			/// maxElement
 			/// minElement
 
+			public method random takes nothing returns $ELEMENTTYPE$
+				local integer index
+				if (this.empty()) then
+					return $NULLVALUE$
+				endif
+				set index = GetRandomInt(0, this.m_size - 1)
+				return this[index]
+			endmethod
+
 			public method operator[] takes integer index returns $ELEMENTTYPE$
 				debug if (index < 0 or index >= this.m_size) then
 					debug call Print("Invalid index: " + I2S(index) + ".")

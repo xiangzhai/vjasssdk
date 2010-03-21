@@ -24,15 +24,15 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 		public static constant integer weatherTypeWindHeavy = 20
 		public static constant integer weatherTypeNoWeather = 21
 		private static constant integer maxWeatherTypes = 22
-		//static start members
+		// static construction members
 		private static integer array m_weatherTypeEffectId[thistype.maxWeatherTypes]
 		private static string array m_skyModelFile[thistype.maxWeatherTypes]
-		//dynamic members
+		// dynamic members
 		private real m_minimumChangeTime
 		private real m_maximumChangeTime
 		private boolean m_changeSky
 		private boolean array m_isWeatherTypeAllowed[thistype.maxWeatherTypes]
-		//members
+		// members
 		private region m_region
 		private timer m_changeTimer
 		private ARectVector m_rects
@@ -155,19 +155,18 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 		private static method timerFunctionChangeWeather takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
 			local thistype this = AHashTable.global().handleInteger(expiredTimer, "this")
-			local integer array possibleWeatherTypes
-			local integer maxPossibleWeatherTypes = 0
+			local AIntegerVector possibleWeatherTypes = AIntegerVector.create()
 			local integer i = 0
 			loop
 				exitwhen (i == thistype.maxWeatherTypes)
 				if (this.m_isWeatherTypeAllowed[i]) then
-					set possibleWeatherTypes[maxPossibleWeatherTypes] = i
-					set maxPossibleWeatherTypes = maxPossibleWeatherTypes + 1
+					call possibleWeatherTypes.pushBack(i)
 				endif
 				set i = i + 1
 			endloop
-			call this.changeWeather(possibleWeatherTypes[GetRandomInt(0, maxPossibleWeatherTypes - 1)])
-			call this.start.evaluate() //start again with new time
+			call this.changeWeather(possibleWeatherTypes.random())
+			call possibleWeatherTypes.destroy()
+			call this.start.evaluate() // start again with new time
 			set expiredTimer = null
 		endmethod
 
@@ -178,9 +177,12 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
+			set this.m_minimumChangeTime = 0.0
+			set this.m_maximumChangeTime = 24.0
 			set this.m_changeSky = false
-			//members
+			call this.setAllWeatherTypesAllowed(false)
+			// members
 			set this.m_region = CreateRegion()
 			set this.m_changeTimer = CreateTimer()
 			call AHashTable.global().setHandleInteger(this.m_changeTimer, "this", this)
@@ -204,7 +206,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			call RemoveRegion(this.m_region)
 			set this.m_region = null
 			call AHashTable.global().destroyTimer(this.m_changeTimer)

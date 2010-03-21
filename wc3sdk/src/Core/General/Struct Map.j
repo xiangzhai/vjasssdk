@@ -407,6 +407,66 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 				call last.destroy()
 			endmethod
 
+			public method randomValue takes nothing returns $ELEMENTTYPE$
+				local integer index
+				local integer i
+				local $NAME$Iterator iterator
+				local $ELEMENTTYPE$ result
+				if (this.empty()) then
+					return $NULLVALUE$
+				endif
+				set index = GetRandomInt(0, this.m_size - 1)
+				set iterator = this.begin()
+				set i = 0
+				loop
+					exitwhen (i == index)
+					call iterator.next()
+					set i = i + 1
+				endloop
+				set result = iterator.data()
+				call iterator.destroy()
+				return result
+			endmethod
+
+			public method randomKey takes nothing returns $KEYTYPE$
+				local integer index
+				local integer i
+				local $NAME$Iterator iterator
+				local $KEYTYPE$ result
+				if (this.empty()) then
+					return $NULLVALUE$
+				endif
+				set index = GetRandomInt(0, this.m_size - 1)
+				set iterator = this.begin()
+				set i = 0
+				loop
+					exitwhen (i == index)
+					call iterator.next()
+					set i = i + 1
+				endloop
+				set result = iterator.key()
+				call iterator.destroy()
+				return result
+			endmethod
+
+			public method randomIterator takes nothing returns $NAME$Iterator
+				local integer index
+				local integer i
+				local $NAME$Iterator iterator
+				if (this.empty()) then
+					return 0
+				endif
+				set index = GetRandomInt(0, this.m_size - 1)
+				set iterator = this.begin()
+				set i = 0
+				loop
+					exitwhen (i == index)
+					call iterator.next()
+					set i = i + 1
+				endloop
+				return iterator
+			endmethod
+
 			public static method create takes nothing returns thistype
 				local thistype this = thistype.allocate()
 				set this.m_front = 0

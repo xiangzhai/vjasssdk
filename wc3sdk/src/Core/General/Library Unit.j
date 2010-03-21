@@ -238,6 +238,17 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralHashTable, ALibraryCo
 	endfunction
 
 	/// @author Tamino Dauth
+	function CreateUnitsAtRect takes integer count, integer unitTypeId, player whichPlayer, rect whichRect, real face returns group
+		local group unitGroup = CreateGroup()
+		loop
+			set count = count - 1
+			exitwhen (count < 0)
+			call GroupAddUnit(unitGroup,  CreateUnit(whichPlayer, unitTypeId, GetRectCenterX(whichRect), GetRectCenterY(whichRect), face))
+		endloop
+		return unitGroup
+	endfunction
+
+	/// @author Tamino Dauth
 	function CreateCorpsesAtPoint takes integer count, integer unitTypeId, player whichPlayer, real x, real y, real face returns group
 		local group unitGroup = CreateGroup()
 		loop

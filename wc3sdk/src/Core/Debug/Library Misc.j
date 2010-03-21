@@ -1,4 +1,4 @@
-library ALibraryCoreDebugMisc requires ALibraryCoreGeneralPlayer
+library ALibraryCoreDebugMisc initializer init requires ALibraryCoreGeneralPlayer
 
 	/**
 	* Displays text on the screen if the debug mode is enabled.
@@ -30,7 +30,41 @@ static if (DEBUG_MODE) then
 		endif
 	endfunction
 
+	globals
+		private AStringList disabledPrintIdentifiers
+	endglobals
+
+	function EnablePrintIdentifier takes string identifier returns nothing
+		call disabledPrintIdentifiers.remove.evaluate(identifier)
+	endfunction
+
+	function DisablePrintIdentifier takes string identifier returns nothing
+		if (disabledPrintIdentifiers.contains.evaluate(identifier)) then
+			return
+		endif
+		call disabledPrintIdentifiers.pushBack.evaluate(identifier)
+	endfunction
+
+	function IsPrintIdentifierEnabled takes string identifier returns boolean
+		return disabledPrintIdentifiers.contains.evaluate(identifier)
+	endfunction
+
+	function IsPrintIdentifierDisabled takes string identifier returns boolean
+		return not disabledPrintIdentifiers.contains.evaluate(identifier)
+	endfunction
+
+	function SetPrintIdentifierEnabled takes string identifier, boolean enabled returns nothing
+		if (enabled) then
+			call EnablePrintIdentifier(identifier)
+		else
+			call DisablePrintIdentifier(identifier)
+		endif
+	endfunction
+
 	function PrintFunctionError takes string functionName, string message returns nothing
+		if (IsPrintIdentifierDisabled(functionName)) then
+			return
+		endif
 		call Print("Function error in function \"" + functionName + "\": " + message)
 	endfunction
 
@@ -49,6 +83,9 @@ endif
 	//! textmacro A_STRUCT_DEBUG takes STRUCTNAME
 static if (DEBUG_MODE) then
 		public method print takes string message returns nothing //stub
+			if (IsPrintIdentifierDisabled($STRUCTNAME$)) then
+				return
+			endif
 			call Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message)
 		endmethod
 
@@ -59,6 +96,9 @@ static if (DEBUG_MODE) then
 		endmethod
 
 		public method printMethodError takes string methodName, string message returns nothing
+			if (IsPrintIdentifierDisabled($STRUCTNAME$) or IsPrintIdentifierDisabled($STRUCTNAME$ + "." + methodName)) then
+				return
+			endif
 			call Print($STRUCTNAME$ + " - " + I2S(this) + ": Method error in method \"" + methodName + "\": " + message)
 		endmethod
 
@@ -69,6 +109,9 @@ static if (DEBUG_MODE) then
 		endmethod
 
 		private static method staticPrint takes string message returns nothing
+			if (IsPrintIdentifierDisabled($STRUCTNAME$)) then
+				return
+			endif
 			call Print($STRUCTNAME$ + ": " + message)
 		endmethod
 
@@ -79,6 +122,9 @@ static if (DEBUG_MODE) then
 		endmethod
 
 		private static method staticPrintMethodError takes string methodName, string message returns nothing
+			if (IsPrintIdentifierDisabled($STRUCTNAME$) or IsPrintIdentifierDisabled($STRUCTNAME$ + "." + methodName)) then
+				return
+			endif
 			call Print($STRUCTNAME$ + ": Method error in method \"" + methodName + "\": " + message)
 		endmethod
 
@@ -98,11 +144,21 @@ endif
 	//! textmacro A_ZINC_STRUCT_DEBUG takes STRUCTNAME
 			public method print(string message)
 			{
+				if (IsPrintIdentifierDisabled($STRUCTNAME$))
+				{
+					return;
+				}
+
 				Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message);
 			}
 
 			private static method staticPrint(string message)
 			{
+				if (IsPrintIdentifierDisabled($STRUCTNAME$))
+				{
+					return;
+				}
+
 				Print($STRUCTNAME$ + ": " + message);
 			}
 	//! endtextmacro
@@ -234,5 +290,11 @@ endif
 	//- GetExpiredTimer() kann einen Absturtz des Spiels verursachen, wenn es keinen Timer gibt.
 	//Einheitengruppen – vom InWarcraft-Nutzer gexxo
 	//- Werden Einheiten per RemoveUnit() aus dem Spiel entfernt und befinden sich bereits in einer Einheitengruppe, so kann es zu Fehlern kommen, da die erste Einheit der Gruppe nun immer null ist.
+
+	private function init takes nothing returns nothing
+static if (DEBUG_MODE) then
+		set disabledPrintIdentifiers = AStringList.create.evaluate()
+endif
+	endfunction
 
 endlibrary

@@ -30,7 +30,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ADamageRecorder\"")
 
-		//dynamic members
+		// dynamic members
 
 		public method setOnDamageAction takes ADamageRecorderOnDamageAction onDamageAction returns nothing
 			set this.m_onDamageAction = onDamageAction
@@ -46,7 +46,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			return this.m_target
 		endmethod
 
-		//members
+		// members
 
 		public method damageSource takes integer index returns unit
 			debug if (not this.checkIndex.evaluate(index)) then
@@ -70,7 +70,13 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			return this.m_totalDamage
 		endmethod
 
-		//methods
+		// methods
+
+		public stub method onSufferDamage takes nothing returns nothing
+			if (this.m_onDamageAction != 0) then
+				call this.m_onDamageAction.execute(this)
+			endif
+		endmethod
 
 		public method enable takes nothing returns nothing
 			debug if (IsTriggerEnabled(this.m_damageTrigger)) then
@@ -118,9 +124,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			call this.m_damageSources.pushBack(GetEventDamageSource())
 			call this.m_damageAmounts.pushBack(GetEventDamage())
 			set this.m_totalDamage = this.m_totalDamage + GetEventDamage()
-			if (this.m_onDamageAction != 0) then
-				call this.m_onDamageAction.execute(this)
-			endif
+			call this.onSufferDamage()
 			set triggeringTrigger = null
 		endmethod
 

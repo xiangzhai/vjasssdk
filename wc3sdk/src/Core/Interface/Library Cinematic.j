@@ -1,5 +1,15 @@
 library ALibraryCoreInterfaceCinematic
 
+	/**
+	 * @author Tamino Dauth
+	 * @todo Test it!
+	 */
+	function EndCinematicSceneForPlayer takes player whichPlayer returns nothing
+		if (whichPlayer == GetLocalPlayer()) then
+			call EndCinematicScene()
+		endif
+	endfunction
+
 	//smaller function than the real
 	//you don't have to use player forces
 	function SetCinematicSceneForPlayer takes player user, integer unitType, player owner, string title, string text, real sceneTime, real voiceTime returns nothing

@@ -420,6 +420,45 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				call last.destroy()
 			endmethod
 
+			public method random takes nothing returns $ELEMENTTYPE$
+				local integer index
+				local integer i
+				local $NAME$Iterator iterator
+				local $ELEMENTTYPE$ result
+				if (this.empty()) then
+					return $NULLVALUE$
+				endif
+				set index = GetRandomInt(0, this.m_size - 1)
+				set iterator = this.begin()
+				set i = 0
+				loop
+					exitwhen (i == index)
+					call iterator.next()
+					set i = i + 1
+				endloop
+				set result = iterator.data()
+				call iterator.destroy()
+				return result
+			endmethod
+
+			public method randomIterator takes nothing returns $NAME$Iterator
+				local integer index
+				local integer i
+				local $NAME$Iterator iterator
+				if (this.empty()) then
+					return 0
+				endif
+				set index = GetRandomInt(0, this.m_size - 1)
+				set iterator = this.begin()
+				set i = 0
+				loop
+					exitwhen (i == index)
+					call iterator.next()
+					set i = i + 1
+				endloop
+				return iterator
+			endmethod
+
 			public method operator< takes thistype other returns boolean
 				debug if (this == other) then
 					debug call Print("Same list.")

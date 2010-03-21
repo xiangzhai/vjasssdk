@@ -152,13 +152,13 @@ library AStructSystemsGuiWidget requires ALibraryCoreInterfaceTrackable, ALibrar
 			return this.m_modelFilePath
 		endmethod
 
-		//members
+		// members
 
 		public method index takes nothing returns integer
 			return this.m_index
 		endmethod
 
-		//methods
+		// methods
 
 		private method createTrackable takes nothing returns nothing
 			if ((this.m_onHitAction != 0) or (this.m_onTrackAction != 0)) then

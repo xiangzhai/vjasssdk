@@ -1,3 +1,17 @@
+2010-03-20 Tamino Dauth <tamino@cdauth.de>
+* Added function EndCinematicSceneForPlayer.
+* Improved AInfo skip mode.
+* Added methods showAllEffects and hideAllEffects to struct ATalk.
+* Added cinematic effect option to method ATalk.init.
+* Improved AVideo skip mode.
+* Added randomize methods to container structs.
+* Added text macro A_NUMERIC_VECTOR.
+* Added function CreateUnitsAtRect.
+
+2010-03-19 Tamino Dauth <tamino@cdauth.de>
+* Added structs AFrameBar, AFrame and AWindow.
+* Revised struct AStyle.
+
 2010-03-17 Tamino Dauth <tamino@cdauth.de>
 * Revised structs AAbstractQuest and AQuest and added dynamic widget and method overwriting support.
 * Revised routines system and added multiple times of day per unit support.

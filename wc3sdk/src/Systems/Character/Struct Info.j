@@ -260,14 +260,15 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 						//call ClearScreenMessagesForPlayer(user) /// @todo Does not do anything.
 					//endif
 					set AInfo.m_playerHasSkipped[GetPlayerId(user)] = false
-					return
+					call StopSound(usedSound, false, false) // stop sound since speech could have been skipped by player
+					call EndCinematicSceneForPlayer(user)
+					exitwhen (true)
 				endif
 				call TriggerSleepAction(AInfo.m_skipCheckRate)
 				set duration = duration - AInfo.m_skipCheckRate
 			endloop
 		endif
 		call waitForVideo(1.0) // do not show any speeches during video
-		call StopSound(usedSound, true, false) //stop sound since speech could have been skipped by player
 		call ResetUnitAnimation(speaker)
 		call ResetUnitAnimation(listener)
 		call AThirdPersonCamera.playerThirdPersonCamera(user).disable()
