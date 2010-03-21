@@ -1,3 +1,8 @@
+2010-03-21 Tamino Dauth <tamino@cdauth.de>
+* Added debugging cheats "enable", "disable", "pathing" and "nopathing".
+* Fixed function CopyUnit.
+* Revised struct ALayer.
+
 2010-03-20 Tamino Dauth <tamino@cdauth.de>
 * Added function EndCinematicSceneForPlayer.
 * Improved AInfo skip mode.
@@ -7,6 +12,7 @@
 * Added randomize methods to container structs.
 * Added text macro A_NUMERIC_VECTOR.
 * Added function CreateUnitsAtRect.
+* Added various debugging functions for filtering identifiers.
 
 2010-03-19 Tamino Dauth <tamino@cdauth.de>
 * Added structs AFrameBar, AFrame and AWindow.

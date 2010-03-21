@@ -17,11 +17,14 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 		private region m_exit
 		private region m_region
 		private AUnitVector m_units
+		private ARealVector m_unitFlyHeights
 		private trigger m_enterTrigger
 		private trigger m_leaveTrigger
 		private trigger m_boundsTrigger
 
 		implement ASystemStruct
+
+		//! runtextmacro A_STRUCT_DEBUG("\"ALayer\"")
 
 		public method setHeight takes real height returns nothing
 			local integer i = 0
@@ -78,23 +81,36 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call RegionClearRect(this.m_region, whichRect)
 		endmethod
 
-		public stub method unitEnters takes unit whichUnit returns nothing
-			call this.m_units.pushBack(whichUnit)
-			call MakeUnitFlyable(whichUnit)
-			call SetUnitFlyHeight(whichUnit, this.m_height, 0.0)
-
+		public stub method onUnitEnters takes unit whichUnit returns nothing
 			if (this.m_onEnterFunction != 0) then
 				call this.m_onEnterFunction.execute(whichUnit)
 			endif
 		endmethod
 
-		public stub method unitLeaves takes unit whichUnit returns nothing
-			call this.m_units.remove(whichUnit)
-			call SetUnitFlyHeight(whichUnit, 0.0, 0.0)
-
+		public stub method onUnitLeaves takes unit whichUnit returns nothing
 			if (this.m_onLeaveFunction != 0) then
 				call this.m_onLeaveFunction.execute(whichUnit)
 			endif
+		endmethod
+
+		public method unitEnters takes unit whichUnit returns nothing
+			call this.m_units.pushBack(whichUnit)
+			call this.m_unitFlyHeights.pushBack(GetUnitFlyHeight(whichUnit))
+			call MakeUnitFlyable(whichUnit)
+			call SetUnitFlyHeight(whichUnit, this.m_height, 0.0)
+			call SetUnitPathing(whichUnit, false)
+
+			call this.onUnitEnters(whichUnit)
+		endmethod
+
+		public method unitLeaves takes unit whichUnit returns nothing
+			local integer index = this.m_units.find(whichUnit)
+			call SetUnitFlyHeight(this.m_units[index], this.m_unitFlyHeights[index], 0.0)
+			call SetUnitPathing(whichUnit, true)
+			call this.m_units.erase(index)
+			call this.m_unitFlyHeights.erase(index)
+
+			call this.onUnitLeaves(whichUnit)
 		endmethod
 
 		public method unitLeaveAll takes nothing returns nothing
@@ -125,10 +141,10 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			return IsTriggerEnabled(this.m_boundsTrigger)
 		endmethod
 
-		private static method eventFilterEnter takes nothing returns boolean
+		private static method triggerConditionEnter takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
-
-			return not this.m_units.contains(GetFilterUnit())
+			debug call this.print("Run condition with trigger unit " + GetUnitName(GetTriggerUnit()))
+			return not this.m_units.contains(GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionEnter takes nothing returns nothing
@@ -136,10 +152,10 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call this.unitEnters(GetTriggerUnit())
 		endmethod
 
-		private static method eventFilterLeave takes nothing returns boolean
+		private static method triggerConditionLeave takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return this.m_units.contains(GetFilterUnit())
+			return this.m_units.contains(GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionLeave takes nothing returns nothing
@@ -147,10 +163,10 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call this.unitLeaves(GetTriggerUnit())
 		endmethod
 
-		private static method eventFilterBounds takes nothing returns boolean
+		private static method triggerConditionBounds takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return this.m_units.contains(GetFilterUnit()) and not IsUnitInRegion(this.m_exit, GetFilterUnit())
+			return this.m_units.contains(GetTriggerUnit()) and not IsUnitInRegion(this.m_exit, GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionBounds takes nothing returns nothing
@@ -168,16 +184,20 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			set this.m_exit = CreateRegion()
 			set this.m_region = CreateRegion()
 			set this.m_units = AUnitVector.create()
+			set this.m_unitFlyHeights = ARealVector.create()
 			set this.m_enterTrigger = CreateTrigger()
-			call TriggerRegisterEnterRegion(this.m_enterTrigger, this.m_entry, Filter(function thistype.eventFilterEnter))
+			call TriggerRegisterEnterRegion(this.m_enterTrigger, this.m_entry, null)
+			call TriggerAddCondition(this.m_enterTrigger, Condition(function thistype.triggerConditionEnter))
 			call TriggerAddAction(this.m_enterTrigger, function thistype.triggerActionEnter)
 			call AHashTable.global().setHandleInteger(this.m_enterTrigger, "this", this)
 			set this.m_leaveTrigger = CreateTrigger()
-			call TriggerRegisterLeaveRegion(this.m_leaveTrigger, this.m_exit, Filter(function thistype.eventFilterLeave))
+			call TriggerRegisterLeaveRegion(this.m_leaveTrigger, this.m_exit, null)
+			call TriggerAddCondition(this.m_leaveTrigger, Condition(function thistype.triggerConditionLeave))
 			call TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionLeave)
 			call AHashTable.global().setHandleInteger(this.m_leaveTrigger, "this", this)
 			set this.m_boundsTrigger = CreateTrigger()
-			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, this.m_region, Filter(function thistype.eventFilterBounds))
+			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, this.m_region, null)
+			call TriggerAddCondition(this.m_boundsTrigger, Condition(function thistype.triggerConditionBounds))
 			call TriggerAddAction(this.m_boundsTrigger, function thistype.triggerActionBounds)
 
 			return this
@@ -191,6 +211,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call RemoveRegion(this.m_region)
 			set this.m_region = null
 			call this.m_units.destroy()
+			call this.m_unitFlyHeights.destroy()
 			call AHashTable.global().destroyTrigger(this.m_enterTrigger)
 			set this.m_enterTrigger = null
 			call AHashTable.global().destroyTrigger(this.m_leaveTrigger)

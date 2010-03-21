@@ -10,8 +10,12 @@
 * giveall - Resets hit points, mana and all ability cooldowns of selected unit of cheating player.
 * damage - Damages selected unit.
 * xp - Adds experience to selected hero.
+* pathing - Enables unit's pathing.
+* nopathing - Disables unit's pathing.
 * benchmarks - Shows all benchmarks.
 * clearbenchmarks - Clears all benchmarks.
+* enable - Enables debug identifier.
+* disable - Disables debug identifier.
 * units - Shows all units.
 * items - Shows all items.
 * destructables - Shows all destructables.
@@ -35,8 +39,12 @@ static if (DEBUG_MODE) then
 		call Print("giveall")
 		call Print("damage <damage>")
 		call Print("xp <experience>")
+		call Print("pathing")
+		call Print("nopathing")
 		call Print("benchmarks")
 		call Print("clearbenchmarks")
+		call Print("enable <identifier>")
+		call Print("disable <identifier>")
 endif
 static if (DEBUG_MODE and A_DEBUG_HANDLES) then
 		call Print("units")
@@ -154,7 +162,7 @@ endif
 			set damageAmount = S2R(SubString(GetEventPlayerChatString(), StringLength("damage") + 1, StringLength(GetEventPlayerChatString())))
 			debug call Print("Damage amount is " + R2S(damageAmount) + ".")
 			if (damageAmount > 0.0) then
-				call UnitDamageTargetBJ(selectedUnit, selectedUnit, damageAmount, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
+				call UnitDamageTargetBJ(null, selectedUnit, damageAmount, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
 			endif
 			set selectedUnit = null
 		endif
@@ -178,12 +186,48 @@ endif
 		set triggerPlayer = null
 	endfunction
 
+	private function pathing takes nothing returns nothing
+		local player triggerPlayer = GetTriggerPlayer()
+		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
+		if (selectedUnit != null) then
+			call SetUnitPathing(selectedUnit, true)
+			debug call Print("Enabled unit pathing.")
+			set selectedUnit = null
+		endif
+		set triggerPlayer = null
+	endfunction
+
+	private function nopathing takes nothing returns nothing
+		local player triggerPlayer = GetTriggerPlayer()
+		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
+		if (selectedUnit != null) then
+			call SetUnitPathing(selectedUnit, false)
+			debug call Print("Disabled unit pathing.")
+			set selectedUnit = null
+		endif
+		set triggerPlayer = null
+	endfunction
+
 	private function benchmarks takes nothing returns nothing
+		debug call Print("Showing all benchmarks:")
 		call ABenchmark.showBenchmarks()
 	endfunction
 
 	private function clearbenchmarks takes nothing returns nothing
-		//call ABenchmark.clearAll()
+		debug call Print("Clearing all benchmarks.")
+		call ABenchmark.clearAll()
+	endfunction
+
+	private function enable takes nothing returns nothing
+		local string identifier = SubString(GetEventPlayerChatString(), StringLength("enable") + 1, StringLength(GetEventPlayerChatString()))
+		debug call Print("Enabling identifier \"" + identifier + "\".")
+		debug call EnablePrintIdentifier(identifier)
+	endfunction
+
+	private function disable takes nothing returns nothing
+		local string identifier = SubString(GetEventPlayerChatString(), StringLength("disable") + 1, StringLength(GetEventPlayerChatString()))
+		debug call Print("Disabling identifier \"" + identifier + "\".")
+		debug call DisablePrintIdentifier(identifier)
 	endfunction
 
 static if (A_DEBUG_HANDLES) then
@@ -212,8 +256,12 @@ static if (DEBUG_MODE) then
 		call ACheat.create("giveall", true, giveall)
 		call ACheat.create("damage", false, damage)
 		call ACheat.create("xp", false, xp)
+		call ACheat.create("pathing", true, pathing)
+		call ACheat.create("nopathing", true, nopathing)
 		call ACheat.create("benchmarks", true, benchmarks)
 		call ACheat.create("clearbenchmarks", true, clearbenchmarks)
+		call ACheat.create("enable", false, enable)
+		call ACheat.create("disable", false, disable)
 endif
 
 static if (A_DEBUG_HANDLES) then

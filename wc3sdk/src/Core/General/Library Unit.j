@@ -165,7 +165,7 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralHashTable, ALibraryCo
 		local integer i
 		local item oldSlotItem
 		local item newSlotItem
-		call ShowUnit(result, IsUnitHidden(usedUnit))
+		call ShowUnit(result, not IsUnitHidden(usedUnit))
 		call PauseUnit(result, IsUnitPaused(usedUnit))
 		call SetResourceAmount(result, GetResourceAmount(usedUnit))
 		call SetUnitUserData(result, GetUnitUserData(usedUnit))

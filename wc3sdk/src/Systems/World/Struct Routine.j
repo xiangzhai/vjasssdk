@@ -162,6 +162,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		private static method triggerActionStart takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			debug call this.print("Starting for unit " + GetUnitName(this.m_routineUnitData.unit.evaluate()))
 			if (not IsUnitPaused(this.m_routineUnitData.unit.evaluate())) then
 				if (thistype.unitHasNextRoutineData.evaluate(this.m_routineUnitData.unit.evaluate())) then
 					call thistype.clearNextRoutineDataOfUnit.evaluate(this.m_routineUnitData.unit.evaluate())
@@ -566,12 +567,10 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		*/
 
 		public method addUnit takes unit whichUnit returns integer
-			local ARoutineUnitData routineUnitData
 			if (this.hasUnit(whichUnit)) then
 				return -1
 			endif
-			set routineUnitData = ARoutineUnitData.create(this, whichUnit)
-			call this.m_unitData.pushBack(routineUnitData)
+			call this.m_unitData.pushBack(ARoutineUnitData.create(this, whichUnit))
 			return this.m_unitData.backIndex()
 		endmethod
 

@@ -9,13 +9,13 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		public static constant integer equipmentTypeSecondaryWeapon = 3
 		public static constant integer equipmentTypeAmulet = 4
 		public static constant integer maxEquipmentTypes = 5
-		//static start members
+		// static construction members
 		private static string textLevel
 		private static string textStrength
 		private static string textAgility
 		private static string textIntelligence
 		private static string textClass
-		//start members
+		// construction members
 		private integer m_itemType
 		private integer m_equipmentType
 		private integer m_requiredLevel
@@ -23,13 +23,13 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		private integer m_requiredAgility
 		private integer m_requiredIntelligence
 		private AClass m_requiredClass
-		//members
+		// members
 		private AIntegerVector m_abilities
 		private ABooleanVector m_permanent
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AItemType\"")
 
-		//start members
+		// construction members
 
 		public method itemType takes nothing returns integer
 			return this.m_itemType
@@ -59,7 +59,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			return this.m_requiredClass
 		endmethod
 
-		//methods
+		// methods
 
 		public method addAbility takes integer abilityId, boolean permanent returns integer
 			call this.m_abilities.pushBack(abilityId)
@@ -155,7 +155,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		/// @param equipmentType If this value is -1 it will always be added to rucksack.
 		public static method create takes integer itemType, integer equipmentType, integer requiredLevel, integer requiredStrength, integer requiredAgility, integer requiredIntelligence, AClass requiredClass returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_itemType = itemType
 			set this.m_equipmentType = equipmentType
 			set this.m_requiredLevel = requiredLevel
@@ -163,7 +163,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			set this.m_requiredAgility = requiredAgility
 			set this.m_requiredIntelligence = requiredIntelligence
 			set this.m_requiredClass = requiredClass
-			//members
+			// members
 			set this.m_abilities = AIntegerVector.create()
 			set this.m_permanent = ABooleanVector.create()
 
@@ -176,7 +176,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			call this.m_abilities.destroy()
 			call this.m_permanent.destroy()
 
@@ -184,7 +184,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 		endmethod
 
 		public static method init takes string textLevel, string textStrength, string textAgility, string textIntelligence, string textClass returns nothing
-			//static start members
+			// static construction members
 			set thistype.textLevel = textLevel
 			set thistype.textStrength = textStrength
 			set thistype.textAgility = textAgility
@@ -197,7 +197,6 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			return AHashTable.global().integer("AItemTypes", I2S(itemTypeId))
 		endmethod
 
-		/// @author Tamino Dauth
 		public static method getItemTypeOfItem takes item usedItem returns thistype
 			return thistype.getItemTypeOfItemTypeId(GetItemTypeId(usedItem))
 		endmethod

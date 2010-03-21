@@ -1,7 +1,7 @@
 library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, AStructCoreGeneralHashTable, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, AStructSystemsCharacterAbstractCharacterSystem, AStructSystemsCharacterCharacter, AStructSystemsCharacterItemType
 
 	struct AInventoryItemData
-		//dynamic members
+		// dynamic members
 		private integer m_itemTypeId
 		private integer m_charges
 		private integer m_dropId
@@ -11,7 +11,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private player m_player
 		private integer m_userData
 		private boolean m_visible
-		//members
+		// members
 		private itemtype m_itemType
 
 		public method setItemTypeId takes integer itemTypeId returns nothing
@@ -23,7 +23,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		public method setCharges takes integer charges returns nothing
-			set this.m_charges = charges
+			set this.m_charges = IMaxBJ(charges, 0)
 		endmethod
 
 		public method charges takes nothing returns integer
@@ -114,16 +114,28 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			call SetItemVisible(usedItem, this.m_visible)
 		endmethod
 
+		/// @return Returns true if item has more than one charge.
 		public method isCharged takes nothing returns boolean
 			return (this.m_itemType == ITEM_TYPE_CHARGED and this.m_charges > 1) or (this.m_itemType != ITEM_TYPE_CHARGED and this.m_charges > 0)
 		endmethod
 
+		/// @return Returns the real number of item charges.
 		public method realCharges takes nothing returns integer
 			if (this.m_itemType == ITEM_TYPE_CHARGED) then
 				return this.m_charges
 			endif
 
 			return this.m_charges + 1
+		endmethod
+
+		public method addItemDataCharges takes thistype other returns integer
+			call this.setCharges(this.charges() + other.realCharges())
+			return this.charges()
+		endmethod
+
+		public method removeItemDataCharges takes thistype other returns integer
+			call this.setCharges(this.charges() - other.realCharges())
+			return this.charges()
 		endmethod
 
 		public method store takes gamecache cache, string missionKey, string labelPrefix returns nothing
@@ -152,7 +164,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 
 		public static method create takes item usedItem, unit usedUnit returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_itemTypeId = GetItemTypeId(usedItem)
 			set this.m_charges = GetItemCharges(usedItem)
 			set this.m_dropId = GetUnitTypeId(usedUnit)
@@ -162,7 +174,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			set this.m_player = GetItemPlayer(usedItem)
 			set this.m_userData = GetItemUserData(usedItem)
 			set this.m_visible = IsItemVisible(usedItem)
-			//members
+			// members
 			set this.m_itemType = GetItemType(usedItem)
 			return this
 		endmethod
@@ -174,7 +186,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			set this.m_itemType = null
 		endmethod
 	endstruct
@@ -187,7 +199,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		public static constant integer maxRucksackItems = 128
 		public static constant integer maxRucksackPages = 32 //maxRucksackItems / maxRucksackItemsPerPage
 		public static constant integer maxRucksackItemsPerPage = 4
-		//static start members
+		// static construction members
 		private static integer leftArrowItemType
 		private static integer rightArrowItemType
 		private static integer openRucksackAbilityId
@@ -198,14 +210,14 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private static string textUnableToMoveRucksackItem
 		private static string textDropPageItem
 		private static string textMovePageItem
-		//members
+		// members
 		private AInventoryItemData array m_equipmentItemData[thistype.maxEquipmentTypes]
 		private AInventoryItemData array m_rucksackItemData[thistype.maxRucksackItems]
 		private trigger m_openTrigger
 		private trigger m_orderTrigger
 		private trigger m_useTrigger //show next page, show previous page, disable in equipment
-		private trigger m_pickupTrigger //pickup
-		private trigger m_dropTrigger //drop
+		private trigger m_pickupTrigger
+		private trigger m_dropTrigger
 		private integer m_rucksackPage
 		private boolean m_rucksackIsEnabled
 
@@ -1037,7 +1049,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				call thistype.setItemIndex(movedItem, newIndex)
 				// destack
 				if (this.m_rucksackItemData[oldIndex].isCharged()) then
-					call this.m_rucksackItemData[oldIndex].setCharges(this.m_rucksackItemData[oldIndex].charges() - 1)
+					call this.m_rucksackItemData[oldIndex].setCharges(this.m_rucksackItemData[oldIndex].realCharges() - 1)
 					if (this.m_rucksackItemData[oldIndex].itemType() == ITEM_TYPE_CHARGED) then
 						call this.m_rucksackItemData[newIndex].setCharges(1)
 					else
@@ -1055,8 +1067,9 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 				set targetItem = null
 			// stack
 			elseif (GetItemTypeId(movedItem) == GetItemTypeId(targetItem)) then
+				debug call Print("Stack, target item id :" + I2S(GetHandleId(targetItem)) + " moved item id: " + I2S(GetHandleId(movedItem)))
 				call thistype.setItemIndex(movedItem, newIndex)
-				call this.m_rucksackItemData[newIndex].setCharges(this.m_rucksackItemData[newIndex].charges() + IMaxBJ(1, this.m_rucksackItemData[oldIndex].charges()))
+				call this.m_rucksackItemData[newIndex].addItemDataCharges(this.m_rucksackItemData[oldIndex])
 				call this.refreshRucksackItemCharges(newIndex)
 				call this.clearRucksackItem(oldIndex, false)
 			//swap
@@ -1208,7 +1221,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 			local integer index = this.itemIndex(usedItem)
 			local unit triggerUnit = GetTriggerUnit()
 			if (this.m_rucksackIsEnabled) then
-				//page items
+				// page items
 				if (GetItemTypeId(usedItem) == thistype.leftArrowItemType) then
 					call TriggerSleepAction(0.0)
 					call RemoveItem(usedItem)
@@ -1228,9 +1241,9 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					call SetItemCharges(usedItem, this.m_rucksackPage)
 					set usedItem = null
 					call this.character().displayMessage(ACharacter.messageTypeError, thistype.textDropPageItem)
-				//destack and drop
+				// destack and drop
 				elseif (this.m_rucksackItemData[index].isCharged()) then
-					call TriggerSleepAction(0.0) //wait until it has been dropped
+					call TriggerSleepAction(0.0) // wait until it has been dropped
 					call this.m_rucksackItemData[index].setCharges(this.m_rucksackItemData[index].charges() - 1)
 					call this.showRucksackItem(index)
 
@@ -1239,7 +1252,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 					else
 						call SetItemCharges(usedItem, 0)
 					endif
-				//drop
+				// drop
 				else
 					call this.clearRucksackItem(index, true) //before drop
 					/// @todo Stop unit?

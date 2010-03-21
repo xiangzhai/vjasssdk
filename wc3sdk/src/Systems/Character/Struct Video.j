@@ -44,12 +44,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set this.m_actor = CopyUnit(oldUnit, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit), bj_UNIT_STATE_METHOD_MAXIMUM)
 			//call SetUnitOwner(this.m_actor, newOwner, false)
 			call ShowUnit(this.m_actor, true)
-			if (IsUnitHidden(this.m_actor)) then
-				call ShowUnit(this.m_actor, true)
-			endif
-			if (IsUnitPaused(this.m_actor)) then
-				call PauseUnit(this.m_actor, false)
-			endif
+			call PauseUnit(this.m_actor, false)
 			call SelectUnit(this.m_actor, false)
 			call SetUnitInvulnerable(this.m_actor, true)
 			call IssueImmediateOrder(this.m_actor, "stop") //cancel orders.
