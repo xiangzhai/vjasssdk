@@ -27,3 +27,4 @@ Succubus.mdx			Blizzard Entertainment		http://xgm.ru/
 Teufelsbestie.mdx		Blizzard Entertainment		http://xgm.ru/
 Teufelshund.mdx			Blizzard Entertainment		http://xgm.ru/
 Teufelsschwein.mdx		Blizzard Entertainment		http://xgm.ru/
+Zauberin.mdx			dickxunder			http://hiveworkshop.com/

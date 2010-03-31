@@ -1,31 +1,37 @@
-Name						Author					Source
+Name						Authors					Source
 Armbrustschuetze.mdx				Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Armbrustschuetze_Portrait.mdx			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Attentaeter.mdx					���					http://www.xgm.ru/
 Attentaeter_Portrait.mdx			���					http://www.xgm.ru/
-Ballista.mdx					HT!					http://www.wc3campaigns.net/
-BallistaAnimated.mdx				HT!					http://www.wc3campaigns.net/
+Ballista.mdx					HT!					http://www.wc3c.net/
+BallistaAnimated.mdx				HT!					http://www.wc3c.net/
 BerittenerSamurai1.mdx				Black_Stan				http://www.xgm.ru/
 BerittenerSamurai1_Portrait.mdx			Black_Stan				http://www.xgm.ru/
 BerittenerSamurai2.mdx				Black_Stan				http://www.xgm.ru/
 BerittenerSamurai2_Portrait.mdx			Black_Stan				http://www.xgm.ru/
+Captain.mdlx					jigrael					http://www.wc3c.net/
+Captain_Portrait.mdlx				jigrael					http://www.wc3c.net/
 DunklerZauberer.mdx				SirRozhka, RUS DooM			http://www.xgm.ru/
-GeistlicheSchwertkaempferin.mdx			jigrael					http://www.wc3campaigns.net/
+GeistlicheSchwertkaempferin.mdx			jigrael					http://www.wc3c.net/
 GepanzerterSamurai.mdx				Black_Stan				http://www.xgm.ru/
 GepanzerterSamurai_Portrait.mdx			Black_Stan				http://www.xgm.ru/
 HerrenloserSamurai.mdx				Black_Stan				http://www.xgm.ru/
 HerrenloserSamurai_Portrait.mdx			Black_Stan				http://www.xgm.ru/
 Junge.mdx					Blizzard Entertainment, Wolverine	http://www.xgm.ru/
+King.mdx					jigrael					http://www.wc3c.net/
+King_Portrait.mdx				jigrael					http://www.wc3c.net/
 Maedchen.mdx					Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Moench.mdx					Ket					http://www.xgm.ru/
 Moench_Portrait.mdx				Ket					http://www.xgm.ru/
+Myrmidon.mdx					jigrael					http://www.wc3c.net/
+Myrmidon_Portrait.mdx				jigrael					http://www.wc3c.net/
 Ninja.mdx					Black_Stan				http://www.xgm.ru/
 Ninja_Portrait.mdx				Black_Stan				http://www.xgm.ru/
 Ninjaschuelerin.mdx				Black_Stan				http://www.xgm.ru/
 Ninjaschuelerin_Portrait.mdx			Black_Stan				http://www.xgm.ru/
 Nordmann.mdx					Blizzard Entertainment, Wolverine	http://www.xgm.ru/
-Nordmann2.mdx					Olof Moleman				http://www.wc3campaigns.net/
-Nordmann2_Portrait.mdx				Olof Moleman				http://www.wc3campaigns.net/
+Nordmann2.mdx					Olof Moleman				http://www.wc3c.net/
+Nordmann2_Portrait.mdx				Olof Moleman				http://www.wc3c.net/
 Paladin.mdx					DeathBringer				http://www.xgm.ru/
 Paladin_Portrait.mdx				DeathBringer				http://www.xgm.ru/
 Pfarrer.mdx					���					http://www.xgm.ru/
@@ -52,6 +58,8 @@ Samuraischuelerin_Portrait.mdx			Black_Stan				http://www.xgm.ru/
 Schiff.mdx					Alibek, Wolverine			http://www.xgm.ru/
 SchwerGepanzerterSamurai.mdx			Black_Stan				http://www.xgm.ru/
 SchwerGepanzerterSamurai_Portrait.mdx		Black_Stan				http://www.xgm.ru/
-Trebuchet.mdx					olofmoleman				http://www.wc3campaigns.net/
-Waldlaeufer.mdx					Whitehorn				http://www.wc3campaigns.net/
+Trebuchet.mdx					olofmoleman				http://www.wc3c.net/
+Waldlaeufer.mdx					Whitehorn				http://www.wc3c.net/
+Warrior.mdx					Miseracord				http://www.hiveworkshop.com/
 Weihnachtsmann.mdx				_Virus_					http://www.xgm.ru/
+Wizard.mdx					CloudWolf				http://www.hiveworkshop.com/

@@ -1,0 +1,5 @@
+File		Authors					Source
+Gnoll.gif	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+Gnoll.mdx	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+GnollCaster.gif	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+GnollCaster.mdx	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
