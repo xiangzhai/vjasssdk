@@ -239,8 +239,9 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call SetUnitPathing(this.m_classUnit, false)
 			// refresh position
 			call SetUnitPosition(this.m_classUnit, thistype.m_x, thistype.m_y)
-			call ShowUnit(this.m_classUnit, false)
-			call ShowUnitForPlayer(this.m_user, this.m_classUnit, true)
+			//call ShowUnit(this.m_classUnit, false)
+			/// @todo Desync
+			//call ShowUnitForPlayer(this.m_user, this.m_classUnit, true)
 			call SetUnitAnimation(this.m_classUnit, this.m_class.animation())
 			call PlaySoundFileForPlayer(this.m_user, this.m_class.soundPath())
 			//call SetCameraTargetControllerNoZForPlayer(this.user, this.classUnit, 0.0, 0.0, false)

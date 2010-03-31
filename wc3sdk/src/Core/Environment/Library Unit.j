@@ -77,7 +77,7 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 	function IsUnitSpellImmune takes unit u returns boolean
 		return IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE)
 	endfunction
-	
+
 	/**
 	* Other functions available for use are GetFullDamage and GetReducedDamage.
 	* GetFullDamage, when passed the actual damage a unit takes (In most cases,
@@ -130,7 +130,7 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 			if (life <= DAMAGE_LIFE) then
 				//If under the threshold, heal it for the moment
 				call SetWidgetLife(u, DAMAGE_LIFE)
-				set test = DAMAGE_LIFE 
+				set test = DAMAGE_LIFE
 			endif
 			if (trig != null and IsTriggerEnabled(trig)) then
 				//Disable the trigger to prevent it registering with damage detection systems

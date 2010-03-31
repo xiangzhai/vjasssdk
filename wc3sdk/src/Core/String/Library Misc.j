@@ -14,6 +14,9 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	* @return If the string was found it returns its position otherwise it will return -1.
 	*/
 	function FindString takes string whichString, string searchedString returns integer
+static if (A_RTC) then
+		return StringPos(whichString, searchedString)
+else
 		local integer i
 		debug if (StringLength(whichString) < StringLength(searchedString)) then
 			debug call PrintFunctionError("FindString", "Used string is lesser than searched string.")
@@ -27,6 +30,7 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 			set i = i + 1
 		endloop
 		return -1
+endif
 	endfunction
 
 	/**
@@ -55,11 +59,15 @@ library ALibraryCoreStringMisc requires optional ALibraryCoreDebugMisc
 	* @return Returns the new string with the replaced sub string.
 	*/
 	function ReplaceString takes string whichString, string replacedString, string replacingString returns string
+static if (A_RTC) then
+		return StringReplace(whichString, replacedString, replacingString)
+else
 		local integer position = FindString(whichString, replacedString)
 		if (position == -1) then
 			return whichString
 		endif
 		return SubString(whichString, 0, position) + replacingString + SubString(whichString, position + StringLength(replacedString), StringLength(whichString))
+endif
 	endfunction
 
 	/**

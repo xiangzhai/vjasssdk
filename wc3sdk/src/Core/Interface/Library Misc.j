@@ -138,12 +138,12 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 
 	/**
 	* @author Tamino Dauth
-	* @todo test please
+	* @todo Desync.
 	*/
 	function ShowUnitForPlayer takes player whichPlayer, unit whichUnit, boolean show returns nothing
-		if (whichPlayer == GetLocalPlayer()) then
+		//if (whichPlayer == GetLocalPlayer()) then
 			call ShowUnit(whichUnit, show)
-		endif
+		//endif
 	endfunction
 
 	globals

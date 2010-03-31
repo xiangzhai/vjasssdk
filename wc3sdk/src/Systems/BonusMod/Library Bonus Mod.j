@@ -206,7 +206,7 @@ library ALibrarySystemsBonusModBonusMod requires AStructCoreGeneralHashTable, op
 	function AUnitSetBonus takes unit whichUnit, integer bonusType, integer amount returns boolean
 		local integer x
 		local integer i
-		local integer bit
+		local integer bit = 0 /// @todo test for JassParser
 		local boolean negative
 		local boolean mana
 		debug if (whichUnit == null or bonusType < 0 or bonusType >= A_BONUS_MAX_TYPES) then

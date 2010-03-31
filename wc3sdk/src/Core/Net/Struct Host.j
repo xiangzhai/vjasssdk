@@ -9,31 +9,43 @@ library AStructCoreNetHost requires ALibraryCoreDebugMisc, AStructCoreGeneralVec
 		public static contant integer commandAccepted = 2
 		public static constant integer commandChat = 3
 		public static constant integer commandNetMessage = 4 // placeholder for extra messages
-		//start members
+		private static constant real connectionTimeOut = 5.0
+		// construction members
 		private integer m_maxClients
-		//members
-		private integer m_clients
-		private integer m_buffer
-		private integer m_listener
-		private AIntegerVector m_sockets
+		private integer m_port
+		// members
+		private integer m_socket
+		//private integer m_clients
+		//private integer m_buffer
+		//private integer m_listener
+		private AStringVector m_clients
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AHost\"")
 
-		public method connect takes string ip, integer port returns boolean
-			local integer socket = SocTCPConnect(ip, port, 1)
-			local integer buffer
+		private static method bufferConnectionAccepted takes nothing returns integer
+			local integer buffer = CreateBuffer()
+			call BufferWriteUInt(buffer, thistype.commandAccepted)
+			return buffer
+		endmethod
 
-			if (not SocTCPConnected(socket)) then
-				call SocCloseSocket(socket)
+		public method connect takes string ip returns boolean
+			local integer buffer = thistype.bufferConnectionAccepted()
+			local integer result = SocSendUDPMessage(this.m_socket, ip, this.m_port, buffer)
+			local real time
+			call DestroyBuffer(buffer)
+
+			if (result != 0) then
 				debug call this.print("Error while connecting to client " + ip + ":" + port + " - " + I2S(SocGetSocketLastError()) + ".")
 				return false
 			endif
+
+			set time = connectionTimeOut
+			loop
+
 			debug call this.print("Connected to " + ip + ":" + I2S(port) + " successfully.")
-			call this.m_sockets.pushBack(socket)
-			set buffer = CreateBuffer()
-			call BufferWriteInt(thistype.commandAccepted, buffer)
-			call SocSendTCPMessage(socket, buffer)
-			call DestroyBuffer(buffer)
+			call this.m_clients.pushBack(ip)
+
+
 			return true
 		endmethod
 

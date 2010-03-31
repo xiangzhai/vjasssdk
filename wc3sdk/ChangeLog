@@ -1,3 +1,6 @@
+2010-03-25 Tamino Dauth <tamino@cdauth.de>
+* Added file "src/Core/Debug/Library Map.j".
+
 2010-03-21 Tamino Dauth <tamino@cdauth.de>
 * Added debugging cheats "enable", "disable", "pathing" and "nopathing".
 * Fixed function CopyUnit.

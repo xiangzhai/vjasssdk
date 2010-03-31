@@ -23,9 +23,10 @@
 * interface - Runs interface debug.
 * signal - Runs signal debug.
 * list - Runs list debug.
+* map - Runs map debug.
 * @todo Causes crash in debug mode!!!
 */
-library ALibrarySystemsDebugUtilities initializer initFunction requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
+library ALibrarySystemsDebugUtilities initializer initFunction requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
 
 	private function help takes nothing returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
@@ -56,6 +57,7 @@ static if (DEBUG_MODE) then
 		call Print("interface")
 		call Print("signal")
 		call Print("list")
+		call Print("map")
 endif
 		set triggerPlayer = null
 	endfunction
@@ -275,6 +277,7 @@ static if (DEBUG_MODE) then
 		call ACheat.create("interface", true, AInterfaceDebug)
 		call ACheat.create("signal", true, ASignalDebug)
 		call ACheat.create("list", true, AListDebug)
+		call ACheat.create("map", true, AMapDebug)
 endif
 	endfunction
 
