@@ -6,6 +6,8 @@ Ast1.mdx			Born2Modificate		http://www.wc3campaigns.net/
 Ast2.mdx			Born2Modificate		http://www.wc3campaigns.net/
 Baumstumpf1.mdx			xXm0RpH3usXx		http://www.inwarcraft.de/
 Baumstumpf2.mdx			Born2Modificate		http://www.wc3campaigns.net/
+Coin.mdx			Frotty			Die Macht des Feuers
+Coins.mdx			Frotty			Die Macht des Feuers
 GeschlossenesBuch1.mdx		Sardor			Die Macht des Feuers
 GeschlossenesBuch2.mdx		Sardor			Die Macht des Feuers
 GeschlossenesBuch3.mdx		Sardor			Die Macht des Feuers
@@ -16,8 +18,16 @@ Holzbrett.mdx			Sardor			Die Macht des Feuers
 Kirchenbank.mdx			Sardor			Die Macht des Feuers
 Kiste1.mdx			Sardor			Die Macht des Feuers
 Kiste2.mdx			xXm0rpH3usXx		http://www.morpheus-modeling.info.ms/
+Langboot.mdx			Sardor			Die Macht des Feuers
+LangbootGross.mdx		Sardor			Die Macht des Feuers
+Messer.mdx			Frotty			Die Macht des Feuers
 Mill.mdx			Rondo			http://www.rondo.eu.tp/
+Mill2.mdx			Rondo			http://www.rondo.eu.tp/
+MoneybagMuch.mdx		Frotty			Die Macht des Feuers
+MoneybagSome			Frotty			Die Macht des Feuers
+MoneybagWithout			Frotty			Die Macht des Feuers
 Pechkessel.mdx			Rondo			http://www.rondo.eu.tp/
+Shit.mdx			Born2Modificate		-
 Steinmauer.mdx			Sardor			Die Macht des Feuers
 Waffenplatz.mdx			Rondo			http://www.rondo.eu.tp/
 Wiederbelebungsschrein.mdx	Sardor			Die Macht des Feuers
