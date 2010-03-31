@@ -1,0 +1,11 @@
+File					Authors						Source
+GnollCasterMossHideSkin.blp		Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollCasterRedRidgeSkin.blp		Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollCasterRiverPawSkin.blp		Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollCasterRotHideSkin.blp		Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollCasterShadowHideSkin.blp		Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollMossHideSkin.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollRedRidge.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollRiverPaw.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollRotHideSkin.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+GnollShadowHideSkin.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
