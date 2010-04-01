@@ -25,6 +25,38 @@
 * @file Includes all possible compression algorithm used in MPQ archives.
 */
 
+#include <cassert>
+#include <cctype>
+
+#include "platform.hpp"
+
+namespace wc3lib
+{
+	
+namespace mpq
+{
+
+enum HashType
+{
+	TableOffset = 0,
+	NameA = 1,
+	NameB = 2,
+	FileKey = 3
+};
+
+/// The encryption and hashing functions use a number table in their procedures. This table must be initialized before the functions are called the first time.
+void InitializeCryptTable(uint32 dwCryptTable[0x500]);
+void EncryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLength, uint32 dwKey);
+void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLength, uint32 dwKey);
+
+/// Based on code from StormLib.
+uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum HashType hashType);
+
+}
+
+}
+
+
 #include <huffman/huff.h>
 #include <zlib/zlib.h>
 #include <pklib/pklib.h>

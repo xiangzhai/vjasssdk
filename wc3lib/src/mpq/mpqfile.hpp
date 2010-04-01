@@ -66,6 +66,11 @@ class MpqFile
 		*/
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		/**
+		* Reads data from stream @param istream and appends it to the already existing file data.
+		* @return Returns the number of read bytes.
+		*/
+		std::streamsize append(std::istream &istream) throw (class Exception);
+		/**
 		* Writes the whole file data, not the header data.
 		*/
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
@@ -85,8 +90,8 @@ class MpqFile
 		
 		static int16 localeToInt(enum Locale locale);
 		static enum Locale intToLocale(int16 value);
-		static int8 platformToInt(enum Platform platform);
-		static enum Platform intToPlatform(int8 value);
+		static int16 platformToInt(enum Platform platform);
+		static enum Platform intToPlatform(int16 value);
 		
 		/**
 		* MPQ files are created by @class Mpq only.
@@ -139,12 +144,12 @@ inline enum MpqFile::Locale MpqFile::intToLocale(int16 value)
 	return MpqFile::Locale(value);
 }
 
-inline int8 MpqFile::platformToInt(enum MpqFile::Platform platform)
+inline int16 MpqFile::platformToInt(enum MpqFile::Platform platform)
 {
-	return int8(platform);
+	return int16(platform);
 }
 
-inline enum MpqFile::Platform MpqFile::intToPlatform(int8 value)
+inline enum MpqFile::Platform MpqFile::intToPlatform(int16 value)
 {
 	return MpqFile::Platform(value);
 }

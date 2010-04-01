@@ -21,7 +21,11 @@
 #ifndef WC3LIB_UTILITIES_HPP
 #define WC3LIB_UTILITIES_HPP
 
+#include <cmath>
 #include <fstream>
+#include <sstream>
+
+#include "internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -54,7 +58,87 @@ inline T readValue(std::fstream &fstream, bool byteSwap = false)
 	return result;
 }
 
+template<typename T>
+std::string sizeStringBinary(T size)
+{
+	std::string unit;
+	T remainder;
+	
+	if (size >= pow(1024, 3))
+	{
+		remainder = size % T(pow(1024, 3));
+		size /= pow(1024, 3);
+		unit = _("Gi");
+	}
+	else if (size >= pow(1024, 2))
+	{
+		remainder = size % T(pow(1024, 2));
+		size /= pow(1024, 2);
+		unit = _("Mi");
+	}
+	else if (size >= 1024)
+	{
+		remainder = size % 1024;
+		size /= 1024;
+		unit = _("Ki");
+	}
+	else
+	{
+		remainder = 0;
+		unit = _("B");
+	}
 
+	std::stringstream sstream;
+	sstream << size;
+	
+	if (remainder != 0)
+		sstream << _(".") << remainder;
+	
+	sstream << ' ' << unit;
+	
+	return sstream.str();
+}
+
+template<typename T>
+std::string sizeStringDecimal(T size)
+{
+	std::string unit;
+	T remainder;
+	
+	if (size >= pow(1000, 3))
+	{
+		remainder = size % T(pow(1000, 3));
+		size /= pow(1000, 3);
+		unit = _("G");
+	}
+	else if (size >= pow(1000, 2))
+	{
+		remainder = size % T(pow(1000, 2));
+		size /= pow(1000, 2);
+		unit = _("M");
+	}
+	else if (size >= 1000)
+	{
+		remainder = size % 1000;
+		size /= 1000;
+		unit = _("k");
+	}
+	else
+	{
+		remainder = 0;
+		unit = _("B");
+	}
+
+	std::stringstream sstream;
+	sstream << size;
+	
+	if (remainder != 0)
+		sstream << _(".") << remainder;
+	
+	sstream << ' ' << unit;
+	
+	return sstream.str();
+}
 
 }
 

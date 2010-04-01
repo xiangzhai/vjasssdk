@@ -40,6 +40,11 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 	return 0;
 }
 
+std::streamsize MpqFile::append(std::istream &istream) throw (class Exception)
+{
+	return 0;
+}
+
 std::streamsize MpqFile::write(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;

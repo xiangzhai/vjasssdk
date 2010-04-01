@@ -1,3 +1,13 @@
+2010-04-01 Tamino Dauth <tamino@cdauth.de>
+* Improved MPQ library functionaliy (fixed hash types and block association).
+* Improved tool "mpq".
+
+2010-03-29 Tamino Dauth <tamino@cdauth.de>
+* Improved MPQ library functionaliy.
+
+2010-03-25 Tamino Dauth <tamino@cdauth.de>
+* Improved MPQ library functionaliy.
+
 2010-03-20 Tamino Dauth <tamino@cdauth.de>
 * Revised cmake files.
 * Improved MPQ library.

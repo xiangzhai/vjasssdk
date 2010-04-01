@@ -1,3 +1,15 @@
+2010-04-01 Tamino Dauth <tamino@cdauth.de>
+* Note that there can't be as many blocks in MPQ archives as int32 allows since last two numbers are reserved for empty and deleted blocks.
+* Maybe we should drop block list and do only use map (since hash entries do use block indices)?
+
+2010-03-29 Tamino Dauth <tamino@cdauth.de>
+* Add program man pages.
+* Fix hash type for "(hash table)" and "(block table)" keys.
+
+2010-03-25 Tamino Dauth <tamino@cdauth.de>
+* Some int8 (locales of hash entries and sectorSizeShift of MPQ header) values of the MPQ specification are defined as int16 values in StormLib and libmpq.
+* Block index values of hash instances aren't correct (wrong decryption of hash table?).
+
 2010-03-20 Tamino Dauth <tamino@cdauth.de>
 * Add MPQ file direct read- and writing capability.
 
@@ -5,7 +17,7 @@
 * Camera seems to be documentated wrongly (ordering of translations and rotation lengths).
 
 2010-02-27 Tamino Dauth <tamino@cdauth.de>
-* Use <boost/cstdint.hpp> instead of <stdint.h> since the second one is C99.
+* DONE: Use <boost/cstdint.hpp> instead of <stdint.h> since the second one is C99.
 
 2010-02-15 Tamino Dauth <tamino@cdauth.de>
 * Revise classes map::Environment and map::Tilepoint (add class Tileset for tileset ids).

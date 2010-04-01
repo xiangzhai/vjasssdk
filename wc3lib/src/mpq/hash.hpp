@@ -48,6 +48,10 @@ class Hash
 		bool deleted() const;
 		bool empty() const;
 		
+		class Mpq* mpq() const;
+		class MpqFile* mpqFile() const;
+		class Block* block() const;
+		
 	protected:
 		friend class Mpq;
 		
@@ -59,7 +63,7 @@ class Hash
 		int32 m_filePathHashA;
 		int32 m_filePathHashB;
 		int16 m_language; // enum?
-		int8 m_platform;
+		int16 m_platform;
 		class Block *m_block; // if this value is 0 it has never been used
 		bool m_deleted; // can not be true if m_block is 0
 };
@@ -72,6 +76,21 @@ inline bool Hash::deleted() const
 inline bool Hash::empty() const
 {
 	return !this->m_deleted && this->m_block == 0;
+}
+
+inline class Mpq* Hash::mpq() const
+{
+	return this->m_mpq;
+}
+
+inline class MpqFile* Hash::mpqFile() const
+{
+	return this->m_mpqFile;
+}
+		
+inline class Block* Hash::block() const
+{
+	return this->m_block;
 }
 
 }

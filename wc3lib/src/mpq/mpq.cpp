@@ -25,6 +25,7 @@
 
 #include <boost/format.hpp>
 
+#include "algorithm.hpp"
 #include "mpq.hpp"
 #include "sector.hpp"
 #include "../internationalisation.hpp"
@@ -33,112 +34,29 @@ namespace wc3lib
 {
 
 namespace mpq
-{
-	
-enum HashType
-{
-	TableOffset = 0,
-	NameA = 1,
-	NameB = 2,
-	FileKey = 3
-};
+{	
 
-// The encryption and hashing functions use a number table in their procedures. This table must be initialized before the functions are called the first time.
-static void InitializeCryptTable(uint32 dwCryptTable[0x500])
-{
-    uint32 seed   = 0x00100001;
-    uint32 index1 = 0;
-    uint32 index2 = 0;
-    int16   i;
-
-    for (index1 = 0; index1 < 0x100; index1++)
-    {
-        for (index2 = index1, i = 0; i < 5; i++, index2 += 0x100)
-        {
-            uint32 temp1, temp2;
-
-            seed  = (seed * 125 + 3) % 0x2AAAAB;
-            temp1 = (seed & 0xFFFF) << 0x10;
-
-            seed  = (seed * 125 + 3) % 0x2AAAAB;
-            temp2 = (seed & 0xFFFF);
-
-            dwCryptTable[index2] = (temp1 | temp2);
-        }
-    }
-}
-
-static void EncryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLength, uint32 dwKey)
-{
-    assert(lpbyBuffer);
-
-    uint32 *lpdwBuffer = (uint32 *)lpbyBuffer;
-    uint32 seed = 0xEEEEEEEE;
-    uint32 ch;
-
-    dwLength /= sizeof(uint32);
-
-    while(dwLength-- > 0)
-    {
-        seed += dwCryptTable[0x400 + (dwKey & 0xFF)];
-        ch = *lpdwBuffer ^ (dwKey + seed);
-
-        dwKey = ((~dwKey << 0x15) + 0x11111111) | (dwKey >> 0x0B);
-        seed = *lpdwBuffer + seed + (seed << 5) + 3;
-
-		*lpdwBuffer++ = ch;
-    }
-}
-
-static void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLength, uint32 dwKey)
-{
-    assert(lpbyBuffer);
-
-    uint32 *lpdwBuffer = (uint32 *)lpbyBuffer;
-    uint32 seed = 0xEEEEEEEEL;
-    uint32 ch;
-
-    dwLength /= sizeof(uint32);
-
-    while(dwLength-- > 0)
-    {
-        seed += dwCryptTable[0x400 + (dwKey & 0xFF)];
-        ch = *lpdwBuffer ^ (dwKey + seed);
-
-        dwKey = ((~dwKey << 0x15) + 0x11111111L) | (dwKey >> 0x0B);
-        seed = ch + seed + (seed << 5) + 3;
-
-		*lpdwBuffer++ = ch;
-    }
-}
-
-// Based on code from StormLib.
-uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum HashType dwHashType)
-{
-    assert(lpszString);
-    
-    uint32  seed1 = 0x7FED7FEDL;
-    uint32  seed2 = 0xEEEEEEEEL;
-    int16    ch;
-
-    while (*lpszString != 0)
-    {
-        ch = toupper(*lpszString++);
-
-        seed1 = dwCryptTable[(dwHashType * 0x100) + ch] ^ (seed1 + seed2);
-        seed2 = ch + seed1 + seed2 + (seed2 << 5) + 3;
-    }
-    
-    return seed1;
-}
-
-const byte Mpq::identifier[4] = { 'M', 'P', 'Q',  0x1 };
+const byte Mpq::identifier[4] = { 'M', 'P', 'Q',  0x1A };
 const int16 Mpq::formatVersion1Identifier = 0x0000;
 const int16 Mpq::formatVersion2Identifier = 0x0001;
 const int32 Mpq::extendedAttributesVersion = 100;
 const std::size_t Mpq::headerSize = sizeof(struct Header);
 
-Mpq::Mpq(const boost::filesystem::path &path) : m_size(boost::filesystem::file_size(path)), m_path(path), m_strongDigitalSignature(0)
+const uint32* Mpq::cryptTable()
+{
+	static uint32 cryptTable[0x500];
+	static bool isInitialized = false;
+	
+	if (!isInitialized)
+	{
+		InitializeCryptTable(cryptTable);
+		isInitialized = true;
+	}
+	
+	return const_cast<const uint32*>(cryptTable);
+}
+
+Mpq::Mpq(const boost::filesystem::path &path) : m_size(boost::filesystem::file_size(path)), m_path(path), m_format(Mpq::Mpq1), m_extendedAttributes(Mpq::None), m_sectorSizeShift(0), m_strongDigitalSignature(0)
 {
 }
 
@@ -157,8 +75,26 @@ Mpq::~Mpq()
 		delete file;
 }
 
-std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfileIstream) throw (class Exception)
+std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstream) throw (class Exception)
 {
+	// find header structure by using file key
+	byte identifier[4];
+	
+	do
+	{
+		istream.read(reinterpret_cast<char*>(identifier), 4);
+		
+		if (istream.gcount() < 4)
+			throw Exception(boost::str(boost::format(_("Missing identifier \"%1%\".")) % Mpq::identifier));
+	}
+	while (memcmp(identifier, Mpq::identifier, 4) != 0);
+	
+	std::cout << "Found MPQ identifier at offset " << (istream.tellg() - std::streamoff(4)) << std::endl;
+	
+	istream.seekg(-4, std::ios::cur);
+	std::streampos startPosition = istream.tellg();
+	std::cout << "Is now at " << startPosition << std::endl;
+	
 	struct Header header;
 	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
 	std::streamsize bytes = istream.gcount();
@@ -187,45 +123,62 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 	if (header.archiveSize != this->m_size)
 		std::cerr << boost::format(_("Warning: MPQ file size of MPQ file \"%1%\" is not equal to its internal header file size.\nFile size: %2%.\nInternal header file size: %3%.")) % this->m_path.string() % this->m_size % header.archiveSize << std::endl;
 	
+	this->m_sectorSizeShift = header.sectorSizeShift;
+	std::cout << "Format version " << header.formatVersion << std::endl;
+	std::cout << "Sector size shift " << header.sectorSizeShift << std::endl;
+	
 	struct ExtendedHeader extendedHeader;
 	
 	if (this->m_format == Mpq::Mpq2)
 	{
+		std::cout << "Has extended header!" << std::endl;
 		istream.read(reinterpret_cast<char*>(&extendedHeader), sizeof(extendedHeader));
 		bytes += istream.gcount();
 	}
 	
 	int64 offset = header.blockTableOffset;
+	std::cout << "1. Block table offset: " << header.blockTableOffset << std::endl;
 	
 	if (this->m_format == Mpq::Mpq2 && extendedHeader.blockTableOffsetHigh > 0)
 		offset += int64(extendedHeader.blockTableOffsetHigh) << 32;
 	
-	istream.seekg(offset);
+	std::cout << "2. Block table offset: " << offset << std::endl;
+	istream.seekg(startPosition + offset);
 
 	std::size_t encryptedBytesSize = header.blockTableEntries * sizeof(struct BlockTableEntry);
 	char *encryptedBytes = new char[encryptedBytesSize];
+
+	std::cout << "Block table entries: " << header.blockTableEntries << "\nSize of single block table entry: " << sizeof(struct BlockTableEntry) << "\nSize of char array: " << encryptedBytesSize << std::endl;
+	//return 0;
 	
-	try
-	{
-		istream.read(encryptedBytes, encryptedBytesSize);
-		uint32 hashValue = HashString(Mpq::cryptTable(), "(block table)", HashType(1)); // HashType.NameA
-		DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
-		std::stringstream sstream(encryptedBytes);
-		
-		for (std::size_t i = 0; i < header.blockTableEntries; ++i)
-		{
-			class Block *block = new Block(this);
-			bytes += block->read(sstream);
-			this->m_blocks.push_back(block);
-		}
-	}
-	catch (...)
-	{
-		delete[] encryptedBytes;
-	}
-	
+	istream.read(encryptedBytes, encryptedBytesSize);
+	//std::cout << "test" << std::endl;
+	uint32 hashValue = HashString(Mpq::cryptTable(), "(block table)", FileKey);
+	std::cout << "block table hash value " << hashValue << std::endl;
+	DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
+	//std::cout << "test 3" << std::endl;
+	std::stringstream sstream;
+	sstream.write(const_cast<const char*>(encryptedBytes), encryptedBytesSize);
 	delete[] encryptedBytes;
 	encryptedBytes = 0;
+	//std::cout << "test 4" << std::endl;
+	
+	for (std::size_t i = 0; i < header.blockTableEntries; ++i)
+	{
+		//std::cout << "test 5" << std::endl;
+		class Block *block = new Block(this);
+		//std::cout << "test 6" << std::endl;
+		bytes += block->read(sstream);
+		//std::cout << "test 7" << std::endl;
+		//std::cout << "Index " << i << std::endl;
+		//std::cout << "Block table entries: " << header.blockTableEntries << "\nSize of single block table entry: " << sizeof(struct BlockTableEntry) << "\nSize of char array: " << encryptedBytesSize << std::endl;
+		this->m_blocks.push_back(block);
+		this->m_blockMap[this->m_blocks.size() - 1] = block;
+	}
+	
+	std::cout << "Block list size: " << this->m_blocks.size() << std::endl;
+		
+	std::cout << "FINISH!" << std::endl;
 	
 	/*
 	read extended block table
@@ -233,7 +186,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 	*/
 	if (this->m_format == Mpq::Mpq2)
 	{
-		istream.seekg(extendedHeader.extendedBlockTableOffset);
+		istream.seekg(startPosition + extendedHeader.extendedBlockTableOffset);
 		
 		BOOST_FOREACH(class Block *block, this->m_blocks)
 		{
@@ -243,50 +196,49 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 			block->m_extendedBlockOffset = extendedBlockTableEntry.extendedBlockOffset;
 		}
 	}
+	
+	std::cout << "FINISH!" << std::endl;
 			
 	// read encrypted hash table
 	offset = header.hashTableOffset;
+	std::cout << "1. Hash table offset: " << offset << std::endl;
 		 
 	if (this->m_format == Mpq::Mpq2 && extendedHeader.hashTableOffsetHigh > 0)
 		offset += int64(extendedHeader.hashTableOffsetHigh) << 32;
 	
+	std::cout << "2. Hash table offset: " << offset << std::endl;
 	istream.seekg(offset);
+	
+	std::cout << "FINISH2!" << std::endl;
 	
 	encryptedBytesSize = header.hashTableEntries * sizeof(struct HashTableEntry);
 	encryptedBytes = new char[encryptedBytesSize];
 	
-	try
-	{
-		istream.read(encryptedBytes, encryptedBytesSize);
-		uint32 hashValue = HashString(Mpq::cryptTable(), "(hash table)", HashType(1)); // HashType.NameA
-		DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
-		std::stringstream sstream(encryptedBytes);
-		
-		for (std::size_t i = 0; i < header.hashTableEntries; ++i)
-		{
-			class Hash *hash = new Hash(this);
-			bytes += hash->read(sstream);
-			this->m_hashes.push_back(hash);
-		}
-	}
-	catch (...)
-	{
-		delete[] encryptedBytes;
-	}
-	
+	std::cout << "FINISH2!" << std::endl;
+
+	istream.read(encryptedBytes, encryptedBytesSize);
+	std::cout << "FINISH2!" << std::endl;
+	hashValue = HashString(Mpq::cryptTable(), "(hash table)", FileKey);
+	std::cout << "Hash table with hash value " << hashValue << std::endl;
+	DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
+	std::cout << "FINISH2!" << std::endl;
+	sstream.flush();
+	sstream.write(const_cast<const char*>(encryptedBytes), encryptedBytesSize);
 	delete[] encryptedBytes;
 	encryptedBytes = 0;
 	
-	/// @todo If file "(listfile)" exists and listfileIstream is 0, add path properties if possible.
-	if (listfileIstream == 0)
+	std::cout << "FINISH3!" << std::endl;
+	
+	for (std::size_t i = 0; i < header.hashTableEntries; ++i)
 	{
-	}
-	/// @todo Read @param listfileIstream and set path properties.
-	else
-	{
+		class Hash *hash = new Hash(this);
+		//std::cout << "Index " << i << std::endl;
+		bytes += hash->read(sstream);
+		this->m_hashes.push_back(hash);
 	}
 	
-	//this->findFile("(listfile)"); listfile contains file paths
+	std::cout << "FINISH4!" << std::endl;	
+	std::cout << "FINISH!!!!!" << std::endl;
 	
 	// file data / add file instances
 	BOOST_FOREACH(class Hash *hash, this->m_hashes)
@@ -336,14 +288,15 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 			else
 			{
 				int32 sectors = 0;
+				int16 sectorSize = this->sectorSize();
 				
 				if (hash->m_block->m_flags & Block::IsSingleUnit)
 					sectors = 1;
 				else
-					sectors = hash->m_block->m_blockSize / header.sectorSizeShift;
+					sectors = hash->m_block->m_blockSize / sectorSize;
 				
 				int32 newOffset = 0;
-				int32 lastSize = hash->m_block->m_blockSize % header.sectorSizeShift;
+				int32 lastSize = hash->m_block->m_blockSize % sectorSize;
 				
 				for (std::size_t i = 0; i < sectors; ++i)
 				{
@@ -353,11 +306,11 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 					if (hash->m_block->m_flags & Block::IsSingleUnit)
 						sector->m_sectorSize = hash->m_block->m_blockSize;
 					else
-						sector->m_sectorSize = header.sectorSizeShift;
+						sector->m_sectorSize = sectorSize;
 					
 					mpqFile->m_sectors.push_back(sector);
 					
-					newOffset += header.sectorSizeShift;
+					newOffset += sectorSize;
 				}
 				
 				// the last sector may contain less than this, depending on the size of the entire file's data.
@@ -390,6 +343,27 @@ std::streamsize Mpq::readMpq(std::istream &istream, const std::istream *listfile
 			
 			this->m_files.push_back(mpqFile);
 		}
+	}
+	
+	class MpqFile *listfileFile = const_cast<class MpqFile*>(this->listfileFile());
+	
+	if (listfileIstream == 0)
+	{
+		if (listfileFile != 0)
+		{
+			std::cout << "CONTAINS LISTFILE FILE!" << std::endl;
+			// read listfile file and create path entries
+			std::stringstream sstream;
+			listfileFile->write(sstream);
+			std::cout << "Adding " << this->readListfilePathEntries(sstream) << " path entries." << std::endl;
+		}
+	}
+	else
+	{
+		// read listfile file and create path entries
+		this->readListfilePathEntries(*listfileIstream);
+		// append list file file
+		const_cast<class MpqFile*>(this->createListfileFile())->append(*listfileIstream);
 	}
 	
 	/// @todo Single "(attributes)" file?
@@ -455,7 +429,7 @@ const class MpqFile* Mpq::findFile(const boost::filesystem::path &path) const
 	return 0;
 }
 
-const class MpqFile* Mpq::findFileByName(const std::string &name) const
+const class MpqFile* Mpq::findFile(const std::string &name) const
 {
 	BOOST_FOREACH(const class MpqFile *mpqFile, this->m_files)
 	{
@@ -466,43 +440,24 @@ const class MpqFile* Mpq::findFileByName(const std::string &name) const
 	return 0;
 }
 
-const class MpqFile* Mpq::findFileByHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const
+const class MpqFile* Mpq::findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const
 {
-	if (this->m_hashes.empty() || this->m_hashes.front()->empty())
+	class Hash *hash = const_cast<class Mpq*>(this)->findHash(path, locale, platform);
+	
+	std::cout << "Hash is " << hash << " when searching for file " << path.string() << std::endl;
+	
+	if (hash == 0)
 		return 0;
-		
-	// Compute the hashes to compare the hash table entry against
-	uint32 nameHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
-	uint32 nameHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);	
-	int16 language = MpqFile::localeToInt(locale);
-	int8 realPlatform = MpqFile::platformToInt(platform);
-	
-	// Check each entry in the hash table till a termination point is reached
-	std::list<class Hash*>::const_iterator iterator = this->m_hashes.begin();
-	
-	do
-	{
-		if (!(*iterator)->deleted())
-		{
-			if ((*iterator)->m_filePathHashA == nameHashA && (*iterator)->m_filePathHashB == nameHashB && (*iterator)->m_language == language && (*iterator)->m_platform == realPlatform)
-			{
-				if ((*iterator)->m_mpqFile->m_path != path) // path has not been set yet
-					(*iterator)->m_mpqFile->m_path = path;
 				
-				return const_cast<const class MpqFile*>((*iterator)->m_mpqFile);
-			}
-		}
-			
-		++iterator;
-	}
-	while (iterator != this->m_hashes.end() && !(*iterator)->empty());
-	
-	return 0;
+	if (hash->m_mpqFile->m_path != path) // path has not been set yet
+		hash->m_mpqFile->m_path = path;
+				
+	return const_cast<const class MpqFile*>(hash->m_mpqFile);
 }
 
 class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream, bool overwriteExisting, std::size_t reservedSpace) throw (class Exception)
 {
-	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFileByHash(path, locale, platform));
+	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(path, locale, platform));
 	
 	if (mpqFile != 0)
 	{
@@ -551,6 +506,7 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 		block->m_fileSize = reservedSpace;
 		block->m_flags = Block::IsFile; /// @todo Set right flags (user-defined).
 		this->m_blocks.push_back(block);
+		this->m_blockMap[this->m_blocks.size() - 1] = block;
 		
 	}
 	
@@ -609,7 +565,7 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 
 bool Mpq::removeFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform)
 {
-	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFileByHash(path, locale, platform));
+	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(path, locale, platform));
 	
 	if (mpqFile == 0)
 		return false;
@@ -633,7 +589,7 @@ bool Mpq::removeFile(const boost::filesystem::path &path)
 
 bool Mpq::removeFile(const std::string &name)
 {
-	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFileByName(name));
+	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(name));
 	
 	if (mpqFile == 0)
 		return false;
@@ -664,18 +620,54 @@ class Mpq& Mpq::operator>>(class Mpq &mpq) throw (class Exception)
 	return *this;
 }
 
-const uint32* Mpq::cryptTable()
+class Hash* Mpq::findHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform)
 {
-	static uint32 cryptTable[0x500];
-	static bool isInitialized = false;
-	
-	if (!isInitialized)
+	if (this->m_hashes.empty() || this->m_hashes.front()->empty())
 	{
-		InitializeCryptTable(cryptTable);
-		isInitialized = true;
+		std::cout << "Hashes are empty." << std::endl;
+		std::cout << "Front hash is empty." << std::endl;
+		
+		return 0;
+	}
+		
+	// Compute the hashes to compare the hash table entry against
+	uint32 nameHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
+	uint32 nameHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);	
+	int16 language = MpqFile::localeToInt(locale);
+	int16 realPlatform = MpqFile::platformToInt(platform);
+	std::cout << "Searching for hash " << path << " with value a " << nameHashA << " and value b " << nameHashB << " and language " << language << " and platform " << realPlatform << std::endl;
+	
+	// Check each entry in the hash table till a termination point is reached
+	std::list<class Hash*>::iterator iterator = this->m_hashes.begin();
+	
+	do
+	{
+		if (!(*iterator)->deleted())
+		{
+			if ((*iterator)->m_filePathHashA == nameHashA && (*iterator)->m_filePathHashB == nameHashB && (*iterator)->m_language == language && (*iterator)->m_platform == realPlatform)	
+				return *iterator;
+		}
+			
+		++iterator;
+	}
+	while (iterator != this->m_hashes.end() && !(*iterator)->empty());
+	
+	return 0;
+}
+
+std::size_t Mpq::readListfilePathEntries(std::istream &istream)
+{
+	// read list file file and create path entries
+	std::size_t count = 0;
+	std::string line;
+	
+	while (std::getline(istream, line))
+	{
+		++count;
+		this->findFile(line, MpqFile::Neutral, MpqFile::Default);
 	}
 	
-	return const_cast<const uint32*>(cryptTable);
+	return count;
 }
 
 }

@@ -29,8 +29,8 @@ namespace wc3lib
 namespace mpq
 {
 
-typedef int8_t byte;
-typedef int8_t int8;
+typedef int8_t byte; // not unsigned
+typedef int8_t int8; // not unsigned
 typedef int16_t int16;
 typedef int32_t int32;
 typedef uint32_t uint32; // used for various encryption and hash functions
@@ -50,11 +50,11 @@ typedef int16_t MD5; // 128 bit
 
 struct Header
 {
-	char magic[4];
+	byte magic[4];
 	int32 headerSize;
 	int32 archiveSize;
 	int16 formatVersion;
-	int8 sectorSizeShift;
+	int16 sectorSizeShift; // int8
 	int32 hashTableOffset;
 	int32 blockTableOffset;
 	int32 hashTableEntries;
@@ -73,7 +73,7 @@ struct HashTableEntry
 	int32 filePathHashA;
 	int32 filePathHashB;
 	int16 language;
-	int8 platform;
+	int16 platform; // int8
 	int32 fileBlockIndex;
 };
 

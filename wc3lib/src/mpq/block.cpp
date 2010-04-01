@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "algorithm.hpp"
 #include "block.hpp"
 #include "mpq.hpp"
 #include "../internationalisation.hpp"
@@ -27,6 +28,23 @@ namespace wc3lib
 	
 namespace mpq
 {
+	
+uint32 Block::fileKey(const boost::filesystem::path &path, const BlockTableEntry &blockTableEntry)
+{
+	static const uint32 BLOCK_OFFSET_ADJUSTED_KEY = 0x00020000L;
+	
+	// Find the file name part of the path
+	const std::string lpszFileName = path.filename();
+		
+	// Hash the name to get the base key
+	uint32 nFileKey = HashString(Mpq::cryptTable(), lpszFileName.c_str(), FileKey);
+	
+	// Offset-adjust the key if necessary
+	if (blockTableEntry.flags & BLOCK_OFFSET_ADJUSTED_KEY)
+		nFileKey = (nFileKey + blockTableEntry.blockOffset) ^ blockTableEntry.fileSize;
+		
+	return nFileKey;
+}
 
 Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffset(0), m_blockSize(0), m_fileSize(0), m_flags(Block::None)
 {
@@ -59,6 +77,17 @@ std::streamsize Block::write(std::ostream &ostream) throw (class Exception)
 	ostream.write(reinterpret_cast<char*>(&entry), sizeof(entry));
 	
 	return sizeof(entry);
+}
+
+uint32 Block::fileKey(const boost::filesystem::path &path) const
+{
+	struct BlockTableEntry entry;
+	entry.blockOffset = this->m_blockOffset;
+	entry.blockSize = this->m_blockSize;
+	entry.fileSize = this->m_fileSize;
+	entry.flags = this->m_flags;
+	
+	return Block::fileKey(path, entry);
 }
 
 }

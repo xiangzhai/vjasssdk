@@ -21,6 +21,8 @@
 #ifndef WC3LIB_MPQ_BLOCK_HPP
 #define WC3LIB_MPQ_BLOCK_HPP
 
+#include <boost/filesystem.hpp>
+
 #include <istream>
 #include <ctime>
 
@@ -48,6 +50,8 @@ class Block
 			IsCompressed = 0x00000200,
 			IsImploded = 0x00000100
 		};
+		
+		static uint32 fileKey(const boost::filesystem::path &path, const BlockTableEntry &blockTableEntry);
 
 		Block(class Mpq *mpq);
 
@@ -63,6 +67,8 @@ class Block
 		uint64 largeOffset() const;
 		bool time(time_t &time);
 		void setFileTime(const time_t &time);
+		
+		uint32 fileKey(const boost::filesystem::path &path) const;
 				
 	protected:
 		friend class Mpq;

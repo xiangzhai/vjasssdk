@@ -21,4 +21,14 @@
 #ifndef WC3LIB_EDITOR_HPP
 #define WC3LIB_EDITOR_HPP
 
+#include "editor/aieditor.hpp"
+#include "editor/blpiohandler.hpp"
+#include "editor/campaigneditor.hpp"
+#include "editor/editor.hpp"
+#include "editor/importmanager.hpp"
+#include "editor/modeleditor.hpp"
+#include "editor/modelview.hpp"
+#include "editor/mpqeditor.hpp"
+
+
 #endif

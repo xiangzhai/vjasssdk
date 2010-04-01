@@ -21,9 +21,12 @@
 #ifndef WC3LIB_MPQ_MPQ_HPP
 #define WC3LIB_MPQ_MPQ_HPP
 
+#include <cmath>
+
 #include <istream>
 #include <ostream>
 #include <list>
+#include <map>
 #include <string>
 #include <sstream>
 
@@ -58,7 +61,8 @@ class Mpq
 			FileTimeStamps = 0x00000002,
 			FileMd5s = 0x00000004
 		};
-		
+
+		static const uint32* cryptTable();		
 		static bool hasStrongDigitalSignature(std::istream &istream);
 		static std::streamsize strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception);
 
@@ -70,9 +74,10 @@ class Mpq
 		~Mpq();
 		
 		/**
+		* @param listfilefileIstream If you want to preselect your custom listfile file, use this value (entries will be appended to the already contained listfile file if it does exist). 
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize readMpq(std::istream &istream, const std::istream *listfileIstream = 0) throw (class Exception);
+		std::streamsize readMpq(std::istream &istream, std::istream *listfileIstream = 0) throw (class Exception);
 		/**
 		* Writes the whole MPQ archive into output stream @param ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
 		* If you change some data of the opened MPQ archive it's written directly into the corresponding file (the whole archive is not loaded into memory!).
@@ -114,17 +119,21 @@ class Mpq
 		const class MpqFile* signatureFile() const;
 
 		/**
-		  * @return Returns unused block space of the archive.
-		  */
-		std::size_t unusedSpace() const;
+		* @return Returns used block space of the archive.
+		*/
+		int64 usedSpace() const;
+		/**
+		* @return Returns unused block space of the archive.
+		*/
+		int64 unusedSpace() const;
 		
 		const class MpqFile* findFile(const boost::filesystem::path &path) const;
-		const class MpqFile* findFileByName(const std::string &name) const;
+		const class MpqFile* findFile(const std::string &name) const;
 		/**
 		* Note that the MPQ archive has no information about file paths if there is no "(listfile)" file. This function is the best way to get your required file.
 		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.		
 		*/
-		const class MpqFile* findFileByHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
+		const class MpqFile* findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
 		/**
 		* Addes a new file to the MPQ archive with path @param path, locale @param locale and platform @param platform.
 		* @param istream This input stream is used for reading the initial file data.
@@ -142,11 +151,27 @@ class Mpq
 		const boost::filesystem::path& path() const;
 		enum Format format() const;
 		enum ExtendedAttributes extendedAttributes() const;
+		int16 sectorSize() const;
 		bool hasStrongDigitalSignature() const;
 		const char* strongDigitalSignature() const;
 		const std::list<class Block*>& blocks() const;
+		/**
+		* Block map is primarily required by hash entries since they get blocks by their indices.
+		*/
+		const std::map<int32, class Block*>& blockMap() const;
 		const std::list<class Hash*>& hashes() const;
 		const std::list<class MpqFile*>& files() const;
+		
+		/**
+		* @return Returns the sum of all block sizes.
+		*/
+		int64 entireBlockSize() const;
+		int64 entireUsedBlockSize() const;
+		int64 entireUnusedBlockSize() const;
+		/**
+		* @return Returns the sum of all file sizes.
+		*/
+		int64 entireFileSize() const;
 		
 		
 		/**
@@ -165,14 +190,24 @@ class Mpq
 		static const int16 formatVersion2Identifier;
 		static const int32 extendedAttributesVersion;
 		
+		/**
+		* 0xFFFFFFFE and 0xFFFFFFFF are reserved for deleted and empty blocks (by hashes).
+		*/
+		static const int32 maxBlockId = 0xFFFFFFFD;
+		static const int32 maxHashId = 0xFFFFFFFF;
+		
 	protected:
 		friend class MpqFile;
 		friend class Hash;
 		friend class Block;
-		
-		static const uint32* cryptTable();
 
 		Mpq(const Mpq &mpq);
+		class Hash* findHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
+		/**
+		* Uses input stream @param istream for reading file path entries and refreshing them by getting their instances (using their hashes).
+		* @return Returns the number of added path entries.
+		*/
+		std::size_t readListfilePathEntries(std::istream &istream);
 		bool checkBlocks() const;
 		bool checkHashes() const;
 		/**
@@ -207,8 +242,10 @@ class Mpq
 		boost::filesystem::path m_path;
 		enum Format m_format;
 		enum ExtendedAttributes m_extendedAttributes;
+		int16 m_sectorSizeShift;
 		char *m_strongDigitalSignature;
 		std::list<class Block*> m_blocks;
+		std::map<int32, class Block*> m_blockMap;
 		std::list<class Hash*> m_hashes;
 		std::list<class MpqFile*> m_files;
 };
@@ -319,7 +356,7 @@ inline const class MpqFile* Mpq::createListfileFile() throw (class Exception)
 
 inline const class MpqFile* Mpq::listfileFile() const
 {
-	return this->findFileByHash("(listfile)", MpqFile::Neutral, MpqFile::Default);
+	return this->findFile("(listfile)", MpqFile::Neutral, MpqFile::Default);
 }
 
 
@@ -362,7 +399,7 @@ inline const class MpqFile* Mpq::createAttributesFile() throw (class Exception)
 
 inline const class MpqFile* Mpq::attributesFile() const
 {
-	return this->findFileByHash("(attributes)", MpqFile::Neutral, MpqFile::Default);
+	return this->findFile("(attributes)", MpqFile::Neutral, MpqFile::Default);
 }
 
 inline bool Mpq::containsSignatureFile() const
@@ -370,22 +407,19 @@ inline bool Mpq::containsSignatureFile() const
 	return this->signatureFile() != 0;
 }
 
-inline std::size_t Mpq::unusedSpace() const
+inline int64 Mpq::usedSpace() const
 {
-	std::size_t result = 0;
-	
-	BOOST_FOREACH(const class Block *block, this->m_blocks)
-	{
-		if (block->empty())
-			result += block->m_blockSize;
-	}
-	
-	return result;
+	return this->entireUsedBlockSize();
+}
+
+inline int64 Mpq::unusedSpace() const
+{
+	return this->entireUnusedBlockSize();
 }
 
 inline const class MpqFile* Mpq::signatureFile() const
 {
-	return this->findFileByHash("(signature)", MpqFile::Neutral, MpqFile::Default);
+	return this->findFile("(signature)", MpqFile::Neutral, MpqFile::Default);
 }
 
 inline std::size_t Mpq::size() const
@@ -408,6 +442,11 @@ inline enum Mpq::ExtendedAttributes Mpq::extendedAttributes() const
 	return this->m_extendedAttributes;
 }
 
+inline int16 Mpq::sectorSize() const
+{
+	return pow(2, this->m_sectorSizeShift) * 512;
+}
+
 inline bool Mpq::hasStrongDigitalSignature() const
 {
 	return this->m_strongDigitalSignature != 0;
@@ -423,6 +462,11 @@ inline const std::list<class Block*>& Mpq::blocks() const
 	return this->m_blocks;
 }
 
+inline const std::map<int32, class Block*>& Mpq::blockMap() const
+{
+	return this->m_blockMap;
+}
+
 inline const std::list<class Hash*>& Mpq::hashes() const
 {
 	return this->m_hashes;
@@ -433,9 +477,55 @@ inline const std::list<class MpqFile*>& Mpq::files() const
 	return this->m_files;
 }
 
+inline int64 Mpq::entireBlockSize() const
+{
+	int64 result = 0;
+	
+	BOOST_FOREACH(const Block *block, this->m_blocks)
+		result += block->m_blockSize;
+	
+	return result;
+}
+
+inline int64 Mpq::entireUsedBlockSize() const
+{
+	int64 result = 0;
+	
+	BOOST_FOREACH(const class Block *block, this->m_blocks)
+	{
+		if (!block->empty())
+			result += block->m_blockSize;
+	}
+	
+	return result;
+}
+
+inline int64 Mpq::entireUnusedBlockSize() const
+{
+	int64 result = 0;
+	
+	BOOST_FOREACH(const class Block *block, this->m_blocks)
+	{
+		if (block->empty())
+			result += block->m_blockSize;
+	}
+	
+	return result;
+}
+
+inline int64 Mpq::entireFileSize() const
+{
+	int64 result = 0;
+	
+	BOOST_FOREACH(const Block *block, this->m_blocks)
+		result += block->m_fileSize;
+	
+	return result;
+}
+
 inline bool Mpq::checkBlocks() const
 {
-	BOOST_FOREACH(class Block *block, this->m_blocks)
+	BOOST_FOREACH(const class Block *block, this->m_blocks)
 	{
 		if (!block->check())
 			return false;
@@ -446,10 +536,17 @@ inline bool Mpq::checkBlocks() const
 
 inline bool Mpq::checkHashes() const
 {
-	BOOST_FOREACH(class Hash *hash, this->m_hashes)
+	BOOST_FOREACH(const class Hash *hash, this->m_hashes)
 	{
 		if (!hash->check())
 			return false;
+		
+		BOOST_FOREACH(const class Hash *hash2, this->m_hashes)
+		{
+			/// @todo same block, ok?
+			if (hash != hash2 && !hash->empty() && !hash->deleted() && hash->block() == hash2->block())
+				return false;
+		}
 	}
 	
 	return true;

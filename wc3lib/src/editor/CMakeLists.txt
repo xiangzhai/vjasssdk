@@ -45,7 +45,7 @@ add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
 target_link_libraries(wc3libeditor wc3libcore wc3libblp wc3libmpq wc3libmdlx ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} OgreMain ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 #wc3libeditorqogre
 
-#install
+# install
 
 install(TARGETS wc3libeditor DESTINATION lib/wc3lib/)
 install(FILES ${wc3lib_EDITOR_H} PUBLIC_HEADER DESTINATION include/wc3lib/editor)

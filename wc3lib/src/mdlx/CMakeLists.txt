@@ -208,7 +208,7 @@ target_link_libraries(wc3libmdlx wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARI
 	#target_link_libraries(wc3libmdlx wc3libmdlxreadblend)
 #endif (BLEND)
 
-#install
+# install
 
 install(TARGETS wc3libmdlx DESTINATION lib/wc3lib/)
 install(FILES ${wc3lib_MDLX_H} PUBLIC_HEADER DESTINATION include/wc3lib/mdlx)

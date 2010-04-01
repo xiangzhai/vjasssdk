@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream>
+
 #include <boost/foreach.hpp>
 
 #include "hash.hpp"
@@ -32,7 +34,7 @@ namespace wc3lib
 namespace mpq
 {
 
-Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_block(0)
+Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_filePathHashA(0), m_filePathHashB(0), m_language(MpqFile::Neutral), m_platform(MpqFile::Default), m_block(0), m_deleted(false)
 {
 }
 
@@ -54,24 +56,12 @@ std::streamsize Hash::read(std::istream &istream) throw (class Exception)
 		this->m_deleted = true;
 	else if (entry.fileBlockIndex != Hash::blockIndexEmpty)
 	{
-		int32 index = 0;
-		
-		BOOST_FOREACH(class Block *block, this->m_mpq->m_blocks)
-		{
-			if (index == entry.fileBlockIndex)
-			{
-				this->m_block = block;
-				
-				break;
-			}
-			
-			++index;
-		}
-		
+		this->m_block = this->mpq()->m_blockMap[entry.fileBlockIndex];
+
 		if (this->m_block == 0)
 			throw Exception(_("Error while searching for corresponding block of hash table entry."));
 	}
-	// otherwise it's empty
+	// otherwise it's empty (block == 0)
 	
 	return bytes;
 }
