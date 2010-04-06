@@ -1,4 +1,4 @@
-Name							Author				From
+File							Authors				Source
 Baer.blp						Blizzard Entertainment		http://xgm.ru/
 BaerBlau.blp						Blizzard Entertainment		http://xgm.ru/
 BaerDunkelbraun.blp					Blizzard Entertainment		http://xgm.ru/

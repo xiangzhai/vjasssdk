@@ -1,2 +1,2 @@
-Name		Author	From
+File		Authors		Source
 Magier.blp	Norinrad	http://www.wc3campaigns.net/

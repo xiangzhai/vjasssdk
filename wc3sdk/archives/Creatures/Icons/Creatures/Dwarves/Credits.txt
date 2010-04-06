@@ -1,3 +1,3 @@
-Name				Author		From
+File				Authors		Source
 BTNZwergenkrieger.blp		Norinrad	http://www.wc3campaigns.net/
 DISBTNZwergenkrieger.blp	Norinrad	http://www.wc3campaigns.net/

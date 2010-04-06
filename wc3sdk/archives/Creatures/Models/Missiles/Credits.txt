@@ -1,2 +1,2 @@
-Name		Author					From
+File		Authors					Source
 Bolzen.mdx	Blizzard Entertainment, Wolverine	http://xgm.ru/

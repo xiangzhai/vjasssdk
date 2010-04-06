@@ -1,4 +1,4 @@
-Name						Authors					Source
+File						Authors					Source
 Armbrustschuetze.mdx				Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Armbrustschuetze_Portrait.mdx			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Attentaeter.mdx					���					http://www.xgm.ru/

@@ -1,4 +1,4 @@
-Name					Author		Source
+File					Authors		Source
 BTNAttentaeter.tga			���		http://www.xgm.ru/
 BTNGeistlicheSchwertkaempferin.blp	Michael Peppers	http://www.wc3campaigns.net/
 BTNPaladin.blp				DeathBringer	http://www.xgm.ru/

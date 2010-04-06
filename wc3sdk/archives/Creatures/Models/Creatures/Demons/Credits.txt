@@ -1,4 +1,4 @@
-Name				Author				From
+File				Authors				Source
 Berserker.mdx			jigrael				http://www.wc3campaigns.net/
 Berserker_Portrait.mdx		jigrael				http://www.wc3campaigns.net/
 Bestie.mdx			Werewulf			http://www.wc3campaigns.net/

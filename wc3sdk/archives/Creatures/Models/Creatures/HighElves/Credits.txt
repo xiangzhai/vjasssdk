@@ -1,4 +1,4 @@
-Name					Author			Source
+File					Authors			Source
 Abtruenniger.mdx			Dionesiist		http://www.hiveworkshop.com/
 Botschafterin.mdx			Elenai			http://www.hiveworkshop.com/
 Botschafterin_Portrait.mdx		Elenai			http://www.hiveworkshop.com/

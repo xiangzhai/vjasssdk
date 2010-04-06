@@ -1,4 +1,4 @@
-Name					Author				Source
+File					Authors				Source
 Berserker.blp				jigrael				http://www.wc3campaigns.net/
 Bestie.blp				Werewulf			http://www.wc3campaigns.net/
 Bestienhaeuptling.blp			jigrael, Moyack			http://www.wc3campaigns.net/
