@@ -41,6 +41,7 @@ Spear1.mdx			Matarael	http://www.hiveworkshop.com/
 Spear2.mdx			Kitabatake	http://www.hiveworkshop.com/
 Stab.mdx			Sardor		DMdF Team
 StabdesWassers.mdx		Thrikodius	http://www.hiveworkshop.com/
+Torch.mdx			ThatGuy43	http://www.hiveworkshop.com/
 Vasallenschild1.mdx		xXm0RpH3usXx	http://www.wc3c.net/
 Vasallenschild2.mdx		xXm0RpH3usXx	http://www.wc3c.net/
 Vasallenschild3.mdx		xXm0RpH3usXx	http://www.wc3c.net/
