@@ -1,0 +1,21 @@
+File				Authors		Source
+Altar.blp			Sardor		Die Macht des Feuers
+Bag.blp				Frotty		Die Macht des Feuers
+Buch1.blp			Sardor		Die Macht des Feuers
+Buch2.blp			Sardor		Die Macht des Feuers
+Buch3.blp			Sardor		Die Macht des Feuers
+Coin.blp			Frotty		Die Macht des Feuers
+Holzbrett.blp			Sardor		Die Macht des Feuers
+Kirchenbank.blp			Sardor		Die Macht des Feuers
+Kiste1.blp			Sardor		Die Macht des Feuers
+Kiste2.blp			xXm0rpH3usXx	http://www.morpheus-modeling.info.ms/
+Messer.blp			Frotty		Die Macht des Feuers
+Mill.blp			Rondo		http://www.rondo.eu.tp/
+Mill2.blp			Frotty		Die Macht des Feuers
+Pechkessel.blp			Rondo		http://www.rondo.eu.tp/
+PechkesselWeiss.blp		Rondo		http://www.rondo.eu.tp/
+Shit.blp			Born2Modificate	-
+Steinmauer.blp			Sardor		Die Macht des Feuers
+WaffenplatzAxt.blp		Rondo		http://www.rondo.eu.tp/
+WaffenplatzHolz.blp		Rondo		http://www.rondo.eu.tp/
+Wiederbelebungsschrein.blp	Sardor		Die Macht des Feuers

@@ -1,4 +1,4 @@
-Name				Author			Source
+File				Authors			Source
 Altar.mdx			Sardor			Die Macht des Feuers
 Amboss.mdx			Born2Modificate		http://www.wc3campaigns.net/
 Apfel1.mdx			Sardor			Die Macht des Feuers
