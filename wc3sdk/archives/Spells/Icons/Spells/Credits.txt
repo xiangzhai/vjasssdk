@@ -26,6 +26,8 @@ BTNLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 BTNInferno.blp			X.e.r.e.X		http://www.hiveworkshop.com/
 BTNKonzentration.blp		KelThuzad		http://www.hiveworkshop.com/
 BTNManaShield.blp		OgeRfaCes		http://www.hiveworkshop.com/
+BTNNextRucksackPage.blp		NFWar			http://www.hiveworkshop.com/
+BTNPreviousRucksackPage.blp	NFWar			http://www.hiveworkshop.com/
 BTNPureEnergie.tga		Crazyrussian		http://www.wc3campaigns.net/
 BTNSpellBook.blp		CRAZYRUSSIAN		http://www.hiveworkshop.com/
 BTNSpells.blp			CRAZYRUSSIAN		http://www.hiveworkshop.com/
@@ -57,6 +59,8 @@ DISBTNLinderung.blp		Coinblin		http://www.hiveworkshop.com/
 DISBTNInferno.blp		X.e.r.e.X		http://www.hiveworkshop.com/
 DISBTNKonzentration.blp		KelThuzad		http://www.hiveworkshop.com/
 DISBTNManaShield.blp		OgeRfaCes		http://www.hiveworkshop.com/
+DISBTNNextRucksackPage.blp	NFWar			http://www.hiveworkshop.com/
+DISBTNPreviousRucksackPage.blp	NFWar			http://www.hiveworkshop.com/
 DISBTNPureEnergie.tga		Crazyrussian		http://www.wc3campaigns.net/
 DISBTNSpellBook.blp		CRAZYRUSSIAN		http://www.hiveworkshop.com/
 DISBTNSpells.blp		CRAZYRUSSIAN		http://www.hiveworkshop.com/
@@ -84,3 +88,11 @@ PASTeleportation		Daelin			http://www.wc3campaigns.net/
 PASManaShield.blp		OgeRfaCes		http://www.hiveworkshop.com/
 SSCHDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
 UPGUPGDunklerDiener.blp		vercas			http://www.hiveworkshop.com/
+
+ATCABTNCurb.blp			KelThuzad		http://www.hiveworkshop.com/
+BTNCurb.blp			KelThuzad		http://www.hiveworkshop.com/
+DISATCABTNCurb.blp		KelThuzad		http://www.hiveworkshop.com/
+DISBTNCurb.blp			KelThuzad		http://www.hiveworkshop.com/
+DISPASCurb.blp			KelThuzad		http://www.hiveworkshop.com/
+PASCurb.blp			KelThuzad		http://www.hiveworkshop.com/
+UPGUPBTNCurb.blp		KelThuzad		http://www.hiveworkshop.com/

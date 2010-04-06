@@ -1,5 +1,6 @@
 File			Authors		Source
 Beherrschung.mdx	JetFangInferno	http://www.wc3c.net/
+BlackWings.mdx		Hanza-Ru	http://www.hiveworkshop.com/
 Blitzschlag.mdx		Tranquil	http://www.hiveworkshop.com/
 ElementareGewalt.mdx	JetFangInferno	http://www.wc3c.net/
 Emblaze.mdx		shamanyouranus	http://www.hiveworkshop.com/
