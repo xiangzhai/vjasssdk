@@ -1,0 +1,2 @@
+File				Authors			Source
+CharacterManagement.tga		Sardor, Baradé		Die Macht des Feuers
