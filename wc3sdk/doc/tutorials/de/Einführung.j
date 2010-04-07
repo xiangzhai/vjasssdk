@@ -29,6 +29,7 @@ globals
 	constant boolean A_SYSTEMS = true
 	constant boolean A_OBJECTS = false
 	constant boolean A_DEBUG_HANDLES = false
+	constant boolean A_DEBUG_NATIVES = false
 	constant boolean A_NET = false
 	constant boolean A_FPS_MOVEMENT = false
 endglobals
@@ -42,8 +43,8 @@ ASL verwendet werden. A_JAPI legt das Gleiche, nur eben für das JAPI-Projekt fe
 der ASL verwendet werden, was allerdings auch eine Menge weiteren Codes bedeutet. A_OBJECTS gibt an, ob man Funktionen bezüglich der vom Projekt
 wc3sdk, welches praktisch das Überprojekt der ASL ist, mitgelieferten MPQ-Archive bzw. Dateien verwenden möchte. Momentan sind das ausschließlich
 Preload-Funktionen für die in den MPQ-Archiven enthaltenen Dateien.
-A_DEBUG_HANDLES kann nur den Wert true enthalten, falls auch A_DEBUG diesen enthält. Hat die Option den Wert true, so versucht die Struktur
-ABenchmark sämtliche Handle-Erzeugungen und -Löschungen mitzuloggen.
+A_DEBUG_HANDLES kann nur den Wert true enthalten, falls auch die vJass-Konstante DEBUG_MODE diesen enthält. Hat die Option den Wert true, so versucht die Struktur
+ABenchmark sämtliche Handle-Erzeugungen und -Löschungen mitzuloggen. A_DEBUG_NATIVES bewirkt, dass die ASL versucht, mögliche Fehler in nativen Jass-Funktionen zu ermitteln.
 A_NET kann nur true sein, falls A_RTC dies auch ist, da für die Netzwerkbibliotheken die nativen Funktionen des Projekts RtC verwendet werden.
 Momentan existiert nur die unfertige Struktur AHost, welche später einmal Teil eines Netzwerksystems für mehr als 12 Spieler sein soll.
 A_FPS_MOVEMENT gibt an, ob die Struktur AMovement des Charaktersystems das FPS-System des Projekts RtC verwenden soll und kann deshalb ebenfalls nur den Wert true enthalten, falls A_RTC dies auch tut.
