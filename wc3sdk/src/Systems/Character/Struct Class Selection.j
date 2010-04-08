@@ -1,7 +1,7 @@
 library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreGeneralPlayer, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceMultiboard, AStructSystemsCharacterCharacter, AStructSystemsCharacterClass
 
 	/// @todo Should be part of @struct AClassSelection, vJass bug.
-	function interface AClassSelectionSelectClassAction takes ACharacter character, AClass class returns nothing
+	function interface AClassSelectionSelectClassAction takes ACharacter character, AClass class, boolean last returns nothing
 
 	/// @todo Should be part of @struct AClassSelection, vJass bug.
 	function interface AClassSelectionCharacterCreationAction takes AClassSelection classSelection, unit whichUnit returns ACharacter
@@ -12,6 +12,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 	struct AClassSelection
 		//static start members
 		private static camerasetup m_cameraSetup
+		private static boolean m_hideUserInterface
 		private static real m_x
 		private static real m_y
 		private static real m_facing
@@ -84,10 +85,12 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or (GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT and ACharacter.shareOnPlayerLeaves())) then
 				call character.shareControl(true)
 			endif
-			call SetUserInterfaceForPlayer(this.m_user, true, true)
+			if (thistype.m_hideUserInterface) then
+				call SetUserInterfaceForPlayer(this.m_user, true, true)
+			endif
 			call ResetToGameCameraForPlayer(this.m_user, 0.0)
 			call character.setClass(this.m_class)
-			call this.m_selectClassAction.execute(character, this.m_class)
+			call this.m_selectClassAction.execute(character, this.m_class, thistype.m_stack == 1)
 			call this.destroy()
 		endmethod
 
@@ -115,18 +118,24 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		endmethod
 
 		private method refreshInfoSheet takes nothing returns nothing
-			local integer count = 3
+			local integer count = 0
 			local integer i
 			local multiboarditem multiboardItem
-			local string strengthText = IntegerArg(thistype.m_textStrength, GetHeroStr(this.m_classUnit, false))
-			local string agilityText = IntegerArg(thistype.m_textAgility, GetHeroAgi(this.m_classUnit, false))
-			local string intelligenceText = IntegerArg(thistype.m_textIntelligence, GetHeroInt(this.m_classUnit, false))
+			local string strengthText
+			local string agilityText
+			local string intelligenceText
 			local AStringVector strings = AStringVector.create()
-			local integer index
+			local integer index = 0
 
-			call strings.pushBack(strengthText)
-			call strings.pushBack(agilityText)
-			call strings.pushBack(intelligenceText)
+			if (thistype.m_hideUserInterface) then
+				set count = 3
+				set strengthText = IntegerArg(thistype.m_textStrength, GetHeroStr(this.m_classUnit, false))
+				set agilityText = IntegerArg(thistype.m_textAgility, GetHeroAgi(this.m_classUnit, false))
+				set intelligenceText = IntegerArg(thistype.m_textIntelligence, GetHeroInt(this.m_classUnit, false))
+				call strings.pushBack(strengthText)
+				call strings.pushBack(agilityText)
+				call strings.pushBack(intelligenceText)
+			endif
 
 			set i = 0
 			loop
@@ -159,30 +168,33 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 			call MultiboardSetRowCount(this.m_infoSheet, count)
 			call MultiboardSetTitleText(this.m_infoSheet, IntegerArg(IntegerArg(StringArg(thistype.m_textTitle, GetUnitName(this.m_classUnit)), this.m_class), thistype.m_lastClass - thistype.m_firstClass + 1))
-			//strength
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
-			call MultiboardSetItemStyle(multiboardItem, true, true)
-			call MultiboardSetItemIcon(multiboardItem, thistype.m_strengthIconPath)
-			call MultiboardSetItemValue(multiboardItem, strengthText)
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
-			//agility
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 1, 0)
-			call MultiboardSetItemStyle(multiboardItem, true, true)
-			call MultiboardSetItemIcon(multiboardItem, thistype.m_agilityIconPath)
-			call MultiboardSetItemValue(multiboardItem, agilityText)
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
-			//intelligence
-			set multiboardItem = MultiboardGetItem(this.m_infoSheet, 2, 0)
-			call MultiboardSetItemStyle(multiboardItem, true, true)
-			call MultiboardSetItemIcon(multiboardItem, thistype.m_intelligenceIconPath)
-			call MultiboardSetItemValue(multiboardItem, intelligenceText)
-			call MultiboardReleaseItem(multiboardItem)
-			set multiboardItem = null
+			if (thistype.m_hideUserInterface) then
+				// strength
+				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 0, 0)
+				call MultiboardSetItemStyle(multiboardItem, true, true)
+				call MultiboardSetItemIcon(multiboardItem, thistype.m_strengthIconPath)
+				call MultiboardSetItemValue(multiboardItem, strengthText)
+				call MultiboardReleaseItem(multiboardItem)
+				set multiboardItem = null
+				// agility
+				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 1, 0)
+				call MultiboardSetItemStyle(multiboardItem, true, true)
+				call MultiboardSetItemIcon(multiboardItem, thistype.m_agilityIconPath)
+				call MultiboardSetItemValue(multiboardItem, agilityText)
+				call MultiboardReleaseItem(multiboardItem)
+				set multiboardItem = null
+				// intelligence
+				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 2, 0)
+				call MultiboardSetItemStyle(multiboardItem, true, true)
+				call MultiboardSetItemIcon(multiboardItem, thistype.m_intelligenceIconPath)
+				call MultiboardSetItemValue(multiboardItem, intelligenceText)
+				call MultiboardReleaseItem(multiboardItem)
+				set multiboardItem = null
+				set index = 3
+			endif
 
 			if (this.m_class.abilities() > 0) then
-				set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3, 0)
+				set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 				call MultiboardSetItemStyle(multiboardItem, true, false)
 				call MultiboardSetItemValue(multiboardItem, thistype.m_textAbilities)
 				call MultiboardReleaseItem(multiboardItem)
@@ -191,7 +203,8 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				set i = 0
 				loop
 					exitwhen(i == this.m_class.abilities())
-					set multiboardItem = MultiboardGetItem(this.m_infoSheet, 3 + 1 + i, 0)
+					set index = index + 1
+					set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 					call MultiboardSetItemStyle(multiboardItem, true, true)
 					call MultiboardSetItemIcon(multiboardItem, this.m_class.abilityIconPath(i))
 					call MultiboardSetItemValue(multiboardItem, GetObjectName(this.m_class.ability(i)))
@@ -202,11 +215,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			endif
 
 			if (this.m_class.descriptionLines() > 0) then
-				if (this.m_class.abilities() > 0) then
-					set index = 3 + 1 + this.m_class.abilities()
-				else
-					set index = 3
-				endif
+				set index = index + 1
 				set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 				call MultiboardSetItemStyle(multiboardItem, true, false)
 				call MultiboardSetItemValue(multiboardItem, thistype.m_textDescription)
@@ -216,7 +225,8 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				set i = 0
 				loop
 					exitwhen(i == this.m_class.descriptionLines())
-					set multiboardItem = MultiboardGetItem(this.m_infoSheet, index + 1 + i, 0)
+					set index = index + 1
+					set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 					call MultiboardSetItemStyle(multiboardItem, true, false)
 					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i))
 					call MultiboardReleaseItem(multiboardItem)
@@ -245,6 +255,9 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call SetUnitAnimation(this.m_classUnit, this.m_class.animation())
 			call PlaySoundFileForPlayer(this.m_user, this.m_class.soundPath())
 			//call SetCameraTargetControllerNoZForPlayer(this.user, this.classUnit, 0.0, 0.0, false)
+			if (not thistype.m_hideUserInterface) then
+				call SelectUnitForPlayerSingle(this.m_classUnit, this.m_user)
+			endif
 
 			call this.refreshInfoSheet()
 		endmethod
@@ -254,9 +267,9 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				call this.selectRandomClass()
 			else
 				call ClearScreenMessagesForPlayer(this.m_user)
-				call SetUserInterfaceForPlayer(this.m_user, false, true)
-				//call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
-				//call MultiboardMinimize(this.m_infoSheet, false)
+				if (thistype.m_hideUserInterface) then
+					call SetUserInterfaceForPlayer(this.m_user, false, true)
+				endif
 				call this.createUnit()
 			endif
 		endmethod
@@ -466,9 +479,10 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			endif
 		endmethod
 
-		public static method init takes camerasetup cameraSetup, real x, real y, real facing, real refreshRate, real rotationAngle, AClass firstClass, AClass lastClass, AClassSelectionCharacterCreationAction characterCreationAction, AClassSelectionStartGameAction startGameAction, string strengthIconPath, string agilityIconPath, string intelligenceIconPath, string textTitle, string textStrength, string textAgility, string textIntelligence, string textAbilities, string textDescription returns nothing
-			//static start members
+		public static method init takes camerasetup cameraSetup, boolean hideUserInterface, real x, real y, real facing, real refreshRate, real rotationAngle, AClass firstClass, AClass lastClass, AClassSelectionCharacterCreationAction characterCreationAction, AClassSelectionStartGameAction startGameAction, string strengthIconPath, string agilityIconPath, string intelligenceIconPath, string textTitle, string textStrength, string textAgility, string textIntelligence, string textAbilities, string textDescription returns nothing
+			// static construction members
 			set thistype.m_cameraSetup = cameraSetup
+			set thistype.m_hideUserInterface = hideUserInterface
 			set thistype.m_x = x
 			set thistype.m_y = y
 			set thistype.m_facing = facing

@@ -2,6 +2,8 @@ library AStructCoreGeneralAsl requires optional ALibraryCoreDebugMisc, ALibraryC
 
 	struct Asl
 		public static constant string version = "1.2"
+		public static constant string rtcVersion = "1.0"
+		public static constant string japiVersion = "1.0"
 		public static constant string maintainer = "Tamino Dauth"
 		public static constant string website = "http://sourceforge.net/projects/vjasssdk/"
 
@@ -44,6 +46,18 @@ static if (DEBUG_MODE) then
 			call Print(StringArg(tr("Version: %s"), thistype.version))
 			call Print(StringArg(tr("Maintainer: %s"), thistype.maintainer))
 			call Print(StringArg(tr("Website: %s"), thistype.website))
+			if (thistype.useRtc()) then
+				call Print(StringArg(tr("* uses RtC %s"), thistype.rtcVersion))
+			endif
+			if (thistype.useJapi()) then
+				call Print(StringArg(tr("* uses jAPI %s"), thistype.japiVersion))
+			endif
+			if (thistype.useObjects()) then
+				call Print(tr("* uses objects"))
+			endif
+			if (thistype.useDebugHandles()) then
+				call Print(tr("* uses debug handles"))
+			endif
 		endmethod
 endif
 	endstruct

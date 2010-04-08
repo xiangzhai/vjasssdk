@@ -1,3 +1,14 @@
+2010-04-08 Tamino Dauth <tamino@cdauth.de>
+* Added cheats "lumber" and "gold".
+* Added initialization option "hideUserInterface" to struct AClassSelection.
+* Added functions SetUserUIForPlayer and SetUserControlForPlayer.
+* Improved level text of struct ACharactersScheme.
+
+2010-04-07 Tamino Dauth <tamino@cdauth.de>
+* Added struct AArrowButton.
+* Revised RtC natives (version 1.0).
+* Added jAPI and RtC version information to struct Asl.
+
 2010-03-25 Tamino Dauth <tamino@cdauth.de>
 * Added file "src/Core/Debug/Library Map.j".
 

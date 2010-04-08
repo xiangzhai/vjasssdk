@@ -559,7 +559,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 				debug endif
 				loop
 					exitwhen (i == exitValue)
-						call unaryFunction.execute(this.m_element[i])
+					call unaryFunction.execute(this.m_element[i])
 					set i = i + 1
 				endloop
 			endmethod

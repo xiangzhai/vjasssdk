@@ -1,3 +1,4 @@
+//! import "Systems/Gui/Struct Arrow Button.j"
 //! import "Systems/Gui/Struct Button.j"
 //! import "Systems/Gui/Struct Check Box.j"
 //! import "Systems/Gui/Struct Dialog.j"
@@ -14,5 +15,5 @@
 //! import "Systems/Gui/Struct Widget.j"
 //! import "Systems/Gui/Struct Window.j"
 
-library ASystemsGui requires AStructSystemsGuiButton, AStructSystemsGuiCheckBox, AStructSystemsGuiDialog, AStructSystemsGuiDialogButton, AStructSystemsGuiFrame, AStructSystemsGuiFrameBar, AStructSystemsGuiGui, AStructSystemsGuiImage, AStructSystemsGuiLayout, AStructSystemsGuiMainWindow, AStructSystemsGuiStyle, AStructSystemsGuiText, AStructSystemsGuiVote, AStructSystemsGuiWidget, AStructSystemsGuiWindow
+library ASystemsGui requires AStructSystemsGuiArrowButton, AStructSystemsGuiButton, AStructSystemsGuiCheckBox, AStructSystemsGuiDialog, AStructSystemsGuiDialogButton, AStructSystemsGuiFrame, AStructSystemsGuiFrameBar, AStructSystemsGuiGui, AStructSystemsGuiImage, AStructSystemsGuiLayout, AStructSystemsGuiMainWindow, AStructSystemsGuiStyle, AStructSystemsGuiText, AStructSystemsGuiVote, AStructSystemsGuiWidget, AStructSystemsGuiWindow
 endlibrary

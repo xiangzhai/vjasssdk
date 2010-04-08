@@ -53,7 +53,12 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 				set text = text + " [" + GetUnitName(character.unit()) + "]"
 			endif
 			if (thistype.m_showLevel) then
-				set text = text + " - " + thistype.m_textLevel + " " + I2S(GetHeroLevel(character.unit()))
+				if (IsUnitType(character.unit(), UNIT_TYPE_HERO)) then
+					set text = text + " - " + thistype.m_textLevel + " " + I2S(GetHeroLevel(character.unit()))
+				// if hero has overtaken an enemy etc.
+				else
+					set text = text + " - " + thistype.m_textLevel + " " + I2S(GetUnitLevel(character.unit()))
+				endif
 			endif
 			return text
 		endmethod

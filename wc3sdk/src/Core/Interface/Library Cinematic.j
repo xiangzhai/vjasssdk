@@ -1,17 +1,21 @@
 library ALibraryCoreInterfaceCinematic
 
 	/**
-	 * @author Tamino Dauth
-	 * @todo Test it!
-	 */
+	* @author Tamino Dauth
+	* @todo Test it!
+	* @see EndCinematicScene, CancelCineSceneBJ
+	*/
 	function EndCinematicSceneForPlayer takes player whichPlayer returns nothing
 		if (whichPlayer == GetLocalPlayer()) then
 			call EndCinematicScene()
 		endif
 	endfunction
 
-	//smaller function than the real
-	//you don't have to use player forces
+	/**
+	* Smaller function than the real function (SetCinematicSceneBJ
+	* You don't have to use player forces.
+	* @see SetCinematicSceneBJ, TransmissionFromUnitWithNameBJ
+	*/
 	function SetCinematicSceneForPlayer takes player user, integer unitType, player owner, string title, string text, real sceneTime, real voiceTime returns nothing
 		local player localPlayer = GetLocalPlayer()
 		local playercolor playerColour = GetPlayerColor(owner)
@@ -23,8 +27,9 @@ library ALibraryCoreInterfaceCinematic
 	endfunction
 
 	/**
+	* Does not init cinematic behaviour, wait for sound and ping the minimap.
 	* @author Tamino Dauth
-	* @state untested
+	* @see TransmissionFromUnitTypeWithNameBJ, TransmissionFromUnit
 	*/
 	function TransmissionFromUnitType takes integer unitType, player owner, string name, string text, sound playedSound returns nothing
 		local playercolor playerColor = GetPlayerColor(owner)
@@ -40,8 +45,9 @@ library ALibraryCoreInterfaceCinematic
 	endfunction
 
 	/**
+	* Same differences like @function TransmissionFromUnitType and additionally does not add unit's indicator.
 	* @author Tamino Dauth
-	* @state untested
+	* @see TransmissionFromUnitWithNameBJ, TransmissionFromUnitType
 	*/
 	function TransmissionFromUnit takes unit usedUnit, string text, sound playedSound returns nothing
 		local player owner = GetOwningPlayer(usedUnit)
@@ -76,6 +82,9 @@ library ALibraryCoreInterfaceCinematic
 		set playerColor = null
 	endfunction
 
+	/**
+	* @see GetTransmissionDuration
+	*/
 	function GetSimpleTransmissionDuration takes sound playedSound returns real
 		if (playedSound != null) then
 			return GetSoundDurationBJ(playedSound)
@@ -83,9 +92,10 @@ library ALibraryCoreInterfaceCinematic
 		return bj_NOTHING_SOUND_DURATION
 	endfunction
 
-	//here it's the same
-	//you don't have to use fucking player forces
-	//we want to use players only!
+	/**
+	* Alternate function without using forces.
+	* @see ClearTextMessagesBJ, ClearTextMessages
+	*/
 	function ClearScreenMessagesForPlayer takes player user returns nothing
 		local player localPlayer = GetLocalPlayer()
 		if (user == localPlayer) then
@@ -94,13 +104,34 @@ library ALibraryCoreInterfaceCinematic
 		set localPlayer = null
 	endfunction
 
-	//and the same
-	//we combinated the interface settings and the user control settings
-	function SetUserInterfaceForPlayer takes player user, boolean show, boolean control returns nothing
+	/**
+	* @see EnableUserUI, ShowInterfaceForceOn, ShowInterfaceForceOff
+	*/
+	function SetUserUIForPlayer takes player whichPlayer, boolean show returns nothing
+		if (whichPlayer == GetLocalPlayer()) then
+			call EnableUserUI(show)
+		endif
+	endfunction
+
+	/**
+	* @see EnableUserControl, SetUserControlForceOn, SetUserControlForceOff
+	*/
+	function SetUserControlForPlayer takes player whichPlayer, boolean enable returns nothing
+		if (whichPlayer == GetLocalPlayer()) then
+			call EnableUserControl(enable)
+		endif
+	endfunction
+
+	/**
+	* Alternate function without using forces. Combines functions @function SetUserUIForPlayer and @function SetUserControlForPlayer.
+	* @see SetUserUIForPlayer, SetUserControlForPlayer, SetUserControlForceOn, SetUserControlForceOff, ShowInterfaceForceOn, ShowInterfaceForceOff, EnableUserUI, EnableUserControl
+	*/
+	function SetUserInterfaceForPlayer takes player user, boolean show, boolean enableControl returns nothing
 		local player localPlayer = GetLocalPlayer()
 		if (user == localPlayer) then
-			call ShowInterface(show, 0.0)
-			call EnableUserControl(control)
+			call EnableUserUI(show)
+			//call ShowInterface(show, 0.0)
+			call EnableUserControl(enableControl)
 		endif
 		set localPlayer = null
 	endfunction

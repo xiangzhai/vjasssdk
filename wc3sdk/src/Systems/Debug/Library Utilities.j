@@ -3,6 +3,8 @@
 * Cheat list:
 * version - Displays ASL information.
 * clear - Clears screen messages for cheating player.
+* gold - Gives player gold.
+* lumber - Gives player lumber.
 * info - Shows some information about selected unit of cheating player.
 * setlevel - Sets level for selected unit of cheating player.
 * kill - Kills selected unit of cheating player.
@@ -33,6 +35,8 @@ library ALibrarySystemsDebugUtilities initializer initFunction requires AStructC
 static if (DEBUG_MODE) then
 		call Print("version")
 		call Print("clear")
+		call Print("gold <gold>")
+		call Print("lumber <lumber>")
 		call Print("info")
 		call Print("setlevel")
 		call Print("kill")
@@ -74,6 +78,18 @@ endif
 		set triggerPlayer = null
 	endfunction
 
+	private function gold takes nothing returns nothing
+		local integer goldAmount = S2I(SubString(GetEventPlayerChatString(), StringLength("gold") + 1, StringLength(GetEventPlayerChatString())))
+		call AdjustPlayerStateBJ(goldAmount, GetTriggerPlayer(), PLAYER_STATE_RESOURCE_GOLD)
+		debug call Print(IntegerArg(tr("Added %i gold."), goldAmount))
+	endfunction
+
+	private function lumber takes nothing returns nothing
+		local integer lumberAmount = S2I(SubString(GetEventPlayerChatString(), StringLength("lumber") + 1, StringLength(GetEventPlayerChatString())))
+		call AdjustPlayerStateBJ(lumberAmount, GetTriggerPlayer(), PLAYER_STATE_RESOURCE_LUMBER)
+		debug call Print(IntegerArg(tr("Added %i lumber."), lumberAmount))
+	endfunction
+
 	/// @todo Add some information.
 	private function info takes nothing returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
@@ -111,9 +127,9 @@ endif
 			if (IsUnitType(hero, UNIT_TYPE_HERO)) then
 				set level = S2I(SubString(message, StringLength("setlevel") + 1, StringLength(message)))
 				call SetHeroLevelBJ(hero, level, true)
-				debug call Print("Set level to " + I2S(level) + ".")
+				debug call Print(IntegerArg(tr("Set level to %i."), level))
 			debug else
-				debug call Print("Unit is not a hero.")
+				debug call Print(tr("Selected unit is not a hero."))
 			endif
 			set hero = null
 		endif
@@ -137,7 +153,7 @@ endif
 		local unit copiedUnit
 		if (selectedUnit != null) then
 			set copiedUnit = CopyUnit(selectedUnit, GetUnitX(selectedUnit), GetUnitY(selectedUnit), GetUnitFacing(selectedUnit), bj_UNIT_STATE_METHOD_ABSOLUTE)
-			debug call Print("Copying unit.")
+			debug call Print(tr("Copying unit."))
 			set copiedUnit = null
 		endif
 		set triggerPlayer = null
@@ -150,7 +166,7 @@ endif
 			call SetUnitLifePercentBJ(selectedUnit, 100.0)
 			call SetUnitManaPercentBJ(selectedUnit, 100.0)
 			call UnitResetCooldown(selectedUnit)
-			debug call Print("Gave all.")
+			debug call Print(tr("Gave all."))
 			set selectedUnit = null
 		endif
 		set triggerPlayer = null
@@ -179,9 +195,9 @@ endif
 			if (IsUnitType(selectedUnit, UNIT_TYPE_HERO)) then
 				set experience = S2I(SubString(GetEventPlayerChatString(), StringLength("xp") + 1, StringLength(GetEventPlayerChatString())))
 				call AddHeroXP(selectedUnit, xp, true)
-				debug call Print("Added " + I2S(xp) + " experience.")
+				debug call Print(IntegerArg(tr("Added %i experience."), xp))
 			debug else
-				debug call Print("Unit is not a hero.")
+				debug call Print(tr("Selected unit is not a hero."))
 			endif
 			set selectedUnit = null
 		endif
@@ -193,7 +209,7 @@ endif
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
 			call SetUnitPathing(selectedUnit, true)
-			debug call Print("Enabled unit pathing.")
+			debug call Print(tr("Enabled unit pathing."))
 			set selectedUnit = null
 		endif
 		set triggerPlayer = null
@@ -204,31 +220,31 @@ endif
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
 			call SetUnitPathing(selectedUnit, false)
-			debug call Print("Disabled unit pathing.")
+			debug call Print(tr("Disabled unit pathing."))
 			set selectedUnit = null
 		endif
 		set triggerPlayer = null
 	endfunction
 
 	private function benchmarks takes nothing returns nothing
-		debug call Print("Showing all benchmarks:")
+		debug call Print(tr("Showing all benchmarks:"))
 		call ABenchmark.showBenchmarks()
 	endfunction
 
 	private function clearbenchmarks takes nothing returns nothing
-		debug call Print("Clearing all benchmarks.")
+		debug call Print(tr("Clearing all benchmarks."))
 		call ABenchmark.clearAll()
 	endfunction
 
 	private function enable takes nothing returns nothing
 		local string identifier = SubString(GetEventPlayerChatString(), StringLength("enable") + 1, StringLength(GetEventPlayerChatString()))
-		debug call Print("Enabling identifier \"" + identifier + "\".")
+		debug call Print(StringArg(tr("Enabling identifier \"%s\"."), identifier))
 		debug call EnablePrintIdentifier(identifier)
 	endfunction
 
 	private function disable takes nothing returns nothing
 		local string identifier = SubString(GetEventPlayerChatString(), StringLength("disable") + 1, StringLength(GetEventPlayerChatString()))
-		debug call Print("Disabling identifier \"" + identifier + "\".")
+		debug call Print(StringArg(tr("Disabling identifier \"%s\"."), identifier))
 		debug call DisablePrintIdentifier(identifier)
 	endfunction
 
@@ -251,6 +267,8 @@ static if (DEBUG_MODE) then
 		call ACheat.create("help", true, help)
 		call ACheat.create("version", true, showVersion)
 		call ACheat.create("clear", true, clear)
+		call ACheat.create("gold", true, gold)
+		call ACheat.create("lumber", true, lumber)
 		call ACheat.create("info", true, info)
 		call ACheat.create("setlevel", false, setlevel)
 		call ACheat.create("kill", true, kill)
