@@ -12,7 +12,7 @@
 	 
 	 Creators Note:
 	  - This extension was created so KDE Linux users could have an easy and light way of programming in vJass. This extension is opensource and freeware, but please if you use it, credit me, because I lost many hours to make this work and to bring this to the world. Hoping it helps, Flame_Phoenix.-->
-<language name="vJass" version="1.26" kateversion="3.3.2" section="Scripts" extensions="*.j;*.J;*.ai;*.AI" author="Pedro Miguel Martins"> 
+<language name="vJass" version="1.26" kateversion="3.3.4" section="Scripts" extensions="*.j;*.J;*.ai;*.AI" author="Pedro Miguel Martins"> 
 	<highlighting>
 		<!-- keywords of vJass-->
 		<list name="keywords">
@@ -63,6 +63,8 @@
 			<item>implement</item>
 			<item>optional</item>
 			<item>hook</item>
+			<item>SCOPE_PREFIX</item>
+			<item>SCOPE_PRIVATE</item>
 			<!-- Zinc -->
 			<item>for</item>
 			<item>while</item>
@@ -2364,130 +2366,60 @@
 		</list>
 		
 		<list name="RtCNatives">
-			<item>StringPos</item>
-			<item>StringReplace</item>
-			<item>IsWindowInFocus</item>
-			<item>Char</item>
-			<item>Log</item>
-			<item>Ln</item>
-			<item>BitAnd</item>
-			<item>BitOr</item>
-			<item>BitXor</item>
-			<item>BitBSL</item>
-			<item>BitBSR</item>
-			<item>BitFlip</item>
-			<item>GetTimestamp</item>
-			<item>GetTimeSeconds</item>
-			<item>GetTimeMinutes</item>
-			<item>GetTimeHours</item>
-			<item>GetTimeMonth</item>
-			<item>GetTimeDayWeek</item>
-			<item>GetTimeDayMonth</item>
-			<item>GetTimeDayYear</item>
-			<item>GetTimeYear</item>
-			<item>GetTickCount</item>
-			<item>GetTimeMilliseconds</item>
-			<item>GetMouseX</item>
-			<item>GetMouseY</item>
-			<item>GetMouseXRelative</item>
-			<item>GetMouseYRelative</item>
-			<item>SetMouseX</item>
-			<item>SetMouseY</item>
-			<item>SetMousePos</item>
-			<item>TriggerRegisterMouseEvent</item>
-			<item>GetMouseTargetX</item>
-			<item>GetMouseTargetY</item>
-			<item>SetMouseBlock</item>
-			<item>IsMouseOverUI</item>
-			<item>TriggerRegisterKeyEvent</item>
-			<item>IsKeyDown</item>
-			<item>SetKeyBlock</item>
-			<item>GetScreenWidth</item>
-			<item>GetScreenHeight</item>
-			<item>GetWindowWidth</item>
-			<item>GetWindowHeight</item>
-			<item>GetWindowX</item>
-			<item>GetWindowY</item>
-			<item>GetTriggerParam_Integer</item>
-			<item>GetTriggerParam_Real</item>
-			<item>GetTriggerParam_String</item>
-			<item>SocTCPConnect</item>
-			<item>SocTCPListen</item>
-			<item>SocTCPAccept</item>
-			<item>SocTCPIP</item>
-			<item>SocSetNagle</item>
-			<item>SocTCPConnected</item>
-			<item>SocUDPConnect</item>
-			<item>SocSendUDPMessage</item>
-			<item>SocSendTCPMessage</item>
-			<item>SocReceiveMessage</item>
-			<item>SocPeekMessage</item>
-			<item>SocSetFormat</item>
-			<item>SocGetLastInIP</item>
-			<item>SocGetLastInPort</item>
-			<item>SocSetSync</item>
-			<item>SocCloseSocket</item>
-			<item>SocGetSocketLastError</item>
-			<item>SocGetMyHost</item>
-			<item>SocCompareIp</item>
-			<item>SocExit</item>
-			<item>SocStart</item>
-			<item>SocNetConnected</item>
-			<item>BufferWriteByte</item>
-			<item>BufferWriteShort</item>
-			<item>BufferWriteUShort</item>
-			<item>BufferWriteInt</item>
-			<item>BufferWriteUInt</item>
-			<item>BufferWriteFloat</item>
-			<item>BufferWriteString</item>
-			<item>BufferWriteChars</item>
-			<item>BufferWriteOrderID</item>
-			<item>BufferReadByte</item>
-			<item>BufferReadShort</item>
-			<item>BufferReadUShort</item>
-			<item>BufferReadInt</item>
-			<item>BufferReadUInt</item>
-			<item>BufferReadFloat</item>
-			<item>BufferReadString</item>
-			<item>BufferReadChars</item>
-			<item>BufferReadOrderID</item>
-			<item>CreateBuffer</item>
-			<item>DestroyBuffer</item>
-			<item>BufferCopy</item>
-			<item>BufferClear</item>
-			<item>BufferSize</item>
-			<item>BufferBytesLeft</item>
-			<item>CreateVector</item>
-			<item>DestroyVector</item>
+			<item>StopWatchCreate</item>
+			<item>StopWatchMark</item>
+			<item>StopWatchDestroy</item>
+			<item>TimeGetTimestamp</item>
+			<item>TimeGetSeconds</item>
+			<item>TimeGetMinutes</item>
+			<item>TimeGetHours</item>
+			<item>TimeGetDayMonth</item>
+			<item>TimeGetDayWeek</item>
+			<item>TimeGetMonth</item>
+			<item>TimeGetYear</item>
+			<item>TimeGetMilliseconds</item>
+			<item>VectorCreate</item>
+			<item>VectorDestroy</item>
 			<item>VectorClear</item>
-			<item>GetVectorSize</item>
-			<item>SetVectorSize</item>
+			<item>VectorGetSize</item>
+			<item>VectorSetSize</item>
 			<item>VectorGet</item>
 			<item>VectorSet</item>
 			<item>VectorPushBack</item>
 			<item>VectorPopBack</item>
 			<item>VectorBack</item>
 			<item>VectorEmpty</item>
-			<item>CreateI64</item>
-			<item>DestroyI64</item>
-			<item>AddIntToI64</item>
-			<item>SubIntFromI64</item>
-			<item>AddI64ToI64</item>
-			<item>SubI64FromI64</item>
-			<item>MulI64</item>
-			<item>DivI64</item>
-			<item>I64AsString</item>
-			<item>I64AsIntHigh</item>
-			<item>I64AsIntLow</item>
-			<item>I64Compare</item>
-			<item>TriggerRegisterTooltipEvent</item>
-			<item>TriggerReturnString</item>
-			<item>GetTriggeringRawcode</item>
-			<item>GetTriggeringLevel</item>
-			<item>CreateTriggerGroup</item>
-			<item>DestroyTriggerGroup</item>
-			<item>TriggerGroupAdd</item>
-			<item>TriggerGroupRun</item>
+			<item>GetMouseTerrainX</item>
+			<item>GetMouseTerrainY</item>
+			<item>GetMouseTerrainZ</item>
+			<item>GetMouseScaleX</item>
+			<item>GetMouseScaleY</item>
+			<item>GetMouseScreenX</item>
+			<item>GetMouseScreenY</item>
+			<item>SetMouseScreenX</item>
+			<item>SetMouseScreenY</item>
+			<item>SetMouseScreenPos</item>
+			<item>IsMouseOverUI</item>
+			<item>SetMouseBlock</item>
+			<item>GetTriggerWheelDelta</item>
+			<item>TriggerRegisterMouseEvent</item>
+			<item>TriggerRegisterKeyEvent</item>
+			<item>GetTriggerKey</item>
+			<item>SetKeyBlock</item>
+			<item>ForceKeyDown</item>
+			<item>ForceKeyUp</item>
+			<item>ForceKeyType</item>
+			<item>StringReplace</item>
+			<item>StringPos</item>
+			<item>StringRPos</item>
+			<item>BitAnd</item>
+			<item>BitOr</item>
+			<item>BitXor</item>
+			<item>BitBSL</item>
+			<item>BitBSR</item>
+			<item>BitFlip</item>
+			<item>Log</item>
+			<item>Ln</item>
 		</list>
 		
 		<!-- datatypes of vJass-->
