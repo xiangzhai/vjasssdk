@@ -29,11 +29,6 @@ namespace wc3lib
 
 namespace mpq
 {
-
-void MpqFile::remove() throw (class Exception)
-{
-	this->m_hash->clear();
-}
 	
 std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 {
@@ -50,12 +45,17 @@ std::streamsize MpqFile::write(std::ostream &ostream) const throw (class Excepti
 	return 0;
 }
 
-MpqFile::MpqFile(class Mpq *mpq, class Hash *hash) : m_mpq(mpq), m_hash(hash), m_size(0), m_compressedSize(0), m_locale(MpqFile::Neutral), m_platform(MpqFile::Default), m_path("")
+MpqFile::MpqFile(class Mpq *mpq, class Hash *hash) : m_mpq(mpq), m_hash(hash), m_path("")
 {
 }
 
 MpqFile::~MpqFile()
 {
+}
+
+void MpqFile::remove() throw (class Exception)
+{
+	this->m_hash->clear();
 }
 
 }

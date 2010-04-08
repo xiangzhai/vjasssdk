@@ -1,3 +1,7 @@
+2010-04-04 Tamino Dauth <tamino@cdauth.de>
+* If removeFile is called with an instance of an MPQ file of the method's corresponding MPQ archive, it should be removed directly instead of searching it again.
+* Check always the corresponding MPQ archive and throw exceptions if it's the same (e. g. if you want to add an MPQ file at twice).
+
 2010-04-01 Tamino Dauth <tamino@cdauth.de>
 * Note that there can't be as many blocks in MPQ archives as int32 allows since last two numbers are reserved for empty and deleted blocks.
 * Maybe we should drop block list and do only use map (since hash entries do use block indices)?

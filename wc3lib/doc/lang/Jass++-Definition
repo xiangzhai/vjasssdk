@@ -160,7 +160,7 @@ Modularisierung-Schlüsselwörter:
 Standard: package, private, protected, public
 
 Objektorientierung-Schlüsselwörter:
-Standard: private protected, class, this, self, super, new, delete, copy, init, virtual, static, friend, abstract
+Standard: private protected, class, this, self, parent, new, delete, copy, init, virtual, static, friend, abstract
 
 Threading-Schlüsselwöter:
 threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
@@ -192,9 +192,12 @@ Notation:
 #include [ jass | zinc | vjass | jasspp ] "Dateipfad"
 #inject InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
 #endinject
-#initjasspp // Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
-#if (konstanter Ausdruck) Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10) 
+#initjasspp			Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
+#if (<konstanter Ausdruck>)	Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10)
+#else if (<konstanter Ausdruck>)
+#else
 #endif
+#error <konstanter Ausdruck>	Bricht den Kompiliervorgang ab und gibt den konstanten Ausdruck als Fehlermeldung aus.
 #jass
 #endjass
 #zinc
@@ -203,7 +206,7 @@ Notation:
 #endvjass
 #jasspp
 #endjasspp
-#external Ausdruck Parameter
+#external <Ausdruck> <Parameter>
 
 Vordefinierte Konstanten:
 OS Enthält eine Zeichenkette mit dem Namen des Betriebssystems.
@@ -512,8 +515,10 @@ new <Klassenname>				Entspricht Klassenname.new()
 delete <Variable>				Entspricht Variable.delete()
 copy Variable					Entspricht Variable.copy()
 Variable = Ausdruck
-Variable == Ausdruck
-Variable != Ausdruck
+Variable					Ist wahr, falls die Variable auf ein Objekt zeigt.
+!Variable					Ist wahr, falls die Variable auf kein Objekt zeigt.
+Variable == Ausdruck				Ist wahr, falls die beide Variablen auf dasselbe Objekt zeigen.
+Variable != Ausdruck				Ist wahr, falls die beide Variablen nicht auf dasselbe Objekt zeigen.
 integer(Variable)				Liefert die interne Ganzzahl der Klasseninstanz.
 id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Klasseninstanz.
 
@@ -649,7 +654,7 @@ default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 {
 }
 
-Deklarationsvoraussetzungen
+20. Deklarationsvoraussetzungen
 
 Funktionen, Pakete, Aufzählungen und Klassen können bei ihrer Deklaration eben solche voraussetzen.
 Dazu wird der :-Operator verwendet. Dies stellt sicher, dass die Voraussetzungen vor dem jeweiligen
@@ -669,11 +674,13 @@ Aufzählungen brauchen in der Regel höchstens Voraussetzungen, wenn das Paket o
 Notation:
 <Funktionsdeklaration|Paketdeklaration|Aufzählungsdeklaration|Klassendeklaration> : <Bezeichner1>, <Bezeichner2>, ... <Bezeichnern>
 
-Funktionen
+21. Funktionen
 
 Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich mindestens die Parametertypen oder die Parameteranzahl unterscheiden.
 Unterscheidet sich lediglich der Rückgabetyp, so gelten beide Definition nicht als unterschiedlich, da im Falle eines Aufrufes ohne eine Speicherung
 des Rückgabetyps nicht sichergestellt werden könnte, welche Version der Funktion aufgerufen werden sollte.
+Parametertypen unterscheiden sich auch, sobald nur einer der beiden als "const" deklariert wurde. In diesem Fall wird je nach konstanter oder nicht
+konstanter Parameterübergabe die jeweilge Version der Funktionsdeklaration ausgewählt.
 Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
 Parameter, welche kein Standardargument besitzen gesetzt werden:
 MyFunction(y = 10, x = 100, 100, 3, 5);
@@ -910,14 +917,14 @@ Der Konstruktor und der Destruktor werden aufgerufen, sobald das Objekt erzeugt 
 Der Kopierkonstruktor wird aufgerufen, sobald das Objekt explizit mittels "copy" kopiert wird.
 Normalerweise wird er automatisch definiert und kopiert den Inhalt aller Elemente des kopierten Objekts in das Zielobjekt (anders als bei C++).
 Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klasseneigenschaft oder -methode aufgerufen.
-Mit dem Schlüsselwort super spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
+Mit dem Schlüsselwort "parent" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
 Bezugsrahmen, angesprochen werden. Da sie normalerweise kein äußerer Bezugsrahmen sind, funktioniert die Verwendung des .-Operators nicht.
-Mit dem Schlüsselwort self spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
+Mit dem Schlüsselwort "self" spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
 die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren statischen Methoden aufruft, insofern sie selbst z. B. zu einer
 der Elternklassen und nicht zur Klasse für die der Aufruf galt gehört.
 Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Bezugsrahmen, über ihren Namen oder den .-Operator angesprochen werden.
 In diesem Fall wird ebenfalls überprüft, ob es sich um eine virtuelle statische Methode handelt und die der korrekten Klasse aufgerufen.
-Mit dem Schlüsselwort this spricht man die verwendete Instanz an.
+Mit dem Schlüsselwort "this" spricht man die verwendete Instanz an.
 Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert.
 In diesem Fall werden die Instanzdaten in der globalen Hashtable oder in zusätzlichen globalen Variablen gespeichert.
 Falls die angegebene Maximalgröße den Wert 8192 übersteigt, sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
@@ -948,10 +955,10 @@ Dies gilt auch für die Kindklassen (Überprüfen, ob es anders mehr Sinn machen
 Notation:
 [ abstract ] class Klassenname [ [Maximalgröße] ] (public | private | protected Klassenname, ...) [Deklarationsvoraussetzungen]
 {
-	new() { } Konstruktor
-	~delete() { } Destruktor
-	copy(Klassenname other) Kopierkonstruktur
-	static init() { } Initialisierungsmethode
+	self new() { } Konstruktor
+	void delete() { } Destruktor
+	void copy(Klassenname other) Kopierkonstruktur
+	static void init() { } Initialisierungsmethode
 
 	[public | protected | private | private protected] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>;
 	[public | protected | private | private protected] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
@@ -973,13 +980,14 @@ möglicherweise keine Methode aufgerufen werden würde.
 ohne dass sie neu definiert werden müssen.
 Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
 
-Mit super.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
+Mit parent.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
 Dabei gilt die Priorität von unten nach oben, von links nach rechts, bei sämtlichen geerbten Klassen.
 
 Abstrakte Methoden besitzen keinen Gültigkeitsbereich, sondern werden mit einem Semikolon abgeschlossen.
 
 Nichtstatische Methoden, die mit dem Postfix "const" deklariert wurden, erhalten das Argument this als konstante Variable
-(bezogen auf das Ziel dessen).
+(bezogen auf das Ziel dessen) und gelten somit auch als eine andere Deklaration der gleichen Methode, welche nicht als "const"
+deklariert wurde (siehe Funktionen).
 
 Statische Methoden, die mit dem Postfix "const" deklariert wurden, dürfen keinerlei nicht als "const" deklarierte, statische
 Methoden der Klasse aufrufen, geschweigedenn irgendwelche statischen Elemente der Klasse verändern, sondern nur zurückgeben.
@@ -1006,6 +1014,9 @@ so gibt der Compiler einen Fehler zurück, da die Elternklassen nicht richtig ko
 Jede nächstgelegene Elternklasse muss konstruiert werden, ob implizit, falls möglich, oder explizit.
 Wird kein Konstruktor in einer Kindklasse definiert, so können selbstverständlich die der Elternklassen mit dem Bezeichner
 der Kindklasse verwendet werden.
+Der Konstruktor muss stets den Namen new tragen und besitzt den Rückgabetyp "self". Er sollte für Gewöhnlich das Objekt "this"
+zurückgeben, jedoch ist dies dem Entwickler selbst überlassen. Gegebenenfalls sollte der Compiler eine Warnung ausgeben, falls
+nicht das Objekt "this" zurückgegeben wird.
 
 Notation:
 new <Klassenname>
@@ -1017,22 +1028,24 @@ Dies kann umgangen werden, indem man den Kopierkonstruktor verwendet und das Obj
 Eigenschaften erzeugt.
 Dazu dient das Schlüsselwort "copy". Es kann entweder die definierte copy-Methode aufgerufen oder das Schlüsselwort der Variable
 vorangestellt werden. Wurde kein eigener Kopierkonstruktor definiert, so werden sämtliche Elementinhalte ebenfalls kopiert.
-Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelementvariablen ebenfalls kopiert wird, jedoch nicht deren
-Arrays, Funktionen oder Objekte. Dadurch zeigen die Elementvariablen beider Objekte möglicherweise auf dieselben Ziele.
-Möchte man die Eigenschaften stattdessen ebenfalls kopieren bzw. neu erzeugen, muss man den Kopierkonstruktor selbst
-definieren. Ist der Kopierkonstruktor als "private", "private protected" oder "protected" definiert, so kann das Schlüsselwort
-nicht von außerhalb angewandt werden.
+Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelementvariablen ebenfalls kopiert wird, sowie auch deren
+Arrays, Funktionen und Objekte usw. (unter Verwendung deren Kopierkontruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf dieselben Ziele,
+falls es sich bei den Elementvariablen um keine Objekte handelt, sondern z. B. native Typen wie "unit".
+Der Inhalt von Elementvariablen mit kopierbasierte Typen wird selbstverständlich ebenfalls kopiert (dazu ist natürlich kein Kopierkonstruktor notwendig).
+Ist der Kopierkonstruktor als "private", "private protected" oder "protected" definiert, so kann das Schlüsselwort
+nicht von außerhalb angewandt werden (gängiges Verhalten, auch bei anderen Methoden).
+Der Kopierkonstruktor darf virtuell und abstrakt sein.
 
 Notation:
 copy <Variable>
 <Variable>.copy()
 
 Destruktor:
-Ein Objekt kann mit Hilfe des "delete"-Operators gelöscht werden. Dabei wird der Variableninhalt automatisch auf 0 gesetzt, was Fehl-
+Ein Objekt kann mit Hilfe des "delete"-Schlüsselworts gelöscht werden. Dabei wird der Variableninhalt automatisch auf 0 gesetzt, was Fehl-
 zugriffe einschränkt bzw. verhindert.
 Zunächst wird der Destruktor, falls vorhanden, der Klasse aufgerufen und danach bis zur obersten Elternklasse hin alle Destruktoren
-der geerbten Klassen. Dabei werden bei einer Mehrfachvererbung zunächst die Vererbungshierachien der ersten Klassen von unten nach oben abgearbeitet
-usw. von links nach rechts.
+der geerbten Klassen. Dabei werden bei einer Mehrfachvererbung zunächst die Vererbungshierachien der ersten Klassen von unten nach oben,
+von rechts nach links abgearbeitet (genau andersherum als beim Konstruktor).
 
 Notation:
 delete <Variable>
@@ -1042,16 +1055,17 @@ Save- und Load-Möglichkeiten:
 Mit Hilfe der Schlüsselwörter store, restore und flush, kann eine Klasseninstanz in einem Spiel-Cache verwaltet werden.
 Dabei muss dem Schlüsselwort der Spiel-Cache, ein Mission-Key und ein Label-Präfix für sämtliche Werte übergeben werden.
 Zu beachten gilt, dass Elemente der Instanz, welche nicht den Typ integer, real, boolean, string oder unit haben,
-nicht in einem Spiel-Cache gespeichert werden können, weshalb man für solche Klasseninstanzen, die Hashtable-Schlüsselwörter
+nicht in einem Spiel-Cache gespeichert werden können, weshalb man für solche Klasseninstanzen die Hashtable-Schlüsselwörter
 verwenden muss.
 In eine Hashtable kann jeder native Datentyp aus Warcraft 3 gespeichert werden, weshalb sämtliche Klasseninstanzelemente
 problemlos gespeichert und geladen werden können.
+Die Hashtable-Schlüsselwörter "save" und "load" entsprechen den Spiel-Cache-Schlüsselwörtern "store" und "restore".
 Mit dem Schlüsselwort "remove", können die Elemente wieder aus der Hashtable entfernt werden. Für Spiel-Cache-Elemente
 muss das Schlüsselwort "flush" verwendet werden.
-Bei Hashtable-Aufrufen wird neben der verwendeten Hashtable nur ein Parent-Key übergeben. Als Child-Key wewird einfach die
-Nummer des jeweiligen Elements genommen. Dabei wird von der Deklarationsreihenfolge in der Klassendeklaration ausgegangen.
+Bei Hashtable-Aufrufen wird neben der verwendeten Hashtable nur ein Parent-Key übergeben. Als Child-Key wird einfach die
+Nummer des jeweiligen Elements genommen. Dabei wird von der Deklarationsreihenfolge in der Klassendeklaration ausgegangen und bei 0 mit dem Zählen angefangen.
 Vor allem die Spiel-Cache-Schlüsselwörter können von Nutzen sein, wenn man eine Kampagne erstellen möchte, in welcher
-in weiteren Karten, die Daten der alten geladen werden sollen.
+in weiteren Karten die Daten der alten geladen werden sollen.
 Array-Elemente werden mit dem jeweiligen Index als Postfix im Spiel-Cache und wie als ein separates Element in der Hashtable 
 gespeichert.
 
@@ -1065,10 +1079,41 @@ Notation:
 
 Operatorenüberladung
 
-Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen enthält, überlädt die Bedeutung eines 
+Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen oder einen zugehörigen Typnamen enthält, überlädt die Bedeutung eines
 Operators für die angegebenen Parametertypen.
 Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, private protected).
-Folgende Operatoren können nach folgenden Schemata überladen werden:
+Wird ein Typ und kein Operatorzeichen als Name genommen, so ermöglicht dies Klassenobjekten explizit die Konvertierung zu diesem Typ.
+Folgende Operatoren können nach folgenden Schemata als nicht statische Methoden überladen werden:
+Bezeichner			Rückgabetyp			Parametertypen
+=				self				self
++ (linksbündig)			self				-
+- (linksbündig)			self				-
++ (rechtsbündig)		self				self
+- (rechtsbündig)
+*				self				self
+/				self				self
+%				self				self
+++				self				self
+--				self				self
++=				self				self
+-=				self				self
+*=				self				self
+/=				self				self
+%=				self				self
+==				boolean				self
+!=				boolean				self
+>=				boolean				self
+<=				boolean				self
+>				boolean				self
+<				boolean				self
+!				boolean				self
+true (steht für den boolschen Ausdruck ohne Operatorzeichen)
+
+Zu beachten gilt es hierbei, dass diverse Logikoperatoren bereits standardmäßig implementiert sind.
+Die eigenen Definitionen überladen selbstverständlich die standardmäßigen.
+
+Als Typ können sowohl native als auch eigene Typen genommen werden. Zu beachten gilt es hierbei, dass sich Klasseninstanzen standardmäßig
+zum Typ "integer" konvertieren lassen.
 
 Das Jass-Paket
 

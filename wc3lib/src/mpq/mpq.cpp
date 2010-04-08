@@ -89,12 +89,8 @@ std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstrea
 	}
 	while (memcmp(identifier, Mpq::identifier, 4) != 0);
 	
-	std::cout << "Found MPQ identifier at offset " << (istream.tellg() - std::streamoff(4)) << std::endl;
-	
 	istream.seekg(-4, std::ios::cur);
 	std::streampos startPosition = istream.tellg();
-	std::cout << "Is now at " << startPosition << std::endl;
-	
 	struct Header header;
 	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
 	std::streamsize bytes = istream.gcount();
@@ -124,61 +120,37 @@ std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstrea
 		std::cerr << boost::format(_("Warning: MPQ file size of MPQ file \"%1%\" is not equal to its internal header file size.\nFile size: %2%.\nInternal header file size: %3%.")) % this->m_path.string() % this->m_size % header.archiveSize << std::endl;
 	
 	this->m_sectorSizeShift = header.sectorSizeShift;
-	std::cout << "Format version " << header.formatVersion << std::endl;
-	std::cout << "Sector size shift " << header.sectorSizeShift << std::endl;
-	
 	struct ExtendedHeader extendedHeader;
 	
 	if (this->m_format == Mpq::Mpq2)
 	{
-		std::cout << "Has extended header!" << std::endl;
 		istream.read(reinterpret_cast<char*>(&extendedHeader), sizeof(extendedHeader));
 		bytes += istream.gcount();
 	}
 	
 	int64 offset = header.blockTableOffset;
-	std::cout << "1. Block table offset: " << header.blockTableOffset << std::endl;
 	
 	if (this->m_format == Mpq::Mpq2 && extendedHeader.blockTableOffsetHigh > 0)
 		offset += int64(extendedHeader.blockTableOffsetHigh) << 32;
 	
-	std::cout << "2. Block table offset: " << offset << std::endl;
 	istream.seekg(startPosition + offset);
-
 	std::size_t encryptedBytesSize = header.blockTableEntries * sizeof(struct BlockTableEntry);
 	char *encryptedBytes = new char[encryptedBytesSize];
-
-	std::cout << "Block table entries: " << header.blockTableEntries << "\nSize of single block table entry: " << sizeof(struct BlockTableEntry) << "\nSize of char array: " << encryptedBytesSize << std::endl;
-	//return 0;
-	
 	istream.read(encryptedBytes, encryptedBytesSize);
-	//std::cout << "test" << std::endl;
 	uint32 hashValue = HashString(Mpq::cryptTable(), "(block table)", FileKey);
-	std::cout << "block table hash value " << hashValue << std::endl;
 	DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
-	//std::cout << "test 3" << std::endl;
 	std::stringstream sstream;
 	sstream.write(const_cast<const char*>(encryptedBytes), encryptedBytesSize);
 	delete[] encryptedBytes;
 	encryptedBytes = 0;
-	//std::cout << "test 4" << std::endl;
 	
 	for (std::size_t i = 0; i < header.blockTableEntries; ++i)
 	{
-		//std::cout << "test 5" << std::endl;
 		class Block *block = new Block(this);
-		//std::cout << "test 6" << std::endl;
 		bytes += block->read(sstream);
-		//std::cout << "test 7" << std::endl;
-		//std::cout << "Index " << i << std::endl;
-		//std::cout << "Block table entries: " << header.blockTableEntries << "\nSize of single block table entry: " << sizeof(struct BlockTableEntry) << "\nSize of char array: " << encryptedBytesSize << std::endl;
 		this->m_blocks.push_back(block);
 		this->m_blockMap[this->m_blocks.size() - 1] = block;
 	}
-	
-	std::cout << "Block list size: " << this->m_blocks.size() << std::endl;
-		
-	std::cout << "FINISH!" << std::endl;
 	
 	/*
 	read extended block table
@@ -196,49 +168,33 @@ std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstrea
 			block->m_extendedBlockOffset = extendedBlockTableEntry.extendedBlockOffset;
 		}
 	}
-	
-	std::cout << "FINISH!" << std::endl;
 			
 	// read encrypted hash table
 	offset = header.hashTableOffset;
-	std::cout << "1. Hash table offset: " << offset << std::endl;
 		 
 	if (this->m_format == Mpq::Mpq2 && extendedHeader.hashTableOffsetHigh > 0)
 		offset += int64(extendedHeader.hashTableOffsetHigh) << 32;
 	
-	std::cout << "2. Hash table offset: " << offset << std::endl;
 	istream.seekg(offset);
-	
-	std::cout << "FINISH2!" << std::endl;
-	
 	encryptedBytesSize = header.hashTableEntries * sizeof(struct HashTableEntry);
 	encryptedBytes = new char[encryptedBytesSize];
-	
-	std::cout << "FINISH2!" << std::endl;
-
 	istream.read(encryptedBytes, encryptedBytesSize);
-	std::cout << "FINISH2!" << std::endl;
 	hashValue = HashString(Mpq::cryptTable(), "(hash table)", FileKey);
-	std::cout << "Hash table with hash value " << hashValue << std::endl;
 	DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
-	std::cout << "FINISH2!" << std::endl;
 	sstream.flush();
 	sstream.write(const_cast<const char*>(encryptedBytes), encryptedBytesSize);
 	delete[] encryptedBytes;
 	encryptedBytes = 0;
 	
-	std::cout << "FINISH3!" << std::endl;
-	
 	for (std::size_t i = 0; i < header.hashTableEntries; ++i)
 	{
 		class Hash *hash = new Hash(this);
-		//std::cout << "Index " << i << std::endl;
 		bytes += hash->read(sstream);
 		this->m_hashes.push_back(hash);
+		
+		if (i == 0)
+			std::cout << "FIRST HASH BLOCK ADDRESS " << hash->m_block << std::endl;
 	}
-	
-	std::cout << "FINISH4!" << std::endl;	
-	std::cout << "FINISH!!!!!" << std::endl;
 	
 	// file data / add file instances
 	BOOST_FOREACH(class Hash *hash, this->m_hashes)
@@ -246,10 +202,8 @@ std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstrea
 		if (!hash->empty() && !hash->deleted())
 		{
 			class MpqFile *mpqFile = new MpqFile(this, hash);
-			mpqFile->m_size = hash->m_block->m_fileSize; // uncompressed size
-			//mpqFile->m_compressedSize = hash->m_block->m_blockSize
-			mpqFile->m_locale = MpqFile::intToLocale(hash->m_language);
-			mpqFile->m_platform = MpqFile::intToPlatform(hash->m_platform);
+			//mpqFile->m_locale = MpqFile::intToLocale(hash->m_language);
+			//mpqFile->m_platform = MpqFile::intToPlatform(hash->m_platform);
 			//mpqFile->m_path = // path can only be set if there is a listfile file or if we're able to convert its hash into file path
 			
 			// seek to file data beginning
@@ -273,9 +227,9 @@ std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstrea
 				}
 				
 				// The last entry contains the file size, making it possible to easily calculate the size of any given sector.
-				istream.read(reinterpret_cast<char*>(&mpqFile->m_size), sizeof(mpqFile->m_size));
+				int32 size;
+				istream.read(reinterpret_cast<char*>(&size), sizeof(size));
 				bytes += istream.gcount();
-				int32 size = mpqFile->m_size;
 				
 				// calculate sector size, not required but maybe useful at some point
 				BOOST_REVERSE_FOREACH(class Sector *sector, mpqFile->m_sectors)
@@ -418,6 +372,21 @@ std::streamsize Mpq::writeMpq(std::ostream &ostream) const throw (class Exceptio
 	return 0;
 }
 
+const class MpqFile* Mpq::findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const
+{
+	class Hash *hash = const_cast<class Mpq*>(this)->findHash(path, locale, platform);
+	
+	std::cout << "Hash is " << hash << " when searching for file " << path.string() << std::endl;
+	
+	if (hash == 0)
+		return 0;
+				
+	if (hash->m_mpqFile->m_path != path) // path has not been set yet
+		hash->m_mpqFile->m_path = path;
+				
+	return const_cast<const class MpqFile*>(hash->m_mpqFile);
+}
+
 const class MpqFile* Mpq::findFile(const boost::filesystem::path &path) const
 {
 	BOOST_FOREACH(const class MpqFile *mpqFile, this->m_files)
@@ -440,32 +409,20 @@ const class MpqFile* Mpq::findFile(const std::string &name) const
 	return 0;
 }
 
-const class MpqFile* Mpq::findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const
+const class MpqFile* Mpq::findFile(const class MpqFile &mpqFile) const
 {
-	class Hash *hash = const_cast<class Mpq*>(this)->findHash(path, locale, platform);
-	
-	std::cout << "Hash is " << hash << " when searching for file " << path.string() << std::endl;
-	
-	if (hash == 0)
-		return 0;
-				
-	if (hash->m_mpqFile->m_path != path) // path has not been set yet
-		hash->m_mpqFile->m_path = path;
-				
-	return const_cast<const class MpqFile*>(hash->m_mpqFile);
+	return this->findFile(mpqFile.path(), mpqFile.locale(), mpqFile.platform());
 }
 
-class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream, bool overwriteExisting, std::size_t reservedSpace) throw (class Exception)
+class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream, bool overwriteExisting, int32 reservedSpace) throw (class Exception)
 {
 	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(path, locale, platform));
 	
+	// In the event of a collision (the home entry is occupied by another file), progressive overflow is used, and the file is placed in the next available hash table entry
 	if (mpqFile != 0)
 	{
-		if (!overwriteExisting)
-			return 0;
-		
-		// overwrite existing
-		mpqFile->remove();
+		if (overwriteExisting)
+			mpqFile->remove();
 	}
 	
 	class Block *block = 0;
@@ -529,7 +486,7 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 	hash->m_block = block;
 	hash->m_filePathHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
 	hash->m_filePathHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);
-	hash->m_language = MpqFile::localeToInt(locale);
+	hash->m_locale = MpqFile::localeToInt(locale);
 	hash->m_platform = MpqFile::platformToInt(platform);
 	hash->m_mpqFile = new MpqFile(this, hash);
 	this->m_files.push_back(hash->m_mpqFile);
@@ -563,9 +520,17 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 	return hash->m_mpqFile;
 }
 
+class MpqFile* Mpq::addFile(const MpqFile &mpqFile, bool overwriteExisting) throw (class Exception)
+{
+	std::stringstream sstream;
+	mpqFile.write(sstream);
+	
+	return this->addFile(mpqFile.path(), mpqFile.locale(), mpqFile.platform(), &sstream, overwriteExisting, mpqFile.size());
+}
+
 bool Mpq::removeFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform)
 {
-	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(path, locale, platform));
+	class MpqFile *mpqFile = this->findFile(path, locale, platform);
 	
 	if (mpqFile == 0)
 		return false;
@@ -577,7 +542,7 @@ bool Mpq::removeFile(const boost::filesystem::path &path, enum MpqFile::Locale l
 
 bool Mpq::removeFile(const boost::filesystem::path &path)
 {
-	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(path));
+	class MpqFile *mpqFile = this->findFile(path);
 	
 	if (mpqFile == 0)
 		return false;
@@ -589,7 +554,7 @@ bool Mpq::removeFile(const boost::filesystem::path &path)
 
 bool Mpq::removeFile(const std::string &name)
 {
-	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(name));
+	class MpqFile *mpqFile = this->findFile(name);
 	
 	if (mpqFile == 0)
 		return false;
@@ -599,24 +564,41 @@ bool Mpq::removeFile(const std::string &name)
 	return true;
 }
 
+bool Mpq::removeFile(const MpqFile &mpqFile)
+{
+	class MpqFile *searchedMpqFile = this->findFile(mpqFile);
+	
+	if (searchedMpqFile == 0)
+		return false;
+	
+	searchedMpqFile->remove();
+	
+	return true;
+}
+
 class Mpq& Mpq::operator<<(const class MpqFile &mpqFile) throw (class Exception)
 {
-	/// @todo Copy all file data, existing files won't be overwritten.
+	// Copy all file data, existing files won't be overwritten.	
+	this->addFile(mpqFile, false);
 	
 	return *this;
 }
 
 class Mpq& Mpq::operator<<(const class Mpq &mpq) throw (class Exception)
 {
-	/// @todo Copy all file data of the other MPQ, existing files won't be overwritten.
+	// Copy all file data of the other MPQ, existing files won't be overwritten.
+	BOOST_FOREACH(const class MpqFile *mpqFile, mpq.files())
+		this->addFile(*mpqFile, false);
 	
 	return *this;
 }
 
 class Mpq& Mpq::operator>>(class Mpq &mpq) throw (class Exception)
 {
-	/// @todo Copy all file data into the other MPQ, existing files won't be overwritten.
-
+	// Copy all file data into the other MPQ, existing files won't be overwritten.
+	BOOST_FOREACH(const class MpqFile *mpqFile, this->files())
+		mpq.addFile(*mpqFile, false);
+	
 	return *this;
 }
 
@@ -624,8 +606,11 @@ class Hash* Mpq::findHash(const boost::filesystem::path &path, enum MpqFile::Loc
 {
 	if (this->m_hashes.empty() || this->m_hashes.front()->empty())
 	{
-		std::cout << "Hashes are empty." << std::endl;
-		std::cout << "Front hash is empty." << std::endl;
+		if (this->m_hashes.empty())
+			std::cout << "Hashes are empty." << std::endl;
+		
+		if (this->m_hashes.front()->empty())
+			std::cout << "Front hash is empty (Block address " << this->m_hashes.front()->m_block << ")." << std::endl;
 		
 		return 0;
 	}
@@ -633,9 +618,9 @@ class Hash* Mpq::findHash(const boost::filesystem::path &path, enum MpqFile::Loc
 	// Compute the hashes to compare the hash table entry against
 	uint32 nameHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
 	uint32 nameHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);	
-	int16 language = MpqFile::localeToInt(locale);
+	int16 realLocale = MpqFile::localeToInt(locale);
 	int16 realPlatform = MpqFile::platformToInt(platform);
-	std::cout << "Searching for hash " << path << " with value a " << nameHashA << " and value b " << nameHashB << " and language " << language << " and platform " << realPlatform << std::endl;
+	std::cout << "Searching for hash " << path << " with value a " << nameHashA << " and value b " << nameHashB << " and locale " << locale << " and platform " << realPlatform << std::endl;
 	
 	// Check each entry in the hash table till a termination point is reached
 	std::list<class Hash*>::iterator iterator = this->m_hashes.begin();
@@ -644,7 +629,7 @@ class Hash* Mpq::findHash(const boost::filesystem::path &path, enum MpqFile::Loc
 	{
 		if (!(*iterator)->deleted())
 		{
-			if ((*iterator)->m_filePathHashA == nameHashA && (*iterator)->m_filePathHashB == nameHashB && (*iterator)->m_language == language && (*iterator)->m_platform == realPlatform)	
+			if ((*iterator)->m_filePathHashA == nameHashA && (*iterator)->m_filePathHashB == nameHashB && (*iterator)->m_locale == realLocale && (*iterator)->m_platform == realPlatform)
 				return *iterator;
 		}
 			
@@ -653,6 +638,43 @@ class Hash* Mpq::findHash(const boost::filesystem::path &path, enum MpqFile::Loc
 	while (iterator != this->m_hashes.end() && !(*iterator)->empty());
 	
 	return 0;
+}
+
+class Hash* Mpq::findHash(const Hash &hash)
+{
+	return this->findHash(hash.mpqFile()->path(), hash.mpqFile()->locale(), hash.mpqFile()->platform());
+}
+
+class MpqFile* Mpq::findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform)
+{
+	return const_cast<class MpqFile*>(const_cast<const Mpq*>(this)->findFile(path, locale, platform));
+}
+
+class MpqFile* Mpq::findFile(const boost::filesystem::path &path)
+{
+	return const_cast<class MpqFile*>(const_cast<const Mpq*>(this)->findFile(path));
+}
+
+class MpqFile* Mpq::findFile(const std::string &name)
+{
+	return const_cast<class MpqFile*>(const_cast<const Mpq*>(this)->findFile(name));
+}
+
+class MpqFile* Mpq::findFile(const class MpqFile &mpqFile)
+{
+	return const_cast<class MpqFile*>(const_cast<const Mpq*>(this)->findFile(mpqFile));
+}
+
+bool Mpq::removeFile(class MpqFile *&mpqFile)
+{
+	if (mpqFile->mpq() != this)
+		return false;
+
+	mpqFile->remove();
+	delete mpqFile;
+	mpqFile = 0;
+
+	return true;
 }
 
 std::size_t Mpq::readListfilePathEntries(std::istream &istream)

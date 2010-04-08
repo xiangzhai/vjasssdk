@@ -29,6 +29,8 @@
 
 #include "platform.hpp"
 #include "../exception.hpp"
+#include "block.hpp"
+#include "hash.hpp"
 
 namespace wc3lib
 {
@@ -58,9 +60,6 @@ class MpqFile
 			Default
 		};
 
-		void remove() throw (class Exception);
-		void rename(const std::string &newName, bool overwriteExisting = false) throw (class Exception);
-		void move(const boost::filesystem::path &newPath, bool overwriteExisting = false) throw (class Exception);
 		/**
 		* Reads the whole file data, not the header data.
 		*/
@@ -74,15 +73,35 @@ class MpqFile
 		* Writes the whole file data, not the header data.
 		*/
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
-		/// @return Returns file size in bytes.
-		std::size_t size() const;
-		/// @return Returns compressed file size in bytes.
-		std::size_t compressedSize() const;
+		
+		// hash attributes
 		enum Locale locale() const;
+		enum Platform platform() const;
+
+		class Mpq* mpq() const;
+		class Hash* hash() const;
 		/**
 		* @return Returns the file path. Note that MPQ archives without list file don't have any information about the file paths.
 		*/
 		const boost::filesystem::path& path() const;
+		
+		// block attributes
+		uint32 fileKey() const;
+		/// @return Returns file size in bytes.
+		int32 size() const;
+		/// @return Returns compressed file size in bytes.
+		int32 compressedSize() const;
+		bool isFile() const;
+		bool isEncrypted() const;
+		bool isCompressed() const;
+		
+		// extended attributes
+		CRC32 crc32() const;
+		void setFileTime(const time_t &time);
+		const struct FILETIME& fileTime() const;
+		bool fileTime(time_t &time) const;
+		MD5 md5() const;
+		
 		const std::list<class Sector*>& sectors() const;
 
 	protected:
@@ -99,34 +118,95 @@ class MpqFile
 		MpqFile(class Mpq *mpq, class Hash *hash);
 		~MpqFile();
 		
+		void remove() throw (class Exception);
+		void rename(const std::string &newName, bool overwriteExisting = false) throw (class Exception);
+		void move(const boost::filesystem::path &newPath, bool overwriteExisting = false) throw (class Exception);
+		
 		class Mpq *m_mpq;
 		class Hash *m_hash;
-		std::size_t m_size; /// @todo  Get correct size type from MPQ specification
-		std::size_t m_compressedSize;
-		enum Locale m_locale;
-		enum Platform m_platform;
 		boost::filesystem::path m_path;
 		std::list<class Sector*> m_sectors;
 };
 
-inline std::size_t MpqFile::size() const
-{
-	return this->m_size;
-}
-
-inline std::size_t MpqFile::compressedSize() const
-{
-	return this->m_compressedSize;
-}
-
 inline enum MpqFile::Locale MpqFile::locale() const
 {
-	return this->m_locale;
+	return MpqFile::intToLocale(this->m_hash->locale());
+}
+
+inline enum MpqFile::Platform MpqFile::platform() const
+{
+	return MpqFile::intToPlatform(this->m_hash->platform());
+}
+
+inline class Mpq* MpqFile::mpq() const
+{
+	return this->m_mpq;
+}
+
+inline class Hash* MpqFile::hash() const
+{
+	return this->m_hash;
 }
 
 inline const boost::filesystem::path& MpqFile::path() const
 {
 	return this->m_path;
+}
+
+inline uint32 MpqFile::fileKey() const
+{
+	return this->m_hash->block()->fileKey(this->path());
+}
+
+inline int32 MpqFile::size() const
+{
+	return this->m_hash->block()->fileSize();
+}
+
+/// @todo FIXME (return compressed and not real size)
+inline int32 MpqFile::compressedSize() const
+{
+	return this->m_hash->block()->blockSize();
+}
+
+inline bool MpqFile::isFile() const
+{
+	return this->m_hash->block()->flags() & Block::IsFile;
+}
+
+inline bool MpqFile::isEncrypted() const
+{
+	return this->m_hash->block()->flags() & Block::IsEncrypted;
+}
+
+inline bool MpqFile::isCompressed() const
+{
+	return this->m_hash->block()->flags() & Block::IsCompressed;
+}
+
+inline CRC32 MpqFile::crc32() const
+{
+	return this->m_hash->block()->crc32();
+}
+
+inline void MpqFile::setFileTime(const time_t &time)
+{
+	this->m_hash->block()->setFileTime(time);
+}
+
+inline const struct FILETIME& MpqFile::fileTime() const
+{
+	return this->m_hash->block()->fileTime();
+}
+
+inline bool MpqFile::fileTime(time_t &time) const
+{
+	return this->m_hash->block()->fileTime(time);
+}
+
+inline MD5 MpqFile::md5() const
+{
+	return this->m_hash->block()->md5();
 }
 
 inline const std::list<class Sector*>& MpqFile::sectors() const

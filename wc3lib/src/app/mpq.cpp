@@ -111,6 +111,9 @@ int main(int argc, char *argv[])
 				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
 				_("\t-h --help                   Shows this text.\n") <<
 				_("\t-i --info                   Shows some information about all read MPQ archives.\n") <<
+				_("\t-h --human-readable         Shows output sizes in an human-readable format.\n") <<
+				_("\t-d --decimal                Shows decimal sizes (factor 1000 not 1024)\n") <<
+				_("\t-l --list                   Lists all contained files of all specified MPQ archives.\n") <<
 				std::endl <<
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
@@ -182,6 +185,13 @@ int main(int argc, char *argv[])
 	{
 		BOOST_FOREACH(const boost::filesystem::path &path, filePaths)
 		{
+			if (!boost::filesystem::is_regular_file(path))
+			{
+				std::cerr << boost::format(_("File \"%1%\" does not seem to be a regular file and will be skipped.")) % path.string() << std::endl;
+
+				continue;
+			}
+
 			std::ifstream istream(path.string().c_str());
 			class Mpq mpq(path);
 			
@@ -208,10 +218,10 @@ int main(int argc, char *argv[])
 			<< boost::format(_("Sector size: %1%")) % sizeString<int16>(mpq.sectorSize(), optionHumanreadable, optionDecimal) << std::endl
 			<< boost::format(_("Entire block size: %1%")) % sizeString<int64>(mpq.entireBlockSize(), optionHumanreadable, optionDecimal) << std::endl
 			<< boost::format(_("Entire file size: %1%")) % sizeString<int64>(mpq.entireFileSize(), optionHumanreadable, optionDecimal) << std::endl
-			<< boost::format(_("Strong digital signature: %1%")) % mpq.hasStrongDigitalSignature() << std::endl
-			<< boost::format(_("Contains listfile file: %1%")) % mpq.containsListfileFile() << std::endl
-			<< boost::format(_("Contains attributes file: %1%")) % mpq.containsAttributesFile() << std::endl
-			<< boost::format(_("Contains signature file: %1%")) % mpq.containsSignatureFile() << std::endl
+			<< boost::format(_("Has strong digital signature: %1%")) % boolString(mpq.hasStrongDigitalSignature()) << std::endl
+			<< boost::format(_("Contains listfile file: %1%")) % boolString(mpq.containsListfileFile()) << std::endl
+			<< boost::format(_("Contains attributes file: %1%")) % boolString(mpq.containsAttributesFile()) << std::endl
+			<< boost::format(_("Contains signature file: %1%")) % boolString(mpq.containsSignatureFile()) << std::endl
 			;
 				
 			if (mpq.extendedAttributes() != Mpq::None)
@@ -232,7 +242,7 @@ int main(int argc, char *argv[])
 			{
 				std::cout << _("Listing contained files:") << std::endl;
 				
-				std::size_t i = 0;
+				std::size_t i = 1;
 				
 				BOOST_FOREACH(const class MpqFile *mpqFile, mpq.files())
 				{

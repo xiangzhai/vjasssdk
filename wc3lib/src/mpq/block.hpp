@@ -65,8 +65,19 @@ class Block
 		bool empty() const;
 		bool unused() const;
 		uint64 largeOffset() const;
-		bool time(time_t &time);
+		
+		class Mpq* mpq() const;
+		int32 blockOffset() const;
+		int16 extendedBlockOffset() const;
+		int32 blockSize() const;
+		int32 fileSize() const;
+		enum Flags flags() const;
+		// extended attributes
+		CRC32 crc32() const;
+		const struct FILETIME& fileTime() const;
+		bool fileTime(time_t &time);
 		void setFileTime(const time_t &time);
+		MD5 md5() const;
 		
 		uint32 fileKey(const boost::filesystem::path &path) const;
 				
@@ -81,10 +92,10 @@ class Block
 		int16 m_extendedBlockOffset;
 		int32 m_blockSize;
 		int32 m_fileSize;
-		Flags m_flags;
+		enum Flags m_flags;
 		// extended attributes
 		CRC32 m_crc32;
-		FILETIME m_fileTime;
+		struct FILETIME m_fileTime;
 		MD5 m_md5;
 };
 
@@ -103,7 +114,47 @@ inline uint64 Block::largeOffset() const
 	return ((uint64)this->m_extendedBlockOffset << 32) + (uint64)this->m_blockOffset;
 }
 
-inline bool Block::time(time_t &time)
+inline class Mpq* Block::mpq() const
+{
+	return this->m_mpq;
+}
+
+inline int32 Block::blockOffset() const
+{
+	return this->m_blockOffset;
+}
+
+inline int16 Block::extendedBlockOffset() const
+{
+	return this->m_extendedBlockOffset;
+}
+
+inline int32 Block::blockSize() const
+{
+	return this->m_blockSize;
+}
+
+inline int32 Block::fileSize() const
+{
+	return this->m_fileSize;
+}
+
+inline enum Block::Flags Block::flags() const
+{
+	return this->m_flags;
+}
+
+inline CRC32 Block::crc32() const
+{
+	return this->m_crc32;
+}
+
+inline const struct FILETIME& Block::fileTime() const
+{
+	return this->m_fileTime;
+}
+
+inline bool Block::fileTime(time_t &time)
 {
 	// The FILETIME represents a 64-bit integer: the number of 100 ns units since January 1, 1601
 	uint64 nTime = ((uint64)this->m_fileTime.highDateTime << 32) + this->m_fileTime.lowDateTime;
@@ -132,6 +183,11 @@ inline void Block::setFileTime(const time_t &time)
 
 	this->m_fileTime.lowDateTime = (uint32_t)nTime;
 	this->m_fileTime.highDateTime = (uint32_t)(nTime >> 32);
+}
+
+inline MD5 Block::md5() const
+{
+	return this->m_md5;
 }
 
 }

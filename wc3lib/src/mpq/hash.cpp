@@ -34,7 +34,7 @@ namespace wc3lib
 namespace mpq
 {
 
-Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_filePathHashA(0), m_filePathHashB(0), m_language(MpqFile::Neutral), m_platform(MpqFile::Default), m_block(0), m_deleted(false)
+Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_filePathHashA(0), m_filePathHashB(0), m_locale(MpqFile::Neutral), m_platform(MpqFile::Default), m_block(0), m_deleted(false)
 {
 }
 
@@ -49,19 +49,30 @@ std::streamsize Hash::read(std::istream &istream) throw (class Exception)
 	
 	this->m_filePathHashA = entry.filePathHashA;
 	this->m_filePathHashB = entry.filePathHashB;
-	this->m_language = entry.language;
+	this->m_locale = entry.locale;
 	this->m_platform = entry.platform;
 	
 	if (entry.fileBlockIndex == Hash::blockIndexDeleted)
+	{
 		this->m_deleted = true;
+		//std::cout << "Hash entry is deleted." << std::endl;
+	}
 	else if (entry.fileBlockIndex != Hash::blockIndexEmpty)
 	{
 		this->m_block = this->mpq()->m_blockMap[entry.fileBlockIndex];
+		this->m_deleted = false;
+		
+		//std::cout << "BLOCK INDEX: " << entry.fileBlockIndex << " and block address " << this->m_block << std::endl;
+		//exit(0);
 
 		if (this->m_block == 0)
 			throw Exception(_("Error while searching for corresponding block of hash table entry."));
 	}
 	// otherwise it's empty (block == 0)
+	else
+	{
+		//std::cout << "Entry is EMPTY WAAAAAAAAAHHHHHHH" << std::endl;
+	}
 	
 	return bytes;
 }
@@ -69,6 +80,7 @@ std::streamsize Hash::read(std::istream &istream) throw (class Exception)
 /// @todo Clear or write file hash and block data!
 void Hash::clear()
 {
+	//exit(0);
 	// If the next entry is empty, mark this one as empty; otherwise, mark this as deleted.
 	for (std::list<class Hash*>::const_iterator iterator = this->m_mpq->m_hashes.begin(); iterator != this->m_mpq->m_hashes.end(); ++iterator)
 	{

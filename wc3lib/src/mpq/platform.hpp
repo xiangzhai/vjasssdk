@@ -72,7 +72,7 @@ struct HashTableEntry
 {
 	int32 filePathHashA;
 	int32 filePathHashB;
-	int16 language;
+	int16 locale;
 	int16 platform; // int8
 	int32 fileBlockIndex;
 };

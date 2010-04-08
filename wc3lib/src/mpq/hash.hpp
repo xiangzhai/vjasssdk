@@ -45,12 +45,31 @@ class Hash
 		void clear();
 		
 		bool check() const;
+		/**
+		* 
+		*/
 		bool deleted() const;
+		/**
+		* Hash table entries are empty if they do not link to any block table entry.
+		* Note that a hash table entry can not be empty when it's deleted.
+		* @return Returns true if the hash table entry has been deleted.
+		* @see Hash.deleted
+		*/
 		bool empty() const;
 		
 		class Mpq* mpq() const;
 		class MpqFile* mpqFile() const;
+		int32 filePathHashA() const;
+		int32 filePathHashB() const;
+		int16 locale() const;
+		int16 platform() const;
 		class Block* block() const;
+		
+		/**
+		* Compares both hash values of both hashes.
+		* @return Returns true if hash values A and B are equal, otherwise false is being returned.
+		*/
+		bool operator==(const Hash &hash) const;
 		
 	protected:
 		friend class Mpq;
@@ -62,7 +81,7 @@ class Hash
 		class MpqFile *m_mpqFile;
 		int32 m_filePathHashA;
 		int32 m_filePathHashB;
-		int16 m_language; // enum?
+		int16 m_locale;
 		int16 m_platform;
 		class Block *m_block; // if this value is 0 it has never been used
 		bool m_deleted; // can not be true if m_block is 0
@@ -87,10 +106,35 @@ inline class MpqFile* Hash::mpqFile() const
 {
 	return this->m_mpqFile;
 }
+
+inline int32 Hash::filePathHashA() const
+{
+	return this->m_filePathHashA;
+}
+
+inline int32 Hash::filePathHashB() const
+{
+	return this->m_filePathHashB;
+}
+
+inline int16 Hash::locale() const
+{
+	return this->m_locale;
+}
+
+inline int16 Hash::platform() const
+{
+	return this->m_platform;
+}
 		
 inline class Block* Hash::block() const
 {
 	return this->m_block;
+}
+
+inline bool Hash::operator==(const Hash &hash) const
+{
+	return this->m_filePathHashA == hash.m_filePathHashA && this->m_filePathHashB == hash.m_filePathHashB;
 }
 
 }

@@ -140,6 +140,14 @@ std::string sizeStringDecimal(T size)
 	return sstream.str();
 }
 
+std::string boolString(bool value)
+{
+	if (value)
+		return _("Yes");
+
+	return _("No");
+}
+
 }
 
 #endif

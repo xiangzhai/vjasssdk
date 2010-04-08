@@ -127,26 +127,39 @@ class Mpq
 		*/
 		int64 unusedSpace() const;
 		
-		const class MpqFile* findFile(const boost::filesystem::path &path) const;
-		const class MpqFile* findFile(const std::string &name) const;
 		/**
 		* Note that the MPQ archive has no information about file paths if there is no "(listfile)" file. This function is the best way to get your required file.
 		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.		
 		*/
 		const class MpqFile* findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
+		const class MpqFile* findFile(const boost::filesystem::path &path) const;
+		const class MpqFile* findFile(const std::string &name) const;
+		/**
+		* Path of MPQ file @param mpqFile should be set if you use this method.
+		*/
+		const class MpqFile* findFile(const class MpqFile &mpqFile) const;
 		/**
 		* Addes a new file to the MPQ archive with path @param path, locale @param locale and platform @param platform.
 		* @param istream This input stream is used for reading the initial file data.
 		* @todo Replace reservedSpace by size of istream?
 		*/
-		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream = 0, bool overwriteExisting = false, std::size_t reservedSpace = 0) throw (class Exception);
+		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream = 0, bool overwriteExisting = false, int32 reservedSpace = 0) throw (class Exception);
+		/**
+		* Path of MPQ file @param mpqFile should be set if you use this method.
+		*/
+		class MpqFile* addFile(const class MpqFile &mpqFile, bool overwriteExisting) throw (class Exception);
 		bool removeFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
 		bool removeFile(const boost::filesystem::path &path);
 		bool removeFile(const std::string &name);
-		
 		/**
-		 * @return Returns the size of the whole MPQ archive file.
-		 */
+		* Path of MPQ file @param mpqFile should be set if you use this method.
+		* @param mpqFile An MPQ file is searched which has the same hash value as @param mpqFile.
+		* @return Returns true if an MPQ file was found and deleted successfully.
+		*/
+		bool removeFile(const class MpqFile &mpqFile);
+		/**
+		* @return Returns the size of the whole MPQ archive file.
+		*/
 		std::size_t size() const;
 		const boost::filesystem::path& path() const;
 		enum Format format() const;
@@ -203,6 +216,19 @@ class Mpq
 
 		Mpq(const Mpq &mpq);
 		class Hash* findHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
+		class Hash* findHash(const Hash &hash);
+		class MpqFile* findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
+		class MpqFile* findFile(const boost::filesystem::path &path);
+		class MpqFile* findFile(const std::string &name);
+		class MpqFile* findFile(const class MpqFile &mpqFile);
+		
+		/**
+		* This function is reserved for internal uses since it gets a non-constant parameter.
+		* @param mpqFile This file has to be contained by the MPQ archive and is completely deleted if function returns true (also its memory!). Note that the parameter has to be a reference of an MPQ file pointer and is set to 0.
+		* @return Returns true if the MPQ file was deleted successfully.
+		*/
+		bool removeFile(class MpqFile *&mpqFile);
+
 		/**
 		* Uses input stream @param istream for reading file path entries and refreshing them by getting their instances (using their hashes).
 		* @return Returns the number of added path entries.

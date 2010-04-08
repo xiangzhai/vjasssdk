@@ -1,3 +1,14 @@
+2010-04-08 Tamino Dauth <tamino@cdauth.de>
+* Added another version of mpq::Mpq::removeFile.
+* Improved tool "mpq".
+
+2010-04-04 Tamino Dauth <tamino@cdauth.de>
+* Added various methods overloadings to class mpq::Mpq and various methods wrappers to class mpq::MpqFile.
+* Revised Jass++ documentation.
+
+2010-04-03 Tamino Dauth <tamino@cdauth.de>
+* Improved MPQ library functionaliy.
+
 2010-04-01 Tamino Dauth <tamino@cdauth.de>
 * Improved MPQ library functionaliy (fixed hash types and block association).
 * Improved tool "mpq".
