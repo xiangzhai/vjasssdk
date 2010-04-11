@@ -105,11 +105,11 @@ library ALibraryCoreInterfaceCinematic
 	endfunction
 
 	/**
-	* @see EnableUserUI, ShowInterfaceForceOn, ShowInterfaceForceOff
+	* @see ShowInterface, ShowInterfaceForceOn, ShowInterfaceForceOff
 	*/
-	function SetUserUIForPlayer takes player whichPlayer, boolean show returns nothing
+	function SetInterfaceForPlayer takes player whichPlayer, boolean show, real fadeDuration returns nothing
 		if (whichPlayer == GetLocalPlayer()) then
-			call EnableUserUI(show)
+			call ShowInterface(show, fadeDuration)
 		endif
 	endfunction
 
@@ -124,13 +124,12 @@ library ALibraryCoreInterfaceCinematic
 
 	/**
 	* Alternate function without using forces. Combines functions @function SetUserUIForPlayer and @function SetUserControlForPlayer.
-	* @see SetUserUIForPlayer, SetUserControlForPlayer, SetUserControlForceOn, SetUserControlForceOff, ShowInterfaceForceOn, ShowInterfaceForceOff, EnableUserUI, EnableUserControl
+	* @see SetInterfaceForPlayer, SetUserControlForPlayer, SetUserControlForceOn, SetUserControlForceOff, ShowInterfaceForceOn, ShowInterfaceForceOff, ShowInterface, EnableUserControl
 	*/
 	function SetUserInterfaceForPlayer takes player user, boolean show, boolean enableControl returns nothing
 		local player localPlayer = GetLocalPlayer()
 		if (user == localPlayer) then
-			call EnableUserUI(show)
-			//call ShowInterface(show, 0.0)
+			call ShowInterface(show, 0.0)
 			call EnableUserControl(enableControl)
 		endif
 		set localPlayer = null

@@ -58,7 +58,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 
 		// methods
 
-		public stub method setState takes integer state returns nothing
+		public stub method onStateAction takes integer state returns nothing
 			local integer i
 			local player user
 			local playercolor playerColor
@@ -79,8 +79,6 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, title)
 				endif
 			endif
-
-			call super.setState(state)
 
 			if (state == AAbstractQuest.stateCompleted or state == AAbstractQuest.stateFailed) then
 				set i = 0
@@ -120,6 +118,8 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 					call ForceQuestDialogUpdate() //required?
 				endif
 			endif
+
+			call super.onStateAction(state)
 		endmethod
 
 		public method displayUpdateMessage takes string message returns nothing

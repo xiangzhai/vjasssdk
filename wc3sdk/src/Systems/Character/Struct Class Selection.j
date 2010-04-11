@@ -10,7 +10,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 	function interface AClassSelectionStartGameAction takes nothing returns nothing
 
 	struct AClassSelection
-		//static start members
+		// static construction members
 		private static camerasetup m_cameraSetup
 		private static boolean m_hideUserInterface
 		private static real m_x
@@ -199,11 +199,11 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 				call MultiboardSetItemValue(multiboardItem, thistype.m_textAbilities)
 				call MultiboardReleaseItem(multiboardItem)
 				set multiboardItem = null
+				set index = index + 1
 
 				set i = 0
 				loop
 					exitwhen(i == this.m_class.abilities())
-					set index = index + 1
 					set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 					call MultiboardSetItemStyle(multiboardItem, true, true)
 					call MultiboardSetItemIcon(multiboardItem, this.m_class.abilityIconPath(i))
@@ -211,27 +211,28 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 					call MultiboardReleaseItem(multiboardItem)
 					set multiboardItem = null
 					set i = i + 1
+					set index = index + 1
 				endloop
 			endif
 
 			if (this.m_class.descriptionLines() > 0) then
-				set index = index + 1
 				set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 				call MultiboardSetItemStyle(multiboardItem, true, false)
 				call MultiboardSetItemValue(multiboardItem, thistype.m_textDescription)
 				call MultiboardReleaseItem(multiboardItem)
 				set multiboardItem = null
+				set index = index + 1
 
 				set i = 0
 				loop
 					exitwhen(i == this.m_class.descriptionLines())
-					set index = index + 1
 					set multiboardItem = MultiboardGetItem(this.m_infoSheet, index, 0)
 					call MultiboardSetItemStyle(multiboardItem, true, false)
 					call MultiboardSetItemValue(multiboardItem, this.m_class.descriptionLine(i))
 					call MultiboardReleaseItem(multiboardItem)
 					set multiboardItem = null
 					set i = i + 1
+					set index = index + 1
 				endloop
 			endif
 			call ShowMultiboardForPlayer(this.m_user, this.m_infoSheet, true)
@@ -247,6 +248,10 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			call SetUnitInvulnerable(this.m_classUnit, true)
 			call PauseUnit(this.m_classUnit, true)
 			call SetUnitPathing(this.m_classUnit, false)
+			/// @todo Has to be set although unit is being paused?!
+			if (IsUnitType(this.m_classUnit, UNIT_TYPE_HERO)) then
+				call SuspendHeroXP(this.m_classUnit, true)
+			endif
 			// refresh position
 			call SetUnitPosition(this.m_classUnit, thistype.m_x, thistype.m_y)
 			//call ShowUnit(this.m_classUnit, false)

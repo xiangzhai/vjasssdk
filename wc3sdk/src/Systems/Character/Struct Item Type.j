@@ -91,6 +91,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_abilities.size())
+				debug call this.print("Test add")
 				call UnitAddAbility(who, this.m_abilities[i])
 				//call UnitMakeAbilityPermanent(who, this.m_permanent[i], this.m_abilities[i]) //stay when unit morphs
 				set i = i + 1
@@ -101,6 +102,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_abilities.size())
+				debug call this.print("Test remove")
 				call UnitRemoveAbility(who, this.m_abilities[i])
 				set i = i + 1
 			endloop
@@ -112,6 +114,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 				exitwhen (i == this.m_abilities.size())
 				if (this.m_permanent[i]) then
 					//debug call this.print("Adding permanent ability " + GetObjectName(this.m_abilities[i]) + " to unit " + GetUnitName(who))
+					debug call this.print("Test add")
 					call UnitAddAbility(who, this.m_abilities[i])
 				endif
 				set i = i + 1
@@ -124,6 +127,7 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 				exitwhen (i == this.m_abilities.size())
 				if (this.m_permanent[i]) then
 					//debug call this.print("Removing permanent ability " + GetObjectName(this.m_abilities[i]) + " from unit " + GetUnitName(who))
+					debug call this.print("Test remove")
 					call UnitRemoveAbility(who, this.m_abilities[i])
 				endif
 				set i = i + 1

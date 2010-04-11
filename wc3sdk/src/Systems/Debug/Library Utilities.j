@@ -180,7 +180,7 @@ endif
 			set damageAmount = S2R(SubString(GetEventPlayerChatString(), StringLength("damage") + 1, StringLength(GetEventPlayerChatString())))
 			debug call Print("Damage amount is " + R2S(damageAmount) + ".")
 			if (damageAmount > 0.0) then
-				call UnitDamageTargetBJ(null, selectedUnit, damageAmount, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
+				call UnitDamageTargetBJ(selectedUnit, selectedUnit, damageAmount, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
 			endif
 			set selectedUnit = null
 		endif
@@ -191,11 +191,19 @@ endif
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		local integer experience
+		local boolean suspend
 		if (selectedUnit != null) then
 			if (IsUnitType(selectedUnit, UNIT_TYPE_HERO)) then
 				set experience = S2I(SubString(GetEventPlayerChatString(), StringLength("xp") + 1, StringLength(GetEventPlayerChatString())))
-				call AddHeroXP(selectedUnit, xp, true)
-				debug call Print(IntegerArg(tr("Added %i experience."), xp))
+				set suspend = IsSuspendedXP(selectedUnit)
+				if (suspend) then
+					call SuspendHeroXP(selectedUnit, false)
+				endif
+				call AddHeroXP(selectedUnit, experience, true)
+				if (suspend) then
+					call SuspendHeroXP(selectedUnit, true)
+				endif
+				debug call Print(IntegerArg(tr("Added %i experience."), experience))
 			debug else
 				debug call Print(tr("Selected unit is not a hero."))
 			endif

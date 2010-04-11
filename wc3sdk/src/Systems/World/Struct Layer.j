@@ -99,6 +99,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call MakeUnitFlyable(whichUnit)
 			call SetUnitFlyHeight(whichUnit, this.m_height, 0.0)
 			call SetUnitPathing(whichUnit, false)
+			debug call this.print("Unit " + GetUnitName(whichUnit) + " enters.")
 
 			call this.onUnitEnters(whichUnit)
 		endmethod
@@ -109,6 +110,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call SetUnitPathing(whichUnit, true)
 			call this.m_units.erase(index)
 			call this.m_unitFlyHeights.erase(index)
+			debug call this.print("Unit " + GetUnitName(whichUnit) + " leaves.")
 
 			call this.onUnitLeaves(whichUnit)
 		endmethod

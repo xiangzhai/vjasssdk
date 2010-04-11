@@ -15,9 +15,8 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 			return this.m_quest
 		endmethod
 
-		public stub method setState takes integer state returns nothing
+		public stub method onStateAction takes integer state returns nothing
 			local boolean result
-			call super.setState(state)
 			set result = not this.m_quest.checkQuestItemsForState(state)
 			if (AQuest.isQuestLogUsed()) then
 				if (this.m_questItem == null) then
@@ -31,6 +30,7 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 					call ForceQuestDialogUpdate() //required?
 				endif
 			endif
+			call super.onStateAction(state)
 		endmethod
 
 		public static method create takes AQuest usedQuest, string description returns thistype

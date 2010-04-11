@@ -16,6 +16,7 @@ library AStructSystemsCharacterTalk requires optional AModuleCoreSystemStruct, A
 		private static string m_order
 		private static real m_maxDistance
 		private static string m_effectPath
+		private static boolean m_hideUserInterface
 		private static boolean m_disableEffectsInCinematicMode
 		private static string m_textErrorMessage
 		private static string m_textExit
@@ -150,7 +151,9 @@ endif
 				debug return
 			debug endif
 			set this.m_character = character
-			call SetUserInterfaceForPlayer(character.player(), false, true)
+			if (thistype.m_hideUserInterface) then
+				call SetUserInterfaceForPlayer(character.player(), false, true)
+			endif
 			call character.setTalk(this)
 			call character.setMovable(false)
 			call PauseUnit(this.m_unit, true) //Disables routines or something else
@@ -172,7 +175,9 @@ endif
 			call AGui.playerGui(characterUser).dialog().clear()
 			call ResetUnitLookAt(this.m_character.unit())
 			call ResetUnitLookAt(this.m_unit)
-			call SetUserInterfaceForPlayer(characterUser, true, true)
+			if (thistype.m_hideUserInterface) then
+				call SetUserInterfaceForPlayer(characterUser, true, true)
+			endif
 			if (not ACharacter.useViewSystem() or not this.m_character.view().enableAgain()) then
 				call AThirdPersonCamera.playerThirdPersonCamera(characterUser).pause()
 				call ResetToGameCameraForPlayer(characterUser, 0.0)
@@ -360,11 +365,12 @@ endif
 			call thistype.setName("ATalk")
 		endmethod
 
-		public static method init takes string order, real maxDistance, string effectPath, boolean disableEffectsInCinematicMode, string textErrorMessage, string textExit, string textBack returns nothing
+		public static method init takes string order, real maxDistance, string effectPath, boolean hideUserInterface, boolean disableEffectsInCinematicMode, string textErrorMessage, string textExit, string textBack returns nothing
 			// static construction members
 			set thistype.m_order = order
 			set thistype.m_maxDistance = maxDistance
 			set thistype.m_effectPath = effectPath
+			set thistype.m_hideUserInterface = hideUserInterface
 			set thistype.m_disableEffectsInCinematicMode = disableEffectsInCinematicMode
 			set thistype.m_textErrorMessage = textErrorMessage
 			set thistype.m_textExit = textExit

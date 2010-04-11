@@ -194,7 +194,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 	/// Item types of chargable items should always be ITEM_TYPE_CHARGED!
 	/// @todo Use UnitDropItemSlot instead of item removals.
 	struct AInventory extends AAbstractCharacterSystem
-		//static constant members, useful for GUIs
+		// static constant members, useful for GUIs
 		public static constant integer maxEquipmentTypes = 5//AItemType.maxEuqipmentTypes /// @todo vJass bug //AClassCharacterItemType
 		public static constant integer maxRucksackItems = 128
 		public static constant integer maxRucksackPages = 32 //maxRucksackItems / maxRucksackItemsPerPage
@@ -215,7 +215,7 @@ library AStructSystemsCharacterInventory requires ALibraryCoreGeneralPlayer, ASt
 		private AInventoryItemData array m_rucksackItemData[thistype.maxRucksackItems]
 		private trigger m_openTrigger
 		private trigger m_orderTrigger
-		private trigger m_useTrigger //show next page, show previous page, disable in equipment
+		private trigger m_useTrigger // show next page, show previous page, disable in equipment
 		private trigger m_pickupTrigger
 		private trigger m_dropTrigger
 		private integer m_rucksackPage

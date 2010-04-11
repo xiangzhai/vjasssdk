@@ -1,3 +1,11 @@
+2010-04-11 Tamino Dauth <tamino@cdauth.de>
+* Fixed cheats "xp" and "damage".
+* Fixed onState method overwriting of structs AQuest and AQuestItem.
+* Added initialization option "hideUserInterface" to struct ATalk.
+
+2010-04-09 Tamino Dauth <tamino@cdauth.de>
+* Added many spell icons and effects to archive "Spells".
+
 2010-04-08 Tamino Dauth <tamino@cdauth.de>
 * Added cheats "lumber" and "gold".
 * Added initialization option "hideUserInterface" to struct AClassSelection.
