@@ -21,6 +21,7 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 20. Deklarationsvoraussetzungen
 21. Funktionen
 22. Funktionsvariablen (Funktionszeiger)
+23. Funktionstypen
 23. Lambda-Funktionen
 24. Funktionsaufrufe
 25. Ausnahmebehandlung
@@ -160,7 +161,7 @@ Modularisierung-Schlüsselwörter:
 Standard: package, private, protected, public
 
 Objektorientierung-Schlüsselwörter:
-Standard: private protected, class, this, self, parent, new, delete, copy, init, virtual, static, friend, abstract
+Standard: class, this, self, parent, new, delete, copy, init, virtual, static, friend, abstract
 
 Threading-Schlüsselwöter:
 threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
@@ -760,6 +761,17 @@ Beispiel:
 integer (integer, integer) functionVariable = MyClass.method0;
 Print(functionVariable.evaluate(0, 10));
 
+Funktionstypen
+
+Funktionstypen sind Typen, die eine einfachere Deklaration von Funktionszeigern ermöglichen.
+Variablen, die einen Funktionstyp als Typ haben, können wie reguläre Funktionsvariablen verwendet werden (siehe Funktionsvariablen).
+
+Notation:
+abstract <Funktionstypname> <Rückgabetyp> (Parametertyp1, Parametertyp2, ... ParametertypN);
+
+Beispiel:
+abstract Predicate boolean ();
+
 Lambda-Funktionen
 
 Lambda-Funktionen sind namenlose Funktionen, sozusagen Funktionen, bei denen nur der Code-Inhalt angegeben werden muss.
@@ -841,7 +853,7 @@ des Gültigkeitsbereiches, in welchem sich die Pseudonymdefinition befindet und 
 geschützten, privat geschützten oder öffentlichen Elemente.
 
 Notation:
-[private | public | protected | private protected] alias <Bezeichner> <Neuer Bezeichner>;
+[private | public | protected | package] alias <Bezeichner> <Neuer Bezeichner>;
 
 
 Vorlagen (templates)
@@ -941,14 +953,15 @@ Handelt es sich um Elementvariablen, so wird lediglich die erste Elementvariable
 Bei den Methoden wird ebenfalls die Methode der zu erst geerbten Klasse (von unten nach oben, von links nach rechts) aufgerufen.
 
 Protected:
-Ist ein Klassenelement "protected", so kann darauf von Kindklassen und von Klassen bzw. Funktionen des aktuellen Pakets und Klassen bzw. Funktionen 
-aus dessen Unterpaketen zugegriffen werden.
+Ist ein Klassenelement "protected", so kann darauf nur von Kindklassen der Klasse zugegriffen werden.
 
-Private protected:
-Ist ein Klassenelement "private protected", so kann darauf nur von Kindklassen der Klasse zugegriffen werden.
+Package:
+Ist ein Klassenelement "package", so kann darauf von Kindklassen und von Klassen bzw. Funktionen des aktuellen Pakets
+aus dessen Unterpaketen zugegriffen werden.
+"package" kann zusätzlich zu "protected", "public" und "private" verwendet werden.
 
 Friend:
-Wird ein Paket, eine Klasse oder eine Funktion als friend einer bestimmten Deklarationsart (public, protected, private oder private protected) 
+Wird ein Paket, eine Klasse oder eine Funktion als friend einer bestimmten Deklarationsart (public, protected oder private)
 deklariert, so erhält diese(s) Zugriff auf die Klassenelemente, die ebenfalls so deklariert wurden.
 Dies gilt auch für die Kindklassen (Überprüfen, ob es anders mehr Sinn machen würde).
 
@@ -960,8 +973,8 @@ Notation:
 	void copy(Klassenname other) Kopierkonstruktur
 	static void init() { } Initialisierungsmethode
 
-	[public | protected | private | private protected] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>;
-	[public | protected | private | private protected] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
+	[package] [public | protected | private] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>;
+	[package] [public | protected | private] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
 } globale Instanzen durch Kommata getrennt;
 
 Methoden:
@@ -976,7 +989,7 @@ Statische Methoden können ebenfalls virtuell sein und werden entsprechend des z
 Abstrakte Methoden müssen allesamt implementiert werden. Abstrakte-Methoden-Implementationen müssen virtuell sein, da sonst
 möglicherweise keine Methode aufgerufen werden würde.
 
-"public", "private protected" und "protected" Methoden können in der Kindklasse "umdeklariert" werden, was ihre zugreifbarkeit verändert,
+"public" und "protected" Methoden können in der Kindklasse "umdeklariert" werden, was ihre zugreifbarkeit verändert,
 ohne dass sie neu definiert werden müssen.
 Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
 
@@ -1032,7 +1045,7 @@ Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelement
 Arrays, Funktionen und Objekte usw. (unter Verwendung deren Kopierkontruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf dieselben Ziele,
 falls es sich bei den Elementvariablen um keine Objekte handelt, sondern z. B. native Typen wie "unit".
 Der Inhalt von Elementvariablen mit kopierbasierte Typen wird selbstverständlich ebenfalls kopiert (dazu ist natürlich kein Kopierkonstruktor notwendig).
-Ist der Kopierkonstruktor als "private", "private protected" oder "protected" definiert, so kann das Schlüsselwort
+Ist der Kopierkonstruktor als "private" oder "protected" definiert, so kann das Schlüsselwort
 nicht von außerhalb angewandt werden (gängiges Verhalten, auch bei anderen Methoden).
 Der Kopierkonstruktor darf virtuell und abstrakt sein.
 
@@ -1081,7 +1094,7 @@ Operatorenüberladung
 
 Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen oder einen zugehörigen Typnamen enthält, überlädt die Bedeutung eines
 Operators für die angegebenen Parametertypen.
-Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, private protected).
+Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, package).
 Wird ein Typ und kein Operatorzeichen als Name genommen, so ermöglicht dies Klassenobjekten explizit die Konvertierung zu diesem Typ.
 Folgende Operatoren können nach folgenden Schemata als nicht statische Methoden überladen werden:
 Bezeichner			Rückgabetyp			Parametertypen

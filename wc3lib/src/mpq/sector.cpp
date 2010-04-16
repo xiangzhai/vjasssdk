@@ -104,22 +104,8 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 					throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
 			}
 
-			/// @todo IMPLEMENT.
 			if (this->m_compression & Sector::Deflated) // Deflated (see ZLib)
-			{
-				throw Exception(_("Sector: ZLib compression is not supported."));
-
-				int state = Z_OK; //= inflateInit(&strm);
-
-
-				if (state != Z_OK)
-					throw Exception(boost::str(boost::format(_("Sector: ZLib error %1%.")) % zError(state)));
-
-				//state = inflateEnd(z_streamp strm);
-
-				if (state != Z_OK)
-					throw Exception(boost::str(boost::format(_("Sector: ZLib error %1%.")) % zError(state)));
-			}
+				bytes += inflateStream(ifstream, ostream);
 
 			if (this->m_compression & Sector::Imploded)
 			{

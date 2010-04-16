@@ -1,3 +1,7 @@
+2010-04-17 Tamino Dauth <tamino@cdauth.de>
+* Added function types to Jass++ definition.
+* Added ZLib inflation support for MPQ file sections.
+
 2010-04-15 Tamino Dauth <tamino@cdauth.de>
 * Improved library MPQ handling.
 * Fixed some MPQ file sector reading bugs.

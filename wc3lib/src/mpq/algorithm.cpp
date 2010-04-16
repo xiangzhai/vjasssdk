@@ -18,7 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+
 #include "algorithm.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -114,7 +117,96 @@ uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum
     
     return seed1;
 }
-	
+
+std::streamsize deflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception)
+{
+	throw Exception(_("deflateStream: ZLib compression is not supported yet!"));
+
+	return 0;
+}
+
+std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception)
+{
+	z_stream stream;
+	stream.zalloc = Z_NULL;
+	stream.zfree = Z_NULL;
+	stream.opaque = Z_NULL;
+	stream.avail_in = 0;
+	stream.next_in = Z_NULL;
+	int state = inflateInit(&stream);
+	std::streamsize streamsize = 0;
+
+	if (state != Z_OK)
+		throw Exception(boost::str(boost::format(_("Sector: ZLib error %1%.")) % zError(state)));
+
+	static const std::size_t bufferSize = 16384;
+
+	do
+	{
+		unsigned char inputBuffer[bufferSize];
+		istream.read((char*)inputBuffer, bufferSize);
+		stream.avail_in = istream.gcount();
+
+		if (!istream)
+		{
+			state = inflateEnd(&stream);
+
+			throw Exception(boost::str(boost::format(_("Sector: ZLib stream error %1%.")) % zError(state)));
+		}
+
+		if (stream.avail_in == 0)
+			break;
+
+		stream.next_in = inputBuffer;
+
+		/* run inflate() on input until output buffer not full */
+		do
+		{
+			unsigned char outputBuffer[bufferSize];
+			stream.avail_out = bufferSize;
+			stream.next_out = outputBuffer;
+
+			state = inflate(&stream, Z_NO_FLUSH);
+
+			if (state == Z_STREAM_ERROR)
+				throw Exception(boost::str(boost::format(_("")) % zError(state))); // state not clobbered
+
+			switch (state)
+			{
+			    case Z_NEED_DICT:
+				state = Z_DATA_ERROR; // and fall through
+			    case Z_DATA_ERROR:
+			    case Z_MEM_ERROR:
+
+				inflateEnd(&stream);
+
+				throw Exception(boost::str(boost::format(_("")) % zError(Z_MEM_ERROR)));
+			}
+
+			unsigned int have = bufferSize - stream.avail_out;
+			ostream.write((char*)outputBuffer, have);
+
+			if (!ostream)
+			{
+				inflateEnd(&stream);
+
+				throw Exception(boost::str(boost::format(_("")) % zError(Z_ERRNO)));
+			}
+
+			streamsize += have;
+		}
+		while (stream.avail_out == 0);
+	}
+	while (state != Z_STREAM_END);
+
+	state = inflateEnd(&stream);
+
+	if (state != Z_OK)
+		throw Exception(boost::str(boost::format(_("Sector: ZLib error %1%.")) % zError(state)));
+
+	return streamsize;
+}
+
 }
 
 }
