@@ -28,6 +28,12 @@
 #include <cassert>
 #include <cctype>
 
+//#include <huffman/huff.h>
+#include <huffman/huffman.h> // C implementation, libhuffman
+#include <zlib.h>
+#include <pklib/pklib.h>
+#include <bzlib.h>
+
 #include "platform.hpp"
 
 namespace wc3lib
@@ -55,11 +61,5 @@ uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum
 }
 
 }
-
-
-#include <huffman/huff.h>
-#include <zlib/zlib.h>
-#include <pklib/pklib.h>
-#include <bzip2/bzlib.h>
 
 #endif

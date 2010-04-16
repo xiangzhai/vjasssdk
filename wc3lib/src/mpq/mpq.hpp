@@ -132,22 +132,32 @@ class Mpq
 		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.		
 		*/
 		const class MpqFile* findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
+		/**
+		* @note This version compares path @param path to all other pathes. Therefore file paths should be set!
+		*/
 		const class MpqFile* findFile(const boost::filesystem::path &path) const;
+		/**
+		* @note This version compares name @param name to all other names. Therefore file paths should be set!
+		*/
 		const class MpqFile* findFile(const std::string &name) const;
 		/**
 		* Path of MPQ file @param mpqFile should be set if you use this method.
+		* Does not search for the instance of @param mpqFile. Only uses its hash data!
+		* @return Returns 0 if no file was found.
 		*/
 		const class MpqFile* findFile(const class MpqFile &mpqFile) const;
 		/**
-		* Addes a new file to the MPQ archive with path @param path, locale @param locale and platform @param platform.
+		* Adds a new file to the MPQ archive with path @param path, locale @param locale and platform @param platform.
 		* @param istream This input stream is used for reading the initial file data.
 		* @todo Replace reservedSpace by size of istream?
 		*/
 		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream = 0, bool overwriteExisting = false, int32 reservedSpace = 0) throw (class Exception);
 		/**
 		* Path of MPQ file @param mpqFile should be set if you use this method.
+		* Does not add @param mpqFile. Only uses its meta data (beside you set @param addData to true)!
+		* @param addData If this value is true contained data of the file will be added to the new one.
 		*/
-		class MpqFile* addFile(const class MpqFile &mpqFile, bool overwriteExisting) throw (class Exception);
+		class MpqFile* addFile(const class MpqFile &mpqFile, bool addData = true, bool overwriteExisting = false) throw (class Exception);
 		bool removeFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
 		bool removeFile(const boost::filesystem::path &path);
 		bool removeFile(const std::string &name);
@@ -162,6 +172,10 @@ class Mpq
 		*/
 		std::size_t size() const;
 		const boost::filesystem::path& path() const;
+		/**
+		* @return Returns the start position of the MPQ archive in its file.
+		*/
+		std::streampos startPosition() const;
 		enum Format format() const;
 		enum ExtendedAttributes extendedAttributes() const;
 		int16 sectorSize() const;
@@ -182,7 +196,7 @@ class Mpq
 		int64 entireUsedBlockSize() const;
 		int64 entireUnusedBlockSize() const;
 		/**
-		* @return Returns the sum of all file sizes.
+		* @return Returns the sum of all file sizes (uncompressed).
 		*/
 		int64 entireFileSize() const;
 		
@@ -229,6 +243,12 @@ class Mpq
 		*/
 		bool removeFile(class MpqFile *&mpqFile);
 
+		class MpqFile* listfileFile();
+		class MpqFile* attributesFile();
+		class MpqFile* signatureFile();
+		class MpqFile* refreshAttributesFile();
+		class MpqFile* refreshSignatureFile();
+
 		/**
 		* Uses input stream @param istream for reading file path entries and refreshing them by getting their instances (using their hashes).
 		* @return Returns the number of added path entries.
@@ -266,6 +286,7 @@ class Mpq
 		
 		std::size_t m_size;
 		boost::filesystem::path m_path;
+		std::streampos m_startPosition;
 		enum Format m_format;
 		enum ExtendedAttributes m_extendedAttributes;
 		int16 m_sectorSizeShift;
@@ -458,6 +479,11 @@ inline const boost::filesystem::path& Mpq::path() const
 	return this->m_path;
 }
 
+inline std::streampos Mpq::startPosition() const
+{
+	return this->m_startPosition;
+}
+
 inline enum Mpq::Format Mpq::format() const
 {
 	return this->m_format;
@@ -544,9 +570,28 @@ inline int64 Mpq::entireFileSize() const
 	int64 result = 0;
 	
 	BOOST_FOREACH(const Block *block, this->m_blocks)
-		result += block->m_fileSize;
+	{
+		// usually size should be 0 if it's not a file but anyway we should check
+		if (block->flags() & Block::IsFile)
+			result += block->m_fileSize;
+	}
 	
 	return result;
+}
+
+inline class MpqFile* Mpq::listfileFile()
+{
+	return const_cast<class MpqFile*>(const_cast<const class Mpq*>(this)->listfileFile());
+}
+
+inline class MpqFile* Mpq::attributesFile()
+{
+	return const_cast<class MpqFile*>(const_cast<const class Mpq*>(this)->attributesFile());
+}
+
+inline class MpqFile* Mpq::signatureFile()
+{
+	return const_cast<class MpqFile*>(const_cast<const class Mpq*>(this)->signatureFile());
 }
 
 inline bool Mpq::checkBlocks() const

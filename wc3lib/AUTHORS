@@ -10,6 +10,8 @@ warblender:
 ogre-qt:
 Lakin Wecker <lakin.wecker@gmail.com>
 
-StormLib:
+pklib:
 Ladislav Zezula <ladik@zezula.net>
-Marko Friedemann <marko.friedemann@bmx-chemnitz.de>  
+
+hufflib:
+Douglas Ryan Richardson

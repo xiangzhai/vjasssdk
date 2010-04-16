@@ -18,7 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <fstream>
+
+#include <boost/format.hpp>
+
+
+#include "../internationalisation.hpp"
+#include "algorithm.hpp"
 #include "sector.hpp"
+#include "mpq.hpp"
 #include "mpqfile.hpp"
 
 namespace wc3lib
@@ -27,13 +35,118 @@ namespace wc3lib
 namespace mpq
 {
 
-Sector::Sector(class MpqFile *mpqFile) : m_mpqFile(mpqFile)
+Sector::Sector(class MpqFile *mpqFile) : m_mpqFile(mpqFile), m_sectorIndex(0), m_sectorOffset(0), m_sectorSize(0), m_compression(Sector::Uncompressed)
 {
 }
-	
-std::streamsize Sector::read(std::istream &istream) throw (class Exception)
+
+std::streamsize Sector::readData(std::istream &istream) throw (class Exception)
 {
 	return 0;
+}
+
+std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exception)
+{
+	std::ifstream ifstream(this->m_mpqFile->mpq()->path().string().c_str(), std::ios_base::in | std::ios_base::binary);
+
+	if (!ifstream)
+		throw Exception(boost::str(boost::format(_("Sector: Unable to open file \"%1%\".")) % this->m_mpqFile->mpq()->path().string()));
+
+	std::streampos position = int32(this->m_mpqFile->mpq()->startPosition()) + this->m_sectorOffset;
+
+	if (this->m_mpqFile->mpq()->format() == Mpq::Mpq1)
+		position += this->m_mpqFile->hash()->block()->blockOffset();
+	else
+		position += this->m_mpqFile->hash()->block()->extendedBlockOffset();
+
+	ifstream.seekg(position);
+//	std::cout << "Sector position " << position << std::endl;
+	byte *data = new byte[this->m_sectorSize];
+	int32 dataSize = this->m_sectorSize;
+
+	if (this->m_mpqFile->isCompressed())
+		dataSize -= 1;
+
+	std::streamsize bytes = 0;
+
+	try
+	{
+		ifstream.read((char*)data, dataSize);
+		bytes = ifstream.gcount();
+
+		/*
+		If the file is encrypted, each sector (after compression/implosion, if applicable) is encrypted with the file's key.
+		Each sector is encrypted using the key + the 0-based index of the sector in the file.
+		*/
+		if (this->m_mpqFile->isEncrypted())
+			DecryptData(Mpq::cryptTable(), (void*)data, uint32(dataSize), this->m_mpqFile->fileKey() + uint32(this->m_sectorIndex));
+
+		// Imploded sectors are the raw compressed data following compression with the implode algorithm (these sectors can only be in imploded files).
+		if (this->m_mpqFile->isImploded())
+		{
+			throw Exception(_("Sector: Imploded files are not supported yet."));
+		}
+		// Compressed sectors (only found in compressed - not imploded - files) are compressed with one or more compression algorithms.
+		else if (this->m_mpqFile->isCompressed())
+		{
+			/// @todo IMPLEMENT.
+			if (this->m_compression & Sector::ImaAdpcmMono) // IMA ADPCM mono
+				;
+
+			/// @todo IMPLEMENT.
+			if (this->m_compression & Sector::ImaAdpcmStereo) // IMA ADPCM stereo
+				;
+
+			if (this->m_compression & Sector::Huffman) // Huffman encoded
+			{
+				int state = huffman_decode_memory((unsigned char*)data, unsigned(dataSize), (unsigned char**)(&data), (unsigned*)(&dataSize));
+
+				if (state != 0)
+					throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
+			}
+
+			/// @todo IMPLEMENT.
+			if (this->m_compression & Sector::Deflated) // Deflated (see ZLib)
+			{
+				throw Exception(_("Sector: ZLib compression is not supported."));
+
+				int state = Z_OK; //= inflateInit(&strm);
+
+
+				if (state != Z_OK)
+					throw Exception(boost::str(boost::format(_("Sector: ZLib error %1%.")) % zError(state)));
+
+				//state = inflateEnd(z_streamp strm);
+
+				if (state != Z_OK)
+					throw Exception(boost::str(boost::format(_("Sector: ZLib error %1%.")) % zError(state)));
+			}
+
+			if (this->m_compression & Sector::Imploded)
+			{
+				throw Exception(_("Sector: Imploded compression is not supported."));
+			}
+
+			if (this->m_compression & Sector::Bzip2Compressed)// BZip2 compressed (see BZip2)
+			{
+				int state = BZ2_bzBuffToBuffDecompress((char*)(data), (unsigned int*)(&dataSize), (char*)(data), unsigned(&dataSize), 0, 1);
+
+				if (state != BZ_OK)
+					throw Exception(boost::str(boost::format(_("Sector: Bzip2 error %1%.")) % state));
+			}
+		}
+
+		ostream.write((const char*)(data), dataSize);
+	}
+	catch (class Exception &exception)
+	{
+		delete[] data;
+
+		throw exception;
+	}
+
+	delete[] data;
+
+	return bytes;
 }
 
 void Sector::setCompression(byte value)

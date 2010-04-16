@@ -1,0 +1,13 @@
+add_subdirectory(huffman)
+list(APPEND linkDirectories huffman)
+# add_subdirectory(pklib)
+if(FLAG_EDITOR_USE)
+	add_subdirectory(qogre)
+	list(APPEND linkDirectories qogre)
+endif()
+if(FLAG_BLEND_USE)
+	add_subdirectory(readblend)
+	list(APPEND linkDirectories readblend)
+endif()
+
+link_directories(${linkDirectories})

@@ -1,7 +1,9 @@
-Virtuelle-Maschine-Implementation:
+Virtuelle-Maschine-Implementation
+
+Die folgenden API-Kategorien sind nach der Reihenfolge ihres Auftretens (falls vorhanden) in der Datei common.j sortiert.
 Falls es eines Tages möglich sein sollte, eine eigene virtuelle Maschine für Jass bzw. Jass++ zu schreiben, so sollten folgende native Funktionen hinzugefügt werden:
 
-Bitwise-API:
+Bitwise API:
 * native BitAnd takes integer a, integer b returns integer
 * native BitOr takes integer a, integer b returns integer
 * native BitXor takes integer a, integer b returns integer
@@ -9,7 +11,7 @@ Bitwise-API:
 * native BitSHR takes integer value, integer shift returns integer
 * native BitNot takes integer value returns integer
 
-Math-API:
+Math API:
 * native RMin takes real a, real b returns real
 * native RMax takes real a, real b returns real
 * native RAbs takes real a returns real
@@ -24,23 +26,40 @@ Math-API:
 * native ISign takes integer a returns integer
 * native IMod takes integer dividend, integer divisor returns integer
 
-String-Utility-API:
+String Utility API:
+Orientiert an den C-String-Funktionen der C-Standardbibliothek (nicht die Namen betreffend).
 * native StringIndex takes string source, string target returns integer
+* native StringComparison takes string a, string b returns integer
+Vergleicht die beiden Zeichenketten a und b miteinander und liefert ihre Beziehung als ganzzahligen
+Wert. 0 bedeutet, dass beide Zeichenketten den gleichen Inhalt haben (siehe strcmp).
+Es gilt zu beachten, dass Warcraft 3 TFT ausschließlich UTF-8-Zeichenketten verwendet.
+* native StringToken takes string source, integer number, string delimiters returns string
+Gibt das nte Token der Zeichenkette zurück (beginnend bei 0) als Trennzeichen werden alle einzelnen
+Zeichen der Zeichenkette "delimiters" verwendet. Lieft der Wert von "number" außerhalb des Token-
+Bereichs, liefert die Funktion null.
 
-
+Group API:
 * native GroupCount takes group whichGroup returns integer
 * native GroupUnit takes group whichGroup, integer index returns unit
+
+Force API:
 * native ForceCount takes force whichForce returns integer
 * native ForcePlayer takes force whichForce, integer index returns player
+
+Native trigger interface
 * native EvaluateFunc takes string funcName returns boolean
 
-Handle-API:
-* native GetHandleSize takes handle whichHandle returns integer // Liefert die Anzahl in Bytes.
+Handle API:
+* native GetHandleSize takes handle whichHandle returns integer
+Liefert die Anzahl in Bytes. Für die Umsetzung dieser Funktionen müssen die Typen dynamisch
+gespeichert werden. Je nach Entwicklungsaufwand, könnte diese Funktion auch optional sein.
   
-Agent-API:
-* native GetAgentReferences takes agent whichAgent returns integer // Liefert die Anzahl der Referenzen auf das Objekt.
+Agent API:
+* native GetAgentReferences takes agent whichAgent returns integer
+Liefert die Anzahl der Referenzen auf das Objekt. Für diese Funktion müsste eine Garbage Collection
+mit Referenzzähler eingebaut werden. Je nach Entwicklungsaufwand, könnte diese Funktion auch optional sein.
 
-Trigger-API:
+Trigger API:
 * native TriggerRemoveEvent takes trigger whichTrigger, event whichEvent returns nothing
 * native TriggerClearEvents takes trigger whichTrigger returns nothing
 * native TriggerCountEvents takes trigger whichTrigger returns integer
@@ -48,16 +67,19 @@ Trigger-API:
 * native TriggerCountActions takes trigger whichTrigger returns integer
 * native TriggerSyncStop takes nothing returns nothing
   
-Unit-API:
+Unit API:
 * native UnitAddBuff takes unit whichUnit, integer buffId returns boolean
 * native UnitRemoveBuff takes unit whichUnit, integer buffId returns boolean
 * native UnitHasBuff takes unit whichUnit, integer buffId returns boolean
 * native GetHeroStrBonus takes unit whichHero returns integer
 * native GetHeroAgiBonus takes unit whichHero returns integer
 * native GetHeroIntBonus takes unit whichHero returns integer
+* native GetUnitZ takes unit whichUnit returns real
   
-Player-API:
+Player API:
 * native TriggerRegisterPlayerKeyEvent takes trigger whichTrigger, player whichPlayer, key whichKey, boolean pressed returns event
+
+Die folgenden Funktionen könnten auch mittels GetLocalPlayer implementiert werden:
 * native HasPlayerKeyPressed takes player whichPlayer, key whichKey returns boolean
 * native GetPlayerMouseX takes player whichPlayer returns real
 * native GetPlayerMouseY takes player whichPlayer returns real
@@ -65,8 +87,13 @@ Player-API:
 * native SetPlayerMinimap takes player whichPlayer, string filePath returns nothing
 * native EnablePlayerMinimap takes player whichPlayer, boolean enable returns nothing 
 * native IsPlayerMinimapEnabled takes player whichPlayer returns boolean
-  
-Trackable-API:
+
+Visual API:
+* native SetMinimap takes string filePath returns nothing
+* native EnableMinimap takes boolean enable returns nothing
+* native IsMinimapEnabled takes nothing returns boolean
+
+Trackable API:
 * native RemoveTrackable takes trackable whichTrackable returns nothing
 * native TrackableShow takes trackable whichTrackable, boolean show returns nothing
 * native TrackableIsShown takes trackable whichTrackable returns boolean
@@ -79,7 +106,16 @@ Trackable-API:
 * native TrackableSetFacing takes trackable whichTrackable, real facing returns nothing
 * native TrackableFacing takes trackable whichTrackable returns real
   
-Multiboard-API:
+Quest API:
+* native QuestRemoveItem takes questitem whichQuestItem returns nothing
+
+Leaderboard API:
+* native LeaderboardSetItemIcon takes leaderboard lb, integer whichItem, string iconPath returns nothing
+* native LeaderboardGetItemIcon takes leaderboard lb, integer whichItem returns string
+* native LeaderboardGetItemValue takes leaderboard lb, integer whichItem returns integer
+* native LeaderboardGetItemLabel takes leaderboard lb, integer whichItem returns string
+
+Multiboard API:
 * native MultiboardGetTitleTextColorRed takes multiboard lb returns integer
 * native MultiboardGetTitleTextColorGreen takes multiboard lb returns integer
 * native MultiboardGetTitleTextColorBlue takes multiboard lb returns integer
@@ -93,35 +129,59 @@ Multiboard-API:
 * native MultiboardGetItemValueColorAlpha takes multiboard lb returns integer
 * native MultiboardGetItemWidth takes multiboard lb returns real
 * native MultiboardGetItemIcon takes multiboard lb returns string
-  
-Quest-API:
-* native QuestRemoveItem takes questitem whichQuestItem returns nothing
+
+Camera API:
+
+Sound API:
+
+Effects API:
+
+Terrain API:
+
+Image API:
+
+Ubersplat API:
+
+Blight API:
+
+Doodad API:
+
+Computer AI interface:
 
 Erweiterte API (keine einfachen Zusätze mehr)
 
-File-API:
+File API:
 Local code, no net traffic. Use GetLocalPlayer() to create player-specific functions.
-* type file extends agent // ist referenzbasiert, keine Kopierung.
-* type filecompression extends handle // Kopierung.
-* type filelocale extends handle // Kopierung.
+Creating files for non-host players has to be allowed by enabling an option (by the players themselves!).
+* type file extends agent
+Ist referenzbasiert, keine Kopierung.
+* type filecompression extends handle
+Kopierung.
+* type filelocale extends handle
+Kopierung.
 * constant native ConvertFileCompression takes integer i returns filecompression
 * constant native ConvertFileLocale takes integer i returns filelocale
-/**
-* Parameter filePath enthält einen relativen Pfad zu einem Standardverzeichnis, in welchem alle erzeugten Dateien abgelegt werden!
-*/
-* native CreateLocalFile takes string filePath returns file // lokales Dateisystem.
-* native CreateLocalDirectory takes string directoryPath returns file // lokales Dateisystem.
-* native OpenFile takes string filePath, filelocale preferedFileLocale returns file // MPQ-Dateien.
-* native OpenLocalFile takes string filePath returns file // lokale Dateien in einem speziellen Verzeichnis?
+* native CreateLocalFile takes string filePath returns file
+Lokales Dateisystem.
+Parameter filePath enthält einen relativen Pfad zu einem Standardverzeichnis, in welchem alle erzeugten Dateien abgelegt werden!
+* native CreateLocalDirectory takes string directoryPath returns file
+Lokales Dateisystem.
+* native OpenFile takes string filePath, filelocale preferedFileLocale returns file
+MPQ-Dateien.
+* native OpenLocalFile takes string filePath returns file
+Lokale Dateien in einem speziellen Verzeichnis?
 * native CloseFile takes file whichFile returns boolean
 * native IsFileDirectory takes file whichFile returns boolean
 * native GetFileName takes file whichFile returns string
 * native GetFilePath takes file whichFile returns string
-* native GetFileDirectoryEntries file whichFile returns integer // gibt 0 zurück, falls die Datei kein Verzeichnis ist
+* native GetFileDirectoryEntries file whichFile returns integer
+Gibt 0 zurück, falls die Datei kein Verzeichnis ist.
 * native GetFileDirectoryEntry file whichFile, integer index returns string
 * native GetFileDirectoryPath takes file whichFile returns string
-* native GetFileSize takes file whichFile returns integer // Größe in Bytes.
-* native GetFileCompressedSize takes file whichFile returns integer // Komprimierte Größe in MPQs.
+* native GetFileSize takes file whichFile returns integer
+Größe in Bytes.
+* native GetFileCompressedSize takes file whichFile returns integer
+Komprimierte Größe in MPQs.
 * native GetFileCompression takes file whichFile returns filecompression
 * native GetFileLocale takes file whichFile returns filelocale
 * native SeekFile takes file whichFile, integer position returns boolean
@@ -138,7 +198,7 @@ Local code, no net traffic. Use GetLocalPlayer() to create player-specific funct
 * native FilePathExists takes string filePath returns boolean
 * native FilePathIsDirectory takes string filePath returns boolean
 
-MDLX-API:
+MDLX API:
 Local code, no net traffic. Use GetLocalPlayer() to create player-specific functions.
 Der Typ "mdlx" stellt nur eine nicht veränderbare Referenz auf eine Modeldatei dar.
 * type mdlx extends agent // ist referenzbasiert, keine Kopierung
@@ -168,7 +228,6 @@ Der Typ "mdlx" stellt nur eine nicht veränderbare Referenz auf eine Modeldatei 
 ...
 
 Container-API:
-
 
 Zudem sollte die umständliche Lösung zur Umgehung der Array-Größe mittels Hashtables wegfallen
 und es dem Benutzer erlaubt werden, dynamisch Speicher zu allozieren. Allerdings mit vernünftigen

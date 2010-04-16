@@ -22,6 +22,7 @@
 
 #include <boost/foreach.hpp>
 
+#include "algorithm.hpp"
 #include "hash.hpp"
 #include "mpq.hpp"
 #include "mpqfile.hpp"
@@ -56,6 +57,7 @@ std::streamsize Hash::read(std::istream &istream) throw (class Exception)
 	{
 		this->m_deleted = true;
 		//std::cout << "Hash entry is deleted." << std::endl;
+		//exit(0);
 	}
 	else if (entry.fileBlockIndex != Hash::blockIndexEmpty)
 	{
@@ -71,7 +73,8 @@ std::streamsize Hash::read(std::istream &istream) throw (class Exception)
 	// otherwise it's empty (block == 0)
 	else
 	{
-		//std::cout << "Entry is EMPTY WAAAAAAAAAHHHHHHH" << std::endl;
+		//std::cout << "Entry is EMPTY WAAAAAAAAAHHHHHHH" << std::hex << " with block index " << entry.fileBlockIndex << std::dec << std::endl;
+		//exit(0);
 	}
 	
 	return bytes;
@@ -110,6 +113,37 @@ void Hash::clear()
 	}
 		
 	this->m_block = 0;
+}
+
+/*
+bool Hash::isHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const
+{
+	uint32 nameHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
+	uint32 nameHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);
+	int16 realLocale = MpqFile::localeToInt(locale);
+	int16 realPlatform = MpqFile::platformToInt(platform);
+
+	return this->m_filePathHashA == nameHashA && this->m_filePathHashB == nameHashB && this->m_locale == realLocale && this->m_platform == realPlatform;
+}
+
+bool Hash::isHash(int32 nameHashA, int32 nameHashB, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const
+{
+	int16 realLocale = MpqFile::localeToInt(locale);
+	int16 realPlatform = MpqFile::platformToInt(platform);
+
+	return this->isHash(nameHashA, nameHashB, locale, platform);
+}
+*/
+
+bool Hash::isHash(int32 nameHashA, int32 nameHashB, int16 locale, int16 platform) const
+{
+	return this->m_filePathHashA == nameHashA && this->m_filePathHashB == nameHashB && this->m_locale == locale && this->m_platform == platform;
+}
+
+void Hash::changePath(const boost::filesystem::path &path)
+{
+	this->m_filePathHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);
+	this->m_filePathHashB = HashString(Mpq::cryptTable(), path.string().c_str(), NameB);
 }
 
 }

@@ -1,26 +1,10 @@
 WC3LIB_ENABLE_EXCEPTIONS()
 
-set(wc3lib_MPQ_SRC
-	algorithm.cpp
-	block.cpp
-	hash.cpp
-	mpq.cpp
-	mpqfile.cpp
-	sector.cpp
-)
-
-set(wc3lib_MPQ_H
-	algorithm.hpp
-	block.hpp
-	hash.hpp
-	mpqfile.hpp
-	mpq.hpp
-	platform.hpp
-	sector.hpp
-)
+WC3LIB_GET_H(wc3lib_MPQ_H)
+WC3LIB_GET_SRC(wc3lib_MPQ_SRC)
 
 add_library(wc3libmpq SHARED ${wc3lib_MPQ_SRC})
-target_link_libraries(wc3libmpq wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(wc3libmpq wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} bz2 z huffman)
 
 # install
 

@@ -24,6 +24,7 @@
 #include <istream>
 #include <ostream>
 #include <list>
+#include <sstream>
 
 #include <boost/filesystem.hpp>
 
@@ -48,10 +49,24 @@ class Sector;
 class MpqFile
 {
 	public:
-		/// @todo Define all locales.
+		/// @todo Define all locales. @link http://wiki.devklog.net/index.php?title=The_MoPaQ_Archive_Format#Locales
 		enum Locale
 		{
-			Neutral
+			Neutral = 0x0,
+			Chinese = 0x404,
+			Czech = 0x405,
+			German = 0x407,
+			English = 0x409,
+			Spanish = 0x40a,
+			French = 0x40c,
+			Italian = 0x410,
+			Japanese = 0x411,
+			Korean = 0x412,
+			Dutch = 0x413,
+			Polish = 0x415,
+			Portuguese = 0x416,
+			Russsian = 0x419,
+			EnglishUK = 0x809
 		};
 		
 		/// There seems to be only one platform.
@@ -61,19 +76,22 @@ class MpqFile
 		};
 
 		/**
-		* Reads the whole file data, not the header data.
+		* Reads the file sector meta data.
 		*/
 		std::streamsize read(std::istream &istream) throw (class Exception);
+		/**
+		* Writes the file sector meta data.
+		*/
+		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+
+		std::streamsize readData(std::istream &istream) throw (class Exception);
 		/**
 		* Reads data from stream @param istream and appends it to the already existing file data.
 		* @return Returns the number of read bytes.
 		*/
-		std::streamsize append(std::istream &istream) throw (class Exception);
-		/**
-		* Writes the whole file data, not the header data.
-		*/
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
-		
+		std::streamsize appendData(std::istream &istream) throw (class Exception);
+		std::streamsize writeData(std::ostream &ostream) const throw (class Exception);
+
 		// hash attributes
 		enum Locale locale() const;
 		enum Platform platform() const;
@@ -87,13 +105,14 @@ class MpqFile
 		
 		// block attributes
 		uint32 fileKey() const;
-		/// @return Returns file size in bytes.
+		/// @return Reurns file size in bytes.
 		int32 size() const;
 		/// @return Returns compressed file size in bytes.
 		int32 compressedSize() const;
 		bool isFile() const;
 		bool isEncrypted() const;
 		bool isCompressed() const;
+		bool isImploded() const;
 		
 		// extended attributes
 		CRC32 crc32() const;
@@ -104,13 +123,27 @@ class MpqFile
 		
 		const std::list<class Sector*>& sectors() const;
 
+		/**
+		* Appends data of file @param mpqFile.
+		*/
+		class MpqFile& operator<<(const class MpqFile &mpqFile) throw (class Exception);
+		/**
+		* Adds a copy of the file to MPQ archive @param mpq.
+		* @note Does not overwrite existing files.
+		*/
+		class MpqFile& operator>>(class Mpq &mpq) throw (class Exception);
+		/**
+		* Appends data of the file to file @param mpqFile.
+		*/
+		class MpqFile& operator>>(class MpqFile &mpqFile) throw (class Exception);
+
 	protected:
 		friend class Mpq;
 		
 		static int16 localeToInt(enum Locale locale);
 		static enum Locale intToLocale(int16 value);
-		static int16 platformToInt(enum Platform platform);
-		static enum Platform intToPlatform(int16 value);
+		static int8 platformToInt(enum Platform platform);
+		static enum Platform intToPlatform(int8 value);
 		
 		/**
 		* MPQ files are created by @class Mpq only.
@@ -118,9 +151,15 @@ class MpqFile
 		MpqFile(class Mpq *mpq, class Hash *hash);
 		~MpqFile();
 		
+		/**
+		* Remove file (clears file hash and block data which frees the file's used space).
+		*/
 		void remove() throw (class Exception);
-		void rename(const std::string &newName, bool overwriteExisting = false) throw (class Exception);
-		void move(const boost::filesystem::path &newPath, bool overwriteExisting = false) throw (class Exception);
+		/**
+		* @return Returns false if the file could not be renamed or if it does already have to specified name.
+		*/
+		bool rename(const std::string &newName, bool overwriteExisting = false) throw (class Exception);
+		bool move(const boost::filesystem::path &newPath, bool overwriteExisting = false) throw (class Exception);
 		
 		class Mpq *m_mpq;
 		class Hash *m_hash;
@@ -184,6 +223,11 @@ inline bool MpqFile::isCompressed() const
 	return this->m_hash->block()->flags() & Block::IsCompressed;
 }
 
+inline bool MpqFile::isImploded() const
+{
+	return this->m_hash->block()->flags() & Block::IsImploded;
+}
+
 inline CRC32 MpqFile::crc32() const
 {
 	return this->m_hash->block()->crc32();
@@ -224,14 +268,34 @@ inline enum MpqFile::Locale MpqFile::intToLocale(int16 value)
 	return MpqFile::Locale(value);
 }
 
-inline int16 MpqFile::platformToInt(enum MpqFile::Platform platform)
+inline int8 MpqFile::platformToInt(enum MpqFile::Platform platform)
 {
-	return int16(platform);
+	return int8(platform);
 }
 
-inline enum MpqFile::Platform MpqFile::intToPlatform(int16 value)
+inline enum MpqFile::Platform MpqFile::intToPlatform(int8 value)
 {
 	return MpqFile::Platform(value);
+}
+
+/**
+* Appends data from input stream @param istream to file @param mpqFile.
+*/
+inline std::istream& operator>>(std::istream &istream, class MpqFile &mpqFile) throw (class Exception)
+{
+	mpqFile.appendData(istream);
+
+	return istream;
+}
+
+/**
+* Writes data of the file @param mpqFile into output stream @param ostream.
+*/
+inline std::ostream& operator<<(std::ostream &ostream, const class MpqFile &mpqFile) throw (class Exception)
+{
+	mpqFile.writeData(ostream);
+
+	return ostream;
 }
 
 }

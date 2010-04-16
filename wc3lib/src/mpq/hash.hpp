@@ -23,6 +23,8 @@
 
 #include <istream>
 
+#include <boost/filesystem.hpp>
+
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -44,6 +46,12 @@ class Hash
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		void clear();
 		
+		//bool isHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
+		//bool isHash(int32 nameHashA, int32 nameHashB, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
+		bool isHash(int32 nameHashA, int32 nameHashB, int16 locale, int16 platform) const;
+
+		void changePath(const boost::filesystem::path &path);
+
 		bool check() const;
 		/**
 		* 
@@ -73,6 +81,7 @@ class Hash
 		
 	protected:
 		friend class Mpq;
+		friend class MpqFile;
 		
 		static const int32 blockIndexDeleted = 0xFFFFFFFE;
 		static const int32 blockIndexEmpty = 0xFFFFFFFF;
@@ -86,6 +95,11 @@ class Hash
 		class Block *m_block; // if this value is 0 it has never been used
 		bool m_deleted; // can not be true if m_block is 0
 };
+
+inline bool Hash::check() const
+{
+	return true;
+}
 
 inline bool Hash::deleted() const
 {
@@ -134,7 +148,7 @@ inline class Block* Hash::block() const
 
 inline bool Hash::operator==(const Hash &hash) const
 {
-	return this->m_filePathHashA == hash.m_filePathHashA && this->m_filePathHashB == hash.m_filePathHashB;
+	return this->isHash(hash.m_filePathHashA, hash.m_filePathHashB, hash.m_locale, hash.m_platform);
 }
 
 }

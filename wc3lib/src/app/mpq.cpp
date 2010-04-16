@@ -110,10 +110,10 @@ int main(int argc, char *argv[])
 				_("Options:\n") <<
 				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
 				_("\t-h --help                   Shows this text.\n") <<
-				_("\t-i --info                   Shows some information about all read MPQ archives.\n") <<
+				_("\t-i --info                   Shows some basic information about all read MPQ archives.\n") <<
 				_("\t-h --human-readable         Shows output sizes in an human-readable format.\n") <<
 				_("\t-d --decimal                Shows decimal sizes (factor 1000 not 1024)\n") <<
-				_("\t-l --list                   Lists all contained files of all specified MPQ archives.\n") <<
+				_("\t-l --list                   Lists all contained files of all read MPQ archives.\n") <<
 				std::endl <<
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
@@ -237,6 +237,14 @@ int main(int argc, char *argv[])
 				if (mpq.extendedAttributes() & Mpq::FileMd5s)
 					std::cout << _("* File MD5s") << std::endl;
 			}
+
+			/// @todo TEST
+			const MpqFile *mpqFile = const_cast<const Mpq*>(&mpq)->findFile("Detector.js", MpqFile::Neutral, MpqFile::Default);
+
+			if (mpqFile == 0)
+				std::cerr << _("Error while searching for file.") << std::endl;
+			else
+				std::cout << "Flags: " << mpqFile->hash()->block()->flags() << "\nFile data: " << *mpqFile << std::endl;
 			
 			if (optionList)
 			{

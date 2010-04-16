@@ -62,7 +62,7 @@ std::streamsize Block::read(std::istream &istream) throw (class Exception)
 	this->m_blockOffset = entry.blockOffset;
 	this->m_blockSize = entry.blockSize;
 	this->m_fileSize = entry.fileSize;
-	this->m_flags = static_cast<enum Block::Flags>(entry.fileSize);
+	this->m_flags = static_cast<enum Block::Flags>(entry.flags);
 
 	return bytes;
 }

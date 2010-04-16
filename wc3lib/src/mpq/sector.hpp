@@ -22,6 +22,7 @@
 #define WC3LIB_MPQ_SECTOR_HPP
 
 #include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -40,8 +41,14 @@ class Sector
 	public:
 		Sector(class MpqFile *mpqFile);
 		
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		//std::streamsize write(std::ostream &ostream) throw (class Exception);
+		/**
+		* Reads new sector data from input stream @param istream and writes it into the MPQ archive.
+		*/
+		std::streamsize readData(std::istream &istream) throw (class Exception);
+		/**
+		* Writes sector data into output stream	@param ostream.
+		*/
+		std::streamsize writeData(std::ostream &ostream) const throw (class Exception);
 		
 	protected:
 		friend class Mpq;
@@ -61,8 +68,9 @@ class Sector
 		void setCompression(byte value);
 		
 		class MpqFile *m_mpqFile;
+		int32 m_sectorIndex;
 		int32 m_sectorOffset;
-		int32 m_sectorSize; // not required, added by wc3lib
+		int32 m_sectorSize; // not required, added by wc3lib, should be the compressed size!
 		enum Compression m_compression;
 };
 

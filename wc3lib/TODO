@@ -1,3 +1,15 @@
+2010-04-15 Tamino Dauth <tamino@cdauth.de>
+* TEST: In der War3x.mpq-Datei kommen nur komprimierte und nicht komprimierte Blöcke vor (keine SingleUnits usw.).
+* TEST: Die Datei "(listfile)" der Datei War3x.mpq hat folgende Blockflags: IsFile, IsCompressed und 0x30000 (unbekannt?).
+* Imploded compression can be used on compressed sectors of non-imploded files?
+* Fix sector table reading!
+* Make some speed tests (wc3lib vs. StormLib vs. SFMPQ).
+* Add MPQ user data support (http://www.zezula.net/en/mpq/mpqformat.html).
+
+2010-04-10 Tamino Dauth <tamino@cdauth.de>
+* Implement zlib decompression.
+* FIXED: Block::IsFile is not set for any block (wrong read position or flag value).
+
 2010-04-04 Tamino Dauth <tamino@cdauth.de>
 * If removeFile is called with an instance of an MPQ file of the method's corresponding MPQ archive, it should be removed directly instead of searching it again.
 * Check always the corresponding MPQ archive and throw exceptions if it's the same (e. g. if you want to add an MPQ file at twice).
