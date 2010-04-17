@@ -17,6 +17,7 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 
 		public stub method setStateWithoutCondition takes integer state returns nothing
 			local boolean result
+			call super.setStateWithoutCondition(state)
 			set result = not this.m_quest.checkQuestItemsForState(state)
 			if (AQuest.isQuestLogUsed()) then
 				if (this.m_questItem == null) then
@@ -30,7 +31,6 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 					call ForceQuestDialogUpdate() //required?
 				endif
 			endif
-			call super.setStateWithoutCondition(state)
 		endmethod
 
 		public static method create takes AQuest usedQuest, string description returns thistype

@@ -2,6 +2,7 @@
 * Added functions GetHeroLevelMaxXP and GetHeroMaxXP.
 * Fixed function GetUnitAllianceStateToUnit.
 * Fixed state settings of struct AAbstractQuest.
+* Fixed ATalkLog index bug.
 
 2010-04-16 Tamino Dauth <tamino@cdauth.de>
 * Added functions GetUnitLevelXP, GetUnitXP and GetUnitHeroXP.

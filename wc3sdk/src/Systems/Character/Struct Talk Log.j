@@ -126,10 +126,10 @@ library AStructSystemsCharacterTalkLog requires AStructCoreGeneralVector, AStruc
 			if (infoIndex == -1) then
 				return null
 			endif
-			if (index >= AInfoData(this.m_infoData[index]).speeches() or index < 0) then
+			if (index >= AInfoData(this.m_infoData[infoIndex]).speeches() or index < 0) then
 				return null
 			endif
-			return AInfoData(this.m_infoData[index]).speech(index).text()
+			return AInfoData(this.m_infoData[infoIndex]).speech(index).text()
 		endmethod
 
 		public method speechSound takes AInfo info, integer index returns sound
@@ -137,10 +137,10 @@ library AStructSystemsCharacterTalkLog requires AStructCoreGeneralVector, AStruc
 			if (infoIndex == -1) then
 				return null
 			endif
-			if (index >= AInfoData(this.m_infoData[index]).speeches() or index < 0) then
+			if (index >= AInfoData(this.m_infoData[infoIndex]).speeches() or index < 0) then
 				return null
 			endif
-			return AInfoData(this.m_infoData[index]).speech(index).sound()
+			return AInfoData(this.m_infoData[infoIndex]).speech(index).sound()
 		endmethod
 
 		public static method create takes ACharacter character returns thistype
