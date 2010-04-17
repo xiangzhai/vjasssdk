@@ -48,9 +48,9 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 		local integer allianceState = -1
 		if (IsPlayerAlly(usedUnitOwner, otherUnitOwner)) then
 			if (GetPlayerAlliance(usedUnitOwner, otherUnitOwner, ALLIANCE_PASSIVE)) then
-				set allianceState = bj_ALLIANCE_NEUTRAL
-			else
 				set allianceState = bj_ALLIANCE_ALLIED
+			else
+				set allianceState = bj_ALLIANCE_NEUTRAL
 			endif
 		else
 			set allianceState = bj_ALLIANCE_UNALLIED
@@ -176,6 +176,53 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 			return damage / (1.0 -((armor * ARMOR_REDUCTION_MULTIPLIER) / (1.0 + ARMOR_REDUCTION_MULTIPLIER * armor)))
 		endif
 		return damage / (2.0 -Pow(0.94, -armor))
+	endfunction
+
+	/**
+	* @author HaiZhung, Tamino Dauth
+	*/
+	function GetUnitLevelXP takes integer unitLevel returns integer
+		local integer result = 25 // default XP
+		local integer i = 2
+		loop
+			exitwhen (i > unitLevel)
+			set result = result + 1 * ((i * 5) + 5)
+			set i = i + 1
+		endloop
+		return result
+	endfunction
+
+	/**
+	* @author HaiZhung, Tamino Dauth
+	*/
+	function GetUnitXP takes unit whichUnit returns integer
+		return GetUnitLevelXP(GetUnitLevel(whichUnit))
+	endfunction
+
+	/**
+	* Considers default creep experience reduction table.
+	* @author HaiZhung, Tamino Dauth
+	*/
+	function GetUnitHeroXP takes unit whichUnit, unit hero returns integer
+		if (GetOwningPlayer(whichUnit) == Player(PLAYER_NEUTRAL_AGGRESSIVE)) then
+			return R2I(I2R(GetUnitXP(whichUnit)) * (0.80 - I2R(GetHeroLevel(hero) - 1) * 0.10))
+		endif
+		return GetUnitXP(whichUnit)
+	endfunction
+
+	function GetHeroLevelMaxXP takes integer heroLevel returns integer
+		local integer result = 0 // level 1 XP
+		local integer i = 2
+		loop
+			exitwhen (i > heroLevel + 1)
+			set result = result + i * 100
+			set i = i + 1
+		endloop
+		return result
+	endfunction
+
+	function GetHeroMaxXP takes unit hero returns integer
+		return GetHeroLevelMaxXP(GetHeroLevel(hero))
 	endfunction
 
 endlibrary

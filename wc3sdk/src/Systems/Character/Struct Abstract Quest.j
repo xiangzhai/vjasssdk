@@ -226,7 +226,8 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		endmethod
 
 		// used by state trigger
-		private method setStateWithoutCondition takes integer state returns nothing
+		/// @todo Should be protected
+		public stub method setStateWithoutCondition takes integer state returns nothing
 			debug if (this.checkState(state)) then
 				set this.m_state = state
 				if (state == thistype.stateNotUsed) then

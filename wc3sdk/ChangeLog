@@ -1,3 +1,11 @@
+2010-04-17 Tamino Dauth <tamino@cdauth.de>
+* Added functions GetHeroLevelMaxXP and GetHeroMaxXP.
+* Fixed function GetUnitAllianceStateToUnit.
+* Fixed state settings of struct AAbstractQuest.
+
+2010-04-16 Tamino Dauth <tamino@cdauth.de>
+* Added functions GetUnitLevelXP, GetUnitXP and GetUnitHeroXP.
+
 2010-04-11 Tamino Dauth <tamino@cdauth.de>
 * Fixed cheats "xp" and "damage".
 * Fixed onState method overwriting of structs AQuest and AQuestItem.

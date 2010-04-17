@@ -58,7 +58,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 
 		// methods
 
-		public stub method onStateAction takes integer state returns nothing
+		public stub method setStateWithoutCondition takes integer state returns nothing
 			local integer i
 			local player user
 			local playercolor playerColor
@@ -119,7 +119,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 				endif
 			endif
 
-			call super.onStateAction(state)
+			call super.setStateWithoutCondition(state)
 		endmethod
 
 		public method displayUpdateMessage takes string message returns nothing

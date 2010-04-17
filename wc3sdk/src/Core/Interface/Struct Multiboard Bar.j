@@ -82,12 +82,16 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 		endmethod
 
 		//methods
-		
+
 		/// Die Farbe des Feldes mit Wert wird je nach Anteil des Wertes vom Maximalwert gesetzt.
 		public method refresh takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
-			set this.m_colouredPart = R2I(this.m_value * I2R(this.m_length) / this.m_maxValue)
+			if (this.m_maxValue != 0) then
+				set this.m_colouredPart = R2I(this.m_value * I2R(this.m_length) / this.m_maxValue)
+			else
+				set this.m_colouredPart = 0
+			endif
 			set i = 0
 			loop
 				exitwhen (i == this.m_length)
@@ -118,7 +122,7 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 					loop
 						exitwhen(i == end + 1)
 						if (valueIcon) then
-							set this.m_valueIcon[i] = icon	
+							set this.m_valueIcon[i] = icon
 						else
 							set this.m_emptyIcon[i] = icon
 						endif
@@ -131,14 +135,14 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 				debug call this.print("The value 'start' has an invalid size: " + I2S(start) + ".")
 			debug endif
 		endmethod
-		
+
 		//comfort methods
 
 		/// Erst aufrufen, nachdem man die Länge gesetzt hat.
 		public method setAllIcons takes string icon, boolean valueIcon returns nothing
 			call this.setIcons(0, this.m_length - 1, icon, valueIcon)
 		endmethod
-		
+
 		/// @return The index of the first field (column or row) which is not used by the bar (alignment is left to right and up to bottom).
 		public method firstFreeField takes nothing returns integer
 			if (this.m_horizontal) then
@@ -205,7 +209,7 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 				set triggerAction = null
 			endif
 		endmethod
-		
+
 		/**
 		* If there aren't enough items in multiboard yet required onces will be added automatically.
 		* @param refreshRate If this value is bigger than 0 multiboard bar will be refreshed.
