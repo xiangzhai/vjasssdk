@@ -10,7 +10,10 @@ set(wc3lib_BLP_H
 )
 
 add_library(wc3libblp SHARED ${wc3lib_BLP_SRC})
-target_link_libraries(wc3libblp wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} ${OPENJPEG_LIBS})
+target_link_libraries(wc3libblp wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
+if(FLAG_JPEG_USE)
+	target_link_libraries(wc3libblp openjpeg)
+endif()
 
 #install
 

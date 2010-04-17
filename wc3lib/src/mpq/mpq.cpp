@@ -24,6 +24,7 @@
 #include <sstream>
 
 #include <boost/format.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 #include "algorithm.hpp"
 #include "mpq.hpp"
@@ -56,23 +57,101 @@ const uint32* Mpq::cryptTable()
 	return const_cast<const uint32*>(cryptTable);
 }
 
-Mpq::Mpq(const boost::filesystem::path &path) : m_size(boost::filesystem::file_size(path)), m_path(path), m_format(Mpq::Mpq1), m_extendedAttributes(Mpq::None), m_sectorSizeShift(0), m_strongDigitalSignature(0)
+Mpq::Mpq() : m_size(0), m_path(), m_format(Mpq::Mpq1), m_extendedAttributes(Mpq::None), m_sectorSize(0), m_strongDigitalSignature(0), m_isOpen(false)
 {
 }
 
 Mpq::~Mpq()
 {
-	if (this->m_strongDigitalSignature != 0)
-		delete[] this->m_strongDigitalSignature;
-	
-	BOOST_FOREACH(class Block *block, this->m_blocks)
-		delete block;
-	
-	BOOST_FOREACH(class Hash *hash, this->m_hashes)
-		delete hash;
+	this->close();
+}
 
-	BOOST_FOREACH(class MpqFile *file, this->m_files)
-		delete file;
+std::streamsize Mpq::create(const boost::filesystem::path &path, bool overwriteExisting, std::streampos startPosition, enum Format format, enum ExtendedAttributes extendedAttributes, int32 sectorSize, bool hasStrongDigitalSignature, bool containsListfileFile, bool containsSignatureFile) throw (class Exception)
+{
+	this->close();
+
+	if (boost::filesystem::exists(path) && !overwriteExisting)
+		throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\". File does already exist.")) % path.string()));
+
+	boost::filesystem::ofstream ofstream(path, std::ios_base::binary);
+
+	if (!ofstream)
+		throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\".")) % path.string()));
+
+	ofstream.seekp(startPosition);
+
+	if (ofstream.tellp() != startPosition)
+		throw Exception(boost::str(boost::format(_("Unable to start in file \"%1%\" at position %2%.")) % path.string() % startPosition));
+
+	this->m_size = boost::filesystem::file_size(path);
+	this->m_path = path;
+	this->m_format = format;
+	this->m_extendedAttributes = extendedAttributes;
+	this->m_sectorSize = sectorSize;
+	std::streamsize streamSize = 0;
+
+	try
+	{
+		streamSize = this->writeMpq(ofstream);
+
+		/// @todo FIXME, set stream size!!!
+		if (hasStrongDigitalSignature)
+			;
+			//this->createStrongDigitalSignature();
+
+		if (containsListfileFile)
+			this->createListfileFile();
+
+		if (containsSignatureFile)
+			;
+			//this->createSignatureFile();
+	}
+	catch (class Exception &exception)
+	{
+		this->clear();
+
+		throw exception;
+	}
+
+	this->m_isOpen = true;
+
+	return streamSize;
+}
+
+std::streamsize Mpq::open(const boost::filesystem::path &path, std::istream *listfileIstream) throw (class Exception)
+{
+	this->close();
+	boost::filesystem::ifstream ifstream(path, std::ios_base::binary);
+
+	if (!ifstream)
+		throw Exception(boost::str(boost::format(_("Unable to open file \"%1%\".")) % path.string()));
+
+	this->m_size = boost::filesystem::file_size(path);
+	this->m_path = path;
+	std::streamsize streamSize = 0;
+
+	try
+	{
+		streamSize = this->readMpq(ifstream, listfileIstream);
+	}
+	catch (class Exception &exception)
+	{
+		this->clear();
+
+		throw exception;
+	}
+
+	this->m_isOpen = true;
+
+	return streamSize;
+}
+
+void Mpq::close()
+{
+	if (!this->m_isOpen)
+		return;
+
+	this->clear();
 }
 
 std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstream) throw (class Exception)
@@ -119,7 +198,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstrea
 	if (header.archiveSize != this->m_size)
 		std::cerr << boost::format(_("Warning: MPQ file size of MPQ file \"%1%\" is not equal to its internal header file size.\nFile size: %2%.\nInternal header file size: %3%.")) % this->m_path.string() % this->m_size % header.archiveSize << std::endl;
 	
-	this->m_sectorSizeShift = header.sectorSizeShift;
+	this->m_sectorSize = pow(2, header.sectorSizeShift) * 512;
 	struct ExtendedHeader extendedHeader;
 	
 	if (this->m_format == Mpq::Mpq2)
@@ -498,6 +577,11 @@ bool Mpq::removeFile(const MpqFile &mpqFile)
 	return true;
 }
 
+bool Mpq::operator!() const
+{
+	return !this->isOpen();
+}
+
 class Mpq& Mpq::operator<<(const class MpqFile &mpqFile) throw (class Exception)
 {
 	// Copy all file data, existing files won't be overwritten.	
@@ -522,6 +606,29 @@ class Mpq& Mpq::operator>>(class Mpq &mpq) throw (class Exception)
 		mpq.addFile(*mpqFile, false);
 	
 	return *this;
+}
+
+void Mpq::clear()
+{
+	this->m_size = 0;
+	this->m_path.clear();
+	this->m_format = Mpq::Mpq1;
+	this->m_extendedAttributes = Mpq::None;
+	this->m_sectorSize = 0;
+	this->m_strongDigitalSignature = 0;
+	this->m_isOpen = false;
+
+	if (this->m_strongDigitalSignature != 0)
+		delete[] this->m_strongDigitalSignature;
+
+	BOOST_FOREACH(class Block *block, this->m_blocks)
+		delete block;
+
+	BOOST_FOREACH(class Hash *hash, this->m_hashes)
+		delete hash;
+
+	BOOST_FOREACH(class MpqFile *file, this->m_files)
+		delete file;
 }
 
 /// @todo There seems to be some MPQ archives which do contain hash tables which do start with an empty entry. Therefore I commented checks for such tables.

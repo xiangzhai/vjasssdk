@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#define DEBUG // test
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -31,6 +33,11 @@
 
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
+
+#ifdef DEBUG
+#include <boost/timer.hpp>
+//#include <StormLib/stormlib/StormLib.h>
+#endif
 
 using namespace wc3lib;
 using namespace wc3lib::mpq;
@@ -67,7 +74,10 @@ int main(int argc, char *argv[])
 		{"info",		    no_argument,             0, 'i'},
 		{"human-readable",          no_argument,             0, 'h'},
 		{"decimal",                 no_argument,             0, 'd'},
-		{"list",                    no_argument,             0, 'l'}, 
+		{"list",                    no_argument,             0, 'l'},
+#ifdef DEBUG
+		{"benchmark",               no_argument,             0,  'b'},
+#endif
 		{0, 0, 0, 0}
 	};
 	
@@ -78,11 +88,14 @@ int main(int argc, char *argv[])
 	bool optionHumanreadable = false;
 	bool optionDecimal = false;
 	bool optionList = false;
+#ifdef DEBUG
+	bool optionBenchmark = false;
+#endif
 	
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "VHihdl", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "VHihdlb", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -108,12 +121,15 @@ int main(int argc, char *argv[])
 				boost::format(_("mpq %1%.\n\n")) % version <<
 				_("Usage: mpq [Options] [MPQ files]\n\n") <<
 				_("Options:\n") <<
-				_("\t-V --version                Shows the current version of vjassdoc.\n") <<
-				_("\t-h --help                   Shows this text.\n") <<
-				_("\t-i --info                   Shows some basic information about all read MPQ archives.\n") <<
-				_("\t-h --human-readable         Shows output sizes in an human-readable format.\n") <<
-				_("\t-d --decimal                Shows decimal sizes (factor 1000 not 1024)\n") <<
-				_("\t-l --list                   Lists all contained files of all read MPQ archives.\n") <<
+				_("\t-V, --version               Shows the current version of vjassdoc.\n") <<
+				_("\t-h, --help                  Shows this text.\n") <<
+				_("\t-i, --info                  Shows some basic information about all read MPQ archives.\n") <<
+				_("\t-h, --human-readable        Shows output sizes in an human-readable format.\n") <<
+				_("\t-d, --decimal               Shows decimal sizes (factor 1000 not 1024)\n") <<
+				_("\t-l, --list                  Lists all contained files of all read MPQ archives.\n") <<
+#ifdef DEBUG
+				_("\t-b, --benchmark             Compares various functionalities of wc3lib and StormLib.\n") <<
+#endif
 				std::endl <<
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
@@ -149,6 +165,14 @@ int main(int argc, char *argv[])
 				
 				break;
 			}
+#ifdef DEBUG
+			case 'b':
+			{
+				optionBenchmark = true;
+
+				break;
+			}
+#endif
 		}
 	}
 		
@@ -192,12 +216,11 @@ int main(int argc, char *argv[])
 				continue;
 			}
 
-			std::ifstream istream(path.string().c_str());
-			class Mpq mpq(path);
+			class Mpq mpq;
 			
 			try
 			{
-				std::streamsize size = mpq.readMpq(istream);
+				std::streamsize size = mpq.open(path);
 			}
 			catch (class wc3lib::Exception &exception)
 			{
@@ -237,6 +260,23 @@ int main(int argc, char *argv[])
 				if (mpq.extendedAttributes() & Mpq::FileMd5s)
 					std::cout << _("* File MD5s") << std::endl;
 			}
+
+#ifdef DEBUG
+			if (optionBenchmark)
+			{
+				mpq.close();
+
+				std::cout << _("Detected debug mode.\nStarting benchmark (wc3lib vs. StormLib)") << std::endl;
+				std::cout << _("Opening MPQ archive (wc3lib):") << std::endl;
+				boost::timer timer;
+				mpq.open(path);
+				std::cout << boost::format(_("Result: %1%s")) % timer.elapsed() << std::endl;
+				std::cout << _("Closing MPQ archive (wc3lib):") << std::endl;
+				timer.restart();
+				mpq.close();
+				std::cout << boost::format(_("Result: %1%s")) % timer.elapsed() << std::endl;
+			}
+#endif
 
 			/// @todo TEST
 			const MpqFile *mpqFile = const_cast<const Mpq*>(&mpq)->findFile("Detector.js", MpqFile::Neutral, MpqFile::Default);

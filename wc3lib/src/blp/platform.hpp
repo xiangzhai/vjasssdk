@@ -48,6 +48,29 @@ typedef uint32_t dword;
 typedef float float32;
 typedef int32_t color;
 
+struct BlpHeader
+{
+	dword identifier;
+	dword compression, mipMapsNumber, sizeX, sizeY, pictureType, pictureSubType;
+	dword mipMapOffset[16], mipMapSize[16];
+};
+
+struct BlpJpegHeader : public BlpHeader
+{
+	dword jpegHeaderSize;
+};
+
+struct Blp2Header
+{
+	char identifier[4];
+	int type;
+	char flags[4];
+	int width;
+	int height;
+	int mipMapOffsets[16];
+	int mipMapLengths[16];
+};
+
 }
 
 }

@@ -45,6 +45,31 @@ namespace wc3lib
 namespace mpq
 {
 
+/**
+* @brief This class allows users to read, write and modify MPQ archives. MPQ (Mo'PaQ, short for Mike O'Brien Pack) is an archiving file format used in several of Blizzard Entertainment's games.
+* Simple example how to use this class:
+* @code
+* class Mpq mpq();
+*
+* try
+* {
+*	mpq.open("War3x.mpq"); // Opens an existing MPQ archive.
+* }
+* catch (class Exception &exception)
+* {
+*	std::cerr << "Unable to open archive: " << exception << std::endl;
+*
+*	return EXIT_FAILURE;
+* }
+*
+* const class MpqFile *mpqFile = findFile("UI/MiscData.txt", MpqFile::Neutral, MpqFile::Neutral);
+*
+* if (mpqFile == 0)
+*	return EXIT_FAILURE;
+*
+* std::cout << "MiscData.txt:\n" << mpqFile << std::endl;
+* @endcode
+*/
 class Mpq
 {
 	public:
@@ -66,12 +91,12 @@ class Mpq
 		static bool hasStrongDigitalSignature(std::istream &istream);
 		static std::streamsize strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception);
 
-		/**
-		* Does not read the MPQ archive data!
-		* Use @fn Mpq.readMpq to do this.
-		*/
-		Mpq(const boost::filesystem::path &path);
+		Mpq();
 		~Mpq();
+
+		std::streamsize create(const boost::filesystem::path &path, bool overwriteExisting = false, std::streampos startPosition = 0, enum Format format = Mpq1, enum ExtendedAttributes extendedAttributes = None, int32 sectorSize = 4096, bool hasStrongDigitalSignature = false, bool containsListfileFile = false, bool containsSignatureFile = false) throw (class Exception);
+		std::streamsize open(const boost::filesystem::path &path, std::istream *listfileIstream = 0) throw (class Exception);
+		void close();
 		
 		/**
 		* @param listfilefileIstream If you want to preselect your custom listfile file, use this value (entries will be appended to the already contained listfile file if it does exist). 
@@ -86,8 +111,9 @@ class Mpq
 		std::streamsize writeMpq(std::ostream &ostream) const throw (class Exception);
 		
 #ifdef TAR
-		std::streamsize readTar(std::istream &istream, enum Mode mode) throw (class Exception);
-		std::streamsize writeTar(std::istream &istream, enum Mode mode) throw (class Exception);		
+		std::streamsize openTar(const boost::filesystem::path &path, std::istream *listfileIstream = 0) throw (class Exception);
+		std::streamsize readTar(std::istream &istream) throw (class Exception);
+		std::streamsize writeTar(std::istream &istream) const throw (class Exception);
 #endif
 		
 		bool check() const;
@@ -178,9 +204,21 @@ class Mpq
 		std::streampos startPosition() const;
 		enum Format format() const;
 		enum ExtendedAttributes extendedAttributes() const;
-		int16 sectorSize() const;
+		/**
+		* Usually the sector size has type int16 and is computed by using formula:
+		* pow(2, sectorSizeShift) * 512. Instead of computing it every time we save
+		* the computed result and use int32.
+		* @see Mpq.sectorSizeShift
+		*/
+		int32 sectorSize() const;
+		/**
+		* @return Computes the original header sector size shift value by using formula:
+		* sqrt(sectorSize / 512)
+		*/
+		int16 sectorSizeShift() const;
 		bool hasStrongDigitalSignature() const;
 		const char* strongDigitalSignature() const;
+		bool isOpen() const;
 		const std::list<class Block*>& blocks() const;
 		/**
 		* Block map is primarily required by hash entries since they get blocks by their indices.
@@ -200,16 +238,26 @@ class Mpq
 		*/
 		int64 entireFileSize() const;
 		
-		
 		/**
-		* @todo Use these two operators for writing/reading files into/from streams.
-		* operator<< // global operator for std::istream
-		* operator<< // operator for one file, existing files won't be overwritten.
-		* operator<< // operator for one archive, existing files won't be overwritten.
-		* operator>> // global operator for std::ostream
+		* @return Returns true if archive is not opened.
+		*/
+		bool operator!() const;
+		/**
+		* Copies data of file @param mpqFile and adds it to the MPQ archive.
+		* Does not overwrite existing files.
+		* @return Returns *this.
 		*/
 		class Mpq& operator<<(const class MpqFile &mpqFile) throw (class Exception);
+		/**
+		* Copies data of all files of MPQ archive @param mpq to the MPQ archive.
+		* Does not overwrite existing files.
+		* @return Returns *this.
+		*/
 		class Mpq& operator<<(const class Mpq &mpq) throw (class Exception);
+		/**
+		* Copies data of alle files of the MPQ archive to MPQ archive @param mpq.
+		* @return Returns *this.
+		*/
 		class Mpq& operator>>(class Mpq &mpq) throw (class Exception);
 
 		static const byte identifier[4];
@@ -229,6 +277,11 @@ class Mpq
 		friend class Block;
 
 		Mpq(const Mpq &mpq);
+		/**
+		* Does not check if archive is open.
+		* @see Mpq.close
+		*/
+		void clear();
 		class Hash* findHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
 		class Hash* findHash(const Hash &hash);
 		class MpqFile* findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform);
@@ -289,8 +342,9 @@ class Mpq
 		std::streampos m_startPosition;
 		enum Format m_format;
 		enum ExtendedAttributes m_extendedAttributes;
-		int16 m_sectorSizeShift;
+		int32 m_sectorSize;
 		char *m_strongDigitalSignature;
+		bool m_isOpen;
 		std::list<class Block*> m_blocks;
 		std::map<int32, class Block*> m_blockMap;
 		std::list<class Hash*> m_hashes;
@@ -494,9 +548,14 @@ inline enum Mpq::ExtendedAttributes Mpq::extendedAttributes() const
 	return this->m_extendedAttributes;
 }
 
-inline int16 Mpq::sectorSize() const
+inline int32 Mpq::sectorSize() const
 {
-	return pow(2, this->m_sectorSizeShift) * 512;
+	return this->m_sectorSize;
+}
+
+inline int16 Mpq::sectorSizeShift() const
+{
+	return sqrt(this->m_sectorSize / 512);
 }
 
 inline bool Mpq::hasStrongDigitalSignature() const
@@ -507,6 +566,11 @@ inline bool Mpq::hasStrongDigitalSignature() const
 inline const char* Mpq::strongDigitalSignature() const
 {
 	return this->m_strongDigitalSignature;
+}
+
+inline bool Mpq::isOpen() const
+{
+	return this->m_isOpen;
 }
 
 inline const std::list<class Block*>& Mpq::blocks() const

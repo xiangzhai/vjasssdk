@@ -87,7 +87,8 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 	// sector offset table
 	else
 	{
-		int32 sectors = this->m_hash->block()->fileSize() / this->m_mpq->sectorSize(); /// @todo How to get this value?
+		int32 sectors = 0;
+		//int32 sectors = this->m_hash->block()->fileSize() / this->m_mpq->sectorSize(); /// @todo How to get this value?
 		std::cout << "Sectors " << sectors << " and flags " << this->m_hash->block()->flags() << std::endl;
 
 		for (std::size_t i = 0; i < sectors; ++i)

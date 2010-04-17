@@ -24,6 +24,7 @@
 #include <cmath>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 #include "internationalisation.hpp"
 
@@ -146,6 +147,23 @@ std::string boolString(bool value)
 		return _("Yes");
 
 	return _("No");
+}
+
+bool expectInput()
+{
+	std::string input;
+	std::cin >> input;
+
+	while (input != _("y") && input != _("n"))
+	{
+		std::cout << _("Wrong input. Expecting new input (y/n):") << std::endl;
+		std::cin >> input;
+	}
+
+	if (input == _("y"))
+		return true;
+
+	return false;
 }
 
 }

@@ -140,6 +140,7 @@ bool Hash::isHash(int32 nameHashA, int32 nameHashB, int16 locale, int16 platform
 	return this->m_filePathHashA == nameHashA && this->m_filePathHashB == nameHashB && this->m_locale == locale && this->m_platform == platform;
 }
 
+/// @todo Write data into hash table.
 void Hash::changePath(const boost::filesystem::path &path)
 {
 	this->m_filePathHashA = HashString(Mpq::cryptTable(), path.string().c_str(), NameA);

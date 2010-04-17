@@ -35,6 +35,7 @@
 
 #include "../exception.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 #include "../blp/blp.hpp"
 #include "../blp/platform.hpp"
 #include "../mdlx/mdlx.hpp"
@@ -97,6 +98,32 @@ static const char *formatExpression[MaxFormats] =
 	"mpq"
 #ifdef TAR
 	,"tar"
+#endif
+};
+
+static const char *formatDescription[MaxFormats] =
+{
+	_("Blizzard's texture format."),
+#ifdef JPEG
+	"",
+#endif
+#ifdef TGA
+	"",
+#endif
+#ifdef PNG
+	"",
+#endif
+	_("Blizzard's text model format."),
+	_("Blizzard's binary model format."),
+#ifdef BLEND
+	"",
+#endif
+#ifdef MAX
+	"",
+#endif
+	_("Blizzard's archive format.")
+#ifdef TAR
+	,""
 #endif
 };
 
@@ -444,31 +471,6 @@ static inline bool checkFormatConvertibility(enum Format format0, enum Format fo
 	return formatConvertibility[format0][format1];
 }
 
-static inline std::string formatBytes(unsigned int bytes)
-{
-	if (bytes % 1024)
-		return boost::str(boost::format(_("%1% KiBytes")) % double(bytes / 1024));
-
-	return boost::str(boost::format(_("%1% bytes")) % bytes);
-}
-
-static inline bool expectInput()
-{
-	std::string input;
-	std::cin >> input;
-			
-	while (input != _("y") && input != _("n")) 
-	{
-		std::cout << _("Wrong input. Expecting new input (y/n):") << std::endl;
-		std::cin >> input;
-	}
-			
-	if (input == _("y"))
-		return true;
-	else
-		return false;
-}
-
 static bool addFilePath(const boost::filesystem::path &path, std::list<boost::filesystem::path> &filePaths, bool recursive, std::string extension)
 {
 	if (!boost::filesystem::exists(path))
@@ -518,7 +520,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.readBlp(ifstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -528,7 +530,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.readJpeg(ifstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -539,7 +541,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.readTga(ifstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+				std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
 			
 			break;
 		}
@@ -550,7 +552,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.readPng(ifstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -570,7 +572,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.writeBlp(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -580,7 +582,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.writeJpeg(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -591,7 +593,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.writeTga(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+				std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
 			
 			break;
 		}
@@ -602,7 +604,7 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 			blp::dword bytes = blp.writePng(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -632,7 +634,7 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 			mdlx::long32 bytes = mdlx.readMdx(ifstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -642,7 +644,7 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 			mdlx::long32 bytes = mdlx.readBlend(ifstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+				std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
 			
 			break;
 		}
@@ -653,7 +655,7 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 			mdlx::long32 bytes = mdlx.readMax(ifstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -681,7 +683,7 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 			mdlx::long32 bytes = mdlx.writeMdx(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -691,7 +693,7 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 			mdlx::long32 bytes = mdlx.writeBlend(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+				std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
 			
 			break;
 		}
@@ -702,7 +704,7 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 			mdlx::long32 bytes = mdlx.writeMax(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -715,26 +717,26 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 
 static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
-	class mpq::Mpq mpq(path);
+	class mpq::Mpq mpq;
 	
 	switch (inputFormat)
 	{
 		case Mpq:
 		{
-			std::streamsize bytes = mpq.readMpq(ifstream);
+			std::streamsize bytes = mpq.open(path);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read MPQ file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Read MPQ file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
 #ifdef TAR
 		case Tar:
 		{
-			std::streamsize bytes = mpq.readTar(ifstream);
+			std::streamsize bytes = mpq.openTar(path);
 			
 			if (verbose)
-				std::cout << boost::format(_("Read TAR file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Read TAR file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -754,7 +756,7 @@ static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstr
 			std::streamsize bytes = mpq.writeMpq(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote MPQ file successfully. %1%.\n")) % formatBytes(bytes) << std::endl;
+				std::cout << boost::format(_("Wrote MPQ file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
 			
 			break;
 		}
@@ -764,7 +766,7 @@ static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstr
 			std::streamsize bytes = mpq.writeTar(ofstream);
 			
 			if (verbose)
-				std::cout << boost::format(_("Wrote TAR file successfully. %1%.\n")) % formatBytes(bytes) << std::endl; bytes);
+				std::cout << boost::format(_("Wrote TAR file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
 			
 			break;
 		}
@@ -866,6 +868,7 @@ int main(int argc, char *argv[])
 	{
 		{"version",     no_argument,             0, 'v'},
 		{"help",        no_argument,             0, 'h'},
+		{"formats",     no_argument,             0, 'f'},
 		{"iformat",     required_argument,       0, 'i'},
 		{"oformat",     required_argument,       0, 'o'},
 		{"dir",         required_argument,       0, 'D'},
@@ -875,6 +878,7 @@ int main(int argc, char *argv[])
 		{0, 0, 0, 0}
 	};
 	
+	bool optionFormats = false;
 	enum Format optionIformat = InvalidFormat;
 	enum Format optionOformat = InvalidFormat;
 	boost::filesystem::path optionDir;
@@ -887,7 +891,7 @@ int main(int argc, char *argv[])
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "vhi:o:D:RVO", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "vhfi:o:D:RVO", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -906,7 +910,7 @@ int main(int argc, char *argv[])
 				"There is NO WARRANTY, to the extent permitted by law."
 				) << std::endl;
 				
-				break;
+				return EXIT_SUCCESS;
 			}
 			
 			case 'h':
@@ -920,13 +924,20 @@ int main(int argc, char *argv[])
 				_("\t-h, --help                Shows this text.\n") <<
 				_("\t-i, --iformat <arg>       <arg> has to be replaced by input files format.\n") <<
 				_("\t-o, --oformat <arg>       <arg> has to be replaced by output files format.\n") <<
-				_("\t-D  --dir <arg>           <arg> has to be replaced by output directory.\n") <<
+				_("\t-D,  --dir <arg>          <arg> has to be replaced by output directory.\n") <<
 				_("\t-R, --recursive           If some of the input files are directories they will be iterated recursively and searched for other files with the input format extension.\n") <<
-				_("\t-V  --verbose             Enables verbose mode and shows more detailed output information.\n") <<
-				_("\t-O  --readonly            Enables read-only mode. Output format is not necessary in read-only mode. This mode can be useful if you just want to try some format reading.\n") <<
+				_("\t-V,  --verbose            Enables verbose mode and shows more detailed output information.\n") <<
+				_("\t-O,  --readonly           Enables read-only mode. Output format is not necessary in read-only mode. This mode can be useful if you just want to try some format reading.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
 				
+				return EXIT_SUCCESS;
+			}
+
+			case 'f':
+			{
+				optionFormats = true;
+
 				break;
 			}
 			
@@ -1010,11 +1021,22 @@ int main(int argc, char *argv[])
 		}
 
 	}
-	else
+	else if (!optionFormats)
 	{
 		std::cerr << _("Missing file arguments.") << std::endl;
 		
 		return EXIT_FAILURE;
+	}
+
+	if (optionFormats)
+	{
+		std::cout << boost::format(_("Listing available formats (%1%):")) % MaxFormats << std::endl;
+
+		for (std::size_t i = 0; i < MaxFormats; ++i)
+			std::cout << boost::format(_("* \"%1%\" - %2%")) % formatExpression[i] % formatDescription[i] << std::endl;
+
+		if (optionFiles.empty())
+			return EXIT_SUCCESS;
 	}
 	
 	if (optionIformat == InvalidFormat)

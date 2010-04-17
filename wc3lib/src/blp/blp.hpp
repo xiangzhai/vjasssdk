@@ -129,24 +129,24 @@ class Blp
 		const std::list<class MipMap*>& mipMaps() const;
 
 		void clear();
-		dword read(std::istream &istream, enum Format format) throw (class Exception);
-		dword write(std::ostream &ostream, enum Format format) throw (class Exception);
+		std::streamsize read(std::istream &istream, enum Format format) throw (class Exception);
+		std::streamsize write(std::ostream &ostream, enum Format format) throw (class Exception);
 		/**
 		* @return Read bytes. Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
 		*/
-		dword readBlp(std::istream &istream) throw (class Exception);
-		dword writeBlp(std::ostream &ostream) throw (class Exception);
+		std::streamsize readBlp(std::istream &istream) throw (class Exception);
+		std::streamsize writeBlp(std::ostream &ostream) throw (class Exception);
 #ifdef JPEG
-		dword readJpeg(std::istream &istream) throw (class Exception);
-		dword writeJpeg(std::ostream &ostream) throw (class Exception);
+		std::streamsize readJpeg(std::istream &istream) throw (class Exception);
+		std::streamsize writeJpeg(std::ostream &ostream) throw (class Exception);
 #endif
 #ifdef TGA
-		dword readTga(std::istream &istream) throw (class Exception);
-		dword writeTga(std::ostream &ostream) throw (class Exception);
+		std::streamsize readTga(std::istream &istream) throw (class Exception);
+		std::streamsize writeTga(std::ostream &ostream) throw (class Exception);
 #endif
 #ifdef PNG
-		dword readPng(std::istream &istream) throw (class Exception);
-		dword writePng(std::ostream &ostream) throw (class Exception);
+		std::streamsize readPng(std::istream &istream) throw (class Exception);
+		std::streamsize writePng(std::ostream &ostream) throw (class Exception);
 #endif
 
 		/**

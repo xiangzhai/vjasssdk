@@ -18,10 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include <fstream>
 
 #include <boost/format.hpp>
-
+#include <boost/filesystem/fstream.hpp>
 
 #include "../internationalisation.hpp"
 #include "algorithm.hpp"
@@ -46,7 +48,7 @@ std::streamsize Sector::readData(std::istream &istream) throw (class Exception)
 
 std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exception)
 {
-	std::ifstream ifstream(this->m_mpqFile->mpq()->path().string().c_str(), std::ios_base::in | std::ios_base::binary);
+	boost::filesystem::ifstream ifstream(this->m_mpqFile->mpq()->path(), std::ios_base::in | std::ios_base::binary);
 
 	if (!ifstream)
 		throw Exception(boost::str(boost::format(_("Sector: Unable to open file \"%1%\".")) % this->m_mpqFile->mpq()->path().string()));
@@ -62,6 +64,7 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 //	std::cout << "Sector position " << position << std::endl;
 	byte *data = new byte[this->m_sectorSize];
 	int32 dataSize = this->m_sectorSize;
+	std::cout << "Sector position " << position << " and data size " << dataSize << std::endl;
 
 	if (this->m_mpqFile->isCompressed())
 		dataSize -= 1;

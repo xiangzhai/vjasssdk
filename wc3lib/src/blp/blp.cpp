@@ -57,29 +57,6 @@ const char Blp::identifier2[4] = { 'B', 'L', 'P', '2' };
 const std::size_t Blp::maxMipMaps = 16;
 const std::size_t Blp::maxCompressedPaletteSize = 256;
 
-struct BlpHeader
-{
-	dword identifier;
-	dword compression, mipMapsNumber, sizeX, sizeY, pictureType, pictureSubType;
-	dword mipMapOffset[16], mipMapSize[16];
-};		
-
-struct BlpJpegHeader : public BlpHeader
-{
-	dword jpegHeaderSize;
-};
-
-struct Blp2Header
-{
-	char identifier[4];
-	int type;
-	char flags[4];
-	int width;
-	int height;
-	int mipMapOffsets[16];
-	int mipMapLengths[16];
-};
-
 Blp::Blp()
 {
 	this->clear();
@@ -104,7 +81,7 @@ void Blp::clear()
 		delete mipMap;
 }
 
-dword Blp::read(std::istream &istream, enum Format format) throw (class Exception)
+std::streamsize Blp::read(std::istream &istream, enum Format format) throw (class Exception)
 {
 	switch (format)
 	{
@@ -130,7 +107,7 @@ dword Blp::read(std::istream &istream, enum Format format) throw (class Exceptio
 	return 0;
 }
 
-dword Blp::write(std::ostream &ostream, enum Format format) throw (class Exception)
+std::streamsize Blp::write(std::ostream &ostream, enum Format format) throw (class Exception)
 {
 	switch (format)
 	{
@@ -177,13 +154,13 @@ static void jpegEventManagerFunction(const char *msg, void *client_data)
 	std::cout << boost::format(_("JPEG event manager message:\n%1%")) % msg << std::endl;
 }
 
-dword Blp::readBlp(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 {
 	this->clear();
 	// header
 	dword identifier;
 	istream.read(reinterpret_cast<char*>(&identifier), sizeof(identifier));
-	dword bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	
 	if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier0, sizeof(Blp::identifier0)) == 0)
 		this->m_version = Blp::Blp0;
@@ -458,9 +435,9 @@ dword Blp::readBlp(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 {
-	dword bytes = 0;
+	std::streamsize bytes = 0;
 	
 	switch (this->m_version)
 	{
@@ -626,34 +603,34 @@ dword Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	return bytes;
 }
 #ifdef JPEG
-dword Blp::readJpeg(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readJpeg(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-dword Blp::writeJpeg(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writeJpeg(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }
 #endif
 #ifdef TGA
-dword Blp::readTga(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readTga(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-dword Blp::writeTga(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writeTga(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }
 #endif
 #ifdef PNG
-dword Blp::readPng(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readPng(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-dword Blp::writePng(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writePng(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }
