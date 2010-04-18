@@ -1,3 +1,7 @@
+2010-04-18 Tamino Dauth <tamino@cdauth.de>
+* Added various item models and icons.
+* Fixed cheats "gold" and "lumber".
+
 2010-04-17 Tamino Dauth <tamino@cdauth.de>
 * Added functions GetHeroLevelMaxXP and GetHeroMaxXP.
 * Fixed function GetUnitAllianceStateToUnit.
