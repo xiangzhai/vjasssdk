@@ -1,3 +1,6 @@
+2010-04-20 Tamino Dauth <tamino@cdauth.de>
+Use first int32 sector offset to get sector table length!!!
+
 2010-04-15 Tamino Dauth <tamino@cdauth.de>
 * TEST: In der War3x.mpq-Datei kommen nur komprimierte und nicht komprimierte Blöcke vor (keine SingleUnits usw.).
 * TEST: Die Datei "(listfile)" der Datei War3x.mpq hat folgende Blockflags: IsFile, IsCompressed und 0x30000 (unbekannt?).

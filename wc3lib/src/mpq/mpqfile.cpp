@@ -43,7 +43,7 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 	// If the file is not compressed/imploded, then the size and offset of all sectors is known, based on the archive's SectorSizeShift. If the file is stored as a single unit compressed/imploded, then the SectorOffsetTable is omitted, as the single file "sector" corresponds to BlockSize and FileSize, as mentioned previously.
 	if  ((this->m_hash->block()->flags() & Block::IsSingleUnit) || (!(this->m_hash->block()->flags() & Block::IsCompressed) && !(this->m_hash->block()->flags() & Block::IsImploded)))
 	{
-		std::cout << "File is not imploded/compressed or a single unit " << std::endl;
+		std::cout << "File is not imploded/compressed or it's a single unit " << std::endl;
 		int32 sectors = 0;
 		int16 sectorSize = this->m_mpq->sectorSize();
 
@@ -87,16 +87,26 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 	// sector offset table
 	else
 	{
-		int32 sectors = 0;
+		int32 sectors = 1;
 		//int32 sectors = this->m_hash->block()->fileSize() / this->m_mpq->sectorSize(); /// @todo How to get this value?
 		std::cout << "Sectors " << sectors << " and flags " << this->m_hash->block()->flags() << std::endl;
+		std::cout << "Block offset: " << this->m_hash->block()->blockOffset() << ", Block size: " << this->m_hash->block()->blockSize() << std::endl;
+		std::cout << "Get position: " << istream.tellg() << std::endl;
 
 		for (std::size_t i = 0; i < sectors; ++i)
 		{
 			class Sector *sector = new Sector(this);
 			istream.read(reinterpret_cast<char*>(&sector->m_sectorOffset), sizeof(sector->m_sectorOffset));
+			std::cout << "Sector offset " << i << ": " << sector->m_sectorOffset << std::endl;
 			bytes += istream.gcount();
 			this->m_sectors.push_back(sector);
+
+			if (i == 0) // sector table ends before first sector offset
+			{
+				sectors = sector->m_sectorOffset / sizeof(sector->m_sectorOffset) - 1;
+				std::cout << "Calculating sectors: " << sectors << std::endl;
+				exit(0); /// @todo First sector offset is too big!
+			}
 		}
 
 		// The last entry contains the file size, making it possible to easily calculate the size of any given sector.
@@ -112,6 +122,7 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 		}
 	}
 
+	// Set sector indices since they're required for sector en- and decryption.
 	int32 index = 0;
 
 	BOOST_FOREACH(class Sector *sector, this->m_sectors)

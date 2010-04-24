@@ -3,7 +3,7 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 2. Laufzeit und Kompilierung
 3. Kompatibilität zu anderen Sprachen
 4. Schlüsselwörter
-5. Blockkommentare
+5. Kommentare
 6. Präprozessoren
 7. Testblöcke
 8. Deklaration nativer Typen
@@ -12,6 +12,7 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 11. Literale
 12. Gültigkeitsbereiche (scopes)
 13. Qualifizierer-Gültigkeitsbereiche
+14. Anweisungsblöcke
 14. Variablen
 15. Operatoren
 16. Typen
@@ -28,13 +29,16 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 26. Finally
 27. Pseudonyme (aliases)
 28. Vorlagen (templates)
+29. Zugriffsmodifikatoren
+30. Freunde
 29. Pakete (packages)
 30. Aufzählungen (enums)
 31. Klassen
-32. Methoden
-33. Operatorenüberladung
-34. Das Jass-Paket
-35. Das Standardpaket
+32. Elemente
+33. Methoden
+34. Operatorenüberladung
+35. Das Jass-Paket
+36. Das Standardpaket
 
 1. Vorwort
 
@@ -161,10 +165,10 @@ Modularisierung-Schlüsselwörter:
 Standard: package, private, protected, public
 
 Objektorientierung-Schlüsselwörter:
-Standard: class, this, self, parent, new, delete, copy, init, virtual, static, friend, abstract
+Standard: class, this, self, parent, new, delete, copy, init, virtual, static, friend, abstract, mutable
 
 Threading-Schlüsselwöter:
-threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
+Warcract-spezifisch:threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
 
 Save- und Load-Schlüsselwörter:
 Warcract-spezifisch: store, restore, flush, save, load, remove
@@ -175,14 +179,28 @@ der Aufruf nicht mittels calls abgerufen werden und es gäbe eventuell weitere N
 (Geschwindigkeit).
 
 Zusammenfassung der Qualifizierer:
-Standard: enum, const, template, package, private, protected, public, class, init, virtual, static, friend, abstract
+Standard: enum, const, template, package, private, protected, public, class, init, virtual, static, friend, abstract, mutable
 Warcraft-spezifisch: native, mapinit, debug, threaded
+
+Zusammenfassung der Anweisungsblockschlüsselwörter:
+Standard: if, else, switch, case, default, while, do, for, foreach, try, catch, finally
+
+Zusammenfassung der Anweisungsschlüsselwörter:
+Standard: break, continue, throw, size, return, new, delete, copy
+Warcraft-spezifisch: id, hash, length, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep, store, restore, flush, save, load, remove
 
 Bezeichnerspezifizierungsschlüsselwörter:
 Standard: enum, package, class
 
-5. Blockkommentare
+5. Kommentare
 
+Zeilenkommentare:
+Zeilenkommentare beginnen mit zwei "/"-Zeichen und enden am Ende der Zeile.
+
+Notation:
+//<Zeilenkommentarinhalt>
+
+Blockkommentare:
 Blockkommentare zwischen einer "/*"- und einer "*/"-Zeichenfolge sind in Jass++ (auch über mehrere Zeilen hinweg) möglich.
 
 Notation:
@@ -246,7 +264,7 @@ Referenzbasierte Werte werden beim Übergeben an eine andere Variable (auch an P
 was bewirkt, dass die andere Variable mit demselben globalen Objekt arbeitet, wie die eine.
 
 Notation:
-native Typname : Elterntyp;
+native <Typname> : <Elterntyp>;
 
 9. Deklaration nativer Funktionen
 
@@ -256,7 +274,7 @@ Native Funktionen aus Jass sollten mittels der Jass++-Syntax erneut bzw. ein ein
 um konstante Parameter usw. erweitern kann.
 
 Notation:
-native [const] Rückgabetyp Funktionsname(Parametertyp Parametername, ...);
+native [const] <Rückgabetyp> <Funktionsname>(<Parametertyp> <Parametername>, ...);
 
 10. Bezeichner (identifiers)
 
@@ -295,6 +313,10 @@ Dies ist explizit gewollt. Über die Bezeichner der äußeren Gültigkeitsbereic
 Gültigkeitsbereiche zugegriffen werden. Dies ermöglicht eine Verschachtelung beliebig vieler Gültigkeitsbreiche.
 Zu beachten gilt, dass lokale Variablen nur im Funktionskopf deklariert werden können, wodurch eine erneute Deklaration und Überlagerung
 der äußeren lokalen Variablen, durch innere in neuen Gültigkeitsbereichen nicht möglich ist.
+Es existieren folgende sprachenspezifische Arten von Gültigkeitsbereichen:
+* Funktionsdeklarationen
+* Aufzählungsdeklarationen
+* Klassendeklarationen
 
 Notation:
 [<Bezeichner>] [<optionale Eigenschaften des jeweiligen Sprachelements>]
@@ -309,6 +331,7 @@ void test()
 	{
 		.x = .x; // Expliziter Verweis auf den äußeren Gültigkeitsbereich mit dem .-Operator
 		.x = 10; // x im Gültigkeitsbereich über dem aktuellen erhält den Wert 10
+		x = 12; // x im Gültigkeitsbereich über dem aktuellen erhält den Wert 12, da im aktuellen Gültigkeitsbereich keine Variable namens x deklariert wurde
 	}
 }
 
@@ -344,12 +367,24 @@ static const integer
 	er = 12;
 }
 
-debug mapinit
+debug
 {
 	void bla() {};
 	void bla2() {};
 	void bla3() {};
 }
+
+14. Anweisungsblöcke
+
+Im Gegensatz zu Gültigkeitsbereichen, sind Anweisungsblöcke keine Bezeichnerebenen. Sie schließen lediglich Anweisungen ein, welche nur in bestimmten
+Fällen ausgeführt werden.
+Für die unterschiedlichen Fallbehandlungen existieren jeweilige Schlüsselwörter.
+Anweisungsblöcke können nicht selbst ohne oder mit eigenem Bezeichner definiert werden.
+Es existieren folgende Arten von Anweisungsblöcken:
+* Verzweigungen
+* Schleifen
+* Ausnahmebehandlungen
+* finally
 
 Variablen
 
@@ -459,6 +494,7 @@ Variable == Ausdruck
 Variable != Ausdruck
 integer(Variable)				Entspricht GetHandleId(Variable)
 id Variable					Entspricht Variable.id und GetHandleId(Variable)
+Variable.id
 
 Für Paketdeklarationen:
 <Paketbezeichner> : <Deklarationsvoraussetzungen>
@@ -470,7 +506,7 @@ Für Aufzählungsdeklarationen:
 <Aufzählungsbezeichner> : <Deklarationsvoraussetzungen>
 
 Für Klassendeklarationen:
-<Klassenbezeichner> : <Erbung> : <Deklarationsvoraussetzungen>
+<Klassenbezeichner> (<Erbung>) : <Deklarationsvoraussetzungen>
 
 Für Arrays:
 size Variable
@@ -504,6 +540,7 @@ reset Variable
 Variable.reset
 integer(Variable)				Liefert die interne Ganzzahl des Funktionsprototypen.
 id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl des Funktionsprototypen.
+Variable.id
 
 Innerhalb von "threaded" Funktionen:
 sleep <real-Ausdruck>
@@ -666,10 +703,7 @@ Deklarationsvoraussetzungen sind notwendig, da Funktionen in Jass erst nach ihre
 verwendet werden können.
 Eine Umgehung dieser Beschränkung kann mit den Schlüsselwörtern execute und evaluate erreicht werden
 (siehe dazu Abschnitt "Funktionen").
-Es gilt noch anzumerken, dass der :-Operator bei Klassen ebenfalls zur Erbung verwendet wird, was
-zu Verwirrung führen kann. Die geerbten Klassen werden zu erst angegeben und danach die Deklarations-
-voraussetzungen.
-Des Weiteren werden geerbte Klassen implizit als Deklarationsvoraussetzung angegeben.
+Geerbte Klassen werden implizit als Deklarationsvoraussetzung angegeben.
 Aufzählungen brauchen in der Regel höchstens Voraussetzungen, wenn das Paket oder die Klasse Ganzzahl-Konstanten enthält.
 
 Notation:
@@ -690,6 +724,7 @@ Parameter mit Standardargumenten erhalten automatisch das Standardargument, inso
 Notation:
 [threaded] [mapinit] [const] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...) [<Deklarationsvoraussetzungen>] [throw (Typen getrennt durch Kommata)]
 {
+	<Anweisungen>
 }
 
 Ist eine Funktion "threaded", kann sie von überall aus mit .execute, .executewait, oder .evaluate aufgerufen werden.
@@ -740,6 +775,8 @@ reset <Funktionsname> // Setzt den Thread der Funktion zurück.
 Ist eine Funktion als "mapinit" deklariert, so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers 
 aufgerufen. Eine "mapinit"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt, 
 manuell aufgerufen wird oder "threaded" ist (einstellbar, "threaded" ist ebenfalls eher unnötig).
+Exisitieren mehrere Funktionen, die als "mapinit" deklariert wurden, so lässt sich die exakte Aufrufreihenfolge nur durch Deklarationsvoraussetzungen
+bestimmen.
 
 Ist eine Funktion als "const" deklariert, so muss sie einen global konstanten Wert zurückgeben. Beim Kompilieren, wird
 sie normalerweise als "constant" Jass-Funktion erzeugt. Global konstant bedeutet in diesem Zusammenhang, dass der Wert
@@ -849,20 +886,21 @@ finally // Wird exakt vor der return-, (throw-,) continue- oder break-Anweisung 
 Pseudonyme (aliases)
 
 Das Schlüsselwort "alias" ermöglicht es einem einen anderen Bezeichner für einen bestehenden zu definieren. Dieser gilt innerhalb
-des Gültigkeitsbereiches, in welchem sich die Pseudonymdefinition befindet und in Klassen bzw. Paketen je nach Präfix für alle privaten,
-geschützten, privat geschützten oder öffentlichen Elemente.
+des Gültigkeitsbereiches, in welchem sich die Pseudonymdefinition befindet.
+Der neue Bezeichner darf bereits existieren und überdeckt innerhalb des Gültigkeitsbereiches den alten. Der Compiler sollte in
+diesem Fall jedoch eine Warnung ausgeben.
+Der Bezeichner dagegen muss existieren.
 
 Notation:
-[private | public | protected | package] alias <Bezeichner> <Neuer Bezeichner>;
-
+alias <Bezeichner> <Neuer Bezeichner>;
 
 Vorlagen (templates)
 
-Vorlagen werden mittels einer einfachen Kopie ihres enthaltenen Codes mit den verwendeten Datentypen gespeichert.
+Vorlagen werden (nur bei Verwendung) mittels einer einfachen Kopie ihres enthaltenen Codes mit den verwendeten Datentypen gespeichert.
 Die Datentypparameter können genau wie bei Funktionsparameter gesetzt werden.
 
 Notation:
-template <Vorlagenbezeichner>< <Datentypparameterbezeichner> [= Standardargument] ...>
+template <Vorlagenbezeichner>< <Datentypparameterbezeichner> [= <Standardargument>] ...>
 {
     <Vorlageninhalt>
 }
@@ -875,19 +913,44 @@ Vector<integer> myVector = new Vector<integer>;
 
 Der Vorlageninhalt können Funktionen, Klassen oder Pakete sein.
 
+Zugriffsmodifikatoren
+
+Zugriffsmodifikatoren bestimmten die Zugriffsmöglichkeiten auf bestimmte Deklarationen.
+"private", "public" und "protected" bestimmten je nach Verwendung innerhalb einer Klasse oder eines Pakets, von wo aus das Code-Objekt
+verwendet werden darf.
+Wird die Deklarationen innerhalb einer Klasse deklariert, so kann das Schlüsselwort "package" verwendet werden, um einen Zugriff vom Paket, in welchem
+sich die Klasse befindet zu erlauben.
+Wird die Deklarationen dagegen innerhalb eines Pakets deklariert, so wird "package" impliziet angehängt (explizit auch möglich), da innerhalb des Pakets
+der Zugriff auf die Deklarationen standardmäßig erlaubt ist.
+
+Notation:
+[private | public | protected] [package] <Deklarationen>
+
+Freunde
+
+Freunde sind Bezeichner, welchen der Zugriff auf alle enthaltenen Elemente, die den Zugriffsmodifikatoren entsprechen, erlaubt wird.
+Pakete und Klassen können Freunde haben.
+Die Bezeichner können durch Kommata getrennt werden.
+
+Notation:
+[Zugriffsmodifikatoren] friend <Bezeichner>[, <Bezeichner>, ...];
+
 Pakete (packages)
 
 Notation einer Paketdefinition:
-package Name [Deklarationsvoraussetzungen]
+package <Name> [<Deklarationsvoraussetzungen>]
 {
-	private | public | protected Funktion/Variable/Klasse/Aufzählung/Paket/friend <Paketname> | <Klassenname> | <Funktionsname>
+	static { } // Initialisierer
+	[Zugriffsmodifikatoren] <Funktion/Variable/Vorlage/Klasse/Aufzählung/Paket>
+	<Freunde>
 }
 
-Fehlt private, public oder protected, ist das Objekt automatisch private. Protected bewirkt, dass das Objekt für die enthaltenen Pakete
+Fehlen die Zugriffsmodifikatoren, ist das Objekt automatisch "private package". Protected bewirkt, dass das Objekt für die enthaltenen Pakete
 zugänglich ist.
+"package" wird implizit an die Zugriffsmodifikatoren angehängt (siehe "Zugriffsmodifikatoren").
 Die Elemente des Pakets werden immer an erster Stelle deklariert, die Elemente der Unterpakete an zweiter, wodurch die Unterpakete bei
 nicht-"private"-Elementen immer auf diese zugreifen können.
-Wird ein Paket als friend deklariert, so erhält dieses je nach Präfixschlüsselwort Zugriff auf sämtliche
+Wird Freund deklariert, so erhält dieser je nach Präfixschlüsselwort Zugriff auf sämtliche
 als solche deklarierten Paketelemente (auch Unterpakete, allerdings nicht deren Elemente - Überprüfen: Freundesfreundezugriff?).
 public friend <Paketname> ist daher implizit gültig, da es dem Paket <Paketname> Zugriff auf alle öffentlichen
 Eigenschaften gestattet.
@@ -906,6 +969,12 @@ Wird die Notation Paketname.* verwendet, so werden alle Unterpakete und deren Un
 Sämtliche verwendete Paketnamen werden durch Kommata getrennt.
 Im Grunde genommen ist eine Paketverwendungsanweisung nichts Anderes als ein erweiteretes Pseudonym.
 
+Initialisierer:
+Die Initialisierungsfunktion wird genau vor dem ersten Zugriff auf ein Paketelement aufgerufen.
+Dies wird vom Compiler durch eine Laufzeitüberprüfung ermöglicht und kann relativ viel Zusatzcode erzeugen, da bei jedem Zugriff von außerhalb
+überprüft werden muss, ob die Klasse bereits initialisiert wurde.
+Die Funktion darf nicht manuell aufgerufen werden und hat deshalb keine Zugriffsmodifikatoren, keinen Rückgabetyp, keinen Bezeichner und keine Parameter.
+
 Aufzählungen (enums)
 
 Wird ein Enumelement gesetzt, so werden alle darauffolgenden Enum-Elemente auf die noch nicht verwendeten nachfolgenden Werte gesetzt.
@@ -913,39 +982,42 @@ Wird ein Enumelement gesetzt, so werden alle darauffolgenden Enum-Elemente auf d
 Notation:
 enum Name [Deklarationsvoraussetzungen]
 {
-    Enumelement1,
+    Enumelement1, // ist automatisch 0
     Enumelement2 = 2,
-    Enumelement3
-} globale Instanzen durch Kommate getrennt;
+    Enumelement3 // ist automatisch 3
+} [globale Instanzen durch Kommate getrennt];
 
-Der size-Operator kann verwendet werden, um den Wert x + 1 zu erhalten, wobei x für das Aufzählungselement mit dem höchsten Wert steht.
+Der size-Operator kann verwendet werden, um den Wert x + 1 zu erhalten, wobei x für das den Wert des Aufzählungselements mit dem höchsten Wert steht.
 
 Klassen
 
 Existiert kein Präfix wie "public", "protected" oder "private" vor der Variablen oder Methodendeklaration, ist das
-Klassenelement automatisch "private". Statische Methoden erhalten keinen this-Parameter.
+Klassenelement automatisch "private" (nicht "private package"!). Statische Methoden erhalten keinen this-Parameter.
 Statische Variablen können mit Klassenname.Variablenname angesprochen werden.
 Der Konstruktor und der Destruktor werden aufgerufen, sobald das Objekt erzeugt oder gelöscht wird.
 Der Kopierkonstruktor wird aufgerufen, sobald das Objekt explizit mittels "copy" kopiert wird.
 Normalerweise wird er automatisch definiert und kopiert den Inhalt aller Elemente des kopierten Objekts in das Zielobjekt (anders als bei C++).
-Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klasseneigenschaft oder -methode aufgerufen.
 Mit dem Schlüsselwort "parent" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
-Bezugsrahmen, angesprochen werden. Da sie normalerweise kein äußerer Bezugsrahmen sind, funktioniert die Verwendung des .-Operators nicht.
+Gültigkeitsbereichen, angesprochen werden. Da sie normalerweise kein äußerer Gültigkeitsbereich sind, funktioniert die Verwendung des .-Operators nicht.
 Mit dem Schlüsselwort "self" spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
 die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren statischen Methoden aufruft, insofern sie selbst z. B. zu einer
 der Elternklassen und nicht zur Klasse für die der Aufruf galt gehört.
-Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Bezugsrahmen, über ihren Namen oder den .-Operator angesprochen werden.
+Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Gültigkeitsbereichen, über ihren Namen oder den .-Operator angesprochen werden.
 In diesem Fall wird ebenfalls überprüft, ob es sich um eine virtuelle statische Methode handelt und die der korrekten Klasse aufgerufen.
 Mit dem Schlüsselwort "this" spricht man die verwendete Instanz an.
 Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert.
 In diesem Fall werden die Instanzdaten in der globalen Hashtable oder in zusätzlichen globalen Variablen gespeichert.
 Falls die angegebene Maximalgröße den Wert 8192 übersteigt, sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
-Große Array-Elemente werden wie normale große Arrays und nicht wie normale Arrays behandelt (siehe Arrays).
+Die Maximalgröße einer Klasse kann mit dem size-Operator abgefragt werden: <Klassenbezeichner>.size
+Im Debug-Modus muss zur Laufzeit 0 vom new-Operator zurückgegeben und eine Fehlermeldung ausgegeben werden, falls die Instanzgrenze überschritten wurde.
+Außerdem muss im Debug-Modus eine Fehlermeldung zurückgegeben bzw. abgebrochen werden, wenn der delete-Operator auf eine 0-Instanz angewandt wird.
 
 Abstrakte Klassen:
 Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen können keine
 Instanzen erzeugt werden. Erbt eine Klasse, eine andere abstrakte Klasse, so muss sie sämtliche
 abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
+
+Vererbung:
 
 Mehrfachvererbung:
 Überschneiden sich Elemente mehrerer geerbter Klassen, so wird vom Compiler eine Warnung ausgegeben.
@@ -956,28 +1028,40 @@ Protected:
 Ist ein Klassenelement "protected", so kann darauf nur von Kindklassen der Klasse zugegriffen werden.
 
 Package:
-Ist ein Klassenelement "package", so kann darauf von Kindklassen und von Klassen bzw. Funktionen des aktuellen Pakets
+Ist ein Klassenelement "package", so kann darauf innerhalb des Pakets, in welchem die Klasse deklariert wurde und
 aus dessen Unterpaketen zugegriffen werden.
-"package" kann zusätzlich zu "protected", "public" und "private" verwendet werden.
-
-Friend:
-Wird ein Paket, eine Klasse oder eine Funktion als friend einer bestimmten Deklarationsart (public, protected oder private)
-deklariert, so erhält diese(s) Zugriff auf die Klassenelemente, die ebenfalls so deklariert wurden.
-Dies gilt auch für die Kindklassen (Überprüfen, ob es anders mehr Sinn machen würde).
 
 Notation:
 [ abstract ] class Klassenname [ [Maximalgröße] ] (public | private | protected Klassenname, ...) [Deklarationsvoraussetzungen]
 {
-	self new() { } Konstruktor
-	void delete() { } Destruktor
-	void copy(Klassenname other) Kopierkonstruktur
-	static void init() { } Initialisierungsmethode
+	[Zugriffsmodifikatoren] self new([<Konstruktorparameter>]) { } // Konstruktor
+	[Zugriffsmodifikatoren] self copy() { } // Kopierkonstruktur
+	[Zugriffsmodifikatoren] void delete() { } // Destruktor
+	static { } // Initialisierer
 
-	[package] [public | protected | private] friend <Paketname> | <Klassenname> | <Funktionsname> | <Variablenname>;
-	[package] [public | protected | private] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
-} globale Instanzen durch Kommata getrennt;
+	<Freunde>;
+	[Zugriffsmodifikatoren] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
+} [globale Instanzen durch Kommata getrennt];
 
-Methoden:
+Elemente
+
+Klassenelemente entsprechen Variablendeklarationen mit Zugriffsmodifikatoren, die zusätzlich statisch oder mutabel (veränderlich/mutable) sein können.
+Elemente, die statisch sind, können niemals als "mutable" deklariert werden und umgekehrt.
+Statische Elemente werden zur Laufzeit pro Klasse einmal erzeugt und sind wie globale Variablen innerhalb des Gültigkeitsbereiches der Klasse.
+Nicht statische Elemente exisitieren zur Laufzeit pro Klasseninstanz einmal.
+Sie können per <Klasseninstanzvariable>.<Elementname> angesprochen werden.
+Als "mutable" deklarierte Elemente, können auch von konstanten Methoden oder bei einem Direktzugriff bei konstanten Instanzen verändert werden.
+
+Array-Elemente:
+Eine Klasse kann ebenfalls Array-Elemente enthalten.
+Exisitiert keine vom Compiler generierte globale Hashtable und ist das Element nicht statisch, empfiehlt es sich, eine Maximalgröße angegeben 
+werden (siehe "Arrays").
+Ansonsten entspricht die Größe der Maximalgröße von Arrays in Jass (8192) / die Maximalgröße der Klasse.
+Der Compiler sollte in diesem Fall zumindest eine Warnung ausgeben.
+Statische Array-Elemente werden wie gewöhnliche Arrays behandelt (siehe "Arrays").
+
+Methoden
+
 Als virtuell deklarierte Methoden, werden pro Klasseninstanz gespeichert. So wird immer die unterste virtuelle Methode aufgerufen.
 Virtuelle Methoden müssen zwingend threaded sein.
 Achtung: Virtuelle Methoden sollten nicht im Konstruktor aufgerufen werden, da sie durch die Konstruktoren erst überschrieben
@@ -1005,7 +1089,7 @@ deklariert wurde (siehe Funktionen).
 Statische Methoden, die mit dem Postfix "const" deklariert wurden, dürfen keinerlei nicht als "const" deklarierte, statische
 Methoden der Klasse aufrufen, geschweigedenn irgendwelche statischen Elemente der Klasse verändern, sondern nur zurückgeben.
 
-Sämtliche Methoden der Elternklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
+Sämtliche nicht private Methoden der Elternklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
 der Methode aufgerufen werden.
 
 Virtuelle Methoden bewirken, dass diese auch aufgerufen werden, wenn das Objekt zu einem Elterntyp konvertiert wurde, da pro
@@ -1032,8 +1116,7 @@ zurückgeben, jedoch ist dies dem Entwickler selbst überlassen. Gegebenenfalls 
 nicht das Objekt "this" zurückgegeben wird.
 
 Notation:
-new <Klassenname>
-<Variable>.new()
+new <Klassenname>([<Konstruktorparameter>])
 
 Kopierkonstruktor:
 Weist man einer Objektvariable den Wert einer anderen zu, so zeigen beide Variablen normalerweise auf dasselbe Objekt.
@@ -1042,20 +1125,26 @@ Eigenschaften erzeugt.
 Dazu dient das Schlüsselwort "copy". Es kann entweder die definierte copy-Methode aufgerufen oder das Schlüsselwort der Variable
 vorangestellt werden. Wurde kein eigener Kopierkonstruktor definiert, so werden sämtliche Elementinhalte ebenfalls kopiert.
 Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelementvariablen ebenfalls kopiert wird, sowie auch deren
-Arrays, Funktionen und Objekte usw. (unter Verwendung deren Kopierkontruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf dieselben Ziele,
-falls es sich bei den Elementvariablen um keine Objekte handelt, sondern z. B. native Typen wie "unit".
-Der Inhalt von Elementvariablen mit kopierbasierte Typen wird selbstverständlich ebenfalls kopiert (dazu ist natürlich kein Kopierkonstruktor notwendig).
+Arrays, Funktionen und Objekte usw. (unter Verwendung von deren Kopierkonstruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf 
+dieselben Ziele, falls es sich bei den Elementvariablen um keine Objekte handelt, sondern um referenzbasierte native Typen, wie z. B. "unit".
+Der Inhalt von Elementvariablen mit kopierbasierten Typen wird selbstverständlich ebenfalls kopiert (dazu ist natürlich kein Kopierkonstruktor notwendig).
 Ist der Kopierkonstruktor als "private" oder "protected" definiert, so kann das Schlüsselwort
 nicht von außerhalb angewandt werden (gängiges Verhalten, auch bei anderen Methoden).
 Der Kopierkonstruktor darf virtuell und abstrakt sein.
+Er darf keinerlei Parameter enthalten.
 
 Notation:
 copy <Variable>
 <Variable>.copy()
 
+Beispiele:
+class X a = new a();
+class X b = a.copy();
+a = copy b;
+
 Destruktor:
-Ein Objekt kann mit Hilfe des "delete"-Schlüsselworts gelöscht werden. Dabei wird der Variableninhalt automatisch auf 0 gesetzt, was Fehl-
-zugriffe einschränkt bzw. verhindert.
+Ein Objekt kann mit Hilfe des "delete"-Schlüsselworts gelöscht bzw. freigegeben werden.
+Dabei wird der Variableninhalt automatisch auf 0 gesetzt, was Fehlzugriffe einschränkt bzw. verhindert.
 Zunächst wird der Destruktor, falls vorhanden, der Klasse aufgerufen und danach bis zur obersten Elternklasse hin alle Destruktoren
 der geerbten Klassen. Dabei werden bei einer Mehrfachvererbung zunächst die Vererbungshierachien der ersten Klassen von unten nach oben,
 von rechts nach links abgearbeitet (genau andersherum als beim Konstruktor).
@@ -1063,6 +1152,12 @@ von rechts nach links abgearbeitet (genau andersherum als beim Konstruktor).
 Notation:
 delete <Variable>
 <Variable>.delete()
+
+Initialisierer:
+Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klasseneigenschaft oder -methode aufgerufen.
+Dies wird vom Compiler durch eine Laufzeitüberprüfung ermöglicht und kann relativ viel Zusatzcode erzeugen, da bei jedem Zugriff von außerhalb
+überprüft werden muss, ob die Klasse bereits initialisiert wurde.
+Die Methode darf nicht manuell aufgerufen werden und hat deshalb keine Zugriffsmodifikatoren, keinen Rückgabetyp, keinen Bezeichner und keine Parameter.
  
 Save- und Load-Möglichkeiten:
 Mit Hilfe der Schlüsselwörter store, restore und flush, kann eine Klasseninstanz in einem Spiel-Cache verwaltet werden.
@@ -1198,5 +1293,4 @@ package jasspp
     class Vector
     class Map
     class Bitset
-
 }

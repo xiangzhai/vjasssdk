@@ -1,3 +1,6 @@
+2010-04-24 Tamino Dauth <tamino@cdauth.de>
+* Revised Jass++ definition.
+
 2010-04-17 Tamino Dauth <tamino@cdauth.de>
 * Added function types to Jass++ definition.
 * Added ZLib inflation support for MPQ file sections.
