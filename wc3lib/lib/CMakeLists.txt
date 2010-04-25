@@ -14,5 +14,7 @@ endif()
 	list(APPEND linkDirectories StormLib/stormlib)
 	#include_directories(StormLib)
 #endif()
+add_subdirectory(wave)
+list(APPEND linkDirectories wave)
 
 link_directories(${linkDirectories})

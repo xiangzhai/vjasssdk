@@ -118,6 +118,72 @@ uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum
     return seed1;
 }
 
+int compressWaveMono(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception)
+{
+	// Prepare the compression level for the next compression
+	// (After us, the Huffmann compression will be called)
+	if (0 < compressionLevel && compressionLevel <= 2)
+		compressionLevel = 4;
+	else if (compressionLevel == 3)
+		compressionLevel = 6;
+	else
+		compressionLevel = 5;
+
+	if (outBufferLength > 0)
+		delete[] outBuffer;
+
+	outBufferLength = inBufferLength;
+	outBuffer = new unsigned char[inBufferLength];
+	CompressWave(outBuffer, outBufferLength, inBuffer, inBufferLength, 1, compressionLevel);
+
+	return outBufferLength;
+}
+
+int decompressWaveMono(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception)
+{
+	if (outBufferLength > 0)
+		delete[] outBuffer;
+
+	outBufferLength = inBufferLength;
+	outBuffer = new unsigned char[inBufferLength];
+	DecompressWave(outBuffer, outBufferLength, inBuffer, inBufferLength, 1);
+
+	return outBufferLength;
+}
+
+int compressWaveStereo(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception)
+{
+	// Prepare the compression type for the next compression
+	// (After us, the Huffmann compression will be called)
+	if(0 < compressionLevel && compressionLevel <= 2)
+		compressionLevel = 4;
+	else if(compressionLevel == 3)
+		compressionLevel = 6;
+	else
+		compressionLevel = 5;
+
+	if (outBufferLength > 0)
+		delete[] outBuffer;
+
+	outBufferLength = inBufferLength;
+	outBuffer = new unsigned char[inBufferLength];
+	CompressWave(outBuffer, outBufferLength, inBuffer, inBufferLength, 2, compressionLevel);
+
+	return outBufferLength;
+}
+
+int decompressWaveStereo(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception)
+{
+	if (outBufferLength > 0)
+		delete[] outBuffer;
+
+	outBufferLength = inBufferLength;
+	outBuffer = new unsigned char[inBufferLength];
+	DecompressWave(outBuffer, outBufferLength, inBuffer, inBufferLength, 2);
+
+	return outBufferLength;
+}
+
 std::streamsize deflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception)
 {
 	throw Exception(_("deflateStream: ZLib compression is not supported yet!"));
@@ -169,7 +235,7 @@ std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) thro
 			state = inflate(&stream, Z_NO_FLUSH);
 
 			if (state == Z_STREAM_ERROR)
-				throw Exception(boost::str(boost::format(_("")) % zError(state))); // state not clobbered
+				throw Exception(boost::str(boost::format(_("Sector: ZLib stream error %1%.")) % zError(state))); // state not clobbered
 
 			switch (state)
 			{
@@ -180,7 +246,7 @@ std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) thro
 
 				inflateEnd(&stream);
 
-				throw Exception(boost::str(boost::format(_("")) % zError(Z_MEM_ERROR)));
+				throw Exception(boost::str(boost::format(_("Sector: ZLib stream error %1%.")) % zError(Z_MEM_ERROR)));
 			}
 
 			unsigned int have = bufferSize - stream.avail_out;
@@ -190,7 +256,7 @@ std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) thro
 			{
 				inflateEnd(&stream);
 
-				throw Exception(boost::str(boost::format(_("")) % zError(Z_ERRNO)));
+				throw Exception(boost::str(boost::format(_("Sector: ZLib stream error %1%.")) % zError(Z_ERRNO)));
 			}
 
 			streamsize += have;

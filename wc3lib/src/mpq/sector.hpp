@@ -66,6 +66,7 @@ class Sector
 		};
 		
 		void setCompression(byte value);
+		uint32 sectorKey() const;
 		
 		class MpqFile *m_mpqFile;
 		int32 m_sectorIndex;

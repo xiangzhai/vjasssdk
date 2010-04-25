@@ -28,6 +28,7 @@
 #include "mpq.hpp"
 #include "sector.hpp"
 #include "../internationalisation.hpp"
+#include "algorithm.hpp" //debug
 
 namespace wc3lib
 {
@@ -41,9 +42,10 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 
 	// This table is not present if this information can be calculated.
 	// If the file is not compressed/imploded, then the size and offset of all sectors is known, based on the archive's SectorSizeShift. If the file is stored as a single unit compressed/imploded, then the SectorOffsetTable is omitted, as the single file "sector" corresponds to BlockSize and FileSize, as mentioned previously.
-	if  ((this->m_hash->block()->flags() & Block::IsSingleUnit) || (!(this->m_hash->block()->flags() & Block::IsCompressed) && !(this->m_hash->block()->flags() & Block::IsImploded)))
+	if  ((this->block()->flags() & Block::IsSingleUnit) || (!(this->block()->flags() & Block::IsCompressed) && !(this->block()->flags() & Block::IsImploded)) || this->block()->flags() & 0x00030000) /// @todo test
 	{
-		std::cout << "File is not imploded/compressed or it's a single unit " << std::endl;
+		std::cout << "Correct flags: " << std::hex << this->m_hash->m_block->flags() << std::dec << std::endl;
+		//std::cout << "File is not imploded/compressed or it's a single unit " << std::endl;
 		int32 sectors = 0;
 		int16 sectorSize = this->m_mpq->sectorSize();
 
@@ -68,7 +70,7 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 
 			this->m_sectors.push_back(sector);
 
-			newOffset += sectorSize;
+			newOffset += sector->m_sectorSize;
 		}
 
 		// the last sector may contain less than this, depending on the size of the entire file's data.
@@ -80,44 +82,57 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 			this->m_sectors.push_back(sector);
 		}
 
-		std::cout << "Real sector count " << this->m_sectors.size() << std::endl;
+		//std::cout << "Real sector count " << this->m_sectors.size() << std::endl;
 
 	}
 	// However, the SectorOffsetTable will be present if the file is compressed/imploded and the file is not stored as a single unit, even if there is only a single sector in the file (the size of the file is less than or equal to the archive's sector size).
 	// sector offset table
 	else
 	{
+		//std::cout << "Starting required debug messages:" << std::endl;
 		int32 sectors = 1;
 		//int32 sectors = this->m_hash->block()->fileSize() / this->m_mpq->sectorSize(); /// @todo How to get this value?
-		std::cout << "Sectors " << sectors << " and flags " << this->m_hash->block()->flags() << std::endl;
-		std::cout << "Block offset: " << this->m_hash->block()->blockOffset() << ", Block size: " << this->m_hash->block()->blockSize() << std::endl;
-		std::cout << "Get position: " << istream.tellg() << std::endl;
+		//std::cout << "Sectors " << sectors << " and flags " << std::hex << this->m_hash->block()->flags() << std::dec << std::endl;
+		//std::cout << "Block offset: " << this->m_hash->block()->blockOffset() << ", Block size: " << this->m_hash->block()->blockSize() << std::endl;
+		//std::cout << "Get position: " << istream.tellg() << std::endl;
+		std::cout << "File size: " << this->m_hash->block()->fileSize() << std::endl;
 
 		for (std::size_t i = 0; i < sectors; ++i)
 		{
-			class Sector *sector = new Sector(this);
-			istream.read(reinterpret_cast<char*>(&sector->m_sectorOffset), sizeof(sector->m_sectorOffset));
-			std::cout << "Sector offset " << i << ": " << sector->m_sectorOffset << std::endl;
+			int32 offset;
+			istream.read(reinterpret_cast<char*>(&offset), sizeof(offset));
+			std::cout << "Offset: " << offset << std::endl;
 			bytes += istream.gcount();
+
+
+			if (offset >= this->m_hash->m_block->fileSize() || offset <= 0)
+			{
+				std::cerr << "Invalid offset: " << offset << " with flags: " << std::hex << this->m_hash->m_block->flags() << std::dec << std::endl;
+				return bytes;
+			}
+
+			class Sector *sector = new Sector(this);
+			sector->m_sectorOffset = offset;
 			this->m_sectors.push_back(sector);
 
 			if (i == 0) // sector table ends before first sector offset
 			{
 				sectors = sector->m_sectorOffset / sizeof(sector->m_sectorOffset) - 1;
 				std::cout << "Calculating sectors: " << sectors << std::endl;
-				exit(0); /// @todo First sector offset is too big!
 			}
 		}
 
-		// The last entry contains the file size, making it possible to easily calculate the size of any given sector.
 		int32 size;
 		istream.read(reinterpret_cast<char*>(&size), sizeof(size));
+		std::cout << "Real file size: " << size << std::endl;
 		bytes += istream.gcount();
 
+		// The last entry contains the file size, making it possible to easily calculate the size of any given sector.
 		// calculate sector size, not required but maybe useful at some point
 		BOOST_REVERSE_FOREACH(class Sector *sector, this->m_sectors)
 		{
 			sector->m_sectorSize = size - sector->m_sectorOffset;
+			std::cout << "Sector size is " << sector->m_sectorSize << std::endl;
 			size = sector->m_sectorOffset;
 		}
 	}
@@ -130,11 +145,20 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 		sector->m_sectorIndex = index;
 
 		// Compressed sectors (only found in compressed - not imploded - files) are compressed with one or more compression algorithms.
-		if (this->isCompressed() & Block::IsCompressed)
+		if (this->isCompressed())
 		{
 			byte compression;
 			istream.read(reinterpret_cast<char*>(&compression), sizeof(compression));
 			bytes += istream.gcount();
+
+			// as well, this byte is encrypted with the sector data, if applicable.
+			if (this->isEncrypted())
+			{
+				std::cout << "Compression before " << std::hex << compression << std::dec << std::endl;
+				DecryptData(Mpq::cryptTable(), (void*)&compression, uint32(sizeof(compression)), sector->sectorKey());
+				std::cout << "Compression afterwards " << std::hex << compression << std::dec << std::endl;
+			}
+
 			sector->setCompression(compression);
 			istream.seekg(sector->m_sectorSize - 1, std::ios_base::cur); // skip sector data
 		}

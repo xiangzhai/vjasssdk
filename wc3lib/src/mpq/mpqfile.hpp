@@ -40,7 +40,6 @@ namespace mpq
 {
 	
 class Mpq;
-class Hash;
 class Sector;
 
 /**
@@ -98,6 +97,10 @@ class MpqFile
 
 		class Mpq* mpq() const;
 		class Hash* hash() const;
+		/**
+		* @return Returns file's corresponding block (same as hash()->block()).
+		*/
+		class Block* block() const;
 		/**
 		* @return Returns the file path. Note that MPQ archives without list file don't have any information about the file paths.
 		*/
@@ -187,6 +190,11 @@ inline class Hash* MpqFile::hash() const
 	return this->m_hash;
 }
 
+inline class Block* MpqFile::block() const
+{
+	return this->m_hash->block();
+}
+
 inline const boost::filesystem::path& MpqFile::path() const
 {
 	return this->m_path;
@@ -194,63 +202,63 @@ inline const boost::filesystem::path& MpqFile::path() const
 
 inline uint32 MpqFile::fileKey() const
 {
-	return this->m_hash->block()->fileKey(this->path());
+	return this->block()->fileKey(this->path());
 }
 
 inline int32 MpqFile::size() const
 {
-	return this->m_hash->block()->fileSize();
+	return this->block()->fileSize();
 }
 
 /// @todo FIXME (return compressed and not real size)
 inline int32 MpqFile::compressedSize() const
 {
-	return this->m_hash->block()->blockSize();
+	return this->block()->blockSize();
 }
 
 inline bool MpqFile::isFile() const
 {
-	return this->m_hash->block()->flags() & Block::IsFile;
+	return this->block()->flags() & Block::IsFile;
 }
 
 inline bool MpqFile::isEncrypted() const
 {
-	return this->m_hash->block()->flags() & Block::IsEncrypted;
+	return this->block()->flags() & Block::IsEncrypted;
 }
 
 inline bool MpqFile::isCompressed() const
 {
-	return this->m_hash->block()->flags() & Block::IsCompressed;
+	return this->block()->flags() & Block::IsCompressed;
 }
 
 inline bool MpqFile::isImploded() const
 {
-	return this->m_hash->block()->flags() & Block::IsImploded;
+	return this->block()->flags() & Block::IsImploded;
 }
 
 inline CRC32 MpqFile::crc32() const
 {
-	return this->m_hash->block()->crc32();
+	return this->block()->crc32();
 }
 
 inline void MpqFile::setFileTime(const time_t &time)
 {
-	this->m_hash->block()->setFileTime(time);
+	this->block()->setFileTime(time);
 }
 
 inline const struct FILETIME& MpqFile::fileTime() const
 {
-	return this->m_hash->block()->fileTime();
+	return this->block()->fileTime();
 }
 
 inline bool MpqFile::fileTime(time_t &time) const
 {
-	return this->m_hash->block()->fileTime(time);
+	return this->block()->fileTime(time);
 }
 
 inline MD5 MpqFile::md5() const
 {
-	return this->m_hash->block()->md5();
+	return this->block()->md5();
 }
 
 inline const std::list<class Sector*>& MpqFile::sectors() const

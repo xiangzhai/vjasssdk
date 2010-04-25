@@ -1,3 +1,7 @@
+2010-04-25 Tamino Dauth <tamino@cdauth.de>
+* Added wave support code.
+* Improved file reading and added debug mode for flag 0x00030000 which seems to be a flag for skipping the sector table.
+
 2010-04-24 Tamino Dauth <tamino@cdauth.de>
 * Revised Jass++ definition.
 

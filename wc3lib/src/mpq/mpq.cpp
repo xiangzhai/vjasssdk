@@ -151,6 +151,7 @@ void Mpq::close()
 	if (!this->m_isOpen)
 		return;
 
+	std::cout << "Closing archive." << std::endl;
 	this->clear();
 }
 
@@ -299,7 +300,7 @@ std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstrea
 			// read listfile file and create path entries
 			std::stringstream sstream;
 			listfileFile->writeData(sstream);
-			std::cout << "Adding " << this->readListfilePathEntries(sstream) << " path entries (sstream " << sstream.str() << ")." << std::endl;
+			std::cout << "Adding " << this->readListfilePathEntries(sstream) << " path entries" << std::endl; // (sstream " << sstream.str() << ")." << std::endl;
 		}
 	}
 	else
@@ -610,6 +611,18 @@ class Mpq& Mpq::operator>>(class Mpq &mpq) throw (class Exception)
 
 void Mpq::clear()
 {
+	if (this->m_strongDigitalSignature != 0)
+		delete[] this->m_strongDigitalSignature;
+
+	//BOOST_FOREACH(class Block *block, this->m_blocks)
+	//	delete block;
+
+	//BOOST_FOREACH(class Hash *hash, this->m_hashes)
+	//	delete hash;
+
+	//BOOST_FOREACH(class MpqFile *file, this->m_files)
+	//	delete file;
+
 	this->m_size = 0;
 	this->m_path.clear();
 	this->m_format = Mpq::Mpq1;
@@ -617,18 +630,6 @@ void Mpq::clear()
 	this->m_sectorSize = 0;
 	this->m_strongDigitalSignature = 0;
 	this->m_isOpen = false;
-
-	if (this->m_strongDigitalSignature != 0)
-		delete[] this->m_strongDigitalSignature;
-
-	BOOST_FOREACH(class Block *block, this->m_blocks)
-		delete block;
-
-	BOOST_FOREACH(class Hash *hash, this->m_hashes)
-		delete hash;
-
-	BOOST_FOREACH(class MpqFile *file, this->m_files)
-		delete file;
 }
 
 /// @todo There seems to be some MPQ archives which do contain hash tables which do start with an empty entry. Therefore I commented checks for such tables.
@@ -726,12 +727,42 @@ std::size_t Mpq::readListfilePathEntries(std::istream &istream)
 	// read list file file and create path entries
 	std::size_t count = 0;
 	std::string line;
-	
-	while (std::getline(istream, line))
+
+	// The listfile is contained in the file "(listfile)" (default language and platform), and is simply a text file with file paths separated by ';', 0Dh, 0Ah, or some combination of these.
+	char character;
+	bool newEntry = false;
+
+	while (istream.get(character))
 	{
-		std::cout << "(listfile) line: " << line << std::endl;
+		if (character == ';' || character == '\r' || character == '\n')
+		{
+			if (!newEntry)
+			{
+				//std::cout << "(listfile) line: " << line << std::endl;
+				//this->findFile(line, MpqFile::Neutral, MpqFile::Default);
+				newEntry = true;
+				++count;
+				line.clear();
+			}
+		}
+		else
+		{
+			line.append(1, character);
+
+			if (newEntry)
+				newEntry = false;
+
+			if (count == 0)
+				count = 1;
+		}
+	}
+
+	// last entry
+	if (!newEntry)
+	{
+		//std::cout << "(listfile) line: " << line << std::endl;
+		//this->findFile(line, MpqFile::Neutral, MpqFile::Default);
 		++count;
-		this->findFile(line, MpqFile::Neutral, MpqFile::Default);
 	}
 	
 	return count;

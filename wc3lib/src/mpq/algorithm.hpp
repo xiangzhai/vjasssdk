@@ -35,6 +35,7 @@
 #include <zlib.h>
 #include <pklib/pklib.h>
 #include <bzlib.h>
+#include <wave/wave.h>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -60,6 +61,20 @@ void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLe
 
 /// Based on code from StormLib.
 uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum HashType hashType);
+
+/**
+* @fn compressWaveMono, decompressWaveMono, compressWaveStereo, decompressWaveStereo
+* Wrapper of StormLib functions.
+* @param inBuffer Buffer which is read from.
+* @param inBufferLength Buffer length which should be set to amount of bytes which should be read from buffer.
+* @param outBuffer Buffer which is read into. If @param outBufferLength is > 0 it this buffer will be deleted automatically. Note that this buffer does not have to be allocated by function's user.
+* @param outBuffer Buffer length which should have the initial size of buffer @param outBuffer. If the buffer is empty this value should be 0.
+* @return Returns witten bytes.
+*/
+int compressWaveMono(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception);
+int decompressWaveMono(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception);
+int compressWaveStereo(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception);
+int decompressWaveStereo(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception);
 
 std::streamsize deflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception);
 /**

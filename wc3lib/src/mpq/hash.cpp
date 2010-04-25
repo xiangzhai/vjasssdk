@@ -92,6 +92,7 @@ void Hash::clear()
 			std::list<class Hash*>::const_iterator nextIterator(iterator);
 			++nextIterator;
 			
+			// If the next entry is empty, mark this one as empty; otherwise, mark this as deleted.
 			if (nextIterator != this->m_mpq->m_hashes.end() && !(*nextIterator)->empty())
 				this->m_deleted = true;
 			

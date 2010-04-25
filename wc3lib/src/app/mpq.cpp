@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 			}
 			catch (class wc3lib::Exception &exception)
 			{
-				std::cerr << boost::format(_("Error occured while opening file \"%1%\".")) % path.string() << exception.what() << std::endl;
+				std::cerr << boost::format(_("Error occured while opening file \"%1%\": \"%2%\"")) % path.string() % exception.what() << std::endl;
 				
 				continue;
 			}
@@ -261,6 +261,48 @@ int main(int argc, char *argv[])
 					std::cout << _("* File MD5s") << std::endl;
 			}
 
+			/// @todo TEST
+			const MpqFile *mpqFile = const_cast<const Mpq*>(&mpq)->findFile("Detector.js", MpqFile::Neutral, MpqFile::Default);
+
+			if (mpqFile == 0)
+				std::cerr << _("Error while searching for file.") << std::endl;
+			else
+				std::cout << "Flags: " << std::hex << mpqFile->hash()->block()->flags() << std::dec << "\nFile data: " << *mpqFile << std::endl;
+
+			std::size_t invalidFiles = 0;
+			enum Block::Flags flags = Block::None;
+
+			BOOST_FOREACH(const class MpqFile *mpqFile, mpq.files())
+			{
+				if (mpqFile->sectors().empty())
+				{
+					++invalidFiles;
+
+					if (flags == Block::None || flags != mpqFile->block()->flags())
+					{
+						std::cout << "New flag." << std::endl;
+						flags = mpqFile->block()->flags();
+					}
+				}
+			}
+
+			std::cout << "Invalid files: " << invalidFiles << " with flags " << std::hex << flags << std::dec << std::endl;
+
+			if (optionList)
+			{
+				std::cout << _("Listing contained files:") << std::endl;
+
+				std::size_t i = 1;
+
+				BOOST_FOREACH(const class MpqFile *mpqFile, mpq.files())
+				{
+					std::cout << boost::format(_("* File %1%: (Size: %2%) - %3%")) % i % sizeString<std::size_t>(mpqFile->size(), optionHumanreadable, optionDecimal) % mpqFile->path() << std::endl;
+					++i;
+				}
+
+				std::cout << boost::format(_("All in all %1% files (Size: %2%)")) % (i + 1) % sizeString<int64>(mpq.entireFileSize(), optionHumanreadable, optionDecimal) << std::endl;
+			}
+
 #ifdef DEBUG
 			if (optionBenchmark)
 			{
@@ -277,29 +319,6 @@ int main(int argc, char *argv[])
 				std::cout << boost::format(_("Result: %1%s")) % timer.elapsed() << std::endl;
 			}
 #endif
-
-			/// @todo TEST
-			const MpqFile *mpqFile = const_cast<const Mpq*>(&mpq)->findFile("Detector.js", MpqFile::Neutral, MpqFile::Default);
-
-			if (mpqFile == 0)
-				std::cerr << _("Error while searching for file.") << std::endl;
-			else
-				std::cout << "Flags: " << mpqFile->hash()->block()->flags() << "\nFile data: " << *mpqFile << std::endl;
-			
-			if (optionList)
-			{
-				std::cout << _("Listing contained files:") << std::endl;
-				
-				std::size_t i = 1;
-				
-				BOOST_FOREACH(const class MpqFile *mpqFile, mpq.files())
-				{
-					std::cout << boost::format(_("* File %1%: (Size: %2%) - %3%")) % i % sizeString<std::size_t>(mpqFile->size(), optionHumanreadable, optionDecimal) % mpqFile->path() << std::endl;
-					++i;
-				}
-				
-				std::cout << boost::format(_("All in all %1% files (Size: %2%)")) % (i + 1) % sizeString<int64>(mpq.entireFileSize(), optionHumanreadable, optionDecimal) << std::endl;
-			}
 		}
 	}
 	

@@ -1,5 +1,15 @@
+2010-04-25 Tamino Dauth <tamino@cdauth.de>
+* Only files with block flags 80030200 do have invalid offset table values (What does 0x00030000 mean?).
+* Listfile of archive War3x.mpq has sector with compression mask 0x43 (What does 0x03 mean?).
+* Fix zlib stream error.
+
+2010-04-24 Tamino Dauth <tamino@cdauth.de>
+* Add compile flags for various Blizzard formats?
+* Add different locale files for applications.
+* Files which have blocks with flags IsFile and IsCompressed do not contain sector tables since all of them do have an invalid offset?
+
 2010-04-20 Tamino Dauth <tamino@cdauth.de>
-Use first int32 sector offset to get sector table length!!!
+* DONE: Use first int32 sector offset to get sector table length!!!
 
 2010-04-15 Tamino Dauth <tamino@cdauth.de>
 * TEST: In der War3x.mpq-Datei kommen nur komprimierte und nicht komprimierte Blöcke vor (keine SingleUnits usw.).

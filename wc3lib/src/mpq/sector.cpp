@@ -60,14 +60,22 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 	else
 		position += this->m_mpqFile->hash()->block()->extendedBlockOffset();
 
-	ifstream.seekg(position);
 //	std::cout << "Sector position " << position << std::endl;
-	byte *data = new byte[this->m_sectorSize];
 	int32 dataSize = this->m_sectorSize;
-	std::cout << "Sector position " << position << " and data size " << dataSize << std::endl;
 
+	// skip compression flags byte
 	if (this->m_mpqFile->isCompressed())
+	{
+		position += 1;
 		dataSize -= 1;
+	}
+
+	ifstream.seekg(position);
+	byte *data = new byte[dataSize];
+	std::cout << "Sector index: " << this->m_sectorIndex << std::endl;
+	std::cout << "Sector offset: " << this->m_sectorOffset << std::endl;
+	std::cout << "Sector real position " << position << " and sector size " << dataSize << std::endl;
+	std::cout << "Sector mask: " << std::hex << this->m_compression << std::dec << std::endl;
 
 	std::streamsize bytes = 0;
 
@@ -81,7 +89,10 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 		Each sector is encrypted using the key + the 0-based index of the sector in the file.
 		*/
 		if (this->m_mpqFile->isEncrypted())
-			DecryptData(Mpq::cryptTable(), (void*)data, uint32(dataSize), this->m_mpqFile->fileKey() + uint32(this->m_sectorIndex));
+		{
+			DecryptData(Mpq::cryptTable(), (void*)data, uint32(dataSize), this->sectorKey());
+			std::cout << "Is encrypted!" << std::endl;
+		}
 
 		// Imploded sectors are the raw compressed data following compression with the implode algorithm (these sectors can only be in imploded files).
 		if (this->m_mpqFile->isImploded())
@@ -93,30 +104,47 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 		{
 			/// @todo IMPLEMENT.
 			if (this->m_compression & Sector::ImaAdpcmMono) // IMA ADPCM mono
-				;
+			{
+				std::cout << "decompress wave mono." << std::endl;
+				unsigned char *unsignedCharData = reinterpret_cast<unsigned char*>(data);
+				decompressWaveMono(unsignedCharData, (int)dataSize, unsignedCharData, dataSize);
+				data = reinterpret_cast<byte*>(unsignedCharData);
+			}
+
+			//	throw Exception(_("Sector: IMA ADPCM mono files are not supported yet."));
 
 			/// @todo IMPLEMENT.
 			if (this->m_compression & Sector::ImaAdpcmStereo) // IMA ADPCM stereo
-				;
+			{
+				std::cout << "decompress wave stereo." << std::endl;
+				unsigned char *unsignedCharData = reinterpret_cast<unsigned char*>(data);
+				decompressWaveStereo(unsignedCharData, (int)dataSize, unsignedCharData, dataSize);
+				data = reinterpret_cast<byte*>(unsignedCharData);
+			}
+				//throw Exception(_("Sector: IMA ADPCM stereo files are not supported yet."));
 
 			if (this->m_compression & Sector::Huffman) // Huffman encoded
 			{
+				std::cout << "Decompress huffman." << std::endl;
 				int state = huffman_decode_memory((unsigned char*)data, unsigned(dataSize), (unsigned char**)(&data), (unsigned*)(&dataSize));
+				//std::cout << "data address " << data << " and data size " << dataSize << std::endl;
 
-				if (state != 0)
-					throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
+				//if (state != 0)
+					//throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
 			}
 
 			if (this->m_compression & Sector::Deflated) // Deflated (see ZLib)
+			{
+				std::cout << "Decompress zlib." << std::endl;
 				bytes += inflateStream(ifstream, ostream);
+			}
 
 			if (this->m_compression & Sector::Imploded)
-			{
 				throw Exception(_("Sector: Imploded compression is not supported."));
-			}
 
 			if (this->m_compression & Sector::Bzip2Compressed)// BZip2 compressed (see BZip2)
 			{
+				std::cout << "Decompress bzip2." << std::endl;
 				int state = BZ2_bzBuffToBuffDecompress((char*)(data), (unsigned int*)(&dataSize), (char*)(data), unsigned(&dataSize), 0, 1);
 
 				if (state != BZ_OK)
@@ -141,6 +169,11 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 void Sector::setCompression(byte value)
 {
 	this->m_compression = static_cast<enum Compression>(value);
+}
+
+uint32 Sector::sectorKey() const
+{
+	return this->m_mpqFile->fileKey() + uint32(this->m_sectorIndex);
 }
 
 }
