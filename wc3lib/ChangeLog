@@ -1,3 +1,7 @@
+2010-04-30 Tamino Dauth <tamino@cdauth.de>
+* Added compressPklib and decompressPklib functions and imploded sectors support.
+* Added section "Gültigkeitsbereichverwendung" to Jass++ definition.
+
 2010-04-25 Tamino Dauth <tamino@cdauth.de>
 * Added wave support code.
 * Improved file reading and added debug mode for flag 0x00030000 which seems to be a flag for skipping the sector table.

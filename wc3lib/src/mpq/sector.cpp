@@ -24,6 +24,10 @@
 
 #include <boost/format.hpp>
 #include <boost/filesystem/fstream.hpp>
+//#include <boost/iostreams/filtering_streambuf.hpp>
+//#include <boost/iostreams/copy.hpp>
+//#include <boost/iostreams/filter/bzip2.hpp>
+//#include <boost/iostreams/filter/zlib.hpp>
 
 #include "../internationalisation.hpp"
 #include "algorithm.hpp"
@@ -94,14 +98,30 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 			std::cout << "Is encrypted!" << std::endl;
 		}
 
+		//boost::iostreams::filtering_istreambuf filteringStreamBuffer;
+
 		// Imploded sectors are the raw compressed data following compression with the implode algorithm (these sectors can only be in imploded files).
 		if (this->m_mpqFile->isImploded())
 		{
-			throw Exception(_("Sector: Imploded files are not supported yet."));
+			if (this->m_compression & Sector::Imploded)
+			{
+				char *data = reinterpret_cast<char*>(data);
+				int dataSize = int(dataSize);
+				decompressPklib(data, dataSize, data, dataSize);
+				std::cout << "Is imploded!" << std::endl;
+			}
+
+			//throw Exception(_("Sector: Imploded files are not supported yet."));
 		}
 		// Compressed sectors (only found in compressed - not imploded - files) are compressed with one or more compression algorithms.
 		else if (this->m_mpqFile->isCompressed())
 		{
+			//boost::iostreams::zlib::huffman_only
+			//boost::iostreams::zlib::deflated
+			//struct boost::iostreams::zlib::zlib_params zlibParameters();
+			//zlibParameters.strategy = boost::iostreams::zlib::huffman_only;
+			//boost::iostreams::zlib_decompressor zlibDecompressor(zlibParameters);
+
 			/// @todo IMPLEMENT.
 			if (this->m_compression & Sector::ImaAdpcmMono) // IMA ADPCM mono
 			{
@@ -126,11 +146,12 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 			if (this->m_compression & Sector::Huffman) // Huffman encoded
 			{
 				std::cout << "Decompress huffman." << std::endl;
+				//filteringStreamBuffer.push(boost::iostreams::filter:)
 				int state = huffman_decode_memory((unsigned char*)data, unsigned(dataSize), (unsigned char**)(&data), (unsigned*)(&dataSize));
-				//std::cout << "data address " << data << " and data size " << dataSize << std::endl;
+				std::cout << "data address " << data << " and data size " << dataSize << std::endl;
 
-				//if (state != 0)
-					//throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
+				if (state != 0)
+					throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
 			}
 
 			if (this->m_compression & Sector::Deflated) // Deflated (see ZLib)
@@ -139,11 +160,10 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 				bytes += inflateStream(ifstream, ostream);
 			}
 
-			if (this->m_compression & Sector::Imploded)
-				throw Exception(_("Sector: Imploded compression is not supported."));
-
-			if (this->m_compression & Sector::Bzip2Compressed)// BZip2 compressed (see BZip2)
+			if (this->m_compression & Sector::Bzip2Compressed) // BZip2 compressed (see BZip2)
 			{
+				//filteringStreamBuffer.push(boost::iostreams::bzip2_decompressor());
+
 				std::cout << "Decompress bzip2." << std::endl;
 				int state = BZ2_bzBuffToBuffDecompress((char*)(data), (unsigned int*)(&dataSize), (char*)(data), unsigned(&dataSize), 0, 1);
 
@@ -152,6 +172,8 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 			}
 		}
 
+		//filteringStreamBuffer.push(ifstream);
+		//boost::iostreams::copy(filteringStreamBuffer, ostream);
 		ostream.write((const char*)(data), dataSize);
 	}
 	catch (class Exception &exception)

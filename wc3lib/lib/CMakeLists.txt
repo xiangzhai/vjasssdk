@@ -1,6 +1,6 @@
 add_subdirectory(huffman)
 list(APPEND linkDirectories huffman)
-# add_subdirectory(pklib)
+add_subdirectory(pklib)
 if(FLAG_EDITOR_USE)
 	add_subdirectory(qogre)
 	list(APPEND linkDirectories qogre)

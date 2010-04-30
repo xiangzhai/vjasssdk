@@ -11,34 +11,35 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 10. Bezeichner (identifiers)
 11. Literale
 12. Gültigkeitsbereiche (scopes)
-13. Qualifizierer-Gültigkeitsbereiche
-14. Anweisungsblöcke
-14. Variablen
-15. Operatoren
-16. Typen
-17. Typkonvertierungen
-18. Verzweigungen
-19. Schleifen
-20. Deklarationsvoraussetzungen
-21. Funktionen
-22. Funktionsvariablen (Funktionszeiger)
-23. Funktionstypen
-23. Lambda-Funktionen
-24. Funktionsaufrufe
-25. Ausnahmebehandlung
-26. Finally
-27. Pseudonyme (aliases)
-28. Vorlagen (templates)
-29. Zugriffsmodifikatoren
-30. Freunde
-29. Pakete (packages)
-30. Aufzählungen (enums)
-31. Klassen
-32. Elemente
-33. Methoden
-34. Operatorenüberladung
-35. Das Jass-Paket
-36. Das Standardpaket
+13. Gültigkeitsbereichverwendung
+14. Qualifizierer-Gültigkeitsbereiche
+15. Anweisungsblöcke
+16. Variablen
+17. Operatoren
+18. Typen
+19. Typkonvertierungen
+20. Verzweigungen
+21. Schleifen
+22. Deklarationsvoraussetzungen
+23. Funktionen
+24. Funktionsvariablen (Funktionszeiger)
+25. Funktionstypen
+26. Lambda-Funktionen
+27. Funktionsaufrufe
+28. Ausnahmebehandlung
+29. Finally
+30. Pseudonyme (aliases)
+31. Vorlagen (templates)
+32. Zugriffsmodifikatoren
+33. Freunde
+34. Pakete (packages)
+35. Aufzählungen (enums)
+36. Klassen
+37. Elemente
+38. Methoden
+39. Operatorenüberladung
+40. Das Jass-Paket
+41. Das Standardpaket
 
 1. Vorwort
 
@@ -317,6 +318,7 @@ Es existieren folgende sprachenspezifische Arten von Gültigkeitsbereichen:
 * Funktionsdeklarationen
 * Aufzählungsdeklarationen
 * Klassendeklarationen
+* Paketdeklarationen
 
 Notation:
 [<Bezeichner>] [<optionale Eigenschaften des jeweiligen Sprachelements>]
@@ -334,6 +336,37 @@ void test()
 		x = 12; // x im Gültigkeitsbereich über dem aktuellen erhält den Wert 12, da im aktuellen Gültigkeitsbereich keine Variable namens x deklariert wurde
 	}
 }
+
+Gültigkeitsbereichverwendung
+
+Gültigkeitsbereiche können innerhalb eines anderen Gültigkeitsbereiches oder global "verwendet" werden.
+Dies bedeutet, dass Elementen des Gültigkeitsbereiches kein Präfix des Gültigkeitsbereiches mehr voran-
+gestellt werden muss.
+Dabei ist auch die Verwendung von verschachtelten Gültigkeitsbereichen möglich.
+Die Verwendung wirkt sich sowohl auf den aktuellen als auch auf alle Untergültigkeitsbereiche dessen aus.
+Sie kann durch den --Operator in einem der Subgültigkeitsbereiche aufgehoben werden, wobei sämtliche Ebenen unterhalb der angegebenen
+aufgehoben werden.
+Der *-Operator dagegen bewirkt, dass sämtliche Untergültigkeitsbereiche implizit ebenfalls verwendet werden.
+Eine Kombination der beiden Operatoren ist theoretisch möglich, da der --Operator implizit den *-Operator verwendet, aber nicht notwendig.
+Der Compiler sollte in diesem Fall eine Warnung ausgeben.
+Zudem ist es unter keinen Umständen möglich bei der Gültigkeitsbereichverwendung den aktuellen Gültigkeitsbereich oder einen Subgültigkeitsbereich
+dessen mit dem *-Operator oder dem --Operator anzugeben.
+In diesem Fall muss der Compiler eine Fehlermeldung ausgeben.
+Eine besondere Ausnahme bei der Gültigkeitsbereichverwendung bilden Funktionen.
+Sie können nur innerhalb ihres eigenen Gültigkeitsbereichs verwendet werden.
+
+Notation:
+<Gültigkeitsbereichbezeichner>[* | -];
+
+Beispiele:
+package gna.gnu.gni*;
+class gna.gnu.gni.Test;
+enum gna.gnu.gni.Test.Type;
+
+Test var = new Test();
+package gna.gnu.gni-;
+Test var2 = new Test(); // Fehler, undefinierter Bezeichner!
+
 
 Qualifizierer-Gültigkeitsbereiche
 
@@ -948,9 +981,9 @@ package <Name> [<Deklarationsvoraussetzungen>]
 Fehlen die Zugriffsmodifikatoren, ist das Objekt automatisch "private package". Protected bewirkt, dass das Objekt für die enthaltenen Pakete
 zugänglich ist.
 "package" wird implizit an die Zugriffsmodifikatoren angehängt (siehe "Zugriffsmodifikatoren").
-Die Elemente des Pakets werden immer an erster Stelle deklariert, die Elemente der Unterpakete an zweiter, wodurch die Unterpakete bei
+Die Elemente des Pakets werden immer automatisch an erster Stelle deklariert, die Elemente der Unterpakete an zweiter, wodurch die Unterpakete bei
 nicht-"private"-Elementen immer auf diese zugreifen können.
-Wird Freund deklariert, so erhält dieser je nach Präfixschlüsselwort Zugriff auf sämtliche
+Wird ein Freund deklariert, so erhält dieser je nach Präfixschlüsselwort Zugriff auf sämtliche
 als solche deklarierten Paketelemente (auch Unterpakete, allerdings nicht deren Elemente - Überprüfen: Freundesfreundezugriff?).
 public friend <Paketname> ist daher implizit gültig, da es dem Paket <Paketname> Zugriff auf alle öffentlichen
 Eigenschaften gestattet.
@@ -958,16 +991,6 @@ private friend <Paketname> würde bewirken, dass die im Paket enthaltenen Pakete
 deklariert wurden, vom Paket <Paketname> zugreifbar wären, allerdings nicht deren private Elemente.
 Dazu müsste das enthaltene Paket ebenfalls die gleiche Anweisung enthalten.
 Neben anderen Paketen können auch anderen Klassen und Funktionen spezielle Zugriffe ermöglicht werden.
-
-Notation einer Paketverwendung:
-package Paketname, Paketname.Unterpaketname.Unterunterpaketname, Paketname, Paketname.*;
-
-Wird ein Paket innerhalb eines anderen oder global verwendet, muss bei Verwendung von dessen Inhalt kein Paketname.-Präfix mehr vorangestellt werden.
-Die Paketverwendung gilt entweder global oder innerhalb eines Pakets und all dessen Unterpaketen.
-Wird ein Unterpaket eines Pakets verwendet, so wird das Paket nicht automatisch mitverwendet.
-Wird die Notation Paketname.* verwendet, so werden alle Unterpakete und deren Unterpakete usw. verwendet.
-Sämtliche verwendete Paketnamen werden durch Kommata getrennt.
-Im Grunde genommen ist eine Paketverwendungsanweisung nichts Anderes als ein erweiteretes Pseudonym.
 
 Initialisierer:
 Die Initialisierungsfunktion wird genau vor dem ersten Zugriff auf ein Paketelement aufgerufen.

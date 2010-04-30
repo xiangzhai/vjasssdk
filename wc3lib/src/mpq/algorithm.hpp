@@ -62,6 +62,8 @@ void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLe
 /// Based on code from StormLib.
 uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum HashType hashType);
 
+void compressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLength, int &compressionType, int /* compressionLevel */) throw (class Exception);
+void decompressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLength) throw (class Exception);
 /**
 * @fn compressWaveMono, decompressWaveMono, compressWaveStereo, decompressWaveStereo
 * Wrapper of StormLib functions.
