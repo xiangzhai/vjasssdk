@@ -1,3 +1,7 @@
+2010-04-30 Tamino Dauth <tamino@cdauth.de>
+* If boost zlib, huffman and bzip2 are usable, maybe we should replace old algorithm implementations.
+* Add KIO protocols mpq, mdl, mdx, blp and slk to editor library.
+
 2010-04-25 Tamino Dauth <tamino@cdauth.de>
 * Only files with block flags 80030200 do have invalid offset table values (What does 0x00030000 mean?).
 * Listfile of archive War3x.mpq has sector with compression mask 0x43 (What does 0x03 mean?).
