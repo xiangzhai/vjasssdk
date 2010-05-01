@@ -3,8 +3,9 @@
 * Cheat list:
 * version - Displays ASL information.
 * clear - Clears screen messages for cheating player.
-* gold - Gives player gold.
-* lumber - Gives player lumber.
+* gold - Gives player gold or shows his current amount.
+* lumber - Gives player lumber or shows his current amount.
+* foodcap - Gives player foot capacity or shows his current amount.
 * info - Shows some information about selected unit of cheating player.
 * setlevel - Sets level for selected unit of cheating player.
 * kill - Kills selected unit of cheating player.
@@ -14,10 +15,11 @@
 * xp - Adds experience to selected hero.
 * pathing - Enables unit's pathing.
 * nopathing - Disables unit's pathing.
+* timeofday - Shows current time of day.
 * benchmarks - Shows all benchmarks.
 * clearbenchmarks - Clears all benchmarks.
-* enable - Enables debug identifier.
-* disable - Disables debug identifier.
+* enable - Enables debug identifier(s).
+* disable - Disables debug identifier(s) or shows all disabled.
 * units - Shows all units.
 * items - Shows all items.
 * destructables - Shows all destructables.
@@ -37,6 +39,7 @@ static if (DEBUG_MODE) then
 		call Print("clear")
 		call Print("gold <gold>")
 		call Print("lumber <lumber>")
+		call Print("foodcap <food capacity>")
 		call Print("info")
 		call Print("setlevel")
 		call Print("kill")
@@ -46,6 +49,7 @@ static if (DEBUG_MODE) then
 		call Print("xp <experience>")
 		call Print("pathing")
 		call Print("nopathing")
+		call Print("timeofday")
 		call Print("benchmarks")
 		call Print("clearbenchmarks")
 		call Print("enable <identifier>")
@@ -78,16 +82,46 @@ endif
 		set triggerPlayer = null
 	endfunction
 
+	private function playerState takes string playerStateName, player whichPlayer, integer amount, playerstate whichPlayerState returns nothing
+		if (amount == -1) then
+			debug call Print(IntegerArg(StringArg(tr("You have %i %s."), playerStateName), GetPlayerState(whichPlayer, whichPlayerState)))
+		else
+			call AdjustPlayerStateBJ(amount, whichPlayer, whichPlayerState)
+			debug call Print(StringArg(IntegerArg(tr("Added %i %s."), amount), playerStateName))
+		endif
+	endfunction
+
 	private function gold takes nothing returns nothing
-		local integer goldAmount = S2I(SubString(GetEventPlayerChatString(), StringLength("gold") + 1, StringLength(GetEventPlayerChatString())))
-		call AdjustPlayerStateBJ(goldAmount, GetTriggerPlayer(), PLAYER_STATE_RESOURCE_GOLD)
-		debug call Print(IntegerArg(tr("Added %i gold."), goldAmount))
+		local string amountString = SubString(GetEventPlayerChatString(), StringLength("gold") + 1, StringLength(GetEventPlayerChatString()))
+		local integer amount
+		if (StringLength(amountString) == 0) then
+			set amount = -1
+		else
+			set amount = S2I(amountString)
+		endif
+		call playerState(tr("gold"), GetTriggerPlayer(), amount, PLAYER_STATE_RESOURCE_GOLD)
 	endfunction
 
 	private function lumber takes nothing returns nothing
-		local integer lumberAmount = S2I(SubString(GetEventPlayerChatString(), StringLength("lumber") + 1, StringLength(GetEventPlayerChatString())))
-		call AdjustPlayerStateBJ(lumberAmount, GetTriggerPlayer(), PLAYER_STATE_RESOURCE_LUMBER)
-		debug call Print(IntegerArg(tr("Added %i lumber."), lumberAmount))
+		local string amountString = SubString(GetEventPlayerChatString(), StringLength("lumber") + 1, StringLength(GetEventPlayerChatString()))
+		local integer amount
+		if (StringLength(amountString) == 0) then
+			set amount = -1
+		else
+			set amount = S2I(amountString)
+		endif
+		call playerState(tr("lumber"), GetTriggerPlayer(), amount, PLAYER_STATE_RESOURCE_LUMBER)
+	endfunction
+
+	private function foodcap takes nothing returns nothing
+		local string amountString = SubString(GetEventPlayerChatString(), StringLength("foodcap") + 1, StringLength(GetEventPlayerChatString()))
+		local integer amount
+		if (StringLength(amountString) == 0) then
+			set amount = -1
+		else
+			set amount = S2I(amountString)
+		endif
+		call playerState(tr("food capacity"), GetTriggerPlayer(), amount, PLAYER_STATE_RESOURCE_FOOD_CAP)
 	endfunction
 
 	/// @todo Add some information.
@@ -123,10 +157,18 @@ endif
 		local string message = GetEventPlayerChatString()
 		local unit hero = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		local integer level
+		local boolean suspend
 		if (hero != null) then
 			if (IsUnitType(hero, UNIT_TYPE_HERO)) then
 				set level = S2I(SubString(message, StringLength("setlevel") + 1, StringLength(message)))
+				set suspend = IsSuspendedXP(hero)
+				if (suspend) then
+					call SuspendHeroXP(hero, false)
+				endif
 				call SetHeroLevelBJ(hero, level, true)
+				if (suspend) then
+					call SuspendHeroXP(hero, true)
+				endif
 				debug call Print(IntegerArg(tr("Set level to %i."), level))
 			debug else
 				debug call Print(tr("Selected unit is not a hero."))
@@ -234,6 +276,10 @@ endif
 		set triggerPlayer = null
 	endfunction
 
+	private function timeofday takes nothing returns nothing
+		debug call Print(StringArg(tr("Current time of day: %s"), GetTimeOfDayString()))
+	endfunction
+
 	private function benchmarks takes nothing returns nothing
 		debug call Print(tr("Showing all benchmarks:"))
 		call ABenchmark.showBenchmarks()
@@ -245,15 +291,31 @@ endif
 	endfunction
 
 	private function enable takes nothing returns nothing
+static if (DEBUG_MODE) then
 		local string identifier = SubString(GetEventPlayerChatString(), StringLength("enable") + 1, StringLength(GetEventPlayerChatString()))
-		debug call Print(StringArg(tr("Enabling identifier \"%s\"."), identifier))
-		debug call EnablePrintIdentifier(identifier)
+		if (StringLength(identifier) == 0) then
+			call Print(tr("Enabling all identifiers."))
+			call EnableAllPrintIdentifiers()
+		elseif (IsPrintIdentifierDisabled(identifier)) then
+			call Print(StringArg(tr("Enabling identifier \"%s\"."), identifier))
+			call EnablePrintIdentifier(identifier)
+		else
+			call Print(StringArg(tr("Identifier \"%s\" is not disabled."), identifier))
+		endif
+endif
 	endfunction
 
 	private function disable takes nothing returns nothing
+static if (DEBUG_MODE) then
 		local string identifier = SubString(GetEventPlayerChatString(), StringLength("disable") + 1, StringLength(GetEventPlayerChatString()))
-		debug call Print(StringArg(tr("Disabling identifier \"%s\"."), identifier))
-		debug call DisablePrintIdentifier(identifier)
+		if (StringLength(identifier) == 0) then
+			call PrintDisabledIdentifiers()
+		elseif (IsPrintIdentifierEnabled(identifier)) then
+			call Print(StringArg(tr("Disabling identifier \"%s\"."), identifier))
+		else
+			call Print(StringArg(tr("Identifier \"%s\" is not enabled."), identifier))
+		endif
+endif
 	endfunction
 
 static if (A_DEBUG_HANDLES) then
@@ -277,6 +339,7 @@ static if (DEBUG_MODE) then
 		call ACheat.create("clear", true, clear)
 		call ACheat.create("gold", false, gold)
 		call ACheat.create("lumber", false, lumber)
+		call ACheat.create("foodcap", false, foodcap)
 		call ACheat.create("info", true, info)
 		call ACheat.create("setlevel", false, setlevel)
 		call ACheat.create("kill", true, kill)
@@ -286,6 +349,7 @@ static if (DEBUG_MODE) then
 		call ACheat.create("xp", false, xp)
 		call ACheat.create("pathing", true, pathing)
 		call ACheat.create("nopathing", true, nopathing)
+		call ACheat.create("timeofday", true, timeofday)
 		call ACheat.create("benchmarks", true, benchmarks)
 		call ACheat.create("clearbenchmarks", true, clearbenchmarks)
 		call ACheat.create("enable", false, enable)

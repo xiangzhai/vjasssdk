@@ -31,6 +31,12 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			private $ELEMENTTYPE$ m
 			private integer j
 
+static if (DEBUG_MODE) then
+			private method checkIndex takes string methodName, integer index returns boolean
+				return PrintMethodErrorIf("$NAME$", this, (index < 0 or index >= this.m_size), methodName, "Invalid index: " + I2S(index) + ".")
+			endmethod
+endif
+
 			public method size takes nothing returns integer
 				return this.m_size
 			endmethod
@@ -60,8 +66,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			* @return Returns the element at index @param index.
 			*/
 			public method at takes integer index returns $ELEMENTTYPE$
-				debug if (index < 0 or index >= this.m_size) then
-					debug call Print("Invalid index: " + I2S(index) + ".")
+				debug if (this.checkIndex("at", index)) then
 					debug return $NULLVALUE$
 				debug endif
 				return this.m_element[index]
@@ -707,16 +712,14 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 			endmethod
 
 			public method operator[] takes integer index returns $ELEMENTTYPE$
-				debug if (index < 0 or index >= this.m_size) then
-					debug call Print("Invalid index: " + I2S(index) + ".")
+				debug if (this.checkIndex("operator[]", index)) then
 					debug return $NULLVALUE$
 				debug endif
-				return this.m_element[index]
+				return this.at(index)
 			endmethod
 
 			public method operator[]= takes integer index, $ELEMENTTYPE$ value returns nothing
-				debug if (index < 0 or index >= this.m_size) then
-					debug call Print("Invalid index: " + I2S(index) + ".")
+				debug if (this.checkIndex("operator[]=", index)) then
 					debug return
 				debug endif
 				set this.m_element[index] = value

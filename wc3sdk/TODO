@@ -1,3 +1,6 @@
+2010-05-01 Tamino Dauth <tamino@cdauth.de>
+* Fix ASL GUI support.
+
 2010-04-07 Tamino Dauth <tamino@cdauth.de>
 * Get icons and graphics for races user interfaces (AStyle).
 * Add RtC 1.0 support.
@@ -6,7 +9,7 @@
 * Improve text macros A_LIST and A_MAP.
 
 2010-03-08 Tamino Dauth <tamino@cdauth.de>
-* Add GUI systems structs (creating new branch): AStyle, AFrame, AWindow, AArrowButton, AListView and AScrollButtons (AStyle should be associated with AMainWindow instances).
+* DONE: Add GUI systems structs (creating new branch): AStyle, AFrame, AWindow, AArrowButton, AListView and AScrollButtons (AStyle should be associated with AMainWindow instances).
 
 2010-03-06 Tamino Dauth <tamino@cdauth.de>
 * FIXED: One unit can't be registered several times on one routine type.
@@ -18,7 +21,7 @@
 * Fix AWeather (DMdF crashes).
 
 2010-02-13 Tamino Dauth <tamino@cdauth.de>
-* Add some time and time of day functions for calculating remaining seconds and minutes etc.
+* DONE: Add some time and time of day functions for calculating remaining seconds and minutes etc.
 
 2010-01-31 Tamino Dauth <tamino@cdauth.de>
 * [noimplicitthis] should be enabled.

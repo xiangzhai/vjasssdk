@@ -31,16 +31,16 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 		private static constant real fieldOfView = 120.0
 		private static constant real farZ = 5000.0
 		private static constant real cliffDistance = 500.0
-		//key settings
+		// key settings
 		private static constant boolean inverted = false
 		private static constant real minAoa = -65.0
 		private static constant real maxAoa = 0.0
 		private static constant real maxRot = 105.0
 		private static constant real aoaInterval = 3.0
 		private static constant real rotInterval = 7.5
-		//static start members
+		// static construction members
 		private static boolean m_useArrowKeys
-		//static members
+		// static members
 		private static thistype array m_playerThirdPersonCamera[12] /// @todo bj_MAX_PLAYERS
 		private static location m_location
 		private static real m_distanceM
@@ -48,17 +48,17 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 		private static real m_offsetM
 		private static real m_offsetT
 		private static timer m_timer
-		//dynamic members
+		// dynamic members
 		private real m_camAoa
 		private real m_camRot
-		//start members
+		// construction members
 		private player m_player
-		//members
+		// members
 		private unit m_unit
 		private boolean m_isEnabled
 		private timer m_firstPan
 
-		//dynamic members
+		// dynamic members
 
 		public method setCamAoa takes real camAoa returns nothing
 			set this.m_camAoa = camAoa
@@ -76,13 +76,13 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 			return this.m_camRot
 		endmethod
 
-		//start members
+		// construction members
 
 		public method player takes nothing returns player
 			return this.m_player
 		endmethod
 
-		//members
+		// members
 
 		public method unit takes nothing returns unit
 			return this.m_unit
@@ -194,21 +194,21 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 
 		private static method create takes player usedPlayer returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_camAoa = thistype.defaultAoa
 			set this.m_camRot = thistype.defaultRot
-			//start members
+			// construction members
 			set this.m_player = usedPlayer
-			//members
+			// members
 			set this.m_unit = null
 			set this.m_firstPan = CreateTimer()
 			return this
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//start members
+			// construction members
 			set this.m_player = null
-			//members
+			// members
 			set this.m_unit = null
 			call PauseTimer(this.m_firstPan)
 			call DestroyTimer(this.m_firstPan)
@@ -228,9 +228,9 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 		endmethod
 
 		public static method init takes boolean useArrowKeys returns nothing
-			//static start members
+			// static construction members
 			set thistype.m_useArrowKeys = useArrowKeys
-			//static members
+			// static members
 			set thistype.m_location = Location(0,0)
 			set thistype.m_distanceM = (thistype.distanceDistanceMax-thistype.distanceDistanceMin)/((thistype.distanceAoaMax - thistype.distanceAoaMin)*bj_DEGTORAD)
 			set thistype.m_distanceT = thistype.distanceDistanceMin-thistype.distanceAoaMin*bj_DEGTORAD*thistype.m_distanceM

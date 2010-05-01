@@ -61,6 +61,23 @@ static if (DEBUG_MODE) then
 		endif
 	endfunction
 
+	function EnableAllPrintIdentifiers takes nothing returns nothing
+		call disabledPrintIdentifiers.clear()
+	endfunction
+
+	function PrintDisabledIdentifiers takes nothing returns integer
+		local AStringListIterator iterator = disabledPrintIdentifiers.begin()
+		call Print("Disabled identifiers:")
+		loop
+			exitwhen (not iterator.isValid())
+			call Print("- " + iterator.data())
+			call iterator.next()
+		endloop
+		call iterator.destroy()
+		call Print("Total: " + I2S(disabledPrintIdentifiers.size()))
+		return disabledPrintIdentifiers.size()
+	endfunction
+
 	function PrintFunctionError takes string functionName, string message returns nothing
 		if (IsPrintIdentifierDisabled(functionName)) then
 			return
@@ -68,10 +85,67 @@ static if (DEBUG_MODE) then
 		call Print("Function error in function \"" + functionName + "\": " + message)
 	endfunction
 
-	function PrintFunctionErrorIf takes boolean condition, string functionName, string message returns nothing
+	function PrintFunctionErrorIf takes boolean condition, string functionName, string message returns boolean
 		if (condition) then
 			call PrintFunctionError(functionName, message)
 		endif
+		return condition
+	endfunction
+
+	function PrintStructInstanceMessage takes string structName, integer instance, string message returns nothing
+		if (IsPrintIdentifierDisabled(structName)) then
+			return
+		endif
+		call Print(structName + " - " + I2S(instance) + ": " + message)
+	endfunction
+
+	function PrintStructInstanceMessageIf takes string structName, integer instance, boolean condition, string message returns boolean
+		if (condition) then
+			call PrintStructInstanceMessage(structName, instance, message)
+		endif
+		return condition
+	endfunction
+
+	function PrintMethodError takes string structName, integer instance, string methodName, string message returns nothing
+		if (IsPrintIdentifierDisabled(structName) or IsPrintIdentifierDisabled(structName + "." + methodName)) then
+			return
+		endif
+		call Print(structName + " - " + I2S(instance) + ": Method error in method \"" + methodName + "\": " + message)
+	endfunction
+
+	function PrintMethodErrorIf takes string structName, integer instance, boolean condition, string methodName, string message returns boolean
+		if (condition) then
+			call PrintMethodError(structName, instance, methodName, message)
+		endif
+		return condition
+	endfunction
+
+	function StaticPrint takes string structName, string message returns nothing
+		if (IsPrintIdentifierDisabled(structName)) then
+			return
+		endif
+		call Print(structName + ": " + message)
+	endfunction
+
+	function StaticPrintIf takes string structName, boolean condition, string message returns boolean
+		if (condition) then
+			call StaticPrint(structName, message)
+		endif
+		return condition
+	endfunction
+
+	function StaticPrintMethodError takes string structName, string methodName, string message returns nothing
+		if (IsPrintIdentifierDisabled(structName) or IsPrintIdentifierDisabled(structName + "." + methodName)) then
+			return
+		endif
+		call Print(structName + ": Method error in method \"" + methodName + "\": " + message)
+	endfunction
+
+	function StaticPrintMethodErrorIf takes string structName, boolean condition, string methodName, string message returns boolean
+		if (condition) then
+			call StaticPrintMethodError(structName, methodName, message)
+		endif
+		return condition
 	endfunction
 endif
 
@@ -83,55 +157,35 @@ endif
 	//! textmacro A_STRUCT_DEBUG takes STRUCTNAME
 static if (DEBUG_MODE) then
 		public method print takes string message returns nothing //stub
-			if (IsPrintIdentifierDisabled($STRUCTNAME$)) then
-				return
-			endif
-			call Print($STRUCTNAME$ + " - " + I2S(this) + ": " + message)
+			call PrintStructInstanceMessage($STRUCTNAME$, this, message)
 		endmethod
 
-		public method printIf takes boolean condition, string message returns nothing
-			if (condition) then
-				call this.print(message)
-			endif
+		public method printIf takes boolean condition, string message returns boolean
+			return PrintStructInstanceMessageIf($STRUCTNAME$, this, condition, message)
 		endmethod
 
 		public method printMethodError takes string methodName, string message returns nothing
-			if (IsPrintIdentifierDisabled($STRUCTNAME$) or IsPrintIdentifierDisabled($STRUCTNAME$ + "." + methodName)) then
-				return
-			endif
-			call Print($STRUCTNAME$ + " - " + I2S(this) + ": Method error in method \"" + methodName + "\": " + message)
+			call PrintMethodError($STRUCTNAME$, this, methodName, message)
 		endmethod
 
-		public method printMethodErrorIf takes boolean condition, string methodName, string message returns nothing
-			if (condition) then
-				call this.printMethodError(methodName, message)
-			endif
+		public method printMethodErrorIf takes boolean condition, string methodName, string message returns boolean
+			return PrintMethodErrorIf($STRUCTNAME$, this, condition, methodName, message)
 		endmethod
 
 		private static method staticPrint takes string message returns nothing
-			if (IsPrintIdentifierDisabled($STRUCTNAME$)) then
-				return
-			endif
-			call Print($STRUCTNAME$ + ": " + message)
+			call StaticPrint($STRUCTNAME$, message)
 		endmethod
 
-		private static method staticPrintIf takes boolean condition, string message returns nothing
-			if (condition) then
-				call thistype.staticPrint(message)
-			endif
+		private static method staticPrintIf takes boolean condition, string message returns boolean
+			return StaticPrintIf($STRUCTNAME$, condition, message)
 		endmethod
 
 		private static method staticPrintMethodError takes string methodName, string message returns nothing
-			if (IsPrintIdentifierDisabled($STRUCTNAME$) or IsPrintIdentifierDisabled($STRUCTNAME$ + "." + methodName)) then
-				return
-			endif
-			call Print($STRUCTNAME$ + ": Method error in method \"" + methodName + "\": " + message)
+			call StaticPrintMethodError($STRUCTNAME$, methodName, message)
 		endmethod
 
-		private static method staticPrintMethodErrorIf takes boolean condition, string methodName, string message returns nothing
-			if (condition) then
-				call thistype.staticPrintMethodError(methodName, message)
-			endif
+		private static method staticPrintMethodErrorIf takes boolean condition, string methodName, string message returns boolean
+			return StaticPrintMethodErrorIf($STRUCTNAME$, condition, methodName, message)
 		endmethod
 endif
 	//! endtextmacro

@@ -16,16 +16,16 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 	* This must be explicit enabled when calling the struct initializer (@method AInfo.init).
 	*/
 	struct AInfo
-		//static start members
-		public static camerasetup m_cameraSetup /// Do not use.
+		// static construction members
+		public static boolean m_thirdPersonCamera /// Do not use.
 		public static integer m_skipKey /// Do not use.
 		public static real m_skipCheckRate /// Do not use.
 		public static string m_speechAnimation /// Do not use.
 		public static string m_listenAnimation /// Do not use.
-		//static members
+		// static members
 		private static trigger m_skipTrigger
 		public static boolean array m_playerHasSkipped[12] //bj_MAX_PLAYERS /// Do not use.
-		//start members
+		// construction members
 		private ATalk m_talk
 		private boolean m_permanent
 		private boolean m_important
@@ -187,9 +187,9 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 			set triggerAction = null
 		endmethod
 
-		public static method init takes camerasetup cameraSetup, integer skipKey, real skipCheckRate, string speechAnimation, string listenAnimation returns nothing
-			//static start members
-			set thistype.m_cameraSetup = cameraSetup
+		public static method init takes boolean thirdPersonCamera, integer skipKey, real skipCheckRate, string speechAnimation, string listenAnimation returns nothing
+			// static construction members
+			set thistype.m_thirdPersonCamera = thirdPersonCamera
 			set thistype.m_skipKey = skipKey
 			set thistype.m_skipCheckRate = skipCheckRate
 			if (skipKey != -1) then
@@ -244,7 +244,11 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		call SetCameraFieldForPlayer(user, CAMERA_FIELD_ZOFFSET, GetUnitZ(speaker) + 128.0, 0.0)
 		call SetCameraTargetControllerNoZForPlayer(user, speaker, 0.0, 0.0, false)
 		*/
-		call AThirdPersonCamera.playerThirdPersonCamera(user).enable(listener, 0.0)
+		if (AInfo.m_thirdPersonCamera) then
+			call AThirdPersonCamera.playerThirdPersonCamera(user).resetCamAoa()
+			call AThirdPersonCamera.playerThirdPersonCamera(user).resetCamRot()
+			call AThirdPersonCamera.playerThirdPersonCamera(user).enable(listener, 0.0)
+		endif
 		call SetCinematicSceneForPlayer(user, GetUnitTypeId(speaker), speakerOwner, GetUnitName(speaker), text, duration, duration)
 		if (info.talk().character().talkLog() != 0) then
 			call info.talk().character().talkLog().addSpeech(info, toCharacter, text, usedSound)
@@ -271,7 +275,9 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		call waitForVideo(1.0) // do not show any speeches during video
 		call ResetUnitAnimation(speaker)
 		call ResetUnitAnimation(listener)
-		call AThirdPersonCamera.playerThirdPersonCamera(user).disable()
+		if (AInfo.m_thirdPersonCamera) then
+			call AThirdPersonCamera.playerThirdPersonCamera(user).disable()
+		endif
 		set user = null
 		set speaker = null
 		set listener = null

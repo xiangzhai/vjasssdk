@@ -397,8 +397,12 @@ endif
 			return this
 		endmethod
 
-		public static method createByRect takes AGui gui,  AStyle style, rect usedRect, boolean useShortcuts, integer shortcut returns AMainWindow
-			return thistype.create(gui, style, GetRectMinX(usedRect), GetRectMaxY(usedRect), GetRectWidthBJ(usedRect), GetRectHeightBJ(usedRect), useShortcuts, shortcut)
+		public static method createByRectSize takes AGui gui, AStyle style, real x, real y, rect whichRect, boolean useShortcuts, integer shortcut returns thistype
+			return thistype.create(gui, style, x, y, GetRectWidthBJ(whichRect), GetRectHeightBJ(whichRect), useShortcuts, shortcut)
+		endmethod
+
+		public static method createByRect takes AGui gui, AStyle style, rect whichRect, boolean useShortcuts, integer shortcut returns thistype
+			return thistype.createByRectSize(gui, style, GetRectMinX(whichRect), GetRectMaxY(whichRect), whichRect, useShortcuts, shortcut)
 		endmethod
 
 		public method onDestroy takes nothing returns nothing

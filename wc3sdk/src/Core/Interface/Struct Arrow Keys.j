@@ -25,9 +25,9 @@ library AStructCoreInterfaceArrowKeys
 		* pressed, if RESUME_PREVIOUS_KEY is true the vertical variable will be set back
 		* to 1, else it will be set to 0.
 		*/
-		//static start members
+		// static construction members
 		private static boolean m_resumePreviousKey
-		//static dynamic members
+		// static dynamic members
 		/**
 		* these are the external functions that get called when an arrow key is pressed/released
 		* you can set these variables to your functions that follow the Event function interface
@@ -42,7 +42,7 @@ library AStructCoreInterfaceArrowKeys
 		private static AArrowKeysOnPressAction m_onReleaseLeftAction
 		private static AArrowKeysOnPressAction m_onPressRightAction
 		private static AArrowKeysOnPressAction m_onReleaseRightAction
-		//static members
+		// static members
 		private static trigger m_pressUpTrigger
 		private static trigger m_releaseUpTrigger
 		private static trigger m_pressDownTrigger
@@ -52,7 +52,7 @@ library AStructCoreInterfaceArrowKeys
 		private static trigger m_pressRightTrigger
 		private static trigger m_releaseRightTrigger
 		private static thistype array m_playerArrowKeys[12] /// @todo @global bj_MAX_PLAYERS, vJass bug.
-		//dynamic members
+		// dynamic members
 		// these are the "quick press" variables. They work similarly to the variables above,
 		// except that they aren't set to 0/false when a key is released. If you are checking
 		// the above variables on a periodic timer, you could miss a keypress if a player
@@ -66,7 +66,7 @@ library AStructCoreInterfaceArrowKeys
 		private boolean m_downQuickPress
 		private boolean m_leftQuickPress
 		private boolean m_rightQuickPress
-		//start members
+		// construction members
 		private player m_player
 		//members
 		// this tells you the status of the arrow keys in the two directions for each player
@@ -84,7 +84,7 @@ library AStructCoreInterfaceArrowKeys
 		private boolean m_left
 		private boolean m_right
 
-		//dynamic members
+		// dynamic members
 
 		public method setVerticalQuickPress takes integer verticalQuickPress returns nothing
 			set this.m_verticalQuickPress = verticalQuickPress
@@ -134,13 +134,13 @@ library AStructCoreInterfaceArrowKeys
 			return this.m_rightQuickPress
 		endmethod
 
-		//start members
+		// construction members
 
 		public method player takes nothing returns player
 			return this.m_player
 		endmethod
 
-		//members
+		// members
 
 		public method vertical takes nothing returns integer
 			return this.m_vertical
@@ -168,16 +168,16 @@ library AStructCoreInterfaceArrowKeys
 
 		public static method create takes player user returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_verticalQuickPress = 0
 			set this.m_horizontalQuickPress = 0
 			set this.m_upQuickPress = false
 			set this.m_downQuickPress = false
 			set this.m_leftQuickPress = false
 			set this.m_rightQuickPress = false
-			//start members
+			// construction members
 			set this.m_player = user
-			//members
+			// members
 			set this.m_vertical = 0
 			set this.m_horizontal = 0
 			set this.m_up = false
@@ -187,7 +187,7 @@ library AStructCoreInterfaceArrowKeys
 			return this
 		endmethod
 
-		//members
+		// members
 
 		private static method triggerActionKeyPressDown takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
@@ -306,7 +306,7 @@ library AStructCoreInterfaceArrowKeys
 			local integer i
 			local player user
 			local event triggerEvent
-			//static dynamic members
+			// static dynamic members
 			set thistype.m_onPressUpAction = 0
 			set thistype.m_onReleaseUpAction = 0
 			set thistype.m_onPressDownAction = 0
@@ -315,9 +315,9 @@ library AStructCoreInterfaceArrowKeys
 			set thistype.m_onReleaseLeftAction = 0
 			set thistype.m_onPressRightAction = 0
 			set thistype.m_onReleaseRightAction = 0
-			//static start members
+			// static construction members
 			set thistype.m_resumePreviousKey = resumePreviousKey
-			//static members
+			// static members
 			set thistype.m_pressUpTrigger = CreateTrigger()
 			set triggerAction = TriggerAddAction(thistype.m_pressUpTrigger, function thistype.triggerActionKeyPressUp)
 			set triggerAction = null
@@ -370,7 +370,7 @@ library AStructCoreInterfaceArrowKeys
 
 		public static method cleanUp takes nothing returns nothing
 			local integer i
-			//static members
+			// static members
 			call DestroyTrigger(thistype.m_pressUpTrigger)
 			set thistype.m_pressUpTrigger = null
 			call DestroyTrigger(thistype.m_releaseUpTrigger)
@@ -398,7 +398,7 @@ library AStructCoreInterfaceArrowKeys
 			endloop
 		endmethod
 
-		//static dynamic members
+		// static dynamic members
 
 		public static method setOnPressUpAction takes AArrowKeysOnPressAction onPressUpAction returns nothing
 			set thistype.m_onPressUpAction = onPressUpAction
@@ -464,7 +464,7 @@ library AStructCoreInterfaceArrowKeys
 			return thistype.m_onReleaseRightAction
 		endmethod
 
-		//static methods
+		// static methods
 
 		public static method playerArrowKeys takes player user returns thistype
 			return thistype.m_playerArrowKeys[GetPlayerId(user)]

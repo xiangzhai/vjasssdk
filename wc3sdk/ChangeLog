@@ -1,3 +1,22 @@
+2010-05-01 Tamino Dauth <tamino@cdauth.de>
+* Revised initializer of struct ADamageRecorder.
+* Improved global damage detection of struct ADamageRecorder.
+* Added several spell and item icons to archives.
+* Fixed cheat "setlevel"
+* Added cheat "foodcap".
+* Improved various cheats.
+* Added debugging functions for text macro structs which can not use nested text macros.
+* Revised trigger data files of archive "ASL".
+* Added archive "ASL_de" for language-related world editor files.
+
+2010-04-28 Tamino Dauth <tamino@cdauth.de>
+* Revised structs AMainWindow and AWindow.
+* Added library ALibraryCoreEnvironmentTimeOfDay.
+* Improved function GetTimeString.
+* Added debugging cheat "timeofday".
+* Dropped camera setup option of struct AInfo and replaced it by "thirdPersonCamera".
+* Added various interface spell and attribute icons.
+
 2010-04-18 Tamino Dauth <tamino@cdauth.de>
 * Added various item models and icons.
 * Fixed cheats "gold" and "lumber".

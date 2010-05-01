@@ -11,13 +11,16 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 	* total damage should be still correct.
 	*/
 	struct ADamageRecorder
-		// static initialization members
+		// static construction members
+		private static boolean m_useGlobalDamageDetection
 		private static ADamageRecorderOnDamageAction m_globalDamageDetectionOnDamageAction
+		private static boolean m_saveDataByDefault
 		// static members
 		private static trigger m_globalDamageDetectionEnterTrigger
 		private static trigger m_globalDamageDetectionLeaveTrigger
 		// dynamic members
 		private ADamageRecorderOnDamageAction m_onDamageAction
+		private boolean m_saveData
 		// construction members
 		private unit m_target
 		// members
@@ -38,6 +41,20 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 
 		public method onDamageAction takes nothing returns ADamageRecorderOnDamageAction
 			return this.m_onDamageAction
+		endmethod
+
+		/**
+		* @param saveData If this value is true damage sources and amounts will be saved.
+		*/
+		public method setSaveData takes boolean saveData returns nothing
+			set this.m_saveData = saveData
+		endmethod
+
+		/**
+		* @return This value is true by default.
+		*/
+		public method saveData takes nothing returns boolean
+			return this.m_saveData
 		endmethod
 
 		// construction members
@@ -72,6 +89,10 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 
 		// methods
 
+		/**
+		* Use @function GetEventDamageSource and @function GetEventDamage to get event properties.
+		* By default this method calls the user defined on damage action (@method ADamageRecorder.onDamageAction).
+		*/
 		public stub method onSufferDamage takes nothing returns nothing
 			if (this.m_onDamageAction != 0) then
 				call this.m_onDamageAction.execute(this)
@@ -117,13 +138,15 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		private static method triggerActionDamaged takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			if (this.m_damageSources.size() == AIntegerVector.maxSize()) then
-				call this.m_damageSources.popFront()
-				call this.m_damageAmounts.popFront()
+			if (this.m_saveData) then
+				if (this.m_damageSources.size() == AIntegerVector.maxSize()) then
+					call this.m_damageSources.popFront()
+					call this.m_damageAmounts.popFront()
+				endif
+				call this.m_damageSources.pushBack(GetEventDamageSource())
+				call this.m_damageAmounts.pushBack(GetEventDamage())
+				set this.m_totalDamage = this.m_totalDamage + GetEventDamage()
 			endif
-			call this.m_damageSources.pushBack(GetEventDamageSource())
-			call this.m_damageAmounts.pushBack(GetEventDamage())
-			set this.m_totalDamage = this.m_totalDamage + GetEventDamage()
 			call this.onSufferDamage()
 			set triggeringTrigger = null
 		endmethod
@@ -144,11 +167,12 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			debug if (target == null) then
 				debug call this.print("Target is null.")
 			debug endif
-			//dynamic members
+			// dynamic members
 			set this.m_onDamageAction = 0
-			//start members
+			set this.m_saveData = true
+			// construction members
 			set this.m_target = target
-			//members
+			// members
 			set this.m_damageSources = AUnitVector.create()
 			set this.m_damageAmounts = ARealVector.create()
 
@@ -162,9 +186,9 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//start members
+			// construction members
 			set this.m_target = null
-			//members
+			// members
 			call this.m_damageSources.destroy()
 			call this.m_damageAmounts.destroy()
 
@@ -196,14 +220,18 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 		endmethod
 
 		/**
-		* @param globalDamageDetectionOnDamageAction If this value is not 0 there will be a global damage detection system which allows you acessing a damage recorder of every unit in map.
+		* @param useGlobalDamageDetection If this value is true there will be a global damage detection system which allows you acessing a damage recorder of every unit in map.
+		* @param globalDamageDetectionOnDamageAction Use this value to specify a default action which is set for every created global damage recorder.
+		* @param saveDataByDefault If this value is true data will be saved by default, otherwise it will be discared.
 		* @todo What's about dying units (should be removed from global damage detection? Heroes?!)
 		*/
-		public static method init takes ADamageRecorderOnDamageAction globalDamageDetectionOnDamageAction returns nothing
-			// static initialization members
+		public static method init takes boolean useGlobalDamageDetection, ADamageRecorderOnDamageAction globalDamageDetectionOnDamageAction, boolean saveDataByDefault returns nothing
+			// static construction members
+			set thistype.m_useGlobalDamageDetection = useGlobalDamageDetection
 			set thistype.m_globalDamageDetectionOnDamageAction = globalDamageDetectionOnDamageAction
+			set thistype.m_saveDataByDefault = saveDataByDefault
 
-			if (globalDamageDetectionOnDamageAction != 0) then
+			if (thistype.m_useGlobalDamageDetection) then
 				call thistype.registerAllUnitsInPlayableMap()
 
 				set thistype.m_globalDamageDetectionEnterTrigger = CreateTrigger()
@@ -211,6 +239,7 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 				call TriggerAddAction(thistype.m_globalDamageDetectionEnterTrigger, function thistype.triggerActionEnter)
 				set thistype.m_globalDamageDetectionLeaveTrigger = CreateTrigger()
 				call TriggerRegisterLeaveRectSimple(thistype.m_globalDamageDetectionLeaveTrigger, bj_mapInitialPlayableArea) /// @todo Leak
+				call TriggerRegisterAnyUnitEventBJ(thistype.m_globalDamageDetectionLeaveTrigger, EVENT_PLAYER_UNIT_DEATH)
 				call TriggerAddAction(thistype.m_globalDamageDetectionLeaveTrigger, function thistype.triggerActionLeave)
 			endif
 
@@ -218,41 +247,52 @@ library AStructCoreEnvironmentDamageRecorder requires optional ALibraryCoreDebug
 			call thistype.initialize()
 		endmethod
 
-		public static method registerGlobalUnit takes unit whichUnit returns nothing
-			local thistype this
-			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
-				debug call thistype.staticPrintMethodError("registerGlobalUnit", "Global damage detection is not enabled.")
-				debug return
-			debug endif
-			set this = thistype.create(whichUnit)
-			call this.setOnDamageAction(thistype.m_globalDamageDetectionOnDamageAction)
-			call AHashTable.global().setHandleInteger(whichUnit, "GlobalDamageRecorder", this)
-		endmethod
-
 		public static method isGlobalUnitRegistered takes unit whichUnit returns boolean
-			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
+			debug if (not thistype.m_useGlobalDamageDetection) then
 				debug call thistype.staticPrintMethodError("isGlobalUnitRegistered", "Global damage detection is not enabled.")
 				debug return false
 			debug endif
 			return AHashTable.global().hasHandleInteger(whichUnit, "GlobalDamageRecorder")
 		endmethod
 
-		public static method unregisterGlobalUnit takes unit whichUnit returns nothing
-			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
-				debug call thistype.staticPrintMethodError("unregisterGlobalUnit", "Global damage detection is not enabled.")
-				debug return
+		public static method registerGlobalUnit takes unit whichUnit returns thistype
+			local thistype this
+			debug if (not thistype.m_useGlobalDamageDetection) then
+				debug call thistype.staticPrintMethodError("registerGlobalUnit", "Global damage detection is not enabled.")
+				debug return 0
 			debug endif
+			if (thistype.isGlobalUnitRegistered(whichUnit)) then
+				return 0
+			endif
+			set this = thistype.create(whichUnit)
+			call this.setOnDamageAction(thistype.m_globalDamageDetectionOnDamageAction)
+			call this.setSaveData(thistype.m_saveDataByDefault)
+			call AHashTable.global().setHandleInteger(whichUnit, "GlobalDamageRecorder", this)
+			return this
+		endmethod
+
+		public static method unregisterGlobalUnit takes unit whichUnit returns boolean
+			debug if (not thistype.m_useGlobalDamageDetection) then
+				debug call thistype.staticPrintMethodError("unregisterGlobalUnit", "Global damage detection is not enabled.")
+				debug return false
+			debug endif
+			if (not thistype.isGlobalUnitRegistered(whichUnit)) then
+				return false
+			endif
 			call thistype(AHashTable.global().handleInteger(whichUnit, "GlobalDamageRecorder")).destroy()
 			call AHashTable.global().removeHandleInteger(whichUnit, "GlobalDamageRecorder")
+			return true
 		endmethod
 
 		public static method globalUnitDamageRecorder takes unit whichUnit returns thistype
-			debug if (thistype.m_globalDamageDetectionOnDamageAction == 0) then
+			debug if (not thistype.m_useGlobalDamageDetection) then
 				debug call thistype.staticPrintMethodError("globalUnitDamageRecorder", "Global damage detection is not enabled.")
 				debug return 0
 			debug endif
 			return thistype(AHashTable.global().handleInteger(whichUnit, "GlobalDamageRecorder"))
 		endmethod
 	endstruct
+
+	hook RemoveUnit ADamageRecorder.unregisterGlobalUnit
 
 endlibrary

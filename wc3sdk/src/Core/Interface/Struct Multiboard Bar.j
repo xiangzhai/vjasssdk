@@ -1,4 +1,4 @@
-library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable
+library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMisc, ALibraryCoreMathsReal, AStructCoreGeneralHashTable
 
 	/**
 	* @todo vJass bug, should be a part of @struct AMultiboardBar.
@@ -7,30 +7,34 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 	*/
 	function interface AMultiboardBarValueFunction takes AMultiboardBar multiboardBar returns real
 
+	/**
+	* Multiboard bars can be used to show values in form of progress bars in the Warcraft 3 TFT multiboard.
+	* They can either be horizontal or vertical and use custom icons.
+	*/
 	struct AMultiboardBar
-		//static constant members
+		// static constant members
 		private static constant integer maxLength = 20
-		//start members
+		// construction members
 		private multiboard m_multiboard
 		private integer m_column
 		private integer m_row
 		private integer m_length
 		private real m_refreshRate
 		private boolean m_horizontal
-		//dynamic members
+		// dynamic members
 		private real m_value
 		private real m_maxValue
 		private string array m_valueIcon[AMultiboardBar.maxLength]
 		private string array m_emptyIcon[AMultiboardBar.maxLength]
 		private AMultiboardBarValueFunction m_valueFunction
 		private AMultiboardBarValueFunction m_maxValueFunction
-		//members
+		// members
 		private integer m_colouredPart
 		private trigger m_refreshTrigger
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AMultiboardBar\"")
 
-		//dynamic member methods
+		// dynamic member methods
 
 		public method setValue takes real value returns nothing
 			set this.m_value = value
@@ -81,14 +85,14 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			return this.m_maxValueFunction
 		endmethod
 
-		//methods
+		// methods
 
-		/// Die Farbe des Feldes mit Wert wird je nach Anteil des Wertes vom Maximalwert gesetzt.
+		/// Refreshes multiboard bar.
 		public method refresh takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
 			if (this.m_maxValue != 0) then
-				set this.m_colouredPart = R2I(this.m_value * I2R(this.m_length) / this.m_maxValue)
+				set this.m_colouredPart = R2I(RoundTo(this.m_value * I2R(this.m_length) / this.m_maxValue, 1.0))
 			else
 				set this.m_colouredPart = 0
 			endif
@@ -100,10 +104,10 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 				else
 					set multiboardItem = MultiboardGetItem(this.m_multiboard, this.m_row + i, this.m_column)
 				endif
-				//coloured part
+				// coloured part
 				if (i < this.m_colouredPart) then
 					call MultiboardSetItemIcon(multiboardItem, this.m_valueIcon[i])
-				//plain Part
+				// plain Part
 				else
 					call MultiboardSetItemIcon(multiboardItem, this.m_emptyIcon[i])
 				endif
@@ -136,9 +140,9 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			debug endif
 		endmethod
 
-		//comfort methods
+		// convenience methods
 
-		/// Erst aufrufen, nachdem man die Länge gesetzt hat.
+		/// Do only call after setting length!
 		public method setAllIcons takes string icon, boolean valueIcon returns nothing
 			call this.setIcons(0, this.m_length - 1, icon, valueIcon)
 		endmethod
@@ -181,7 +185,7 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 					set multiboardItem = MultiboardGetItem(this.m_multiboard, this.m_row + i, this.m_column)
 				endif
 				call MultiboardSetItemStyle(multiboardItem, false, true)
-				call MultiboardSetItemWidth(multiboardItem, 0.01) //Einzeln einstellen, um nicht das ganze Multiboard zu verändern
+				call MultiboardSetItemWidth(multiboardItem, 0.01) // set each item to prevent changing the whole multiboard
 				call MultiboardReleaseItem(multiboardItem)
 				set multiboardItem = null
 				set i = i + 1
@@ -217,19 +221,19 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 		*/
 		public static method create takes multiboard usedMultiboard, integer column, integer row, integer length, real refreshRate, boolean horizontal, real value, real maxValue, AMultiboardBarValueFunction valueFunction, AMultiboardBarValueFunction maxValueFunction returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_multiboard = usedMultiboard
 			set this.m_column = column
 			set this.m_row = row
 			set this.m_length = length
 			set this.m_refreshRate = refreshRate
 			set this.m_horizontal = horizontal
-			//dynamic members
+			// dynamic members
 			set this.m_value = value
 			set this.m_maxValue = maxValue
 			set this.m_valueFunction = valueFunction
 			set this.m_maxValueFunction = maxValueFunction
-			//members
+			// members
 			set this.m_colouredPart = 0
 
 			call this.resizeMultiboard()
@@ -238,18 +242,14 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			return this
 		endmethod
 
-		private method destroyRefreshTrigger takes nothing returns nothing
+		public method onDestroy takes nothing returns nothing
+			// construction members
+			set this.m_multiboard = null
+			// members
 			if (this.m_refreshRate > 0.0) then
 				call AHashTable.global().destroyTrigger(this.m_refreshTrigger)
 				set this.m_refreshTrigger = null
 			endif
-		endmethod
-
-		public method onDestroy takes nothing returns nothing
-			//start members
-			set this.m_multiboard = null
-
-			call this.destroyRefreshTrigger()
 		endmethod
 	endstruct
 

@@ -21,36 +21,6 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		return ""
 	endfunction
 
-	/**
-	* Converts a specific number of seconds to a string with minutes and hours.
-	* Example: 120 seconds - 02:00.
-	*/
-	function GetTimeString takes integer seconds returns string
-		local string result = ""
-		local integer minutes = seconds / 60
-		local integer hours = minutes / 60
-		set seconds = ModuloInteger(seconds, 60)
-		set minutes = ModuloInteger(minutes, 60)
-		if (seconds >= 10) then
-			set result = I2S(seconds)
-		else
-			set result = "0" + I2S(seconds)
-		endif
-		set result = result + ":"
-		if (minutes >= 10) then
-			set result = result + I2S(minutes)
-		else
-			set result = result + "0" + I2S(minutes)
-		endif
-		set result = result + ":"
-		if (hours >= 10) then
-			set result = result + I2S(hours)
-		else
-			set result = result + "0" + I2S(hours)
-		endif
-		return result
-	endfunction
-
 	/// Converts string @param colorString to a player color.
 	function StringToPlayerColor takes string colorString returns playercolor
 		if (colorString == "ff0000") then
@@ -223,6 +193,36 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		endif
 
 		return result
+	endfunction
+
+	/**
+	* Converts a specific number of seconds to a string with minutes and hours.
+	* Example: 120 seconds - 02:00.
+	*/
+	function GetTimeString takes integer seconds returns string
+		local integer minutes = seconds / 60
+		local integer hours = minutes / 60
+		local string secondsString
+		local string minutesString
+		local string hoursString
+		set seconds = ModuloInteger(seconds, 60)
+		set minutes = ModuloInteger(minutes, 60)
+		if (seconds >= 10) then
+			set secondsString = I2S(seconds)
+		else
+			set secondsString = IntegerArg(tr("0%i"), seconds)
+		endif
+		if (minutes >= 10) then
+			set minutesString = I2S(minutes)
+		else
+			set minutesString = IntegerArg(tr("0%i"), minutes)
+		endif
+		if (hours >= 10) then
+			set hoursString = I2S(hours)
+		else
+			set hoursString = IntegerArg(tr("0%i"), hours)
+		endif
+		return IntegerArg(IntegerArg(IntegerArg(tr("%i:%i:%i"), hours), minutes), seconds)
 	endfunction
 
 endlibrary
