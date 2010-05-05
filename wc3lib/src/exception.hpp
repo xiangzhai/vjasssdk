@@ -24,17 +24,21 @@
 #include <exception>
 #include <string>
 
+#include <boost/exception/all.hpp>
+#include <boost/format.hpp>
+
 namespace wc3lib
 {
 
-class Exception : public std::exception
+class Exception : public virtual std::exception, public virtual boost::exception
 {
 	public:
 		Exception(const std::string &what) throw ();
+		Exception(const boost::format &what) throw ();
 		virtual ~Exception() throw ();
 		const char* what() const throw ();
 
-	private:
+	protected:
 		std::string m_what;
 };
 

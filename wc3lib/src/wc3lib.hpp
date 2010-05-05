@@ -21,6 +21,14 @@
 #ifndef WC3LIB_WC3LIB_HPP
 #define WC3LIB_WC3LIB_HPP
 
+/**
+* @indexpage
+* @chapter Introduction
+* This is the introduction into the wc3lib.
+* @date
+* @endchapter
+* @namespace wc3lib
+*/
 /// @todo Add all include files!
 
 #include "exception.hpp"

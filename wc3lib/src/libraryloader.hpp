@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,40 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_SLK_DATA_HPP
-#define WC3LIB_SLK_DATA_HPP
+#ifndef WC3LIB_LIBRARYLOADER_HPP
+#define WC3LIB_LIBRARYLOADER_HPP
 
-#include <istream>
-#include <ostream>
+#include <map>
+
+#include <boost/filesystem/path.hpp>
+
+#include "exception.hpp"
 
 namespace wc3lib
 {
-	
-namespace slk
-{
-	
-class DataEntry;
 
-/**
-* Default class for reading <Prefix>Data.txt files like WorldEditData.txt or TriggerStrings.txt.
-* @todo Should use a Bison file which defines the possible syntax for these files.
-*/
-class Data
+class LibraryLoader
 {
 	public:
-		Data();
-		~Data();
+		typedef LibraryLoader self;
 
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		static bool libraryHasBeenLoaded(const boost::filesystem::path &path);
+		static void loadLibrary(const boost::filesystem::path &path) throw (class Exception);
+		static void unloadLibrary(const boost::filesystem::path &path) throw (class Exception);
+		static void* librarySymbol(const boost::filesystem::path &path, const std::string symbolName) throw (class Exception);
 
-	protected:
-		virtual class DataEntry* dataEntry() = 0;
+	private:
+		LibraryLoader();
+		LibraryLoader(const self &);
+		~LibraryLoader();
 
-		std::list<class DataEntry*> m_entries;
+		static std::map<boost::filesystem::path, void*> m_libraries;
 };
-
-}
 
 }
 

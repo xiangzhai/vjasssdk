@@ -46,7 +46,7 @@ class Slk
 		~Slk();
 
 		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class SlkEntry* slkEntry(std::size_t column) = 0;

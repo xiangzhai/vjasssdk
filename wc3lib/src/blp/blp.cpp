@@ -24,36 +24,35 @@
 #include <cstring>
 #include <iostream>
 
-#include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
 #include "blp.hpp"
-#include "../internationalisation.hpp"
+#include "../libraryloader.hpp"
 
 #ifdef JPEG
-#include <openjpeg.h>
+#include <jpeglib.h>
 #endif
-//#include <jpeglib.h>
 
 namespace wc3lib
 {
 
 namespace blp
 {
-	
-Blp::MipMap::MipMap()
+
+Blp::MipMap::MipMap(dword width, dword height) : m_width(width), m_height(height)
 {
 }
 
 /// @todo Implement.
-void Blp::MipMap::scale(dword newWidth, dword newHeight)
+void Blp::MipMap::scale(dword newWidth, dword newHeight) throw (class Exception)
 {
+	throw Exception(_("Not implemented yet!"));
 }
 
-const char Blp::identifier0[4] = { 'B', 'L', 'P', '0' };
-const char Blp::identifier1[4] = { 'B', 'L', 'P', '1' };
-const char Blp::identifier2[4] = { 'B', 'L', 'P', '2' };
+const byte Blp::identifier0[4] = { 'B', 'L', 'P', '0' };
+const byte Blp::identifier1[4] = { 'B', 'L', 'P', '1' };
+const byte Blp::identifier2[4] = { 'B', 'L', 'P', '2' };
 const std::size_t Blp::maxMipMaps = 16;
 const std::size_t Blp::maxCompressedPaletteSize = 256;
 
@@ -149,10 +148,12 @@ static std::size_t requiredMipMaps(std::size_t width, std::size_t height)
 	return mips;
 }
 
-static void jpegEventManagerFunction(const char *msg, void *client_data)
+#ifdef JPEG
+static std::string jpegError(const std::string &message)
 {
-	std::cout << boost::format(_("JPEG event manager message:\n%1%")) % msg << std::endl;
+	return boost::str(boost::format(message) % jpeg_std_error(0)->jpeg_message_table != 0 ? jpeg_std_error(0)->jpeg_message_table[jpeg_std_error(0)->last_jpeg_message] : _("No error"));
 }
+#endif
 
 std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 {
@@ -208,9 +209,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			mipMapOffsets.push_back(offset);
 			mipMapSizes.push_back(size);
 			
-			class MipMap *mipMap = new MipMap;
-			mipMap->setWidth(this->mipMapWidth(i));
-			mipMap->setHeight(this->mipMapHeight(i));
+			class MipMap *mipMap = new MipMap(this->mipMapWidth(i), this->mipMapHeight(i));
 			
 			if (this->m_flags != Blp::Alpha && size != mipMap->width() * mipMap->height())
 				std::cout << "Size " << size << " is not equal to " << mipMap->width() * mipMap->height() << std::endl;
@@ -232,7 +231,6 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		byte *jpegHeader = new byte[jpegHeaderSize];
 		istream.read(reinterpret_cast<char*>(jpegHeader), jpegHeaderSize);
 		bytes += istream.gcount();
-		std::cout << "Using Open JPEG version " << OPENJPEG_VERSION << std::endl;
 		std::list<dword>::iterator offset = mipMapOffsets.begin();
 		std::list<dword>::iterator size = mipMapSizes.begin();
 		
@@ -245,71 +243,55 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			if (nullBytes > 0)
 				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
 			
-			std::size_t bufferSize = boost::numeric_cast<std::size_t>(*size);
+			// all mipmaps use the same header.
+			std::size_t bufferSize = boost::numeric_cast<std::size_t>(*size) + jpegHeaderSize;
 			unsigned char *buffer = new unsigned char[bufferSize];
+			memcpy(reinterpret_cast<void*>(buffer), reinterpret_cast<const void*>(jpegHeader), jpegHeaderSize);
 			istream.read((char*)buffer, boost::numeric_cast<std::streamsize>(bufferSize));
 
 			try
 			{
-				opj_common_ptr cinfo;
-				opj_cio_t *decompressIO = opj_cio_open(cinfo, buffer, bufferSize);
-
-				if (decompressIO == NULL)
-					throw Exception(_("Error while reading JPEG data."));
-
-				opj_event_mgr_t eventManager;
-				std::cout << "TEST --- 1" << std::endl;
-				eventManager.error_handler = &jpegEventManagerFunction;
-				std::cout << "TEST --- 2" << std::endl;
-				eventManager.info_handler = &jpegEventManagerFunction;
-				std::cout << "TEST --- 3" << std::endl;
-				eventManager.warning_handler = &jpegEventManagerFunction;
-				std::cout << "TEST --- 4" << std::endl;
-			
-				if (opj_set_event_mgr(cinfo, &eventManager, 0) == NULL)	
-					throw Exception(_("Error while creating JPEG event manager."));
-
-				//int OPJ_CALLCONV cio_tell(opj_cio_t *cio);
-				//void OPJ_CALLCONV cio_seek(opj_cio_t *cio, int pos);
-
-				std::cout << "Test 1" << std::endl;
-				opj_dinfo_t *decompressInfo = opj_create_decompress(CODEC_JPT); //CODEC_UNKNOWN, CODEC_JP2
 				/*
-				typedef enum CODEC_FORMAT {
-				CODEC_UNKNOWN
-				CODEC_J2K
-				CODEC_JPT
-				CODEC_JP2
-				} OPJ_CODEC_FORMAT;
+				LibraryLoader::loadLibrary("jpeg");
+				(void *)(j_decompress_ptr, int, size_t) jpeg_create_decompress = LibraryLoader::librarySymbol("jpeg", "jpeg_CreateDecompress");
+				*/
+				std::cout << "Using jpeglib version " << JPEG_LIB_VERSION << std::endl;
+
+				j_decompress_ptr cinfo;
+				jpeg_create_decompress(cinfo);
+				jpeg_mem_src(cinfo, buffer, bufferSize);
+				jpeg_mem_dest(cinfo, &buffer, &bufferSize);
+
+				if (jpeg_read_header(cinfo, true) != JPEG_HEADER_OK)
+				{
+					jpeg_abort_decompress(cinfo);
+
+					throw Exception(jpegError(_("Did not find header. Error: %1%.")));
+				}
+
+				if (!cinfo->saw_JFIF_marker)
+					std::cerr << _("Warning: Did not find JFIF marker. JFIF format is used by default!") << std::endl;
+
+
+				if (!jpeg_start_decompress(cinfo))
+				{
+					jpeg_abort_decompress(cinfo);
+
+					throw Exception(jpegError(_("Could not start decompress. Error: %1%.")));
+				}
+
+				/*
+				jpeg_has_multiple_scans JPP((j_decompress_ptr cinfo));
+				1043 EXTERN(boolean) jpeg_start_output JPP((j_decompress_ptr cinfo,
+				1044                                        int scan_number))
 				*/
 
-				if (decompressInfo == NULL)
-					throw Exception(_("Error while creating JPEG decompressor."));
+				jpeg_destroy_decompress(cinfo);
 
-				std::cout << "Test 2" << std::endl;
-				opj_dparameters_t decompressParameters;
-				opj_set_default_decoder_parameters(&decompressParameters);
-				//decompressParameters.jpwl_max_tiles = 16;
-				std::cout << "Test 3" << std::endl;
-				opj_setup_decoder(decompressInfo, &decompressParameters);
-				std::cout << "Test 4" << std::endl;
-				cio_seek(decompressIO, 0);
-				opj_image_t *decompressImage = opj_decode(decompressInfo, decompressIO);
-				std::cout << "Test 5" << std::endl;
-				
-				
-				if (decompressImage == NULL)
-					throw Exception(_("Error while creating decompressed JPEG image."));
+				/// @todo Fill mip map color data (user buffer)
+				BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
+					;
 
-				std::cout << "Got decompressed and decoded JPEG image with size X " << decompressImage->x1 << ", size Y " << decompressImage->y1 << ", " << decompressImage->numcomps << " components and color space " << decompressImage->color_space << std::endl;
-
-				/// @todo Fill mip map data
-				//mipMap
-
-				opj_destroy_decompress(decompressInfo);
-				opj_cio_close(decompressIO);
-				delete[] jpegHeader;
-				jpegHeader = 0;
 				delete[] buffer;
 				buffer = 0;
 			}
@@ -336,6 +318,9 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			++offset;
 			++size;
 		}
+
+		delete[] jpegHeader;
+		jpegHeader = 0;
 #else
 		throw Exception(_("Compiled without JPEG support."));
 #endif
@@ -349,12 +334,14 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		else
 			std::cout << "Without alphas!" << std::endl;
 		
+		std::vector<color> palette(Blp::maxCompressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
+
 		for (int i = 0; i < Blp::maxCompressedPaletteSize; ++i)
 		{
                         color paletteColor;
                         istream.read(reinterpret_cast<char*>(&paletteColor), sizeof(paletteColor));
 			bytes += istream.gcount();
-			this->m_palette.push_back(paletteColor);
+			palette[i] = paletteColor;
 		}
 	
 		std::list<dword>::iterator offset = mipMapOffsets.begin();
@@ -374,16 +361,25 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			
 			dword toReadBytes = *size;
 
-			for (int j = 0; j < mipMap->width(); ++j)
+			for (dword j = 0; j < mipMap->width(); ++j)
 			{
-				for (int k = 0; k < mipMap->height(); ++k)
+				for (dword k = 0; k < mipMap->height(); ++k)
 				{
-					byte value;
-					istream.read(reinterpret_cast<char*>(&value), sizeof(value));
+					byte index;
+					istream.read(reinterpret_cast<char*>(&index), sizeof(index));
 					bytes += istream.gcount();
 					toReadBytes -= istream.gcount();
 					//std::cout << "To read bytes " << toReadBytes << std::endl;
-					mipMap->addIndex(value);
+					byte alpha = 0;
+
+					if (this->m_flags == Blp::Alpha)
+					{
+						istream.read(reinterpret_cast<char*>(&alpha), sizeof(alpha));
+						bytes += istream.gcount();
+						toReadBytes -= istream.gcount();
+					}
+
+					mipMap->setColor(j, k, palette[index], alpha);
 					
 					/*
 					if (istream.eof())
@@ -393,14 +389,6 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 						throw Exception("");
 					}
 					*/
-					
-					if (this->m_flags == Blp::Alpha)
-					{
-						istream.read(reinterpret_cast<char*>(&value), sizeof(value));
-						bytes += istream.gcount();
-						toReadBytes -= istream.gcount();
-						mipMap->addAlpha(value);
-					}
 				}
 			}
 			
@@ -413,8 +401,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			++offset;
 			++size;
 
-			std::cout << "Mip map index list size " << mipMap->indices().size() << std::endl;
-			std::cout << "Mip map alpha list size " << mipMap->alphas().size() << std::endl;
+			std::cout << "Mip map colors map size " << mipMap->m_colors.size() << std::endl;
 		}
 	}
 	else
@@ -442,19 +429,19 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	switch (this->m_version)
 	{
 		case Blp::Blp0:
-			ostream.write(Blp::identifier0, sizeof(Blp::identifier0));
+			ostream.write(reinterpret_cast<const char*>(Blp::identifier0), sizeof(Blp::identifier0));
 			bytes += sizeof(identifier0);
 			
 			break;
 			
 		case Blp::Blp1:
-			ostream.write(Blp::identifier1, sizeof(Blp::identifier1));
+			ostream.write(reinterpret_cast<const char*>(Blp::identifier1), sizeof(Blp::identifier1));
 			bytes += sizeof(identifier1);
 			
 			break;
 			
 		case Blp::Blp2:
-			ostream.write(Blp::identifier2, sizeof(Blp::identifier2));
+			ostream.write(reinterpret_cast<const char*>(Blp::identifier2), sizeof(Blp::identifier2));
 			bytes += sizeof(identifier2);
 			
 			break;
@@ -480,10 +467,10 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	BOOST_FOREACH (const class MipMap *mipMap, this->m_mipMaps)
 	{
 		mipMapOffsets.push_back(startOffset);
-		dword size = mipMap->indices().size() * sizeof(byte);
+		dword size = mipMap->colors().size() * sizeof(byte);
 		
 		if (this->m_flags == Blp::Alpha)
-			size += mipMap->alphas().size() * sizeof(byte);
+			size *= 2;
 			
 		mipMapSizes.push_back(size);
 		startOffset += size;
@@ -537,59 +524,51 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 		else
 			std::cout << "Without alphas!" << std::endl;
 		
-		std::size_t i = 0;
-		
-		BOOST_FOREACH(const color palettColor, this->m_palette)
+		// fill palette, palette has always size of Blp::maxCompressedPaletteSize (remaining colors have value 0).
+		std::vector<const struct MipMap::Color*> palette(Blp::maxCompressedPaletteSize, 0);
+
+		BOOST_FOREACH(const class MipMap *mipMap, this->m_mipMaps)
 		{
-			if (i >= Blp::maxCompressedPaletteSize)
+			for (dword width = 0; width < mipMap->width(); ++width)
 			{
-				std::cout << boost::format(_("Warning: BLP image does contain more than %1% different colors: %2%.\nSkipping writing of palette colors.")) % Blp::maxCompressedPaletteSize % this->m_palette.size() << std::endl;
+				for (dword height = 0; height < mipMap->height(); ++height)
+				{
+					if (palette[mipMap->colorAt(width, height).paletteIndex] == 0)
+						palette[mipMap->colorAt(width, height).paletteIndex] = &mipMap->colorAt(width, height);
+					else if (!palette[mipMap->colorAt(width, height).paletteIndex]->compareRgb(mipMap->colorAt(width, height)))
+						std::cerr << _("Warning: There are different mip map colors with same index.") << std::endl;
+				}
+			}
+		}
 
-				break;
-                        }
-
-			ostream.write(reinterpret_cast<const char*>(&palettColor), sizeof(palettColor));
-			bytes += sizeof(palettColor);
-			++i;
+		// write palette
+		BOOST_FOREACH(const struct MipMap::Color *paletteColor, palette)
+		{
+			color value = paletteColor == 0 ? 0 : paletteColor->rgb; // check if empty
+			ostream.write(reinterpret_cast<const char*>(&value), sizeof(value));
+			bytes += sizeof(value);
 		}
 
 		std::cout << "Wrote " << bytes << " with palette." << std::endl;
 
-                /// @todo Write 0 byte colors?
-		if (i < Blp::maxCompressedPaletteSize)
-		{
-			for ( ; i < Blp::maxCompressedPaletteSize; ++i)
-			{
-				color palettColor = 0;
-				ostream.write(reinterpret_cast<const char*>(&palettColor), sizeof(palettColor));
-				bytes += sizeof(palettColor);
-			}
-		}
-
-		std::cout << "Wrote " << bytes << " with empty palette." << std::endl;
-
+		// write mip maps
 		BOOST_FOREACH(const class MipMap *mipMap, this->m_mipMaps)
 		{
-			std::cout << "Mip map index list size " << mipMap->indices().size() << std::endl;
-			std::cout << "Mip map alpha list size " << mipMap->alphas().size() << std::endl;
-			std::list<byte>::const_iterator index = mipMap->indices().begin();
-			std::list<byte>::const_iterator alpha = mipMap->alphas().begin();
-			
-			while (index != mipMap->indices().end())
+			for (dword width = 0; width < mipMap->width(); ++width)
 			{
-				ostream.write(reinterpret_cast<const char*>(&(*index)), sizeof(*index));
-				bytes += sizeof(*index);
-				//std::cout << "Wrote index with size " << sizeof(*index) << std::endl;
-				++index;
-				
-				if (this->m_flags == Blp::Alpha)
+				for (dword height = 0; height < mipMap->height(); ++height)
 				{
-					ostream.write(reinterpret_cast<const char*>(&(*alpha)), sizeof(*alpha));
-					bytes += sizeof(*alpha);
-					++alpha;
+					byte index = mipMap->colorAt(width, height).paletteIndex;
+					ostream.write(reinterpret_cast<const char*>(&index), sizeof(index));
+					bytes += sizeof(index);
+
+					if (this->m_flags == Blp::Alpha)
+					{
+						byte alpha = mipMap->colorAt(width, height).alpha;
+						ostream.write(reinterpret_cast<const char*>(&alpha), sizeof(alpha));
+						bytes += sizeof(alpha);
+					}
 				}
-				
-				//std::cout << "Wrote index with alpha " << sizeof(*alpha) << std::endl;
 			}
 		}
 
@@ -652,9 +631,7 @@ bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
 	{
 		width /= 2;
 		height /= 2;
-		class MipMap *mipMap = new MipMap;
-		mipMap->setWidth(width);
-		mipMap->setHeight(height);
+		class MipMap *mipMap = new MipMap(width, height);
 		/// @todo Generate new scaled index and alpha list.
 			
 		

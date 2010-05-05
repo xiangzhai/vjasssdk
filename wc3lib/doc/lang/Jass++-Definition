@@ -10,36 +10,37 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 9. Deklaration nativer Funktionen
 10. Bezeichner (identifiers)
 11. Literale
-12. Gültigkeitsbereiche (scopes)
-13. Gültigkeitsbereichverwendung
-14. Qualifizierer-Gültigkeitsbereiche
-15. Anweisungsblöcke
-16. Variablen
-17. Operatoren
-18. Typen
-19. Typkonvertierungen
-20. Verzweigungen
-21. Schleifen
-22. Deklarationsvoraussetzungen
-23. Funktionen
-24. Funktionsvariablen (Funktionszeiger)
-25. Funktionstypen
-26. Lambda-Funktionen
-27. Funktionsaufrufe
-28. Ausnahmebehandlung
-29. Finally
-30. Pseudonyme (aliases)
-31. Vorlagen (templates)
-32. Zugriffsmodifikatoren
-33. Freunde
-34. Pakete (packages)
-35. Aufzählungen (enums)
-36. Klassen
-37. Elemente
-38. Methoden
-39. Operatorenüberladung
-40. Das Jass-Paket
-41. Das Standardpaket
+12. Escape-Sequenzen
+13. Gültigkeitsbereiche (scopes)
+14. Gültigkeitsbereichverwendung
+15. Qualifizierer-Gültigkeitsbereiche
+16. Anweisungsblöcke
+17. Variablen
+18. Operatoren
+19. Typen
+20. Typkonvertierungen
+21. Verzweigungen
+22. Schleifen
+23. Deklarationsvoraussetzungen
+24. Funktionen
+25. Funktionsvariablen (Funktionszeiger)
+26. Funktionstypen
+27. Lambda-Funktionen
+28. Funktionsaufrufe
+29. Ausnahmebehandlung
+30. Finally
+31. Pseudonyme (aliases)
+32. Vorlagen (templates)
+33. Zugriffsmodifikatoren
+34. Freunde
+35. Pakete (packages)
+36. Aufzählungen (enums)
+37. Klassen
+38. Elemente
+39. Methoden
+40. Operatorenüberladung
+41. Das Jass-Paket
+42. Das Standardpaket
 
 1. Vorwort
 
@@ -209,15 +210,23 @@ Notation:
 
 6. Präprozessoren
 
-#include [ jass | zinc | vjass | jasspp ] "Dateipfad"
+Präprozessoren werden vor der restlichen Syntaxvalidierung ausgewertet.
+Sie können zur Vorauswertung verwendet werden, um zu bestimmen, welcher Code kompiliert und welcher
+vom Compiler ignoriert werden soll.
+Präprozessoren werden mit dem #-Zeichen eingeleitet. Darauf muss eine der Anweisungen folgen.
+Eine Anweisung mehrzeilig zu gestalten wird momentan nicht unterstützt und ist eigentlich auch nicht
+notwendig, da man keine eigenen Makros (wie in C und C++) definieren kann.
+Zwischen dem #-Zeichen und der Anweisung können beliebig viele Leerzeichen bzw. Tabulatoren stehen.
+
+#include [ jass | zinc | vjass | jasspp | cjass ] [ once ] "<Dateipfad>" Wird cjass verwendet, so wird die gesamte Datei ignoriert! Wird once angegeben, wird die Datei nur einmal eingebunden.
 #inject InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
 #endinject
-#initjasspp			Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
-#if (<konstanter Ausdruck>)	Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10)
+#initjasspp				Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
+#if (<konstanter Ausdruck>)		Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10)
 #else if (<konstanter Ausdruck>)
 #else
 #endif
-#error <konstanter Ausdruck>	Bricht den Kompiliervorgang ab und gibt den konstanten Ausdruck als Fehlermeldung aus.
+#error <konstanter Ausdruck>		Bricht den Kompiliervorgang ab und gibt den konstanten Ausdruck als Fehlermeldung aus.
 #jass
 #endjass
 #zinc
@@ -226,17 +235,29 @@ Notation:
 #endvjass
 #jasspp
 #endjasspp
-#external <Ausdruck> <Parameter>
+#cjass					Nur reserviert. Code wird momentan noch ignoriert.
+#endcjass				Nur reserviert. Code wird momentan noch ignoriert.
+#external <Ausdruck> <Parameter>	Ruft einen externen Befehl mit Parametern auf. Externe Befehle müssen vom Compiler ausgeliefert und ausgewertet werden.
 
 Vordefinierte Konstanten:
-OS Enthält eine Zeichenkette mit dem Namen des Betriebssystems.
+Es gilt zu beachten, dass die folgenden Konstanten normale Jass++-Konstanten eines nativen Typs sind und somit auch in Nicht-Präprozessor-Anweisungen verwendet werden können.
+ABGELEHNT: OS Enthält eine Zeichenkette mit dem Namen des Betriebssystems.
+LANGUAGE Enthält eine Zeichenkette mit der aktuellen Skriptsprache ("Jass++", "Zinc", "vJass", "Jass")
+LANGUAGE_VERSION Enthält eine Zeichenkette mit der Version der aktuellen Skriptsprache
+JASS Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass ist.
+ZINC Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Zinc ist.
+VJASS Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache vJass ist.
+JASSPP Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass++ ist.
 COMPILER Enthält eine Zeichenkette mit dem Namen des verwendeten Compilers.
 COMPILER_VERSION Enthält eine Zeichenkette mit der Version des verwendeten Compilers.
 WC3_VERSION Enthält eine Zeichenkette mit der Warcraft-3-Version (ist zur Laufzeit aktuell!).
 WC3_TFT_VERSION Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-Version. Falls The Frozen Throne nicht verwendet wird, ist der Wert gleich 0 gesetzt (ist zur Laufzeit aktuell!).
+WC3_PATH Enthält einen Verzeichnispfad zum Installationsverzeichnis von Warcraft 3 bzw. Warcraft 3 The Frozen Throne. Es gilt zu beachten, dass dies der Pfad desjenigen ist, der den Code kompiliert und nicht der der jeweiligen Spieler.
 DEBUG_MODE Enthält entweder true oder false, je nachdem, ob der Debug-Modus aktiviert oder deaktiviert ist.
 FILE_NAME Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
 LINE_NUMBER Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
+SCOPE_NAME Enthält eine Zeichenkette des Namens des aktuellen Gültigkeitsbereichs.
+SCOPE_NAME_FULL Enthält eine Zeichenkette des gesamten Namens (auch alle oberen Gültigkeitsbereiche) des aktuellen Gültigkeitsbereichs.
 OPTIMIZATION_INLINE_FUNCTIONS Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
 OPTIMIZATION_REMOVE_WHITE_SPACES Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
 OPTIMIZATION_REMOVE_CONSTANTS Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
@@ -245,7 +266,8 @@ TODO: Hier noch weitere Optimierungsoptionen hinzufügen.
 Dateipfade für die Include-Anweisung:
 Dateipfade müssen wie bei UNIX Systemen geschrieben werden. . steht für das aktuelle und ..
 für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen getrennt.
-~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Wurzelverzeichnis.
+Standardmäßig wird im Verzeichnis der Code-Datei gesucht.
+ABGELEHNT: ~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Wurzelverzeichnis.
   
 7. Testblöcke
 
@@ -290,7 +312,7 @@ Außerdem kann dem Bezeichner in bestimmten Fällen ein Schlüsselwortpräfix vo
 Ein Literal ist ein sich selbst erklärender Ausdruck. Für folgende native Typen gelten folgende Literalnotationsregeln:
 
 Kopierbasierte Typen:
-* string : "<Literal>" | null
+* string : "<Zeichenkettenliteral>" | null
 * integer : 0<Oktalliteral> | 0%<Binärliteral> | 0x<Hexadezimalliteral> | <Dezimalliteral> | '<Id-Literal>' | null
 * real : <Fließkommaliteral> | null
 * boolean : true | false | null
@@ -301,6 +323,20 @@ Referenzbasierte Typen:
 * agent (und Kindtypen) : 0
 * Klassenobjekte : 0
 * Funktionszeiger : 0
+
+12. Escape-Sequenzen
+
+Eine Escape-Sequenz ist ein Zeichen, welchem entweder das \- oder das |-Zeichen vorangestellt wird und welches ausschließlich ein einem
+Zeichenkettenliteral vorkommen darf.
+Farbkodierungen werden zum Kompilierzeitpunkt validiert.
+Es gibt folgende Escape-Sequenzen:
+n				Zeilenumbruch
+t				Horizontaler Tabulator
+\				Backslash
+|				Strich
+"				Doppeltes Anführungszeichen
+c<Farbkodierung>		Anfang der Farbkodierung
+r				Ende der Farbkodierung
 
 12. Gültigkeitsbereiche (scopes)
 
@@ -544,13 +580,21 @@ Für Klassendeklarationen:
 Für Arrays:
 size Variable
 Variable.size
+Variable[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
+
+Für große Arrays:
+integer(Variable)				Liefert die interne Ganzzahl der Array-Instanz.
+id Variable					Liefert die interne Ganzzahl der Array-Instanz.
+Variable.id
 
 Für Aufzählungen:
 Variable = Ausdruck
 Variable == Ausdruck
 Variable != Ausdruck
-size Aufzählungsbezeichner
-Aufzählungsbezeichner.size
+size <Aufzählungsbezeichner>
+<Aufzählungsbezeichner>.size
+length <Aufzählungsbezeichner>
+<Aufzählungsbezeichner>.length
 
 Für Funktionszeiger:
 execute Variable(<Parameter)
@@ -572,7 +616,7 @@ Variable.sleepoff
 reset Variable
 Variable.reset
 integer(Variable)				Liefert die interne Ganzzahl des Funktionsprototypen.
-id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl des Funktionsprototypen.
+id Variable					Liefert die interne Ganzzahl des Funktionsprototypen.
 Variable.id
 
 Innerhalb von "threaded" Funktionen:
@@ -580,7 +624,7 @@ sleep <real-Ausdruck>
 id						Liefert die interne Ganzzahl des Funktionsprototypen.
 
 Für Klassen(instanzen):
-<Klassenname>.<Enum | statische Methode | statisches Element>
+<Klassenname>.<Aufzählung | statische Methode | statisches Element>
 <Variable>.<Elementname | Methodenname>
 new <Klassenname>				Entspricht Klassenname.new()
 delete <Variable>				Entspricht Variable.delete()
@@ -592,13 +636,6 @@ Variable == Ausdruck				Ist wahr, falls die beide Variablen auf dasselbe Objekt 
 Variable != Ausdruck				Ist wahr, falls die beide Variablen nicht auf dasselbe Objekt zeigen.
 integer(Variable)				Liefert die interne Ganzzahl der Klasseninstanz.
 id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Klasseninstanz.
-
-Für Arrays:
-Variable[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
-
-Für große Arrays:
-integer(Variable)				Liefert die interne Ganzzahl der Array-Instanz.
-id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Array-Instanz.
 
 Typen
 
@@ -1011,6 +1048,7 @@ enum Name [Deklarationsvoraussetzungen]
 } [globale Instanzen durch Kommate getrennt];
 
 Der size-Operator kann verwendet werden, um den Wert x + 1 zu erhalten, wobei x für das den Wert des Aufzählungselements mit dem höchsten Wert steht.
+Der length-Operator kann verwendet werden, um die Anzahl der Aufzählungs-Elemente zu erhalten.
 
 Klassen
 

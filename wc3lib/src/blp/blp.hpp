@@ -23,10 +23,15 @@
 
 #include <istream>
 #include <ostream>
+#include <map>
+#include <utility>
 #include <list>
+
+#include <boost/format.hpp>
 
 #include "platform.hpp"
 #include "../exception.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -47,25 +52,35 @@ class Blp
 		class MipMap
 		{
 			public:
-				MipMap();
+				struct Color
+				{
+					color rgb;
+					byte alpha;
+					byte paletteIndex; // only used for paletted compression
+
+					bool compareRgb(const Color &other) const
+					{
+						return this->rgb == other.rgb;
+					};
+				};
+
+				MipMap(dword width, dword height);
 				
-				void scale(dword newWidth, dword newHeight);
+				void scale(dword newWidth, dword newHeight) throw (class Exception);
 				
-				void setWidth(dword width);
 				dword width() const;
-				void setHeight(dword height);
 				dword height() const;
 				
-				void addIndex(byte index);
-				const std::list<byte>& indices() const;
-				void addAlpha(byte alpha);
-				const std::list<byte>& alphas() const;
-				
+				void setColor(dword width, dword height, color rgb, byte alpha, byte paletteIndex = 0) throw (class Exception);
+				const std::map<std::pair<dword, dword>, struct Color>& colors() const;
+				const struct Color& colorAt(dword width, dword height) const;
+
 			protected:
+				friend class Blp;
+
 				dword m_width;
 				dword m_height;
-				std::list<byte> m_indices; //[mip map width * mip map height];
-				std::list<byte> m_alphas; //[mip map width * mip map height];
+				std::map<std::pair<dword, dword>, struct Color> m_colors; //[mip map width * mip map height];
 		};
 
 		enum Format
@@ -92,29 +107,29 @@ class Blp
 
 		enum Compression
 		{
-			Jpeg = 0,
+			Jpeg = 0, // JFIF!
 			Paletted = 1
 		};
 		
-		enum Flag
+		enum Flags
 		{
 			NoAlpha = 0,
 			Alpha = 8
 		};
 		
-		static const char identifier0[4];
-		static const char identifier1[4];
-		static const char identifier2[4];
+		static const byte identifier0[4];
+		static const byte identifier1[4];
+		static const byte identifier2[4];
 		static const std::size_t maxMipMaps;
 		static const std::size_t maxCompressedPaletteSize;
 
 		Blp();
 		~Blp();
 
-		void setCompression(dword compression);
-		dword compression() const;
-		void setFlags(dword flags);
-		dword flags() const;
+		void setCompression(enum Compression compression);
+		enum Compression compression() const;
+		void setFlags(enum Flags flags);
+		enum Flags flags() const;
 		void setWidth(dword width);
 		dword width() const;
 		void setHeight(dword height);
@@ -123,8 +138,6 @@ class Blp
 		dword pictureType() const;
 		void setPictureSubType(dword pictureSubType);
 		dword pictureSubType() const;
-		void setPalette(std::list<color> &palette);
-		const std::list<color>& palette() const;
 		void addMipMap(class MipMap *mipMap);
 		const std::list<class MipMap*>& mipMaps() const;
 
@@ -162,33 +175,21 @@ class Blp
 		
 		// header
 		enum Version m_version;
-		dword m_compression;		//0 - Uses JPEG compression
+		enum Compression m_compression;		//0 - Uses JPEG compression
 						//1 - Uses palettes (uncompressed)
-		dword m_flags;			//#8 - Uses alpha channel (?)
+		enum Flags m_flags;			//#8 - Uses alpha channel (?)
 		dword m_width;
 		dword m_height;
 		dword m_pictureType;		//3 - Uncompressed index list + alpha list
 						//4 - Uncompressed index list + alpha list
 						//5 - Uncompressed index list
 		dword m_pictureSubType;		//1 - ???
-		// uncompressed 1
-                std::list<color> m_palette; // uncompressed 1 and 2 only use 256 different colors.
 		std::list<class MipMap*> m_mipMaps;
 };
-
-inline void Blp::MipMap::setWidth(dword width)
-{
-	this->m_width = width;
-}
 
 inline dword Blp::MipMap::width() const
 {
 	return this->m_width;
-}
-
-inline void Blp::MipMap::setHeight(dword height)
-{
-	this->m_height = height;
 }
 
 inline dword Blp::MipMap::height() const
@@ -196,42 +197,42 @@ inline dword Blp::MipMap::height() const
 	return this->m_height;
 }
 
-inline void Blp::MipMap::addIndex(byte index)
+inline void Blp::MipMap::setColor(dword width, dword height, color rgb, byte alpha, byte paletteIndex) throw (class Exception)
 {
-	this->m_indices.push_back(index);
+	if (width >= this->m_width || width < 0 || height >= this->m_height || height < 0)
+		throw Exception(boost::str(boost::format(_("Mip map: Invalid indices (width %1%, height %2%).")) % width % height));
+
+	this->m_colors[std::make_pair(width, height)].rgb = rgb;
+	this->m_colors[std::make_pair(width, height)].alpha = alpha;
+	this->m_colors[std::make_pair(width, height)].paletteIndex = paletteIndex;
 }
 
-inline const std::list<byte>& Blp::MipMap::indices() const
+inline const std::map<std::pair<dword, dword>, struct Blp::MipMap::Color>& Blp::MipMap::colors() const
 {
-	return this->m_indices;
+	return this->m_colors;
 }
 
-inline void Blp::MipMap::addAlpha(byte alpha)
+inline const struct Blp::MipMap::Color& Blp::MipMap::colorAt(dword width, dword height) const
 {
-	this->m_alphas.push_back(alpha);
+	return const_cast<const struct Blp::MipMap::Color&>(const_cast<class MipMap*>(this)->m_colors[std::make_pair(width, height)]);
 }
 
-inline const std::list<byte>& Blp::MipMap::alphas() const
-{
-	return this->m_alphas;
-}
-
-inline void Blp::setCompression(dword compression)
+inline void Blp::setCompression(enum Blp::Compression compression)
 {
 	this->m_compression = compression;
 }
 
-inline dword Blp::compression() const
+inline enum Blp::Compression Blp::compression() const
 {
 	return this->m_compression;
 }
 
-inline void Blp::setFlags(dword flags)
+inline void Blp::setFlags(enum Blp::Flags flags)
 {
 	this->m_flags = flags;
 }
 
-inline dword Blp::flags() const
+inline enum Blp::Flags Blp::flags() const
 {
 	return this->m_flags;
 }
@@ -274,16 +275,6 @@ inline void Blp::setPictureSubType(dword pictureSubType)
 inline dword Blp::pictureSubType() const
 {
 	return this->m_pictureSubType;
-}
-
-inline void Blp::setPalette(std::list<color> &palette)
-{
-	this->m_palette = palette;
-}
-
-inline const std::list<color>& Blp::palette() const
-{
-	return this->m_palette;
 }
 
 inline void Blp::addMipMap(class MipMap *mipMap)

@@ -18,7 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cstdio>
+#include <iostream>
+
+#include <boost/format.hpp>
 
 #include "material.hpp"
 #include "materials.hpp"
@@ -55,12 +57,7 @@ long32 Material::readMdx(std::istream &istream) throw (class Exception)
 	long32 bytes = istream.gcount();
 	
 	if (nbytesi <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Material: Small byte count.\nBytes %d.\n"), nbytesi);
-		
-		throw Exception(message);
-	}
+		throw Exception(boost::format(_("Material: Small byte count.\nBytes %d.\n")) % nbytesi);
 	
 	istream.read(reinterpret_cast<char*>(&this->m_priorityPlane), sizeof(this->m_priorityPlane));
 	bytes += istream.gcount();
@@ -68,12 +65,12 @@ long32 Material::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	
 	if (this->m_renderMode != 1 && this->m_renderMode != 16 && this->m_renderMode != 32)
-		fprintf(stderr, _("Material: Warning, unknown render mode.\nRender mode %d.\n"), this->m_renderMode);
+		std::cerr << boost::format(_("Material: Warning, unknown render mode.\nRender mode %1%.")) % this->m_renderMode << std::endl;
 	
 	bytes += this->m_layers->readMdx(istream);
 	
 	if (nbytesi != bytes)
-		fprintf(stderr, _("Material: Real byte count is not equal to file byte count.\nReal byte count %d.\nFile byte count %d.\n"), bytes, nbytesi);
+		std::cerr << boost::format(_("Material: Real byte count is not equal to file byte count.\nReal byte count %1%.\nFile byte count %2%.")) % bytes % nbytesi << std::endl;
 	
 	return bytes;
 }

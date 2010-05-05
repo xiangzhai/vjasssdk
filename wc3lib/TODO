@@ -1,3 +1,40 @@
+2010-05-02 Tamino Dauth <tamino@cdauth.de>
+* Make BLP Qt Plugin installable.
+* Rename editor::SubEditor to editor::Module (and of course all other modules).
+* World editor should get his strings from file WorldEditStrings.txt (not gettext).
+* Trigger editor should be able to read files TriggerData.txt and TriggerStrings.txt.
+* If Warcraft 3 is able to read various TriggerData files trigger editor should support defining custom actions/events/trigger calls/types.
+* Import module should allow user to import folders.
+* Preview selected map loading screen in editor.
+* Rects should be copiable like cameras.
+* Center of rects should be choosable.
+* Add region layer which contains regions (select added rects, cells). Region file should be called war3map.w3g.
+* Unit layer should provide text view (list items like rects, searchable).
+* Add entry "Apply pathing" to terrain layer.
+* Selection should allow selecting various object types together (units and doodads etc.) add selection filter options like Select: [] units, [] rects etc.
+* Add view menu entry "Pathing - Air".
+* Map size and camera size should be choosable by setting numbers.
+* Advanced - Replace etc. functions should work on chosen rects/regions only.
+* Object manager misses imported data stats (add regions, too).
+* Note that there can be several palettes!
+* Add Button to insert object type data in object editor's string entries (<Id,DataA1>).
+* Add button doodad and unit layer: Select in object editor.
+* Add object editor tabs for customizing lightnings, sounds, textures, models etc..
+* Add object editor file menu entries for merging object data.
+* Add map file entries for exporting/importing placed rects, placed cameras, placed units, placed doodads, terrain and path map (maybe add to palettes).
+* DEPRACATED?: Add map file entry "Import script".
+* Remove widget brush list.
+* Model preview widget should allow using mouse control for changing view.
+* Widgets model preview and mini map preview should become movable widgets.
+* Terrain brush height and width should be choosable by setting their exact values.
+* Preview game screen of campaign in model preview widget if selected.
+* Preview cursor textur of campaign.
+* Make selected campaign sound playable.
+* Note that you'll have to write custom classes for various object editor menu actions since they do differ (campaign and map object editors, import editor, too).
+* Doodad brush should be choosable for placing units/items, too (also random facing).
+* Add disable option for animating placed objects.
+* Add direct test mode to editor (TOO MUCH WORK).
+
 2010-04-30 Tamino Dauth <tamino@cdauth.de>
 * If boost zlib, huffman and bzip2 are usable, maybe we should replace old algorithm implementations.
 * Add KIO protocols mpq, mdl, mdx, blp and slk to editor library.
@@ -82,11 +119,11 @@
 * Decrypt the whole block table at once?!
 
 2010-01-14 Tamino Dauth <tamino@cdauth.de>
-* Use std::streamsize (in case of need by conversion) for all byte returns of read methods.
+* DONE: Use std::streamsize (in case of need by conversion) for all byte returns of read methods.
 
 2010-01-11 Tamino Dauth <tamino@cdauth.de>
-* Write methods should be const.
-* Enable Boost threading exception handling (-fexceptions).
+* DONE: Write methods should be const.
+* FIXED: Enable Boost threading exception handling (-fexceptions).
 * Separate class instances in converter application.
 
 2010-01-06 Tamino Dauth <tamino@cdauth.de>
@@ -136,7 +173,7 @@
 * Add editor GUI widgets.
 
 2009-11-01 Tamino Dauth <tamino@cdauth.de>
-* MPQ files should be readed and create MpqFile instances for each file or use the native types of specification?
+* DONE: MPQ files should be readed and create MpqFile instances for each file or use the native types of specification?
 * Required compile flags: BLEND (supports Blender file conversion), DEBUG (cmake debug mode)
 
 2009-10-28 Tamino Dauth <tamino@cdauth.de>
@@ -151,7 +188,7 @@
 * Fix MDX property validation (+n means n or bigger than n, I think).
 
 2009-10-09 Tamino Dauth <tamino@cdauth.de>
-* Use BLP header mip map offsets and sizes.
+* FIXED: Use BLP header mip map offsets and sizes.
 * Note that there is unused space between header and JPEG mip map data which probably can be removed.
 * Read something about JPEG format implementation since BLP specification does not explain this.
 

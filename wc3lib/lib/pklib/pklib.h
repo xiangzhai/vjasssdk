@@ -12,11 +12,6 @@
 #ifndef __PKLIB_H__
 #define __PKLIB_H__
 
-#include <boost/cstdint.hpp>
-
-typedef int16_t DWORD_PTR;
-typedef int16_t INT_PTR;
-
 //-----------------------------------------------------------------------------
 // Defines
 

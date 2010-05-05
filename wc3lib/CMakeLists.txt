@@ -60,13 +60,15 @@ WC3LIB_SET_COMPILE_FLAG(FLAG_EDITOR_USE "EDITOR")
 find_package(Gettext REQUIRED) 
 
 set(Boost_USE_MULTITHREADED TRUE)
-set(Boost_DEBUG TRUE) # debug mode
+if (FLAG_DEBUG_USE)
+	set(Boost_DEBUG TRUE)
+endif ()
 set(Boost_DETAILED_FAILURE_MSG TRUE)
 set(Boost_ADDITIONAL_VERSIONS "1.78" "1.78.0" "1.79" "1.79.0")
 find_package(Boost 1.42.0 COMPONENTS filesystem thread REQUIRED)
 
 if(FLAG_JPEG_USE)
-	find_library(openjpeg REQUIRED)
+	find_library(jpeg REQUIRED)
 endif()
 
 if(FLAG_EDITOR_USE)
@@ -85,7 +87,6 @@ include_directories(${GETTEXT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${KDE4_INCLUDE_
 include_directories(/usr/include/OGRE)
 
 add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")
-
 
 include_directories(src lib)
 

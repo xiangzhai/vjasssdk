@@ -185,6 +185,7 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 
 	delete[] data;
 
+	exit(0);
 	return bytes;
 }
 

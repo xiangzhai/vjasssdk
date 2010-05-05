@@ -1,6 +1,22 @@
+2010-05-05 Tamino Dauth <tamino@cdauth.de>
+* Improved BLP library.
+* Fixed pklib compilation error.
+* Added class LibraryLoader for dynamic library loading.
+
+2010-05-02 Tamino Dauth <tamino@cdauth.de>
+* Removed openjpeg code from class blp::Blp and replaced it by jpeglib code.
+* Fixed BLP read and write functions.
+* Revised Blp::MipMap class (saving all color values now).
+* Added some editor related todo tasks.
+
+2010-05-01 Tamino Dauth <tamino@cdauth.de>
+* Revised Jass++ definition.
+
 2010-04-30 Tamino Dauth <tamino@cdauth.de>
 * Added compressPklib and decompressPklib functions and imploded sectors support.
 * Added section "Gültigkeitsbereichverwendung" to Jass++ definition.
+* Added Doxygen settings file.
+* Revised cmake files.
 
 2010-04-25 Tamino Dauth <tamino@cdauth.de>
 * Added wave support code.

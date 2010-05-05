@@ -39,9 +39,9 @@ BlpIOHandler::~BlpIOHandler()
 
 bool BlpIOHandler::canRead() const
 {
-	char identifier[4];
+	byte identifier[4];
 	
-	if (this->device() != 0 && this->device()->isReadable() && this->device()->peek(identifier, sizeof(identifier)) == sizeof(identifier) && memcmp(identifier, "BLP1", sizeof(identifier)))
+	if (this->device() != 0 && this->device()->isReadable() && this->device()->peek(identifier, sizeof(identifier)) == sizeof(identifier) && memcmp(identifier, Blp::identifier0, sizeof(identifier)))
 		return true;
 
 	return false;
@@ -73,25 +73,16 @@ bool BlpIOHandler::read(QImage *image)
 	*/
 		
 	this->m_blp->setPictureSubType(0); //1
-	std::list<blp::color> palette;
-	
-	foreach (QRgb rgb, image->colorTable())
-		palette.push_back(rgb);
 
-	this->m_blp->setPalette(palette);
-	struct blp::Blp::MipMap *mipMap = new blp::Blp::MipMap;
-	mipMap->setWidth(image->width());
-	mipMap->setHeight(image->height());
-	QImage alphaChannel = image->alphaChannel();
-	
-	for (int i = 0; i < image->width(); ++i)
+	struct blp::Blp::MipMap *mipMap = new blp::Blp::MipMap(image->width(), image->height());
+
+	for (int width = 0; width < image->width(); ++width)
 	{
-		for (int j = 0; j < image->height(); ++j)
+		for (int height = 0; height < image->height(); ++height)
 		{
-			mipMap->addIndex(image->pixel(i, j));
-			
-			if (image->hasAlphaChannel())
-				mipMap->addAlpha(alphaChannel.pixel(i, j));
+			QRgb rgb = image->pixel(width, height);
+			int index = image->pixelIndex(width, height);
+			mipMap->setColor(width, height, rgb, qAlpha(rgb), index);
 		}
 	}
 	

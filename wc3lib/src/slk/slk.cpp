@@ -62,7 +62,7 @@ std::streamsize Slk::read(std::istream &istream) throw (class Exception)
 	return 0;
 }
 
-std::streamsize Slk::write(std::ostream &ostream) throw (class Exception)
+std::streamsize Slk::write(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
