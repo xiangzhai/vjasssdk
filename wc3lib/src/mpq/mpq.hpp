@@ -47,7 +47,7 @@ namespace mpq
 
 /**
 * @brief This class allows users to read, write and modify MPQ archives. MPQ (Mo'PaQ, short for Mike O'Brien Pack) is an archiving file format used in several of Blizzard Entertainment's games.
-* Simple example how to use this class:
+* Here's a simple example how to use this class:
 * @code
 * class Mpq mpq();
 *
@@ -62,13 +62,20 @@ namespace mpq
 *	return EXIT_FAILURE;
 * }
 *
-* const class MpqFile *mpqFile = findFile("UI/MiscData.txt", MpqFile::Neutral, MpqFile::Neutral);
+* const class MpqFile *mpqFile = mpq.findFile("UI/MiscData.txt", MpqFile::Neutral, MpqFile::Neutral);
 *
 * if (mpqFile == 0)
 *	return EXIT_FAILURE;
 *
 * std::cout << "MiscData.txt:\n" << mpqFile << std::endl;
+* mpq.close(); // This function will be called automatically when variable mpq is deleted.
 * @endcode
+* There are three further classes which are related to this one and can be used by the user.
+* In fact, mostly user does only need to know @class MpqFile which allows him constant access
+* to files contained by the MPQ archive.
+* Use Mpq::addFile to add a new file which will return 0 (if an error occurs) or the new MpqFile
+* instance which refers to the newly created file.
+
 */
 class Mpq
 {

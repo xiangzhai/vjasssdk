@@ -1,40 +1,8 @@
 WC3LIB_ENABLE_EXCEPTIONS()
 
-set(wc3lib_EDITOR_SRC
-	aieditor.cpp
-	blpiohandler.cpp
-	blpioplugin.cpp
-	campaigneditor.cpp
-	editor.cpp
-	importmanager.cpp
-	modeleditor.cpp
-	modelview.cpp
-	mpqeditor.cpp
-	newmapdialog.cpp
-	renderer.cpp
-	objecteditor.cpp
-	objectmanager.cpp
-	soundeditor.cpp	
-	subeditor.cpp
-	terraineditor.cpp
-	textureeditor.cpp
-	triggereditor.cpp
-)
-
-set(wc3lib_EDITOR_H
-	blpiohandler.hpp
-	blpioplugin.hpp
-	editor.hpp
-	modelview.hpp
-	renderer.hpp
-	terraineditor.hpp
-)
-
-set(wc3lib_EDITOR_UI
-	modeleditor.ui
-	newmapdialog.ui
-	triggereditor.ui
-)
+WC3LIB_GET_H(wc3lib_EDITOR_H)
+WC3LIB_GET_SRC(wc3lib_EDITOR_SRC)
+WC3LIB_GET_UI(wc3lib_EDITOR_UI)
 
 #QT4_WRAP_UI(wc3lib_EDITOR_UI_H ${wc3lib_EDITOR_UI})
 

@@ -179,7 +179,7 @@ static void writeBuffer(char *buf, unsigned int *size, void *param)
 	info->outPosition += toWrite;
 }
 
-void compressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLength, int &compressionType, int /* compressionLevel */)  throw (class Exception)
+void compressPklib(char *&outBuffer, int &outLength, char* const &inBuffer, int inLength, int &compressionType, int /* compressionLevel */)  throw (class Exception)
 {
 	struct DataInfo info; // Data information
 	// Fill data information structure
@@ -212,7 +212,7 @@ void compressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLeng
 		throw Exception(boost::str(boost::format(_("Implode error %1%.")) % state));
 }
 
-void decompressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLength) throw (class Exception)
+void decompressPklib(char *&outBuffer, int &outLength, char* const &inBuffer, int inLength) throw (class Exception)
 {
 	struct DataInfo info; // Data information
 	// Fill data information structure
@@ -241,7 +241,7 @@ void decompressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLe
 		throw Exception(boost::str(boost::format(_("Explode error %1%.")) % state));
 }
 
-int compressWaveMono(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception)
+int compressWaveMono(short* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception)
 {
 	// Prepare the compression level for the next compression
 	// (After us, the Huffmann compression will be called)
@@ -262,7 +262,7 @@ int compressWaveMono(short *&inBuffer, int inBufferLength, unsigned char *&outBu
 	return outBufferLength;
 }
 
-int decompressWaveMono(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception)
+int decompressWaveMono(unsigned char* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception)
 {
 	if (outBufferLength > 0)
 		delete[] outBuffer;
@@ -274,7 +274,7 @@ int decompressWaveMono(unsigned char *&inBuffer, int inBufferLength, unsigned ch
 	return outBufferLength;
 }
 
-int compressWaveStereo(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception)
+int compressWaveStereo(short* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception)
 {
 	// Prepare the compression type for the next compression
 	// (After us, the Huffmann compression will be called)
@@ -295,7 +295,7 @@ int compressWaveStereo(short *&inBuffer, int inBufferLength, unsigned char *&out
 	return outBufferLength;
 }
 
-int decompressWaveStereo(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception)
+int decompressWaveStereo(unsigned char* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception)
 {
 	if (outBufferLength > 0)
 		delete[] outBuffer;

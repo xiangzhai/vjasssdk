@@ -62,8 +62,8 @@ void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLe
 /// Based on code from StormLib.
 uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum HashType hashType);
 
-void compressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLength, int &compressionType, int /* compressionLevel */) throw (class Exception);
-void decompressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLength) throw (class Exception);
+void compressPklib(char *&outBuffer, int &outLength, char* const &inBuffer, int inLength, int &compressionType, int /* compressionLevel */) throw (class Exception);
+void decompressPklib(char *&outBuffer, int &outLength, char* const &inBuffer, int inLength) throw (class Exception);
 /**
 * @fn compressWaveMono, decompressWaveMono, compressWaveStereo, decompressWaveStereo
 * Wrapper of StormLib functions.
@@ -73,10 +73,10 @@ void decompressPklib(char *&outBuffer, int &outLength, char *&inBuffer, int inLe
 * @param outBuffer Buffer length which should have the initial size of buffer @param outBuffer. If the buffer is empty this value should be 0.
 * @return Returns witten bytes.
 */
-int compressWaveMono(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception);
-int decompressWaveMono(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception);
-int compressWaveStereo(short *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception);
-int decompressWaveStereo(unsigned char *&inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception);
+int compressWaveMono(short* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception);
+int decompressWaveMono(unsigned char* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception);
+int compressWaveStereo(short* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception);
+int decompressWaveStereo(unsigned char* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception);
 
 std::streamsize deflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception);
 /**

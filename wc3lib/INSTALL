@@ -12,3 +12,6 @@ MPQ:
 	- TAR
 
 EDITOR
+
+cmake options:
+BUILD_DOCUMENTATION

@@ -35,7 +35,48 @@ namespace wc3lib
 
 namespace mpq
 {
-	
+
+std::streamsize MpqFile::readData(std::istream &istream) throw (class Exception)
+{
+	std::streamsize bytes = 0;
+
+	BOOST_FOREACH(class Sector *sector, this->m_sectors)
+		bytes += sector->readData(istream);
+
+	return bytes;
+}
+
+std::streamsize MpqFile::appendData(std::istream &istream) throw (class Exception)
+{
+	throw Exception(_("MpqFile: appendData is not implemented yet!"));
+
+	return 0;
+}
+
+std::streamsize MpqFile::writeData(std::ostream &ostream) const throw (class Exception)
+{
+	std::streamsize bytes = 0;
+
+	std::cout << "We have " << this->m_sectors.size() << " sectors." << std::endl;
+
+	BOOST_FOREACH(const class Sector *sector, this->m_sectors)
+		bytes += sector->writeData(ostream);
+
+	return bytes;
+}
+
+MpqFile::MpqFile(class Mpq *mpq, class Hash *hash) : m_mpq(mpq), m_hash(hash), m_path("")
+{
+	if (hash != 0)
+		hash->m_mpqFile = this;
+}
+
+MpqFile::~MpqFile()
+{
+	BOOST_FOREACH(class Sector *sector, this->m_sectors)
+		delete sector;
+}
+
 std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = 0;
@@ -178,47 +219,6 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 std::streamsize MpqFile::write(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
-}
-
-std::streamsize MpqFile::readData(std::istream &istream) throw (class Exception)
-{
-	std::streamsize bytes = 0;
-
-	BOOST_FOREACH(class Sector *sector, this->m_sectors)
-		bytes += sector->readData(istream);
-
-	return bytes;
-}
-
-std::streamsize MpqFile::appendData(std::istream &istream) throw (class Exception)
-{
-	throw Exception(_("MpqFile: appendData is not implemented yet!"));
-
-	return 0;
-}
-
-std::streamsize MpqFile::writeData(std::ostream &ostream) const throw (class Exception)
-{
-	std::streamsize bytes = 0;
-
-	std::cout << "We have " << this->m_sectors.size() << " sectors." << std::endl;
-
-	BOOST_FOREACH(const class Sector *sector, this->m_sectors)
-		bytes += sector->writeData(ostream);
-
-	return bytes;
-}
-
-MpqFile::MpqFile(class Mpq *mpq, class Hash *hash) : m_mpq(mpq), m_hash(hash), m_path("")
-{
-	if (hash != 0)
-		hash->m_mpqFile = this;
-}
-
-MpqFile::~MpqFile()
-{
-	BOOST_FOREACH(class Sector *sector, this->m_sectors)
-		delete sector;
 }
 
 void MpqFile::remove() throw (class Exception)

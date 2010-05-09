@@ -122,44 +122,6 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 			//zlibParameters.strategy = boost::iostreams::zlib::huffman_only;
 			//boost::iostreams::zlib_decompressor zlibDecompressor(zlibParameters);
 
-			/// @todo IMPLEMENT.
-			if (this->m_compression & Sector::ImaAdpcmMono) // IMA ADPCM mono
-			{
-				std::cout << "decompress wave mono." << std::endl;
-				unsigned char *unsignedCharData = reinterpret_cast<unsigned char*>(data);
-				decompressWaveMono(unsignedCharData, (int)dataSize, unsignedCharData, dataSize);
-				data = reinterpret_cast<byte*>(unsignedCharData);
-			}
-
-			//	throw Exception(_("Sector: IMA ADPCM mono files are not supported yet."));
-
-			/// @todo IMPLEMENT.
-			if (this->m_compression & Sector::ImaAdpcmStereo) // IMA ADPCM stereo
-			{
-				std::cout << "decompress wave stereo." << std::endl;
-				unsigned char *unsignedCharData = reinterpret_cast<unsigned char*>(data);
-				decompressWaveStereo(unsignedCharData, (int)dataSize, unsignedCharData, dataSize);
-				data = reinterpret_cast<byte*>(unsignedCharData);
-			}
-				//throw Exception(_("Sector: IMA ADPCM stereo files are not supported yet."));
-
-			if (this->m_compression & Sector::Huffman) // Huffman encoded
-			{
-				std::cout << "Decompress huffman." << std::endl;
-				//filteringStreamBuffer.push(boost::iostreams::filter:)
-				int state = huffman_decode_memory((unsigned char*)data, unsigned(dataSize), (unsigned char**)(&data), (unsigned*)(&dataSize));
-				std::cout << "data address " << data << " and data size " << dataSize << std::endl;
-
-				if (state != 0)
-					throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
-			}
-
-			if (this->m_compression & Sector::Deflated) // Deflated (see ZLib)
-			{
-				std::cout << "Decompress zlib." << std::endl;
-				bytes += inflateStream(ifstream, ostream);
-			}
-
 			if (this->m_compression & Sector::Bzip2Compressed) // BZip2 compressed (see BZip2)
 			{
 				//filteringStreamBuffer.push(boost::iostreams::bzip2_decompressor());
@@ -169,6 +131,52 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 
 				if (state != BZ_OK)
 					throw Exception(boost::str(boost::format(_("Sector: Bzip2 error %1%.")) % state));
+			}
+
+			/// @todo Inflate memory not stream.
+			if (this->m_compression & Sector::Deflated) // Deflated (see ZLib)
+			{
+				std::cout << "Decompress zlib. with data size " << dataSize << std::endl;
+				std::stringstream sstreamOut;
+				sstreamOut.write(reinterpret_cast<const char*>(data), dataSize);
+				std::stringstream sstreamIn;
+				std::streamsize size = inflateStream(sstreamOut, sstreamIn);
+				bytes += size;
+				delete[] data;
+				data = new byte[size];
+				dataSize = size;
+				sstreamIn.read(reinterpret_cast<char*>(data), dataSize);
+			}
+
+			if (this->m_compression & Sector::Huffman) // Huffman encoded
+			{
+				std::cout << "Decompress huffman. Data " << data << std::endl << " and data size " << dataSize << std::endl;
+				//filteringStreamBuffer.push(boost::iostreams::filter:)
+				int state = huffman_decode_memory((unsigned char*)data, unsigned(dataSize), (unsigned char**)(&data), (unsigned*)(&dataSize));
+				std::cout << "data address " << data << " and data size " << dataSize << std::endl;
+
+				if (state != 0)
+					throw Exception(boost::str(boost::format(_("Sector: Huffman error %1%.")) % state));
+			}
+
+			if (this->m_compression & Sector::ImaAdpcmStereo) // IMA ADPCM stereo
+			{
+				std::cout << "decompress wave stereo." << std::endl;
+				unsigned char *unsignedCharData = reinterpret_cast<unsigned char*>(data);
+				std::cout << "previous data size " << dataSize << std::endl;
+				decompressWaveStereo(unsignedCharData, (int)dataSize, unsignedCharData, dataSize);
+				data = reinterpret_cast<byte*>(unsignedCharData);
+				std::cout << "current data size " << dataSize << std::endl;
+			}
+
+			if (this->m_compression & Sector::ImaAdpcmMono) // IMA ADPCM mono
+			{
+				std::cout << "decompress wave mono." << std::endl;
+				unsigned char *unsignedCharData = reinterpret_cast<unsigned char*>(data);
+				std::cout << "previous data size " << dataSize << std::endl;
+				decompressWaveMono(unsignedCharData, (int)dataSize, unsignedCharData, dataSize);
+				std::cout << "current data size " << dataSize << std::endl;
+				data = reinterpret_cast<byte*>(unsignedCharData);
 			}
 		}
 
@@ -186,6 +194,7 @@ std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exce
 	delete[] data;
 
 	exit(0);
+
 	return bytes;
 }
 

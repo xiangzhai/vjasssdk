@@ -4,7 +4,6 @@ message("These are the Boost libraries: ${Boost_LIBRARIES}.")
 
 if (FLAG_EDITOR_USE)
 	kde4_add_executable(editor editor.cpp)
-	add_executable(editor editor.cpp)
 	target_link_libraries(editor ${wc3lib_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 endif ()
 

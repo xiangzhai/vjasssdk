@@ -41,7 +41,7 @@ void LibraryLoader::loadLibrary(const boost::filesystem::path &path) throw (clas
 	if (self::libraryHasBeenLoaded(path))
 		return;
 
-	void *handle = dlopen(path.string().c_str(), RTLD_NOW);
+	void *handle = dlopen(path.string().c_str(), RTLD_LAZY);
 
 	if (handle == NULL)
 		throw Exception(boost::format(_("Error while loading shared object \"%1%\": %2%")) % path.string() % dlerror());

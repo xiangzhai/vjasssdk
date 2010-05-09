@@ -253,7 +253,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			{
 				/*
 				LibraryLoader::loadLibrary("jpeg");
-				(void *)(j_decompress_ptr, int, size_t) jpeg_create_decompress = LibraryLoader::librarySymbol("jpeg", "jpeg_CreateDecompress");
+				void* (*jpeg_create_decompress)(j_decompress_ptr, int, size_t) = LibraryLoader::librarySymbol("jpeg", "jpeg_CreateDecompress");
 				*/
 				std::cout << "Using jpeglib version " << JPEG_LIB_VERSION << std::endl;
 

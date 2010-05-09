@@ -32,8 +32,16 @@ function(WC3LIB_GET_SRC resultName)
 	set(${resultName} ${result} PARENT_SCOPE)
 endfunction()
 
+function(WC3LIB_GET_UI resultName)
+	file(GLOB list *.ui)
+	list(APPEND result ${list})
+	set(${resultName} ${result} PARENT_SCOPE)
+endfunction()
+
+# FIXME
 function(WC3LIB_GET_COMPILE_FLAGS resultName)
-	get_directory_property(FLAGS COMPILE_DEFINITIONS)
+	get_property(FLAGS DIRECTORY . PROPERTY COMPILE_DEFINITIONS)
+	message("FLAGS: ${FLAGS}")
 	set(${resultName} ${FLAGS} PARENT_SCOPE)
 endfunction()
 
@@ -54,8 +62,13 @@ WC3LIB_GET_COMPILE_FLAGS(FLAGS)
 message(STATUS "Compile flags are: \"${FLAGS}\".")
 WC3LIB_SET_COMPILE_FLAG(FLAG_DEBUG_USE "DEBUG")
 WC3LIB_SET_COMPILE_FLAG(FLAG_BLEND_USE "BLEND")
-WC3LIB_SET_COMPILE_FLAG(FLAG_EDITOR_USE "JPEG")
+WC3LIB_SET_COMPILE_FLAG(FLAG_JPEG_USE "JPEG")
 WC3LIB_SET_COMPILE_FLAG(FLAG_EDITOR_USE "EDITOR")
+
+# TEST
+add_definitions(-DEDITOR=1 -DJPEG=1)
+set(FLAG_EDITOR_USE 1)
+set(FLAG_JPEG_USE 1)
 
 find_package(Gettext REQUIRED) 
 
@@ -74,16 +87,18 @@ endif()
 if(FLAG_EDITOR_USE)
 	find_package(Qt4 REQUIRED)
 	find_package(KDE4 REQUIRED)
+	#include(${QT_USE_FILE})
+	add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+	include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
+	link_directories(${KDE4_LIB_DIR})
 endif()
 
 #find_library(Ogre REQUIRED) # todo Use custom cmake module to find Ogre.
 # todo: is only required when using -DJPEG
 find_library(OPENJPEG_LIBS openjpeg) # todo Use custom cmake module to find openjpeg.
 
-#include(${QT_USE_FILE})
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-link_directories(${Boost_LIBRARY_DIRS} ${KDE4_LIB_DIR})
-include_directories(${GETTEXT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR} ${Ogre_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIRS})
+include_directories(${GETTEXT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${Ogre_INCLUDE_DIR})
 include_directories(/usr/include/OGRE)
 
 add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")
@@ -96,5 +111,5 @@ add_subdirectory(lib)
 add_subdirectory(src)
 #add_subdirectory(icons)
 
-include(CPack)
+#include(CPack)
 

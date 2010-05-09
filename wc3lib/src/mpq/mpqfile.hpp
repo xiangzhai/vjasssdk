@@ -74,15 +74,6 @@ class MpqFile
 			Default
 		};
 
-		/**
-		* Reads the file sector meta data.
-		*/
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		/**
-		* Writes the file sector meta data.
-		*/
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
-
 		std::streamsize readData(std::istream &istream) throw (class Exception);
 		/**
 		* Reads data from stream @param istream and appends it to the already existing file data.
@@ -153,6 +144,15 @@ class MpqFile
 		*/
 		MpqFile(class Mpq *mpq, class Hash *hash);
 		~MpqFile();
+
+		/**
+		* Reads the file sector meta data.
+		*/
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		/**
+		* Writes the file sector meta data.
+		*/
+		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 		
 		/**
 		* Remove file (clears file hash and block data which frees the file's used space).
