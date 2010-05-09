@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_TRIGGEREDITOR_HPP
 #define WC3LIB_EDITOR_TRIGGEREDITOR_HPP
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace editor
 {
 
-class TriggerEditor : public SubEditor
+class TriggerEditor : public Module
 {
 	public:
 		TriggerEditor(class Editor *editor);

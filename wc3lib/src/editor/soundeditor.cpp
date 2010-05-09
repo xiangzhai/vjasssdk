@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 
-SoundEditor::SoundEditor(class Editor *editor) : SubEditor(editor)
+SoundEditor::SoundEditor(class Editor *editor) : Module(editor)
 {
 }
 	

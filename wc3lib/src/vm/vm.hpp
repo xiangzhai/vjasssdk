@@ -22,7 +22,7 @@
 #define VM_VM_HPP
 
 #include <istream>
-#include <list>
+#include <map>
 
 #include "../exception.hpp"
 
@@ -50,9 +50,9 @@ class Vm
 	void run() throw (class Exception);
 	
     protected:
-	std::list<class Type*> m_types;
-	std::list<class Function*> m_functions;
-	std::list<class Variable*> m_variables;
+	std::map<std::string, class Type*> m_types;
+	std::map<std::string, class Function*> m_functions;
+	std::map<std::string, class Variable*> m_variables;
 	class Function *m_currentFunction;
 };
 

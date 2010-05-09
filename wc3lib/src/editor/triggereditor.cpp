@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 
-TriggerEditor::TriggerEditor(class Editor *editor) : m_editor(editor)
+TriggerEditor::TriggerEditor(class Editor *editor) : Module(editor)
 {
 }
 

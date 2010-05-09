@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_TEXTUREEDITOR_HPP
 #define WC3LIB_EDITOR_TEXTUREEDITOR_HPP
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace editor
 {
 
-class TextureEditor : public SubEditor
+class TextureEditor : public Module
 {
 	public:
 		TextureEditor(class Editor *editor);

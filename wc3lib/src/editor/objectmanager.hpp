@@ -21,13 +21,15 @@
 #ifndef WC3LIB_EDITOR_OBJECTMANAGER_HPP
 #define WC3LIB_EDITOR_OBJECTMANAGER_HPP
 
+#include "module.hpp"
+
 namespace wc3lib
 {
 	
 namespace editor
 {
 
-class ObjectManager : public SubEditor
+class ObjectManager : public Module
 {
 	public:
 		ObjectManager(class Editor *editor);

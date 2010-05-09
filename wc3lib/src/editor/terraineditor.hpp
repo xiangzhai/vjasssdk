@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_TERRAINEDITOR_HPP
 #define WC3LIB_EDITOR_TERRAINEDITOR_HPP
 
-#include "subeditor.hpp"
+#include "module.hpp"
 #include "modelview.hpp"
 
 namespace wc3lib
@@ -34,7 +34,7 @@ namespace editor
 * @todo Model view (Ogre view) should be splittable.
 * @todo Maybe you should add a custom UI like for other sub editors.
 */
-class TerrainEditor : public SubEditor, public ModelView
+class TerrainEditor : public Module, public ModelView
 {
 	public:
 		TerrainEditor(class Editor *editor, Qt::WFlags f = 0);

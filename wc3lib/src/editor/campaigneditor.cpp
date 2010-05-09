@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 
-CampaignEditor::CampaignEditor(class Editor *editor) : SubEditor(editor)
+CampaignEditor::CampaignEditor(class Editor *editor) : Module(editor)
 {
 }
 

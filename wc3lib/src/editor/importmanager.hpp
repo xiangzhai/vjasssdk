@@ -21,13 +21,15 @@
 #ifndef WC3LIB_EDITOR_IMPORTMANAGER_HPP
 #define WC3LIB_EDITOR_IMPORTMANAGER_HPP
 
+#include "module.hpp"
+
 namespace wc3lib
 {
 	
 namespace editor
 {
 
-class ImportManager : public SubEditor
+class ImportManager : public Module
 {
 	public:
 		ImportManager(class Editor *editor);

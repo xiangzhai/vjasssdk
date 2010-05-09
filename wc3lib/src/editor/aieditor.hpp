@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_AIEDITOR_HPP
 #define WC3LIB_EDITOR_AIEDITOR_HPP
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace editor
 {
 
-class AiEditor : public SubEditor
+class AiEditor : public Module
 {
 	public:
 		AiEditor(class Editor *editor);

@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 	
-MpqEditor::MpqEditor(class Editor *editor) : SubEditor(editor)
+MpqEditor::MpqEditor(class Editor *editor) : Module(editor)
 {
 }
 	

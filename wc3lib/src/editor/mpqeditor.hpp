@@ -23,7 +23,7 @@
 
 #include <list>
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
@@ -38,7 +38,7 @@ class Mpq;
 namespace editor
 {
 
-class MpqEditor : public SubEditor
+class MpqEditor : public Module
 {
 	public:
 		MpqEditor(class Editor *editor);

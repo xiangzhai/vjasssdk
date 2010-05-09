@@ -41,6 +41,7 @@ namespace blp
 
 /**
 * @brief Provides access to the BLP format.
+*
 * A full mipmap chain must be present. The last mipmap must be 1x1 (no larger).
 * If an image is 32x8 the mipmap chain must be 32x8, 16x4, 8x2, 4x1, 2x1, 1x1.
 * Sizes not of powers of 2 seems to work fine too, the same rules for mipmaps

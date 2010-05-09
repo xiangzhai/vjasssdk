@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_SOUNDEDITOR_HPP
 #define WC3LIB_EDITOR_SOUNDEDITOR_HPP
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace editor
 {
 
-class SoundEditor : public SubEditor
+class SoundEditor : public Module
 {
 	public:
 		SoundEditor(class Editor *editor);

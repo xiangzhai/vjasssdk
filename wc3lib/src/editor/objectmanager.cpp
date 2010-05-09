@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 	
-ObjectManager::ObjectManager(class Editor *editor) : SubEditor(editor)
+ObjectManager::ObjectManager(class Editor *editor) : Module(editor)
 {
 }
 	

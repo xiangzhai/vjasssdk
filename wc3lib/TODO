@@ -3,7 +3,7 @@
 
 2010-05-02 Tamino Dauth <tamino@cdauth.de>
 * Make BLP Qt Plugin installable.
-* Rename editor::SubEditor to editor::Module (and of course all other modules).
+* DONE: Rename editor::SubEditor to editor::Module.
 * World editor should get his strings from file WorldEditStrings.txt (not gettext).
 * Trigger editor should be able to read files TriggerData.txt and TriggerStrings.txt.
 * If Warcraft 3 is able to read various TriggerData files trigger editor should support defining custom actions/events/trigger calls/types.

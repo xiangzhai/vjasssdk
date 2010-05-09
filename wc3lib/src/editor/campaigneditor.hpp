@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_CAMPAIGNEDITOR_HPP
 #define WC3LIB_EDITOR_CAMPAIGNEDITOR_HPP
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace editor
 {
 
-class CampaignEditor : public SubEditor
+class CampaignEditor : public Module
 {
 	public:
 		CampaignEditor(class Editor *editor);

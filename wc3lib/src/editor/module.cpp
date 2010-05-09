@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 
-SubEditor::SubEditor(class Editor *editor) : m_editor(editor)
+Module::Module(class Editor *editor) : m_editor(editor)
 {
 }
 

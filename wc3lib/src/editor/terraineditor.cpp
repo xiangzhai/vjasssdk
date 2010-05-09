@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 
-TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : SubEditor(editor), ModelView(editor, f)
+TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), ModelView(editor, f)
 {
 }
 
@@ -36,7 +36,7 @@ TerrainEditor::~TerrainEditor()
 
 void TerrainEditor::show()
 {
-	SubEditor::show();
+	Module::show();
 	ModelView::show();
 }
 

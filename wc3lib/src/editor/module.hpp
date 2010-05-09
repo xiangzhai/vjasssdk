@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_SUBEDITOR_HPP
-#define WC3LIB_EDITOR_SUBEDITOR_HPP
+#ifndef WC3LIB_EDITOR_MODULE_HPP
+#define WC3LIB_EDITOR_MODULE_HPP
 
 #include <QWidget>
 
@@ -31,10 +31,10 @@ namespace editor
 
 class Editor;
 	
-class SubEditor : public QWidget
+class Module : public QWidget
 {
 	public:
-		SubEditor(class Editor *editor);
+		Module(class Editor *editor);
 		
 	protected:
 		class Editor *m_editor;

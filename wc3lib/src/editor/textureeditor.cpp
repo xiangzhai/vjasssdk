@@ -26,7 +26,7 @@ namespace wc3lib
 namespace editor
 {
 	
-TextureEditor::TextureEditor(class Editor *editor) : SubEditor(editor)
+TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
 {
 }
 	

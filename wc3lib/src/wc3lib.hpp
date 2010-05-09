@@ -22,12 +22,24 @@
 #define WC3LIB_WC3LIB_HPP
 
 /**
-* @indexpage
-* @chapter Introduction
-* This is the introduction into the wc3lib.
-* @date
-* @endchapter
+* @mainpage wc3lib
+* @date Version date
+* 2010-05-09
+*
+* @section introduction Introduction
+* This is the introduction.
+*
+* @section blp BLP library
+* This is the description of the BLP library.
+*
+* @section editor Editor library
+* This is the description of the editor library.
+*
+* @section applications Applications
+* This is the description of the provided applications.
+*
 * @namespace wc3lib
+* All code elements of the wc3lib belong to this namespace!
 */
 /// @todo Add all include files!
 
