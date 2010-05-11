@@ -1,3 +1,9 @@
+2010-05-11 Tamino Dauth <tamino@cdauth.de>
+* Replaced automatic (and bugged) quest system message displaying by single call methods.
+* Added new convenience methods to struct AAbstractQuest.
+* Added method infoHasBeenShownToCharacter to struct ATalk.
+* Added cheat "order".
+
 2010-05-01 Tamino Dauth <tamino@cdauth.de>
 * Revised initializer of struct ADamageRecorder.
 * Improved global damage detection of struct ADamageRecorder.

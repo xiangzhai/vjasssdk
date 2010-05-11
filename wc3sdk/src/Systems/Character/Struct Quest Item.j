@@ -15,9 +15,55 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 			return this.m_quest
 		endmethod
 
+		// methods
+
+		/// Single call!
+		public stub method enable takes nothing returns boolean
+			if (this.setState(AAbstractQuest.stateNew)) then
+				call this.quest().displayUpdate()
+				return true
+			endif
+			return false
+		endmethod
+
+		/// Single call!
+		public stub method disable takes nothing returns boolean
+			return this.setState(AAbstractQuest.stateNotUsed)
+		endmethod
+
+		/// Single call!
+		public stub method complete takes nothing returns boolean
+			local integer oldState = this.quest().state()
+			if (this.setState(AAbstractQuest.stateCompleted)) then
+				if (this.quest().state() == AAbstractQuest.stateCompleted and oldState != AAbstractQuest.stateCompleted) then
+					call this.quest().displayState()
+				else
+					call this.quest().displayUpdate()
+				endif
+				return true
+			endif
+			return false
+		endmethod
+
+		/// Single call!
+		public stub method fail takes nothing returns boolean
+			local integer oldState = this.quest().state()
+			if (this.setState(AAbstractQuest.stateFailed)) then
+				if (this.quest().state() == AAbstractQuest.stateFailed and oldState != AAbstractQuest.stateFailed) then
+					call this.quest().displayState()
+				else
+					call this.quest().displayUpdate()
+				endif
+				return true
+			endif
+			return false
+		endmethod
+
 		public stub method setStateWithoutCondition takes integer state returns nothing
 			local boolean result
-			call super.setStateWithoutCondition(state)
+static if (DEBUG_MODE) then
+			call this.print("Warning: Set state to not used. Can not destroy quest items.")
+endif
 			set result = not this.m_quest.checkQuestItemsForState(state)
 			if (AQuest.isQuestLogUsed()) then
 				if (this.m_questItem == null) then
@@ -31,6 +77,7 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 					call ForceQuestDialogUpdate() //required?
 				endif
 			endif
+			call super.setStateWithoutCondition(state)
 		endmethod
 
 		public static method create takes AQuest usedQuest, string description returns thistype

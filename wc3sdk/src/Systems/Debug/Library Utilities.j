@@ -15,6 +15,7 @@
 * xp - Adds experience to selected hero.
 * pathing - Enables unit's pathing.
 * nopathing - Disables unit's pathing.
+* order - Displays unit order information or issues unit order.
 * timeofday - Shows current time of day.
 * benchmarks - Shows all benchmarks.
 * clearbenchmarks - Clears all benchmarks.
@@ -49,6 +50,7 @@ static if (DEBUG_MODE) then
 		call Print("xp <experience>")
 		call Print("pathing")
 		call Print("nopathing")
+		call Print("order <order>")
 		call Print("timeofday")
 		call Print("benchmarks")
 		call Print("clearbenchmarks")
@@ -276,6 +278,25 @@ endif
 		set triggerPlayer = null
 	endfunction
 
+	private function order takes nothing returns nothing
+		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(GetTriggerPlayer())
+		local string orderString
+		if (selectedUnit != null) then
+			set orderString = SubString(GetEventPlayerChatString(), StringLength("order") + 1, StringLength(GetEventPlayerChatString()))
+			if (orderString == null) then
+				debug call Print(StringArg(StringArg(tr("%s's order: %s"), GetUnitName(selectedUnit)), OrderId2String(GetUnitCurrentOrder(selectedUnit))))
+			elseif (IsStringAlphabetical(orderString)) then
+				debug call Print(StringArg(StringArg(tr("Order %s: %s"), GetUnitName(selectedUnit)), orderString))
+				call IssueImmediateOrder(selectedUnit, orderString)
+			else
+				debug call Print(StringArg(StringArg(tr("Order %s: %s"), GetUnitName(selectedUnit)), OrderId2String(S2I(orderString))))
+				call IssueImmediateOrderById(selectedUnit, S2I(orderString))
+			endif
+		else
+			debug call Print(tr("No unit is selected."))
+		endif
+	endfunction
+
 	private function timeofday takes nothing returns nothing
 		debug call Print(StringArg(tr("Current time of day: %s"), GetTimeOfDayString()))
 	endfunction
@@ -349,6 +370,7 @@ static if (DEBUG_MODE) then
 		call ACheat.create("xp", false, xp)
 		call ACheat.create("pathing", true, pathing)
 		call ACheat.create("nopathing", true, nopathing)
+		call ACheat.create("order", false, order)
 		call ACheat.create("timeofday", true, timeofday)
 		call ACheat.create("benchmarks", true, benchmarks)
 		call ACheat.create("clearbenchmarks", true, clearbenchmarks)

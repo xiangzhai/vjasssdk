@@ -8,6 +8,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		private static string m_textQuestCompleted
 		private static string m_textQuestFailed
 		private static string m_textQuestUpdate
+		private static string m_textListItem
 		//dynamic members
 		private AIntegerVector m_questItems
 		private string m_iconPath
@@ -58,17 +59,40 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 
 		// methods
 
-		public stub method setStateWithoutCondition takes integer state returns nothing
+		private method displayStateMessage takes nothing returns nothing
 			local integer i
-			local player user
-			local playercolor playerColor
+
+			if (title != null) then
+				if (this.character() != 0) then
+					call this.character().displayMessage(ACharacter.messageTypeInfo, this.title())
+					set i = 0
+					loop
+						exitwhen (i == this.m_questItems.size())
+						call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
+						set i = i + 1
+					endloop
+					call PlaySoundFileForPlayer(this.character().player(), this.soundPath())
+				else
+					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.title())
+					set i = 0
+					loop
+						exitwhen (i == this.m_questItems.size())
+						call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
+						set i = i + 1
+					endloop
+					call PlaySound(this.soundPath())
+				endif
+			endif
+		endmethod
+
+		public method displayState takes nothing returns nothing
 			local string title = null
 
-			if (state == AAbstractQuest.stateNew and thistype.m_textQuestNew != null) then
+			if (this.state() == AAbstractQuest.stateNew and thistype.m_textQuestNew != null) then
 				set title = thistype.m_textQuestNew
-			elseif (state == AAbstractQuest.stateCompleted and thistype.m_textQuestCompleted != null) then
+			elseif (this.state() == AAbstractQuest.stateCompleted and thistype.m_textQuestCompleted != null) then
 				set title = thistype.m_textQuestCompleted
-			elseif (state == AAbstractQuest.stateFailed and thistype.m_textQuestFailed != null) then
+			elseif (this.state() == AAbstractQuest.stateFailed and thistype.m_textQuestFailed != null) then
 				set title = thistype.m_textQuestFailed
 			endif
 
@@ -80,12 +104,104 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 				endif
 			endif
 
-			if (state == AAbstractQuest.stateCompleted or state == AAbstractQuest.stateFailed) then
+			call this.displayStateMessage()
+		endmethod
+
+		public method displayUpdate takes nothing returns nothing
+			if (this.character() != 0) then
+				if (thistype.m_textQuestUpdate != null) then
+					call this.character().displayMessage(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
+				endif
+			else
+				if (thistype.m_textQuestUpdate != null) then
+					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
+				endif
+			endif
+
+			call this.displayStateMessage()
+		endmethod
+
+		public method displayUpdateMessage takes string message returns nothing
+			if (this.character() != 0) then
+				if (thistype.m_textQuestUpdate != null) then
+					call this.character().displayMessage(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
+				endif
+				call this.character().displayMessage(ACharacter.messageTypeInfo, this.title())
+				call this.character().displayMessage(ACharacter.messageTypeInfo, message)
+				if (thistype.m_updateSoundPath != null) then
+					call PlaySoundFileForPlayer(this.character().player(), thistype.m_updateSoundPath)
+				endif
+			else
+				if (thistype.m_textQuestUpdate != null) then
+					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
+				endif
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.title())
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, message)
+				if (thistype.m_updateSoundPath != null) then
+					call PlaySound(thistype.m_updateSoundPath)
+				endif
+			endif
+		endmethod
+
+		/// Single call!
+		public stub method enableUntil takes integer questItemIndex returns boolean
+			local integer i = 0
+			if (this.setState(AAbstractQuest.stateNew)) then
+				set i = 0
+				loop
+					exitwhen (i == IMinBJ(this.m_questItems.size(), questItemIndex + 1))
+					call AQuestItem(this.m_questItems[i]).setState(AAbstractQuest.stateNew)
+					set i = i + 1
+				endloop
+				call this.displayState()
+				return true
+			endif
+			return false
+		endmethod
+
+		/// Single call!
+		/// Enables all items (checking conditions).
+		public stub method enable takes nothing returns boolean
+			return this.enableUntil(this.m_questItems.size() - 1)
+		endmethod
+
+		/// Single call!
+		/// Should disable all items since setting state to AAbstractQuest.stateNotUsed will set all items to this state, too.
+		public stub method disable takes nothing returns boolean
+			return this.setState(AAbstractQuest.stateNotUsed)
+		endmethod
+
+		/// Single call!
+		public stub method complete takes nothing returns boolean
+			if (this.setState(AAbstractQuest.stateCompleted)) then
+				call this.displayState()
+				return true
+			endif
+			return false
+		endmethod
+
+		/// Single call!
+		public stub method fail takes nothing returns boolean
+			if (this.setState(AAbstractQuest.stateFailed)) then
+				call this.displayState()
+				return true
+			endif
+			return false
+		endmethod
+
+		/// Note that if quest's state is changed quest items states will be changed automatically without checking conditions.
+		public stub method setStateWithoutCondition takes integer state returns nothing
+			local integer i
+			local player user
+			local playercolor playerColor
+			local string title = null
+
+			if (state == AAbstractQuest.stateCompleted or state == AAbstractQuest.stateFailed or state == AAbstractQuest.stateNotUsed) then
 				set i = 0
 				loop
 					exitwhen (i == this.m_questItems.size())
 					if (AQuestItem(this.m_questItems[i]).state() == AAbstractQuest.stateNew) then
-						call AQuestItem(this.m_questItems[i]).setState(state)
+						call AQuestItem(this.m_questItems[i]).setStateWithoutCondition(state)
 					endif
 					set i = i + 1
 				endloop
@@ -122,29 +238,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			call super.setStateWithoutCondition(state)
 		endmethod
 
-		public method displayUpdateMessage takes string message returns nothing
-			if (this.character() != 0) then
-				if (thistype.m_textQuestUpdate != null) then
-					call this.character().displayMessage(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
-				endif
-				call this.character().displayMessage(ACharacter.messageTypeInfo, this.title())
-				call this.character().displayMessage(ACharacter.messageTypeInfo, message)
-				if (thistype.m_updateSoundPath != null) then
-					call PlaySoundFileForPlayer(this.character().player(), thistype.m_updateSoundPath)
-				endif
-			else
-				if (thistype.m_textQuestUpdate != null) then
-					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.m_textQuestUpdate)
-				endif
-				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.title())
-				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, message)
-				if (thistype.m_updateSoundPath != null) then
-					call PlaySound(thistype.m_updateSoundPath)
-				endif
-			endif
-		endmethod
-
-		// if all quest items have an equal state quest does also get their state
+		/// If all quest items have an equal state quest does also get their state (without checking its state condition!)
 		public method checkQuestItemsForState takes integer state returns boolean
 			local integer i
 			local boolean result = true
@@ -159,7 +253,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 					set i = i + 1
 				endloop
 				if (result) then
-					call this.setState(state)
+					call this.setStateWithoutCondition(state)
 				endif
 			endif
 			return result
@@ -215,14 +309,15 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		endmethod
 
 		/// init is already used by struct @struct AAbstractQuest (@method AAbstractQuest.init)
-		public static method init0 takes boolean useQuestLog, string updateSoundPath, string textQuestNew, string textQuestCompleted, string textQuestFailed, string textQuestUpdate returns nothing
-			// static  construction members
+		public static method init0 takes boolean useQuestLog, string updateSoundPath, string textQuestNew, string textQuestCompleted, string textQuestFailed, string textQuestUpdate, string textListItem returns nothing
+			// static construction members
 			set thistype.m_useQuestLog = useQuestLog
 			set thistype.m_updateSoundPath = updateSoundPath
 			set thistype.m_textQuestNew = textQuestNew
 			set thistype.m_textQuestCompleted = textQuestCompleted
 			set thistype.m_textQuestFailed = textQuestFailed
 			set thistype.m_textQuestUpdate = textQuestUpdate
+			set thistype.m_textListItem = textListItem
 		endmethod
 
 		// static construction members

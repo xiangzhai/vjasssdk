@@ -144,6 +144,10 @@ endif
 			return AInfo(this.m_infos[index]).hasBeenShownToCharacter.evaluate(this.m_character.userId())
 		endmethod
 
+		public method infoHasBeenShownToCharacter takes integer index, ACharacter character returns boolean
+			return AInfo(this.m_infos[index]).hasBeenShownToCharacter.evaluate(character.userId())
+		endmethod
+
 		/// Usually you don't have to call this method since talks will be activated by a specific unit order.
 		public method openForCharacter takes ACharacter character returns nothing
 			debug if (this.m_character != 0) then

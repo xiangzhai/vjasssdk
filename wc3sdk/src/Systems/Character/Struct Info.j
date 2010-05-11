@@ -32,14 +32,14 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		private AInfoCondition m_condition
 		private AInfoAction m_action
 		private string m_description
-		//members
+		// members
 		private ADialogButton m_dialogButton
 		private integer m_talkIndex
 		private boolean array m_hasBeenShownToCharacter[12] //bj_MAX_PLAYERS
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AInfo\"")
 
-		//start members
+		// construction members
 
 		public method talk takes nothing returns ATalk
 			return this.m_talk
@@ -65,7 +65,7 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 			return this.m_description
 		endmethod
 
-		//members
+		// members
 
 		public method isShown takes nothing returns boolean
 			return this.m_dialogButton != 0
@@ -79,7 +79,7 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 			return this.m_hasBeenShownToCharacter[playerId]
 		endmethod
 
-		//methods
+		// methods
 
 		public method run takes nothing returns nothing
 			local unit self = this.m_talk.character().unit()
@@ -89,7 +89,6 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 			set self = null
 			set user = null
 		endmethod
-
 
 		private static method dialogButtonActionRunInfo takes ADialogButton dialogButton returns nothing
 			local ATalk talk = ACharacter.playerCharacter(dialogButton.dialog().player()).talk()
@@ -128,14 +127,14 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 
 		public static method create takes ATalk talk, boolean permanent, boolean important, AInfoCondition condition, AInfoAction action, string description returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_talk = talk
 			set this.m_permanent = permanent
 			set this.m_important = important
 			set this.m_condition = condition
 			set this.m_action = action
 			set this.m_description = description
-			//members
+			// members
 			set this.m_dialogButton = 0
 			set this.m_talkIndex = talk.addInfoInstance(this)
 			return this
@@ -152,11 +151,10 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 			return result
 		endmethod
 
+		// skipping actions are handled in speech function itself
 		private static method triggerActionSkip takes nothing returns nothing
 			local player triggerPlayer = GetTriggerPlayer()
-			//call ClearScreenMessagesForPlayer(triggerPlayer) //does not do anything
 			set thistype.m_playerHasSkipped[GetPlayerId(triggerPlayer)] = true
-			/// @todo Stop sound immediatly
 			set triggerPlayer = null
 		endmethod
 

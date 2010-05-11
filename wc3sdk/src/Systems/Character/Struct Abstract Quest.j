@@ -57,6 +57,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		private real m_pingGreen
 		private real m_pingBlue
 		private widget m_pingWidget
+		private boolean m_distributeRewardsOnCompletion
 		// construction members
 		private ACharacter m_character
 		private string m_title
@@ -89,7 +90,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			return this.m_title
 		endmethod
 
-		private method soundPath takes nothing returns string
+		public method soundPath takes nothing returns string
 			if (this.m_state == thistype.stateNew) then
 				return thistype.m_stateNewSoundPath
 			elseif (this.m_state == thistype.stateCompleted) then
@@ -98,16 +99,6 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 				return thistype.m_stateFailedSoundPath
 			endif
 			return ""
-		endmethod
-
-		private method displayMessage takes nothing returns nothing
-			if (this.m_character != 0) then
-				call this.m_character.displayMessage(ACharacter.messageTypeInfo, this.modifiedTitle())
-				call PlaySoundFileForPlayer(this.m_character.player(), this.soundPath())
-			else
-				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.modifiedTitle())
-				call PlaySound(this.soundPath())
-			endif
 		endmethod
 
 		private method displayRewardMessage takes integer reward returns nothing
@@ -141,7 +132,8 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			endif
 		endmethod
 
-		private method distributeRewards takes nothing returns nothing
+		/// @todo Should be protected
+		public method distributeRewards takes nothing returns nothing
 			local integer i
 			if (this.m_character != 0) then
 				if (this.m_reward[thistype.rewardLevel] != 0) then
@@ -250,7 +242,6 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call EnableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage()
 				elseif (state == thistype.stateCompleted) then
 					if (this.m_stateTrigger[thistype.stateNew] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateNew])
@@ -261,8 +252,9 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage()
-					call this.distributeRewards()
+					if (this.m_distributeRewardsOnCompletion) then
+						call this.distributeRewards()
+					endif
 				elseif (state == thistype.stateFailed) then
 					if (this.m_stateTrigger[thistype.stateNew] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateNew])
@@ -273,19 +265,21 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 					if (this.m_stateTrigger[thistype.stateFailed] != null) then
 						call DisableTrigger(this.m_stateTrigger[thistype.stateFailed])
 					endif
-					call this.displayMessage()
 				endif
 				call this.onStateAction(state)
 			debug endif
 		endmethod
 
-		public stub method setState takes integer state returns nothing
+		/// Call this method if you want to set the state manually.
+		public stub method setState takes integer state returns boolean
 			debug if (this.checkState(state)) then
 				if (not this.onStateCondition(state)) then
-					return
+					return false
 				endif
 				call this.setStateWithoutCondition(state)
+				return true
 			debug endif
+			debug return false
 		endmethod
 
 		public method state takes nothing returns integer
@@ -414,6 +408,14 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			return this.m_pingWidget
 		endmethod
 
+		public method setDistributeRewardsOnCompletion takes boolean distribute returns nothing
+			set this.m_distributeRewardsOnCompletion = distribute
+		endmethod
+
+		public method distributeRewardsOnCompletion takes nothing returns boolean
+			return this.m_distributeRewardsOnCompletion
+		endmethod
+
 		// construction members
 
 		public method character takes nothing returns ACharacter
@@ -474,6 +476,22 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			set this.m_pingBlue = blue
 		endmethod
 
+		public method isNotUsed takes nothing returns boolean
+			return this.m_state == thistype.stateNotUsed
+		endmethod
+
+		public method isNew takes nothing returns boolean
+			return this.m_state == thistype.stateNew
+		endmethod
+
+		public method isCompleted takes nothing returns boolean
+			return this.m_state == thistype.stateCompleted
+		endmethod
+
+		public method isFailed takes nothing returns boolean
+			return this.m_state == thistype.stateFailed
+		endmethod
+
 		// methods
 
 		private static method triggerConditionRunQuestState takes nothing returns boolean
@@ -528,6 +546,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 			// dynamic members
 			set this.m_state = thistype.stateNotUsed
 			set this.m_pingWidget = null
+			set this.m_distributeRewardsOnCompletion = true
 			// construction members
 			set this.m_character = character
 			set this.m_title = title
