@@ -54,11 +54,14 @@ TC_UNITGROUP=WESTRING_TRIGCAT_UNITGROUP,ReplaceableTextures\WorldEditUI\Actions-
 TC_UBERSPLAT=WESTRING_TRIGCAT_UBERSPLAT,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_VISIBILITY=WESTRING_TRIGCAT_VISIBILITY,ReplaceableTextures\WorldEditUI\Actions-Visibility
 // ASL
-TC_ASL="Advanced Script Library",ReplaceableTextures\WorldEditUI\Actions-Nothing
+TC_ASL_CORE_GENERAL=WESTRING_ASL_TRIGCAT_CORE_GENERAL,ReplaceableTextures\WorldEditUI\Actions-Nothing
+TC_ASL_CORE_DEBUG=WESTRING_ASL_TRIGCAT_CORE_DEBUG,ReplaceableTextures\WorldEditUI\Actions-Nothing
+TC_ASL_SYSTEMS_CHARACTER=WESTRING_ASL_TRIGCAT_SYSTEMS_CHARACTER,ReplaceableTextures\WorldEditUI\Actions-Nothing
+TC_ASL_SYSTEMS_WORLD=WESTRING_ASL_TRIGCAT_SYSTEMS_WORLD,ReplaceableTextures\WorldEditUI\Actions-Nothing
 
 //%%% DEBUG - Remove for retail
-//TC_OBSOLETE=WESTRING_TRIGCAT_OBSOLETE,ReplaceableTextures\WorldEditUI\Editor-TriggerFunction
-//TC_DEBUG=WESTRING_TRIGCAT_DEBUG,ReplaceableTextures\WorldEditUI\Editor-TriggerFunction
+TC_OBSOLETE=WESTRING_TRIGCAT_OBSOLETE,ReplaceableTextures\WorldEditUI\Editor-TriggerFunction
+TC_DEBUG=WESTRING_TRIGCAT_DEBUG,ReplaceableTextures\WorldEditUI\Editor-TriggerFunction
 
 // AI Editor only
 TC_AI_TOWN=WESTRING_TRIGCAT_AI_TOWN,none
@@ -140,10 +143,10 @@ fogmodifier=0,1,0,WESTRING_TRIGTYPE_fogmodifier
 weathereffect=0,1,0,WESTRING_TRIGTYPE_weathereffect
 
 // ASL
-ACharacter=0,1,1,"Charakter",integer
-ARoutine=0,1,1,"Tagesablauf",integer
-ASpawnPoint=0,1,1,"Erzeugungspunkt",integer
-AWeather=0,1,1,"Wetter",integer
+ACharacter=0,1,1,WESTRING_ASL_TRIGTYPE_ACHARACTER,integer
+ARoutine=0,1,1,WESTRING_ASL_TRIGTYPE_AROUTINE,integer
+ASpawnPoint=0,1,1,WESTRING_ASL_TRIGTYPE_ASPAWNPOINT,integer
+AWeather=0,1,1,WESTRING_ASL_TRIGTYPE_AWEATHER,integer
 
 
 // Trigger Non-Variable Types - Atomic (built-in to the language)
@@ -272,6 +275,7 @@ modelfile=0,0,0,WESTRING_TRIGTYPE_modelfile,string,Model,1
 anyfile=0,0,0,WESTRING_TRIGTYPE_anyfile,string,Any,1
 preloadfile=0,0,0,WESTRING_TRIGTYPE_preloadfile,string,Preload,1
 imagefile=0,0,0,WESTRING_TRIGTYPE_imagefile,string,Image,1
+soundfile,0,0,0,WESTRING_TRIGTYPE_soundfile,string,Sound,1
 
 // Trigger Non-Variable Types - Custom (handled internally by the editor)
 StringExt=0,0,0,WESTRING_TRIGTYPE_StringExt,string
@@ -305,10 +309,10 @@ group=CreateGroup(),WESTRING_TRIGDEFAULT_GROUP
 force=CreateForce(),WESTRING_TRIGDEFAULT_FORCE
 timer=CreateTimer(),WESTRING_TRIGDEFAULT_TIMER
 dialog=DialogCreate(),WESTRING_TRIGDEFAULT_DIALOG
-ACharacter=0,"Kein Charakter
-ARoutine=0,"Kein Tagesablauf"
-ASpawnPoint=0,"Kein Erzeugungspunkt"
-AWeather=0,"Kein Wetter"
+ACharacter=0,WESTRING_ASL_TRIGDEFAULT_CHARACTER
+ARoutine=0,WESTRING_ASL_TRIGDEFAULT_ROUTINE
+ASpawnPoint=0,WESTRING_ASL_TRIGDEFAULT_SPAWNPOINT
+AWeather=0,WESTRING_ASL_TRIGDEFAULT_WEATHER
 
 //***************************************************************************
 [TriggerParams]
@@ -2164,6 +2168,22 @@ UbersplatTypeDPSE=1,ubersplattype,`DPSE`,WESTRING_UBERSPLAT_DPSE
 UbersplatTypeNVOL=1,ubersplattype,`NVOL`,WESTRING_UBERSPLAT_NVOL
 UbersplatTypeNVCR=1,ubersplattype,`NVCR`,WESTRING_UBERSPLAT_NVCR
 
+// ASL
+ARtc=1,boolean,A_RTC,WESTRING_ASL_RTCAVAILABILITY
+AJapi=1,boolean,A_JAPI,WESTRING_ASL_JAPIAVAILABILITY
+AMesgHelloWorld=1,string,WESTRING_ASL_HELLO_WORLD
+AMesgASpawnPointInit=1,string,WESTRING_ASL_ASPAWNPOINTINIT_MESG
+
+
+ //A_RTC = false
+//	constant boolean A_JAPI = false
+//	constant boolean A_SYSTEMS = true
+//	constant boolean A_OBJECTS = false
+//	constant boolean A_DEBUG_HANDLES = false
+//	constant boolean A_DEBUG_NATIVES = false
+//	constant boolean A_NET = false
+//	constant boolean A_FPS_MOVEMENT = false
+
 
 //***************************************************************************
 [TriggerEvents]
@@ -2465,7 +2485,7 @@ _AndMultiple_Category=TC_CONDITION
 OrMultiple=1,nothing
 _OrMultiple_Category=TC_CONDITION
 
-//ASL
+// ASL
 
 
 //***************************************************************************
@@ -4669,29 +4689,44 @@ _DestroyFogModifier_Category=TC_VISIBILITY
 
 
 // ASL
-sc__Asl_init=0,nothing
+sc__Asl_init=1,nothing
 sc__Asl_init_Defaults=
 _sc__Asl_init_Limits=
-_sc__Asl_init_Category=TC_ASL
+_sc__Asl_init_Category=TC_ASL_CORE_GENERAL
 
-sc__ASpawnPoint_create=0,real,real,real
-_sc__ASpawnPoint_create_Defaults=0.0,0.0,0.0
-_sc__ASpawnPoint_create_Limits=_,_,_,_
-_sc__ASpawnPoint_create_Category=TC_ASL
+Print=1,StringExt
+Print_Defaults=AMesgHelloWorld
+Print_Limits=
+Print_Category=TC_ASL_CORE_DEBUG
 
-sc__ARoutine_create=0,boolean,boolean,integer,integer,integer
-_sc__ARoutine_create_Defaults=false,false,0,0,0
-_sc__ARoutine_create_Limits=_,_,_,_
-_sc__ARoutine_create_Category=TC_ASL
+PrintIf=1,boolean,StringExt
+PrintIf_Defaults=true,AMesgHelloWorld
+PrintIf_Limits=
+PrintIf_Category=TC_ASL_CORE_DEBUG
+
+sc__ASpawnPoint_init=1,real,modelfile,soundfile,integer,boolean,player,StringExt
+sc__ASpawnPoint_init_Defaults=60.0,"Objects\\Spawnmodels\\NightElf\\EntBirthTarget\\EntBirthTarget.mdl","Abilities\\Spells\\Orc\\EtherealForm\\SpiritWalkerMorph.wav",50,false,PlayerNA,AMesgASpawnPointInit
+_sc__ASpawnPoint_init_Limits=
+_sc__ASpawnPoint_init_Category=TC_ASL_SYSTEMS_WORLD
+
+sc__ASpawnPoint_destroy=1,ASpawnPoint
+sc__ASpawnPoint_destroy_Defaults=0
+sc__ASpawnPoint_destroy_Limits=
+sc__ASpawnPoint_destroy_Category=TC_ASL_SYSTEMS_WORLD
+
+sc__ARoutine_destroy=1,ARoutine
+sc__ARoutine_destroy_Defaults=0
+sc__ARoutine_destroy_Limits=
+sc__ARoutine_destroy_Category=TC_ASL_SYSTEMS_WORLD
 
 // Obsolete actions
-//AddPerfLogLabel=0,string
-//_AddPerfLogLabel_Defaults="Triggered Debug Label"
-//_AddPerfLogLabel_Category=TC_OBSOLETE
+AddPerfLogLabel=0,string
+_AddPerfLogLabel_Defaults="Triggered Debug Label"
+_AddPerfLogLabel_Category=TC_OBSOLETE
 
-//Cheat=0,string
-//_Cheat_Defaults="warnings"
-//_Cheat_Category=TC_OBSOLETE
+Cheat=0,string
+_Cheat_Defaults="warnings"
+_Cheat_Category=TC_OBSOLETE
 
 
 
@@ -6394,6 +6429,19 @@ GetLastCreatedTextTag=1,0,texttag
 _GetLastCreatedTextTag_Defaults=
 _GetLastCreatedTextTag_Category=TC_LAST
 
+// ASL
+
+// returns ASpawnPoint
+sc__ASpawnPoint_create=1,0,ASpawnPoint,real,real,real
+_sc__ASpawnPoint_create_Defaults=0.0,0.0,0.0
+_sc__ASpawnPoint_create_Limits=_,_,_,_
+_sc__ASpawnPoint_create_Category=TC_ASL_WORLD
+
+// returns ARoutine
+sc__ARoutine_create=1,0,ARoutine,boolean,boolean,integer,integer,integer
+_sc__ARoutine_create_Defaults=false,false,0,0,0
+_sc__ARoutine_create_Limits=_,_,_,_
+_sc__ARoutine_create_Category=TC_ASL_WORLD
 
 
 //***************************************************************************
@@ -6427,8 +6475,8 @@ Trigger01Action06=MeleeStartingUnits
 Trigger01Action07=MeleeStartingAI
 Trigger01Action08=MeleeInitVictoryDefeat
 
-Trigger02Name=ASL-Initialisierung
-Trigger02Comment=In diesem Auslöser können sämtliche ASL-Systeme initialisiert werden. Dies sollte vor ihrer Verwendung geschehen.
+Trigger02Name=WESTRING_ASL_TRIG_INIT
+Trigger02Comment=WESTRING_ASL_TRIG_INIT_COMMENT
 Trigger02Category=1
 Trigger02Events=1
 Trigger02Event01=MapInitializationEvent
