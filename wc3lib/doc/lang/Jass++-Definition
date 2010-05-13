@@ -21,6 +21,7 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 20. Typkonvertierungen
 21. Verzweigungen
 22. Schleifen
+23. Variablensperrung (locking)
 23. Deklarationsvoraussetzungen
 24. Funktionen
 25. Funktionsvariablen (Funktionszeiger)
@@ -170,7 +171,7 @@ Objektorientierung-Schlüsselwörter:
 Standard: class, this, self, parent, new, delete, copy, init, virtual, static, friend, abstract, mutable
 
 Threading-Schlüsselwöter:
-Warcract-spezifisch:threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
+Warcract-spezifisch: threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
 
 Save- und Load-Schlüsselwörter:
 Warcract-spezifisch: store, restore, flush, save, load, remove
@@ -186,6 +187,7 @@ Warcraft-spezifisch: native, mapinit, debug, threaded
 
 Zusammenfassung der Anweisungsblockschlüsselwörter:
 Standard: if, else, switch, case, default, while, do, for, foreach, try, catch, finally
+Warcraft-spezifisch: threaded
 
 Zusammenfassung der Anweisungsschlüsselwörter:
 Standard: break, continue, throw, size, return, new, delete, copy
@@ -326,19 +328,30 @@ Referenzbasierte Typen:
 
 12. Escape-Sequenzen
 
-Eine Escape-Sequenz ist ein Zeichen, welchem entweder das \- oder das |-Zeichen vorangestellt wird und welches ausschließlich ein einem
+Eine Escape-Sequenz ist ein Zeichen, welchem das \-Zeichen vorangestellt wird und welches ausschließlich ein einem
 Zeichenkettenliteral vorkommen darf.
-Farbkodierungen werden zum Kompilierzeitpunkt validiert.
 Es gibt folgende Escape-Sequenzen:
 n				Zeilenumbruch
 t				Horizontaler Tabulator
 \				Backslash
-|				Strich
 "				Doppeltes Anführungszeichen
-c<Farbkodierung>		Anfang der Farbkodierung
-r				Ende der Farbkodierung
 
-12. Gültigkeitsbereiche (scopes)
+Zusätzlich existieren spezielle Escape-Sequenzen für Warcraft-3-Daten.
+Zum einen gibt es Farbkodierungen, die Ausgabetext in der Regel im Spiel farbig erscheinen lassen und zum anderen
+gibt es Objekteditordaten, welche vor allem in Fähigkeiten-Tooltips verwendet werden.
+Farbkodierungen und Objekteditordaten werden zum Kompilierzeitpunkt validiert bzw. kompiliert.
+Die Objekteditordaten werden in den Zeichenketten zum Kompilierzeitpunkt ersetzt, insofern auf die Objekteditor-
+daten zugegriffen werden kann.
+Sind eine Farbkodierung oder ein Objekteditordatenverweis ungültig bzw. kann auf die Objekteditordaten nicht
+zugegriffen werden, gibt der Compiler keinen Fehler, sondern lediglich eine Warnung aus.
+Bei Objekteditordatenverweisen kann optional ein %-Zeichen angehängt werden, welches angibt, dass es sich um
+einen prozentualen Anteil handelt, was zu einer korrekten Formatierung führt.
+
+Notation:
+|c<Farbe>|r
+<<Objekt-Id>,<Feld-Id>[, %]>
+
+13. Gültigkeitsbereiche (scopes)
 
 Gültigkeitsbereiche definieren, innerhalb welches Bereiches eine Deklaration ihre Gültigkeit hat. Außerhalb dieses Bereiches
 kann die Deklaration nur über den Bezeichner, insofern ein solcher existiert, des Gültigkeitsbereiches bzw. den .-Operator erreicht werden.
@@ -373,7 +386,7 @@ void test()
 	}
 }
 
-Gültigkeitsbereichverwendung
+14. Gültigkeitsbereichverwendung
 
 Gültigkeitsbereiche können innerhalb eines anderen Gültigkeitsbereiches oder global "verwendet" werden.
 Dies bedeutet, dass Elementen des Gültigkeitsbereiches kein Präfix des Gültigkeitsbereiches mehr voran-
@@ -404,7 +417,7 @@ package gna.gnu.gni-;
 Test var2 = new Test(); // Fehler, undefinierter Bezeichner!
 
 
-Qualifizierer-Gültigkeitsbereiche
+15. Qualifizierer-Gültigkeitsbereiche
 
 Unter Qualifizierer-Gültigkeitsbereichen versteht man in Jass++ Gültigkeitsbereiche ohne Namen,
 welche nicht als eine weitere Überdeckungsschicht gelten, jedoch sämtliche enthaltenen Code-Elemente (der ersten Ebene)
@@ -443,7 +456,7 @@ debug
 	void bla3() {};
 }
 
-14. Anweisungsblöcke
+16. Anweisungsblöcke
 
 Im Gegensatz zu Gültigkeitsbereichen, sind Anweisungsblöcke keine Bezeichnerebenen. Sie schließen lediglich Anweisungen ein, welche nur in bestimmten
 Fällen ausgeführt werden.
@@ -455,7 +468,7 @@ Es existieren folgende Arten von Anweisungsblöcken:
 * Ausnahmebehandlungen
 * finally
 
-Variablen
+17. Variablen
 
 Variablen existieren, falls nicht anders angegeben, vom Programmstart bis zum Programmende. Lokale Variablen in Funktionen, sowie Elementvariablen
 von Klassen leben vom Funktionsaufruf bis zum Ende des Funktionsablaufes bzw. von der Erzeugung der Klasseninstanz bis zur Löschung dieser.
@@ -484,7 +497,7 @@ mit speziellen Verfahren bei höheren Größenangaben um den benötigten Speiche
 Eventuell sollte er einen Hinweis anzeigen, falls die Grenze überschritten wird. Da die Array-Größe ein konstanter Ganzzahlwert sein muss,
 ist sie stets zur Kompilierzeit bekannt und kann mit dem size-Operator abgefragt werden.
 
-Variablen können global, in Paketen, Klassen, Funktionen oder Methoden deklariert werden.
+Variablen können global, in Paketen, Klassen, Aufzählungen, Funktionen oder Methoden deklariert werden.
 Klassen, Funktionen und Methoden können statische Variablen enthalten:
 static integer test;
 static const integer test = 10;
@@ -492,7 +505,7 @@ static const integer test = 10;
 Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
 dagegen 0 (siehe Abschnitt Literale).
 
-Operatoren
+18. Operatoren
 
 Für Gültigkeitsbereiche:
 [<Bezeichner des Gültigkeitsbereiches>].<Bezeichner eines im Gültigkeitsbereich deklarierten Elements>
@@ -637,7 +650,7 @@ Variable != Ausdruck				Ist wahr, falls die beide Variablen nicht auf dasselbe O
 integer(Variable)				Liefert die interne Ganzzahl der Klasseninstanz.
 id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Klasseninstanz.
 
-Typen
+19. Typen
 
 In Jass++ können sämtliche Typen aus Jass ohne besondere Einschränkungen (bis auf const-Deklarationen) verwendet werden.
 Eigene Typen können ausschließlich mittels Klassen definiert werden. Alle anderen Typen sind native Typen.
@@ -687,7 +700,7 @@ myUnit = widget(myWidget); // illegal!
 Unit const myUnit = myOtherNonConstantUnit;
 Unit myUnit= myOtherConstantUnit; // illegal!
 
-Verzweigungen
+20. Verzweigungen
 
 if (Ausdruck)
 {
@@ -719,7 +732,7 @@ switch (<Variable>)
 	}
 }
 
-Schleifen
+21. Schleifen
 
 while (<Ausdruck>)
 {
@@ -762,7 +775,31 @@ default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 {
 }
 
-20. Deklarationsvoraussetzungen
+22. Variablensperrung (locking)
+
+Da das Schlüsselwort "threaded" die Deklaration einer Funktion ermöglicht, welche fast gleichzeit wie andere ausgeführt
+werden kann und es in Warcraft 3 The Frozen Throne selbst den Datentyp "trigger" gibt, dessen Aktionen ebenfalls
+fast gleichzeitig ausgeführt werden können (eigentlich handelt es sich aufgrund der einzig möglichen Compilerimplementation
+bei beiden Möglichkeiten um den Datentyp "trigger"), unterstützt die Sprache auch sogenannte Variablensperrungen,
+die verhindern, dass eine Variable über einen bestimmten Zeitraum aus mehreren Funktionen gesetzt wird.
+Ausgelesen werden können Variablen zu jedem Zeitpunkt, jedoch sollte der Testmodus nach Einstellung eine Warnung
+ausgeben können, wenn eine gesperrte Variable außerhalb ihres Sperrblocks ausgelesen wird.
+Die Sperrung einer Variable ist bis zum Ende des sogenannten Sperrblocks gültig, welcher in einer als "threaded"
+deklarierten Funktion auch "sleep"-Anweisungen enthalten kann.
+Zudem kann bei der Verwendung eines "threaded"-Blocks eine Sekundendauer in Form eines Fließkommazahlenliterals
+angegeben werden. Wird dies getan, so wartet die Funktion solange bis die Variable entsperrt wurde und überprüft
+diese in dem angegebenen Intervall. Sollte versucht werden eine Variable zu sperren, die bereits gesperrt ist und
+kein Intervall angegeben werden, so würde der Sperrblock übersprungen werden.
+
+Notation:
+threaded (<Variablenname>[; <Fließkommaintervall>])
+{
+	<Anweisungen>
+}
+
+
+
+23. Deklarationsvoraussetzungen
 
 Funktionen, Pakete, Aufzählungen und Klassen können bei ihrer Deklaration eben solche voraussetzen.
 Dazu wird der :-Operator verwendet. Dies stellt sicher, dass die Voraussetzungen vor dem jeweiligen

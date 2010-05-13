@@ -20,14 +20,14 @@
 
 #include "QOgreWidget.h"
 
-#include <OgreNoMemoryMacros.h>
+//#include <OgreNoMemoryMacros.h>
 #if defined(Q_WS_WIN)
 #include <windows.h>	// needed for WindowFromDC()
 #else
 #include <Qt/qx11info_x11.h>
 #include <X11/Xlib.h>
 #endif
-#include <OgreMemoryMacros.h>
+//#include <OgreMemoryMacros.h>
 
 
 Ogre::Root *QOgreWidget::m_ogreRoot = 0;

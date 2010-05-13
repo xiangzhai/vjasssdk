@@ -95,9 +95,9 @@ class DocComment : public Object
 		std::list<class Object*> m_seeObjects;
 		std::list<std::string> m_todos;
 		
-		private:
-			std::string m_identifier;
-			const std::string& identifer() const;
+	private:
+		std::string m_identifier;
+		const std::string& identifer() const;
 };
 
 inline void DocComment::setObject(class Object *object)

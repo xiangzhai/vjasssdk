@@ -1,3 +1,6 @@
+2010-05-11 Tamino Dauth <tamino@cdauth.de>
+* Implement classes Brush (abstract), TerrainBrush, DoodadBrush, UnitBrush, RectBrush, CameraBrush and RegionBrush at namespace editor.
+
 2010-05-06 Tamino Dauth <tamino@cdauth.de>
 * Instead of fixing zlib stream error we should rewrite the function that it can be used with memory.
 

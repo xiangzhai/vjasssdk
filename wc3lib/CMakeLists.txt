@@ -65,11 +65,6 @@ WC3LIB_SET_COMPILE_FLAG(FLAG_BLEND_USE "BLEND")
 WC3LIB_SET_COMPILE_FLAG(FLAG_JPEG_USE "JPEG")
 WC3LIB_SET_COMPILE_FLAG(FLAG_EDITOR_USE "EDITOR")
 
-# TEST
-add_definitions(-DEDITOR=1 -DJPEG=1)
-set(FLAG_EDITOR_USE 1)
-set(FLAG_JPEG_USE 1)
-
 find_package(Gettext REQUIRED) 
 
 set(Boost_USE_MULTITHREADED TRUE)
@@ -80,18 +75,19 @@ set(Boost_DETAILED_FAILURE_MSG TRUE)
 set(Boost_ADDITIONAL_VERSIONS "1.78" "1.78.0" "1.79" "1.79.0")
 find_package(Boost 1.42.0 COMPONENTS filesystem thread REQUIRED)
 
-if(FLAG_JPEG_USE)
+if (FLAG_JPEG_USE)
 	find_library(jpeg REQUIRED)
-endif()
+endif ()
 
-if(FLAG_EDITOR_USE)
+if (FLAG_EDITOR_USE)
 	find_package(Qt4 REQUIRED)
 	find_package(KDE4 REQUIRED)
 	#include(${QT_USE_FILE})
 	add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 	include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
+	message("Qt dir ${QT_INCLUDE_DIR}")
 	link_directories(${KDE4_LIB_DIR})
-endif()
+endif ()
 
 #find_library(Ogre REQUIRED) # todo Use custom cmake module to find Ogre.
 # todo: is only required when using -DJPEG

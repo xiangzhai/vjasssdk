@@ -37,7 +37,7 @@ class Language;
 class DocComment;
 
 /**
-* A Code file which is treated by a @class Parser instance.
+* A Code file which is treated by a Parser instance.
 * This class is able to handle the whole scripting languages syntax and to parse it.
 */
 class File : public yyFlexLexer

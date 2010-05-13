@@ -22,9 +22,9 @@
 #define QTOGREWIDGET_H
 
 
-#include <OgreNoMemoryMacros.h>
-#include <QtGui>
-#include <OgreMemoryMacros.h>
+//#include <OgreNoMemoryMacros.h>
+#include <Qt/QtGui>
+//#include <OgreMemoryMacros.h>
 #include <vector>
 
 #include <Ogre.h>

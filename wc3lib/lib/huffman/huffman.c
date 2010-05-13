@@ -1055,4 +1055,6 @@ int huffman_decode_memory(const unsigned char *bufin,
 	return 0;
 }
 
+#ifdef __cplusplus
+}
 #endif
