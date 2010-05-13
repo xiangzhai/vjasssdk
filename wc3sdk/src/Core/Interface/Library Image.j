@@ -8,6 +8,7 @@
 * <li>Image files may only have RGB channels (no alpha channels)</li>
 * <li>Image files have to be saved as 32 Bit TGA</li>
 * <li>Image files should be converted into BLP format</li>
+* </ul>
 */
 library ALibraryCoreInterfaceImage
 
@@ -15,8 +16,11 @@ library ALibraryCoreInterfaceImage
 	* Creates an image being visible for only one player.
 	* @author PitzerMike
 	* Local variable is being needed because of rendering.
+	* @todo Crashes game!
 	*/
 	function CreateImageForPlayer takes player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY returns image
+		return null
+		/*
 		local player localPlayer = GetLocalPlayer()
 		local image whichImage
 		local string localFile = ""
@@ -24,9 +28,10 @@ library ALibraryCoreInterfaceImage
 			set localFile = file
 		endif
 		set whichImage = CreateImage(localFile, sizeX, sizeY, 0.0, (x - (sizeX / 2.0)), (y - (sizeY / 2.0)), z, 0.0, 0.0, 0.0, 2) // image is placed in centre
-		call SetImageRenderAlways(whichImage, true) //Hierbei testen, ob es dadurch dann doch für alle Spieler sichtbar ist
+		call SetImageRenderAlways(whichImage, true)
 		set localPlayer = null
 		return whichImage
+		*/
 	endfunction
 
 	/**

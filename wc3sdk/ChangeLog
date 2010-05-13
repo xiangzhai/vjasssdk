@@ -1,3 +1,9 @@
+2010-05-13 Tamino Dauth <tamino@cdauth.eu>
+* Added methods assign, resize, createWithSize, createByOther, copyNumber and copy to struct of text macro A_LIST.
+* Added file "src/Core/General/Interface Container.j" which contains abstract interfaces for iterator and container types.
+* Added text macros A_FOREACH, A_FOREACH_2, A_FOREACH_END, A_REVERSE_FOREACH, A_REVERSE_FOREACH_2 and A_REVERSE_FOREACH_END.
+* Revised introduction documentation file.
+
 2010-05-11 Tamino Dauth <tamino@cdauth.de>
 * Replaced automatic (and bugged) quest system message displaying by single call methods.
 * Added new convenience methods to struct AAbstractQuest.

@@ -2,12 +2,12 @@
 * Fix function GetHeroMaxXP.
 
 2010-05-01 Tamino Dauth <tamino@cdauth.de>
-* Fix ASL GUI support.
+* Fix ASL GUI (trigger editor) support.
 * Improve GUI trigger actions (see WEU, UMSWE).
 
 2010-04-07 Tamino Dauth <tamino@cdauth.de>
 * Get icons and graphics for races user interfaces (AStyle).
-* Add RtC 1.0 support.
+* DONE: Add RtC 1.0 support.
 
 2010-03-10 Tamino Dauth <tamino@cdauth.de>
 * Improve text macros A_LIST and A_MAP.

@@ -57,9 +57,33 @@ vor Anweisungen bezüglich der Debug-Funktionen und -Strukturen der ASL vergesse
 führen kann.
 
 3. Der Kern
-Die ASL ist in ihren Kern und ihre Systeme aufgeteilt. Der Kern beinhaltet vor allem allgemeine Datentypen und Funktionen für die Warcraft-3-Standard-
-Datentypen.
+Die ASL ist in ihren Kern und ihre Systeme aufgeteilt. Der Kern beinhaltet vor allem allgemeine Datentypen und Funktionen für die Warcraft-3-Standard-Datentypen.
+Viele der enthaltenen Funktionen wurden nicht speziell von ASL-Entwicklern geschrieben, sondern  nahezu eins zu eins kopiert, da die ASL erst entstand als
+es bereits viele Jass-Funktionen gab. Die Namen der Autoren sind in der Regel im Funktionskommentar aufgelistet. Die Datentypen, sprich Strukturen und Schnittstellen, stellen eine häufig in Projekten benötigte und verwendete Funktionalität zur Verfügung.
+So existiert zum Beispiel die Struktur ADamageRecorder, die den erlittenen Schaden einer Einheit aufzeichnen.
+Des Weiteren enthält das Kern-Modul "General" einige Behälterstrukturen, welche in Form eines Textmacros
+mit dem entsprechenden Datentyp erzeugt werden können. Einige dieser Behälterstrukturen bieten Funktionen für sogenannte Iteratoren an, welche aus der Programmiersprache C++
+abgeschaut wurden und einen Verweis auf enthaltene Elemente erlauben. Diese Iteratoren ermöglich ebenfalls die Verwendung eines "foreach"-Textmakros, das einfache "foreach"-Schleifen,
+wie man sie aus Sprachen wie PHP oder Java kennt, nachbildet.
+Für Testzwecke existiert das Modul "Debug", welches neben unzähligen Ausgabefunktionen Strukturen wie ABenchmark enthält, mittels welcher Zeitmessungen durchgeführt und deren Resultat ausgegeben werden können.
+Momentan ist das Modul "Ai" leider noch leer, da die ASL keine Unterstützung in der KI-Programmierung anbietet. Der Autor empfiehlt daher, auf Projekte wie "AMAI" zurückzugreifen, wenn der Leser etwas
+in diese Richtung entwickeln möchte.
+Die ASL verwendet außer den übernommenen Grundfunktionen jedoch kaum gängige Systeme, wie sie z. B. auf wc3c.net zu finden sind.
+Dies hat oftmals den Grund, dass die Systeme auf wc3c.net oder anderen Seiten nicht gut oder passend genug für die Verwendung in der ASL entworfen wurden.
+Oftmals bietet die Entwicklung eigener Systeme im Nachhinein wesentlich mehr Möglichkeiten, komplexere Aufgaben zu bewältigen.
 
 4. Die Systeme
 
 5. Die Objekte (das wc3sdk-Projekt)
+Die ASL ist Teil des wc3sdk-Projekts, welches nicht nur deren Code zur Verfügung stellt, sondern nebenbei auch noch eine ganze Reihe von Modellen und Texturen, die
+für die Modifikation von Warcraft 3 The Frozen Throne geeignet sind.
+Die meisten Modelle und Texturen stammen von Warcraft-Modifikationseiten des Internets und wurden bevor sie zu einem der Projektarchive hinzugefügt wurden, zumindest vorher getestet.
+Da das wc3sdk-Projekt einst hauptsächlich für die sich in der Entwicklung befindlichen Modifikation "Die Macht des Feuers" gedacht war, sind viele Texturen und Modelle noch deutsch benannt.
+Dies wird sich mit der Zeit jedoch ändern, da das wc3sdk-Projekt international zugänglich gemacht werden soll.
+Auch befinden sich einige Dateien wie z. B. die Texturen von einigen Umgebungsmodellen noch nicht im korrekten Verzeichnis. Die Verzeichnisstruktur wurde erst während der Entwicklung entworfen
+und da die Verschiebung einer Textur, eine notwendige Änderung des Pfades in der zugehörigen Modelldatei mit sich zieht, wird dieser aufwändige Prozess ebenfalls erst mit der Zeit durchgeführt
+werden.
+Kreaturen und Gegenstände wurden, wenn auch inzwischen auf Englisch, hauptsächlich nach ihrer Bedeutung in der Welt von Warcraft bzw. in "Die Macht des Feuers" benannt.
+Natürlich können die Objekte im Spiel dennoch anders benannt werden.
+Es ist geplant, SLK-Dateien für die verschiedenen Dateien zu schreiben, welche einen einfacheren Zugriff
+vom Editor aus darauf erlauben.

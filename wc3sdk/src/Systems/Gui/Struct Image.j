@@ -20,8 +20,8 @@ library AStructSystemsGuiImage requires ALibraryCoreInterfaceImage, AStructSyste
 				call DestroyImage(this.m_image)
 				set this.m_image = null
 			endif
-			//set this.m_image = CreateImageForPlayer(this.mainWindow().gui().player(), file, this.mainWindow().getX(this.x()), this.mainWindow().getY(this.y()), 0.0, this.sizeX(), this.sizeY())
-			//call ShowImage(this.m_image, this.isShown())
+			set this.m_image = CreateImageForPlayer(this.mainWindow().gui().player(), file, this.mainWindow().getX(this.x()), this.mainWindow().getY(this.y()), 0.0, this.sizeX(), this.sizeY())
+			call ShowImage(this.m_image, this.isShown())
 		endmethod
 
 		public method file takes nothing returns string
@@ -52,7 +52,7 @@ library AStructSystemsGuiImage requires ALibraryCoreInterfaceImage, AStructSyste
 			return this.m_alpha
 		endmethod
 
-		//methods
+		// methods
 
 		public stub method show takes nothing returns nothing
 			call super.show()

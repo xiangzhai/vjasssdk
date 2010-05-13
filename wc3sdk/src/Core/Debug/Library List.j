@@ -48,6 +48,7 @@ library ALibraryCoreDebugList requires ALibraryCoreDebugMisc, AStructCoreDebugBe
 	endfunction
 
 	function AListDebug takes nothing returns nothing
+		local AIntegerList list
 		local ABenchmark listBenchmark = listInsertionsSpeedTest()
 		local ABenchmark mapBenchmark = mapInsertionsSpeedTest()
 		local ABenchmark vectorBenchmark = vectorInsertionsSpeedTest()
@@ -57,6 +58,24 @@ library ALibraryCoreDebugList requires ALibraryCoreDebugMisc, AStructCoreDebugBe
 		call listBenchmark.destroy()
 		call mapBenchmark.destroy()
 		call vectorBenchmark.destroy()
+		debug call Print("A_FOREACH test:")
+		set list = AIntegerList.createWithSize(10, 0)
+		//! runtextmacro A_FOREACH("list")
+			// no trigger sleep here since iterator could be changed
+			debug call Print("Data: " + I2S(AIntegerListIterator(aIterator).data()))
+		//! runtextmacro A_FOREACH_END()
+		debug call Print("A_REVERSE_FOREACH test:")
+		call list.clear()
+		call list.pushBack(1)
+		call list.pushBack(2)
+		call list.pushBack(3)
+		call list.pushBack(4)
+		call list.pushBack(5)
+		call list.pushBack(6)
+		//! runtextmacro A_REVERSE_FOREACH("list")
+			// no trigger sleep here since iterator could be changed
+			debug call Print("Data: " + I2S(AIntegerListIterator(aIterator).data()))
+		//! runtextmacro A_REVERSE_FOREACH_END()
 	endfunction
 
 endlibrary

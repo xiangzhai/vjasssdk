@@ -214,7 +214,7 @@ endif
 
 			/// Assigns new content to the container, dropping all the elements contained in the container object before the call and replacing them by those specified by the parameters:
 			public method assign takes integer number, $ELEMENTTYPE$ content returns nothing
-				//push back number times with content content
+				// push back number times with content content
 				local integer i = 0
 				call this.clear()
 				loop
@@ -745,7 +745,7 @@ endif
 
 			public static method create takes nothing returns thistype
 				local thistype this = thistype.allocate()
-				//members
+				// members
 				set this.m_size = 0
 				return this
 			endmethod

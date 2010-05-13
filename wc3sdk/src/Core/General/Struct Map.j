@@ -1,4 +1,4 @@
-library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
+library AStructCoreGeneralMap requires AInterfaceCoreGeneralContainer, optional ALibraryCoreDebugMisc
 
 	/**
 	* @author Tamino Dauth
@@ -78,6 +78,14 @@ library AStructCoreGeneralMap requires optional ALibraryCoreDebugMisc
 
 			public method data takes nothing returns $ELEMENTTYPE$
 				return this.m_data
+			endmethod
+
+			public method hasNext takes nothing returns boolean
+				return this.m_next != 0
+			endmethod
+
+			public method hasPrevious takes nothing returns boolean
+				return this.m_previous != 0
 			endmethod
 
 			public static method create takes nothing returns thistype

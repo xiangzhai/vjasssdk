@@ -1,4 +1,4 @@
-library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
+library AStructCoreGeneralList requires AInterfaceCoreGeneralContainer, optional ALibraryCoreDebugMisc
 
 	/**
 	* @author Tamino Dauth
@@ -52,6 +52,14 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				return this.m_data
 			endmethod
 
+			public method hasNext takes nothing returns boolean
+				return this.m_next != 0
+			endmethod
+
+			public method hasPrevious takes nothing returns boolean
+				return this.m_previous != 0
+			endmethod
+
 			public static method create takes nothing returns thistype
 				local thistype this = thistype.allocate()
 				set this.m_next = 0
@@ -69,12 +77,12 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 		$STRUCTPREFIX$ struct $NAME$Iterator[$ITERATORSPACE$]
 			private $NAME$Node m_node
 
-			/// Required by list struct.
+			/// Required by container struct.
 			public method setNode takes $NAME$Node node returns nothing
 				set this.m_node = node
 			endmethod
 
-			/// Required by list struct.
+			/// Required by container struct.
 			public method node takes nothing returns $NAME$Node
 				return this.m_node
 			endmethod
@@ -84,11 +92,11 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 			endmethod
 
 			public method hasNext takes nothing returns boolean
-				return this.m_node != 0 and this.m_node.next() != 0
+				return this.m_node != 0 and this.m_node.hasNext()
 			endmethod
 
 			public method hasPrevious takes nothing returns boolean
-				return this.m_node != 0 and this.m_node.previous() != 0
+				return this.m_node != 0 and this.m_node.hasPrevious()
 			endmethod
 
 			/// Similar to C++'s ++ iterators operator.
@@ -109,6 +117,20 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				set this.m_node = this.m_node.next()
 			endmethod
 
+			/**
+			* @todo If you want to implement toBack and toFront (like Qt does) you'll have to save parent struct instance ...
+			*/
+			public static method create takes nothing returns thistype
+				local thistype this = thistype.allocate()
+				set this.m_node = 0
+
+				return this
+			endmethod
+
+			public method operator== takes thistype iterator returns boolean
+				return this.m_node == iterator.m_node
+			endmethod
+
 			public method setData takes $ELEMENTTYPE$ data returns nothing
 				if (this.m_node == 0) then
 					return
@@ -122,25 +144,10 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				endif
 				return this.m_node.data()
 			endmethod
-
-			/**
-			* @todo If you want to implement toBack and toFront (like Qt does) you'll have to save parent struct instance ...
-			*/
-
-			public static method create takes nothing returns thistype
-				local thistype this = thistype.allocate()
-				set this.m_node = 0
-
-				return this
-			endmethod
-
-			public method operator== takes thistype iterator returns boolean
-				return this.m_node == iterator.m_node
-			endmethod
 		endstruct
 
 		$STRUCTPREFIX$ struct $NAME$[$STRUCTSPACE$]
-			//members
+			// members
 			private $NAME$Node m_front
 			private $NAME$Node m_back
 			private integer m_size
@@ -258,6 +265,27 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 					set this.m_back = node.previous() // could be 0!
 					call node.destroy()
 					set this.m_size = this.m_size - 1
+				endif
+			endmethod
+
+			public method resize takes integer size, $ELEMENTTYPE$ newContent returns nothing
+				local integer i
+				if (size < this.m_size) then
+					set i = this.m_size
+					loop
+						exitwhen (i == size)
+						call this.popBack()
+						set i = i - 1
+					endloop
+				elseif (size > this.m_size) then
+					set i = size
+					loop
+						exitwhen (i == this.m_size)
+						call this.pushBack(newContent)
+						set i = i + 1
+					endloop
+				//else
+					//do nothing
 				endif
 			endmethod
 
@@ -411,13 +439,56 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				call iterator.destroy()
 			endmethod
 
+			/**
+			* Copies elements in range @param first, @param last into list starting at position @param position.
+			* This function will skip copying automatically if end of destionation list is reached.
+			*/
+			public method copyNumber takes $NAME$Iterator first, $NAME$Iterator last, $NAME$Iterator position returns nothing
+				local $NAME$Node node = first.node()
+				local $NAME$Node destinationNode = position.node()
+				loop
+					call destinationNode.setData(node.data())
+					exitwhen (node == last.node() or not node.hasNext() or not destinationNode.hasNext())
+					set node = node.next()
+					set destinationNode = destinationNode.next()
+				endloop
+			endmethod
+
+			/**
+			* Copies all elements into list starting at position @param position.
+			* There should be left enough space after at position @param position otherwise copying is being skipped automatically.
+			*/
+			public method copy takes $NAME$Iterator position returns nothing
+				local $NAME$Node node = this.m_front
+				local $NAME$Node destinationNode = position.node()
+
+				if (node == 0) then // is empty
+					return
+				endif
+
+				loop
+					call destinationNode.setData(node.data())
+					exitwhen (node == this.m_back or not node.hasNext() or not destinationNode.hasNext())
+					set node = node.next()
+					set destinationNode = destinationNode.next()
+				endloop
+			endmethod
+
 			/// All the elements in the list container are dropped: they are removed from the list container, leaving it with a size of 0.
 			public method clear takes nothing returns nothing
-				local $NAME$Iterator first = this.begin()
-				local $NAME$Iterator last = this.end()
-				call this.eraseNumber(first, last)
-				call first.destroy()
-				call last.destroy()
+				call this.eraseNumberNode(this.m_front, this.m_back)
+			endmethod
+
+			/// Assigns new content to the container, dropping all the elements contained in the container object before the call and replacing them by those specified by the parameters:
+			public method assign takes integer number, $ELEMENTTYPE$ content returns nothing
+				// push back number times with content content
+				local integer i = 0
+				call this.clear()
+				loop
+					exitwhen (i == number)
+					call this.pushBack(content)
+					set i = i + 1
+				endloop
 			endmethod
 
 			public method random takes nothing returns $ELEMENTTYPE$
@@ -472,6 +543,21 @@ library AStructCoreGeneralList requires optional ALibraryCoreDebugMisc
 				set this.m_back = 0
 				set this.m_size = 0
 
+				return this
+			endmethod
+
+			public static method createWithSize takes integer size, $ELEMENTTYPE$ content returns thistype
+				local thistype this = thistype.create()
+				call this.resize(size, content)
+				return this
+			endmethod
+
+			/// Creates a list by filling it with elements of list @param other.
+			public static method createByOther takes thistype other returns thistype
+				local thistype this = thistype.createWithSize(other.size(), $NULLVALUE$)
+				local $NAME$Iterator start = this.begin()
+				call other.copy(start)
+				call start.destroy()
 				return this
 			endmethod
 
