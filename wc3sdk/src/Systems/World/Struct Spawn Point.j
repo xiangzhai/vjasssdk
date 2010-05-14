@@ -114,7 +114,7 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 
 	/// @struct ASpawnPoint provides the functionality of common creep spawn points, mostly used in RPG maps.
 	struct ASpawnPoint extends ASpawnPointInterface
-		//static start members
+		// static construction members
 		private static real m_time
 		private static string m_effectFilePath
 		private static string m_soundFilePath
@@ -122,9 +122,9 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 		private static boolean m_distributeItems
 		private static player m_owner
 		private static string m_textDistributeItem
-		//static member
+		// static member
 		private static integer m_dropOwnerId
-		//members
+		// members
 		private AIntegerVector m_members
 		private AGroup m_group
 		private trigger m_deathTrigger
@@ -401,7 +401,7 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
-			//members
+			// members
 			set this.m_members = AIntegerVector.create()
 			set this.m_group = AGroup.create()
 			set this.m_spawnTimer = null
@@ -412,7 +412,7 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 
 		/// Removes all contained units.
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			loop
 				exitwhen (this.m_members.empty())
 				call ASpawnPointMember(this.m_members.back()).destroy()
@@ -439,7 +439,7 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 		* @param owner The player who owns all spawn point units.
 		*/
 		public static method init takes real time, string effectFilePath, string soundFilePath, integer dropChance, boolean distributeItems, player owner, string textDistributeItem returns nothing
-			//static start members
+			// static construction members
 			set thistype.m_time = time
 			set thistype.m_effectFilePath = effectFilePath
 			set thistype.m_soundFilePath = soundFilePath
@@ -447,7 +447,7 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 			set thistype.m_distributeItems = distributeItems
 			set thistype.m_owner = owner
 			set thistype.m_textDistributeItem = textDistributeItem
-			//static members
+			// static members
 			set thistype.m_dropOwnerId = 0
 
 			if (thistype.m_soundFilePath != null) then

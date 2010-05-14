@@ -339,6 +339,18 @@ library AStructCoreGeneralMap requires AInterfaceCoreGeneralContainer, optional 
 				return false
 			endmethod
 
+			public method contains takes $NAME$Iterator iterator returns boolean
+				local $NAME$Node node = this.m_front
+				loop
+					exitwhen (node == 0)
+					if (node == iterator.node()) then
+						return true
+					endif
+					set node = node.next()
+				endloop
+				return false
+			endmethod
+
 			/**
 			* The list container is extended by inserting a new element before the element at position @param position with value @param value and key @param key.
 			* This effectively increases the container size by @param number.
@@ -347,25 +359,25 @@ library AStructCoreGeneralMap requires AInterfaceCoreGeneralContainer, optional 
 			*/
 			public method insert takes $NAME$Iterator position, $KEYTYPE$ key, $ELEMENTTYPE$ value returns nothing
 				local $NAME$Node node
-				if (this.containsKey(key) or (position < 0 and not this.empty())) then
+				local $NAME$Node tmpNode
+				if (this.containsKey(key) or (position == 0 and not this.empty()) or (position != 0 and not this.contains(position))) then
 					return
 				endif
 				set node = $NAME$Node.create()
 				call node.setKey(key)
 				call node.setData(value)
-				if (position > 0) then
-					if (position.node().previous() != 0) then
-						call node.setPrevious(position.node().previous())
+				if (position == 0) then
+					set this.m_front = node
+					set this.m_back = node
+				else
+					set tmpNode = position.node().previous()
+					call position.node().setPrevious(node)
+
+					if (tmpNode != 0) then
+						call tmpNode.setNext(node)
 					else
 						set this.m_front = node
 					endif
-
-
-					call node.setNext(position.node())
-					call position.node().setPrevious(node)
-				else
-					set this.m_front = node
-					set this.m_back = node
 				endif
 				set this.m_size = this.m_size + 1
 			endmethod

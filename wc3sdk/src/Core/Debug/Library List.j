@@ -1,7 +1,7 @@
 library ALibraryCoreDebugList requires ALibraryCoreDebugMisc, AStructCoreDebugBenchmark, AStructCoreGeneralList, AStructCoreGeneralMap, AStructCoreGeneralVector
 
 	globals
-		private constant integer insertions = 100000
+		private constant integer insertions = 1000
 	endglobals
 
 	private function listInsertionsSpeedTest takes nothing returns ABenchmark
@@ -23,6 +23,7 @@ library ALibraryCoreDebugList requires ALibraryCoreDebugMisc, AStructCoreDebugBe
 		local AUnitMapIterator iterator
 		local integer i = 0
 		call benchmark.start()
+		debug call Print("Map TEST")
 		loop
 			exitwhen (map.size() == insertions)
 			set iterator = map.begin()

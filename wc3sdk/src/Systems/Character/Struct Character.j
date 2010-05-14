@@ -114,7 +114,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			return this.m_shrine
 		endmethod
 
-		//start members
+		// construction members
 
 		/**
 		* Each character has its own owner. Each playing player can own exact one character.

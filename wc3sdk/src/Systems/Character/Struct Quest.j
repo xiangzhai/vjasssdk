@@ -62,26 +62,34 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		private method displayStateMessage takes nothing returns nothing
 			local integer i
 
-			if (title != null) then
-				if (this.character() != 0) then
-					call this.character().displayMessage(ACharacter.messageTypeInfo, this.title())
-					set i = 0
-					loop
-						exitwhen (i == this.m_questItems.size())
+			if (this.character() != 0) then
+				call this.character().displayMessage(ACharacter.messageTypeInfo, this.title())
+				set i = 0
+				loop
+					exitwhen (i == this.m_questItems.size())
+					if (not AQuestItem(this.m_questItems[i]).isNotUsed()) then
 						call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
-						set i = i + 1
-					endloop
-					call PlaySoundFileForPlayer(this.character().player(), this.soundPath())
-				else
-					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.title())
-					set i = 0
-					loop
-						exitwhen (i == this.m_questItems.size())
+					endif
+					set i = i + 1
+				endloop
+				call PlaySoundFileForPlayer(this.character().player(), this.soundPath())
+			else
+				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.title())
+				set i = 0
+				loop
+					exitwhen (i == this.m_questItems.size())
+					if (not AQuestItem(this.m_questItems[i]).isNotUsed()) then
 						call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
-						set i = i + 1
-					endloop
-					call PlaySound(this.soundPath())
-				endif
+					endif
+					set i = i + 1
+				endloop
+				call PlaySound(this.soundPath())
+			endif
+
+			/// @todo For corresponding player only.
+			if (thistype.m_useQuestLog) then
+				call FlashQuestDialogButton()
+				call ForceQuestDialogUpdate() //required?
 			endif
 		endmethod
 
@@ -222,16 +230,10 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 					call QuestSetDiscovered(this.m_questLogQuest, false)
 				elseif (state == AAbstractQuest.stateNew) then
 					call QuestSetDiscovered(this.m_questLogQuest, true)
-					call FlashQuestDialogButton()
-					call ForceQuestDialogUpdate() //required?
 				elseif (state == AAbstractQuest.stateCompleted) then
 					call QuestSetCompleted(this.m_questLogQuest, true)
-					call FlashQuestDialogButton()
-					call ForceQuestDialogUpdate() //required?
 				elseif (state == AAbstractQuest.stateFailed) then
 					call QuestSetFailed(this.m_questLogQuest, true)
-					call FlashQuestDialogButton()
-					call ForceQuestDialogUpdate() //required?
 				endif
 			endif
 

@@ -1,23 +1,23 @@
 library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreEnvironmentSound, ALibraryCoreEnvironmentSpecialEffect, AStructSystemsCharacterCharacter, AStructSystemsCharacterRevival
 
 	struct AShrine
-		//static start members
+		// static construction members
 		private static string m_effectPath
 		private static string m_soundPath
 		private static string m_textMessage
-		//start members
+		// construction members
 		private destructable m_destructable
 		private rect m_discoverRect
 		private rect m_revivalRect
 		private real m_facing
-		//members
+		// members
 		private trigger m_shrineTrigger
 		private region m_discoverRegion
 		private effect m_discoverEffect
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AShrine\"")
 
-		//start members
+		// construction members
 
 		public method destructable takes nothing returns destructable
 			return this.m_destructable
@@ -35,7 +35,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 			return this.m_facing
 		endmethod
 
-		//methods
+		// methods
 
 		private method disableForCharacter takes ACharacter character returns nothing
 			debug if (character.shrine() == this) then
@@ -122,7 +122,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 
 		static method create takes destructable usedDestructable, rect discoverRect, rect revivalRect, real facing returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_destructable = usedDestructable
 			debug if (usedDestructable == null) then
 				debug call this.print("Destructable is null!")
@@ -167,7 +167,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//start members
+			// construction members
 			set this.m_destructable = null
 
 			call this.destroyDiscoverRegion()
@@ -179,7 +179,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 		/// @param effectPath If this value is null there is no effect
 		/// @param soundPath If this value is null there is no sound.
 		public static method init takes string effectPath, string soundPath, string textMessage returns nothing
-			//static start members
+			// static construction members
 			set thistype.m_effectPath = effectPath
 			set thistype.m_soundPath = soundPath
 			set thistype.m_textMessage = textMessage

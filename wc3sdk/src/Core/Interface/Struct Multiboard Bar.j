@@ -92,7 +92,7 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			local integer i
 			local multiboarditem multiboardItem
 			if (this.m_maxValue != 0) then
-				set this.m_colouredPart = R2I(RoundTo(this.m_value * I2R(this.m_length) / this.m_maxValue, 1.0))
+				set this.m_colouredPart = R2I(this.m_value * I2R(this.m_length) / this.m_maxValue)//R2I(RoundTo(this.m_value * I2R(this.m_length) / this.m_maxValue, 1.0))
 			else
 				set this.m_colouredPart = 0
 			endif

@@ -1,5 +1,8 @@
 2010-05-11 Tamino Dauth <tamino@cdauth.de>
 * Fix function GetHeroMaxXP.
+* Fix quest state setting when all states are being set completed.
+* Fix time of day functions.
+* Test MultiboardSuppressDisplayForPlayer.
 
 2010-05-01 Tamino Dauth <tamino@cdauth.de>
 * Fix ASL GUI (trigger editor) support.

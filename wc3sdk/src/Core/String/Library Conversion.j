@@ -102,40 +102,6 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	endfunction
 
 	/**
-	* New argument function.
-	* Is much faster because you don't have to filter all the arguments and don't have to convert the types by yourself.
-	* @code
-	* StringArg(StringArg(IntegerArg("You're %i years old and you're called %s. Besides you're %s.", 0), "Peter"), "gay")
-	* @endcode
-	*/
-	//! textmacro AStringArgumentMacro takes TYPE, TYPENAME, TYPECHAR, CONVERSIONFUNCTION
-		function $TYPENAME$Arg takes string whichString, $TYPE$ value returns string
-			local string result = whichString
-			local integer index = FindString(result, "%$TYPECHAR$")
-			if (index != -1) then
-				set result = RemoveSubString(result, index, 2)
-				set result = InsertString(result, index, $CONVERSIONFUNCTION$(value))
-			endif
-			return result
-		endfunction
-	//! endtextmacro
-
-	//! runtextmacro AStringArgumentMacro("integer", "Integer", "i", "I2S")
-	//! runtextmacro AStringArgumentMacro("real", "Real", "r", "R2S")
-	//! runtextmacro AStringArgumentMacro("string", "String", "s", "")
-
-	/// @param width Width of argument string in characters (if it is too short there will be inserted space characters).
-	function RealArgW takes string whichString, real value, integer width, integer precision returns string
-			local string result = whichString
-			local integer index = FindString(whichString, "%r")
-			if (index != -1) then
-				set result = RemoveSubString(result, index, 2)
-				set result = InsertString(result, index, R2SW(value, width, precision))
-			endif
-			return result
-	endfunction
-
-	/**
 	* @author Extrarius
 	* @link http://www.wc3jass.com/
 	*/
@@ -210,19 +176,74 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		if (seconds >= 10) then
 			set secondsString = I2S(seconds)
 		else
-			set secondsString = IntegerArg(tr("0%i"), seconds)
+			set secondsString = IntegerArg.evaluate(tr("0%i"), seconds)
 		endif
 		if (minutes >= 10) then
 			set minutesString = I2S(minutes)
 		else
-			set minutesString = IntegerArg(tr("0%i"), minutes)
+			set minutesString = IntegerArg.evaluate(tr("0%i"), minutes)
 		endif
 		if (hours >= 10) then
 			set hoursString = I2S(hours)
 		else
-			set hoursString = IntegerArg(tr("0%i"), hours)
+			set hoursString = IntegerArg.evaluate(tr("0%i"), hours)
 		endif
-		return IntegerArg(IntegerArg(IntegerArg(tr("%i:%i:%i"), hours), minutes), seconds)
+		return IntegerArg.evaluate(IntegerArg.evaluate(IntegerArg.evaluate(tr("%i:%i:%i"), hours), minutes), seconds)
 	endfunction
+
+	/**
+	* New argument function.
+	* Is much faster because you don't have to filter all the arguments and don't have to convert the types by yourself.
+	* @code
+	* StringArg(StringArg(IntegerArg("You're %i years old and you're called %s. Besides you're %s.", 0), "Peter"), "gay")
+	* @endcode
+	* @see AFormat
+	*/
+	//! textmacro AStringArgumentMacro takes NAME, TYPE, TYPECHARS, CONVERSION, PARAMETERS
+		function $NAME$ takes string whichString, $TYPE$ value $PARAMETERS$ returns string
+			local integer index = FindString(whichString, "%$TYPECHARS$")
+			if (index != -1) then
+				set whichString = SubString(whichString, 0, index) + $CONVERSION$ + SubString(whichString, index + StringLength("%$TYPECHARS$"), StringLength(whichString))
+			debug else
+				debug call PrintFunctionError("$NAME$", "Missing member of type $TYPE$ in string \"" + whichString + "\".")
+			endif
+			return whichString
+		endfunction
+	//! endtextmacro
+
+	//! runtextmacro AStringArgumentMacro("IArg", "integer", "i", "I2S(value)", "")
+	//! runtextmacro AStringArgumentMacro("IntegerArg", "integer", "i", "I2S(value)", "")
+	//! runtextmacro AStringArgumentMacro("RArg", "real", "r", "R2S(value)", "")
+	//! runtextmacro AStringArgumentMacro("RealArg", "real", "r", "R2S(value)", "")
+	/// @param width Width of argument string in characters (if it is too short there will be inserted space characters).
+	//! runtextmacro AStringArgumentMacro("RWArg", "real", "r", "R2SW(value, width, precision)", ", integer width, integer precision")
+	/// @param width Width of argument string in characters (if it is too short there will be inserted space characters).
+	//! runtextmacro AStringArgumentMacro("RealWidthArg", "real", "r", "R2SW(value, width, precision)", ", integer width, integer precision")
+	//! runtextmacro AStringArgumentMacro("SArg", "string", "s", "value", "")
+	//! runtextmacro AStringArgumentMacro("StringArg", "string", "s", "value", "")
+	//! runtextmacro AStringArgumentMacro("HArg", "handle", "h", "I2S(GetHandleId(value))", "")
+	//! runtextmacro AStringArgumentMacro("HandleArg", "handle", "h", "I2S(GetHandleId(value))", "")
+	//! runtextmacro AStringArgumentMacro("UArg", "unit", "u", "GetUnitName(value)", "")
+	//! runtextmacro AStringArgumentMacro("UnitArg", "unit", "u", "GetUnitName(value)", "")
+	//! runtextmacro AStringArgumentMacro("ItArg", "item", "it", "GetItemName(value)", "")
+	//! runtextmacro AStringArgumentMacro("ItemArg", "item", "it", "GetItemName(value)", "")
+	//! runtextmacro AStringArgumentMacro("DArg", "destructable", "d", "GetDestructableName(value)", "")
+	//! runtextmacro AStringArgumentMacro("DestructableArg", "destructable", "d", "GetDestructableName(value)", "")
+	//! runtextmacro AStringArgumentMacro("PArg", "player", "p", "GetPlayerName(value)", "")
+	//! runtextmacro AStringArgumentMacro("PlayerArg", "player", "p", "GetPlayerName(value)", "")
+	//! runtextmacro AStringArgumentMacro("HeArg", "unit", "he", "GetHeroProperName(value)", "")
+	//! runtextmacro AStringArgumentMacro("HeroArg", "unit", "he", "GetHeroProperName(value)", "")
+	//! runtextmacro AStringArgumentMacro("OArg", "integer", "o", "GetObjectName(value)", "")
+	//! runtextmacro AStringArgumentMacro("ObjectArg", "integer", "o", "GetObjectName(value)", "")
+	//! runtextmacro AStringArgumentMacro("LArg", "string", "l", "GetLocalizedString(value)", "")
+	//! runtextmacro AStringArgumentMacro("LocalizedStringArg", "string", "l", "GetLocalizedString(value)", "")
+	//! runtextmacro AStringArgumentMacro("KArg", "string", "k", "I2S(GetLocalizedHotkey(value))", "")
+	//! runtextmacro AStringArgumentMacro("LocalizedHotkeyArg", "string", "k", "I2S(GetLocalizedHotkey(value))", "")
+	//! runtextmacro AStringArgumentMacro("EArg", "integer", "e", "GetExternalString(value)", "")
+	//! runtextmacro AStringArgumentMacro("ExternalStringArg", "integer", "e", "GetExternalString(value)", "")
+	/// Use seconds as parameter!
+	//! runtextmacro AStringArgumentMacro("TArg", "integer", "t", "GetTimeString(value)", "")
+	/// Use seconds as parameter!
+	//! runtextmacro AStringArgumentMacro("TimeArg", "integer", "t", "GetTimeString(value)", "")
 
 endlibrary

@@ -8,7 +8,7 @@ library ALibraryCoreEnvironmentTimeOfDay requires ALibraryCoreStringConversion
 	endfunction
 
 	function GetTimeOfDayElapsedMinutesInHour takes nothing returns integer
-		return R2I((I2R(GetTimeOfDayElapsedHours()) - GetTimeOfDay()) * 100.0)
+		return R2I((GetTimeOfDay() - I2R(GetTimeOfDayElapsedHours())) * 100.0)
 	endfunction
 
 	function GetTimeOfDayRemainingHours takes nothing returns integer
@@ -25,7 +25,7 @@ library ALibraryCoreEnvironmentTimeOfDay requires ALibraryCoreStringConversion
 	endfunction
 
 	function GetTimeOfDayElapsedSecondsInMinute takes nothing returns integer
-		return R2I((I2R(GetTimeOfDayElapsedMinutes()) - (I2R(GetTimeOfDayElapsedHours()) - GetTimeOfDay()) * 100.0) * 100.0)
+		return R2I(((GetTimeOfDay() - I2R(GetTimeOfDayElapsedHours())) * 100.0 - I2R(GetTimeOfDayElapsedMinutes())) * 100.0)
 	endfunction
 
 	function GetTimeOfDayRemainingMinutes takes nothing returns integer

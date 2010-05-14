@@ -80,6 +80,10 @@ library ALibraryCoreDebugString requires AStructCoreDebugBenchmark, ALibraryCore
 		debug endif
 	endfunction
 
+	function GetStringFormatDebug takes nothing returns nothing
+		debug call Print(Format("Hallo %1%, wie heißt du? Du bist %2%!!!!").s("Peter").s("ein Arschloch").result())
+	endfunction
+
 	function AStringDebug takes nothing returns nothing
 		local ABenchmark benchmark = ABenchmark.create("String debug")
 		local string testString = "Lieber Peter, gestern ging es mir gut."
@@ -89,6 +93,7 @@ library ALibraryCoreDebugString requires AStructCoreDebugBenchmark, ALibraryCore
 		call GetStringConversionDebug()
 		call GetStringPoolFunctionsDebug(testString, testParameter0)
 		call GetStringMiscFunctionsDebug(testString, testParameter0, testParameter1)
+		call GetStringFormatDebug()
 		call benchmark.stop()
 		call benchmark.show()
 		call benchmark.destroy()

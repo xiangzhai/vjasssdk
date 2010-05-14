@@ -23,7 +23,7 @@ library AStructSystemsCharacterBuff requires AModuleCoreGeneralSystemStruct, ASt
 			call this.m_targets.pushBack(whichUnit)
 			if (count == 0) then
 				call UnitAddAbility(whichUnit, this.m_buffId)
-				call UnitMakeAbilityPermanent(whichUnit, true, this.m_buffId) //bleibt auch bei Verwandlungen
+				call UnitMakeAbilityPermanent(whichUnit, true, this.m_buffId) // bleibt auch bei Verwandlungen
 			endif
 			set count = count + 1
 			call AHashTable.global().setHandleInteger(whichUnit, "ABuff" + I2S(this) + "Count", count)
@@ -61,13 +61,13 @@ library AStructSystemsCharacterBuff requires AModuleCoreGeneralSystemStruct, ASt
 
 		public static method init takes nothing returns nothing
 			call thistype.initialize()
-			//static members
+			// static members
 			set thistype.m_buffs = AIntegerVector.create()
 		endmethod
 
 		public static method cleanUp takes nothing returns nothing
 			call thistype.uninitialize()
-			//static members
+			// static members
 			loop
 				exitwhen (thistype.m_buffs.empty())
 				call thistype(thistype.m_buffs.back()).destroy()

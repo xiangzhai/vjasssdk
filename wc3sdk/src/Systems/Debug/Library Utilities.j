@@ -12,7 +12,7 @@
 * copy - Copies selected unit of cheating player.
 * giveall - Resets hit points, mana and all ability cooldowns of selected unit of cheating player.
 * damage - Damages selected unit.
-* xp - Adds experience to selected hero.
+* xp - Adds experience to selected hero or shows experience information about selected unit.
 * pathing - Enables unit's pathing.
 * nopathing - Disables unit's pathing.
 * order - Displays unit order information or issues unit order.
@@ -31,7 +31,7 @@
 * map - Runs map debug.
 * @todo Causes crash in debug mode!!!
 */
-library ALibrarySystemsDebugUtilities initializer initFunction requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
+library ALibrarySystemsDebugUtilities initializer initFunction requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
 
 	private function help takes nothing returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
@@ -237,19 +237,26 @@ endif
 		local integer experience
 		local boolean suspend
 		if (selectedUnit != null) then
-			if (IsUnitType(selectedUnit, UNIT_TYPE_HERO)) then
-				set experience = S2I(SubString(GetEventPlayerChatString(), StringLength("xp") + 1, StringLength(GetEventPlayerChatString())))
-				set suspend = IsSuspendedXP(selectedUnit)
-				if (suspend) then
-					call SuspendHeroXP(selectedUnit, false)
+			set experience = S2I(SubString(GetEventPlayerChatString(), StringLength("xp") + 1, StringLength(GetEventPlayerChatString())))
+			if (experience != 0) then
+				if (IsUnitType(selectedUnit, UNIT_TYPE_HERO)) then
+					set suspend = IsSuspendedXP(selectedUnit)
+					if (suspend) then
+						call SuspendHeroXP(selectedUnit, false)
+					endif
+					call AddHeroXP(selectedUnit, experience, true)
+					if (suspend) then
+						call SuspendHeroXP(selectedUnit, true)
+					endif
+					debug call Print(IntegerArg(tr("Added %i experience."), experience))
+				else
+					debug call Print(tr("Selected unit is not a hero."))
 				endif
-				call AddHeroXP(selectedUnit, experience, true)
-				if (suspend) then
-					call SuspendHeroXP(selectedUnit, true)
-				endif
-				debug call Print(IntegerArg(tr("Added %i experience."), experience))
-			debug else
-				debug call Print(tr("Selected unit is not a hero."))
+			elseif (IsUnitType(selectedUnit, UNIT_TYPE_HERO)) then
+				debug call Print(IntegerArg(IntegerArg(tr("%i/%i experience."), GetHeroXP(selectedUnit)), GetHeroMaxXP(selectedUnit)))
+				debug call Print(IntegerArg(tr("%i unit experience."), GetUnitXP(selectedUnit)))
+			else
+				debug call Print(IntegerArg(tr("%i unit experience."), GetUnitXP(selectedUnit)))
 			endif
 			set selectedUnit = null
 		endif

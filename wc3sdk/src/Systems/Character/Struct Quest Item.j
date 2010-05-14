@@ -64,7 +64,6 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 static if (DEBUG_MODE) then
 			call this.print("Warning: Set state to not used. Can not destroy quest items.")
 endif
-			set result = not this.m_quest.checkQuestItemsForState(state)
 			if (AQuest.isQuestLogUsed()) then
 				if (this.m_questItem == null) then
 					set this.m_questItem = QuestCreateItem(this.m_quest.questLogQuest())
@@ -72,12 +71,9 @@ endif
 				endif
 				//call QuestItemSetDescription(this.questLogQuestItem, this.title())
 				call QuestItemSetCompleted(this.m_questItem, state == AAbstractQuest.stateCompleted)
-				if (result) then
-					call FlashQuestDialogButton()
-					call ForceQuestDialogUpdate() //required?
-				endif
 			endif
 			call super.setStateWithoutCondition(state)
+			call this.m_quest.checkQuestItemsForState(state)
 		endmethod
 
 		public static method create takes AQuest usedQuest, string description returns thistype

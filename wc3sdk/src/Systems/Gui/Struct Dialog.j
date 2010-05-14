@@ -7,20 +7,21 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 	* all 10-button groups into pages.
 	*/
 	struct ADialog
-		//static constant members
+		// static constant members
 		public static constant integer maxDialogButtons = 100
 		private static constant integer maxPageButtons = 10
-		//static start members
+		// static construction members
 		private static integer shortcutPreviousPage
 		private static integer shortcutNextPage
 		private static string textPreviousPage
 		private static string textNextPage
-		//dynamic members
+		private static string m_textMessage
+		// dynamic members
 		private string m_message
 		private boolean m_isDisplayed
-		//start members
+		// construction members
 		private player m_player
-		//members
+		// members
 		private dialog m_dialog
 		private AIntegerVector m_dialogButtons
 		private integer m_currentPage
@@ -32,12 +33,12 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ADialog\"")
 
-		//dynamic members
+		// dynamic members
 
 		public method setMessage takes string message returns nothing
 			set this.m_message = message
 			if (this.m_isDisplayed) then
-				call DialogSetMessage(this.m_dialog, message) //InsertLineBreaks(message, 10)
+				call DialogSetMessage(this.m_dialog, this.modifiedMessage()) //InsertLineBreaks(message, 10)
 			endif
 		endmethod
 
@@ -50,7 +51,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			local integer exitValue
 			set this.m_isDisplayed = displayed
 			if (displayed) then
-				call DialogSetMessage(this.m_dialog, this.m_message) //InsertLineBreaks(message, 10)
+				call DialogSetMessage(this.m_dialog, this.modifiedMessage()) //InsertLineBreaks(message, 10)
 				set i = this.m_currentPage * thistype.maxPageButtons
 				set exitValue = (this.m_currentPage + 1) * thistype.maxPageButtons
 				loop
@@ -84,13 +85,13 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			return this.m_isDisplayed
 		endmethod
 
-		//start members
+		// construction members
 
 		public method player takes nothing returns player
 			return this.m_player
 		endmethod
 
-		//members
+		// members
 
 		public method dialog takes nothing returns dialog
 			return this.m_dialog
@@ -107,6 +108,13 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 		endmethod
 
 		// methods
+
+		public method modifiedMessage takes nothing returns string
+			if (this.m_maxPageNumber == 0) then
+				return this.m_message
+			endif
+			return IntegerArg(IntegerArg(StringArg(thistype.m_textMessage, this.m_message), this.m_currentPage + 1), this.m_maxPageNumber + 1)
+		endmethod
 
 		public method show takes nothing returns nothing
 			call this.setDisplayed(true)
@@ -259,11 +267,11 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 
 		public static method create takes player usedPlayer returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_isDisplayed = false
-			//start members
+			// construction members
 			set this.m_player = usedPlayer
-			//members
+			// members
 			set this.m_dialog = DialogCreate()
 			set this.m_dialogButtons = AIntegerVector.create()
 			set this.m_currentPage = 0
@@ -280,12 +288,13 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			call this.m_dialogButtons.destroy()
 		endmethod
 
-		public static method init takes integer shortcutPreviousPage, integer shortcutNextPage, string textPreviousPage, string textNextPage returns nothing
-			//static start members
+		public static method init takes integer shortcutPreviousPage, integer shortcutNextPage, string textPreviousPage, string textNextPage, string textMessage returns nothing
+			// static construction members
 			set thistype.shortcutPreviousPage = shortcutPreviousPage
 			set thistype.shortcutNextPage = shortcutNextPage
 			set thistype.textPreviousPage = textPreviousPage
 			set thistype.textNextPage = textNextPage
+			set thistype.m_textMessage = textMessage
 		endmethod
 	endstruct
 

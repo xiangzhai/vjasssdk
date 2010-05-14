@@ -1,8 +1,18 @@
+2010-05-14 Tamino Dauth <tamino@cdauth.eu>
+* Added dialog message modification in struct ADialog for multi page dialogs.
+* Added struct AFormat and some corresponding global functions.
+* Improved internal text macro AStringArgumentMacro.
+* RealArgW is called RealWidthArg now.
+* Added many new string argument types (globally and for struct AFormat).
+* Fixed function insert of struct in text macro A_MAP.
+
 2010-05-13 Tamino Dauth <tamino@cdauth.eu>
 * Added methods assign, resize, createWithSize, createByOther, copyNumber and copy to struct of text macro A_LIST.
 * Added file "src/Core/General/Interface Container.j" which contains abstract interfaces for iterator and container types.
 * Added text macros A_FOREACH, A_FOREACH_2, A_FOREACH_END, A_REVERSE_FOREACH, A_REVERSE_FOREACH_2 and A_REVERSE_FOREACH_END.
 * Revised introduction documentation file.
+* Revised cheat "xp".
+* Fixed listing of not used quest items.
 
 2010-05-11 Tamino Dauth <tamino@cdauth.de>
 * Replaced automatic (and bugged) quest system message displaying by single call methods.
