@@ -1,3 +1,10 @@
+2010-05-15 Tamino Dauth <tamino@cdauth.eu>
+* Fixed some methods of struct AGroup.
+* Added some methods to struct AGroup.
+* Added some documentation.
+* Added struct APlayerVector.
+* Added struct AForce.
+
 2010-05-14 Tamino Dauth <tamino@cdauth.eu>
 * Added dialog message modification in struct ADialog for multi page dialogs.
 * Added struct AFormat and some corresponding global functions.

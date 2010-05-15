@@ -3,7 +3,7 @@ library AStructCoreStringFormat requires ALibraryCoreStringMisc, optional ALibra
 	/**
 	* Use this struct to format strings which should be internationalized.
 	* @code
-		local string message = Format(tr("It's %1% o'clock and you're going to die in %2% hours. Maybe you should ask %3% why you're still alive.")).t(GetTimeOfDay()).i(3).s("Peter").result()
+	local string message = Format(tr("It's %1% o'clock and you're going to die in %2% hours. Maybe you should ask %3% why you're still alive.")).t(GetTimeOfDay()).i(3).s("Peter").result()
 	* @endcode
 	* Instead of AFormat.result you can use the global String function.
 	* This struct has been inspired by Boost C++ Libraries projects's format module (@link http://www.boost.org/doc/libs/1_43_0/libs/format/index.html).

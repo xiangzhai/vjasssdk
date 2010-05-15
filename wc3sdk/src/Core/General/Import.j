@@ -1,5 +1,6 @@
 //! import "Core/General/Interface Container.j"
 //! import "Core/General/Struct Asl.j"
+//! import "Core/General/Struct Force.j"
 //! import "Core/General/Struct Group.j"
 //! import "Core/General/Struct Hash Table.j"
 //! import "Core/General/Struct List.j"
@@ -16,5 +17,5 @@
 //! import "Core/General/Library Unit.j"
 //! import "Core/General/Module System Struct.j"
 
-library ACoreGeneral requires AInterfaceCoreGeneralContainer, AStructCoreGeneralAsl, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralList, AStructCoreGeneralMap, AStructCoreGeneralNumericVector, AStructCoreGeneralSignal, AStructCoreGeneralSlkTableEntry, AStructCoreGeneralStack, AStructCoreGeneralVector, ALibraryCoreGeneralConversion, ALibraryCoreGeneralGame, ALibraryCoreGeneralItem, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, AModuleCoreGeneralSystemStruct
+library ACoreGeneral requires AInterfaceCoreGeneralContainer, AStructCoreGeneralAsl, AStructCoreGeneralForce, AStructCoreGeneralGroup, AStructCoreGeneralHashTable, AStructCoreGeneralList, AStructCoreGeneralMap, AStructCoreGeneralNumericVector, AStructCoreGeneralSignal, AStructCoreGeneralSlkTableEntry, AStructCoreGeneralStack, AStructCoreGeneralVector, ALibraryCoreGeneralConversion, ALibraryCoreGeneralGame, ALibraryCoreGeneralItem, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, AModuleCoreGeneralSystemStruct
 endlibrary

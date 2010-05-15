@@ -1,11 +1,16 @@
 library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 
-	/// Provides access to a single hashtable instance.
-	/// @author Tamino Dauth
+	/**
+	* Provides access to a single hashtable instance.
+	* ASL internally uses AHashTable.global instance. Do not use this method to prevent conflicts with the ASL!
+	* There are various methods which allow you to save values of different types or attach them on handles since handle objects do have an unique key.
+	* Note that string hash values are usually used as keys since this struct was using data type gamecache before which uses string mission keys and labels.
+	* @author Tamino Dauth
+	*/
 	struct AHashTable
-		//static members
+		// static members
 		private static AHashTable m_global
-		//members
+		// members
 		private hashtable m_hashTable
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AHashTable\"")
@@ -152,25 +157,26 @@ library AStructCoreGeneralHashTable requires optional ALibraryCoreDebugMisc
 
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
-			//members
+			// members
 			set this.m_hashTable = InitHashtable()
 
 			return this
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			call this.flush()
 			set this.m_hashTable = null
 		endmethod
 
 		private static method onInit takes nothing returns nothing
-			//static members
+			// static members
 			set AHashTable.m_global = 0
 		endmethod
 
 		/**
 		* Global hash table is used by Advanced Script Library itself.
+		* Please do not use this method to prevent conflicts with the ASL.
 		*/
 		public static method global takes nothing returns thistype
 			if (thistype.m_global == 0) then

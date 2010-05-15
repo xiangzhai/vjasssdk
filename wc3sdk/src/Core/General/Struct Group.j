@@ -1,8 +1,20 @@
 library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreGeneralUnit
 
-	/// @todo Should be contained by @struct AGroup, vJass bug.
-	function interface AGroupForFunction takes unit whichUnit returns nothing
-
+	/**
+	* This struct is kind of wrapper for data type group. Since group does not allow
+	* direct accesses to internally stored units it's very annoying to get any group member
+	* which is not the first one.
+	* You'll always have to iterate the whole group, remove the first member and copying it into
+	* another group which should replace your first one in the end.
+	* This process has to go on until you found your required unit.
+	* Another possibility is to use filters but they have to be global functions and therefore
+	* you will either have to attach data anywhere or have to use a global variable.
+	* Instead of using filter functions this struct allows you direct access to a vector
+	* which contains all units.
+	* Additionally it provides various addGroup methods which do use the GroupEnum functions from Jass.
+	* Methods like AGroup.removeUnitsOfPlayer or removeAlliesOfUnit are very useful for spell functions.
+	* The only disadvantage of this struct is that it is a little bit slower than using native type group (especially when adding other groups e. g. by using AGroup.addUnitsOfType).
+	*/
 	struct AGroup
 		// members
 		private AUnitVector m_units
@@ -15,6 +27,10 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 
 		// methods
 
+		/**
+		* Fills an existing Warcraft-3-like group with all members of the group.
+		* @param whichGroup Group which is filled with all group members.
+		*/
 		public method fillGroup takes group whichGroup returns nothing
 			local integer i = 0
 			loop
@@ -34,14 +50,17 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			return whichGroup
 		endmethod
 
-		public method forGroup takes AGroupForFunction forFunction returns nothing
+		/**
+		* Simple forEach wrapper (equal to units.forEach).
+		*/
+		public method forGroup takes AUnitVectorUnaryFunction forFunction returns nothing
 			call this.m_units.forEach(forFunction)
 		endmethod
 
 		/**
 		* Adds all units of group @param whichGroup to the group.
 		* @param destroy If this value is true group @param whichGroup will be destroyed after it has been added.
-		* @param clear If this value is true group @param whichGroup will be cleared after it has been added. This value has no effect if destroy is already true. If both parameters are false group @param whichGroup won't change. Unfortunately the method has to re-add all units (limited Warcraft 3 natives).
+		* @param clear If this value is true group @param whichGroup will be cleared after it has been added. This value has no effect if @param destroy is already true. If both parameters are false group @param whichGroup won't change. Unfortunately the method has to re-add all units (limited Warcraft 3 natives).
 		*/
 		public method addGroup takes group whichGroup, boolean destroy, boolean clear returns nothing
 			local unit firstOfGroup
@@ -162,7 +181,7 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 		endmethod
 
 		public method locationOrder takes string order, location whichLocation returns boolean
-			local group whichGroup = CreateGroup()
+			local group whichGroup = this.group()
 			local boolean result = GroupPointOrderLoc(whichGroup, order, whichLocation)
 			call DestroyGroup(whichGroup)
 			set whichGroup = null
@@ -170,7 +189,7 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 		endmethod
 
 		public method pointOrderById takes integer order, real x, real y returns boolean
-			local group whichGroup = CreateGroup()
+			local group whichGroup = this.group()
 			local boolean result = GroupPointOrderById(whichGroup, order, x, y)
 			call DestroyGroup(whichGroup)
 			set whichGroup = null
@@ -178,7 +197,7 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 		endmethod
 
 		public method locationOrderById takes integer order, location whichLocation returns boolean
-			local group whichGroup = CreateGroup()
+			local group whichGroup = this.group()
 			local boolean result = GroupPointOrderByIdLoc(whichGroup, order, whichLocation)
 			call DestroyGroup(whichGroup)
 			set whichGroup = null
@@ -186,7 +205,7 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 		endmethod
 
 		public method targetOrder takes string order, widget targetWidget returns boolean
-			local group whichGroup = CreateGroup()
+			local group whichGroup = this.group()
 			local boolean result = GroupTargetOrder(whichGroup, order, targetWidget)
 			call DestroyGroup(whichGroup)
 			set whichGroup = null
@@ -194,11 +213,23 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 		endmethod
 
 		public method targetOrderById takes integer order, widget targetWidget returns boolean
-			local group whichGroup = CreateGroup()
+			local group whichGroup = this.group()
 			local boolean result = GroupTargetOrderById(whichGroup, order, targetWidget)
 			call DestroyGroup(whichGroup)
 			set whichGroup = null
 			return result
+		endmethod
+
+		public method isInGroup takes group whichGroup returns boolean
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				if (not IsUnitInGroup(this.m_units[i], whichGroup)) then
+					return false
+				endif
+				set i = i + 1
+			endloop
+			return true
 		endmethod
 
 		public method isDead takes nothing returns boolean
@@ -334,13 +365,19 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
-			//members
+			// members
 			set this.m_units = AUnitVector.create()
 			return this
 		endmethod
 
+		public static method createWithGroup takes group whichGroup, boolean destroy, boolean clear returns thistype
+			local thistype this = thistype.create()
+			call this.addGroup(whichGroup, destroy, clear)
+			return this
+		endmethod
+
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			call this.m_units.destroy()
 		endmethod
 	endstruct

@@ -21,7 +21,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 	* Maybe shortcut abilities will be added dynamically (by checking which shortcuts are really necessary) in future.
 	*/
 	struct AGui
-		//static constant members
+		// static constant members
 		public static constant integer shortcutArrowUpDown = 0 //these are the special shortcuts
 		public static constant integer shortcutArrowDownDown = 1
 		public static constant integer shortcutArrowLeftDown = 2
@@ -34,22 +34,22 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		private static constant integer m_maxSpecialShortcuts = 9
 		private static constant integer m_maxMainWindows = 4 //public see above in the text macro
 		private static constant integer m_maxShortcuts = 91 //'Z' + 1
-		//static start members
+		// static construction members
 		private static integer m_shortcutHandlerUnitType
 		private static real m_shortcutHandlerX
 		private static real m_shortcutHandlerY
 		private static string m_textOk
 		private static integer m_shortcutOk
-		//static dynamic members
+		// static dynamic members
 		private static integer array m_shortcutAbility[thistype.m_maxShortcuts]
-		//static members
+		// static members
 		private static thistype array m_playerGui[12] /// bj_MAX_PLAYERS, @todo vJass bug
-		//dynamic members
+		// dynamic members
 		private AGuiOnPressShortcutAction array m_onPressShortcutAction[thistype.m_maxShortcuts]
 		private integer array m_onPressShortcutActionId[thistype.m_maxShortcuts]
-		//start members
+		// construction members
 		private player m_player
-		//members
+		// members
 		private AIntegerVector m_mainWindows
 		private AMainWindow m_shownMainWindow
 		private trigger m_leaveTrigger
@@ -61,7 +61,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AGui\"")
 
-		//dynamic members
+		// dynamic members
 
 		/**
 		* Each shortcut (including special shortcuts) can have its own action.
@@ -83,13 +83,13 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			call this.setOnPressShortcutAction(shortcut, onPressGuiShortcutAction, this)
 		endmethod
 
-		//start members
+		// construction members
 
 		public method player takes nothing returns player
 			return this.m_player
 		endmethod
 
-		//members
+		// members
 
 		public method shownMainWindow takes nothing returns AMainWindow
 			return this.m_shownMainWindow
@@ -99,14 +99,14 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			return this.m_dialog
 		endmethod
 
-		//convenience methods
+		// convenience methods
 
 		/// @return Returns if a dialog or main window is shown to the user.
 		public method isShown takes nothing returns boolean
 			return this.m_shownMainWindow != 0 or this.m_dialog.isDisplayed()
 		endmethod
 
-		//methods
+		// methods
 
 		/// Saves GUI users camera data and selection in game.
 		public method savePlayerData takes nothing returns nothing
@@ -326,9 +326,9 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		/// Shortcuts will be disabled first.
 		private static method create takes player whichPlayer returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_player = whichPlayer
-			//members
+			// members
 			set this.m_mainWindows = AIntegerVector.create()
 			set this.m_shownMainWindow = 0
 			set this.m_playerSelection = APlayerSelection.create(whichPlayer)
@@ -370,7 +370,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 
 		/// Will be destroyed when player leaves the game.
 		private method onDestroy takes nothing returns nothing
-			//members
+			// members
 			loop
 				exitwhen (this.m_mainWindows.empty())
 				call AMainWindow(this.m_mainWindows.back()).destroy()
@@ -395,7 +395,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 		*/
 		public static method init takes integer shortcutHandlerUnitType, real shortcutHandlerX, real shortcutHandlerY, string textOk, integer shortcutOk returns nothing
 			local integer i
-			// static start members
+			// static construction members
 			set thistype.m_shortcutHandlerUnitType = shortcutHandlerUnitType
 			set thistype.m_shortcutHandlerX = shortcutHandlerX
 			set thistype.m_shortcutHandlerY = shortcutHandlerY
@@ -414,7 +414,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			endloop
 		endmethod
 
-		//static dynamic members
+		// static dynamic members
 
 		public static method setShortcutAbility takes integer shortcutAbility, integer abilityId returns nothing
 			set thistype.m_shortcutAbility[shortcutAbility] = abilityId
@@ -424,13 +424,13 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 			return thistype.m_shortcutAbility[shortcutAbility]
 		endmethod
 
-		//static methods
+		// static methods
 
 		public static method playerGui takes player whichPlayer returns thistype
 			return thistype.m_playerGui[GetPlayerId(whichPlayer)]
 		endmethod
 
-		//static convenience methods
+		// static convenience methods
 
 		public static method setOnPressGuiShortcutActionForAll takes integer shortcut, AGuiOnPressGuiShortcutAction onPressGuiShortcutAction returns nothing
 			local integer i

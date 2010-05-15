@@ -10,7 +10,7 @@
 * <li>Image files should be converted into BLP format</li>
 * </ul>
 */
-library ALibraryCoreInterfaceImage
+library ALibraryCoreInterfaceImage requires optional ALibraryCoreDebugMisc
 
 	/**
 	* Creates an image being visible for only one player.
@@ -19,6 +19,7 @@ library ALibraryCoreInterfaceImage
 	* @todo Crashes game!
 	*/
 	function CreateImageForPlayer takes player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY returns image
+		debug call PrintFunctionError("CreateImageForPlayer", "Is bugged!")
 		return null
 		/*
 		local player localPlayer = GetLocalPlayer()

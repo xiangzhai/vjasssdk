@@ -1,6 +1,6 @@
 2010-05-11 Tamino Dauth <tamino@cdauth.de>
-* Fix function GetHeroMaxXP.
-* Fix quest state setting when all states are being set completed.
+* Fix function GetHeroMaxXP (probably correct but multiboard bar doesn show correct value).
+* DONE: Fix quest state setting when all states are being set completed.
 * Fix time of day functions.
 * Test MultiboardSuppressDisplayForPlayer.
 

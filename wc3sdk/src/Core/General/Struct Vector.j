@@ -802,4 +802,5 @@ endif
 	//! runtextmacro A_VECTOR("", "ADestructableVector", "destructable", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "ARectVector", "rect", "null", "100", "50000")
 	//! runtextmacro A_VECTOR("", "AWeatherEffectVector", "weathereffect", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "APlayerVector", "player", "null", "100", "50000")
 endlibrary
