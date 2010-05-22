@@ -1,3 +1,15 @@
+2010-05-21 Tamino Dauth <tamino@cdauth.eu>
+* Fixed some GUI trigger data.
+* Fixed some models.
+* Fixed some code.
+
+2010-05-21 Tamino Dauth <tamino@cdauth.eu>
+* Added Neratia models (84).
+
+2010-05-19 Tamino Dauth <tamino@cdauth.eu>
+* Revised struct ACheat.
+* Revised various utility cheats.
+
 2010-05-15 Tamino Dauth <tamino@cdauth.eu>
 * Fixed some methods of struct AGroup.
 * Added some methods to struct AGroup.

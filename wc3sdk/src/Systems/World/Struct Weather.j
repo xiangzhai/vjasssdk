@@ -217,7 +217,7 @@ library AStructSystemsWorldWeather requires optional ALibraryCoreDebugMisc, AStr
 
 		/// @todo Set all sky types (maybe add custom skies)
 		public static method init takes nothing returns nothing
-			// static start members
+			// static construction members
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainHeavy] = 'RAhr'
 			set thistype.m_skyModelFile[thistype.weatherTypeAshenvaleRainHeavy] = ""
 			set thistype.m_weatherTypeEffectId[thistype.weatherTypeAshenvaleRainLight] = 'RAlr'

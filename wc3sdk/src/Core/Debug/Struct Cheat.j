@@ -2,7 +2,7 @@
 library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreGeneralPlayer
 
 	/// @todo Should be a part of @struct ACheat, vJass bug.
-	function interface ACheatOnCheatAction takes nothing returns nothing
+	function interface ACheatOnCheatAction takes ACheat cheat returns nothing
 
 	/**
 	* ACheat provides a simple cheat functionality. Cheats are string which the player has to enter in chat and which can provide everything the user wants them.
@@ -31,10 +31,14 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 
 		// methods
 
+		public method argument takes nothing returns string
+			return SubString(GetEventPlayerChatString(), StringLength(this.m_cheat) + 1, StringLength(GetEventPlayerChatString()))
+		endmethod
+
 		private static method triggerActionCheat takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.m_action.execute()
+			call this.m_action.execute(this)
 			set triggeringTrigger = null
 		endmethod
 
@@ -46,14 +50,14 @@ library AStructCoreDebugCheat requires ALibraryCoreDebugMisc, AStructCoreGeneral
 			set this.m_cheatTrigger = CreateTrigger()
 			set i = 0
 			loop
-					exitwhen (i == bj_MAX_PLAYERS)
-					set user = Player(i)
-					if (IsPlayerPlayingUser(user)) then
-						set triggerEvent = TriggerRegisterPlayerChatEvent(this.m_cheatTrigger, user, this.m_cheat, this.m_exactMatch)
-						set triggerEvent = null
-					endif
-					set user = null
-					set i = i + 1
+				exitwhen (i == bj_MAX_PLAYERS)
+				set user = Player(i)
+				if (IsPlayerPlayingUser(user)) then
+					set triggerEvent = TriggerRegisterPlayerChatEvent(this.m_cheatTrigger, user, this.m_cheat, this.m_exactMatch)
+					set triggerEvent = null
+				endif
+				set user = null
+				set i = i + 1
 			endloop
 			set triggerAction = TriggerAddAction(this.m_cheatTrigger, function thistype.triggerActionCheat)
 			set triggerAction = null

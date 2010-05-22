@@ -16,7 +16,7 @@
 * pathing - Enables unit's pathing.
 * nopathing - Disables unit's pathing.
 * order - Displays unit order information or issues unit order.
-* timeofday - Shows current time of day.
+* timeofday - Suspends or continue time of day or shows current.
 * benchmarks - Shows all benchmarks.
 * clearbenchmarks - Clears all benchmarks.
 * enable - Enables debug identifier(s).
@@ -31,9 +31,9 @@
 * map - Runs map debug.
 * @todo Causes crash in debug mode!!!
 */
-library ALibrarySystemsDebugUtilities initializer initFunction requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
+library ALibrarySystemsDebugUtilities requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
 
-	private function help takes nothing returns nothing
+	private function help takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 static if (DEBUG_MODE) then
 		call Print("version")
@@ -51,7 +51,7 @@ static if (DEBUG_MODE) then
 		call Print("pathing")
 		call Print("nopathing")
 		call Print("order <order>")
-		call Print("timeofday")
+		call Print("timeofday <stop/continue>")
 		call Print("benchmarks")
 		call Print("clearbenchmarks")
 		call Print("enable <identifier>")
@@ -72,13 +72,13 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function showVersion takes nothing returns nothing
+	private function showVersion takes ACheat cheat returns nothing
 static if (DEBUG_MODE) then
 		call Asl.showInformation()
 endif
 	endfunction
 
-	private function clear takes nothing returns nothing
+	private function clear takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		call ClearScreenMessagesForPlayer(triggerPlayer)
 		set triggerPlayer = null
@@ -93,8 +93,8 @@ endif
 		endif
 	endfunction
 
-	private function gold takes nothing returns nothing
-		local string amountString = SubString(GetEventPlayerChatString(), StringLength("gold") + 1, StringLength(GetEventPlayerChatString()))
+	private function gold takes ACheat cheat returns nothing
+		local string amountString = cheat.argument()
 		local integer amount
 		if (StringLength(amountString) == 0) then
 			set amount = -1
@@ -104,8 +104,8 @@ endif
 		call playerState(tr("gold"), GetTriggerPlayer(), amount, PLAYER_STATE_RESOURCE_GOLD)
 	endfunction
 
-	private function lumber takes nothing returns nothing
-		local string amountString = SubString(GetEventPlayerChatString(), StringLength("lumber") + 1, StringLength(GetEventPlayerChatString()))
+	private function lumber takes ACheat cheat returns nothing
+		local string amountString = cheat.argument()
 		local integer amount
 		if (StringLength(amountString) == 0) then
 			set amount = -1
@@ -115,8 +115,8 @@ endif
 		call playerState(tr("lumber"), GetTriggerPlayer(), amount, PLAYER_STATE_RESOURCE_LUMBER)
 	endfunction
 
-	private function foodcap takes nothing returns nothing
-		local string amountString = SubString(GetEventPlayerChatString(), StringLength("foodcap") + 1, StringLength(GetEventPlayerChatString()))
+	private function foodcap takes ACheat cheat returns nothing
+		local string amountString = cheat.argument()
 		local integer amount
 		if (StringLength(amountString) == 0) then
 			set amount = -1
@@ -127,7 +127,7 @@ endif
 	endfunction
 
 	/// @todo Add some information.
-	private function info takes nothing returns nothing
+	private function info takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
@@ -154,7 +154,7 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function setlevel takes nothing returns nothing
+	private function setlevel takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local string message = GetEventPlayerChatString()
 		local unit hero = GetFirstSelectedUnitOfPlayer(triggerPlayer)
@@ -162,7 +162,7 @@ endif
 		local boolean suspend
 		if (hero != null) then
 			if (IsUnitType(hero, UNIT_TYPE_HERO)) then
-				set level = S2I(SubString(message, StringLength("setlevel") + 1, StringLength(message)))
+				set level = S2I(cheat.argument())
 				set suspend = IsSuspendedXP(hero)
 				if (suspend) then
 					call SuspendHeroXP(hero, false)
@@ -181,7 +181,7 @@ endif
 	endfunction
 
 	/// @todo If no unit is selected, kill an item or a destructable
-	private function kill takes nothing returns nothing
+	private function kill takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
@@ -191,7 +191,7 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function copy takes nothing returns nothing
+	private function copy takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		local unit copiedUnit
@@ -203,7 +203,7 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function giveall takes nothing returns nothing
+	private function giveall takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
@@ -216,12 +216,12 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function damage takes nothing returns nothing
+	private function damage takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		local real damageAmount
 		if (selectedUnit != null) then
-			set damageAmount = S2R(SubString(GetEventPlayerChatString(), StringLength("damage") + 1, StringLength(GetEventPlayerChatString())))
+			set damageAmount = S2R(cheat.argument())
 			debug call Print("Damage amount is " + R2S(damageAmount) + ".")
 			if (damageAmount > 0.0) then
 				call UnitDamageTargetBJ(selectedUnit, selectedUnit, damageAmount, ATTACK_TYPE_NORMAL, DAMAGE_TYPE_NORMAL)
@@ -231,13 +231,13 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function xp takes nothing returns nothing
+	private function xp takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		local integer experience
 		local boolean suspend
 		if (selectedUnit != null) then
-			set experience = S2I(SubString(GetEventPlayerChatString(), StringLength("xp") + 1, StringLength(GetEventPlayerChatString())))
+			set experience = S2I(cheat.argument())
 			if (experience != 0) then
 				if (IsUnitType(selectedUnit, UNIT_TYPE_HERO)) then
 					set suspend = IsSuspendedXP(selectedUnit)
@@ -263,7 +263,7 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function pathing takes nothing returns nothing
+	private function pathing takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
@@ -274,7 +274,7 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function nopathing takes nothing returns nothing
+	private function nopathing takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
 		if (selectedUnit != null) then
@@ -285,11 +285,11 @@ endif
 		set triggerPlayer = null
 	endfunction
 
-	private function order takes nothing returns nothing
+	private function order takes ACheat cheat returns nothing
 		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(GetTriggerPlayer())
 		local string orderString
 		if (selectedUnit != null) then
-			set orderString = SubString(GetEventPlayerChatString(), StringLength("order") + 1, StringLength(GetEventPlayerChatString()))
+			set orderString = cheat.argument()
 			if (orderString == null) then
 				debug call Print(StringArg(StringArg(tr("%s's order: %s"), GetUnitName(selectedUnit)), OrderId2String(GetUnitCurrentOrder(selectedUnit))))
 			elseif (IsStringAlphabetical(orderString)) then
@@ -304,23 +304,34 @@ endif
 		endif
 	endfunction
 
-	private function timeofday takes nothing returns nothing
-		debug call Print(StringArg(tr("Current time of day: %s"), GetTimeOfDayString()))
+	private function timeofday takes ACheat cheat returns nothing
+		local string argument = cheat.argument()
+		if (argument == "stop") then
+			call SuspendTimeOfDay(true)
+		elseif (argument == "continue") then
+			call SuspendTimeOfDay(false)
+		else
+			debug call Print(StringArg(tr("Current time of day: %s"), GetTimeOfDayString()))
+			debug call Print("Test, elapsed hours: " + I2S(GetTimeOfDayElapsedHours()))
+			debug call Print("Test, elapsed minutes in hour: " + I2S(GetTimeOfDayElapsedMinutesInHour()))
+			debug call Print("Test, remaining hours: " + I2S(GetTimeOfDayRemainingHours()))
+			debug call Print("Test, elapsed minutes: " + I2S(GetTimeOfDayElapsedMinutes()))
+		endif
 	endfunction
 
-	private function benchmarks takes nothing returns nothing
+	private function benchmarks takes ACheat cheat returns nothing
 		debug call Print(tr("Showing all benchmarks:"))
 		call ABenchmark.showBenchmarks()
 	endfunction
 
-	private function clearbenchmarks takes nothing returns nothing
+	private function clearbenchmarks takes ACheat cheat returns nothing
 		debug call Print(tr("Clearing all benchmarks."))
 		call ABenchmark.clearAll()
 	endfunction
 
-	private function enable takes nothing returns nothing
+	private function enable takes ACheat cheat returns nothing
 static if (DEBUG_MODE) then
-		local string identifier = SubString(GetEventPlayerChatString(), StringLength("enable") + 1, StringLength(GetEventPlayerChatString()))
+		local string identifier = cheat.argument()
 		if (StringLength(identifier) == 0) then
 			call Print(tr("Enabling all identifiers."))
 			call EnableAllPrintIdentifiers()
@@ -333,9 +344,9 @@ static if (DEBUG_MODE) then
 endif
 	endfunction
 
-	private function disable takes nothing returns nothing
+	private function disable takes ACheat cheat returns nothing
 static if (DEBUG_MODE) then
-		local string identifier = SubString(GetEventPlayerChatString(), StringLength("disable") + 1, StringLength(GetEventPlayerChatString()))
+		local string identifier = cheat.argument()
 		if (StringLength(identifier) == 0) then
 			call PrintDisabledIdentifiers()
 		elseif (IsPrintIdentifierEnabled(identifier)) then
@@ -347,20 +358,42 @@ endif
 	endfunction
 
 static if (A_DEBUG_HANDLES) then
-	private function units takes nothing returns nothing
+	private function units takes ACheat cheat returns nothing
 		call ABenchmark.showUnits()
 	endfunction
 
-	private function items takes nothing returns nothing
+	private function items takes ACheat cheat returns nothing
 		call ABenchmark.showItems()
 	endfunction
 
-	private function destructables takes nothing returns nothing
+	private function destructables takes ACheat cheat returns nothing
 		call ABenchmark.showDestructables()
 	endfunction
 endif
 
-	private function initFunction takes nothing returns nothing
+static if (DEBUG_MODE) then
+	private function stringDebug takes ACheat cheat returns nothing
+		call AStringDebug()
+	endfunction
+
+	private function interfaceDebug takes ACheat cheat returns nothing
+		call AInterfaceDebug()
+	endfunction
+
+	private function signalDebug takes ACheat cheat returns nothing
+		call ASignalDebug()
+	endfunction
+
+	private function listDebug takes ACheat cheat returns nothing
+		call AListDebug()
+	endfunction
+
+	private function mapDebug takes ACheat cheat returns nothing
+		call AMapDebug()
+	endfunction
+endif
+
+	function AInitUtilityCheats takes nothing returns nothing
 static if (DEBUG_MODE) then
 		call ACheat.create("help", true, help)
 		call ACheat.create("version", true, showVersion)
@@ -392,11 +425,11 @@ static if (A_DEBUG_HANDLES) then
 endif
 
 static if (DEBUG_MODE) then
-		call ACheat.create("string", true, AStringDebug)
-		call ACheat.create("interface", true, AInterfaceDebug)
-		call ACheat.create("signal", true, ASignalDebug)
-		call ACheat.create("list", true, AListDebug)
-		call ACheat.create("map", true, AMapDebug)
+		call ACheat.create("string", true, stringDebug)
+		call ACheat.create("interface", true, interfaceDebug)
+		call ACheat.create("signal", true, signalDebug)
+		call ACheat.create("list", true, listDebug)
+		call ACheat.create("map", true, mapDebug)
 endif
 	endfunction
 

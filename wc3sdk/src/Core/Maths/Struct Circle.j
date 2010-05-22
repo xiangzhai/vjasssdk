@@ -1,10 +1,10 @@
 library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMathsPoint
 
 	struct ACircle extends APoint
-		//dynamic members
+		// dynamic members
 		private real m_radius
 
-		//dynamic members
+		// dynamic members
 
 		public method setRadius takes real radius returns nothing
 			set this.m_radius = radius
@@ -14,7 +14,7 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 			return this.m_radius
 		endmethod
 
-		//methods
+		// methods
 
 		public method diameter takes nothing returns real
 			return 2 * this.m_radius
@@ -38,12 +38,12 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 			public method contains$TYPENAME$ takes $TYPE$ circle$TYPENAME$ returns boolean
 				return this.containsPoint(Get$TYPENAME$X(circle$TYPENAME$), Get$TYPENAME$Y(circle$TYPENAME$)) //Because of the location type I use the 'Circle' prefix
 			endmethod
-			
+
 			public method borderContains$TYPENAME$ takes $TYPE$ circle$TYPENAME$ returns boolean
 				return this.borderContainsPoint(Get$TYPENAME$X(circle$TYPENAME$), Get$TYPENAME$Y(circle$TYPENAME$))
 			endmethod
 		//! endtextmacro
-	
+
 		//! runtextmacro ACircleMacro("location", "Location")
 		//! runtextmacro ACircleMacro("widget", "Widget")
 		//! runtextmacro ACircleMacro("unit", "Unit")
@@ -53,7 +53,7 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 		public method borderLocation takes real angle returns location
 			return GetPolarProjectionOfPoint(this.x(), this.y(), angle, this.m_radius)
 		endmethod
-	
+
 		public method randomLocation takes nothing returns location
 			local real distance = (SquareRoot(GetRandomReal(0.0, 1.0)) * this.m_radius)
 			local real angle = GetRandomReal(0.0, (2.0 * bj_PI))
@@ -102,7 +102,7 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 
 		public static method create takes real x, real y, real radius returns thistype
 			local thistype this = thistype.allocate(x, y)
-			//dynamic members
+			// dynamic members
 			set this.m_radius = radius
 
 			return this

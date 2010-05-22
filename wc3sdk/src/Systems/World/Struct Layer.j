@@ -151,6 +151,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 
 		private static method triggerActionEnter takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
+			debug call this.print("Unit " + GetUnitName(GetTriggerUnit()) + " enters.")
 			call this.unitEnters(GetTriggerUnit())
 		endmethod
 
@@ -162,6 +163,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 
 		private static method triggerActionLeave takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
+			debug call this.print("Unit " + GetUnitName(GetTriggerUnit()) + " leaves.")
 			call this.unitLeaves(GetTriggerUnit())
 		endmethod
 
@@ -175,6 +177,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			call SetUnitX(GetTriggerUnit(), GetUnitPolarProjectionX(GetTriggerUnit(), GetUnitFacing(GetTriggerUnit()) - 180.0, 100.0))
 			call SetUnitY(GetTriggerUnit(), GetUnitPolarProjectionY(GetTriggerUnit(), GetUnitFacing(GetTriggerUnit()) - 180.0, 100.0))
+			debug call this.print("Reset unit " + GetUnitName(GetTriggerUnit()) + " into bounds.")
 		endmethod
 
 		public static method create takes nothing returns thistype

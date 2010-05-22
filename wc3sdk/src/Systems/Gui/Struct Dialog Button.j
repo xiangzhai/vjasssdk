@@ -4,21 +4,21 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 	function interface ADialogButtonAction takes ADialogButton dialogButton returns nothing
 
 	struct ADialogButton
-		//start members
+		// construction members
 		private ADialog m_dialog
 		private string m_text
 		private integer m_shortcut
 		private boolean m_isQuitButton
 		private boolean m_doScoreScreen
 		private ADialogButtonAction m_action
-		//members
+		// members
 		private integer m_index
 		private button m_button
 		private trigger m_trigger
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ADialogButton\"")
 
-		//start members
+		// construction members
 
 		public method dialog takes nothing returns ADialog
 			return this.m_dialog
@@ -54,7 +54,7 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 			return this.m_button
 		endmethod
 
-		//methods
+		// methods
 
 		/// Usually you do not need this method. It is used by @struct ADialog.
 		public method addButton takes nothing returns nothing
@@ -95,14 +95,14 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 
 		public static method create takes ADialog whichDialog, string text, integer shortcut, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_dialog = whichDialog
 			set this.m_text = text
 			set this.m_shortcut = shortcut
 			set this.m_isQuitButton = isQuitButton
 			set this.m_doScoreScreen = doScoreScreen
 			set this.m_action = action
-			//members
+			// members
 			set this.m_index = whichDialog.addDialogButtonInstance.evaluate(this)
 
 			return this
@@ -118,7 +118,7 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 		public method onDestroy takes nothing returns nothing
 			call this.m_dialog.removeDialogButtonByIndex.evaluate(this.m_index)
 			if (this.m_button != null) then
-				set this.m_button = null //can not be destroyed
+				set this.m_button = null // can not be destroyed
 				call this.destroyTrigger()
 			endif
 		endmethod
