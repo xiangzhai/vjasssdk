@@ -27,6 +27,8 @@ namespace vjasstrans
 {
 
 extern const char *version;
+extern bool optionVerbose;
+extern bool optionStartAtLast;
 extern bool optionFill;
 extern bool optionReplace;
 extern bool optionRecursive;

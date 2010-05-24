@@ -23,80 +23,43 @@
 #include <list>
 #include <cstring>
 #include <cstdlib>
-//POSIX
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <dirent.h>
+
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 
 #include "parser.hpp"
 #include "string.hpp"
 #include "options.hpp"
 #include "internationalisation.hpp"
 
-
 using namespace vjasstrans;
 
-static std::list<class String*> strings;
+static Parser::StringList strings;
 
-static int select(const struct dirent *dirEntry)
+static void addDirectory(const boost::filesystem::path &directoryPath, std::list<boost::filesystem::path> &filePaths)
 {
-	return 1;
-}
+	std::cout << boost::format(_("Reading directory \"%1%\".")) % directoryPath.string() << std::endl;
+	boost::filesystem::directory_iterator endIterator;
 
-static void addDirectory(const std::string &directoryPath, std::list<std::string> &filePaths)
-{
-	DIR *dir = opendir(directoryPath.c_str());
-	
-	if (dir == NULL)
+	for (boost::filesystem::directory_iterator iterator(directoryPath); iterator != endIterator; ++iterator)
 	{
-		fprintf(stderr, _("Error while opening directory \"%s\".\n"), directoryPath.c_str());
-		
-		return;
-	}
-	
-	struct dirent **dirEntries = 0;
-	int entries = scandir(directoryPath.c_str(), &dirEntries,
-              select,
-              0);
-	
-	if (entries == -1)
-	{
-		fprintf(stderr, _("Error while reading directory \"%s\".\n"), directoryPath.c_str());
-		
-		return;
-	}
-	
-	for (int i = 0; i < entries; ++i)
-	{
-		if (strcmp(dirEntries[i]->d_name, ".") != 0 && strcmp(dirEntries[i]->d_name, "..") != 0)
+		if (!boost::filesystem::exists(iterator->status()))
 		{
-			struct stat fileInfo;
-			std::string path = directoryPath + '/' + dirEntries[i]->d_name;
-			
-			if (stat(path.c_str(), &fileInfo) == -1)
-			{
-				fprintf(stderr, _("Error while reading file \"%s\".\n"), path.c_str());
-				
-				continue;
-			}
-			
-			if (fileInfo.st_mode & S_IFDIR)
-			{
-				fprintf(stderr, _("Is another dir \"%s\".\n"), path.c_str());
-			
-				if (optionRecursive)
-					addDirectory(path.c_str(), filePaths);
-			}
-			else
-				filePaths.push_back(path.c_str());
-		}
-	}
-	
-	delete[] dirEntries;
-	
-	if (closedir(dir) == -1)
-		fprintf(stderr, _("Error while closing directory \"%s\".\n"), directoryPath.c_str());
+			std::cerr << boost::format(_("Error while reading file \"%1%\".")) % iterator->path().string() << std::endl;
 
+			continue;
+		}
+
+		if (boost::filesystem::is_directory(iterator->status()))
+		{
+			if (optionRecursive)
+				addDirectory(iterator->path(), filePaths);
+			else
+				std::cerr << boost::format(_("\"%1%\" is another directory and is being skipped.")) % iterator->path().string() << std::endl;
+		}
+		else
+			filePaths.push_back(iterator->path());
+	}
 }
 
 int main(int argc, char *argv[])
@@ -104,7 +67,7 @@ int main(int argc, char *argv[])
 	// Set the current locale.
 	setlocale(LC_ALL, "");
 	// Set the text message domain.
-	bindtextdomain("vjasstrans", LOCALE_DIR);
+	bindtextdomain("vjasstrans", "share/locale");
 	textdomain("vjasstrans");
 	
 	if (argc == 1)
@@ -134,6 +97,8 @@ int main(int argc, char *argv[])
 		_("vjasstrans [options] <files or directories>\n\n") <<
 		_("Options:\n") <<
 		_("--version                   Shows the current version of vjasstrans.\n") <<
+		_("--startatlast               Uses the biggest id + 1 of read input files as first string id and not the first free id.\n") <<
+		_("--verbose                   Shows verbose output.\n") <<
 		_("--fill                      Fills string values with default strings when adding them from code files.\n") <<
 		_("--replace                   Replaces all translated strings by STRING_<id> in code files.\n") <<
 		_("--recursive                 Parses all source files in sub directories.\n") <<
@@ -143,9 +108,9 @@ int main(int argc, char *argv[])
 		_("--awts                      Appends file with all parsed strings.")
 		<< std::endl
 		;
-		fprintf(stdout, _("--trans <arg>               <arg> has to be the name of the translation function. Default value: %s.\n"), optionTrans.c_str());
-		fprintf(stdout, _("--wtspath <arg>             <arg> has to be the file path of wts file. Default value: %s.\n"), optionWtspath.c_str());
-		fprintf(stdout, _("--fdfpath <arg>             <arg> has to be the file path of fdf file. Default value: %s.\n"), optionFdfpath.c_str());
+		std::cout << boost::format(_("--trans <arg>               <arg> has to be the name of the translation function. Default value: %1%.")) % optionTrans << std::endl;
+		std::cout << boost::format(_("--wtspath <arg>             <arg> has to be the file path of wts file. Default value: %1%.")) % optionWtspath << std::endl;
+		std::cout << boost::format(_("--fdfpath <arg>             <arg> has to be the file path of fdf file. Default value: %1%.")) % optionFdfpath << std::endl;
 		std::cout <<
 		_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 		std::endl;
@@ -153,15 +118,17 @@ int main(int argc, char *argv[])
 		return EXIT_SUCCESS;
 	}
 	
-	std::list<std::string> filePaths;
+	std::list<boost::filesystem::path> filePaths;
 	
-	for (int i = 1; i < argc; ++i)
+	for (std::size_t i = 1; i < argc; ++i)
 	{
-		if (strcmp(argv[i], "--fill") == 0)
-		{
+		if (strcmp(argv[i], "--startatlast") == 0)
+			optionStartAtLast = true;
+		else if (strcmp(argv[i], "--verbose") == 0)
+			optionVerbose = true;
+		else if (strcmp(argv[i], "--fill") == 0)
 			optionFill = true;
-		}
-		if (strcmp(argv[i], "--replace") == 0)
+		else if (strcmp(argv[i], "--replace") == 0)
 		{
 			optionReplace = true;
 		}
@@ -189,7 +156,7 @@ int main(int argc, char *argv[])
 		{
 			if (++i == argc)
 			{
-				std::cerr << "Missing argument of option --trans." << std::endl;
+				std::cerr << _("Missing argument of option --trans.") << std::endl;
 				
 				return EXIT_FAILURE;
 			}
@@ -200,7 +167,7 @@ int main(int argc, char *argv[])
 		{
 			if (++i == argc)
 			{
-				std::cerr << "Missing argument of option --wtspath." << std::endl;
+				std::cerr << _("Missing argument of option --wtspath.") << std::endl;
 				
 				return EXIT_FAILURE;
 			}
@@ -211,7 +178,7 @@ int main(int argc, char *argv[])
 		{
 			if (++i == argc)
 			{
-				std::cerr << "Missing argument of option --fdfpath." << std::endl;
+				std::cerr << _("Missing argument of option --fdfpath.") << std::endl;
 				
 				return EXIT_FAILURE;
 			}
@@ -223,23 +190,28 @@ int main(int argc, char *argv[])
 	}
 			
 	// filtering non-existing files and directories
-	for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
-	{
-		struct stat fileInfo;
-		
-		if (stat(iterator->c_str(), &fileInfo) != 0)
+	BOOST_FOREACH(boost::filesystem::path path, filePaths)
+	{		
+		if (!boost::filesystem::exists(path))
 		{
-			fprintf(stderr, "File or directory \"%s\" does not exist.\n", iterator->c_str());
-			//filePaths.erase(iterator); /// @todo 
+			std::cerr << boost::format(_("File or directory \"%1%\" does not exist.")) % path.string() << std::endl;
+			filePaths.remove(path);
 		}
 		// is directory
-		else if (fileInfo.st_mode & S_IFDIR)
+		else if (boost::filesystem::is_directory(path))
 		{
 			if (optionRecursive)
-				addDirectory(*iterator, filePaths);
+				addDirectory(path, filePaths);
 		
 			//filePaths.erase(iterator);
 		}
+	}
+
+	if (filePaths.empty())
+	{
+		std::cerr << _("Missing valid file paths.") << std::endl;
+
+		return EXIT_FAILURE;
 	}
 	
 	if (optionAfdf)
@@ -248,14 +220,26 @@ int main(int argc, char *argv[])
 	if (optionAwts)
 		Parser::readWts(optionWtspath, strings);
 	
-	for (std::list<std::string>::iterator iterator = filePaths.begin(); iterator != filePaths.end(); ++iterator)
-		Parser::parse(*iterator, strings, optionReplace, optionTrans);
+	BOOST_FOREACH(boost::filesystem::path path, filePaths)
+		Parser::parse(path, strings, optionReplace, optionTrans);
 	
 	if (optionFdf || optionAfdf)
 		Parser::writeFdf(optionFdfpath, strings);
 	
 	if (optionWts || optionAwts)
 		Parser::writeWts(optionWtspath, strings);
+
+	if (optionVerbose)
+	{
+		std::size_t averageLength = 0;
+
+		BOOST_FOREACH(Parser::StringListValueConst value, strings)
+			averageLength += value.second->defaultString().length();
+
+		averageLength /= strings.size();
+
+		std::cout << boost::format(_("Result: %1% strings, %2% is average length.")) % strings.size() % averageLength << std::endl;
+	}
 
 	return EXIT_SUCCESS;
 }

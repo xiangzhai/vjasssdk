@@ -1,3 +1,9 @@
+2010-05-24 Tamino Dauth <tamino@cdauth.eu>
+* Add option --iwts for including read wts files (if included file contains a translation it will be used, this option cannot be used with --fill).
+* Add option --ifdf for including read fdf files (if included file contains a translation it will be used, this option cannot be used with --fill).
+* DONE: Add option --startatlast which allows user to start with string id bigger than the biggest one in the appended file and to do not use free ids between range 0 and biggest used string id.
+* DONE: Save strings in map sorted by id which increases access and search time.
+
 2009-11-29 Tamino Dauth <tamino@cdauth.de>
 * Use opt_get and boost libraries instead of POSIX.
 

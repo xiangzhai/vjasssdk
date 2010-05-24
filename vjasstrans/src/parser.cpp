@@ -23,11 +23,11 @@
 #include <sstream>
 #include <iostream> //verbose
 #include <cstring>
-//POSIX
-#include <sys/stat.h>
+#include <list>
 
 #include <boost/tokenizer.hpp>
-#include <boost/format.hpp>
+#include <boost/foreach.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 #include "parser.hpp"
 #include "string.hpp"
@@ -80,24 +80,24 @@ static bool getNextTranslationFunctionCall(const std::string &line, const std::s
 	return true;
 }
 
-static bool checkForStringConflict(std::list<class String*> &strings, class String *string)
+static bool checkForStringConflict(Parser::StringList &strings, class String *string)
 {
-	for (std::list<class String*>::iterator iterator = strings.begin(); iterator != strings.end(); ++iterator)
+	BOOST_FOREACH(Parser::StringListValue value, strings)
 	{
-		if ((*iterator)->defaultString() == string->defaultString())
+		if (value.second->defaultString() == value.second->defaultString())
 		{
-			std::cerr << boost::format(_("Detected string conflict:\nString 0: \"%1%\"\nString 0 translation: \"%2%\"\nString 1: \"%3%\"\nString 1 translation: \"%4%\"\nEnter 0 to use string 0 or 1 to use string 1.\n")) % (*iterator)->idString() % (*iterator)->valueString() % string->idString() % string->valueString() << std::endl;
-			int value;
-			std::cin >> value;
+			std::cerr << boost::format(_("Detected string conflict:\nString 0: \"%1%\"\nString 0 translation: \"%2%\"\nString 1: \"%3%\"\nString 1 translation: \"%4%\"\nEnter 0 to use string 0 or 1 to use string 1.\n")) % value.second->idString() % value.second->valueString() % string->idString() % string->valueString() << std::endl;
+			int answer;
+			std::cin >> answer;
 			
-			if (value == 0)
+			if (answer == 0)
 			{
 				std::cout << _("Using string 0.") << std::endl;
-				delete *iterator;
-				strings.erase(iterator);
-				strings.push_back(string);
+				strings.erase(value.first);
+				delete value.second;
+				strings.insert(std::make_pair(string->id(), string));
 			}
-			else if (value == 1)
+			else if (answer == 1)
 			{
 				std::cout << _("Using string 1.") << std::endl;
 				delete string;
@@ -107,27 +107,28 @@ static bool checkForStringConflict(std::list<class String*> &strings, class Stri
 		}
 	}
 	
-	strings.push_back(string);
+	strings.insert(std::make_pair(string->id(), string));
 	
 	return false;
 }
 
-bool Parser::parse(const std::string &filePath, std::list<class String*> &strings, const bool replace, const std::string &translationFunction)
+bool Parser::parse(const boost::filesystem::path &filePath, StringList &strings, const bool replace, const std::string &translationFunction)
 {
-	fprintf(stdout, _("Parsing file \"%s\".\n"), filePath.c_str());
-	std::fstream fstream(filePath.c_str(), std::ios_base::in);
+	std::cout << boost::format(_("Parsing file \"%1%\".")) % filePath.string() << std::endl;
+	boost::filesystem::fstream fstream(filePath, std::ios_base::in);
 
 	if (!fstream)
 	{
-		fprintf(stdout, _("Error while opening file \"%s\".\n"), filePath.c_str());
+		std::cerr << boost::format(_("Error while opening file \"%1%\".")) % filePath.string() << std::endl;
 		
 		return false;
 	}
 	
+	static bool startedAtLast = false;
 	std::string line;
 	std::list<std::string> lines;
 
-	for (unsigned int i = 0; std::getline(fstream, line); ++i)
+	for (std::size_t i = 0; std::getline(fstream, line); ++i)
 	{
 		std::string::size_type position = 0;
 		std::string::size_type length = 0;
@@ -135,63 +136,91 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 		while (getNextTranslationFunctionCall(line, translationFunction, position, length, true))
 		{
 			std::string defaultString = line.substr(position, length);
-			int id = 0;
-			std::list<int> usedIds;
+			std::size_t id = 0;
 			bool exists = false;
-			std::list<class String*>::iterator iterator = strings.begin();
-			
-			for (int j = 0; iterator != strings.end(); ++iterator, ++j)
+			std::size_t j = 0;
+			StringListValue existing;
+
+			BOOST_FOREACH(StringListValue value, strings)
 			{
-				if ((*iterator)->defaultString() == defaultString)
+				if (value.second->defaultString() == defaultString)
 				{
 					id = j;
 					exists = true;
+					existing = value;
 					
 					break;
 				}
-				
-				usedIds.push_back((*iterator)->id());
+
+				++j;
 			}
 			
-			// check if id is already used
+			// check if id is already being used
 			if (!exists)
 			{
-				while (true)
+				// find biggest id and start afterwards
+				if (optionStartAtLast && !startedAtLast)
 				{
-					bool notUsed = true;
-					
-					for (std::list<int>::iterator iterator = usedIds.begin(); notUsed && iterator != usedIds.end(); ++iterator)
+					if (!strings.empty()) // otherwise, start at 0
 					{
-						if (*iterator == id)
-							notUsed = false;
+						std::size_t biggestId = 0;
+
+						BOOST_FOREACH(StringListValueConst value, strings)
+						{
+							if (value.second->id() > biggestId)
+								biggestId = value.second->id();
+						}
+
+						try
+						{
+							id = biggestId + 1;
+						}
+						catch (...)
+						{
+							std::cerr << boost::format(_("Error while trying to increase id with value %1%.")) % biggestId << std::endl;
+
+							return false;
+						}
 					}
-					
-					if (notUsed)
-						break;
-					
-					// get overflows
-					try
+
+					startedAtLast = true;
+
+					if (optionVerbose)
+						std::cout << boost::format(_("Starting at id: %1%")) % id << std::endl;
+				}
+				// find free id otherwise take next.
+				else
+				{
+					do
 					{
-						++id;
+						if (strings.find(id) == strings.end())
+							break;
+
+						try
+						{
+							++id;
+						}
+						catch (...)
+						{
+							std::cerr << boost::format(_("Error while trying to increase id with value %1%.")) % id << std::endl;
+
+							return false;
+						}
+
 					}
-					catch (...)
-					{
-						fprintf(stderr, _("Error while trying to increase id with value %d.\n"), id);
-						
-						return false;
-					}
+					while (true);
 				}
 				
 				std::stringstream sstream;
 				sstream << "STRING_" << id;
 				std::string valueString = optionFill ? defaultString : "";
-				strings.push_back(new String(filePath, i, sstream.str(), defaultString, valueString));
+				strings.insert(std::make_pair(id, new String(filePath, i, sstream.str(), defaultString, valueString)));
 				
 				if (replace)
 					line.replace(position, length, sstream.str());
 			}
 			else if (replace)
-				line.replace(position, length, (*iterator)->idString());
+				line.replace(position, length, existing.second->idString());
 		}
 
 		if (replace)
@@ -202,7 +231,7 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 
 	if (replace)
 	{
-		fstream.open(filePath.c_str(), std::ios_base::out);
+		fstream.open(filePath, std::ios_base::out);
 
 		for (std::list<std::string>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
 		{
@@ -218,21 +247,22 @@ bool Parser::parse(const std::string &filePath, std::list<class String*> &string
 	return true;
 }
 
-bool Parser::readFdf(const std::string &filePath, std::list<class String*> &strings)
+bool Parser::readFdf(const boost::filesystem::path &filePath, StringList &strings)
 {
-	fprintf(stdout, _("Reading fdf file \"%s\".\n"), filePath.c_str());
-	std::ifstream fstream(filePath.c_str(), std::ios_base::in);
+	std::cout << boost::format(_("Reading fdf file \"%1%\".")) % filePath << std::endl;
+	boost::filesystem::fstream fstream(filePath, std::ios_base::in);
 
 	if (!fstream)
 	{
-		fprintf(stderr, _("Error while opening fdf file \"%s\".\n"), filePath.c_str());
+		std::cerr << boost::format(_("Error while opening fdf file \"%1%\".")) << filePath.string() << std::endl;
+
 		return false;
 	}
 
 	bool foundEndCharacter = false;
 	std::string line;
 
-	for (unsigned int i = 0; std::getline(fstream, line); ++i)
+	for (std::size_t i = 0; std::getline(fstream, line); ++i)
 	{
 		if (line.empty())
 			continue;
@@ -270,7 +300,7 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 		
 				if (index == std::string::npos)
 				{
-					fprintf(stderr, _("Error at line %d: Missing */.\n"), i);
+					std::cerr << boost::format(_("Error at line %1%: Missing */.")) % i << std::endl;
 					
 					continue;
 				}
@@ -280,7 +310,7 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 		
 				if (length == std::string::npos)
 				{
-					fprintf(stderr, _("Error at line %d: Missing */.\n"), i);
+					std::cerr << boost::format(_("Error at line %1%: Missing */.")) % i << std::endl;
 					
 					continue;
 				}
@@ -290,7 +320,7 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 		
 				if (defaultString.empty())
 				{
-					fprintf(stderr, _("Error at line %d: Missing default string.\n"), i);
+					std::cerr << boost::format(_("Error at line %1%: Missing default string.")) % i << std::endl;
 					
 					continue;
 				}
@@ -299,7 +329,7 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 		
 				if (index == std::string::npos)
 				{
-					fprintf(stderr, _("Error at line %d: Missing \".\n"), i);
+					std::cerr << boost::format(_("Error at line %1%: Missing \".\n")) % i << std::endl;
 					
 					continue;
 				}
@@ -309,7 +339,7 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 		
 				if (length == std::string::npos)
 				{
-					fprintf(stderr, _("Error at line %d: Missing \".\n"), i);
+					std::cerr << boost::format(_("Error at line %1%: Missing \".")) % i << std::endl;
 					
 					continue;
 				}
@@ -330,35 +360,36 @@ bool Parser::readFdf(const std::string &filePath, std::list<class String*> &stri
 	
 	std::cout << _("Listening file strings:") << std::endl;
 
-	for (std::list<class String*>::iterator iterator = strings.begin(); iterator != strings.end(); ++iterator)
-		std::cout << "- " << (*iterator)->idString() << "\t\t" << (*iterator)->defaultString() << std::endl;
+	BOOST_FOREACH(StringListValueConst value, strings)
+		std::cout << boost::format(_("- %1%\t\t%2%")) % value.second->idString() % value.second->defaultString() << std::endl;
 
 	return true;
 }
 
-bool Parser::writeFdf(const std::string &filePath, const std::list<class String*> &strings)
+bool Parser::writeFdf(const boost::filesystem::path &filePath, const StringList &strings)
 {
-	fprintf(stdout, _("Writing fdf file \"%s\".\n"), filePath.c_str());
-	std::ofstream fstream(filePath.c_str());
+	std::cout << boost::format(_("Writing fdf file \"%1%\".")) % filePath.string() << std::endl;
+	boost::filesystem::ofstream fstream(filePath);
 
 	if (!fstream)
 	{
-		fprintf(stdout, _("Error while opening fdf file \"%s\".\n"), filePath.c_str());
+		std::cerr << boost::format(_("Error while opening fdf file \"%1%\".")) % filePath.string() << std::endl;
 		
 		return false;
 	}
 
 	fstream << "StringList {" << std::endl;
-	int i = 0;
+	std::size_t i = 0;
 
-	for (std::list<class String*>::const_iterator iterator = strings.begin(); iterator != strings.end(); ++iterator, ++i)
+	BOOST_FOREACH(const StringListValueConst value, strings)
 	{
-		fstream << "\t" << (*iterator)->idString() << "\t\t\t\"" << (*iterator)->valueString() << '\"';
+		fstream << "\t" << value.second->idString() << "\t\t\t\"" << value.second->valueString() << '\"';
 		
 		if (i != strings.size() - 1)
 			fstream << ',';
 
-		fstream << " /* " << (*iterator)->defaultString() << " */" << std::endl;
+		fstream << " /* " << value.second->defaultString() << " */" << std::endl;
+		++i;
 	}
 
 	fstream << '}' << std::endl;
@@ -366,14 +397,14 @@ bool Parser::writeFdf(const std::string &filePath, const std::list<class String*
 	return true;
 }
 
-bool Parser::readWts(const std::string &filePath, std::list<class String*> &strings)
+bool Parser::readWts(const boost::filesystem::path &filePath, StringList &strings)
 {
-	fprintf(stdout, _("Reading wts file \"%s\".\n"), filePath.c_str());
-	std::ifstream fstream(filePath.c_str());
+	std::cout << boost::format(_("Reading wts file \"%1%\".")) % filePath.string() << std::endl;
+	boost::filesystem::ifstream fstream(filePath);
 	
 	if (!fstream)
 	{
-		fprintf(stderr, _("Error while opening wts file \"%s\".\n"), filePath.c_str());
+		std::cerr << boost::format(_("Error while opening wts file \"%1%\".")) % filePath << std::endl;
 		
 		return false;
 	}
@@ -381,7 +412,7 @@ bool Parser::readWts(const std::string &filePath, std::list<class String*> &stri
 	std::list<std::string> lines;
 	std::string line;
 
-	for (unsigned int i = 0; std::getline(fstream, line); ++i, lines.push_back(line))
+	for (std::size_t i = 0; std::getline(fstream, line); ++i, lines.push_back(line))
 	{
 		std::string::size_type position = line.find("STRING");
 		
@@ -403,14 +434,14 @@ bool Parser::readWts(const std::string &filePath, std::list<class String*> &stri
 			}
 			else
 			{
-				fprintf(stderr, _("Error at line %i: Missing value string line or { character line.\n"), i);
+				std::cerr << boost::format(_("Error at line %1%: Missing value string line or { character line.")) % i << std::endl;
 				
 				break;
 			}
 		}
 		else
 		{
-			fprintf(stderr, _("Error at line %i: Missing default string line.\n"), i);
+			std::cerr << boost::format(_("Error at line %1%: Missing default string line.")) % i << std::endl;
 			//std::cout << "Line: " << line << " and sub string " << line.substr(2) << std::endl;
 			
 			break;
@@ -422,24 +453,24 @@ bool Parser::readWts(const std::string &filePath, std::list<class String*> &stri
 	return true;
 }
 
-bool Parser::writeWts(const std::string &filePath, const std::list<class String*> &strings)
+bool Parser::writeWts(const boost::filesystem::path &filePath, const StringList &strings)
 {
-	fprintf(stdout, _("Writing wts file \"%s\".\n"), filePath.c_str());
-	std::ofstream fstream(filePath.c_str());
+	std::cout << boost::format(_("Writing wts file \"%1%\".")) % filePath.string() << std::endl;
+	boost::filesystem::ofstream fstream(filePath);
 
 	if (!fstream)
 	{
-		fprintf(stderr, _("Error while creating wts file \"%s\".\n"), filePath.c_str());
+		std::cerr << boost::format(_("Error while creating wts file \"%1%\".")) % filePath.string() << std::endl;
 		
 		return false;
 	}
 
-	for (std::list<class String*>::const_iterator iterator = strings.begin(); iterator != strings.end(); ++iterator)
+	BOOST_FOREACH(StringListValueConst value, strings)
 	{
-		fstream << "STRING " << (*iterator)->id() << '\n'
-		<< "// " << (*iterator)->defaultString() << '\n'
+		fstream << "STRING " << value.second->id() << '\n'
+		<< "// " << value.second->defaultString() << '\n'
 		<< "{\n"
-		<< (*iterator)->valueString() << '\n'
+		<< value.second->valueString() << '\n'
 		<< "}\n"
 		<< std::endl;
 	}

@@ -21,8 +21,10 @@
 #ifndef VJASSTRANS_PARSER_H
 #define VJASSTRANS_PARSER_H
 
-#include <list>
+#include <map>
 #include <string>
+
+#include <boost/filesystem.hpp>
 
 namespace vjasstrans
 {
@@ -32,11 +34,15 @@ class String;
 class Parser
 {
 	public:
-		static bool parse(const std::string &filePath, std::list<class String*> &strings, const bool replace = false, const std::string &translationFunction = "GetLocalizedString");
-		static bool readFdf(const std::string &filePath, std::list<class String*> &strings);
-		static bool writeFdf(const std::string &filePath, const std::list<class String*> &strings);
-		static bool readWts(const std::string &filePath, std::list<class String*> &strings);
-		static bool writeWts(const std::string &filePath, const std::list<class String*> &strings);
+		typedef std::map<std::size_t, class String*> StringList; // key is string id
+		typedef std::pair<std::size_t, class String*> StringListValue;
+		typedef std::pair<std::size_t, const class String*> StringListValueConst;
+
+		static bool parse(const boost::filesystem::path &filePath, StringList &strings, const bool replace = false, const std::string &translationFunction = "GetLocalizedString");
+		static bool readFdf(const boost::filesystem::path &filePath, StringList &strings);
+		static bool writeFdf(const boost::filesystem::path &filePath, const StringList &strings);
+		static bool readWts(const boost::filesystem::path &filePath, StringList &strings);
+		static bool writeWts(const boost::filesystem::path &filePath, const StringList &strings);
 };
 
 }

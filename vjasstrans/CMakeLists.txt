@@ -12,7 +12,7 @@ else (GETTEXT_FOUND)
 	# cancel
 endif (GETTEXT_FOUND)
 
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS filesystem REQUIRED)
 
 if (Boost_FOUND)
 	message(STATUS "Boost has been found.")
@@ -21,8 +21,6 @@ else (Boost_FOUND)
 	message(STATUS "Boost has not been found.")
 	# cancel
 endif (Boost_FOUND)
-
-add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")
 
 include_directories(src)
 add_subdirectory(src)

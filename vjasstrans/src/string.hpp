@@ -25,6 +25,8 @@
 #include <functional>
 #include <sstream>
 
+#include <boost/filesystem.hpp>
+
 namespace vjasstrans
 {
 
@@ -39,15 +41,24 @@ class String
 			};
 		};
 
-		String(const std::string &filePath, unsigned int line, const std::string &idString, const std::string &defaultString, const std::string &valueString) : m_filePath(filePath), m_line(line), m_idString(idString), m_defaultString(defaultString), m_valueString(valueString)
+		static std::size_t id(const String &string)
+		{
+			std::stringstream sstream(string.m_idString.substr(7));
+			std::size_t result;
+			sstream >> result;
+
+			return result;
+		}
+
+		String(const boost::filesystem::path &filePath, std::size_t line, const std::string &idString, const std::string &defaultString, const std::string &valueString) : m_filePath(filePath), m_line(line), m_idString(idString), m_defaultString(defaultString), m_valueString(valueString)
 		{
 		};
 
-		std::string filePath() const
+		boost::filesystem::path filePath() const
 		{
 			return this->m_filePath;
 		};
-		unsigned int line() const
+		std::size_t line() const
 		{
 			return this->m_line;
 		};
@@ -63,17 +74,14 @@ class String
 		{
 			return this->m_valueString;
 		};
-		unsigned int id()
+		std::size_t id() const
 		{
-			std::stringstream sstream(this->m_idString.substr(7));
-			unsigned int result;
-			sstream >> result;
-			return result;
-		}
+			return id(*this);
+		};
 
 	private:
-		std::string m_filePath;
-		unsigned int m_line;
+		boost::filesystem::path m_filePath;
+		std::size_t m_line;
 		std::string m_idString;
 		std::string m_defaultString;
 		std::string m_valueString;

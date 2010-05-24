@@ -7,8 +7,7 @@ set(SRC
 add_executable(vjasstrans ${SRC})
 target_link_libraries(vjasstrans ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
-#install
-
+# install
 install(TARGETS
 	vjasstrans
 	DESTINATION bin

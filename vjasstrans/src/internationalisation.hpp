@@ -21,6 +21,8 @@
 #ifndef VJASSTRANS_INTERNATIONALISATION_H
 #define VJASSTRANS_INTERNATIONALISATION_H
 
+#include <boost/format.hpp>
+
 //preparation for gettext
 #include <libintl.h>
 #include <locale.h>
