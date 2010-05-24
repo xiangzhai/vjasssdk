@@ -278,9 +278,9 @@ library AStructCoreGeneralList requires AInterfaceCoreGeneralContainer, optional
 						set i = i - 1
 					endloop
 				elseif (size > this.m_size) then
-					set i = size
+					set i = this.m_size
 					loop
-						exitwhen (i == this.m_size)
+						exitwhen (i == size)
 						call this.pushBack(newContent)
 						set i = i + 1
 					endloop

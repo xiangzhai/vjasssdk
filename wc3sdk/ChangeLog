@@ -1,3 +1,8 @@
+2010-05-24 Tamino Dauth <tamino@cdauth.eu>
+* Added init option likeWarcraft to struct AQuest and changed its message behaviour.
+* Fixed method resize of vector struct of text macro A_VECTOR.
+* Fixed method resize of vector struct of text macro A_LIST.
+
 2010-05-21 Tamino Dauth <tamino@cdauth.eu>
 * Fixed some GUI trigger data.
 * Fixed some models.

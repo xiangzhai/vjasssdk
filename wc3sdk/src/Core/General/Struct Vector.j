@@ -190,9 +190,9 @@ endif
 						set i = i - 1
 					endloop
 				elseif (size > this.m_size) then
-					set i = size
+					set i = this.m_size
 					loop
-						exitwhen (i == this.m_size)
+						exitwhen (i == size)
 						call this.pushBack(newContent)
 						set i = i + 1
 					endloop
@@ -751,14 +751,14 @@ endif
 			endmethod
 
 			public static method createWithSize takes integer size, $ELEMENTTYPE$ content returns thistype
-				local thistype this = thistype.allocate()
+				local thistype this = thistype.create()
 				call this.resize(size, content)
 				return this
 			endmethod
 
 			/// Creates a vector by filling it with elements of vector @param other.
 			public static method createByOther takes thistype other returns thistype
-				local thistype this = thistype.allocate()
+				local thistype this = thistype.create()
 				local integer i = 0
 				loop
 					exitwhen (i == other.m_size)

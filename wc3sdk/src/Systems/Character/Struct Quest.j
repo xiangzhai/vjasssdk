@@ -3,6 +3,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 	struct AQuest extends AAbstractQuest
 		// static construction members
 		private static boolean m_useQuestLog
+		private static boolean m_likeWarcraft
 		private static string m_updateSoundPath
 		private static string m_textQuestNew
 		private static string m_textQuestCompleted
@@ -63,26 +64,31 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			local integer i
 
 			if (this.character() != 0) then
+
 				call this.character().displayMessage(ACharacter.messageTypeInfo, this.title())
-				set i = 0
-				loop
-					exitwhen (i == this.m_questItems.size())
-					if (not AQuestItem(this.m_questItems[i]).isNotUsed()) then
-						call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
-					endif
-					set i = i + 1
-				endloop
+				if (not thistype.m_likeWarcraft or (not this.isCompleted() and not this.isFailed())) then
+					set i = 0
+					loop
+						exitwhen (i == this.m_questItems.size())
+						if (not AQuestItem(this.m_questItems[i]).isNotUsed()) then
+							call this.character().displayMessage(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
+						endif
+						set i = i + 1
+					endloop
+				endif
 				call PlaySoundFileForPlayer(this.character().player(), this.soundPath())
 			else
 				call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, this.title())
-				set i = 0
-				loop
-					exitwhen (i == this.m_questItems.size())
-					if (not AQuestItem(this.m_questItems[i]).isNotUsed()) then
-						call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
-					endif
-					set i = i + 1
-				endloop
+				if (not thistype.m_likeWarcraft or (not this.isCompleted() and not this.isFailed())) then
+					set i = 0
+					loop
+						exitwhen (i == this.m_questItems.size())
+						if (not AQuestItem(this.m_questItems[i]).isNotUsed()) then
+							call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, StringArg(thistype.m_textListItem, AQuestItem(this.m_questItems[i]).modifiedTitle()))
+						endif
+						set i = i + 1
+					endloop
+				endif
 				call PlaySound(this.soundPath())
 			endif
 
@@ -104,10 +110,19 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 				set title = thistype.m_textQuestFailed
 			endif
 
-			if (title != null) then
-				if (this.character() != 0) then
+
+			if (this.character() != 0) then
+				if (thistype.m_likeWarcraft) then
+					call this.character().displayMessage(ACharacter.messageTypeInfo, " ") // Warcraft like line break
+				endif
+				if (title != null) then
 					call this.character().displayMessage(ACharacter.messageTypeInfo, title)
-				else
+				endif
+			else
+				if (thistype.m_likeWarcraft) then
+					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, " ") // Warcraft like line break
+				endif
+				if (title != null) then
 					call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, title)
 				endif
 			endif
@@ -310,10 +325,14 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			call this.destroyQuestItems()
 		endmethod
 
-		/// init is already used by struct @struct AAbstractQuest (@method AAbstractQuest.init)
-		public static method init0 takes boolean useQuestLog, string updateSoundPath, string textQuestNew, string textQuestCompleted, string textQuestFailed, string textQuestUpdate, string textListItem returns nothing
+		/**
+		* init is already used by struct @struct AAbstractQuest (@method AAbstractQuest.init)
+		* @param likeWarcraft If this value is true quest fail messages won't list all quest items and there will be a line break before all quest state messages.
+		*/
+		public static method init0 takes boolean useQuestLog, boolean likeWarcraft, string updateSoundPath, string textQuestNew, string textQuestCompleted, string textQuestFailed, string textQuestUpdate, string textListItem returns nothing
 			// static construction members
 			set thistype.m_useQuestLog = useQuestLog
+			set thistype.m_likeWarcraft = likeWarcraft
 			set thistype.m_updateSoundPath = updateSoundPath
 			set thistype.m_textQuestNew = textQuestNew
 			set thistype.m_textQuestCompleted = textQuestCompleted
