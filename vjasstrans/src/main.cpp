@@ -24,8 +24,10 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <boost/tokenizer.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "parser.hpp"
 #include "string.hpp"
@@ -95,6 +97,7 @@ int main(int argc, char *argv[])
 		std::cout <<
 		_("Usage:\n") <<
 		_("vjasstrans [options] <files or directories>\n\n") <<
+		_("File types will be detected by file extensions. Note that WTS and FDF files will be read first and Jass scripts afterwards. This allows you to add already existing string files.\n\n") <<
 		_("Options:\n") <<
 		_("--version                   Shows the current version of vjasstrans.\n") <<
 		_("--startatlast               Uses the biggest id + 1 of read input files as first string id and not the first free id.\n") <<
@@ -104,15 +107,15 @@ int main(int argc, char *argv[])
 		_("--recursive                 Parses all source files in sub directories.\n") <<
 		_("--fdf                       Creates file with all parsed strings.\n") <<
 		_("--wts                       Creates file with all parsed strings.\n") <<
-		_("--afdf                      Appends file with all parsed strings.\n") <<
-		_("--awts                      Appends file with all parsed strings.")
+		_("--overwrite                 Overwrites existing FDF and WTS files and does not read them first.\n") <<
+		_("--skipunknown               Skips files with unknown extension.")
 		<< std::endl
 		;
 		std::cout << boost::format(_("--trans <arg>               <arg> has to be the name of the translation function. Default value: %1%.")) % optionTrans << std::endl;
 		std::cout << boost::format(_("--wtspath <arg>             <arg> has to be the file path of wts file. Default value: %1%.")) % optionWtspath << std::endl;
 		std::cout << boost::format(_("--fdfpath <arg>             <arg> has to be the file path of fdf file. Default value: %1%.")) % optionFdfpath << std::endl;
 		std::cout <<
-		_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
+		_("\nReport bugs to tamino@cdauth.eu or on http://sourceforge.net/projects/vjasssdk/") <<
 		std::endl;
 		
 		return EXIT_SUCCESS;
@@ -144,13 +147,13 @@ int main(int argc, char *argv[])
 		{
 			optionWts = true;
 		}
-		else if (strcmp(argv[i], "--awts") == 0)
+		else if (strcmp(argv[i], "--overwrite") == 0)
 		{
-			optionAwts = true;
+			optionOverwrite = true;
 		}
-		else if (strcmp(argv[i], "--afdf") == 0)
+		else if (strcmp(argv[i], "--skipunknown") == 0)
 		{
-			optionAfdf = true;
+			optionSkipunknown = true;
 		}
 		else if (strcmp(argv[i], "--trans") == 0)
 		{
@@ -188,14 +191,17 @@ int main(int argc, char *argv[])
 		else
 			filePaths.push_back(argv[i]);
 	}
-			
+
+	std::list<boost::filesystem::path> invalidFilePaths;
+
 	// filtering non-existing files and directories
 	BOOST_FOREACH(boost::filesystem::path path, filePaths)
-	{		
+	{
 		if (!boost::filesystem::exists(path))
 		{
 			std::cerr << boost::format(_("File or directory \"%1%\" does not exist.")) % path.string() << std::endl;
-			filePaths.remove(path);
+
+			invalidFilePaths.push_back(path);
 		}
 		// is directory
 		else if (boost::filesystem::is_directory(path))
@@ -207,6 +213,9 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	BOOST_FOREACH(boost::filesystem::path path, invalidFilePaths)
+		filePaths.remove(path);
+
 	if (filePaths.empty())
 	{
 		std::cerr << _("Missing valid file paths.") << std::endl;
@@ -214,19 +223,64 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	
-	if (optionAfdf)
-		Parser::readFdf(optionFdfpath, strings);
-	
-	if (optionAwts)
-		Parser::readWts(optionWtspath, strings);
+	if (!optionOverwrite)
+	{
+		if (boost::filesystem::exists(optionFdfpath))
+			Parser::readFdf(optionFdfpath, strings);
+
+		if (boost::filesystem::exists(optionWtspath))
+			Parser::readWts(optionWtspath, strings);
+
+	}
+	else if (optionVerbose)
+	{
+		if (boost::filesystem::exists(optionFdfpath))
+			std::cout << _("FDF file won't be read and will be overwritten.") << std::endl;
+
+		if (boost::filesystem::exists(optionWtspath))
+			std::cout << _("WTS file won't be read and will be overwritten.") << std::endl;
+	}
 	
 	BOOST_FOREACH(boost::filesystem::path path, filePaths)
+	{
+		std::string extension(path.extension());
+		boost::algorithm::to_lower(extension);
+
+		if (extension == ".fdf")
+			Parser::readFdf(path, strings);
+		else if (extension == ".wts")
+			Parser::readWts(path, strings);
+		else
+			continue;
+
+		filePaths.remove(path);
+	}
+
+	BOOST_FOREACH(boost::filesystem::path path, filePaths)
+	{
+		std::string extension(path.extension());
+		boost::algorithm::to_lower(extension);
+
+		if (extension != ".j" && extension != ".ai")
+		{
+			if (optionSkipunknown)
+			{
+				if (optionVerbose)
+					std::cerr << boost::format(_("Warning: File \"%1%\" has unknown extension (\"%2%\") and will be skipped.")) % path.string() % extension << std::endl;
+
+				continue;
+			}
+			else if (optionVerbose)
+				std::cerr << boost::format(_("Warning: File \"%1%\" has unknown extension (\"%2%\") and will be handled as Jass script file.")) % path.string() % extension << std::endl;
+		}
+
 		Parser::parse(path, strings, optionReplace, optionTrans);
+	}
 	
-	if (optionFdf || optionAfdf)
+	if (optionFdf)
 		Parser::writeFdf(optionFdfpath, strings);
 	
-	if (optionWts || optionAwts)
+	if (optionWts)
 		Parser::writeWts(optionWtspath, strings);
 
 	if (optionVerbose)

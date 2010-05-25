@@ -1,21 +1,27 @@
+2010-05-25 Tamino Dauth <tamino@cdauth.eu>
+* Removed unnecessary options --awts and --afdf.
+* Added options --skipunknown and --overwrite.
+* Improved read behaviour.
+* Improved string conflict behaviour.
+
 2010-05-24 Tamino Dauth <tamino@cdauth.eu>
 * Replaced POSIX functions by Boost ones.
 * Added option --verbose.
 * Added option --startatlast.
 * Replaced list type by map which increases program speed massively.
 
-2009-12-20 Tamino Dauth <tamino@cdauth.de>
+2009-12-20 Tamino Dauth <tamino@cdauth.eu>
 * Fixed escape sequence detection.
 * Added option --fill.
 
-2009-10-06 Tamino Dauth <tamino@cdauth.de>
+2009-10-06 Tamino Dauth <tamino@cdauth.eu>
 * Improved parsing.
 * Doubled strings will be detected much better now.
 
-2009-09-10 Tamino Dauth <tamino@cdauth.de>
+2009-09-10 Tamino Dauth <tamino@cdauth.eu>
 * Improved cmake files.
 
-2009-09-06 Tamino Dauth <tamino@cdauth.de>
+2009-09-06 Tamino Dauth <tamino@cdauth.eu>
 * Added options --wtspath, --fdfpath, --afdf and --awts.
 * Methods of class Parser are static now.
 * Added file "src/options.hpp".
@@ -23,27 +29,27 @@
 * Fixed parsing issues of several translation strings in one function call.
 * Wts and fdf files can be appended now.
 
-2009-09-05 Tamino Dauth <tamino@cdauth.de>
+2009-09-05 Tamino Dauth <tamino@cdauth.eu>
 * Revised code of class Parser.
 
-2009-08-08 Tamino Dauth <tamino@cdauth.de>
+2009-08-08 Tamino Dauth <tamino@cdauth.eu>
 * Revised main function.
 * Added option --trans.
 * Added file "src/internationalisation.h".
 * Improved --help and --version output.
 
-2009-08-07 Tamino Dauth <tamino@cdauth.de>
+2009-08-07 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/string.h".
 * Added file "src/parser.h".
 * Added file "src/parser.cpp".
 * Added options --fdf, --wts.
 
-2009-08-06 Tamino Dauth <tamino@cdauth.de>
+2009-08-06 Tamino Dauth <tamino@cdauth.eu>
 * Added recursive mode.
 
-2009-08-01 Tamino Dauth <tamino@cdauth.de>
+2009-08-01 Tamino Dauth <tamino@cdauth.eu>
 * There won't be same strings anymore.
 * Added option --replace.
 
-2009-07-27 Tamino Dauth <tamino@cdauth.de>
+2009-07-27 Tamino Dauth <tamino@cdauth.eu>
 * Implemented read functionality.

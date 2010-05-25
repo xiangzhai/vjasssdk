@@ -24,6 +24,7 @@
 #include <string>
 #include <functional>
 #include <sstream>
+#include <list>
 
 #include <boost/filesystem.hpp>
 
@@ -33,6 +34,12 @@ namespace vjasstrans
 class String
 {
 	public:
+		struct UsageData
+		{
+			boost::filesystem::path &filePath;
+			std::size_t line;
+		};
+
 		struct IdComparator : public std::binary_function<class String*, class String*, bool>
 		{
 			bool operator()(class String *first, class String *second) const
@@ -50,9 +57,23 @@ class String
 			return result;
 		}
 
-		String(const boost::filesystem::path &filePath, std::size_t line, const std::string &idString, const std::string &defaultString, const std::string &valueString) : m_filePath(filePath), m_line(line), m_idString(idString), m_defaultString(defaultString), m_valueString(valueString)
+		String(const std::string &idString, const std::string &defaultString, const std::string &valueString) : m_filePath(filePath), m_line(line), m_idString(idString), m_defaultString(defaultString), m_valueString(valueString), m_usageData(std::list<struct UsageData*>())
 		{
 		};
+
+		~String()
+		{
+			BOOST_FOREACH(struct UsageData *usageData, this->m_usageData)
+				delete usageData;
+		}
+
+		void addUsage(const boost::filesystem::path &path, std::size_t line)
+		{
+			struct UsageData *usageData = new UsageData;
+			usageData->filePath = path;
+			usageData->line = line;
+			this->m_usageData.push_back(usageData);
+		}
 
 		boost::filesystem::path filePath() const
 		{
@@ -78,13 +99,16 @@ class String
 		{
 			return id(*this);
 		};
+		const std::list<struct UsageData*>& usageData() const
+		{
+			return this->m_usgeData;
+		}
 
 	private:
-		boost::filesystem::path m_filePath;
-		std::size_t m_line;
 		std::string m_idString;
 		std::string m_defaultString;
 		std::string m_valueString;
+		std::list<struct UsageData*> m_usageData;
 };
 
 }

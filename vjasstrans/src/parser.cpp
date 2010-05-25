@@ -84,20 +84,20 @@ static bool checkForStringConflict(Parser::StringList &strings, class String *st
 {
 	BOOST_FOREACH(Parser::StringListValue value, strings)
 	{
-		if (value.second->defaultString() == value.second->defaultString())
+		if (value.second->defaultString() == string->defaultString())
 		{
-			std::cerr << boost::format(_("Detected string conflict:\nString 0: \"%1%\"\nString 0 translation: \"%2%\"\nString 1: \"%3%\"\nString 1 translation: \"%4%\"\nEnter 0 to use string 0 or 1 to use string 1.\n")) % value.second->idString() % value.second->valueString() % string->idString() % string->valueString() << std::endl;
-			int answer;
+			std::cerr << boost::format(_("Detected string conflict:\nString 0: \"%1%\"\nString 0 default string: \"%2%\"\nString 0 translation: \"%3%\"\nString 1: \"%4%\"\nString 1 default string: \"%5%\"\nString 1 translation: \"%6%\"\nEnter 0 to use string 0, 1 to use string 1 or anything else to skip (strings will be left both).\n")) % value.second->idString() % value.second->defaultString() % value.second->valueString() % string->idString() % string->defaultString() % string->valueString() << std::endl;
+			char answer;
 			std::cin >> answer;
 			
-			if (answer == 0)
+			if (answer == '0')
 			{
 				std::cout << _("Using string 0.") << std::endl;
 				strings.erase(value.first);
 				delete value.second;
 				strings.insert(std::make_pair(string->id(), string));
 			}
-			else if (answer == 1)
+			else if (answer == '1')
 			{
 				std::cout << _("Using string 1.") << std::endl;
 				delete string;
@@ -214,7 +214,9 @@ bool Parser::parse(const boost::filesystem::path &filePath, StringList &strings,
 				std::stringstream sstream;
 				sstream << "STRING_" << id;
 				std::string valueString = optionFill ? defaultString : "";
-				strings.insert(std::make_pair(id, new String(filePath, i, sstream.str(), defaultString, valueString)));
+				class String *string = new String(sstream.str(), defaultString, valueString);
+				string->addUsage(filePath, i);
+				strings.insert(std::make_pair(id, string));
 				
 				if (replace)
 					line.replace(position, length, sstream.str());
@@ -346,7 +348,7 @@ bool Parser::readFdf(const boost::filesystem::path &filePath, StringList &string
 		
 				length -= index + 2;
 				std::string valueString = line.substr(index, length);
-				class String *string = new String("", 0, idString, defaultString, valueString);
+				class String *string = new String(idString, defaultString, valueString);
 				checkForStringConflict(strings, string);
 				//std::cout << "Adding string from fdf file" << std::endl;
 			}
@@ -428,9 +430,8 @@ bool Parser::readWts(const boost::filesystem::path &filePath, StringList &string
 			if (std::getline(fstream, line) && ++i && line == "{" && std::getline(fstream, line) && ++i)
 			{
 				std::string valueString = line;
-				class String *string = new String("", 0, idString, defaultString, line);
-				if (!checkForStringConflict(strings, string))
-					std::cout << "Adding string from wts file" << std::endl;
+				class String *string = new String(idString, defaultString, line);
+				checkForStringConflict(strings, string);
 			}
 			else
 			{
