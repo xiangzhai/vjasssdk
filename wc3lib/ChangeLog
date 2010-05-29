@@ -1,3 +1,23 @@
+2010-05-28 Tamino Dauth <tamino@cdauth.eu>
+* Improved warblender.
+* Added struct mdlx::VertexData.
+* Added class mdlx::Bounds.
+* Revised nearly all mdlx classes (revised read/write functions).
+
+2010-05-23 Tamino Dauth <tamino@cdauth.eu>
+* Improved Jass++ specification.
+
+2010-05-16 Tamino Dauth <tamino@cdauth.eu>
+* Improved runtime library loading support.
+* Removed library dependency compilation flags.
+* Revised lang module code.
+* Renamed various mdlx classes (doc/mdlx/Classes.txt).
+
+2010-05-14 Tamino Dauth <tamino@cdauth.eu>
+* Added library SFmpqapi.
+* Changed library headers installation paths.
+* Added cmake files to libraries SFmpqapi and StormLib.
+
 2010-05-09 Tamino Dauth <tamino@cdauth.de>
 * Renamed and moved some classes.
 

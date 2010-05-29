@@ -1,3 +1,13 @@
+Consider that wc3lib will support runtime linking/loading which means that libraries
+are being loaded at runtime and if this fails an exception is being thrown.
+
+Flags:
+EDITOR - Qt/KDE 4 are required!
+
+cmake options:
+BUILD_DOCUMENTATION - Generates doxygen documentation (doxygen is required)
+
+DEPRACATED:
 Compilation flags for native format conversion support:
 BLP:
 	- JPEG
