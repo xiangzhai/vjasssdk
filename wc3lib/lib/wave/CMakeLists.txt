@@ -8,4 +8,4 @@ add_library(wave SHARED ${wc3lib_LIB_WAVE_SRC})
 # install
 
 install(TARGETS wave DESTINATION lib/wc3lib/lib/)
-install(FILES ${wc3lib_LIB_WAVE_H} PUBLIC_HEADER DESTINATION include/wc3lib/lib)
+install(FILES ${wc3lib_LIB_WAVE_H} PUBLIC_HEADER DESTINATION include/wc3lib/lib/wave)

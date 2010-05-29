@@ -18,58 +18,175 @@ def add(x, y):
 def sub(x, y):
 	return x-y
 
+def checkForOptionalBlock(block):
+	if block.optional and not block.present:
+		return True
+
+	return False
+
+def loadObjectTranslations(wbObject, bObject):
+	# load translations
+	if not checkForOptionalBlock(wbObject.KGTR):
+		# TODO check line type and additional data
+		for elem in wbObject.KGTR.array:
+			bObject.loc = [bObject.loc.x + elem.x, bObject.loc.y + elem.y, bObject.loc.z +  elem.z] # add values (translate)
+
+def loadObjectRotations(wbObject, bObject):
+	# load rotations
+	if not checkForOptionalBlock(wbObject.KGRT):
+		# TODO check line type and additional data
+		for elem in wbObject.KGRT.array:
+			# TODO: Values a, b, c, d in MDLX?
+			bObject.rot = [bObject.rot.x + elem.a, bObject.rot.y + elem.b, bObject.rot.z +  elem.c] # add values (rotate)
+
+def loadObjectScalings(wbObject, bObject):
+	# load scalings
+	if not checkForOptionalBlock(wbObject.KGSC):
+		# TODO check line type and additional data
+		for elem in wbObject.KGSC.array:
+			bObject.setSize([bObject.getSize().x + elem.x, bObject.getSize().y + elem.y, bObject.getSize().z +  elem.z]) # add values (scale)
+
+def loadObjectVisibilities(wbObject, bObject):
+	# load visibilities
+	if not checkForOptionalBlock(wbObject.KATV):
+		for alpha in wbObject.KATV.alpha:
+			print "Unable to add alpha."
+			# TODO: Values frame and state in MDLX?
+			#bObject.rot = [bObject.rot.x + elem.a, bObject.rot.y + elem.b, bObject.rot.z +  elem.c] # add values (rotate)
+
+# Call this function for every object which contains an OBJ instance.
+def loadObject(wbObject, bObject):
+	bObject.setName(wbObject.Name)
+
+	# TODO properties for sequences only?
+	loadObjectTranslations(wbObject, bObject)
+	loadObjectRotations(wbObject, bObject)
+	loadObjectScalings(wbObject, bObject)
+	loadObjectVisibilities(wbObject, bObject)
+
+# Each load MDX file has its own group.
+# Sometimes files are being loaded which should be changed (like models of particle emitters).
+# Those file groups should get some constraints.
 class Importer(Converter):
 	def __init__(self, scene=None, fps=None):
 		Converter.__init__(self, scene, fps)
 		self.model = None
+		self.group = None
 		self.textures = None
 		self.materials = None
 		self.meshes = None
 		self.armature = None
 
+	def getObjectByName(self, name):
+		for obj in self.scene.objects:
+			if obj.name() == name:
+				return obj
+
+		return None
+
+	def loadObjectPivotPointLocation(wbObjectId, blObject):
+		wbPivt = self.model.PIVT.pivpts[wbObjectId]
+		blObject.loc = [ wbPivt.x, wbPivt.y, wbPivt.z ]
+
+	# Call this function to load parent data and create parent relationships between objects.
+	def loadObjectParent(self, wbObject, bObject):
+		# FIXME: 0 is default parent, what's meant by default?
+		if wbObject.Parent == 0 or wbObject.Parent == 0xFFFFFFFF:
+			return
+
+		wbParent = wbObject.objects[wbObject.Parent]
+		bParent = self.getObjectByName(wbParent.model.MODL.Name)
+
+		if bParent == None:
+			sys.stderr.write("Parent object \"%s\" of object \"%s\" does not exist in scene \"%s\".\n" % wbParent.model.MODL.Name % bObject.name() % self.scene.getName())
+			return
+
+		sys.stderr.write("Object \"%s\" has parent \"%s\".\n" % bObject.getName() % bParent.getName())
+		bObject.setParent(bParent)
+
+		# TODO properties for sequences only?
+		#if not wbObject.dontInheritTranslation():
+		#	loadObjectTranslations(wbParent, bObject)
+
+		#if not wbObject.dontInheritScaling():
+		#	loadObjectScalings(wbParent, bObject)
+
+		#if not wbObject.dontInheritRotation():
+		#	loadObjectRotations(wbParent, bObject)
+
+
+		# TODO Inherit parent's visibilities (no flag?)
+		#loadObjectVisibilities(wbParent, bObject)
+
+		# TODO What does billboarded mean?
+		# if wbObject.billboarded():
+		# if wbObject.billboardedLockX():
+		# if wbObject.billboardedLockY():
+
+		#if wbObject.cameraAnchored():
+			# TODO inherit camera
+
+	def loadAllObjectParents(self):
+		for obj in self.scene.objects:
+			obj
+
+	def linkObject(self, datablock, name):
+		obj = self.scene.objects.new(datablock) # name + 'Object'
+		#object.link(datablock)
+		#self.scene.link(object)
+		self.group.objects.link(obj)
+
+		return obj
+
 	def armatureName(self):
 		return self.model.MODL.Name + '.Armature'
+
+	def textureName(self, texnr):
+		return self.model.MODL.Name + '.Tex' + str(texnr)
+
+	def materialName(self, matnr):
+		return self.model.MODL.Name + '.Mat' + str(matnr)
+
+	def meshName(self, geosetnr):
+		return self.model.MODL.Name + '.Mesh' + str(geosetnr)
+
+	def lightName(self, lightnr):
+		return self.model.MODL.Name + '.Lamp' + str(lightnr)
+
+	def particleEmitterName(self, premnr):
+		return self.model.MODL.Name + '.ParticleEmitter' + str(premnr)
 
 	def toBlender(self, model):
 		self.model = model
 		self.meshes = []
-		self.armature = Blender.Armature.Armature(self.armatureName())
+		print "Model name " + self.model.MODL.Name
+		self.group = Blender.Group.New(self.model.MODL.Name)
+		self.armature = Blender.Armature.New(self.armatureName()) # is linked in loadSequences
 
-		sys.stderr.write("Converting model %s to Blender data structures..\n" % (repr(self.model.MODL.Name)))
+		sys.stderr.write("Converting model \"%s\" to Blender data structures..\n" % self.model.MODL.Name)
 		self.loadTextures()
 		self.loadMaterials()
 		self.loadMeshes()
 		self.loadBones()
 		self.loadSequences()
 		self.loadLights()
-		#self.loadParticleEmitters()
-		#self.loadParticleEmitters2()
-		sys.stderr.write("Done converting model %s.\n" % (repr(self.model.MODL.Name)))
+		self.loadParticleEmitters()
+		self.loadParticleEmitters2()
+		sys.stderr.write("Done converting model \"%s\".\n" % self.model.MODL.Name)
 
 		self.armature = None
 		self.meshes = None
 		self.scene = None
 		self.model = None
 
-	def textureName(self, textureNumber):
-		return self.model.MODL.Name + '.Tex' + str(textureNumber)
-
-	def materialName(self, materialNumber):
-		return self.model.MODL.Name + '.Mat' + str(materialNumber)
-
-	def meshName(self, geosetNumber):
-		return self.model.MODL.Name + '.Mesh' + str(geosetNumber)
-
-	def lampName(self, lightNumber):
-		return self.model.MODL.Name + '.Lamp' + str(lightNumber)
-
 	def loadTextures(self):
 		(filepath, dummy) = os.path.split(self.model.filename)
 		self.textures = []
 		for texnr in range(self.model.TEXS.ntexs):
-			tex = Blender.Texture.New(self.textureName(texnr))
-			tex.setType('Image')
-			tex.setImageFlags('InterPol', 'UseAlpha', 'MipMap')
+			bTexture = Blender.Texture.New(self.textureName(texnr))
+			self.linkObject(bTexture, self.textureName(texnr))
+			bTexture.setType('Image')
+			bTexture.setImageFlags('InterPol', 'UseAlpha', 'MipMap')
 			texturefile = self.model.TEXS.textures[texnr].TexturePath;
 			if texturefile!='':
 				if os.name!='nt':
@@ -79,22 +196,22 @@ class Importer(Converter):
 				sys.stderr.write("texture %d: PNG texture file (%s)\n" % (texnr, texturefile))
 
 				try:
-					tex.setImage(Blender.Image.Load(texturefile))
+					bTexture.setImage(Blender.Image.Load(texturefile))
 				except IOError:
 					sys.stderr.write("Unable to assign texture file.\n")
 
 					pass
 
-				self.textures.append(tex)
+				self.textures.append(bTexture)
 			else:
 				sys.stderr.write("texture %d: None\n" % texnr)
 				self.textures.append(None)
-
 
 	def loadMaterials(self):
 		self.materials = []
 		for matnr in range(self.model.MTLS.nmtls):
 			mat = Blender.Material.New(self.materialName(matnr))
+			self.linkObject(mat, self.materialName(matnr))
 			mat.setRGBCol(self.teamcolour)
 			mat.setMode('Shadeless', 'ZTransp')
 			setTexFace = 1
@@ -125,32 +242,33 @@ class Importer(Converter):
 			self.materials.append(mat)
 
 	def loadMeshes(self):
-		for geoset_i in range(len(self.model.GEOS.geosets)):
-			geoset = self.model.GEOS.geosets[geoset_i]
-			mymesh = Blender.Mesh.New()
-			sys.stderr.write("mesh name \"%s\"\n" % self.meshName(geoset_i))
-			sys.stderr.write("mesh %d: %d NRMS\n" % (geoset_i, geoset.NRMS.nvrts))
+		for geosetnr in range(len(self.model.GEOS.geosets)):
+			geoset = self.model.GEOS.geosets[geosetnr]
+			mymesh = Blender.Mesh.New(self.meshName(geosetnr))
+			mymeshObject = self.linkObject(mymesh, self.meshName(geosetnr))
+			sys.stderr.write("mesh name \"%s\"\n" % self.model.MODL.Name + '.Mesh' + str(geosetnr))
+			sys.stderr.write("mesh %d: %d NRMS\n" % (geosetnr, geoset.NRMS.nvrts))
 
 			#mymesh.hasFaceUV(1);
 
 			normalVertices = []
 
 			# vertices
-			for vert_i in range(len(geoset.VRTX.vertices)):
-				vert = geoset.VRTX.vertices[vert_i]
+			for vertnr in range(len(geoset.VRTX.vertices)):
+				vert = geoset.VRTX.vertices[vertnr]
 				x = vert.x
 				y = vert.y
 				z = vert.z
 				mymesh.verts.extend(Blender.Mathutils.Vector([x,y,z]))
-				mymesh.verts[vert_i].no[0] = geoset.NRMS.vertices[vert_i].x
-				mymesh.verts[vert_i].no[0] = geoset.NRMS.vertices[vert_i].y
-				mymesh.verts[vert_i].no[0] = geoset.NRMS.vertices[vert_i].z
-				
+				mymesh.verts[vertnr].no.x = geoset.NRMS.vertices[vertnr].x
+				mymesh.verts[vertnr].no.y = geoset.NRMS.vertices[vertnr].y
+				mymesh.verts[vertnr].no.z = geoset.NRMS.vertices[vertnr].z
+
 				#if HAS_TEX==1:
 				#	v.uvco[0] = geoset.UVAS.UVBS[0].vertices[vert_i].x;
 				#	v.uvco[1] = geoset.UVAS.UVBS[0].vertices[vert_i].y;
 
-			sys.stderr.write("mesh %d: %d verts\n" % (geoset_i, len(mymesh.verts)))
+			sys.stderr.write("mesh %d: %d verts\n" % (geosetnr, len(mymesh.verts)))
 			sys.stderr.write("Mesh added to Blender.\n")
 
 			# faces
@@ -166,9 +284,9 @@ class Importer(Converter):
 				mymesh.faces[i].uv = [uv_v1, uv_v2, uv_v3];
 				mymesh.faces[i].mode = mymesh.faces[i].mode | Blender.Mesh.FaceModes['TEX'];
 				mymesh.faces[i].mat = 0;
-				
-			sys.stderr.write("mesh %d: %d faces\n" % (geoset_i, len(mymesh.faces)))
-			
+
+			sys.stderr.write("mesh %d: %d faces\n" % (geosetnr, len(mymesh.faces)))
+
 			# vertex groups
 			#self.groups = {}
 			#for vertexIndex in range(len(geoset.GNDX.vertexGroups)):
@@ -176,7 +294,7 @@ class Importer(Converter):
 			#	objectList = geoset.MATS.matrices[geoset.MTGC.groupCount[geoset.GNDX.vertexGroups[vertexIndex]]]
 			#	sys.stderr.write("objectList: %s\n" % type(objectList))
 			#	boneNames = [self.BONE.bones[objectIndex].OBJ.Name for objectIndex in objectList]
-			#	
+			#
 			#	for name in boneNames:
 			#		if self.groups.has_key(name):
 			#			self.groups[name].append(vertexIndex)
@@ -186,11 +304,10 @@ class Importer(Converter):
 			#for grp_name, grp in self.groups:
 			#	mymesh.addVertGroup(grp_name)
 			#	mymesh.assignVertsToGroup(grp_name, grp, 1.0, 'replace')
-			
+
 			mymesh.update()
-			blMeshObj = self.scene.objects.new(mymesh, self.meshName(geoset_i))
-			blMeshObj.setMaterials([self.materials[geoset.MaterialID]]);
-			self.meshes.append(blMeshObj)
+			mymeshObject.setMaterials([self.materials[geoset.MaterialID]]);
+			self.meshes.append(mymeshObject)
 
 	def loadBones(self):
 		sys.stderr.write("Ordering bones..\n")
@@ -236,14 +353,18 @@ class Importer(Converter):
 			wbPivt = self.model.PIVT.pivpts[wbBone.OBJ.ObjectID]
 			wbBoneKey = wbBone.OBJ.Name
 
-			if wbBone.OBJ.Parent != -1:
-				self.armature.bones[wbBoneKey].setParent(self.armature.bones[self.model.BONE.bones[wbBone.Parent].OBJ.Name])
-				wbBoneChildren[wbBone.Parent].append(index)
+			if wbBone.OBJ.Parent != 0xFFFFFFFF:
+				wbBoneChildren[wbBone.OBJ.Parent].append(index)
 			#else:
 				#parentTail = [0, 0, 0]
 
 			myEditBone = Blender.Armature.Editbone()
 			self.armature.makeEditable()
+
+			# TODO: create bone object
+			#loadObject(wbBone, myEditBone)
+			#self.loadObjectParent(wbBone, myEditBone) # load parent data
+
 			self.armature.bones[wbBoneKey] = myEditBone
 			self.armature.bones[wbBoneKey].head = Blender.Mathutils.Vector([wbPivt.x, wbPivt.y, wbPivt.z])
 			#self.armature.bones[wbBoneKey].hasIK(1)
@@ -283,8 +404,7 @@ class Importer(Converter):
 
 
 		# create scene object
-		blArmObj = self.scene.objects.new(self.armature)
-		#blArmObj.link(self.armature)
+		blArmObj = self.linkObject(self.armature, self.armatureName())
 		blArmObj.makeParent(blMeshObjArray)
 
 	def boneInsert(self, boneIndex, boneOrder):
@@ -471,16 +591,23 @@ class Importer(Converter):
 			ycurve.addBezier((self.wbTime2blFrame(frame.Frame, start), -1*mat.z))
 			zcurve.addBezier((self.wbTime2blFrame(frame.Frame, start), mat.y))
 
-	# new
+	# new, optional
 	# @author Tamino Dauth
 	def loadLights(self):
+
+		if checkForOptionalBlock(self.model.LITE):
+			return
+
 		sys.stderr.write("loading %i lights\n" % self.model.LITE.nlits)
 
 		for lightnr in range(self.model.LITE.nlits):
 			wbLamp = self.model.LITE.lights[lightnr]
-			object = Blender.Object.New(self.lampName(lightnr))
-			blLamp = Blender.Lamp.New(object)
-			blLamp.setName(wbLamp.OBJ.Name)
+			blLamp = Blender.Lamp.New(self.lightName(lightnr))
+			object = self.linkObject(blLamp, self.lightName(lightnr))
+
+			loadObject(wbLamp, blLamp)
+			self.loadObjectParent(wbLamp, blLamp) # load parent data
+
 			#(0:Omnidirectional;1:Directional;2:Ambient)
 			if wbLamp.Type == 0:
 				blLamp.setType('Lamp')
@@ -491,26 +618,78 @@ class Importer(Converter):
 			#else:
 				# todo throw exception
 
-			#light.AttStart
-			#light.AttEnd
+			#blLamp.setDistance(wbLamp.AttEnd)
+			# start und Ende der Schwächung
+			#wbLamp.AttStart
+			#wbLamp.AttEnd
 			blLamp.R = wbLamp.ColR
 			blLamp.G = wbLamp.ColB
 			blLamp.B = wbLamp.ColB
 			blLamp.setEnergy(wbLamp.Intensity)
-			#light.AmbColR
-			#light.AmbColG
-			#light.AmbColB
-			#light.AmbColIntensity
-			self.scene.link(object)
+			#wbLamp.AmbColR
+			#wbLamp.AmbColG
+			#wbLamp.AmbColB
+			#wbLamp.AmbColIntensity
 
+
+
+			self.loadObjectPivotPointLocation(wbLamp.OBJ.ObjectId, object)
+
+	# not optional
 	def loadParticleEmitters(self):
+
+		if checkForOptionalBlock(self.model.PREM):
+			return
+
 		sys.stderr.write("loading %i particle emitters\n" % self.model.PREM.nprems)
 
 		for premnr in range(self.model.PREM.nprems):
 			wbParticle = self.model.PREM.particleemitters[premnr]
-			object = Blender.Object.New(self.particleName(premnr))
-			blParticle = Blender.Particle.New(object)
+			blParticle = Blender.Particle.New(self.particleName(premnr))
+			object = self.linkObject(blParticle, self.particleName(premnr))
+
+			# TODO: Does not contain an OBJ instance has its own values!
 			blParticle.setName(wbParticle.Name)
+
+			blParticle.maxvel = wbParticle.InitVelocity
+			blParticle.avvel = 100 # 100% of max velocity
+			blParticle.lifetime = wbParticle.LifeSpan
+			blParticle.startFrame = 0
+			blParticle.endFrame = prem.EmissionRate # TODO: correct value?
+			blParticle.amount = prem.Longitude * prem.Latitude # TODO: Float values, get amount by size (width * height).
+			blParticle.tanacc = prem.Gravity * 100 / wbParticle.InitVelocity # TODO: percentage (not latacc?)
+			blParticle.type = 'EMITTER'
+			blParticle.distribution = Particle.DISTRIBUTION['GRID']
+			blParticle.particleDistribution = Particle.EMITFROM['VERTS']
+			blParticle.drawAs = Particle.DRAWAS['GROUP']
+			blParticle.displayPercentage = 100
+
+			#for rot in blParticle.
+			#prem.KGRT = KGRT(1)
+			#prem.KGRT.readFrom(file, model)
+			#prem.KGSC = KGSC(1)
+
+			if PREM.usesMdl(prem):
+				reader = mdx.Reader()
+				mdxModel = None
+
+				try:
+					mdxModel = reader.loadFile(prem.ModelPath)
+				except mdx.MDXFileFormatError:
+					sys.stderr.write("Could not read model file \"%1%\" of particle emitter \"%2%\".\n" % prem.ModelPath % wbParticle.Name)
+
+
+				importer=Importer(scene=self.scene, fps=self.fps)
+				importer.toBlender(mdxModel) # TODO: Link load file with its file and do not add to the MDLX file (use model.filename)
+				# adding particle system to load object
+				group=Group.Get(mdxModel.MODL.Name)
+
+				for object in group.objects:
+					object.newParticleSystem(blParticle.getName())
+
+			elif PREM.usesTga(prem): # TODO: Load model file as TGA texture (plane)?!
+				print "Uses tga"
+
 
 			# do not inherit translation, rotation and scaling
 			#if wbParticle.Parent == -1:
@@ -518,8 +697,12 @@ class Importer(Converter):
 			#else:
 				#blParticle.setParent(
 
+			self.loadObjectPivotPointLocation(wbParticle.ObjectID, object)
 
-			bl.Particle.type = 'EMITTER'
-
+	# not optional
 	def loadParticleEmitters2(self):
+
+		if checkForOptionalBlock(self.model.PRE2):
+			return
+
 		sys.stderr.write("loading %i particle emitters 2\n" % self.model.PRE2.npre2s)

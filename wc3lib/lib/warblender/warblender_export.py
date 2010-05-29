@@ -1,6 +1,6 @@
 #!BPY
 """
-Name: 'Blizzard Warcraft III model file (.mdx)...'
+Name: 'Blizzard Warcraft III model file (.mdx) ...'
 Blender: 249a
 Group: 'Export'
 Tooltip: "Export to a Blizzard's Warcraft III model file"

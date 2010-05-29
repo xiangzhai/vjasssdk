@@ -8,4 +8,4 @@ add_library(huffman SHARED ${wc3lib_LIB_HUFFMAN_SRC})
 # install
 
 install(TARGETS huffman DESTINATION lib/wc3lib/lib/)
-install(FILES ${wc3lib_LIB_HUFFMAN_H} PUBLIC_HEADER DESTINATION include/wc3lib/lib)
+install(FILES ${wc3lib_LIB_HUFFMAN_H} PUBLIC_HEADER DESTINATION include/wc3lib/lib/huffman)

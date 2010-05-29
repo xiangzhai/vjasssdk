@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import struct
 import string
@@ -60,8 +61,22 @@ def readVertices(file, obj):
 def getVerticesSize(obj):
 	return LONG_SIZE + (obj.nvrts * 3 * FLOAT_SIZE)
 
+# Removes 0 chars.
 def readString(file, length):
-	return string.strip(file.read(length), "\x00")
+	value = str(file.read(length))
+	#value = value.strip("PDR")
+	index = value.find("\x00")
+	print "Value is " + value
+	print "Index of read string is " + str(index)
+	print "Length of read string is " + str(len(value))
+
+	if index != -1:
+		value = value[0:index]
+
+	return value
+
+def writeString(file, string, length):
+	file.write(string + ((length - string.len) * '\x00')) # fill empty space with \x00 chars
 
 def deepDictListAdd(dict, location, item, ListAdd=0):
 	#sys.stderr.write("deepDictListAdd: " + str(location) + ": " + str(item) + "\n")
@@ -146,7 +161,7 @@ class MDXBlock:
 		else:
 			self.present = 1
 			self.loadBlock(file, model)
-	
+
 	def loadBlock(self, file, model):
 		pass
 
@@ -191,8 +206,8 @@ class Model:
 		s += str(self.CAMS) + "\n"
 		s += str(self.EVTS) + "\n"
 		s += str(self.CLID) + "\n"
-		return s 
-	
+		return s
+
 	def id(self):
 		return "block%d" % id(self)
 
@@ -285,7 +300,7 @@ class VERS(MDXBlock):
 	def blockToHTML(self, parent, root):
 		s = html.property("Version", '%d', self.version)
 		return s
-		
+
 
 class MODL(MDXBlock):
 	""" Model """
@@ -422,7 +437,7 @@ class MTLS(MDXBlock):
 			self.materials.append(material)
 			self.nmtls += 1
 		perror("MTLS layersize: " + str(layersize))
-	
+
 	def toString(self):
 		s = "nbytes: " + str(self.nbytes) + "\n"
 		s += "nmtls: " + str(self.nmtls) + "\n"
@@ -915,7 +930,7 @@ class GEOS(MDXBlock):
 				s += ".geosets[%d].ganimations[%d].MaxExtz = %f\n" % (i, j, ganim.MaxExtz)
 			s += str(obj.UVAS)
 		return s
-	
+
 	def getBlockSize(self):
 		return 4 + self.nbytes
 
@@ -1013,7 +1028,7 @@ class PTYP(MDXBlock):
 		self.primType = []
 		for i in range(self.nptyps):
 			self.primType.append(readLong(file))
-	
+
 	def getBlockSize(self):
 		return 4 + LONG_SIZE + self.nptyps * LONG_SIZE
 
@@ -1083,7 +1098,7 @@ class PVTX(MDXBlock):
 			s += ("[%d, %d, %d] " % (self.vertices[3 * i], self.vertices[3 * i + 1], self.vertices[3 * i + 2]))
 		s += "\n"
 		return s
-	
+
 	def getBlockSize(self):
 		return 4 + LONG_SIZE + (self.nvrts * SHORT_SIZE)
 
@@ -1359,7 +1374,7 @@ class BONE(MDXBlock):
 	""" Bones """
 	def __init__(self, optional=0):
 		MDXBlock.__init__(self, 'BONE', optional)
-	
+
 	def loadBlock(self, file, model):
 		self.nbytes = readLong(file)
 		self.bones = []
@@ -1613,7 +1628,7 @@ class PIVT(MDXBlock):
 	""" PivotPoints """
 	def __init__(self, optional=0):
 		MDXBlock.__init__(self, 'PIVT', optional)
-	
+
 	def loadBlock(self, file, model):
 		self.nbytes = readLong(file)
 		self.pivpts = []
@@ -1648,6 +1663,15 @@ class PIVT(MDXBlock):
 		return s
 
 class PREM(MDXBlock):
+	usesTga = 0x80 # +bit8(EmitterUsesTGA)
+	usesMdl = 0x800000 # +bit23(EmitterUsesMDL)
+
+	def usesTga(prem):
+		return prem.Flags & PREM.usesTga
+
+	def usesMdl(prem):
+		return prem.Flags & PREM.usesMdl
+
 	""" ParticleEmitter """
 	def __init__(self, optional=0):
 		MDXBlock.__init__(self, 'PREM', optional)
