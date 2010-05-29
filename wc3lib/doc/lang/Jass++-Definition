@@ -69,34 +69,36 @@ jedoch halte ich dies für keine sinnvolle Idee, falls man nicht ein ganzes Prog
 Die zweite Option ist eine Erweiterung der Syntax von Jass, welche jederzeit in reinen Jass-Code konvertiert werden kann.
 Dazu muss man "nur" einen Compiler bzw. Precompiler für die eigene Skriptsprache schreiben, welcher die Syntax dieser kennt und zu Jass konvertieren
 kann.
-Diese Option wurde bisher bei allen mir bekannten Skritpsprachenerweiterungen, welche genau genommen nur drei, ja eigentlich nur zwei sind, gewählt.
+Diese Option wurde bisher bei allen mir bekannten Skritpsprachenerweiterungen von Jass, welche genau genommen nur drei, ja eigentlich nur zwei sind, gewählt.
 
 Die Lösung:
-Zum Einen wäre da Vexorians vJass, welches sich mit großem Erfolg verbreitet hat und grob alle wichtigen Mängel von Jass behebt.
+Zum Einen wäre da Vexorians vJass, welches sich mit großem Erfolg verbreitet hat und grob alle wichtigen Mängel von Jass behebt, die
+Syntax aber grundsätzlich beibehält und sich bei neuen Sprachkonstrukten an diese anpasst.
 Zum Anderen wären da cJass und Zinc. Ich fasse diese beiden Sprachen zusammen, da sie mehr einen Zusatz zu vJass darstellen.
 Sie erweitern lediglich die Syntax um einige Fähigkeiten und sind beidesamt kompatibel zu vJass.
 Vexorian hat nicht nur die beiden Sprachen vJass und Zinc entwickelt, sondern auch den dazugehörigen Precompiler, den JassHelper,
 welcher meines Wissens nach in Pascal bzw. Delphi geschrieben ist.
-Für cJass existiert ebenfalls ein, in Assembler geschriebener, Precompiler.
-Wo liegt nun also das Problem, wenn es bereits diese Spracherweiterungen gibt?
+Für cJass existiert ebenfalls ein, in Assembler geschriebener Precompiler.
+Wo liegt nun also das Problem wenn es bereits diese Spracherweiterungen gibt?
 Die Antwort ist ganz einfach: Zinc und cJass haben jeweils ihre eigenen Arten einer Syntaxerweiterung über die man sich bereits teil-
 weise streiten kann, da sie sehr von der Syntax herkömmlicher Sprachen abweicht.
 vJass dagegen ist das eigentliche Ziel meiner Kritik, da diese Spracherweiterung erst die eigentlichen und wirklich notwendigen Fähigkeiten
 mit sich bringt. Objektorientierung, Modularisierung, Funktionszeiger, Executions und Evaluations, und inzwischen auch namenlose bzw. Lambda-Funktionen.
-Viele davon gefallen mir und ich bin daher inzwischen auch ein langjähriger Benutzer vJass'.
-Womit ich jedoch eigentlich unzufrieden bin ist zum einen der Mangel an weiteren notwendigen und praktischen Erweiterungen, sowie des Programms
+Viele davon gefallen mir und ich bin daher inzwischen auch ein langjähriger Benutzer vJass', jedoch auch hauptsächlich aus dem Grund, dass das normale
+Jass auf Dauer sehr umständlich zu verwenden ist und es keine wirkliche Alternative zu vJass gab und gibt.
+Womit ich unzufrieden bin ist zum einen der Mangel an weiteren notwendigen und praktischen Erweiterungen, sowie des Programms
 JassHelper, welches nicht einmal plattformübergreifend ist, die teilweise wirklich unschöne Syntax und die daraus resultierende Erweiterung Zinc bzw.
 die Trennung der beiden Sprachen und zu schlechter Letzt die mangelnde Fehlerbehebung bei aufkommenden Fehlern.
-Der Code des JassHelpers ist frei verfügbar, das ist mir wohl bewusst, jedoch bin ich 1. nicht so mit Pascal und dessen Syntax vertraut, halte 2.
-den Code für mehr als unübersichtlich und bin 3. nicht gerade motiviert, eine Windows-Anwendung weiterzuentwickeln, welche eine Sprache interpretiert
+Der Code des JassHelpers ist frei verfügbar, das ist mir wohl bewusst, jedoch bin ich 1. nicht sehr mit Pascal und dessen Syntax vertraut, halte 2.
+den Code für mehr als unübersichtlich und bin 3. nicht gerade motiviert, eine Windows-Anwendung weiterzuentwickeln, welche eine Sprache analysiert
 und kompiliert, an deren Syntax ich einiges auszusetzen habe.
-Zudem interessiere ich mich inzwischen sehr für Programmiersprachen, weshalb die Entwicklung einer eigenen Sprache, hoffentlich auch einen gewissen
+Zudem interessiere ich mich inzwischen sehr für Programmiersprachen, weshalb die Entwicklung einer eigenen Sprache hoffentlich auch einen gewissen
 Lerneffekt bei mir auslösen wird.
 
 Jass++:
 Ich bin ein Fan der Programmiersprache C++. Daher der Name Jass++. Ob er passend oder unpassend ist, ist mir relativ egal, es ist nur ein Bezeichner.
-Jass++ soll alles abdecken, was mir persönlich und eventuell auch anderen in Jass fehlt.
-Genau wie vJass, muss es in Jass-Code umgewandelt werden, weshalb ein Precompiler benötigt wird. Ein solcher wird momentan von mir selbst entwickelt.
+Jass++ soll alles abdecken, was mir persönlich und eventuell auch anderen an Jass fehlt.
+Genau wie vJass muss es in Jass-Code umgewandelt werden, weshalb ein Precompiler benötigt wird. Ein solcher wird momentan von mir selbst entwickelt.
 Neben der Sprachsyntaxdefinition existiert auch eine Compiler-Definition, welche mehr eine Empfehlung an mich selbst und andere, die einen Precompiler
 für die Sprache schreiben wollen, ist.
 Jass++ soll einerseits speziell auf Warcraft 3 The Frozen Throne und die Merkmale von Jass zugeschnitten sein und andererseits die Mächtigkeit einer
@@ -105,20 +107,25 @@ Dabei werden zum Teil einzigartige und zum Teil altbekannte Syntaxelemente unter
 Zudem, und dies halte ich persönlich für eine sehr wichtige Eigenschaft der Sprache, soll sie so gut wie möglich zu bestehenden Spracherweiterungen
 von Jass kompatibel sein und zumindest deren getrennte Behandlung erlauben.
 
+Syntax des Dokuments:
+| bedeutet "oder".
+Zwischen zwei eckige Klammern eingeschlossener Inhalt ist optional.
+Zwischen ein Größer- und ein Kleinerzeichen eingeschlossener Inhalt muss durch etwas ersetzt werden.
+
 2. Laufzeit und Kompilierung
 
 Im Gegensatz zu Jass ist Jass++ keine reine Interpreter-Sprache mehr, da sie zunächst zu Jass-Code
 umgewandelt werden muss. Daher wird in den nachfolgenden Inhalten oft zwischen der Lauf- und der Kompilier-
-zeit unterschied. Mit der Kompilierzeit ist jene Zeit gemeint, in welcher der Jass++-Code zu Jass-Code
+zeit unterschied. Mit der Kompilierzeit ist jene Zeit gemeint, in welcher der Jass++-Code in Jass-Code
 umgewandelt wird. Mit der Laufzeit dagegen ist jene Zeit gemeint, in der der bereits zu Jass-Code kompilierte
-Jass++-Code ausgeführt wird. Dies wird in der Regel von Warcraft 3 The Frozen Throne bzw. dess Engine
+Jass++-Code ausgeführt bzw. interpretiert wird. Dies wird in der Regel von Warcraft 3 The Frozen Throne bzw. dessen Engine
 bewerkstelligt, könnte jedoch theoretisch auch von einer anderen, selbst gebauten getan werden.
 
 3. Kompatibilität zu anderen Sprachen
 
 Kompatibilität zu Jass:
 Jass-Funktionen und -Variablen, die innerhalb der #jass und #endjass-Präprozessoranweisungen
-deklariert wurden, können von Jass++-Code normal aufgerufen werden. Dabei gilt zu beachten,
+deklariert wurden, können von Jass++-Code normal verwendet werden. Dabei gilt zu beachten,
 dass die Typumwandlungsregeln von Jass++ bei der Parameterübergabe gelten.
 Native Funktionen und Typen können ebenfalls durch eine reine Jass-Deklaration verwendet werden
 und müssen nicht erst mit den Jass++-Sprachelementen deklariert werden. Diese eignen sich eher
@@ -134,22 +141,29 @@ Paket-Funktionen deklariert werden.
 Kompatibilität zu vJass:
 Momentan ist noch nicht geplant Jass++- und vJass-Code kombinierbar zu machen.
 Code zwischen den Präprozessoranweisungen #vjass und #endjass wird daher bei einer Jass++-
-Kompilierung ignoriert.
+Kompilierung ignoriert bzw. zu Jass-Code umgewandelt und genau wie Jass-Code vor sämtlichen Jass++-
+Elementen deklariert, definiert und aufgerufen.
 
 Kompatibilität zu Zinc:
 Momentan ist noch nicht geplant Jass++- und Zinc-Code kombinierbar zu machen.
 Code zwischen den Präprozessoranweisungen #zinc und #endzinc wird daher bei einer Jass++-
-Kompilierung ignoriert.
+Kompilierung ignoriert bzw. zu Jass-Code umgewandelt und genau wie Jass-Code vor sämtlichen Jass++-
+Elementen deklariert, definiert und aufgerufen.
 
 Kompatibilität zu CJass:
 Momentan ist noch nicht geplant Jass++- und CJass-Code kombinierbar zu machen.
 Code zwischen den Präprozessoranweisungen #cjass und #endcjass wird daher bei einer Jass++-
-Kompilierung ignoriert.
+Kompilierung ignoriert bzw. zu Jass-Code umgewandelt und genau wie Jass-Code vor sämtlichen Jass++-
+Elementen deklariert, definiert und aufgerufen.
 
 4. Schlüsselwörter
 
 Im Folgenden wird zwischen Standard, was auf gängige Programmiersprachen verweist, und Warcraft-spezifisch, was auf Warcraft-spezifische
 Eigenschaften verweist, unterschieden.
+
+Typ-Schlüsselwörter:
+Standard: integer, string, boolean, real
+Warcraft-spezifisch: code, handle, agent, event, player, widget, unit, destructable, item, ability, buff, force, group, trigger, triggercondition, triggeraction, timer, location, region, rect, boolexpr, sound, conditionfunc, filterfunc, unitpool, itempool, race, alliancetype, racepreference, gamestate, igamestate, fgamestate, playerstate, playerscore, playergameresult, unitstate, aidifficulty, eventid, gameevent, playerevent, playerunitevent, unitevent, limitop, widgetevent, dialogevent, unittype, gamespeed, gamedifficulty, gametype, mapflag, mapvisibility, mapsetting, mapdensity, mapcontrol, playerslotstate, volumegroup, camerafield, camerasetup, playercolor, placement, startlocprio, raritycontrol, blendmode, texmapflags, effect, effecttype, weathereffect, terraindeformation, fogstate, fogmodifier, dialog, button, quest, questitem, defeatcondition, timerdialog, leaderboard, multiboard, multiboarditem, trackable, gamecache, version, itemtype, texttag, attacktype, damagetype, weapontype, soundtype, lightning, pathingtype, image, ubersplat, hashtable
 
 Prozedual-Schlüsselwörter:
 Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const, alias
@@ -221,7 +235,7 @@ notwendig, da man keine eigenen Makros (wie in C und C++) definieren kann.
 Zwischen dem #-Zeichen und der Anweisung können beliebig viele Leerzeichen bzw. Tabulatoren stehen.
 
 #include [ jass | zinc | vjass | jasspp | cjass ] [ once ] "<Dateipfad>" Wird cjass verwendet, so wird die gesamte Datei ignoriert! Wird once angegeben, wird die Datei nur einmal eingebunden.
-#inject InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
+#inject CustomMapScript | InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
 #endinject
 #initjasspp				Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
 #if (<konstanter Ausdruck>)		Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10)
@@ -243,34 +257,36 @@ Zwischen dem #-Zeichen und der Anweisung können beliebig viele Leerzeichen bzw.
 
 Vordefinierte Konstanten:
 Es gilt zu beachten, dass die folgenden Konstanten normale Jass++-Konstanten eines nativen Typs sind und somit auch in Nicht-Präprozessor-Anweisungen verwendet werden können.
-ABGELEHNT: OS Enthält eine Zeichenkette mit dem Namen des Betriebssystems.
-LANGUAGE Enthält eine Zeichenkette mit der aktuellen Skriptsprache ("Jass++", "Zinc", "vJass", "Jass")
-LANGUAGE_VERSION Enthält eine Zeichenkette mit der Version der aktuellen Skriptsprache
-JASS Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass ist.
-ZINC Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Zinc ist.
-VJASS Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache vJass ist.
-JASSPP Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass++ ist.
-COMPILER Enthält eine Zeichenkette mit dem Namen des verwendeten Compilers.
-COMPILER_VERSION Enthält eine Zeichenkette mit der Version des verwendeten Compilers.
-WC3_VERSION Enthält eine Zeichenkette mit der Warcraft-3-Version (ist zur Laufzeit aktuell!).
-WC3_TFT_VERSION Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-Version. Falls The Frozen Throne nicht verwendet wird, ist der Wert gleich 0 gesetzt (ist zur Laufzeit aktuell!).
-WC3_PATH Enthält einen Verzeichnispfad zum Installationsverzeichnis von Warcraft 3 bzw. Warcraft 3 The Frozen Throne. Es gilt zu beachten, dass dies der Pfad desjenigen ist, der den Code kompiliert und nicht der der jeweiligen Spieler.
-DEBUG_MODE Enthält entweder true oder false, je nachdem, ob der Debug-Modus aktiviert oder deaktiviert ist.
-FILE_NAME Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
-LINE_NUMBER Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
-SCOPE_NAME Enthält eine Zeichenkette des Namens des aktuellen Gültigkeitsbereichs.
-SCOPE_NAME_FULL Enthält eine Zeichenkette des gesamten Namens (auch alle oberen Gültigkeitsbereiche) des aktuellen Gültigkeitsbereichs.
-OPTIMIZATION_INLINE_FUNCTIONS Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
-OPTIMIZATION_REMOVE_WHITE_SPACES Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
-OPTIMIZATION_REMOVE_CONSTANTS Enthält entweder true oder false, je nachdem, ob die Optimierungsoption im Compiler aktiviert ist oder nicht.
+Typ Bezeichner
+ABGELEHNT: string OS				Enthält eine Zeichenkette mit dem Namen des Betriebssystems.
+string LANGUAGE					Enthält eine Zeichenkette mit der aktuellen Skriptsprache ("Jass++", "Zinc", "vJass", "Jass")
+string LANGUAGE_VERSION				Enthält eine Zeichenkette mit der Version der aktuellen Skriptsprache
+boolean JASS					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass ist.
+boolean ZINC					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Zinc ist.
+boolean VJASS					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache vJass ist.
+boolean JASSPP					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass++ ist.
+string COMPILER					Enthält eine Zeichenkette mit dem Namen des verwendeten Compilers.
+string COMPILER_VERSION				Enthält eine Zeichenkette mit der Version des verwendeten Compilers.
+string WC3_VERSION				Enthält eine Zeichenkette mit der Warcraft-3-Version (ist zur Laufzeit aktuell!).
+string WC3_TFT_VERSION				Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-Version. Falls The Frozen Throne nicht verwendet wird, ist der Wert gleich 0 gesetzt (ist zur Laufzeit aktuell!).
+ABGELEHNT: string WC3_PATH			Enthält einen Verzeichnispfad zum Installationsverzeichnis von Warcraft 3 bzw. Warcraft 3 The Frozen Throne. Es gilt zu beachten, dass dies der Pfad desjenigen ist, der den Code kompiliert und nicht der der jeweiligen Spieler.
+boolean DEBUG_MODE				Enthält einen boolean-Wert, der angibt, ob der Debug-Modus aktiviert ist.
+string FILE_NAME				Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
+string LINE_NUMBER				Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
+string SCOPE_NAME				Enthält eine Zeichenkette des Namens des aktuellen Gültigkeitsbereichs.
+string SCOPE_NAME_FULL				Enthält eine Zeichenkette des gesamten Namens (auch alle oberen Gültigkeitsbereiche) des aktuellen Gültigkeitsbereichs.
+boolean OPTIMIZATION_INLINE_FUNCTIONS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_WHITE_SPACES	Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_CONSTANTS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_COMMENTS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
 TODO: Hier noch weitere Optimierungsoptionen hinzufügen.
 
 Dateipfade für die Include-Anweisung:
-Dateipfade müssen wie bei UNIX Systemen geschrieben werden. . steht für das aktuelle und ..
+Dateipfade müssen wie bei UNIX-Systemen geschrieben werden. . steht für das aktuelle und ..
 für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen getrennt.
-Standardmäßig wird im Verzeichnis der Code-Datei gesucht.
+Standardmäßig wird im Verzeichnis der aktuellen Code-Datei nach angegebenen Dateinamen gesucht.
 ABGELEHNT: ~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Wurzelverzeichnis.
-  
+
 7. Testblöcke
 
 Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
@@ -297,16 +313,18 @@ Native Funktionen werden wie native Typen lediglich deklariert und nicht definie
 undefiniert bleiben, solange der Compiler weiß, wie die Funktion aufzurufen ist.
 Native Funktionen aus Jass sollten mittels der Jass++-Syntax erneut bzw. ein einziges Mal deklariert werden, da man sie bei solchen Deklarationen
 um konstante Parameter usw. erweitern kann.
+Dies muss jedoch nicht geschehen (siehe "Kompatibilät zu Jass").
 
 Notation:
-native [const] <Rückgabetyp> <Funktionsname>(<Parametertyp> <Parametername>, ...);
+native [const] <Rückgabetyp> <Funktionsname>([<Parametertyp> <Parametername>, ...]);
 
 10. Bezeichner (identifiers)
 
 Ein Bezeichner ist ein vom Entwickler definierter Name, welcher ein bestimmtes Code-Element bezeichnet und darauf verweist.
 Für Bezeichner gelten bestimmte Regeln bezüglich ihrer Definition. Bezeichner dürfen in Jass++ anders als in Jass nicht mit
 dem Präfix "jasspp" beginnen, da dieses für den Compiler reserviert ist (theoretisch könnte dieser auch sämtliche Bezeichner ersetzen,
-um so dagegen vorzugehen, jedoch wird es vorläufig trotzdem reserviert). Ansonsten gelten dieselben Regeln wie in Jass (z. B. keine Unterstriche am Anfang).
+um so dagegen vorzugehen, jedoch wird es vorläufig trotzdem reserviert). Ansonsten gelten dieselben Regeln wie in Jass (z. B. keine Unterstriche am Anfang,
+keine Schlüsselwörter - auch nicht die von Jass++).
 Außerdem kann dem Bezeichner in bestimmten Fällen ein Schlüsselwortpräfix vorangestellt werden, welches die Art des Objekts genauer spezifiziert (siehe dazu Abschnitt "Schlüsselwörter").
 
 11. Literale
@@ -365,6 +383,7 @@ Zu beachten gilt, dass lokale Variablen nur im Funktionskopf deklariert werden k
 der äußeren lokalen Variablen, durch innere in neuen Gültigkeitsbereichen nicht möglich ist.
 Es existieren folgende sprachenspezifische Arten von Gültigkeitsbereichen:
 * Funktionsdeklarationen
+* Funktionstypendeklarationen
 * Aufzählungsdeklarationen
 * Klassendeklarationen
 * Paketdeklarationen
@@ -478,13 +497,14 @@ automatisch gelöscht werden.
 Sie können ausschließlich global oder in Paket-, Klassen- und Funktionsdefinitionen deklariert werden und
 ausschließlich in Klassen- und Funktionsdefinitionen als "static". Es gilt zu beachten, dass diese statischen Variablen wie andere globale
 bei ihrer Deklaration bzw. dem Programmstart ein einziges Mal initialisiert werden und nicht wie bei lokalen z. B. bei jedem Funktionsaufruf.
-Außerdem können nur statische Variablen mit dem Schlüsselwort "const"
-als konstant deklariert werden (dies bezieht sich aber nicht auf ihren Rückgabetyp).
+Statische und nicht statische Variablen können mit dem Schlüsselwort "const" als Variablen mit konstantem Inhalt deklariert werden.
 
 Notation:
 [static] [const] <Variablentyp> <Variablenname>[[<Variablengröße der 1. Dimension>][<Variablengröße der n. Dimension>]] [= <Initialisierungswert>];
  
-Konstante Variablen müssen bei ihrer Deklaration initialisiert werden. Ihr Inhalt ist bis zu ihrer Löschung unveränderbar.
+Konstante Variablen müssen bei ihrer Deklaration initialisiert werden. Ihr Inhalt ist bis zu ihrer Löschung unveränderbar
+(das Wort "konstant" bezieht sich also auf den Inhalt, nicht direkt auf die Variable, die ja am Ende ihres Gültigkeitsbereiches bzw.
+des Skripts gelöscht wird).
 Array-Größenangaben müssen konstante Ganzzahlwerte sein.
 Der Variableninhalt wird bei Arrays wie in C oder C++ mittels geschweifter Klammern eingeschlossen:
 integer tes[2] = { 10, 2 };
@@ -504,6 +524,10 @@ static const integer test = 10;
 
 Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
 dagegen 0 (siehe Abschnitt Literale).
+Es gilt zu beachten, dass die Objekte, auf welche bei Variablen mit referenzierbasierten Typen verwiesen wird, mit speziellen Funktionen
+und nicht mit einer einfachen 0-Setzung gelöscht werden.
+Die Sprache garantiert jedoch, dass Variablen nach einer Löschung des verwiesenen Objekts den Inhalt 0 haben, insofern die Löschung
+erfolgreich war (keine Ausnahme wurde geworfen) (siehe "Ausnahmen" und "Methoden - Destruktor").
 
 18. Operatoren
 
@@ -561,6 +585,8 @@ Variable >= Ausdruck				Die Vergleichsoperatoren beziehen sich in diesem Fall au
 Variable <= Ausdruck
 Variable > Ausdruck
 Variable < Ausdruck
+Variable * Ausdruck				Der Ausdruck muss eine Ganzzahl sein. Liefert eine neue Zeichenkette, in welcher die alte Ausdruck mal kopiert und aneinander gehängt wurde.
+Variable *= Ausdruck				Die Variable erhält den vervielfachten Inhalt.
 hash Variable					Entspricht Variable.hash und StringHash(Variable)
 Variable[Index]					Entspricht SubString(Variable, index, index + 1)
 length Variable					Entspricht Variable.length und StringLength(Variable)
@@ -652,9 +678,9 @@ id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Klassen
 
 19. Typen
 
-In Jass++ können sämtliche Typen aus Jass ohne besondere Einschränkungen (bis auf const-Deklarationen) verwendet werden.
+In Jass++ können sämtliche Typen aus Jass ohne besondere Einschränkungen (bis auf "const"-Deklarationen) verwendet werden.
 Eigene Typen können ausschließlich mittels Klassen definiert werden. Alle anderen Typen sind native Typen.
-Ein Variablentyp kann als Postfix das Schlüsselwort "const" erhalten, insofern er referenzbasiert ist.
+Ein Variablentyp kann als Suffix das Schlüsselwort "const" erhalten, insofern er referenzbasiert ist.
 In Jass++ wird wie in Jass zwischen referenz- und kopierbasierten Typen unterschieden. Ist der Typ einer Variable
 referenzbasiert und konstant, so darf das Objekt, auf welches referenziert wird nicht verändert werden, die Variable selbst jedoch schon.
 Der Inhalt kopierbasierter Variablen wird wie der referenzbasierter beim Übergeben an eine andere (z. B. an Funktionsparameter) kopiert,
@@ -663,6 +689,9 @@ explizit vom Entwickler wieder freigegeben werden muss.
 Da auch Funktionszeiger referenzbasierter Typen sind, können sie ebenfalls als "const" deklariert werden, was zur Folge hat,
 dass die Funktionen, auf welche sie zeigen nicht mit den Schlüsselwörtern execute, executewait, evaluate, sleepon, sleepoff und reset aufgerufen
 bzw. diese auf sie angewandt werden dürfen.
+Wird eine Variable eines referenzbasierten Typs freigegeben bzw. gelöscht, so wird bei einer erfolgreichen Freigabe der Variableninhalt auf 0
+gesetzt.
+Dies gilt auch für native referenzbasierte Typen.
 
 Notation:
 <Typbezeichner> [const]
@@ -884,6 +913,8 @@ aufgerufen. Eine "mapinit"-Funktion darf keine Parameter entgegennehmen. Außerd
 manuell aufgerufen wird oder "threaded" ist (einstellbar, "threaded" ist ebenfalls eher unnötig).
 Exisitieren mehrere Funktionen, die als "mapinit" deklariert wurden, so lässt sich die exakte Aufrufreihenfolge nur durch Deklarationsvoraussetzungen
 bestimmen.
+Setzt eine als "mapinit" deklarierte Funktion eine andere voraus (ob direkt oder indirekt), so ist garantiert, dass sie erst nach dieser vorausgesetzten
+aufgerufen wird.
 
 Ist eine Funktion als "const" deklariert, so muss sie einen global konstanten Wert zurückgeben. Beim Kompilieren, wird
 sie normalerweise als "constant" Jass-Funktion erzeugt. Global konstant bedeutet in diesem Zusammenhang, dass der Wert
@@ -1004,21 +1035,27 @@ alias <Bezeichner> <Neuer Bezeichner>;
 Vorlagen (templates)
 
 Vorlagen werden (nur bei Verwendung) mittels einer einfachen Kopie ihres enthaltenen Codes mit den verwendeten Datentypen gespeichert.
-Die Datentypparameter können genau wie bei Funktionsparameter gesetzt werden.
+Die Datentypparameter können genau wie bei Funktionsparametern gesetzt werden.
+Als Bezeichner der Vorlage wird der erste folgende Bezeichner innerhalb nach der Vorlagendeklaration verwendet.
+Das bedeutet, dass eine Vorlagendeklaration nur vor bestimmten Deklarationen erfolgen darf.
+Folgende Sprachkonstrukte können als Vorlagen deklariert sein:
+* Funktionen
+* Funktionstypen
+* Pakete
+* Aufzählungen
+* Klassen
 
 Notation:
-template <Vorlagenbezeichner>< <Datentypparameterbezeichner> [= <Standardargument>] ...>
-{
-    <Vorlageninhalt>
-}
+template < <Datentypparameterbezeichner> [= <Standardargument>] ...> <Vorlageninhalt/-bezeichner>
 
-<Vorlagenbezeichner>< <Datentypparameterbezeichner> = <Parameterwert> ... >
-<Vorlagenbezeichner>< <Parameterwert> ... >
+<Vorlagenbezeichner>< [<Datentypparameterbezeichner> = <Parameterwert>] ... >
+<Vorlagenbezeichner>< [<Parameterwert>] ... >
 
 Beispiel:
-Vector<integer> myVector = new Vector<integer>;
-
-Der Vorlageninhalt können Funktionen, Klassen oder Pakete sein.
+template < T = integer > class Vector {};
+Vector<integer> myVector1 = new Vector<integer>();
+Vector myVector2 = new Vector();
+Vector<T = integer > myVector3 = new Vector< T = integer >();
 
 Zugriffsmodifikatoren
 
@@ -1130,15 +1167,14 @@ Ist ein Klassenelement "package", so kann darauf innerhalb des Pakets, in welche
 aus dessen Unterpaketen zugegriffen werden.
 
 Notation:
-[ abstract ] class Klassenname [ [Maximalgröße] ] (public | private | protected Klassenname, ...) [Deklarationsvoraussetzungen]
+[ abstract ] class Klassenname [ [<Maximalgröße>] ] (public | private | protected Klassenname, ...) [Deklarationsvoraussetzungen]
 {
-	[Zugriffsmodifikatoren] self new([<Konstruktorparameter>]) { } // Konstruktor
-	[Zugriffsmodifikatoren] self copy() { } // Kopierkonstruktur
-	[Zugriffsmodifikatoren] void delete() { } // Destruktor
-	static { } // Initialisierer
-
-	<Freunde>;
-	[Zugriffsmodifikatoren] [static] <Methode> | <Variable> [ = <Startwertzuweisung> ] | <Aufzählung> | <Klasse> | <Paket>;
+	[<Konstruktoren>]
+	[<Kopierkonstruktor>]
+	[<Destruktor>]
+	[<Initialisierer>]
+	[<Zugriffsmodifikatoren> <Funktionstypen> | <Aufzählungen> | <Klassen> | <Pakete>]
+	[<Methoden>] | <Elemente>]
 } [globale Instanzen durch Kommata getrennt];
 
 Elemente
@@ -1148,7 +1184,10 @@ Elemente, die statisch sind, können niemals als "mutable" deklariert werden und
 Statische Elemente werden zur Laufzeit pro Klasse einmal erzeugt und sind wie globale Variablen innerhalb des Gültigkeitsbereiches der Klasse.
 Nicht statische Elemente exisitieren zur Laufzeit pro Klasseninstanz einmal.
 Sie können per <Klasseninstanzvariable>.<Elementname> angesprochen werden.
-Als "mutable" deklarierte Elemente, können auch von konstanten Methoden oder bei einem Direktzugriff bei konstanten Instanzen verändert werden.
+Als "mutable" deklarierte Elemente können auch von konstanten Methoden oder bei einem Direktzugriff bei konstanten Instanzen verändert werden.
+
+Notation:
+[Zugriffsmodifikatoren] [static | mutable] <Variablendeklaration>;
 
 Array-Elemente:
 Eine Klasse kann ebenfalls Array-Elemente enthalten.
@@ -1165,41 +1204,45 @@ Virtuelle Methoden müssen zwingend threaded sein.
 Achtung: Virtuelle Methoden sollten nicht im Konstruktor aufgerufen werden, da sie durch die Konstruktoren erst überschrieben
 und der Klasseninstanz zugewiesen werden. Der Compiler sollte in diesem Fall eine Warnung ausgeben.
 Der Konstruktor selbst kann nicht virtuell sein.
-Besitzt eine Klasse virtuelle Methoden, so sollte der Compiler eine Warnung ausgeben, falls sie keinen virtuellen Destruktor besitzt.
-Statische Methoden können ebenfalls virtuell sein und werden entsprechend des zugehörigen Objekts aufgerufen.
-
-Abstrakte Methoden müssen allesamt implementiert werden. Abstrakte-Methoden-Implementationen müssen virtuell sein, da sonst
-möglicherweise keine Methode aufgerufen werden würde.
-
-"public" und "protected" Methoden können in der Kindklasse "umdeklariert" werden, was ihre zugreifbarkeit verändert,
-ohne dass sie neu definiert werden müssen.
-Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
-
-Mit parent.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
-Dabei gilt die Priorität von unten nach oben, von links nach rechts, bei sämtlichen geerbten Klassen.
-
-Abstrakte Methoden besitzen keinen Gültigkeitsbereich, sondern werden mit einem Semikolon abgeschlossen.
-
-Nichtstatische Methoden, die mit dem Postfix "const" deklariert wurden, erhalten das Argument this als konstante Variable
-(bezogen auf das Ziel dessen) und gelten somit auch als eine andere Deklaration der gleichen Methode, welche nicht als "const"
-deklariert wurde (siehe Funktionen).
-
-Statische Methoden, die mit dem Postfix "const" deklariert wurden, dürfen keinerlei nicht als "const" deklarierte, statische
-Methoden der Klasse aufrufen, geschweigedenn irgendwelche statischen Elemente der Klasse verändern, sondern nur zurückgeben.
-
-Sämtliche nicht private Methoden der Elternklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
-der Methode aufgerufen werden.
-
+Statische Methoden können ebenfalls virtuell sein und werden entsprechend des zugehörigen Objekts innerhalb einer Methode aufgerufen.
+Wird eine nicht virtuelle statische Methode aus einer virtuellen Methode heraus aufgerufen, sollte der Compiler eine Warnung ausgeben.
 Virtuelle Methoden bewirken, dass diese auch aufgerufen werden, wenn das Objekt zu einem Elterntyp konvertiert wurde, da pro
 Objekt Verweise auf die entsprechenden Methoden gespeichert werden. Dies gilt für statische und nicht statische virtuelle Methoden.
 Bei virtuellen statischen Methoden kommt noch die Besonderheit hinzu, dass bei einem Aufruf der statischen Methode Kindklasse::statischeMethode(),
 welche jedoch in der Kindklasse nicht neu definiert wurde, weshalb automatisch die der Elternklasse aufgerufen wird, von der statischen Methode
 überprüft werden muss, von welcher Klasse aus sie aufgerufen wurde, damit sie bei virtuellen statischen Methoden die richtigen der Kindklasse und
 nicht die der Elternklasse aufruft.
-Virtuelle Methoden müssen in jedem Fall "threaded" sein!
+Wird also eine virtuelle Methode aufgerufen, so ist garantiert, dass sämtliche andere virtuellen Methoden, die aus dieser heraus aufgerufen werden,
+sich auf der selben bzw. niedrigsten Klassenebene des Objekts befinden, falls sie dort deklariert wurden.
+
+Abstrakte Methoden besitzen keinen Gültigkeitsbereich, sondern werden mit einem Semikolon abgeschlossen.
+Außerdem müssen sie als virtuell deklariert werden.
+Abstrakte Methoden müssen allesamt implementiert werden, falls die Kindklasse nicht als "abstract" deklariert wurde.
+
+Zugriffsmodifikatoren von Methoden können in der Kindklasse "umdeklariert" werden, was ihre zugreifbarkeit verändert,
+ohne dass sie neu definiert werden müssen.
+Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
+
+Mit parent.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
+Dabei gilt die Priorität von unten nach oben, von links nach rechts, bei sämtlichen geerbten Klassen.
+
+Nichtstatische Methoden, die mit dem Suffix "const" deklariert wurden, erhalten das Argument this als konstantes Objekt
+und gelten somit auch als eine andere Deklaration der gleichen Methode, welche nicht als "const"
+deklariert wurde (siehe Funktionen).
+
+Statische Methoden, die mit dem Suffix "const" deklariert wurden, dürfen keinerlei nicht als "const" deklarierte, statische
+Methoden der Klasse aufrufen, geschweigedenn irgendwelche statischen Elemente der Klasse verändern, sondern nur zurückgeben.
+
+Bei beiden Arten von "const"-Methoden gilt die Ausnahme für "mutable"-Elemente.
+Diese dürfen auch von "const"-Methoden verändert werden.
+
+Sämtliche nicht private Methoden der Elternklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
+der Methode aufgerufen werden.
+Wird eine nicht virtuelle Methode einer Elternklasse überschrieben und der Typ der Elternklasse irgendwo im Code verwendet, so sollte
+der Compiler eine Warnung ausgeben, dass möglicherweise nicht die richtige aufgerufen wird.
 
 Notation:
-[static] [virtual | abstract] Funktionsdeklaration [const]
+[static] [virtual] [abstract] Funktionsdeklaration [const]
 
 Konstruktor:
 Der Konstruktor einer Klasse darf nicht virtuell und somit auch nicht abstrakt sein.
@@ -1212,16 +1255,28 @@ der Kindklasse verwendet werden.
 Der Konstruktor muss stets den Namen new tragen und besitzt den Rückgabetyp "self". Er sollte für Gewöhnlich das Objekt "this"
 zurückgeben, jedoch ist dies dem Entwickler selbst überlassen. Gegebenenfalls sollte der Compiler eine Warnung ausgeben, falls
 nicht das Objekt "this" zurückgegeben wird.
+Er kann entweder über den Bezeichner der Funktion (<Klassenname>.new) oder per "new" aufgerufen werden. Bei zweiterer Variante
+wird der Typ automatisch anhand des Typs der Variable bestimmt, was jedoch nicht immer (z. B. bei der Verwendung von abstrakten Klassen)
+erwünscht ist.
+Dies ist selbstverständlich auch bei der Übergabe als Funktionsparameter möglich.
+Klassen benötigen keinen Standardkonstruktor. Wird kein Konstruktor deklariert, so wird beim Aufruf von "new" eine Funktion in einer höheren
+Schicht (Compilerimplementation) aufgerufen und dennoch ein Objekt konstruiert. Jedoch sollte der Compiler eine Warnung ausgeben, falls kein
+Konstruktor definiert wurde bzw. Eigenschaftsvariablen der Klasse nicht initialisiert wurden.
 
-Notation:
-new <Klassenname>([<Konstruktorparameter>])
+Deklarations-Notation:
+[Zugriffsmodifikatoren] self new([<Konstruktorparameter>]) { }
+
+Aufrufs-Notation:
+new <Klassenname>.new([<Konstruktorparameter>])
+new ([<Konstruktorparameter>])
 
 Kopierkonstruktor:
 Weist man einer Objektvariable den Wert einer anderen zu, so zeigen beide Variablen normalerweise auf dasselbe Objekt.
 Dies kann umgangen werden, indem man den Kopierkonstruktor verwendet und das Objekt kopiert bzw. ein neues mit den gleichen
 Eigenschaften erzeugt.
 Dazu dient das Schlüsselwort "copy". Es kann entweder die definierte copy-Methode aufgerufen oder das Schlüsselwort der Variable
-vorangestellt werden. Wurde kein eigener Kopierkonstruktor definiert, so werden sämtliche Elementinhalte ebenfalls kopiert.
+vorangestellt werden. Wird kein eigener Kopierkonstruktor definiert, so werden sämtliche Elementinhalte ebenfalls kopiert und außerdem
+alle Kopierkonstruktoren der Elternklassen in der Reihenfolge, welche auch beim Konstruktor angewandt wird, aufgerufen.
 Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelementvariablen ebenfalls kopiert wird, sowie auch deren
 Arrays, Funktionen und Objekte usw. (unter Verwendung von deren Kopierkonstruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf 
 dieselben Ziele, falls es sich bei den Elementvariablen um keine Objekte handelt, sondern um referenzbasierte native Typen, wie z. B. "unit".
@@ -1229,9 +1284,13 @@ Der Inhalt von Elementvariablen mit kopierbasierten Typen wird selbstverständli
 Ist der Kopierkonstruktor als "private" oder "protected" definiert, so kann das Schlüsselwort
 nicht von außerhalb angewandt werden (gängiges Verhalten, auch bei anderen Methoden).
 Der Kopierkonstruktor darf virtuell und abstrakt sein.
-Er darf keinerlei Parameter enthalten.
+Er darf keinerlei Parameter enthalten, weshalb nur exakt ein Kopierkonstruktor pro Klasse deklariert werden kann.
+Werden in einem selbstdefinierten Kopierkonstruktor nicht die Kopierkonstruktoren der Elternklassen aufgerufen, so sollte der Compiler eine Warnung ausgeben.
 
-Notation:
+Deklarations-Notation:
+[Zugriffsmodifikatoren] self copy() { }
+
+Aufrufs-Notation:
 copy <Variable>
 <Variable>.copy()
 
@@ -1242,12 +1301,21 @@ a = copy b;
 
 Destruktor:
 Ein Objekt kann mit Hilfe des "delete"-Schlüsselworts gelöscht bzw. freigegeben werden.
-Dabei wird der Variableninhalt automatisch auf 0 gesetzt, was Fehlzugriffe einschränkt bzw. verhindert.
+Dabei wird der Variableninhalt der betreffenden Variable automatisch auf 0 gesetzt, was Fehlzugriffe einschränkt bzw. verhindert.
 Zunächst wird der Destruktor, falls vorhanden, der Klasse aufgerufen und danach bis zur obersten Elternklasse hin alle Destruktoren
 der geerbten Klassen. Dabei werden bei einer Mehrfachvererbung zunächst die Vererbungshierachien der ersten Klassen von unten nach oben,
 von rechts nach links abgearbeitet (genau andersherum als beim Konstruktor).
+Existiert kein selbst definierter Destruktor, so ist das Objekt dennoch löschbar. Hierbei gilt praktisch das Gleiche wie beim Konstruktor:
+Es gibt stets einen automatisch erzeugten Destruktor.
+Erbt die entsprechende Klasse von mindestens einer anderen Klasse, so muss der Destruktor virtuell sein. Dies soll Nichtlöschen von allozierten
+Objekten verhindern.
+Der Destruktor einer abstrakten Klasse muss daher schon als virtuell deklariert werden (zwar nicht unbedingt notwendig, da es sonst einen Fehler in
+der Kindklasse gäbe, aber warum nicht?).
 
-Notation:
+Deklarations-Notation:
+[Zugriffsmodifikatoren] void delete() { }
+
+Aufruf-Notation:
 delete <Variable>
 <Variable>.delete()
 
@@ -1256,7 +1324,10 @@ Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klassenei
 Dies wird vom Compiler durch eine Laufzeitüberprüfung ermöglicht und kann relativ viel Zusatzcode erzeugen, da bei jedem Zugriff von außerhalb
 überprüft werden muss, ob die Klasse bereits initialisiert wurde.
 Die Methode darf nicht manuell aufgerufen werden und hat deshalb keine Zugriffsmodifikatoren, keinen Rückgabetyp, keinen Bezeichner und keine Parameter.
- 
+
+Notation:
+static { <Anweisungen> }
+
 Save- und Load-Möglichkeiten:
 Mit Hilfe der Schlüsselwörter store, restore und flush, kann eine Klasseninstanz in einem Spiel-Cache verwaltet werden.
 Dabei muss dem Schlüsselwort der Spiel-Cache, ein Mission-Key und ein Label-Präfix für sämtliche Werte übergeben werden.
@@ -1387,8 +1458,10 @@ package jasspp
     /*
     Definition eigener Klassen wie z. B. verschiedener Container-Klassen usw.
     */
-    class List
-    class Vector
-    class Map
-    class Bitset
+    template <Vorlagenbezeichner>< <Datentypparameterbezeichner> [= <Standardargument>] ...>
+    public abstract class Container
+    public class List : public Container
+    public class Vector : public Container
+    public class Map : public Container
+    public class Bitset : public Container
 }

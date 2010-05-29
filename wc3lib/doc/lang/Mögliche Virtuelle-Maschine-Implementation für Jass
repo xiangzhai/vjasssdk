@@ -137,6 +137,16 @@ Sound API:
 Effects API:
 
 Terrain API:
+* native SetTerrainCliffLevel takes real x, real y, integer cliffLevel returns nothing
+* native SetTerrainRectCliffLevel takes rect whichRect, integer cliffLevel returns nothing
+* native SetTerrainRegionCliffLevel takes region whichRegion, integer cliffLevel returns nothing
+* native SetTerrainRectType takes rect whichRect, integer terrainType, integer variation, integer area, integer shape returns nothing
+* native SetTerrainRegionType takes region whichRegion, integer terrainType, integer variation, integer area, integer shape returns nothing
+* native IsTerrainRectPathable takes rect whichRect, pathingtype t returns boolean
+Gibt false zurück, falls mindestens ein Punkt nicht passierbar ist.
+* native IsTerrainRegionPathable takes region whichRegion, pathingtype t returns boolean
+* native SetTerrainRectPathable takes rect whichRect, pathingtype t, boolean flag returns nothing
+* native SetTerrainRegionPathable takes region whichRegion, pathingtype t, boolean flag returns nothing
 
 Image API:
 

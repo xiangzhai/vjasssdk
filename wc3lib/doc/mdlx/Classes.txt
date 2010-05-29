@@ -24,7 +24,26 @@ CLID				-				CollisionShapes			Mdlx					CollisionShapes
 KLAC				-				LightAmbientColors		Light					LightAmbientColors
 -				-				AttachmentVisibility		AttachmentVisibilities			AttachmentVisibility
 KATV				-				AttachmentVisibilities		Mdlx (various classes Attachment, Mdlx - Object)
+-				-				TextureAnimationRotation	TextureAnimationRotations		TextureAnimationRotation
+KTAR				-				TextureAnimationRotations	TextureAnimation			TextureAnimationRotations
+-				-				CameraRotationLength		CameraRotationLengths			CameraRotationLength
+KCRL				-				CameraRotationLengths		Camera					CameraRotationLengths
+-				-				TextureAnimationScaling		TextureAnimationScalings		TextureAnimationScaling
+KTAS				-				TextureAnimationScalings	TextureAnimation			TextureAnimationScalings
+-				-				TextureAnimationTranslation	TextureAnimationTranslations		TextureAnimationTranslation
+KTAT				-				TextureAnimationTranslations	TextureAnimation			TextureAnimationTranslations
+-				-				CameraTranslation		CameraTranslations			CameraTranslation
+KCTR				-				CameraTranslations		Camera					CameraTranslations
+-				-				CameraTargetTranslation		CameraTargetTranslations		CameraTargetTranslation
+KTTR				-				CameraTargetTranslations	Camera					CameraTargetTranslations
+-				-				LightAmbientVisibility		LightAmbientVisibilities		LightAmbientVisibility
+KLAV				-				LightAmbientVisibilities	Light					LightAmbientVisibilities
+-				-				ParticleEmitterVisibility	ParticleEmitterVisibilities		ParticleEmitterVisibility
+KPEV				-				ParticleEmitterVisibilities	ParticleEmitter				ParticleEmitterVisibilities
+-				-				ParticleEmitter2Visibility	ParticleEmitter2Visibilities		ParticleEmitter2Visibility
+KP2V				-				ParticleEmitter2Visibilities	ParticleEmitter2			ParticleEmitter2Visibilities
 
+EmissionRate				-			EmissionRates				ParticleEmitter2EmissionRate
 EmissionRates				KP2E			ParticleEmitter2			ParticleEmitter2EmissionRates
 Event					-			Events					Event
 Events					EVTS			Mdlx					Events
@@ -80,12 +99,10 @@ RibbonEmitter				-			RibbonEmitters
 RibbonEmitters				RIBB			Mdlx
 Rotation0				-			Rotation0s				Rotation
 Rotation0s				KGRT			Mdlx (various classes)			Rotations
-Rotation1				-			Rotation1s				TextureAnimationRotation
-Rotation1s				KTAR			TextureAnimation			TextureAnimationRotations
-Scaling0				-			Scaling0s
-Scaling0s				KGSC			Mdlx (various classes)
-Scaling0				-			Scaling1s				TextureAnimationScaling
-Scaling1s				KTAS			TextureAnimation			TextureAnimationScalings
+
+Scaling0				-			Scaling0s				Scaling
+Scaling0s				KGSC			Mdlx (various classes)			Scalings
+
 SegmentColor				-			ParticleEmitter2
 Sequence				-			Sequences
 Sequences				SEQS			Mdlx
@@ -93,33 +110,19 @@ Texture					-			Textures
 Textures				TEXS			Mdlx
 TextureVertex				-			TextureVertices
 TextureVertices				UVBS			Geoset					??? (warblend calls texture coordinates)
-Translation0				-			Translation0s				CameraTranslation
-Translation0s				KCTR			Camera					CameraTranslations
-Translation1				-			Translation1s
-Translation1s				KGTR			Mdlx (various classes)
-Translation2				-			Translation2s				TextureAnimationTranslation
-Translation2s				KTAT			TextureAnimation			TextureAnimationTranslations
-Translation3				-			Translation3s				CameraTargetTranslation?!
-Translation3s				KTTR			Camera					CameraTargetTranslations?!
+
+Translation1				-			Translation1s				Translation
+Translation1s				KGTR			Mdlx (various classes)			Translations
+
 Version					VERS			Mdlx
 Vertex					-			Vertices
 Vertices				VRTX			Geoset
-Visibility1				-			Visibility1s				LightAmbientVisibility
-Visibility1s				KLAV			Light					LightAmbientVisibilities
-Visibility2				-			Visibility3s				ParticleEmitter2Visibility
-Visibility2s				KP2V			ParticleEmitter2			ParticleEmitter2Visibilities
-Visibility3				-			Visibility3s				ParticleEmitterVisibility
-Visibility3s				KPEV			ParticleEmitter				ParticleEmitterVisibilities
 RibbonEmitterVisibility			-			RibbonEmitterVisibilities		RibbonEmitterVisibility
 RibbonEmitterVisibilities		KRVS			RibbonEmitter				RibbonEmitterVisibilities
 RibbonEmitterHeightAbove		-			RibbonEmitterHeightsAbove
 RibbonEmitterHeightsAbove		KRHA			RibbonEmitter
 RibbonEmitterHeightBelow		-			RibbonEmitterHeightsBelow
 RibbonEmitterHeightsBelow		KRHB			RibbonEmitter
-
-Missing:				
-CameraRotationLength			-			below					CameraRotationLength??
-CameraRotationLengths			KCRL			Camera					CameraRotationLengths??
 
 2. Abstract MDLX property classes
 Name					Child classes
