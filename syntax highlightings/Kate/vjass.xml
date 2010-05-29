@@ -453,7 +453,8 @@
 			<item>GetRevivableUnit</item>
 			<item>GetRevivingUnit</item>
 			<item>GetSaveBasicFilename</item>
-			<item>GetSelectedUnit</item>
+			<!-- Does not exist -->
+			<!-- <item>GetSelectedUnit</item> -->
 			<item>GetSellingUnit</item>
 			<item>GetSoldItem</item>
 			<item>GetSoldUnit</item>
@@ -2378,6 +2379,7 @@
 			<item>TimeGetMonth</item>
 			<item>TimeGetYear</item>
 			<item>TimeGetMilliseconds</item>
+			<item>GetTickCount</item>
 			<item>VectorCreate</item>
 			<item>VectorDestroy</item>
 			<item>VectorClear</item>
