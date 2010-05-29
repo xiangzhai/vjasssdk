@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility1.hpp"
+#include "textureanimationscaling.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 	
-Visibility1::Visibility1(class Visibility1s *visibilities) : MdxAlpha(visibilities)
+TextureAnimationScaling::TextureAnimationScaling(class TextureAnimationScalings *scalings) : MdxScaling(scalings)
 {
 }
 

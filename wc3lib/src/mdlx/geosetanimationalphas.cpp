@@ -40,7 +40,7 @@ void GeosetAnimationAlphas::readMdl(std::istream &istream) throw (class Exceptio
 {
 }
 
-void GeosetAnimationAlphas::writeMdl(std::ostream &ostream) throw (class Exception)
+void GeosetAnimationAlphas::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

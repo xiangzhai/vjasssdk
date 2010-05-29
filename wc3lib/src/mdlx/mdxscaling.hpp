@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDXSCALING_HPP
 #define WC3LIB_MDXSCALING_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -40,8 +41,8 @@ class MdxScaling
 		MdxScaling(class MdxScalings *scalings);
 		virtual ~MdxScaling();
 		
-		long32 readMdx(std::istream &istream) throw (class Exception);
-		long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 		
 	protected:
 		class MdxScalings *m_scalings;

@@ -35,11 +35,11 @@ MaterialAlphas::~MaterialAlphas()
 {
 }
 
-void MaterialAlphas::readMdl(std::fstream &fstream) throw (class Exception)
+void MaterialAlphas::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void MaterialAlphas::writeMdl(std::fstream &fstream) throw (class Exception)
+void MaterialAlphas::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

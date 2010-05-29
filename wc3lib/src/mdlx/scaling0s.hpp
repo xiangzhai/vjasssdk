@@ -32,7 +32,7 @@ namespace mdlx
 class Mdlx;
 class Scaling0;
 
-//KGSC
+/// KGSC
 class Scaling0s : public MdxScalings
 {
 	public:
@@ -43,7 +43,7 @@ class Scaling0s : public MdxScalings
 		const std::list<class Scaling0*>& scalings() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class MdxScaling* createNewMember();

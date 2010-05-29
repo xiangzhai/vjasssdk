@@ -38,7 +38,7 @@ void ParticleEmitter2Latitudes::readMdl(std::istream &istream) throw (class Exce
 {
 }
 
-void ParticleEmitter2Latitudes::writeMdl(std::ostream &ostream) throw (class Exception)
+void ParticleEmitter2Latitudes::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

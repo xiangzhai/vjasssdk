@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include <boost/tokenizer.hpp>
+#include <boost/foreach.hpp>
 
 #include "mdlx.hpp"
 #include "version.hpp"
@@ -31,6 +32,8 @@
 #include "readblend/readblend.h"
 #include "readblend/blendtype.h"
 #endif
+
+#include "texture.hpp"
 
 #include "../internationalisation.hpp"
 
@@ -117,7 +120,7 @@ void Mdlx::readMdl(std::istream &istream) throw (class Exception)
 	this->m_collisionShapes->readMdl(istream);
 }
 
-void Mdlx::writeMdl(std::ostream &ostream) throw (class Exception)
+void Mdlx::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	this->m_version->writeMdl(ostream);
 	this->m_model->writeMdl(ostream);
@@ -141,9 +144,9 @@ void Mdlx::writeMdl(std::ostream &ostream) throw (class Exception)
 	this->m_collisionShapes->writeMdl(ostream);
 }
 
-long32 Mdlx::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Mdlx::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	bytes += this->m_version->readMdx(istream);
 	bytes += this->m_model->readMdx(istream);
 	bytes += this->m_sequences->readMdx(istream);
@@ -154,34 +157,23 @@ long32 Mdlx::readMdx(std::istream &istream) throw (class Exception)
 	bytes += this->m_geosets->readMdx(istream);
 	bytes += this->m_geosetAnimations->readMdx(istream);
 	bytes += this->m_bones->readMdx(istream);
-	std::cout << "After bones" << std::endl;
 	bytes += this->m_lights->readMdx(istream);
-	std::cout << "After lights" << std::endl;
 	bytes += this->m_helpers->readMdx(istream);
-	std::cout << "After helpers" << std::endl;
 	bytes += this->m_attachments->readMdx(istream);
-	std::cout << "After attachments" << std::endl;
 	bytes += this->m_pivotPoints->readMdx(istream);
-	std::cout << "After pivot points" << std::endl;
 	bytes += this->m_particleEmitters->readMdx(istream);
-	std::cout << "After particle emitters" << std::endl;
 	bytes += this->m_particleEmitter2s->readMdx(istream);
-	std::cout << "After particle emitter2s" << std::endl;
 	bytes += this->m_ribbonEmitters->readMdx(istream);
-	std::cout << "After ribbon emitters" << std::endl;
 	bytes += this->m_cameras->readMdx(istream);
-	std::cout << "After cameras" << std::endl;
 	bytes += this->m_events->readMdx(istream);
-	std::cout << "After events" << std::endl;
 	bytes += this->m_collisionShapes->readMdx(istream);
-	std::cout << "After collision shapes" << std::endl;
 	
 	return bytes;
 }
 
-long32 Mdlx::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Mdlx::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	bytes += this->m_version->writeMdx(ostream);
 	bytes += this->m_model->writeMdx(ostream);
 	bytes += this->m_sequences->writeMdx(ostream);
@@ -347,7 +339,7 @@ void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 	MY_CLOSE(file);
 }
 
-void Mdlx::writeBlend(std::fstream &fstream) throw (class Exception)
+void Mdlx::writeBlend(std::istream &ostream) const throw (class Exception)
 {
 }
 #endif
@@ -357,7 +349,7 @@ void Mdlx::read3ds(std::istream &istream) throw (class Exception)
 {
 }
 
-void Mdlx::write3ds(std::ostream &ostream) throw (class Exception)
+void Mdlx::write3ds(std::ostream &ostream) const throw (class Exception)
 {
 }
 #endif
@@ -701,6 +693,25 @@ void Mdlx::writeMdlHelpers(std::fstream &fstream) throw (Exception)
 	}
 }
 */
+
+std::size_t Mdlx::replaceTexturePaths(const ascii oldTexturePath[0x100], const ascii newTexturePath[0x100], std::size_t number)
+{
+	std::size_t result = 0;
+
+	BOOST_FOREACH(class Texture *texture, this->m_textures->textures())
+	{
+		if (memcmp(texture->texturePath(), oldTexturePath, 0x100) == 0)
+		{
+			texture->setTexturePath(newTexturePath);
+			++result;
+
+			if (number != 0 && result == number)
+				break;
+		}
+	}
+
+	return result;
+}
 
 }
 

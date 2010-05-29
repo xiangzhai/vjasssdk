@@ -21,10 +21,7 @@
 #ifndef WC3LIB_MDLX_GANIMATION_HPP
 #define WC3LIB_MDLX_GANIMATION_HPP
 
-#include <iostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "bounds.hpp"
 
 namespace wc3lib
 {
@@ -34,71 +31,26 @@ namespace mdlx
 
 class Geoset;
 
-class Ganimation
+class Ganimation : public Bounds
 {
 	public:
 		Ganimation(class Geoset *geoset);
 		virtual ~Ganimation();
 
 		class Geoset* geoset() const;
-		float32 boundsRadius() const;
-		float32 minExtentX() const;
-		float32 minExtentY() const;
-		float32 minExtentZ() const;
-		float32 maxExtentX() const;
-		float32 maxExtentY() const;
-		float32 maxExtentZ() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Geoset *m_geoset;
-		float32 m_boundsRadius;
-		float32 m_minExtentX, m_minExtentY, m_minExtentZ;
-		float32 m_maxExtentX, m_maxExtentY, m_maxExtentZ;
 };
 
 inline class Geoset* Ganimation::geoset() const
 {
 	return this->m_geoset;
-}
-
-inline float32 Ganimation::boundsRadius() const
-{
-	return this->m_boundsRadius;
-}
-
-inline float32 Ganimation::minExtentX() const
-{
-	return this->m_minExtentX;
-}
-
-inline float32 Ganimation::minExtentY() const
-{
-	return this->m_minExtentY;
-}
-
-inline float32 Ganimation::minExtentZ() const
-{
-	return this->m_minExtentZ;
-}
-
-inline float32 Ganimation::maxExtentX() const
-{
-	return this->m_maxExtentX;
-}
-
-inline float32 Ganimation::maxExtentY() const
-{
-	return this->m_maxExtentY;
-}
-
-inline float32 Ganimation::maxExtentZ() const
-{
-	return this->m_maxExtentZ;
 }
 
 }

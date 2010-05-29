@@ -38,14 +38,14 @@ void SegmentColor::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void SegmentColor::writeMdl(std::ostream &ostream) throw (class Exception)
+void SegmentColor::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 SegmentColor::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize SegmentColor::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_red), sizeof(this->m_red));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_green), sizeof(this->m_green));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_blue), sizeof(this->m_blue));
@@ -54,7 +54,7 @@ long32 SegmentColor::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 SegmentColor::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize SegmentColor::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

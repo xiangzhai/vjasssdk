@@ -22,41 +22,93 @@
 #define WC3LIB_UTILITIES_HPP
 
 #include <cmath>
-#include <fstream>
 #include <sstream>
 #include <iostream>
 
+#include "exception.hpp"
 #include "internationalisation.hpp"
 
 namespace wc3lib
 {
 
 /**
-* Note that you can not use fstream >> operators to read values (e. g. longs or floats) from binary files.
+* Note that you can not use istream >> operators to read values (e. g. longs or floats) from binary files.
 * Thus this template function exists.
 */
 template<typename T>
-inline T readValue(std::fstream &fstream, bool byteSwap = false)
+inline T readValue(std::istream &istream, bool byteSwap = false)
 {
 	char bytes[sizeof(T)];
-	fstream.read(bytes, sizeof(T));
+	istream.read(bytes, sizeof(T));
 	T result = 0;
 	
 	// i has to be signed?!
 	if (byteSwap)
 	{
-		for (int i = sizeof(T) - 1; i >= 0; --i)
+		for (std::size_t i = sizeof(T) - 1; i >= 0; --i)
 			result |= (bytes[i] << (i << 3));
 	}
 	else
 	{
-		int j =  sizeof(T) - 1;
+		std::size_t j =  sizeof(T) - 1;
 		
-		for (int i = 0; i < sizeof(T); ++i, --j)
+		for (std::size_t i = 0; i < sizeof(T); ++i, --j)
 			result |= (bytes[i] << (j << 3));
 	}
 	
 	return result;
+}
+
+template<typename T>
+inline std::istream& read(std::istream &istream, T &value, std::streamsize &sizeCounter)
+{
+	istream.read(reinterpret_cast<char*>(&value), sizeof(value));
+
+	if (!istream)
+		throw Exception(_("Input stream error."));
+
+	sizeCounter += istream.gcount();
+	
+	return istream;
+}
+
+template<typename T>
+inline std::istream& readArray(std::istream &istream, T value, std::size_t valueSize, std::streamsize &sizeCounter)
+{
+	istream.read(value, valueSize);
+
+	if (!istream)
+		throw Exception(_("Input stream error."));
+
+	sizeCounter += istream.gcount();
+
+	return istream;
+}
+
+template<typename T>
+inline std::ostream& write(std::ostream &ostream, T &value, std::streamsize &sizeCounter)
+{
+	ostream.write(reinterpret_cast<const char*>(&value), sizeof(value));
+
+	if (!ostream)
+		throw Exception(_("Output stream error."));
+
+	sizeCounter += sizeof(value);
+
+	return ostream;
+}
+
+template<typename T>
+inline std::ostream& writeArray(std::ostream &ostream, const T value, std::size_t valueSize, std::streamsize &sizeCounter)
+{
+	ostream.write(value, valueSize);
+
+	if (!ostream)
+		throw Exception(_("Output stream error."));
+
+	sizeCounter += valueSize;
+
+	return ostream;
 }
 
 template<typename T>
@@ -141,7 +193,7 @@ std::string sizeStringDecimal(T size)
 	return sstream.str();
 }
 
-std::string boolString(bool value)
+inline std::string boolString(bool value)
 {
 	if (value)
 		return _("Yes");
@@ -149,7 +201,7 @@ std::string boolString(bool value)
 	return _("No");
 }
 
-bool expectInput()
+inline bool expectInput()
 {
 	std::string input;
 	std::cin >> input;

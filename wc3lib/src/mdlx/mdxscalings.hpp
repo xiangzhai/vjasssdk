@@ -49,8 +49,8 @@ class MdxScalings : public MdxBlock
 		
 		long32 lineType() const;
 		
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 		
 	protected:
 		/**

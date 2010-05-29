@@ -41,9 +41,9 @@ class PrimitiveType : public GroupMdxBlockMember
 		long32 value() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		long32 m_value;

@@ -43,7 +43,7 @@ class Intensities : public MdxAlphas
 		const std::list<class Intensity*>& intensities() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class MdxAlpha* createNewMember();

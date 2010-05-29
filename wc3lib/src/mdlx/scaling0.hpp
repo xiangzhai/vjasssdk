@@ -30,8 +30,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Scaling0s;
-
 class Scaling0 : public MdxScaling
 {
 	public:
@@ -41,7 +39,7 @@ class Scaling0 : public MdxScaling
 		class Scaling0s* scalings() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class Scaling0s* Scaling0::scalings() const

@@ -38,7 +38,7 @@ void Scaling0::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Scaling0::writeMdl(std::ostream &ostream) throw (class Exception)
+void Scaling0::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

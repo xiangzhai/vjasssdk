@@ -41,7 +41,7 @@ class ParticleEmitter2Latitudes : public MdxAlphas
 		class ParticleEmitter2* particleEmitter() const;
 		
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 		
 	private:
 		class ParticleEmitter2 *m_particleEmitter;

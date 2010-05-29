@@ -18,11 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_VISIBILITY2_HPP
-#define WC3LIB_MDLX_VISIBILITY2_HPP
-
-#include "mdxalpha.hpp"
-#include "visibility2s.hpp"
+#include "textureanimationscalings.hpp"
+#include "textureanimationscaling.hpp"
 
 namespace wc3lib
 {
@@ -30,21 +27,27 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Visibility2 : public MdxAlpha
+TextureAnimationScalings::TextureAnimationScalings(class TextureAnimation *textureAnimation) : MdxScalings("KTAS", false), m_textureAnimation(textureAnimation)
 {
-	public:
-		Visibility2(class Visibility2s *visibilities);
-		
-		class Visibility2s* visibilities() const;
-};
+}
 
-inline class Visibility2s* Visibility2::visibilities() const
+TextureAnimationScalings::~TextureAnimationScalings()
 {
-	return dynamic_cast<class Visibility2s*>(this->m_alphas);
+}
+
+void TextureAnimationScalings::readMdl(std::istream &istream) throw (class Exception)
+{
+}
+
+void TextureAnimationScalings::writeMdl(std::ostream &ostream) const throw (class Exception)
+{
+}
+
+class MdxScaling* TextureAnimationScalings::createNewMember()
+{
+	return new TextureAnimationScaling(this);
 }
 
 }
 
 }
-
-#endif

@@ -24,6 +24,8 @@
 #include <string>
 #include <ostream>
 
+#include "../internationalisation.hpp"
+
 namespace wc3lib
 {
 	

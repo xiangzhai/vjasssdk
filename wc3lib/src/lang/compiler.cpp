@@ -43,13 +43,15 @@ Compiler::~Compiler()
 {
 }
 	
-void Compiler::compile(std::iostream &iostream, const class Parser &parser) throw (class Exception)
+void Compiler::compile(std::iostream &iostream, class Parser &parser) throw (class Exception)
 {
-	BOOST_FOREACH(class Language *language, parser.m_languages)
-		language->prepareObjects();
+	typedef std::pair<std::string, class Language*> pairType;
+
+	BOOST_FOREACH(pairType language, parser.m_languages)
+		language.second->prepareObjects();
 	
-	BOOST_FOREACH(class Language *language, parser.m_languages)
-		language->writeObjects(iostream);
+	BOOST_FOREACH(pairType language, parser.m_languages)
+		language.second->writeObjects(iostream);
 }
 
 void Compiler::optimize(std::iostream &iostream) throw (class Exception)

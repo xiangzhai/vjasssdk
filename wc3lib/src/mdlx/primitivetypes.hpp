@@ -43,7 +43,7 @@ class PrimitiveTypes : public GroupMdxBlock
 		const std::list<class PrimitiveType*>& primitiveTypes() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

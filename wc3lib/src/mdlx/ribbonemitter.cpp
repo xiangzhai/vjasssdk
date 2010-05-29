@@ -51,15 +51,15 @@ void RibbonEmitter::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void RibbonEmitter::writeMdl(std::ostream &ostream) throw (class Exception)
+void RibbonEmitter::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 RibbonEmitter::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize RibbonEmitter::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi = 0;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	long32 nbytesikg; // inclusive bytecount including KGXXs
 	istream.read(reinterpret_cast<char*>(&nbytesikg), sizeof(nbytesikg));
 	bytes += istream.gcount();
@@ -109,7 +109,7 @@ long32 RibbonEmitter::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 RibbonEmitter::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize RibbonEmitter::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

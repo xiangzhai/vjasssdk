@@ -38,20 +38,20 @@ void MatrixGroupCount::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void MatrixGroupCount::writeMdl(std::ostream &ostream) throw (class Exception)
+void MatrixGroupCount::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 MatrixGroupCount::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MatrixGroupCount::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
+	std::streamsize bytes = 0;
 	istream.read(reinterpret_cast<char*>(&this->m_data), sizeof(this->m_data));
 	bytes += istream.gcount();
 	
 	return bytes;
 }
 
-long32 MatrixGroupCount::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize MatrixGroupCount::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

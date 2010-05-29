@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,10 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_VISIBILITY2S_HPP
-#define WC3LIB_MDLX_VISIBILITY2S_HPP
+#ifndef WC3LIB_BOUNDS_HPP
+#define WC3LIB_BOUNDS_HPP
 
-#include "mdxalphas.hpp"
+#include <istream>
+#include <ostream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -29,34 +33,61 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Visibility2;
-
-//KP2V
-class Visibility2s : public MdxAlphas
+/**
+* Should be inherited by classes Model, Sequence, Geoset and Ganimation.
+*/
+class Bounds
 {
 	public:
-		Visibility2s(class Mdlx *mdlx);
-		virtual ~Visibility2s();
+		Bounds();
+		virtual ~Bounds();
 
-		class Mdlx* mdlx() const;
-		const std::list<class Visibility2*>& visibilities() const;
-
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+
+		void setBoundsRadius(float32 boundsRadius);
+		float32 boundsRadius() const;
+		struct VertexData& minimumExtent();
+		struct VertexData& maximumExtent();
+		const struct VertexData& minimumExtent() const;
+		const struct VertexData& maximumExtent() const;
 
 	protected:
-		class Mdlx *m_mdlx;
+		float32 m_boundsRadius;
+		struct VertexData m_minimumExtent;
+		struct VertexData m_maximumExtent;
 };
 
-inline class Mdlx* Visibility2s::mdlx() const
+inline void Bounds::setBoundsRadius(float32 boundsRadius)
 {
-	return this->m_mdlx;
+	this->m_boundsRadius = boundsRadius;
 }
 
-inline const std::list<class Visibility2*>& Visibility2s::visibilities() const
+inline float32 Bounds::boundsRadius() const
 {
-	return reinterpret_cast<const class std::list<class Visibility2*>&>(this->m_alphas);
+	return this->m_boundsRadius;
+}
+
+inline struct VertexData& Bounds::minimumExtent()
+{
+	return this->m_minimumExtent;
+}
+
+inline struct VertexData& Bounds::maximumExtent()
+{
+	return this->m_maximumExtent;
+}
+
+inline const struct VertexData& Bounds::minimumExtent() const
+{
+	return this->m_minimumExtent;
+}
+
+inline const struct VertexData& Bounds::maximumExtent() const
+{
+	return this->m_maximumExtent;
 }
 
 }

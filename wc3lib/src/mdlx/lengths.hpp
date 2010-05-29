@@ -43,7 +43,7 @@ class Lengths : public MdxAlphas
 		const std::list<class Length*>& lengths() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class ParticleEmitter2 *m_particleEmitter;

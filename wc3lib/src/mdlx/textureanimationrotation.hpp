@@ -18,8 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "scaling1s.hpp"
-#include "scaling1.hpp"
+#ifndef WC3LIB_MDLX_TEXTURE_ANIMATION_ROTATION_HPP
+#define WC3LIB_MDLX_TEXTURE_ANIMATION_ROTATION_HPP
+
+#include "mdxscaling.hpp"
+#include "textureanimationrotations.hpp"
 
 namespace wc3lib
 {
@@ -27,27 +30,21 @@ namespace wc3lib
 namespace mdlx
 {
 
-Scaling1s::Scaling1s(class TextureAnimation *textureAnimation) : MdxScalings("KTAS", false), m_textureAnimation(textureAnimation)
+class TextureAnimationRotation : public MdxScaling
 {
-}
+	public:
+		TextureAnimationRotation(class TextureAnimationRotations *rotations);
+		
+		class TextureAnimationRotations* rotations() const;
+};
 
-Scaling1s::~Scaling1s()
+inline class TextureAnimationRotations* TextureAnimationRotation::rotations() const
 {
-}
-
-void Scaling1s::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Scaling1s::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
-class MdxScaling* Scaling1s::createNewMember()
-{
-	return new Scaling1(this);
+	return dynamic_cast<class TextureAnimationRotations*>(this->m_scalings);
 }
 
 }
 
 }
+
+#endif

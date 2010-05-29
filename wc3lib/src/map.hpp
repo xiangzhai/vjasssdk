@@ -21,4 +21,18 @@
 #ifndef WC3LIB_MAP_HPP
 #define WC3LIB_MAP_HPP
 
+#error Map module is not usable yet!
+
+#include "map/environment.hpp"
+#include "map/itemset.hpp"
+#include "map/pathmap.hpp"
+#include "map/platform.hpp"
+#include "map/shadow.hpp"
+#include "map/tilepoint.hpp"
+#include "map/tree.hpp"
+#include "map/trees.hpp"
+#include "map/w3g.hpp"
+#include "map/w3m.hpp"
+#include "map/w3x.hpp"
+
 #endif

@@ -18,52 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ROTATION1S_HPP
-#define WC3LIB_MDLX_ROTATION1S_HPP
-
-#include "mdxscalings.hpp"
+#include "particleemitter2visibility.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-class TextureAnimation;
-class Rotation0;
-
-//KTAR
-class Rotation1s : public MdxScalings
+	
+ParticleEmitter2Visibility::ParticleEmitter2Visibility(class ParticleEmitter2Visibilities *visibilities) : MdxAlpha(visibilities)
 {
-	public:
-		Rotation1s(class TextureAnimation *textureAnimation);
-		virtual ~Rotation1s();
-
-		class TextureAnimation* textureAnimation() const;
-		const std::list<class Rotation1*>& rotations() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-
-	protected:
-		virtual class MdxScaling* createNewMember();
-		
-		class TextureAnimation *m_textureAnimation;
-};
-
-inline class TextureAnimation* Rotation1s::textureAnimation() const
-{
-	return this->m_textureAnimation;
-}
-
-inline const std::list<class Rotation1*>& Rotation1s::rotations() const
-{
-	return reinterpret_cast<const std::list<class Rotation1*>&>(this->m_scalings);
 }
 
 }
 
 }
-
-#endif
-

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,46 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_VISIBILITY3S_HPP
-#define WC3LIB_MDLX_VISIBILITY3S_HPP
+#ifndef WC3LIB_EDITOR_TERRAINBRUSH_HPP
+#define WC3LIB_EDITOR_TERRAINBRUSH_HPP
 
-#include "mdxalphas.hpp"
+#include "brush.hpp"
+#include "../map/platform.hpp"
+#include "../map/tilepoint.hpp"
 
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
 
-class ParticleEmitter;
-class Visibility3;
-
-//KPEV
-class Visibility3s : public MdxAlphas
+class TerrainBrush : public Brush
 {
 	public:
-		Visibility3s(class ParticleEmitter *particleEmitter);
-		virtual ~Visibility3s();
+		TerrainBrush(class TerrainEditor *terrainEditor);
 
-		class ParticleEmitter* particleEmitter() const;
-		const std::list<class Visibility3*>& visibilities() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		
 	protected:
-		class ParticleEmitter *m_particleEmitter;
+		map::uint16_t m_groundHeight;
+		bool m_boundary:1;
+		map::uint16_t waterLevel:15;
+		enum map::Tilepoint::Flags m_flags;
+		map::uint16_t groundTextureType:4;
+		map::uint8_t textureDetails;
+		map::uint16_t m_cliffTextureType:4;
+		map::uint16_t m_layerHeight:4;
 };
-
-inline class ParticleEmitter* Visibility3s::particleEmitter() const
-{
-	return this->m_particleEmitter;
-}
-
-inline const std::list<class Visibility3*>& Visibility3s::visibilities() const
-{
-	return reinterpret_cast<const std::list<class Visibility3*>&>(this->m_alphas);
-}
 
 }
 

@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "collisionshapes.hpp"
 #include "collisionshape.hpp"
 
@@ -33,22 +35,21 @@ CollisionShapes::CollisionShapes(class Mdlx *mdlx) : MdxBlock("CLID"), m_mdlx(md
 
 CollisionShapes::~CollisionShapes()
 {
-	for (std::list<class CollisionShape*>::iterator iterator = this->m_collisionShapes.begin(); iterator != this->m_collisionShapes.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class CollisionShape *collisionShape, this->m_collisionShapes)
+		delete collisionShape;
 }
 
 void CollisionShapes::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void CollisionShapes::writeMdl(std::ostream &ostream) throw (class Exception)
+void CollisionShapes::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 CollisionShapes::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize CollisionShapes::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::cout << "Test." << std::endl;
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -59,11 +60,8 @@ long32 CollisionShapes::readMdx(std::istream &istream) throw (class Exception)
 	
 	while (nbytes > 0)
 	{
-		std::cout << "Test 2" << std::endl;
 		class CollisionShape *collisionShape = new CollisionShape(this);
-		std::cout << "Test 3" << std::endl;
 		long32 readBytes = collisionShape->readMdx(istream);
-		std::cout << "Test 4" << std::endl;
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_collisionShapes.push_back(collisionShape);
@@ -72,9 +70,9 @@ long32 CollisionShapes::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 CollisionShapes::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize CollisionShapes::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	if (bytes == 0)
 		return 0;

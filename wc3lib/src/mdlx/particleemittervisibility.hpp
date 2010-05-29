@@ -18,18 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility2.hpp"
+#ifndef WC3LIB_MDLX_PARTICLE_EMITTER_VISIBILITY_HPP
+#define WC3LIB_MDLX_PARTICLE_EMITTER_VISIBILITY_HPP
+
+#include "mdxalpha.hpp"
+#include "particleemittervisibilities.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-	
-Visibility2::Visibility2(class Visibility2s *visibilities) : MdxAlpha(visibilities)
+
+class ParticleEmitterVisibility : public MdxAlpha
 {
+	public:
+		ParticleEmitterVisibility(class ParticleEmitterVisibilities *visibilities);
+		
+		class ParticleEmitterVisibilities* visibilities() const;
+};
+
+inline class ParticleEmitterVisibilities* ParticleEmitterVisibility::visibilities() const
+{
+	return dynamic_cast<class ParticleEmitterVisibilities*>(this->m_alphas);
 }
 
 }
 
 }
+
+#endif

@@ -21,4 +21,15 @@
 #ifndef WC3LIB_LANG_HPP
 #define WC3LIB_LANG_HPP
 
+#error Lang module is not usable yet!
+
+#include "lang/compiler.hpp"
+#include "lang/doccomment.hpp"
+#include "lang/file.hpp"
+#include "lang/object.hpp"
+#include "lang/parser.hpp"
+#include "lang/sourcefile.hpp"
+#include "lang/syntaxerror.hpp"
+#include "lang/utilities.hpp"
+
 #endif

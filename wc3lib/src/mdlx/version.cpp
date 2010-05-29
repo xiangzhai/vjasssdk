@@ -18,11 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream>
 #include <sstream>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream> //debug
 
+#include <boost/format.hpp>
 #include <boost/tokenizer.hpp>
 
 #include "version.hpp"
@@ -34,6 +35,8 @@ namespace wc3lib
 
 namespace mdlx
 {
+
+const long32 Version::currentVersion = 800;
 
 Version::Version(class Mdlx *mdlx) : MdxBlock("VERS"), m_mdlx(mdlx)
 {
@@ -92,7 +95,7 @@ void Version::readMdl(std::istream &istream) throw (class Exception)
 		throw Exception(_("Version: Missing format version number."));
 }
 
-void Version::writeMdl(std::ostream &ostream) throw (class Exception)
+void Version::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream <<
 	"// Current FormatVersion is 800\n"
@@ -102,35 +105,28 @@ void Version::writeMdl(std::ostream &ostream) throw (class Exception)
 	;
 }
 
-long32 Version::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Version::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	long32 nbytes;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	bytes += istream.gcount();
 	
-	if (nbytes != 4)
-	{
-		char message[50];
-		sprintf(message, _("Versions with more than 4 bytes are not supported. Read version has %d bytes."), nbytes);
-		
-		throw Exception(message);
-	}
+	if (nbytes != sizeof(this->m_version))
+		throw Exception(boost::format(_("Versions with more than %1% bytes are not supported. Read version has %1% bytes.")) % sizeof(this->m_version) % nbytes);
 	
 	istream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
 	bytes += istream.gcount();
 	
-	std::cout << "Bytes " << bytes << " Version " << this->m_version << std::endl;
-	
 	if (this->m_version != Version::currentVersion)
-		fprintf(stdout, _("Warning: Version %d probably is not supported. Current version is %d.\n"), this->m_version, Version::currentVersion);
+		std::cerr << boost::format(_("Warning: Version %1% is probably not supported. Current version is %2$.")) % this->m_version % Version::currentVersion << std::endl;
 	
 	return bytes;
 }
 
-long32 Version::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Version::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	long32 nbytes = sizeof(this->m_version);
 	ostream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
 	bytes += sizeof(nbytes);

@@ -21,7 +21,9 @@
 #ifndef WC3LIB_MDLX_TEXTURE_HPP
 #define WC3LIB_MDLX_TEXTURE_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
+#include <cstring>
 
 #include "../exception.hpp"
 #include "platform.hpp"
@@ -44,24 +46,27 @@ class Texture
 			Both = 3
 		};
 
+		static const std::size_t texturePathSize = 0x100;
+
 		Texture(class Textures *textures);
 		virtual ~Texture();
 
 		class Textures* textures() const;
 		long32 replaceableId() const;
+		void setTexturePath(const ascii texturePath[texturePathSize]);
 		const ascii* texturePath() const;
 		long32 unknown0() const;
 		long32 wrapping() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Textures *m_textures;
 		long32 m_replaceableId;
-		ascii m_texturePath[0x100]; //(0x100 bytes)
+		ascii m_texturePath[texturePathSize]; //(0x100 bytes)
 		long32 m_unknown0; //(0)
 		long32 m_wrapping; //(1:WrapWidth;2:WrapHeight;3:Both)
 };
@@ -74,6 +79,11 @@ inline class Textures* Texture::textures() const
 inline long32 Texture::replaceableId() const
 {
 	return this->m_replaceableId;
+}
+
+inline void Texture::setTexturePath(const ascii texturePath[Texture::texturePathSize])
+{
+	memcpy(this->m_texturePath, texturePath, Texture::texturePathSize);
 }
 
 inline const char* Texture::texturePath() const

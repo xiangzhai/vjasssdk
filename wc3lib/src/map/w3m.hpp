@@ -48,6 +48,21 @@ class Blp;
 namespace map
 {
 
+class Shadow;
+class PathMap;
+class Trees;
+class Units;
+class Info;
+class Strings;
+class MenuMinimap;
+class CustomUnits;
+class Triggers;
+class Cameras;
+class Rects;
+class Sounds;
+class CustomTextTriggers;
+class ImportedFiles;
+
 class W3m
 {
 	public:

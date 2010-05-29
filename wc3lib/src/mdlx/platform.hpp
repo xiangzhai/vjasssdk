@@ -35,6 +35,11 @@ typedef unsigned long long32; /// @todo are there any fstream >> operators which
 typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
 typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?
 
+struct VertexData
+{
+	float32 x, y, z;
+};
+
 }
 
 }

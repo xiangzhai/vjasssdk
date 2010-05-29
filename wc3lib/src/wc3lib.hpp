@@ -45,6 +45,7 @@
 
 #include "exception.hpp"
 #include "internationalisation.hpp"
+#include "libraryloader.hpp"
 #include "utilities.hpp"
 
 #include "blp.hpp"

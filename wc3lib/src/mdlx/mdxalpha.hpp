@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDXALPHA_HPP
 #define WC3LIB_MDXALPHA_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -40,8 +41,8 @@ class MdxAlpha
 		MdxAlpha(class MdxAlphas *alphas);
 		virtual ~MdxAlpha();
 		
-		long32 readMdx(std::istream &istream) throw (class Exception);
-		long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 		
 	protected:
 		class MdxAlphas *m_alphas;

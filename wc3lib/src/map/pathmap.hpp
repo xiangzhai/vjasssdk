@@ -58,7 +58,7 @@ class Pathmap
 		int32 height() const;
 		enum Data data(std::size_t width, size_t height) const throw (class Exception);
 		
-		static const char8 identifier[4] = { 'M', 'P', '3', 'W' };
+		static const char8 identifier[4];
 
 	protected:
 		class W3m *m_w3m;

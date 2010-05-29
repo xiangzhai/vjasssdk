@@ -49,14 +49,14 @@ void Bone::readMdl(std::istream &istream) throw (class Exception)
 	/// @todo FIXME
 }
 
-void Bone::writeMdl(std::ostream &ostream) throw (class Exception)
+void Bone::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	/// @todo FIXME
 }
 
-long32 Bone::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Bone::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = Object::readMdx(istream);
+	std::streamsize bytes = Object::readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_geosetAnimationId), sizeof(this->m_geosetAnimationId));
@@ -65,9 +65,9 @@ long32 Bone::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Bone::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Bone::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = Object::writeMdx(ostream);
+	std::streamsize bytes = Object::writeMdx(ostream);
 	
 	return bytes;
 }

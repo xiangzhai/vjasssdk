@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_LAYERS_HPP
 #define WC3LIB_MDLX_LAYERS_HPP
 
-#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -45,12 +42,12 @@ class Layers : public MdxBlock
 		virtual ~Layers();
 
 		class Material* material() const;
-		std::list<class Layer*> layers() const;
+		const std::list<class Layer*>& layers() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Material *m_material;
@@ -62,7 +59,7 @@ inline class Material* Layers::material() const
 	return this->m_material;
 }
 
-inline std::list<class Layer*> Layers::layers() const
+inline const std::list<class Layer*>& Layers::layers() const
 {
 	return this->m_layers;
 }

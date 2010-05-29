@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "texturevertices.hpp"
 #include "texturevertex.hpp"
 #include "../internationalisation.hpp"
@@ -34,21 +36,21 @@ TextureVertices::TextureVertices(class Geoset *geoset) : MdxBlock("UVBS"), m_geo
 
 TextureVertices::~TextureVertices()
 {
-	for (std::list<class TextureVertex*>::iterator iterator = this->m_textureVertices.begin(); iterator != this->m_textureVertices.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class TextureVertex *textureVertex, this->m_textureVertices)
+		delete textureVertex;
 }
 
 void TextureVertices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureVertices::writeMdl(std::ostream &ostream) throw (class Exception)
+void TextureVertices::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 TextureVertices::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize TextureVertices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -57,12 +59,7 @@ long32 TextureVertices::readMdx(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&nvrts), sizeof(nvrts));
 	
 	if (nvrts <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Texture Vertices: 0 byte texture vertices.\n"));
-		
-		throw Exception(message);
-	}
+		throw Exception(_("Texture Vertices: 0 byte texture vertices."));
 	
 	bytes += istream.gcount();
 	
@@ -76,9 +73,9 @@ long32 TextureVertices::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 TextureVertices::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize TextureVertices::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	if (bytes == 0)
 		return 0;

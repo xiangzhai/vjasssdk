@@ -21,9 +21,12 @@
 #ifndef WC3LIB_INTERNATIONALISATION_HPP
 #define WC3LIB_INTERNATIONALISATION_HPP
 
-//preparation for gettext
+// preparation for gettext
 #include <libintl.h>
 #include <locale.h>
 #define _(string) gettext(string)
+
+// Boost format library
+#include <boost/format.hpp>
 
 #endif

@@ -35,17 +35,21 @@ class LibraryLoader
 	public:
 		typedef LibraryLoader self;
 
-		static bool libraryHasBeenLoaded(const boost::filesystem::path &path);
-		static void loadLibrary(const boost::filesystem::path &path) throw (class Exception);
-		static void unloadLibrary(const boost::filesystem::path &path) throw (class Exception);
-		static void* librarySymbol(const boost::filesystem::path &path, const std::string symbolName) throw (class Exception);
+		class Handle
+		{
+			public:
+				void *handle;
+				boost::filesystem::path path;
+		};
+
+		static class Handle* loadLibrary(const boost::filesystem::path &path) throw (class Exception);
+		static void unloadLibrary(class Handle *handle) throw (class Exception);
+		static void* librarySymbol(const class Handle &handle, const std::string symbolName) throw (class Exception);
 
 	private:
 		LibraryLoader();
 		LibraryLoader(const self &);
 		~LibraryLoader();
-
-		static std::map<boost::filesystem::path, void*> m_libraries;
 };
 
 }

@@ -21,7 +21,7 @@
 #include "light.hpp"
 #include "lights.hpp"
 #include "intensities.hpp"
-#include "visibility1s.hpp"
+#include "lightambientvisibilities.hpp"
 #include "lightambientcolors.hpp"
 #include "ambientcolors.hpp"
 #include "ambientintensities.hpp"
@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Light::Light(class Lights *lights) : Object(lights->mdlx()), m_lights(lights), m_intensities(new Intensities(this)), m_visibilities(new Visibility1s(this)), m_colors(new LightAmbientColors(this)), m_ambientColors(new AmbientColors(this)), m_ambientIntensities(new AmbientIntensities(this))
+Light::Light(class Lights *lights) : Object(lights->mdlx()), m_lights(lights), m_intensities(new Intensities(this)), m_visibilities(new LightAmbientVisibilities(this)), m_colors(new LightAmbientColors(this)), m_ambientColors(new AmbientColors(this)), m_ambientIntensities(new AmbientIntensities(this))
 {
 }
 
@@ -49,15 +49,15 @@ void Light::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Light::writeMdl(std::ostream &ostream) throw (class Exception)
+void Light::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Light::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Light::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	bytes += Object::readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_type), sizeof(this->m_type));
 	bytes += istream.gcount();
@@ -90,7 +90,7 @@ long32 Light::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Light::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Light::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

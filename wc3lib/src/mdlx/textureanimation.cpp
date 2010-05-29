@@ -23,8 +23,8 @@
 #include "textureanimation.hpp"
 #include "textureanimations.hpp"
 #include "textureanimationtranslations.hpp"
-#include "rotation1s.hpp"
-#include "scaling1s.hpp"
+#include "textureanimationrotations.hpp"
+#include "textureanimationscalings.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimation::TextureAnimation(class TextureAnimations *textureAnimations) : m_textureAnimations(textureAnimations), m_translations(new TextureAnimationTranslations(this)), m_rotations(new Rotation1s(this)), m_scalings(new Scaling1s(this))
+TextureAnimation::TextureAnimation(class TextureAnimations *textureAnimations) : m_textureAnimations(textureAnimations), m_translations(new TextureAnimationTranslations(this)), m_rotations(new TextureAnimationRotations(this)), m_scalings(new TextureAnimationScalings(this))
 {
 }
 
@@ -48,7 +48,7 @@ void TextureAnimation::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureAnimation::writeMdl(std::ostream &ostream) throw (class Exception)
+void TextureAnimation::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	/*
 	fstream << "\tTVertexAnim {\n";
@@ -78,12 +78,11 @@ void TextureAnimation::writeMdl(std::ostream &ostream) throw (class Exception)
 }
 
 
-long32 TextureAnimation::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize TextureAnimation::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
 	long32 nbytesi = 0;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	bytes += istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	bytes += this->m_translations->readMdx(istream);
 	bytes += this->m_rotations->readMdx(istream);
 	bytes += this->m_scalings->readMdx(istream);
@@ -94,8 +93,9 @@ long32 TextureAnimation::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 TextureAnimation::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize TextureAnimation::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 }

@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
 #define WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
 
-#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -45,12 +42,12 @@ class MatrixGroupCounts : public MdxBlock
 		virtual ~MatrixGroupCounts();
 
 		class Geoset* geoset() const;
-		std::list<class MatrixGroupCount*> matrixGroupCounts() const;
+		const std::list<class MatrixGroupCount*>& matrixGroupCounts() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Geoset *m_geoset;
@@ -62,7 +59,7 @@ inline class Geoset* MatrixGroupCounts::geoset() const
 	return this->m_geoset;
 }
 
-inline std::list<class MatrixGroupCount*> MatrixGroupCounts::matrixGroupCounts() const
+inline const std::list<class MatrixGroupCount*>& MatrixGroupCounts::matrixGroupCounts() const
 {
 	return this->m_matrixGroupCounts;
 }

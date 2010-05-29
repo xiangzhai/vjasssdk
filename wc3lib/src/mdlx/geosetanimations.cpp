@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 #include "geosetanimations.hpp"
 #include "geosetanimation.hpp"
@@ -36,21 +37,21 @@ GeosetAnimations::GeosetAnimations(class Mdlx *mdlx) : MdxBlock("GEOA"), m_mdlx(
 
 GeosetAnimations::~GeosetAnimations()
 {
-	for (std::list<class GeosetAnimation*>::iterator iterator = this->m_geosetAnimations.begin(); iterator != this->m_geosetAnimations.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class GeosetAnimation *geosetAnimation, this->m_geosetAnimations)
+		delete geosetAnimation;
 }
 
 void GeosetAnimations::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GeosetAnimations::writeMdl(std::ostream &ostream) throw (class Exception)
+void GeosetAnimations::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 GeosetAnimations::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GeosetAnimations::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -76,7 +77,7 @@ long32 GeosetAnimations::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 GeosetAnimations::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize GeosetAnimations::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	if (MdxBlock::writeMdx(ostream) == 0)
 		return 0;

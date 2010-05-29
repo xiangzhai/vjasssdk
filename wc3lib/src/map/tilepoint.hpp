@@ -51,7 +51,7 @@ class Tilepoint
 		Tilepoint(class Environment *environment);
 		
 		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 		
 		short16 worldEditorHeight(short16 layer, short16 groundZeroLevel, short16 layerZeroLevel) const;
 		float32 worldEditorWaterLevel(short16 groundZeroLevel, float32 waterZeroLevel) const;
@@ -61,10 +61,10 @@ class Tilepoint
 		short16 m_groundHeight;
 		short16 m_waterLevel;
 		enum Tilepoint::Flags m_flags;
-		std::bitset<4> m_groundTextureType;
+		unsigned int m_groundTextureType:4;
 		char8 m_textureDetails;
-		std::bitset<4> m_cliffTextureType;
-		std::bitset<4> m_layerHeight;
+		unsigned int m_cliffTextureType:4;
+		unsigned int m_layerHeight:4;
 
 };
 	

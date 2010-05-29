@@ -24,8 +24,6 @@
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -36,7 +34,7 @@ namespace mdlx
 class Mdlx;
 class Sequence;
 
-//SEQS
+/// SEQS
 class Sequences : public MdxBlock
 {
 	public:
@@ -44,12 +42,12 @@ class Sequences : public MdxBlock
 		virtual ~Sequences();
 
 		class Mdlx* mdlx() const;
-		std::list<class Sequence*> sequences() const;
+		const std::list<class Sequence*>& sequences() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
@@ -61,7 +59,7 @@ inline class Mdlx* Sequences::mdlx() const
 	return this->m_mdlx;
 }
 
-inline std::list<class Sequence*> Sequences::sequences() const
+inline const std::list<class Sequence*>& Sequences::sequences() const
 {
 	return this->m_sequences;
 }

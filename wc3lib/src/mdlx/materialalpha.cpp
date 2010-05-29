@@ -40,7 +40,7 @@ void MaterialAlpha::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void MaterialAlpha::writeMdl(std::ostream &ostream) throw (class Exception)
+void MaterialAlpha::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

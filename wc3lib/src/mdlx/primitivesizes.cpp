@@ -20,6 +20,8 @@
 
 #include <iostream> // debug
 
+#include <boost/foreach.hpp>
+
 #include "primitivesizes.hpp"
 #include "primitivesize.hpp"
 
@@ -35,21 +37,21 @@ PrimitiveSizes::PrimitiveSizes(class Geoset *geoset) : MdxBlock("PCNT"), m_geose
 
 PrimitiveSizes::~PrimitiveSizes()
 {
-	for (std::list<class PrimitiveSize*>::iterator iterator = this->m_primitiveSizes.begin(); iterator != this->m_primitiveSizes.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class PrimitiveSize *primitiveSize, this->m_primitiveSizes)
+		delete primitiveSize;
 }
 
 void PrimitiveSizes::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PrimitiveSizes::writeMdl(std::ostream &ostream) throw (class Exception)
+void PrimitiveSizes::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 PrimitiveSizes::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveSizes::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -71,9 +73,9 @@ long32 PrimitiveSizes::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 PrimitiveSizes::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize PrimitiveSizes::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	if (bytes == 0)
 		return 0;

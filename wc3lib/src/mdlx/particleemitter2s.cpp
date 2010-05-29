@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "particleemitter2s.hpp"
 #include "particleemitter2.hpp"
 
@@ -33,21 +35,21 @@ ParticleEmitter2s::ParticleEmitter2s(class Mdlx *mdlx) : MdxBlock("PRE2"), m_mdl
 
 ParticleEmitter2s::~ParticleEmitter2s()
 {
-	for (std::list<class ParticleEmitter2*>::iterator iterator = this->m_particleEmitters.begin(); iterator != this->m_particleEmitters.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class ParticleEmitter2 *particleEmitter, this->m_particleEmitters)
+		delete particleEmitter;
 }
 
 void ParticleEmitter2s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void ParticleEmitter2s::writeMdl(std::ostream &ostream) throw (class Exception)
+void ParticleEmitter2s::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 ParticleEmitter2s::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter2s::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -63,15 +65,14 @@ long32 ParticleEmitter2s::readMdx(std::istream &istream) throw (class Exception)
 		nbytes -= readBytes;
 		bytes += readBytes;
 		this->m_particleEmitters.push_back(particleEmitter);
-		std::cout << "Got particle emitter with " << readBytes << " bytes and " << nbytes << " bytes left." << std::endl;
 	}
 	
 	return bytes;
 }
 
-long32 ParticleEmitter2s::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize ParticleEmitter2s::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	if (bytes == 0)
 		return 0;

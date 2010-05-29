@@ -89,6 +89,8 @@ class Editor : public KMainWindow
 		void showTextureEditor();
 		
 	protected:
+		void readSettings();
+
 		std::list<class mpq::Mpq*> m_mpqs;
 		std::list<std::size_t> m_mpqsPriorities;
 		class TerrainEditor *m_terrainEditor;

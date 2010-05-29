@@ -35,6 +35,11 @@ Exception::~Exception() throw ()
 {
 }
 
+void Exception::appendWhat(const std::string &what)
+{
+	this->m_what.append(what);
+}
+
 const char* Exception::what() const throw ()
 {
 	return this->m_what.c_str();

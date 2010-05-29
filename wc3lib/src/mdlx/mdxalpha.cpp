@@ -35,10 +35,10 @@ MdxAlpha::~MdxAlpha()
 {
 }
 
-long32 MdxAlpha::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdxAlpha::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
 	bytes += istream.gcount();
 	
@@ -53,10 +53,10 @@ long32 MdxAlpha::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 MdxAlpha::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize MdxAlpha::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	ostream.write(reinterpret_cast<const char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = sizeof(this->m_frame);
+	std::streamsize bytes = sizeof(this->m_frame);
 	ostream.write(reinterpret_cast<const char*>(&this->m_state), sizeof(this->m_state));
 	bytes += sizeof(this->m_state);
 	

@@ -21,4 +21,11 @@
 #ifndef WC3LIB_SLK_HPP
 #define WC3LIB_SLK_HPP
 
+#error Slk module is not usable yet!
+
+#include "slk/data.hpp"
+#include "slk/dataentry.hpp"
+#include "slk/datasubentry.hpp"
+#include "slk/slk.hpp"
+
 #endif

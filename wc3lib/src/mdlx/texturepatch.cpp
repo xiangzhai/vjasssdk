@@ -41,16 +41,16 @@ void TexturePatch::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TexturePatch::writeMdl(std::ostream &ostream) throw (class Exception)
+void TexturePatch::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 TexturePatch::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize TexturePatch::readMdx(std::istream &istream) throw (class Exception)
 {
 	return this->m_textureVertices->readMdx(istream);
 }
 
-long32 TexturePatch::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize TexturePatch::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return this->m_textureVertices->writeMdx(ostream);
 }

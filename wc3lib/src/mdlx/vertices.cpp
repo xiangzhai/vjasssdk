@@ -37,11 +37,11 @@ Vertices::~Vertices()
 {
 }
 
-void Vertices::readMdl(std::fstream &fstream) throw (class Exception)
+void Vertices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Vertices::writeMdl(std::fstream &fstream) throw (class Exception)
+void Vertices::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

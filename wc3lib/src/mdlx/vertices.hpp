@@ -32,7 +32,7 @@ namespace mdlx
 class Geoset;
 class Vertex;
 
-//VRTX [Vertices]
+/// VRTX [Vertices]
 class Vertices : public GroupMdxBlock
 {
 	public:
@@ -42,8 +42,8 @@ class Vertices : public GroupMdxBlock
 		class Geoset* geoset() const;
 		const std::list<class Vertex*>& vertices() const;
 
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 		//virtual long32 readMdx(std::fstream &fstream) throw (class Exception);
 		//virtual long32 writeMdx(std::fstream &fstream) throw (class Exception);
 

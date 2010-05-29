@@ -38,11 +38,11 @@ void PrimitiveSize::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PrimitiveSize::writeMdl(std::ostream &ostream) throw (class Exception)
+void PrimitiveSize::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 PrimitiveSize::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveSize::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 bytes = 0;
 	istream.read(reinterpret_cast<char*>(&this->m_value), sizeof(this->m_value));
@@ -51,7 +51,7 @@ long32 PrimitiveSize::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 PrimitiveSize::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize PrimitiveSize::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

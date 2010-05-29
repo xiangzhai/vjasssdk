@@ -38,7 +38,7 @@ void ParticleEmitter2Speed::readMdl(std::istream &istream) throw (class Exceptio
 {
 }
 
-void ParticleEmitter2Speed::writeMdl(std::ostream &ostream) throw (class Exception)
+void ParticleEmitter2Speed::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

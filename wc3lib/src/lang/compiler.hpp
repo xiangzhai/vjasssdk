@@ -42,7 +42,7 @@ class Compiler
 		Compiler();
 		~Compiler();
 	
-		void compile(std::iostream &iostream, const class Parser &parser) throw (class Exception);
+		void compile(std::iostream &iostream, class Parser &parser) throw (class Exception);
 		/**
 		* This method should only be called on Jass files. It removes unnecessary white-space characters and comments.
 		* Besides functions are inlined and identifiers are shortend.

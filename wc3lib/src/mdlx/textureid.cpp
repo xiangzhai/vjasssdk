@@ -39,14 +39,14 @@ void TextureId::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureId::writeMdl(std::ostream &ostream) throw (class Exception)
+void TextureId::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 TextureId::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize TextureId::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_state), sizeof(this->m_state));
@@ -63,7 +63,7 @@ long32 TextureId::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 TextureId::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize TextureId::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

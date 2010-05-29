@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,30 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility2s.hpp"
+#ifndef WC3LIB_EDITOR_BRUSH_HPP
+#define WC3LIB_EDITOR_BRUSH_HPP
+
+#include "../map/platform.hpp"
 
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
 
-Visibility2s::Visibility2s(class Mdlx *mdlx) : MdxAlphas("KP2V"), m_mdlx(mdlx)
+class TerrainEditor;
+
+class Brush
 {
-}
+	public:
+		Brush(class TerrainEditor *terrainEditor);
+		virtual ~Brush() = 0;
 
-Visibility2s::~Visibility2s()
-{
-}
+		virtual void onPlace(map::int32 x, map::int32 y) = 0;
 
-void Visibility2s::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Visibility2s::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
+	protected:
+		class TerrainEditor *m_terrainEditor;
+};
 
 }
 
 }
+
+#endif

@@ -39,7 +39,7 @@ namespace lang
 /**
 * Each language instance is a list of language object lists.
 */
-class Language : public std::list<class Object::List>
+class Language : public std::list<class Object::List*>
 {
 	public:		
 		Language();
@@ -72,12 +72,13 @@ class Language : public std::list<class Object::List>
 		/**
 		* Every language can have source files.
 		*/
-		class SourceFile::List& sourceFiles();
+		class SourceFile::List* sourceFiles();
 };
 
-inline class SourceFile::List& Language::sourceFiles()
+inline class SourceFile::List* Language::sourceFiles()
 {
-	return dynamic_cast<class SourceFile::List&>(this->front());
+	return dynamic_cast<class SourceFile::List*>(this->front());
+}
 
 }
 

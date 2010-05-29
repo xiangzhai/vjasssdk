@@ -35,8 +35,8 @@ namespace mdlx
 
 class TextureAnimations;
 class TextureAnimationTranslations;
-class Rotation1s;
-class Scaling1s;
+class TextureAnimationRotations;
+class TextureAnimationScalings;
 
 class TextureAnimation
 {
@@ -46,19 +46,19 @@ class TextureAnimation
 
 		class TextureAnimations* textureAnimations() const;
 		class TextureAnimationTranslations* translations() const;
-		class Rotation1s* rotations() const;
-		class Scaling1s* scalings() const;
+		class TextureAnimationRotations* rotations() const;
+		class TextureAnimationScalings* scalings() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class TextureAnimations *m_textureAnimations;
 		class TextureAnimationTranslations *m_translations; //(KTAT) // Might be optional
-		class Rotation1s *m_rotations; //(KTAR)
-		class Scaling1s *m_scalings; //(KTAS)
+		class TextureAnimationRotations *m_rotations; //(KTAR)
+		class TextureAnimationScalings *m_scalings; //(KTAS)
 };
 
 inline class TextureAnimations* TextureAnimation::textureAnimations() const
@@ -71,12 +71,12 @@ inline class TextureAnimationTranslations* TextureAnimation::translations() cons
 	return this->m_translations;
 }
 
-inline class Rotation1s* TextureAnimation::rotations() const
+inline class TextureAnimationRotations* TextureAnimation::rotations() const
 {
 	return this->m_rotations;
 }
 
-inline class Scaling1s* TextureAnimation::scalings() const
+inline class TextureAnimationScalings* TextureAnimation::scalings() const
 {
 	return this->m_scalings;
 }

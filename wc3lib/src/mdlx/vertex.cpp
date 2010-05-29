@@ -38,13 +38,13 @@ void Vertex::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Vertex::writeMdl(std::ostream &ostream) throw (class Exception)
+void Vertex::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Vertex::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Vertex::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
+	std::streamsize bytes = 0;
 	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
@@ -55,7 +55,7 @@ long32 Vertex::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Vertex::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Vertex::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

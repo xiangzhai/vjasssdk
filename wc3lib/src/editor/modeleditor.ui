@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>805</width>
-    <height>921</height>
+    <width>955</width>
+    <height>1070</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,6 +50,16 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="2" rowspan="3">
+    <widget class="wc3lib::editor::ModelView" name="rendererWidget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>400</width>
+       <height>800</height>
+      </size>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="3" rowspan="3">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
@@ -67,12 +77,75 @@
         <property name="tabReorderingEnabled">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="animations">
+        <widget class="QWidget" name="modelTab">
+         <attribute name="title">
+          <string>Model</string>
+         </attribute>
+         <widget class="QWidget" name="verticalLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>20</y>
+            <width>181</width>
+            <height>151</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Name:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="KLineEdit" name="klineedit">
+               <property name="maxLength">
+                <number>336</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Unknown:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Blend time:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="animationsTab">
          <attribute name="title">
           <string>Animations</string>
          </attribute>
         </widget>
-        <widget class="QWidget" name="textures">
+        <widget class="QWidget" name="texturesTab">
          <attribute name="title">
           <string>Textures</string>
          </attribute>
@@ -82,19 +155,14 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="2" rowspan="3">
-    <widget class="wc3lib::editor::ModelView" name="rendererWidget" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>400</width>
-       <height>800</height>
-      </size>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
   <customwidget>
    <class>KTabWidget</class>
    <extends>QTabWidget</extends>

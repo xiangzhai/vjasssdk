@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "groupmdxblock.hpp"
 #include "groupmdxblockmember.hpp"
 
@@ -33,22 +35,20 @@ GroupMdxBlock::GroupMdxBlock(byte blockName[4], bool optional) : MdxBlock(blockN
 
 GroupMdxBlock::~GroupMdxBlock()
 {
-	for (std::list<class GroupMdxBlockMember*>::iterator iterator = this->m_members.begin(); iterator != this->m_members.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class GroupMdxBlockMember *groupMdxBlockMember, this->m_members)
+		delete groupMdxBlockMember;
 }
 
-long32 GroupMdxBlock::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GroupMdxBlock::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
-	
-	std::cout << "Block name " << this->blockName() << std::endl;
+
 	long32 groupCount = 0;
 	istream.read(reinterpret_cast<char*>(&groupCount), sizeof(groupCount));
 	bytes += istream.gcount();
-	std::cout << "Group count " << groupCount << std::endl;
 	
 	for ( ; groupCount > 0; --groupCount)
 	{
@@ -57,29 +57,22 @@ long32 GroupMdxBlock::readMdx(std::istream &istream) throw (class Exception)
 		this->m_members.push_back(member);
 	}
 	
-	std::cout << "Group bytes " << bytes << std::endl;
-	
 	return bytes;
 }
 
-long32 GroupMdxBlock::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize GroupMdxBlock::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
 	
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	long32 groupCount = this->m_members.size();
 	ostream.write(reinterpret_cast<const char*>(&groupCount), sizeof(groupCount));
 	bytes += sizeof(groupCount);
-	std::cout << "Group count " << groupCount << std::endl;
 	
-	for (std::list<class GroupMdxBlockMember*>::iterator iterator = this->m_members.begin(); iterator != this->m_members.end(); ++iterator)
-	{
-		bytes += (*iterator)->writeMdx(ostream);
-	}
-	
-	std::cout << "Group bytes " << bytes << std::endl;
+	BOOST_FOREACH(const class GroupMdxBlockMember *groupMdxBlockMember, this->m_members)
+		bytes += groupMdxBlockMember->writeMdx(ostream);
 	
 	return bytes;
 }

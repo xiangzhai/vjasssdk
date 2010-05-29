@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_VISIBILITY3_HPP
-#define WC3LIB_MDLX_VISIBILITY3_HPP
+#ifndef WC3LIB_MDLX_PARTICLE_EMITTER_VISIBILITIES_HPP
+#define WC3LIB_MDLX_PARTICLE_EMITTER_VISIBILITIES_HPP
 
-#include "mdxalpha.hpp"
-#include "visibility3s.hpp"
+#include "mdxalphas.hpp"
 
 namespace wc3lib
 {
@@ -30,17 +29,36 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Visibility3 : public MdxAlpha
+class ParticleEmitter;
+class ParticleEmitterVisibility;
+
+/// tag KPEV
+class ParticleEmitterVisibilities : public MdxAlphas
 {
 	public:
-		Visibility3(class Visibility3s *visibilities);
+		ParticleEmitterVisibilities(class ParticleEmitter *particleEmitter);
+		virtual ~ParticleEmitterVisibilities();
+
+		class ParticleEmitter* particleEmitter() const;
+		const std::list<class ParticleEmitterVisibility*>& visibilities() const;
+
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 		
-		class Visibility3s* visibilities() const;
+	protected:
+		virtual class MdxAlpha* createNewMember();
+
+		class ParticleEmitter *m_particleEmitter;
 };
 
-inline class Visibility3s* Visibility3::visibilities() const
+inline class ParticleEmitter* ParticleEmitterVisibilities::particleEmitter() const
 {
-	return dynamic_cast<class Visibility3s*>(this->m_alphas);
+	return this->m_particleEmitter;
+}
+
+inline const std::list<class ParticleEmitterVisibility*>& ParticleEmitterVisibilities::visibilities() const
+{
+	return reinterpret_cast<const std::list<class ParticleEmitterVisibility*>&>(this->m_alphas);
 }
 
 }

@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 #include <list>
 
 #include "platform.hpp"
@@ -41,7 +42,7 @@ class SegmentColor;
 class ParticleEmitter2Speeds;
 class ParticleEmitter2Latitudes;
 class EmissionRates;
-class Visibility2s;
+class ParticleEmitter2Visibilities;
 class Lengths;
 class ParticleEmitter2Widths;
 
@@ -125,14 +126,14 @@ class ParticleEmitter2
 		class ParticleEmitter2Speeds* speeds() const;
 		class ParticleEmitter2Latitudes* latitudes() const;
 		class EmissionRates* emissionRates() const;
-		class Visibility2s* visibilities() const;
+		class ParticleEmitter2Visibilities* visibilities() const;
 		class Lengths* numbers() const;
 		class ParticleEmitter2Widths* widths() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class ParticleEmitter2s *m_particleEmitters;
@@ -173,7 +174,7 @@ class ParticleEmitter2
 		class ParticleEmitter2Speeds *m_speeds; //(KP2S)
 		class ParticleEmitter2Latitudes *m_latitudes; //(KP2L)
 		class EmissionRates *m_emissionRates; //(KP2E)
-		class Visibility2s *m_visibilities; //(KP2V)
+		class ParticleEmitter2Visibilities *m_visibilities; //(KP2V)
 		class Lengths *m_numbers; //(KP2N)
 		class ParticleEmitter2Widths *m_widths; //(KP2W)
 };
@@ -418,7 +419,7 @@ inline class EmissionRates* ParticleEmitter2::emissionRates() const
 	return this->m_emissionRates;
 }
 
-inline class Visibility2s* ParticleEmitter2::visibilities() const
+inline class ParticleEmitter2Visibilities* ParticleEmitter2::visibilities() const
 {
 	return this->m_visibilities;
 }

@@ -21,7 +21,6 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONS_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONS_HPP
 
-#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
@@ -43,12 +42,12 @@ class GeosetAnimations : public MdxBlock
 		virtual ~GeosetAnimations();
 
 		class Mdlx* mdlx() const;
-		std::list<class GeosetAnimation*> geosetAnimations() const;
+		const std::list<class GeosetAnimation*>& geosetAnimations() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
@@ -60,7 +59,7 @@ inline class Mdlx* GeosetAnimations::mdlx() const
 	return this->m_mdlx;
 }
 
-inline std::list<class GeosetAnimation*> GeosetAnimations::geosetAnimations() const
+inline const std::list<class GeosetAnimation*>& GeosetAnimations::geosetAnimations() const
 {
 	return this->m_geosetAnimations;
 }

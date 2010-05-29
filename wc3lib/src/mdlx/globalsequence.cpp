@@ -63,21 +63,21 @@ void GlobalSequence::readMdl(std::istream &istream) throw (class Exception)
 	sstream >> this->m_duration;
 }
 
-void GlobalSequence::writeMdl(std::ostream &ostream) throw (class Exception)
+void GlobalSequence::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream << "\tDuration " << this->duration() << ",\n";
 }
 
-long32 GlobalSequence::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GlobalSequence::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
 	
 	return istream.gcount();
 }
 
-long32 GlobalSequence::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize GlobalSequence::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	ostream.write(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
+	ostream.write(reinterpret_cast<const char*>(&this->m_duration), sizeof(this->m_duration));
 	
 	return sizeof(this->m_duration);
 }

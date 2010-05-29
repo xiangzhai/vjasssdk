@@ -34,7 +34,7 @@ class DataEntry;
 
 /**
 * Default class for reading <Prefix>Data.txt files like WorldEditData.txt or TriggerStrings.txt.
-* @todo Should use a Bison file which defines the possible syntax for these files.
+* @todo Should use a Bison file which defines the possible syntax for these files. Maybe we could use Boost's parser library instead.
 */
 class Data
 {

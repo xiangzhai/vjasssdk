@@ -39,7 +39,7 @@ void Intensities::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Intensities::writeMdl(std::ostream &ostream) throw (class Exception)
+void Intensities::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

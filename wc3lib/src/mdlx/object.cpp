@@ -47,15 +47,15 @@ void Object::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Object::writeMdl(std::ostream &ostream) throw (class Exception)
+void Object::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Object::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Object::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi = 0;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_name), sizeof(this->m_name));
 	bytes += istream.gcount();
 	std::cout << "Object name is " << this->m_name << " and nbytesi is " << nbytesi << std::endl;
@@ -92,7 +92,7 @@ long32 Object::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Object::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Object::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

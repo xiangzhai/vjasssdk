@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_SEGMENTCOLOR_HPP
 #define WC3LIB_MDLX_SEGMENTCOLOR_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -46,9 +47,9 @@ class SegmentColor
 		float32 blue() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class ParticleEmitter2 *m_particleEmitter;

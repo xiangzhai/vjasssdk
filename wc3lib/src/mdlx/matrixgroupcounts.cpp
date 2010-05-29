@@ -18,8 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "matrixgroupcounts.hpp"
 #include "matrixgroupcount.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -33,30 +36,30 @@ MatrixGroupCounts::MatrixGroupCounts(class Geoset *geoset) : MdxBlock("MTGC"), m
 
 MatrixGroupCounts::~MatrixGroupCounts()
 {
-	for (std::list<class MatrixGroupCount*>::iterator iterator = this->m_matrixGroupCounts.begin(); iterator != this->m_matrixGroupCounts.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class MatrixGroupCount *matrixGroupCount, this->m_matrixGroupCounts)
+		delete matrixGroupCount;
 }
 
 void MatrixGroupCounts::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void MatrixGroupCounts::writeMdl(std::ostream &ostream) throw (class Exception)
+void MatrixGroupCounts::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
 
-long32 MatrixGroupCounts::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MatrixGroupCounts::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
 	
 	long32 nmtrcs = 0;
-	istream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
-	bytes += istream.gcount();
-	std::cout << "Matrix group counts " << nmtrcs << std::endl;
+	read(istream, nmtrcs, bytes);
+	//istream.read(reinterpret_cast<char*>(&nmtrcs), sizeof(nmtrcs));
+	//bytes += istream.gcount();
 	
 	for ( ; nmtrcs > 0; --nmtrcs)
 	{
@@ -65,17 +68,15 @@ long32 MatrixGroupCounts::readMdx(std::istream &istream) throw (class Exception)
 		this->m_matrixGroupCounts.push_back(matrixGroupCount);
 	}
 	
-	std::cout << "Matrix group counts bytes " << bytes << std::endl;
-	
 	return bytes;
 }
 
-long32 MatrixGroupCounts::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize MatrixGroupCounts::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
 	
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

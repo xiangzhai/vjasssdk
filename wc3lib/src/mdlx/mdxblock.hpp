@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_MDXBLOCK_HPP
 #define WC3LIB_MDLX_MDXBLOCK_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -35,20 +36,22 @@ namespace mdlx
 class MdxBlock
 {
 	public:
-		MdxBlock(byte blockName[4], bool optional = true);
+		static const std::size_t blockNameSize = 4;
+
+		MdxBlock(byte blockName[blockNameSize], bool optional = true);
 		virtual ~MdxBlock();
 
 		const byte* blockName() const;
 		bool optional() const;
 		bool exists() const;
 
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 		
 		bool moveToBlockName(std::iostream &iostream);
 
 	protected:
-		byte m_blockName[4]; /// @todo byte or ascii?
+		byte m_blockName[blockNameSize]; /// @todo byte or ascii?
 		bool m_optional;
 		bool m_exists;
 };

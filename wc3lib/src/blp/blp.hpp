@@ -87,16 +87,9 @@ class Blp
 		enum Format
 		{
 			BlpFormat,
-
-#ifdef JPEG
 			JpegFormat,
-#endif
-#ifdef TGA
-			TgaFormat
-#endif
-#ifdef PNG
-			,PngFormat
-#endif
+			TgaFormat,
+			PngFormat
 		};
 		
 		enum Version
@@ -142,7 +135,10 @@ class Blp
 		void addMipMap(class MipMap *mipMap);
 		const std::list<class MipMap*>& mipMaps() const;
 
-		void clear();
+		/**
+		* Cleans all BLP data.
+		*/
+		void clean();
 		std::streamsize read(std::istream &istream, enum Format format) throw (class Exception);
 		std::streamsize write(std::ostream &ostream, enum Format format) throw (class Exception);
 		/**
@@ -150,18 +146,12 @@ class Blp
 		*/
 		std::streamsize readBlp(std::istream &istream) throw (class Exception);
 		std::streamsize writeBlp(std::ostream &ostream) throw (class Exception);
-#ifdef JPEG
 		std::streamsize readJpeg(std::istream &istream) throw (class Exception);
 		std::streamsize writeJpeg(std::ostream &ostream) throw (class Exception);
-#endif
-#ifdef TGA
 		std::streamsize readTga(std::istream &istream) throw (class Exception);
 		std::streamsize writeTga(std::ostream &ostream) throw (class Exception);
-#endif
-#ifdef PNG
 		std::streamsize readPng(std::istream &istream) throw (class Exception);
 		std::streamsize writePng(std::ostream &ostream) throw (class Exception);
-#endif
 
 		/**
 		* Adds mip map @param initialMipMap to mip map list and generates number - 1 new mip maps which are added to mip map list, too.
@@ -200,7 +190,7 @@ inline dword Blp::MipMap::height() const
 
 inline void Blp::MipMap::setColor(dword width, dword height, color rgb, byte alpha, byte paletteIndex) throw (class Exception)
 {
-	if (width >= this->m_width || width < 0 || height >= this->m_height || height < 0)
+	if (width >= this->m_width || height >= this->m_height)
 		throw Exception(boost::str(boost::format(_("Mip map: Invalid indices (width %1%, height %2%).")) % width % height));
 
 	this->m_colors[std::make_pair(width, height)].rgb = rgb;

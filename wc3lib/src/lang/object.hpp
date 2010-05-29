@@ -76,6 +76,7 @@ class Object
 #endif
 				
 				class Language *m_language;
+
 			private:
 				List(const List&);
 		};
@@ -87,7 +88,7 @@ class Object
 		static const std::string& objectHtmlPageLink(const class Object *object, const std::string &identifier = "-"); //should use the id
 #endif
 	
-		Object(class Object::List *list, const std::string &identifier, class SourceFile *sourceFile, std::size_t line);
+		Object(class Object::List *list, const std::string &identifier, class SourceFile *sourceFile = 0, std::size_t line = 0);
 #ifdef SQLITE		
 		Object(std::vector<Object::SqlValueDataType> &columnVector);
 #endif

@@ -39,14 +39,14 @@ void Normal::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Normal::writeMdl(std::ostream &ostream) throw (class Exception)
+void Normal::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Normal::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Normal::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
@@ -55,7 +55,7 @@ long32 Normal::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Normal::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Normal::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

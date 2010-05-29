@@ -101,26 +101,27 @@ std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&this->m_centerOffsetY), sizeof(this->m_centerOffsetY));
 	bytes += istream.gcount();
 	
+	this->m_tilepoints = std::map<std::pair<int32, int32>, class Tilepoint*>(this->m_maxX * this->m_maxY);
 	// The first tilepoint defined in the file stands for the lower left corner of the map when looking from the top, then it goes line by line (horizontal).
-	for (std::size_t y = 0; y < this->m_maxY; ++y)
+	for (int32 = 0; y < this->m_maxY; ++y)
 	{
-		for (std::size_t x = 0; x < this->m_maxX; ++x)
+		for (int32 x = 0; x < this->m_maxX; ++x)
 		{
 			class Tilepoint *tilepoint = new Tilepoint(this);
 			bytes += tilepoint->read(istream);
-			this->m_tilepoints.push_back(tilepoint);
+			this->m_tilepoints[x][y] = tilepoint;
 		}
 	}
 	
 	return bytes;
 }
 
-std::streamsize Environment::write(std::ostream &ostream) throw (class Exception)
+std::streamsize Environment::write(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-enum Environment::MainTileset Environment::convertCharToMainTileset(char value)
+enum Environment::MainTileset Environment::convertCharToMainTileset(char value) throw (class Exception)
 {
 	switch (value)
 	{
@@ -179,9 +180,9 @@ enum Environment::MainTileset Environment::convertCharToMainTileset(char value)
 			return Environment::BlackCitadel;
 	}
 	
-	std::cout << boost::str(boost::format(_("Environment: Character \'%1%\' does not refer to any main tileset.")) % value) << std::endl;
+	throw Exception(boost::str(boost::format(_("Environment: Character \'%1%\' does not refer to any main tileset.")) % value));
 	
-	return Environment::Ashenvale;
+	//return Environment::Ashenvale;
 }
 	
 }

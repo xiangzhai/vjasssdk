@@ -22,8 +22,6 @@
 #define WC3LIB_MDLX_MDLX_HPP
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -85,19 +83,19 @@ class Mdlx : public MdxBlock
 		class CollisionShapes* collisionShapes() const;
 
 		void readMdl(std::istream &istream) throw (class Exception);
-		void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
-
-#ifdef BLEND
+		void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 		void readBlend(const std::string &filePath) throw (class Exception);
-		void writeBlend(std::istream &istream) throw (class Exception);
-#endif
-
-#ifdef MAX
+		void writeBlend(std::ostream &ostream) const throw (class Exception);
 		void read3ds(std::istream &istream) throw (class Exception);
-		void write3ds(std::ostream &ostream) throw (class Exception);
-#endif
+		void write3ds(std::ostream &ostream) const throw (class Exception);
+
+		/**
+		* @param number If this value is 0 all matching paths will be changed.
+		* @return Returns the number of changed texture paths.
+		*/
+		std::size_t replaceTexturePaths(const ascii oldTexturePath[0x100], const ascii newTexturePath[0x100], std::size_t number = 0);
 
 	protected:
 		class Version *m_version; //VERS

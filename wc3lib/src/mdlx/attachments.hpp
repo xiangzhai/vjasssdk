@@ -42,12 +42,12 @@ class Attachments : public MdxBlock
 		virtual ~Attachments();
 
 		class Mdlx* mdlx() const;
-		std::list<class Attachment*> attachments() const;
+		const std::list<class Attachment*>& attachments() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &istream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &istream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
@@ -59,7 +59,7 @@ inline class Mdlx* Attachments::mdlx() const
 	return this->m_mdlx;
 }
 
-inline std::list<class Attachment*> Attachments::attachments() const
+inline const std::list<class Attachment*>& Attachments::attachments() const
 {
 	return this->m_attachments;
 }

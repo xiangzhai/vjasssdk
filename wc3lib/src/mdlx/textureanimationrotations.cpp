@@ -18,18 +18,36 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "scaling1.hpp"
+#include "textureanimationrotations.hpp"
+#include "textureanimationrotation.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-	
-Scaling1::Scaling1(class Scaling1s *scalings) : MdxScaling(scalings)
+
+TextureAnimationRotations::TextureAnimationRotations(class TextureAnimation *textureAnimation) : MdxScalings("KTAR", false), m_textureAnimation(textureAnimation)
 {
 }
 
+TextureAnimationRotations::~TextureAnimationRotations()
+{
+}
+
+void TextureAnimationRotations::readMdl(std::istream &istream) throw (class Exception)
+{
+}
+
+void TextureAnimationRotations::writeMdl(std::ostream &ostream) const throw (class Exception)
+{
+}
+
+class MdxScaling* TextureAnimationRotations::createNewMember()
+{
+	return new TextureAnimationRotation(this);
+}
+	
 }
 
 }

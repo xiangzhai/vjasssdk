@@ -43,13 +43,13 @@ void Cameras::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Cameras::writeMdl(std::ostream &ostream) throw (class Exception)
+void Cameras::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Cameras::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Cameras::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -70,9 +70,9 @@ long32 Cameras::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Cameras::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Cameras::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	if (bytes == 0)
 		return 0;

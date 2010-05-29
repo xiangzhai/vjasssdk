@@ -30,12 +30,17 @@
 namespace wc3lib
 {
 
+/**
+* Default exception class base.
+* Is used by all exception classes in wc3lib.
+*/
 class Exception : public virtual std::exception, public virtual boost::exception
 {
 	public:
-		Exception(const std::string &what) throw ();
+		Exception(const std::string &what = "") throw ();
 		Exception(const boost::format &what) throw ();
 		virtual ~Exception() throw ();
+		void appendWhat(const std::string &what);
 		const char* what() const throw ();
 
 	protected:

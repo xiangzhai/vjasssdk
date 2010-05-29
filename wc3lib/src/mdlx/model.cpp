@@ -18,7 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
+#include <iostream>
+
+#include <boost/format.hpp>
 
 #include "model.hpp"
 /// @todo Maybe we should one single "objects" include file.
@@ -51,7 +53,7 @@ void Model::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Model::writeMdl(std::ostream &ostream) throw (class Exception)
+void Model::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream << "Model \"" << this->m_name << "\" {\n";
 
@@ -88,23 +90,14 @@ void Model::writeMdl(std::ostream &ostream) throw (class Exception)
 		ostream << "\tNumEvents " << this->mdlx()->events()->events().size() << ",\n";
 */
 	
-	ostream << "\tBlendTime " << this->blendTime() << ",\n";
-
-	if (this->minExtX() != 0.0 || this->minExtY() != 0.0 || this->minExtZ() != 0.0)
-		ostream << "MinimumExtent { " << this->minExtX() << ", " << this->minExtY() << ", " << this->minExtZ() << " },\n";
-
-	if (this->maxExtX() != 0.0 || this->maxExtY() != 0.0 || this->maxExtZ() != 0.0)
-		ostream << "MaxmimumExtent { " << this->maxExtX() << ", " << this->maxExtY() << ", " << this->maxExtZ() << " },\n";
-
-	if (this->boundsRadius()!= 0.0)
-		ostream << "BoundsRadius " << this->boundsRadius() << ",\n";
+	Bounds::writeMdl(ostream);
 
 	ostream << "}\n";
 }
 
-long32 Model::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Model::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	long32 nbytes = 0;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
@@ -116,58 +109,29 @@ long32 Model::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
 	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtX), sizeof(this->m_minExtX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtY), sizeof(this->m_minExtY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
-	bytes += istream.gcount();
+	bytes += Bounds::readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_blendTime), sizeof(this->m_blendTime));
 	bytes += istream.gcount();
 	
-	if (bytes - 4 - sizeof(nbytes) != nbytes) //- identifier length
-	{
-		/// @todo Exception required?
-		fprintf(stderr, _("Model: Warning - Read byte count doesn't fit with real byte count.\nRead byte count: %d.\nReal byte count: %d.\n"), nbytes, bytes);
-	}
+	/// @todo Exception required?
+	if (bytes - MdxBlock::blockNameSize - sizeof(nbytes) != nbytes) //- identifier length
+		std::cerr << boost::format(_("Model: Warning - Read byte count doesn't fit with real byte count.\nRead byte count: %1%.\nReal byte count: %2%.")) % nbytes % bytes << std::endl;
 	
 	return bytes;
 }
 
-long32 Model::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Model::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	long32 nbytes = sizeof(*this); //nbytes, excluding byte count
-	ostream.write(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	ostream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
 	bytes += sizeof(nbytes);
 	ostream.write(this->m_name, sizeof(this->m_name));
 	bytes += sizeof(this->m_name);
-	ostream.write(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
+	ostream.write(reinterpret_cast<const char*>(&this->m_unknown0), sizeof(this->m_unknown0));
 	bytes += sizeof(this->m_unknown0);
-	ostream.write(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += sizeof(this->m_boundsRadius);
-	ostream.write(reinterpret_cast<char*>(&this->m_minExtX), sizeof(this->m_minExtX));
-	bytes += sizeof(this->m_minExtX);
-	ostream.write(reinterpret_cast<char*>(&this->m_minExtY), sizeof(this->m_minExtY));
-	bytes += sizeof(this->m_minExtY);
-	ostream.write(reinterpret_cast<char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
-	bytes += sizeof(this->m_minExtZ);
-	ostream.write(reinterpret_cast<char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
-	bytes += sizeof(this->m_maxExtX);
-	ostream.write(reinterpret_cast<char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
-	bytes += sizeof(this->m_maxExtY);
-	ostream.write(reinterpret_cast<char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
-	bytes += sizeof(this->m_maxExtZ);
-	ostream.write(reinterpret_cast<char*>(&this->m_blendTime), sizeof(this->m_blendTime));
+	bytes += Bounds::writeMdx(ostream);
+	ostream.write(reinterpret_cast<const char*>(&this->m_blendTime), sizeof(this->m_blendTime));
 	bytes += sizeof(this->m_blendTime);
 	
 	return bytes;

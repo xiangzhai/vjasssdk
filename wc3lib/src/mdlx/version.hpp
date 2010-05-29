@@ -29,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-//VERS
+/// tag VERS
 class Version : public MdxBlock
 {
 	public:
@@ -40,11 +40,11 @@ class Version : public MdxBlock
 		long32 version() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
-		static const long32 currentVersion = 800;
+		static const long32 currentVersion;
 
 	protected:
 		class Mdlx *m_mdlx;

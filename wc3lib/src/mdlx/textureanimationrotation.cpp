@@ -18,27 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility3s.hpp"
+#include "textureanimationrotation.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-Visibility3s::Visibility3s(class ParticleEmitter *particleEmitter) : MdxAlphas("KPEV"), m_particleEmitter(particleEmitter)
-{
-}
-
-Visibility3s::~Visibility3s()
-{
-}
-
-void Visibility3s::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Visibility3s::writeMdl(std::ostream &ostream) throw (class Exception)
+	
+TextureAnimationRotation::TextureAnimationRotation(class TextureAnimationRotations *rotations) : MdxScaling(rotations)
 {
 }
 

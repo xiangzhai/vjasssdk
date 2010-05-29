@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "mdxalphas.hpp"
 #include "mdxalpha.hpp"
 
@@ -33,13 +35,13 @@ MdxAlphas::MdxAlphas(byte blockName[4], bool optional) : MdxBlock(blockName, opt
 
 MdxAlphas::~MdxAlphas()
 {
-	for (std::list<class MdxAlpha*>::iterator iterator = this->m_alphas.begin(); iterator != this->m_alphas.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class MdxAlpha *alpha, this->m_alphas)
+		delete alpha;
 }
 		
-long32 MdxAlphas::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdxAlphas::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -62,9 +64,9 @@ long32 MdxAlphas::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 MdxAlphas::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize MdxAlphas::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	if (bytes == 0)
 		return 0;
@@ -77,8 +79,8 @@ long32 MdxAlphas::writeMdx(std::ostream &ostream) throw (class Exception)
 	ostream.write(reinterpret_cast<const char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
 	bytes += sizeof(this->m_globalSequenceId);
 	
-	for (std::list<class MdxAlpha*>::iterator iterator = this->m_alphas.begin(); iterator != this->m_alphas.end(); ++iterator)
-		bytes += (*iterator)->writeMdx(ostream);
+	BOOST_FOREACH(const class MdxAlpha *alpha, this->m_alphas)
+		bytes += alpha->writeMdx(ostream);
 	
 	return bytes;
 }

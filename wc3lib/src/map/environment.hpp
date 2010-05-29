@@ -24,7 +24,7 @@
 #include <istream>
 #include <ostream>
 #include <list>
-#include <vector>
+#include <map>
 #include <string>
 
 #include "platform.hpp"
@@ -70,18 +70,18 @@ class Environment
 		Environment(class W3m *w3m);
 		
 		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 		
 		int32 mapWidth() const;
 		int32 mapHeight() const;
-		
+
 		const class Tilepoint* tilepoint(int32 x, int32 y) const;
 		
 		static char* tilesetIdToCString(int32 tilesetId);
 		static std::string tilesetIdToString(int32 tilesetId);
 		
 	protected:
-		static enum MainTileset convertCharToMainTileset(char value);
+		static enum MainTileset convertCharToMainTileset(char value) throw (class Exception);
 		
 		class W3m *m_w3m;
 		int32 m_version;
@@ -93,7 +93,7 @@ class Environment
 		int32 m_maxY;
 		float32 m_centerOffsetX;
 		float32 m_centerOffsetY;
-		std::vector<class Tilepoint*> m_tilepoints;
+		std::map<std::pair<int32, int32>, class Tilepoint*> m_tilepoints;
 		
 };
 
@@ -116,15 +116,18 @@ inline const class Tilepoint* Environment::tilepoint(int32 x, int32 y) const
 
 }
 
- char* tilesetIdToCString(int32 tilesetId);
-
-static std::string tilesetIdToString(int32 tilesetId);
+char* Environment::tilesetIdToCString(int32 tilesetId)
 {
 	unsigned char output[5];
 	memcpy(reinterpret_cast<void*>(output), reinterpret_cast<const void*>(&tilesetId), 4);
 	output[4] = '\0';
-	
+
 	return (char*)output;
+}
+
+std::string Environment::tilesetIdToString(int32 tilesetId);
+{
+	return Environment::tilesetIdToCString(tilesetId);
 }
 
 

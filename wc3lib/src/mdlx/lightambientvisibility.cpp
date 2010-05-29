@@ -18,36 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "rotation1s.hpp"
-#include "rotation1.hpp"
+#include "lightambientvisibility.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-Rotation1s::Rotation1s(class TextureAnimation *textureAnimation) : MdxScalings("KTAR", false), m_textureAnimation(textureAnimation)
-{
-}
-
-Rotation1s::~Rotation1s()
-{
-}
-
-void Rotation1s::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Rotation1s::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
-class MdxScaling* Rotation1s::createNewMember()
-{
-	return new Rotation1(this);
-}
 	
+LightAmbientVisibility::LightAmbientVisibility(class LightAmbientVisibilities *visibilities) : MdxAlpha(visibilities)
+{
+}
+
 }
 
 }

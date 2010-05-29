@@ -34,11 +34,11 @@ Normals::~Normals()
 {
 }
 
-void Normals::readMdl(std::fstream &fstream) throw (class Exception)
+void Normals::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Normals::writeMdl(std::fstream &fstream) throw (class Exception)
+void Normals::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

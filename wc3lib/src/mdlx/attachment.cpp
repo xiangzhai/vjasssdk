@@ -80,7 +80,7 @@ void Attachment::readMdl(std::istream &istream) throw (class Exception)
 	sstream >> this->m_objectId;
 }
 
-void Attachment::writeMdl(std::ostream &ostream) throw (class Exception)
+void Attachment::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	// Observe properties of an Object.
 	// Path only appears if its length is greater than 0. 
@@ -132,11 +132,11 @@ void Attachment::writeMdl(std::ostream &ostream) throw (class Exception)
 }
 
 
-long32 Attachment::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Attachment::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi = 0;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	bytes += Object::readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_path), sizeof(this->m_path));
 	bytes += istream.gcount();
@@ -152,7 +152,7 @@ long32 Attachment::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Attachment::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Attachment::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

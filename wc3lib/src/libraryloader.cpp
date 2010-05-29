@@ -28,49 +28,44 @@
 namespace wc3lib
 {
 
-std::map<boost::filesystem::path, void*> LibraryLoader::m_libraries;
-
-bool LibraryLoader::libraryHasBeenLoaded(const boost::filesystem::path &path)
+class LibraryLoader::Handle* LibraryLoader::loadLibrary(const boost::filesystem::path &path) throw (class Exception)
 {
-	return self::m_libraries.find(path) != self::m_libraries.end();
-}
-
-void LibraryLoader::loadLibrary(const boost::filesystem::path &path) throw (class Exception)
-{
-	// Library has already been loaded.
-	if (self::libraryHasBeenLoaded(path))
-		return;
-
 	void *handle = dlopen(path.string().c_str(), RTLD_LAZY);
 
 	if (handle == NULL)
 		throw Exception(boost::format(_("Error while loading shared object \"%1%\": %2%")) % path.string() % dlerror());
 
-	self::m_libraries.insert(std::make_pair(path, handle));
+	class Handle *result = new Handle;
+	result->handle = handle;
+	result->path = path;
+
+	return result;
 }
 
-void LibraryLoader::unloadLibrary(const boost::filesystem::path &path) throw (class Exception)
+void LibraryLoader::unloadLibrary(class Handle *handle) throw (class Exception)
 {
+	if (handle == 0)
+		throw Exception(_("Error while unloading shared object. Handle is 0."));
+
 	// Library hasn't already been loaded.
-	if (dlclose(self::m_libraries[path]) != 0)
-		throw Exception(boost::format(_("Error while unloading shared object \"%1%\". It has never been loaded.")) % path.string());
+	if (dlclose(handle->handle) != 0)
+		throw Exception(boost::format(_("Error while unloading shared object \"%1%\". It has never been loaded.")) % handle->path.string());
+
+	delete handle;
 }
 
-void* LibraryLoader::librarySymbol(const boost::filesystem::path &path, const std::string symbolName) throw (class Exception)
+void* LibraryLoader::librarySymbol(const class Handle &handle, const std::string symbolName) throw (class Exception)
 {
-	if (!self::libraryHasBeenLoaded(path))
-		throw Exception(boost::format(_("Error while loading symbol \"%1%\" from shared object \"%2%\": Shared object has never been loaded.")) % symbolName % path.string());
-
 	dlerror(); // clean up errors
 
 	// get symbol
-	void *handle = dlsym(self::m_libraries[path], symbolName.c_str());
+	void *symbolHandle = dlsym(handle.handle, symbolName.c_str());
 
 	// got error
 	if (dlerror() != NULL)
-		throw Exception(boost::format(_("Error while loading symbol \"%1%\" from shared object \"%2%\": %3%")) % symbolName % path.string() % dlerror());
+		throw Exception(boost::format(_("Error while loading symbol \"%1%\" from shared object \"%2%\": %3%")) % symbolName % handle.path.string() % dlerror());
 
-	return handle;
+	return symbolHandle;
 }
 
 LibraryLoader::LibraryLoader()

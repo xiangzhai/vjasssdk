@@ -39,21 +39,21 @@ void TextureVertex::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureVertex::writeMdl(std::ostream &ostream) throw (class Exception)
+void TextureVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 TextureVertex::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize TextureVertex::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
 	bytes += istream.gcount();
 	
 	return bytes;
 }
 
-long32 TextureVertex::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize TextureVertex::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

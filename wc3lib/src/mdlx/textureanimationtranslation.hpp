@@ -39,7 +39,7 @@ class TextureAnimationTranslation : public MdxScaling
 		class TextureAnimationTranslations* translations() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class TextureAnimationTranslations* TextureAnimationTranslation::translations() const

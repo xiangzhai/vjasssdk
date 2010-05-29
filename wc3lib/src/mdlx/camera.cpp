@@ -48,15 +48,15 @@ void Camera::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Camera::writeMdl(std::ostream &ostream) throw (class Exception)
+void Camera::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Camera::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Camera::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(this->m_name, sizeof(this->m_name));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_positionX), sizeof(this->m_positionX));
@@ -88,7 +88,7 @@ long32 Camera::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Camera::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Camera::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
 #include "primitivevertices.hpp"
 #include "primitivevertex.hpp"
 
@@ -47,9 +45,9 @@ void PrimitiveVertices::writeMdl(std::ostream &ostream) throw (class Exception)
 {
 }
 
-long32 PrimitiveVertices::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveVertices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -57,7 +55,6 @@ long32 PrimitiveVertices::readMdx(std::istream &istream) throw (class Exception)
 	long32 ntris = 0;
 	istream.read(reinterpret_cast<char*>(&ntris), sizeof(ntris));
 	bytes += istream.gcount();
-	std::cout << "Primitive vertices " << ntris << std::endl;
 	
 	for ( ; ntris > 0; --ntris)
 	{
@@ -66,14 +63,12 @@ long32 PrimitiveVertices::readMdx(std::istream &istream) throw (class Exception)
 		this->m_primitiveVertices.push_back(primitiveVertex);
 	}
 	
-	std::cout << "Primitive vertices bytes " << bytes << std::endl;
-	
 	return bytes;
 }
 
-long32 PrimitiveVertices::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize PrimitiveVertices::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	if (bytes == 0)
 		return 0;

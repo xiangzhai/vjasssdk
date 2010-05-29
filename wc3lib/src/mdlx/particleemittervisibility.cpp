@@ -18,51 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_SCALING1S_HPP
-#define WC3LIB_MDLX_SCALING1S_HPP
-
-#include "mdxscalings.hpp"
+#include "particleemittervisibility.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-
-class TextureAnimation;
-class Scaling1;
-
-//KTAS
-class Scaling1s : public MdxScalings
+	
+ParticleEmitterVisibility::ParticleEmitterVisibility(class ParticleEmitterVisibilities *visibilities) : MdxAlpha(visibilities)
 {
-	public:
-		Scaling1s(class TextureAnimation *textureAnimation);
-		virtual ~Scaling1s();
-
-		class TextureAnimation* textureAnimation() const;
-		const std::list<class Scaling1*>& scalings() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-
-	protected:
-		virtual class MdxScaling* createNewMember();
-		
-		class TextureAnimation *m_textureAnimation;
-};
-
-inline class TextureAnimation* Scaling1s::textureAnimation() const
-{
-	return this->m_textureAnimation;
-}
-
-inline const std::list<class Scaling1*>& Scaling1s::scalings() const
-{
-	return reinterpret_cast<const std::list<class Scaling1*>&>(this->m_scalings);
 }
 
 }
 
 }
-
-#endif

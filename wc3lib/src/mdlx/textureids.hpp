@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_TEXTUREIDS_HPP
 #define WC3LIB_MDLX_TEXTUREIDS_HPP
 
-#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -37,7 +34,7 @@ namespace mdlx
 class Materials;
 class Layer;
 
-//(KMTF)
+/// (KMTF), state of TextureId is long not float, therefore this class does not inherit MdxAlphas.
 class TextureIds : public MdxBlock
 {
 	public:
@@ -55,12 +52,12 @@ class TextureIds : public MdxBlock
 		class Layer* layer() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
-		std::list<class TextureId*> textureIds() const;
+		const std::list<class TextureId*>& textureIds() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Layer *m_layer;
@@ -84,7 +81,7 @@ inline long32 TextureIds::globalSequenceId() const
 	return this->m_globalSequenceId;
 }
 
-inline std::list<class TextureId*> TextureIds::textureIds() const
+inline const std::list<class TextureId*>& TextureIds::textureIds() const
 {
 	return this->m_textureIds;
 }

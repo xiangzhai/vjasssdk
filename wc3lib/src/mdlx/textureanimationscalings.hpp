@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_VISIBILITY1_HPP
-#define WC3LIB_MDLX_VISIBILITY1_HPP
+#ifndef WC3LIB_MDLX_TEXTURE_ANIMATION_SCALINGS_HPP
+#define WC3LIB_MDLX_TEXTURE_ANIMATION_SCALINGS_HPP
 
-#include "mdxalpha.hpp"
-#include "visibility1s.hpp"
+#include "mdxscalings.hpp"
 
 namespace wc3lib
 {
@@ -30,17 +29,36 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Visibility1 : public MdxAlpha
+class TextureAnimation;
+class TextureAnimationScaling;
+
+/// tag KTAS
+class TextureAnimationScalings : public MdxScalings
 {
 	public:
-		Visibility1(class Visibility1s *visibilities);
+		TextureAnimationScalings(class TextureAnimation *textureAnimation);
+		virtual ~TextureAnimationScalings();
+
+		class TextureAnimation* textureAnimation() const;
+		const std::list<class TextureAnimationScaling*>& scalings() const;
+
+		virtual void readMdl(std::istream &istream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+
+	protected:
+		virtual class MdxScaling* createNewMember();
 		
-		class Visibility1s* visibilities() const;
+		class TextureAnimation *m_textureAnimation;
 };
 
-inline class Visibility1s* Visibility1::visibilities() const
+inline class TextureAnimation* TextureAnimationScalings::textureAnimation() const
 {
-	return dynamic_cast<class Visibility1s*>(this->m_alphas);
+	return this->m_textureAnimation;
+}
+
+inline const std::list<class TextureAnimationScaling*>& TextureAnimationScalings::scalings() const
+{
+	return reinterpret_cast<const std::list<class TextureAnimationScaling*>&>(this->m_scalings);
 }
 
 }

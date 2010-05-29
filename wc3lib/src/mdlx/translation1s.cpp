@@ -39,7 +39,7 @@ void Translation1s::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Translation1s::writeMdl(std::ostream &ostream) throw (class Exception)
+void Translation1s::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

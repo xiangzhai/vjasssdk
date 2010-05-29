@@ -45,7 +45,7 @@ class GeosetAnimationColors : public MdxScalings
 		const std::list<class GeosetAnimationColor*>& geosetAnimationColors() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class GeosetAnimation *m_geosetAnimation;

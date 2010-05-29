@@ -38,19 +38,19 @@ void GroupVertex::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GroupVertex::writeMdl(std::ostream &ostream) throw (class Exception)
+void GroupVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 GroupVertex::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GroupVertex::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_data), sizeof(this->m_data));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	
 	return bytes;
 }
 
-long32 GroupVertex::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize GroupVertex::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

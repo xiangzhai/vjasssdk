@@ -20,10 +20,13 @@
 
 #include <sstream>
 
-#include "objects.hpp"
+#include "sourcefile.hpp"
 #include "internationalisation.hpp"
 
-namespace vjassdoc
+namespace wc3lib
+{
+
+namespace lang
 {
 
 #ifdef SQLITE
@@ -40,7 +43,7 @@ void SourceFile::initClass()
 }
 #endif
 
-SourceFile::SourceFile(const std::string &identifier, const std::string &path) : Object(identifier, 0, 0, 0), m_path(path)
+SourceFile::SourceFile(class List *list, const boost::filesystem::path &path) : Object(list, path.filename()), m_path(path)
 {
 }
 
@@ -54,14 +57,15 @@ void SourceFile::init()
 {
 }
 
-void SourceFile::pageNavigation(std::ofstream &file) const
+#ifdef HTML
+void SourceFile::writeHtmlPageNavigation(std::ofstream &file) const
 {
 	file
 	<< "\t\t\t<li><a href=\"#Code\">"	<< _("Code") << "</a></li>\n"
 	;
 }
 
-void SourceFile::page(std::ofstream &file) const
+void SourceFile::writeHtmlPageNavigationContent(std::ofstream &file) const
 {
 	file
 	<< "\t\t<h2><a name=\"Code\">" << _("Code") << "</a></h2>\n"
@@ -87,7 +91,7 @@ void SourceFile::page(std::ofstream &file) const
 	;
 
 }
-
+#endif
 #ifdef SQLITE
 std::string SourceFile::sqlStatement() const
 {
@@ -99,5 +103,7 @@ std::string SourceFile::sqlStatement() const
 	return sstream.str();
 }
 #endif
+
+}
 
 }

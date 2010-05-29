@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 #include "bones.hpp"
 #include "bone.hpp"
@@ -36,21 +37,21 @@ Bones::Bones(class Mdlx *mdlx) : MdxBlock("BONE"), m_mdlx(mdlx)
 
 Bones::~Bones()
 {
-	for (std::list<class Bone*>::iterator iterator = this->m_bones.begin(); iterator != this->m_bones.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class Bone *bone, this->m_bones)
+		delete bone;
 }
 
 void Bones::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Bones::writeMdl(std::ostream &ostream) throw (class Exception)
+void Bones::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Bones::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Bones::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -73,7 +74,7 @@ long32 Bones::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Bones::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Bones::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

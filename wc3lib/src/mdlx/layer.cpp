@@ -48,11 +48,11 @@ void Layer::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Layer::writeMdl(std::ostream &ostream) throw (class Exception)
+void Layer::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Layer::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Layer::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 bytes = 0;
 	long32 nbytesi = 0;
@@ -95,7 +95,7 @@ long32 Layer::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Layer::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Layer::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

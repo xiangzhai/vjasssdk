@@ -23,7 +23,7 @@
 #include "translation1s.hpp"
 #include "rotation0s.hpp"
 #include "scaling0s.hpp"
-#include "visibility3s.hpp"
+#include "particleemittervisibilities.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter::ParticleEmitter(class ParticleEmitters *particleEmitters) : m_particleEmitters(particleEmitters), m_translations(new Translation1s(particleEmitters->mdlx())),  m_rotations(new Rotation0s(particleEmitters->mdlx())), m_scalings(new Scaling0s(particleEmitters->mdlx())), m_visibilities(new Visibility3s(this))
+ParticleEmitter::ParticleEmitter(class ParticleEmitters *particleEmitters) : m_particleEmitters(particleEmitters), m_translations(new Translation1s(particleEmitters->mdlx())),  m_rotations(new Rotation0s(particleEmitters->mdlx())), m_scalings(new Scaling0s(particleEmitters->mdlx())), m_visibilities(new ParticleEmitterVisibilities(this))
 {
 }
 
@@ -47,15 +47,15 @@ void ParticleEmitter::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void ParticleEmitter::writeMdl(std::ostream &ostream) throw (class Exception)
+void ParticleEmitter::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 ParticleEmitter::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	long32 nbytesikg; // inclusive bytecount including KGXXs
 	istream.read(reinterpret_cast<char*>(&nbytesikg), sizeof(nbytesikg));
 	bytes += istream.gcount();
@@ -91,7 +91,7 @@ long32 ParticleEmitter::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 ParticleEmitter::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize ParticleEmitter::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

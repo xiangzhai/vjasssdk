@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,15 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility3.hpp"
+#include "brush.hpp"
 
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
-	
-Visibility3::Visibility3(class Visibility3s *visibilities) : MdxAlpha(visibilities)
+
+Brush::Brush(class TerrainEditor *terrainEditor) : m_terrainEditor(terrainEditor)
 {
 }
 

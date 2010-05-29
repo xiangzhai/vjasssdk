@@ -31,6 +31,8 @@ namespace wc3lib
 namespace map
 {
 
+Pathmap::identifier[4] = { 'M', 'P', '3', 'W' };
+
 static struct Header
 {
 	char8 fileId[4]; //[4]: file ID = 'MP3W'

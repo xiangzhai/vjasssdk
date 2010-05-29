@@ -32,7 +32,7 @@ namespace mdlx
 class RibbonEmitter;
 class RibbonEmitterHeightAbove;
 
-//KRHA
+/// KRHA
 class RibbonEmitterHeightsAbove : public MdxAlphas
 {
 	public:
@@ -43,7 +43,7 @@ class RibbonEmitterHeightsAbove : public MdxAlphas
 		const std::list<class RibbonEmitterHeightAbove*>& heights() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class RibbonEmitter *m_ribbonEmitter;

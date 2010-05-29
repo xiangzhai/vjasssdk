@@ -53,14 +53,15 @@ void OgreMdlx::refresh() throw (class Exception)
 		this->m_mesh = meshManager->createManual(this->m_mdlx->model()->name(), "MDLX");
 	
 	//else if (this->m_mesh->
+	/// @todo bounds radius, minimum and maximum extent are for Warcraft rendering only?
 	this->m_mesh->_setBoundingSphereRadius(this->m_mdlx->model()->boundsRadius());
 	this->m_mesh->_setBounds(Ogre::AxisAlignedBox(
-		this->m_mdlx->model()->minExtX(),
-		this->m_mdlx->model()->minExtY(),
-		this->m_mdlx->model()->minExtZ(),
-		this->m_mdlx->model()->maxExtX(),
-		this->m_mdlx->model()->maxExtY(),
-		this->m_mdlx->model()->maxExtZ()
+		this->m_mdlx->model()->minimumExtent().x,
+		this->m_mdlx->model()->minimumExtent().y,
+		this->m_mdlx->model()->minimumExtent().z,
+		this->m_mdlx->model()->maximumExtent().x,
+		this->m_mdlx->model()->maximumExtent().y,
+		this->m_mdlx->model()->maximumExtent().z
 		)
 	);
 	

@@ -72,7 +72,6 @@ class Parser
 		std::size_t parse(const boost::filesystem::path &path, class Language *initialSourceFileLanguage = 0) throw (class Exception);
 		std::size_t parse(const std::list<boost::filesystem::path> &paths, class Language *initialSourceFileLanguage = 0) throw (class Exception);
 		void prepareObjects();
-		void sortObjectsAlphabetically();
 		void showSyntaxErrors(std::ostream &ostream);
 #ifdef SQLITE
 		/**
@@ -156,18 +155,6 @@ inline const class File& Parser::file() const
 inline const std::map<std::string, class Language*>& Parser::languages() const
 {
 	return this->m_languages;
-}
-
-inline void Parser::setCurrentLanguage(class Language *language)
-{
-	this->m_currentLanguage = language;
-	
-	if (this->m_languages.find(language->name()) == this->m_languages.end())
-	{
-		/// @todo Implement map
-		this->m_languages.
-		this->m_languages.insert(this->m_languages.find(language->name()), language);
-	
 }
 
 inline const class Language& Parser::currentLanguage() const

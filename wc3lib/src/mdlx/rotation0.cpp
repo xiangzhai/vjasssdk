@@ -39,14 +39,14 @@ void Rotation0::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Rotation0::writeMdl(std::ostream &ostream) throw (class Exception)
+void Rotation0::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Rotation0::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Rotation0::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_a), sizeof(this->m_a));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_b), sizeof(this->m_b));
@@ -79,7 +79,7 @@ long32 Rotation0::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Rotation0::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Rotation0::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

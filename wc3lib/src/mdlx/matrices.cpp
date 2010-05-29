@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "matrices.hpp"
 #include "matrix.hpp"
 
@@ -33,21 +35,21 @@ Matrices::Matrices(class Geoset *geoset) : MdxBlock("MATS"), m_geoset(geoset)
 
 Matrices::~Matrices()
 {
-	for (std::list<class Matrix*>::iterator iterator = this->m_matrices.begin(); iterator != this->m_matrices.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class Matrix *matrix, this->m_matrices)
+		delete matrix;
 }
 
 void Matrices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Matrices::writeMdl(std::ostream &ostream) throw (class Exception)
+void Matrices::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Matrices::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Matrices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -66,9 +68,9 @@ long32 Matrices::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Matrices::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Matrices::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

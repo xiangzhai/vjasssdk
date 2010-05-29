@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_PRIMITIVESIZES_HPP
 #define WC3LIB_MDLX_PRIMITIVESIZES_HPP
 
-#include <iostream>
 #include <list>
 
 #include "mdxblock.hpp"
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -45,12 +42,12 @@ class PrimitiveSizes : public MdxBlock
 		virtual ~PrimitiveSizes();
 
 		class Geoset* geoset() const;
-		std::list<class PrimitiveSize*> primitiveSizes() const;
+		const std::list<class PrimitiveSize*>& primitiveSizes() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Geoset *m_geoset;
@@ -62,7 +59,7 @@ inline class Geoset* PrimitiveSizes::geoset() const
 	return this->m_geoset;
 }
 
-inline std::list<class PrimitiveSize*> PrimitiveSizes::primitiveSizes() const
+inline const std::list<class PrimitiveSize*>& PrimitiveSizes::primitiveSizes() const
 {
 	return this->m_primitiveSizes;
 }

@@ -111,4 +111,7 @@ const std::string& sqlFilteredString(const std::string &value)
 	return result;
 }
 #endif
+
+}
+
 }

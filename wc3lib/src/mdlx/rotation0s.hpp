@@ -34,7 +34,7 @@ namespace mdlx
 class Mdlx;
 class Rotation0;
 
-//KGRT
+/// KGRT
 class Rotation0s : public MdxBlock
 {
 	public:
@@ -52,12 +52,12 @@ class Rotation0s : public MdxBlock
 		class Mdlx* mdlx() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
-		std::list<class Rotation0*> rotations() const;
+		const std::list<class Rotation0*>& rotations() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
@@ -81,7 +81,7 @@ inline long32 Rotation0s::globalSequenceId() const
 	return this->m_globalSequenceId;
 }
 
-inline std::list<class Rotation0*> Rotation0s::rotations() const
+inline const std::list<class Rotation0*>& Rotation0s::rotations() const
 {
 	return this->m_rotations;
 }

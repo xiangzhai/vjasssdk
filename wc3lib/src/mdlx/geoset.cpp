@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+#include <boost/format.hpp>
+
 #include "geoset.hpp"
 #include "geosets.hpp"
 #include "vertices.hpp"
@@ -39,12 +42,15 @@ namespace wc3lib
 namespace mdlx
 {
 
-Geoset::Geoset(class Geosets *geosets) : m_geosets(geosets), m_vertices(new Vertices(this)), m_normals(new Normals(this)),  m_primitveTypes(new PrimitiveTypes(this)), m_primitiveSizes(new PrimitiveSizes(this)),  m_primitiveVertices(new PrimitiveVertices(this)),  m_groupVertices(new GroupVertices(this)), m_matrixGroupCounts(new MatrixGroupCounts(this)),  m_matrices(new Matrices(this)), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0), m_texturePatches(new TexturePatches(this)), m_textureVertices(new TextureVertices(this))
+Geoset::Geoset(class Geosets *geosets) : m_geosets(geosets), m_vertices(new Vertices(this)), m_normals(new Normals(this)),  m_primitveTypes(new PrimitiveTypes(this)), m_primitiveSizes(new PrimitiveSizes(this)),  m_primitiveVertices(new PrimitiveVertices(this)),  m_groupVertices(new GroupVertices(this)), m_matrixGroupCounts(new MatrixGroupCounts(this)),  m_matrices(new Matrices(this)), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_texturePatches(new TexturePatches(this)), m_textureVertices(new TextureVertices(this))
 {
 }
 
 Geoset::~Geoset()
 {
+	BOOST_FOREACH(class Ganimation *ganimation, this->m_ganimations)
+		delete ganimation;
+
 	delete this->m_vertices;
 	delete this->m_normals;
 	delete this->m_primitveTypes;
@@ -59,27 +65,23 @@ Geoset::~Geoset()
 
 void Geoset::readMdl(std::istream &istream) throw (class Exception)
 {
+	throw Exception(_("Geoset::readMdl: Not implemented yet."));
 }
 
-void Geoset::writeMdl(std::ostream &ostream) throw (class Exception)
+void Geoset::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	throw Exception(_("Geoset::writeMdl: Not implemented yet."));
 }
 
-long32 Geoset::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Geoset::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytes = 0;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
 	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geoset: 0 byte geoset.\n"));
-		
-		throw Exception(message);
-	}
+		throw Exception(boost::format(_("Geoset: To small byte count (%1%).")) % nbytes);
 	
-	std::cout << "Test 1" << std::endl;
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	bytes += this->m_vertices->readMdx(istream);
 	bytes += this->m_normals->readMdx(istream);
 	bytes += this->m_primitveTypes->readMdx(istream);
@@ -88,32 +90,16 @@ long32 Geoset::readMdx(std::istream &istream) throw (class Exception)
 	bytes += this->m_groupVertices->readMdx(istream);
 	bytes += this->m_matrixGroupCounts->readMdx(istream);
 	bytes += this->m_matrices->readMdx(istream);
-	std::cout << "Test 2" << std::endl;
 	istream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_selectionGroup), sizeof(this->m_selectionGroup));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_selectable), sizeof(this->m_selectable));
 	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
-	bytes += istream.gcount();
-	std::cout << "Test 3" << std::endl;
+	bytes += Bounds::readMdx(istream);
 	long32 nanim = 0;
 	istream.read(reinterpret_cast<char*>(&nanim), sizeof(nanim));
 	bytes += istream.gcount();
-	std::cout << "Test 4 nanimations " << nanim << std::endl;
 	
 	for ( ; nanim > 0; --nanim)
 	{
@@ -122,18 +108,17 @@ long32 Geoset::readMdx(std::istream &istream) throw (class Exception)
 		this->m_ganimations.push_back(ganimation);
 	}
 	
-	std::cout << "Test 5" << std::endl;
 	bytes += this->m_texturePatches->readMdx(istream);
 	/// @todo Doesn't exist!!!!
 	bytes += this->m_textureVertices->readMdx(istream);
 	
-	std::cout << "Test 192832948" << std::endl;
-	
 	return bytes;
 }
 
-long32 Geoset::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Geoset::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
+	throw Exception(_("Geoset::writeMdx: Not implemented yet."));
+
 	return 0;
 }
 

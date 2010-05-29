@@ -39,7 +39,7 @@ class RibbonEmitterHeightAbove : public MdxAlpha
 		class RibbonEmitterHeightsAbove* heights() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class RibbonEmitterHeightsAbove* RibbonEmitterHeightAbove::heights() const

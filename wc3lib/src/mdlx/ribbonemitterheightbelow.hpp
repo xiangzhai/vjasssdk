@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERHEIGHTBELOW_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERHEIGHTBELOW_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdxalpha.hpp"
+#include "ribbonemitterheightsbelow.hpp"
 
 namespace wc3lib
 {
@@ -33,58 +30,21 @@ namespace wc3lib
 namespace mdlx
 {
 
-class RibbonEmitterHeightsBelow;
-
-class RibbonEmitterHeightBelow
+class RibbonEmitterHeightBelow : public MdxAlpha
 {
 	public:
 		RibbonEmitterHeightBelow(class RibbonEmitterHeightsBelow *heights);
 		virtual ~RibbonEmitterHeightBelow();
 
 		class RibbonEmitterHeightsBelow* heights() const;
-		long32 frame() const;
-		float32 state() const;
-		float32 inTan() const;
-		float32 outTan() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
-
-	protected:
-		class RibbonEmitterHeightsBelow *m_heights;
-		long32 m_frame;
-		float32 m_state; //(0 or 1)
-		//if (LineType > 1) {
-		float32 m_inTan;
-		float32 m_outTan;
-		//}
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class RibbonEmitterHeightsBelow* RibbonEmitterHeightBelow::heights() const
 {
-	return this->m_heights;
-}
-
-inline long32 RibbonEmitterHeightBelow::frame() const
-{
-	return this->m_frame;
-}
-
-inline float32 RibbonEmitterHeightBelow::state() const
-{
-	return this->m_state;
-}
-
-inline float32 RibbonEmitterHeightBelow::inTan() const
-{
-	return this->m_inTan;
-}
-
-inline float32 RibbonEmitterHeightBelow::outTan() const
-{
-	return this->m_outTan;
+	return dynamic_cast<class RibbonEmitterHeightsBelow*>(this->m_alphas);
 }
 
 }

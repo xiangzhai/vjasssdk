@@ -21,6 +21,8 @@
 #ifndef WC3LIB_LANG_SOURCEFILE_HPP
 #define WC3LIB_LANG_SOURCEFILE_HPP
 
+#include <boost/filesystem/path.hpp>
+
 #include "object.hpp"
 
 namespace wc3lib
@@ -52,7 +54,7 @@ class SourceFile : public Object
 #endif
 		};
 
-		SourceFile(const boost::filesystem::path &path);
+		SourceFile(class List *list, const boost::filesystem::path &path);
 #ifdef SQLITE		
 		SourceFile(std::vector<Object::SqlValueDataType> &columnVector);
 #endif

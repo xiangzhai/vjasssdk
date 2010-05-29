@@ -27,18 +27,27 @@
 #include <boost/foreach.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <jpeglib.h>
+
 #include "blp.hpp"
 #include "../libraryloader.hpp"
-
-#ifdef JPEG
-#include <jpeglib.h>
-#endif
 
 namespace wc3lib
 {
 
 namespace blp
 {
+
+//#ifndef STATIC
+// jpeg read functions
+typedef struct jpeg_error_mgr* (*jpeg_std_errorType)(struct jpeg_error_mgr*);
+typedef void (*jpeg_CreateDecompressType)(j_decompress_ptr, int, size_t);
+typedef void (*jpeg_mem_srcType)(j_decompress_ptr, unsigned char*, unsigned long);
+typedef int (*jpeg_read_headerType)(j_decompress_ptr, boolean);
+typedef boolean (*jpeg_start_decompressType)(j_decompress_ptr);
+typedef void (*jpeg_abort_decompressType)(j_decompress_ptr);
+typedef void (*jpeg_destroy_decompressType)(j_decompress_ptr);
+//#endif
 
 Blp::MipMap::MipMap(dword width, dword height) : m_width(width), m_height(height)
 {
@@ -58,15 +67,15 @@ const std::size_t Blp::maxCompressedPaletteSize = 256;
 
 Blp::Blp()
 {
-	this->clear();
+	this->clean();
 }
 
 Blp::~Blp()
 {
-	this->clear();
+	this->clean();
 }
 
-void Blp::clear()
+void Blp::clean()
 {
 	this->m_version = Blp::Blp0;
 	this->m_compression = Blp::Paletted;
@@ -86,18 +95,15 @@ std::streamsize Blp::read(std::istream &istream, enum Format format) throw (clas
 	{
 		case Blp::BlpFormat:
 			return this->readBlp(istream);
-#ifdef JPEG
+
 		case Blp::JpegFormat:
 			return this->readJpeg(istream);
-#endif
-#ifdef TGA
+
 		case Blp::TgaFormat:
 			return this->readTga(istream);
-#endif
-#ifdef PNG
+
 		case Blp::PngFormat:
 			return this->readPng(istream);
-#endif	
 			
 		default:
 			throw Exception(_("Unknown format."));
@@ -112,18 +118,16 @@ std::streamsize Blp::write(std::ostream &ostream, enum Format format) throw (cla
 	{
 		case Blp::BlpFormat:
 			return this->writeBlp(ostream);
-#ifdef JPEG
+
 		case Blp::JpegFormat:
 			return this->writeJpeg(ostream);
-#endif
-#ifdef TGA
+
 		case Blp::TgaFormat:
 			return this->writeTga(ostream);
-#endif
-#ifdef PNG
+
 		case Blp::PngFormat:
 			return this->writePng(ostream);
-#endif	
+
 		default:
 			throw Exception(_("Unknown format."));
 	}
@@ -148,16 +152,14 @@ static std::size_t requiredMipMaps(std::size_t width, std::size_t height)
 	return mips;
 }
 
-#ifdef JPEG
-static std::string jpegError(const std::string &message)
+static std::string jpegError(jpeg_std_errorType jpeg_std_error, const std::string &message)
 {
-	return boost::str(boost::format(message) % jpeg_std_error(0)->jpeg_message_table != 0 ? jpeg_std_error(0)->jpeg_message_table[jpeg_std_error(0)->last_jpeg_message] : _("No error"));
+	return boost::str(boost::format(message) % (jpeg_std_error(0)->jpeg_message_table != 0 ? jpeg_std_error(0)->jpeg_message_table[jpeg_std_error(0)->last_jpeg_message] : _("No error")));
 }
-#endif
 
 std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 {
-	this->clear();
+	this->clean();
 	// header
 	dword identifier;
 	istream.read(reinterpret_cast<char*>(&identifier), sizeof(identifier));
@@ -224,7 +226,40 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	if (this->m_compression == Blp::Jpeg)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
-#ifdef JPEG
+		class LibraryLoader::Handle *libraryHandle = 0;
+		jpeg_std_errorType jpeg_std_error = 0;
+		jpeg_CreateDecompressType jpeg_CreateDecompress = 0;
+		jpeg_mem_srcType jpeg_mem_src = 0;
+		jpeg_read_headerType jpeg_read_header = 0;
+		jpeg_start_decompressType jpeg_start_decompress = 0;
+		jpeg_abort_decompressType jpeg_abort_decompress = 0;
+		jpeg_destroy_decompressType jpeg_destroy_decompress = 0;
+
+		try
+		{
+			libraryHandle = LibraryLoader::loadLibrary("jpeg");
+			void *symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_std_error");
+			jpeg_std_error = *((jpeg_std_errorType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_CreateDecompress");
+			jpeg_CreateDecompress = *((jpeg_CreateDecompressType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_mem_src");
+			jpeg_mem_src = *((jpeg_mem_srcType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_read_header");
+			jpeg_read_header = *((jpeg_read_headerType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_start_decompress");
+			jpeg_start_decompress = *((jpeg_start_decompressType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_abort_decompress");
+			jpeg_abort_decompress = *((jpeg_abort_decompressType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_destroy_decompress");
+			jpeg_destroy_decompress = *((jpeg_destroy_decompressType*)(&symbol));
+		}
+		catch (class Exception &exception)
+		{
+			exception.appendWhat("\nRequired for BLP reading.");
+
+			throw exception;
+		}
+
 		dword jpegHeaderSize;
 		istream.read(reinterpret_cast<char*>(&jpegHeaderSize), sizeof(jpegHeaderSize));
 		bytes += istream.gcount();
@@ -251,22 +286,18 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 
 			try
 			{
-				/*
-				LibraryLoader::loadLibrary("jpeg");
-				void* (*jpeg_create_decompress)(j_decompress_ptr, int, size_t) = LibraryLoader::librarySymbol("jpeg", "jpeg_CreateDecompress");
-				*/
-				std::cout << "Using jpeglib version " << JPEG_LIB_VERSION << std::endl;
+				std::cout << boost::format(_("Using header of jpeglib version %1%.")) % JPEG_LIB_VERSION << std::endl;
 
-				j_decompress_ptr cinfo;
+				j_decompress_ptr cinfo = 0;
 				jpeg_create_decompress(cinfo);
 				jpeg_mem_src(cinfo, buffer, bufferSize);
-				jpeg_mem_dest(cinfo, &buffer, &bufferSize);
+				//jpeg_mem_dest(cinfo, &buffer, &bufferSize);
 
 				if (jpeg_read_header(cinfo, true) != JPEG_HEADER_OK)
 				{
 					jpeg_abort_decompress(cinfo);
 
-					throw Exception(jpegError(_("Did not find header. Error: %1%.")));
+					throw Exception(jpegError(jpeg_std_error, _("Did not find header. Error: %1%.")));
 				}
 
 				if (!cinfo->saw_JFIF_marker)
@@ -277,7 +308,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 				{
 					jpeg_abort_decompress(cinfo);
 
-					throw Exception(jpegError(_("Could not start decompress. Error: %1%.")));
+					throw Exception(jpegError(jpeg_std_error, _("Could not start decompress. Error: %1%.")));
 				}
 
 				/*
@@ -321,9 +352,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 
 		delete[] jpegHeader;
 		jpegHeader = 0;
-#else
-		throw Exception(_("Compiled without JPEG support."));
-#endif
+		LibraryLoader::unloadLibrary(libraryHandle);
 	}
 	else if (this->m_compression == Blp::Paletted)
 	{
@@ -336,7 +365,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		
 		std::vector<color> palette(Blp::maxCompressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
 
-		for (int i = 0; i < Blp::maxCompressedPaletteSize; ++i)
+		for (std::size_t i = 0; i < Blp::maxCompressedPaletteSize; ++i)
 		{
                         color paletteColor;
                         istream.read(reinterpret_cast<char*>(&paletteColor), sizeof(paletteColor));
@@ -581,7 +610,7 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 	
 	return bytes;
 }
-#ifdef JPEG
+
 std::streamsize Blp::readJpeg(std::istream &istream) throw (class Exception)
 {
 	return 0;
@@ -591,8 +620,7 @@ std::streamsize Blp::writeJpeg(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }
-#endif
-#ifdef TGA
+
 std::streamsize Blp::readTga(std::istream &istream) throw (class Exception)
 {
 	return 0;
@@ -602,8 +630,7 @@ std::streamsize Blp::writeTga(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }
-#endif
-#ifdef PNG
+
 std::streamsize Blp::readPng(std::istream &istream) throw (class Exception)
 {
 	return 0;
@@ -613,7 +640,6 @@ std::streamsize Blp::writePng(std::ostream &ostream) throw (class Exception)
 {
 	return 0;
 }
-#endif
 
 bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
 {
@@ -627,7 +653,7 @@ bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
 	//std::list<byte> indexList = initialMipMap->m_indexList;
 	//std::list<byte> alphaList = initialMipMap->m_alphaList;
 	
-	for (int i = 1; i < number; ++i)
+	for (std::size_t i = 1; i < number; ++i)
 	{
 		width /= 2;
 		height /= 2;

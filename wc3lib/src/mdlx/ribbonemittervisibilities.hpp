@@ -32,7 +32,7 @@ namespace mdlx
 class RibbonEmitter;
 class RibbonEmitterVisibility;
 
-//KRVS
+/// KRVS
 class RibbonEmitterVisibilities : public MdxAlphas
 {
 	public:
@@ -43,7 +43,7 @@ class RibbonEmitterVisibilities : public MdxAlphas
 		const std::list<class RibbonEmitterVisibility*>& visibilities() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class RibbonEmitter *m_ribbonEmitter;

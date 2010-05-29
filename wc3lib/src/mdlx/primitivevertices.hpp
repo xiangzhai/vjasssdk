@@ -42,12 +42,12 @@ class PrimitiveVertices : public MdxBlock
 		virtual ~PrimitiveVertices();
 
 		class Geoset* geoset() const;
-		std::list<class PrimitiveVertex*> primitiveVertices() const;
+		const std::list<class PrimitiveVertex*>& primitiveVertices() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Geoset *m_geoset;
@@ -59,7 +59,7 @@ inline class Geoset* PrimitiveVertices::geoset() const
 	return this->m_geoset;
 }
 
-inline std::list<class PrimitiveVertex*> PrimitiveVertices::primitiveVertices() const
+inline const std::list<class PrimitiveVertex*>& PrimitiveVertices::primitiveVertices() const
 {
 	return this->m_primitiveVertices;
 }

@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -36,7 +37,7 @@ class ParticleEmitters;
 class Translation1s;
 class Rotation0s;
 class Scaling0s;
-class Visibility3s;
+class ParticleEmitterVisibilities;
 
 class ParticleEmitter
 {
@@ -66,12 +67,12 @@ class ParticleEmitter
 		long32 unknown0() const;
 		float32 lifeSpan() const;
 		float32 initVelocity() const;
-		class Visibility3s* visibilities() const;
+		class ParticleEmitterVisibilities* visibilities() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class ParticleEmitters *m_particleEmitters;
@@ -92,7 +93,7 @@ class ParticleEmitter
 		long32 m_unknown0; //(0)
 		float32 m_lifeSpan;
 		float32 m_initVelocity;
-		class Visibility3s *m_visibilities; //(KPEV)
+		class ParticleEmitterVisibilities *m_visibilities; //(KPEV)
 };
 
 inline class ParticleEmitters* ParticleEmitter::particleEmitters() const
@@ -175,7 +176,7 @@ inline float32 ParticleEmitter::initVelocity() const
 	return this->m_initVelocity;
 }
 
-inline class Visibility3s* ParticleEmitter::visibilities() const
+inline class ParticleEmitterVisibilities* ParticleEmitter::visibilities() const
 {
 	return this->m_visibilities;
 }

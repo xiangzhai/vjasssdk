@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 #include "particleemitter2.hpp"
 #include "particleemitter2s.hpp"
@@ -29,7 +30,7 @@
 #include "particleemitter2speeds.hpp"
 #include "particleemitter2latitudes.hpp"
 #include "emissionrates.hpp"
-#include "visibility2s.hpp"
+#include "particleemitter2visibilities.hpp"
 #include "lengths.hpp"
 #include "particleemitter2widths.hpp"
 
@@ -39,7 +40,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2::ParticleEmitter2(class ParticleEmitter2s *particleEmitters) : m_particleEmitters(particleEmitters), m_translations(new Translation1s(particleEmitters->mdlx())), m_rotations(new Rotation0s(particleEmitters->mdlx())), m_scalings(new Scaling0s(particleEmitters->mdlx())), m_speeds(new ParticleEmitter2Speeds(this)), m_latitudes(new ParticleEmitter2Latitudes(this)), m_emissionRates(new EmissionRates(particleEmitters->mdlx())), m_visibilities(new Visibility2s(particleEmitters->mdlx())), m_numbers(new Lengths(this)), m_widths(new ParticleEmitter2Widths(this))
+ParticleEmitter2::ParticleEmitter2(class ParticleEmitter2s *particleEmitters) : m_particleEmitters(particleEmitters), m_translations(new Translation1s(particleEmitters->mdlx())), m_rotations(new Rotation0s(particleEmitters->mdlx())), m_scalings(new Scaling0s(particleEmitters->mdlx())), m_speeds(new ParticleEmitter2Speeds(this)), m_latitudes(new ParticleEmitter2Latitudes(this)), m_emissionRates(new EmissionRates(particleEmitters->mdlx())), m_visibilities(new ParticleEmitter2Visibilities(this)), m_numbers(new Lengths(this)), m_widths(new ParticleEmitter2Widths(this))
 {
 }
 
@@ -49,8 +50,8 @@ ParticleEmitter2::~ParticleEmitter2()
 	delete this->m_rotations;
 	delete this->m_scalings;
 		
-	for (std::list<class SegmentColor*>::iterator iterator = this->m_segmentColors.begin(); iterator != this->m_segmentColors.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class SegmentColor *segmentColor, this->m_segmentColors)
+		delete segmentColor;
 				
 	delete this->m_speeds;
 	delete this->m_latitudes;
@@ -64,15 +65,15 @@ void ParticleEmitter2::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void ParticleEmitter2::writeMdl(std::ostream &ostream) throw (class Exception)
+void ParticleEmitter2::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	long32 nbytesikg;
 	istream.read(reinterpret_cast<char*>(&nbytesikg), sizeof(nbytesikg));
 	bytes += istream.gcount();
@@ -120,7 +121,7 @@ long32 ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&this->m_tailLength), sizeof(this->m_tailLength));
 	bytes += istream.gcount();
 	
-	for (int i = 0; i < 3; ++i) /// @todo Usually 3 segment colors?!
+	for (std::size_t i = 0; i < 3; ++i) /// @todo Usually 3 segment colors?!
 	{
 		class SegmentColor *segmentColor = new SegmentColor(this);
 		bytes += segmentColor->readMdx(istream);
@@ -184,7 +185,7 @@ long32 ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 ParticleEmitter2::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize ParticleEmitter2::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

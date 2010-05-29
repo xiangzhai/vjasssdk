@@ -41,13 +41,13 @@ void Event::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Event::writeMdl(std::ostream &ostream) throw (Exception)
+void Event::writeMdl(std::ostream &ostream) const throw (Exception)
 {
 }
 
-long32 Event::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Event::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = Object::readMdx(istream);
+	std::streamsize bytes = Object::readMdx(istream);
 	bytes += this->m_tracks->readMdx(istream);
 	long32 ntrks = 0; // usually (1)
 	istream.read(reinterpret_cast<char*>(&ntrks), sizeof(ntrks));
@@ -66,7 +66,7 @@ long32 Event::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Event::writeMdx(std::ostream &ostream) throw (Exception)
+std::streamsize Event::writeMdx(std::ostream &ostream) const throw (Exception)
 {
 	return 0;
 }

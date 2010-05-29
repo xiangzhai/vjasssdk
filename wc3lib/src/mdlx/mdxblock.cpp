@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-//#include <cstdio>
+#include <iostream>
 #include <cstring>
 
 #include <boost/format.hpp>
@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdxBlock::MdxBlock(byte blockName[4], bool optional) : m_optional(optional), m_exists(false)
+	MdxBlock::MdxBlock(byte blockName[MdxBlock::blockNameSize], bool optional) : m_optional(optional), m_exists(false)
 {
 	memcpy(this->m_blockName, blockName, sizeof(blockName));
 	/*
@@ -46,22 +46,20 @@ MdxBlock::~MdxBlock()
 }
 
 /// @todo Consider optional like in Python script.
-long32 MdxBlock::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdxBlock::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
+	std::streamsize bytes = 0;
 	byte identifier[sizeof(this->m_blockName)];
 	std::istream::pos_type position = istream.tellg();
 	istream.read(identifier, sizeof(identifier));
 	bytes += istream.gcount();
-	std::cout << "Read bytes: " << istream.gcount() << " and block name " << identifier << std::endl;
 
 	if (memcmp(identifier, this->m_blockName, sizeof(this->m_blockName)) != 0)
 	{
 		if (this->m_optional)
 		{
 			istream.seekg(position);
-			std::cout << "Block " << this->m_blockName << " is optional and doesn't exist." << std::endl;
-			std::cout << "Block name " << this->m_blockName << " is not equal to " << identifier << std::endl;
+			std::cout << boost::format(_("Block %1% is optional and doesn't exist.\nIt is not equal to identifier \"%2%\".")) % this->m_blockName % identifier << std::endl;
 			
 			return 0;
 		}
@@ -74,7 +72,7 @@ long32 MdxBlock::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 MdxBlock::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize MdxBlock::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	if (!this->m_exists)
 		return 0;

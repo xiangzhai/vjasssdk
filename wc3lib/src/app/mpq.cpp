@@ -19,8 +19,6 @@
  ***************************************************************************/
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
 
 #include "../mpq.hpp"
 #include "../internationalisation.hpp"
@@ -32,8 +30,8 @@
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 
-#ifdef DEBUG
 #include <boost/timer.hpp>
+#ifdef DEBUG
 //#include <StormLib/stormlib/StormLib.h>
 #endif
 
@@ -73,9 +71,7 @@ int main(int argc, char *argv[])
 		{"human-readable",          no_argument,             0, 'h'},
 		{"decimal",                 no_argument,             0, 'd'},
 		{"list",                    no_argument,             0, 'l'},
-#ifdef DEBUG
 		{"benchmark",               no_argument,             0,  'b'},
-#endif
 		{0, 0, 0, 0}
 	};
 	
@@ -86,9 +82,7 @@ int main(int argc, char *argv[])
 	bool optionHumanreadable = false;
 	bool optionDecimal = false;
 	bool optionList = false;
-#ifdef DEBUG
 	bool optionBenchmark = false;
-#endif
 	
 	while (true)
 	{
@@ -125,9 +119,7 @@ int main(int argc, char *argv[])
 				_("\t-h, --human-readable        Shows output sizes in an human-readable format.\n") <<
 				_("\t-d, --decimal               Shows decimal sizes (factor 1000 not 1024)\n") <<
 				_("\t-l, --list                  Lists all contained files of all read MPQ archives.\n") <<
-#ifdef DEBUG
 				_("\t-b, --benchmark             Compares various functionalities of wc3lib and StormLib.\n") <<
-#endif
 				std::endl <<
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
@@ -163,14 +155,13 @@ int main(int argc, char *argv[])
 				
 				break;
 			}
-#ifdef DEBUG
+
 			case 'b':
 			{
 				optionBenchmark = true;
 
 				break;
 			}
-#endif
 		}
 	}
 		
@@ -301,7 +292,6 @@ int main(int argc, char *argv[])
 				std::cout << boost::format(_("All in all %1% files (Size: %2%)")) % (i + 1) % sizeString<int64>(mpq.entireFileSize(), optionHumanreadable, optionDecimal) << std::endl;
 			}
 
-#ifdef DEBUG
 			if (optionBenchmark)
 			{
 				mpq.close();
@@ -315,8 +305,12 @@ int main(int argc, char *argv[])
 				timer.restart();
 				mpq.close();
 				std::cout << boost::format(_("Result: %1%s")) % timer.elapsed() << std::endl;
-			}
+/// @todo Add runtime linking support by using LibraryLoader.
+#ifdef DEBUG
+#else
+				std::cerr << _("Since program has been compiled without debug option, StormLib cannot be used.") << std::endl;
 #endif
+			}
 		}
 	}
 	

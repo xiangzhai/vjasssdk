@@ -41,7 +41,7 @@ class ParticleEmitter2Width : public MdxAlpha
 		class ParticleEmitter2Widths* widths() const;
 		
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class ParticleEmitter2Widths* ParticleEmitter2Width::widths() const

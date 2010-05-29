@@ -35,10 +35,10 @@ MdxScaling::~MdxScaling()
 {
 }
 
-long32 MdxScaling::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdxScaling::readMdx(std::istream &istream) throw (class Exception)
 {
 	istream.read(reinterpret_cast<char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = istream.gcount();
+	std::streamsize bytes = istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
@@ -65,10 +65,10 @@ long32 MdxScaling::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 MdxScaling::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize MdxScaling::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	ostream.write(reinterpret_cast<const char*>(&this->m_frame), sizeof(this->m_frame));
-	long32 bytes = sizeof(this->m_frame);
+	std::streamsize bytes = sizeof(this->m_frame);
 	ostream.write(reinterpret_cast<const char*>(&this->m_x), sizeof(this->m_x));
 	bytes += sizeof(this->m_x);
 	ostream.write(reinterpret_cast<const char*>(&this->m_y), sizeof(this->m_y));
@@ -80,7 +80,7 @@ long32 MdxScaling::writeMdx(std::ostream &ostream) throw (class Exception)
 	{
 		ostream.write(reinterpret_cast<const char*>(&this->m_inTanX), sizeof(this->m_inTanX));
 		bytes += sizeof(this->m_inTanX);
-		ostream.write(reinterpret_cast<char*>(&this->m_inTanY), sizeof(this->m_inTanY));
+		ostream.write(reinterpret_cast<const char*>(&this->m_inTanY), sizeof(this->m_inTanY));
 		bytes += sizeof(this->m_inTanY);
 		ostream.write(reinterpret_cast<const char*>(&this->m_inTanZ), sizeof(this->m_inTanZ));
 		bytes += sizeof(this->m_inTanZ);

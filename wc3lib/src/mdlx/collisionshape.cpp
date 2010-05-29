@@ -39,13 +39,13 @@ void CollisionShape::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void CollisionShape::writeMdl(std::ostream &ostream) throw (class Exception)
+void CollisionShape::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 CollisionShape::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize CollisionShape::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = Object::readMdx(istream);
+	std::streamsize bytes = Object::readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_shape), sizeof(this->m_shape));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
@@ -74,7 +74,7 @@ long32 CollisionShape::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 CollisionShape::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize CollisionShape::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

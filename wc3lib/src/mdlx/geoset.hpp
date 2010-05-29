@@ -22,10 +22,8 @@
 #define WC3LIB_MDLX_GEOSET_HPP
 
 #include <list>
-#include <iostream>
 
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "bounds.hpp"
 
 namespace wc3lib
 {
@@ -46,7 +44,7 @@ class Ganimation;
 class TexturePatches;
 class TextureVertices;
 
-class Geoset
+class Geoset : public Bounds
 {
 	public:
 		enum Selectable
@@ -70,21 +68,14 @@ class Geoset
 		long32 materialId() const;
 		long32 selectionGroup() const;
 		long32 selectable() const;
-		float32 boundsRadius() const;
-		float32 minExtentX() const;
-		float32 minExtentY() const;
-		float32 minExtentZ() const;
-		float32 maxExtentX() const;
-		float32 maxExtentY() const;
-		float32 maxExtentZ() const;
-		std::list<class Ganimation*> ganimations() const;
+		const std::list<class Ganimation*>& ganimations() const;
 		class TexturePatches* texturePatches() const;
 		class TextureVertices* textureVertices() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Geosets *m_geosets;
@@ -99,9 +90,6 @@ class Geoset
 		long32 m_materialId;
 		long32 m_selectionGroup;
 		long32 m_selectable; //(0:none;4:Unselectable)
-		float32 m_boundsRadius;
-		float32 m_minExtentX, m_minExtentY, m_minExtentZ;
-		float32 m_maxExtentX, m_maxExtentY, m_maxExtentZ;
 		//long32 nanim;
 		std::list<class Ganimation*> m_ganimations;
 		//struct GAnimation *ganimations; //[nganim], naim?!?! Tamino Dauth
@@ -169,42 +157,7 @@ inline long32 Geoset::selectable() const
 	return this->m_selectable;
 }
 
-inline float32 Geoset::boundsRadius() const
-{
-	return this->m_boundsRadius;
-}
-
-inline float32 Geoset::minExtentX() const
-{
-	return this->m_minExtentX;
-}
-
-inline float32 Geoset::minExtentY() const
-{
-	return this->m_minExtentY;
-}
-
-inline float32 Geoset::minExtentZ() const
-{
-	return this->m_minExtentZ;
-}
-
-inline float32 Geoset::maxExtentX() const
-{
-	return this->m_maxExtentX;
-}
-
-inline float32 Geoset::maxExtentY() const
-{
-	return this->m_maxExtentY;
-}
-
-inline float32 Geoset::maxExtentZ() const
-{
-	return this->m_maxExtentZ;
-}
-
-inline std::list<class Ganimation*> Geoset::ganimations() const
+inline const std::list<class Ganimation*>& Geoset::ganimations() const
 {
 	return this->m_ganimations;
 }

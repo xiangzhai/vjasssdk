@@ -39,7 +39,7 @@ void ParticleEmitter2Widths::readMdl(std::istream &istream) throw (class Excepti
 {
 }
 
-void ParticleEmitter2Widths::writeMdl(std::ostream &ostream) throw (class Exception)
+void ParticleEmitter2Widths::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

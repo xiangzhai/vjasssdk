@@ -38,7 +38,7 @@ void GeosetAnimationColors::readMdl(std::istream &istream) throw (class Exceptio
 {
 }
 
-void GeosetAnimationColors::writeMdl(std::ostream &ostream) throw (class Exception)
+void GeosetAnimationColors::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

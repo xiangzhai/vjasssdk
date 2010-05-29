@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/format.hpp>
+#include <boost/foreach.hpp>
+
 #include "geosets.hpp"
 #include "geoset.hpp"
 #include "../internationalisation.hpp"
@@ -34,62 +37,46 @@ Geosets::Geosets(class Mdlx *mdlx) : MdxBlock("GEOS"), m_mdlx(mdlx)
 
 Geosets::~Geosets()
 {
-	for (std::list<class Geoset*>::iterator iterator = this->m_geosets.begin(); iterator != this->m_geosets.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class Geoset *geoset, this->m_geosets)
+		delete geoset;
 }
 
 void Geosets::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Geosets::writeMdl(std::ostream &ostream) throw (class Exception)
+void Geosets::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Geosets::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Geosets::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
-	{
-		std::cout << "No geosets." << std::endl;
-		
 		return 0;
-	}
 	
 	long32 nbytes = 0; //nbytes
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	
 	if (nbytes <= 0)
-	{
-		char message[50];
-		sprintf(message, _("Geosets: 0 byte geosets.\n"));
-		
-		throw Exception(message);
-	}
-	
-	std::cout << "Read " << nbytes << " geoset bytes." << std::endl;
+		throw Exception(_("Geosets: 0 byte geosets.\n"));
 	
 	bytes += istream.gcount();
 	
 	while (nbytes > 0)
 	{
 		class Geoset *geoset = new Geoset(this);
-		long32 readBytes = geoset->readMdx(istream); 
-		std::cout << "Read geoset with " << readBytes << " bytes." << std::endl;
-		
+		long32 readBytes = geoset->readMdx(istream); 	
 		nbytes -= readBytes;
-		std::cout << nbytes  << " bytes left." << std::endl;
 		bytes += readBytes;
 		this->m_geosets.push_back(geoset);
 	}
 	
-	std::cout << "Canceled" << std::endl;
-	
 	return bytes;
 }
 
-long32 Geosets::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Geosets::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

@@ -39,13 +39,13 @@ void Helpers::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Helpers::writeMdl(std::ostream &ostream) throw (class Exception)
+void Helpers::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Helpers::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Helpers::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -67,12 +67,12 @@ long32 Helpers::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Helpers::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Helpers::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
 	
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }

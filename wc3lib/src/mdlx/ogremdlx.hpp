@@ -33,6 +33,9 @@ namespace mdlx
 	
 class Mdlx;
 
+/**
+* This class can be used to display MDLX models by using the OGRE 3d rendering engine.
+*/
 class OgreMdlx
 {
 	public:
@@ -40,6 +43,9 @@ class OgreMdlx
 		
 		class Mdlx* mdlx() const;
 		
+		/**
+		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
+		*/
 		void refresh() throw (class Exception);
 		
 	protected:

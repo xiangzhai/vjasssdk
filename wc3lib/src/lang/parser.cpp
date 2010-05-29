@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream>
+#include <iostream> // debug
 #include <sstream>
 #include <algorithm>
 #include <fstream>
@@ -64,16 +64,14 @@ std::size_t Parser::parse(const boost::filesystem::path &path, class Language *i
 		throw Exception(_("Intial language is missing."));
 	
 	if (!boost::filesystem::exists(path))
-		throw Exception(Parser::FilePathError, boost::str(boost::format(_("File path \"%1%\" does not exist.")) % path.string()));
+		throw Exception(boost::format(_("File path \"%1%\" does not exist.")) % path.string());
 
 	std::ifstream ifstream(path.string().c_str());
 	
 	if (!ifstream)
 		throw Exception(boost::str(boost::format(_("Unable to open file stream for file path \"%1%\".")) % path.string()));
 	
-	class SourceFile *sourceFile = new SourceFile(path.filename(), path.string());
-	
-	initialSourceFileLanguage->push_back(sourceFile);
+	class SourceFile *sourceFile = new SourceFile(initialSourceFileLanguage->sourceFiles(), path);
 	this->m_file = new File();
 	std::size_t lines = this->m_file->parse(this, sourceFile, ifstream);
 	delete this->m_file;
@@ -88,22 +86,17 @@ std::size_t Parser::parse(const std::list<boost::filesystem::path> &paths, class
 	std::size_t lines = 0;
 	
 	BOOST_FOREACH(const boost::filesystem::path &path, paths)
-		lines += this->parse(paths, initialSourceFileLanguage);
+		lines += this->parse(path, initialSourceFileLanguage);
 	
 	return lines;
 }
 
 void Parser::prepareObjects()
 {
-	BOOST_FOREACH(class Language *language, this->m_languages)
-		language->prepareObjects();
-}
+	typedef std::pair<std::string,class Language*> pairType;
 
-
-void Parser::sortObjectsAlphabetically()
-{
-	BOOST_FOREACH(class Language *language, this->m_languages)
-		language->sort(Object::AlphabeticalComparator());
+	BOOST_FOREACH(pairType language, this->m_languages)
+		language.second->prepareObjects();
 }
 
 void Parser::showSyntaxErrors(std::ostream &ostream)
@@ -286,158 +279,19 @@ class Object* Parser::searchObjectDatabase(std::size_t index, std::size_t id)
 }
 #endif
 
-class Object* Parser::searchObjectInList(const std::string &identifier, const enum List &list, const enum SearchMode &searchMode, const class Object *object)
+void Parser::setCurrentLanguage(class Language *language)
 {
-	if (!Vjassdoc::optionParseObjectsOfList(list))
-		return 0;
+	this->m_currentLanguage = language;
+	std::map<std::string, class Language*>::iterator position = this->m_languages.find(language->name());
 
-	std::list<class Object*> objectList = this->getList(list);
-
-	return Parser::searchObjectInCustomList(objectList, identifier, searchMode, object);
+	if (position == this->m_languages.end())
+	{
+		/// @todo Implement map
+		//this->m_languages.
+		this->m_languages.insert(std::make_pair(language->name(), language));
+	}
 }
 
-std::list<const class Object*> Parser::getSpecificList(enum Parser::List list, const struct Comparator &comparator, const class Object *object)
-{
-	if (!Vjassdoc::optionParseObjectsOfList(list))
-		return std::list<class Object*>();
-
-	std::list<class Object*> result;
-	
-	BOOST_FOREACH(const class Object *iterator, this->m_lists[list].objects())
-	{
-		if (comparator(iterator, object))
-			result.push_back(iterator);
-	}
-	
-	return result;
-}
-
-std::list<const class Object*> Parser::autoCompletion(const std::string &line, std::size_t &index)
-{
-	std::string token = getToken(line, index);
-
-	if (token.empty())
-		return std::list<const class Object*>();
-
-	if (token == "private" || token == "public" || token == "//!")
-		token = getToken(line, index);
-
-	enum Keyword
-	{
-		None,
-		Extension,
-		Requirement,
-		Delegate,
-		Hook,
-		ReturnType,
-		Call,
-		ReturnValue
-	};
-
-	Keyword keyword = None;
-	std::list<enum Parser::List> lists;
-
-	if (token == "extends")
-	{
-		std::cout << "Found extends token" << std::endl;
-		lists.push_back(Parser::Structs);
-		lists.push_back(Parser::Interfaces);
-		keyword = Extension;
-	}
-	else if (token == "requires" || token == "needs")
-		lists.push_back(Parser::Libraries);
-	else if (token == "delegate")
-		lists.push_back(Parser::Structs);
-	else if (token == "implement")
-		lists.push_back(Parser::Modules);
-	else if (token == "hook")
-	{
-		lists.push_back(Parser::Functions);
-		lists.push_back(Parser::Methods); //statics
-	}
-	else if (token == "returns")
-	{
-		lists.push_back(Parser::Types);
-		lists.push_back(Parser::FunctionInterfaces);
-		lists.push_back(Parser::Interfaces);
-		lists.push_back(Parser::Structs);
-	}
-	else if (token == "call")
-	{
-		lists.push_back(Parser::FunctionInterfaces);
-		lists.push_back(Parser::Functions);
-		lists.push_back(Parser::Methods);
-		lists.push_back(Parser::Structs); //calling static methods
-	}
-	else if (token == "return")
-	{
-		lists.push_back(Parser::Types); // integer(10)
-		lists.push_back(Parser::Globals); // bj_MAX_PLAYERS
-		lists.push_back(Parser::Locals); // i
-		lists.push_back(Parser::FunctionInterfaces); // FunctionInterface.bla
-		lists.push_back(Parser::Interfaces); // Widget(1)
-		lists.push_back(Parser::Structs); // Widget(1)
-	}
-
-	token = getToken(line, index);
-	std::cout << "Search identifier token " << token << std::endl;
-	std::list<class Object*> results;
-
-	BOOST_FOREACH(enum Parser::List list, lists)
-	{
-		BOOST_FOREACH(const class Object *object, this->m_lists[list])
-		{
-			if (token == object->identifier())
-				results.push_back(object);
-		}
-	}
-
-	return results;
-}
-
-void Parser::getStructInheritanceList(const class Interface *extension, const std::string &prefix, std::ostream &ostream)
-{
-	std::list<class Object*> structList = this->getSpecificList(Parser::Structs, Struct::HasExtension(), extension);
-
-	if (structList.empty())
-		return;
-
-	ostream << prefix << "<ul>\n";
-
-	for (std::list<class Object*>::iterator iterator = structList.begin(); iterator != structList.end(); ++iterator)
-	{
-		ostream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
-		this->getStructInheritanceList(static_cast<class Interface*>(*iterator), prefix + "\t\t", ostream);
-		ostream << prefix << "\t</li>\n";
-	}
-
-	ostream << prefix << "</ul>\n";
-}
-
-/// @todo FIXME
-void Parser::getLibraryRequirementList(const class Library *requirement, const std::string &prefix, std::ostream &ostream)
-{
-	std::cout << "Running with library " << requirement->identifier() << std::endl;
-
-	std::list<class Object*> specifiedList = this->getSpecificList(Parser::Libraries, Library::HasRequirement(), requirement); /// @todo Comparator is not called.
-
-	if (specifiedList.empty())
-	{
-		std::cout << "Requirement list is empty." << std::endl;
-		
-		return;
-	}
-
-	ostream << prefix << "<ul>\n";
-
-	for (std::list<class Object*>::iterator iterator = specifiedList.begin(); iterator != specifiedList.end(); ++iterator)
-	{
-		ostream << prefix << "\t<li>" << (*iterator)->pageLink() << '\n';
-		this->getLibraryRequirementList(static_cast<class Library*>(*iterator), prefix + "\t\t", ostream);
-		ostream << prefix << "\t</li>\n";
-	}
-
-	ostream << prefix << "</ul>\n";
 }
 
 }

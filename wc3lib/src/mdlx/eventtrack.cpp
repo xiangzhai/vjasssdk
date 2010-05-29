@@ -39,16 +39,16 @@ void EventTrack::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void EventTrack::writeMdl(std::ostream &ostream) throw (Exception)
+void EventTrack::writeMdl(std::ostream &ostream) const throw (Exception)
 {
 }
 
-long32 EventTrack::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize EventTrack::readMdx(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-long32 EventTrack::writeMdx(std::ostream &ostream) throw (Exception)
+std::streamsize EventTrack::writeMdx(std::ostream &ostream) const throw (Exception)
 {
 	return 0;
 }

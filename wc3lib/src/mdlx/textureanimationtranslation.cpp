@@ -38,7 +38,7 @@ void TextureAnimationTranslation::readMdl(std::istream &istream) throw (class Ex
 {
 }
 
-void TextureAnimationTranslation::writeMdl(std::ostream &ostream) throw (class Exception)
+void TextureAnimationTranslation::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

@@ -140,6 +140,7 @@ std::string Object::List::sqlColumnName(std::size_t column) const throw (std::ex
 
 Object::Object(class Object::List *list, const std::string &identifier, class SourceFile *sourceFile, std::size_t line) : m_list(list), m_identifier(identifier), m_sourceFile(sourceFile), m_line(line)
 {
+	list->push_back(this);
 }
 
 #ifdef SQLITE

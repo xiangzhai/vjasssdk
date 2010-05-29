@@ -18,8 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "visibility1s.hpp"
-#include "visibility1.hpp"
+#ifndef WC3LIB_MDLX_PARTICLEEMITTER2VISIBILITY_HPP
+#define WC3LIB_MDLX_PARTICLEEMITTER2VISIBILITY_HPP
+
+#include "mdxalpha.hpp"
+#include "particleemitter2visibilities.hpp"
 
 namespace wc3lib
 {
@@ -27,27 +30,21 @@ namespace wc3lib
 namespace mdlx
 {
 
-Visibility1s::Visibility1s(class Light *light) : MdxAlphas("KLAV"), m_light(light)
+class ParticleEmitter2Visibility : public MdxAlpha
 {
-}
+	public:
+		ParticleEmitter2Visibility(class ParticleEmitter2Visibilities *visibilities);
+		
+		class ParticleEmitter2Visibilities* visibilities() const;
+};
 
-Visibility1s::~Visibility1s()
+inline class ParticleEmitter2Visibilities* ParticleEmitter2Visibility::visibilities() const
 {
-}
-
-void Visibility1s::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Visibility1s::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
-class MdxAlpha* Visibility1s::createNewMember()
-{
-	return new Visibility1(this);
+	return dynamic_cast<class ParticleEmitter2Visibilities*>(this->m_alphas);
 }
 
 }
 
 }
+
+#endif

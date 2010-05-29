@@ -43,7 +43,7 @@ class GeosetAnimationAlphas : public MdxAlphas
 		const std::list<class GeosetAnimationAlpha*>& geosetAnimationAlphas() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class GeosetAnimation *m_geosetAnimation;

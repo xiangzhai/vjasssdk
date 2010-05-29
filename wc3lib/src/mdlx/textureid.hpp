@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_TEXTUREID_HPP
 #define WC3LIB_MDLX_TEXTUREID_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -34,7 +35,7 @@ namespace mdlx
 
 class TextureIds;
 
-//state is long not float
+/// state is long not float therefore it doesn't inherit MdxAlpha.
 class TextureId
 {
 	public:
@@ -48,9 +49,9 @@ class TextureId
 		float32 outTan() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual long32 readMdx(std::istream &istream) throw (class Exception);
-		virtual long32 writeMdx(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class TextureIds *m_textureIds;

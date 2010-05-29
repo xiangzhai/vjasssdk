@@ -32,7 +32,7 @@ namespace mdlx
 class Mdlx;
 class Translation1;
 
-//KGTR, like KGSC (Scalings)
+/// KGTR, like KGSC (Scalings)
 class Translation1s : public MdxScalings
 {
 	public:
@@ -43,7 +43,7 @@ class Translation1s : public MdxScalings
 		const std::list<class Translation1*>& translations() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class MdxScaling* createNewMember();

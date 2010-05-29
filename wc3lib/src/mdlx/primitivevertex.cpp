@@ -38,20 +38,20 @@ void PrimitiveVertex::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void PrimitiveVertex::writeMdl(std::ostream &ostream) throw (class Exception)
+void PrimitiveVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 PrimitiveVertex::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveVertex::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
+	std::streamsize bytes = 0;
 	istream.read(reinterpret_cast<char*>(&this->m_triangle), sizeof(this->m_triangle));
 	bytes += istream.gcount();
 	
 	return bytes;
 }
 
-long32 PrimitiveVertex::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize PrimitiveVertex::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

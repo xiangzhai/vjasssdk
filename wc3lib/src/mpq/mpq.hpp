@@ -49,15 +49,23 @@ namespace mpq
 * @brief This class allows users to read, write and modify MPQ archives. MPQ (Mo'PaQ, short for Mike O'Brien Pack) is an archiving file format used in several of Blizzard Entertainment's games.
 * Here's a simple example how to use this class:
 * @code
-* class Mpq mpq();
+* #include <wc3lib/mpq.hpp>
 *
-* try
+* using namespace wc3lib::mpq;
+*
+* void testFunction()
 * {
-*	mpq.open("War3x.mpq"); // Opens an existing MPQ archive.
-* }
-* catch (class Exception &exception)
-* {
-*	std::cerr << "Unable to open archive: " << exception << std::endl;
+*	class Mpq mpq();
+*
+*	// Using exception handling to catch errors.
+*	try
+*	{
+*		mpq.open("War3x.mpq"); // Opens an existing MPQ archive.
+*	}
+*	catch (class Exception &exception)
+*	{
+*		std::cerr << "Unable to open archive: " << exception << std::endl;
+*	}
 *
 *	return EXIT_FAILURE;
 * }

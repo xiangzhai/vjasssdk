@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream>
+#include <iostream> /// @todo debug?
 
 #include <boost/format.hpp>
 
@@ -46,11 +46,11 @@ void Material::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Material::writeMdl(std::ostream &ostream) throw (class Exception)
+void Material::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 Material::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Material::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi = 0;
 	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
@@ -75,7 +75,7 @@ long32 Material::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Material::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Material::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	long32 bytes = 0;
 	

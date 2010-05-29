@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <QtCore/QSettings>
+
 #include <kmenu.h>
 #include <kaction.h>
 #include <kmenubar.h>
@@ -48,9 +50,16 @@ namespace editor
 Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_terrainEditor(0), m_triggerEditor(0), m_soundEditor(0), m_objectEditor(0), m_campaignEditor(0), m_aiEditor(0), m_objectManager(0), m_importManager(0), m_mpqEditor(0), m_modelEditor(0), m_textureEditor(0), m_newMapDialog(0)
 {
 	class KMenu *fileMenu = new KMenu(tr("File"), this);
-	class KAction *newMapAction = new KAction(KIcon(":/actions/newmap.png"), tr("&New map ..."), this);
-	connect(newMapAction, SIGNAL(triggered()), this, SLOT(newMap()));
 	this->menuBar()->addMenu(fileMenu);
+	class KAction *newMapAction = new KAction(KIcon(":/actions/newmap.png"), ki18n("New map ..."), this);
+	connect(newMapAction, SIGNAL(triggered()), this, SLOT(newMap()));
+	class KAction *openMapAction = new KAction(KIcon(":/actions/openmap.png"), ki18n("Open map ..."), this);
+	connect(openMapAction, SIGNAL(triggered()), this, SLOT(openMap()));
+
+	QSettings settings("Blizzard Entertainment", "WorldEdit", this);
+	settings.beginGroup("shortcuts");
+	// Read shortcuts
+	newMapAction->setShortcut(settings.value("newmap", KShortcut(ki18n("Strg+N"))));
 }
 
 Editor::~Editor()
@@ -232,8 +241,7 @@ void Editor::newMap()
 		this->m_newMapDialog = new NewMapDialog(this);
 	
 	this->m_newMapDialog->show();
-}
-	
+}	
 
 }
 

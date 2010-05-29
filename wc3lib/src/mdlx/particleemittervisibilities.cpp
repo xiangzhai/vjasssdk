@@ -18,16 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "rotation1.hpp"
+#include "particleemittervisibilities.hpp"
+#include "particleemittervisibility.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-	
-Rotation1::Rotation1(class Rotation1s *rotations) : MdxScaling(rotations)
+
+ParticleEmitterVisibilities::ParticleEmitterVisibilities(class ParticleEmitter *particleEmitter) : MdxAlphas("KPEV"), m_particleEmitter(particleEmitter)
 {
+}
+
+ParticleEmitterVisibilities::~ParticleEmitterVisibilities()
+{
+}
+
+void ParticleEmitterVisibilities::readMdl(std::istream &istream) throw (class Exception)
+{
+}
+
+void ParticleEmitterVisibilities::writeMdl(std::ostream &ostream) const throw (class Exception)
+{
+}
+
+class MdxAlpha* ParticleEmitterVisibilities::createNewMember()
+{
+	return new ParticleEmitterVisibility(this);
 }
 
 }

@@ -18,11 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_ROTATION1_HPP
-#define WC3LIB_MDLX_ROTATION1_HPP
+#ifndef WC3LIB_MDLX_TEXTURE_ANIMATION_SCALING_HPP
+#define WC3LIB_MDLX_TEXTURE_ANIMATION_SCALING_HPP
 
 #include "mdxscaling.hpp"
-#include "rotation1s.hpp"
+#include "textureanimationscalings.hpp"
 
 namespace wc3lib
 {
@@ -30,17 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Rotation1 : public MdxScaling
+class TextureAnimationScaling : public MdxScaling
 {
 	public:
-		Rotation1(class Rotation1s *rotations);
+		TextureAnimationScaling(class TextureAnimationScalings *scalings);
 		
-		class Rotation1s* rotations() const;
+		class TextureAnimationScalings* scalings() const;
 };
 
-inline class Rotation1s* Rotation1::rotations() const
+inline class TextureAnimationScalings* TextureAnimationScaling::scalings() const
 {
-	return dynamic_cast<class Rotation1s*>(this->m_scalings);
+	return dynamic_cast<class TextureAnimationScalings*>(this->m_scalings);
 }
 
 }

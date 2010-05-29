@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
-
 #include "sequence.hpp"
 #include "sequences.hpp"
 
@@ -41,13 +39,30 @@ void Sequence::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Sequence::writeMdl(std::ostream &ostream) throw (class Exception)
+void Sequence::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	ostream
+	<< "Anim " << this->name() << " {\n"
+	<< "Interval { " << this->intervalStart() << ", " << this->intervalEnd() << " },\n"
+	;
+
+	if (this->noLooping() == 1)
+		ostream << "NonLooping,\n";
+
+	if (this->moveSpeed() != 0.0)
+		ostream << "MoveSpeed " << this->moveSpeed() << ",\n";
+
+	if (this->rarity() != 0.0)
+		ostream << "Rarity " << this->rarity() << ",\n";
+
+	Bounds::writeMdl(ostream);
+
+	ostream << "}\n";
 }
 
-long32 Sequence::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Sequence::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
+	std::streamsize bytes = 0;
 	istream.read(this->m_name, sizeof(this->m_name));
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
@@ -62,28 +77,14 @@ long32 Sequence::readMdx(std::istream &istream) throw (class Exception)
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
 	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtX), sizeof(this->m_minExtX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtY), sizeof(this->m_minExtY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
-	bytes += istream.gcount();
-	std::cout << "Single sequence bytes " << bytes << std::endl;
+	bytes += Bounds::readMdx(istream);
 	
 	return bytes;
 }
 
-long32 Sequence::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Sequence::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = 0;
+	std::streamsize bytes = 0;
 	ostream.write(this->m_name, sizeof(this->m_name));
 	bytes += sizeof(this->m_name);
 	ostream.write(reinterpret_cast<const char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
@@ -98,20 +99,7 @@ long32 Sequence::writeMdx(std::ostream &ostream) throw (class Exception)
 	bytes += sizeof(this->m_rarity);
 	ostream.write(reinterpret_cast<const char*>(&this->m_unknown0), sizeof(this->m_unknown0));
 	bytes += sizeof(this->m_unknown0);
-	ostream.write(reinterpret_cast<const char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	bytes += sizeof(this->m_boundsRadius);
-	ostream.write(reinterpret_cast<const char*>(&this->m_minExtX), sizeof(this->m_minExtX));
-	bytes += sizeof(this->m_minExtX);
-	ostream.write(reinterpret_cast<const char*>(&this->m_minExtY), sizeof(this->m_minExtY));
-	bytes += sizeof(this->m_minExtY);
-	ostream.write(reinterpret_cast<const char*>(&this->m_minExtZ), sizeof(this->m_minExtZ));
-	bytes += sizeof(this->m_minExtZ);
-	ostream.write(reinterpret_cast<const char*>(&this->m_maxExtX), sizeof(this->m_maxExtX));
-	bytes += sizeof(this->m_maxExtX);
-	ostream.write(reinterpret_cast<const char*>(&this->m_maxExtY), sizeof(this->m_maxExtY));
-	bytes += sizeof(this->m_maxExtY);
-	ostream.write(reinterpret_cast<const char*>(&this->m_maxExtZ), sizeof(this->m_maxExtZ));
-	bytes += sizeof(this->m_maxExtZ);
+	bytes += Bounds::writeMdx(ostream);
 	
 	return bytes;
 }

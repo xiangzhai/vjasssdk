@@ -18,10 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_VISIBILITY1S_HPP
-#define WC3LIB_MDLX_VISIBILITY1S_HPP
+#ifndef WC3LIB_MDLX_LIGHTAMBIENTVISIBILITY_HPP
+#define WC3LIB_MDLX_LIGHTAMBIENTVISIBILITY_HPP
 
-#include "mdxalphas.hpp"
+#include "mdxalpha.hpp"
+#include "lightambientvisibilities.hpp"
 
 namespace wc3lib
 {
@@ -29,36 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Light;
-class Visibility1;
-
-//KLAV
-class Visibility1s : public MdxAlphas
+class LightAmbientVisibility : public MdxAlpha
 {
 	public:
-		Visibility1s(class Light *light);
-		virtual ~Visibility1s();
-
-		class Light* light() const;
-		const std::list<class Visibility1*>& visibilities() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-
-	protected:
-		virtual class MdxAlpha* createNewMember();
+		LightAmbientVisibility(class LightAmbientVisibilities *visibilities);
 		
-		class Light *m_light;
+		class LightAmbientVisibilities* visibilities() const;
 };
 
-inline class Light* Visibility1s::light() const
+inline class LightAmbientVisibilities* LightAmbientVisibility::visibilities() const
 {
-	return this->m_light;
-}
-
-inline const std::list<class Visibility1*>& Visibility1s::visibilities() const
-{
-	return reinterpret_cast<const std::list<class Visibility1*>&>(this->m_alphas);
+	return dynamic_cast<class LightAmbientVisibilities*>(this->m_alphas);
 }
 
 }

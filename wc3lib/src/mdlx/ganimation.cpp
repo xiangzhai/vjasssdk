@@ -26,7 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Ganimation::Ganimation(class Geoset *geoset) : m_geoset(geoset), m_boundsRadius(0.0), m_minExtentX(0.0), m_minExtentY(0.0), m_minExtentZ(0.0), m_maxExtentX(0.0), m_maxExtentY(0.0), m_maxExtentZ(0.0)
+Ganimation::Ganimation(class Geoset *geoset) : m_geoset(geoset)
 {
 }
 
@@ -34,37 +34,28 @@ Ganimation::~Ganimation()
 {
 }
 
+/// @todo Implement.
 void Ganimation::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Ganimation::writeMdl(std::ostream &ostream) throw (class Exception)
+void Ganimation::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	ostream
+	<< "Anim {\n"
+	;
+	Bounds::writeMdl(ostream);
+	ostream << "}";
 }
 
-long32 Ganimation::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Ganimation::readMdx(std::istream &istream) throw (class Exception)
 {
-	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	long32 bytes = istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtentX), sizeof(this->m_minExtentX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtentY), sizeof(this->m_minExtentY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minExtentZ), sizeof(this->m_minExtentZ));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtentX), sizeof(this->m_maxExtentX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtentY), sizeof(this->m_maxExtentY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxExtentZ), sizeof(this->m_maxExtentZ));
-	bytes += istream.gcount();
-		
-	return bytes;
+	return Bounds::readMdx(istream);
 }
 
-long32 Ganimation::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Ganimation::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	return Bounds::writeMdx(ostream);
 }
 
 }

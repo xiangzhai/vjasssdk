@@ -20,6 +20,8 @@
 
 #include <iostream> //debug
 
+#include <boost/foreach.hpp>
+
 #include "sequences.hpp"
 #include "sequence.hpp"
 #include "../internationalisation.hpp"
@@ -36,53 +38,28 @@ Sequences::Sequences(class Mdlx *mdlx) : MdxBlock("SEQS"), m_mdlx(mdlx)
 
 Sequences::~Sequences()
 {
-	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class Sequence *sequence, this->m_sequences)
+		delete sequence;
 }
 
 void Sequences::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void Sequences::writeMdl(std::ostream &ostream) throw (class Exception)
+void Sequences::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream
 	<< "Sequences " << this->m_sequences.size() << " {\n";
 
-	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
-	{
-		ostream
-		<< "\tAnim " << (*iterator)->name() << " {\n"
-		<< "\t\tInterval { " << (*iterator)->intervalStart() << ", " << (*iterator)->intervalEnd() << " },\t"
-		;
-
-		if ((*iterator)->noLooping() == 1)
-			ostream << "\t\tNonLooping,\n";
-
-		if ((*iterator)->moveSpeed() != 0.0)
-			ostream << "\t\tMoveSpeed " << (*iterator)->moveSpeed() << ",\n";
-
-		if ((*iterator)->rarity() != 0.0)
-			ostream << "\t\tRarity " << (*iterator)->rarity() << ",\n";
-
-		if ((*iterator)->minExtX() != 0.0 || (*iterator)->minExtY() != 0.0 || (*iterator)->minExtZ() != 0.0)
-			ostream << "\t\tMinimumExtent { " << (*iterator)->minExtX() << ", " << (*iterator)->minExtY() << ", " << (*iterator)->minExtZ() << " },\n";
-
-		if ((*iterator)->maxExtX() != 0.0 || (*iterator)->maxExtY() != 0.0 || (*iterator)->maxExtZ() != 0.0)
-			ostream << "\t\tMaxmimumExtent { " << (*iterator)->maxExtX() << ", " << (*iterator)->maxExtY() << ", " << (*iterator)->maxExtZ() << " },\n";
-
-		if ((*iterator)->boundsRadius() != 0.0)
-			ostream << "\t\tBoundsRadius " << (*iterator)->boundsRadius() << ",\n";
-
-		ostream << "\t}\n";
-	}
+	BOOST_FOREACH(class Sequence *sequence, this->m_sequences)
+		sequence->writeMdl(ostream);
 
 	ostream << "}\n";
 }
 
-long32 Sequences::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Sequences::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -108,15 +85,15 @@ long32 Sequences::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 Sequences::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize Sequences::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	long32 nbytes = 0;
 	std::ostream::pos_type position = ostream.tellp();
 	
-	for (std::list<class Sequence*>::iterator iterator = this->m_sequences.begin(); iterator != this->m_sequences.end(); ++iterator)
+	BOOST_FOREACH(const class Sequence *sequence, this->m_sequences)
 	{
-		long32 writtenBytes = (*iterator)->writeMdx(ostream);
+		long32 writtenBytes = sequence->writeMdx(ostream);
 		
 		if (writtenBytes == 0)
 			throw Exception(_("Sequences: 0 byte sequence."));

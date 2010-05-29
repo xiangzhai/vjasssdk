@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "groupvertices.hpp"
 #include "groupvertex.hpp"
 
@@ -33,21 +35,21 @@ GroupVertices::GroupVertices(class Geoset *geoset) : MdxBlock("GNDX"), m_geoset(
 
 GroupVertices::~GroupVertices()
 {
-	for (std::list<class GroupVertex*>::iterator iterator = this->m_groupVertices.begin(); iterator != this->m_groupVertices.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class GroupVertex *groupVertex, this->m_groupVertices)
+		delete groupVertex;
 }
 
 void GroupVertices::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GroupVertices::writeMdl(std::ostream &ostream) throw (class Exception)
+void GroupVertices::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-long32 GroupVertices::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GroupVertices::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -55,7 +57,6 @@ long32 GroupVertices::readMdx(std::istream &istream) throw (class Exception)
 	long32 nvgrps = 0;
 	istream.read(reinterpret_cast<char*>(&nvgrps), sizeof(nvgrps));
 	bytes += istream.gcount();
-	std::cout << "Group vertices " << nvgrps << std::endl;
 	
 	for ( ; nvgrps > 0; --nvgrps)
 	{
@@ -64,12 +65,10 @@ long32 GroupVertices::readMdx(std::istream &istream) throw (class Exception)
 		this->m_groupVertices.push_back(groupVertex);
 	}
 	
-	std::cout << "Group vertices bytes " << bytes << std::endl;
-	
 	return bytes;
 }
 
-long32 GroupVertices::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize GroupVertices::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

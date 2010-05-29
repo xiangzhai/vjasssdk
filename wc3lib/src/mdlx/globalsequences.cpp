@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "globalsequences.hpp"
 #include "globalsequence.hpp"
 #include "../internationalisation.hpp"
@@ -34,28 +36,28 @@ GlobalSequences::GlobalSequences(class Mdlx *mdlx) : MdxBlock("GLBS"), m_mdlx(md
 
 GlobalSequences::~GlobalSequences()
 {
-	for (std::list<class GlobalSequence*>::iterator iterator = this->m_globalSequences.begin(); iterator != this->m_globalSequences.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class GlobalSequence *globalSequence, this->m_globalSequences)
+		delete globalSequence;
 }
 
 void GlobalSequences::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GlobalSequences::writeMdl(std::ostream &ostream) throw (class Exception)
+void GlobalSequences::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream << "GlobalSequences " << this->globalSequences().size() << " {\n";
 
-	for (std::list<class GlobalSequence*>::iterator iterator = this->globalSequences().begin(); iterator != this->globalSequences().end(); ++iterator)
-		(*iterator)->writeMdl(ostream);
+	BOOST_FOREACH(class GlobalSequence *globalSequence, this->m_globalSequences)
+		globalSequence->writeMdl(ostream);
 
 	ostream << "}\n";
 }
 
 
-long32 GlobalSequences::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GlobalSequences::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = MdxBlock::readMdx(istream);
+	std::streamsize bytes = MdxBlock::readMdx(istream);
 	
 	if (bytes == 0)
 		return 0;
@@ -80,10 +82,9 @@ long32 GlobalSequences::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-long32 GlobalSequences::writeMdx(std::ostream &ostream) throw (class Exception)
+std::streamsize GlobalSequences::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = 0;
-	bytes += MdxBlock::writeMdx(ostream);
+	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	
 	return bytes;
 }
