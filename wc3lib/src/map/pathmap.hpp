@@ -23,7 +23,9 @@
 
 #include <istream>
 #include <ostream>
+#include <map>
 
+#include "platform.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
@@ -37,7 +39,7 @@ class W3m;
 class Pathmap
 {
 	public:
-		enum Data
+		enum Type
 		{
 			Walk = 0x02,
 			Fly = 0x04,
@@ -56,7 +58,7 @@ class Pathmap
 		int32 fileVersion() const;
 		int32 width() const;
 		int32 height() const;
-		enum Data data(std::size_t width, size_t height) const throw (class Exception);
+		enum Type type(const class Position &position) const throw (class Exception);
 		
 		static const char8 identifier[4];
 
@@ -65,7 +67,7 @@ class Pathmap
 		int32 m_fileVersion;
 		int32 m_width;
 		int32 m_height;
-		enum Data *m_data;
+		std::map<class Position, enum Type> m_data;
 };
 
 inline int32 Pathmap::fileVersion() const
@@ -83,12 +85,14 @@ inline int32 Pathmap::height() const
 	return this->m_height;
 }
 
-inline enum Pathmap::Data Pathmap::data(std::size_t width, size_t height) const throw (class Exception)
+inline enum Pathmap::Type Pathmap::type(const class Position &position) const throw (class Exception)
 {
-	if (this->m_data == 0 || width >= this->m_width || height >= this->m_height)
+	std::map<class Position, enum Type>::const_iterator iterator = this->m_data.find(position);
+
+	if (iterator == this->m_data.end())
 		throw Exception();
 	
-	return this->m_data[width][height];
+	return iterator->second;
 }
 
 }

@@ -73,77 +73,99 @@ std::streamsize Mpq::create(const boost::filesystem::path &path, bool overwriteE
 	if (boost::filesystem::exists(path) && !overwriteExisting)
 		throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\". File does already exist.")) % path.string()));
 
-	boost::filesystem::ofstream ofstream(path, std::ios_base::binary);
-
-	if (!ofstream)
-		throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\".")) % path.string()));
-
-	ofstream.seekp(startPosition);
-
-	if (ofstream.tellp() != startPosition)
-		throw Exception(boost::str(boost::format(_("Unable to start in file \"%1%\" at position %2%.")) % path.string() % startPosition));
-
-	this->m_size = boost::filesystem::file_size(path);
-	this->m_path = path;
-	this->m_format = format;
-	this->m_extendedAttributes = extendedAttributes;
-	this->m_sectorSize = sectorSize;
-	std::streamsize streamSize = 0;
-
+	/// @todo Lock file.
 	try
 	{
-		streamSize = this->writeMpq(ofstream);
+		boost::filesystem::ofstream ofstream(path, std::ios_base::binary);
 
-		/// @todo FIXME, set stream size!!!
-		if (hasStrongDigitalSignature)
-			;
-			//this->createStrongDigitalSignature();
+		if (!ofstream)
+			throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\".")) % path.string()));
 
-		if (containsListfileFile)
-			this->createListfileFile();
+		ofstream.seekp(startPosition);
 
-		if (containsSignatureFile)
-			;
-			//this->createSignatureFile();
+		if (ofstream.tellp() != startPosition)
+			throw Exception(boost::str(boost::format(_("Unable to start in file \"%1%\" at position %2%.")) % path.string() % startPosition));
+
+		this->m_size = boost::filesystem::file_size(path);
+		this->m_path = path;
+		this->m_format = format;
+		this->m_extendedAttributes = extendedAttributes;
+		this->m_sectorSize = sectorSize;
+		std::streamsize streamSize = 0;
+
+		try
+		{
+			streamSize = this->writeMpq(ofstream);
+
+			/// @todo FIXME, set stream size!!!
+			if (hasStrongDigitalSignature)
+				;
+				//this->createStrongDigitalSignature();
+
+			if (containsListfileFile)
+				this->createListfileFile();
+
+			if (containsSignatureFile)
+				;
+				//this->createSignatureFile();
+		}
+		catch (class Exception &exception)
+		{
+			this->clear();
+
+			throw exception;
+		}
+
+		this->m_isOpen = true;
+
+		return streamSize;
 	}
-	catch (class Exception &exception)
+	catch (...)
 	{
-		this->clear();
+		/// @todo Unlock file.
 
-		throw exception;
+		throw;
 	}
-
-	this->m_isOpen = true;
-
-	return streamSize;
 }
 
 std::streamsize Mpq::open(const boost::filesystem::path &path, std::istream *listfileIstream) throw (class Exception)
 {
 	this->close();
-	boost::filesystem::ifstream ifstream(path, std::ios_base::binary);
 
-	if (!ifstream)
-		throw Exception(boost::str(boost::format(_("Unable to open file \"%1%\".")) % path.string()));
-
-	this->m_size = boost::filesystem::file_size(path);
-	this->m_path = path;
-	std::streamsize streamSize = 0;
+	/// @todo Lock file.
 
 	try
 	{
-		streamSize = this->readMpq(ifstream, listfileIstream);
+		boost::filesystem::ifstream ifstream(path, std::ios_base::binary);
+
+		if (!ifstream)
+			throw Exception(boost::str(boost::format(_("Unable to open file \"%1%\".")) % path.string()));
+
+		this->m_size = boost::filesystem::file_size(path);
+		this->m_path = path;
+		std::streamsize streamSize = 0;
+
+		try
+		{
+			streamSize = this->readMpq(ifstream, listfileIstream);
+		}
+		catch (class Exception &exception)
+		{
+			this->clear();
+
+			throw exception;
+		}
+
+		this->m_isOpen = true;
+
+		return streamSize;
 	}
-	catch (class Exception &exception)
+	catch (...)
 	{
-		this->clear();
+		/// @todo Unlock file.
 
-		throw exception;
+		throw;
 	}
-
-	this->m_isOpen = true;
-
-	return streamSize;
 }
 
 void Mpq::close()
@@ -152,6 +174,7 @@ void Mpq::close()
 		return;
 
 	std::cout << "Closing archive." << std::endl;
+	/// @todo Unlock file.
 	this->clear();
 }
 

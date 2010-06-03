@@ -53,11 +53,18 @@ class Tilepoint
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 		
+		const class Position& position() const;
+		int32 x() const;
+		int32 y() const;
+
 		short16 worldEditorHeight(short16 layer, short16 groundZeroLevel, short16 layerZeroLevel) const;
 		float32 worldEditorWaterLevel(short16 groundZeroLevel, float32 waterZeroLevel) const;
 		
 	protected:
+		friend class Environment;
+
 		class Environment *m_environment;
+		class Position m_position;
 		short16 m_groundHeight;
 		short16 m_waterLevel;
 		enum Tilepoint::Flags m_flags;
@@ -67,10 +74,25 @@ class Tilepoint
 		unsigned int m_layerHeight:4;
 
 };
+
+inline const class Position& Tilepoint::position() const
+{
+	return this->m_position;
+}
+
+inline int32 Tilepoint::x() const
+{
+	return this->m_position.first;
+}
+
+inline int32 Tilepoint::y() const
+{
+	return this->m_position.second;
+}
 	
 inline short16 Tilepoint::worldEditorHeight(short16 layer, short16 groundZeroLevel, short16 layerZeroLevel) const
 {
-	return (this->m_groundHeight - groundZeroLevel + (layer - layerZeroLevel) * this->m_layerHeight.to_ulong()) / 4;
+	return (this->m_groundHeight - groundZeroLevel + (layer - layerZeroLevel) * this->m_layerHeight) / 4;
 }
 
 inline float32 Tilepoint::worldEditorWaterLevel(short16 groundZeroLevel, float32 waterZeroLevel) const

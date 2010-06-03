@@ -31,9 +31,12 @@ namespace wc3lib
 namespace map
 {
 
-Pathmap::identifier[4] = { 'M', 'P', '3', 'W' };
+const char8 Pathmap::identifier[4] = { 'M', 'P', '3', 'W' };
 
-static struct Header
+namespace
+{
+
+struct Header
 {
 	char8 fileId[4]; //[4]: file ID = 'MP3W'
 	int32 fileVersion; //: file version = 0
@@ -41,14 +44,14 @@ static struct Header
 	int32 height; //: path map height (=map_height*4)
 };
 
-Pathmap::Pathmap(class W3m *w3m) : m_w3m(w3m), m_fileVersion(0), m_width(0), m_height(0), m_data(0)
+}
+
+Pathmap::Pathmap(class W3m *w3m) : m_w3m(w3m), m_fileVersion(0), m_width(0), m_height(0)
 {
 }
 
 Pathmap::~Pathmap()
 {
-	if (this->m_data != 0)
-		delete[] this->m_data;
 }
 
 std::streamsize Pathmap::read(std::istream &istream) throw (class Exception)
@@ -63,13 +66,20 @@ std::streamsize Pathmap::read(std::istream &istream) throw (class Exception)
 	this->m_fileVersion = header.fileVersion;
 	this->m_width = header.width;
 	this->m_height = header.height;
-	
-	if (this->m_data != 0)
-		delete[] this->m_data;
-	
-	this->m_data = new Pathmap::Data[header.width][header.height];
-	istream.read(reinterpret_cast<char*>(&this->m_data), header.width * header.height);
-	bytes += istream.gcount();
+
+	if (!this->m_data.empty())
+		this->m_data.clear();
+
+	for (int32 width = 0; width < header.width; ++width)
+	{
+		for (int32 height = 0; height < header.height; ++height)
+		{
+			char8 type;
+			istream.read(reinterpret_cast<char*>(&type), sizeof(type));
+			bytes += istream.gcount();
+			this->m_data[std::make_pair(width, height)] = static_cast<enum Type>(type);
+		}
+	}
 	
 	return bytes;
 }

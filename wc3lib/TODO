@@ -1,3 +1,6 @@
+2010-06-01 Tamino Dauth <tamino@cdauth.eu>
+* Use BOOST_SCOPED_ENUM_START/namespace for enums.
+
 2010-05-29 Tamino Dauth <tamino@cdauth.eu>
 * mdl read and write methods should also return streamsize.
 

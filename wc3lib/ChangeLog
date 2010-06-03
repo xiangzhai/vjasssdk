@@ -1,3 +1,19 @@
+2010-06-03 Tamino Dauth <tamino@cdauth.eu>
+* Revised classes map::Environment, map::Tilepoint, map::Shadow and map::Pathmap.
+* Added struct map::Rgb and class map::Position.
+* Added UI for camera palette to editor module.
+* Revised Jass++ specification - added load and ai blocks and improved conversion description and enum specification.
+
+
+2010-06-02 Tamino Dauth <tamino@cdauth.eu>
+* Added classes map::Camera, map::Cameras, map::Rect and map::Rects.
+* Added utility functions readCString, readString, writeCString and writeString.
+
+2010-06-01 Tamino Dauth <tamino@cdauth.eu>
+* Dropped unnecessary operator "length" of language Jass++.
+* Added "container types" definition to Jass++ specification.
+* Added list of native "container types".
+
 2010-05-28 Tamino Dauth <tamino@cdauth.eu>
 * Improved warblender.
 * Added struct mdlx::VertexData.

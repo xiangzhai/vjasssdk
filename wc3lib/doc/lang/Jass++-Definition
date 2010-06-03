@@ -6,8 +6,11 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 5. Kommentare
 6. Präprozessoren
 7. Testblöcke
-8. Deklaration nativer Typen
-9. Deklaration nativer Funktionen
+8. Lade-Blöcke
+9. KI-Blöcke
+10. Verfügbarkeiten
+11. Deklaration nativer Typen
+12. Deklaration nativer Funktionen
 10. Bezeichner (identifiers)
 11. Literale
 12. Escape-Sequenzen
@@ -18,7 +21,6 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 17. Variablen
 18. Operatoren
 19. Typen
-20. Typkonvertierungen
 21. Verzweigungen
 22. Schleifen
 23. Variablensperrung (locking)
@@ -107,6 +109,43 @@ Dabei werden zum Teil einzigartige und zum Teil altbekannte Syntaxelemente unter
 Zudem, und dies halte ich persönlich für eine sehr wichtige Eigenschaft der Sprache, soll sie so gut wie möglich zu bestehenden Spracherweiterungen
 von Jass kompatibel sein und zumindest deren getrennte Behandlung erlauben.
 
+Mächtigkeit und Umfang:
+Jass an sich ist wie z. B. C eine rein funktionale Sprache. Man definiert einige Funktionen, die bei bestimmten Ereignissen (siehe "Ereignisbehandlung")
+aufgerufen werden und erhält so sein Programm. In der Regel ist das fast die beste Lösung, um eine Spiele-Engine ansprechbar zu machen und eine einfache
+Schnittstelle für Anwender herzustellen. Diese kann jederzeit durch die Definition neuer nativer Typen und Funktionen erweitert werden und die Komplexität
+hält sich in Grenzen. Letztlich kann alles sogar noch um ein Vielfaches vereinfacht werden, indem man erstens eine ganze Reihe von in Jass geschriebenen
+Funktionen zur Verfügung stellt, die selbst die nativen Funktionen verwenden und diese um oftmals benötigte Operationen erweitern und indem man zweitens
+eine grafische Oberfläche über das Ganze packt, sodass selbst ein Nichtprogrammierer kaum noch ein Problem mit der Verwendung der Funktionen hat, insofern
+diese ausreichend dokumentiert sind.
+Letzteres bedeutet zwar einen gewissen Aufwand, aber der Erfolg des Welteneditors von Warcraft 3 The Frozen Throne spricht für sich und ich selbst kann
+man mich an einen sehr schnellen Lernprozess und schnelle Erfolge ohne jegliche Programmierkenntnisse zur damaligen Zeit erinnern.
+Man fragt sich also, warum es eigentlich Sinn macht, eine mächtigere und umfangreichere Skriptsprache zu entwerfen und zu implementieren.
+Um das zu verstehen, muss man sich die Entwicklung von der Modifikationen des Spiels und den Umfang der nativen Funktionen ansehen.
+Viele der nativen Funktionen werden für einfache Karten, die sich an das normale Spielprinzip halten, gar nicht benötigt. Die Modifizierenden aber haben
+mit der Zeit erkannt, dass man eine Menge eigener, neuer Systeme mit den vorhandenen Funktionen einbauen kann, welche völlig neue Spielprinzipien möglich machen.
+Der einzige Nachteil ist die Spielleistung, die sich natürlich umgekehrt proportional zum Umfang der Systeme verhält.
+Der zweite und noch viel wichtigere Punkt ist die Tatsache, dass der Quell-Code des Spiels nicht verfügbar ist und somit die Möglichkeit der Implementation
+nativer Typen und Funktionen für Anwender nicht zur Verfügung steht.
+Daher muss alles per Jass eingebaut werden und bei einem größeren Umfang der Systeme ist auch ein größerer Umfang und eine größerer Mächtigkeit der Skript-
+sprache von Umfang, um den Arbeitsaufwand zu reduzieren und vor allem die Fehlerquellen.
+
+Ereignisbehandlung:
+Jass ist eine ereignisgesteuerte Skriptsprache. Das bedeutet, dass letztlich alles über Ereignisse des Spiels ausgelöst wird. Die Jass-API bietet unterschiedliche
+Funktionen für die Registrierung von Ereignissen an sogenannten Auslösern, welche ausgeführt werden, sobald eines der registrierten Ereignisse ausgelöst wird.
+Zunächst wird dann eine optionale Bedingung des Auslösers überprüft und dann je nachdem ob die Bedingung zutrifft oder nicht oder keine existiert, die Aktion bzw.
+Funktion des Auslösers ausgeführt. Selbstverständlich hat jedes Ereigniss spezielle Ereignissdaten bzw. -parameter wie z. B. den angesteurten Auslöser (GetTriggeringTrigger()).
+Mit diesen Ereignisdaten kann dann mit der Auslöseraktion entsprechendend auf das Ereignis reagiert werden. Leider sind die Ereignisse in mancher Hinsicht relativ limitiert
+und beschränken sich teilweise auf die Funktionalität, die benötigt wird, um einfache Karten und Szenarios wie sie bereits vom Spiel mitgeliefert werden und nichts Umfangreicheres
+zu gestalten.
+Zeitliche Aktionen können per mit Zeitgeberereignissen und Warteanweisungen (siehe "Multi Threading") gesteuert werden.
+ERGÄNZEN.
+
+Multi Threading:
+NOCH EINFÜGEN.
+
+Objektorientierung:
+NOCH EINFÜGEN.
+
 Syntax des Dokuments:
 | bedeutet "oder".
 Zwischen zwei eckige Klammern eingeschlossener Inhalt ist optional.
@@ -167,10 +206,10 @@ Warcraft-spezifisch: code, handle, agent, event, player, widget, unit, destructa
 
 Prozedual-Schlüsselwörter:
 Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const, alias
-Warcract-spezifisch: native, mapinit, debug
+Warcract-spezifisch: native, mapinit, debug, ai, load
 
 Operator-Schlüsselwörter:
-Warcraft-spezifisch: id, hash, length
+Warcraft-spezifisch: id, hash
 
 Funktional-Schlüsselwörter:
 Standard: operator, return
@@ -197,7 +236,7 @@ der Aufruf nicht mittels calls abgerufen werden und es gäbe eventuell weitere N
 
 Zusammenfassung der Qualifizierer:
 Standard: enum, const, template, package, private, protected, public, class, init, virtual, static, friend, abstract, mutable
-Warcraft-spezifisch: native, mapinit, debug, threaded
+Warcraft-spezifisch: native, mapinit, debug, threaded, ai, load
 
 Zusammenfassung der Anweisungsblockschlüsselwörter:
 Standard: if, else, switch, case, default, while, do, for, foreach, try, catch, finally
@@ -205,10 +244,14 @@ Warcraft-spezifisch: threaded
 
 Zusammenfassung der Anweisungsschlüsselwörter:
 Standard: break, continue, throw, size, return, new, delete, copy
-Warcraft-spezifisch: id, hash, length, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep, store, restore, flush, save, load, remove
+Warcraft-spezifisch: id, hash, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep, store, restore, flush, save, load, remove
+
+Zusammenfassung der Container-Typ-Schlüsselwörter:
+Standard: string
+Warcraft-spezifisch: force, group
 
 Bezeichnerspezifizierungsschlüsselwörter:
-Standard: enum, package, class
+Standard: ai, load, abstract, enum, package, class
 
 5. Kommentare
 
@@ -298,7 +341,52 @@ debug
 {
 }
 
-8. Deklaration nativer Typen
+8. Lade-Blöcke
+
+Lade-Blöcke werden zum Vorladen ("preloading") bestimmter Dateien verwendet und werden mit dem Schlüsselwort "load" eingeleitet.
+Die angegebenen Dateien werden am Anfang der "main"-Funktion, noch vor allen anderen Funktionsaufrufen, geladen.
+Die Ladeaufrufe entsprechen einem Aufruf der nativen Jass-Funktion "Preload".
+Da Lade-Blöcke einen Bezeichner haben können, können Sie sich auch gegenseitig voraussetzen (siehe "Deklarationsanforderungen"),
+wodurch die Reihenfolge während des Ladens bestimmt werden kann.
+Hat ein Lade-Block keinen Bezeichner, wird er ebenfalls je nach seiner Deklarationsposition ausgeführt.
+
+Notation:
+load [<Bezeichner>] [Deklarationsvoraussetzung]
+{
+	"<Dateipfad>",
+	"<Dateipfad>"
+}
+
+9. KI-Blöcke
+
+Da das Spiel Warcraft 3 The Frozen Throne ein recht umfangreiches KI-Modul besitzt, gibt es in Jass++
+selbstverständlich eine kleinere Unterstützung für KI-Skripts.
+KI-Blöcke werden mit dem Schlüsselwort "ai" eingeleitet und haben zwingend einen Bezeichner.
+Innerhalb eines KI-Blocks dürfen explizit Variablen und Funktionen aus der verwendeten "common.ai"-Datei
+verwendet werden bzw. natürlich auch eigene, die innerhalb des KI-Blocks deklariert wurden.
+Der Inhalt des KI-Blocks kann über seinen Bezeichner mit den Schlüsselwörtern "execute" und "for" für einen Spieler gestartet werden.
+Der Aufruf entspricht einem Aufruf der nativen Jass-Funktion "StartCampaignAI" mit dem Spieler und dem Bezeichner als Parameter.
+Der Inhalt kann nur von anderen KI-Blöcken aus aufgerufen werden, natürlich nur insofern die Deklarationsreihenfolge stimmt.
+Innerhalb des KI-Blocks darf kein KI-Block aufgerufen werden.
+Ein KI-Block kann ebenfalls als Deklarationsvoraussetzung verwendet werden, um sicherzustellen, dass er aufrufbar ist bzw.
+sein Inhalt von einem anderen KI-Block aus verwendbar ist.
+
+Deklarations-Notation:
+ai <Bezeichner> [Deklarationsvoraussetzungen]
+{
+	<Anweisungen>
+}
+
+Aufrufsnotation:
+execute <Bezeichner> for <Spieler>
+
+10. Verfügbarkeiten
+In Jass++ ist es garantiert, dass sämtlicher Code aus der "common.j"- und der "Blizzard.j"-Datei zur Verfügung steht.
+Dabei kann eine beliebige Version von Warcraft 3 The Frozen Throne verwendet werden, in welcher die Datentypen "agent"
+und "hashtable" bereits verfügbar sind.
+Die Datei "common.ai" ist nur in KI-Blöcken garantiert verfügbar (siehe "KI-Blöcke").
+
+10. Deklaration nativer Typen
 
 Es gibt kopierbasierte und referenzbasierte native Typen. Der Typ "agent" wird von sämtlichen referenzbasierten nativen Typen erweitert.
 Referenzbasierte Werte werden beim Übergeben an eine andere Variable (auch an Paramter) nicht kopiert, sondern lediglich ihre Referenz,
@@ -373,7 +461,8 @@ Notation:
 
 Gültigkeitsbereiche definieren, innerhalb welches Bereiches eine Deklaration ihre Gültigkeit hat. Außerhalb dieses Bereiches
 kann die Deklaration nur über den Bezeichner, insofern ein solcher existiert, des Gültigkeitsbereiches bzw. den .-Operator erreicht werden.
-In bestimmten Fällen geschieht dies implizit (Methodenaufruf, Pseudonyme, Paketverwendung usw.).
+Innerhalb kann der Bezeichner mit dem .-Operator optional verwendet werden.
+In bestimmten Fällen geschieht dies implizit (Methodenaufruf, Pseudonyme, Gültigkeitsbereichverwendung usw.).
 Ein Gültigkeitsbereich besitzt in Jass++ nicht zwingend einen Bezeichner und ist zwischen einer geöffneten und einer geschlossenen eckigen
 Klammer definiert.
 Je tiefer der Gültigkeitsbereich, desto höher ist die Priorität des Bezeichners. Die Bezeichner können sich gegenseitig überdecken.
@@ -382,18 +471,24 @@ Gültigkeitsbereiche zugegriffen werden. Dies ermöglicht eine Verschachtelung b
 Zu beachten gilt, dass lokale Variablen nur im Funktionskopf deklariert werden können, wodurch eine erneute Deklaration und Überlagerung
 der äußeren lokalen Variablen, durch innere in neuen Gültigkeitsbereichen nicht möglich ist.
 Es existieren folgende sprachenspezifische Arten von Gültigkeitsbereichen:
+* Verzweigungen
+* Schleifen
+* Ausnahmebehandlungen
 * Funktionsdeklarationen
-* Funktionstypendeklarationen
 * Aufzählungsdeklarationen
 * Klassendeklarationen
 * Paketdeklarationen
+
+Anmerkung zu Funktionen:
+Es gilt zu beachten, dass ebenfalls auf Eigenschaften von Funktionen zugegriffen werden kann, jedoch nur, wie auch bei Klassen,
+auf die statischen Variablen.
 
 Notation:
 [<Bezeichner>] [<optionale Eigenschaften des jeweiligen Sprachelements>]
 {
 }
 
-Bespiel:
+Bespiele:
 void test()
 {
 	int x = 0;
@@ -403,6 +498,13 @@ void test()
 		.x = 10; // x im Gültigkeitsbereich über dem aktuellen erhält den Wert 10
 		x = 12; // x im Gültigkeitsbereich über dem aktuellen erhält den Wert 12, da im aktuellen Gültigkeitsbereich keine Variable namens x deklariert wurde
 	}
+}
+
+class Test
+{
+	public static const i = 10;
+	public static const j = i; // Der Bezeichner kann innerhalb des Gültigkeitsbereiches weggelassen werden.
+	public static const k = Test.j; // Er ist optional.
 }
 
 14. Gültigkeitsbereichverwendung
@@ -417,11 +519,13 @@ aufgehoben werden.
 Der *-Operator dagegen bewirkt, dass sämtliche Untergültigkeitsbereiche implizit ebenfalls verwendet werden.
 Eine Kombination der beiden Operatoren ist theoretisch möglich, da der --Operator implizit den *-Operator verwendet, aber nicht notwendig.
 Der Compiler sollte in diesem Fall eine Warnung ausgeben.
-Zudem ist es unter keinen Umständen möglich bei der Gültigkeitsbereichverwendung den aktuellen Gültigkeitsbereich oder einen Subgültigkeitsbereich
+Zudem ist es unter keinen Umständen möglich, bei der Gültigkeitsbereichverwendung den aktuellen Gültigkeitsbereich oder einen Subgültigkeitsbereich
 dessen mit dem *-Operator oder dem --Operator anzugeben.
 In diesem Fall muss der Compiler eine Fehlermeldung ausgeben.
-Eine besondere Ausnahme bei der Gültigkeitsbereichverwendung bilden Funktionen.
-Sie können nur innerhalb ihres eigenen Gültigkeitsbereichs verwendet werden.
+Auch Funktionen können als Gültigkeitsbereich verwendet werden (siehe "Gültigkeitsbereiche").
+VERALTET: Eine besondere Ausnahme bei der Gültigkeitsbereichverwendung bilden Funktionen.
+VERALTET: Ihr innerer Gültigkeitsbereich kann nicht von außerhalb verwendet werden.
+Elemente die in einem Gültigkeitsbereich enthalten sind, müssen niemals zwingend dessen Bezeichner angeben.
 
 Notation:
 <Gültigkeitsbereichbezeichner>[* | -];
@@ -434,7 +538,6 @@ enum gna.gnu.gni.Test.Type;
 Test var = new Test();
 package gna.gnu.gni-;
 Test var2 = new Test(); // Fehler, undefinierter Bezeichner!
-
 
 15. Qualifizierer-Gültigkeitsbereiche
 
@@ -560,6 +663,50 @@ Variable < Ausdruck
 Für den Typ integer:
 real(Variable)						Entspricht I2R(Variable)
 string(Variable)					Entspricht I2S(Variable)
+race(Variable)						Entspricht ConvertRace(Variable)
+alliancetype(Variable)					Entspricht ConvertAllianceType(Variable)
+racepreference(Variable)				Entspricht ConvertRacePref(Variable)
+igamestate(Variable)					Entspricht ConvertIGameState(Variable)
+fgamestate(Variable)					Entspricht ConvertFGameState(Variable)
+playerstate(Variable)					Entspricht ConvertPlayerState(Variable)
+playerscore(Variable)					Entspricht ConvertPlayerScore(Variable)
+playergameresult(Variable)				Entspricht ConvertPlayerGameResult(Variable)
+unitstate(Variable)					Entspricht ConvertUnitState(Variable)
+aidifficulty(Variable)					Entspricht ConvertAIDifficulty(Variable)
+gameevent(Variable)					Entspricht ConvertGameEvent(Variable)
+playerevent(Variable)					Entspricht ConvertPlayerEvent(Variable)
+playerunitevent(Variable)				Entspricht ConvertPlayerUnitEvent(Variable)
+widgetevent(Variable)					Entspricht ConvertWidgetEvent(Variable)
+dialogevent(Variable)					Entspricht ConvertDialogEvent(Variable)
+unitevent(Variable)					Entspricht ConvertUnitEvent(Variable)
+limitop(Variable)					Entspricht ConvertLimitOp(Variable)
+unittype(Variable)					Entspricht ConvertUnitType(Variable)
+gamespeed(Variable)					Entspricht ConvertGameSpeed(Variable)
+placement(Variable)					Entspricht ConvertPlacement(Variable)
+startlocprio(Variable)					Entspricht ConvertStartLocPrio(Variable)
+gamedifficulty(Variable)					Entspricht ConvertGameDifficulty(Variable)
+gametype(Variable)					Entspricht ConvertGameType(Variable)
+mapflag(Variable)					Entspricht ConvertMapFlag(Variable)
+mapvisibility(Variable)					Entspricht ConvertMapVisibility(Variable)
+mapsetting(Variable)					Entspricht ConvertMapSetting(Variable)
+mapdensity(Variable)					Entspricht ConvertMapDensity(Variable)
+mapcontrol(Variable)					Entspricht ConvertMapControl(Variable)
+playercolor(Variable)					Entspricht ConvertPlayerColor(Variable)
+playerslotstate(Variable)					Entspricht ConvertPlayerSlotState(Variable)
+volumegroup(Variable)					Entspricht ConvertVolumeGroup(Variable)
+camerafield(Variable)					Entspricht ConvertCameraField(Variable)
+blendmode(Variable)					Entspricht ConvertBlendMode(Variable)
+raritycontrol(Variable)					Entspricht ConvertRarityControl(Variable)
+texmapflags(Variable)					Entspricht ConvertTexMapFlags(Variable)
+fogstate(Variable)					Entspricht ConvertFogState(Variable)
+effecttype(Variable)					Entspricht ConvertEffectType(Variable)
+version(Variable)					Entspricht ConvertVersion(Variable)
+itemtype(Variable)					Entspricht ConvertItemType(Variable)
+attacktype(Variable)					Entspricht ConvertAttackType(Variable)
+damagetype(Variable)					Entspricht ConvertDamageType(Variable)
+weapontype(Variable)					Entspricht ConvertWeaponType(Variable)
+soundtype(Variable)					Entspricht ConvertSoundType(Variable)
+pathingtype(Variable)					Entspricht ConvertPathingType(Variable)
 
 Für den Typ real:
 integer(Variable)					Entspricht R2I(Variable)
@@ -588,13 +735,13 @@ Variable < Ausdruck
 Variable * Ausdruck				Der Ausdruck muss eine Ganzzahl sein. Liefert eine neue Zeichenkette, in welcher die alte Ausdruck mal kopiert und aneinander gehängt wurde.
 Variable *= Ausdruck				Die Variable erhält den vervielfachten Inhalt.
 hash Variable					Entspricht Variable.hash und StringHash(Variable)
-Variable[Index]					Entspricht SubString(Variable, index, index + 1)
-length Variable					Entspricht Variable.length und StringLength(Variable)
+Variable[Index]					Entspricht SubString(Variable, index, index + 1). Liefert immer "null", wenn sich der Index außerhalb des String-Bereichs befindet.
+size Variable					Entspricht Variable.size und StringLength(Variable)
 integer(Variable)				Entspricht S2I(Variable)
 real(Variable)					Entspricht S2R(Variable)
 
 Für den Typ code:
-Variable = Ausdruck
+Variable = Ausdruck				Der Ausdruck muss eine zuvor deklarierte Funktion sein, die keine Parameter entgegen nimmt und keinen Rückgabetyp besitzt. In Jass wird für gewöhnlich nicht überprüft, ob die Funktion zuvor deklariert wurde, was zu Laufzeitfehlern führen kann.
 
 Für den Typ handle:
 Variable = Ausdruck
@@ -604,6 +751,22 @@ integer(Variable)				Entspricht GetHandleId(Variable)
 id Variable					Entspricht Variable.id und GetHandleId(Variable)
 Variable.id
 
+Für den Typ force:
+Variable[Index]					Liefert den Spieler (Typ "player") der Streitmacht des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Streitmacht, so liefert der Ausdruck "null".
+size Variable					Liefert die Größe der Streitmacht als Ganzzahl.
+Variable.size					Liefert die Größe der Streitmacht als Ganzzahl.
+
+Für den group:
+Variable[Index]					Liefert die Einheit (Typ "unit") der Gruppe des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Gruppe, so liefert der Ausdruck "null".
+size Variable					Liefert die Größe der Gruppe als Ganzzahl.
+Variable.size					Liefert die Größe der Gruppe als Ganzzahl.
+
+Für Lade-Blöcke:
+<Lade-Block-Bezeichner> : <Deklarationsvoraussetzungen>
+
+Für KI-Blöcke:
+<KI-Block-Bezeichner> : <Deklarationsvoraussetzungen>
+
 Für Paketdeklarationen:
 <Paketbezeichner> : <Deklarationsvoraussetzungen>
 
@@ -611,14 +774,16 @@ Für Funktionsdeklarationen:
 <Rückgabetyp> <Funktionsname><Parameterliste> : <Deklarationsvoraussetzungen>
 
 Für Aufzählungsdeklarationen:
-<Aufzählungsbezeichner> : <Deklarationsvoraussetzungen>
+<Aufzählungsbezeichner> (<Erbung) : <Deklarationsvoraussetzungen>
 
 Für Klassendeklarationen:
 <Klassenbezeichner> (<Erbung>) : <Deklarationsvoraussetzungen>
 
 Für Arrays:
-size Variable
-Variable.size
+size Variable					Liefert die Größe des Arrays.
+Variable.size					Liefert die Größe des Arrays.
+size Variable <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
+Variable.size <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
 Variable[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
 
 Für große Arrays:
@@ -627,13 +792,12 @@ id Variable					Liefert die interne Ganzzahl der Array-Instanz.
 Variable.id
 
 Für Aufzählungen:
+<Geerbter Typ>(Variable)
 Variable = Ausdruck
 Variable == Ausdruck
 Variable != Ausdruck
-size <Aufzählungsbezeichner>
-<Aufzählungsbezeichner>.size
-length <Aufzählungsbezeichner>
-<Aufzählungsbezeichner>.length
+size <Aufzählungsbezeichner>			Liefert die Anzahl der Elemente der Aufzählung
+<Aufzählungsbezeichner>.size			Liefert die Anzahl der Elemente der Aufzählung
 
 Für Funktionszeiger:
 execute Variable(<Parameter)
@@ -680,14 +844,19 @@ id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Klassen
 
 In Jass++ können sämtliche Typen aus Jass ohne besondere Einschränkungen (bis auf "const"-Deklarationen) verwendet werden.
 Eigene Typen können ausschließlich mittels Klassen definiert werden. Alle anderen Typen sind native Typen.
-Ein Variablentyp kann als Suffix das Schlüsselwort "const" erhalten, insofern er referenzbasiert ist.
+Ein Variablentyp kann als Suffix das Schlüsselwort "const" erhalten.
 In Jass++ wird wie in Jass zwischen referenz- und kopierbasierten Typen unterschieden. Ist der Typ einer Variable
 referenzbasiert und konstant, so darf das Objekt, auf welches referenziert wird nicht verändert werden, die Variable selbst jedoch schon.
+So kann ihr ein neuer Inhalt zugewiesen werden, für diesen jedoch keine Methode aufgerufen werden, die nicht als "const" deklariert wurde (siehe "Methoden").
+Kopierbasierte Typen sind somit immer implizit als "const" deklariert, da von ihnen sowieso eine Kopie erzeugt wird und nicht eine Referenz.
+Daher bewirkt das Suffix "const" bei kopierbasierten Typen nichts, ist aber eine gültige Syntax.
+Dies wurde so entschieden, da es z. B. bei der Definition generischer Containerklassen zu Problemen kommen kann, wenn es darum geht, einen
+unveränderbaren Wert zurückzugeben.
 Der Inhalt kopierbasierter Variablen wird wie der referenzbasierter beim Übergeben an eine andere (z. B. an Funktionsparameter) kopiert,
 jedoch wird bei referenzbasierten lediglich eine Referenz auf ein global existierendes Objekt kopiert, welches, falls möglich,
 explizit vom Entwickler wieder freigegeben werden muss.
 Da auch Funktionszeiger referenzbasierter Typen sind, können sie ebenfalls als "const" deklariert werden, was zur Folge hat,
-dass die Funktionen, auf welche sie zeigen nicht mit den Schlüsselwörtern execute, executewait, evaluate, sleepon, sleepoff und reset aufgerufen
+dass die Funktionen, auf welche sie zeigen nicht mit den Schlüsselwörtern "execute", "executewait", "evaluate", "sleepon", "sleepoff" und "reset" aufgerufen
 bzw. diese auf sie angewandt werden dürfen.
 Wird eine Variable eines referenzbasierten Typs freigegeben bzw. gelöscht, so wird bei einer erfolgreichen Freigabe der Variableninhalt auf 0
 gesetzt.
@@ -703,7 +872,7 @@ Klasseninstanzenreferenzen können zum Typ integer konvertiert werden (ebenfalls
 Kindinstanzen können zu Elterninstanzen implizit konvertiert werden. Dies gilt auch für
 native Kindtypen wie z. B. unit zu widget.
 Andersherum muss explizit umgewandelt werden und gilt nur noch für Klasseninstanzen, nicht für
-native Typen.
+native Typen mit Ausnahme derer für die native Konvertierungsfunktionen zur Verfügung stehen.
 Zu beachten gilt, dass es bei Eltern-zu-Kind-Konvertierungen zu fehlenden Daten für z. B.
 virtuelle Methoden kommen kann. Schlimmer noch wäre ein Zugriff auf ein Instanzelement
 einer ursprünglichen Nichtklasseninstanz, da so auf ein falsches Element einer anderen
@@ -712,6 +881,11 @@ gefunden werden.
 Daher sollte der Compiler bei solchen Konvertierungen eine Warnung ausgeben.
 Außerdem können Variablen mit nicht-konstantem Inhalt implizit zu solchen konvertiert werden.
 Andersherum ist eine Konvertierung gar nicht möglich.
+Schlägt eine Konvertierung fehl (z. B. eine Ganzzahl in einen Schadenstypen), so wird ein Nullwert
+zurückgeliefert. 0 bei referenzbasierten und "null" bei kopierbasierten Typen.
+Eine Liste der möglichen Konvertierungen nativer Typen, welche durch die bestehenden nativen Funktionen
+von Jass möglich sind und nach der Konvertierungssyntax von Jass++ durchgeführt werden können finden
+Sie im Abschnitt "Operatoren" und im Unterabschnitt des jeweiligen Typs.
 
 Notation:
 <Konvertierungstyp>(Ausdruck)
@@ -729,8 +903,41 @@ myUnit = widget(myWidget); // illegal!
 Unit const myUnit = myOtherNonConstantUnit;
 Unit myUnit= myOtherConstantUnit; // illegal!
 
+Container-Typen:
+Ein Container-Typ ist ein Typ, welcher die Verwendung des "size"- und des "[]"-Operators gestattet.
+Dabei muss der "size"-Operator eine Ganzzahl zurückgeben und der "[]"-Operator eine einzige als
+Parameter entgegen nehmen und einen beliebigen Typ zurückgeben.
+Ob die beiden Operatoren als "const" implementiert sind ist frei wählbar, jedoch können, falls
+einer der beiden nicht als "const" implementiert ist, konstante Instanzen des Typs nicht in
+"foreach"-Schleifen verwendet werden.
+Anderenfalls geht dies ohne Probleme durch die vorgegebene Implementation (siehe "foreach-Schleife").
+Es gibt drei native Container-Typen:
+* string
+* force
+* group
+
+Alle drei können somit in "foreach-Schleifen" verwendet werden.
+Außerdem zählen Aufzählungen auch zu den Container-Typen.
+
+Vordefinierte Typen:
+Bei folgenden Typen wird die verwendete "common.j"-Datei analysiert und anhand der dort definierten Jass-Konstanten
+ermittelt, welche Werte zur Verfügung stehen. Sollte eine Variable eines der Typen einen anderen Wert erhalten
+haben als in der Datei zur Verfügung steht, so gibt der Compiler eine Fehlermeldung aus.
+Dabei werden auch Konvertierungen von Ganzzahlen zu einem der Typen überprüft. Sollte die Konvertierung erst zur
+Laufzeit überprüfbar sein, gibt der Compiler zumindest eine Warnung aus.
+Hier ist eine Liste der nativen Typen:
+playercolor, race, playergameresult, alliancetype, version, attacktype, damagetype, weapontype, pathingtype, racepreference,
+mapcontrol, gametype, mapflag, placement, startlocprio, mapdensity, gamedifficulty, gamespeed, playerslotstate, volumegroup,
+igamestate, fgamestate, playerstate, unitstate, aidifficulty, playerscore, gameevent, playerevent, playerunitevent, unitevent
+widgetevent, dialogevent, gameevent, playerevent, playerunitevent, limitop, unittype, itemtype, camerafield, blendmode, raritycontrol,
+texmapflags, fogstate, effecttype, soundtype
+
 20. Verzweigungen
 
+if-Verzweigungen:
+If-Verzweigunen werden zur Überprüfung unterschiedlicher Ausdrücke benutzt.
+
+Notationen:
 if (Ausdruck)
 {
 }
@@ -741,8 +948,10 @@ else (Ausdruck)
 {
 }
 
+Switch-Verzweigungen:
 Switch-Verzweigungen können anders als in herkömmlichen Sprachen jede Art von Datentyp behandeln.
 
+Notation:
 switch (<Variable>)
 {
 	case (<konstanter Ausdruck>)
@@ -772,6 +981,9 @@ case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdr
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 {
 }
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
 
 do
 {
@@ -781,6 +993,9 @@ case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdr
 {
 }
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
 {
 }
 
@@ -793,14 +1008,20 @@ case (<konstanter Ganzzahlausdruck>) // Schleife wurde <Anzahl> mal durchlaufen.
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
 {
 }
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
 
-foreach (<Variablenname>; <Variablenname einer Array-Variable>)
+foreach (<Variablenname>; <Container-Variable>) // siehe "Container-Typen"
 {
 }
 case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
 {
 }
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
 {
 }
 
@@ -830,7 +1051,7 @@ threaded (<Variablenname>[; <Fließkommaintervall>])
 
 23. Deklarationsvoraussetzungen
 
-Funktionen, Pakete, Aufzählungen und Klassen können bei ihrer Deklaration eben solche voraussetzen.
+Lade-Blöcke, KI-Blöcke, Funktionen, Pakete, Aufzählungen und Klassen können bei ihrer Deklaration eben solche voraussetzen.
 Dazu wird der :-Operator verwendet. Dies stellt sicher, dass die Voraussetzungen vor dem jeweiligen
 Code-Objekt deklariert werden. Sollte es dabei zu Kreisabhängigkeiten kommen, indem sich z. B. zwei
 Code-Objekte gegenseitig voraussetzen, so muss der Compiler eine Fehlermeldung ausgeben.
@@ -843,7 +1064,7 @@ Geerbte Klassen werden implizit als Deklarationsvoraussetzung angegeben.
 Aufzählungen brauchen in der Regel höchstens Voraussetzungen, wenn das Paket oder die Klasse Ganzzahl-Konstanten enthält.
 
 Notation:
-<Funktionsdeklaration|Paketdeklaration|Aufzählungsdeklaration|Klassendeklaration> : <Bezeichner1>, <Bezeichner2>, ... <Bezeichnern>
+<Lade-Block|KI-Block|Funktionsdeklaration|Paketdeklaration|Aufzählungsdeklaration|Klassendeklaration> : <Bezeichner1>, <Bezeichner2>, ... <Bezeichnern>
 
 21. Funktionen
 
@@ -927,14 +1148,16 @@ Funktionsvariablen sind Variablen des Typs "<Rückgabetyp> (<Parameter>)". Sie k
 Der Verweis ist normalerweise ein Integer-Wert, welcher je nach Kompilierung des Codes unterschiedlich auf die Funktion verweisen kann.
 Eine Funktionsvariable kann ebenso auf Methoden einer Klasse verweisen, welche ebenfalls als "threaded" deklariert sein müssen.
 Funktionsvariablen können wie normale "threaded" Funktionen aufgerufen werden.
-Des Weiteren gilt es zu beachten, dass Funktionsvariablen ebenfalls als "const" deklariert werden können (siehe Abschnitt Typen).
+Des Weiteren gilt es zu beachten, dass Funktionsvariablen ebenfalls als "const" deklariert werden können (siehe "Typen").
 
 Notation:
-<Rückgabetyp> (Parametertyp1, Parametertyp2, ... ParametertypN) <Variablenname> [= Funktionsname | "threaded" Lambda-Funktionsdefinition];
+<Rückgabetyp> (Parametertyp1, Parametertyp2, ... ParametertypN) [const] <Variablenname> [= Funktionsname | "threaded" Lambda-Funktionsdefinition];
 
 Beispiel:
 integer (integer, integer) functionVariable = MyClass.method0;
 Print(functionVariable.evaluate(0, 10));
+integer (real, real) const functionVariable2 = MyClass.method1;
+Print(functionVariable.evaluate(1.0, 3.0)); // Ungültig: .evaluate kann nicht auf Funktionen konstanter Funktionszeiger angewandt werden.
 
 Funktionstypen
 
@@ -1111,18 +1334,24 @@ Die Funktion darf nicht manuell aufgerufen werden und hat deshalb keine Zugriffs
 
 Aufzählungen (enums)
 
-Wird ein Enumelement gesetzt, so werden alle darauffolgenden Enum-Elemente auf die noch nicht verwendeten nachfolgenden Werte gesetzt.
+Aufzählungselemente dürfen nur konstante Ausdrücke als Werte enthalten.
+Alle Aufzählungselemente müssen den geerbten Typ haben.
+Wird der geerbte Typ weggelassen, so ist die Aufzählung standardmäßig vom nativen Typ
+"integer".
+Aufzählungen sind Container-Typen (siehe "Container-Typen") und können daher auch in "foreach"-Schleifen verwendet werden.
+Wird ein Aufzählungselement gesetzt, so werden alle darauffolgenden nicht explizit gesetzten Elemente, auf die noch nicht verwendeten nachfolgenden Werte gesetzt,
+falls solche existieren. Bei Ganz- und Fließkommazahlen wird dabei einfach in 1er-Schritten hochgezählt.
+Beim Typ "boolean" gilt die Reihenfolge "true", "false". Bei vordefinierten Typen (siehe "Typen") gilt die aufsteigende Reihenfolge Ihrer Ganzzahlwerte.
+Ist das letzte Element einer Reihenfolge erreicht, so erhalten alle weiteren Elemente ebenfalls das letzte
+und der Compiler gibt eine Warnung aus.
 
 Notation:
-enum Name [Deklarationsvoraussetzungen]
+enum <Name> (<geerbter Typ>) [Deklarationsvoraussetzungen]
 {
-    Enumelement1, // ist automatisch 0
-    Enumelement2 = 2,
-    Enumelement3 // ist automatisch 3
+    <Elementname> [= <Elementwert>] [,] // Nach dem letzten Element muss kein Komma gesetzt werden.
 } [globale Instanzen durch Kommate getrennt];
 
-Der size-Operator kann verwendet werden, um den Wert x + 1 zu erhalten, wobei x für das den Wert des Aufzählungselements mit dem höchsten Wert steht.
-Der length-Operator kann verwendet werden, um die Anzahl der Aufzählungs-Elemente zu erhalten.
+Der size-Operator kann verwendet werden, um die Anzahl der Aufzählungselemente zu erhalten.
 
 Klassen
 
@@ -1152,6 +1381,14 @@ Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen
 Instanzen erzeugt werden. Erbt eine Klasse, eine andere abstrakte Klasse, so muss sie sämtliche
 abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
 
+Container-Klassen:
+Container-Klassen werden definiert, indem die Klasse die Operatoren "size" und "[]" implementiert (als nicht statische Methoden).
+Dabei gilt es zu beachten, dass "size" eine Ganzzahl zurück geben muss.
+Des Weiteren muss "[]" exakt einen Ganzzahlparameter entgegen nehmen und darf einen beliebigen Typ zurückgeben.
+Beide Operatoren können sowohl normal als auch als "const" deklariert werden.
+Dabei sollte der "size"-Operator die Größe des Containers und der "[]" Zugriff auf die einzelnen Elemente zur Verfügung stellen.
+Die Instanz entspricht somit einem eindimensionalen Array und ist ein Container-Typ (siehe "Container-Typen").
+
 Vererbung:
 
 Mehrfachvererbung:
@@ -1167,7 +1404,7 @@ Ist ein Klassenelement "package", so kann darauf innerhalb des Pakets, in welche
 aus dessen Unterpaketen zugegriffen werden.
 
 Notation:
-[ abstract ] class Klassenname [ [<Maximalgröße>] ] (public | private | protected Klassenname, ...) [Deklarationsvoraussetzungen]
+[ abstract ] class Klassenname [ [<Maximalgröße>] ] (public | private | protected <Klassenname>, ...) [Deklarationsvoraussetzungen]
 {
 	[<Konstruktoren>]
 	[<Kopierkonstruktor>]
@@ -1358,39 +1595,60 @@ Operatorenüberladung
 
 Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen oder einen zugehörigen Typnamen enthält, überlädt die Bedeutung eines
 Operators für die angegebenen Parametertypen.
-Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse usw. geschehen (private, protected, public, package).
-Wird ein Typ und kein Operatorzeichen als Name genommen, so ermöglicht dies Klassenobjekten explizit die Konvertierung zu diesem Typ.
+Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse geschehen (mit den jeweiligen Zugriffsmodifikatoren).
+Wird ein Typ und kein Operatorzeichen als Bezeichner gewählt, so ermöglicht dies Klassenobjekten eine explizite Konvertierung zum Typ der den Bezeichner trägt.
 Folgende Operatoren können nach folgenden Schemata als nicht statische Methoden überladen werden:
-Bezeichner			Rückgabetyp			Parametertypen
-=				self				self
-+ (linksbündig)			self				-
-- (linksbündig)			self				-
-+ (rechtsbündig)		self				self
+Bezeichner			Rückgabetyp			Parametertypen		Parameteranzahl
+=				self				self			1
++ (linksbündig)			self				-			0
+- (linksbündig)			self				-			0
++ (rechtsbündig)		self				self			1
 - (rechtsbündig)
-*				self				self
-/				self				self
-%				self				self
-++				self				self
---				self				self
-+=				self				self
--=				self				self
-*=				self				self
-/=				self				self
-%=				self				self
-==				boolean				self
-!=				boolean				self
->=				boolean				self
-<=				boolean				self
->				boolean				self
-<				boolean				self
-!				boolean				self
+*				self				self			1
+/				self				self			1
+%				self				self			1
+++				self				self			1
+--				self				self			1
++=				self				self			1
+-=				self				self			1
+*=				self				self			1
+/=				self				self			1
+%=				self				self			1
+==				boolean				self			1
+!=				boolean				self			1
+>=				boolean				self			1
+<=				boolean				self			1
+>				boolean				self			1
+<				boolean				self			1
+!				boolean				self			1
 true (steht für den boolschen Ausdruck ohne Operatorzeichen)
+[]				beliebig			beliebig		beliebig
+size				integer				-			0
+()				beliebig			beliebig		beliebig
 
 Zu beachten gilt es hierbei, dass diverse Logikoperatoren bereits standardmäßig implementiert sind.
 Die eigenen Definitionen überladen selbstverständlich die standardmäßigen.
 
+Anmerkung zum []-Operator:
+Der []-Operator dient normalerweise dem Zugriff auf Indizes und ist standardmäßig für keine Klasseninstanz definiert.
+Es ist möglich dem []-Operator mehrere Parameter zu geben, welche bei einem Aufruf innerhalb der eckigen Klammern wie bei einem gewöhnlichen Funktions-
+aufruf durch Kommata getrennt werden müssen.
+Es gibt jedoch bestimmte Regeln, welche eingehalten werden müssen, damit die Klasse eine Container-Klasse ist (siehe "Container-Klassen" und "Container-Typen").
+
+Anmerkung zum size-Operator:
+Der size-Operator macht für gewöhnlich eine vom Entwickler definierte Aussage über eine bestimmte Größe der Instanz bzw. eines ihrer enthaltenen
+Elemente.
+Auch hierbei gelten bestimmte Regeln, damit die Klasse eine Container-Klasse ist (siehe "Container-Klassen" und "Container-Typen").
+
 Als Typ können sowohl native als auch eigene Typen genommen werden. Zu beachten gilt es hierbei, dass sich Klasseninstanzen standardmäßig
 zum Typ "integer" konvertieren lassen.
+Eine eigene Definition des Operators "integer" hat eine höhere Priorität als die Standardimplementierung.
+
+Konvertierungsoperatorennotation:
+<Zugriffsmodifikatoren> operator <Typbezeichner>() [const]
+{
+	<Anweisungen>
+}
 
 Das Jass-Paket
 
@@ -1435,10 +1693,34 @@ package jasspp
     /*
     Definitionen globaler Funktionen, welche in der Regel die nativen Typen verwenden.
     */
-    void Print(string message);
+
+    // Test-Funktionen
+    public void Print(string message)
+    public void Print(integer value)
+    public void Print(real value)
+    public void Print(handle value)
+
+    // Zeichenketten-Funktionen
+    public Format Format(string value)
+    public string String(Format value)
+    public integer StringFind(string value, integer startOffset = 0)
+
+    // Bildfunktionen
+    public void CreateImageForPlayer(player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY)
+    public void ShowImageToPlayer(player whichPlayer, image whichImage, boolean show)
+
+    // Kamerafunktionen
+    public void PanCameraToUnitTimedWithZ(unit whichUnit, real duration)
+    public void RotateCameraAroundPointForPlayer(player whichPlayer, real x, real y, real degrees, real duration)
+    public void SmartCameraPanWithZForPlayer(player whichPlayer, real x, real y, real zOffset, real duration)
+    public void SmartCameraPanForPlayer(player whichPlayer, real x, real y, real duration)
+    public void SmartCameraPan(real x, real y, real duration)
 
     /*
     Definitionen der Wrapper-Klassen, welche die Funktionalität der nativen Typen mittels Objektorientierung anbieten.
+    Außerdem enthalten sie Methoden, welche BJ-Funktionen und globale Funktionen des Standardpakets selbst für die einzelnen
+    Typen verwenden.
+    Die Klassen für kopierbasierte Typen ermöglichen somit eine einfache Funktionalität für die Typen mittels referenzbasierter Typen.
     */
     public class Boolean
     public class String
@@ -1454,12 +1736,25 @@ package jasspp
     public class Event
     public class Trigger
     public class HashTable
+    public class GameCache
     
-    /*
-    Definition eigener Klassen wie z. B. verschiedener Container-Klassen usw.
+    /**
+    * Definition eigener Klassen wie z. B. verschiedener Container-Klassen usw.
     */
-    template <Vorlagenbezeichner>< <Datentypparameterbezeichner> [= <Standardargument>] ...>
+
+    // Internationalisierungsklassen
+    public class Format
+    {
+    };
+
+    // Container-Klassen
+    template < ElementType >
     public abstract class Container
+    {
+	public abstract integer operator size() const;
+	public abstract ElementType const operator [](integer index) const;
+    };
+
     public class List : public Container
     public class Vector : public Container
     public class Map : public Container

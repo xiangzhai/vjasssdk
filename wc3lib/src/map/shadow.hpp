@@ -23,9 +23,12 @@
 
 #include <istream>
 #include <ostream>
+#include <map>
+#include <valarray>
 
 #include "platform.hpp"
 #include "../exception.hpp"
+#include "tilepoint.hpp"
 
 namespace wc3lib
 {
@@ -36,21 +39,56 @@ namespace map
 class W3m;
 
 /**
-* Each byte set the shadow status of 1/16 of a tileset.
-* It means that each tileset is divided in 16 parts (4*4).
+* "war3map.shd" is usally the map's shadow map file.
+* Each tilepoint of the map has exactly 16 shadow points.
+* Use class key to get shadow data of some point.
 * @note You should refresh the shadow map if you change map size!
+* @see Tilepoint, Environment
 */
 class Shadow
 {
 	public:
+		class Key : public std::valarray<int32>
+		{
+			public:
+				Key(int32 x, int32 y, int32 point);
+				int32 x() const;
+				int32 y() const;
+				int32 point() const;
+
+				/**
+				* This operator is required since map is stored sorted.
+				* Note that this should provide correct sorting (width * height * point).
+				*/
+				bool operator<(const Key &other) const;
+				bool operator==(const Key &other) const;
+		};
+
+		enum Type
+		{
+			NoShadow = 0x00,
+			HasShadow = 0xFF
+		};
+
 		Shadow(class W3m *w3m);
 		~Shadow();
 
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		std::streamsize write(std::ostream &ostream) throw (class Exception);
 
-		bool containsShadow(int32 x, int32 y, int32 point);
-		//bool tilesetContains
+		enum Type type(const class Key &key) const;
+		/**
+		* Just for one single layer point.
+		*/
+		bool containsShadow(const class Key &key) const;
+		/**
+		* Checks all 16 layer points and returns true if any of them contains shadow.
+		*/
+		bool containsShadow(int32 x, int32 y) const;
+		/**
+		* Does also check all 16 layer points.
+		*/
+		bool tilepointContainsShadow(const class Tilepoint &tilepoint) const;
 		
 		static const int32 shadowPointsPerTileset = 16;
 
@@ -62,15 +100,74 @@ class Shadow
 		0x00 = no shadow
 		0xFF = shadow
 		*/
-		char8 *m_data;
+		std::map<class Key, enum Type> m_data;
 };
 
-inline bool Shadow::containsShadow(int32 x, int32 y, int32 point)
+inline Shadow::Key::Key(int32 x, int32 y, int32 point) : std::valarray<int32>(3)
 {
-	if (point >= Shadow::shadowPointsPerTileset)
-		return false;
-	
-	return (this->m_data[x * y * point] == 0xFF);
+	(*this)[0] = x;
+	(*this)[1] = y;
+	(*this)[2] = std::min(point, Shadow::shadowPointsPerTileset - 1);
+}
+
+inline int32 Shadow::Key::x() const
+{
+	return (*this)[0];
+}
+
+inline int32 Shadow::Key::y() const
+{
+	return (*this)[1];
+}
+
+inline int32 Shadow::Key::point() const
+{
+	return (*this)[2];
+}
+
+inline bool Shadow::Key::operator<(const Key &other) const
+{
+	return this->y() < other.y() || (this->y() == other.y() && this->x() < other.x()) || (this->y() == other.y() && this->x() == other.x() && this->point() < other.point());
+}
+
+inline bool Shadow::Key::operator==(const Key &other) const
+{
+	return this->x() == other.x() && this->y() == other.y() && this->point() == other.point();
+}
+
+inline enum Shadow::Type Shadow::type(const Shadow::Key &key) const
+{
+	std::map<class Key, enum Type>::const_iterator iterator = this->m_data.find(key);
+
+	if (iterator == this->m_data.end())
+		return Shadow::NoShadow;
+
+	return iterator->second;
+}
+
+inline bool Shadow::containsShadow(const Key &key) const
+{
+	return this->type(key) == Shadow::HasShadow;
+}
+
+inline bool Shadow::containsShadow(int32 x, int32 y) const
+{
+	bool result = false;
+
+	for (int32 point = 0; point < Shadow::shadowPointsPerTileset && !result; ++point)
+	{
+		class Key key(x, y, point);
+
+		if (this->containsShadow(key))
+			result = true;
+	}
+
+	return result;
+}
+
+inline bool Shadow::tilepointContainsShadow(const class Tilepoint &tilepoint) const
+{
+	return this->containsShadow(tilepoint.x(), tilepoint.y());
 }
 
 }

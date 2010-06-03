@@ -75,9 +75,12 @@ class Environment
 		int32 mapWidth() const;
 		int32 mapHeight() const;
 
-		const class Tilepoint* tilepoint(int32 x, int32 y) const;
+		const class Tilepoint* tilepoint(const class Position &position) const;
 		
-		static char* tilesetIdToCString(int32 tilesetId);
+		/**
+		* @return Returns a newly allocated C string which you'll have to free.
+		*/
+		static char8* tilesetIdToCString(int32 tilesetId);
 		static std::string tilesetIdToString(int32 tilesetId);
 		
 	protected:
@@ -93,7 +96,7 @@ class Environment
 		int32 m_maxY;
 		float32 m_centerOffsetX;
 		float32 m_centerOffsetY;
-		std::map<std::pair<int32, int32>, class Tilepoint*> m_tilepoints;
+		std::map<class Position, class Tilepoint*> m_tilepoints;
 		
 };
 
@@ -107,27 +110,32 @@ inline int32 Environment::mapHeight() const
 	return this->m_maxY - 1;
 }
 
-inline const class Tilepoint* Environment::tilepoint(int32 x, int32 y) const
+inline const class Tilepoint* Environment::tilepoint(const class Position &position) const
 {
-	if (x < 0 || y < 0 || x > this->m_maxX || y > this->m_maxY)
-		return 0;
-	
-	return this->m_tilepoints[x * y];
+	std::map<class Position, class Tilepoint*>::const_iterator iterator = this->m_tilepoints.find(position);
 
+	if (iterator == this->m_tilepoints.end())
+		return 0;
+
+	return iterator->second;
 }
 
-char* Environment::tilesetIdToCString(int32 tilesetId)
+inline char8* Environment::tilesetIdToCString(int32 tilesetId)
 {
-	unsigned char output[5];
+	char8 *output = new char[5];
 	memcpy(reinterpret_cast<void*>(output), reinterpret_cast<const void*>(&tilesetId), 4);
 	output[4] = '\0';
 
-	return (char*)output;
+	return output;
 }
 
-std::string Environment::tilesetIdToString(int32 tilesetId);
+inline std::string Environment::tilesetIdToString(int32 tilesetId)
 {
-	return Environment::tilesetIdToCString(tilesetId);
+	char8 *cString = Environment::tilesetIdToCString(tilesetId);
+	std::string value(cString);
+	delete[] cString;
+
+	return value;
 }
 
 

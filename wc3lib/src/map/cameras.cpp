@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,59 +20,62 @@
 
 #include <boost/foreach.hpp>
 
-#include "shadow.hpp"
-#include "w3m.hpp"
+#include "cameras.hpp"
+#include "camera.hpp"
 #include "../utilities.hpp"
+#include "../internationalisation.hpp"
 
-namespace wc3lib
-{
-	
-namespace map
+namespace wc3lib::map
 {
 
-Shadow::Shadow(class W3m *w3m) : m_w3m(w3m)
+const int32 Cameras::version = 0;
+
+Cameras::Cameras(class W3m *w3m) : m_w3m(w3m)
 {
+
 }
 
-Shadow::~Shadow()
+Cameras::~Cameras()
 {
+	BOOST_FOREACH(class Camera *camera, this->m_cameras)
+		delete camera;
 }
 
-std::streamsize Shadow::read(std::istream &istream) throw (class Exception)
+std::streamsize Cameras::read(std::istream &istream) throw (class Exception)
 {
-	std::streamsize size = 0;
+	std::streamsize size;
+	read(istream, this->m_version, size);
 
-	for (int32 width = 0; width < this->m_w3m->width(); ++width)
+	if (this->m_version != Cameras::version)
+		throw Exeption(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
+
+	int32 number;
+	read(istream, number, size);
+
+	for ( ; number >= 0; --number)
 	{
-		for (int32 height = 0; height < this->m_w3m->height(); ++height)
-		{
-			for (int32 point = 0; point < Shadow::shadowPointsPerTileset; ++point)
-			{
-				char8 data;
-				wc3lib::read(istream, data, size);
-				this->m_data.insert(std::make_pair(Key(width, height, point), static_cast<enum Shadow::Type>(data)));
-			}
-		}
-	}
-	
-	return size;
-}
-
-std::streamsize Shadow::write(std::ostream &ostream) throw (class Exception)
-{
-	std::streamsize size = 0;
-	typedef std::pair<class Key, enum Type> valueType;
-
-	// Should be sorted correctly (operator< of class Key)
-	BOOST_FOREACH(valueType value, this->m_data)
-	{
-		char8 data = static_cast<char8>(value.second);
-		wc3lib::write(ostream, data, size);
+		class Camera *camera = new Camera(this);
+		size += camera->read(istream);
+		this->m_cameras.push_back(camera);
 	}
 
 	return size;
 }
-	
+
+std::streamsize Cameras::write(std::ostream &ostream) const throw (class Exception)
+{
+	if (this->m_version != Cameras::version)
+		throw Exeption(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
+
+	std::streamsize size;
+	write(ostream, this->m_version, size);
+	int32 number = this->m_cameras.size();
+	read(istream, number, size);
+
+	BOOST_FOREACH(const class Camera *camera, this->m_cameras)
+		size += camera->write(ostream);
+
+	return size;
 }
 
 }

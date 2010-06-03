@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #ifndef WC3LIB_MAP_PLATFORM_HPP
-#define WC3LIB_MAP_PLATFORM_hPP
+#define WC3LIB_MAP_PLATFORM_HPP
 
 #include <boost/cstdint.hpp>
 
@@ -37,6 +37,10 @@ namespace map
 * Example: 1234 decimal = [00 00 04 D2]h will be stored in this order: [D2 04 00 00]h
 */
 typedef int32_t int32;
+
+/// Versions (file versions) are usually being saved as int32 values.
+//typedef int32 version;
+typedef int32_t id;
 
 /**
 * Short Integers
@@ -114,6 +118,22 @@ typedef int32_t flag;
 *
 * Warcraft 3 also uses structured types of various size.
 */
+
+struct Rgb
+{
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+};
+
+class Position : public std::pair<int32, int32>
+{
+	public:
+		Position(const std::pair<int32, int32> &pair) { this->first = pair.first; this->second = pair.second; };
+		Position(int32 x, int32 y) { this->first = x; this->first = y; };
+		int32 x() const { return this->first; };
+		int32 y() const { return this->second; };
+};
 
 }
 

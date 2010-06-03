@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,59 +20,54 @@
 
 #include <boost/foreach.hpp>
 
-#include "shadow.hpp"
-#include "w3m.hpp"
-#include "../utilities.hpp"
+#include "rects.hpp"
+#include "rect.hpp"
+#include "../internationalisation.hpp"
 
-namespace wc3lib
-{
-	
-namespace map
+namespace wc3lib::map
 {
 
-Shadow::Shadow(class W3m *w3m) : m_w3m(w3m)
-{
-}
+const int32 Rects::version = 5;
 
-Shadow::~Shadow()
+Rects::Rects(class W3m *w3m) : m_w3m(w3m)
 {
 }
 
-std::streamsize Shadow::read(std::istream &istream) throw (class Exception)
+std::streamsize Rects::read(std::istream &istream) throw (class Exception)
 {
-	std::streamsize size = 0;
+	std::streamsize size;
+	read(istream, this->m_version, size);
 
-	for (int32 width = 0; width < this->m_w3m->width(); ++width)
+	if (this->m_version != Rects::version)
+		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Rects::version);
+
+	int32 number;
+	read(istream, number, size);
+
+	for ( ; number >= 0; --number)
 	{
-		for (int32 height = 0; height < this->m_w3m->height(); ++height)
-		{
-			for (int32 point = 0; point < Shadow::shadowPointsPerTileset; ++point)
-			{
-				char8 data;
-				wc3lib::read(istream, data, size);
-				this->m_data.insert(std::make_pair(Key(width, height, point), static_cast<enum Shadow::Type>(data)));
-			}
-		}
-	}
-	
-	return size;
-}
-
-std::streamsize Shadow::write(std::ostream &ostream) throw (class Exception)
-{
-	std::streamsize size = 0;
-	typedef std::pair<class Key, enum Type> valueType;
-
-	// Should be sorted correctly (operator< of class Key)
-	BOOST_FOREACH(valueType value, this->m_data)
-	{
-		char8 data = static_cast<char8>(value.second);
-		wc3lib::write(ostream, data, size);
+		class Rect *rect = new Rect(this);
+		size += rect->read(istream);
+		this->m_rects.insert(std::make_pair(rect->index(), rect));
 	}
 
 	return size;
 }
-	
+
+std::streamsize Rects::write(std::ostream &ostream) const throw (class Exception)
+{
+	if (this->m_version != Rects::version)
+		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Rects::version);
+
+	std::streamsize size;
+	write(ostream, this->m_version, size);
+	int32 number = this->m_rects.size();
+	write(ostream, number, size);
+
+	BOOST_FOREACH(const class Rect *rect, this->m_rects)
+		size += rect->write(ostream);
+
+	return size;
 }
 
 }

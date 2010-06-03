@@ -22,6 +22,7 @@
 #define WC3LIB_UTILITIES_HPP
 
 #include <cmath>
+#include <cstring>
 #include <sstream>
 #include <iostream>
 
@@ -34,6 +35,7 @@ namespace wc3lib
 /**
 * Note that you can not use istream >> operators to read values (e. g. longs or floats) from binary files.
 * Thus this template function exists.
+* @deprecated This function should not be used anymore since std::istream.read reads unformatted data and there is a couple of utility functions which provide additionally read funcitonality.
 */
 template<typename T>
 inline T readValue(std::istream &istream, bool byteSwap = false)
@@ -85,6 +87,37 @@ inline std::istream& readArray(std::istream &istream, T value, std::size_t value
 	return istream;
 }
 
+inline std::istream& readCString(std::istream &istream, char *value, std::streamsize &sizeCounter)
+{
+	// get 0 terminating character, get name
+	std::streampos position = istream.tellg();
+	char character;
+	istream.get(character);
+	std::size_t i = position;
+
+	while (character != '\0')
+	{
+		++i;
+		istream.get(character);
+	}
+
+	std::size_t length = i - position;
+	istream.seekg(position, std::ios_base::cur);
+	value = new char[length];
+	readArray(istream, value, length, sizeCounter);
+
+	return istream;
+}
+
+inline std::istream& readString(std::istream &istream, std::string &value, std::streamsize &sizeCounter)
+{
+	char *cString = 0;
+	readCString(istream, cString, sizeCounter);
+	value = cString;
+
+	return istream;
+}
+
 template<typename T>
 inline std::ostream& write(std::ostream &ostream, T &value, std::streamsize &sizeCounter)
 {
@@ -107,6 +140,21 @@ inline std::ostream& writeArray(std::ostream &ostream, const T value, std::size_
 		throw Exception(_("Output stream error."));
 
 	sizeCounter += valueSize;
+
+	return ostream;
+}
+
+inline std::ostream& writeCString(std::ostream &ostream, const char *value, std::streamsize &sizeCounter)
+{
+	ostream.write(value, strlen(value) + 1); // write 0 terminating character
+	sizeCounter += strlen(value) + 1;
+
+	return ostream;
+}
+
+inline std::ostream& writeString(std::ostream &ostream, std::string &value, std::streamsize &sizeCounter)
+{
+	writeCString(ostream, value.data(), sizeCounter);
 
 	return ostream;
 }

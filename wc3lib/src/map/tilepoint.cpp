@@ -18,9 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/format.hpp>
-
 #include "tilepoint.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -28,7 +27,10 @@ namespace wc3lib
 namespace map
 {
 
-static struct TilepointData
+namespace
+{
+
+struct TilepointData
 {
 	uint16_t groundHeight;
 	unsigned int boundaryFlag:1;
@@ -39,8 +41,10 @@ static struct TilepointData
 	unsigned int cliffTextureType:4;
 	unsigned int layerHeight:4;
 };
-	
-Tilepoint::Tilepoint(class Environment *environment) : m_environment(environment), m_groundHeight(0), m_waterLevel(0), m_flags(Tilepoint::Ramp), m_groundTextureType(0), m_textureDetails(0), m_cliffTextureType(0), m_layerHeight(0)
+
+}
+
+Tilepoint::Tilepoint(class Environment *environment) : m_environment(environment), m_position(0, 0), m_groundHeight(0), m_waterLevel(0), m_flags(Tilepoint::Ramp), m_groundTextureType(0), m_textureDetails(0), m_cliffTextureType(0), m_layerHeight(0)
 {
 }
 
@@ -58,7 +62,7 @@ std::streamsize Tilepoint::read(std::istream &istream) throw (class Exception)
 	this->m_flags = static_cast<enum Tilepoint::Flags>(tilepointData.flags);
 
 	if (tilepointData.boundaryFlag)
-		this->m_flags |= Tilepoint::ShadowBoundary;
+		this->m_flags = (enum Tilepoint::Flags)((int)(this->m_flags) | (int)(Tilepoint::ShadowBoundary));
 
 	this->m_groundTextureType = tilepointData.groundTextureType;
 	this->m_textureDetails = tilepointData.textureDetails;

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,44 +18,96 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_SLK_SLK_HPP
-#define WC3LIB_SLK_SLK_HPP
+#ifndef WC3LIB_MAP_RECT_HPP
+#define WC3LIB_MAP_RECT_HPP
 
 #include <istream>
 #include <ostream>
-#include <list>
+#include <string>
 
+#include "platform.hpp"
 #include "../exception.hpp"
 
-namespace wc3lib
+namespace wc3lib::map
 {
 
-namespace slk
-{
+class Rects;
 
-class SlkEntry;
-
-/**
-* Default class for SLK files like CliffTypes.slk.
-* @todo Should use a Bison file which defines the possible syntax for these files.
-*/
-class Slk
+class Rect
 {
 	public:
-		Slk();
-		virtual ~Slk();
+		Rect(class Rects *rects);
 
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 
-	protected:
-		virtual class SlkEntry* slkEntry(std::size_t column) = 0;
+		float32 left() const;
+		float32 right() const;
+		float32 bottom() const;
+		float32 top() const;
+		const std::string& name() const;
+		int32 index() const;
+		id weatherEffectId() const;
+		const std::string& soundName() const;
+		const struct Rgb& color() const;
 
-		std::size_t m_lines;
-		std::size_t m_columns;
-		std::list<class SlkEntry*> m_entries;
+	protected:
+		class Rects *m_rects;
+		float32 m_left;
+		float32 m_right;
+		float32 m_bottom;
+		float32 m_top;
+		std::string m_name;
+		int32 m_index;
+		id m_weatherEffectId;
+		std::string m_soundName; // class Sound *m _sound
+		struct Rgb m_color; // no alpha!
+
 };
 
+inline float32 Rect::left() const
+{
+	return this->m_left;
+}
+
+inline float32 Rect::right() const;
+{
+	return this->m_right;
+}
+
+inline float32 Rect::bottom() const
+{
+	return this->m_bottom;
+}
+
+inline float32 Rect::top() const
+{
+	return this->m_top;
+}
+
+inline const std::string& Rect::name() const
+{
+	return this->m_name;
+}
+
+inline int32 Rect::index() const
+{
+	return this->m_index;
+}
+
+inline id Rect::weatherEffectId() const
+{
+	return this->m_weatherEffectId;
+}
+
+inline const std::string& Rect::soundName() const
+{
+	return this->m_soundName;
+}
+
+inline const struct Rgb& Rect::color() const
+{
+	return this->m_color;
 }
 
 }

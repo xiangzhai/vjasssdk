@@ -101,15 +101,15 @@ std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&this->m_centerOffsetY), sizeof(this->m_centerOffsetY));
 	bytes += istream.gcount();
 	
-	this->m_tilepoints = std::map<std::pair<int32, int32>, class Tilepoint*>(this->m_maxX * this->m_maxY);
 	// The first tilepoint defined in the file stands for the lower left corner of the map when looking from the top, then it goes line by line (horizontal).
-	for (int32 = 0; y < this->m_maxY; ++y)
+	for (int32 y = 0; y < this->m_maxY; ++y)
 	{
 		for (int32 x = 0; x < this->m_maxX; ++x)
 		{
 			class Tilepoint *tilepoint = new Tilepoint(this);
+			tilepoint->m_position = std::make_pair(x, y);
 			bytes += tilepoint->read(istream);
-			this->m_tilepoints[x][y] = tilepoint;
+			this->m_tilepoints[tilepoint->m_position] = tilepoint;
 		}
 	}
 	
