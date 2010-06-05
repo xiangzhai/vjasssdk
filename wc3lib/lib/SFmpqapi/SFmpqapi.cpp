@@ -3,7 +3,11 @@
 #define WIN32_LEAN_AND_MEAN
 
 // Includes
+#if (defined(_WIN32) || defined(WIN32)) && !defined(NO_WINDOWS_H)
 #include <windows.h>
+#else
+#include "linux/windows.h"
+#endif
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>

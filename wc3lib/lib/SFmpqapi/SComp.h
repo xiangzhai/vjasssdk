@@ -7,7 +7,7 @@
 #if (defined(_WIN32) || defined(WIN32)) && !defined(NO_WINDOWS_H)
 #include <windows.h>
 #else
-#include "wintypes.h"
+#include "linux/windows.h"
 #endif
 
 #ifdef __cplusplus

@@ -19,13 +19,53 @@
  ***************************************************************************/
 
 #include "mpqprotocol.hpp"
+#include "../mpq.hpp"
 
 namespace wc3lib
 {
 
-MpqProtocol::MpqProtocol()
+namespace editor
+{
+
+MpqArchive::MpqArchive(QIODevice *dev) : KArchive(dev), m_mpq(new mpq::Mpq())
 {
 }
+
+MpqArchive::MpqArchive(const QString &fileName) : KArchive(fileName), m_mpq(new mpq::Mpq())
+{
+
+}
+
+MpqArchive::~MpqArchive()
+{
+	delete this->m_mpq;
+}
+
+bool MpqArchive::closeArchive()
+{
+	this->m_mpq->close();
+
+	return true;
+}
+
+bool MpqArchive::openArchive(QIODevice::OpenMode mode)
+{
+	switch (mode)
+	{
+		case QIODevice::WriteOnly:
+		case QIODevice::ReadWrite:
+			//this->m_mpq->readMpq(this->device()->)
+			break;
+	}
+}
+
+
+void MpqArchive::setDevice(QIODevice *dev)
+{
+
+}
+
+virtual void virtual_hook(int id, void *data);
 
 }
 

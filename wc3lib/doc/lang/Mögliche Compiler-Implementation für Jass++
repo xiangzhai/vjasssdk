@@ -122,19 +122,37 @@ function jasspp__getPrototypeFunctionTrigger takes integer index returns trigger
 	return null
 endfunction
 
-// Wird statt der eigentlichen Funktion bei .evaluate aufgerufen.
-function jasspp__prototypeFunction<Prototypnummer> takes <Parametertyp0> <Parametername0>, <Parametertyp1> <Paramtername1> returns <Rückgabetyp0>
+// Wird statt der eigentlichen Funktion bei evaluate aufgerufen.
+function jasspp__prototypeFunction<Prototypnummer>Evaluate takes <Parametertyp0> <Parametername0>, <Parametertyp1> <Paramtername1> returns <Rückgabetyp0>
 	set jasspp__prototypeFunctionArgument0__<Parametertyp0> = <Parameter0>
 	set jasspp__prototypeFunctionArgument0__<Parametertyp1> = <Parameter1>
 	call TriggerEvaluate(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
 	return jasspp__prototypeFunctionReturnValue0__<Rückgabetyp0>
 endfunction
 
-// Wird statt der eigentlichen Funktion bei .execute aufgerufen.
-function jasspp__prototypeFunction<Prototypnummer> takes <Parametertyp0> <Parametername0>, <Parametertyp1> <Paramtername1> returns nothing
+// Wird statt der eigentlichen Funktion bei execute aufgerufen.
+function jasspp__prototypeFunction<Prototypnummer>Execute takes <Parametertyp0> <Parametername0>, <Parametertyp1> <Paramtername1> returns nothing
 	set jasspp__prototypeFunctionArgument0__<Parametertyp0> = <Parameter0>
 	set jasspp__prototypeFunctionArgument0__<Parametertyp1> = <Parameter1>
 	call TriggerExecute(jasspp__prototypeFunctionTriggers<Index des verwendeten Arrays>[<Prototypnummer>])
+endfunction
+
+// Wird vom erzeugten Timer aufgerufen.
+function jasspp__prototypeFunction<Prototypnummer>TimerAction takes nothing returns nothing
+	local <Parametertyp0> param0 = LoadHashtable<Parametertyp0>(jasspp__hashTable, GetHandleId(GetExpiredTimer()), 0)
+	local <Parametertyp1> param1 = LoadHashtable<Parametertyp1>(jasspp__hashTable, GetHandleId(GetExpiredTimer()), 1)
+	call FlushChildHashtable(jasspp__hashTable, GetHandleId(GetExpiredTimer()))
+	call DestroyTimer(GetExpiredTimer())
+	call jasspp__prototypeFunction<Prototypnummer>Execute(param0, param1)
+endfunction
+
+// Wird statt der eigentlichen Funktion bei execute <Real-Ausdruck> aufgerufen.
+function jasspp__prototypeFunction<Prototypnummer> takes real timeout, <Parametertyp0> <Parametername0>, <Parametertyp1> <Paramtername1> returns nothing
+	local timer whichTimer = CreateTimer()
+	call SaveHashtable<Parametertyp0>(jasspp__hashTable, GetHandleId(whichTimer), 0, <Parameter0>)
+	call SaveHashtable<Parametertyp1>(jasspp__hashTable, GetHandleId(whichTimer), 1, <Parameter1>)
+	call TimerStart(whichTimer, timeout, false, function jasspp__prototypeFunction<Prototypnummer>TimerAction)
+	set whichTimer = null
 endfunction
 
 13. Klassengenerierung
@@ -307,13 +325,16 @@ Die Funktion wird nach der Funktion InitBlizzard in der Funktion main des Karten
 10.3 Zugriffsfunktionen für Funktionen/Methoden mit gleichem Namen
 
 11. Funktionen generieren
+
 Jass-Funktionen, die zwischen den Präprozessoranweisungen #jass und #endjass deklariert wurden,
 werden vor sämtlichen in Jass++-Paketen enthaltenen Funktionen in das Kartenskript geschrieben.
 Daher sind sie aus Jass++ allesamt verwendbar. Dabei werden sie in der Einlesereihenfolge des Parsers
 gelassen.
 
 Ersetzung von threaded Funktionsaufrufen:
-Neu schreiben
+execute <Funktionsbezeichner>(<Parameter>)
+wird durch
+TriggerExecute(
 
 Aufruf von init Funktionen:
 "init"-Funktionen besitzen keine Argumente. Sie werden automatisch vor dem Aufruf der Funktion RunInitializationTriggers aufgerufen.

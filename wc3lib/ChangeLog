@@ -1,9 +1,20 @@
+2010-06-05 Tamino Dauth <tamino@cdauth.eu>
+* Revised Jass++ specification.
+* Revised Jass++ compiler implementation suggestion.
+* cmake function WC3LIB_SET_COMPILE_FLAG is called WC3LIB_GET_COMPILE_FLAG now.
+* Added cmake function WC3LIB_ENABLE_COMPILE_FLAG.
+* Improved GCC options setup.
+* Using GCC options -fPIC (dynamic linking) and -fms-extensions (anonymous structs - huffman lib) now.
+* Dropped fucking "QT_USE_FILE".
+* Fixed various problems compiling StormLib and SFmpqapi correctly.
+* Improved BLP JPEG read functionality.
+* Added abstract class wc3lib::Format.
+
 2010-06-03 Tamino Dauth <tamino@cdauth.eu>
 * Revised classes map::Environment, map::Tilepoint, map::Shadow and map::Pathmap.
 * Added struct map::Rgb and class map::Position.
 * Added UI for camera palette to editor module.
 * Revised Jass++ specification - added load and ai blocks and improved conversion description and enum specification.
-
 
 2010-06-02 Tamino Dauth <tamino@cdauth.eu>
 * Added classes map::Camera, map::Cameras, map::Rect and map::Rects.

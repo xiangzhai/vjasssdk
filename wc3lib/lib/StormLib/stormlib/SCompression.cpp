@@ -22,11 +22,7 @@
 #include "pklib/pklib.h"              
 
 // Include functions from zlib
-#ifndef __SYS_ZLIB
-#include "zlib/zlib.h"      // Include functions from zlib
-#else
 #include <zlib.h>           // If zlib is available on system, use this instead
-#endif
 
 // Include functions from Huffmann compression
 #include "huffman/huff.h"  
@@ -35,11 +31,7 @@
 #include "wave/wave.h"  
 
 // Include functions from BZip2 compression library
-#ifndef __SYS_BZLIB
-#include "bzip2/bzlib.h"      // Include functions from bzlib
-#else
 #include <bzlib.h>           // If bzlib is available on system, use this instead
-#endif
 
 //-----------------------------------------------------------------------------
 // Local structures

@@ -22,6 +22,7 @@
 #include <sstream>
 #include <cstdio>
 #include <cstring>
+#include <bitset> // test
 #include <iostream>
 
 #include <boost/foreach.hpp>
@@ -47,6 +48,8 @@ typedef int (*jpeg_read_headerType)(j_decompress_ptr, boolean);
 typedef boolean (*jpeg_start_decompressType)(j_decompress_ptr);
 typedef void (*jpeg_abort_decompressType)(j_decompress_ptr);
 typedef void (*jpeg_destroy_decompressType)(j_decompress_ptr);
+typedef JDIMENSION (*jpeg_read_scanlinesType)(j_decompress_ptr cinfo, JSAMPARRAY scanlines, JDIMENSION max_lines);
+typedef boolean (*jpeg_finish_decompressType)(j_decompress_ptr cinfo);
 //#endif
 
 Blp::MipMap::MipMap(dword width, dword height) : m_width(width), m_height(height)
@@ -56,14 +59,14 @@ Blp::MipMap::MipMap(dword width, dword height) : m_width(width), m_height(height
 /// @todo Implement.
 void Blp::MipMap::scale(dword newWidth, dword newHeight) throw (class Exception)
 {
-	throw Exception(_("Not implemented yet!"));
+	throw Exception(_("MipMap::scale - Not implemented yet!"));
 }
 
 const byte Blp::identifier0[4] = { 'B', 'L', 'P', '0' };
 const byte Blp::identifier1[4] = { 'B', 'L', 'P', '1' };
 const byte Blp::identifier2[4] = { 'B', 'L', 'P', '2' };
 const std::size_t Blp::maxMipMaps = 16;
-const std::size_t Blp::maxCompressedPaletteSize = 256;
+const std::size_t Blp::compressedPaletteSize = 256;
 
 Blp::Blp()
 {
@@ -89,56 +92,13 @@ void Blp::clean()
 		delete mipMap;
 }
 
-std::streamsize Blp::read(std::istream &istream, enum Format format) throw (class Exception)
+namespace
 {
-	switch (format)
-	{
-		case Blp::BlpFormat:
-			return this->readBlp(istream);
-
-		case Blp::JpegFormat:
-			return this->readJpeg(istream);
-
-		case Blp::TgaFormat:
-			return this->readTga(istream);
-
-		case Blp::PngFormat:
-			return this->readPng(istream);
-			
-		default:
-			throw Exception(_("Unknown format."));
-	}
-	
-	return 0;
-}
-
-std::streamsize Blp::write(std::ostream &ostream, enum Format format) throw (class Exception)
-{
-	switch (format)
-	{
-		case Blp::BlpFormat:
-			return this->writeBlp(ostream);
-
-		case Blp::JpegFormat:
-			return this->writeJpeg(ostream);
-
-		case Blp::TgaFormat:
-			return this->writeTga(ostream);
-
-		case Blp::PngFormat:
-			return this->writePng(ostream);
-
-		default:
-			throw Exception(_("Unknown format."));
-	}
-	
-	return 0;
-}
 
 /**
 * @author PitzerMike, Jean-Francois Roy, Tamino Dauth
 */
-static std::size_t requiredMipMaps(std::size_t width, std::size_t height)
+std::size_t requiredMipMaps(std::size_t width, std::size_t height)
 {
 	std::size_t mips = 0;
 	std::size_t value = std::min<int>(width, height);
@@ -152,9 +112,11 @@ static std::size_t requiredMipMaps(std::size_t width, std::size_t height)
 	return mips;
 }
 
-static std::string jpegError(jpeg_std_errorType jpeg_std_error, const std::string &message)
+std::string jpegError(jpeg_std_errorType jpeg_std_error, const std::string &message)
 {
 	return boost::str(boost::format(message) % (jpeg_std_error(0)->jpeg_message_table != 0 ? jpeg_std_error(0)->jpeg_message_table[jpeg_std_error(0)->last_jpeg_message] : _("No error")));
+}
+
 }
 
 std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
@@ -234,6 +196,8 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		jpeg_start_decompressType jpeg_start_decompress = 0;
 		jpeg_abort_decompressType jpeg_abort_decompress = 0;
 		jpeg_destroy_decompressType jpeg_destroy_decompress = 0;
+		jpeg_read_scanlinesType jpeg_read_scanlines = 0;
+		jpeg_finish_decompressType jpeg_finish_decompress = 0;
 
 		try
 		{
@@ -252,6 +216,10 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			jpeg_abort_decompress = *((jpeg_abort_decompressType*)(&symbol));
 			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_destroy_decompress");
 			jpeg_destroy_decompress = *((jpeg_destroy_decompressType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_read_scanlines");
+			jpeg_read_scanlines = *((jpeg_read_scanlinesType*)(&symbol));
+			symbol = LibraryLoader::librarySymbol(*libraryHandle, "jpeg_finish_decompress");
+			jpeg_finish_decompress = *((jpeg_finish_decompressType*)(&symbol));
 		}
 		catch (class Exception &exception)
 		{
@@ -289,6 +257,8 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 				std::cout << boost::format(_("Using header of jpeglib version %1%.")) % JPEG_LIB_VERSION << std::endl;
 
 				j_decompress_ptr cinfo = 0;
+				//jpeg_error_mgr jerr;
+				//cinfo->err = jpeg_std_error(&jerr);
 				jpeg_create_decompress(cinfo);
 				jpeg_mem_src(cinfo, buffer, bufferSize);
 				//jpeg_mem_dest(cinfo, &buffer, &bufferSize);
@@ -311,18 +281,58 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 					throw Exception(jpegError(jpeg_std_error, _("Could not start decompress. Error: %1%.")));
 				}
 
+				std::cout << "JPEG image has width " << cinfo->image_width << " and height " << cinfo->image_height << std::endl;
+				std::cout << "JPEG image has scaled width " << cinfo->output_width << " and scaled height " << cinfo->output_height << std::endl;
+				std::cout << "Color map has size " << cinfo->actual_number_of_colors << std::endl;
+				//cinfo->colormap
+				JDIMENSION scanlinesSize = cinfo->output_width * cinfo->output_components;
+				JSAMPARRAY scanlines = new JSAMPROW[scanlinesSize];
+
+				// per scanline
+				while (cinfo->output_scanline < cinfo->output_height)
+				{
+					scanlines[cinfo->output_scanline] = new JSAMPLE[cinfo->output_height];
+					JDIMENSION dimension = jpeg_read_scanlines(cinfo, scanlines, scanlinesSize);
+					//put_scanline_someplace(scanlines[0], scanlinesSize);
+				}
 				/*
 				jpeg_has_multiple_scans JPP((j_decompress_ptr cinfo));
 				1043 EXTERN(boolean) jpeg_start_output JPP((j_decompress_ptr cinfo,
 				1044                                        int scan_number))
 				*/
-
+				jpeg_finish_decompress(cinfo);
 				jpeg_destroy_decompress(cinfo);
 
-				/// @todo Fill mip map color data (user buffer)
-				BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
-					;
+				// fill mip map with JPEG data.
+				for (dword width = 0; width < mipMap->width(); ++width)
+				{
+					for (dword height = 0; height < mipMap->height(); ++height)
+					{
+						JDIMENSION dimension = 0;
+						color rgb = 0;
+						//JCS_GRAYSCALE
+						//std::bitset<color> rgb;
+						//rgb.set()
 
+						// 3 pixels
+						if (cinfo->out_color_space == JCS_RGB)
+						{
+							//std::bitset
+							rgb = scanlines[width + dimension][height];
+							++dimension;
+							rgb = rgb << 1;
+							rgb |= scanlines[width + dimension][height];
+							++dimension;
+							rgb = rgb << 1;
+							rgb |= scanlines[width + dimension][height];
+						}
+
+						//mipMap->setColor(width, height, color);
+					}
+				}
+
+				delete[] scanlines;
+				scanlines = 0;
 				delete[] buffer;
 				buffer = 0;
 			}
@@ -363,9 +373,9 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		else
 			std::cout << "Without alphas!" << std::endl;
 		
-		std::vector<color> palette(Blp::maxCompressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
+		std::vector<color> palette(Blp::compressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
 
-		for (std::size_t i = 0; i < Blp::maxCompressedPaletteSize; ++i)
+		for (std::size_t i = 0; i < Blp::compressedPaletteSize; ++i)
 		{
                         color paletteColor;
                         istream.read(reinterpret_cast<char*>(&paletteColor), sizeof(paletteColor));
@@ -451,7 +461,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize bytes = 0;
 	
@@ -538,11 +548,9 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 
 	if (this->m_compression == Blp::Jpeg)
 	{
+		/// @todo Use class LibraryLoader to load JPEG functions and write data.
 		std::cout << "Detected JPEG compression mode. Not implemented yet." << std::endl;
-#ifdef JPEG
-#else
 		throw Exception(_("Compiled without JPEG support."));
-#endif
 	}
 	else if (this->m_compression == Blp::Paletted)
 	{
@@ -553,8 +561,8 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) throw (class Exception)
 		else
 			std::cout << "Without alphas!" << std::endl;
 		
-		// fill palette, palette has always size of Blp::maxCompressedPaletteSize (remaining colors have value 0).
-		std::vector<const struct MipMap::Color*> palette(Blp::maxCompressedPaletteSize, 0);
+		// fill palette, palette has always size of Blp::compressedPaletteSize (remaining colors have value 0).
+		std::vector<const struct MipMap::Color*> palette(Blp::compressedPaletteSize, 0);
 
 		BOOST_FOREACH(const class MipMap *mipMap, this->m_mipMaps)
 		{
@@ -616,7 +624,7 @@ std::streamsize Blp::readJpeg(std::istream &istream) throw (class Exception)
 	return 0;
 }
 
-std::streamsize Blp::writeJpeg(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writeJpeg(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
@@ -626,7 +634,7 @@ std::streamsize Blp::readTga(std::istream &istream) throw (class Exception)
 	return 0;
 }
 
-std::streamsize Blp::writeTga(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writeTga(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
@@ -636,7 +644,7 @@ std::streamsize Blp::readPng(std::istream &istream) throw (class Exception)
 	return 0;
 }
 
-std::streamsize Blp::writePng(std::ostream &ostream) throw (class Exception)
+std::streamsize Blp::writePng(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

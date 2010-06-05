@@ -42,8 +42,8 @@ class Tilepoint;
 class Environment
 {
 	public:
-		static const int32 currentVersion = 11;
-		static const int32 maxTilesets = 16;
+		static const int32 currentVersion;
+		static const int32 maxTilesets;
 	
 		enum MainTileset
 		{

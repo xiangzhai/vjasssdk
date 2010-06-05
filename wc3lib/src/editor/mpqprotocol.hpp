@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef MPQPROTOCOL_HPP
-#define MPQPROTOCOL_HPP
+#ifndef WC3LIB_EDITOR_MPQARCHIVE_HPP
+#define WC3LIB_EDITOR_MPQARCHIVE_HPP
 
-#include <kio/slavebase.h>
+#include <karchive.h>
 
 namespace wc3lib
 {
@@ -29,10 +29,34 @@ namespace wc3lib
 namespace editor
 {
 
-class MpqProtocol : public KIO::SlaveBase
+namespace mpq
+{
+
+class Mpq;
+
+}
+
+class MpqArchive : public KArchive
 {
 	public:
-		MpqProtocol();
+		MpqArchive(QIODevice *dev);
+		MpqArchive(const QString &fileName);
+		virtual ~MpqArchive();
+
+	protected:
+		virtual bool closeArchive();
+		virtual bool doFinishWriting(qint64 size);
+		virtual bool doPrepareWriting(const QString &name, const QString &user, const QString &group, qint64 size, mode_t perm, time_t atime, time_t mtime, time_t ctime);
+		virtual bool doWriteDir(const QString &name, const QString &user, const QString &group, mode_t perm, time_t atime, time_t mtime, time_t ctime);
+		virtual bool doWriteSymLink (const QString &name, const QString &target, const QString &user, const QString &group, mode_t perm, time_t atime, time_t mtime, time_t ctime);
+		KArchiveDirectory* findOrCreate(const QString &path);
+		virtual bool openArchive(QIODevice::OpenMode mode);
+		virtual KArchiveDirectory* rootDir();
+		void setDevice(QIODevice *dev);
+		void setRootDir(KArchiveDirectory *rootDir);
+		virtual void virtual_hook(int id, void *data);
+
+		class mpq::Mpq *m_mpq;
 };
 
 }

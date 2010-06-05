@@ -118,8 +118,8 @@ int main(int argc, char *argv[])
 				_("\t-i, --info                  Shows some basic information about all read MPQ archives.\n") <<
 				_("\t-h, --human-readable        Shows output sizes in an human-readable format.\n") <<
 				_("\t-d, --decimal               Shows decimal sizes (factor 1000 not 1024)\n") <<
-				_("\t-l, --list                  Lists all contained files of all read MPQ archives.\n") <<
-				_("\t-b, --benchmark             Compares various functionalities of wc3lib and StormLib.\n") <<
+				_("\t-l, --list                  Lists all contained files of all read MPQ archives (requires --info).\n") <<
+				_("\t-b, --benchmark             Compares various functionalities of wc3lib and StormLib (requires --info).\n") <<
 				std::endl <<
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
@@ -307,6 +307,25 @@ int main(int argc, char *argv[])
 				std::cout << boost::format(_("Result: %1%s")) % timer.elapsed() << std::endl;
 /// @todo Add runtime linking support by using LibraryLoader.
 #ifdef DEBUG
+				std::cout << _("Opening MPQ archive (StormLib):") << std::endl;
+				HANDLE stormLibArchive;
+				timer.restart();
+
+				if (SFileCreateArchiveEx(
+				 path.string().c_str(),           // Archive file name
+				 MPQ_OPEN_EXISTING,      // How to open the archive
+				 HASH_TABLE_SIZE_MIN,            // Size of hash table for new archives
+				 &stormLibArchive                    // Pointer to result HANDLE
+				 ))
+				{
+					std::cout << boost::format(_("Result: %1%s")) % timer.elapsed() << std::endl;
+					std::cout << _("Closing MPQ archive (StormLib):") << std::endl;
+					timer.restart();
+					SFileCloseArchive(stormLibArchive);
+				}
+				else
+					std::cerr << boost::format(_("Failed to open MPQ archive \"%1%\" by using StormLib.")) % path.string() << std::endl;
+
 #else
 				std::cerr << _("Since program has been compiled without debug option, StormLib cannot be used.") << std::endl;
 #endif

@@ -1,3 +1,10 @@
+2010-06-05 Tamino Dauth <tamino@cdauth.eu>
+* Finding Qt and KDE packages seems to add unnecessary compile flags which prevent huffman from being compiled correctly.
+
+2010-06-04 Tamino Dauth <tamino@cdauth.eu>
+* Fix long compile flags variable.
+* Fix huffman syntax error (maybe GCC bug, fixed in version 4.6 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=4784).
+
 2010-06-01 Tamino Dauth <tamino@cdauth.eu>
 * Use BOOST_SCOPED_ENUM_START/namespace for enums.
 
@@ -38,7 +45,7 @@
 * Add object editor tabs for customizing lightnings, sounds, textures, models etc..
 * Add object editor file menu entries for merging object data.
 * Add map file entries for exporting/importing placed rects, placed cameras, placed units, placed doodads, terrain and path map (maybe add to palettes).
-* DEPRACATED?: Add map file entry "Import script".
+* DEPRECATED?: Add map file entry "Import script".
 * Remove widget brush list.
 * Model preview widget should allow using mouse control for changing view.
 * Widgets model preview and mini map preview should become movable widgets.

@@ -921,13 +921,14 @@ int main(int argc, char *argv[])
 				_("\tconverter [-vhioRV] <input files/directories>\n") <<
 				_("\nOptions:\n") <<
 				_("\t-v, --version             Shows the current version of mdlxtest.\n") <<
-				_("\t-h, --help                Shows this text.\n") <<
+				_("\tf, --formats              Lists all possible input and output formats.\n") <<
+				("\t-h, --help                 Shows this text.\n") <<
 				_("\t-i, --iformat <arg>       <arg> has to be replaced by input files format.\n") <<
 				_("\t-o, --oformat <arg>       <arg> has to be replaced by output files format.\n") <<
-				_("\t-D,  --dir <arg>          <arg> has to be replaced by output directory.\n") <<
+				_("\t-D, --dir <arg>           <arg> has to be replaced by output directory.\n") <<
 				_("\t-R, --recursive           If some of the input files are directories they will be iterated recursively and searched for other files with the input format extension.\n") <<
-				_("\t-V,  --verbose            Enables verbose mode and shows more detailed output information.\n") <<
-				_("\t-O,  --readonly           Enables read-only mode. Output format is not necessary in read-only mode. This mode can be useful if you just want to try some format reading.\n") <<
+				_("\t-V, --verbose             Enables verbose mode and shows more detailed output information.\n") <<
+				_("\t-O, --readonly            Enables read-only mode. Output format is not necessary in read-only mode. This mode can be useful if you just want to try some format reading.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
 				

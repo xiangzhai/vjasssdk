@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_BLPIOHANDLER_HPP
 #define WC3LIB_EDITOR_BLPIOHANDLER_HPP
 
-#include <QImageIOHandler>
+#include <QtGui/QImageIOHandler>
 
 #include "../blp/blp.hpp"
 

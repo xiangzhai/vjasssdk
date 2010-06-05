@@ -32,6 +32,9 @@ namespace wc3lib
 	
 namespace map
 {
+
+const int32 Environment::currentVersion = 11;
+const int32 Environment::maxTilesets = 16;
 	
 Environment::Environment(class W3m *w3m) : m_w3m(w3m)
 {

@@ -5,6 +5,7 @@ Mögliche Kapitelunterteilung der Sprachdefinition:
 4. Schlüsselwörter
 5. Kommentare
 6. Präprozessoren
+7. Testmodus (debug mode)
 7. Testblöcke
 8. Lade-Blöcke
 9. KI-Blöcke
@@ -330,6 +331,28 @@ für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen
 Standardmäßig wird im Verzeichnis der aktuellen Code-Datei nach angegebenen Dateinamen gesucht.
 ABGELEHNT: ~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Wurzelverzeichnis.
 
+7. Testmodus (debug mode)
+
+Der Testmodus kann für gewöhnlich per Option des Compilers aktiviert werden und bewirkt einige Änderungen
+am Verhalten von bestimmten nativen Funktionen als auch von vom Compiler für die Sprachfunktionalität generierten,
+was das Testen bzw. die Fehlerfindung erleichtern und Abstürze vermeiden soll.
+In der Regel bewirkt der Testmodus die Überprüfung von Laufzeitfehlern, die sich so nicht zur Kompilierzeit
+überprüfen lassen, zusätzliche Daten erforden und somit den Programmablauf verlangsamen.
+
+ExecuteFunc:
+Diese native Funktion wird in allen Aufrufen ersetzt und eine Liste aller parameter- und rückgabetyplosen Funktionsnamen
+generiert, die bei jedem Aufruf der Nativen mit dem Funktionsnamenparameter abgeglichen wird.
+Ist der Funktionsnamenparameter nicht in der Liste vorhanden, wird eine Fehlermeldung mit diesem ausgegeben und der Aufruf
+abgebrochen.
+
+Player:
+Sollte die Funktion zur Laufzeit mit einer Ganzzahl außerhalb des Bereichs 0-bj_MAX_PLAYER_SLOTS aufgerufen werden, so
+sollte eine Fehlermeldung ausgegeben und "null" zurückgegeben werden.
+
+Variablensperrung (locking):
+Siehe "Variablensperrung (locking)".
+
+
 7. Testblöcke
 
 Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
@@ -364,15 +387,32 @@ selbstverständlich eine kleinere Unterstützung für KI-Skripts.
 KI-Blöcke werden mit dem Schlüsselwort "ai" eingeleitet und haben zwingend einen Bezeichner.
 Innerhalb eines KI-Blocks dürfen explizit Variablen und Funktionen aus der verwendeten "common.ai"-Datei
 verwendet werden bzw. natürlich auch eigene, die innerhalb des KI-Blocks deklariert wurden.
+Jedoch keinerlei selbstdefinierte Funktionen von außerhalb, da der Block wie ein externes Skript behandelt wird
+und man ansonsten sämtliches Verwendetes mit in das Skript hinein kopieren müsste bzw. dabei alle Abhängigkeiten
+genaustens prüfen müsste.
+Für Funktionen aus der "common.j" und "Blizzard.j" gelten gewisse Einschränkungen (siehe unten).
 Der Inhalt des KI-Blocks kann über seinen Bezeichner mit den Schlüsselwörtern "execute" und "for" für einen Spieler gestartet werden.
-Der Aufruf entspricht einem Aufruf der nativen Jass-Funktion "StartCampaignAI" mit dem Spieler und dem Bezeichner als Parameter.
-Der Inhalt kann nur von anderen KI-Blöcken aus aufgerufen werden, natürlich nur insofern die Deklarationsreihenfolge stimmt.
-Innerhalb des KI-Blocks darf kein KI-Block aufgerufen werden.
-Ein KI-Block kann ebenfalls als Deklarationsvoraussetzung verwendet werden, um sicherzustellen, dass er aufrufbar ist bzw.
-sein Inhalt von einem anderen KI-Block aus verwendbar ist.
+Der Aufruf entspricht einem Aufruf der nativen Jass-Funktion "StartCampaignAI" mit dem Spieler und dem Bezeichner "Scripts/Custom/<Bezeichner>.ai" als Parameter.
+Daher muss der Compiler dafür sorgen, dass aus dem KI-Block sozusagen eine externe Datei nach dem obigen Schema im Verzeichnis "Scripts/Custom" generiert wird.
+Der KI-Block ist also auch manuell mit der Nativen aufrufbar und sollte sich im MPQ-Archiv der Karte befinden. Der Compiler sollte einen Fehler ausgeben,
+falls die Datei bereits existiert und nicht vom Compiler generiert wurde.
+Die Compilergenerierung wird am Anfang der Datei mit dem Kommentar "// Jass++ AI" markiert.
+Der Inhalt eines KI-Blocks darf nur innerhalb des Blocks selbst aufgerufen werden.
+Bestimmte Funktionen aus der "common.j" und "Blizzard.j" dürfen in KI-Blöcken weder direkt noch indirekt verwendet werden:
+* Native Funktionen, die eine Zeichenkette zurückgeben
+* Native Funktionen, die sogenannte Callbacks annehmen (code, trigger, boolexpr, ForGroup, etc.)
+* ExecuteFunc
+
+Siehe auch http://jass.sourceforge.net/doc/library.shtml.
+Es gilt noch zu beachten, dass globale Variablen pro KI-Block separat existieren und die KI-Blöcke so nicht in der Lage sind,
+globale Variablen gegenseitig oder für das Kartenskript zu überschreiben.
+KI-Blöcke könnnen nicht als Deklarationsvoraussetzung verwendet werden, da sie in jedem Fall ausgeführt werden können und
+ihre Deklaration nicht im Skript stattfindet.
+Sie selbst können ebenfalls keine Deklarationsvoraussetzung haben, da alle verfügbaren Funktionen bereits vor ihnen
+deklariert werden.
 
 Deklarations-Notation:
-ai <Bezeichner> [Deklarationsvoraussetzungen]
+ai <Bezeichner>
 {
 	<Anweisungen>
 }
@@ -385,6 +425,11 @@ In Jass++ ist es garantiert, dass sämtlicher Code aus der "common.j"- und der "
 Dabei kann eine beliebige Version von Warcraft 3 The Frozen Throne verwendet werden, in welcher die Datentypen "agent"
 und "hashtable" bereits verfügbar sind.
 Die Datei "common.ai" ist nur in KI-Blöcken garantiert verfügbar (siehe "KI-Blöcke").
+Jedoch sind die drei nativen Funktionen:
+* GetUnitGoldCost
+* GetUnitWoodCost
+* und GetUnitBuildTime
+ebenfalls in Nicht-KI-Block-Bereichen verfügbar (siehe http://jass.sourceforge.net/doc/library.shtml).
 
 10. Deklaration nativer Typen
 
@@ -684,7 +729,7 @@ unittype(Variable)					Entspricht ConvertUnitType(Variable)
 gamespeed(Variable)					Entspricht ConvertGameSpeed(Variable)
 placement(Variable)					Entspricht ConvertPlacement(Variable)
 startlocprio(Variable)					Entspricht ConvertStartLocPrio(Variable)
-gamedifficulty(Variable)					Entspricht ConvertGameDifficulty(Variable)
+gamedifficulty(Variable)				Entspricht ConvertGameDifficulty(Variable)
 gametype(Variable)					Entspricht ConvertGameType(Variable)
 mapflag(Variable)					Entspricht ConvertMapFlag(Variable)
 mapvisibility(Variable)					Entspricht ConvertMapVisibility(Variable)
@@ -692,7 +737,7 @@ mapsetting(Variable)					Entspricht ConvertMapSetting(Variable)
 mapdensity(Variable)					Entspricht ConvertMapDensity(Variable)
 mapcontrol(Variable)					Entspricht ConvertMapControl(Variable)
 playercolor(Variable)					Entspricht ConvertPlayerColor(Variable)
-playerslotstate(Variable)					Entspricht ConvertPlayerSlotState(Variable)
+playerslotstate(Variable)				Entspricht ConvertPlayerSlotState(Variable)
 volumegroup(Variable)					Entspricht ConvertVolumeGroup(Variable)
 camerafield(Variable)					Entspricht ConvertCameraField(Variable)
 blendmode(Variable)					Entspricht ConvertBlendMode(Variable)
@@ -765,7 +810,7 @@ Für Lade-Blöcke:
 <Lade-Block-Bezeichner> : <Deklarationsvoraussetzungen>
 
 Für KI-Blöcke:
-<KI-Block-Bezeichner> : <Deklarationsvoraussetzungen>
+execute <KI-Block-Bezeichner> for <Spielerausdruck>
 
 Für Paketdeklarationen:
 <Paketbezeichner> : <Deklarationsvoraussetzungen>
@@ -799,13 +844,10 @@ Variable != Ausdruck
 size <Aufzählungsbezeichner>			Liefert die Anzahl der Elemente der Aufzählung
 <Aufzählungsbezeichner>.size			Liefert die Anzahl der Elemente der Aufzählung
 
-Für Funktionszeiger:
-execute Variable(<Parameter)
-Variable.execute(<Parameter>)
-executewait Variable(<Parameter)
-Variable.executewait(<Parameter>)
-evaluate Variable(<Parameter)
-Variable.evaluate(<Parameter>)
+Für "threaded" Funktionen:
+execute Variable(<Parameter>)
+executewait [<real-Ausdruck>] Variable(<Parameter>)
+evaluate Variable(<Parameter>)
 executions Variable
 Variable.executions
 evaluations Variable
@@ -813,11 +855,10 @@ Variable.evaluations
 sleeps Variable
 Variable.sleeps
 sleepon Variable
-Variable.sleepon
 sleepoff Variable
-Variable.sleepoff
 reset Variable
-Variable.reset
+
+Für Funktionszeiger:
 integer(Variable)				Liefert die interne Ganzzahl des Funktionsprototypen.
 id Variable					Liefert die interne Ganzzahl des Funktionsprototypen.
 Variable.id
@@ -1064,7 +1105,7 @@ Geerbte Klassen werden implizit als Deklarationsvoraussetzung angegeben.
 Aufzählungen brauchen in der Regel höchstens Voraussetzungen, wenn das Paket oder die Klasse Ganzzahl-Konstanten enthält.
 
 Notation:
-<Lade-Block|KI-Block|Funktionsdeklaration|Paketdeklaration|Aufzählungsdeklaration|Klassendeklaration> : <Bezeichner1>, <Bezeichner2>, ... <Bezeichnern>
+<Lade-Block|Funktionsdeklaration|Paketdeklaration|Aufzählungsdeklaration|Klassendeklaration> : <Bezeichner1>, <Bezeichner2>, ... <Bezeichnern>
 
 21. Funktionen
 
@@ -1084,51 +1125,64 @@ Notation:
 	<Anweisungen>
 }
 
-Ist eine Funktion "threaded", kann sie von überall aus mit .execute, .executewait, oder .evaluate aufgerufen werden.
-Rückgabewerte können nur bei .evaluate zurückgegeben werden.
-.evaluate erzeugt keinen neuen Thread, es wird daher gewartet, bis der Funktionsaufruf abgearbeitet wurde. Funktionen, die mit
-.evaluate aufgerufen werden, dürfen keine sleep-Anweisungen bzw. TriggerSleepAction-Aufrufe enthalten.
+"threaded"-Funktionen:
+Ist eine Funktion "threaded", kann sie von überall aus mit einem der Schlüsselwörter "execute", "executewait", oder "evaluate" aufgerufen werden.
+Rückgabewerte können nur bei "evaluate" zurückgegeben werden.
+"evaluate" erzeugt keinen neuen Thread, es wird daher gewartet, bis der Funktionsaufruf abgearbeitet wurde. Funktionen, die mit
+"evaluate" aufgerufen werden, dürfen keine "sleep"-Anweisungen bzw. "TriggerSleepAction"-Aufrufe enthalten, ob direkt oder indirekt spielt dabei keine Rolle.
 Der Compiler sollte in diesem Fall eine Fehlermeldung ausgeben.
-Bei .execute und .executewait dagegen, läuft der Code unmittelbar nach dem Aufruf weiter. Der Funktionsaufruf findet in einem eigenen
+Bei "execute" und "executewait" dagegen, läuft der Code unmittelbar nach dem Aufruf weiter. Der Funktionsaufruf findet in einem eigenen
 Thread statt.
-.execute und .executewait bewirken eigentlich das Gleiche, insofern TriggerExecute und TriggerExecuteWait das Gleiche bewirken.
-Der Rückgabewert von Funktionen, die mit .execute bzw. .executewait aufgerufen wurden, dürfen nicht verwendet werden (zeitliche Differenz!).
+"execute" und "executewait" bewirken eigentlich das Gleiche, insofern "TriggerExecute" und "TriggerExecuteWait" das Gleiche bewirken.
+Jedoch gibt es eine weitere Verwendungsmöglichkeit von "executewait", die sich von "execute" deutlich unterscheidet.
+Gibt man bei "executewait" vor dem Funktionsbezeichner eine "real"-Wert an, so wird die Funktion erst nach Ablauf dieser Zeit
+aufgerufen, jedoch wie bei "execute" nicht auf den Aufruf gewartet.
+Intern wird dies durch einen speziell dafür erzeugten Zeitgeber "timer" realisiert.
+Der Rückgabewert von Funktionen, die mit "execute" bzw. "executewait" aufgerufen wurden, dürfen nicht verwendet werden (zeitliche Differenz!).
 
-Mittels der Schlüsselwörter "executions" und "evaluations" kann herausgefunden werden, wie oft eine "threaded" Funktion per .execute und .executewait 
-bzw. .evaluate aufgerufen wurde.
+Notation:
+evaluate <Funktionsbezeichner>
+execute <Funktionsbezeichner>
+executewait [<real-Ausdruck>] <Funktionsbezeichner>
+
+Mittels der Schlüsselwörter "executions" und "evaluations" kann herausgefunden werden, wie oft eine "threaded" Funktion per "execute" und "executewait"
+bzw. "evaluate" aufgerufen wurde.
 Zurückgegeben wird die Anzahl als integer.
 
 Notation:
-<Funktionsname>.executions
-<Funktionsname>.evaluations
-executions <Funktionsname>
-evaluations <Funktionsname>
+executions <Funktionsbezeichner>
+evaluations <Funktionsbezeichner>
+<Funktionsbezeichner>.executions
+<Funktionsbezeichner>.evaluations
  
 Mittels des Schlüsselwortes "sleep", kann in einer "threaded"-Funktion gewartet werden.
+Sie entspricht einem Aufruf der Funktion "TriggerSleepAction".
 
 Notation:
-sleep(<real-Ausdruck>)
+sleep <real-Ausdruck>
 
 Mittels der Schlüsselwörter "sleeps", "sleepon" und "sleepoff" kann eine "threaded" Funktion darauf überprüft werden, ob ihr Thread gerade wartet bzw.
 das Warten aktiviert oder deaktiviert werden.
-Die Aktivierung und Deaktivierung des Wartens bezieht sich NUR auf alle laufenden .execute- und .executewait-Aufrufe der Funktion.
+Die Aktivierung und Deaktivierung des Wartens bezieht sich NUR auf alle laufenden "execute"- und "executewait"-Aufrufe der Funktion.
 Sämtliche Aufrufe nach der Aktivierung bzw. Deaktivierung sind davon ausgeschlossen.
-Dies liegt am Verhalten der nativen Jass-Funktion TriggerWaitOnSleeps.
+Dies liegt am Verhalten der nativen Jass-Funktion "TriggerWaitOnSleeps".
 Test-Anmerkung:
-IsTriggerWaitOnSleeps gibt nur true zurück, falls explizit TriggerWaitOnSleeps(<Auslöser>, true) aufgerufen wurde. Am Verhalten des Auslösers
+"IsTriggerWaitOnSleeps" gibt nur "true" zurück, falls explizit TriggerWaitOnSleeps(<Auslöser>, true) aufgerufen wurde. Am Verhalten des Auslösers
 scheint sich aber nichts zu ändern.
 
 Notation:
-sleeps <Funktionsname>// Liefert einen Boolean-Wert.
-sleepon <Funktionsname> // Funktion wartet bei "sleep"-Anweisungen.
-sleepoff <Funktionsname> // Funktion wartet nicht bei "sleep"-Anweisungen.
+sleeps <Funktionsbezeichner> // Liefert einen Boolean-Wert.
+<Funktionsbezeichner>.sleeps // Liefert einen Boolean-Wert.
+sleepon <Funktionsbezeichner> // Funktion wartet bei "sleep"-Anweisungen.
+sleepoff <Funktionsbezeichner> // Funktion wartet nicht bei "sleep"-Anweisungen.
 
-Mittels des Schlüsselwortes "reset" kann eine "threaded" Funktion zurückgesetzt werden. Dies bewirkt, dass sie bei der nächsten sleep-Anweisung 
-abbricht. Dies gilt für sämtliche execute- und executewait-Aufrufe der Funktion.
+Mittels des Schlüsselwortes "reset" kann eine "threaded" Funktion zurückgesetzt werden. Dies bewirkt, dass sie bei der nächsten "sleep"-Anweisung
+abbricht. Dies gilt für sämtliche "execute"- und "executewait"-Aufrufe der Funktion.
 
 Notation:
 reset <Funktionsname> // Setzt den Thread der Funktion zurück.
 
+Weiteres:
 Ist eine Funktion als "mapinit" deklariert, so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers 
 aufgerufen. Eine "mapinit"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt, 
 manuell aufgerufen wird oder "threaded" ist (einstellbar, "threaded" ist ebenfalls eher unnötig).

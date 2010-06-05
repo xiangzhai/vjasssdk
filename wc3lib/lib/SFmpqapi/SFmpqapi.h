@@ -158,7 +158,11 @@
 #ifndef SHADOWFLARE_MPQ_API_INCLUDED
 #define SHADOWFLARE_MPQ_API_INCLUDED
 
+#if (defined(_WIN32) || defined(WIN32)) && !defined(NO_WINDOWS_H)
 #include <windows.h>
+#else
+#include "linux/windows.h"
+#endif
 
 #ifndef SFMPQ_STATIC
 

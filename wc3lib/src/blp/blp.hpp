@@ -72,7 +72,7 @@ class Blp
 				dword width() const;
 				dword height() const;
 				
-				void setColor(dword width, dword height, color rgb, byte alpha, byte paletteIndex = 0) throw (class Exception);
+				void setColor(dword width, dword height, color rgb, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
 				const std::map<std::pair<dword, dword>, struct Color>& colors() const;
 				const struct Color& colorAt(dword width, dword height) const;
 
@@ -94,14 +94,14 @@ class Blp
 		
 		enum Version
 		{
-			Blp0, //ROC
-			Blp1, //TFT
-			Blp2 // WoW
+			Blp0, /// Reign of Chaos
+			Blp1, /// Warcraft The Frozen Throne
+			Blp2 /// World of Warcraft
 		};
 
 		enum Compression
 		{
-			Jpeg = 0, // JFIF!
+			Jpeg = 0, /// JFIF!
 			Paletted = 1
 		};
 		
@@ -111,11 +111,16 @@ class Blp
 			Alpha = 8
 		};
 		
+		/// File header identifier of format BLP0.
 		static const byte identifier0[4];
+		/// File header identifier of format BLP1.
 		static const byte identifier1[4];
+		/// File header identifier of format BLP2.
 		static const byte identifier2[4];
+		/// Number of maximum mip maps which can be hold by one BLP file.
 		static const std::size_t maxMipMaps;
-		static const std::size_t maxCompressedPaletteSize;
+		/// Size of color palette (always the same) used by BLP files with compression BLP::Paletted.
+		static const std::size_t compressedPaletteSize;
 
 		Blp();
 		~Blp();
@@ -139,19 +144,17 @@ class Blp
 		* Cleans all BLP data.
 		*/
 		void clean();
-		std::streamsize read(std::istream &istream, enum Format format) throw (class Exception);
-		std::streamsize write(std::ostream &ostream, enum Format format) throw (class Exception);
 		/**
 		* @return Read bytes. Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
 		*/
 		std::streamsize readBlp(std::istream &istream) throw (class Exception);
-		std::streamsize writeBlp(std::ostream &ostream) throw (class Exception);
+		std::streamsize writeBlp(std::ostream &ostream) const throw (class Exception);
 		std::streamsize readJpeg(std::istream &istream) throw (class Exception);
-		std::streamsize writeJpeg(std::ostream &ostream) throw (class Exception);
+		std::streamsize writeJpeg(std::ostream &ostream) const throw (class Exception);
 		std::streamsize readTga(std::istream &istream) throw (class Exception);
-		std::streamsize writeTga(std::ostream &ostream) throw (class Exception);
+		std::streamsize writeTga(std::ostream &ostream) const throw (class Exception);
 		std::streamsize readPng(std::istream &istream) throw (class Exception);
-		std::streamsize writePng(std::ostream &ostream) throw (class Exception);
+		std::streamsize writePng(std::ostream &ostream) const throw (class Exception);
 
 		/**
 		* Adds mip map @param initialMipMap to mip map list and generates number - 1 new mip maps which are added to mip map list, too.

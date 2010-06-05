@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include "StormLib.h"
+#include "SCommon.h"
 
 #define TRANS_COL 256
 
@@ -374,7 +375,7 @@ uint8_t * WINAPI celGetFrameData(uint8_t *pFileBuf, uint8_t *palette, uint16_t u
      ******************************/
     
     double erg = rint(sqrt(pow(2, rint(log((double)(framestart[uFrameNum+1] - framestart[uFrameNum])) / log(2.0)))));
-    pFrame = new FrameBuf(palette, uFrameNum, uXSize, uYSize, uMaxX, max((uint16_t)min((int)erg, 0x7F), uXSize));
+    pFrame = new FrameBuf(palette, uFrameNum, uXSize, uYSize, uMaxX, STORMLIB_MAX((uint16_t)STORMLIB_MIN((int)erg, 0x7F), uXSize));
     
     /****** ramp detection -- AFAIK only needed for 32x32 tiles ********
      * here I use hard coded constants because this is the only simple

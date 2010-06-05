@@ -30,7 +30,8 @@ namespace wc3lib
 
 class LibraryLoader::Handle* LibraryLoader::loadLibrary(const boost::filesystem::path &path) throw (class Exception)
 {
-	void *handle = dlopen(path.string().c_str(), RTLD_LAZY);
+	std::string symbolName = path.string().c_str();
+	void *handle = dlopen(symbolName.insert(0, "lib").append(".so").c_str(), RTLD_LAZY);
 
 	if (handle == NULL)
 		throw Exception(boost::format(_("Error while loading shared object \"%1%\": %2%")) % path.string() % dlerror());

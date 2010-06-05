@@ -22,7 +22,7 @@
 #define WC3LIB_EDITOR_BLPIOPLUGIN_HPP
 
 
-#include <QImageIOPlugin>
+#include <QtGui/QImageIOPlugin>
 
 namespace wc3lib
 {
