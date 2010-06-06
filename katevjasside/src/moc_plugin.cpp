@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'plugin.h'
 **
-** Created: Sun May 31 14:32:59 2009
+** Created: Fri Aug 14 21:40:23 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.1)
 **
 ** WARNING! All changes made in this file will be lost!
