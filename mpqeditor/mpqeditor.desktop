@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=mpqeditor -caption "%c" %i
+Icon=mpqeditor
+X-DocPath=konversation/index.html
+GenericName=MPQ Editor
+GenericName[de]=MPQ-Editor
+Terminal=false
+Name=mpqeditor
+Categories=Qt;KDE;Development;

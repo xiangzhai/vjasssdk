@@ -1,0 +1,20 @@
+2009-07-10 Tamino Dauth <tamino@cdauth.de>
+* Added SFmpq headers and library.
+
+2009-07-09 Tamino Dauth <tamino@cdauth.de>
+* Improved help menu entry.
+
+2009-07-02 Tamino Dauth <tamino@cdauth.de>
+* Improved MPQ creation functionality.
+* Added help menu actions.
+
+2009-06-29 Tamino Dauth <tamino@cdauth.de>
+* Improved archive creation dialog.
+* Improved main window.
+* Added file "ui/archiveswidget.ui".
+* Added file "src/archiveswidget.h".
+* Added file "src/archiveswidget.cpp".
+* Improved mpq treatment.
+
+2009-06-14 Tamino Dauth <tamino@cdauth.de>
+* Started project.

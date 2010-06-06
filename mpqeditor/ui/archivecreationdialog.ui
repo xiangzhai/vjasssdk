@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ArchiveCreationDialog</class>
+ <widget class="KDialog" name="ArchiveCreationDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>380</width>
+    <height>231</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Create MPQ Archive</string>
+  </property>
+  <property name="locale">
+   <locale language="C" country="AnyCountry"/>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>0</y>
+     <width>149</width>
+     <height>208</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="m_archivePathLabel">
+      <property name="text">
+       <string>Archive Path:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="KUrlRequester" name="m_archivePathUrlRequester">
+      <property name="filter">
+       <string>*.mpq, *.MPQ|MPQ archives\n*.w3m;;*.W3M|Warcraft 3 Maps</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="m_directoryPathLabel">
+      <property name="text">
+       <string>Directory Path:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="KUrlRequester" name="m_directoryPathUrlRequester">
+      <property name="filter">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="m_hashTableSizeLabel">
+      <property name="text">
+       <string>Hash Table Size:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="KIntSpinBox" name="m_hashTableSizeSpinBox">
+      <property name="minimum">
+       <number>16</number>
+      </property>
+      <property name="maximum">
+       <number>262144</number>
+      </property>
+      <property name="base">
+       <number>10</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="m_attributesCheckBox">
+      <property name="text">
+       <string>(attributes)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="m_version2CheckBox">
+      <property name="text">
+       <string>Format Version 2.0</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KDialog</class>
+   <extends>QDialog</extends>
+   <header>kdialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
