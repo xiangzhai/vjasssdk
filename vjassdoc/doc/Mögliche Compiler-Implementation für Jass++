@@ -19,6 +19,7 @@ Möglich Kapitelunterteilung einer Compiler-Implementation:
 	
 3. Generierte Variablen
 4. Die globale Hashtable
+5. Anwendung
 
 1. Vorwort
 
@@ -40,7 +41,7 @@ Es fallen sogar eigens deklarierte Variablen weg, da ihre Daten in der Hashtable
 8. Globale Hashtable erzeugen/Laufzeitglobale erzeugen
 
 8.1 Globale Hashtable
-Ist der Hashtable-Modus aktiviert, so wird eine globale Variable namens __hashtable des Typs hashtable in das Kartenskript
+Ist der Hashtable-Modus aktiviert, so wird eine globale Variable namens jasspp__hashtable des Typs hashtable in das Kartenskript
 eingefügt.
 Die globale Hashtable wird für Funktionsparameter von .executewait-, .execute- und .evaluate-Aufrufen, Klasseninstanzen und Arrayinstanzen verwendet.
 Sie wird in der main-Funktion der Karte nach dem Aufruf der InitBlizzard-Funktion in der Funktion InitJassPP erzeugt.
@@ -98,53 +99,53 @@ Achtung: Der Compiler muss beim Verwenden einer neuen globalen Variable, immer d
 der bereits verwendeten Arrays abziehen (siehe Klassenelementezugriff).
 
 globals
-	trigger array __prototypeFunctionTriggers0
-	trigger array __prototypeFunctionTriggers1
-	<Parametertyp0> array __prototypeFunctionArguments0__<Parametertyp0>
-	<Parametertyp0> array __prototypeFunctionArguments1__<Parametertyp0>
-	<Parametertyp1> array __prototypeFunctionArguments0__<Parametertyp1>
-	<Parametertyp1> array __prototypeFunctionArguments1__<Parametertyp1>
-	<Rückgabetyp0> array __prototypeFunctionReturnValues0__<Rückgabetyp0>
+	trigger array jasspp__prototypeFunctionTriggers0
+	trigger array jasspp__prototypeFunctionTriggers1
+	<Parametertyp0> array jasspp__prototypeFunctionArguments0__<Parametertyp0>
+	<Parametertyp0> array jasspp__prototypeFunctionArguments1__<Parametertyp0>
+	<Parametertyp1> array jasspp__prototypeFunctionArguments0__<Parametertyp1>
+	<Parametertyp1> array jasspp__prototypeFunctionArguments1__<Parametertyp1>
+	<Rückgabetyp0> array jasspp__prototypeFunctionReturnValues0__<Rückgabetyp0>
 endglobals
 
-function __prototypeFunction<Prototypnummer> takes nothing returns nothing
-	local <Parametertyp0> <Parametername0> = __prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>]
-	local <Parametertyp1> <Parametername1> = __prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>]
-	set __prototypeFunctionReturnValues0__<Rückgabetyp0> = <Parametername0> * <Parametername1>
+function jasspp__prototypeFunction<Prototypnummer> takes nothing returns nothing
+	local <Parametertyp0> <Parametername0> = jasspp__prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>]
+	local <Parametertyp1> <Parametername1> = jasspp__prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>]
+	set jasspp__prototypeFunctionReturnValues0__<Rückgabetyp0> = <Parametername0> * <Parametername1>
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
-function __init__PrototypeFunction<Prototypnummer> takes nothing returns nothing
-	set __prototypeFunctionTriggers0[<Prototypnummer>] = CreateTrigger()
-	call TriggerAddAction(__prototypeFunctionTriggers0[<Prototypnummer>], function __prototypeFunction<Prototypnummer>)
+function jasspp__init__PrototypeFunction<Prototypnummer> takes nothing returns nothing
+	set jasspp__prototypeFunctionTriggers0[<Prototypnummer>] = CreateTrigger()
+	call TriggerAddAction(__prototypeFunctionTriggers0[<Prototypnummer>], function jasspp__prototypeFunction<Prototypnummer>)
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
 // Für den Debug-Modus.
-function __free__PrototypeFunction<Prototypnummer> takes nothing returns nothing
+function jasspp__free__PrototypeFunction<Prototypnummer> takes nothing returns nothing
 	call TriggerClearActions(__prototypeFunctionTriggers0[<Prototypnummer>])
 	call DestroyTrigger(__prototypeFunctionTriggers0[<Prototypnummer>])
-	set __prototypeFunctionTriggers0[<Prototypnummer>] = null
+	set jasspp__prototypeFunctionTriggers0[<Prototypnummer>] = null
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
 // Für .evaluations.
-function __evaluations__prototypeFunction<Prototypnummer> takes nothing returns integer
+function jasspp__evaluations__prototypeFunction<Prototypnummer> takes nothing returns integer
 	return GetTriggerEvalCount(__prototypeFunctionTriggers0[<Prototypnummer>])
 endfunction
 
 // Kann auch ohne Funktion in den Code kopiert werden.
 // Für .executions.
-function __executions__prototypeFunction<Prototypnummer> takes nothing returns integer
+function jasspp__executions__prototypeFunction<Prototypnummer> takes nothing returns integer
 	return GetTriggerExecCount(__prototypeFunctionTriggers0[<Prototypnummer>])
 endfunction
 
 function testEvaluation takes nothing returns nothing
 	local <Rückgabetyp0> result
-	set __prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>] = <Parameter0>
-	set __prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>] = <Parameter1>
+	set jasspp__prototypeFunctionArguments0__<Parametertyp0>[<Prototypnummer>] = <Parameter0>
+	set jasspp__prototypeFunctionArguments0__<Parametertyp1>[<Prototypnummer>] = <Parameter1>
 	call TriggerEvaluate(__prototypeFunctionTriggers0[<Prototypnummer>])
-	set result = __prototypeFunctionReturnValues0__<Rückgabetyp0>
+	set result = jasspp__prototypeFunctionReturnValues0__<Rückgabetyp0>
 endfunction
 
 Klasseninstanzen ohne globale Hashtable:
@@ -160,33 +161,33 @@ für einen nichtallozierten Zeiger reserviert ist) eine globale Array-Variable f
 Außerdem werden Zugriffsfunktionen für die virtuellen Methoden und Elemente
 generiert, welche bei Zugriffen anstatt eines normalen Zugriffs verwendet werden (automatische Ersetzung):
 globals
-	constant integer __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size
-	boolean array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0
-	boolean array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1
-	<Elementtyp> array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0
-	<Elementtyp> array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1
-	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>0
-	integer array __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>1
+	constant integer jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size
+	boolean array jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0
+	boolean array jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1
+	<Elementtyp> array jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0
+	<Elementtyp> array jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1
+	integer array jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>0
+	integer array jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Methodenname>1
 endglobals
 
 Allokation:
 
 // fixen, 0-Zeiger beachten!
-function __newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
+function jasspp__newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
 	local integer i = 0
 	loop
-		exitwhen (i == IMax(1, __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size / JASS_MAX_ARRAY_SIZE))
+		exitwhen (i == IMax(1, jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size / JASS_MAX_ARRAY_SIZE))
 		set j = 1 // 0 ist reserviert für den Null-Zeiger
 		loop
 			exitwhen (j == IMin(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size, JASS_MAX_ARRAY_SIZE) + 1)
 			if (i == 0) then // Benutze Array-Variable 0
-				if (not __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[j]) then
-					set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0[j] = true
+				if (not jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[j]) then
+					set jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0[j] = true
 					return i * j
 				endif
 			elseif (i == 1) then // Benutze Array-Variable 1
-				if (not __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[j]) then
-					set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1[j] = true
+				if (not jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>[j]) then
+					set jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1[j] = true
 					return i * j
 				endif
 			endif
@@ -201,94 +202,94 @@ function __newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klasse
 endfunction
 
 // Eventuell Variable automatisch auf 0 setzen?
-function __deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+function jasspp__deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
 #if (DEBUG_MODE)
-	if (id <= 0 or id >= __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+	if (id <= 0 or id >= jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to free id " + I2S(id) + " for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
 		return
 	endif
 #endif
 	if (id < JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 0
-		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0[id] = false
+		set jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>0[id] = false
 	elseif (id < 2 * JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 1
-		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1[id] = false
+		set jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>1[id] = false
 	endif
 endfunction
 
 // Die Elementzugriffsfunktionen gelten ebenso für virtuelle Methoden
 
-function __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id, <Elementtyp> value returns nothing
+function jasspp__setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id, <Elementtyp> value returns nothing
 #if (DEBUG_MODE)
-	if (id < 0 or __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+	if (id < 0 or jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to set member <Elementname> of type <Elementtyp> for instance " + I2S(id) + " of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")		
 		return
 	endif
 #endif
 	if (id < JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 0
-		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0[id] = value
+		set jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0[id] = value
 	elseif (id < 2 * JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 1
-		set __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1[id] = value
+		set jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1[id] = value
 	endif
 endfunction
 
-function __member__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns <Elementtyp>
+function jasspp__member__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns <Elementtyp>
 #if (DEBUG_MODE)
-	if (id < 0 or __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+	if (id < 0 or jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to get member <Elementname> of type <Elementtyp> for instance " + I2S(id) + " of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")		
 		return <Elementtypnullwert>
 	endif
 #endif
 	if (id < JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 0
-		return __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0[id]
+		return jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>0[id]
 	elseif (id < 2 * JASS_MAX_ARRAY_SIZE) then // Benutze Array-Variable 1
-		return __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1[id]
+		return jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__<Elementname>1[id]
 	endif
 	return <Elementtypnullwert>
 endfunction
 
 // Existiert auch für Kindklassen.
-function __initMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Startwert>)
+function jasspp__initMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call jasspp__setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Startwert>)
 endfunction
 
 // Existiert auch für Kindklassen.
-function __initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Funktionsprototyp-Id der virtuellen Methode>)
+function jasspp__initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call jasspp__setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Funktionsprototyp-Id der virtuellen Methode>)
 endfunction
 
 // Existiert auch für Kindklassen.
-function __resetMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Nullwert>)
+function jasspp__resetMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call jasspp__setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, <Nullwert>)
 endfunction
 
 // Existiert auch für Kindklassen.
-function __resetVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	call __setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, 0)
+function jasspp__resetVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call jasspp__setMember__<Elementname>__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id, 0)
 endfunction
 
 // Existiert auch für Kindklassen.
-function __new__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
-	local integer id = __newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>()
+function jasspp__new__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes nothing returns integer
+	local integer id = jasspp__newparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>()
 #if (DEBUG_MODE)
 	if (id == 0) then
 		return
 	endif
 #endif
-	call __initMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls Elemente vorhanden.
-	call __initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls virtuelle Methoden vorhanden.
+	call jasspp__initMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls Elemente vorhanden.
+	call jasspp__initVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls virtuelle Methoden vorhanden.
 endfunction
 
 // Existiert auch für Kindklassen. Eventuell Variable automatisch auf 0 setzen?
-function __delete__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
-	call __deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id)
+function jasspp__delete__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname> takes integer id returns nothing
+	call jasspp__deleteparent__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id)
 #if (DEBUG_MODE)
-	if (id <= 0 or id >= __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
+	if (id <= 0 or id >= jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) then
 		call DisplayTimedTextToPlayer(GetLocalPlayer(), 0.0, 0.0, 1000.0, "Unable to free id " + I2S(id) + " for an instance of class \"<Paketnamen getrennt durch Punkte><Klassenname>\". Maximum size is " + I2S(__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__size) + ".")
 		return
 	endif
 #endif
-	call __resetMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls Elemente vorhanden.
-	call __resetVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls virtuelle Methoden vorhanden.
+	call jasspp__resetMembers__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls Elemente vorhanden.
+	call jasspp__resetVirtualMethods__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(id) // Falls virtuelle Methoden vorhanden.
 endfunction
 
 Methoden:
@@ -301,8 +302,8 @@ boolean test(integer a, integer b)
 
 wird ersetzt durch
 
-function __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test0 takes integer this, integer a, integer b returns boolean
-	return a + b + __member__m_x__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(this)
+function jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test0 takes integer this, integer a, integer b returns boolean
+	return a + b + jasspp__member__m_x__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>(this)
 endfunction
 
 /*
@@ -314,7 +315,7 @@ threaded void test(integer a, integer b)
 
 wird ersetzt durch
 
-function __FunctionPrototype<n> takes nothing returns nothing
+function jasspp__FunctionPrototype<n> takes nothing returns nothing
 	local integer this = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("this"))
 	local integer a = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("a"))
 	local integer b = LoadInteger(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("b"))
@@ -323,7 +324,7 @@ endfunction
 und in der Initialisierungsfunktion mit folgendem initialisiert
 
 local trigger prototypeTrigger = CreateTrigger()
-call TriggerAddAction(prototypeTrigger, function __<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test)
+call TriggerAddAction(prototypeTrigger, function jasspp__<Paketnamen getrennt durch doppelte Unterstriche>__<Klassenname>__test)
 SaveTriggerHandle(__hashtable, StringHash("FunctionPrototype<n>"), StringHash("Trigger"), prototypeTrigger)
 set prototypeTrigger = null
 
@@ -418,26 +419,26 @@ default
 
 Generierter Code:
 local boolean test = false
-local boolean __loopBreak0
-local integer __loopCounter0
-set __loopBreak0 = false
-set __loopCounter0 = 0
+local boolean jasspp__loopBreak0
+local integer jasspp__loopCounter0
+set jasspp__loopBreak0 = false
+set jasspp__loopCounter0 = 0
 loop
 	exitwhen (not test)
 	continue; ???????
-	set __loopBreak0 = true // break;
+	set jasspp__loopBreak0 = true // break;
 	exitwhen (true) // break;
-	set __loopCounter0 = __loopCounter0 + 1 // letzte Anweisung
+	set jasspp__loopCounter0 = jasspp__loopCounter0 + 1 // letzte Anweisung
 endloop
 if (__loopCounter0 == 100) then // case 100
-elseif (not __loopBreak0) then // default
+elseif (not jasspp__loopBreak0) then // default
 endif
 
 Anmerkungen:
-Pro Schleife in einer Funktion, welche eine default-Verzweigung verwendet, wird eine Variable namens __loopBreak<n> des Types boolean am Anfang
+Pro Schleife in einer Funktion, welche eine default-Verzweigung verwendet, wird eine Variable namens jasspp__loopBreak<n> des Types boolean am Anfang
 der Funktion deklariert und vor dem Schleifenblock auf false gesetzt.
 Diese wird bei einer break-Anweisung auf true gesetzt.
-Pro Schleife in einer Funktion, welche eine case-Verzweigung verwendet, wird eine Variable namens __loopCounter<n> des Typs integer am Anfang 
+Pro Schleife in einer Funktion, welche eine case-Verzweigung verwendet, wird eine Variable namens jasspp__loopCounter<n> des Typs integer am Anfang 
 der Funktion deklariert und vor dem Schleifenblock genullt.
 Diese wird nach jedem Schleifendurchlauf erhöht (auch continue?).
 
@@ -452,13 +453,13 @@ default
 }
 
 Generierter Code:
-local boolean __loopBreak0
-set __loopBreak0 = false
+local boolean jasspp__loopBreak0
+set jasspp__loopBreak0 = false
 loop
-	set __loopBreak0 = true
+	set jasspp__loopBreak0 = true
 	exitwhen (true)
 endloop
-if (not __loopBreak0) then
+if (not jasspp__loopBreak0) then
 endif
 
 Code:
@@ -476,20 +477,20 @@ default
 
 Generierter Code:
 local integer i
-local boolean __loopBreak0
-local integer __loopCounter0
-set __loopBreak0 = false
-set __loopCounter0 = 0
+local boolean jasspp__loopBreak0
+local integer jasspp__loopCounter0
+set jasspp__loopBreak0 = false
+set jasspp__loopCounter0 = 0
 set i = 0 // i = 0
 loop
 exitwhen (i >= 100) // i < 100
-	set __loopBreak0 = true // break;
+	set jasspp__loopBreak0 = true // break;
 	exitwhen (true) // break;
-	set __loopCounter0 = __loopCounter0 + 1
+	set jasspp__loopCounter0 = jasspp__loopCounter0 + 1
 	set i = i + 1 // i++
 endloop
 if (__loopCounter0 == 10) then // case 10
-elseif (not __loopBreak0) then // default
+elseif (not jasspp__loopBreak0) then // default
 endif
 
 17. Ausnahmen
@@ -504,14 +505,14 @@ integer test(integer a, integer b) throw (integer)
 
 Der Compiler generiert:
 globals
-	integer __throwValueInteger
-	boolean __thrownInteger
+	integer jasspp__throwValueInteger
+	boolean jasspp__thrownInteger
 endglobals
 
 function test takes integer a, integer b returns integer
 	if (a == b)
-		set __throwValueInteger = 10
-		set __thrownInteger = true
+		set jasspp__throwValueInteger = 10
+		set jasspp__thrownInteger = true
 		return 0 // Nullwert
 	endif
 endfunction
@@ -540,15 +541,15 @@ void bla()
 Der Compiler generiert:
 function bla takes nothing returns nothing
 	local integer x
-	local integer __tmpValueInteger0
-	local integer __catchValueInteger
-	set __tmpValueInteger0 = test(10, 10)
+	local integer jasspp__tmpValueInteger0
+	local integer jasspp__catchValueInteger
+	set jasspp__tmpValueInteger0 = test(10, 10)
 	if (__thrownInteger) then
-		set __catchValueInteger = __throwValueInteger
+		set jasspp__catchValueInteger = jasspp__throwValueInteger
 		call Print(I2S(__catchValueInteger))
 	elseif (<restliche Typen überprüfen>) then
 	else // eigentliche try-Blockausführung
-		set x = __tmpValue0
+		set x = jasspp__tmpValue0
 	endif
 endfunction
 
@@ -626,4 +627,23 @@ void test()
 	finally // Wird vor der break- und der continue-Anweisung ausgeführt.
 	{
 	}
-} 
+}
+
+5. Anwendung
+
+./jassc [Optionen] Eingabedateien
+
+Optionen:
+	--version Zeigt die verwendete Version an.
+	--help Zeigt eine Liste möglicher Optionen.
+	--recursive <dir> Sämtliche Verzeichnisse der Eingabedateien werden rekursiv nach .j-Dateien durchsucht, welche ebenfalls geparst werden.
+	--include <dirs> Einbindungsverzeichnisse für #include- oder //! import-Anweisungen.
+	--showerrors Gibt eine Liste gefundener Syntaxfehler aus.
+	--verify Sucht bei Bezeichnern nach zugehörigen Typen und bricht bei Nichtfindungen den Kompilierprozess ab, nachdem alle überprüft wurden (Nichtfindungen werden zur Fehlerliste hinzugefügt).
+	--html <dir> Erzeugt eine HTML-API-Referenz aus dem unkompilierten Code.
+	--sqlite <file> Erzeugt eine SQLite3-Datenbank aus dem unkompilierten Code.
+	--map <file> Erweitert ein Kartenskript um den zu Jass-Code kompilierten Code.
+	--mapscript <file> Kompiliert oder erweitert ein Jass-Kartenskript aus dem eingelesen Code.
+	--script <file> Kompiliert ein Jass-Skript aus dem eingelesen Code.
+	--optimize Optimiert den Code beim Kompilieren.
+	--language <lang> Setzt den Startwert der Skriptsprache (standardmäßig jass, mögliche Einträge: jass, vjass, zinc, jasspp, cjass).

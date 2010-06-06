@@ -1,22 +1,37 @@
 Virtuelle-Maschine-Implementation:
 Falls es eines Tages möglich sein sollte, eine eigene virtuelle Maschine für Jass bzw. Jass++ zu schreiben, so sollten folgende native Funktionen hinzugefügt werden:
+
+Math-API:
 * native RMin takes real a, real b returns real
 * native RMax takes real a, real b returns real
 * native RAbs takes real a returns real
 * native RSign takes real a returns real
 * native RMod takes real dividend, real divisor returns real
+* native RExp takes real a returns real
+* native RLog takes real a returns real
+* native RLog10 takes real a returns real
 * native IMin takes integer a, integer b returns integer
 * native IMax takes integer a, integer b returns integer
 * native IAbs takes integer a returns integer
 * native ISign takes integer a returns integer
 * native IMod takes integer dividend, integer divisor returns integer
+
+String-Utility-API:
 * native StringIndex takes string source, string target returns integer
+
+
 * native GroupCount takes group whichGroup returns integer
 * native GroupUnit takes group whichGroup, integer index returns unit
 * native ForceCount takes force whichForce returns integer
 * native ForcePlayer takes force whichForce, integer index returns player
 * native EvaluateFunc takes string funcName returns boolean
+
+Handle-API:
+* native GetHandleSize takes handle whichHandle returns integer // Liefert die Anzahl in Bytes.
   
+Agent-API:
+* native GetAgentReferences takes agent whichAgent returns integer // Liefert die Anzahl der Referenzen auf das Objekt.
+
 Trigger-API:
 * native TriggerRemoveEvent takes trigger whichTrigger, event whichEvent returns nothing
 * native TriggerClearEvents takes trigger whichTrigger returns nothing
@@ -73,13 +88,50 @@ Multiboard-API:
   
 Quest-API:
 * native QuestRemoveItem takes questitem whichQuestItem returns nothing
-  
-Der Typ "mdlx" stellt nur eine nicht veränderbare Referenz auf eine Modeldatei dar.
-type mdlx extends agent // ist referenzbasiert, keine Kopierung
-type model extends agent // ist referenzbasiert, keine Kopierung
 
-* native CreateMdlx takes string filePath returns mdlx
-* native DestroyMdlx takes string filePath returns nothing
+Erweiterte API (keine einfachen Zusätze mehr)
+
+File-API:
+Local code, no net traffic. Use GetLocalPlayer() to create player-specific functions.
+* type file extends agent // ist referenzbasiert, keine Kopierung.
+* type filecompression extends handle // Kopierung.
+* type filelocale extends handle // Kopierung.
+* constant native ConvertFileCompression takes integer i returns filecompression
+* constant native ConvertFileLocale takes integer i returns filelocale
+* native CreateFile takes string filePath, filecompression fileCompression, filelocale fileLocale returns file // MPQ-Dateien.
+* native CreateLocalFile takes string filePath returns file
+* native OpenFile takes string filePath, filelocale preferedFileLocale returns file // MPQ-Dateien.
+* native OpenLocalFile takes string filePath returns file // lokale Dateien in einem speziellen Verzeichnis?
+* native CloseFile takes file whichFile returns boolean
+* native GetFileName takes file whichFile returns string
+* native GetFilePath takes file whichFile returns string
+* native GetFileDirectoryPath takes file whichFile returns string
+* native GetFileSize takes file whichFile returns integer // Größe in Bytes.
+* native GetFileCompressedSize takes file whichFile returns integer // Komprimierte Größe in MPQs.
+* native GetFileCompression takes file whichFile returns filecompression
+* native GetFileLocale takes file whichFile returns filelocale
+* native SeekFile takes file whichFile, integer position returns boolean
+* native GetFileSeekPosition takes file whichFile returns integer
+* native GetFileEndPosition takes file whichFile returns integer
+* native ReadFileString takes file whichFile, integer length returns string
+* native ReadFileInteger takes file whichFile returns integer
+* native ReadFileReal takes file whichFile returns real
+* native ReadFileBoolean takes file whichFile returns boolean
+* native WriteFileString takes file whichFile, string line returns boolean
+* native WriteFileInteger takes file whichFile, integer value returns boolean
+* native WriteFileReal takes file whichFile, real value returns boolean
+* native WriteFileBoolean takes file whichFile, boolean value returns boolean
+* native FilePathExists takes string filePath returns boolean
+* native FilePathIsDirectory takes string filePath returns boolean
+
+MDLX-API:
+Local code, no net traffic. Use GetLocalPlayer() to create player-specific functions.
+Der Typ "mdlx" stellt nur eine nicht veränderbare Referenz auf eine Modeldatei dar.
+* type mdlx extends agent // ist referenzbasiert, keine Kopierung
+* type model extends agent // ist referenzbasiert, keine Kopierung
+
+* native CreateMdlx takes file whichFile returns mdlx
+* native DestroyMdlx takes mdlx whichMdlx returns nothing
 * native GetMdlxGeosets takes mdlx whichMdlx returns integer
 * native GetMdlxMaterials takes mdlx whichMdlx returns integer
 * native GetMdlxAnimations takes mdlx whichMdlx returns integer
@@ -87,16 +139,16 @@ type model extends agent // ist referenzbasiert, keine Kopierung
 ...
   
 * native CreateModel takes mdlx whichMdlx, real x, real y, real z returns model
-* native RemoveModel takes mdlx whichMdlx returns nothing
-* native SetModelTranslationX takes mdlx whichMdlx, real x returns nothing
-* native SetModelTranslationY takes mdlx whichMdlx, real y returns nothing
-* native SetModelTranslationZ takes mdlx whichMdlx, real z returns nothing
-* native SetModelRotationX takes mdlx whichModel, real angle returns nothing
-* native SetModelRotationY takes mdlx whichModel, real angle returns nothing
-* native SetModelRotationZ takes mdlx whichModel, real angle returns nothing
-* native SetModelScalingX takes mdlx whichModel, real factor returns nothing
-* native SetModelScalingY takes mdlx whichModel, real factor returns nothing
-* native SetModelScalingZ takes mdlx whichModel, real factor returns nothing
+* native RemoveModel takes model whichModel returns nothing
+* native SetModelTranslationX takes model whichModel, real x returns nothing // Verschiebung an der X-Achse.
+* native SetModelTranslationY takes model whichModel, real y returns nothing
+* native SetModelTranslationZ takes model whichModel, real z returns nothing
+* native SetModelRotationX takes model whichModel, real angle returns nothing // Drehung an der X-Achse.
+* native SetModelRotationY takes model whichModel, real angle returns nothing
+* native SetModelRotationZ takes model whichModel, real angle returns nothing // Skalierung an der X-Achse.
+* native SetModelScalingX takes model whichModel, real factor returns nothing
+* native SetModelScalingY takes model whichModel, real factor returns nothing
+* native SetModelScalingZ takes model whichModel, real factor returns nothing
 ...
 
 Zudem sollte die umständliche Lösung zur Umgehung der Array-Größe mittels Hashtables wegfallen

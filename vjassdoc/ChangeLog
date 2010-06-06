@@ -1,3 +1,12 @@
+2009-12-19 Tamino Dauth <tamino@cdauth.de>
+* Revised Jass++ language definition, and compiler implementation documents.
+
+2009-12-18 Tamino Dauth <tamino@cdauth.de>
+* Revised Jass++ language definition, and compiler implementation documents.
+
+2009-12-16 Tamino Dauth <tamino@cdauth.de>
+* Revised Jass++ language definition, compiler implementation and Jass virtual machine implementation documents.
+
 2009-12-14 Tamino Dauth <tamino@cdauth.de>
 * Added first switch, case, default, throw, catch, try and finalize definitions to Jass++ documentation.
 

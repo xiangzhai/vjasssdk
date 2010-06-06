@@ -37,6 +37,8 @@ class Compiler
 		void compile(std::ostream &ostream, enum Vjassdoc::Language language);
 	
 	protected:
+		void sortPackages() const;
+		
 		/**
 		* Writes "the global hashtable". Jass++ only.
 		*/
