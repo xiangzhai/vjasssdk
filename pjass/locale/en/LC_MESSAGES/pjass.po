@@ -1,0 +1,146 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pjass\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-02-21 16:12+0100\n"
+"PO-Revision-Date: 2009-03-09 17:43+0100\n"
+"Last-Translator: Tamino Dauth <tamino.dauth@web.de>\n"
+"Language-Team: Tamino Dauth <tamino@cdauth.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src\n"
+"X-Poedit-SearchPath-0: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:66
+#, c-format
+msgid "Major error!\n"
+msgstr "Major error!\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:77
+#, c-format
+msgid "Undeclared function: %s\n"
+msgstr "Undeclared function: %s\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:91
+#, c-format
+msgid "Undeclared variable: %s\n"
+msgstr "Undeclared variable: %s\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:220
+#, c-format
+msgid "Symbol %s multiply defined."
+msgstr "Symbol %s multiply defined."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:259
+msgid "Bad types for binary operator."
+msgstr "Bad types for binary operator."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:293
+#, c-format
+msgid "Cannot convert %s to %s."
+msgstr "Cannot convert %s to %s."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:324
+#, c-format
+msgid "Cannot convert %s to %s"
+msgstr "Cannot convert %s to %s"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:354
+msgid "Too many arguments passed to function."
+msgstr "Too many arguments passed to function."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:358
+msgid "Not enough arguments passed to function."
+msgstr "Not enough arguments passed to function."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:371
+msgid "Cannot be converted to numeric type."
+msgstr "Cannot be converted to numeric type."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:380
+msgid "Comparing the order/size of 2 variables only works on Reals and Integers."
+msgstr "Comparing the order/size of 2 variables only works on Reals and Integers."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:384
+msgid "null > null and similar is not allowed."
+msgstr "null > null and similar is not allowed."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:397
+msgid "Comparing two variables of different primitive types (except real and integer) is not allowed."
+msgstr "Comparing two variables of different primitive types (except real and integer) is not allowed."
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:414
+#: src/grammar.y:67
+#, c-format
+msgid "Parse successful: %8d lines: %s.\n"
+msgstr "Parse successful: %8d lines: %s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:416
+#, c-format
+msgid "%s failed with %d error%s.\n"
+msgstr "%s failed with %d error%s.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:422
+#, c-format
+msgid "pjass version %s by Rudi Cilibrasi, modified by AIAndy and Baradé.\n"
+msgstr "pjass version %s by Rudi Cilibrasi, modified by AIAndy and Baradé.\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:438
+#, c-format
+msgid ""
+"To use this program, list the files you would like to parse in order.\n"
+"If you would like to parse from standard input (the keyboard), then\n"
+"use - as an argument.  If you supply no arguments to pjass, it will\n"
+"parse the console standard input by default.\n"
+"To test this program, go into your Scripts directory, and type:\n"
+"pjass common.j common.ai Blizzard.j\n"
+"pjass accepts some options:\n"
+"pjass --help       Display this help\n"
+"pjass --version    Display version information and exit\n"
+"pjass -e1          Ignores error level 1pjass +e2          Undo Ignore of error level 2pjass -            Read from standard input (may appear in a list)\n"
+msgstr ""
+"To use this program, list the files you would like to parse in order.\n"
+"If you would like to parse from standard input (the keyboard), then\n"
+"use - as an argument.  If you supply no arguments to pjass, it will\n"
+"parse the console standard input by default.\n"
+"To test this program, go into your Scripts directory, and type:\n"
+"pjass common.j common.ai Blizzard.j\n"
+"pjass accepts some options:\n"
+"pjass --help       Display this help\n"
+"pjass --version    Display version information and exit\n"
+"pjass -e1          Ignores error level 1pjass +e2          Undo Ignore of error level 2pjass -            Read from standard input (may appear in a list)\n"
+
+#: /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/pjass/src/misc.c:470
+#, c-format
+msgid "Error: Cannot open %s.\n"
+msgstr "Error: Cannot open %s.\n"
+
+#: src/grammar.y:63
+#, c-format
+msgid "Got result %d, %s.\n"
+msgstr "Got result %d, %s.\n"
+
+#: src/grammar.y:69
+#: src/grammar.y:84
+#, c-format
+msgid "%d errors ignored."
+msgstr "%d errors ignored."
+
+#: src/grammar.y:77
+#, c-format
+msgid "Parse failed: 1 error total.\n"
+msgstr "Parse failed: 1 error total.\n"
+
+#: src/grammar.y:79
+#, c-format
+msgid "Parse failed: %d errors total.\n"
+msgstr "Parse failed: %d errors total.\n"
+
+#: src/grammar.y:82
+#, c-format
+msgid "Parse failed.\n"
+msgstr "Parse failed.\n"
+

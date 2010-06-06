@@ -1,0 +1,18 @@
+2009-11-21 Tamino Dauth <tamino@cdauth.de>
+* Revised cmake files.
+* Deleted unnecessary files.
+* Updated script files.
+
+2009-01-27 Tamino Dauth <tamino@cdauth.de>
+* Changed translation file paths.
+* Switched to cmake.
+* Moved to KDevelop.
+
+2008-11-13 Tamino Dauth <tamino@cdauth.de>
+* Modified makefile.
+* Added gettext functionality.
+* Modified some output strings.
+* The -v option was replaced by --version.
+* The -h option was replaced by --help.
+* Added cross-platform functionality by using precprocessors.
+* Added gettext translation catalog for German.
