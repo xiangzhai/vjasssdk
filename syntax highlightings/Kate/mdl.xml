@@ -253,7 +253,8 @@
 			
 			<itemData name="Decimal"                defStyleNum="dsDecVal" spellChecking="false"/>
 			<itemData name="Float"                  defStyleNum="dsFloat" spellChecking="false"/>
-			<itemData name="String"                 defStyleNum="dsString"/>
+			<itemData name="String"			defStyleNum="dsString"/>
+			<itemData name="String Char"		defStyleNum="dsChar"/>
 			<itemData name="Comment"                defStyleNum="dsComment"/>
 			<itemData name="Region Marker"          defStyleNum="dsRegionMarker" spellChecking="false"/>
 			<itemData name="Error"                  defStyleNum="dsError" spellChecking="false"/>

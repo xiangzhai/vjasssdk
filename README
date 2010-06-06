@@ -1,40 +1,55 @@
-2009-11-26 Tamino Dauth <tamino@cdauth.de>
+2010-06-06 Tamino Dauth <tamino@cdauth.eu>
 
-The vjasssdk is a collection of useful tools which help you working more efficient with Blizzard's Warcraft 3 specific formats.
-Some parts has been developed by Tamino Dauth <tamino@cdauth.de> and others were made up by him but developed by others.
-Most applications should usually be able to be run on UNIX, Win32 and Mac OS platforms.
-Here is a list of all provided tools and their brief descriptions:
+vjasssdk is a collection of useful tools which do support working more efficient with Blizzard's specified formats for their game Warcraft 3 and its add-on Warcraft 3 The Frozen Throne.
+Some parts has been developed by Tamino Dauth <tamino@cdauth.eu> (me) who is main contributor and creator of vjasssdk. Others has been improved or changed by him but originally were developed by others.
+Most applications should usually be able being run on UNIX, Win32 and Mac OS platforms.
+Here is a list of all provided directories with tools, projects and documentation and their brief descriptions:
 
-* vjasside
-	The vjasside is an integrated development GUI environment written in Trolltechs (by now Nokia) C++ framework Qt.
-	It helps to handle your Jass and vJass code. Besides it integrates most of the other tools,
-	so you do not have to use every tool as stand-alone application.
-	Note that the development of this project has stopped since there are more efficient ways (e. g. KDE 4) to provide
-	a Jass, vJass and Zinc IDE.
+* doc:
+	This directory contains many documentation files for various Warcraft 3 The Frozen Throne related formats and also some specifications for custom formats like Jass++.
+	Additionally it contains first documents for the German book "Warcraft-3-The-Frozen-Throne-Modifikation" which hopefully will become some bigger and contain lots of information about all stuff around modification of Warcraft 3 The Frozen Throne.
 
-* vjassdoc:
-	vjassdoc is an API documentation tool which generates an API documentation by parsing your Jass and vJass files.
-	The documentation offers simple HTML files which list all parsed objects of the code which are necessary for other devlopers.
-	Additionally it allows the user to generate a SQLite3 database for extern programs.
-	It is clearly written in C++ code using the STDL, C++ Boost Libraries, gettext and SQLite3.
+* JassHelper:
+	JassHelper is a vJass and Zinc parser and "to-Jass-compiler" written in Pascal by Vexorian.
+	It allows you to parse vJass and Zinc code files and check them for syntax errors. Afterwards it generates a Jass map script.
+	This program has not been changed yet in vjasssdk. Initially it has been added to fix some bugs and make it cross-platform.
+
+* katevjasside:
+	Before project wc3lib was being started I had tried to create an add-on for KDE's well-known editor Kate.
+	Unfortunately it didn't appear correctly on my custom system and therefore I had stopped development quickly.
+
+* mpqeditor:
+	mpqeditor is a little project which has been started to create a KDE-integrated MPQ editor which uses StormLib for MPQ file access.
+	At the moment it is not being developed since there is the wc3lib project now.
 
 * PJass:
 	PJass is a Jass parser written in C by Rudi Cilibrasi. It is able to parse Jass code files and check them for syntax errors.
+	This program has got cmake and gettext support in vjasssdk.
 
-* JassHelper:
-	The JassHelper is a vJass and Zinc parser and "to-Jass-compiler" written in Pascal by Vexorian.
-	It allows you to parse vJass and Zinc code files and check them for syntax errors. Afterwards it generates a Jass map script.
+* Syntax highlightings:
+	There are two supported editors: Kate and Notepad++. Note that Zinc highlighting is still missing and MDL highlighting is still in beta stage.
 
-* Syntax highlighting files:
-	There are two supported editors: Kate and Notepad++. Note that Zinc highlighting is still missing.
+* vjassdoc:
+	vjassdoc is an API documentation tool which generates an API documentation by parsing Jass and vJass code files.
+	The documentation offers simple HTML files which list all parsed and specified objects of the code.
+	Additionally it allows users to generate an SQLite3 database for extern programs.
+	It is clearly written in C++ code using the STDL, C++ Boost Libraries, gettext and SQLite3 C API.
+	Note that the development of this project has also been stopped since there's the new project wc3lib now which will use Bison and Flex to analyse a language's syntax. However, this tool should be fully usable for most Jass and vJass code.
 
-* Languages:
-	At the moment there are some language files which are Lex and Yacc files for the scripting languages Jass, vJass and Zinc.
-	These language files will be used for newly generated parser and compiler for those languages. They're also intended for replacing
-	vjassdoc's customized parser.
+* vjasside
+	vjasside is an IDE (integrated development environment) using Trolltech's (by now Nokia's) C++ framework Qt and written in C++.
+	It helps to handle your Jass and vJass code. Besides it integrates most of other tools provided by vjasssdk, so you do not have to use every tool as stand-alone application.
+	Note that the development of this project has been stopped since there are more efficient ways (e. g. KDE) to provide a Jass, vJass and Zinc IDE.
+	It's not usable for end users at its current stage.
 
-* wc3lib
-	wc3lib is a Warcraft 3 The Frozen Throne format library which allows you to read and write Blizzard's formats:
+vjasstrans:
+	vjasstrans is an internationalisation tool for Jass code and Warcraft 3 related projects.
+	It's able to parse Jass code, WTS and FDF files for their content and it can also replace
+	or append it. It's very useful if you want to replace some strings in your code by id strings
+	and add them to the WTS file (war3map.wts) of your map to provide your map in different languages.
+
+* wc3lib:
+	wc3lib is a format library which allows you to read and write Blizzard's formats designed for the game Warcraft 3 The Frozen Throne:
 	* BLP
 	* MDL
 	* MDX
@@ -44,3 +59,9 @@ Here is a list of all provided tools and their brief descriptions:
 	* W3X
 	* W3G
 	* etc.
+	Additionally it provides some tools and support for some non-Blizzard formats like vJass.
+	At the moment it is being developed heavily and fast but since there is a lot of work to do it will probably take a long time until it becomes really usable.
+
+* wc3sdk:
+	wc3sdk firstly provides the ASL (advanced script library) and secondly some big archives with Warcraft 3 The Frozen Throne modifcation files like models, textures etc.
+	Actually vjasssdk should be called wc3sdk since it's not really just related to vJass but wc3sdk has been started before.
