@@ -1,0 +1,87 @@
+Vermutungen:
+Das erste Byte ist immer f7
+Das zweite Byte ist der Befehl oder eine Id für irgendetwas
+Das dritte Byte ist die Länge des Pakets
+
+Pakettypen:
+Sequenz: f7 33 08 00 03 00 00 00
+Größe: 8 Bytes
+Quelle: Spielleiter
+Ziel: Spieler
+
+Sequenz: f7 01 08 00 73 8f 9d 00
+Größe: 8 Bytes
+Quelle: Spielleiter
+Ziel: Spieler
+
+Sequenz: f7 0a 04 00
+Größe: 4 Bytes
+Quelle: Spielleiter
+Ziel: Spieler
+
+Sequenz: f7 28 09 00 01 ff 02 12 09
+Größe: 9 Bytes
+Quelle: Spieler
+Ziel: Spielleiter
+
+Sequenz: 
+f7 09 55 00 4f 00 08 01 64 02 00 00 01 42 01 64   ..U.O...d....B.d
+02 64 02 00 00 00 42 01 64 00 ff 00 00 02 0c 60   .d....B.d......`
+01 64 00 ff 00 00 0c 0c 60 00 64 00 ff 02 01 01   .d......`.d.....
+05 48 01 50 00 ff 02 01 01 06 48 01 50 00 ff 02   .H.P......H.P...
+01 02 04 41 01 50 00 ff 02 01 02 07 41 01 50 06   ...A.P......A.P.
+39 9d 00 00 08
+Größe: 85 Bytes
+Quelle: Spielleiter
+Ziel: Spieler
+
+(Vorletztes Paket)
+Sequenz: f7 2f 10 00 50 58 33 57 18 00 00 00 00 00 00 00
+Größe: 16 Bytes
+Quelle: Spieler
+Ziel: 255.255.255.255
+
+(Letztes Paket)
+Sequenz: f7 2f 10 00 50 58 33 57 18 00 00 00 00 00 00 00
+Größe: 16 Bytes
+Quelle: Spielleiter
+Ziel: 255.255.255.255
+
+Statistische Informationen:
+Enorm oft wird die 16-Bytes-Sequenz f7 32 10 00 03 00 00 00 02 00 00 00 04 00 00 00 gesendet.
+
+An den Spieler wird vom Spielleiter des Öfteren das Paket f7 01 08 00 73 8f 9d 00 gesendet (8 Bytes).
+
+Aktualisierungspaket:
+Befindet sich der Spieler im Lokales-Netzwerk-Menü, so empfängt er von seinem 
+Netzwerk-Server (?) in regelmäßigen Abständen Pakete, die an alle Computer im
+lokalen Netzwerk gesendet werden:
+Quelle: Netzwerk-Server (Oder Spielersteller?)
+Ziel: 255.255.255.255 (alle?)
+Größe: 16 Bytes
+f7 32 10 00
+
+Spieleinstieg:
+Sobald sich der Spieler in ein Spiel im lokalen Netzwerk einloggt, sendet er folgendes Paket:
+Quelle: Spieler
+Ziel: 255.255.255.255 (alle?)
+Größe: 16 Bytes
+f7 2f 10 00 50 58 33 57 18 00 00 00 00 00 00 00   ./..PX3W........
+
+Spieleinstellungsänderungen:
+Ändert der Spielleiter einige Einstellungen der Spieler, noch im Erstellungsmenü, erhält der Spieler folgendes Paket:
+Quelle: Spielleiter
+Ziel: 255.255.255.255 (alle?)
+Größe: 16 Bytes
+f7 2f 10 00 50 58 33 57 18 00 00 00 00 00 00 00   ./..PX3W........
+
+Vermutlich wird es an alle gesendet, da z. B. die Spielerzahl auch die noch nicht eingeloggten Spieler betrifft.
+
+Spielerstellungspaket:
+Sobald ein Spiel im lokalen Netzwerk erstellt wurde, erhält der empfangende Spieler ein Paket mit folgendem Aufbau:
+Quelle: Spielersteller
+Ziel: Spieler
+Größe: 163 Bytes
+f7 30 a3 00 50 58
+20 Bytes ?
+Ab Byte 21 (beginned bei 1) Der Spielname (Lokales Spiel (Deranor))

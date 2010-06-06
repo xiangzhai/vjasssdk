@@ -1,0 +1,1816 @@
+Mögliche Kapitelunterteilung der Sprachdefinition:
+1. Vorwort
+2. Laufzeit und Kompilierung
+3. Kompatibilität zu anderen Sprachen
+4. Schlüsselwörter
+5. Kommentare
+6. Präprozessoren
+7. Testmodus (debug mode)
+7. Testblöcke
+8. Lade-Blöcke
+9. KI-Blöcke
+10. Verfügbarkeiten
+11. Deklaration nativer Typen
+12. Deklaration nativer Funktionen
+10. Bezeichner (identifiers)
+11. Literale
+12. Escape-Sequenzen
+13. Gültigkeitsbereiche (scopes)
+14. Gültigkeitsbereichverwendung
+15. Qualifizierer-Gültigkeitsbereiche
+16. Anweisungsblöcke
+17. Variablen
+18. Operatoren
+19. Typen
+21. Verzweigungen
+22. Schleifen
+23. Variablensperrung (locking)
+23. Deklarationsvoraussetzungen
+24. Funktionen
+25. Funktionsvariablen (Funktionszeiger)
+26. Funktionstypen
+27. Lambda-Funktionen
+28. Funktionsaufrufe
+29. Ausnahmebehandlung
+30. Finally
+31. Pseudonyme (aliases)
+32. Vorlagen (templates)
+33. Zugriffsmodifikatoren
+34. Freunde
+35. Pakete (packages)
+36. Aufzählungen (enums)
+37. Klassen
+38. Elemente
+39. Methoden
+40. Operatorenüberladung
+41. Das Jass-Paket
+42. Das Standardpaket
+
+1. Vorwort
+
+Limitierungen von Jass:
+Jass ist eine funktionale Skriptsprache und bietet daher keine Möglichkeiten der generischen, objektorientierten
+oder modularen Programmierung. Zudem wird nicht, wie z. B. in C, zwischen Deklaration und Definition streng unterschieden,
+sondern ist eine Deklaration in jedem Fall auch eine Definition.
+Außer dem Aufruf von Auslöser-Aktionen und -Bedingungen und dem Aufruf von Funktionen mittels ExecuteFunc gibt es keine
+Möglichkeit, eine Funktion vor ihrer Definition aufzurufen. Zudem beschränken sich beide Varianten auf parameterlose
+Funktionen.
+Zusätzlich besitzt die Skriptsprache Jass ein Array-Größen-Limit von 8192 (2^13), Arrays können nicht als Parameter
+übergeben werden, es gibt keine Funktionszeiger, Variablen des Types "code" können nicht als Array deklariert werden,
+es kann nur ein globals-Block existieren, es kann kein direkter Einfluss auf automatisch generierte Funktionen
+des Kartenskripts bzw. Blizzards genommen werden, auch wenn diese Fähigkeit nicht unbedingt zur Sprache selbst gehören muss,
+die Syntax ist etwas unschön, da keine geschweiften Klammern, for- und while-Schleifen, sowie erweiterte Operatoren verwendet
+werden können, es gibt keine Ausnahmebehandlung, es können unvermeidbare Speicherlecks entstehen und zu guter Letzt
+gibt es keine Blockkommentare in Jass.
+
+Das Problem:
+Möchte man nun die Skriptsprache Jass verbessern bzw. erweitern, so müsste man verständlicherweise ihren Interpreter umschreiben.
+In der Theorie lassen sich zwar viele neue Fähigkeiten planen, jedoch scheitert man an der Umsetzung, da der Quell-Code des Interpreters
+bzw. derer von ganz Warcraft 3 The Frozen Throne nicht frei verfügbar ist. Nun hat man sicherlich die Option, die gesamte Warcraft-3-The-
+Frozen-Throne-Engine neu zu schreiben und könnte im Zuge dessen den Interpreter anders schreiben und somit die Skriptsprache Jass verbessern,
+jedoch halte ich dies für keine sinnvolle Idee, falls man nicht ein ganzes Programmiererteam hinter sich stehen hat.
+Die zweite Option ist eine Erweiterung der Syntax von Jass, welche jederzeit in reinen Jass-Code konvertiert werden kann.
+Dazu muss man "nur" einen Compiler bzw. Precompiler für die eigene Skriptsprache schreiben, welcher die Syntax dieser kennt und zu Jass konvertieren
+kann.
+Diese Option wurde bisher bei allen mir bekannten Skritpsprachenerweiterungen von Jass, welche genau genommen nur drei, ja eigentlich nur zwei sind, gewählt.
+
+Die Lösung:
+Zum Einen wäre da Vexorians vJass, welches sich mit großem Erfolg verbreitet hat und grob alle wichtigen Mängel von Jass behebt, die
+Syntax aber grundsätzlich beibehält und sich bei neuen Sprachkonstrukten an diese anpasst.
+Zum Anderen wären da cJass und Zinc. Ich fasse diese beiden Sprachen zusammen, da sie mehr einen Zusatz zu vJass darstellen.
+Sie erweitern lediglich die Syntax um einige Fähigkeiten und sind beidesamt kompatibel zu vJass.
+Vexorian hat nicht nur die beiden Sprachen vJass und Zinc entwickelt, sondern auch den dazugehörigen Precompiler, den JassHelper,
+welcher meines Wissens nach in Pascal bzw. Delphi geschrieben ist.
+Für cJass existiert ebenfalls ein, in Assembler geschriebener Precompiler.
+Wo liegt nun also das Problem wenn es bereits diese Spracherweiterungen gibt?
+Die Antwort ist ganz einfach: Zinc und cJass haben jeweils ihre eigenen Arten einer Syntaxerweiterung über die man sich bereits teil-
+weise streiten kann, da sie sehr von der Syntax herkömmlicher Sprachen abweicht.
+vJass dagegen ist das eigentliche Ziel meiner Kritik, da diese Spracherweiterung erst die eigentlichen und wirklich notwendigen Fähigkeiten
+mit sich bringt. Objektorientierung, Modularisierung, Funktionszeiger, Executions und Evaluations, und inzwischen auch namenlose bzw. Lambda-Funktionen.
+Viele davon gefallen mir und ich bin daher inzwischen auch ein langjähriger Benutzer vJass', jedoch auch hauptsächlich aus dem Grund, dass das normale
+Jass auf Dauer sehr umständlich zu verwenden ist und es keine wirkliche Alternative zu vJass gab und gibt.
+Womit ich unzufrieden bin ist zum einen der Mangel an weiteren notwendigen und praktischen Erweiterungen, sowie des Programms
+JassHelper, welches nicht einmal plattformübergreifend ist, die teilweise wirklich unschöne Syntax und die daraus resultierende Erweiterung Zinc bzw.
+die Trennung der beiden Sprachen und zu schlechter Letzt die mangelnde Fehlerbehebung bei aufkommenden Fehlern.
+Der Code des JassHelpers ist frei verfügbar, das ist mir wohl bewusst, jedoch bin ich 1. nicht sehr mit Pascal und dessen Syntax vertraut, halte 2.
+den Code für mehr als unübersichtlich und bin 3. nicht gerade motiviert, eine Windows-Anwendung weiterzuentwickeln, welche eine Sprache analysiert
+und kompiliert, an deren Syntax ich einiges auszusetzen habe.
+Zudem interessiere ich mich inzwischen sehr für Programmiersprachen, weshalb die Entwicklung einer eigenen Sprache hoffentlich auch einen gewissen
+Lerneffekt bei mir auslösen wird.
+
+Jass++:
+Ich bin ein Fan der Programmiersprache C++. Daher der Name Jass++. Ob er passend oder unpassend ist, ist mir relativ egal, es ist nur ein Bezeichner.
+Jass++ soll alles abdecken, was mir persönlich und eventuell auch anderen an Jass fehlt.
+Genau wie vJass muss es in Jass-Code umgewandelt werden, weshalb ein Precompiler benötigt wird. Ein solcher wird momentan von mir selbst entwickelt.
+Neben der Sprachsyntaxdefinition existiert auch eine Compiler-Definition, welche mehr eine Empfehlung an mich selbst und andere, die einen Precompiler
+für die Sprache schreiben wollen, ist.
+Jass++ soll einerseits speziell auf Warcraft 3 The Frozen Throne und die Merkmale von Jass zugeschnitten sein und andererseits die Mächtigkeit einer
+umfangreichen, modernen Programmiersprache mit sich bringen.
+Dabei werden zum Teil einzigartige und zum Teil altbekannte Syntaxelemente unterstützt.
+Zudem, und dies halte ich persönlich für eine sehr wichtige Eigenschaft der Sprache, soll sie so gut wie möglich zu bestehenden Spracherweiterungen
+von Jass kompatibel sein und zumindest deren getrennte Behandlung erlauben.
+
+Mächtigkeit und Umfang:
+Jass an sich ist wie z. B. C eine rein funktionale Sprache. Man definiert einige Funktionen, die bei bestimmten Ereignissen (siehe "Ereignisbehandlung")
+aufgerufen werden und erhält so sein Programm. In der Regel ist das fast die beste Lösung, um eine Spiele-Engine ansprechbar zu machen und eine einfache
+Schnittstelle für Anwender herzustellen. Diese kann jederzeit durch die Definition neuer nativer Typen und Funktionen erweitert werden und die Komplexität
+hält sich in Grenzen. Letztlich kann alles sogar noch um ein Vielfaches vereinfacht werden, indem man erstens eine ganze Reihe von in Jass geschriebenen
+Funktionen zur Verfügung stellt, die selbst die nativen Funktionen verwenden und diese um oftmals benötigte Operationen erweitern und indem man zweitens
+eine grafische Oberfläche über das Ganze packt, sodass selbst ein Nichtprogrammierer kaum noch ein Problem mit der Verwendung der Funktionen hat, insofern
+diese ausreichend dokumentiert sind.
+Letzteres bedeutet zwar einen gewissen Aufwand, aber der Erfolg des Welteneditors von Warcraft 3 The Frozen Throne spricht für sich und ich selbst kann
+man mich an einen sehr schnellen Lernprozess und schnelle Erfolge ohne jegliche Programmierkenntnisse zur damaligen Zeit erinnern.
+Man fragt sich also, warum es eigentlich Sinn macht, eine mächtigere und umfangreichere Skriptsprache zu entwerfen und zu implementieren.
+Um das zu verstehen, muss man sich die Entwicklung von der Modifikationen des Spiels und den Umfang der nativen Funktionen ansehen.
+Viele der nativen Funktionen werden für einfache Karten, die sich an das normale Spielprinzip halten, gar nicht benötigt. Die Modifizierenden aber haben
+mit der Zeit erkannt, dass man eine Menge eigener, neuer Systeme mit den vorhandenen Funktionen einbauen kann, welche völlig neue Spielprinzipien möglich machen.
+Der einzige Nachteil ist die Spielleistung, die sich natürlich umgekehrt proportional zum Umfang der Systeme verhält.
+Der zweite und noch viel wichtigere Punkt ist die Tatsache, dass der Quell-Code des Spiels nicht verfügbar ist und somit die Möglichkeit der Implementation
+nativer Typen und Funktionen für Anwender nicht zur Verfügung steht.
+Daher muss alles per Jass eingebaut werden und bei einem größeren Umfang der Systeme ist auch ein größerer Umfang und eine größerer Mächtigkeit der Skript-
+sprache von Umfang, um den Arbeitsaufwand zu reduzieren und vor allem die Fehlerquellen.
+
+Ereignisbehandlung:
+Jass ist eine ereignisgesteuerte Skriptsprache. Das bedeutet, dass letztlich alles über Ereignisse des Spiels ausgelöst wird. Die Jass-API bietet unterschiedliche
+Funktionen für die Registrierung von Ereignissen an sogenannten Auslösern, welche ausgeführt werden, sobald eines der registrierten Ereignisse ausgelöst wird.
+Zunächst wird dann eine optionale Bedingung des Auslösers überprüft und dann je nachdem ob die Bedingung zutrifft oder nicht oder keine existiert, die Aktion bzw.
+Funktion des Auslösers ausgeführt. Selbstverständlich hat jedes Ereigniss spezielle Ereignissdaten bzw. -parameter wie z. B. den angesteurten Auslöser (GetTriggeringTrigger()).
+Mit diesen Ereignisdaten kann dann mit der Auslöseraktion entsprechendend auf das Ereignis reagiert werden. Leider sind die Ereignisse in mancher Hinsicht relativ limitiert
+und beschränken sich teilweise auf die Funktionalität, die benötigt wird, um einfache Karten und Szenarios wie sie bereits vom Spiel mitgeliefert werden und nichts Umfangreicheres
+zu gestalten.
+Zeitliche Aktionen können per mit Zeitgeberereignissen und Warteanweisungen (siehe "Multi Threading") gesteuert werden.
+ERGÄNZEN.
+
+Multi Threading:
+NOCH EINFÜGEN.
+
+Objektorientierung:
+NOCH EINFÜGEN.
+
+Syntax des Dokuments:
+| bedeutet "oder".
+Zwischen zwei eckige Klammern eingeschlossener Inhalt ist optional.
+Zwischen ein Größer- und ein Kleinerzeichen eingeschlossener Inhalt muss durch etwas ersetzt werden.
+
+2. Laufzeit und Kompilierung
+
+Im Gegensatz zu Jass ist Jass++ keine reine Interpreter-Sprache mehr, da sie zunächst zu Jass-Code
+umgewandelt werden muss. Daher wird in den nachfolgenden Inhalten oft zwischen der Lauf- und der Kompilier-
+zeit unterschied. Mit der Kompilierzeit ist jene Zeit gemeint, in welcher der Jass++-Code in Jass-Code
+umgewandelt wird. Mit der Laufzeit dagegen ist jene Zeit gemeint, in der der bereits zu Jass-Code kompilierte
+Jass++-Code ausgeführt bzw. interpretiert wird. Dies wird in der Regel von Warcraft 3 The Frozen Throne bzw. dessen Engine
+bewerkstelligt, könnte jedoch theoretisch auch von einer anderen, selbst gebauten getan werden.
+
+3. Kompatibilität zu anderen Sprachen
+
+Kompatibilität zu Jass:
+Jass-Funktionen und -Variablen, die innerhalb der #jass und #endjass-Präprozessoranweisungen
+deklariert wurden, können von Jass++-Code normal verwendet werden. Dabei gilt zu beachten,
+dass die Typumwandlungsregeln von Jass++ bei der Parameterübergabe gelten.
+Native Funktionen und Typen können ebenfalls durch eine reine Jass-Deklaration verwendet werden
+und müssen nicht erst mit den Jass++-Sprachelementen deklariert werden. Diese eignen sich eher
+zur Deklaration neuer Typen und nativer Funktionen, insofern es dem Entwickler möglich ist, dies
+z. B. mit Hilfe des Werkzeugs Grimoire zu bewerkstelligen.
+Aus Jass heraus kann ebenfalls mittels der #jasspp- und #endjasspp-Präprozessoranweisungen Jass++-Code
+verwendet werden, allerdings sollten die zu Jass kompilierten Jass++-Funktionen und -Variablen
+aus Jass-Code heraus nicht verwendbar sein.
+Es gilt hierbei noch anzumerken, dass die Verwendung von Jass++-Code in globalen Jass-Funktionen
+aufgrund der Paketsortierung zu größeren Problemen führen kann, da Jass-Funktionen vor sämtlichen
+Paket-Funktionen deklariert werden.
+
+Kompatibilität zu vJass:
+Momentan ist noch nicht geplant Jass++- und vJass-Code kombinierbar zu machen.
+Code zwischen den Präprozessoranweisungen #vjass und #endjass wird daher bei einer Jass++-
+Kompilierung ignoriert bzw. zu Jass-Code umgewandelt und genau wie Jass-Code vor sämtlichen Jass++-
+Elementen deklariert, definiert und aufgerufen.
+
+Kompatibilität zu Zinc:
+Momentan ist noch nicht geplant Jass++- und Zinc-Code kombinierbar zu machen.
+Code zwischen den Präprozessoranweisungen #zinc und #endzinc wird daher bei einer Jass++-
+Kompilierung ignoriert bzw. zu Jass-Code umgewandelt und genau wie Jass-Code vor sämtlichen Jass++-
+Elementen deklariert, definiert und aufgerufen.
+
+Kompatibilität zu CJass:
+Momentan ist noch nicht geplant Jass++- und CJass-Code kombinierbar zu machen.
+Code zwischen den Präprozessoranweisungen #cjass und #endcjass wird daher bei einer Jass++-
+Kompilierung ignoriert bzw. zu Jass-Code umgewandelt und genau wie Jass-Code vor sämtlichen Jass++-
+Elementen deklariert, definiert und aufgerufen.
+
+4. Schlüsselwörter
+
+Im Folgenden wird zwischen Standard, was auf gängige Programmiersprachen verweist, und Warcraft-spezifisch, was auf Warcraft-spezifische
+Eigenschaften verweist, unterschieden.
+
+Typ-Schlüsselwörter:
+Standard: integer, string, boolean, real
+Warcraft-spezifisch: code, handle, agent, event, player, widget, unit, destructable, item, ability, buff, force, group, trigger, triggercondition, triggeraction, timer, location, region, rect, boolexpr, sound, conditionfunc, filterfunc, unitpool, itempool, race, alliancetype, racepreference, gamestate, igamestate, fgamestate, playerstate, playerscore, playergameresult, unitstate, aidifficulty, eventid, gameevent, playerevent, playerunitevent, unitevent, limitop, widgetevent, dialogevent, unittype, gamespeed, gamedifficulty, gametype, mapflag, mapvisibility, mapsetting, mapdensity, mapcontrol, playerslotstate, volumegroup, camerafield, camerasetup, playercolor, placement, startlocprio, raritycontrol, blendmode, texmapflags, effect, effecttype, weathereffect, terraindeformation, fogstate, fogmodifier, dialog, button, quest, questitem, defeatcondition, timerdialog, leaderboard, multiboard, multiboarditem, trackable, gamecache, version, itemtype, texttag, attacktype, damagetype, weapontype, soundtype, lightning, pathingtype, image, ubersplat, hashtable
+
+Prozedual-Schlüsselwörter:
+Standard: if, else, switch, case, break, continue, default, while, do, for, foreach, try, catch, finally, throw, enum, size, const, alias
+Warcract-spezifisch: native, mapinit, debug, ai, load
+
+Operator-Schlüsselwörter:
+Warcraft-spezifisch: id, hash
+
+Funktional-Schlüsselwörter:
+Standard: operator, return
+
+Generik-Schlüsselwörter:
+Standard: template
+
+Modularisierung-Schlüsselwörter:
+Standard: package, private, protected, public
+
+Objektorientierung-Schlüsselwörter:
+Standard: class, this, self, parent, new, delete, copy, init, virtual, static, friend, abstract, mutable
+
+Threading-Schlüsselwöter:
+Warcract-spezifisch: threaded, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep
+
+Save- und Load-Schlüsselwörter:
+Warcract-spezifisch: store, restore, flush, save, load, remove
+
+Möglicher Zusatz:
+executefast ermöglicht den Aufruf mit ExecuteFunc und Parameterspeicherung, jedoch könnte
+der Aufruf nicht mittels calls abgerufen werden und es gäbe eventuell weitere Nachteile
+(Geschwindigkeit).
+
+Zusammenfassung der Qualifizierer:
+Standard: enum, const, template, package, private, protected, public, class, init, virtual, static, friend, abstract, mutable
+Warcraft-spezifisch: native, mapinit, debug, threaded, ai, load
+
+Zusammenfassung der Anweisungsblockschlüsselwörter:
+Standard: if, else, switch, case, default, while, do, for, foreach, try, catch, finally
+Warcraft-spezifisch: threaded
+
+Zusammenfassung der Anweisungsschlüsselwörter:
+Standard: break, continue, throw, size, return, new, delete, copy
+Warcraft-spezifisch: id, hash, execute, executewait, evaluate, executions, evaluations, sleeps, sleepon, sleepoff, reset, sleep, store, restore, flush, save, load, remove
+
+Zusammenfassung der Container-Typ-Schlüsselwörter:
+Standard: string
+Warcraft-spezifisch: force, group
+
+Bezeichnerspezifizierungsschlüsselwörter:
+Standard: ai, load, abstract, enum, package, class
+
+5. Kommentare
+
+Zeilenkommentare:
+Zeilenkommentare beginnen mit zwei "/"-Zeichen und enden am Ende der Zeile.
+
+Notation:
+//<Zeilenkommentarinhalt>
+
+Blockkommentare:
+Blockkommentare zwischen einer "/*"- und einer "*/"-Zeichenfolge sind in Jass++ (auch über mehrere Zeilen hinweg) möglich.
+
+Notation:
+/*<Blockkommentarinhalt>*/
+
+6. Präprozessoren
+
+Präprozessoren werden vor der restlichen Syntaxvalidierung ausgewertet.
+Sie können zur Vorauswertung verwendet werden, um zu bestimmen, welcher Code kompiliert und welcher
+vom Compiler ignoriert werden soll.
+Präprozessoren werden mit dem #-Zeichen eingeleitet. Darauf muss eine der Anweisungen folgen.
+Eine Anweisung mehrzeilig zu gestalten wird momentan nicht unterstützt und ist eigentlich auch nicht
+notwendig, da man keine eigenen Makros (wie in C und C++) definieren kann.
+Zwischen dem #-Zeichen und der Anweisung können beliebig viele Leerzeichen bzw. Tabulatoren stehen.
+
+#include [ jass | zinc | vjass | jasspp | cjass ] [ once ] "<Dateipfad>" Wird cjass verwendet, so wird die gesamte Datei ignoriert! Wird once angegeben, wird die Datei nur einmal eingebunden.
+#inject CustomMapScript | InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
+#endinject
+#initjasspp				Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
+#if (<konstanter Ausdruck>)		Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10)
+#else if (<konstanter Ausdruck>)
+#else
+#endif
+#error <konstanter Ausdruck>		Bricht den Kompiliervorgang ab und gibt den konstanten Ausdruck als Fehlermeldung aus.
+#jass
+#endjass
+#zinc
+#endzinc
+#vjass
+#endvjass
+#jasspp
+#endjasspp
+#cjass					Nur reserviert. Code wird momentan noch ignoriert.
+#endcjass				Nur reserviert. Code wird momentan noch ignoriert.
+#external <Ausdruck> <Parameter>	Ruft einen externen Befehl mit Parametern auf. Externe Befehle müssen vom Compiler ausgeliefert und ausgewertet werden.
+
+Vordefinierte Konstanten:
+Es gilt zu beachten, dass die folgenden Konstanten normale Jass++-Konstanten eines nativen Typs sind und somit auch in Nicht-Präprozessor-Anweisungen verwendet werden können.
+Typ Bezeichner
+ABGELEHNT: string OS				Enthält eine Zeichenkette mit dem Namen des Betriebssystems.
+string LANGUAGE					Enthält eine Zeichenkette mit der aktuellen Skriptsprache ("Jass++", "Zinc", "vJass", "Jass")
+string LANGUAGE_VERSION				Enthält eine Zeichenkette mit der Version der aktuellen Skriptsprache
+boolean JASS					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass ist.
+boolean ZINC					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Zinc ist.
+boolean VJASS					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache vJass ist.
+boolean JASSPP					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Jass++ ist.
+string COMPILER					Enthält eine Zeichenkette mit dem Namen des verwendeten Compilers.
+string COMPILER_VERSION				Enthält eine Zeichenkette mit der Version des verwendeten Compilers.
+string WC3_VERSION				Enthält eine Zeichenkette mit der Warcraft-3-Version (ist zur Laufzeit aktuell!).
+string WC3_TFT_VERSION				Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-Version. Falls The Frozen Throne nicht verwendet wird, ist der Wert gleich 0 gesetzt (ist zur Laufzeit aktuell!).
+ABGELEHNT: string WC3_PATH			Enthält einen Verzeichnispfad zum Installationsverzeichnis von Warcraft 3 bzw. Warcraft 3 The Frozen Throne. Es gilt zu beachten, dass dies der Pfad desjenigen ist, der den Code kompiliert und nicht der der jeweiligen Spieler.
+boolean DEBUG_MODE				Enthält einen boolean-Wert, der angibt, ob der Debug-Modus aktiviert ist.
+string FILE_NAME				Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
+string LINE_NUMBER				Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
+string SCOPE_NAME				Enthält eine Zeichenkette des Namens des aktuellen Gültigkeitsbereichs.
+string SCOPE_NAME_FULL				Enthält eine Zeichenkette des gesamten Namens (auch alle oberen Gültigkeitsbereiche) des aktuellen Gültigkeitsbereichs.
+boolean OPTIMIZATION_INLINE_FUNCTIONS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_WHITE_SPACES	Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_CONSTANTS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_COMMENTS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+TODO: Hier noch weitere Optimierungsoptionen hinzufügen.
+
+Dateipfade für die Include-Anweisung:
+Dateipfade müssen wie bei UNIX-Systemen geschrieben werden. . steht für das aktuelle und ..
+für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen getrennt.
+Standardmäßig wird im Verzeichnis der aktuellen Code-Datei nach angegebenen Dateinamen gesucht.
+ABGELEHNT: ~ verweist auf das Heimatverzeichnis des Benutzers, / auf das Wurzelverzeichnis.
+
+7. Testmodus (debug mode)
+
+Der Testmodus kann für gewöhnlich per Option des Compilers aktiviert werden und bewirkt einige Änderungen
+am Verhalten von bestimmten nativen Funktionen als auch von vom Compiler für die Sprachfunktionalität generierten,
+was das Testen bzw. die Fehlerfindung erleichtern und Abstürze vermeiden soll.
+In der Regel bewirkt der Testmodus die Überprüfung von Laufzeitfehlern, die sich so nicht zur Kompilierzeit
+überprüfen lassen, zusätzliche Daten erforden und somit den Programmablauf verlangsamen.
+
+ExecuteFunc:
+Diese native Funktion wird in allen Aufrufen ersetzt und eine Liste aller parameter- und rückgabetyplosen Funktionsnamen
+generiert, die bei jedem Aufruf der Nativen mit dem Funktionsnamenparameter abgeglichen wird.
+Ist der Funktionsnamenparameter nicht in der Liste vorhanden, wird eine Fehlermeldung mit diesem ausgegeben und der Aufruf
+abgebrochen.
+
+Player:
+Sollte die Funktion zur Laufzeit mit einer Ganzzahl außerhalb des Bereichs 0-bj_MAX_PLAYER_SLOTS aufgerufen werden, so
+sollte eine Fehlermeldung ausgegeben und "null" zurückgegeben werden.
+
+Variablensperrung (locking):
+Siehe "Variablensperrung (locking)".
+
+
+7. Testblöcke
+
+Der von Testblöcken enthaltene Code wird nur kompiliert, insofern der eingebaute Debug-Modus aktiviert ist.
+Analog zu #if (DEBUG_MODE) und #endif.
+Testblöcke sind nach der unten aufgezeigten Form ein Qualifizierer-Gültigkeitsbereich.
+
+Notation:
+debug
+{
+}
+
+8. Lade-Blöcke
+
+Lade-Blöcke werden zum Vorladen ("preloading") bestimmter Dateien verwendet und werden mit dem Schlüsselwort "load" eingeleitet.
+Die angegebenen Dateien werden am Anfang der "main"-Funktion, noch vor allen anderen Funktionsaufrufen, geladen.
+Die Ladeaufrufe entsprechen einem Aufruf der nativen Jass-Funktion "Preload".
+Da Lade-Blöcke einen Bezeichner haben können, können Sie sich auch gegenseitig voraussetzen (siehe "Deklarationsanforderungen"),
+wodurch die Reihenfolge während des Ladens bestimmt werden kann.
+Hat ein Lade-Block keinen Bezeichner, wird er ebenfalls je nach seiner Deklarationsposition ausgeführt.
+
+Notation:
+load [<Bezeichner>] [Deklarationsvoraussetzung]
+{
+	"<Dateipfad>",
+	"<Dateipfad>"
+}
+
+9. KI-Blöcke
+
+Da das Spiel Warcraft 3 The Frozen Throne ein recht umfangreiches KI-Modul besitzt, gibt es in Jass++
+selbstverständlich eine kleinere Unterstützung für KI-Skripts.
+KI-Blöcke werden mit dem Schlüsselwort "ai" eingeleitet und haben zwingend einen Bezeichner.
+Innerhalb eines KI-Blocks dürfen explizit Variablen und Funktionen aus der verwendeten "common.ai"-Datei
+verwendet werden bzw. natürlich auch eigene, die innerhalb des KI-Blocks deklariert wurden.
+Jedoch keinerlei selbstdefinierte Funktionen von außerhalb, da der Block wie ein externes Skript behandelt wird
+und man ansonsten sämtliches Verwendetes mit in das Skript hinein kopieren müsste bzw. dabei alle Abhängigkeiten
+genaustens prüfen müsste.
+Für Funktionen aus der "common.j" und "Blizzard.j" gelten gewisse Einschränkungen (siehe unten).
+Der Inhalt des KI-Blocks kann über seinen Bezeichner mit den Schlüsselwörtern "execute" und "for" für einen Spieler gestartet werden.
+Der Aufruf entspricht einem Aufruf der nativen Jass-Funktion "StartCampaignAI" mit dem Spieler und dem Bezeichner "Scripts/Custom/<Bezeichner>.ai" als Parameter.
+Daher muss der Compiler dafür sorgen, dass aus dem KI-Block sozusagen eine externe Datei nach dem obigen Schema im Verzeichnis "Scripts/Custom" generiert wird.
+Der KI-Block ist also auch manuell mit der Nativen aufrufbar und sollte sich im MPQ-Archiv der Karte befinden. Der Compiler sollte einen Fehler ausgeben,
+falls die Datei bereits existiert und nicht vom Compiler generiert wurde.
+Die Compilergenerierung wird am Anfang der Datei mit dem Kommentar "// Jass++ AI" markiert.
+Der Inhalt eines KI-Blocks darf nur innerhalb des Blocks selbst aufgerufen werden.
+Bestimmte Funktionen aus der "common.j" und "Blizzard.j" dürfen in KI-Blöcken weder direkt noch indirekt verwendet werden:
+* Native Funktionen, die eine Zeichenkette zurückgeben
+* Native Funktionen, die sogenannte Callbacks annehmen (code, trigger, boolexpr, ForGroup, etc.)
+* ExecuteFunc
+
+Siehe auch http://jass.sourceforge.net/doc/library.shtml.
+Es gilt noch zu beachten, dass globale Variablen pro KI-Block separat existieren und die KI-Blöcke so nicht in der Lage sind,
+globale Variablen gegenseitig oder für das Kartenskript zu überschreiben.
+KI-Blöcke könnnen nicht als Deklarationsvoraussetzung verwendet werden, da sie in jedem Fall ausgeführt werden können und
+ihre Deklaration nicht im Skript stattfindet.
+Sie selbst können ebenfalls keine Deklarationsvoraussetzung haben, da alle verfügbaren Funktionen bereits vor ihnen
+deklariert werden.
+
+Deklarations-Notation:
+ai <Bezeichner>
+{
+	<Anweisungen>
+}
+
+Aufrufsnotation:
+execute <Bezeichner> for <Spieler>
+
+10. Verfügbarkeiten
+In Jass++ ist es garantiert, dass sämtlicher Code aus der "common.j"- und der "Blizzard.j"-Datei zur Verfügung steht.
+Dabei kann eine beliebige Version von Warcraft 3 The Frozen Throne verwendet werden, in welcher die Datentypen "agent"
+und "hashtable" bereits verfügbar sind.
+Die Datei "common.ai" ist nur in KI-Blöcken garantiert verfügbar (siehe "KI-Blöcke").
+Jedoch sind die drei nativen Funktionen:
+* GetUnitGoldCost
+* GetUnitWoodCost
+* und GetUnitBuildTime
+ebenfalls in Nicht-KI-Block-Bereichen verfügbar (siehe http://jass.sourceforge.net/doc/library.shtml).
+
+10. Deklaration nativer Typen
+
+Es gibt kopierbasierte und referenzbasierte native Typen. Der Typ "agent" wird von sämtlichen referenzbasierten nativen Typen erweitert.
+Referenzbasierte Werte werden beim Übergeben an eine andere Variable (auch an Paramter) nicht kopiert, sondern lediglich ihre Referenz,
+was bewirkt, dass die andere Variable mit demselben globalen Objekt arbeitet, wie die eine.
+
+Notation:
+native <Typname> : <Elterntyp>;
+
+9. Deklaration nativer Funktionen
+
+Native Funktionen werden wie native Typen lediglich deklariert und nicht definiert. Die Definition erfolgt in der verwendeten Engine und kann
+undefiniert bleiben, solange der Compiler weiß, wie die Funktion aufzurufen ist.
+Native Funktionen aus Jass sollten mittels der Jass++-Syntax erneut bzw. ein einziges Mal deklariert werden, da man sie bei solchen Deklarationen
+um konstante Parameter usw. erweitern kann.
+Dies muss jedoch nicht geschehen (siehe "Kompatibilät zu Jass").
+
+Notation:
+native [const] <Rückgabetyp> <Funktionsname>([<Parametertyp> <Parametername>, ...]);
+
+10. Bezeichner (identifiers)
+
+Ein Bezeichner ist ein vom Entwickler definierter Name, welcher ein bestimmtes Code-Element bezeichnet und darauf verweist.
+Für Bezeichner gelten bestimmte Regeln bezüglich ihrer Definition. Bezeichner dürfen in Jass++ anders als in Jass nicht mit
+dem Präfix "jasspp" beginnen, da dieses für den Compiler reserviert ist (theoretisch könnte dieser auch sämtliche Bezeichner ersetzen,
+um so dagegen vorzugehen, jedoch wird es vorläufig trotzdem reserviert). Ansonsten gelten dieselben Regeln wie in Jass (z. B. keine Unterstriche am Anfang,
+keine Schlüsselwörter - auch nicht die von Jass++).
+Außerdem kann dem Bezeichner in bestimmten Fällen ein Schlüsselwortpräfix vorangestellt werden, welches die Art des Objekts genauer spezifiziert (siehe dazu Abschnitt "Schlüsselwörter").
+
+11. Literale
+
+Ein Literal ist ein sich selbst erklärender Ausdruck. Für folgende native Typen gelten folgende Literalnotationsregeln:
+
+Kopierbasierte Typen:
+* string : "<Zeichenkettenliteral>" | null
+* integer : 0<Oktalliteral> | 0%<Binärliteral> | 0x<Hexadezimalliteral> | <Dezimalliteral> | '<Id-Literal>' | null
+* real : <Fließkommaliteral> | null
+* boolean : true | false | null
+* handle (und Nicht-agent-Kindtypen): null
+
+Referenzbasierte Typen:
+* code : 0
+* agent (und Kindtypen) : 0
+* Klassenobjekte : 0
+* Funktionszeiger : 0
+
+12. Escape-Sequenzen
+
+Eine Escape-Sequenz ist ein Zeichen, welchem das \-Zeichen vorangestellt wird und welches ausschließlich ein einem
+Zeichenkettenliteral vorkommen darf.
+Es gibt folgende Escape-Sequenzen:
+n				Zeilenumbruch
+t				Horizontaler Tabulator
+\				Backslash
+"				Doppeltes Anführungszeichen
+
+Zusätzlich existieren spezielle Escape-Sequenzen für Warcraft-3-Daten.
+Zum einen gibt es Farbkodierungen, die Ausgabetext in der Regel im Spiel farbig erscheinen lassen und zum anderen
+gibt es Objekteditordaten, welche vor allem in Fähigkeiten-Tooltips verwendet werden.
+Farbkodierungen und Objekteditordaten werden zum Kompilierzeitpunkt validiert bzw. kompiliert.
+Die Objekteditordaten werden in den Zeichenketten zum Kompilierzeitpunkt ersetzt, insofern auf die Objekteditor-
+daten zugegriffen werden kann.
+Sind eine Farbkodierung oder ein Objekteditordatenverweis ungültig bzw. kann auf die Objekteditordaten nicht
+zugegriffen werden, gibt der Compiler keinen Fehler, sondern lediglich eine Warnung aus.
+Bei Objekteditordatenverweisen kann optional ein %-Zeichen angehängt werden, welches angibt, dass es sich um
+einen prozentualen Anteil handelt, was zu einer korrekten Formatierung führt.
+
+Notation:
+|c<Farbe>|r
+<<Objekt-Id>,<Feld-Id>[, %]>
+
+13. Gültigkeitsbereiche (scopes)
+
+Gültigkeitsbereiche definieren, innerhalb welches Bereiches eine Deklaration ihre Gültigkeit hat. Außerhalb dieses Bereiches
+kann die Deklaration nur über den Bezeichner, insofern ein solcher existiert, des Gültigkeitsbereiches bzw. den .-Operator erreicht werden.
+Innerhalb kann der Bezeichner mit dem .-Operator optional verwendet werden.
+In bestimmten Fällen geschieht dies implizit (Methodenaufruf, Pseudonyme, Gültigkeitsbereichverwendung usw.).
+Ein Gültigkeitsbereich besitzt in Jass++ nicht zwingend einen Bezeichner und ist zwischen einer geöffneten und einer geschlossenen eckigen
+Klammer definiert.
+Je tiefer der Gültigkeitsbereich, desto höher ist die Priorität des Bezeichners. Die Bezeichner können sich gegenseitig überdecken.
+Dies ist explizit gewollt. Über die Bezeichner der äußeren Gültigkeitsbereiche bzw. den .-Operator kann auf Bezeichner höherer
+Gültigkeitsbereiche zugegriffen werden. Dies ermöglicht eine Verschachtelung beliebig vieler Gültigkeitsbreiche.
+Zu beachten gilt, dass lokale Variablen nur im Funktionskopf deklariert werden können, wodurch eine erneute Deklaration und Überlagerung
+der äußeren lokalen Variablen, durch innere in neuen Gültigkeitsbereichen nicht möglich ist.
+Es existieren folgende sprachenspezifische Arten von Gültigkeitsbereichen:
+* Verzweigungen
+* Schleifen
+* Ausnahmebehandlungen
+* Funktionsdeklarationen
+* Aufzählungsdeklarationen
+* Klassendeklarationen
+* Paketdeklarationen
+
+Anmerkung zu Funktionen:
+Es gilt zu beachten, dass ebenfalls auf Eigenschaften von Funktionen zugegriffen werden kann, jedoch nur, wie auch bei Klassen,
+auf die statischen Variablen.
+
+Notation:
+[<Bezeichner>] [<optionale Eigenschaften des jeweiligen Sprachelements>]
+{
+}
+
+Bespiele:
+void test()
+{
+	int x = 0;
+
+	{
+		.x = .x; // Expliziter Verweis auf den äußeren Gültigkeitsbereich mit dem .-Operator
+		.x = 10; // x im Gültigkeitsbereich über dem aktuellen erhält den Wert 10
+		x = 12; // x im Gültigkeitsbereich über dem aktuellen erhält den Wert 12, da im aktuellen Gültigkeitsbereich keine Variable namens x deklariert wurde
+	}
+}
+
+class Test
+{
+	public static const i = 10;
+	public static const j = i; // Der Bezeichner kann innerhalb des Gültigkeitsbereiches weggelassen werden.
+	public static const k = Test.j; // Er ist optional.
+}
+
+14. Gültigkeitsbereichverwendung
+
+Gültigkeitsbereiche können innerhalb eines anderen Gültigkeitsbereiches oder global "verwendet" werden.
+Dies bedeutet, dass Elementen des Gültigkeitsbereiches kein Präfix des Gültigkeitsbereiches mehr voran-
+gestellt werden muss.
+Dabei ist auch die Verwendung von verschachtelten Gültigkeitsbereichen möglich.
+Die Verwendung wirkt sich sowohl auf den aktuellen als auch auf alle Untergültigkeitsbereiche dessen aus.
+Sie kann durch den --Operator in einem der Subgültigkeitsbereiche aufgehoben werden, wobei sämtliche Ebenen unterhalb der angegebenen
+aufgehoben werden.
+Der *-Operator dagegen bewirkt, dass sämtliche Untergültigkeitsbereiche implizit ebenfalls verwendet werden.
+Eine Kombination der beiden Operatoren ist theoretisch möglich, da der --Operator implizit den *-Operator verwendet, aber nicht notwendig.
+Der Compiler sollte in diesem Fall eine Warnung ausgeben.
+Zudem ist es unter keinen Umständen möglich, bei der Gültigkeitsbereichverwendung den aktuellen Gültigkeitsbereich oder einen Subgültigkeitsbereich
+dessen mit dem *-Operator oder dem --Operator anzugeben.
+In diesem Fall muss der Compiler eine Fehlermeldung ausgeben.
+Auch Funktionen können als Gültigkeitsbereich verwendet werden (siehe "Gültigkeitsbereiche").
+VERALTET: Eine besondere Ausnahme bei der Gültigkeitsbereichverwendung bilden Funktionen.
+VERALTET: Ihr innerer Gültigkeitsbereich kann nicht von außerhalb verwendet werden.
+Elemente die in einem Gültigkeitsbereich enthalten sind, müssen niemals zwingend dessen Bezeichner angeben.
+
+Notation:
+<Gültigkeitsbereichbezeichner>[* | -];
+
+Beispiele:
+package gna.gnu.gni*;
+class gna.gnu.gni.Test;
+enum gna.gnu.gni.Test.Type;
+
+Test var = new Test();
+package gna.gnu.gni-;
+Test var2 = new Test(); // Fehler, undefinierter Bezeichner!
+
+15. Qualifizierer-Gültigkeitsbereiche
+
+Unter Qualifizierer-Gültigkeitsbereichen versteht man in Jass++ Gültigkeitsbereiche ohne Namen,
+welche nicht als eine weitere Überdeckungsschicht gelten, jedoch sämtliche enthaltenen Code-Elemente (der ersten Ebene)
+als etwas Bestimmtes qualifzieren.
+Dabei muss die Qualifizierung eines eingeschlossenen definierten Objekts von der Syntax gestattet sein.
+Mit folgenden Schlüsselwörtern können solche Qualifizierer-Gültigkeitsbereiche definiert werden:
+Siehe dazu "Zusammenfassung der Qualifizierer" im Abschnitt "Schlüsselwörter".
+
+Die Schlüsselwörter können auch in Kombination verwendet werden, falls dies die Syntax der Sprache
+erlaubt.
+Außerdem können sämtliche (auch selbst definierte) Typen als Qualifizierer verwendet werden.
+Des Weiteren gilt es zu beachten, dass manche Qualifizierer eventuell auch eine andere Art der Zusammenfassung erlauben
+(z. B. Trennung durch Kommata).
+In einem solchen Fall steht es dem Entwickler frei, sich zwischen den beiden Varianten zu entscheiden.
+Rückgabetypen, Parameter, angeforderte Pakete, geerbte Klassen oder Array-Größen können nicht auf eine
+solche Weise für einge Gruppe von Code-Elementen definiert werden!
+
+Notation:
+<Qualifizierer1> <Qualifizierer2> ... <Qualifizierern>
+{
+	<Code-Element-Definition>
+}
+
+Beispiele:
+static const integer
+{
+	ich = 10;
+	du = 10;
+	er = 12;
+}
+
+debug
+{
+	void bla() {};
+	void bla2() {};
+	void bla3() {};
+}
+
+16. Anweisungsblöcke
+
+Im Gegensatz zu Gültigkeitsbereichen, sind Anweisungsblöcke keine Bezeichnerebenen. Sie schließen lediglich Anweisungen ein, welche nur in bestimmten
+Fällen ausgeführt werden.
+Für die unterschiedlichen Fallbehandlungen existieren jeweilige Schlüsselwörter.
+Anweisungsblöcke können nicht selbst ohne oder mit eigenem Bezeichner definiert werden.
+Es existieren folgende Arten von Anweisungsblöcken:
+* Verzweigungen
+* Schleifen
+* Ausnahmebehandlungen
+* finally
+
+17. Variablen
+
+Variablen existieren, falls nicht anders angegeben, vom Programmstart bis zum Programmende. Lokale Variablen in Funktionen, sowie Elementvariablen
+von Klassen leben vom Funktionsaufruf bis zum Ende des Funktionsablaufes bzw. von der Erzeugung der Klasseninstanz bis zur Löschung dieser.
+Variablen, die als "static" deklariert wurden, existieren ebenfalls vom Programmstart bis zum Programmende.
+Anders als in C++ können in Jass++ keine Variablen in beliebig verschachtelten Gültigkeitsbereichen deklariert werden, die am Ende dieser
+automatisch gelöscht werden.
+Sie können ausschließlich global oder in Paket-, Klassen- und Funktionsdefinitionen deklariert werden und
+ausschließlich in Klassen- und Funktionsdefinitionen als "static". Es gilt zu beachten, dass diese statischen Variablen wie andere globale
+bei ihrer Deklaration bzw. dem Programmstart ein einziges Mal initialisiert werden und nicht wie bei lokalen z. B. bei jedem Funktionsaufruf.
+Statische und nicht statische Variablen können mit dem Schlüsselwort "const" als Variablen mit konstantem Inhalt deklariert werden.
+
+Notation:
+[static] [const] <Variablentyp> <Variablenname>[[<Variablengröße der 1. Dimension>][<Variablengröße der n. Dimension>]] [= <Initialisierungswert>];
+ 
+Konstante Variablen müssen bei ihrer Deklaration initialisiert werden. Ihr Inhalt ist bis zu ihrer Löschung unveränderbar
+(das Wort "konstant" bezieht sich also auf den Inhalt, nicht direkt auf die Variable, die ja am Ende ihres Gültigkeitsbereiches bzw.
+des Skripts gelöscht wird).
+Array-Größenangaben müssen konstante Ganzzahlwerte sein.
+Der Variableninhalt wird bei Arrays wie in C oder C++ mittels geschweifter Klammern eingeschlossen:
+integer tes[2] = { 10, 2 };
+
+Es können mehrdimensionale Arrays deklariert werden:
+integer test[2][2] = { { 10, 5 }, { 2, 4 } };
+
+Da ein Array in Warcraft 3 nur 8192 bzw. 8191 (wird im letzten Feld die Größe gespeichert?) haben kann, kümmert sich der Compiler
+mit speziellen Verfahren bei höheren Größenangaben um den benötigten Speicherplatz.
+Eventuell sollte er einen Hinweis anzeigen, falls die Grenze überschritten wird. Da die Array-Größe ein konstanter Ganzzahlwert sein muss,
+ist sie stets zur Kompilierzeit bekannt und kann mit dem size-Operator abgefragt werden.
+
+Variablen können global, in Paketen, Klassen, Aufzählungen, Funktionen oder Methoden deklariert werden.
+Klassen, Funktionen und Methoden können statische Variablen enthalten:
+static integer test;
+static const integer test = 10;
+
+Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
+dagegen 0 (siehe Abschnitt Literale).
+Es gilt zu beachten, dass die Objekte, auf welche bei Variablen mit referenzierbasierten Typen verwiesen wird, mit speziellen Funktionen
+und nicht mit einer einfachen 0-Setzung gelöscht werden.
+Die Sprache garantiert jedoch, dass Variablen nach einer Löschung des verwiesenen Objekts den Inhalt 0 haben, insofern die Löschung
+erfolgreich war (keine Ausnahme wurde geworfen) (siehe "Ausnahmen" und "Methoden - Destruktor").
+
+18. Operatoren
+
+Für Gültigkeitsbereiche:
+[<Bezeichner des Gültigkeitsbereiches>].<Bezeichner eines im Gültigkeitsbereich deklarierten Elements>
+
+Für die Typen integer und real:
+Variable = Ausdruck
++Variable
+-Variable
+Variable + Ausdruck
+Variable - Ausdruck
+Variable * Ausdruck
+Variable / Ausdruck
+Variable % Ausdruck
+Variable++
+Variable--
+Variable += Ausdruck
+Variable -= Ausdruck
+Variable *= Ausdruck
+Variable /= Ausdruck
+Variable %= Ausdruck
+Variable == Ausdruck
+Variable != Ausdruck
+Variable >= Ausdruck
+Variable <= Ausdruck
+Variable > Ausdruck
+Variable < Ausdruck
+
+Für den Typ integer:
+real(Variable)						Entspricht I2R(Variable)
+string(Variable)					Entspricht I2S(Variable)
+race(Variable)						Entspricht ConvertRace(Variable)
+alliancetype(Variable)					Entspricht ConvertAllianceType(Variable)
+racepreference(Variable)				Entspricht ConvertRacePref(Variable)
+igamestate(Variable)					Entspricht ConvertIGameState(Variable)
+fgamestate(Variable)					Entspricht ConvertFGameState(Variable)
+playerstate(Variable)					Entspricht ConvertPlayerState(Variable)
+playerscore(Variable)					Entspricht ConvertPlayerScore(Variable)
+playergameresult(Variable)				Entspricht ConvertPlayerGameResult(Variable)
+unitstate(Variable)					Entspricht ConvertUnitState(Variable)
+aidifficulty(Variable)					Entspricht ConvertAIDifficulty(Variable)
+gameevent(Variable)					Entspricht ConvertGameEvent(Variable)
+playerevent(Variable)					Entspricht ConvertPlayerEvent(Variable)
+playerunitevent(Variable)				Entspricht ConvertPlayerUnitEvent(Variable)
+widgetevent(Variable)					Entspricht ConvertWidgetEvent(Variable)
+dialogevent(Variable)					Entspricht ConvertDialogEvent(Variable)
+unitevent(Variable)					Entspricht ConvertUnitEvent(Variable)
+limitop(Variable)					Entspricht ConvertLimitOp(Variable)
+unittype(Variable)					Entspricht ConvertUnitType(Variable)
+gamespeed(Variable)					Entspricht ConvertGameSpeed(Variable)
+placement(Variable)					Entspricht ConvertPlacement(Variable)
+startlocprio(Variable)					Entspricht ConvertStartLocPrio(Variable)
+gamedifficulty(Variable)				Entspricht ConvertGameDifficulty(Variable)
+gametype(Variable)					Entspricht ConvertGameType(Variable)
+mapflag(Variable)					Entspricht ConvertMapFlag(Variable)
+mapvisibility(Variable)					Entspricht ConvertMapVisibility(Variable)
+mapsetting(Variable)					Entspricht ConvertMapSetting(Variable)
+mapdensity(Variable)					Entspricht ConvertMapDensity(Variable)
+mapcontrol(Variable)					Entspricht ConvertMapControl(Variable)
+playercolor(Variable)					Entspricht ConvertPlayerColor(Variable)
+playerslotstate(Variable)				Entspricht ConvertPlayerSlotState(Variable)
+volumegroup(Variable)					Entspricht ConvertVolumeGroup(Variable)
+camerafield(Variable)					Entspricht ConvertCameraField(Variable)
+blendmode(Variable)					Entspricht ConvertBlendMode(Variable)
+raritycontrol(Variable)					Entspricht ConvertRarityControl(Variable)
+texmapflags(Variable)					Entspricht ConvertTexMapFlags(Variable)
+fogstate(Variable)					Entspricht ConvertFogState(Variable)
+effecttype(Variable)					Entspricht ConvertEffectType(Variable)
+version(Variable)					Entspricht ConvertVersion(Variable)
+itemtype(Variable)					Entspricht ConvertItemType(Variable)
+attacktype(Variable)					Entspricht ConvertAttackType(Variable)
+damagetype(Variable)					Entspricht ConvertDamageType(Variable)
+weapontype(Variable)					Entspricht ConvertWeaponType(Variable)
+soundtype(Variable)					Entspricht ConvertSoundType(Variable)
+pathingtype(Variable)					Entspricht ConvertPathingType(Variable)
+
+Für den Typ real:
+integer(Variable)					Entspricht R2I(Variable)
+string(Variable)					Entspricht R2S(Variable)
+string(Variable, <Ganzzahlausdruck>, <Ganzzahlausdruck>)Entspricht R2SW(Variable, <Ganzzahlausdruck>, <Ganzzahlausdruck>)
+
+Für den Typ boolean:
+Variable = Ausdruck
+Variable
+!Variable
+Variable == Ausdruck
+Variable != Ausdruck
+
+Für den Typ string:
+Variable = Ausdruck
+Variable + Ausdruck
+Variable - Ausdruck				Entfernt eine Teilzeichenkette
+Variable += Ausdruck
+Variable -= Ausdruck				Entfernt eine Teilzeichenkette
+Variable == Ausdruck
+Variable != Ausdruck
+Variable >= Ausdruck				Die Vergleichsoperatoren beziehen sich in diesem Fall auf die Wertigkeit des Unicode-Zeichens (Warcraft 3 TFT verwendet kein ASCII)
+Variable <= Ausdruck
+Variable > Ausdruck
+Variable < Ausdruck
+Variable * Ausdruck				Der Ausdruck muss eine Ganzzahl sein. Liefert eine neue Zeichenkette, in welcher die alte Ausdruck mal kopiert und aneinander gehängt wurde.
+Variable *= Ausdruck				Die Variable erhält den vervielfachten Inhalt.
+hash Variable					Entspricht Variable.hash und StringHash(Variable)
+Variable[Index]					Entspricht SubString(Variable, index, index + 1). Liefert immer "null", wenn sich der Index außerhalb des String-Bereichs befindet.
+size Variable					Entspricht Variable.size und StringLength(Variable)
+integer(Variable)				Entspricht S2I(Variable)
+real(Variable)					Entspricht S2R(Variable)
+
+Für den Typ code:
+Variable = Ausdruck				Der Ausdruck muss eine zuvor deklarierte Funktion sein, die keine Parameter entgegen nimmt und keinen Rückgabetyp besitzt. In Jass wird für gewöhnlich nicht überprüft, ob die Funktion zuvor deklariert wurde, was zu Laufzeitfehlern führen kann.
+
+Für den Typ handle:
+Variable = Ausdruck
+Variable == Ausdruck
+Variable != Ausdruck
+integer(Variable)				Entspricht GetHandleId(Variable)
+id Variable					Entspricht Variable.id und GetHandleId(Variable)
+Variable.id
+
+Für den Typ force:
+Variable[Index]					Liefert den Spieler (Typ "player") der Streitmacht des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Streitmacht, so liefert der Ausdruck "null".
+size Variable					Liefert die Größe der Streitmacht als Ganzzahl.
+Variable.size					Liefert die Größe der Streitmacht als Ganzzahl.
+
+Für den group:
+Variable[Index]					Liefert die Einheit (Typ "unit") der Gruppe des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Gruppe, so liefert der Ausdruck "null".
+size Variable					Liefert die Größe der Gruppe als Ganzzahl.
+Variable.size					Liefert die Größe der Gruppe als Ganzzahl.
+
+Für Lade-Blöcke:
+<Lade-Block-Bezeichner> : <Deklarationsvoraussetzungen>
+
+Für KI-Blöcke:
+execute <KI-Block-Bezeichner> for <Spielerausdruck>
+
+Für Paketdeklarationen:
+<Paketbezeichner> : <Deklarationsvoraussetzungen>
+
+Für Funktionsdeklarationen:
+<Rückgabetyp> <Funktionsname><Parameterliste> : <Deklarationsvoraussetzungen>
+
+Für Aufzählungsdeklarationen:
+<Aufzählungsbezeichner> (<Erbung) : <Deklarationsvoraussetzungen>
+
+Für Klassendeklarationen:
+<Klassenbezeichner> (<Erbung>) : <Deklarationsvoraussetzungen>
+
+Für Arrays:
+size Variable					Liefert die Größe des Arrays.
+Variable.size					Liefert die Größe des Arrays.
+size Variable <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
+Variable.size <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
+Variable[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
+
+Für große Arrays:
+integer(Variable)				Liefert die interne Ganzzahl der Array-Instanz.
+id Variable					Liefert die interne Ganzzahl der Array-Instanz.
+Variable.id
+
+Für Aufzählungen:
+<Geerbter Typ>(Variable)
+Variable = Ausdruck
+Variable == Ausdruck
+Variable != Ausdruck
+size <Aufzählungsbezeichner>			Liefert die Anzahl der Elemente der Aufzählung
+<Aufzählungsbezeichner>.size			Liefert die Anzahl der Elemente der Aufzählung
+
+Für "threaded" Funktionen:
+execute Variable(<Parameter>)
+executewait [<real-Ausdruck>] Variable(<Parameter>)
+evaluate Variable(<Parameter>)
+executions Variable
+Variable.executions
+evaluations Variable
+Variable.evaluations
+sleeps Variable
+Variable.sleeps
+sleepon Variable
+sleepoff Variable
+reset Variable
+
+Für Funktionszeiger:
+integer(Variable)				Liefert die interne Ganzzahl des Funktionsprototypen.
+id Variable					Liefert die interne Ganzzahl des Funktionsprototypen.
+Variable.id
+
+Innerhalb von "threaded" Funktionen:
+sleep <real-Ausdruck>
+id						Liefert die interne Ganzzahl des Funktionsprototypen.
+
+Für Klassen(instanzen):
+<Klassenname>.<Aufzählung | statische Methode | statisches Element>
+<Variable>.<Elementname | Methodenname>
+new <Klassenname>				Entspricht Klassenname.new()
+delete <Variable>				Entspricht Variable.delete()
+copy Variable					Entspricht Variable.copy()
+Variable = Ausdruck
+Variable					Ist wahr, falls die Variable auf ein Objekt zeigt.
+!Variable					Ist wahr, falls die Variable auf kein Objekt zeigt.
+Variable == Ausdruck				Ist wahr, falls die beide Variablen auf dasselbe Objekt zeigen.
+Variable != Ausdruck				Ist wahr, falls die beide Variablen nicht auf dasselbe Objekt zeigen.
+integer(Variable)				Liefert die interne Ganzzahl der Klasseninstanz.
+id Variable					Entspricht Variable.id. Liefert die interne Ganzzahl der Klasseninstanz.
+
+19. Typen
+
+In Jass++ können sämtliche Typen aus Jass ohne besondere Einschränkungen (bis auf "const"-Deklarationen) verwendet werden.
+Eigene Typen können ausschließlich mittels Klassen definiert werden. Alle anderen Typen sind native Typen.
+Ein Variablentyp kann als Suffix das Schlüsselwort "const" erhalten.
+In Jass++ wird wie in Jass zwischen referenz- und kopierbasierten Typen unterschieden. Ist der Typ einer Variable
+referenzbasiert und konstant, so darf das Objekt, auf welches referenziert wird nicht verändert werden, die Variable selbst jedoch schon.
+So kann ihr ein neuer Inhalt zugewiesen werden, für diesen jedoch keine Methode aufgerufen werden, die nicht als "const" deklariert wurde (siehe "Methoden").
+Kopierbasierte Typen sind somit immer implizit als "const" deklariert, da von ihnen sowieso eine Kopie erzeugt wird und nicht eine Referenz.
+Daher bewirkt das Suffix "const" bei kopierbasierten Typen nichts, ist aber eine gültige Syntax.
+Dies wurde so entschieden, da es z. B. bei der Definition generischer Containerklassen zu Problemen kommen kann, wenn es darum geht, einen
+unveränderbaren Wert zurückzugeben.
+Der Inhalt kopierbasierter Variablen wird wie der referenzbasierter beim Übergeben an eine andere (z. B. an Funktionsparameter) kopiert,
+jedoch wird bei referenzbasierten lediglich eine Referenz auf ein global existierendes Objekt kopiert, welches, falls möglich,
+explizit vom Entwickler wieder freigegeben werden muss.
+Da auch Funktionszeiger referenzbasierter Typen sind, können sie ebenfalls als "const" deklariert werden, was zur Folge hat,
+dass die Funktionen, auf welche sie zeigen nicht mit den Schlüsselwörtern "execute", "executewait", "evaluate", "sleepon", "sleepoff" und "reset" aufgerufen
+bzw. diese auf sie angewandt werden dürfen.
+Wird eine Variable eines referenzbasierten Typs freigegeben bzw. gelöscht, so wird bei einer erfolgreichen Freigabe der Variableninhalt auf 0
+gesetzt.
+Dies gilt auch für native referenzbasierte Typen.
+
+Notation:
+<Typbezeichner> [const]
+
+Typkonvertierungen:
+Sämtliche Typkonvertierungen müssen explizit vorgenommen werden, insofern es sich nicht
+um eine Kind-zu-Eltern-Konvertierung handelt. Sämtliche Funktions- und
+Klasseninstanzenreferenzen können zum Typ integer konvertiert werden (ebenfalls explizit).
+Kindinstanzen können zu Elterninstanzen implizit konvertiert werden. Dies gilt auch für
+native Kindtypen wie z. B. unit zu widget.
+Andersherum muss explizit umgewandelt werden und gilt nur noch für Klasseninstanzen, nicht für
+native Typen mit Ausnahme derer für die native Konvertierungsfunktionen zur Verfügung stehen.
+Zu beachten gilt, dass es bei Eltern-zu-Kind-Konvertierungen zu fehlenden Daten für z. B.
+virtuelle Methoden kommen kann. Schlimmer noch wäre ein Zugriff auf ein Instanzelement
+einer ursprünglichen Nichtklasseninstanz, da so auf ein falsches Element einer anderen
+Instanz zugegriffen werden würde. Dies kann selbst zur Laufzeit nicht im Debug-Modus heraus-
+gefunden werden.
+Daher sollte der Compiler bei solchen Konvertierungen eine Warnung ausgeben.
+Außerdem können Variablen mit nicht-konstantem Inhalt implizit zu solchen konvertiert werden.
+Andersherum ist eine Konvertierung gar nicht möglich.
+Schlägt eine Konvertierung fehl (z. B. eine Ganzzahl in einen Schadenstypen), so wird ein Nullwert
+zurückgeliefert. 0 bei referenzbasierten und "null" bei kopierbasierten Typen.
+Eine Liste der möglichen Konvertierungen nativer Typen, welche durch die bestehenden nativen Funktionen
+von Jass möglich sind und nach der Konvertierungssyntax von Jass++ durchgeführt werden können finden
+Sie im Abschnitt "Operatoren" und im Unterabschnitt des jeweiligen Typs.
+
+Notation:
+<Konvertierungstyp>(Ausdruck)
+
+Beispiele:
+MyClass myClassValue = new MyClass;
+integer myValue = integer(myClassValue);
+MyParentClass myParentClassValue = myClassValue;
+myClassValue = myParentClassValue; // illegal!
+myClassValue = MyClass(myParentClassValue);
+unit myUnit = null;
+widget myWidget = myUnit;
+myUnit = myWidget; // illegal!
+myUnit = widget(myWidget); // illegal!
+Unit const myUnit = myOtherNonConstantUnit;
+Unit myUnit= myOtherConstantUnit; // illegal!
+
+Container-Typen:
+Ein Container-Typ ist ein Typ, welcher die Verwendung des "size"- und des "[]"-Operators gestattet.
+Dabei muss der "size"-Operator eine Ganzzahl zurückgeben und der "[]"-Operator eine einzige als
+Parameter entgegen nehmen und einen beliebigen Typ zurückgeben.
+Ob die beiden Operatoren als "const" implementiert sind ist frei wählbar, jedoch können, falls
+einer der beiden nicht als "const" implementiert ist, konstante Instanzen des Typs nicht in
+"foreach"-Schleifen verwendet werden.
+Anderenfalls geht dies ohne Probleme durch die vorgegebene Implementation (siehe "foreach-Schleife").
+Es gibt drei native Container-Typen:
+* string
+* force
+* group
+
+Alle drei können somit in "foreach-Schleifen" verwendet werden.
+Außerdem zählen Aufzählungen auch zu den Container-Typen.
+
+Vordefinierte Typen:
+Bei folgenden Typen wird die verwendete "common.j"-Datei analysiert und anhand der dort definierten Jass-Konstanten
+ermittelt, welche Werte zur Verfügung stehen. Sollte eine Variable eines der Typen einen anderen Wert erhalten
+haben als in der Datei zur Verfügung steht, so gibt der Compiler eine Fehlermeldung aus.
+Dabei werden auch Konvertierungen von Ganzzahlen zu einem der Typen überprüft. Sollte die Konvertierung erst zur
+Laufzeit überprüfbar sein, gibt der Compiler zumindest eine Warnung aus.
+Hier ist eine Liste der nativen Typen:
+playercolor, race, playergameresult, alliancetype, version, attacktype, damagetype, weapontype, pathingtype, racepreference,
+mapcontrol, gametype, mapflag, placement, startlocprio, mapdensity, gamedifficulty, gamespeed, playerslotstate, volumegroup,
+igamestate, fgamestate, playerstate, unitstate, aidifficulty, playerscore, gameevent, playerevent, playerunitevent, unitevent
+widgetevent, dialogevent, gameevent, playerevent, playerunitevent, limitop, unittype, itemtype, camerafield, blendmode, raritycontrol,
+texmapflags, fogstate, effecttype, soundtype
+
+20. Verzweigungen
+
+if-Verzweigungen:
+If-Verzweigunen werden zur Überprüfung unterschiedlicher Ausdrücke benutzt.
+
+Notationen:
+if (Ausdruck)
+{
+}
+else if (Ausdruck)
+{
+}
+else (Ausdruck)
+{
+}
+
+Switch-Verzweigungen:
+Switch-Verzweigungen können anders als in herkömmlichen Sprachen jede Art von Datentyp behandeln.
+
+Notation:
+switch (<Variable>)
+{
+	case (<konstanter Ausdruck>)
+	{
+		break;
+	}
+
+	case (<konstanter Ausdruck>) // Ein Ausdruck kann auch aus mehreren durch Kommate getrennten Werten bestehen: 1,10,2
+	{
+		break;
+	}
+
+	default
+	{
+		break;
+	}
+}
+
+21. Schleifen
+
+while (<Ausdruck>)
+{
+}
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+do
+{
+}
+while (<Ausdruck>);
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+for (<Ausdruck>; <Ausdruck>; <Ausdruck>)
+{
+}
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <Anzahl> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+foreach (<Variablenname>; <Container-Variable>) // siehe "Container-Typen"
+{
+}
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+22. Variablensperrung (locking)
+
+Da das Schlüsselwort "threaded" die Deklaration einer Funktion ermöglicht, welche fast gleichzeit wie andere ausgeführt
+werden kann und es in Warcraft 3 The Frozen Throne selbst den Datentyp "trigger" gibt, dessen Aktionen ebenfalls
+fast gleichzeitig ausgeführt werden können (eigentlich handelt es sich aufgrund der einzig möglichen Compilerimplementation
+bei beiden Möglichkeiten um den Datentyp "trigger"), unterstützt die Sprache auch sogenannte Variablensperrungen,
+die verhindern, dass eine Variable über einen bestimmten Zeitraum aus mehreren Funktionen gesetzt wird.
+Ausgelesen werden können Variablen zu jedem Zeitpunkt, jedoch sollte der Testmodus nach Einstellung eine Warnung
+ausgeben können, wenn eine gesperrte Variable außerhalb ihres Sperrblocks ausgelesen wird.
+Die Sperrung einer Variable ist bis zum Ende des sogenannten Sperrblocks gültig, welcher in einer als "threaded"
+deklarierten Funktion auch "sleep"-Anweisungen enthalten kann.
+Zudem kann bei der Verwendung eines "threaded"-Blocks eine Sekundendauer in Form eines Fließkommazahlenliterals
+angegeben werden. Wird dies getan, so wartet die Funktion solange bis die Variable entsperrt wurde und überprüft
+diese in dem angegebenen Intervall. Sollte versucht werden eine Variable zu sperren, die bereits gesperrt ist und
+kein Intervall angegeben werden, so würde der Sperrblock übersprungen werden.
+
+Notation:
+threaded (<Variablenname>[; <Fließkommaintervall>])
+{
+	<Anweisungen>
+}
+
+
+
+23. Deklarationsvoraussetzungen
+
+Lade-Blöcke, KI-Blöcke, Funktionen, Pakete, Aufzählungen und Klassen können bei ihrer Deklaration eben solche voraussetzen.
+Dazu wird der :-Operator verwendet. Dies stellt sicher, dass die Voraussetzungen vor dem jeweiligen
+Code-Objekt deklariert werden. Sollte es dabei zu Kreisabhängigkeiten kommen, indem sich z. B. zwei
+Code-Objekte gegenseitig voraussetzen, so muss der Compiler eine Fehlermeldung ausgeben.
+Ansonsten muss er sicherstellen, dass die Objekte in der richtigen Reihenfolge deklariert werden.
+Deklarationsvoraussetzungen sind notwendig, da Funktionen in Jass erst nach ihrer Deklaration im Skript
+verwendet werden können.
+Eine Umgehung dieser Beschränkung kann mit den Schlüsselwörtern execute und evaluate erreicht werden
+(siehe dazu Abschnitt "Funktionen").
+Geerbte Klassen werden implizit als Deklarationsvoraussetzung angegeben.
+Aufzählungen brauchen in der Regel höchstens Voraussetzungen, wenn das Paket oder die Klasse Ganzzahl-Konstanten enthält.
+
+Notation:
+<Lade-Block|Funktionsdeklaration|Paketdeklaration|Aufzählungsdeklaration|Klassendeklaration> : <Bezeichner1>, <Bezeichner2>, ... <Bezeichnern>
+
+21. Funktionen
+
+Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich mindestens die Parametertypen oder die Parameteranzahl unterscheiden.
+Unterscheidet sich lediglich der Rückgabetyp, so gelten beide Definition nicht als unterschiedlich, da im Falle eines Aufrufes ohne eine Speicherung
+des Rückgabetyps nicht sichergestellt werden könnte, welche Version der Funktion aufgerufen werden sollte.
+Parametertypen unterscheiden sich auch, sobald nur einer der beiden als "const" deklariert wurde. In diesem Fall wird je nach konstanter oder nicht
+konstanter Parameterübergabe die jeweilge Version der Funktionsdeklaration ausgewählt.
+Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
+Parameter, welche kein Standardargument besitzen gesetzt werden:
+MyFunction(y = 10, x = 100, 100, 3, 5);
+Parameter mit Standardargumenten erhalten automatisch das Standardargument, insofern sie nicht explizit beim Aufruf gesetzt werden.
+
+Notation:
+[threaded] [mapinit] [const] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...) [<Deklarationsvoraussetzungen>] [throw (Typen getrennt durch Kommata)]
+{
+	<Anweisungen>
+}
+
+"threaded"-Funktionen:
+Ist eine Funktion "threaded", kann sie von überall aus mit einem der Schlüsselwörter "execute", "executewait", oder "evaluate" aufgerufen werden.
+Rückgabewerte können nur bei "evaluate" zurückgegeben werden.
+"evaluate" erzeugt keinen neuen Thread, es wird daher gewartet, bis der Funktionsaufruf abgearbeitet wurde. Funktionen, die mit
+"evaluate" aufgerufen werden, dürfen keine "sleep"-Anweisungen bzw. "TriggerSleepAction"-Aufrufe enthalten, ob direkt oder indirekt spielt dabei keine Rolle.
+Der Compiler sollte in diesem Fall eine Fehlermeldung ausgeben.
+Bei "execute" und "executewait" dagegen, läuft der Code unmittelbar nach dem Aufruf weiter. Der Funktionsaufruf findet in einem eigenen
+Thread statt.
+"execute" und "executewait" bewirken eigentlich das Gleiche, insofern "TriggerExecute" und "TriggerExecuteWait" das Gleiche bewirken.
+Jedoch gibt es eine weitere Verwendungsmöglichkeit von "executewait", die sich von "execute" deutlich unterscheidet.
+Gibt man bei "executewait" vor dem Funktionsbezeichner eine "real"-Wert an, so wird die Funktion erst nach Ablauf dieser Zeit
+aufgerufen, jedoch wie bei "execute" nicht auf den Aufruf gewartet.
+Intern wird dies durch einen speziell dafür erzeugten Zeitgeber "timer" realisiert.
+Der Rückgabewert von Funktionen, die mit "execute" bzw. "executewait" aufgerufen wurden, dürfen nicht verwendet werden (zeitliche Differenz!).
+
+Notation:
+evaluate <Funktionsbezeichner>
+execute <Funktionsbezeichner>
+executewait [<real-Ausdruck>] <Funktionsbezeichner>
+
+Mittels der Schlüsselwörter "executions" und "evaluations" kann herausgefunden werden, wie oft eine "threaded" Funktion per "execute" und "executewait"
+bzw. "evaluate" aufgerufen wurde.
+Zurückgegeben wird die Anzahl als integer.
+
+Notation:
+executions <Funktionsbezeichner>
+evaluations <Funktionsbezeichner>
+<Funktionsbezeichner>.executions
+<Funktionsbezeichner>.evaluations
+ 
+Mittels des Schlüsselwortes "sleep", kann in einer "threaded"-Funktion gewartet werden.
+Sie entspricht einem Aufruf der Funktion "TriggerSleepAction".
+
+Notation:
+sleep <real-Ausdruck>
+
+Mittels der Schlüsselwörter "sleeps", "sleepon" und "sleepoff" kann eine "threaded" Funktion darauf überprüft werden, ob ihr Thread gerade wartet bzw.
+das Warten aktiviert oder deaktiviert werden.
+Die Aktivierung und Deaktivierung des Wartens bezieht sich NUR auf alle laufenden "execute"- und "executewait"-Aufrufe der Funktion.
+Sämtliche Aufrufe nach der Aktivierung bzw. Deaktivierung sind davon ausgeschlossen.
+Dies liegt am Verhalten der nativen Jass-Funktion "TriggerWaitOnSleeps".
+Test-Anmerkung:
+"IsTriggerWaitOnSleeps" gibt nur "true" zurück, falls explizit TriggerWaitOnSleeps(<Auslöser>, true) aufgerufen wurde. Am Verhalten des Auslösers
+scheint sich aber nichts zu ändern.
+
+Notation:
+sleeps <Funktionsbezeichner> // Liefert einen Boolean-Wert.
+<Funktionsbezeichner>.sleeps // Liefert einen Boolean-Wert.
+sleepon <Funktionsbezeichner> // Funktion wartet bei "sleep"-Anweisungen.
+sleepoff <Funktionsbezeichner> // Funktion wartet nicht bei "sleep"-Anweisungen.
+
+Mittels des Schlüsselwortes "reset" kann eine "threaded" Funktion zurückgesetzt werden. Dies bewirkt, dass sie bei der nächsten "sleep"-Anweisung
+abbricht. Dies gilt für sämtliche "execute"- und "executewait"-Aufrufe der Funktion.
+
+Notation:
+reset <Funktionsname> // Setzt den Thread der Funktion zurück.
+
+Weiteres:
+Ist eine Funktion als "mapinit" deklariert, so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers 
+aufgerufen. Eine "mapinit"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt, 
+manuell aufgerufen wird oder "threaded" ist (einstellbar, "threaded" ist ebenfalls eher unnötig).
+Exisitieren mehrere Funktionen, die als "mapinit" deklariert wurden, so lässt sich die exakte Aufrufreihenfolge nur durch Deklarationsvoraussetzungen
+bestimmen.
+Setzt eine als "mapinit" deklarierte Funktion eine andere voraus (ob direkt oder indirekt), so ist garantiert, dass sie erst nach dieser vorausgesetzten
+aufgerufen wird.
+
+Ist eine Funktion als "const" deklariert, so muss sie einen global konstanten Wert zurückgeben. Beim Kompilieren, wird
+sie normalerweise als "constant" Jass-Funktion erzeugt. Global konstant bedeutet in diesem Zusammenhang, dass der Wert
+zur Laufzeit immer je nach übergebenen Parametern derselbe ist.
+
+Funktionsvariablen (Funktionszeiger)
+
+Funktionsvariablen sind Variablen des Typs "<Rückgabetyp> (<Parameter>)". Sie können einen Verweis auf eine beliebige
+"threaded"-Funktion mit dem angegebenen Rückgabetyp und den angegebenen Parametern oder eine "threaded" Lambda-Funktion enthalten.
+Der Verweis ist normalerweise ein Integer-Wert, welcher je nach Kompilierung des Codes unterschiedlich auf die Funktion verweisen kann.
+Eine Funktionsvariable kann ebenso auf Methoden einer Klasse verweisen, welche ebenfalls als "threaded" deklariert sein müssen.
+Funktionsvariablen können wie normale "threaded" Funktionen aufgerufen werden.
+Des Weiteren gilt es zu beachten, dass Funktionsvariablen ebenfalls als "const" deklariert werden können (siehe "Typen").
+
+Notation:
+<Rückgabetyp> (Parametertyp1, Parametertyp2, ... ParametertypN) [const] <Variablenname> [= Funktionsname | "threaded" Lambda-Funktionsdefinition];
+
+Beispiel:
+integer (integer, integer) functionVariable = MyClass.method0;
+Print(functionVariable.evaluate(0, 10));
+integer (real, real) const functionVariable2 = MyClass.method1;
+Print(functionVariable.evaluate(1.0, 3.0)); // Ungültig: .evaluate kann nicht auf Funktionen konstanter Funktionszeiger angewandt werden.
+
+Funktionstypen
+
+Funktionstypen sind Typen, die eine einfachere Deklaration von Funktionszeigern ermöglichen.
+Variablen, die einen Funktionstyp als Typ haben, können wie reguläre Funktionsvariablen verwendet werden (siehe Funktionsvariablen).
+
+Notation:
+abstract <Funktionstypname> <Rückgabetyp> (Parametertyp1, Parametertyp2, ... ParametertypN);
+
+Beispiel:
+abstract Predicate boolean ();
+
+Lambda-Funktionen
+
+Lambda-Funktionen sind namenlose Funktionen, sozusagen Funktionen, bei denen nur der Code-Inhalt angegeben werden muss.
+In Jass++ ist es möglich Lambda-Funktionen zu deklarieren, welche keinen Rückgabewert haben und keine Parameter entgegennehmen.
+Lambda-Funktionen können entweder in Variablen des Typs code oder in Funktionsvariablen gespeichert werden. Bei letzterer Variablenart
+müssen sie jedoch als "threaded" deklariert werden, bei ersterer ist dies optional.
+Außerdem kann ihr Inhalt an andere Funktionen wie bei gewöhnlichen Funktionsvariablen bzw. Variablen des Typs "code" weitergegeben
+werden.
+Lambda-Funktionen könne auch direkt an Paramater der beiden Typen übergeben werden.
+
+Notation:
+code <Variablenname> = [threaded] { <Funktions-Code> };
+void () <Variablenname> = threaded { <Funktions-Code> };
+
+code-Beispiel:
+void test()
+{
+	code testCode = { integer i; for (i = 0; i < 100; i++) { Print("Iteration " + I2S(i)); } };
+}
+
+Funktionsvariablen-Beispiel:
+void test()
+{
+	void () testFunctionVariable = { integer i; for (i = 0; i < 100; i++) { Print("Iteration " + I2S(i)); } };
+	testFunctionVariable.execute();
+	testFunctionVariable.evaluate(); // Illegal!
+}
+
+Parameter-Beispiel:
+void test()
+{
+	timer testTimer = CreateTimer();
+	TimerStart(testTimer, 2.0, true, { Print("Timer function runs!"); });
+}
+
+Funktionsaufrufe
+
+Notation:
+<Funktionsname | Funktionsvariable>[<.execute | .executefast | .evaluate>](<Parameterwert> ...);
+<Funktionsname>[<.execute | .executefast | .evaluate>](<Parametername> = <Parameterwert>);
+
+Zweitere Notation ist nur bei Funktionen, jedoch nicht bei Funktionsvariablen anwendbar. Sie erlaubt eine explizite Definition der
+übergebenen Parameterwerte.
+Des Weiteren gilt es zu beachten, dass Standardparameterwerte bei Funktionsvariablen ihre Gültigkeit verlieren. Bei ihnen müssen
+sämtliche Parameterwerte explizit angegeben werden.
+
+Ausnahmebehandlung
+
+Ausnahmen können von einer beliebigen Funktion geworfen werden, die als "throw" Funktion deklariert wurde.
+Die Ausnahme kann mittels eines try-catch-Blocks aufgefangen werden.
+
+Notation:
+try
+{
+	<Anweisungen>
+}
+catch (<Typ> <Variablenname>)
+{
+}
+default // Alle anderen Ausnahmen
+{
+}
+
+Finally
+
+Finally-Blöcke werden in jedem Fall vor der return-, (throw-, macht das Sinn?)  continue- oder break-Anweisung einer Funktion oder Schleife oder
+am Ende eines try-Blocks abgearbeitet.
+
+Notation:
+<Funktionsdefinition | Schleifendefinition | Try-Block>
+finally // Wird exakt vor der return-, (throw-,) continue- oder break-Anweisung oder am Ende des try-Blocks abgearbeitet
+{
+}
+
+Pseudonyme (aliases)
+
+Das Schlüsselwort "alias" ermöglicht es einem einen anderen Bezeichner für einen bestehenden zu definieren. Dieser gilt innerhalb
+des Gültigkeitsbereiches, in welchem sich die Pseudonymdefinition befindet.
+Der neue Bezeichner darf bereits existieren und überdeckt innerhalb des Gültigkeitsbereiches den alten. Der Compiler sollte in
+diesem Fall jedoch eine Warnung ausgeben.
+Der Bezeichner dagegen muss existieren.
+
+Notation:
+alias <Bezeichner> <Neuer Bezeichner>;
+
+Vorlagen (templates)
+
+Vorlagen werden (nur bei Verwendung) mittels einer einfachen Kopie ihres enthaltenen Codes mit den verwendeten Datentypen gespeichert.
+Die Datentypparameter können genau wie bei Funktionsparametern gesetzt werden.
+Als Bezeichner der Vorlage wird der erste folgende Bezeichner innerhalb nach der Vorlagendeklaration verwendet.
+Das bedeutet, dass eine Vorlagendeklaration nur vor bestimmten Deklarationen erfolgen darf.
+Folgende Sprachkonstrukte können als Vorlagen deklariert sein:
+* Funktionen
+* Funktionstypen
+* Pakete
+* Aufzählungen
+* Klassen
+
+Notation:
+template < <Datentypparameterbezeichner> [= <Standardargument>] ...> <Vorlageninhalt/-bezeichner>
+
+<Vorlagenbezeichner>< [<Datentypparameterbezeichner> = <Parameterwert>] ... >
+<Vorlagenbezeichner>< [<Parameterwert>] ... >
+
+Beispiel:
+template < T = integer > class Vector {};
+Vector<integer> myVector1 = new Vector<integer>();
+Vector myVector2 = new Vector();
+Vector<T = integer > myVector3 = new Vector< T = integer >();
+
+Zugriffsmodifikatoren
+
+Zugriffsmodifikatoren bestimmten die Zugriffsmöglichkeiten auf bestimmte Deklarationen.
+"private", "public" und "protected" bestimmten je nach Verwendung innerhalb einer Klasse oder eines Pakets, von wo aus das Code-Objekt
+verwendet werden darf.
+Wird die Deklarationen innerhalb einer Klasse deklariert, so kann das Schlüsselwort "package" verwendet werden, um einen Zugriff vom Paket, in welchem
+sich die Klasse befindet zu erlauben.
+Wird die Deklarationen dagegen innerhalb eines Pakets deklariert, so wird "package" impliziet angehängt (explizit auch möglich), da innerhalb des Pakets
+der Zugriff auf die Deklarationen standardmäßig erlaubt ist.
+
+Notation:
+[private | public | protected] [package] <Deklarationen>
+
+Freunde
+
+Freunde sind Bezeichner, welchen der Zugriff auf alle enthaltenen Elemente, die den Zugriffsmodifikatoren entsprechen, erlaubt wird.
+Pakete und Klassen können Freunde haben.
+Die Bezeichner können durch Kommata getrennt werden.
+
+Notation:
+[Zugriffsmodifikatoren] friend <Bezeichner>[, <Bezeichner>, ...];
+
+Pakete (packages)
+
+Notation einer Paketdefinition:
+package <Name> [<Deklarationsvoraussetzungen>]
+{
+	static { } // Initialisierer
+	[Zugriffsmodifikatoren] <Funktion/Variable/Vorlage/Klasse/Aufzählung/Paket>
+	<Freunde>
+}
+
+Fehlen die Zugriffsmodifikatoren, ist das Objekt automatisch "private package". Protected bewirkt, dass das Objekt für die enthaltenen Pakete
+zugänglich ist.
+"package" wird implizit an die Zugriffsmodifikatoren angehängt (siehe "Zugriffsmodifikatoren").
+Die Elemente des Pakets werden immer automatisch an erster Stelle deklariert, die Elemente der Unterpakete an zweiter, wodurch die Unterpakete bei
+nicht-"private"-Elementen immer auf diese zugreifen können.
+Wird ein Freund deklariert, so erhält dieser je nach Präfixschlüsselwort Zugriff auf sämtliche
+als solche deklarierten Paketelemente (auch Unterpakete, allerdings nicht deren Elemente - Überprüfen: Freundesfreundezugriff?).
+public friend <Paketname> ist daher implizit gültig, da es dem Paket <Paketname> Zugriff auf alle öffentlichen
+Eigenschaften gestattet.
+private friend <Paketname> würde bewirken, dass die im Paket enthaltenen Pakete, die als "private"
+deklariert wurden, vom Paket <Paketname> zugreifbar wären, allerdings nicht deren private Elemente.
+Dazu müsste das enthaltene Paket ebenfalls die gleiche Anweisung enthalten.
+Neben anderen Paketen können auch anderen Klassen und Funktionen spezielle Zugriffe ermöglicht werden.
+
+Initialisierer:
+Die Initialisierungsfunktion wird genau vor dem ersten Zugriff auf ein Paketelement aufgerufen.
+Dies wird vom Compiler durch eine Laufzeitüberprüfung ermöglicht und kann relativ viel Zusatzcode erzeugen, da bei jedem Zugriff von außerhalb
+überprüft werden muss, ob die Klasse bereits initialisiert wurde.
+Die Funktion darf nicht manuell aufgerufen werden und hat deshalb keine Zugriffsmodifikatoren, keinen Rückgabetyp, keinen Bezeichner und keine Parameter.
+
+Aufzählungen (enums)
+
+Aufzählungselemente dürfen nur konstante Ausdrücke als Werte enthalten.
+Alle Aufzählungselemente müssen den geerbten Typ haben.
+Wird der geerbte Typ weggelassen, so ist die Aufzählung standardmäßig vom nativen Typ
+"integer".
+Aufzählungen sind Container-Typen (siehe "Container-Typen") und können daher auch in "foreach"-Schleifen verwendet werden.
+Wird ein Aufzählungselement gesetzt, so werden alle darauffolgenden nicht explizit gesetzten Elemente, auf die noch nicht verwendeten nachfolgenden Werte gesetzt,
+falls solche existieren. Bei Ganz- und Fließkommazahlen wird dabei einfach in 1er-Schritten hochgezählt.
+Beim Typ "boolean" gilt die Reihenfolge "true", "false". Bei vordefinierten Typen (siehe "Typen") gilt die aufsteigende Reihenfolge Ihrer Ganzzahlwerte.
+Ist das letzte Element einer Reihenfolge erreicht, so erhalten alle weiteren Elemente ebenfalls das letzte
+und der Compiler gibt eine Warnung aus.
+
+Notation:
+enum <Name> (<geerbter Typ>) [Deklarationsvoraussetzungen]
+{
+    <Elementname> [= <Elementwert>] [,] // Nach dem letzten Element muss kein Komma gesetzt werden.
+} [globale Instanzen durch Kommate getrennt];
+
+Der size-Operator kann verwendet werden, um die Anzahl der Aufzählungselemente zu erhalten.
+
+Klassen
+
+Existiert kein Präfix wie "public", "protected" oder "private" vor der Variablen oder Methodendeklaration, ist das
+Klassenelement automatisch "private" (nicht "private package"!). Statische Methoden erhalten keinen this-Parameter.
+Statische Variablen können mit Klassenname.Variablenname angesprochen werden.
+Der Konstruktor und der Destruktor werden aufgerufen, sobald das Objekt erzeugt oder gelöscht wird.
+Der Kopierkonstruktor wird aufgerufen, sobald das Objekt explizit mittels "copy" kopiert wird.
+Normalerweise wird er automatisch definiert und kopiert den Inhalt aller Elemente des kopierten Objekts in das Zielobjekt (anders als bei C++).
+Mit dem Schlüsselwort "parent" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
+Gültigkeitsbereichen, angesprochen werden. Da sie normalerweise kein äußerer Gültigkeitsbereich sind, funktioniert die Verwendung des .-Operators nicht.
+Mit dem Schlüsselwort "self" spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
+die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren statischen Methoden aufruft, insofern sie selbst z. B. zu einer
+der Elternklassen und nicht zur Klasse für die der Aufruf galt gehört.
+Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Gültigkeitsbereichen, über ihren Namen oder den .-Operator angesprochen werden.
+In diesem Fall wird ebenfalls überprüft, ob es sich um eine virtuelle statische Methode handelt und die der korrekten Klasse aufgerufen.
+Mit dem Schlüsselwort "this" spricht man die verwendete Instanz an.
+Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert.
+In diesem Fall werden die Instanzdaten in der globalen Hashtable oder in zusätzlichen globalen Variablen gespeichert.
+Falls die angegebene Maximalgröße den Wert 8192 übersteigt, sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
+Die Maximalgröße einer Klasse kann mit dem size-Operator abgefragt werden: <Klassenbezeichner>.size
+Im Debug-Modus muss zur Laufzeit 0 vom new-Operator zurückgegeben und eine Fehlermeldung ausgegeben werden, falls die Instanzgrenze überschritten wurde.
+Außerdem muss im Debug-Modus eine Fehlermeldung zurückgegeben bzw. abgebrochen werden, wenn der delete-Operator auf eine 0-Instanz angewandt wird.
+
+Abstrakte Klassen:
+Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen können keine
+Instanzen erzeugt werden. Erbt eine Klasse, eine andere abstrakte Klasse, so muss sie sämtliche
+abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
+
+Container-Klassen:
+Container-Klassen werden definiert, indem die Klasse die Operatoren "size" und "[]" implementiert (als nicht statische Methoden).
+Dabei gilt es zu beachten, dass "size" eine Ganzzahl zurück geben muss.
+Des Weiteren muss "[]" exakt einen Ganzzahlparameter entgegen nehmen und darf einen beliebigen Typ zurückgeben.
+Beide Operatoren können sowohl normal als auch als "const" deklariert werden.
+Dabei sollte der "size"-Operator die Größe des Containers und der "[]" Zugriff auf die einzelnen Elemente zur Verfügung stellen.
+Die Instanz entspricht somit einem eindimensionalen Array und ist ein Container-Typ (siehe "Container-Typen").
+
+Vererbung:
+
+Mehrfachvererbung:
+Überschneiden sich Elemente mehrerer geerbter Klassen, so wird vom Compiler eine Warnung ausgegeben.
+Handelt es sich um Elementvariablen, so wird lediglich die erste Elementvariable der geerbten Klassen belegt.
+Bei den Methoden wird ebenfalls die Methode der zu erst geerbten Klasse (von unten nach oben, von links nach rechts) aufgerufen.
+
+Protected:
+Ist ein Klassenelement "protected", so kann darauf nur von Kindklassen der Klasse zugegriffen werden.
+
+Package:
+Ist ein Klassenelement "package", so kann darauf innerhalb des Pakets, in welchem die Klasse deklariert wurde und
+aus dessen Unterpaketen zugegriffen werden.
+
+Notation:
+[ abstract ] class Klassenname [ [<Maximalgröße>] ] (public | private | protected <Klassenname>, ...) [Deklarationsvoraussetzungen]
+{
+	[<Konstruktoren>]
+	[<Kopierkonstruktor>]
+	[<Destruktor>]
+	[<Initialisierer>]
+	[<Zugriffsmodifikatoren> <Funktionstypen> | <Aufzählungen> | <Klassen> | <Pakete>]
+	[<Methoden>] | <Elemente>]
+} [globale Instanzen durch Kommata getrennt];
+
+Elemente
+
+Klassenelemente entsprechen Variablendeklarationen mit Zugriffsmodifikatoren, die zusätzlich statisch oder mutabel (veränderlich/mutable) sein können.
+Elemente, die statisch sind, können niemals als "mutable" deklariert werden und umgekehrt.
+Statische Elemente werden zur Laufzeit pro Klasse einmal erzeugt und sind wie globale Variablen innerhalb des Gültigkeitsbereiches der Klasse.
+Nicht statische Elemente exisitieren zur Laufzeit pro Klasseninstanz einmal.
+Sie können per <Klasseninstanzvariable>.<Elementname> angesprochen werden.
+Als "mutable" deklarierte Elemente können auch von konstanten Methoden oder bei einem Direktzugriff bei konstanten Instanzen verändert werden.
+
+Notation:
+[Zugriffsmodifikatoren] [static | mutable] <Variablendeklaration>;
+
+Array-Elemente:
+Eine Klasse kann ebenfalls Array-Elemente enthalten.
+Exisitiert keine vom Compiler generierte globale Hashtable und ist das Element nicht statisch, empfiehlt es sich, eine Maximalgröße angegeben 
+werden (siehe "Arrays").
+Ansonsten entspricht die Größe der Maximalgröße von Arrays in Jass (8192) / die Maximalgröße der Klasse.
+Der Compiler sollte in diesem Fall zumindest eine Warnung ausgeben.
+Statische Array-Elemente werden wie gewöhnliche Arrays behandelt (siehe "Arrays").
+
+Methoden
+
+Als virtuell deklarierte Methoden, werden pro Klasseninstanz gespeichert. So wird immer die unterste virtuelle Methode aufgerufen.
+Virtuelle Methoden müssen zwingend threaded sein.
+Achtung: Virtuelle Methoden sollten nicht im Konstruktor aufgerufen werden, da sie durch die Konstruktoren erst überschrieben
+und der Klasseninstanz zugewiesen werden. Der Compiler sollte in diesem Fall eine Warnung ausgeben.
+Der Konstruktor selbst kann nicht virtuell sein.
+Statische Methoden können ebenfalls virtuell sein und werden entsprechend des zugehörigen Objekts innerhalb einer Methode aufgerufen.
+Wird eine nicht virtuelle statische Methode aus einer virtuellen Methode heraus aufgerufen, sollte der Compiler eine Warnung ausgeben.
+Virtuelle Methoden bewirken, dass diese auch aufgerufen werden, wenn das Objekt zu einem Elterntyp konvertiert wurde, da pro
+Objekt Verweise auf die entsprechenden Methoden gespeichert werden. Dies gilt für statische und nicht statische virtuelle Methoden.
+Bei virtuellen statischen Methoden kommt noch die Besonderheit hinzu, dass bei einem Aufruf der statischen Methode Kindklasse::statischeMethode(),
+welche jedoch in der Kindklasse nicht neu definiert wurde, weshalb automatisch die der Elternklasse aufgerufen wird, von der statischen Methode
+überprüft werden muss, von welcher Klasse aus sie aufgerufen wurde, damit sie bei virtuellen statischen Methoden die richtigen der Kindklasse und
+nicht die der Elternklasse aufruft.
+Wird also eine virtuelle Methode aufgerufen, so ist garantiert, dass sämtliche andere virtuellen Methoden, die aus dieser heraus aufgerufen werden,
+sich auf der selben bzw. niedrigsten Klassenebene des Objekts befinden, falls sie dort deklariert wurden.
+
+Abstrakte Methoden besitzen keinen Gültigkeitsbereich, sondern werden mit einem Semikolon abgeschlossen.
+Außerdem müssen sie als virtuell deklariert werden.
+Abstrakte Methoden müssen allesamt implementiert werden, falls die Kindklasse nicht als "abstract" deklariert wurde.
+
+Zugriffsmodifikatoren von Methoden können in der Kindklasse "umdeklariert" werden, was ihre zugreifbarkeit verändert,
+ohne dass sie neu definiert werden müssen.
+Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
+
+Mit parent.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
+Dabei gilt die Priorität von unten nach oben, von links nach rechts, bei sämtlichen geerbten Klassen.
+
+Nichtstatische Methoden, die mit dem Suffix "const" deklariert wurden, erhalten das Argument this als konstantes Objekt
+und gelten somit auch als eine andere Deklaration der gleichen Methode, welche nicht als "const"
+deklariert wurde (siehe Funktionen).
+
+Statische Methoden, die mit dem Suffix "const" deklariert wurden, dürfen keinerlei nicht als "const" deklarierte, statische
+Methoden der Klasse aufrufen, geschweigedenn irgendwelche statischen Elemente der Klasse verändern, sondern nur zurückgeben.
+
+Bei beiden Arten von "const"-Methoden gilt die Ausnahme für "mutable"-Elemente.
+Diese dürfen auch von "const"-Methoden verändert werden.
+
+Sämtliche nicht private Methoden der Elternklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
+der Methode aufgerufen werden.
+Wird eine nicht virtuelle Methode einer Elternklasse überschrieben und der Typ der Elternklasse irgendwo im Code verwendet, so sollte
+der Compiler eine Warnung ausgeben, dass möglicherweise nicht die richtige aufgerufen wird.
+
+Notation:
+[static] [virtual] [abstract] Funktionsdeklaration [const]
+
+Konstruktor:
+Der Konstruktor einer Klasse darf nicht virtuell und somit auch nicht abstrakt sein.
+Konstruktoren einer Klassevererbungshierarchie werden von oben nach unten, von links nach rechts, aufgerufen.
+Empfangen alle Elternklassenkonstruktoren bestimmte Argumente und wird nicht mindestens einer davon manuell aufgerufen,
+so gibt der Compiler einen Fehler zurück, da die Elternklassen nicht richtig konstruiert wurden.
+Jede nächstgelegene Elternklasse muss konstruiert werden, ob implizit, falls möglich, oder explizit.
+Wird kein Konstruktor in einer Kindklasse definiert, so können selbstverständlich die der Elternklassen mit dem Bezeichner
+der Kindklasse verwendet werden.
+Der Konstruktor muss stets den Namen new tragen und besitzt den Rückgabetyp "self". Er sollte für Gewöhnlich das Objekt "this"
+zurückgeben, jedoch ist dies dem Entwickler selbst überlassen. Gegebenenfalls sollte der Compiler eine Warnung ausgeben, falls
+nicht das Objekt "this" zurückgegeben wird.
+Er kann entweder über den Bezeichner der Funktion (<Klassenname>.new) oder per "new" aufgerufen werden. Bei zweiterer Variante
+wird der Typ automatisch anhand des Typs der Variable bestimmt, was jedoch nicht immer (z. B. bei der Verwendung von abstrakten Klassen)
+erwünscht ist.
+Dies ist selbstverständlich auch bei der Übergabe als Funktionsparameter möglich.
+Klassen benötigen keinen Standardkonstruktor. Wird kein Konstruktor deklariert, so wird beim Aufruf von "new" eine Funktion in einer höheren
+Schicht (Compilerimplementation) aufgerufen und dennoch ein Objekt konstruiert. Jedoch sollte der Compiler eine Warnung ausgeben, falls kein
+Konstruktor definiert wurde bzw. Eigenschaftsvariablen der Klasse nicht initialisiert wurden.
+
+Deklarations-Notation:
+[Zugriffsmodifikatoren] self new([<Konstruktorparameter>]) { }
+
+Aufrufs-Notation:
+new <Klassenname>.new([<Konstruktorparameter>])
+new ([<Konstruktorparameter>])
+
+Kopierkonstruktor:
+Weist man einer Objektvariable den Wert einer anderen zu, so zeigen beide Variablen normalerweise auf dasselbe Objekt.
+Dies kann umgangen werden, indem man den Kopierkonstruktor verwendet und das Objekt kopiert bzw. ein neues mit den gleichen
+Eigenschaften erzeugt.
+Dazu dient das Schlüsselwort "copy". Es kann entweder die definierte copy-Methode aufgerufen oder das Schlüsselwort der Variable
+vorangestellt werden. Wird kein eigener Kopierkonstruktor definiert, so werden sämtliche Elementinhalte ebenfalls kopiert und außerdem
+alle Kopierkonstruktoren der Elternklassen in der Reihenfolge, welche auch beim Konstruktor angewandt wird, aufgerufen.
+Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelementvariablen ebenfalls kopiert wird, sowie auch deren
+Arrays, Funktionen und Objekte usw. (unter Verwendung von deren Kopierkonstruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf 
+dieselben Ziele, falls es sich bei den Elementvariablen um keine Objekte handelt, sondern um referenzbasierte native Typen, wie z. B. "unit".
+Der Inhalt von Elementvariablen mit kopierbasierten Typen wird selbstverständlich ebenfalls kopiert (dazu ist natürlich kein Kopierkonstruktor notwendig).
+Ist der Kopierkonstruktor als "private" oder "protected" definiert, so kann das Schlüsselwort
+nicht von außerhalb angewandt werden (gängiges Verhalten, auch bei anderen Methoden).
+Der Kopierkonstruktor darf virtuell und abstrakt sein.
+Er darf keinerlei Parameter enthalten, weshalb nur exakt ein Kopierkonstruktor pro Klasse deklariert werden kann.
+Werden in einem selbstdefinierten Kopierkonstruktor nicht die Kopierkonstruktoren der Elternklassen aufgerufen, so sollte der Compiler eine Warnung ausgeben.
+
+Deklarations-Notation:
+[Zugriffsmodifikatoren] self copy() { }
+
+Aufrufs-Notation:
+copy <Variable>
+<Variable>.copy()
+
+Beispiele:
+class X a = new a();
+class X b = a.copy();
+a = copy b;
+
+Destruktor:
+Ein Objekt kann mit Hilfe des "delete"-Schlüsselworts gelöscht bzw. freigegeben werden.
+Dabei wird der Variableninhalt der betreffenden Variable automatisch auf 0 gesetzt, was Fehlzugriffe einschränkt bzw. verhindert.
+Zunächst wird der Destruktor, falls vorhanden, der Klasse aufgerufen und danach bis zur obersten Elternklasse hin alle Destruktoren
+der geerbten Klassen. Dabei werden bei einer Mehrfachvererbung zunächst die Vererbungshierachien der ersten Klassen von unten nach oben,
+von rechts nach links abgearbeitet (genau andersherum als beim Konstruktor).
+Existiert kein selbst definierter Destruktor, so ist das Objekt dennoch löschbar. Hierbei gilt praktisch das Gleiche wie beim Konstruktor:
+Es gibt stets einen automatisch erzeugten Destruktor.
+Erbt die entsprechende Klasse von mindestens einer anderen Klasse, so muss der Destruktor virtuell sein. Dies soll Nichtlöschen von allozierten
+Objekten verhindern.
+Der Destruktor einer abstrakten Klasse muss daher schon als virtuell deklariert werden (zwar nicht unbedingt notwendig, da es sonst einen Fehler in
+der Kindklasse gäbe, aber warum nicht?).
+
+Deklarations-Notation:
+[Zugriffsmodifikatoren] void delete() { }
+
+Aufruf-Notation:
+delete <Variable>
+<Variable>.delete()
+
+Initialisierer:
+Die Initialisierungsmethode wird genau vor dem ersten Zugriff auf eine Klasseneigenschaft oder -methode aufgerufen.
+Dies wird vom Compiler durch eine Laufzeitüberprüfung ermöglicht und kann relativ viel Zusatzcode erzeugen, da bei jedem Zugriff von außerhalb
+überprüft werden muss, ob die Klasse bereits initialisiert wurde.
+Die Methode darf nicht manuell aufgerufen werden und hat deshalb keine Zugriffsmodifikatoren, keinen Rückgabetyp, keinen Bezeichner und keine Parameter.
+
+Notation:
+static { <Anweisungen> }
+
+Save- und Load-Möglichkeiten:
+Mit Hilfe der Schlüsselwörter store, restore und flush, kann eine Klasseninstanz in einem Spiel-Cache verwaltet werden.
+Dabei muss dem Schlüsselwort der Spiel-Cache, ein Mission-Key und ein Label-Präfix für sämtliche Werte übergeben werden.
+Zu beachten gilt, dass Elemente der Instanz, welche nicht den Typ integer, real, boolean, string oder unit haben,
+nicht in einem Spiel-Cache gespeichert werden können, weshalb man für solche Klasseninstanzen die Hashtable-Schlüsselwörter
+verwenden muss.
+In eine Hashtable kann jeder native Datentyp aus Warcraft 3 gespeichert werden, weshalb sämtliche Klasseninstanzelemente
+problemlos gespeichert und geladen werden können.
+Die Hashtable-Schlüsselwörter "save" und "load" entsprechen den Spiel-Cache-Schlüsselwörtern "store" und "restore".
+Mit dem Schlüsselwort "remove", können die Elemente wieder aus der Hashtable entfernt werden. Für Spiel-Cache-Elemente
+muss das Schlüsselwort "flush" verwendet werden.
+Bei Hashtable-Aufrufen wird neben der verwendeten Hashtable nur ein Parent-Key übergeben. Als Child-Key wird einfach die
+Nummer des jeweiligen Elements genommen. Dabei wird von der Deklarationsreihenfolge in der Klassendeklaration ausgegangen und bei 0 mit dem Zählen angefangen.
+Vor allem die Spiel-Cache-Schlüsselwörter können von Nutzen sein, wenn man eine Kampagne erstellen möchte, in welcher
+in weiteren Karten die Daten der alten geladen werden sollen.
+Array-Elemente werden mit dem jeweiligen Index als Postfix im Spiel-Cache und wie als ein separates Element in der Hashtable 
+gespeichert.
+
+Notation:
+<Variablenname>.store(<Spiel-Cache>, <Mission-Key>, <Label-Präfix>)
+<Variablenname>.restore(<Spiel-Cache>, <Mission-Key>, <Label-Präfix>)
+<Variablenname>.flush(<Spiel-Cache>, <Mission-Key>, <Label-Präfix>)
+<Variablenname>.save(<Hashtable>, <Parent-Key>)
+<Variablenname>.load(<Hashtable>, <Parent-Key>)
+<Variablenname>.remove(<Hashtable>, <Parent-Key>)
+
+Operatorenüberladung
+
+Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen oder einen zugehörigen Typnamen enthält, überlädt die Bedeutung eines
+Operators für die angegebenen Parametertypen.
+Dies kann global, innerhalb eines Pakets oder innerhalb einer Klasse geschehen (mit den jeweiligen Zugriffsmodifikatoren).
+Wird ein Typ und kein Operatorzeichen als Bezeichner gewählt, so ermöglicht dies Klassenobjekten eine explizite Konvertierung zum Typ der den Bezeichner trägt.
+Folgende Operatoren können nach folgenden Schemata als nicht statische Methoden überladen werden:
+Bezeichner			Rückgabetyp			Parametertypen		Parameteranzahl
+=				self				self			1
++ (linksbündig)			self				-			0
+- (linksbündig)			self				-			0
++ (rechtsbündig)		self				self			1
+- (rechtsbündig)
+*				self				self			1
+/				self				self			1
+%				self				self			1
+++				self				self			1
+--				self				self			1
++=				self				self			1
+-=				self				self			1
+*=				self				self			1
+/=				self				self			1
+%=				self				self			1
+==				boolean				self			1
+!=				boolean				self			1
+>=				boolean				self			1
+<=				boolean				self			1
+>				boolean				self			1
+<				boolean				self			1
+!				boolean				self			1
+true (steht für den boolschen Ausdruck ohne Operatorzeichen)
+[]				beliebig			beliebig		beliebig
+size				integer				-			0
+()				beliebig			beliebig		beliebig
+
+Zu beachten gilt es hierbei, dass diverse Logikoperatoren bereits standardmäßig implementiert sind.
+Die eigenen Definitionen überladen selbstverständlich die standardmäßigen.
+
+Anmerkung zum []-Operator:
+Der []-Operator dient normalerweise dem Zugriff auf Indizes und ist standardmäßig für keine Klasseninstanz definiert.
+Es ist möglich dem []-Operator mehrere Parameter zu geben, welche bei einem Aufruf innerhalb der eckigen Klammern wie bei einem gewöhnlichen Funktions-
+aufruf durch Kommata getrennt werden müssen.
+Es gibt jedoch bestimmte Regeln, welche eingehalten werden müssen, damit die Klasse eine Container-Klasse ist (siehe "Container-Klassen" und "Container-Typen").
+
+Anmerkung zum size-Operator:
+Der size-Operator macht für gewöhnlich eine vom Entwickler definierte Aussage über eine bestimmte Größe der Instanz bzw. eines ihrer enthaltenen
+Elemente.
+Auch hierbei gelten bestimmte Regeln, damit die Klasse eine Container-Klasse ist (siehe "Container-Klassen" und "Container-Typen").
+
+Als Typ können sowohl native als auch eigene Typen genommen werden. Zu beachten gilt es hierbei, dass sich Klasseninstanzen standardmäßig
+zum Typ "integer" konvertieren lassen.
+Eine eigene Definition des Operators "integer" hat eine höhere Priorität als die Standardimplementierung.
+
+Konvertierungsoperatorennotation:
+<Zugriffsmodifikatoren> operator <Typbezeichner>() [const]
+{
+	<Anweisungen>
+}
+
+Das Jass-Paket
+
+Das Jass-Paket deklariert sowohl native Typen und Funktionen als auch nicht native Funktionen und Variablen der Dateien "common.j", common.ai" und "Blizzard.j".
+Als Alternative können jene drei Dateien auch mittels #include jass <Dateipfad> eingebunden werden.
+
+package jass
+{
+	package commonj
+	{
+	}
+	
+	package commonai
+	{
+	}
+	
+	package Blizzardj
+	{
+	}
+}
+
+Das Standardpaket
+
+Es existieren Wrapper für jeden Warcraft-3-Datentyp, sowie zusätzliche Methoden und Klassen. Auf das Wichtigste beschränken!
+
+package jasspp
+{
+    package jass.*;
+
+    /*
+    Definition spezieller implementationsspezifischer Funktionen.
+    */
+    debug
+    {
+	integer allocateArrayInstance();
+	integer allocateClassInstance();
+	boolean freeArrayInstance(integer index);
+	boolean freeClassInstance(integer index);
+	boolean freeFunctionPrototype(integer index);
+    }
+
+    /*
+    Definitionen globaler Funktionen, welche in der Regel die nativen Typen verwenden.
+    */
+
+    // Test-Funktionen
+    public void Print(string message)
+    public void Print(integer value)
+    public void Print(real value)
+    public void Print(handle value)
+
+    // Zeichenketten-Funktionen
+    public Format Format(string value)
+    public string String(Format value)
+    public integer StringFind(string value, integer startOffset = 0)
+
+    // Bildfunktionen
+    public void CreateImageForPlayer(player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY)
+    public void ShowImageToPlayer(player whichPlayer, image whichImage, boolean show)
+
+    // Kamerafunktionen
+    public void PanCameraToUnitTimedWithZ(unit whichUnit, real duration)
+    public void RotateCameraAroundPointForPlayer(player whichPlayer, real x, real y, real degrees, real duration)
+    public void SmartCameraPanWithZForPlayer(player whichPlayer, real x, real y, real zOffset, real duration)
+    public void SmartCameraPanForPlayer(player whichPlayer, real x, real y, real duration)
+    public void SmartCameraPan(real x, real y, real duration)
+
+    /*
+    Definitionen der Wrapper-Klassen, welche die Funktionalität der nativen Typen mittels Objektorientierung anbieten.
+    Außerdem enthalten sie Methoden, welche BJ-Funktionen und globale Funktionen des Standardpakets selbst für die einzelnen
+    Typen verwenden.
+    Die Klassen für kopierbasierte Typen ermöglichen somit eine einfache Funktionalität für die Typen mittels referenzbasierter Typen.
+    */
+    public class Boolean
+    public class String
+    public class Integer
+    public class Real
+    public class Code
+    public class Handle
+    public class Agent : public Handle
+    public class Widget : public Agent
+    public class Unit : public Widget
+    public class Item : public Widget
+    public class Destructable : public Widget
+    public class Event
+    public class Trigger
+    public class HashTable
+    public class GameCache
+    
+    /**
+    * Definition eigener Klassen wie z. B. verschiedener Container-Klassen usw.
+    */
+
+    // Internationalisierungsklassen
+    public class Format
+    {
+    };
+
+    // Container-Klassen
+    template < ElementType >
+    public abstract class Container
+    {
+	public abstract integer operator size() const;
+	public abstract ElementType const operator [](integer index) const;
+    };
+
+    public class List : public Container
+    public class Vector : public Container
+    public class Map : public Container
+    public class Bitset : public Container
+}
