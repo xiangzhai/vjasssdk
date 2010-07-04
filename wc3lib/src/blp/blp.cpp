@@ -675,21 +675,21 @@ bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
 	return true;
 }
 
-dword Blp::mipMapWidth(int index) const
+dword Blp::mipMapWidth(std::size_t index) const
 {
 	dword width = this->m_width;
 	
-	for (int i = 0; i < index; ++i)
+	for (std::size_t i = 0; i < index; ++i)
 		width /= 2;
 	
 	return width;
 }
 
-dword Blp::mipMapHeight(int index) const
+dword Blp::mipMapHeight(std::size_t index) const
 {
 	dword height = this->m_height;
 	
-	for (int i = 0; i < index; ++i)
+	for (std::size_t i = 0; i < index; ++i)
 		height /= 2;
 	
 	return height;

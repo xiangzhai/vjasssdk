@@ -164,8 +164,8 @@ class Blp
 		bool generateMipMaps(class MipMap *initialMipMap, std::size_t number = Blp::maxMipMaps);
 		
 	protected:
-		dword mipMapWidth(int index) const;
-		dword mipMapHeight(int index) const;
+		dword mipMapWidth(std::size_t index) const;
+		dword mipMapHeight(std::size_t index) const;
 		
 		// header
 		enum Version m_version;

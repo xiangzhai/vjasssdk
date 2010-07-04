@@ -22,34 +22,37 @@
 #define WC3LIB_LANG_SYNTAXERROR_HPP
 
 #include <string>
+#include <ostream>
 
 #include "sourcefile.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace lang
 {
 
 class SyntaxError
 {
 	public:
-		static bool Comparator(class SyntaxError *syntaxError0, class SyntaxError *syntaxError1);
-	
-		SyntaxError(class SourceFile *sourceFile, std::size_t line, const std::string &message);
+		SyntaxError(class SourceFile *sourceFile, const class Position &position, const std::string &message);
 		class SourceFile* sourceFile() const;
-		std::size_t line() const;
+		const class Position& position() const;
 		const std::string& message() const;
-	
+
 	protected:
 		class SourceFile *m_sourceFile;
-		std::size_t m_line;
+		class Position m_position;
 		std::string m_message;
 };
 
-inline bool SyntaxError::Comparator(class SyntaxError *syntaxError0, class SyntaxError *syntaxError1)
+/// Allows formatted output of syntax errors.
+inline std::ostream& operator<<(std::ostream &ostream, const class SyntaxError &syntaxError)
 {
-	return syntaxError0->sourceFile()->identifier() < syntaxError1->sourceFile()->identifier();
+	ostream << boost::format(_("%1% (Line %2%, column %3%): %4%")) % syntaxError.sourceFile()->path().string() % syntaxError.position().line() % tsyntaxError.position().column() % syntaxError.message() << std::endl;
+
+	return ostream;
 }
 
 inline class SourceFile* SyntaxError::sourceFile() const
@@ -57,9 +60,9 @@ inline class SourceFile* SyntaxError::sourceFile() const
 	return this->m_sourceFile;
 }
 
-inline std::size_t SyntaxError::line() const
+inline const class Position& SyntaxError::line() const
 {
-	return this->m_line;
+	return this->m_position;
 }
 
 inline const std::string& SyntaxError::message() const

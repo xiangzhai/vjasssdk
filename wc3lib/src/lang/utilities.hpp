@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2008 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,9 +28,13 @@
 
 namespace wc3lib
 {
-	
+
 namespace lang
 {
+
+/**
+* @file utilities.hpp Contains some deprecated utility functions.
+*/
 
 extern const std::string& getToken(const std::string &line, std::string::size_type &index, bool endOfLine = false);
 extern void createHtmlHeader(std::ostream &ostream, const std::string &title, const std::string &language = _("en"));

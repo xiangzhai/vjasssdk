@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2008 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,63 +22,47 @@
 #define WC3LIB_LANG_LANGUAGE_HPP
 
 #include <string>
-#include <iostream>
 
 #include <boost/filesystem.hpp>
 
-#include "object.hpp"
-#include "sourcefile.hpp"
+#include <driver.h>
 
 namespace wc3lib
 {
-	
+
 namespace lang
 {
 
-
 /**
-* Each language instance is a list of language object lists.
+* Abstract scripting language class. Should be inheritted by other languages.
+* Note that you usually create no instance of a language since there should be only one single constant accessable by a static function of the language class.
 */
-class Language : public std::list<class Object::List*>
+class Language
 {
-	public:		
-		Language();
-		virtual ~Language();
-		
+	public:
+		static const class Language* language();
+
 		/**
 		* @return Returns the real name of the language.
 		*/
 		virtual const std::string& name() const = 0;
 		/**
 		* @return Returns if the language is compatible to language @param language. Compatible means that the language can treat code of the other language as well as its own!
-		*/		
-		virtual bool compatibleTo(const Language &language) const = 0;
-#ifdef HTML
-		/**
-		* Writes all objects categories entries (<objects category name> (number of objects)) and their corresponding object identifiers lists into output stream @param ostream by using string prefix @param prefix for each entry.
-		*/		
-		virtual void htmlWriteObjectsCategories(std::ostream &ostream, const std::string &prefix = "") const = 0;
-		virtual void htmlWriteObjectsPages(const boost::filesystem::path &dirPath) const = 0;
-#endif
-		/**
-		* Prepares all objects and their links to each other. Afterwards they should be compilable.
 		*/
-		virtual void prepareObjects() = 0;
+		virtual bool compatibleTo(const class Language &language) const = 0;
 		/**
-		* Writes objects into map script stream.
+		* Creates a new Bison/Flex driver for parsing the language.
 		*/
-		virtual void writeObjects(std::iostream &iostream) = 0;
-		
-		/**
-		* Every language can have source files.
-		*/
-		class SourceFile::List* sourceFiles();
-};
+		virtual class example::Driver* createDriver() const = 0;
 
-inline class SourceFile::List* Language::sourceFiles()
-{
-	return dynamic_cast<class SourceFile::List*>(this->front());
-}
+	protected:
+		Language();
+		Language(class Language &);
+		class Language& operator=(class Language &);
+		virtual ~Language();
+
+		class Language *m_language;
+};
 
 }
 

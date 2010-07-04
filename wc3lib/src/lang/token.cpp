@@ -18,10 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_JASSPP_JASSPP_HPP
-#define WC3LIB_LANG_JASSPP_JASSPP_HPP
-
-#include "../language.hpp"
+#include "token.hpp"
 
 namespace wc3lib
 {
@@ -29,21 +26,10 @@ namespace wc3lib
 namespace lang
 {
 
-namespace jasspp
+Token::Token(class Parser *parser, const class Position &position, const class Scope &scope, const std::string &expression) : m_parser(parser), m_language(language), m_position(position), m_scope(scope), m_expression(expression)
 {
-
-class Jasspp : public Language
-{
-	public:
-		virtual const std::string& name() const;
-		virtual bool compatibleTo(const class Language &language) const;
-		virtual class example::Driver* createDriver() const;
-};
-
 }
 
 }
 
 }
-
-#endif

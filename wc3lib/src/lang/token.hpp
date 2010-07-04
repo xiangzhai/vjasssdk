@@ -18,10 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_JASSPP_JASSPP_HPP
-#define WC3LIB_LANG_JASSPP_JASSPP_HPP
-
-#include "../language.hpp"
+#ifndef WC3LIB_LANG_TOKEN_HPP
+#define WC3LIB_LANG_TOKEN_HPP
 
 namespace wc3lib
 {
@@ -29,18 +27,36 @@ namespace wc3lib
 namespace lang
 {
 
-namespace jasspp
-{
-
-class Jasspp : public Language
+/**
+* Provides access to a parsed token.
+* Parser holds various containers of all of its parsed tokens.
+* Each token has some corresponding information about its language, position and scope.
+* This class should be inherited by all other token type classes.
+*/
+class Token
 {
 	public:
-		virtual const std::string& name() const;
-		virtual bool compatibleTo(const class Language &language) const;
-		virtual class example::Driver* createDriver() const;
-};
+		Token(class Parser *parser, const class Position &position, const class Scope &scope, const std::string &expression);
+		virtual ~Token();
 
-}
+		virtual void init() = 0; /// Some tokens has to be initialized after finding all tokens of all files.
+		class Parser* parser() const;
+		class Language* language() const;
+		const class Position& position() const;
+		const class Scope& scope() const;
+		const std::string& expression() const;
+
+	protected:
+		class Parser *m_parser;
+		class Language *m_language;
+		class Position m_position;
+		class Scope m_scope;
+		std::string m_expression;
+
+	private:
+		Token(const class Token&);
+		class Token& operator=(const Token&);
+};
 
 }
 

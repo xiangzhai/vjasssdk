@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008, 2009 by Tamino Dauth                              *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2008 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,114 +21,38 @@
 #ifndef WC3LIB_LANG_DOCCOMMENT_HPP
 #define WC3LIB_LANG_DOCCOMMENT_HPP
 
-#include <list>
-
-#include "object.hpp"
+#include "token.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace lang
 {
 
-class DocComment : public Object
+/**
+* Documentation comments are allowed in all languages (including JASS itself).
+* They're declared just like usual comments with an additional / or * character and can contain some special
+* expressions which should by formatted when calling Compiler::generateDocumentation.
+* Just visit http://www.stack.nl/~dimitri/doxygen/ to get all documentation comment rules.
+* Note that they have to be generated language-specific since those different languages have different declarations which allow
+* a corresponding documentation comment.
+* There is still the old tool vjassdoc which is also written in C++ and allows you to generate an HTML API documentation for vJass code only.
+* You can get all release packages on http://sourceforge.net/projects/vjasssdk/files/wc3sdk/vjassdoc/releases/.
+*/
+class DocComment : public Token
 {
 	public:
-		class List : public Object::List
-		{
-			public:
-				List(class Language *language);
-				virtual ~List();			
-#ifdef HTML
-				virtual const std::string& htmlCategoryName() const;
-				virtual const std::string& htmlFolderName() const;
-#endif
-
-				
-			protected:
-#ifdef SQLITE
-				virtual const std::string& sqlTableName() const;
-				virtual std::size_t sqlColumns() const;
-				virtual const std::string& sqlColumnDataType(std::size_t column) const throw (class Exception);
-				virtual const std::string& sqlColumnName(std::size_t column) const throw (class Exception);
-#endif
-		};
-
-		DocComment(class Object::List *list, class SourceFile *sourceFile, std::size_t line);
-#ifdef SQLITE		
-		DocComment(std::vector<Object::SqlValueDataType> &columnVector);
-#endif
-		virtual ~DocComment();
-
 		virtual void init();
-#ifdef SQLITE
-		virtual const std::string& sqlValue(std::size_t column) const;
-#endif
-#ifdef HTML
-		virtual void writeHtmlPageNavigation(std::ostream &ostream) const;
-		virtual void writeHtmlPageContent(std::ostream &ostream) const;
-#endif
 
-#ifdef SQLITE
-		virtual const std::string& sqlStatement() const;
-#endif
-		void setObject(class Object *object); //Just used by the Object class.
-		const std::string& briefDescription() const;
-		const class Object* object() const;
-		const std::list<std::string>& authors() const;
-		const std::list<class Object*>& seeObjects() const;
-		const std::list<std::string>& todos() const;
+		/**
+		* Each documentation comment belongs to another token.
+		*/
+		void setToken(class Token *token);
+		const class Token* token() const;
 
 	protected:
-#ifdef HTML
-		virtual const std::string& htmlPageName() const;
-#endif
-
-#ifdef SQLITE
-		static const std::size_t sqlMaxAuthors;
-		static const std::size_t sqlMaxSeeObjects;
-#endif
-	
-		std::string m_briefDescription;
-		class Object *m_object;
-		std::list<std::string> m_authors;
-		std::list<class Object*> m_seeObjects;
-		std::list<std::string> m_todos;
-		
-	private:
-		std::string m_identifier;
-		const std::string& identifer() const;
+		class Token *m_token;
 };
-
-inline void DocComment::setObject(class Object *object)
-{
-	this->m_object = object;
-}
-
-inline const std::string& DocComment::briefDescription() const
-{
-	return this->m_briefDescription;
-}
-
-inline const class Object* DocComment::object() const
-{
-	return this->m_object;
-}
-
-inline const std::list<std::string>& DocComment::authors() const
-{
-	return this->m_authors;
-}
-
-inline const std::list<class Object*>& DocComment::seeObjects() const
-{
-	return this->m_seeObjects;
-}
-
-inline const std::list<std::string>& DocComment::todos() const
-{
-	return this->m_todos;
-}
 
 }
 
