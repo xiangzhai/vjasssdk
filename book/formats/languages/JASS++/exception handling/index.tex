@@ -1,0 +1,21 @@
+\chapter{Ausnahmebehandlung}
+Ausnahmebehandlung ist ein eleganter Weg, alternative Verhaltensweisen des Programms zu behandeln.
+Ausnahmen können von einer beliebigen Funktion geworfen werden, die als "throw"-Funktion deklariert wurde (siehe "Funktionen").
+Die Ausnahme kann mittels eines try-catch-default-Blocks aufgefangen werden.
+Der Compiler sollte eine Warnung ausgeben, falls keine Ausnahme eines angegebenen Typs innerhalb des try-Blocks geworfen werden
+könnte.
+Außerdem sollte er eine Warnung ausgeben, wenn ein Ausnahmetyp nicht oder gar keiner behandelt wird. Dabei gilt es zu beachten, dass
+Ausnahmetypen, die indirekt von der Funktion geworfen werden können, für den Funktionsinhalt selbst überprüft werden, damit keine
+riesige Liste von Warnungen bei großen Verschachtelungen entsteht.
+
+\section{Notation}
+try
+{
+	<Anweisungen>
+}
+catch (<Typ> <Variablenname>)
+{
+}
+default // Alle anderen Ausnahmen
+{
+}

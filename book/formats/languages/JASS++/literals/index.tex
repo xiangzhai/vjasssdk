@@ -1,0 +1,106 @@
+\chapter { Literale }
+
+Ein Literal ist ein sich selbst erklärender Ausdruck, der nicht speziell benannt werden muss also keinen Bezeichner benötigt.
+Für folgende native Typen gelten folgende Literalnotationsregeln:
+
+Kopierbasierte Typen:
+* string : "<Zeichenkettenliteral>" | null
+* integer : 0<Oktalliteral> | 0%<Binärliteral> | 0x<Hexadezimalliteral> | <Dezimalliteral> | '<Id-Literal>' | null
+* real : <Fließkommaliteral> | null
+* boolean : true | false | null
+* handle (und Nicht-agent-Kindtypen): null
+
+Referenzbasierte Typen:
+* code : 0
+* agent (und Kindtypen) : 0
+* Klassenobjekte : 0
+* Funktionszeiger : 0
+
+\section { Nullwerte }
+Wie oben dargestellt erhalten kopierbasierte Typen einen Nullwert mit dem Literal "null" und referenzbasierte Typen mit dem Literal "0".
+Der Zugriff auf Nullwerte kann in manchen Fällen zu einem undefinierten Verhalten führen.
+In der Regel ist er im Testmodus jedoch abgesichert und führt zu Fehlermeldungen (siehe "Klassen").
+
+\section { Objekttypen-Literale }
+Des Weiteren können Eigenschaften sogenannter Objekttypen, die einen bestimmten nativen, kopierbasierten Typ haben abgefragt werden.
+Objekttypen erhalten in Warcraft 3 The Frozen Throne eine vierstellige, hexadezimale Id. Daher können Objekttypen im Wertebereich von 16^4 definiert werden.
+Jede Id identifiziert genau einen Objekttyp.
+Ein Objekttyp kann in JASS++ folgendes sein:
+* ein Einheitentyp
+* ein Gegenstandstyp
+* ein Doodad-Typ
+* ein Zerstörbares-Typ
+* ein Fähigkeitentyp
+* ein Zauberverstärkertyp
+* ein Forschungstyp
+* ein Wettereffekttyp
+* ein Blitzeffekttyp
+* ein Geländeset
+
+Die Objekttypen stammen aus eine der folgenden Dateien:
+* UI/UnitData.slk
+*
+*
+* war3map.u
+* war3map.d
+TODO
+
+Dabei werden die angegebenen Dateien in den folgenden Archiven in absteigender Reihenfolge durchsucht:
+* Karte
+* Kampagne
+* War3Patch.mpq
+* War3Locale.mpq (richtigen Namen finden)
+* War3X.mpq
+* War3.mpq
+TODO
+
+Die Eigenschaften eines Objekttyps können einen der folgenden nativen, kopierbasierten Typen haben:
+* string
+* integer
+* real
+* boolean
+TODO
+
+Die Eigenschaften eines Objekttyps haben selbst nochmals eine eigene Id.
+Ein Objekttypen-Eigenschafts-Literal wird immer als ein Ausdruck eines der angegebenen Typen interpretiert.
+Kann der Objekttypeintrag bzw. der Objekttyp-Eigenschaftseintrag nicht gefunden werden, so gibt der Compiler eine Warnung aus.
+Das Literal ist in diesem Fall ein Nullwert ("null").
+Wird keine Eigenschafts-Id angegeben, so wird der Ausdruck als Array interpretiert. Dies geht jedoch nur falls alle Objekttypen-Eigenschaften
+den gleichen nativen, kopierbasierten Typ haben.
+Ansonsten kann das Literal nur als eigener Typ interpertiert werden (siehe "Klassen - Zuweisungen").
+Die Notation sieht folgendermaßen aus:
+<<Objekttyp-Id>[, %]>
+<<Objekttyp-Id>,<Eigenschafts-Id>[, %])>
+
+Das Prozentzeichen ist optional und gibt an, dass Fließkommazahlen als Prozentanteile und daher als Ganzzahlen zwischen 0 und 100 interpretiert werden
+sollen. Aus 0.30 würde in diesem Fall also die Ganzzahl 30 werden.
+Es gilt bei einer reinen Angabe der Objekttyp-Id für alle Eigenschaften.
+Es gilt zu beachten, dass Objekttypen-Ids auch als Escape-Sequenzen verwendet werden können.
+
+\section { Farbliterale }
+Farbliterale haben stets den nativen Typ "integer". Sie sind daher ein 32-Bit-Wert, welcher eine RGBA-Farbe enthält.
+Der RGBA-Wert muss hexadezimal angegeben werden, wobei die ersten beiden Ziffern für den Alphawert, die zweiten beiden für den Grünwert,
+die dritten beiden für den Blauwert und die letzten beiden für den Blauwert stehen.
+Notation:
+|c<Farbe>|r
+
+\section { Escape-Sequenzen }
+Eine Escape-Sequenz ist ein Zeichen, welchem das \-Zeichen vorangestellt wird und welches ausschließlich ein einem
+Zeichenkettenliteral vorkommen darf.
+Es gibt folgende Escape-Sequenzen:
+n				Zeilenumbruch
+t				Horizontaler Tabulator
+\				Backslash
+"				Doppeltes Anführungszeichen
+
+Zusätzlich existieren spezielle Escape-Sequenzen für Objekttypen-Ids (siehe "Literale - Objekttypen-Ids") und Farben (siehe "Literale - Farbliterale").
+Farbkodierungen und Objekttypen-Ids in Zeichenketten werden zum Kompilierzeitpunkt validiert bzw. kompiliert.
+Die speziellen Escapesequenzen werden in den Zeichenketten zum Kompilierzeitpunkt ersetzt, insofern sie gültig sind.
+Falls nicht, bleibt der Ausdruck erhalten und der Compiler gibt eine Warnung aus.
+Wie bei normalen Objektypen-Literalen kann ein Prozentzeichen angehängt werden.
+Bei Farben kann jedoch, anders als bei gewöhnlichen Farbliteralen, Text eingeschlossen werden. Dieser sollte dann in der entsprechenden Farbe
+im Spiel bei einer Ausgabe angezeigt werden.
+
+\section { Notation }
+|c<Farbe>[<Text>]|r
+<<Objekt-Id>,<Feld-Id>[, %]> 

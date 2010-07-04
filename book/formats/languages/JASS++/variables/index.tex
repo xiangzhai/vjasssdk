@@ -1,0 +1,60 @@
+\chapter{Variable}
+Variable existieren, falls nicht anders angegeben, vom Programmstart bis zum Programmende. Nicht statische Variable in Funktionen und
+Klassen leben vom Funktionsaufruf bis zum Ende des Funktionsablaufes bzw. von der Erzeugung der Klasseninstanz
+bis zur Löschung dieser.
+Variable, die als "static" deklariert wurden, existieren ebenfalls vom Programmstart bis zum Programmende.
+Anders als in C++ können in JASS++ keine Variable in beliebig verschachtelten Gültigkeitsbereichen deklariert werden, die am Ende dieser
+automatisch gelöscht werden.
+Sie können ausschließlich global oder in Gültigkeitsbereichen deklariert werden und tragen implizit den Qualifizerer "dynamic",
+können aber auch als "static" deklariert werden. Es gilt zu beachten, dass diese statischen Variable wie andere globale
+bei ihrer Deklaration bzw. dem Programmstart ein einziges Mal initialisiert werden und nicht wie bei lokalen z. B. bei jedem Funktionsaufruf.
+Statische und nicht statische Variable können mit dem Schlüsselwort "const" als Variablen mit konstantem Inhalt deklariert werden.
+Man sollte des Weiteren beachten, dass auch Variable innerhalb von Funktionen und Methoden Zugriffsmodifikatoren haben können (siehe "Funktionen").
+Variable innerhalb von Funktionen und Methoden, die nicht statisch sind, dürfen nur am Anfang des Funktionskörpers deklariert werden.
+Statische dagegen an beliebiger Stelle innerhalb der Funktion bzw. Methode.
+Da nicht statische Variablen in Funktionen und Methoden nur vom Aufruf bis zum Ablaufsende leben, kann auf sie auch nicht zugegriffen werden, wenn sie
+öffentlich sind (siehe "Zugriffsmodifikatoren"). Auch nicht wenn es sich um eine Funktionsvariable handelt!
+
+\section{Initialisierungsnotation}
+{ <Ausdruck 1>[, <Ausdruck 2>] } | <Ausdruck>
+
+\section{Bezeichnernotation}
+<Variablenbezeichner>[[[<Variablengröße der 1. Dimension>]][<Variablengröße der n. Dimension>]] [= <Initialisierungsnotation>]
+
+\section{Notation}
+[Zugriffsmodifikatoren] [static] [const] [var] <Variablentyp> | <Typendeklaration> <Bezeichnernotation 1>[, <Bezeichnernotation 2>, <Bezeichnernotation n>];
+
+Das Schlüsselwort "var" ist optional und dient besserer Lesbarkeit des Codes.
+Variable mit konstantem Inhalt müssen bei ihrer Deklaration initialisiert werden. Ihr Inhalt ist bis zu ihrer Löschung unveränderbar.
+
+Variable können global oder in Gültigkeitsbereichen deklariert werden.
+Klassen, Funktionen und Methoden können statische Variablen enthalten:
+static integer test;
+static const integer test = 10;
+
+Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
+dagegen 0 (siehe Abschnitt Literale).
+Es gilt zu beachten, dass die Objekte, auf welche bei Variablen mit referenzierbasierten Typen verwiesen wird, mit speziellen Funktionen
+und nicht mit einer einfachen 0-Setzung gelöscht werden.
+Die Sprache garantiert jedoch, dass Variablen nach einer Löschung des verwiesenen Objekts den Inhalt 0 haben, insofern die Löschung
+erfolgreich war (keine Ausnahme wurde geworfen) (siehe "Ausnahmen" und "Methoden - Destruktor").
+
+\section{Arrays}
+Array-Größenangaben müssen konstante Ganzzahlwerte sein.
+Der Variableninhalt wird bei Arrays wie in C oder C++ mittels geschweifter Klammern eingeschlossen:
+integer tes[2] = { 10, 2 };
+
+Es können mehrdimensionale Arrays deklariert werden:
+integer test[2][2] = { { 10, 5 }, { 2, 4 } };
+
+Da ein Array in Warcraft 3 nur 8192 bzw. 8191 (wird im letzten Feld die Größe gespeichert?) haben kann, kümmert sich der Compiler
+mit speziellen Verfahren bei höheren Größenangaben um den benötigten Speicherplatz.
+Die Größenabgabe einer Dimension kann weggelassen werden. In diesem Fall entspricht sie 8192.
+Es sollte zur Kompilierzeit und zur Laufzeit im Testmodus jeder Indexzugriff überprüft werden und im Fehlerfall eine entsprechende Meldung
+ausgegeben werden.
+Die Array-Größe muss ein konstanter Ganzzahlwert sein. Sie ist daher zur Kompilierzeit bekannt und kann mit dem size-Operator abgefragt werden.
+Bei einer Initialisierung des Arrays, können die Dimensionsangaben auch weggelassen werden, da sie in diesem Fall automatisch bestimmt werden.
+Mit dem "size"-Operator erhält man die Größe eines Arrays.
+Dynamische Arrays werden nicht unterstützt, stattdessen sollte man native Behältertypen, welche der Standardbibliothek oder eigene verwenden (siehe "Standardbibliothek").
+Arrays können von Funktionen nicht als Parameter entgegen genommen und auch nicht zurückgegeben werden.
+Arrays des Typs "code" sind ungültig.

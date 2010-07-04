@@ -1,0 +1,212 @@
+\chapter{Operatoren}
+
+\section{Für Gültigkeitsbereiche}
+[<Bezeichner des Gültigkeitsbereiches>].<Bezeichner eines im Gültigkeitsbereich deklarierten Elements>
+
+\section{Für die meisten nativen und alle selbstdefinierten Typen}
+save <Ausdruck> <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>
+load <Ausdruck> <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>
+
+\section{Für die Typen integer und real}
+Ausdruck = Ausdruck
++Ausdruck
+-Ausdruck
+Ausdruck + Ausdruck
+Ausdruck - Ausdruck
+Ausdruck * Ausdruck
+Ausdruck / Ausdruck
+Ausdruck % Ausdruck
+Ausdruck++
+Ausdruck--
+Ausdruck += Ausdruck
+Ausdruck -= Ausdruck
+Ausdruck *= Ausdruck
+Ausdruck /= Ausdruck
+Ausdruck %= Ausdruck
+Ausdruck == Ausdruck
+Ausdruck != Ausdruck
+Ausdruck >= Ausdruck
+Ausdruck <= Ausdruck
+Ausdruck > Ausdruck
+Ausdruck < Ausdruck
+
+\section{Für den Typ integer}
+real(Ausdruck)						Entspricht I2R(Ausdruck)
+string(Ausdruck)					Entspricht I2S(Ausdruck)
+race(Ausdruck)						Entspricht ConvertRace(Ausdruck)
+alliancetype(Ausdruck)					Entspricht ConvertAllianceType(Ausdruck)
+racepreference(Ausdruck)				Entspricht ConvertRacePref(Ausdruck)
+igamestate(Ausdruck)					Entspricht ConvertIGameState(Ausdruck)
+fgamestate(Ausdruck)					Entspricht ConvertFGameState(Ausdruck)
+playerstate(Ausdruck)					Entspricht ConvertPlayerState(Ausdruck)
+playerscore(Ausdruck)					Entspricht ConvertPlayerScore(Ausdruck)
+playergameresult(Ausdruck)				Entspricht ConvertPlayerGameResult(Ausdruck)
+unitstate(Ausdruck)					Entspricht ConvertUnitState(Ausdruck)
+aidifficulty(Ausdruck)					Entspricht ConvertAIDifficulty(Ausdruck)
+gameevent(Ausdruck)					Entspricht ConvertGameEvent(Ausdruck)
+playerevent(Ausdruck)					Entspricht ConvertPlayerEvent(Ausdruck)
+playerunitevent(Ausdruck)				Entspricht ConvertPlayerUnitEvent(Ausdruck)
+widgetevent(Ausdruck)					Entspricht ConvertWidgetEvent(Ausdruck)
+dialogevent(Ausdruck)					Entspricht ConvertDialogEvent(Ausdruck)
+unitevent(Ausdruck)					Entspricht ConvertUnitEvent(Ausdruck)
+limitop(Ausdruck)					Entspricht ConvertLimitOp(Ausdruck)
+unittype(Ausdruck)					Entspricht ConvertUnitType(Ausdruck)
+gamespeed(Ausdruck)					Entspricht ConvertGameSpeed(Ausdruck)
+placement(Ausdruck)					Entspricht ConvertPlacement(Ausdruck)
+startlocprio(Ausdruck)					Entspricht ConvertStartLocPrio(Ausdruck)
+gamedifficulty(Ausdruck)				Entspricht ConvertGameDifficulty(Ausdruck)
+gametype(Ausdruck)					Entspricht ConvertGameType(Ausdruck)
+mapflag(Ausdruck)					Entspricht ConvertMapFlag(Ausdruck)
+mapvisibility(Ausdruck)					Entspricht ConvertMapVisibility(Ausdruck)
+mapsetting(Ausdruck)					Entspricht ConvertMapSetting(Ausdruck)
+mapdensity(Ausdruck)					Entspricht ConvertMapDensity(Ausdruck)
+mapcontrol(Ausdruck)					Entspricht ConvertMapControl(Ausdruck)
+playercolor(Ausdruck)					Entspricht ConvertPlayerColor(Ausdruck)
+playerslotstate(Ausdruck)				Entspricht ConvertPlayerSlotState(Ausdruck)
+volumegroup(Ausdruck)					Entspricht ConvertVolumeGroup(Ausdruck)
+camerafield(Ausdruck)					Entspricht ConvertCameraField(Ausdruck)
+blendmode(Ausdruck)					Entspricht ConvertBlendMode(Ausdruck)
+raritycontrol(Ausdruck)					Entspricht ConvertRarityControl(Ausdruck)
+texmapflags(Ausdruck)					Entspricht ConvertTexMapFlags(Ausdruck)
+fogstate(Ausdruck)					Entspricht ConvertFogState(Ausdruck)
+effecttype(Ausdruck)					Entspricht ConvertEffectType(Ausdruck)
+version(Ausdruck)					Entspricht ConvertVersion(Ausdruck)
+itemtype(Ausdruck)					Entspricht ConvertItemType(Ausdruck)
+attacktype(Ausdruck)					Entspricht ConvertAttackType(Ausdruck)
+damagetype(Ausdruck)					Entspricht ConvertDamageType(Ausdruck)
+weapontype(Ausdruck)					Entspricht ConvertWeaponType(Ausdruck)
+soundtype(Ausdruck)					Entspricht ConvertSoundType(Ausdruck)
+pathingtype(Ausdruck)					Entspricht ConvertPathingType(Ausdruck)
+
+\section{Für den Typ real}
+integer(Ausdruck)					Entspricht R2I(Ausdruck)
+string(Ausdruck)					Entspricht R2S(Ausdruck)
+string(Ausdruck, <Ganzzahlausdruck>, <Ganzzahlausdruck>)Entspricht R2SW(Ausdruck, <Ganzzahlausdruck>, <Ganzzahlausdruck>)
+
+\section{Für den Typ boolean}
+Ausdruck = Ausdruck
+Ausdruck
+!Ausdruck
+Ausdruck == Ausdruck
+Ausdruck != Ausdruck
+
+\section{Für den Typ string}
+Ausdruck = Ausdruck
+Ausdruck + Ausdruck
+Ausdruck - Ausdruck				Entfernt eine Teilzeichenkette
+Ausdruck += Ausdruck
+Ausdruck -= Ausdruck				Entfernt eine Teilzeichenkette
+Ausdruck == Ausdruck
+Ausdruck != Ausdruck
+Ausdruck >= Ausdruck				Die Vergleichsoperatoren beziehen sich in diesem Fall auf die Wertigkeit des Unicode-Zeichens (Warcraft 3 TFT verwendet kein ASCII)
+Ausdruck <= Ausdruck
+Ausdruck > Ausdruck
+Ausdruck < Ausdruck
+Ausdruck * Ausdruck				Der Ausdruck muss eine Ganzzahl sein. Liefert eine neue Zeichenkette, in welcher die alte Ausdruck mal kopiert und aneinander gehängt wurde.
+Ausdruck *= Ausdruck				Die Ausdruck erhält den vervielfachten Inhalt.
+hash Ausdruck					Entspricht Ausdruck.hash und StringHash(Ausdruck)
+Ausdruck[Index]					Entspricht SubString(Ausdruck, index, index + 1). Liefert immer "null", wenn sich der Index außerhalb des String-Bereichs befindet.
+size Ausdruck					Entspricht Ausdruck.size und StringLength(Ausdruck)
+integer(Ausdruck)				Entspricht S2I(Ausdruck)
+real(Ausdruck)					Entspricht S2R(Ausdruck)
+
+\section{Für den Typ code}
+Ausdruck = Ausdruck				Der Ausdruck muss eine zuvor deklarierte Funktion sein, die keine Parameter entgegen nimmt und keinen Rückgabetyp besitzt. In JASS wird für gewöhnlich nicht überprüft, ob die Funktion zuvor deklariert wurde, was zu Laufzeitfehlern führen kann.
+
+\section{Für den Typ handle}
+Ausdruck = Ausdruck
+Ausdruck == Ausdruck
+Ausdruck != Ausdruck
+integer(Ausdruck)				Entspricht GetHandleId(Ausdruck)
+id Ausdruck					Entspricht Ausdruck.id und GetHandleId(Ausdruck)
+Ausdruck.id
+
+\section{Für den Typ force}
+Ausdruck[Index]					Liefert den Spieler (Typ "player") der Streitmacht des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Streitmacht, so liefert der Ausdruck "null".
+size Ausdruck					Liefert die Größe der Streitmacht als Ganzzahl.
+Ausdruck.size					Liefert die Größe der Streitmacht als Ganzzahl.
+
+\section{Für den Typ group}
+Ausdruck[Index]					Liefert die Einheit (Typ "unit") der Gruppe des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Gruppe, so liefert der Ausdruck "null".
+size Ausdruck					Liefert die Größe der Gruppe als Ganzzahl.
+Ausdruck.size					Liefert die Größe der Gruppe als Ganzzahl.
+
+\section{Für den Typ hashtable}
+exists Ausdruck <Ganzzahlausdruck>
+Ausdruck.exists <Ganzzahlausdruck>
+flush Ausdruck <Ganzzahlausdruck>
+
+\section{Für den Typ gamecache}
+exists Ausdruck <Zeichenkettenausdruck>
+Ausdruck.exists <Zeichenkettenausdruck>
+flush Ausdruck <Zeichenkettenausdruck>
+
+\section{Für Lade-Blöcke}
+<Lade-Block-Bezeichner> : <Deklarationsvoraussetzungen>
+
+\section{Für KI-Blöcke}
+execute <KI-Block-Bezeichner> for <Spielerausdruck>
+
+\section{Für Funktionsdeklarationen}
+<Rückgabetyp> <Funktionsname><Parameterliste> : <Deklarationsvoraussetzungen>
+
+\section{Für Aufzählungsdeklarationen}
+<Aufzählungsbezeichner> (<Erbung) : <Deklarationsvoraussetzungen>
+
+\section{Für Klassendeklarationen}
+<Klassenbezeichner> (<Erbung>) : <Deklarationsvoraussetzungen>
+
+\section{Für Arrays}
+size Ausdruck					Liefert die Größe des Arrays.
+Ausdruck.size					Liefert die Größe des Arrays.
+size Ausdruck <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
+Ausdruck.size <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
+Ausdruck[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
+
+\section{Für Aufzählungen}
+<Geerbter Typ>(Ausdruck)
+Ausdruck = Ausdruck
+Ausdruck == Ausdruck
+Ausdruck != Ausdruck
+size <Aufzählungsbezeichner>			Liefert die Anzahl der Elemente der Aufzählung
+<Aufzählungsbezeichner>.size			Liefert die Anzahl der Elemente der Aufzählung
+
+\section{Für "threaded" Funktionen}
+execute Funktion(<Parameter>)
+executewait [<real-Ausdruck>] Funktion(<Parameter>)
+evaluate Funktion(<Parameter>)
+executions Funktion
+Funktion.executions
+evaluations Funktion
+Funktion.evaluations
+sleeps Funktion
+Funktion.sleeps
+sleepon Funktion
+sleepoff Funktion
+reset Funktion
+
+\section{Für Funktionstypen}
+integer(Ausdruck)				Liefert die interne Ganzzahl des Funktionsprototypen.
+id Ausdruck					Liefert die interne Ganzzahl des Funktionsprototypen.
+Ausdruck.id
+
+\section{Innerhalb von "threaded" Funktionen}
+sleep <real-Ausdruck>
+id						Liefert die interne Ganzzahl des Funktionsprototypen.
+
+\section{Innerhalb von Funktionen}
+wait <real-Ausdruck>
+
+\section{Für Klassen(instanzen)}
+<Klassenname>.<Aufzählung | statische Methode | statisches Element>
+<Ausdruck>.<Elementname | Methodenname>
+new <Klassenname>				Entspricht Klassenname.new()
+delete <Ausdruck>				Entspricht Ausdruck.delete()
+copy Ausdruck					Entspricht Ausdruck.copy()
+Ausdruck = Ausdruck
+Ausdruck					Ist wahr, falls die Ausdruck auf ein Objekt zeigt.
+!Ausdruck					Ist wahr, falls die Ausdruck auf kein Objekt zeigt.
+Ausdruck == Ausdruck				Ist wahr, falls die beide Ausdruckn auf dasselbe Objekt zeigen.
+Ausdruck != Ausdruck				Ist wahr, falls die beide Ausdruckn nicht auf dasselbe Objekt zeigen.
+integer(Ausdruck)				Liefert die interne Ganzzahl der Klasseninstanz.
+id Ausdruck					Entspricht Ausdruck.id. Liefert die interne Ganzzahl der Klasseninstanz.

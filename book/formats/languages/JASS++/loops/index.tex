@@ -1,0 +1,64 @@
+\chapter{Schleifen}
+\section{Bedingte Schleifen}
+while (<Ausdruck>)
+{
+}
+case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+do
+{
+}
+while (<Ausdruck>);
+case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+\section{Zählerschleifen}
+for (<Ausdruck>; <Ausdruck>; <Ausdruck>)
+{
+}
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <Anzahl> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+\section{Behälter-Schleifen}
+foreach (<Variablenname>; <Container-Variable>) // siehe "Container-Typen"
+{
+}
+case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+\section{Endlosschleifen}
+Diese Schleifen können nur mit "break" abgebrochen werden. Besitzt eine Schleife dieser Art keine oder nur eine indirekte "break"-Anweisung, so muss
+der Compiler eine Warnung ausgeben.
+
+forever
+{
+}

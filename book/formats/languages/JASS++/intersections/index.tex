@@ -1,0 +1,50 @@
+\chapter{Verzweigungen}
+
+\section{Wenn-Dann-Ansonsten-Verzweigungen}
+Wenn-Dann-Ansonsten-Verzweigunen werden zur Überprüfung unterschiedlicher Ausdrücke benutzt.
+Sie werden mit dem Schlüsselwort "if" eingeleitet, welchem in jedem Fall ein in Klammern eingeschlossener Wahrheitsausdruck (Typ "boolean")
+folgen muss. Ist dieser Ausdruck zur Laufzeit wahr, so werden die Anweisungen im durch eckige Klammern eingeschlossenen Anweisungsblock
+ausgeführt.
+Optional können mit "else if" weitere Ausdrücke überprüft werden, falls der erste nicht zutrifft. Des Weiteren können mit einem ebenfalls optionalen
+"else" Anweisungen ausgeführt werden, falls keiner der überprüften Ausdrücke wahr ist.
+Falls ein konstanter Ausdruck überprüft wird, sollte der Compiler einen Hinweis ausgeben, falls der konstante Ausdruck nicht wahr ist, eine Warnung.
+
+Notationen:
+if (<Wahrheitsausdruck>)
+{
+}
+[else if (<Wahrheitsausdruck>)
+{
+}
+else (<Wahrheitsausdruck>)
+{
+}]
+
+\section{Fall-Verzweigungen}
+Fall-Verzweigungen können anders als in herkömmlichen Sprachen wie C/C++ jede Art von Datentyp behandeln. Außerdem müssen die Ausdrücke in den "case"-
+Verzweigungen nicht konstant sein.
+Entfällt die "break"-Anweisung, so beginnt die Fallverzweigung erneut, was einen deutlichen Unterschied zu anderen Sprachen darstellt.
+Dies dient dem Fall, dass die Variable der Fallverzweigung verändert wurde.
+Dies gilt natürlich nicht, wenn sich eine "return"-Anweisung im Block befindet.
+Der Compiler sollte eine Warnung ausgeben, falls sich weder eine direkte "break"- noch eine direkte "return"-Anweisung in einem der Blöcke befindet, da
+es eventuell zu einer ewigen Rekursion führen könnte.
+Mit direkt ist gemeint, dass sie sich nicht in einer Wenn-Dann-Ansonsten-Verzweigung befindet.
+
+Notation:
+switch (<Ausdruck>)
+{
+	case (<Ausdruck>)
+	{
+		break;
+	}
+
+	case (<Ausdruck>) // Ein Ausdruck kann auch aus mehreren durch Kommata getrennten Werten bestehen: 1,10,2
+	{
+		break;
+	}
+
+	default
+	{
+		break;
+	}
+} 

@@ -1,0 +1,31 @@
+\chapter{Gültigkeitsbereichverwendung}
+Gültigkeitsbereiche können innerhalb eines anderen Gültigkeitsbereiches oder im globalen "verwendet" werden.
+Dies bedeutet, dass Elementen des Gültigkeitsbereiches kein Präfix des Gültigkeitsbereiches mehr voran-
+gestellt werden muss.
+Dabei ist auch die Verwendung von verschachtelten Gültigkeitsbereichen möglich.
+Die Verwendung wirkt sich sowohl auf den aktuellen als auch auf alle Untergültigkeitsbereiche dessen aus.
+Sie kann durch den --Operator in einem der Subgültigkeitsbereiche aufgehoben werden, wobei sämtliche Ebenen unterhalb der angegebenen
+aufgehoben werden.
+Der *-Operator dagegen bewirkt, dass sämtliche Untergültigkeitsbereiche implizit ebenfalls verwendet werden.
+Eine Kombination der beiden Operatoren ist theoretisch möglich, da der --Operator implizit den *-Operator verwendet, aber nicht notwendig.
+Der Compiler sollte in diesem Fall eine Warnung ausgeben.
+Zudem ist es unter keinen Umständen möglich, bei der Gültigkeitsbereichverwendung den aktuellen Gültigkeitsbereich oder einen Subgültigkeitsbereich
+dessen mit dem *-Operator oder dem --Operator anzugeben.
+In diesem Fall muss der Compiler eine Fehlermeldung ausgeben.
+Auch Funktionen können als Gültigkeitsbereich verwendet werden (siehe "Gültigkeitsbereiche").
+VERALTET: Eine besondere Ausnahme bei der Gültigkeitsbereichverwendung bilden Funktionen.
+VERALTET: Ihr innerer Gültigkeitsbereich kann nicht von außerhalb verwendet werden.
+Elemente die in einem Gültigkeitsbereich enthalten sind, müssen niemals zwingend dessen Bezeichner angeben.
+
+\section{Notation}
+<Gültigkeitsbereichbezeichner>[* | -];
+
+\section{Beispiele}
+scope gna.gnu.gni*;
+class gna.gnu.gni.Test;
+enum gna.gnu.gni.Test.Type;
+
+Test var = new Test();
+scope gna.gnu.gni-;
+Test var2 = new Test(); // Fehler, undefinierter Bezeichner!
+ 

@@ -1,0 +1,108 @@
+\chapter { Vorwort }
+
+\section { Limitierungen von JASS }
+JASS ist eine funktionale Skriptsprache und bietet daher keine Möglichkeiten der generischen, objektorientierten
+oder modularen Programmierung. Zudem wird nicht, wie z. B. in C, zwischen Deklaration und Definition streng unterschieden,
+sondern ist eine Deklaration in jedem Fall auch eine Definition.
+Außer dem Aufruf von Auslöser-Aktionen und -Bedingungen und dem Aufruf von Funktionen mittels ExecuteFunc gibt es keine
+Möglichkeit, eine Funktion vor ihrer Definition aufzurufen. Zudem beschränken sich beide Varianten auf parameterlose
+Funktionen.
+Zusätzlich besitzt die Skriptsprache JASS ein Array-Größen-Limit von 8192 (2^13), Arrays können nicht als Parameter
+übergeben werden, es gibt keine Funktionszeiger, Variablen des Types "code" können nicht als Array deklariert werden,
+es kann nur ein globals-Block existieren, es kann kein direkter Einfluss auf automatisch generierte Funktionen
+des Kartenskripts bzw. Blizzards genommen werden, auch wenn diese Fähigkeit nicht unbedingt zur Sprache selbst gehören muss,
+die Syntax ist etwas unschön, da keine geschweiften Klammern, for- und while-Schleifen, sowie erweiterte Operatoren verwendet
+werden können, es gibt keine Ausnahmebehandlung, es können unvermeidbare Speicherlecks entstehen und zu guter Letzt
+gibt es keine Blockkommentare in JASS.
+
+\section { Das Problem }
+Möchte man nun die Skriptsprache JASS verbessern bzw. erweitern, so müsste man verständlicherweise ihren Interpreter umschreiben.
+In der Theorie lassen sich zwar viele neue Fähigkeiten planen, jedoch scheitert man an der Umsetzung, da der Quell-Code des Interpreters
+bzw. derer von ganz Warcraft 3 The Frozen Throne nicht frei verfügbar ist. Nun hat man sicherlich die Option, die gesamte Warcraft-3-The-
+Frozen-Throne-Engine neu zu schreiben und könnte im Zuge dessen den Interpreter anders schreiben und somit die Skriptsprache JASS verbessern,
+jedoch halte ich dies für keine sinnvolle Idee, falls man nicht ein ganzes Programmiererteam hinter sich stehen hat.
+Die zweite Option ist eine Erweiterung der Syntax von JASS, welche jederzeit in reinen JASS-Code konvertiert werden kann.
+Dazu muss man "nur" einen Compiler bzw. Precompiler für die eigene Skriptsprache schreiben, welcher die Syntax dieser kennt und zu JASS konvertieren
+kann.
+Diese Option wurde bisher bei allen mir bekannten Skritpsprachenerweiterungen von JASS, welche genau genommen nur drei, ja eigentlich nur zwei sind, gewählt.
+
+\section { Die Lösung }
+Zum Einen wäre da Vexorians vJass, welches sich mit großem Erfolg verbreitet hat und grob alle wichtigen Mängel von JASS behebt, die
+Syntax aber grundsätzlich beibehält und sich bei neuen Sprachkonstrukten an diese anpasst.
+Zum Anderen wären da cJass und Zinc. Ich fasse diese beiden Sprachen zusammen, da sie mehr einen Zusatz zu vJass darstellen.
+Sie erweitern lediglich die Syntax um einige Fähigkeiten und sind beidesamt kompatibel zu vJass.
+Vexorian hat nicht nur die beiden Sprachen vJass und Zinc entwickelt, sondern auch den dazugehörigen Precompiler, den JassHelper,
+welcher meines Wissens nach in Pascal bzw. Delphi geschrieben ist.
+Für cJass existiert ebenfalls ein, in Assembler geschriebener Precompiler.
+Wo liegt nun also das Problem wenn es bereits diese Spracherweiterungen gibt?
+Die Antwort ist ganz einfach: Zinc und cJass haben jeweils ihre eigenen Arten einer Syntaxerweiterung über die man sich bereits teil-
+weise streiten kann, da sie sehr von der Syntax herkömmlicher Sprachen abweicht.
+vJass dagegen ist das eigentliche Ziel meiner Kritik, da diese Spracherweiterung erst die eigentlichen und wirklich notwendigen Fähigkeiten
+mit sich bringt. Objektorientierung, Modularisierung, Funktionszeiger, Executions und Evaluations, und inzwischen auch namenlose bzw. Lambda-Funktionen.
+Viele davon gefallen mir und ich bin daher inzwischen auch ein langjähriger Benutzer vJass', jedoch auch hauptsächlich aus dem Grund, dass das normale
+JASS auf Dauer sehr umständlich zu verwenden ist und es keine wirkliche Alternative zu vJass gab und gibt.
+Womit ich unzufrieden bin ist zum einen der Mangel an weiteren notwendigen und praktischen Erweiterungen, sowie des Programms
+JassHelper, welches nicht einmal plattformübergreifend ist, die teilweise wirklich unschöne Syntax und die daraus resultierende Erweiterung Zinc bzw.
+die Trennung der beiden Sprachen und zu schlechter Letzt die mangelnde Fehlerbehebung bei aufkommenden Fehlern.
+Der Code des JassHelpers ist frei verfügbar, das ist mir wohl bewusst, jedoch bin ich 1. nicht sehr mit Pascal und dessen Syntax vertraut, halte 2.
+den Code für mehr als unübersichtlich und bin 3. nicht gerade motiviert, eine Windows-Anwendung weiterzuentwickeln, welche eine Sprache analysiert
+und kompiliert, an deren Syntax ich einiges auszusetzen habe.
+Zudem interessiere ich mich inzwischen sehr für Programmiersprachen, weshalb die Entwicklung einer eigenen Sprache hoffentlich auch einen gewissen
+Lerneffekt bei mir auslösen wird.
+
+\section { JASS++ }
+Ich bin ein Fan der Programmiersprache C++. Daher der Name JASS++. Ob er passend oder unpassend ist, ist mir relativ egal, es ist nur ein Bezeichner.
+JASS++ soll alles abdecken, was mir persönlich und eventuell auch anderen an JASS fehlt.
+Genau wie vJass muss es in JASS-Code umgewandelt werden, weshalb ein Precompiler benötigt wird. Ein solcher wird momentan von mir selbst entwickelt.
+Neben der Sprachsyntaxdefinition existiert auch eine Compiler-Definition, welche mehr eine Empfehlung an mich selbst und andere, die einen Precompiler
+für die Sprache schreiben wollen, ist.
+JASS++ soll einerseits speziell auf Warcraft 3 The Frozen Throne und die Merkmale von JASS zugeschnitten sein und andererseits die Mächtigkeit einer
+umfangreichen, modernen Programmiersprache mit sich bringen.
+Dabei werden zum Teil einzigartige und zum Teil altbekannte Syntaxelemente unterstützt.
+Zudem, und dies halte ich persönlich für eine sehr wichtige Eigenschaft der Sprache, soll sie so gut wie möglich zu bestehenden Spracherweiterungen
+von JASS kompatibel sein und zumindest deren getrennte Behandlung erlauben.
+
+\section { Mächtigkeit und Umfang }
+JASS an sich ist wie z. B. C eine rein funktionale Sprache. Man definiert einige Funktionen, die bei bestimmten Ereignissen (siehe "Ereignisbehandlung")
+aufgerufen werden und erhält so sein Programm. In der Regel ist das fast die beste Lösung, um eine Spiele-Engine ansprechbar zu machen und eine einfache
+Schnittstelle für Anwender herzustellen. Diese kann jederzeit durch die Definition neuer nativer Typen und Funktionen erweitert werden und die Komplexität
+hält sich in Grenzen. Letztlich kann alles sogar noch um ein Vielfaches vereinfacht werden, indem man erstens eine ganze Reihe von in Jass geschriebenen
+Funktionen zur Verfügung stellt, die selbst die nativen Funktionen verwenden und diese um oftmals benötigte Operationen erweitern und indem man zweitens
+eine grafische Oberfläche über das Ganze packt, sodass selbst ein Nichtprogrammierer kaum noch ein Problem mit der Verwendung der Funktionen hat, insofern
+diese ausreichend dokumentiert sind.
+Letzteres bedeutet zwar einen gewissen Aufwand, aber der Erfolg des Welteneditors von Warcraft 3 The Frozen Throne spricht für sich und ich selbst kann
+man mich an einen sehr schnellen Lernprozess und schnelle Erfolge ohne jegliche Programmierkenntnisse zur damaligen Zeit erinnern.
+Man fragt sich also, warum es eigentlich Sinn macht, eine mächtigere und umfangreichere Skriptsprache zu entwerfen und zu implementieren.
+Um das zu verstehen, muss man sich die Entwicklung von der Modifikationen des Spiels und den Umfang der nativen Funktionen ansehen.
+Viele der nativen Funktionen werden für einfache Karten, die sich an das normale Spielprinzip halten, gar nicht benötigt. Die Modifizierenden aber haben
+mit der Zeit erkannt, dass man eine Menge eigener, neuer Systeme mit den vorhandenen Funktionen einbauen kann, welche völlig neue Spielprinzipien möglich machen.
+Der einzige Nachteil ist die Spielleistung, die sich natürlich umgekehrt proportional zum Umfang der Systeme verhält.
+Der zweite und noch viel wichtigere Punkt ist die Tatsache, dass der Quell-Code des Spiels nicht verfügbar ist und somit die Möglichkeit der Implementation
+nativer Typen und Funktionen für Anwender nicht zur Verfügung steht.
+Daher muss alles per JASS eingebaut werden und bei einem größeren Umfang der Systeme ist auch ein größerer Umfang und eine größerer Mächtigkeit der Skript-
+sprache von Umfang, um den Arbeitsaufwand zu reduzieren und vor allem die Fehlerquellen.
+
+\section { Ereignisbehandlung }
+JASS ist eine ereignisgesteuerte Skriptsprache. Das bedeutet, dass letztlich alles über Ereignisse des Spiels ausgelöst wird. Die JASS-API bietet unterschiedliche
+Funktionen für die Registrierung von Ereignissen an sogenannten Auslösern, welche ausgeführt werden, sobald eines der registrierten Ereignisse ausgelöst wird.
+Zunächst wird dann eine optionale Bedingung des Auslösers überprüft und dann je nachdem ob die Bedingung zutrifft oder nicht oder keine existiert, die Aktion bzw.
+Funktion des Auslösers ausgeführt. Selbstverständlich hat jedes Ereigniss spezielle Ereignissdaten bzw. -parameter wie z. B. den angesteurten Auslöser (GetTriggeringTrigger()).
+Mit diesen Ereignisdaten kann dann mit der Auslöseraktion entsprechendend auf das Ereignis reagiert werden. Leider sind die Ereignisse in mancher Hinsicht relativ limitiert
+und beschränken sich teilweise auf die Funktionalität, die benötigt wird, um einfache Karten und Szenarios wie sie bereits vom Spiel mitgeliefert werden und nichts Umfangreicheres
+zu gestalten.
+Zeitliche Aktionen können per mit Zeitgeberereignissen und Warteanweisungen (siehe "Multi Threading") gesteuert werden.
+TODO ERGÄNZEN.
+
+\section { Multi Threading }
+TODO
+
+\section { Objektorientierung }
+TODO
+
+\section { Objekttypen-Daten }
+TODO
+
+\section { Syntax des Dokuments }
+| bedeutet "oder".
+Zwischen zwei eckige Klammern eingeschlossener Inhalt ist optional.
+Zwischen ein Größer- und ein Kleinerzeichen eingeschlossener Inhalt muss durch etwas ersetzt werden.

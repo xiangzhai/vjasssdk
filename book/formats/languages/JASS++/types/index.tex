@@ -1,0 +1,108 @@
+\chapter{Typen}
+
+In JASS++ können sämtliche Typen aus JASS ohne besondere Einschränkungen (bis auf "const"-Deklarationen) verwendet werden.
+Es können jedoch auch eigene Typen können definiert werden. Insgesamt existieren folgende Arten von Typen:
+\begin{enumerate}
+\item native Typen
+\item Funktionen (auch native)
+\item Funktionstypen
+\item Aufzählungen
+\item Klassen
+\end{enumerate}
+Eine Variable muss stets einen bestimmten Typ besitzen. Dieser kann als Suffix das Schlüsselwort "const" erhalten, was praktisch als
+anderer Typ gilt und nur beschränkte Operationen mit der Variable erlaubt.
+In JASS++ wird, wie in JASS, zwischen referenz- und kopierbasierten Typen unterschieden. Ist der Typ einer Variable
+referenzbasiert und konstant, so darf das Objekt, auf welches referenziert wird nicht verändert werden, die Variable selbst jedoch schon.
+So kann ihr ein neuer Inhalt zugewiesen werden, für diesen jedoch keine Methode aufgerufen werden, die nicht als "const" deklariert wurde (siehe "Methoden").
+Kopierbasierte Typen sind somit immer implizit als "const" deklariert, da von ihnen sowieso eine Kopie erzeugt wird und nicht eine Referenz.
+Daher bewirkt das Suffix "const" bei kopierbasierten Typen nichts, ist aber eine gültige Syntax.
+Dies wurde so entschieden, da es z. B. bei der Definition generischer Containerklassen zu Problemen kommen kann, wenn es darum geht, einen
+unveränderbaren Wert zurückzugeben.
+Der Typ gilt ebenfalls als anderer bei Funktionsdeklarationen (siehe "Funktionen"), jedoch wird die Version der Funktion niemals aufgerufen, falls eine andere
+mit selbigem Bezeichner aber einem nichtkonstanten Typ als Parameter existiert. Der Compiler sollte zumindest einen Hinweis ausgeben, wenn
+kopierbasierte, konstante Typen verwendet werden.
+Der Inhalt kopierbasierter Variablen wird wie der referenzbasierter beim Übergeben an eine andere (z. B. an Funktionsparameter) kopiert,
+jedoch wird bei referenzbasierten lediglich eine Referenz auf ein global existierendes Objekt kopiert, welches, falls möglich,
+explizit vom Entwickler wieder freigegeben werden muss.
+Da auch Funktionszeiger referenzbasierter Typen sind, können sie ebenfalls als "const" deklariert werden (siehe "Funktionstypen").
+Wird eine Variable eines referenzbasierten Typs freigegeben bzw. gelöscht, so wird bei einer erfolgreichen Freigabe der Variableninhalt auf 0
+gesetzt.
+Dies gilt auch für native referenzbasierte Typen.
+Ein Typ muss nicht zwingend einen Bezeichner besitzen, insofern mindestens eine Instanz davon am Ende der Typendeklaration erzeugt wird.
+Der Typ kann dann von nirgendwo sonst aus im Code verwendet werden. Man spricht dabei auch von anonymen Typen. Instanzen können bei
+Typendeklarationen in der Regel am Ende erzeugt werden (siehe "Variablen").
+
+\section{Typendeklaration-Notation}
+[<benötigte Schlüsselwörter>] [<Typbezeichner>] [<benötigte Angaben>] [<Variablendeklaration 1>, ...];
+
+\section{Typenverwendung-Notation}
+<Typbezeichner> [const]
+
+\section{Typkonvertierungen}
+Sämtliche Typkonvertierungen müssen explizit vorgenommen werden, insofern es sich nicht
+um eine Kind-zu-Eltern-Konvertierung handelt. Sämtliche Funktions- und
+Klasseninstanzenreferenzen können zum Typ integer konvertiert werden (ebenfalls explizit).
+Kindinstanzen können zu Elterninstanzen implizit konvertiert werden. Dies gilt auch für
+native Kindtypen wie z. B. unit zu widget.
+Andersherum muss explizit umgewandelt werden und gilt nur noch für Klasseninstanzen, nicht für
+native Typen mit Ausnahme derer für die native Konvertierungsfunktionen zur Verfügung stehen.
+Zu beachten gilt, dass es bei Eltern-zu-Kind-Konvertierungen zu fehlenden Daten für z. B.
+virtuelle Methoden kommen kann. Schlimmer noch wäre ein Zugriff auf ein Instanzelement
+einer ursprünglichen Nichtklasseninstanz, da so auf ein falsches Element einer anderen
+Instanz zugegriffen werden würde. Dies kann selbst zur Laufzeit nicht im Debug-Modus heraus-
+gefunden werden.
+Daher sollte der Compiler bei solchen Konvertierungen eine Warnung ausgeben.
+Außerdem können Variablen mit nicht-konstantem Inhalt implizit zu solchen konvertiert werden.
+Andersherum ist eine Konvertierung gar nicht möglich.
+Schlägt eine Konvertierung fehl (z. B. eine Ganzzahl in einen Schadenstypen), so wird ein Nullwert
+zurückgeliefert. 0 bei referenzbasierten und "null" bei kopierbasierten Typen.
+Eine Liste der möglichen Konvertierungen nativer Typen, welche durch die bestehenden nativen Funktionen
+von JASS möglich sind und nach der Konvertierungssyntax von JASS++ durchgeführt werden können finden
+Sie im Abschnitt "Operatoren" und im Unterabschnitt des jeweiligen Typs.
+
+\subsection{Notation}
+<Konvertierungstyp>(Ausdruck)
+
+\subsection{Beispiele}
+MyClass myClassValue = new MyClass;
+integer myValue = integer(myClassValue);
+MyParentClass myParentClassValue = myClassValue;
+myClassValue = myParentClassValue; // illegal!
+myClassValue = MyClass(myParentClassValue);
+unit myUnit = null;
+widget myWidget = myUnit;
+myUnit = myWidget; // illegal!
+myUnit = widget(myWidget); // illegal!
+unit const myUnit = myOtherNonConstantUnit;
+unit myUnit= myOtherConstantUnit; // illegal!
+
+\section{Behältertypen}
+Ein Behältertyp ist ein Typ, welcher die Verwendung des "size"- und des "[]"-Operators gestattet.
+Dabei muss der "size"-Operator eine Ganzzahl zurückgeben und der "[]"-Operator eine einzige als
+Parameter entgegennehmen und den Typ der enthaltenen Elemente des Behälters zurückgeben.
+Ob die beiden Operatoren als "const" implementiert sind ist frei wählbar, jedoch können, falls
+einer der beiden nicht als "const" implementiert ist, konstante Instanzen des Typs nicht in
+"foreach"-Schleifen verwendet werden.
+Anderenfalls geht dies ohne Probleme durch die vorgegebene Implementation (siehe "foreach-Schleife").
+Es gibt drei native Behältertypen, die jeweils Werte eines bestimmten nativen Typs enthalten:
+\begin{enumerate}
+\item string - string (einzelnes Zeichen)
+\item force - player
+\item group - unit
+\end{enumerate}
+
+Alle drei können somit in "foreach-Schleifen" verwendet werden.
+Außerdem zählen auch Aufzählungen zu den Behältertypen (siehe "Aufzählungen").
+
+\section{Vordefinierte Typen}
+Bei folgenden Typen wird die verwendete "common.j"-Datei analysiert und anhand der dort definierten JASS-Konstanten
+ermittelt, welche Werte zur Verfügung stehen. Sollte eine Variable eines der Typen einen anderen Wert erhalten
+haben als in der Datei zur Verfügung steht, so gibt der Compiler eine Fehlermeldung aus.
+Dabei werden auch Konvertierungen von Ganzzahlen zu einem der Typen überprüft. Sollte die Konvertierung erst zur
+Laufzeit überprüfbar sein, gibt der Compiler zumindest eine Warnung aus.
+Hier ist eine Liste der nativen Typen:
+playercolor, race, playergameresult, alliancetype, version, attacktype, damagetype, weapontype, pathingtype, racepreference,
+mapcontrol, gametype, mapflag, placement, startlocprio, mapdensity, gamedifficulty, gamespeed, playerslotstate, volumegroup,
+igamestate, fgamestate, playerstate, unitstate, aidifficulty, playerscore, gameevent, playerevent, playerunitevent, unitevent
+widgetevent, dialogevent, gameevent, playerevent, playerunitevent, limitop, unittype, itemtype, camerafield, blendmode, raritycontrol,
+texmapflags, fogstate, effecttype, soundtype 

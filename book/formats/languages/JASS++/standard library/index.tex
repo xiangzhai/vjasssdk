@@ -1,0 +1,471 @@
+\chapter { Die Standardbibliothek }
+
+Die Standardbibliothek ist innerhalb eines jeden JASS++-Skripts verfügbar.
+Die Bezeichner von Gültigkeitesbereichen, Funktionen, Klassen, Aufzählungen und Funktionstypen beginnen groß. Die Bezeichner von Parametern, Methoden und Elementen
+beginnen klein.
+Eine Ausnahme macht hierbei der Gültigkeitsbereich der Standardbibliothek selbst, welcher den Bezeichner "jasspp" trägt.
+Die Bibliothek ist umfangreicher als bei manch anderen Sprachen und soll nicht nur grundlegende Funktionen der Datenverarbeitung anbieten, sondern eben auch
+erweiterte.
+Daher existieren Unterbereiche wie "RpgApi" und "VideoApi".
+Die Unterbereiche tragen alle samt das Suffix "Api" im Bezeichner, um Namenskonflikte zu vermeiden.
+Die Testfunktionen des Unterbereichs "DebugApi" sind nur im Testmodus verfügbar!
+Die hier zusammengestellte Gesamt-API basiert auf meinen persönlichen Erfahrungen mit JASS und vJass und sollte alles nötige enthalten und in einigen Bereichen
+Standards setzen. Virtuelle Methoden, Vorlagen und Parameter mit Funktionstypen bieten dennoch eine gewisse generische Schnittstelle.
+Auf das Wichtigste und möglichst Abstrakte beschränken!
+
+\section { Definition }
+// Use same identifiers (there can be several versions of a function with same identifier.
+// Use aliases like CreateSpecialEffect and aliases for BJs
+scope jasspp
+{
+	scope jass.*;
+
+	debug
+	{
+		public scope DebugApi
+		{
+			public integer allocateArrayInstance()
+			public integer allocateClassInstance()
+			public boolean freeArrayInstance(integer index)
+			public boolean freeClassInstance(integer index)
+			public boolean freeFunctionPrototype(integer index)
+
+			// Test-Funktionen
+			public void Print(string message)
+			public void Print(integer value)
+			public void Print(real value)
+			public void Print(handle value)
+
+			public void PrintGlobalHashTableInformation()
+		}
+	}
+
+	// Scope uses types real, integer, location, rect and region (geometric)
+	public scope MathApi
+	{
+		// conversion
+		public function string I2A(integer value, string charPool);
+		public function sinteger A2I(string value, string charPool);
+		public function string I2Roman(integer value);
+		public function string	I2Binary(integer value);
+		public function integer Binary2I(string value);
+		public function string	I2Octal(integer value);
+		public function integer Octal2I(string value);
+		public function string I2Hexadecimal(integer value);
+		public function integer Hexadicmal2I(string value);
+
+		// real
+		public function real RoundTo(real base, real interval)
+		public function real JumpParabola(real distance, real maxDistance, real curve)
+		public function real ParabolaZ(real maxHeight, real distance, real x)
+		public function real Log(real x, integer iterations)
+		public function real Logarithm(real base, real x, integer iterations)
+		public function real GetRandomFacing()
+
+		// point
+		public function real GetTerrainZ(real x, real y)
+		public function real GetPointZ( real x, real y)
+		public function real GetDistanceBetweenPoints takes real x0, real y0, real z0, real x1, real y1, real z1)
+		public function location GetCentreBetweenPoints(real x0, real y0, real x1, real y1)
+		public function real GetPolarProjectionX(real x, real angle, real distance)
+		public function real GetPolarProjectionY(real Y, real angle, real distance)
+		public function location GetPolarProjectionOfPoint(real x, real y, real angle, real distance)
+		public function real GetAngleBetweenPoints(real x0, real y0, real x1, real y1)
+		public function real GetAngleBetweenPointsFromCentre(real centreX, real centreY, real x0, real y0, real x1, real y1)
+
+
+		// rect
+		public function rect GetRectsBorderRect(rect rect1, rect rect2)
+		public function rect RectFromPointSize(real x, real y, real width, real height)
+		public function void SetRectByCoordinates(rect whichRect, real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4)
+		public function group GetGroupInRectByCoordinates(real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4)
+
+		// handle
+		private template < T, function FunctionX, function FunctionY >
+		{
+			function real GetZ(T value);
+			function real GetDistanceBetween(T value0, T value1, real z0, real z1)
+			function location GetCentreBetween(T value0, T value1)
+			function real GetPolarProjectionX(T value, real angle, real distance)
+			function real GetPolarProjectionY(T value, real angle, real distance)
+			function real GetAngleBetween(T value0, T value1)
+			function rect RectFromSize(T value, real width, real height)
+		}
+
+		// widget
+		// Create templates for types widget, unit, destructable and item.
+		public alias GetWidgetZ GetZ<widget, GetWidgetX, GetWidgetY>;
+		public alias GetDistanceBetweenWidgets GetDistanceBetween<widget, GetWidgetX, GetWidgetY>;
+		public alias GetCentreBetweenWidgets GetCentreBetween<widget, GetWidgetX, GetWidgetY>;
+		public alias GetWidgetPolarProjectionX GetPolarProjectionX<widget, GetWidgetX, GetWidgetY>;
+		public alias GetWidgetPolarProjectionY GetPolarProjectionY<widget, GetWidgetX, GetWidgetY>;
+		public alias GetAngleBetweenWidgets GetAngleBetween<unit, GetWidgetX, GetWidgetY>;
+		public alias RectFromWidgetsSize RectFromSize<widget, GetWidgetX, GetWidgetY>;
+
+		// unit
+		public alias GetUnitZ GetZ<unit, GetUnitX, GetUnitY>;
+		public alias GetDistanceBetweenUnits GetDistanceBetween<unit, GetUnitX, GetUnitY>;
+		public alias GetCentreBetweenUnits GetCentreBetween<unit, GetUnitX, GetUnitY>;
+		public alias GetUnitPolarProjectionX GetPolarProjectionX<unit, GetUnitX, GetUnitY>;
+		public alias GetUnitPolarProjectionY GetPolarProjectionY<unit, GetUnitX, GetUnitY>;
+		public alias GetAngleBetweenUnits GetAngleBetween<unit, GetUnitX, GetUnitY>;
+		public alias RectFromUnitsSize RectFromSize<unit, GetUnitX, GetUnitY>;
+
+		public function real GetDistanceBetweenUnitsWithZ(unit unit1, unit unit2)
+		public function void SetUnitPolarProjectionPosition(unit whichUnit, real angle, real distance)
+		public function void SetUnitZ(unit whichUnit, real z)
+		public function boolean SetUnitXIfNotBlocked(unit whichUnit, real oldX, real oldY, real x)
+		public function boolean SetUnitYIfNotBlocked(unit whichUnit, real oldX, real oldY, real y)
+		SetUnitXYIfNotBlocked takes unit usedUnit, real oldX, real oldY, real x, real y returns boolean
+		FindClosestUnit takes group g, real x, real y returns unit
+		FindClosestUnitByLocation takes group g, location loc returns unit
+		FindClosestUnitByRect takes group usedGroup, rect usedRect returns unit
+		IsUnitOnRect takes unit u, rect r returns boolean
+		SetUnitFacingToFaceUnit takes unit whichUnit, unit target returns nothing
+		SetUnitFacingToFaceRectTimed takes unit whichUnit, rect whichRect, real duration returns nothing
+		SetUnitPositionRect takes unit whichUnit, rect whichRect returns nothing
+		SetUnitPositionRectFacing takes unit whichUnit, rect whichRect, real facing returns nothing
+		SetUnitToRandomPointOfRect takes unit whichUnit, rect whichRect returns nothing
+		IssueRectOrder takes unit whichUnit, string order, rect whichRect returns boolean
+		IssueRectOrderById takes unit whichUnit, integer order, rect whichRect returns boolean
+
+		// item
+		public alias GetItemZ GetZ<item, GetItemX, GetItemY>;
+		public alias GetDistanceBetweenItems GetDistanceBetween<item, GetItemX, GetItemY>;
+		public alias GetCentreBetweenItems GetCentreBetween<item, GetItemX, GetItemY>;
+		public alias GetItemPolarProjectionX GetPolarProjectionX<item, GetItemX, GetItemY>;
+		public alias GetItemPolarProjectionY GetPolarProjectionY<item, GetItemX, GetItemY>;
+		public alias GetAngleBetweenItems GetAngleBetween<item, GetItemX, GetItemY>;
+		public alias RectFromItemsSize RectFromSize<item, GetItemX, GetItemY>;
+
+		public function void SetItemPolarProjectionPosition(item whichItem, real angle, real distance)
+
+		// destructable
+		
+
+		// location
+		public alias GetDistanceBetweenLocations GetDistanceBetween<location, GetLocationX, GetLocationY>;
+		public alias GetCentreBetweenLocations GetCentreBetweenLocations<location, GetLocationX, GetLocationY>;
+		public alias GetAngleBetweenLocationsFromCentre GetAngleBetween<location, GetLocationX, GetLocationY>;
+
+		public class Vector3
+		{
+			private real m_x;
+			private real m_y;
+			private real m_z;
+
+			public void x(real x)
+			public real x() const
+			public void y(real y)
+			public real y() const
+			public void z(real z)
+			public real z() const
+		};
+
+		public class Circle
+		public class Matrix
+	}
+
+	public scope StringApi
+	{
+		public boolean StringIsAscii(string value)
+		public boolean StringIsBinary(string value)
+		public boolean StringIsOctal(string value)
+		public boolean StringIsDecimal(string value)
+		public boolean StringIsHexadecimal(string value)
+		public boolean StringIsAlphabetical(string value)
+		public boolean StringIsNumeral(string value)
+		public boolean StringIsSpecial(string value)
+		public boolean StringIsWhiteSpace(string value)
+		public boolean StringIsSignature(string value)
+		public boolean StringIsInteger(string value)
+		public boolean StringIsReal(string value)
+		public boolean StringIsBoolean(string value)
+
+		public integer StringFind(string value, integer startOffset = 0)
+		public string StringReverse(string value, integer startOffset = 0)
+		public string StringReplace(string value, string oldValue, string newValue = "")
+		public string StringRemove(string value, string oldValue)
+		public string StringInsert(string value, string newValue, integer position = 0)
+		public string StringAppend(string value, string newValue)
+		public string StringMove(string value, string movedValue, integer position = 0)
+		public boolean StringMatch(string value, string otherValue)
+
+		public string StringModifiedPlayerName(player whichPlayer, boolean showColor = true, boolean showNumber = true)
+		public string StringBar(real value, real maxValue, integer length, string colour, string barCharacter = "|")
+	}
+
+	public scope UnitApi
+	{
+		public function boolean UnitMoveItemToSlot(unit whichUnit, item whichItem, integer slot)
+		public function boolean UnitUseItemOfSlot(unit whichUnit, integer slot)
+		public function boolean UnitUseItemOfSlotOnTarget(unit whichUnit, integer slot, widget target)
+		public function boolean UnitUseItemOfSlotOnPoint(unit whichUnit, integer slot, real x, real y)
+		public function boolean UnitDropSlot(unit whichUnit, integer slot, integer newSlot)
+		public function real GetUnitMissingLife(unit whichUnit)
+		public function real GetUnitMissingLifePercent(unit whichUnit)
+		public function real GetUnitMissingMana(unit whichUnit)
+		public function real GetUnitMissingManaPercent(unit whichUnit)
+		public function unit CopyUnit(unit whichUnit, real x, real y, real facing, integer stateMethod)
+		
+		public function unit CreateUnitAtRect(player whichPlayer, integer unitTypeId, rect whichRect, real facing)
+		public function unit CreateCorpseAtRect(player whichPlayer, integer unitTypeId, rect whichRect, real facing)
+		public function void PauseAllUnits(boolean pause)
+		public function integer GetHeroStrBonus(unit hero)
+		public function integer GetHeroAgiBonus(unit hero)
+		public function integer GetHeroIntBonus(unit hero)
+	}
+
+	public scope GroupApi
+	{
+		public function group CreateUnitsAtPoint(integer count, integer unitTypeId, player whichPlayer, real x, real y, real face)
+		public function group CreateUnitsAtRect(integer count, integer unitTypeId, player whichPlayer, rect whichRect, real face)
+		public function group CreateCorpsesAtPoint(integer count, integer unitTypeId, player whichPlayer, real x, real y, real face)
+
+		public function unit FirstOfGroupEx(group whichGroup)
+	}
+
+	public scope MiscApi
+	{
+		template < abstract function SlotFunction >
+		public class Signal
+
+		public function boolean IsInGame()
+		public function boolean IsInGameEx()
+		public function item CopyItem(item whichItem, real x, real y)
+		public function string GetItemTypeIdName(integer itemTypeId)
+		public function boolean IsPlayerPlayingUser(player whichPlayer)
+		public function integer CountPlayingPlayers()
+		public function integer CountPlayingUsers()
+
+		
+
+	}
+
+	public scope EnvironmentApi
+	{
+		public function boolean IsDestructableDead(destructable whichDestructable)
+		public function boolean IsDestructableTree(destructable whichDestructable)
+		public function boolean TreeFilter()
+
+		public function lightning CreateLightning(player whichPlayer, string whichCode, real x0, real y0, real z0, real x1, real y1, real z1)
+		public function lightning CreateLightning(force whichForce, string whichCode, real x0, real y0, real z0, real x1, real y1, real z1)
+		public function lightning CreateLightning(location location0, location location1)
+		public function lightning CreateLightning(player whichPlayer, location location0, location location1)
+		public function lightning CreateLightning(force whichForce, location location0, location location1)
+
+		public function void PlaySound(player whichPlayer, sound whichSound)
+		public function void PlaySound(string filePath)
+		public function void PlaySound(string filePath, real x, real y, real z)
+		public function void PlaySound(string filePath, unit whichUnit)
+
+		public function void PlaySound(player whichPlayer, string filePath)
+		public function void PlaySound(player whichPlayer, string filePath, real x, real y, real z)
+
+		public function void PreloadSoundFile(string filePath)
+
+		public function effect AddSpecialEffect(player whichPlayer, string modelPath, real x, real y)
+		public function effect AddSpecialEffect(player whichPlayer, string modelPath, widget target, string attachPoint)
+
+		public alias AddSpecialEffect CreateSpecialEffect;
+
+		public void ResetTerrainFog(player whichPlayer)
+
+		SetTerrainSpacePathable takes real x, real y, pathingtype pathingType, boolean flag
+		IsTerrainDeepWater takes real x, real y returns boolean
+		IsTerrainShallowWater takes real x, real y returns boolean
+		IsTerrainLand takes real x, real y returns boolean
+		IsTerrainPlatform takes real x, real y returns boolean
+		IsTerrainWalkable takes real x, real y, real maxRange returns boolean
+
+		GetTimeOfDayElapsedHours takes nothing returns integer
+		GetTimeOfDayElapsedMinutesInHour takes nothing returns integer
+		GetTimeOfDayElapsedMinutes takes nothing returns integer
+		GetTimeOfDayElapsedSecondsInMinute takes nothing returns integer
+		GetTimeOfDayRemainingMinutes takes nothing returns integer
+		GetTimeOfDayElapsedSeconds takes nothing returns integer
+		GetTimeOfDayRemainingSeconds takes nothing returns integer
+		GetTimeOfDayString takes nothing returns string
+
+		MakeUnitMovable takes unit usedUnit, boolean movable returns nothing
+		MakeUnitFlyable takes unit usedUnit returns nothing
+		MakeUnitAttackable takes unit usedUnit, boolean attackable returns nothing
+		IsUnitInvulnerable takes unit usedUnit returns boolean
+		GetUnitAlliance( unit usedUnit, unit otherUnit returns integer
+
+		public class TimeOfDay
+		public class DamageRecorder
+		public class DynamicLightning
+		public class Jump
+		public class Missile
+	}
+
+	public scope InterfaceApi
+	{
+		public void CreateImageForPlayer(player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY)
+		public void ShowImageToPlayer(player whichPlayer, image whichImage, boolean show)
+
+		public void LeaderboardDisplayToPlayer(player whichPlayer, leaderboard whichLeaderboard, boolean show)
+
+		public void MultiboardDisplayToPlayer(player whichPlayer, multiboard whichMultiboard, boolean show)
+		public void MultiboardSuppressDisplayForPlayer(player whichPlayer, boolean flag)
+
+		public void PingMinimapExForPlayer(player whichPlayer, real x, real y, real duration, real red, real green, real blue, boolean extraEffect)
+
+		public void PanCameraToUnitTimedWithZ(unit whichUnit, real duration)
+		public void RotateCameraAroundPointForPlayer(player whichPlayer, real x, real y, real degrees, real duration)
+		public void SmartCameraPanWithZForPlayer(player whichPlayer, real x, real y, real zOffset, real duration)
+		public void SmartCameraPanForPlayer(player whichPlayer, real x, real y, real duration)
+		public void SmartCameraPan(real x, real y, real duration)
+
+		public void ShowGenericCinematicFilterToPlayer(player whichPlayer, real duration, blendmode blendMode, string texture, real red0, real green0, real blue0, real transparency0, real red1, real green1, real blue1, real transparency1)
+		public void ShowBlackScreenCinematicFilterToPlayer(player whichPlayer, real duration)
+		public void ShowBlackScreenCinematicFilter(real duration)
+		
+		public trackable CreateTrackableForPlayer(player whichPlayer, string modelPath, real x, real y, real facingAngle)
+		public trackable CreateTrackableForPlayerZ(player whichPlayer, string modelPath, real x, real y, real z, real facingAngle)
+
+		public boolean IsPlayerSelectionEmpty(player whichPlayer)
+		public unit GetFirstSelectedUnitOfPlayer(player whichPlayer)
+		public void MakeUnitSelectable(unit whichUnit, boolean selectable)
+
+		public class MultiboardBar
+
+
+		public class MultiboardWidgetHealthBar (public MultiboardBar)
+		public class MultiboardUnitStateBar (public MultiboardBar)
+		
+
+		public class PlayerSelection
+		public class ForceSelection
+
+		// Streitmachtbasierter Dialog, auch in gemeinsamer Kontrolle anwendbar!
+		public class ForceDialog
+	}
+
+	// Paket zur Internationalisierung.
+	public scope FormatApi
+	{
+		public Format Format(string value)
+		public string String(Format value)
+
+		public class Format
+		{
+		};
+	}
+
+	public scope RpgApi
+	{
+		public class UnitCamera
+
+		public class UnitRucksackItemData
+		{
+			private integer m_charges;
+			private integer m_itemType;
+		}
+
+		// Verwendet das Standard-Warcraft-Inventar um eine seitenbasierte Ausrüstung und einen seitenbasierten Rucksack zur Verfügung zu stellen.
+		// Der unterschied zwischen Ausrüstung und Rucksack besteht darin, dass Ausrüstungsgegenstände stets eine Wirkung auf den Träger haben.
+		public class UnitRucksack
+		{
+			public integer pages() const;
+			public void setPages(integer pages);
+
+			public bool addItem(item whichItem);
+			public UnitRucksackItemData containedItem(integer index);
+			public UnitRucksackItemData containedItem(integer page, integer index);
+
+			public void changePage(integer page);
+			public void show();
+			public void hide();
+			public bool isShown() const;
+
+			private unit m_whichUnit
+			private UnitRucksackItemData m_itemData[][];
+		};
+	}
+
+	public class VideoApi
+	{
+		public abstract class Actor
+		{
+			public abstract threaded void store();
+			public abstract threaded void restore();
+		};
+
+		public class UnitActor : public Actor
+		{
+			public self new (unit storedUnit);
+			public void delete ();
+
+			public threaded store();
+			public threaded restore();
+
+			public unit storedUnit();
+			public unit actor();
+
+			private unit m_storedUnit;
+			private unit m_actorUnit;
+		};
+
+
+		public class Video
+		{
+			private force m_players;
+			private List<Actor> m_actors;
+
+			protected virtual threaded void setup()
+			protected virtual threaded void play()
+			protected virtual threaded void stop()
+			protected virtual threaded void skip()
+		};
+	}
+
+	public scope ContainerApi
+	{
+		template < Type >
+		public abstract function UnaryPredicate bool (Type const);
+
+		template < Type1, Type2 >
+		public abstract function BinaryPredicate bool (Type1 const, Type2 const);
+
+		template < Type >
+		public abstract function Generator void (Type const);
+
+		template < class ContainerType >
+		public abstract class ContainerIterator
+		{
+			private friend class ContainerType;
+
+			public abstract self operator ++();
+			public abstract self operator --();
+		};
+
+		template < ElementType, ContainerIteratorType, ConstantContainerIteratorType, ReverseContainerIteratorType, ConstantReverseContainerIteratorType >
+		public abstract class Container
+		{
+			public abstract integer operator size() const;
+			public abstract ElementType const operator [](integer index) const;
+
+			public abstract void clear() const;
+			public abstract bool isEmpty() const;
+			public abstract ElementType random();
+			// Verwendet die nativen Zufallsfunktionen von JASS, daher für alle Container.
+			public abstract ElementType const random() const;
+
+			public abstract ContainerIteratorType begin();
+			public abstract ConstantContainerIteratorType begin() const;
+			public abstract ReverseContainerIteratorType rBegin();
+			public abstract ConstantReverseContainerIteratorType rBegin() const;
+			public abstract ContainerIteratorType end();
+			public abstract ConstantContainerIteratorType end() const;
+			public abstract ReverseContainerIteratorType rEnd();
+			public abstract ConstantReverseContainerIteratorType rEnd() const;
+		};
+	
+		public class List (public Container)
+		public class Vector (public Container)
+		public class Map (public Container)
+		public class Bitset (public Container)
+	}
+} 

@@ -1,0 +1,112 @@
+\chapter{Gültigkeitsbereiche}
+Gültigkeitsbereiche definieren, innerhalb welches Bereiches eine Deklaration ihre Gültigkeit hat. Außerhalb dieses Bereiches
+kann die Deklaration nur über den Bezeichner, insofern ein solcher existiert, des Gültigkeitsbereiches bzw. den .-Operator erreicht werden.
+Innerhalb kann der Bezeichner mit dem .-Operator optional verwendet werden.
+In bestimmten Fällen geschieht dies implizit (Methodenaufruf, Pseudonyme, Gültigkeitsbereichverwendung usw.).
+Außerdem können außerhalb eines Gültigkeitsbereiches nur statische Deklarationen dessen verwendet werden.
+Dies sind z. B. statische Variablen, Klassendeklarationen usw. (siehe unten).
+Ein Gültigkeitsbereich besitzt in JASS++ nicht zwingend einen Bezeichner und ist zwischen einer geöffneten und einer geschlossenen eckigen
+Klammer definiert.
+Dies gilt jedoch nicht für den äußersten Gültigkeitsbereich, welcher nirgends explizit deklariert wird und ebenfalls keinen Bezeichner trägt.
+Er erlaubt es dem Entwickler, eine Funktion direkt zu deklarieren, ohne einen Gültigkeitsbereich für sie zu definieren.
+Gültigkeitsbereiche können beliebig verschachtelt werden, unabhängig ihrer Art. Das bedeutet, dass z. B. auch Klassen innerhalb von 
+Klassendeklarationen deklariert werden können.
+Je tiefer der Gültigkeitsbereich, desto höher ist die Priorität des Bezeichners. Die Bezeichner können sich gegenseitig überdecken.
+Dies ist explizit gewollt. Über die Bezeichner der äußeren Gültigkeitsbereiche bzw. den .-Operator kann auf Bezeichner höherer
+Gültigkeitsbereiche zugegriffen werden. Dies ermöglicht eine Verschachtelung beliebig vieler Gültigkeitsbreiche.
+Zu beachten gilt, dass lokale Variablen nur im Funktionskopf deklariert werden können, wodurch eine erneute Deklaration und Überlagerung
+der äußeren lokalen Variablen, durch innere in neuen Gültigkeitsbereichen nicht möglich ist.
+Ein Gültigkeitsbereich kann mit dem optionalen Schlüsselwort "scope" eingeleitet werden. Dieses wird den weiteren Qualifizierern vorangstellt. 
+
+Es existieren folgende Arten von Gültigkeitsbereichen:
+\begin{enumerate}
+\item benannte Gültigkeitsbereiche
+\item unbenannte Gültigkeitsbereiche
+\item sprachspezifische Gültigkeitsbereiche
+\end{enumerate}
+
+Es existieren folgende sprachenspezifische Arten von Gültigkeitsbereichen:
+\begin{enumerate}
+\item Verzweigungen
+\item Schleifen
+\item Ausnahmebehandlungen
+\item Funktionsdeklarationen
+\item Aufzählungsdeklarationen
+\item Klassendeklarationen
+\item Qualifizierer-Gültigkeitsbereiche
+\end{enumerate}
+
+Folgende Deklarationen sind nicht statisch sondern dynamisch und können daher von einem äußeren Gültigkeitsbereich bzw. einem inneren, bei welchem es sich um einen
+sprachenspezifischen handelt, nicht verwendet werden:
+\begin{enumerate}
+\item Deklarationen nicht statischer Variabler in Funktionen
+\item Deklarationen nicht statischer Elemente in Klassen
+\end{enumerate}
+
+\section{Anmerkung zu Funktionen}
+Es gilt zu beachten, dass ebenfalls auf Eigenschaften von Funktionen zugegriffen werden kann, jedoch nur, wie auch bei Klassen,
+auf die statischen Variablen (siehe "Zugriffsmodifikatoren").
+
+\section{Deklarationsvoraussetzungen}
+Benannte Gültigkeitsbereiche können bei ihrer Deklaration eben solche voraussetzen.
+Dazu wird der :-Operator verwendet. Dies stellt sicher, dass die Voraussetzungen vor dem jeweiligen
+Gültigkeitsbereich deklariert werden. Sollte es dabei zu Kreisabhängigkeiten kommen, indem sich z. B. zwei
+Deklarationen gegenseitig voraussetzen, so muss der Compiler eine Fehlermeldung ausgeben.
+Ansonsten muss er sicherstellen, dass die Objekte in der richtigen Reihenfolge deklariert werden.
+Deklarationsvoraussetzungen sind notwendig, da Funktionen in JASS erst nach ihrer Deklaration im Skript
+verwendet werden können.
+Eine Umgehung dieser Beschränkung kann nur bei als "threaded" deklarierte Funktionen erreicht werden
+(siehe dazu Abschnitt "Funktionen").
+Abgeleitete Klassen werden implizit als Deklarationsvoraussetzung angegeben.
+
+\subsection{Notation}
+: <Bezeichner 1>, <Bezeichner 2>, ... <Bezeichner n>
+
+\section{Initialisierer}
+Die Initialisierungsfunktion wird genau vor dem ersten Zugriff auf ein Gültigkeitsbereichselement aufgerufen.
+Dies wird vom Compiler durch eine Laufzeitüberprüfung ermöglicht und kann relativ viel Zusatzcode erzeugen, da bei jedem Zugriff von außerhalb
+überprüft werden muss, ob der Gültigkeitsbereich bereits initialisiert wurde.
+Die Funktion darf nicht manuell aufgerufen werden und hat deshalb keine Zugriffsmodifikatoren, keinen Rückgabetyp, keinen Bezeichner und keine Parameter.
+Werden mehrere Initialisierer im selben Gültigkeitsbereich deklariert, so sollte der Compiler einen Hinweis ausgeben.
+ANMERKUNG: Zunächst wurde der Initialisierer mit dem Schlüsselwort "static" deklariert, jedoch gerät diese Art der Deklaration in einen Konflikt mit
+den Qualifizierer-Gültigkeitsbereichen.
+
+\subsection{Notation}
+static { <Anweisungen> }
+
+\section{Notation von Gültigkeitsbereichen}
+[scope] [<weitere Qualifizierer>] [<Bezeichner>] [<Eigenschaften des jeweiligen Sprachkonstrukts>] [<Deklarationsvoraussetzungen>]
+{
+	[Initialisierer]
+	[<Zugriffsmodifikatoren>] [<Deklarationen>]
+}
+
+\section{Bespiele}
+void test()
+{
+	int x = 0;
+
+	{
+		.x = .x; // Expliziter Verweis auf den äußeren Gültigkeitsbereich mit dem .-Operator
+		.x = 10; // x im äußeren Gültigkeitsbereich erhält den Wert 10
+		x = 12; // x im äußeren Gültigkeitsbereich erhält den Wert 12, da im aktuellen Gültigkeitsbereich keine Variable namens x deklariert wurde
+	}
+}
+
+scope
+{
+	int y = 10;
+
+	scope test
+	{
+		int y = 12; // Neue Deklaration, andere Variable!
+		y = .y; // Zuweisung des Wertes der Variablen des äußeren Gültigkeitsbereiches.
+	}
+}
+
+class Test
+{
+	public static const integer i = 10;
+	public static const integer j = i; // Der Bezeichner kann innerhalb des Gültigkeitsbereiches weggelassen werden.
+	public static const integer k = Test.j; // Er ist optional.
+}

@@ -1,0 +1,114 @@
+\chapter{Funktionen}
+
+Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich mindestens die Parametertypen oder die Parameteranzahl unterscheiden.
+Unterscheidet sich lediglich der Rückgabetyp, so gelten beide Definition nicht als unterschiedlich, da im Falle eines Aufrufes ohne eine Speicherung
+des Rückgabetyps nicht sichergestellt werden könnte, welche Version der Funktion aufgerufen werden sollte.
+Parametertypen unterscheiden sich auch, sobald nur einer der beiden als "const" deklariert wurde. In diesem Fall wird je nach konstanter oder nicht
+konstanter Parameterübergabe die jeweilge Version der Funktionsdeklaration ausgewählt.
+Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
+Parameter, welche kein Standardargument besitzen gesetzt werden:
+MyFunction(y = 10, x = 100, 100, 3, 5);
+Parameter mit Standardargumenten erhalten automatisch das Standardargument, insofern sie nicht explizit beim Aufruf gesetzt werden.
+Eine Funktion, die einen Rückgabetyp ungleich "void" besitzt und keine "return"-Anweisung in ihrem äußersten Gültigkeitsbereich, liefert an dieser Stelle
+automatisch einen Nullwert ihres Rückgabetyps zurück. Der Compiler sollte jedoch in diesem Fall eine Warnung ausgeben.
+Dies dient z. B. Situationen, in denen z. B. durch "return"-Anweisungen im Block einer "default"-Anweisung in einer "switch"-Verzweigung
+garantiert ist, dass die Funktion immer einen Wert zurückgibt und dennoch keine "return"-Anweisung im äußersten Gültigkeitsbereich steht.
+Lokale nicht statische Variablen der Funktion dürfen nur am Anfang des Funktionskörpers stattfinden. Innerhalb einer Funktion deklarierte
+Variablen können ebenfalls Zugriffsmodifikatoren besitzen.
+Es können nur Ausnahmen der Typen direkt geworfen werden, die nach dem Schlüsselwort "throw" angegeben wurden.
+Mit direkt ist gemeint, dass sie nicht von einer verschachtelten Funktion geworfen werden (siehe "Ausnahmebehandlung").
+
+\section{Notation}
+[threaded] [mapinit] [const] [function] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...) [<Deklarationsvoraussetzungen>] [throw (Typen getrennt durch Kommata)]
+{
+	<Deklarationen lokaler nicht statischer Variablen>
+	<Anweisungen>
+}
+
+Das Schlüsselwort "function" ist optional und dient besserer Lesbarkeit des Codes.
+
+\section{"wait"-Anweisungen}
+Das Schlüsselwort "wait" sorgt für ein Warten in Spielzeit und wartet somit auch synchron (das heißt auch bei Pausierungen des Spiels wird angehalten).
+Dem "wait"-Schlüsselwort folgt eine Fließkommazahlenausdruck. Bei der Kompilierung wird vor jeder "wait"-Anweisung der Zustand der Funktion mit dem Schlüssel eines neu erzeugten Zeitgebers gespeichert.
+Mit Zustand sind sämtliche lokale Variablen gemeint.
+Alle Teile zwischen bzw. nach "wait"-Anweisungen werden auf separate Funktionen aufgeteilt, die die entsprechenden Daten aus ihrem ablaufenden Zeitgeber laden.
+Dabei muss garantiert sein, dass auch Ereignisdaten korrekt übergeben werden. Wird also eine "wait"-Anweisung ausgeführt, bricht die Funktion ab, startet einen Zeitgeber mit dem angegebenen Intervall und ruft beim Ablauf den Funktionsteil auf, in welchem die Daten geladen werden.
+Daher muss die Funktion auch nicht "threaded" sein, insofern der Aufruf eines Zeitgebers in Auslöserbedingungen möglich ist (nachprüfen!).
+Bei mehreren "wait"-Anweisungen entsteht so eine Verschachtelung von Zeitgeberaufrufen.
+Hinweis: "executewait" hat große Ähnlichkeit mit dieser Funktionalität. "executewait" wird jedoch benötigt, damit die Funktion nach dem Aufruf weiterlaufen kann.
+"wait" kann z. B. bei Videosequenzen verwendet werden, damit die Sequenz synchron abläuft.
+
+\subsection{Notation}
+wait <Fließkommazahlausdruck>
+
+\section{"threaded"-Funktionen}
+Ist eine Funktion "threaded", kann sie von überall aus mit einem der Schlüsselwörter "execute", "executewait", oder "evaluate" aufgerufen werden.
+Rückgabewerte können nur bei "evaluate" zurückgegeben werden.
+"evaluate" erzeugt keinen neuen Thread, es wird daher gewartet, bis der Funktionsaufruf abgearbeitet wurde. Funktionen, die mit
+"evaluate" aufgerufen werden, dürfen keine "sleep"-Anweisungen bzw. "TriggerSleepAction"-Aufrufe enthalten, ob direkt oder indirekt spielt dabei keine Rolle.
+Der Compiler sollte in diesem Fall eine Fehlermeldung ausgeben.
+Bei "execute" und "executewait" dagegen, läuft der Code unmittelbar nach dem Aufruf weiter. Der Funktionsaufruf findet in einem eigenen
+Thread statt.
+"execute" und "executewait" bewirken eigentlich das Gleiche, insofern "TriggerExecute" und "TriggerExecuteWait" das Gleiche bewirken.
+Jedoch gibt es eine weitere Verwendungsmöglichkeit von "executewait", die sich von "execute" deutlich unterscheidet.
+Gibt man bei "executewait" vor dem Funktionsbezeichner eine "real"-Wert an, so wird die Funktion erst nach Ablauf dieser Zeit
+aufgerufen, jedoch wie bei "execute" nicht auf den Aufruf gewartet.
+Intern wird dies durch einen speziell dafür erzeugten Zeitgeber "timer" realisiert. Theoretisch wäre daher die Anweisung "executewait" mit einem
+"real"-Ausdruck auch in Nicht-"threaded"-Funktionen möglich (erlauben?).
+Der Rückgabewert von Funktionen, die mit "execute" bzw. "executewait" aufgerufen wurden, dürfen nicht verwendet werden (zeitliche Differenz!).
+
+\subsection{Notation}
+evaluate <Funktionsbezeichner>
+execute <Funktionsbezeichner>
+executewait [<real-Ausdruck>] <Funktionsbezeichner>
+
+Mittels der Schlüsselwörter "executions" und "evaluations" kann herausgefunden werden, wie oft eine "threaded" Funktion per "execute" und "executewait"
+bzw. "evaluate" aufgerufen wurde.
+Zurückgegeben wird die Anzahl als integer.
+
+\subsection{Notation}
+executions <Funktionsbezeichner>
+evaluations <Funktionsbezeichner>
+<Funktionsbezeichner>.executions
+<Funktionsbezeichner>.evaluations
+ 
+Mittels des Schlüsselwortes "sleep", kann in einer "threaded"-Funktion gewartet werden.
+Sie entspricht einem Aufruf der Funktion "TriggerSleepAction".
+
+\subsection{Notation}
+sleep <real-Ausdruck>
+
+Mittels der Schlüsselwörter "sleeps", "sleepon" und "sleepoff" kann eine "threaded" Funktion darauf überprüft werden, ob ihr Thread gerade wartet bzw.
+das Warten aktiviert oder deaktiviert werden.
+Die Aktivierung und Deaktivierung des Wartens bezieht sich NUR auf alle laufenden "execute"- und "executewait"-Aufrufe der Funktion.
+Sämtliche Aufrufe nach der Aktivierung bzw. Deaktivierung sind davon ausgeschlossen.
+Dies liegt am Verhalten der nativen JASS-Funktion "TriggerWaitOnSleeps".
+Test-Anmerkung:
+"IsTriggerWaitOnSleeps" gibt nur "true" zurück, falls explizit TriggerWaitOnSleeps(<Auslöser>, true) aufgerufen wurde. Am Verhalten des Auslösers
+scheint sich aber nichts zu ändern.
+
+\subsection{Notation}
+sleeps <Funktionsbezeichner> // Liefert einen Boolean-Wert.
+<Funktionsbezeichner>.sleeps // Liefert einen Boolean-Wert.
+sleepon <Funktionsbezeichner> // Funktion wartet bei "sleep"-Anweisungen.
+sleepoff <Funktionsbezeichner> // Funktion wartet nicht bei "sleep"-Anweisungen.
+
+Mittels des Schlüsselwortes "reset" kann eine "threaded" Funktion zurückgesetzt werden. Dies bewirkt, dass sie bei der nächsten "sleep"-Anweisung
+abbricht. Dies gilt für sämtliche "execute"- und "executewait"-Aufrufe der Funktion.
+
+\subsection{Notation}
+reset <Funktionsname> // Setzt den Thread der Funktion zurück.
+
+\section{Karteninitialisierer}
+Ist eine Funktion als "mapinit" deklariert, so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers 
+aufgerufen. Eine "mapinit"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt, 
+manuell aufgerufen wird oder "threaded" ist (einstellbar, "threaded" ist ebenfalls eher unnötig).
+Exisitieren mehrere Funktionen, die als "mapinit" deklariert wurden, so lässt sich die exakte Aufrufreihenfolge nur durch Deklarationsvoraussetzungen
+bestimmen.
+Setzt eine als "mapinit" deklarierte Funktion eine andere voraus (ob direkt oder indirekt), so ist garantiert, dass sie erst nach dieser vorausgesetzten
+aufgerufen wird.
+
+\section{Konstante Funktionen}
+Ist eine Funktion als "const" deklariert, so muss sie einen global konstanten Wert zurückgeben. Beim Kompilieren, wird
+sie normalerweise als "constant" JASS-Funktion erzeugt. Global konstant bedeutet in diesem Zusammenhang, dass der Wert
+zur Laufzeit immer je nach übergebenen Parametern derselbe ist. 

@@ -1,0 +1,21 @@
+\chapter{Variablensperrung}
+
+Da das Schlüsselwort "threaded" die Deklaration einer Funktion ermöglicht, welche fast gleichzeit wie andere ausgeführt
+werden kann und es in Warcraft 3 The Frozen Throne selbst den Datentyp "trigger" gibt, dessen Aktionen ebenfalls
+fast gleichzeitig ausgeführt werden können (eigentlich handelt es sich aufgrund der einzig möglichen Compilerimplementation
+bei beiden Möglichkeiten um den Datentyp "trigger"), unterstützt die Sprache auch sogenannte Variablensperrungen,
+die verhindern, dass eine Variable über einen bestimmten Zeitraum aus mehreren Funktionen gesetzt wird.
+Ausgelesen werden können Variablen zu jedem Zeitpunkt, jedoch sollte der Testmodus nach Einstellung eine Warnung
+ausgeben können, wenn eine gesperrte Variable außerhalb ihres Sperrblocks ausgelesen wird.
+Die Sperrung einer Variable ist bis zum Ende des sogenannten Sperrblocks gültig, welcher in einer als "threaded"
+deklarierten Funktion auch "sleep"-Anweisungen enthalten kann.
+Zudem kann bei der Verwendung eines "threaded"-Blocks eine Sekundendauer in Form eines Fließkommazahlenliterals
+angegeben werden. Wird dies getan, so wartet die Funktion solange bis die Variable entsperrt wurde und überprüft
+diese in dem angegebenen Intervall. Sollte versucht werden eine Variable zu sperren, die bereits gesperrt ist und
+kein Intervall angegeben werden, so würde der Sperrblock übersprungen werden.
+
+\section{Notation}
+threaded (<Variablenname>[; <Fließkommaintervall>])
+{
+	<Anweisungen>
+}

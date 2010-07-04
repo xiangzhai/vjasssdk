@@ -1,0 +1,41 @@
+* MathApi
+* StringUtilityApi
+* MapSetupApi
+* TimerApi
+* GroupApi
+* ForceApi
+* RegionAndLocationApi
+* NativeTriggerInterface
+* BooleanExprApi
+* TriggerGameEventApi
+* TriggerPlayerBasedEventApi
+* TriggerUnitBasedEventApi
+* WidgetApi
+* DestructableObjectApi
+* ItemApi
+* UnitApi
+* PlayerApi
+* FogOfWarApi
+* GameApi
+* CampaignApi
+* DialogApi
+* GameCacheApi // comment is missing in script
+* HashtableApi // comment is missing in script
+* RandomizationApi
+* VisualApi // terrain fog, sky model, some interface stuff, mini map, time of day, text tag
+* TrackableApi
+* QuestApi
+* TimerDialogApi
+* LeaderboardApi
+* MultiboardApi
+* CameraApi
+* SoundApi
+* EffectsApi // also weather effects and terrain deformations
+* TerrainApi
+* ImageApi
+* UbersplatApi
+* BlightApi
+* DoodadApi
+* ComputerAiInterface
+* CheatApi // comment is missing in script
+* PreloadApi // comment is missing in script

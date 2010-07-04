@@ -1,0 +1,16 @@
+\chapter{Funktionstypen}
+
+Funktionstypen sind Typen, die es Variablen erlauben, Verweise auf als "threaded" deklarierte Funktionen zu speichern.
+Dabei müssen der Rückgabetyp und sämtliche Parametertypen übereinstimmen.
+Wird eine Variable mit einem Funktionstyp bei ihrer Deklaration als "const deklariert, hat dies zur Folge, dass die Funktionen,
+auf welche die Variable zeigt nicht mit den Schlüsselwörtern "execute", "executewait", "evaluate", "sleepon", "sleepoff" und "reset" aufgerufen
+bzw. diese auf sie angewandt werden dürfen.
+Es gilt zu beachten, dass jede Funktionsdeklaration implizit einen Funktionstypen deklariert. Funktionsbezeichner können daher als Typen
+verwendet werden.
+Das Schlüsselwort "function" ist optional und dient einer besseren Lesbarkeit des Codes.
+
+\section{Notation}
+[function] [<Funktionstypname>] <Rückgabetyp> (Parametertyp1, Parametertyp2, ... ParametertypN) [Instanzendeklarationen];
+
+\section{Beispiel}
+Predicate boolean () a = function b;

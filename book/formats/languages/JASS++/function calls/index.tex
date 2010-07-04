@@ -1,0 +1,17 @@
+\chapter{Funktionsaufrufe}
+Funktionen können über ihren Bezeichner und der Angabe der notwendigen Parameterwerte aufgerufen werden. Ist ihr Rückgabetyp nicht "void", so kann
+der Rückgabewert als Ausdruck verwendet werden (z. B. bei einer Zuweisung).
+Des Weiteren ist es erlaubt als "threaded" deklarierte Funktionen mit einem der Schlüsselwörter
+\begin{enumerate}
+\item execute
+\item executewait
+\item evaluate
+\end{enumerate}
+aufzurufen.
+Die Parameter können bei einem Aufruf (wie z. B. in der Skriptsprache Python) explizit gesetzt werden. Parameter mit einem vordefinierten Wert (siehe
+"Funktionen") müssen nicht explizit gesetzt werden.
+Diese beiden Regeln entfallen bei Funktionsvariablen, da hierbei kein fester Bezeichner und somit auch keine bestimmte Funktionsdeklaration zugeordnet werden kann.
+
+\section{Notation}
+[<execute | executewait | evaluate>] <Funktionsbezeichner | Funktionsvariable>(<Parameterwert> ...);
+[<execute | executewait | evaluate>] <Funktionsbezeichner | Funktionsvariable>(<Parametername> = <Parameterwert>);

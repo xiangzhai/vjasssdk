@@ -1,0 +1,11 @@
+\chapter { Deklaration nativer Funktionen }
+
+Native Funktionen werden wie native Typen lediglich deklariert und nicht definiert. Die Definition erfolgt in der verwendeten Engine und kann
+undefiniert bleiben, solange der Compiler weiß, wie die Funktion aufzurufen ist.
+Native Funktionen aus JASS sollten mittels der JASS++-Syntax erneut bzw. ein einziges Mal deklariert werden, da man sie bei solchen Deklarationen
+um konstante Parameter usw. erweitern kann.
+Dies muss jedoch nicht geschehen (siehe "Kompatibilät zu JASS").
+Das "function"-Schlüsselwort ist wie bei selbstdefinierten Funktionen optional und dient besserer Lesbarkeit des Codes. 
+
+\section { Notation }
+native [const] [function] <Rückgabetyp> <Funktionsname>([<Parametertyp> <Parametername>, ...]);

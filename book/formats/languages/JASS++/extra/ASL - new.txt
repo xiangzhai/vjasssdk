@@ -1,0 +1,47 @@
+function GetIssuedOrderItem takes nothing returns item
+    if not (GetIssuedOrderId() >= 852008) and (GetIssuedOrderId() <= 852013) then
+        return null
+    endif
+    return(UnitItemInSlot(GetTriggerUnit(), (GetIssuedOrderId()-852008)))
+endfunction
+
+Trigger Execute and event responses
+When a trigger executes another trigger, it passes all its event responses to the other trigger so it can freely use them too.
+
+
+Turn Off the beast
+Another important thing to know about triggers, is the ability to turn them off or on.
+
+When a trigger is turned off, it simply won't react to events.
+
+DisableTrigger and TriggerExecute
+TriggerExecute doesn't check if a trigger is off before executing it. Turning triggers off is only for events.
+
+If you want DisableTrigger to stop TriggerExecute you can use this function:
+It simply returns true as long as the trigger is on.
+
+So to execute a trigger and make sure it only executes it when it is on you can use this:
+if (IsTriggerEnabled(sometrigger)) then
+    call TriggerExecute(sometrigger)
+endif
+
+inject DestroyTrigger wenn TriggerWaitOnSleeps true ist, Warnung ausgeben und Auslöser nicht zerstören (BUG).
+
+Dasselbe bei DestroyTimer machen
+
+TriggerReset testen bzw Möglichkeit finden, Trigger sofort zu unterbrechen!!!!
+If you are not using things like TriggerExecute / ConditionalTriggerExecute or TriggerEvaluate on that trigger then GetTriggerEvalCount would return the number of times an event registered for the trigger has happened. And GetTriggerExecCount would return the number of times an event registered for the trigger has happened AND was validated by the trigger's condition.
+
+ACHTUNG ai-Block-Hinweis für Jass++:
+Anyways, I've found that some functions from common.j just don't work in a JASS AI script, and the only way to get those functions is by practice.
+
+execute <real-Wert> <threaded Funktionsbezeichner/Variable>
+Bewirkt, dass die angegebene Funktion nach der angebenen Zeit (real-Wert) ausgeführt wird.
+Damit es möglich ist Parameter zu übergeben, muss der Compiler bei einem solchen Aufruf einen Timer erzeugen, die Parameter mit der id des Timers in einer hashtable speichern
+und sie dann beim Aufruf auslesen lassen, wenn die Parameter entgegen genommen werden.
+Dazu muss eine Zwischenfunktion ohne Parameter und zusätzlich zur Auslöserbedingung und -aktion erzeugt werden, die anhand von GetExpiredTimer() die Parameter ausliest, die eigentliche Funktion aufruft (mit den Parametern), wartet bis die Funktion abgelaufen ist (also kein execute) und den Timer danach ordentlich wieder löscht.
+Im Zusammenhang mit Lambda-Funktionen wäre das Ganze sehr interessant für Zauber- und Videofunktionen, da man eine Menge Code ohne TriggerSleepAction mit sehr exakten Wartemethoden, die auch bei einer Spielpausierung und synchronisiert stattfinden, geschrieben werden kann.
+Natürlich wird nach einer execute-Anweisung sofort mit den Anweisungen fortgefahren.
+
+Da Aufzählungen Container-Typen sind, können sie auch in foreach-Schleifen verwendet werden.
+Sollte das passieren, so müssen Ihre Eigenschaften intern entweder in einem Array gespeichert oder besser über eine Zugriffsfunktion, die einen Index entgegen nimmt, ausgelesen werden.

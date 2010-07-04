@@ -1,0 +1,29 @@
+\chapter { Deklarationen }
+
+In JASS++ gibt es zwei Arten von Deklarationen: dynamische und statische. Statische existieren vom Programmstart bis zum
+Programmende (bzw. Spielstart bis zum Spielende). Dynamische haben eine bestimmte, oftmals zur Lauftzeit definierte Verfügbar-
+keitsdauer.
+In Funktionen geht diese vom Funktionsaufruf bis zum Funktionsablaufsende. In Klassen von der Erzeugung des Objekts bis zu
+dessen Freigabe.
+Statische Deklarationen erhalten den Qualifzierer "static", dynamische den Qualifzierer "dynamic". Es gelten einige Implikations-
+regeln, um unnötige Tipparbeit zu vermeiden. Dennoch ist auch eine explizite Voranstellung des jeweiligen Qualifizerers erlaubt.
+Es gibt nur eine begrenzte Reihe von Deklarationsarten, die beide Arten der Qualifikation zulassen.
+
+Folgende Sprachkonstrukte werden implizit als dynamisch deklariert:
+* Variablen
+* Methoden
+
+Folgende Sprachkonstrukte werden implizit als statisch deklariert:
+* eigene Gültigkeitsbereiche
+* Typen
+* Funktionen
+* Pseudonyme
+* Aufzählungen
+* Klassen
+
+Folgende Sprachkonstrukte erlauben auch die explizite Qualifikation durch den nicht impliziten Qualifizierer.
+* Variablenart
+* Methoden
+
+\section { Notation }
+[static | dynamic] <Deklaration> 
