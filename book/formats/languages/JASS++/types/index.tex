@@ -77,22 +77,44 @@ unit const myUnit = myOtherNonConstantUnit;
 unit myUnit= myOtherConstantUnit; // illegal!
 
 \section{Behältertypen}
-Ein Behältertyp ist ein Typ, welcher die Verwendung des "size"- und des "[]"-Operators gestattet.
+Ein Behältertyp ist ein Typ, welcher mindestens die Verwendung des "size"- und des "[]"-Operators erlaubt.
+Die Verwendung des "+=" bzw. "+" und des "-=" bzw. "-"-Operators ist optional möglich.
 Dabei muss der "size"-Operator eine Ganzzahl zurückgeben und der "[]"-Operator eine einzige als
 Parameter entgegennehmen und den Typ der enthaltenen Elemente des Behälters zurückgeben.
 Ob die beiden Operatoren als "const" implementiert sind ist frei wählbar, jedoch können, falls
 einer der beiden nicht als "const" implementiert ist, konstante Instanzen des Typs nicht in
 "foreach"-Schleifen verwendet werden.
 Anderenfalls geht dies ohne Probleme durch die vorgegebene Implementation (siehe "foreach-Schleife").
+Mit dem "+" bzw. dem "+="-Operator kann man neue Instanzen eines Behälters erzeugen bzw. vorhandene um neue Einträge erweitern.
+Mit dem "-" bzw. dem "-="-Operator kann man neue Instanzen eines Behälters erzeugen bzw. vorhandene um bestehende Einträge verringern.
 Es gibt drei native Behältertypen, die jeweils Werte eines bestimmten nativen Typs enthalten:
 \begin{enumerate}
-\item string - string (einzelnes Zeichen)
+\item string - string ([] liefert ein einzelnes Zeichen)
 \item force - player
 \item group - unit
 \end{enumerate}
 
 Alle drei können somit in "foreach-Schleifen" verwendet werden.
-Außerdem zählen auch Aufzählungen zu den Behältertypen (siehe "Aufzählungen").
+Außerdem zählen auch Aufzählungen zu den Behältertypen (siehe "Aufzählungen"). Jedoch sind diese nicht erweiterbar.
+
+\subsection{Operatoren}
+Die Additions- und Subtraktionsoperatoren entfernen immer genau die Anzahl der Elemente des jeweiligen Ausdrucks.
+Daher wird ein Element, das mehrfach in einem Behälter vorhanden ist genau einmal aus diesem entfernt, wenn der "-"-Operator
+verwendet wird.
+Außerdem kann der zweite Ausdruck bei ihnen auch ein einzelnes Element sein!
+\begin{enumerate}
+\item + - Addiert zwei Behälter und erzeugt daraus einen neuen Behälter mit dem Inhalt beider Behälter.
+\item - - Subtrahiert zwei Behälter und erzeugt daraus einen neuen Behälter mit dem Inhalt des ersten Behälters ohne die Elemente des zweiten Behälters.
+\item += - Addiert einen anderen Behälter zu einem bestehenden.
+\item -= - Subtrahiert einen anderen Behälter von einem bestehenden.
+\item size - Liefert die Anzahl der Elemente eines Behälters.
+\item [] - Liefert ein Element eines Behälters.
+\item []= - Setzt ein Element eines Behälters.
+\item >= Vergleicht die Größe zweier Behälter.
+\item <= Vergleicht die Größe zweier Behälter.
+\item > Vergleicht die Größe zweier Behälter.
+\item < Vergleicht die Größe zweier Behälter.
+\end{enumerate}
 
 \section{Vordefinierte Typen}
 Bei folgenden Typen wird die verwendete "common.j"-Datei analysiert und anhand der dort definierten JASS-Konstanten

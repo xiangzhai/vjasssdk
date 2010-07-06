@@ -40,21 +40,24 @@ Die Sprache garantiert jedoch, dass Variablen nach einer Löschung des verwiesen
 erfolgreich war (keine Ausnahme wurde geworfen) (siehe "Ausnahmen" und "Methoden - Destruktor").
 
 \section{Arrays}
-Array-Größenangaben müssen konstante Ganzzahlwerte sein.
-Der Variableninhalt wird bei Arrays wie in C oder C++ mittels geschweifter Klammern eingeschlossen:
-integer tes[2] = { 10, 2 };
+Arrays dienen einer generischen Schnittstelle für beliebige Behältertypen. Daher können Variable eines jeden Typs (ausgenommen "code")
+als Array deklariert werden.
+Array-Größenangaben müssen Ganzzahlwerte sein. Sie können weggelassen werden, falls sich die Größe aus der Initialisierung heraus
+ermitteln lässt.
+Der Variableninhalt wird bei Arrays wie in C/C++ mittels geschweifter Klammern eingeschlossen. Es können mehrdimensionale
+Arrays deklariert werden. Die Größe von Arrays ist durchgehend dynamisch. Außerdem können Arrays im Gegensatz zu Arrays in JASS
+als Parameter und Rückgabewert übergeben werden. Zudem kann einem Array der Inhalt eines anderen Arrays zugewiesen werden.
+Des Weiteren gelten für Arrays die selben Regeln wie für alle Behältertypen (siehe "Behältertypen"), jedoch sind Arrays kopier-
+und nicht referenzbasiert!
 
-Es können mehrdimensionale Arrays deklariert werden:
-integer test[2][2] = { { 10, 5 }, { 2, 4 } };
+\subsection{Anmerkung zur Compiler-Implementation}
+Arrays in JASS++ müssen mit Hash-Tabellen oder Spiel-Caches umgesetzt werden. Es gilt dabei zu beachten, dass sie kopierbasiert sind
+und am Ende ihres Gültigkeitsbereiches wieder freigegeben werden müssen.
 
-Da ein Array in Warcraft 3 nur 8192 bzw. 8191 (wird im letzten Feld die Größe gespeichert?) haben kann, kümmert sich der Compiler
-mit speziellen Verfahren bei höheren Größenangaben um den benötigten Speicherplatz.
-Die Größenabgabe einer Dimension kann weggelassen werden. In diesem Fall entspricht sie 8192.
-Es sollte zur Kompilierzeit und zur Laufzeit im Testmodus jeder Indexzugriff überprüft werden und im Fehlerfall eine entsprechende Meldung
-ausgegeben werden.
-Die Array-Größe muss ein konstanter Ganzzahlwert sein. Sie ist daher zur Kompilierzeit bekannt und kann mit dem size-Operator abgefragt werden.
-Bei einer Initialisierung des Arrays, können die Dimensionsangaben auch weggelassen werden, da sie in diesem Fall automatisch bestimmt werden.
-Mit dem "size"-Operator erhält man die Größe eines Arrays.
-Dynamische Arrays werden nicht unterstützt, stattdessen sollte man native Behältertypen, welche der Standardbibliothek oder eigene verwenden (siehe "Standardbibliothek").
-Arrays können von Funktionen nicht als Parameter entgegen genommen und auch nicht zurückgegeben werden.
-Arrays des Typs "code" sind ungültig.
+\subsection{Initialisierungsnotation}
+{ { <Wert 1>, <Wert 2>, <Wert 3>, <Wert n> }, { <Wert 1>, <Wert 2>, <Wert 3>, <Wert n> } };
+
+\subsection{Notation}
+<Typ> <Bezeichner>[<Größe der 1. Dimension>][ [<Größe der 2. Dimension>] ][ [<Größe der 3. Dimension>] ] [= Initialisierungsnotation]
+
+

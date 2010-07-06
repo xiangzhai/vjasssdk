@@ -121,16 +121,6 @@ integer(Ausdruck)				Entspricht GetHandleId(Ausdruck)
 id Ausdruck					Entspricht Ausdruck.id und GetHandleId(Ausdruck)
 Ausdruck.id
 
-\section{Für den Typ force}
-Ausdruck[Index]					Liefert den Spieler (Typ "player") der Streitmacht des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Streitmacht, so liefert der Ausdruck "null".
-size Ausdruck					Liefert die Größe der Streitmacht als Ganzzahl.
-Ausdruck.size					Liefert die Größe der Streitmacht als Ganzzahl.
-
-\section{Für den Typ group}
-Ausdruck[Index]					Liefert die Einheit (Typ "unit") der Gruppe des Indizes Index. Befindet sich der Index außerhalb des Bereichs der Gruppe, so liefert der Ausdruck "null".
-size Ausdruck					Liefert die Größe der Gruppe als Ganzzahl.
-Ausdruck.size					Liefert die Größe der Gruppe als Ganzzahl.
-
 \section{Für den Typ hashtable}
 exists Ausdruck <Ganzzahlausdruck>
 Ausdruck.exists <Ganzzahlausdruck>
@@ -140,6 +130,23 @@ flush Ausdruck <Ganzzahlausdruck>
 exists Ausdruck <Zeichenkettenausdruck>
 Ausdruck.exists <Zeichenkettenausdruck>
 flush Ausdruck <Zeichenkettenausdruck>
+
+\section{Für Behältertypen}
+Ausdruck[Index]					Liefert das Element des Indizes Index. Befindet sich der Index außerhalb des Bereichs des Behälters, so liefert der Ausdruck "null". Es sollte eine Laufzeitwarnung ausgegeben werden.
+Ausdruck[Index]=				Setzt das Element des Indizes Index. Befindet sich der Index außerhalb des Bereichs des Behälters, so wird nichts gesetzt. Es sollte eine Laufzeitwarnung ausgegeben werden.
+size Ausdruck					Liefert die Größe des Behälters als Ganzzahl.
+Ausdruck.size					Liefert die Größe des Behälters als Ganzzahl.
+Ausdruck + Ausdruck
+Ausdruck - Ausdruck
+Ausdruck += Ausdruck
+Ausdruck -= Ausdruck
+Ausdruck >= Ausdruck
+Ausdruck <= Ausdruck
+Ausdruck > Ausdruck
+Ausdruck < Ausdruck
+
+\section{Für Arrays}
+Ausdruck[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
 
 \section{Für Lade-Blöcke}
 <Lade-Block-Bezeichner> : <Deklarationsvoraussetzungen>
@@ -156,20 +163,15 @@ execute <KI-Block-Bezeichner> for <Spielerausdruck>
 \section{Für Klassendeklarationen}
 <Klassenbezeichner> (<Erbung>) : <Deklarationsvoraussetzungen>
 
-\section{Für Arrays}
-size Ausdruck					Liefert die Größe des Arrays.
-Ausdruck.size					Liefert die Größe des Arrays.
-size Ausdruck <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
-Ausdruck.size <Ganzzahl>			Liefert die Größe der Dimension <Ganzzahl> des Arrays.
-Ausdruck[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
-
 \section{Für Aufzählungen}
+size <Aufzählungsbezeichner>			Liefert die Anzahl der Elemente der Aufzählung
+<Aufzählungsbezeichner>.size			Liefert die Anzahl der Elemente der Aufzählung
+
+\section{Für Aufzählungselemente}
 <Geerbter Typ>(Ausdruck)
 Ausdruck = Ausdruck
 Ausdruck == Ausdruck
 Ausdruck != Ausdruck
-size <Aufzählungsbezeichner>			Liefert die Anzahl der Elemente der Aufzählung
-<Aufzählungsbezeichner>.size			Liefert die Anzahl der Elemente der Aufzählung
 
 \section{Für "threaded" Funktionen}
 execute Funktion(<Parameter>)

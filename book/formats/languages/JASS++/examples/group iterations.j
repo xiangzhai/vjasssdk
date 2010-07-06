@@ -1,6 +1,6 @@
 // Group iteration
 
-// Jass
+// JASS
 
 function IterateMyGroup takes group whichGroup returns nothing
 	local unit firstOfGroup
@@ -38,7 +38,7 @@ function IterateMyGroup2 takes group whichGroup returns nothing
 	call ForGroup(whichGroup, call DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 5.0, GetUnitName(GetEnumUnit())))
 endfunction
 
-// Jass++
+// JASS++
 
 void IterateMyGroup(group const whichGroup)
 {

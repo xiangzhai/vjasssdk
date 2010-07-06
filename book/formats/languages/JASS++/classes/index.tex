@@ -1,0 +1,181 @@
+\chapter{Klassen}
+
+Mit dem Schlüsselwort "parent" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
+Gültigkeitsbereichen, angesprochen werden. Da sie normalerweise kein äußerer Gültigkeitsbereich sind, funktioniert die Verwendung des "."-Operators nicht.
+Mit dem Schlüsselwort "self" spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
+die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren statischen Methoden aufruft, insofern sie selbst z. B. zu einer
+der Elternklassen und nicht zur Klasse für die der Aufruf galt gehört.
+Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Gültigkeitsbereichen, über ihren Namen oder den .-Operator angesprochen werden.
+In diesem Fall wird ebenfalls überprüft, ob es sich um eine virtuelle statische Methode handelt und die der korrekten Klasse aufgerufen.
+Mit dem Schlüsselwort "this" spricht man die verwendete Instanz an.
+Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert (Zweiteres ist in der Regel der Fall).
+In diesem Fall werden die Instanzdaten in der globalen Hash-Tabelle oder in zusätzlichen globalen Variablen gespeichert.
+Falls die angegebene Maximalgröße den Wert 8192 übersteigt und keine globale Hash-Tabelle existiert,
+sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
+Die Maximalgröße einer Klasse kann mit dem "size"-Operator abgefragt werden: <Klassenbezeichner>.size
+Im Test-Modus muss zur Laufzeit 0 vom "new"-Operator zurückgegeben und eine Fehlermeldung ausgegeben werden, falls die Instanzgrenze 
+überschritten wurde.
+Außerdem muss im Test-Modus eine Fehlermeldung zurückgegeben bzw. abgebrochen werden, wenn der "delete"-Operator auf eine 0-Instanz angewandt wird.
+
+\section{Abstrakte Klassen}
+Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen können keine
+Instanzen erzeugt werden. Erbt eine Klasse, eine andere abstrakte Klasse, so muss sie sämtliche
+abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
+
+\section{Behälter-Klassen}
+Behälter-Klassen werden definiert, indem die Klasse mindestens die Operatoren "size" und "[]" implementiert (als nicht statische Methoden).
+Beide Operatoren können sowohl normal als auch als "const" deklariert werden.
+Dabei sollte der "size"-Operator die Größe des Behälters und der "[]" Zugriff auf die einzelnen Elemente zur Verfügung stellen.
+Die Instanz entspricht somit einem eindimensionalen Array (siehe "Behältertypen").
+
+\section{Vererbung}
+
+\subsection{Mehrfachvererbung}
+Überschneiden sich Elemente mehrerer geerbter Klassen, so wird vom Compiler eine Warnung ausgegeben.
+Handelt es sich um Elementvariablen, so wird lediglich die erste Elementvariable der geerbten Klassen belegt.
+Bei den Methoden wird ebenfalls die Methode der zu erst geerbten Klasse (von unten nach oben, von links nach rechts) aufgerufen.
+
+\section{protected}
+Ist eine Deklaration innerhalb des Klassengültigkeitsbereiches "protected", so kann darauf nur von abgleiteten Klassen
+der Klasse zugegriffen werden.
+
+\section{Notation}
+[ abstract ] class <Klassenbezeichner> [ [<Maximalgröße>] ] (public | private | protected <Klassenbezeichner>, ...)
+{
+	[<Deklarationen>]
+} [globale Instanzen durch Kommata getrennt];
+
+\section{Elemente}
+Klassenelemente entsprechen Variablendeklarationen mit Zugriffsmodifikatoren, die zusätzlich statisch oder mutabel (veränderlich/mutable) sein können.
+Elemente, die statisch sind, können niemals als "mutable" deklariert werden und umgekehrt.
+Statische Elemente werden zur Laufzeit pro Klasse einmal erzeugt und sind wie globale Variablen innerhalb des Gültigkeitsbereiches der Klasse.
+Nicht statische Elemente exisitieren zur Laufzeit pro Klasseninstanz einmal.
+Sie können per <Klasseninstanzvariable>.<Elementname> angesprochen werden.
+Als "mutable" deklarierte Elemente können auch von konstanten Methoden oder bei einem Direktzugriff bei konstanten Instanzen verändert werden.
+Eine Klasse kann ebenfalls Array-Elemente enthalten (siehe "Typen - Arrays").
+
+\subsection{Notation}
+[Zugriffsmodifikatoren] [static | mutable] <Variablendeklaration>;
+
+\section{Methoden}
+Als virtuell deklarierte Methoden, werden pro Klasseninstanz gespeichert. So wird immer die unterste virtuelle Methode aufgerufen.
+Virtuelle Methoden müssen zwingend threaded sein.
+Achtung: Virtuelle Methoden sollten nicht im Konstruktor aufgerufen werden, da sie durch die Konstruktoren erst überschrieben
+und der Klasseninstanz zugewiesen werden. Der Compiler sollte in diesem Fall eine Warnung ausgeben.
+Der Konstruktor selbst kann nicht virtuell sein.
+Statische Methoden können ebenfalls virtuell sein und werden entsprechend des zugehörigen Objekts innerhalb einer Methode aufgerufen.
+Wird eine nicht virtuelle statische Methode aus einer virtuellen Methode heraus aufgerufen, sollte der Compiler eine Warnung ausgeben.
+Virtuelle Methoden bewirken, dass diese auch aufgerufen werden, wenn das Objekt zu einem Elterntyp konvertiert wurde, da pro
+Objekt Verweise auf die entsprechenden Methoden gespeichert werden. Dies gilt für statische und nicht statische virtuelle Methoden.
+Bei virtuellen statischen Methoden kommt noch die Besonderheit hinzu, dass bei einem Aufruf der statischen Methode Kindklasse.statischeMethode(),
+welche jedoch in der Kindklasse nicht neu definiert wurde, weshalb automatisch die der Elternklasse aufgerufen wird, von der statischen Methode
+überprüft werden muss, von welcher Klasse aus sie aufgerufen wurde, damit sie bei virtuellen statischen Methoden die richtigen der Kindklasse und
+nicht die der Elternklasse aufruft.
+Wird also eine virtuelle Methode aufgerufen, so ist garantiert, dass sämtliche andere virtuellen Methoden, die aus dieser heraus aufgerufen werden,
+sich auf der selben bzw. niedrigsten Klassenebene des Objekts befinden, falls sie dort deklariert wurden.
+
+\subsection{Abstrakte Methoden}
+Abstrakte Methoden besitzen keinen Gültigkeitsbereich, sondern werden mit einem Semikolon abgeschlossen.
+Außerdem müssen sie als virtuell deklariert werden.
+Abstrakte Methoden müssen allesamt implementiert werden, falls die Kindklasse nicht als "abstract" deklariert wurde.
+
+\subsection{Zugriffsmodifikatoren}
+Zugriffsmodifikatoren von Methoden können in der Kindklasse "umdeklariert" werden, was ihre zugreifbarkeit verändert,
+ohne dass sie neu definiert werden müssen.
+Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
+
+\subsection{Methoden der abgleiteten Klasse}
+Mit parent.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
+Dabei gilt die Priorität von unten nach oben, von links nach rechts, bei sämtlichen geerbten Klassen.
+
+\subsection{Konstante Methoden}
+Nichtstatische Methoden, die mit dem Suffix "const" deklariert wurden, erhalten das Argument this als konstantes Objekt
+und gelten somit auch als eine andere Deklaration der gleichen Methode, welche nicht als "const"
+deklariert wurde (siehe Funktionen).
+
+Statische Methoden, die mit dem Suffix "const" deklariert wurden, dürfen keinerlei nicht als "const" deklarierte, statische
+Methoden der Klasse aufrufen, geschweigedenn irgendwelche statischen Elemente der Klasse verändern, sondern nur zurückgeben.
+
+Bei beiden Arten von "const"-Methoden gilt die Ausnahme für "mutable"-Elemente.
+Diese dürfen auch von "const"-Methoden verändert werden.
+
+\subsection{Methodenüberschreibung}
+Sämtliche nicht private Methoden der Elternklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
+der Methode aufgerufen werden.
+Wird eine nicht virtuelle Methode einer Elternklasse überschrieben und der Typ der Elternklasse irgendwo im Code verwendet, so sollte
+der Compiler eine Warnung ausgeben, dass möglicherweise nicht die richtige aufgerufen wird.
+
+\subsection{Notation}
+[static] [virtual] [abstract] Funktionsdeklaration [const]
+
+\subsection{Konstruktor}
+Der Konstruktor einer Klasse darf nicht virtuell und somit auch nicht abstrakt sein.
+Konstruktoren einer Klassevererbungshierarchie werden von oben nach unten, von links nach rechts, aufgerufen.
+Empfangen alle Elternklassenkonstruktoren bestimmte Argumente und wird nicht mindestens einer davon manuell aufgerufen,
+so gibt der Compiler einen Fehler zurück, da die Elternklassen nicht richtig konstruiert wurden.
+Jede nächstgelegene Elternklasse muss konstruiert werden, ob implizit, falls möglich (keine Parameter), oder explizit.
+Wird kein Konstruktor in einer Kindklasse definiert, so können selbstverständlich die der Elternklassen mit dem Bezeichner
+der Kindklasse verwendet werden.
+Der Konstruktor muss stets den Namen "new" tragen und besitzt keinen Rückgabetyp. Er gibt dennoch das neu erzeugte Objekt zurück,
+welches vom Entwickler nicht modifiziert werden kann (die Variable "this" kann im Konstruktor verändert werden, wird aber nicht
+zurückgegeben).
+Dies dient der Garantie, dass ein neu erzeugtes Objekt bei einer Konstruktion zurückgegeben wird.
+Er kann über den Bezeichner der Funktion ("new") aufgerufen werden.
+Dabei wird der Typ automatisch anhand des Typs der Variable bestimmt, was jedoch nicht immer (z. B. bei der Verwendung von abstrakten Klassen) erwünscht ist. Daher sollte der Typ der Variable umgewandelt werden, falls eine andere Klasse verwendet werden soll.
+Dies ist selbstverständlich auch bei der Übergabe als Funktionsparameter möglich.
+Klassen benötigen keinen Standardkonstruktor. Wird kein Konstruktor deklariert, so wird beim Aufruf von "new" eine Funktion in einer höheren
+Schicht (Compilerimplementation) aufgerufen und dennoch ein Objekt konstruiert. Jedoch sollte der Compiler eine Warnung ausgeben, falls kein
+Konstruktor definiert wurde bzw. Eigenschaftsvariablen der Klasse nicht initialisiert wurden.
+
+\subsubsection{Deklarations-Notation}
+[Zugriffsmodifikatoren] new([<Konstruktorparameter>]) { [<Anweisungen>] }
+
+\subsubsection{Aufrufs-Notation}
+new ([<Konstruktorparameter>])
+
+\subsection{Kopierkonstruktor}
+Weist man einer Objektvariable den Wert einer anderen zu, so zeigen beide Variablen normalerweise auf dasselbe Objekt.
+Dies kann umgangen werden, indem man den Kopierkonstruktor verwendet und das Objekt kopiert bzw. ein neues mit den gleichen
+Eigenschaften erzeugt.
+Dazu dient das Schlüsselwort "copy". Es einer Klassen-Instanz-Variable vorangestellt werden (wie beim Konstruktor).
+Wird kein eigener Kopierkonstruktor definiert, so werden sämtliche Elementinhalte ebenfalls kopiert und außerdem
+alle Kopierkonstruktoren der Elternklassen in der Reihenfolge, welche auch beim Konstruktor angewandt wird, aufgerufen.
+Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelementvariablen ebenfalls kopiert wird, sowie auch deren
+Arrays, Funktionen und Objekte usw. (unter Verwendung von deren Kopierkonstruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf 
+dieselben Ziele, falls es sich bei den Elementvariablen um keine Objekte handelt, sondern um referenzbasierte native Typen, wie z. B. "unit".
+Der Inhalt von Elementvariablen mit kopierbasierten Typen wird selbstverständlich ebenfalls kopiert (dazu ist natürlich kein Kopierkonstruktor notwendig).
+Der Kopierkonstruktor darf virtuell und abstrakt sein.
+Er darf keinerlei Parameter enthalten, weshalb nur exakt ein Kopierkonstruktor pro Klasse deklariert werden kann.
+Außerdem darf er keinen Rückgabetyp besitzen, da wie beim Konstruktor garantiert wird, dass eine neue Instanz zurückgegeben wird.
+Werden in einem selbstdefinierten Kopierkonstruktor nicht die Kopierkonstruktoren der Elternklassen aufgerufen, so sollte der Compiler eine Warnung ausgeben.
+
+\subsubsection{Deklarations-Notation}
+[Zugriffsmodifikatoren] copy() { [<Anweisungen>] }
+
+\subsubsection{Aufrufs-Notation}
+copy <Ausdruck>
+
+\subsubsection{Beispiele}
+class X a = new a();
+class X b = a.copy();
+a = copy b;
+
+\subsection{Destruktor}
+Ein Objekt kann mit Hilfe des "delete"-Schlüsselworts gelöscht bzw. freigegeben werden.
+Dabei wird der Variableninhalt der betreffenden Variable automatisch auf 0 gesetzt, was Fehlzugriffe einschränkt bzw. verhindert.
+Zunächst wird der Destruktor, falls vorhanden, der Klasse aufgerufen und danach bis zur obersten Elternklasse hin alle Destruktoren
+der geerbten Klassen. Dabei werden bei einer Mehrfachvererbung zunächst die Vererbungshierachien der ersten Klassen von unten nach oben,
+von rechts nach links abgearbeitet (genau andersherum als beim Konstruktor).
+Existiert kein selbst definierter Destruktor, so ist das Objekt dennoch löschbar. Hierbei gilt praktisch das Gleiche wie beim Konstruktor:
+Es gibt stets einen automatisch erzeugten Destruktor.
+Erbt die entsprechende Klasse von mindestens einer anderen Klasse, so muss der Destruktor virtuell sein. Dies soll Nichtlöschen von allozierten
+Objekten verhindern.
+Der Destruktor einer abstrakten Klasse muss daher schon als virtuell deklariert werden (zwar nicht unbedingt notwendig, da es sonst einen Fehler in
+der Kindklasse gäbe, aber warum nicht?).
+Der Destruktor besitzt ebenfalls keinen Rückgabetyp und darf pro Klasse nur einmal definiert werden.
+
+\subsubsection{Deklarations-Notation}
+[Zugriffsmodifikatoren] delete() { }
+
+\subsubsection{Aufrufs-Notation}
+delete <Ausdruck>
