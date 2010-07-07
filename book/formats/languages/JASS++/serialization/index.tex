@@ -1,0 +1,46 @@
+\chapter{Serialisierung}
+In JASS++ können Datenstrukturen auf unterschiedliche Weisen serialisiert, sprich als Datensequenz in Datenpuffer geschrieben werden.
+Folgende Sprachkonstrukte lassen sich serialisieren:
+\begin{enumerate}
+\item Objekte nativer Typen
+\item Objekte eigener Typen (Aufzählungen und Klassen)
+\end{enumerate}
+
+Des Weiteren gibt es folgende Möglichkeiten der Serialisierung:
+\begin{enumerate}
+\item in einer Hash-Tabelle
+\item in einem Spiel-Cache
+\end{enumerate}
+
+Für die Serialisierung in JASS++ existieren die Schlüsselwörter "save", "load", "remove" und "exists".
+Um ein Objekt zu serialisieren muss immer ein Schlüssel angegeben werden. Im Hash-Tabellen muss dieser Schlüssel den Typ "integer" und in Spiel-Caches den Typ "string" besitzen.
+Man beachte, dass man z. B. mit der Funktion "StringHash" aus einer Zeichenkette einen Ganzzahl wert machen und somit auch für Hash-Tabellen eine Zeichenkette als Schlüssel verwenden kann.
+Mit dem Schlüsselwort "flush" werden sämtliche Serialisierungsdaten des entsprechenden Schlüssels gelöscht.
+Mit dem Schlüsselwort "exists" kann überprüft werden, ob ein Objekt unter dem angegebenen Schlüssel im Speicher existiert. Ein Ausdruck mit dem Schlüsselwort liefert daher einen "boolean"-Wert zurück.
+Das bedeutet, dass die einzigen Zusatzinformationen zu jeder Serialisierung ein "boolean"-Wert sind, welcher angibt, ob ein Objekt gespeichert wurde.
+Mit dem Schlüsselwort "save" kann ein Objekt unter dem angegebenen Schlüssel serialisiert werden. Falls sich bereits ein Objekt unter dem verwenden Schlüssel im Speicher befindet, so wird dieses vorher automatisch bereinigt.
+Mit dem Schlüsselwort "load" kann man die Daten eines serialisierten Objekts unter dem angegebenen Schlüssel in ein Objekt laden.
+Dabei wird nicht anhand irgendwelcher gespeicherten Dateninformationen ermittelt, welche Daten geladen werden müssen, sondern anhand des Objekts, in welches die Daten geladen werden sollen.
+Aufgrund der Geschwindigkeitsvorteile und der schon bestehenden Sicherheit durch die JASS-Nativen, werden Typinformationen über die einzelnen Werte nicht gespeichert und auch nicht überprüft.
+Sollte daher ein gespeicherter Wert oder gar ein ganzes Objekt nicht existieren, so wird keine Ausnahme geworfen.
+Die einzelnen Werte des Objekts, in welches die Daten geladen werden sollen, werden lediglich auf ihre Nullwerte gesetzt.
+Eine Ausnahme besteht im Testmodus, in welchem zumindest eine Laufzeitwarnung erscheinen sollte, falls geladene Daten nicht existieren.
+Des Weiteren gilt es zu anzumerken, dass auch Arrays und Array-Eigenschaften problemlos serialisiert werden können.
+
+Folgende native Datentypen können nicht in Hash-Tabellen serialisiert werden:
+-
+TODO
+
+Folgende native Datentypen können nicht in Spiel-Caches serialisiert werden:
+-
+TODO
+
+Sollte dennoch versucht werden ein Objekt eines solchen Typs zu serialisieren, ob direkt oder indirekt (z. B. in Form eines Klassenelements), so muss der Compiler eine Fehlermeldung ausgeben.
+Die Beschränkungen existieren aufgrund der Beschränkungen der nativen JASS-Funktionen.
+
+\section{Notation}
+save <Variable> <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>
+load <Variable> <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>
+exists <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>
+<Hash-Tabelle | Spiel-Cache>.exists <Ganzzahlausdruck | Zeichenkettenausdruck>
+flush <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck> 

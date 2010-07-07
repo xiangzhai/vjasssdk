@@ -1,6 +1,6 @@
-\chapter { Vorwort }
+\chapter{Vorwort}
 
-\section { Limitierungen von JASS }
+\section{Limitierungen von JASS}
 JASS ist eine funktionale Skriptsprache und bietet daher keine Möglichkeiten der generischen, objektorientierten
 oder modularen Programmierung. Zudem wird nicht, wie z. B. in C, zwischen Deklaration und Definition streng unterschieden,
 sondern ist eine Deklaration in jedem Fall auch eine Definition.
@@ -15,7 +15,7 @@ die Syntax ist etwas unschön, da keine geschweiften Klammern, for- und while-Sc
 werden können, es gibt keine Ausnahmebehandlung, es können unvermeidbare Speicherlecks entstehen und zu guter Letzt
 gibt es keine Blockkommentare in JASS.
 
-\section { Das Problem }
+\section{Das Problem}
 Möchte man nun die Skriptsprache JASS verbessern bzw. erweitern, so müsste man verständlicherweise ihren Interpreter umschreiben.
 In der Theorie lassen sich zwar viele neue Fähigkeiten planen, jedoch scheitert man an der Umsetzung, da der Quell-Code des Interpreters
 bzw. derer von ganz Warcraft 3 The Frozen Throne nicht frei verfügbar ist. Nun hat man sicherlich die Option, die gesamte Warcraft-3-The-
@@ -26,7 +26,7 @@ Dazu muss man "nur" einen Compiler bzw. Precompiler für die eigene Skriptsprach
 kann.
 Diese Option wurde bisher bei allen mir bekannten Skritpsprachenerweiterungen von JASS, welche genau genommen nur drei, ja eigentlich nur zwei sind, gewählt.
 
-\section { Die Lösung }
+\section{Die Lösung}
 Zum Einen wäre da Vexorians vJass, welches sich mit großem Erfolg verbreitet hat und grob alle wichtigen Mängel von JASS behebt, die
 Syntax aber grundsätzlich beibehält und sich bei neuen Sprachkonstrukten an diese anpasst.
 Zum Anderen wären da cJass und Zinc. Ich fasse diese beiden Sprachen zusammen, da sie mehr einen Zusatz zu vJass darstellen.
@@ -50,7 +50,7 @@ und kompiliert, an deren Syntax ich einiges auszusetzen habe.
 Zudem interessiere ich mich inzwischen sehr für Programmiersprachen, weshalb die Entwicklung einer eigenen Sprache hoffentlich auch einen gewissen
 Lerneffekt bei mir auslösen wird.
 
-\section { JASS++ }
+\section{JASS++}
 Ich bin ein Fan der Programmiersprache C++. Daher der Name JASS++. Ob er passend oder unpassend ist, ist mir relativ egal, es ist nur ein Bezeichner.
 JASS++ soll alles abdecken, was mir persönlich und eventuell auch anderen an JASS fehlt.
 Genau wie vJass muss es in JASS-Code umgewandelt werden, weshalb ein Precompiler benötigt wird. Ein solcher wird momentan von mir selbst entwickelt.
@@ -62,7 +62,7 @@ Dabei werden zum Teil einzigartige und zum Teil altbekannte Syntaxelemente unter
 Zudem, und dies halte ich persönlich für eine sehr wichtige Eigenschaft der Sprache, soll sie so gut wie möglich zu bestehenden Spracherweiterungen
 von JASS kompatibel sein und zumindest deren getrennte Behandlung erlauben.
 
-\section { Mächtigkeit und Umfang }
+\section{Mächtigkeit und Umfang}
 JASS an sich ist wie z. B. C eine rein funktionale Sprache. Man definiert einige Funktionen, die bei bestimmten Ereignissen (siehe "Ereignisbehandlung")
 aufgerufen werden und erhält so sein Programm. In der Regel ist das fast die beste Lösung, um eine Spiele-Engine ansprechbar zu machen und eine einfache
 Schnittstelle für Anwender herzustellen. Diese kann jederzeit durch die Definition neuer nativer Typen und Funktionen erweitert werden und die Komplexität
@@ -82,7 +82,7 @@ nativer Typen und Funktionen für Anwender nicht zur Verfügung steht.
 Daher muss alles per JASS eingebaut werden und bei einem größeren Umfang der Systeme ist auch ein größerer Umfang und eine größerer Mächtigkeit der Skript-
 sprache von Umfang, um den Arbeitsaufwand zu reduzieren und vor allem die Fehlerquellen.
 
-\section { Ereignisbehandlung }
+\section{Ereignisbehandlung}
 JASS ist eine ereignisgesteuerte Skriptsprache. Das bedeutet, dass letztlich alles über Ereignisse des Spiels ausgelöst wird. Die JASS-API bietet unterschiedliche
 Funktionen für die Registrierung von Ereignissen an sogenannten Auslösern, welche ausgeführt werden, sobald eines der registrierten Ereignisse ausgelöst wird.
 Zunächst wird dann eine optionale Bedingung des Auslösers überprüft und dann je nachdem ob die Bedingung zutrifft oder nicht oder keine existiert, die Aktion bzw.
@@ -93,16 +93,16 @@ zu gestalten.
 Zeitliche Aktionen können per mit Zeitgeberereignissen und Warteanweisungen (siehe "Multi Threading") gesteuert werden.
 TODO ERGÄNZEN.
 
-\section { Multi Threading }
+\section{Multi Threading}
 TODO
 
-\section { Objektorientierung }
+\section{Objektorientierung}
 TODO
 
-\section { Objekttypen-Daten }
+\section{Objekttypen-Daten}
 TODO
 
-\section { Syntax des Dokuments }
+\section{Syntax des Dokuments}
 | bedeutet "oder".
 Zwischen zwei eckige Klammern eingeschlossener Inhalt ist optional.
 Zwischen ein Größer- und ein Kleinerzeichen eingeschlossener Inhalt muss durch etwas ersetzt werden.

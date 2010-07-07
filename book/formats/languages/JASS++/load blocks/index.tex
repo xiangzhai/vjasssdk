@@ -1,0 +1,15 @@
+\chapter{Lade-Blöcke}
+
+Lade-Blöcke werden zum Vorladen ("preloading") bestimmter Dateien verwendet und werden mit dem Schlüsselwort "load" eingeleitet.
+Die angegebenen Dateien werden am Anfang der "main"-Funktion, noch vor allen anderen Funktionsaufrufen, geladen.
+Die Ladeaufrufe entsprechen einem Aufruf der nativen JASS-Funktion "Preload".
+Da Lade-Blöcke einen Bezeichner haben können, können Sie sich auch gegenseitig voraussetzen (siehe "Deklarationsanforderungen"),
+wodurch die Reihenfolge während des Ladens bestimmt werden kann.
+Hat ein Lade-Block keinen Bezeichner, wird er ebenfalls je nach seiner Deklarationsposition ausgeführt.
+
+\section{Notation}
+load [<Bezeichner>] [Deklarationsvoraussetzung]
+{
+	"<Dateipfad>",
+	"<Dateipfad>"
+} 

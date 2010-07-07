@@ -108,13 +108,26 @@ Außerdem kann der zweite Ausdruck bei ihnen auch ein einzelnes Element sein!
 \item += - Addiert einen anderen Behälter zu einem bestehenden.
 \item -= - Subtrahiert einen anderen Behälter von einem bestehenden.
 \item size - Liefert die Anzahl der Elemente eines Behälters.
-\item [] - Liefert ein Element eines Behälters.
-\item []= - Setzt ein Element eines Behälters.
+\item [] - Liefert ein Element oder einen Bereich eines Behälters.
+\item []= - Setzt ein Element oder einen Bereich eines Behälters.
 \item >= Vergleicht die Größe zweier Behälter.
 \item <= Vergleicht die Größe zweier Behälter.
 \item > Vergleicht die Größe zweier Behälter.
 \item < Vergleicht die Größe zweier Behälter.
 \end{enumerate}
+
+\subsection{Intervalle}
+Mit dem "[]"-Operator können nicht nur einzelne Elemente gesetzt bzw. ausgelesen werden, sondern auch Bereiche bzw. Intervalle.
+Dabei müssen statt eines Indizes ein Start- und ein Endwert angegeben werden. Diese Art der Anweisung liefert einen neu erzeugten
+Behälter mit den entsprechenden Elementen bzw. nimmt einen solchen als Ausdruck entgegen.
+Es sollte eine Laufzeitwarnung ausgegeben werden, falls ein Fehlzugriff stattfindet. Ein Fehlzugriff liefert immer einen leeren
+neuen Behälter.
+
+\subsection{Zugriffsnotation}
+<Ausdruck>[<Index>]
+<Ausdruck>[<Index>] = <Ausdruck>;
+<Behälterausdruck>[<Startposition>;<Endposition>]
+<Behälterausdruck>[<Startposition>;<Endposition>] = <Behälterausdruck>
 
 \section{Vordefinierte Typen}
 Bei folgenden Typen wird die verwendete "common.j"-Datei analysiert und anhand der dort definierten JASS-Konstanten

@@ -1,0 +1,19 @@
+\chapter{Aufzählungen}
+Aufzählungselemente dürfen nur konstante Ausdrücke als Werte enthalten.
+Alle Aufzählungselemente müssen den geerbten Typ haben.
+Wird der geerbte Typ weggelassen, so ist die Aufzählung standardmäßig vom nativen Typ "integer".
+Aufzählungen sind konstante Behältertypen (siehe "Behältertypen") und können daher auch in "foreach"-Schleifen verwendet werden.
+Wird ein Aufzählungselement bei der Deklaration gesetzt, so werden alle darauffolgenden nicht explizit gesetzten Elemente,
+auf die noch nicht verwendeten nachfolgenden Werte gesetzt, falls solche existieren.
+Bei Ganz- und Fließkommazahlen wird dabei einfach in 1er-Schritten hochgezählt.
+Beim Typ "boolean" gilt die Reihenfolge "true", "false". Bei vordefinierten Typen (siehe "Typen") gilt die aufsteigende
+Reihenfolge Ihrer Ganzzahlwerte.
+Ist das letzte Element einer Reihenfolge erreicht, so erhalten alle weiteren Elemente ebenfalls das letzte
+und der Compiler gibt eine Warnung aus.
+Der "size"-Operator kann verwendet werden, um die Anzahl der Aufzählungselemente zu erhalten. 
+
+\section{Notation}
+enum <Bezeichner> (<geerbter Typ>) [Deklarationsvoraussetzungen]
+{
+    <Elementname> [= <Elementwert>] [,] // Nach dem letzten Element muss kein Komma gesetzt werden.
+} [globale Instanzen durch Kommate getrennt];

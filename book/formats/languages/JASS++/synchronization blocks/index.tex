@@ -1,0 +1,27 @@
+\chapter{Synchronisationsblöcke}
+Sogenannte Synchronisationsblöcke ermöglichen das Ausführen von Code für einen bestimmten Spieler bzw. eine bestimmte Spielergruppe.
+Dabei können dem Schlüsselwort Spieler- (player) und Streitmacht (force)-Ausdrücke folgen, für die der auszuführende Code lokal ausgeführt werden soll.
+Umgesetzt wird das Ganze vom Compiler über die Funktion "GetLocalPlayer". Lokalblöcke werden in JASS++ benötigt, um den Compiler den enthaltenen Code zu validieren, da nicht sämtlicher Code innerhalb eines solchen Blocks stehen darf.
+Es gibt eine Reihe nativer Funktionen, die ausdrücklich zugelassen ist.
+Zudem dürfen nur Variablen bestimmter Typen eine Zuweisung erhalten und der Compiler sollte eine Warnung ausgeben, falls diese außerhalb des Blocks noch einmal verwendet werden.
+Außerdem wird zur Kompilier- und Laufzeit eine Warnung ausgegeben, falls ein Synchronisationsblock für einen nicht menschlichen Spieler ausgeführt wird.
+Dabei wird zur Laufzeit auch überprüft, ob der Spieler das Spiel bereits verlassen hat.
+
+\section{Notation}
+local (<Spieler-/Streitmachtausdruck 1>[, <Spieler-/Streitmachtausdruck 2>, … <Spieler-/Streitmachtausdruck n>])
+{
+	<Anweisungen>
+}
+
+\section{Liste erlaubter nativer Typen, deren Werte verändert werden dürfen}
+* string
+* integer
+* real
+* boolean
+TODO
+
+\section{Liste erlaubter nativer Funktionen}
+* MultiboardDisplay
+* LeaderboardDisplay
+* StartSound
+TODO 

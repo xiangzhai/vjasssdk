@@ -1,0 +1,40 @@
+\chapter{KIs}
+Da das Spiel Warcraft 3 The Frozen Throne ein recht umfangreiches KI-Modul besitzt, gibt es in JASS++
+selbstverständlich eine kleinere Unterstützung für KI-Skripts.
+KI-Blöcke werden mit dem Schlüsselwort "ai" eingeleitet und haben zwingend einen Bezeichner.
+Innerhalb eines KI-Blocks dürfen explizit Variablen und Funktionen aus der verwendeten "common.ai"-Datei
+verwendet werden bzw. natürlich auch eigene, die innerhalb des KI-Blocks deklariert wurden.
+Jedoch keinerlei selbstdefinierte Funktionen von außerhalb, da der Block wie ein externes Skript behandelt wird
+und man ansonsten sämtliches Verwendetes mit in das Skript hinein kopieren müsste bzw. dabei alle Abhängigkeiten
+genaustens prüfen müsste.
+Für Funktionen aus der "common.j" und "Blizzard.j" gelten gewisse Einschränkungen (siehe unten).
+Der Inhalt des KI-Blocks kann über seinen Bezeichner mit den Schlüsselwörtern "execute" und "for" für einen Spieler gestartet werden.
+Der Aufruf entspricht einem Aufruf der nativen JASS-Funktion "StartCampaignAI" mit dem Spieler und dem Bezeichner "Scripts/Custom/<Bezeichner>.ai" als Parameter.
+Daher muss der Compiler dafür sorgen, dass aus dem KI-Block sozusagen eine externe Datei nach dem obigen Schema im Verzeichnis "Scripts/Custom" generiert wird.
+Der KI-Block ist also auch manuell mit der Nativen aufrufbar und sollte sich im MPQ-Archiv der Karte befinden. Der Compiler sollte einen Fehler ausgeben,
+falls die Datei bereits existiert und nicht vom Compiler generiert wurde.
+Die Compilergenerierung wird am Anfang der Datei mit dem Kommentar "// JASS++ AI" markiert.
+Der Inhalt eines KI-Blocks darf nur innerhalb des Blocks selbst aufgerufen werden.
+Bestimmte Funktionen aus der "common.j" und "Blizzard.j" dürfen in KI-Blöcken weder direkt noch indirekt verwendet werden:
+\begin{enumerate}
+\item Native Funktionen, die eine Zeichenkette zurückgeben
+\item Native Funktionen, die sogenannte Callbacks annehmen (code, trigger, boolexpr, ForGroup, etc.)
+\item ExecuteFunc
+\end{enumerate}
+
+Siehe auch http://jass.sourceforge.net/doc/library.shtml.
+Es gilt noch zu beachten, dass globale Variablen pro KI-Block separat existieren und die KI-Blöcke so nicht in der Lage sind,
+globale Variablen gegenseitig oder für das Kartenskript zu überschreiben.
+KI-Blöcke könnnen nicht als Deklarationsvoraussetzung verwendet werden, da sie in jedem Fall ausgeführt werden können und
+ihre Deklaration nicht im Skript stattfindet.
+Sie selbst können ebenfalls keine Deklarationsvoraussetzung haben, da alle verfügbaren Funktionen bereits vor ihnen
+deklariert werden.
+
+\section{Deklarationsnotation}
+ai <Bezeichner>
+{
+	<Anweisungen>
+}
+
+\section{Aufrufsnotation}
+execute <Bezeichner> for <Spieler> 

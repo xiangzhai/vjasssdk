@@ -1,7 +1,22 @@
 \chapter{Schleifen}
+Schleifen erlauben dem Programmierer, Anweisungen automatisiert mehrmals ausführen zu lassen.
+Für gewöhnlich wird in Programmiersprachen zwischen kopf- und fußgesteuerten Schleifen unterschieden.
+Eine Ausnahme bilden dabei in JASS++ Endlosschleifen, da sie keinen Wahrheitsausdruck benötigen.
+Die Verwendung der Schlüsselwörter "case", "default", und "else" erlauben dem Programmierer zusätzliche Möglichkeiten,
+auf den Verlauf der Schleifenausführungen zu reagieren, ohne selbst entsprechende Variable zu deklarieren und zu setzen.
+Mit dem Schlüsselwort "break" können Schleifenabläufe abgebrochen werden. Mit dem Schlüsselwort "continue" können Schleifen-
+abläufe erneut am Anfang des Schleifenkörpers begonnen werden.
+
 \section{Bedingte Schleifen}
-while (<Ausdruck>)
+
+\subsection{while-Schleifen}
+while-Schleifen sind kopfgesteuerte Schleifen, bei welchen zunächst ein Wahrheitsausdruck angegeben werden muss.
+Solange dieser wahr ist, wird der Schleifenkörper ausgeführt.
+
+\subsubsection{Notation}
+while (<Wahrheitsausdruck>)
 {
+	[break; | continue;]
 }
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
 {
@@ -13,10 +28,55 @@ else // Schleife wurde durch eine break-Anweisung abgebrochen
 {
 }
 
+\subsection{do-while-Schleifen}
+do-while-Schleifen sind fußgesteuerte Schleifen, bei welchen zunächst der Schleifenkörper ausgeführt wird und danach
+solange der angegebene Wahrheitsausdruck wahr ist.
+
+\subsubsection{Notation}
 do
 {
+	[break; | continue;]
 }
-while (<Ausdruck>);
+while (<Wahrheitsausdruck>);
+case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+\subsection{until-Schleifen}
+until-Schleifen sind kopfgesteuerte Schleifen, bei welchen zunächst ein Wahrheitsausdruck angegeben werden muss.
+Solange dieser falsch ist, wird der Schleifenkörper ausgeführt.
+
+\subsubsection{Notation}
+until (<Wahrheitsausdruck>)
+{
+	[break; | continue;]
+}
+case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
+{
+}
+default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
+{
+}
+else // Schleife wurde durch eine break-Anweisung abgebrochen
+{
+}
+
+\subsection{do-until-Schleifen}
+do-until-Schleifen sind fußgesteuerte Schleifen, bei welchen zunächst der Schleifenkörper ausgeführt wird und danach
+solange der angegebene Wahrheitsausdruck falsch ist.
+
+\subsubsection{Notation}
+do
+{
+	[break; | continue;]
+}
+until (<Wahrheitsausdruck>);
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
 {
 }
@@ -28,37 +88,54 @@ else // Schleife wurde durch eine break-Anweisung abgebrochen
 }
 
 \section{Zählerschleifen}
-for (<Ausdruck>; <Ausdruck>; <Ausdruck>)
+
+\subsection{for-Schleifen}
+for (<Anweisung>; <Wahrheitsausdruck>; <Anweisung>)
+{
+	[break; | continue;]
+}
+case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
 {
 }
-case (<konstanter Ganzzahlausdruck>) // Schleife wurde <Anzahl> mal durchlaufen.
+default // Schleife wurde nicht durch eine "break"-Anweisung abgebrochen
 {
 }
-default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
-{
-}
-else // Schleife wurde durch eine break-Anweisung abgebrochen
+else // Schleife wurde durch eine "break"-Anweisung abgebrochen
 {
 }
 
 \section{Behälter-Schleifen}
-foreach (<Variablenname>; <Container-Variable>) // siehe "Container-Typen"
+
+\subsection{foreach-Schleifen}
+foreach (<Variablenname>; <Behälterausdruck>) // siehe "Typen - Behältertypen"
+{
+	[break; | continue;]
+}
+case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
 {
 }
-case (<konstanter Ganzzahlausdruck>) // Schleife wurde <konstanter Ganzzahlausdruck> mal durchlaufen.
+default // Schleife wurde nicht durch eine "break"-Anweisung abgebrochen
 {
 }
-default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
-{
-}
-else // Schleife wurde durch eine break-Anweisung abgebrochen
+else // Schleife wurde durch eine "break"-Anweisung abgebrochen
 {
 }
 
 \section{Endlosschleifen}
-Diese Schleifen können nur mit "break" abgebrochen werden. Besitzt eine Schleife dieser Art keine oder nur eine indirekte "break"-Anweisung, so muss
-der Compiler eine Warnung ausgeben.
+Diese Schleifen können nur mit "break" abgebrochen werden. Besitzt eine Schleife dieser Art keine oder nur eine indirekte
+"break"-Anweisung, so muss der Compiler eine Warnung ausgeben.
 
+\subsection{forever-Schleifen}
+Die Verwendung des "default"-Blocks ist selbstverständlich nicht möglich.
+
+\subsubsection{Notation}
 forever
+{
+	[break; | continue;]
+}
+case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
+{
+}
+else // Schleife wurde durch eine "break"-Anweisung abgebrochen
 {
 }

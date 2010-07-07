@@ -1,0 +1,38 @@
+\chapter{Vorlagen}
+Vorlagen werden (nur bei Verwendung) mittels einer einfachen Kopie ihres enthaltenen Codes mit den verwendeten Datentypen gespeichert.
+Die Datentypparameter können genau wie bei Funktionsparametern gesetzt werden.
+Als Bezeichner der Vorlage wird der erste folgende Bezeichner innerhalb nach der Vorlagendeklaration verwendet.
+Das bedeutet, dass eine Vorlagendeklaration nur vor bestimmten Deklarationen erfolgen darf.
+Folgende Sprachkonstrukte können als Vorlagen deklariert sein:
+\begin{enumerate}
+\item Funktionen
+\item Funktionstypen
+\item Aufzählungen
+\item Klassen
+\end{enumerate}
+
+Es können gewisse Typvorschriften für die Datentypparameter gemacht werden, indem Bezeichnerqualifizierer oder sogar Typen selbst vorangestellt werden.
+Ein Parameter mit dem Präfix "class" darf also nur den Wert eines Klassenbezeichners erhalten.
+Ein Parameter mit dem Präfix "integer" darf nur einen Ganzzahlausdruck als Wert erhalten.
+Wird ein anderes Sprachkonstrukt als Parameter übergeben, muss der Compiler eine Fehlermeldung ausgeben.
+Wird kein Qualifzierer angegeben dürfen beliebige Typen, jedoch keine Literale bzw. Wertausdrücke als Parameter verwendet werden.
+Bei der Erzeugung eines Vorlagenobjekts müssen die eckigen Klammern nicht verwendet werden, falls alle Parameter Standardargumente besitzen bzw.
+nicht explizit definiert werden müssen.
+
+\section{Notation}
+template < [<Bezeichnerqualifizierer>] <Datentypparameterbezeichner> [= <Standardargument>] ...> <Vorlageninhalt/-bezeichner>
+
+<Vorlagenbezeichner>< [<Datentypparameterbezeichner> = <Parameterwert>] ... >
+<Vorlagenbezeichner>< [<Parameterwert>] ... >
+
+\section{Beispiel}
+template < T = integer > class Vector {};
+Vector<integer> myVector1 = new Vector<integer>();
+Vector myVector2 = new Vector();
+Vector<T = integer > myVector3 = new Vector< T = integer >();
+template < type T = integer > class List {};
+List list1;
+List<integer> list2;
+List<T=integer> list3;
+List<> list4;
+List<class CustomType> list5; // Ungültig: Parameter "T" muss ein Typ sein.

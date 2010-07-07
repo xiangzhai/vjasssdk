@@ -1,0 +1,63 @@
+\chapter{Operatorenüberladung}
+Eine Funktions- oder Methodendeklaration, welche das Schlüsselwort operator und ein zugehöriges Operatorzeichen oder einen zugehörigen Typnamen enthält, überlädt die Bedeutung eines
+Operators für die angegebenen Parametertypen.
+Dies kann global oder innerhalb eines Gültigkeitsbereiches geschehen (mit den jeweiligen Zugriffsmodifikatoren).
+Wird ein Typ und kein Operatorzeichen als Bezeichner gewählt, so ermöglicht dies Klassenobjekten eine explizite Konvertierung zum Typ der den Bezeichner trägt.
+Es gilt zu beachten, dass innerhalb der Operatordefinition nicht der überladene Operator gilt (also keine Rekursion möglich). Dies soll ermöglichen,
+dass man den originalen zumindest nocht innerhalb der eigenen Definition aufrufen kann.
+Folgende Operatoren können nach folgenden Schemata als nicht statische Methoden überladen werden:
+Bezeichner			Rückgabetyp			Parametertypen		Parameteranzahl
+=				self				self			1
++ (linksbündig)			self				-			0
+- (linksbündig)			self				-			0
++ (rechtsbündig)		self				self			1
+- (rechtsbündig)
+*				self				self			1
+/				self				self			1
+%				self				self			1
+++				self				self			1
+--				self				self			1
++=				self				self			1
+-=				self				self			1
+*=				self				self			1
+/=				self				self			1
+%=				self				self			1
+==				boolean				self			1
+!=				boolean				self			1
+>=				boolean				self			1
+<=				boolean				self			1
+>				boolean				self			1
+<				boolean				self			1
+!				boolean				self			1
+true (steht für den boolschen Ausdruck ohne Operatorzeichen)
+[]				beliebig			beliebig		1 bzw. 2 für Intervalle
+[]=				-				beliebig		2 bzw. 3 für Intervalle, der letzte Parameter wird stets als der Zuweisungswert verwendet
+size				integer				-			0
+()				beliebig			beliebig		beliebig
+
+save				-				beliebig		beliebig
+load				-				beliebig		beliebig
+exists				boolean				-			-
+flush				-				belibig			beliebig
+
+Zu beachten gilt es hierbei, dass diverse Logikoperatoren bereits standardmäßig implementiert sind.
+Die eigenen Definitionen überladen selbstverständlich die standardmäßigen.
+
+\section{Anmerkung zum []-Operator}
+Der []-Operator dient normalerweise dem Zugriff auf Indizes und ist standardmäßig für keine Klasseninstanz definiert.
+Es ist möglich dem []-Operator zwei Parameter zu geben, um Intervallzugriffe zu ermöglichen (siehe "Typen - Behältertypen").
+
+\section{Anmerkung zum size-Operator}
+Der size-Operator macht für gewöhnlich eine vom Entwickler definierte Aussage über eine bestimmte Größe der Instanz bzw. eines ihrer enthaltenen
+Elemente.
+Auch hierbei gelten bestimmte Regeln, damit die Klasse ein Behältertyp ist (siehe "Typen - Behälterypen").
+
+Als Typ können sowohl native als auch eigene Typen genommen werden. Zu beachten gilt es hierbei, dass sich Klasseninstanzen standardmäßig
+zum Typ "integer" konvertieren lassen.
+Eine eigene Definition des Operators "integer" hat eine höhere Priorität als die Standardimplementierung.
+
+\section{Konvertierungsoperatorennotation} 
+<Zugriffsmodifikatoren> operator <Typbezeichner>() [const]
+{
+	<Anweisungen>
+}

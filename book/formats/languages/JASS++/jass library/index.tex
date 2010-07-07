@@ -1,0 +1,22 @@
+\chapter{Die JASS-Bibliothek}
+In der JASS-Bibliothek werden sowohl native Typen und Funktionen als auch nicht native Funktionen und Variablen der Dateien 
+"common.j", common.ai" und "Blizzard.j" deklariert.
+Diese Bibliothek ist genau wie die Standardbibliothek in jedem JASS++-Skript verfügbar.
+Es gilt zu beachten, dass die neue Deklaration einerseits aufgrund der Verschachtelung in Gültigkeitsbereiche und andererseits
+aufgrund der Verwendung von konstanten Typen in JASS++ notwendig ist.
+Des Weiteren wäre eine Deklaration Nativer in JASS-Code nicht in JASS++ gültig.
+
+scope jass
+{
+	scope commonj
+	{
+	}
+	
+	scope commonai
+	{
+	}
+	
+	scope Blizzardj
+	{
+	}
+} 
