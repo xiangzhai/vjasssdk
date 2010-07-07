@@ -120,8 +120,9 @@ Außerdem kann der zweite Ausdruck bei ihnen auch ein einzelnes Element sein!
 Mit dem "[]"-Operator können nicht nur einzelne Elemente gesetzt bzw. ausgelesen werden, sondern auch Bereiche bzw. Intervalle.
 Dabei müssen statt eines Indizes ein Start- und ein Endwert angegeben werden. Diese Art der Anweisung liefert einen neu erzeugten
 Behälter mit den entsprechenden Elementen bzw. nimmt einen solchen als Ausdruck entgegen.
-Es sollte eine Laufzeitwarnung ausgegeben werden, falls ein Fehlzugriff stattfindet. Ein Fehlzugriff liefert immer einen leeren
-neuen Behälter.
+Es sollte eine Laufzeitwarnung ausgegeben werden, falls dabei Werte außerhalb des Behälterbereichs übergeben werden.
+Ein solcher Fehlzugriff liefert stets einen Nullwert.
+Eine Fehlsetzung setzt stets nichts.
 
 \subsection{Zugriffsnotation}
 <Ausdruck>[<Index>]

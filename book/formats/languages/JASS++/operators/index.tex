@@ -134,6 +134,8 @@ flush Ausdruck <Zeichenkettenausdruck>
 \section{Für Behältertypen}
 Ausdruck[Index]					Liefert das Element des Indizes Index. Befindet sich der Index außerhalb des Bereichs des Behälters, so liefert der Ausdruck "null". Es sollte eine Laufzeitwarnung ausgegeben werden.
 Ausdruck[Index]=				Setzt das Element des Indizes Index. Befindet sich der Index außerhalb des Bereichs des Behälters, so wird nichts gesetzt. Es sollte eine Laufzeitwarnung ausgegeben werden.
+Ausdruck[Startposition;Endposition]		Liefert einen Bereich. Befindet sich ein Wert außerhalb des Behälterbereichs, liefert der Ausdruck "null". Es sollte eine Laufzweitwarnung ausgegeben werden.
+Ausdruck[Startposition;Endposition]=		Setzt einen Bereich des Behälters. Befindet sich ein Wert außerhalb des Behälterbereichs, so wird nichts gesetzt. Es sollte eine Laufzeitwarnung ausgegeben werden.
 size Ausdruck					Liefert die Größe des Behälters als Ganzzahl.
 Ausdruck.size					Liefert die Größe des Behälters als Ganzzahl.
 Ausdruck + Ausdruck
