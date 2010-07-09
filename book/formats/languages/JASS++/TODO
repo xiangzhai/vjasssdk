@@ -1,8 +1,0 @@
-Hinzuzufügendes Kapitel "enums".
-Benötigte LaTeX-Typen:
-keyword
-notation
-code
-
-
-[Zahl;Zahl] liefert einen Bereich eines Arrays -> Intervall.
