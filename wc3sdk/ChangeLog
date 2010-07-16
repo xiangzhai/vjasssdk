@@ -1,3 +1,24 @@
+2010-07-11 Tamino Dauth <tamino@cdauth.eu>
+* Extended struct ALayer for mutiple region usage.
+* Added iterator support to text macro A_VECTOR.
+
+2010-07-10 Tamino Dauth <tamino@cdauth.eu>
+* Fixed various bugs of struct AInventory.
+* Added initialization option for item owners to struct AInventory.
+* Revised struct ALayer and fixed various bugs.
+
+2010-06-05 Tamino Dauth <tamino@cdauth.eu>
+* Added debugging function for timer expiring.
+
+2010-05-31 Tamino Dauth <tamino@cdauth.eu>
+* Added structs AUnitCopy and AHeroIcon.
+
+2010-05-30 Tamino Dauth <tamino@cdauth.eu>
+* Revised character inventory system.
+
+2010-05-25 Tamino Dauth <tamino@cdauth.eu>
+* Added various models and textures to archives "Ambient" and "Creatures".
+
 2010-05-24 Tamino Dauth <tamino@cdauth.eu>
 * Added init option likeWarcraft to struct AQuest and changed its message behaviour.
 * Fixed method resize of vector struct of text macro A_VECTOR.
@@ -38,13 +59,13 @@
 * Revised cheat "xp".
 * Fixed listing of not used quest items.
 
-2010-05-11 Tamino Dauth <tamino@cdauth.de>
+2010-05-11 Tamino Dauth <tamino@cdauth.eu>
 * Replaced automatic (and bugged) quest system message displaying by single call methods.
 * Added new convenience methods to struct AAbstractQuest.
 * Added method infoHasBeenShownToCharacter to struct ATalk.
 * Added cheat "order".
 
-2010-05-01 Tamino Dauth <tamino@cdauth.de>
+2010-05-01 Tamino Dauth <tamino@cdauth.eu>
 * Revised initializer of struct ADamageRecorder.
 * Improved global damage detection of struct ADamageRecorder.
 * Added several spell and item icons to archives.
@@ -55,7 +76,7 @@
 * Revised trigger data files of archive "ASL".
 * Added archive "ASL_de" for language-related world editor files.
 
-2010-04-28 Tamino Dauth <tamino@cdauth.de>
+2010-04-28 Tamino Dauth <tamino@cdauth.eu>
 * Revised structs AMainWindow and AWindow.
 * Added library ALibraryCoreEnvironmentTimeOfDay.
 * Improved function GetTimeString.
@@ -63,47 +84,47 @@
 * Dropped camera setup option of struct AInfo and replaced it by "thirdPersonCamera".
 * Added various interface spell and attribute icons.
 
-2010-04-18 Tamino Dauth <tamino@cdauth.de>
+2010-04-18 Tamino Dauth <tamino@cdauth.eu>
 * Added various item models and icons.
 * Fixed cheats "gold" and "lumber".
 
-2010-04-17 Tamino Dauth <tamino@cdauth.de>
+2010-04-17 Tamino Dauth <tamino@cdauth.eu>
 * Added functions GetHeroLevelMaxXP and GetHeroMaxXP.
 * Fixed function GetUnitAllianceStateToUnit.
 * Fixed state settings of struct AAbstractQuest.
 * Fixed ATalkLog index bug.
 
-2010-04-16 Tamino Dauth <tamino@cdauth.de>
+2010-04-16 Tamino Dauth <tamino@cdauth.eu>
 * Added functions GetUnitLevelXP, GetUnitXP and GetUnitHeroXP.
 
-2010-04-11 Tamino Dauth <tamino@cdauth.de>
+2010-04-11 Tamino Dauth <tamino@cdauth.eu>
 * Fixed cheats "xp" and "damage".
 * Fixed onState method overwriting of structs AQuest and AQuestItem.
 * Added initialization option "hideUserInterface" to struct ATalk.
 
-2010-04-09 Tamino Dauth <tamino@cdauth.de>
+2010-04-09 Tamino Dauth <tamino@cdauth.eu>
 * Added many spell icons and effects to archive "Spells".
 
-2010-04-08 Tamino Dauth <tamino@cdauth.de>
+2010-04-08 Tamino Dauth <tamino@cdauth.eu>
 * Added cheats "lumber" and "gold".
 * Added initialization option "hideUserInterface" to struct AClassSelection.
 * Added functions SetUserUIForPlayer and SetUserControlForPlayer.
 * Improved level text of struct ACharactersScheme.
 
-2010-04-07 Tamino Dauth <tamino@cdauth.de>
+2010-04-07 Tamino Dauth <tamino@cdauth.eu>
 * Added struct AArrowButton.
 * Revised RtC natives (version 1.0).
 * Added jAPI and RtC version information to struct Asl.
 
-2010-03-25 Tamino Dauth <tamino@cdauth.de>
+2010-03-25 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/Core/Debug/Library Map.j".
 
-2010-03-21 Tamino Dauth <tamino@cdauth.de>
+2010-03-21 Tamino Dauth <tamino@cdauth.eu>
 * Added debugging cheats "enable", "disable", "pathing" and "nopathing".
 * Fixed function CopyUnit.
 * Revised struct ALayer.
 
-2010-03-20 Tamino Dauth <tamino@cdauth.de>
+2010-03-20 Tamino Dauth <tamino@cdauth.eu>
 * Added function EndCinematicSceneForPlayer.
 * Improved AInfo skip mode.
 * Added methods showAllEffects and hideAllEffects to struct ATalk.
@@ -114,18 +135,18 @@
 * Added function CreateUnitsAtRect.
 * Added various debugging functions for filtering identifiers.
 
-2010-03-19 Tamino Dauth <tamino@cdauth.de>
+2010-03-19 Tamino Dauth <tamino@cdauth.eu>
 * Added structs AFrameBar, AFrame and AWindow.
 * Revised struct AStyle.
 
-2010-03-17 Tamino Dauth <tamino@cdauth.de>
+2010-03-17 Tamino Dauth <tamino@cdauth.eu>
 * Revised structs AAbstractQuest and AQuest and added dynamic widget and method overwriting support.
 * Revised routines system and added multiple times of day per unit support.
 
-2010-03-16 Tamino Dauth <tamino@cdauth.de>
+2010-03-16 Tamino Dauth <tamino@cdauth.eu>
 * Added various stub event methods to structs ASpell and AVideo.
 
-2010-03-14 Tamino Dauth <tamino@cdauth.de>
+2010-03-14 Tamino Dauth <tamino@cdauth.eu>
 * Added various methods to struct AGroup.
 * Addded struct AItemSpawnPoint and interface ASpawnPointInterface.
 * Added methods remove and removeIf to struct of text macro A_LIST.
@@ -133,93 +154,93 @@
 * Revised total damage calculation of struct ADamageRecorder.
 * Added functions CreateCorpseAtRect and CreateCorpsesAtPoint.
 
-2010-03-13 Tamino Dauth <tamino@cdauth.de>
+2010-03-13 Tamino Dauth <tamino@cdauth.eu>
 * Fixed item drop location of struct ASpawnPoint.
 * Added cheat "xp".
 * Added experience option to struct ACharacter.
 
-2010-03-12 Tamino Dauth <tamino@cdauth.de>
+2010-03-12 Tamino Dauth <tamino@cdauth.eu>
 * Improved text macro A_MAP.
 * Fixed values of text tag functions.
 * Added function ShowShadowStrikeTextTagForPlayer.
 
-2010-03-11 Tamino Dauth <tamino@cdauth.de>
+2010-03-11 Tamino Dauth <tamino@cdauth.eu>
 * Added struct AStyle.
 
-2010-03-10 Tamino Dauth <tamino@cdauth.de>
+2010-03-10 Tamino Dauth <tamino@cdauth.eu>
 * Added text macro A_MAP.
 * Improved text macro A_LIST.
 
-2010-03-08 Tamino Dauth <tamino@cdauth.de>
+2010-03-08 Tamino Dauth <tamino@cdauth.eu>
 * Added parameter to initializer of struct AInventory.
 * ACharacter.messageTypeError uses function SimError now.
 * Fixed various bugs of struct ALayer.
 * Added method showOnPage to struct ADialog.
 * Fixed clearing dialog title when changing dialog page bug.
 
-2010-03-06 Tamino Dauth <tamino@cdauth.de>
+2010-03-06 Tamino Dauth <tamino@cdauth.eu>
 * Added function speech2.
 * Revised struct ATalkLog.
 
-2010-02-26 Tamino Dauth <tamino@cdauth.de>
+2010-02-26 Tamino Dauth <tamino@cdauth.eu>
 * Revised structs ACharacter and AClassSelection that user can implement custom ACharacter child structs.
 
-2010-02-22 Tamino Dauth <tamino@cdauth.de>
+2010-02-22 Tamino Dauth <tamino@cdauth.eu>
 * Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
 
-2010-02-20 Tamino Dauth <tamino@cdauth.de>
+2010-02-20 Tamino Dauth <tamino@cdauth.eu>
 * Added several unit methods to struct ARoutine.
 
-2010-02-14 Tamino Dauth <tamino@cdauth.de>
+2010-02-14 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AGroup.
 * Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
 * Added several icon files to archives "Spells" and "Items".
 
-2010-02-05 Tamino Dauth <tamino@cdauth.de>
+2010-02-05 Tamino Dauth <tamino@cdauth.eu>
 * Init video actions is called by .evaluate now.
 
-2010-02-03 Tamino Dauth <tamino@cdauth.de>
+2010-02-03 Tamino Dauth <tamino@cdauth.eu>
 * Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
 
-2010-02-01 Tamino Dauth <tamino@cdauth.de>
+2010-02-01 Tamino Dauth <tamino@cdauth.eu>
 * Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
 * Improved struct APvp.
 
-2010-01-31 Tamino Dauth <tamino@cdauth.de>
+2010-01-31 Tamino Dauth <tamino@cdauth.eu>
 * Revised some code parts for supporting [forcemethodevaluate] JassHelper option.
 * Added functions PrintIf, PrintFunctionErrorIf and methods of text macro A_STRUCT_DEBUG printIf, printMethodErrorIf and staticPrintMethodErrorIf.
 
-2010-01-30 Tamino Dauth <tamino@cdauth.de>
+2010-01-30 Tamino Dauth <tamino@cdauth.eu>
 * Added several grassland texture pathes to the preload function.
 
-2010-01-02 Tamino Dauth <tamino@cdauth.de>
+2010-01-02 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct ACharactersScheme.
 
-2010-01-01 Tamino Dauth <tamino@cdauth.de>
+2010-01-01 Tamino Dauth <tamino@cdauth.eu>
 * Added several human and orc creatures models.
 * Fixed AClassSelection user interface bug.
 * Fixed ACharactersScheme free unallocated instance bug.
 * Added global damage detection system which is based on struct ADamageRecorder.
 
-2009-12-30 Tamino Dauth <tamino@cdauth.de>
+2009-12-30 Tamino Dauth <tamino@cdauth.eu>
 * Improved various store and restore methods.
 * Revised initializer of struct ACharactersScheme and added methods for modifying its bar icons.
 * Added several icon files from Wc3C.net for display of multiboard bars.
 
-2009-12-28 Tamino Dauth <tamino@cdauth.de>
+2009-12-28 Tamino Dauth <tamino@cdauth.eu>
 * Added methods store and restore to several character system structs for storing and restoring characters to and from game caches.
 * Added function PlaySoundFileOnUnit.
 
-2009-12-23 Tamino Dauth <tamino@cdauth.de>
+2009-12-23 Tamino Dauth <tamino@cdauth.eu>
 * Added methods enable and disable to struct AWeather.
 
-2009-12-20 Tamino Dauth <tamino@cdauth.de>
+2009-12-20 Tamino Dauth <tamino@cdauth.eu>
 * Fixed struct ASpawnPoint.
 * Released version 1.1.
 * Added soundFilePath parameter to ASpawnPoint's initializer.
 * Added methods hasAlliesOfPlayer, hasAlliesOfUnit, hasEnemiesOfPlayer and hasEnemiesOfUnit to struct AGroup.
 
-2009-12-19 Tamino Dauth <tamino@cdauth.de>
+2009-12-19 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct ALayout.
 * Removed methods user from structs AWidget and AMainWindow.
 * Removed method gui from struct AWidget.
@@ -230,22 +251,22 @@
 * Renamed method user of struct ACharacter to player.
 * Dropped convenience methods user and unit of struct AAbstractCharacterSystem.
 
-2009-12-18 Tamino Dauth <tamino@cdauth.de>
+2009-12-18 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct ALayout.
 
-2009-12-15 Tamino Dauth <tamino@cdauth.de>
+2009-12-15 Tamino Dauth <tamino@cdauth.eu>
 * AButton extends AImage instead of AWidget now.
 * Added possibility to define a background image file for tooltips in main windows.
 * Dropped deprecated struct ASystemDebugger.
 
-2009-12-14 Tamino Dauth <tamino@cdauth.de>
+2009-12-14 Tamino Dauth <tamino@cdauth.eu>
 * Added methods showRange and showRangeUntil to struct ATalk.
 * Improved struct ATalkLog.
 * Improved and revised text macro A_STACK.
 * Added default Jass type A_STACK and A_LIST instances.
 * Fixed clearAll method of ABenchmark.
 
-2009-12-13 Tamino Dauth <tamino@cdauth.de>
+2009-12-13 Tamino Dauth <tamino@cdauth.eu>
 * Added functions IssueRectOrder and IssueRectOrderById.
 * Converted content of file "src/Systems/World/Struct Layer.j" from Zinc to vJass code.
 * Converted content of file "src/Core/General/Struct List.j" from Zinc to vJass code.
@@ -258,38 +279,38 @@
 * Added method clearAll to struct ABenchmark.
 * Added debugging cheat "clearbenchmarks".
 
-2009-12-12 Tamino Dauth <tamino@cdauth.de>
+2009-12-12 Tamino Dauth <tamino@cdauth.eu>
 * Added experience function parameter to struct's ACharactersScheme initializer.
 * Revised structs AClass and AClassSelection for easier configuration of class abilities and description.
 * Fixed various syntax errors.
 
-2009-12-11 Tamino Dauth <tamino@cdauth.de>
+2009-12-11 Tamino Dauth <tamino@cdauth.eu>
 * Added more parameters to ACharactersScheme's initializer.
 * Added functions SetUnitPositionRect, SetUnitPositionRectFacing and SetUnitFacingToFaceUnit.
 
-2009-12-10 Tamino Dauth <tamino@cdauth.de>
+2009-12-10 Tamino Dauth <tamino@cdauth.eu>
 * Improved German ALayer tutorial.
 * Revised function MoveSubString.
 * Added various missing code files to SVN repository.
 
-2009-12-09 Tamino Dauth <tamino@cdauth.de>
+2009-12-09 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct ASpawnPoint.
 * Added method isEmpty to vector struct of text macro A_VECTOR.
 * Fixed function ReverseString
 * Revised struct AMissile.
 
-2009-12-08 Tamino Dauth <tamino@cdauth.de>
+2009-12-08 Tamino Dauth <tamino@cdauth.eu>
 * Revised file "archives/Asl/UI/TriggerData.txt".
 * Added various ambient extra model files.
 * Fixed various syntax errors.
 
-2009-12-07 Tamino Dauth <tamino@cdauth.de>
+2009-12-07 Tamino Dauth <tamino@cdauth.eu>
 * Added functions IsTerrainDeepWater, IsTerrainShallowWater, IsTerrainLand, IsTerrainPlatform and IsTerrainWalkable.
 
-2009-12-06 Tamino Dauth <tamino@cdauth.de>
+2009-12-06 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct AMissile.
 
-2009-12-05 Tamino Dauth <tamino@cdauth.de>
+2009-12-05 Tamino Dauth <tamino@cdauth.eu>
 * Fixed various bugs of struct AVector3.
 * Added methods setItem, setDestructable, setNorm, norm, scalarProduct, scalarProduct2 and sum to struct AVector3.
 * Added functions PlaySoundFile, PlaySoundFileAt and PlaySoundFileAtForPlayer.
@@ -297,164 +318,164 @@
 * Renamed function PreloadSoundPath to PreloadSoundFile.
 * Revised struct AMissile.
 
-2009-12-04 Tamino Dauth <tamino@cdauth.de>
+2009-12-04 Tamino Dauth <tamino@cdauth.eu>
 * Added file "doc/tutorials/de/Ebenen.j".
 * Added file "src/Core/General/Struct List.j".
 
-2009-11-27 Tamino Dauth <tamino@cdauth.de>
+2009-11-27 Tamino Dauth <tamino@cdauth.eu>
 * Added struct ALayer to world system.
 
-2009-11-26 Tamino Dauth <tamino@cdauth.de>
+2009-11-26 Tamino Dauth <tamino@cdauth.eu>
 * Added methods suspendExperience and suspendExperienceForAll to struct ACharacter.
 * Added more parameters to method init of struct ACharactersScheme.
 * Revised struct ACharactersScheme.
 * Revised struct AVector3.
 
-2009-11-22 Tamino Dauth <tamino@cdauth.de>
+2009-11-22 Tamino Dauth <tamino@cdauth.eu>
 * Renamed terrain textures.
 
-2009-11-11 Tamino Dauth <tamino@cdauth.de>
+2009-11-11 Tamino Dauth <tamino@cdauth.eu>
 * Added module AStructModule.
 * Added struct ABuff.
 
-2009-11-09 Tamino Dauth <tamino@cdauth.de>
+2009-11-09 Tamino Dauth <tamino@cdauth.eu>
 * Added function PreventSave.
 
-2009-11-07 Tamino Dauth <tamino@cdauth.de>
+2009-11-07 Tamino Dauth <tamino@cdauth.eu>
 * Released Advanced Script Library version 1.0.
 * Improved editor system.
 
-2009-10-29 Tamino Dauth <tamino@cdauth.de>
+2009-10-29 Tamino Dauth <tamino@cdauth.eu>
 * Added various new methods to struct AGroup.
 
-2009-10-28 Tamino Dauth <tamino@cdauth.de>
+2009-10-28 Tamino Dauth <tamino@cdauth.eu>
 * Fixed various syntax errors and bugs.
 
-2009-10-27 Tamino Dauth <tamino@cdauth.de>
+2009-10-27 Tamino Dauth <tamino@cdauth.eu>
 * Revised method addGroup of struct AGroup.
 * Added function PauseAllUnits (and corresponding hook function).
 
-2009-10-25 Tamino Dauth <tamino@cdauth.de>
+2009-10-25 Tamino Dauth <tamino@cdauth.eu>
 * Improved and fixed functions of library ALibraryCoreStringMisc.
 * Improved and fixed constants and functions of library ALibraryCoreStringPool.
 * Improved and fixed functions of library ALibraryCoreStringConversion.
 
-2009-10-24 Tamino Dauth <tamino@cdauth.de>
+2009-10-24 Tamino Dauth <tamino@cdauth.eu>
 * Added methods openForCharacter and close to struct ATalk.
 * Added methods for en- and disabling routines to structs ARoutine and ARoutineData.
 * Improved struct AVote and added struct intializer method.
 
-2009-10-22 Tamino Dauth <tamino@cdauth.de>
+2009-10-22 Tamino Dauth <tamino@cdauth.eu>
 * Improved world routine system.
 
-2009-10-18 Tamino Dauth <tamino@cdauth.de>
+2009-10-18 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct ARoutine.
 * Added several type methods to struct AHashTable for new native save and load functions of hash tables.
 * Set some sky models for several weather effects of struct AWeather.
 
-2009-10-17 Tamino Dauth <tamino@cdauth.de>
+2009-10-17 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct ARoutine.
 
-2009-10-16 Tamino Dauth <tamino@cdauth.de>
+2009-10-16 Tamino Dauth <tamino@cdauth.eu>
 * Added Nerubian user interface to MPQ archive "Interface".
 * Method addGroup of struct AGroup won't destroy the added group automatically anymore.
 * Revised struct ARoutine.
 
-2009-10-10 Tamino Dauth <tamino@cdauth.de>
+2009-10-10 Tamino Dauth <tamino@cdauth.eu>
 * Moved Bonus Mod to systems.
 * Object libraries do only provide file preloading now.
 * Added static ifs.
 * Added optional library requirement.
 * Added optional text macro calls.
 
-2009-09-23 Tamino Dauth <tamino@cdauth.de>
+2009-09-23 Tamino Dauth <tamino@cdauth.eu>
 * Renamed method usingJapi and usingRtc to useJapi and useRtc.
 
-2009-09-22 Tamino Dauth <tamino@cdauth.de>
+2009-09-22 Tamino Dauth <tamino@cdauth.eu>
 * Struct AVector is called AVector3 now.
 
-2009-09-11 Tamino Dauth <tamino@cdauth.de>
+2009-09-11 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/Core/String/Struct Tokenizer.j".
 
-2009-09-09 Tamino Dauth <tamino@cdauth.de>
+2009-09-09 Tamino Dauth <tamino@cdauth.eu>
 * Added methods incudes, innerProduct, copyNumber and copy to struct of text macro A_VECTOR.
 
-2009-09-07 Tamino Dauth <tamino@cdauth.de>
+2009-09-07 Tamino Dauth <tamino@cdauth.eu>
 * Added function Bounty.
 * Improved bonus mod and added bonus typs sight range and mana and life regeneration.
 * Removed function AClearUnitBonus.
 * Added function AUnitRemoveBonus.
 * Added icons for ability "Linderung".
 
-2009-09-06 Tamino Dauth <tamino@cdauth.de>
+2009-09-06 Tamino Dauth <tamino@cdauth.eu>
 * Added several debug hooks for Blizzards natives.
 * Added handle counters to struct ABenchmark.
 
-2009-09-02 Tamino Dauth <tamino@cdauth.de>
+2009-09-02 Tamino Dauth <tamino@cdauth.eu>
 * Added first implementation of computer controllers and shared control support to character system.
 * Added function CountPlayingPlayers.
 
-2009-08-24 Tamino Dauth <tamino@cdauth.de>
+2009-08-24 Tamino Dauth <tamino@cdauth.eu>
 * Added method removeFromRucksackByTypeId to struct AInventory.
 * Fixed move item to page bug of struct AInventory.
 
-2009-08-22 Tamino Dauth <tamino@cdauth.de>
+2009-08-22 Tamino Dauth <tamino@cdauth.eu>
 * Added function CreateUnitAtRect.
 
-2009-08-19 Tamino Dauth <tamino@cdauth.de>
+2009-08-19 Tamino Dauth <tamino@cdauth.eu>
 * Start page is shown automatically by talks if no info is.
 
-2009-08-15 Tamino Dauth <tamino@cdauth.de>
+2009-08-15 Tamino Dauth <tamino@cdauth.eu>
 * Added method setActorsMoveSpeed to struct AVideo.
 * Added function SetUnitFacingToFaceRectTimed.
 * Inventory and talk log systems stay enabled now when charakter is set unmovable.
 
-2009-08-14 Tamino Dauth <tamino@cdauth.de>
+2009-08-14 Tamino Dauth <tamino@cdauth.eu>
 * Added function CreateUnitsAtPoint.
 * Added function SmartCameraPan.
 * Talk speeches should for finishing video sequences now.
 * Added several icon and model files to archive Items.
 * Added file "src/Systems/Character/Struct Kill Quest Item.j".
 
-2009-08-13 Tamino Dauth <tamino@cdauth.de>
+2009-08-13 Tamino Dauth <tamino@cdauth.eu>
 * Added several files to archive "Creatures".
 
-2009-08-12 Tamino Dauth <tamino@cdauth.de>
+2009-08-12 Tamino Dauth <tamino@cdauth.eu>
 * Added sky model option to struct AWeather.
 * Added functions moveNpcTo, moveNpcToRectCenter, waitForNewNpcRect and moveNpcToRectCenterAndWait.
 * Improved struct AInventory and added private struct AInventoryItemData.
 
-2009-08-11 Tamino Dauth <tamino@cdauth.de>
+2009-08-11 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AInventory.
 * Added debugging cheat "damage".
 
-2009-08-09 Tamino Dauth <tamino@cdauth.de>
+2009-08-09 Tamino Dauth <tamino@cdauth.eu>
 * Fixed resetting equipment of struct AInventory.
 * Added owner parameter to function SetCinematicSceneForPlayer.
 * Improved index setting when resetting slots of struct AInventory.
 * Added several creature model and icon files to archive Creatures.
 
-2009-08-08 Tamino Dauth <tamino@cdauth.de>
+2009-08-08 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AAbstractQuest.
 * Replaced all <struct type>Vector structs by struct AIntegerVector.
 * Improved vector cleanups in destructors of several structs.
 * Added parameter MAXINSTANCES to text macro A_VECTOR.
 * Fixed required struct space of A_VECTOR instances (thanks to Vexorian).
 
-2009-08-07 Tamino Dauth <tamino@cdauth.de>
+2009-08-07 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct AMissile and added structs AMissileType and ADamageMissileType..
 
-2009-08-06 Tamino Dauth <tamino@cdauth.de>
+2009-08-06 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AArrowKeys.
 * Improved ATalk's camera settings.
 * Current dialog page will be resetted now when dialog is cleared.
 
-2009-08-06 Tamino Dauth <tamino@cdauth.de>
+2009-08-06 Tamino Dauth <tamino@cdauth.eu>
 * Improved actor treatment of struct AVideo.
 * Improved item stacking and destracking treatment of struct AInventory.
 * Added Anitarf's arrow key system which is required by Opossum's third person camera system.
 
-2009-08-05 Tamino Dauth <tamino@cdauth.de>
+2009-08-05 Tamino Dauth <tamino@cdauth.eu>
 * Added file "archives/Spells/Icons/Spells/BTNAbsorbation.blp".
 * Added file "archives/Spells/Icons/Spells/BTNManaShield.blp".
 * Added file "archives/Spells/Icons/Spells/DISBTNAbsorbation.blp".
@@ -469,7 +490,7 @@
 * Fixed bug in method checkQuestItemsForState of AQuest.
 * Added method restoreUnitActors to struct AVideo.
 
-2009-08-04 Tamino Dauth <tamino@cdauth.de>
+2009-08-04 Tamino Dauth <tamino@cdauth.eu>
 * Disabled restoring player selection of APlayerSelection since it causes a desynchronization.
 * getCharacterByUnit is much faster now, using hash table value.
 * Added file "src/Core/Interface/Struct Third Person Camera.j" with Opossum's system.
@@ -481,47 +502,47 @@
 * User-disabled character systems won't be reenabled again anymore.
 * Dialogs won't be cleared automatically anymore when a button is clicked.
 
-2009-08-03 Tamino Dauth <tamino@cdauth.de>
+2009-08-03 Tamino Dauth <tamino@cdauth.eu>
 * Added methods shownMainWindow and isShown to struct AGui.
 
-2009-08-02 Tamino Dauth <tamino@cdauth.de>
+2009-08-02 Tamino Dauth <tamino@cdauth.eu>
 * Added more default vectors.
 * Added methods isEnabled and setEnabled to struct ADamageRecorder.
 
-2009-08-01 Tamino Dauth <tamino@cdauth.de>
+2009-08-01 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AHashTable.
 * Added all new natives of Warcraft version 1.24 to file "src/common.j".
 
-2009-07-31 Tamino Dauth <tamino@cdauth.de>
+2009-07-31 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct AHashTable.
 
-2009-07-29 Tamino Dauth <tamino@cdauth.de>
+2009-07-29 Tamino Dauth <tamino@cdauth.eu>
 * Added file "archives/Creatures/Models/Creatures/Humans/Wizard.mdx".
 * Added file "archives/Creatures/Textures/Creatures/Humans/Wizard.blp".
 
-2009-07-27 Tamino Dauth <tamino@cdauth.de>
+2009-07-27 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct APvp.
 
-2009-07-25 Tamino Dauth <tamino@cdauth.de>
+2009-07-25 Tamino Dauth <tamino@cdauth.eu>
 * Added default vector structs.
 
-2009-07-25 Tamino Dauth <tamino@cdauth.de>
+2009-07-25 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/Systems/Gui/Struct Vote.j".
 
-2009-07-20 Tamino Dauth <tamino@cdauth.de>
+2009-07-20 Tamino Dauth <tamino@cdauth.eu>
 * Improved talk skip treatment.
 
-2009-07-11 Tamino Dauth <tamino@cdauth.de>
+2009-07-11 Tamino Dauth <tamino@cdauth.eu>
 * Added function UnitDropSlot.
 * Added file "src/Core/Net/Struct Host.j".
 * Added file "src/Core/Net/Import.j".
 
-2009-07-10 Tamino Dauth <tamino@cdauth.de>
+2009-07-10 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/Systems/Character/Struct Talk Log.j".
 * Improved text macro A_VECTOR.
 * Implemented talk log functionality.
 
-2009-07-08 Tamino Dauth <tamino@cdauth.de>
+2009-07-08 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct ACharacter.
 * Revised struct AShrine.
 * Revised struct ACharactersScheme.
@@ -533,16 +554,16 @@
 * Those two files will be imported automatically by file "src/Import Asl.j" now.
 * Added file "src/Core/Debug/Struct Benchmark.j".
 
-2009-07-07 Tamino Dauth <tamino@cdauth.de>
+2009-07-07 Tamino Dauth <tamino@cdauth.eu>
 * Revised struct ASystemDebugger.
 * Added file "src/Core/General/Struct Asl.j".
 * Revised structs AMovement and AFight.
 * Improved several documentation comments.
 
-2009-06-29 Tamino Dauth <tamino@cdauth.de>
+2009-06-29 Tamino Dauth <tamino@cdauth.eu>
 * Added method diameter to struct ACircle.
 
-2009-06-28 Tamino Dauth <tamino@cdauth.de>
+2009-06-28 Tamino Dauth <tamino@cdauth.eu>
 * Improved structs ACharactersScheme, AWeather and AClassSelection.
 * Revised struct AClass.
 * Revised struct ARevival.
@@ -552,7 +573,7 @@
 * Revised struct AVideo.
 * Revised struct ACharacter.
 
-2009-06-26 Tamino Dauth <tamino@cdauth.de>
+2009-06-26 Tamino Dauth <tamino@cdauth.eu>
 * Fixed Bonus Mod ability creation.
 * Added file "archives/Spells/Models/Effects/Emblaze.mdx".
 * Added file "archives/Spells/Models/Effects/FreezeBuff.mdx".
@@ -560,18 +581,18 @@
 * Added file "archives/Spells/Icons/Spells/BTNFreeze.blp".
 * Added file "archives/Spells/Icons/Spells/DISBTNFreeze.blp".
 
-2009-06-25 Tamino Dauth <tamino@cdauth.de>
+2009-06-25 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AInventory.
 * Improved struct ADialog.
 * Added file "src/Core/General/Struct Group.j".
 
-2009-06-23 Tamino Dauth <tamino@cdauth.de>
+2009-06-23 Tamino Dauth <tamino@cdauth.eu>
 * Added methods saveActor and restoreActor to struct AVideo.
 * Added functions IsDestructableDead and IsDestructableTree.
 * Revised page creation of struct ADialog.
 * Added method init to struct ADialog.
 
-2009-06-21 Tamino Dauth <tamino@cdauth.de>
+2009-06-21 Tamino Dauth <tamino@cdauth.eu>
 * Removed file "src/Core/Environment/Struct Environment Hash Table.j".
 * Removed file "src/Core/Debug/Struct Debug Hash Table.j".
 * Added file "src/Core/Debug/Library Signal.j".
@@ -588,7 +609,7 @@
 * Fixed id attachement bug of struct AAbstractQuest.
 * Selection will be restored correctly now when video ends.
 
-2009-06-20 Tamino Dauth <tamino@cdauth.de>
+2009-06-20 Tamino Dauth <tamino@cdauth.eu>
 * Fixed desynchronization bug of struct AGui.
 * Revised struct AClassSelection.
 * Added file "archives/Ambient/Models/Ambient/Grassland/Pechkessel.mdx".
@@ -604,7 +625,7 @@
 * Added file "archives/Items/Icons/Items/DISBTNLightWoodenShield.blp".
 * Added file "archives/Items/Icons/Items/DISBTNWoodenShield.blp".
 
-2009-06-19 Tamino Dauth <tamino@cdauth.de>
+2009-06-19 Tamino Dauth <tamino@cdauth.eu>
 * Added file "archives/Spells/Icons/Spells/ATCDunklerDiener.blp".
 * Added file "archives/Spells/Icons/Spells/ATTDunklerDiener.blp".
 * Added file "archives/Spells/Icons/Spells/BTNDunklerDiener.blp".
@@ -623,11 +644,11 @@
 * Removed file "src/Systems/World/Struct World Hash Table.j".
 * Added file "src/Systems/World/Struct World Weather.j".
 
-2009-06-18 Tamino Dauth <tamino@cdauth.de>
+2009-06-18 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AInventory.
 * Found and fixed bug which was produced by JassHelper in debug mode.
 
-2009-06-17 Tamino Dauth <tamino@cdauth.de>
+2009-06-17 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AInventory.
 * Added file "archives/Items/Models/Items/Flute.mdx".
 * Added file "archives/Items/Models/Items/Ring.mdx".
@@ -638,13 +659,13 @@
 * Added file "archives/Ambient/Textures/Ambient/Grassland/Mill.blp".
 * Added function TransmissionFromUnitType to library ALibraryCoreInterfaceCinematic.
 
-2009-06-16 Tamino Dauth <tamino@cdauth.de>
+2009-06-16 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AInventory.
 
-2009-06-15 Tamino Dauth <tamino@cdauth.de>
+2009-06-15 Tamino Dauth <tamino@cdauth.eu>
 * Improved struct AInventory.
 
-2009-06-14 Tamino Dauth <tamino@cdauth.de>
+2009-06-14 Tamino Dauth <tamino@cdauth.eu>
 * Fixed coordinate treatment of struct AMainWindow.
 * Fixed function ShowTextTagForPlayer.
 * Added file "archives/Creatures/Models/Creatures/Humans/Warrior.mdx".
@@ -654,7 +675,7 @@
 * Added number display to struct AClassSelection.
 * Improved video skip functionality of struct AVideo.
 
-2009-06-13 Tamino Dauth <tamino@cdauth.de>
+2009-06-13 Tamino Dauth <tamino@cdauth.eu>
 * Improved function CopyUnit.
 * Added file "src/Core/General/Library Item.j".
 * Added function CopyItem.
@@ -664,33 +685,33 @@
 * Added file "archives/Ambient/Models/Extra/Window Rays.mdx".
 * Renamed members and methods of structs AMainWindow, AImage and AText.
 
-2009-06-11 Tamino Dauth <tamino@cdauth.de>
+2009-06-11 Tamino Dauth <tamino@cdauth.eu>
 * Fixed texture path of file "archives/Items/Models/Items/StabderWeissagung.mdx".
 * Fixed texture path of file "archives/Ambient/Models/Ambient/Grassland/Sky/Tageshimmel.mdx".
 * Fixed texture path of file "archives/Creatures/Models/Creatures/Humans/Maedchen.mdx".
 
-2009-06-10 Tamino Dauth <tamino@cdauth.de>
+2009-06-10 Tamino Dauth <tamino@cdauth.eu>
 * Improved structs AInfo and ATalk.
 * Fixed texture paths of files "archives/Creatures/Models/Creatures/Humans/Pfarrer.mdx" and "archives/Creatures/Models/Creatures/Humans/Pfarrer_Portrait.mdx".
 
-2009-06-09 Tamino Dauth <tamino@cdauth.de>
+2009-06-09 Tamino Dauth <tamino@cdauth.eu>
 * Improved structs AAbstractQuest, AQuest and AQuestItem.
 
-2009-06-08 Tamino Dauth <tamino@cdauth.de>
+2009-06-08 Tamino Dauth <tamino@cdauth.eu>
 * Added function speech to library AStructSystemsCharacterInfo.
 * Added missed texture file "archives/Ambient/Textures/Kiste.blp".
 * Added icon, model and texture files for spell "Konzentration" to archive Spells.
 * Fixed texture path of model file "archives/Creates/Undeads/Zombie.mdx".
 * Revised structs AInfo and ATalk.
 
-2009-06-07 Tamino Dauth <tamino@cdauth.de>
+2009-06-07 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/Systems/Gui/Struct Dialog Button.j".
 * Added file "src/Systems/Gui/Struct Dialog.j".
 * Added file "src/Systems/Character/Struct Info.j".
 * Revised dialog handling of struct AGui.
 * Splitted old struct ATalk into structs ATalk and AInfo.
 
-2009-06-06 Tamino Dauth <tamino@cdauth.de>
+2009-06-06 Tamino Dauth <tamino@cdauth.eu>
 * Added separation of permanent and usable abilities of struct AItemType.
 * Improved struct AInventory.
 * Added methods isUnitCharacter, panCameraSmart and panCameraSmartToAll to struct ACharacter.
@@ -698,12 +719,12 @@
 * Added methods add and remove to struct ASpell.
 * Added several item models and icons to archive Items.
 
-2009-06-05 Tamino Dauth <tamino@cdauth.de>
+2009-06-05 Tamino Dauth <tamino@cdauth.eu>
 * Added method actor to struct AVideo.
 * Revised method show of struct ACharacter.
 * Added methods showAll, getFirstCharacter and copy to struct ACharacter.
 
-2009-06-04 Tamino Dauth <tamino@cdauth.de>
+2009-06-04 Tamino Dauth <tamino@cdauth.eu>
 * Added method setPosition to struct ACharacter.
 * Improved many member and method names of structs.
 * Improved text macro A_VECTOR.
@@ -713,28 +734,28 @@
 * Replaced file "archives/Spells/Icons/Spells/BTNEntzuenden.blp".
 * Replaced file "archives/Spells/Icons/Spells/DISBTNEntzuenden.blp".
 
-2009-06-02 Tamino Dauth <tamino@cdauth.de>
+2009-06-02 Tamino Dauth <tamino@cdauth.eu>
 * Improved list struct of text macro A_LIST.
 * Replaced A_CONTAINER statements of structs AGui and AMainWindow by A_LIST.
 * Renamed A_LIST to A_VECTOR since it's more a vector than a list.
 * Revised struct ACharacter.
 * Revised struct AItemType.
 
-2009-06-01 Tamino Dauth <tamino@cdauth.de>
+2009-06-01 Tamino Dauth <tamino@cdauth.eu>
 * Revised text macros A_CONTAINER and A_LIST.
 
-2009-05-29 Tamino Dauth <tamino@cdauth.de>
+2009-05-29 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/Core/General/Struct List.j".
 * Added method clear to struct AContainer.
 * Replaced list administration in struct ADynamicLightning by struct ADynamicLightningList.
 
-2009-05-26 Tamino Dauth <tamino@cdauth.de>
+2009-05-26 Tamino Dauth <tamino@cdauth.eu>
 * Added parameter showMessage to method enableForCharacter of struct AShrine.
 * Added method enableShrineForAll to struct ACharacter.
 * Fixed player leaves bug of struct AClassSelection.
 * Fixed ACharactersScheme behaviour when player has left the game.
 
-2009-05-25 Tamino Dauth <tamino@cdauth.de>
+2009-05-25 Tamino Dauth <tamino@cdauth.eu>
 * Fixed revival dialog bug.
 * Movement doesn't work now when the character is dead.
 * Added file "archives/Spells/Models/Effects/Blitzschlag.mdx".
@@ -744,29 +765,29 @@
 * Added file "archives/Spells/Icons/Spells/DISBTNHeiligeKraft.blp".
 * Added file "archives/Spells/Icons/Spells/DISPASHeiligeKraft.blp".
 
-2009-05-24 Tamino Dauth <tamino@cdauth.de>
+2009-05-24 Tamino Dauth <tamino@cdauth.eu>
 * Fixed equipment bug of struct AInventory.
 * Added debugging cheat "help".
 * Improved debugging cheat "giveall".
 
-2009-05-23 Tamino Dauth <tamino@cdauth.de>
+2009-05-23 Tamino Dauth <tamino@cdauth.eu>
 * Added methods spell, spellByAbilityId and spellCount to struct ACharacter.
 * Added start member methods to struct ASpell.
 
-2009-05-22 Tamino Dauth <tamino@cdauth.de>
+2009-05-22 Tamino Dauth <tamino@cdauth.eu>
 * Added function ShowBlackScreenCinematicFilter.
 * Improved filter of struct AVideo.
 * Added file "src/Core/Environment/Struct Dynamic Lightning.j".
 * Added function RealArgW.
 * Improved struct AInventory and ACharactersScheme.
 
-2009-05-21 Tamino Dauth <tamino@cdauth.de>
+2009-05-21 Tamino Dauth <tamino@cdauth.eu>
 * Added file "archives/Ambient/Models/Ambient/Special/Lichtquelle.mdx".
 * Added file "archives/Ambient/Models/Ambient/Special/Feuer.mdx".
 * Added file "archives/Items/Models/Items/EdlerKlerikerhelm.mdx".
 * Added several item model and textures files.
 
-2009-05-20 Tamino Dauth <tamino@cdauth.de>
+2009-05-20 Tamino Dauth <tamino@cdauth.eu>
 * Added method allyChannelLoopCondition to struct ASpell.
 * Added functions SimError, ParabolaZ, StringMatch and I2Roman.
 * Added file "archives/Spells/Icons/Spells/BTNAnstuermen.blp".
@@ -775,14 +796,14 @@
 * Added file "archives/Spells/Icons/Spells/PASAnstuermen.blp".
 * Added several shield model and texutre files of xXm0RpH3usXx.
 
-2009-05-12 Tamino Dauth <tamino@cdauth.de>
+2009-05-12 Tamino Dauth <tamino@cdauth.eu>
 * Added file "src/Core/General/Struct Signal.j".
 
-2009-05-11 Tamino Dauth <tamino@cdauth.de>
+2009-05-11 Tamino Dauth <tamino@cdauth.eu>
 * Added Rising_Dusk's armor and damage detection system to library ALibraryCoreEnvironmentUnit.
 * Added on damage action functionality to struct ADamageRecorder.
 
-2009-05-08 Tamino Dauth <tamino@cdauth.de>
+2009-05-08 Tamino Dauth <tamino@cdauth.eu>
 * Added file archive/Interface/UserInterfaces/Naga/InventoryCover.blp.
 * Added file archive/Interface/UserInterfaces/Naga/Tile1.blp.
 * Added file archive/Interface/UserInterfaces/Naga/Tile2.blp.
@@ -801,14 +822,14 @@
 * Added functions SetTerrainFogNight(), SetTerrainFogSunny(), SetTerrainFogForrest() and SetTerrainFogFoggy() to library ALibraryCoreEnvironmentTerrainFog.
 * Moved function ResetTerrainFogForPlayer() from library ALibraryCoreEnvironmentTerrain to ALibraryCoreEnvironmentTerrainFog.
 
-2009-05-02 Tamino Dauth <tamino@cdauth.de>
+2009-05-02 Tamino Dauth <tamino@cdauth.eu>
 * Fixed several syntax errors.
 
-2009-05-01 Tamino Dauth <tamino@cdauth.de>
+2009-05-01 Tamino Dauth <tamino@cdauth.eu>
 * Uncommented a test comment in struct AAbstractQuest.
 * Added trigger condition to order trigger of struct AInventory.
 
-2009-04-26 Tamino Dauth <tamino@cdauth.de>
+2009-04-26 Tamino Dauth <tamino@cdauth.eu>
 * Added member textNextPage to struct AGui.
 * Added member shortcutNextPage to struct AGui.
 * Added member textPreviousPage to struct AGui.
@@ -821,11 +842,11 @@
 * Added method addExtendedDialogButton() to struct AGui.
 * Added global AMaxDialogButtons to library ALibraryCoreInterfaceMisc.
 
-2009-04-21 Tamino Dauth <tamino@cdauth.de>
+2009-04-21 Tamino Dauth <tamino@cdauth.eu>
 * Added file "Objects/Library Bonus Mod.j"
 * Added first implementation of stack functionality in struct AInventory.
 
-2009-04-19 Tamino Dauth <tamino@cdauth.de>
+2009-04-19 Tamino Dauth <tamino@cdauth.eu>
 * Added struct ANeratiaFightArea to library AStructSystemsCharacterNeratiaFight.
 * Improved struct ANeratiaFight.
 * Added method displayMessageByUser() to struct ACharacter.
@@ -836,7 +857,7 @@
 * Renamed method targetLoopCondition() of struct ASpell to enemyTargetLoopCondition().
 * Added methods enemyTargetLoopConditionResistant() and allyTargetLoopCondition() to struct ASpell.
 
-2009-04-18 Tamino Dauth <tamino@cdauth.de>
+2009-04-18 Tamino Dauth <tamino@cdauth.eu>
 * Added file "Models/Creatures/Demons/Bestienhaeuptling.mdx" to archive Creatures.mpq.
 * Added file "Textures/Creatures/Demons/Bestienhaeuptling.blp" to archive Creatures.mpq.
 * Added file "Icons/Creatures/Demons/BTNBestienhaeuptling.blp" to archive Creatures.mpq.
@@ -850,23 +871,23 @@
 * Renamed file "Models/Ambient/Grassland/Kiste.mdx" in archive Ambient.mpq to "Models/Ambient/Grassland/Kiste1.mdx".
 * Renamed file "Textures/Kiste.mdx" in archive Ambient.mpq to "Textures/Ambient/Grassland/Kiste1.blp".
 
-2009-04-13 Tamino Dauth <tamino@cdauth.de>
+2009-04-13 Tamino Dauth <tamino@cdauth.eu>
 * Finished method createCircle() of struct AMissile.
 * Added static method createCircleFromUnit() to struct AMissile.
 * Replaced library ALibraryCoreGeneralDebug by library ALibraryCoreDebugMisc.
 
-2009-04-11 Tamino Dauth <tamino@cdauth.de>
+2009-04-11 Tamino Dauth <tamino@cdauth.eu>
 * Added function interface AVideoInitAction.
 * Improved struct ADamageRecorder.
 * Improved struct AMissile's damage functionality.
 * Renamed several methods of struct AContainer.
 
-2009-04-09 Tamino Dauth <tamino@cdauth.de>
+2009-04-09 Tamino Dauth <tamino@cdauth.eu>
 * Added functions TransmissionFromUnit(), TransmissionFromUnitForPlayer() and GetSimpleTransmissionDuration() to library ALibraryCoreInterfaceCinematic.
 * Added functions PanCameraToTimedWithZForPlayer(), SmartCameraPanForPlayer(), SmartCameraPanWithZForPlayer() and RotateCameraAroundPointForPlayer() to library ALibraryCoreInterfaceCamera.
 * Revised struct AVideo.
 
-2009-04-08 Tamino Dauth <tamino@cdauth.de>
+2009-04-08 Tamino Dauth <tamino@cdauth.eu>
 * Added methods setCamerBoundsToRect() and resetCameraBoundsToMapRect() to struct ACharacter.
 * Added function ResetTerrainFogForPlayer() to library ACoreLibraryEnvironmentTerrain.
 * Main window shortcut can be the escape key now.
@@ -878,7 +899,7 @@
 * Revised struct AInventory.
 * Added function interface AVideoStopAction.
 
-2009-04-07 Tamino Dauth <tamino@cdauth.de>
+2009-04-07 Tamino Dauth <tamino@cdauth.eu>
 * Changed character argument of spell functions to spell argument.
 * Added static method targetDamageCondition() to struct ASpell.
 * Added methods replaceUnit(), setLocation() and select() to struct ACharacter.
@@ -890,7 +911,7 @@
 * Added method guiIndex() to struct AMainWindow.
 * Added methods setFile() and file() to struct AImage.
 
-2009-04-05 Tamino Dauth <tamino@cdauth.de>
+2009-04-05 Tamino Dauth <tamino@cdauth.eu>
 * Added method setFacing() to struct ACharacter.
 * Added start member facing to struct AShrine which has to be set in constructor.
 * Fixed colourising in function GetModifiedPlayerName().
@@ -905,61 +926,61 @@
 * Added method level() to struct ASpell.
 * Added debug utilities cheat giveall.
 
-2009-04-02 Tamino Dauth <tamino@cdauth.de>
+2009-04-02 Tamino Dauth <tamino@cdauth.eu>
 * Added static method staticPrint() to text macro A_STRUCT_DEBUG.
 * Added text macro instances of text macro A_STRUCT_DEBUG to several structs.
 * Fixed several bugs and syntax errors.
 
-2009-04-01 Tamino Dauth <tamino@cdauth.de>
+2009-04-01 Tamino Dauth <tamino@cdauth.eu>
 * Added methods getPolarProjectionX() and getPolarProjectionY() to struct ACircle.
 * Renamed files and libraries.
 
-2009-03-31 Tamino Dauth <tamino@cdauth.de>
+2009-03-31 Tamino Dauth <tamino@cdauth.eu>
 * Added library AStructDebugCheat to the core debug module.
 * Moved library AStructDebugDebugHashTable to the core debug module.
 * Revised struct AMissile.
 * Added static method getCharacterByUnit() to struct ACharacter.
 * Added methods getName(), setX(), setY() and setRect() to struct ACharacter.
 
-2009-03-30 Tamino Dauth <tamino@cdauth.de>
+2009-03-30 Tamino Dauth <tamino@cdauth.eu>
 * Added methods setWidget() and setUnit() to struct AVector.
 * Improved AMissile struct.
 
-2009-03-27 Tamino Dauth <tamino@cdauth.de>
+2009-03-27 Tamino Dauth <tamino@cdauth.eu>
 * Added library AStructEnvironmentMissile with struct AMissile.
 
-2009-03-21 Tamino Dauth <tamino@cdauth.de>
+2009-03-21 Tamino Dauth <tamino@cdauth.eu>
 * Renamed function ASCIIToChar to AsciiToChar.
 
-2009-03-18 Tamino Dauth <tamino@cdauth.de>
+2009-03-18 Tamino Dauth <tamino@cdauth.eu>
 * Constructor of struct AContainer doesn't have any parameters anymore.
 * Added library AStructGuiCheckBox and contained struct ACheckBox.
 * Renamed config method of struct AQuest to init0.
 * Revised struct ASystemDebugger.
 
-2009-03-17 Tamino Dauth <tamino@cdauth.de>
+2009-03-17 Tamino Dauth <tamino@cdauth.eu>
 * Renamed have methods of struct AHashTable to has methods.
 * Improved methods of struct AContainer.
 * Revised library ALibraryDebugSystemDebugger.
 
-2009-03-13 Tamino Dauth <tamino@cdauth.de>
+2009-03-13 Tamino Dauth <tamino@cdauth.eu>
 * Added text macro A_STRUCT_DEBUG to library ALibraryGeneralDebug.
 
-2009-03-10 Tamino Dauth <tamino@cdauth.de>
+2009-03-10 Tamino Dauth <tamino@cdauth.eu>
 * Added static method getItemTypeOfItem() to struct AItemType.
 * Added method checkEquipment() to struct AInventory.
 * Replaced Class keyword in struct files and libraries by Struct.
 * Added library ALibraryGuiLayout to GUI system.
 
-2009-03-09 Tamino Dauth <tamino@cdauth.de>
+2009-03-09 Tamino Dauth <tamino@cdauth.eu>
 * Revised A_STACK text macro.
 * Revised some documentation comments.
 
-2009-03-08 Tamino Dauth <tamino@cdauth.de>
+2009-03-08 Tamino Dauth <tamino@cdauth.eu>
 * Revised several documentation comments.
 * Renamed some container methods.
 
-2009-03-04 Tamino Dauth <tamino@cdauth.de>
+2009-03-04 Tamino Dauth <tamino@cdauth.eu>
 * Removed method protectedSetState() of struct AAbstractQuest.
 * Made method setState() of struct AAbstractQuest stub.
 * Removed method setEnabled() and setDisabled() of struct AWidget.
@@ -967,11 +988,11 @@
 * Added static methods multiplication() and projection() to struct AVector.
 * Improved and revised some documentation comments.
 
-2009-03-01 Tamino Dauth <tamino@cdauth.de>
-* Changed e-mail address tamino.dauth@web.de to tamino@cdauth.de.
+2009-03-01 Tamino Dauth <tamino@cdauth.eu>
+* Changed e-mail address tamino.dauth@web.de to tamino@cdauth.eu.
 
-2009-02-20 Tamino Dauth <tamino@cdauth.de>
-* Changed e-mail address from tamino.dauth@web.de to tamino@cdauth.de.
+2009-02-20 Tamino Dauth <tamino@cdauth.eu>
+* Changed e-mail address from tamino.dauth@web.de to tamino@cdauth.eu.
 * Renamed function GetRandomAlphabeticChar() to GetRandomAlphabeticalChar().
 * Renamed function GetRandomPeculiarChar() to GetRandomSpecialChar().
 * Renamed function IsStringAlphabetic() to IsStringAlphabetical().
@@ -983,84 +1004,84 @@
 * Renamed struct ASLKTable to ASlkTable.
 * Revised several documentation comments.
 
-2009-02-05 Tamino Dauth <tamino@cdauth.de>
+2009-02-05 Tamino Dauth <tamino@cdauth.eu>
 * Added library ALibraryInterfaceCinematicFilter.
 
-2009-02-04 Tamino Dauth <tamino@cdauth.de>
+2009-02-04 Tamino Dauth <tamino@cdauth.eu>
 * Added files Models/Creatures/Humans/Nordmann2.mdx, Models/Creatures/Humans/Nordmann2_Portrait.mdx and Textures/Creatures/Humans/Nordmann2.blp of Olof Moleman from wc3campaigns.net.
 * Renamed file Models/Creatures/Humans/Nordmann.mdx to Models/Creatures/Humans/Nordmann1.mdx.
 * Added allUnitsAreInRect() method to ACharacter class.
 
-2009-02-02 Tamino Dauth <tamino@cdauth.de>
+2009-02-02 Tamino Dauth <tamino@cdauth.eu>
 * Added library AClassCharacterNeratiaFight.
 
-2009-01-26 Tamino Dauth <tamino@cdauth.de>
+2009-01-26 Tamino Dauth <tamino@cdauth.eu>
 * Added methods SetUnitXIfNotBlocked(), SetUnitYIfNotBlocked() and SetUnitXYIfNotBlocked() of the inWarcraft.de user WaterKnight to the library ALibraryMathsUnit.
 
-2009-01-05 Tamino Dauth <tamino@cdauth.de>
+2009-01-05 Tamino Dauth <tamino@cdauth.eu>
 * Characters scheme bars will be displayed correctly now.
 
-2008-12-06 Tamino Dauth <tamino@cdauth.de>
+2008-12-06 Tamino Dauth <tamino@cdauth.eu>
 * Fixed various bugs of the quest system.
 * Found a bug in the World Editor or TESH and reported it on wc3campaigns.net.
 * Added the methods setIconPath() and getIconPath() to the AQuest struct.
 * Implement first skipable wait functions in the ATalk struct.
 
-2008-12-02 Tamino Dauth <tamino@cdauth.de>
+2008-12-02 Tamino Dauth <tamino@cdauth.eu>
 * Added the getGui() method to the AWidget and AMainWindow structs as comfort method.
 
-2008-12-01 Tamino Dauth <tamino@cdauth.de>
+2008-12-01 Tamino Dauth <tamino@cdauth.eu>
 * Found some sleep call errors in executed actions of the struct AInfo and ATalk.
 * Quest pings won't be shown anymore before setting quest's state to new.
 * Fixed several bugs.
 * Added the setPingColour() method to the AAbstractQuest struct.
 
-2008-11-29 Tamino Dauth <tamino@cdauth.de>
+2008-11-29 Tamino Dauth <tamino@cdauth.eu>
 * Added the setPingLocation(), setPingRect(), setPingWidget(), setPingUnit(), setPingDestructable(), and setPingItem() methods to the AAbstractQuest struct.
 
-2008-11-25 Tamino Dauth <tamino@cdauth.de>
+2008-11-25 Tamino Dauth <tamino@cdauth.eu>
 * Added methods addSpecialEffect(), addSpellEffect(), addSpellEffectById(), createUnit(), createDestructable(), createDestructableZ(), createItem() and createTrackable() to the ACircle struct.
 
-2008-11-23 Tamino Dauth <tamino@cdauth.de>
+2008-11-23 Tamino Dauth <tamino@cdauth.eu>
 * Added Dionesiists demon models Demon, Destroyer, Imp2 and Captain to the creatures archive.
 * Model files will be named in English now.
 
-2008-11-14 Tamino Dauth <tamino@cdauth.de>
+2008-11-14 Tamino Dauth <tamino@cdauth.eu>
 * Added ALibraryGeneralUnit library to the core.
 * Added gexxo's FirstOfGroupSave() function to the ALibraryGeneralUnit library.
 * Added a gexxo's detailed function description to the FirstOfGroupSave() function.
 
-2008-11-01 Tamino Dauth <tamino@cdauth.de>
+2008-11-01 Tamino Dauth <tamino@cdauth.eu>
 * Found bug in InsertLineBreaks().
 * Renamed the static wait() method of the AVideo struct to waitForVideo().
 * Added wait() method to AVideo struct.
 * Shortcut actions will be reseted now when GUI hides.
 
-2008-10-31 Tamino Dauth <tamino@cdauth.de>
+2008-10-31 Tamino Dauth <tamino@cdauth.eu>
 * Fixed video skip bug.
 * Switched character struct selection key back to the escape key.
 
-2008-10-28 Tamino Dauth <tamino@cdauth.de>
+2008-10-28 Tamino Dauth <tamino@cdauth.eu>
 * Switched character struct selection key to the up arrow key.
 
-2008-10-25 Tamino Dauth <tamino@cdauth.de>
+2008-10-25 Tamino Dauth <tamino@cdauth.eu>
 * Switched to utf8 document encodings.
 * Revised and added parts of the documentation comments.
 * Fixed a bug in the dockWidget() and dockMainWindow() methods of the AMainWindow and AGui structes.
 * Added the undockWidget() method to the AMainWindow struct.
 * Added the undockMainWindow() method to the AGui struct.
 
-2008-10-21 Tamino Dauth <tamino@cdauth.de>
+2008-10-21 Tamino Dauth <tamino@cdauth.eu>
 * Added the SystemDebugger struct to the system debug module.
 * Added the AButton struct as alias for the AWidget struct.
 
-2008-10-11 Tamino Dauth <tamino@cdauth.de>
+2008-10-11 Tamino Dauth <tamino@cdauth.eu>
 * Added the library ALibraryGeneralGame to the general module.
 * Added PandaMine's and Captain Griffen's functions IsInGame() and IsInGameEx() to the ALibraryGeneralGame library.
 * Fixed some syntax errors.
 * Revised the Struct Template file.
 
-2008-09-23 Tamino Dauth <tamino@cdauth.de>
+2008-09-23 Tamino Dauth <tamino@cdauth.eu>
 * Added the library ALibraryEnvironmentDestructable to the environment module.
 * Added PitzerMike's TreeFilter function to the ALibraryEnvironmentDestructable library.
 * Added Shadow1500's JumpParabola function to the ALibraryMathsReal library.
@@ -1076,29 +1097,29 @@
 * The function ShowBashTextTagForPlayer was added to the ALibraryInterfaceTextTag library.
 * Added Vexorian's Log and Logarithm function to the ALibraryMathsReal library (replaced the constant ITERATIONS with the parameter iterations).
 
-2008-09-21 Tamino Dauth <tamino@cdauth.de>
+2008-09-21 Tamino Dauth <tamino@cdauth.eu>
 * Added library ALibraryMathsReal to the maths module.
 * Added WaterKnight's RoundTo and RoundToGetDifference functions to the ALibraryMathsReal library.
 
-2008-09-01 Tamino Dauth <tamino@cdauth.de>
+2008-09-01 Tamino Dauth <tamino@cdauth.eu>
 * Fixed a bug in the scale method of the AVector struct.
 * Added the addScaled method to the AVecotr struct.
 
-2008-08-29 Tamino Dauth <tamino@cdauth.de>
+2008-08-29 Tamino Dauth <tamino@cdauth.eu>
 * Added all init methods.
 * Thrown out the AScollBar struct.
 * Replaced camera value constants with camera setups in the AView, ATalk and AMainWindow struct.
 
-2008-08-28 Tamino Dauth <tamino@cdauth.de>
+2008-08-28 Tamino Dauth <tamino@cdauth.eu>
 * Added init methods to several structs.
 
-2008-08-26 Tamino Dauth <tamino@cdauth.de>
+2008-08-26 Tamino Dauth <tamino@cdauth.eu>
 * Removed the wait parameter of the ATalk speech method.
 * Removed the character parameter of the AQuestItem constructor.
 * You have to call the stop method of the AVideo struct manually now.
 * Added a cinematic filter to the AVideo play and stop methods.
 
-2008-08-24 Tamino Dauth <tamino@cdauth.de>
+2008-08-24 Tamino Dauth <tamino@cdauth.eu>
 * Changelog was created.
 * Some bugfixes with the TriggerSleepAction() function in the ATalk and AInfo struct.
 * The AQuestItem struct uses the questitem data type now.
