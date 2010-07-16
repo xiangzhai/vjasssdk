@@ -28,7 +28,8 @@ library AInterfaceCoreGeneralContainer
 	endinterface
 
 	globals
-		AIteratorInterface aIterator = 0 /// Global iterator variable which has to be used in ASL foreach statements.
+		/// Global iterator variable which has to be used in ASL foreach statements.
+		AIteratorInterface aIterator = 0
 	endglobals
 
 	/// There should not be any TriggerSleepAction call in foreach block.
@@ -72,4 +73,5 @@ library AInterfaceCoreGeneralContainer
 		endloop
 		call aIterator.destroy()
 	//! endtextmacro
+	
 endlibrary

@@ -3,8 +3,9 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 	/**
 	* @author Tamino Dauth
 	* Got some inspiration from @link http://www.cplusplus.com/reference/stl and @link http://www.cplusplus.com/reference/stl/vector.
+	* Vector containers do not use nodes. They use default Warcraft 3 arrays (extended by vJass).
 	*/
-	//! textmacro A_VECTOR takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, MAXSIZE, STRUCTSPACE
+	//! textmacro A_VECTOR takes STRUCTPREFIX, NAME, ELEMENTTYPE, NULLVALUE, MAXSIZE, STRUCTSPACE, ITERATORSPACE
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$UnaryPredicate takes $ELEMENTTYPE$ value returns boolean
@@ -22,6 +23,81 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$BinaryOperation takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns $ELEMENTTYPE$
+		
+		$STRUCTPREFIX$ struct $NAME$Iterator[$ITERATORSPACE$]
+			private $NAME$ m_container
+			private integer m_index
+
+			/// Required by container struct.
+			public method setIndex takes integer index returns nothing
+				set this.m_index = index
+			endmethod
+
+			/// Required by container struct.
+			public method index takes nothing returns integer
+				return this.m_index
+			endmethod
+
+			public method isValid takes nothing returns boolean
+				return this.m_index != -1
+			endmethod
+
+			public method hasNext takes nothing returns boolean
+				return this.m_index != -1 and this.m_container.size() > this.m_index + 1
+			endmethod
+
+			public method hasPrevious takes nothing returns boolean
+				return this.m_index != -1 and this.m_container.size() != 0 and this.m_index - 1 >= 0
+			endmethod
+
+			/// Similar to C++'s ++ iterators operator.
+			public method next takes nothing returns nothing
+				if (this.m_index == -1 or not this.hasNext()) then
+					return
+				endif
+
+				set this.m_index = this.m_index + 1
+			endmethod
+
+			/// Similar to C++'s -- iterators operator.
+			public method previous takes nothing returns nothing
+				if (this.m_index == -1 or not this.hasPrevious()) then
+					return
+				endif
+
+				set this.m_index = this.m_index - 1
+			endmethod
+
+			/**
+			* Vector iterators need container struct instance since vectors do not use nodes.
+			* @todo If you want to implement toBack and toFront (like Qt does) you'll have to save parent struct instance ...
+			*/
+			public static method create takes $NAME$ container returns thistype
+				local thistype this = thistype.allocate()
+				set this.m_container = container
+				set this.m_index = -1
+
+				return this
+			endmethod
+
+			public method operator== takes thistype iterator returns boolean
+				return this.m_index == iterator.m_index and this.m_container == iterator.m_container
+			endmethod
+
+			public method setData takes $ELEMENTTYPE$ data returns nothing
+				if (this.m_index == -1) then
+					return
+				endif
+				set this.m_container[this.m_index] = data
+			endmethod
+
+			public method data takes nothing returns $ELEMENTTYPE$
+				if (this.m_index == -1) then
+					return $NULLVALUE$
+				endif
+				return this.m_container[this.m_index]
+			endmethod
+		endstruct
 
 		$STRUCTPREFIX$ struct $NAME$[$STRUCTSPACE$]
 			//members
@@ -36,6 +112,29 @@ static if (DEBUG_MODE) then
 				return PrintMethodErrorIf("$NAME$", this, (index < 0 or index >= this.m_size), methodName, "Invalid index: " + I2S(index) + ".")
 			endmethod
 endif
+
+			/**
+			* @return Returns a newly created iterator referencing to the first element of the vector.
+			* @note You'll have to take care of releasing the returned iterator.
+			*/
+			public method begin takes nothing returns $NAME$Iterator
+				local $NAME$Iterator begin = $NAME$Iterator.create(this)
+				call begin.setIndex(0)
+
+				return begin
+			endmethod
+
+			/**
+			* Does not reference the past-end element (like in C++) rather than the last one.
+			* @return Returns a newly created iterator referencing to the last element of the vector.
+			* @note You'll have to take care of releasing the returned iterator.
+			*/
+			public method end takes nothing returns $NAME$Iterator
+				local $NAME$Iterator end = $NAME$Iterator.create(this)
+				call end.setIndex(this.m_size - 1)
+
+				return end
+			endmethod
 
 			public method size takes nothing returns integer
 				return this.m_size
@@ -784,23 +883,23 @@ endif
 	//! endtextmacro
 
 	/**
-	* default vectors, Jass data types
+	* default vectors, JASS data types
 	* max instances = required struct space / biggest array member size
 	* 400000 is struct space maximum
 	* max instances = 50000 / 100 = 500
 	* Use AIntegerVector for all struct types to save code space.
 	*/
-	//! runtextmacro A_VECTOR("", "AIntegerVector", "integer", "0", "100", "50000")
-	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "100", "50000")
-	//! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "100", "50000")
-	//! runtextmacro A_VECTOR("", "ARealVector", "real", "0.0", "100", "50000")
-	//! runtextmacro A_VECTOR("", "AHandleVector", "handle", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "AIntegerVector", "integer", "0", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "AStringVector", "string", "null", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "ABooleanVector", "boolean", "false", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "ARealVector", "real", "0.0", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "AHandleVector", "handle", "null", "100", "50000", "8192")
 
-	//! runtextmacro A_VECTOR("", "AEffectVector", "effect", "null", "100", "50000")
-	//! runtextmacro A_VECTOR("", "AUnitVector", "unit", "null", "100", "50000")
-	//! runtextmacro A_VECTOR("", "AItemVector", "item", "null", "100", "50000")
-	//! runtextmacro A_VECTOR("", "ADestructableVector", "destructable", "null", "100", "50000")
-	//! runtextmacro A_VECTOR("", "ARectVector", "rect", "null", "100", "50000")
-	//! runtextmacro A_VECTOR("", "AWeatherEffectVector", "weathereffect", "null", "100", "50000")
-	//! runtextmacro A_VECTOR("", "APlayerVector", "player", "null", "100", "50000")
+	//! runtextmacro A_VECTOR("", "AEffectVector", "effect", "null", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "AUnitVector", "unit", "null", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "AItemVector", "item", "null", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "ADestructableVector", "destructable", "null", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "ARectVector", "rect", "null", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "AWeatherEffectVector", "weathereffect", "null", "100", "50000", "8192")
+	//! runtextmacro A_VECTOR("", "APlayerVector", "player", "null", "100", "50000", "8192")
 endlibrary

@@ -12,9 +12,9 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	* @author Tamino Dauth
 	* @state untested
 	*/
-	function RotateCameraAroundPointForPlayer takes player user, real x, real y, real degrees, real duration returns nothing
+	function RotateCameraAroundPointForPlayer takes player whichPlayer, real x, real y, real degrees, real duration returns nothing
 		local player localPlayer = GetLocalPlayer()
-		if (localPlayer == user) then
+		if (localPlayer == whichPlayer) then
 			call SetCameraRotateMode(x, y, bj_DEGTORAD * degrees, duration)
 		endif
 		set localPlayer = null
@@ -26,10 +26,10 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	* @author Tamino Dauth
 	* @state untested
 	*/
-	function SmartCameraPanWithZForPlayer takes player user, real x, real y, real zOffset, real duration returns nothing
+	function SmartCameraPanWithZForPlayer takes player whichPlayer, real x, real y, real zOffset, real duration returns nothing
 		local player localPlayer = GetLocalPlayer()
 		local real distance
-		if (localPlayer == user) then
+		if (localPlayer == whichPlayer) then
 			set distance = GetDistanceBetweenPoints(x, y, 0.0, GetCameraTargetPositionX(), GetCameraTargetPositionY(), 0.0)
 			if (distance >= bj_SMARTPAN_TRESHOLD_SNAP) then
 				//If the user is too far away, snap the camera.
@@ -91,24 +91,24 @@ library ALibraryCoreInterfaceCamera requires ALibraryCoreGeneralPlayer, ALibrary
 	* @author Tamino Dauth
 	* @state untested
 	*/
-	function PanCameraToTimedWithZForPlayer takes player user, real x, real y, real zOffset, real duration returns nothing
+	function PanCameraToTimedWithZForPlayer takes player whichPlayer, real x, real y, real zOffset, real duration returns nothing
 		local player localPlayer = GetLocalPlayer()
-		if (localPlayer == user) then
+		if (localPlayer == whichPlayer) then
 			call PanCameraToTimedWithZ(x, y, zOffset, duration)
 		endif
 		set localPlayer = null
 	endfunction
 
-	function SetCameraBoundsForPlayer takes player user, real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
+	function SetCameraBoundsForPlayer takes player whichPlayer, real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
 		local player localPlayer = GetLocalPlayer()
-		if (user == localPlayer) then
+		if (whichPlayer == localPlayer) then
 			call SetCameraBounds(x1, y1, x2, y2, x3, y3, x4, y4)
 		endif
 		set localPlayer = null
 	endfunction
 
-	function SetCameraBoundsToPointForPlayer takes player user, real x, real y returns nothing
-		call SetCameraBoundsForPlayer(user, x, y, x, y, x, y, x, y)
+	function SetCameraBoundsToPointForPlayer takes player whichPlayer, real x, real y returns nothing
+		call SetCameraBoundsForPlayer(whichPlayer, x, y, x, y, x, y, x, y)
 	endfunction
 
 	function ResetCameraBoundsToMapRectForPlayer takes player user returns nothing

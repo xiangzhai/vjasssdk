@@ -282,13 +282,6 @@ endif
 	endfunction
 
 	/// @todo Should be private, vJass bug.
-	function DebugDestroyTimer takes timer whichTimer returns nothing
-		//IsTimerPaused
-		//Timer-Ablauf
-		//- Zerstörte Timer laufen trotz ihrer Zerstörung ab. Man muss einen Timer anhalten bevor man ihn zerstört.
-	endfunction
-
-	/// @todo Should be private, vJass bug.
 	function DebugSetUnitX takes unit whichUnit, real newX returns nothing
 		if (newX < GetRectMinX(bj_mapInitialPlayableArea) or newX > GetRectMaxX(bj_mapInitialPlayableArea)) then
 			debug call PrintFunctionError("SetUnitX", "Invalid parameter newX, value " + R2S(newX) + ". Canceling function call to avoid game crash.")
@@ -327,6 +320,48 @@ endif
 		debug call PrintFunctionError("SetImageRender", "Does not work, use SetImageRenderAlways instead.")
 	endfunction
 
+	/// @todo Should be private, vJass bug.
+	function DebugDestroyTrigger takes trigger whichTrigger returns nothing
+		/// @todo CHECK IF TRIGGER RUNS
+	endfunction
+
+	private function TriggerActionTimerExpires takes nothing returns nothing
+		if (not AHashTable.global().handleBoolean(GetExpiredTimer(), "DebugTimerIsPeriodic")) then
+			call AHashTable.global().flushHandle(GetExpiredTimer())
+			call DestroyTrigger(GetTriggeringTrigger())
+		endif
+	endfunction
+
+	function DebugTimerStart takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
+		local trigger whichTrigger = CreateTrigger()
+		call TriggerRegisterTimerExpireEvent(whichTrigger, whichTimer)
+		call TriggerAddAction(whichTrigger, function TriggerActionTimerExpires)
+		call AHashTable.global().setHandleBoolean(whichTimer, "DebugTimerIsPeriodic", periodic)
+		call AHashTable.global().setHandleBoolean(whichTimer, "DebugTimerRuns", true)
+		call AHashTable.global().setHandleTrigger(whichTimer, "DebugTimerTrigger", whichTrigger)
+		set whichTrigger = null
+	endfunction
+
+	function DebugPauseTimer takes timer whichTimer returns nothing
+		call AHashTable.global().setHandleBoolean(whichTimer, "DebugTimerRuns", false)
+	endfunction
+
+	function DebugResumeTimer takes timer whichTimer returns nothing
+		call AHashTable.global().setHandleBoolean(whichTimer, "DebugTimerRuns", true)
+	endfunction
+
+	/// @todo Should be private, vJass bug.
+	/// - Zerstörte Timer laufen trotz ihrer Zerstörung ab. Man muss einen Timer anhalten bevor man ihn zerstört.
+	function DebugDestroyTimer takes timer whichTimer returns nothing
+		if (AHashTable.global().handleBoolean(whichTimer, "DebugTimerRuns")) then
+			debug call Print("Timer with id " + I2S(GetHandleId(whichTimer)) + " has not been stopped before destroying it.")
+			call PauseTimer(whichTimer)
+			call DestroyTrigger(AHashTable.global().handleTrigger(whichTimer, "DebugTimerTrigger"))
+		endif
+
+		call AHashTable.global().flushHandle(whichTimer)
+	endfunction
+
 static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 	hook Player DebugPlayer
 	hook InitGameCache DebugInitGameCache
@@ -336,6 +371,11 @@ static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 	hook CreateUnit DebugCreateUnit
 	hook RestoreUnit DebugRestoreUnit
 	hook SetImageRender DebugSetImageRender
+	hook DestroyTrigger DebugDestroyTrigger
+	hook TimerStart DebugTimerStart
+	hook PauseTimer DebugPauseTimer
+	hook ResumeTimer DebugResumeTimer
+	hook DestroyTimer DebugDestroyTimer
 endif
 
 	//GroupEnumUnitsInRectCounted und GroupEnumUnitsInRangeCounted

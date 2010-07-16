@@ -1,4 +1,50 @@
-library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibraryCoreMathsHandle, ALibraryCoreMathsUnit
+library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStructCoreGeneralList, ALibraryCoreDebugMisc, ALibraryCoreMathsHandle, ALibraryCoreMathsUnit
+
+	private struct ARegionData
+		private region m_region
+		private real m_flyHeight
+
+		public method region takes nothing returns region
+			return this.m_region
+		endmethod
+
+		public method flyHeight takes nothing returns real
+			return this.m_flyHeight
+		endmethod
+
+		public static method create takes region whichRegion, real flyHeight returns thistype
+			local thistype this = thistype.allocate()
+			set this.m_region = whichRegion
+			set this.m_flyHeight = flyHeight
+
+			return this
+		endmethod
+	endstruct
+
+	private struct AUnitData
+		private unit m_unit
+		private real m_flyHeight
+
+		public method unit takes nothing returns unit
+			return this.m_unit
+		endmethod
+
+		public method flyHeight takes nothing returns real
+			return this.m_flyHeight
+		endmethod
+
+		public method restore takes nothing returns nothing
+			call SetUnitFlyHeight(this.m_unit, this.m_flyHeight, 0.0)
+		endmethod
+		
+		public static method create takes unit whichUnit returns thistype
+			local thistype this = thistype.allocate()
+			set this.m_unit = whichUnit
+			set this.m_flyHeight = GetUnitFlyHeight(this.m_unit)
+
+			return this
+		endmethod
+	endstruct
 
 	/// @todo Should be contained by @struct ALayer, vJass bug.
 	function interface ALayerOnEnterFunction takes unit whichUnit returns nothing
@@ -8,38 +54,34 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 
 	/**
 	* @todo Untested!
+	* Layers can be used to create multiple movable rects for units on the same position of map using
+	* the z-axis.
+	* As you can't do this by using the terrain editor or the Warcraft engine itself this struct
+	* uses the native function @function SetUnitFlyHeight and turns off units pathing (by using
+	* native function @function SetUnitPathing) to be usable on water and other blocking rects.
+	* Each layer consists of several regions which can be extended by adding rects.
+	* Each region has its own specific meaning and all rects should be placed in specific order
+	* that the layer can be used correctly.
+	* This image should describe what each region means to the layer:
+	* @image TODO
+	* @note Added regions and units won't be removed from game by the layer at any time! You'll have to take care yourself.
 	*/
 	struct ALayer
 		private real m_height
 		private ALayerOnEnterFunction m_onEnterFunction
 		private ALayerOnLeaveFunction m_onLeaveFunction
-		private region m_entry
-		private region m_exit
-		private region m_region
-		private AUnitVector m_units
-		private ARealVector m_unitFlyHeights
+		private ARegionList m_entryRegions
+		private ARegionList m_exitRegions
+		private AIntegerList m_regions // Holds structs of ARegionData.
+		private AIntegerList m_units /// Holds structs of AUnitData.
 		private trigger m_enterTrigger
 		private trigger m_leaveTrigger
+		private trigger m_regionTrigger
 		private trigger m_boundsTrigger
 
 		implement ASystemStruct
 
 		//! runtextmacro A_STRUCT_DEBUG("\"ALayer\"")
-
-		public method setHeight takes real height returns nothing
-			local integer i = 0
-			set this.m_height = height
-
-			loop
-				exitwhen (i == this.m_units.size())
-				call SetUnitFlyHeight(this.m_units[i], this.m_height, 0.0)
-				set i = i + 1
-			endloop
-		endmethod
-
-		public method height takes nothing returns real
-			return this.m_height
-		endmethod
 
 		public method setOnEnterFunction takes ALayerOnEnterFunction onEnterFunction returns nothing
 			set this.m_onEnterFunction = onEnterFunction
@@ -57,28 +99,58 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			return this.m_onLeaveFunction
 		endmethod
 
-		public method addEntryRect takes rect whichRect returns nothing
-			call RegionAddRect(this.m_entry, whichRect)
+		public method addEntryRegion takes region whichRegion returns nothing
+			call this.m_entryRegions.pushBack(whichRegion)
+			call TriggerRegisterEnterRegion(this.m_enterTrigger, whichRegion, null)
 		endmethod
 
-		public method removeEntryRect takes rect whichRect returns nothing
-			call RegionClearRect(this.m_entry, whichRect)
+		public method removeEntryRegion takes region whichRegion returns nothing
+			call this.m_entryRegions.remove(whichRegion)
+			/// @todo Remove event
 		endmethod
 
-		public method addExitRect takes rect whichRect returns nothing
-			call RegionAddRect(this.m_exit, whichRect)
+		public method addExitRegion takes region whichRegion returns nothing
+			call this.m_exitRegions.pushBack(whichRegion)
+			call TriggerRegisterEnterRegion(this.m_leaveTrigger, whichRegion, null)
 		endmethod
 
-		public method removeExitRect takes rect whichRect returns nothing
-			call RegionClearRect(this.m_exit, whichRect)
+		public method removeExitRegion takes region whichRegion returns nothing
+			call this.m_exitRegions.remove(whichRegion)
+			/// @todo Remove event
 		endmethod
 
-		public method addRect takes rect whichRect returns nothing
-			call RegionAddRect(this.m_region, whichRect)
+		public method addRegion takes region whichRegion, real flyHeight returns nothing
+			call this.m_regions.pushBack(ARegionData.create(whichRegion, flyHeight))
+			call TriggerRegisterLeaveRegion(this.m_regionTrigger, whichRegion, null)
+			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, whichRegion, null)
+		endmethod
+		
+		private method regionDataByRegion takes region whichRegion returns ARegionData
+			local AIntegerListIterator iterator = this.m_regions.begin()
+			local ARegionData result = 0
+			loop
+				exitwhen (not iterator.isValid())
+				if (ARegionData(iterator.data()).region() == whichRegion) then
+					set result = ARegionData(iterator.data())
+					exitwhen (true)
+				endif
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			return result
 		endmethod
 
-		public method removeRect takes rect whichRect returns nothing
-			call RegionClearRect(this.m_region, whichRect)
+		public method removeRegion takes region whichRegion returns nothing
+			local ARegionData data = this.regionDataByRegion(whichRegion)
+static if (DEBUG_MODE) then
+			if (data == 0) then
+				call this.print(Format(tr("Region %1% is not contained by layer.")).region(whichRegion).result())
+				return
+			endif
+endif
+			call this.m_regions.remove(data)
+			call data.destroy()
+			/// @todo Remove events
 		endmethod
 
 		public stub method onUnitEnters takes unit whichUnit returns nothing
@@ -93,35 +165,81 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			endif
 		endmethod
 
-		public method unitEnters takes unit whichUnit returns nothing
-			call this.m_units.pushBack(whichUnit)
-			call this.m_unitFlyHeights.pushBack(GetUnitFlyHeight(whichUnit))
-			call MakeUnitFlyable(whichUnit)
-			call SetUnitFlyHeight(whichUnit, this.m_height, 0.0)
-			call SetUnitPathing(whichUnit, false)
-			debug call this.print("Unit " + GetUnitName(whichUnit) + " enters.")
+		private method unitRegionData takes unit whichUnit returns ARegionData
+			local AIntegerListIterator iterator = this.m_regions.begin()
+			local ARegionData result = 0
+			loop
+				exitwhen (not iterator.isValid())
+				if (IsUnitInRegion(ARegionData(iterator.data()).region(), whichUnit)) then
+					set result = ARegionData(iterator.data())
+					exitwhen (true)
+				endif
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			return result
+		endmethod
 
+		private method refreshUnit takes unit whichUnit, region whichRegion returns nothing
+			local ARegionData data = this.regionDataByRegion(whichRegion)
+static if (DEBUG_MODE) then
+			if (data == 0) then
+				call this.print(Format("Region %1% is not being contained by layer.").region(whichRegion).result())
+				return
+			endif
+endif
+			call SetUnitFlyHeight(whichUnit, data.flyHeight(), 0.0)
+		endmethod
+
+		public method unitEnters takes unit whichUnit, region whichRegion returns nothing
+			call this.m_units.pushBack(AUnitData.create(whichUnit))
+			call MakeUnitFlyable(whichUnit)
+			call SetUnitPathing(whichUnit, false)
+			call this.refreshUnit(whichUnit, whichRegion)
+			debug call this.print("Unit " + GetUnitName(whichUnit) + " enters.")
 			call this.onUnitEnters(whichUnit)
 		endmethod
 
+		private method unitUnitData takes unit whichUnit returns AUnitData
+			local AIntegerListIterator iterator = this.m_units.begin()
+			local AUnitData result = 0
+			loop
+				exitwhen (not iterator.isValid())
+				if (AUnitData(iterator.data()).unit() == whichUnit) then
+					set result = AUnitData(iterator.data())
+					exitwhen (true)
+				endif
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			return result
+		endmethod
+
 		public method unitLeaves takes unit whichUnit returns nothing
-			local integer index = this.m_units.find(whichUnit)
-			call SetUnitFlyHeight(this.m_units[index], this.m_unitFlyHeights[index], 0.0)
+			local AUnitData data = this.unitUnitData(whichUnit)
+static if (DEBUG_MODE) then
+			if (data == 0) then
+				call this.print(Format("Unit %1% is not being contained by layer.").u(whichUnit).result())
+				return
+			endif
+endif
+			call this.m_units.remove(data)
+			call data.restore()
+			call data.destroy()
 			call SetUnitPathing(whichUnit, true)
-			call this.m_units.erase(index)
-			call this.m_unitFlyHeights.erase(index)
 			debug call this.print("Unit " + GetUnitName(whichUnit) + " leaves.")
 
 			call this.onUnitLeaves(whichUnit)
 		endmethod
 
-		public method unitLeaveAll takes nothing returns nothing
-			local integer i
-
+		public method unitsLeaveAll takes nothing returns nothing
+			local AIntegerListIterator iterator = this.m_units.begin()
 			loop
-				exitwhen (this.m_units.empty())
-				call this.unitLeaves(this.m_units.back())
+				exitwhen (not iterator.isValid())
+				call this.unitLeaves(AUnitData(iterator.data()).unit())
+				call iterator.next()
 			endloop
+			call iterator.destroy()
 		endmethod
 
 		public method enable takes nothing returns nothing
@@ -131,7 +249,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 		endmethod
 
 		/**
-		* Does not change already added units!
+		* Does not change already added/contained units!
 		*/
 		public method disable takes nothing returns nothing
 			call DisableTrigger(this.m_enterTrigger)
@@ -142,23 +260,38 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 		public method isEnabled takes nothing returns boolean
 			return IsTriggerEnabled(this.m_boundsTrigger)
 		endmethod
+		
+		public method containsUnit takes unit whichUnit returns boolean
+			local AIntegerListIterator iterator = this.m_units.begin()
+			local boolean result = false
+			loop
+				exitwhen (not iterator.isValid())
+				if (AUnitData(iterator.data()).unit() == whichUnit) then
+					set result = true
+					exitwhen (true)
+				endif
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			return result
+		endmethod
 
 		private static method triggerConditionEnter takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			debug call this.print("Run condition with trigger unit " + GetUnitName(GetTriggerUnit()))
-			return not this.m_units.contains(GetTriggerUnit())
+			return not this.containsUnit(GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionEnter takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			debug call this.print("Unit " + GetUnitName(GetTriggerUnit()) + " enters.")
-			call this.unitEnters(GetTriggerUnit())
+			call this.unitEnters(GetTriggerUnit(), GetTriggeringRegion())
 		endmethod
 
 		private static method triggerConditionLeave takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return this.m_units.contains(GetTriggerUnit())
+			return this.containsUnit(GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionLeave takes nothing returns nothing
@@ -167,12 +300,35 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 			call this.unitLeaves(GetTriggerUnit())
 		endmethod
 
+		private static method triggerConditionRegion takes nothing returns boolean
+			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
+
+			return this.containsUnit(GetTriggerUnit())
+		endmethod
+
+		private static method triggerActionRegion takes nothing returns nothing
+			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
+			call this.refreshUnit(GetTriggerUnit(), GetTriggeringRegion())
+		endmethod
+
+		private method isUnitInExitRegion takes unit whichUnit returns boolean
+			local ARegionData regionData = this.unitRegionData(whichUnit)
+static if (DEBUG_MODE) then
+			if (regionData == 0) then
+				call this.print(Format("Unit %1% is not being contained by layer.").u(whichUnit).result())
+				return false
+			endif
+endif
+			return this.m_exitRegions.contains(regionData.region())
+		endmethod
+
 		private static method triggerConditionBounds takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return this.m_units.contains(GetTriggerUnit()) and not IsUnitInRegion(this.m_exit, GetTriggerUnit())
+			return this.containsUnit(GetTriggerUnit()) and not this.isUnitInExitRegion(GetTriggerUnit())
 		endmethod
 
+		/// @todo Pause Unit/Move unit back correctly.
 		private static method triggerActionBounds takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			call SetUnitX(GetTriggerUnit(), GetUnitPolarProjectionX(GetTriggerUnit(), GetUnitFacing(GetTriggerUnit()) - 180.0, 100.0))
@@ -182,45 +338,70 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, ALibra
 
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
-			set this.m_height = 0.0
 			set this.m_onEnterFunction = 0
 			set this.m_onLeaveFunction = 0
-			set this.m_entry = CreateRegion()
-			set this.m_exit = CreateRegion()
-			set this.m_region = CreateRegion()
-			set this.m_units = AUnitVector.create()
-			set this.m_unitFlyHeights = ARealVector.create()
+			set this.m_entryRegions = ARegionList.create()
+			set this.m_exitRegions = ARegionList.create()
+			set this.m_regions = AIntegerList.create()
+			set this.m_units = AIntegerList.create()
+
 			set this.m_enterTrigger = CreateTrigger()
-			call TriggerRegisterEnterRegion(this.m_enterTrigger, this.m_entry, null)
 			call TriggerAddCondition(this.m_enterTrigger, Condition(function thistype.triggerConditionEnter))
 			call TriggerAddAction(this.m_enterTrigger, function thistype.triggerActionEnter)
 			call AHashTable.global().setHandleInteger(this.m_enterTrigger, "this", this)
+
 			set this.m_leaveTrigger = CreateTrigger()
-			call TriggerRegisterLeaveRegion(this.m_leaveTrigger, this.m_exit, null)
 			call TriggerAddCondition(this.m_leaveTrigger, Condition(function thistype.triggerConditionLeave))
 			call TriggerAddAction(this.m_leaveTrigger, function thistype.triggerActionLeave)
 			call AHashTable.global().setHandleInteger(this.m_leaveTrigger, "this", this)
+
+			set this.m_regionTrigger = CreateTrigger()
+			call TriggerAddCondition(this.m_regionTrigger, Condition(function thistype.triggerConditionRegion))
+			call TriggerAddAction(this.m_regionTrigger, function thistype.triggerActionRegion)
+			call AHashTable.global().setHandleInteger(this.m_regionTrigger, "this", this)
+
 			set this.m_boundsTrigger = CreateTrigger()
-			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, this.m_region, null)
 			call TriggerAddCondition(this.m_boundsTrigger, Condition(function thistype.triggerConditionBounds))
 			call TriggerAddAction(this.m_boundsTrigger, function thistype.triggerActionBounds)
+			call AHashTable.global().setHandleInteger(this.m_boundsTrigger, "this", this)
 
 			return this
 		endmethod
+		
+		private method destroyRegions takes nothing returns nothing
+			local AIntegerListIterator iterator = this.m_regions.begin()
+			loop
+				exitwhen (not iterator.isValid())
+				call ARegionData(iterator.data()).destroy()
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			call this.m_regions.destroy()
+		endmethod
+		
+		private method destroyUnits takes nothing returns nothing
+			local AIntegerListIterator iterator = this.m_units.begin()
+			loop
+				exitwhen (not iterator.isValid())
+				call AUnitData(iterator.data()).destroy()
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			call this.m_units.destroy()
+		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			call RemoveRegion(this.m_entry)
-			set this.m_entry = null
-			call RemoveRegion(this.m_exit)
-			set this.m_exit = null
-			call RemoveRegion(this.m_region)
-			set this.m_region = null
-			call this.m_units.destroy()
-			call this.m_unitFlyHeights.destroy()
+			call this.unitsLeaveAll()
+			call this.m_entryRegions.destroy()
+			call this.m_exitRegions.destroy()
+			call this.destroyRegions()
+			call this.destroyUnits()
 			call AHashTable.global().destroyTrigger(this.m_enterTrigger)
 			set this.m_enterTrigger = null
 			call AHashTable.global().destroyTrigger(this.m_leaveTrigger)
 			set this.m_enterTrigger = null
+			call AHashTable.global().destroyTrigger(this.m_regionTrigger)
+			set this.m_regionTrigger = null
 			call AHashTable.global().destroyTrigger(this.m_boundsTrigger)
 			set this.m_enterTrigger = null
 		endmethod

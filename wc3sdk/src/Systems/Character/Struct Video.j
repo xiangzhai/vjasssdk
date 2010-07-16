@@ -245,12 +245,10 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				debug return
 			debug endif
 			call DisableTrigger(thistype.m_skipTrigger)
-			call EnableUserControl(false)
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			set playersAll = GetPlayersAll()
 			call CinematicModeExBJ(false, playersAll, 0.0)
-			call EnableUserControl(false)
 			set playersAll = null
 			if (ATalk.initialized() and ATalk.disableEffectsInCinematicMode()) then
 				call ATalk.showAllEffects()
@@ -267,7 +265,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			call thistype.restorePlayerData()
-			call EnableUserControl(true)
 
 			call ACharacter.setAllMovable(true)
 			set thistype.m_runningVideo = 0

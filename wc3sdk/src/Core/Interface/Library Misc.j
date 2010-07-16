@@ -49,8 +49,9 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 		constant integer AShortcutX = 88
 		constant integer AShortcutY = 89
 		constant integer AShortcutZ = 90
-		//dialogs
-		constant integer AMaxDialogButtons = 12 /// @todo 16?
+		// dialogs
+		/// @todo 16?
+		constant integer AMaxDialogButtons = 12
 	endglobals
 
 	debug function KeyIsValid takes integer key returns boolean

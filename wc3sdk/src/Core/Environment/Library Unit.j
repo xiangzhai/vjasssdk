@@ -103,14 +103,20 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 	* function GetFullDamage takes real damage, real armor returns real
 	*/
 	globals
-		//Values that should be changed for your map
-		private constant real ARMOR_REDUCTION_MULTIPLIER = 0.06 /// @author Rising_Dusk
-		private constant integer LIFE_BONUS_SPELL_ID = 'lif&' /// @author Rising_Dusk
-		//Values that do not need to be changed
-		constant real ARMOR_INVULNERABLE = 917451.519 /// @author Rising_Dusk
-		private constant real DAMAGE_TEST = 16. /// @author Rising_Dusk
-		private constant real DAMAGE_LIFE = 30. /// @author Rising_Dusk
-		private constant real NATLOG_094 = -0.061875 /// @author Rising_Dusk
+		// Values that should be changed for your map
+		/// @author Rising_Dusk
+		private constant real ARMOR_REDUCTION_MULTIPLIER = 0.06
+		/// @author Rising_Dusk
+		private constant integer LIFE_BONUS_SPELL_ID = 'lif&'
+		// Values that do not need to be changed
+		/// @author Rising_Dusk
+		private constant real ARMOR_INVULNERABLE = 917451.519
+		/// @author Rising_Dusk
+		private constant real DAMAGE_TEST = 16.
+		/// @author Rising_Dusk
+		private constant real DAMAGE_LIFE = 30.
+		/// @author Rising_Dusk
+		private constant real NATLOG_094 = -0.061875
 	endglobals
 
 	////! external ObjectMerger w3a AIlz lif& anam "GetUnitArmorLifeBonus" ansf "" Ilif 1 30 aite 0

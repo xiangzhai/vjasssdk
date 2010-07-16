@@ -689,7 +689,7 @@ library AStructCoreGeneralForce requires AStructCoreGeneralVector
 		/**
 		* @see GetPlayerTechMaxAllowed
 		*/
-		public method techMaxAllowed takes integer techid returns real
+		public method techMaxAllowed takes integer techid returns integer
 			local integer result = 0
 			local integer i = 0
 			loop

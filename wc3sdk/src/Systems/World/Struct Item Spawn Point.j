@@ -98,13 +98,17 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 		endmethod
 
 		private method respawn takes nothing returns nothing
-			debug call this.print("Starting item respawn")
-			set this.m_item = null
-			if (this.m_timer == null) then
-				set this.m_timer = CreateTimer()
-				call AHashTable.global().setHandleInteger(this.m_timer, "this", this)
+			if (not this.runs() and this.m_isEnabled and (this.m_item == null or IsItemOwned(this.m_item) or GetWidgetLife(this.m_item) <= 0.0 or GetDistanceBetweenPoints(GetItemX(this.m_item), GetItemY(this.m_item), 0.0, this.m_x, this.m_y, 0.0) > thistype.m_removalRange)) then
+				debug call this.print("Starting item respawn")
+				set this.m_item = null
+				if (this.m_timer == null) then
+					set this.m_timer = CreateTimer()
+					call AHashTable.global().setHandleInteger(this.m_timer, "this", this)
+				endif
+				call TimerStart(this.m_timer, thistype.m_time, false, function thistype.timerFunctionRespawn)
+			debug else
+				debug call this.print("Do not start item respawn!")
 			endif
-			call TimerStart(this.m_timer, thistype.m_time, false, function thistype.timerFunctionRespawn)
 		endmethod
 
 		public static method create takes item whichItem, real weight returns thistype
@@ -156,13 +160,13 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 
 		private static method timerFunctionRespawnCheck takes nothing returns nothing
 			local AIntegerListIterator iterator = thistype.m_itemSpawnPoints.begin()
+			debug call thistype.staticPrint("Calling item spawn points check with count of " + I2S(thistype.m_itemSpawnPoints.size()))
 			loop
 				exitwhen (not iterator.isValid())
-				if (not thistype(iterator.data()).runs() and thistype(iterator.data()).m_isEnabled and (thistype(iterator.data()).m_item == null or IsItemOwned(thistype(iterator.data()).m_item) or GetWidgetLife(thistype(iterator.data()).m_item) <= 0.0 or GetDistanceBetweenPoints(GetItemX(thistype(iterator.data()).m_item), GetItemY(thistype(iterator.data()).m_item), 0.0, thistype(iterator.data()).m_x, thistype(iterator.data()).m_y, 0.0) > thistype.m_removalRange)) then
-					call thistype(iterator.data()).respawn()
-				endif
+				call thistype(iterator.data()).respawn() // checks if item has to be respawned!
 				call iterator.next()
 			endloop
+			call iterator.destroy()
 		endmethod
 
 		public static method init takes real checkRate, real time, real removalRange returns nothing

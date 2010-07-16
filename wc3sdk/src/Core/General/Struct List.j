@@ -159,7 +159,7 @@ library AStructCoreGeneralList requires AInterfaceCoreGeneralContainer, optional
 				return begin
 			endmethod
 
-			/// Does not reference the past-end element rather than the last one.
+			/// Does not reference the past-end element (like in C++) rather than the last one.
 			public method end takes nothing returns $NAME$Iterator
 				local $NAME$Iterator end = $NAME$Iterator.create()
 				call end.setNode(this.m_back)
@@ -574,7 +574,7 @@ library AStructCoreGeneralList requires AInterfaceCoreGeneralContainer, optional
 	//! endtextmacro
 
 	/**
-	* default lists, Jass data types
+	* default lists, JASS data types
 	* max instances = required struct space / biggest array member size
 	* 400000 is struct space maximum
 	* max instances = 8192 / 1 = 8192 since there is no array member
@@ -586,5 +586,6 @@ library AStructCoreGeneralList requires AInterfaceCoreGeneralContainer, optional
 	//! runtextmacro A_LIST("", "AHandleList", "handle", "null", "8192", "40000", "8192")
 
 	//! runtextmacro A_LIST("", "APlayerList", "player", "null", "8192", "40000", "8192")
+	//! runtextmacro A_LIST("", "ARegionList", "region", "null", "8192", "40000", "8192")
 
 endlibrary
