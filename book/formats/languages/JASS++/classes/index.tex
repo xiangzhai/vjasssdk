@@ -1,6 +1,6 @@
 \chapter{Klassen}
 
-Mit dem Schlüsselwort "parent" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
+Mit dem Schlüsselwort "base" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
 Gültigkeitsbereichen, angesprochen werden. Da sie normalerweise kein äußerer Gültigkeitsbereich sind, funktioniert die Verwendung des "."-Operators nicht.
 Mit dem Schlüsselwort "self" spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
 die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren statischen Methoden aufruft, insofern sie selbst z. B. zu einer
@@ -13,7 +13,7 @@ In diesem Fall werden die Instanzdaten in der globalen Hash-Tabelle oder in zus�
 Falls die angegebene Maximalgröße den Wert 8192 übersteigt und keine globale Hash-Tabelle existiert,
 sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
 Die Maximalgröße einer Klasse kann mit dem "size"-Operator abgefragt werden: <Klassenbezeichner>.size
-Im Test-Modus muss zur Laufzeit 0 vom "new"-Operator zurückgegeben und eine Fehlermeldung ausgegeben werden, falls die Instanzgrenze 
+Im Test-Modus muss zur Laufzeit 0 vom "new"-Operator zurückgegeben und eine Fehlermeldung ausgegeben werden, falls die Instanzgrenze
 überschritten wurde.
 Außerdem muss im Test-Modus eine Fehlermeldung zurückgegeben bzw. abgebrochen werden, wenn der "delete"-Operator auf eine 0-Instanz angewandt wird.
 
@@ -21,6 +21,23 @@ Außerdem muss im Test-Modus eine Fehlermeldung zurückgegeben bzw. abgebrochen 
 Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen können keine
 Instanzen erzeugt werden. Erbt eine Klasse, eine andere abstrakte Klasse, so muss sie sämtliche
 abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
+
+\section{Native Klassen}
+Native Klassen werden mit dem Schlüsselwort "native" deklariert. Sie können abstrakt sein.
+Native Klassen bewirken eine Behandlung der Klasse wie einen nativen, referenzbasierten Typ.
+Daher werden für alle Methoden Funktionen erzeugt. Dabei tragen Konstruktoren alle den Bezeichner
+"Create<Klassenbezeichner>", der Destruktor den Bezeichner "Destroy<Klassenbezeichner>" und der Kopier-
+konstruktor den Bezeichner "Copy<Klassenbezeichner>".
+Die Konstruktor- und die Kopierkonstruktorfunktionen erhalten als Rückgabetyp den Klassentyp.
+Der Destruktor erhält einen Parameter des Klassentyps.
+Alle anderen Funktionen werden ebenfalls aus dem Klassenbezeichner und dem Methodennamen erzeugt:
+"<Klassenbezeichner><Methodenbezeichner>" und sie erhalten selbstverständlich das Klassenobjekt als
+ersten Parameter.
+Es gilt außerdem zu beachten, dass die Methodenbezeichner in den Funktionsbezeichnern und der Klassenbezeichner in den
+Funktionsbezeichnern, in denen er an zweiter Stelle kommt automatisch mit einem Großbuchstaben beginnen,
+um dem Schema der Nativen aus JASS zu gleichen.
+Native Klassen werden hauptsächlich in der Standardbibliothek von JASS++ verwendet, um eine nicht objektorientierte
+Zugriffsmöglichkeit zu erlauben.
 
 \section{Behälter-Klassen}
 Behälter-Klassen werden definiert, indem die Klasse mindestens die Operatoren "size" und "[]" implementiert (als nicht statische Methoden).
@@ -40,7 +57,7 @@ Ist eine Deklaration innerhalb des Klassengültigkeitsbereiches "protected", so 
 der Klasse zugegriffen werden.
 
 \section{Notation}
-[ abstract ] class <Klassenbezeichner> [ [<Maximalgröße>] ] (public | private | protected <Klassenbezeichner>, ...)
+[native][abstract] class <Klassenbezeichner> [ [<Maximalgröße>] ] (public | private | protected <Klassenbezeichner>, ...)
 {
 	[<Deklarationen>]
 } [globale Instanzen durch Kommata getrennt];
@@ -85,7 +102,7 @@ ohne dass sie neu definiert werden müssen.
 Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
 
 \subsection{Methoden der abgleiteten Klasse}
-Mit parent.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
+Mit base.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
 Dabei gilt die Priorität von unten nach oben, von links nach rechts, bei sämtlichen geerbten Klassen.
 
 \subsection{Konstante Methoden}
@@ -141,23 +158,25 @@ Dazu dient das Schlüsselwort "copy". Es einer Klassen-Instanz-Variable voranges
 Wird kein eigener Kopierkonstruktor definiert, so werden sämtliche Elementinhalte ebenfalls kopiert und außerdem
 alle Kopierkonstruktoren der Elternklassen in der Reihenfolge, welche auch beim Konstruktor angewandt wird, aufgerufen.
 Zu beachten gilt dabei, dass der Inhalt von Array-, Funktions- und Objektelementvariablen ebenfalls kopiert wird, sowie auch deren
-Arrays, Funktionen und Objekte usw. (unter Verwendung von deren Kopierkonstruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf 
+Arrays, Funktionen und Objekte usw. (unter Verwendung von deren Kopierkonstruktoren). Dadurch zeigen die Elementvariablen beider Objekte nur auf
 dieselben Ziele, falls es sich bei den Elementvariablen um keine Objekte handelt, sondern um referenzbasierte native Typen, wie z. B. "unit".
 Der Inhalt von Elementvariablen mit kopierbasierten Typen wird selbstverständlich ebenfalls kopiert (dazu ist natürlich kein Kopierkonstruktor notwendig).
 Der Kopierkonstruktor darf virtuell und abstrakt sein.
 Er darf keinerlei Parameter enthalten, weshalb nur exakt ein Kopierkonstruktor pro Klasse deklariert werden kann.
+Daher benötigt er bei der Deklaration wie der Initialisierer (siehe "Gültigkeitsbereiche - Initialisierer") keine Klammern für Parameter.
 Außerdem darf er keinen Rückgabetyp besitzen, da wie beim Konstruktor garantiert wird, dass eine neue Instanz zurückgegeben wird.
 Werden in einem selbstdefinierten Kopierkonstruktor nicht die Kopierkonstruktoren der Elternklassen aufgerufen, so sollte der Compiler eine Warnung ausgeben.
 
 \subsubsection{Deklarations-Notation}
-[Zugriffsmodifikatoren] copy() { [<Anweisungen>] }
+[Zugriffsmodifikatoren] copy { [<Anweisungen>] }
 
 \subsubsection{Aufrufs-Notation}
 copy <Ausdruck>
+<Ausdruck>.copy
 
 \subsubsection{Beispiele}
 class X a = new a();
-class X b = a.copy();
+class X b = a.copy;
 a = copy b;
 
 \subsection{Destruktor}
@@ -172,10 +191,11 @@ Erbt die entsprechende Klasse von mindestens einer anderen Klasse, so muss der D
 Objekten verhindern.
 Der Destruktor einer abstrakten Klasse muss daher schon als virtuell deklariert werden (zwar nicht unbedingt notwendig, da es sonst einen Fehler in
 der Kindklasse gäbe, aber warum nicht?).
-Der Destruktor besitzt ebenfalls keinen Rückgabetyp und darf pro Klasse nur einmal definiert werden.
+Der Destruktor besitzt ebenfalls keine Parameter und keinen Rückgabetyp und darf pro Klasse nur einmal definiert werden.
+Daher benötigt er bei der Deklaration wie der Initialisierer (siehe "Gültigkeitsbereiche - Initialisierer") keine Klammern für Parameter.
 
 \subsubsection{Deklarations-Notation}
-[Zugriffsmodifikatoren] delete() { }
+[Zugriffsmodifikatoren] delete { }
 
 \subsubsection{Aufrufs-Notation}
 delete <Ausdruck>

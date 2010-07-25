@@ -6,6 +6,16 @@ verwendet werden, insofern er öffentlich ist.
 Der neue Bezeichner darf bereits existieren und überdeckt innerhalb des Gültigkeitsbereiches den alten. Der Compiler sollte in
 diesem Fall jedoch eine Warnung ausgeben.
 Der Bezeichner dagegen muss existieren.
+Es gilt zu beachten, dass der Pseudonym-Bezeichner ebenfalls zweimal im selben Gültigkeitsbereich existieren kann,
+insofern er ein Pseudonym für eine andere, unterscheidbare Typendefinition ist.
+In diesem Fall gilt der Bezeichner also für beide Deklarationen und der Compiler entscheidet nach Anwendungsfall.
+Dies kann bei Funktions- und Vorlageninstanzdeklarationen der Fall sein, da diese sich nicht nur durch ihren Bezeichner
+unterscheiden müssen (siehe "Funktionen" und "Vorlagen").
+Ein Pseudonym für eine Funktionsdeklaration kann daher hergestellt werden, auch wenn der Bezeichner des Pseudonyms bereits
+im selben Gültigkeitsbereich existiert, insofern sich die Funktionsdeklaration unterscheidet.
+Damit vereinen Pseudonyme in JASS++ die Möglichkeiten von "typedef"-Anwendungen in C/C++ und richtigen Pseudonymen, da auch
+Gültigkeitsbereichsbezeichner überdeckt werden können.
+Pseudonym-Deklarationen müssen nicht angefordert werden. Sie existieren gültigkeitsbereichsweit.
 
 \section{Notation}
-alias <Neuer Bezeichner> <Bezeichner>;
+[Zugriffsmodifikatoren] alias <Neuer Bezeichner> (<Bezeichner>[, <Bezeichner n>]);

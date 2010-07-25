@@ -1,27 +1,37 @@
-\chapter { Literale }
-
+\chapter{Literale}
 Ein Literal ist ein sich selbst erklärender Ausdruck, der nicht speziell benannt werden muss also keinen Bezeichner benötigt.
 Für folgende native Typen gelten folgende Literalnotationsregeln:
 
 Kopierbasierte Typen:
-* string : "<Zeichenkettenliteral>" | null
-* integer : 0<Oktalliteral> | 0%<Binärliteral> | 0x<Hexadezimalliteral> | <Dezimalliteral> | '<Id-Literal>' | null
-* real : <Fließkommaliteral> | null
-* boolean : true | false | null
-* handle (und Nicht-agent-Kindtypen): null
+TODO: Exponentialschreibweise für alle Ganzzahlausdrücke erlauben und auch für Fließkommazahlen?
+\begin{enumerate}
+\item string : "<Zeichenkettenliteral>" | null
+\item integer : 0<Oktalliteral> | 0%<Binärliteral> | 0x<Hexadezimalliteral> | <Dezimalliteral>[e <Exponent>] | '<Id-Literal>' | null
+\item real : <Fließkommaliteral> [r | R] | null
+\item boolean : true | false | null
+\item handle (und Nicht-agent-Kindtypen): null
+\end{enumerate}
 
 Referenzbasierte Typen:
-* code : 0
-* agent (und Kindtypen) : 0
-* Klassenobjekte : 0
-* Funktionszeiger : 0
+\begin{enumerate}
+\item code : 0
+\item agent (und Kindtypen) : 0
+\item Klassenobjekte : 0
+\item Funktionszeiger : 0
+\end{enumerate}
 
-\section { Nullwerte }
+Dabei können Zeichenkettenausdrücke mehrfach hintereinander geschrieben werden. Diese werden dann automatisch zu einem einzelnen
+zusammengefasst. Dies vereinfacht die Aufteilung auf mehrere Zeilen, ohne unnötige Zeilenumbrüche und Einrückungen dazwischen und
+dient einer besseren Übersicht:
+"<Ausdruckteil 1>"
+"<Ausdruckteil n>"
+
+\section{Nullwerte}
 Wie oben dargestellt erhalten kopierbasierte Typen einen Nullwert mit dem Literal "null" und referenzbasierte Typen mit dem Literal "0".
 Der Zugriff auf Nullwerte kann in manchen Fällen zu einem undefinierten Verhalten führen.
 In der Regel ist er im Testmodus jedoch abgesichert und führt zu Fehlermeldungen (siehe "Klassen").
 
-\section { Objekttypen-Literale }
+\section{Objekttypen-Literale}
 Des Weiteren können Eigenschaften sogenannter Objekttypen, die einen bestimmten nativen, kopierbasierten Typ haben abgefragt werden.
 Objekttypen erhalten in Warcraft 3 The Frozen Throne eine vierstellige, hexadezimale Id. Daher können Objekttypen im Wertebereich von 16^4 definiert werden.
 Jede Id identifiziert genau einen Objekttyp.
@@ -77,14 +87,14 @@ sollen. Aus 0.30 würde in diesem Fall also die Ganzzahl 30 werden.
 Es gilt bei einer reinen Angabe der Objekttyp-Id für alle Eigenschaften.
 Es gilt zu beachten, dass Objekttypen-Ids auch als Escape-Sequenzen verwendet werden können.
 
-\section { Farbliterale }
+\section{Farbliterale}
 Farbliterale haben stets den nativen Typ "integer". Sie sind daher ein 32-Bit-Wert, welcher eine RGBA-Farbe enthält.
 Der RGBA-Wert muss hexadezimal angegeben werden, wobei die ersten beiden Ziffern für den Alphawert, die zweiten beiden für den Grünwert,
 die dritten beiden für den Blauwert und die letzten beiden für den Blauwert stehen.
 Notation:
 |c<Farbe>|r
 
-\section { Escape-Sequenzen }
+\section{Escape-Sequenzen}
 Eine Escape-Sequenz ist ein Zeichen, welchem das \-Zeichen vorangestellt wird und welches ausschließlich ein einem
 Zeichenkettenliteral vorkommen darf.
 Es gibt folgende Escape-Sequenzen:
@@ -101,6 +111,6 @@ Wie bei normalen Objektypen-Literalen kann ein Prozentzeichen angehängt werden.
 Bei Farben kann jedoch, anders als bei gewöhnlichen Farbliteralen, Text eingeschlossen werden. Dieser sollte dann in der entsprechenden Farbe
 im Spiel bei einer Ausgabe angezeigt werden.
 
-\section { Notation }
+\section{Notation}
 |c<Farbe>[<Text>]|r
-<<Objekt-Id>,<Feld-Id>[, %]> 
+<<Objekt-Id>,<Feld-Id>[, %]>

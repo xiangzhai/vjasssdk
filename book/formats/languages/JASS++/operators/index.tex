@@ -1,4 +1,12 @@
 \chapter{Operatoren}
+Operatoren sind Zeichenausdrücke, die Operationen mit einem oder mehreren Ausdrücken erlauben.
+Operatoren sind entweder bestimmte Sonderzeichen, die unter anderem bestimmte Ausdrücke an einer Stelle
+erwarten oder Schlüsselwörter.
+In der Regel werden dabei die Schlüsselwörter vor den Ausdruck gestellt. Handelt es sich um ein Operator-
+schlüsselwort dessen Operation einen neuen Ausdruck zurück liefert, kann das Schlüsselwort mit einem .-Operator
+an den Ausdruck angehängt werden.
+Dies entspricht ebenfalls der Notation von Variablen in bestimmten Gültigkeitsbereichen.
+Operatoren können überladen werden (siehe "Operatorenüberladung").
 
 \section{Für Gültigkeitsbereiche}
 [<Bezeichner des Gültigkeitsbereiches>].<Bezeichner eines im Gültigkeitsbereich deklarierten Elements>
@@ -154,7 +162,7 @@ Ausdruck[Indexdimension 1][Indexdimension 2]...[Indexdimension n]
 <Lade-Block-Bezeichner> : <Deklarationsvoraussetzungen>
 
 \section{Für KI-Blöcke}
-execute <KI-Block-Bezeichner> for <Spielerausdruck>
+execute <KI-Block-Bezeichner> for <Spielerausdruck | Streitmachtausdruck>
 
 \section{Für Funktionsdeklarationen}
 <Rückgabetyp> <Funktionsname><Parameterliste> : <Deklarationsvoraussetzungen>
@@ -205,8 +213,8 @@ wait <real-Ausdruck>
 <Klassenname>.<Aufzählung | statische Methode | statisches Element>
 <Ausdruck>.<Elementname | Methodenname>
 new <Klassenname>				Entspricht Klassenname.new()
-delete <Ausdruck>				Entspricht Ausdruck.delete()
-copy Ausdruck					Entspricht Ausdruck.copy()
+delete <Ausdruck>				Entspricht Ausdruck.delete
+copy Ausdruck					Entspricht Ausdruck.copy
 Ausdruck = Ausdruck
 Ausdruck					Ist wahr, falls die Ausdruck auf ein Objekt zeigt.
 !Ausdruck					Ist wahr, falls die Ausdruck auf kein Objekt zeigt.
