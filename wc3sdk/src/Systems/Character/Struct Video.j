@@ -293,10 +293,10 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
 			// dynamic members
-			set this.m_initAction = initAction
-			set this.m_playAction = playAction
-			set this.m_stopAction = stopAction
-			set this.m_skipAction = skipAction
+			set this.m_initAction = 0
+			set this.m_playAction = 0
+			set this.m_stopAction = 0
+			set this.m_skipAction = 0
 
 			return this
 		endmethod

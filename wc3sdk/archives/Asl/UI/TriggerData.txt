@@ -4690,34 +4690,34 @@ _DestroyFogModifier_Category=TC_VISIBILITY
 
 // ASL
 sc__Asl_init=1,nothing
-sc__Asl_init_Defaults=
+_sc__Asl_init_Defaults=
 _sc__Asl_init_Limits=
 _sc__Asl_init_Category=TC_ASL_CORE_GENERAL
 
 Print=1,StringExt
-Print_Defaults=AMesgHelloWorld
-Print_Limits=
-Print_Category=TC_ASL_CORE_DEBUG
+_Print_Defaults=AMesgHelloWorld
+_Print_Limits=
+_Print_Category=TC_ASL_CORE_DEBUG
 
 PrintIf=1,boolean,StringExt
-PrintIf_Defaults=true,AMesgHelloWorld
-PrintIf_Limits=
-PrintIf_Category=TC_ASL_CORE_DEBUG
+_PrintIf_Defaults=true,AMesgHelloWorld
+_PrintIf_Limits=
+_PrintIf_Category=TC_ASL_CORE_DEBUG
 
 sc__ASpawnPoint_init=1,real,modelfile,soundfile,integer,boolean,player,StringExt
-sc__ASpawnPoint_init_Defaults=60.0,"Objects\\Spawnmodels\\NightElf\\EntBirthTarget\\EntBirthTarget.mdl","Abilities\\Spells\\Orc\\EtherealForm\\SpiritWalkerMorph.wav",50,false,PlayerNA,AMesgASpawnPointInit
+_sc__ASpawnPoint_init_Defaults=60.0,"Objects\\Spawnmodels\\NightElf\\EntBirthTarget\\EntBirthTarget.mdl","Abilities\\Spells\\Orc\\EtherealForm\\SpiritWalkerMorph.wav",50,false,PlayerNA,AMesgASpawnPointInit
 _sc__ASpawnPoint_init_Limits=
 _sc__ASpawnPoint_init_Category=TC_ASL_SYSTEMS_WORLD
 
 sc__ASpawnPoint_destroy=1,ASpawnPoint
-sc__ASpawnPoint_destroy_Defaults=0
-sc__ASpawnPoint_destroy_Limits=
-sc__ASpawnPoint_destroy_Category=TC_ASL_SYSTEMS_WORLD
+_sc__ASpawnPoint_destroy_Defaults=0
+_sc__ASpawnPoint_destroy_Limits=
+_sc__ASpawnPoint_destroy_Category=TC_ASL_SYSTEMS_WORLD
 
 sc__ARoutine_destroy=1,ARoutine
-sc__ARoutine_destroy_Defaults=0
-sc__ARoutine_destroy_Limits=
-sc__ARoutine_destroy_Category=TC_ASL_SYSTEMS_WORLD
+_sc__ARoutine_destroy_Defaults=0
+_sc__ARoutine_destroy_Limits=
+_sc__ARoutine_destroy_Category=TC_ASL_SYSTEMS_WORLD
 
 // Obsolete actions
 AddPerfLogLabel=0,string

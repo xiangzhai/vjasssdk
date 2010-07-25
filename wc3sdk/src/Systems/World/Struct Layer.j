@@ -36,7 +36,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 		public method restore takes nothing returns nothing
 			call SetUnitFlyHeight(this.m_unit, this.m_flyHeight, 0.0)
 		endmethod
-		
+
 		public static method create takes unit whichUnit returns thistype
 			local thistype this = thistype.allocate()
 			set this.m_unit = whichUnit
@@ -124,7 +124,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 			call TriggerRegisterLeaveRegion(this.m_regionTrigger, whichRegion, null)
 			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, whichRegion, null)
 		endmethod
-		
+
 		private method regionDataByRegion takes region whichRegion returns ARegionData
 			local AIntegerListIterator iterator = this.m_regions.begin()
 			local ARegionData result = 0
@@ -144,7 +144,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 			local ARegionData data = this.regionDataByRegion(whichRegion)
 static if (DEBUG_MODE) then
 			if (data == 0) then
-				call this.print(Format(tr("Region %1% is not contained by layer.")).region(whichRegion).result())
+				call this.print(Format(tr("Region %1% is not contained by layer.")).h(whichRegion).result())
 				return
 			endif
 endif
@@ -184,7 +184,7 @@ endif
 			local ARegionData data = this.regionDataByRegion(whichRegion)
 static if (DEBUG_MODE) then
 			if (data == 0) then
-				call this.print(Format("Region %1% is not being contained by layer.").region(whichRegion).result())
+				call this.print(Format("Region %1% is not being contained by layer.").h(whichRegion).result())
 				return
 			endif
 endif
@@ -260,7 +260,7 @@ endif
 		public method isEnabled takes nothing returns boolean
 			return IsTriggerEnabled(this.m_boundsTrigger)
 		endmethod
-		
+
 		public method containsUnit takes unit whichUnit returns boolean
 			local AIntegerListIterator iterator = this.m_units.begin()
 			local boolean result = false
@@ -367,7 +367,7 @@ endif
 
 			return this
 		endmethod
-		
+
 		private method destroyRegions takes nothing returns nothing
 			local AIntegerListIterator iterator = this.m_regions.begin()
 			loop
@@ -378,7 +378,7 @@ endif
 			call iterator.destroy()
 			call this.m_regions.destroy()
 		endmethod
-		
+
 		private method destroyUnits takes nothing returns nothing
 			local AIntegerListIterator iterator = this.m_units.begin()
 			loop

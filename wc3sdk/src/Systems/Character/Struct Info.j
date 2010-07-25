@@ -100,7 +100,6 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		public method show takes nothing returns boolean
 			local unit self = this.m_talk.character().unit()
 			local player user = this.m_talk.character().player()
-			local integer shortcut
 			local boolean result = false
 			if (this.m_permanent or not this.m_hasBeenShownToCharacter[GetPlayerId(user)]) then
 				if (this.m_important) then
@@ -111,8 +110,7 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 				else
 					if (this.m_condition == 0 or this.m_condition.evaluate(this)) then
 						set result = true
-						set shortcut = AGui.playerGui(user).dialog().dialogButtons()
-						set this.m_dialogButton = AGui.playerGui(user).dialog().addDialogButton("[" + I2S(shortcut) + "] " + this.m_description, AShortcut0 + shortcut, thistype.dialogButtonActionRunInfo)
+						set this.m_dialogButton = AGui.playerGui(user).dialog().addDialogButtonIndex(this.m_description, thistype.dialogButtonActionRunInfo)
 					endif
 				endif
 			endif

@@ -386,9 +386,11 @@ library AStructCoreGeneralMap requires AInterfaceCoreGeneralContainer, optional 
 				local $NAME$Node tmpNode
 				loop
 					exitwhen (first == 0)
+					// check both since it can be front and back at the same time!
 					if (first == this.m_front) then
 						set this.m_front = first.next()
-					elseif (first == this.m_back) then
+					endif
+					if (first == this.m_back) then
 						set this.m_back = first.previous()
 					endif
 					if (first.next() != 0) then

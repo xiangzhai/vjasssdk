@@ -8446,6 +8446,10 @@ WESTRING_UNITORDERNOTARG_INCINERATEARROWON="Neutraler Feuerlord - 'Verbrennen' a
 WESTRING_UNITORDERNOTARG_INCINERATEARROWOFF="Neutraler Feuerlord - 'Verbrennen' deaktivieren (Pfeil)"
 WESTRING_HEROSKILL_INCINERATEARROW="Neutraler Feuerlord - 'Verbrennen' (Pfeil)"
 
+// NEW OLD
+WESTRING_TRIGCAT_OBSOLETE="Veraltet"
+WESTRING_TRIGCAT_DEBUG="Test"
+
 // NEW
 WESTRING_TRIGTYPE_soundfile="Geräusch-Datei"
 

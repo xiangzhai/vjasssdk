@@ -1,3 +1,14 @@
+2010-07-25 Tamino Dauth <tamino@cdauth.eu>
+* Added shortcut index methods to struct ADialog.
+* Fixed AFormat bug which prevented it from formatting tokens more than one times.
+* Recognized that A_DEBUG_NATIVES prevents map from being able to be started.
+* Fixed debugging functions IsPrintIdentifierEnabled and IsPrintIdentifierDisabled.
+* Fixed erasing of maps and lists when erased element is front and back at the same moment.
+
+2010-07-19 Tamino Dauth <tamino@cdauth.eu>
+* Fixed unit hiding bug of struct AHeroIcon.
+* Replaced AIntegerVector in struct ADialog by AIntegerList.
+
 2010-07-11 Tamino Dauth <tamino@cdauth.eu>
 * Extended struct ALayer for mutiple region usage.
 * Added iterator support to text macro A_VECTOR.

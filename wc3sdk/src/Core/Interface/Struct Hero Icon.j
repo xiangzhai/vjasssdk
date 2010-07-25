@@ -84,7 +84,7 @@ endif
 			call this.m_unitCopy.setCopyPause(false)
 			call this.m_unitCopy.setCopyVulnerbility(false)
 			call this.m_unitCopy.setCopyDeath(false)
-			call ShowUnit(this.hero(), false)
+			//call ShowUnit(this.hero(), false) // starting enabled, has to be visible!
 			call SetUnitOwner(this.hero(), iconOwner, false)
 			call SetUnitInvulnerable(this.hero(), true)
 			call SetUnitPathing(this.hero(), false)

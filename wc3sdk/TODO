@@ -1,62 +1,82 @@
-2010-05-24 Tamino Dauth <tamino@cdauth.de>
+2010-07-19 Tamino Dauth <tamino@cdauth.eu>
+* Add backwards iterator types to container macros.
+* FIXED: As I introduced list type instead of vector for struct ADialog buttons can't be showned second time.
+
+2010-07-11 Tamino Dauth <tamino@cdauth.eu>
+* What's about iterators of containers which decrease their size while the iterator still references to an already deleted element. Iterator shouldn't be valid anymore?
+
+2010-07-10 Tamino Dauth <tamino@cdauth.eu>
+* FIXED: Items which aren't owned by other players are interpreted as such by rucksack system.
+* FIXED: Items which are owned by other players are only dropped from equipment not from rucksack but message
+is shown in rucksack only.
+* Just add AInventory which is inherited by ARucksack and AEquipment.
+* Unit of AHeroIcon has to be visible on map (for attacks and movement!).
+* Fix ItemSpawnPoint.
+* ALayer should allow multiple heights with corresponding rects.
+
+2010-05-30 Tamino Dauth <tamino@cdauth.eu>
+* Add struct AHeroIcon for allied heroes which can be used to see allied hero data and to do some orders on them.
+* Add option "useHeroIcons" for character system.
+
+2010-05-24 Tamino Dauth <tamino@cdauth.eu>
 * Change quest messages that they're more like Warcraft 3 TFT.
 
-2010-05-11 Tamino Dauth <tamino@cdauth.de>
+2010-05-11 Tamino Dauth <tamino@cdauth.eu>
 * Fix function GetHeroMaxXP (probably correct but multiboard bar doesn show correct value).
 * DONE: Fix quest state setting when all states are being set completed.
 * Fix time of day functions.
 * Test MultiboardSuppressDisplayForPlayer.
 
-2010-05-01 Tamino Dauth <tamino@cdauth.de>
+2010-05-01 Tamino Dauth <tamino@cdauth.eu>
 * Fix ASL GUI (trigger editor) support.
 * Improve GUI trigger actions (see WEU, UMSWE).
 
-2010-04-07 Tamino Dauth <tamino@cdauth.de>
+2010-04-07 Tamino Dauth <tamino@cdauth.eu>
 * Get icons and graphics for races user interfaces (AStyle).
 * DONE: Add RtC 1.0 support.
 
-2010-03-10 Tamino Dauth <tamino@cdauth.de>
+2010-03-10 Tamino Dauth <tamino@cdauth.eu>
 * Improve text macros A_LIST and A_MAP.
 
-2010-03-08 Tamino Dauth <tamino@cdauth.de>
+2010-03-08 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Add GUI systems structs (creating new branch): AStyle, AFrame, AWindow, AArrowButton, AListView and AScrollButtons (AStyle should be associated with AMainWindow instances).
 
-2010-03-06 Tamino Dauth <tamino@cdauth.de>
+2010-03-06 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: One unit can't be registered several times on one routine type.
 
-2010-02-27 Tamino Dauth <tamino@cdauth.de>
+2010-02-27 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: Changing dialog pages seems to clear the dialog title.
 
-2010-02-14 Tamino Dauth <tamino@cdauth.de>
+2010-02-14 Tamino Dauth <tamino@cdauth.eu>
 * Fix AWeather (DMdF crashes).
 
-2010-02-13 Tamino Dauth <tamino@cdauth.de>
+2010-02-13 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Add some time and time of day functions for calculating remaining seconds and minutes etc.
 
-2010-01-31 Tamino Dauth <tamino@cdauth.de>
+2010-01-31 Tamino Dauth <tamino@cdauth.eu>
 * [noimplicitthis] should be enabled.
 
-2009-12-30 Tamino Dauth <tamino@cdauth.de>
+2009-12-30 Tamino Dauth <tamino@cdauth.eu>
 * Add store and restore methods to all character system structs.
 
-2009-12-24 Tamino Dauth <tamino@cdauth.de>
+2009-12-24 Tamino Dauth <tamino@cdauth.eu>
 * DEPRECATED: Add struct APlayerInterfaceData which holds all interface data and use it for AVideo and AGui to restore everything (what's about enabled cinematic mode).
 
-2009-12-19 Tamino Dauth <tamino@cdauth.de>
+2009-12-19 Tamino Dauth <tamino@cdauth.eu>
 * Maybe add some members like minSizeX or maxSizeX to struct AWidget for ALayout.
 * AImage.setFile - CreateImageForPlayer or ShowImage do crash the game in debug mode.
 * AThirdPersonCamera: when should it be created?
 * Call all evaluates explicity that users can use [forcemethodevaluate] without getting any problems.
 
-2009-12-14 Tamino Dauth <tamino@cdauth.de>
+2009-12-14 Tamino Dauth <tamino@cdauth.eu>
 * DEPRECATED: Remove size members from struct AWidget (beside from AImage).
 * DONE: Add size parameters to ALayout, improve ALayout.
 * Add struct AImageBar to GUI system.
 
-2009-12-13 Tamino Dauth <tamino@cdauth.de>
+2009-12-13 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Fix game crash which is caused by ALibrarySystemsDebugUtilities.
 
-2009-12-09 Tamino Dauth <tamino@cdauth.de>
+2009-12-09 Tamino Dauth <tamino@cdauth.eu>
 * Fix missile target seeking mode.
 * Fix debug handle mode.
 * Fix MoveString and MoveSubString.
@@ -64,20 +84,20 @@
 * Test AJump, ALayer and ASpawnPoint.
 * Pause talks when showing video.
 
-2009-12-05 Tamino Dauth <tamino@cdauth.de>
+2009-12-05 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Maybe you should use vectors for struct AMissile. Test missile collision.
 
-2009-12-04 Tamino Dauth <tamino@cdauth.de>
+2009-12-04 Tamino Dauth <tamino@cdauth.eu>
 * Do some benchmarks with AVector and AList ...
 
-2009-11-21 Tamino Dauth <tamino@cdauth.de>
+2009-11-21 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Water files in directory "Doodads..." of archive "Ambient" should be moved into "Models/Ambient.." and added for "Die Macht des Feuers" separately.
 
-2009-11-20 Tamino Dauth <tamino@cdauth.de>
+2009-11-20 Tamino Dauth <tamino@cdauth.eu>
 * Files "archives/Creatures/Models/Creatures/Humans/Samureiausbilder.mdx" and "archives/Creatures/Models/Creatures/Humans/Samureiausbilder_Portrait.mdx" miss file "Textures/HeroMusashMiyamoto".
 * Files "archives/Creatures/Models/Creatures/Humans/GepanzerterSamurai.mdx" misses file "Textures/Creatures/Humans/GepanzerterSamurai/Harquebus.blp".
 
-2009-11-09 Tamino Dauth <tamino@cdauth.de>
+2009-11-09 Tamino Dauth <tamino@cdauth.eu>
 * Einheiten bei Charakterklassenauswahl richten (Anzeige pro Spieler).
 * DONE: Character class descriptions should be added by using struct AStringVector.
 * Test structs AMissile and AJump.
@@ -87,21 +107,21 @@
 * DONE: Add struct ABuff to character system (instance per unit per spell cast, ASpell should get a buff vector).
 * DONE: AVideo: TriggerSleepAction vs. PolledWait (if you use timers you can't use one single video action).
 
-2009-11-07 Tamino Dauth <tamino@cdauth.de>
+2009-11-07 Tamino Dauth <tamino@cdauth.eu>
 * Add struct AEquipmentType for inventory.
 * Make character systems unit specific that they can be used without the character system (characte system structs should inherit the new ones).
 * Equipment of inventory system should be able to be used with several pages like rucksack.
 * Improve editor system.
 * ARoutine.disableAllForUnit doesn't work.
 
-2009-11-01 Tamino Dauth <tamino@cdauth.de>
+2009-11-01 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Nichtanimierte Version von Borns Weizen einbauen.
 * Mehr generische Verlaufblockertexturen (unterschiedliche Größen) zur Verfügung stellen.
 
-2009-10-25 Tamino Dauth <tamino@cdauth.de>
+2009-10-25 Tamino Dauth <tamino@cdauth.eu>
 * DONE: AVideo methods which are using TriggerSleepAction calls maybe should be moved into functions.
 
-2009-10-16 Tamino Dauth <tamino@cdauth.de>
+2009-10-16 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: Rechter Rucksackgegenstand wird nicht korrekt zurückgesetzt.
 * DONE: Report bugs to Vexorian:
 	- static ifs not bla or not bla doesn't work
@@ -113,16 +133,16 @@
 die Beendungsfunktion aufgerufen (falls vorhanden). Außerdem wird nach dem inzwischen begonnenen Tagesablauf gesucht und dessen Beginnfunktion aufgerufen.
 * DONE: Still missing various type methods for struct AHashTable (since new data type hashtable was introduced by Blizzard)
 
-2009-10-10 Tamino Dauth <tamino@cdauth.de>
+2009-10-10 Tamino Dauth <tamino@cdauth.eu>
 * Add documentation files.
 
-2009-09-02 Tamino Dauth <tamino@cdauth.de>
+2009-09-02 Tamino Dauth <tamino@cdauth.eu>
 * Add computer controller and shared control support to character system.
 
-2009-08-24 Tamino Dauth <tamino@cdauth.de>
+2009-08-24 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: If you move an item to next page second time, next page item is moved sometimes?!
 
-2009-08-08 Tamino Dauth <tamino@cdauth.de>
+2009-08-08 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Replace struct type vectors by AIntegerVector.
 * FIXED: Vector structs need more space.
 * FIXED: If an item is equipped while the rucksack is opened, abilities should be added to character and abilities of the unequipping item should be removed.
@@ -130,53 +150,53 @@ die Beendungsfunktion aufgerufen (falls vorhanden). Außerdem wird nach dem inzw
 * FIXED: Resetting equipped items which where switched diagonal does not work.
 * FIXED: Missing item name in "Add to rucksack." message.
 
-2009-08-07 Tamino Dauth <tamino@cdauth.de>
+2009-08-07 Tamino Dauth <tamino@cdauth.eu>
 * init methods of structs AThirdPersonCamera and AArrowKeys should have their constant settings as parameters.
 
-2009-08-05 Tamino Dauth <tamino@cdauth.de>
+2009-08-05 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Fix custom system enabl- and disabling.
 
-2009-07-31 Tamino Dauth <tamino@cdauth.de>
+2009-07-31 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Fix camera height of talk camera.
 
-2009-07-23 Tamino Dauth <tamino@cdauth.de>
+2009-07-23 Tamino Dauth <tamino@cdauth.eu>
 * Note: Do not destroy triggers in their own actions if there are some TriggerSleepAction calls after destruction.
 
-2009-07-18 Tamino Dauth <tamino@cdauth.de>
+2009-07-18 Tamino Dauth <tamino@cdauth.eu>
 * Native declarations in map file don't work.
 
-2009-07-11 Tamino Dauth <tamino@cdauth.de>
+2009-07-11 Tamino Dauth <tamino@cdauth.eu>
 * Maybe we should use function UnitDropItemSlot instead of all those item removals in the inventory system.
 
-2009-07-07 Tamino Dauth <tamino@cdauth.de>
+2009-07-07 Tamino Dauth <tamino@cdauth.eu>
 * Perhaps you should add various characters schema pages/views like statistics (deaths, kills etc.).
 * Add button models for system debugger (by using Blender).
 
-2009-06-21 Tamino Dauth <tamino@cdauth.de>
+2009-06-21 Tamino Dauth <tamino@cdauth.eu>
 * Note: Never create add conditions or actions to a trigger which are defined as static methods below the trigger creation.
 
-2009-06-05 Tamino Dauth <tamino@cdauth.de>
+2009-06-05 Tamino Dauth <tamino@cdauth.eu>
 * Not necessary: Implement a vector for player characters.
 * DONE: Finish function CopyUnit.
 * DONE: Finish ATalk and AInfo revision.
 
-2009-05-25 Tamino Dauth <tamino@cdauth.de>
+2009-05-25 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: Revival timer does only appear when the character dies with "Reincarnation".
 * Note: Don't make a character unmovable when he dies since this will disable all systems (like revival). Specify everything for each single system!
 
-2009-05-22 Tamino Dauth <tamino@cdauth.de>
+2009-05-22 Tamino Dauth <tamino@cdauth.eu>
 * DONE: We need lists like in C++ for structs like ALightningChain!
 
-2009-05-21 Tamino Dauth <tamino@cdauth.de>
+2009-05-21 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: File "archives/Creatures/Models/Creatures/Undeads/Zombie.mdx" doesn't work?!
 
-2009-05-11 Tamino Dauth <tamino@cdauth.de>
+2009-05-11 Tamino Dauth <tamino@cdauth.eu>
 * Added static method channelCondition to struct ASpell.
 
-2009-05-08 Tamino Dauth <tamino@cdauth.de>
+2009-05-08 Tamino Dauth <tamino@cdauth.eu>
 * Missing functions SetTerrainFogForPlayer and SetTerrainFogExForPlayer?
 
-2009-04-09 Tamino Dauth <tamino@cdauth.de>
+2009-04-09 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: AInventory: Unit orders for moving items aren't received.
 * FIXED: AInventory: Equipment is not placed in rucksack if you've already equipped an item of the same equipment type.
 * FIXED: AInventory: Attributes should always be the same (if you open your rucksack).
@@ -184,11 +204,11 @@ die Beendungsfunktion aufgerufen (falls vorhanden). Außerdem wird nach dem inzw
 * DONE: ACharacterScheme: Add a separator field between hit points and mana bar.
 * FIXED: ASpell: Cast actions will stop when user calls TriggerSleepAction().
 
-2009-04-08 Tamino Dauth <tamino@cdauth.de>
+2009-04-08 Tamino Dauth <tamino@cdauth.eu>
 * Add member m_ prefix and rename get methods.
 * FIXED: Main window is not created correctly.
 
-2009-04-05 Tamino Dauth <tamino@cdauth.de>
+2009-04-05 Tamino Dauth <tamino@cdauth.eu>
 * Add log functionality to talk system for AInfo instances.
 * DONE: Fix revival timer function call.
 * DONE: Fix talk trigger sleep function.
@@ -196,7 +216,7 @@ die Beendungsfunktion aufgerufen (falls vorhanden). Außerdem wird nach dem inzw
 * Maybe add preloadMusic() function since music loading often laggs in game.
 * DONE: Quest pings should be displayed at the same time (maybe use only one ping trigger for all).
 
-Tamino Dauth <tamino@cdauth.de>
+Tamino Dauth <tamino@cdauth.eu>
 * FIXED: Abstract quest id won't be attached correctly on its state trigger.
 * FIXED: First speech of talks will be displayed but the wait time will be ignored (Executions are right)!
 * FIXED: Rucksack page items can not be equipped.

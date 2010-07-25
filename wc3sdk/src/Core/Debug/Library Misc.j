@@ -46,11 +46,11 @@ static if (DEBUG_MODE) then
 	endfunction
 
 	function IsPrintIdentifierEnabled takes string identifier returns boolean
-		return disabledPrintIdentifiers.contains.evaluate(identifier)
+		return not disabledPrintIdentifiers.contains.evaluate(identifier)
 	endfunction
 
 	function IsPrintIdentifierDisabled takes string identifier returns boolean
-		return not disabledPrintIdentifiers.contains.evaluate(identifier)
+		return disabledPrintIdentifiers.contains.evaluate(identifier)
 	endfunction
 
 	function SetPrintIdentifierEnabled takes string identifier, boolean enabled returns nothing
@@ -362,6 +362,7 @@ endif
 		call AHashTable.global().flushHandle(whichTimer)
 	endfunction
 
+/// @todo Seems to prevent map from being able to be started.
 static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 	hook Player DebugPlayer
 	hook InitGameCache DebugInitGameCache

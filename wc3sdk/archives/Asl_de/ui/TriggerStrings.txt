@@ -32,25 +32,25 @@ TriggerRegisterDestDeathInRegionEventHint="Nur die ersten 64 Zerstörbaren inner
 
 // Dialog events
 TriggerRegisterDialogEventBJ="Dialog-Button-Klick"
-TriggerRegisterDialogEventBJ="A dialog button is clicked for ",~Dialog
+TriggerRegisterDialogEventBJ="Ein Dialog-Button des ",~Dialogs," wird angeklickt"
 TriggerRegisterDialogEventBJHint=
 
 
 // Game events
-TriggerRegisterGameStateEventTimeOfDay="Time Of Day"
-TriggerRegisterGameStateEventTimeOfDay="The in-game time of day becomes ",~Operation," ",~Time
-TriggerRegisterGameStateEventTimeOfDayHint="A game day is 24 hours long.  Six a.m. is 6.00, and six p.m. is 18.00."
+TriggerRegisterGameStateEventTimeOfDay="Uhrzeit"
+TriggerRegisterGameStateEventTimeOfDay="Die spielinterne Uhrzeit wird ",~Operation," ",~Zeit
+TriggerRegisterGameStateEventTimeOfDayHint="Ein Spieltag geht 24 Stunden lang. Sechs Uhr morgens ist 6.00 und sechs Uhr abends ist 18.00."
 
-TriggerRegisterVariableEvent="Value Of Real Variable"
-TriggerRegisterVariableEvent=~Variable," becomes ",~Operation," ",~Value
-TriggerRegisterVariableEventHint="This only works for non-array variables of type 'Real'."
+TriggerRegisterVariableEvent="Wert einer Real-Variablen"
+TriggerRegisterVariableEvent=~Variable," wird ",~Operation," ",~Wert
+TriggerRegisterVariableEventHint="Dies funktioniert nur mit Nicht-Array-Variablen des Typs 'Real'."
 
-TriggerRegisterGameLoadedEventBJ="Game Load"
-TriggerRegisterGameLoadedEventBJ="A saved game is loaded"
+TriggerRegisterGameLoadedEventBJ="Spielladung"
+TriggerRegisterGameLoadedEventBJ="Ein gespeichertes Spiel wird geladen"
 TriggerRegisterGameLoadedEventBJHint="This fires immediately after the saved game is finished loading."
 
-TriggerRegisterGameSavedEventBJ="Game Save"
-TriggerRegisterGameSavedEventBJ="The game is about to be saved"
+TriggerRegisterGameSavedEventBJ="Spielspeicherung"
+TriggerRegisterGameSavedEventBJ="Das Spiel stets kurz davor gespeichert zu werden"
 TriggerRegisterGameSavedEventBJHint="This fires immediately before the game is saved."
 
 TriggerRegisterShowSkillEventBJ="Hero Abilities Button Clicked"
@@ -67,9 +67,9 @@ TriggerRegisterGameEventHint="This event only occurs during automated tournament
 
 
 // Player events
-TriggerRegisterPlayerChatEvent="Chat Message"
-TriggerRegisterPlayerChatEvent=~Player," types a chat message containing ",~Text," as ",~Match Type
-TriggerRegisterPlayerChatEventHint="Use 'Event Response - Entered/Matched Chat Message' to refer to the chat message that was entered/matched.  Use 'Event Response - Triggering Player' to refer to the player who typed the message."
+TriggerRegisterPlayerChatEvent="Chat-Nachricht"
+TriggerRegisterPlayerChatEvent=~Spieler," gibt eine Chat-Nachricht, welche den ",~Text," als ",~Übereinstimmungstyp," enthält, ein"
+TriggerRegisterPlayerChatEventHint="Verwenden Sie 'Ereignis-Reaktion - Eingegebene/übereinstimmende Chat-Nachricht' um auf die Chat-Nachricht zu verweisen, die eingeben wurde/übereinstimmte.  Verwenden Sie 'Ereignis-Reaktion - Auslösender Spieler', um auf den Spieler zu verweisen, welcher die Nachricht eingegeben hat."
 
 TriggerRegisterPlayerEventEndCinematic="Cinematic Skipped"
 TriggerRegisterPlayerEventEndCinematic=~Player," skips a cinematic sequence"
@@ -79,12 +79,12 @@ TriggerRegisterPlayerSelectionEventBJ="Selection Event"
 TriggerRegisterPlayerSelectionEventBJ=~Player," ",~Selects/Deselects," a unit"
 TriggerRegisterPlayerSelectionEventBJHint="Use 'Event Response - Triggering Unit' to refer to the unit being selected or deselected."
 
-TriggerRegisterPlayerKeyEventBJ="Keyboard Event"
-TriggerRegisterPlayerKeyEventBJ=~Player," ",~Presses/Releases," the ",~Key," key"
+TriggerRegisterPlayerKeyEventBJ="Tastatur-Ereignis"
+TriggerRegisterPlayerKeyEventBJ=~Spieler," ",~drückt/lässt ," die ",~Taste," los"
 TriggerRegisterPlayerKeyEventBJHint=
 
-TriggerRegisterPlayerStateEvent="Properties"
-TriggerRegisterPlayerStateEvent=~Player,"'s ",~Property," becomes ",~Operation," ",~Value
+TriggerRegisterPlayerStateEvent="Eigenschaften"
+TriggerRegisterPlayerStateEvent=~Spieler,"s ",~Eigenschaft," wird ",~Operation," ",~Wert
 TriggerRegisterPlayerStateEventHint=
 
 TriggerRegisterPlayerEventAllianceChanged="Alliance Change (Any)"
@@ -3677,16 +3677,16 @@ StringCase="Convert String Case"
 StringCase="String(",~String,") as ",~Lower/Upper Case
 StringCaseHint="All letters in the string will be changed to the selected case."
 
-GetDestructableName="Destructible Name"
-GetDestructableName="Name of ",~Destructible
+GetDestructableName="Zerstörbares-Name"
+GetDestructableName="Name des ",~Zerstörbaren
 GetDestructableNameHint=
 
-GetEventPlayerChatString="Entered Chat String"
-GetEventPlayerChatString="Entered chat string"
+GetEventPlayerChatString="Eingegebene Chat-Zeichenkette"
+GetEventPlayerChatString="Eingegebene Chat-Zeichenkette"
 GetEventPlayerChatStringHint=
 
-GetEventPlayerChatStringMatched="Matched Chat String"
-GetEventPlayerChatStringMatched="Matched chat string"
+GetEventPlayerChatStringMatched="Übereinstimmende Chat-Zeichenkette"
+GetEventPlayerChatStringMatched="Übereinstimmende Chat-Zeichenkette"
 GetEventPlayerChatStringMatchedHint=
 
 GetSaveBasicFilename="Saved-Game Filename"
@@ -3855,19 +3855,19 @@ GetEnumUnit="Picked Unit"
 GetEnumUnit="Picked unit"
 GetEnumUnitHint="When using the 'Pick Every Unit...' action, this refers to each unit as it is picked."
 
-GetFilterUnit="Matching Unit"
-GetFilterUnit="Matching unit"
+GetFilterUnit="Übereinstimmende Einheit"
+GetFilterUnit="Übereinstimmende Einheit"
 GetFilterUnitHint="Use this to refer to the unit being considered for 'Units Matching Condition' functions."
 
 GroupPickRandomUnit="Random Unit From Unit Group"
 GroupPickRandomUnit="Random unit from ",~Unit Group
 GroupPickRandomUnitHint=
 
-GetAttackedUnitBJ="Attacked Unit"
-GetAttackedUnitBJ="Attacked unit"
+GetAttackedUnitBJ="Angegriffene Einheit"
+GetAttackedUnitBJ="Angegriffene Einheit"
 GetAttackedUnitBJHint="When responding to an 'Is Attacked' unit event, this refers to the unit that is being attacked."
 
-GetAttacker="Attacking Unit"
+GetAttacker="Angreifende Einheit"
 GetAttacker="Attacking unit"
 GetAttackerHint="When responding to an 'Is Attacked' unit event, this refers to the attacking unit."
 
@@ -4053,8 +4053,8 @@ GetEnumDestructable="Picked Destructible"
 GetEnumDestructable="Picked destructible"
 GetEnumDestructableHint="When using the 'Pick Every Destructible...' action, this refers to each destructible as it is picked."
 
-GetFilterDestructable="Matching Destructible"
-GetFilterDestructable="Matching destructible"
+GetFilterDestructable="Übereinstimmendes Zerstörbares"
+GetFilterDestructable="Übereinstimmendes Zerstörbares"
 GetFilterDestructableHint="Use this to refer to the destructible being considered for the 'Random Destructible' functions."
 
 GetDyingDestructable="Dying Destructible"
@@ -4163,8 +4163,8 @@ GetSpellAbilityIdHint="When responding to 'Channeling/Casting/etc. casting an ab
 
 
 // returns heroskillcode
-GetLearnedSkillBJ="Learned Hero Skill"
-GetLearnedSkillBJ="Learned Hero Skill"
+GetLearnedSkillBJ="Erlernte Helden-Fähigkeit"
+GetLearnedSkillBJ="Erlernte Helden-Fähigkeit"
 GetLearnedSkillBJHint=
 
 
@@ -4173,16 +4173,16 @@ GetEnumPlayer="Picked Player"
 GetEnumPlayer="Picked player"
 GetEnumPlayerHint="When using the 'Pick Every Player...' action, this refers to each player as he/she is picked."
 
-GetFilterPlayer="Matching Player"
-GetFilterPlayer="Matching player"
+GetFilterPlayer="Übereinstimmender Spieler"
+GetFilterPlayer="Übereinstimmender Spieler"
 GetFilterPlayerHint="Use this to refer to the player being considered for the 'All Players Matching Condition' function."
 
-GetOwningPlayer="Owner Of Unit"
-GetOwningPlayer="Owner of ",~Unit
+GetOwningPlayer="Besitzer der Einheit"
+GetOwningPlayer="Besitzer der ",~Einheit
 GetOwningPlayerHint=
 
-GetItemPlayer="Owner Of Item"
-GetItemPlayer="Owner of ",~Item
+GetItemPlayer="Besitzer des Gegenstands"
+GetItemPlayer="Besitzer des ",~Gegenstands
 GetItemPlayerHint=
 
 ForcePickRandomPlayer="Random Player From Player Group"
@@ -4193,12 +4193,12 @@ ConvertedPlayer="Convert Player Index To Player"
 ConvertedPlayer="Player(",~Player Index,")"
 ConvertedPlayerHint="Player indexes range from 1 to 16."
 
-GetChangingUnitPrevOwner="Previous Owner"
-GetChangingUnitPrevOwner="Previous owner"
+GetChangingUnitPrevOwner="Vorheriger Besitzer"
+GetChangingUnitPrevOwner="Vorheriger Besitzer"
 GetChangingUnitPrevOwnerHint="When responding to a 'Changes Owner' unit event, this refers to the previous owner of the unit."
 
-GetTriggerPlayer="Triggering Player"
-GetTriggerPlayer="Triggering player"
+GetTriggerPlayer="Auslösender Spieler"
+GetTriggerPlayer="Auslösender Spieler"
 GetTriggerPlayerHint=
 
 LeaderboardGetIndexedPlayerBJ="Player In Position"
@@ -4207,16 +4207,16 @@ LeaderboardGetIndexedPlayerBJHint=
 
 
 // returns group
-GetLastCreatedGroup="Last Created Unit Group"
-GetLastCreatedGroup="Last created unit group"
+GetLastCreatedGroup="Zuletzt erstellte Einheitengruppe"
+GetLastCreatedGroup="Zuletzt erstellte Einheitengruppe"
 GetLastCreatedGroupHint="This is the last set of units created via a 'Unit - Create' trigger action."
 
 GetRandomSubGroup="Random N Units From Unit Group"
 GetRandomSubGroup="Random ",~Count," units from ",~Unit Group
 GetRandomSubGroupHint=
 
-GetUnitsInRectAll="Units In Region"
-GetUnitsInRectAll="Units in ",~Region
+GetUnitsInRectAll="Einheiten in Region"
+GetUnitsInRectAll="Einheiten in ",~Region
 GetUnitsInRectAllHint=
 
 GetUnitsInRectOfPlayer="Units In Region Owned By Player"

@@ -28,17 +28,29 @@ library AStructCoreStringFormat requires ALibraryCoreStringMisc, optional ALibra
 		//! textmacro AFormatMethod takes NAME, TYPE, TYPECHARS, CONVERSION, PARAMETERS
 			public method $NAME$ takes $TYPE$ value $PARAMETERS$ returns thistype
 				local string positionString = "%" + I2S(this.m_position + 1) + "%"
-				local integer index = FindString(this.m_text, positionString)
-				if (index == -1) then
-					set index = FindString(this.m_text, "%$TYPECHARS$")
-					if (index != -1) then
-						set this.m_text = SubString(this.m_text, 0, index) + $CONVERSION$ + SubString(this.m_text, index + StringLength("%$TYPECHARS$"), StringLength(this.m_text))
+				local boolean isFirst = true
+				local integer index
+				loop
+					set index = FindString(this.m_text, positionString)
+					if (index == -1) then
+						// replace only one %typechar value
+						if (isFirst) then
+							set index = FindString(this.m_text, "%$TYPECHARS$")
+							if (index != -1) then
+								set this.m_text = SubString(this.m_text, 0, index) + $CONVERSION$ + SubString(this.m_text, index + StringLength("%$TYPECHARS$"), StringLength(this.m_text))
+								set this.m_position = this.m_position + 1 // increase because of exiting loop
+							else
+								debug call this.print("Format error in string \"" + this.m_text + "\" at position " + I2S(this.m_position) + ".")
+								return this // do not increase position?
+							endif
+						endif
+						exitwhen (true)
 					else
-						debug call this.print("Format error in string \"" + this.m_text + "\" at position " + I2S(this.m_position) + ".")
+						set this.m_text = SubString(this.m_text, 0, index) + $CONVERSION$ + SubString(this.m_text, index + StringLength(positionString), StringLength(this.m_text))
+						set isFirst = false
 					endif
-				else
-					set this.m_text = SubString(this.m_text, 0, index) + $CONVERSION$ + SubString(this.m_text, index + StringLength(positionString), StringLength(this.m_text))
-				endif
+
+				endloop
 				set this.m_position = this.m_position + 1
 				return this
 			endmethod

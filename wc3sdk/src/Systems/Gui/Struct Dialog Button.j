@@ -3,6 +3,10 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 	/// @todo Should be a part of @struct ADialogButton, vJass bug.
 	function interface ADialogButtonAction takes ADialogButton dialogButton returns nothing
 
+	/**
+	* Dialog buttons will be added to their corresponding dialogs automatically when being created.
+	* @todo Add property "permanent" which indicates that the button is shown on each page of dialog.
+	*/
 	struct ADialogButton
 		// construction members
 		private ADialog m_dialog
@@ -44,7 +48,7 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 			return this.m_action
 		endmethod
 
-		//members
+		// members
 
 		public method index takes nothing returns integer
 			return this.m_index
@@ -56,12 +60,23 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 
 		// methods
 
-		/// Usually you do not need this method. It is used by @struct ADialog.
+		public stub method onAction takes nothing returns nothing
+			// action should never be 0
+			//if (this.m_action != 0) then
+				call this.m_action.execute(this)
+			//endif
+		endmethod
+
+		/**
+		* Usually you do not need this method. It is used by @struct ADialog.
+		* Hightlights shortcuts of dialog buttons white (ffffff) since text normally is
+		* coloured yellow.
+		*/
 		public method addButton takes nothing returns nothing
 			if (not this.m_isQuitButton) then
-				set this.m_button = DialogAddButton(this.m_dialog.dialog.evaluate(), HighlightShortcut(this.m_text, this.m_shortcut, "ffffcc00"),  this.m_shortcut)
+				set this.m_button = DialogAddButton(this.m_dialog.dialog.evaluate(), HighlightShortcut(this.m_text, this.m_shortcut, "ffffffff"),  this.m_shortcut)
 			else
-				 set this.m_button = DialogAddQuitButton(this.m_dialog.dialog.evaluate(), this.m_doScoreScreen, HighlightShortcut(this.m_text, this.m_shortcut, "ffffcc00"),  this.m_shortcut)
+				 set this.m_button = DialogAddQuitButton(this.m_dialog.dialog.evaluate(), this.m_doScoreScreen, HighlightShortcut(this.m_text, this.m_shortcut, "ffffffff"),  this.m_shortcut)
 			endif
 			call this.createTrigger.evaluate()
 		endmethod
@@ -75,14 +90,14 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local ADialogButton this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call this.dialog().setDisplayedByButton.evaluate(false) // Do not clear the dialog automatically (dialog().clear()) since it can be shown again with same buttons.
-			call this.m_action.execute(this)
+			call this.onAction()
 			set triggeringTrigger = null
 		endmethod
 
 		private method createTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			//create always since it sends the dialog that it's hidden again.
+			// create always since it sends the dialog that it's hidden again.
 			//if (this.m_action != 0) then
 				set this.m_trigger = CreateTrigger()
 				set triggerEvent = TriggerRegisterDialogButtonEvent(this.m_trigger, this.m_button)
@@ -116,7 +131,7 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			call this.m_dialog.removeDialogButtonByIndex.evaluate(this.m_index)
+			call this.m_dialog.removeDialogButtonInstance.evaluate(this)
 			if (this.m_button != null) then
 				set this.m_button = null // can not be destroyed
 				call this.destroyTrigger()
