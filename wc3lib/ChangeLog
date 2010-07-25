@@ -1,3 +1,11 @@
+2010-07-25 Tamino Dauth <tamino@cdauth.eu>
+* Fixed various bugs in language module.
+* Improved application "converter" and added option quiet.
+* Improved runtime library loading support by dropping some preprocessor statements.
+
+2010-07-05 Tamino Dauth <tamino@cdauth.eu>
+* Improved JASS++ parser files.
+
 2010-06-05 Tamino Dauth <tamino@cdauth.eu>
 * Revised Jass++ specification.
 * Revised Jass++ compiler implementation suggestion.
@@ -375,7 +383,7 @@
 2009-09-27 Tamino Dauth <tamino@cdauth.de>
 * Improved several code files of mdlx library.
 * Improved mdlxtest.
-  
+
 2009-09-26 Tamino Dauth <tamino@cdauth.de>
 * Improved several code files of mdlx library.
 * Improved mdlxtest.
@@ -390,7 +398,7 @@
 2009-09-23 Tamino Dauth <tamino@cdauth.de>
 * Improved several code files of mdlx library.
 * Added several code files to mdlx library.
-  
+
 2009-09-22 Tamino Dauth <tamino@cdauth.de>
 * Improved several code files of mdlx library.
 * Added several code files to mdlx library.

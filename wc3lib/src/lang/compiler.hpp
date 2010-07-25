@@ -45,7 +45,7 @@ class Compiler
 			None = 0x00,
 			RemoveComments = 0x0002, /// All comments will be ommitted.
 			ReplaceIdentifiers = 0x0004, /// All identifiers will be replaced by short identifiers like "a".
-			ReplaceConstants = 0x0008 /// All constants identifiers will be replaced by their content and not be declared in map script.
+			ReplaceConstants = 0x0008, /// All constants identifiers will be replaced by their content and not be declared in map script.
 			InlineFunctions = 0x0012
 		};
 

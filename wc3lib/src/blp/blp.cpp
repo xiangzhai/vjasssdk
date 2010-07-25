@@ -22,7 +22,6 @@
 #include <sstream>
 #include <cstdio>
 #include <cstring>
-#include <bitset> // test
 #include <iostream>
 
 #include <boost/foreach.hpp>
@@ -87,7 +86,7 @@ void Blp::clean()
 	this->m_height = 0;
 	this->m_pictureType = 5;
 	this->m_pictureSubType = 0;
-	
+
 	BOOST_FOREACH(class Blp::MipMap *mipMap, this->m_mipMaps)
 		delete mipMap;
 }
@@ -102,7 +101,7 @@ std::size_t requiredMipMaps(std::size_t width, std::size_t height)
 {
 	std::size_t mips = 0;
 	std::size_t value = std::min<int>(width, height);
-	
+
 	while (value > 0)
 	{
 		value /= 2;
@@ -126,7 +125,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	dword identifier;
 	istream.read(reinterpret_cast<char*>(&identifier), sizeof(identifier));
 	std::streamsize bytes = istream.gcount();
-	
+
 	if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier0, sizeof(Blp::identifier0)) == 0)
 		this->m_version = Blp::Blp0;
 	else if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier1, sizeof(Blp::identifier1)) == 0)
@@ -135,7 +134,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		this->m_version = Blp::Blp2;
 	else
 		throw Exception(boost::str(boost::format(_("Error while reading BLP file. Missing BLP identifier, got \"%1%\".")) % reinterpret_cast<const char*>(&identifier)));
-	
+
 	istream.read(reinterpret_cast<char*>(&this->m_compression), sizeof(this->m_compression));
 	bytes += istream.gcount();
 	//dword mipMaps;
@@ -156,7 +155,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	std::cout << "Required mip maps are " << mipMaps << std::endl;
 	std::list<dword> mipMapOffsets;
 	std::list<dword> mipMapSizes;
-	
+
 	for (std::size_t i = 0; i < Blp::maxMipMaps; ++i)
 	{
 		// header data
@@ -166,25 +165,25 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		dword size;
 		istream.read(reinterpret_cast<char*>(&size), sizeof(size));
 		bytes += istream.gcount();
-		
+
 		if (i < mipMaps)
 		{
 			std::cout << "Reading mip map's " << i << " offset " << offset << " and size " << size << std::endl;
 			mipMapOffsets.push_back(offset);
 			mipMapSizes.push_back(size);
-			
+
 			class MipMap *mipMap = new MipMap(this->mipMapWidth(i), this->mipMapHeight(i));
-			
+
 			if (this->m_flags != Blp::Alpha && size != mipMap->width() * mipMap->height())
 				std::cout << "Size " << size << " is not equal to " << mipMap->width() * mipMap->height() << std::endl;
 			else if (this->m_flags == Blp::Alpha && size != mipMap->width() * mipMap->height() * 2)
 				std::cout << "Size " << size << " is not equal to " << mipMap->width() * mipMap->height() * 2 << std::endl;
-			
+
 			this->m_mipMaps.push_back(mipMap);
 		}
-		
+
 	}
-	
+
 	if (this->m_compression == Blp::Jpeg)
 	{
 		std::cout << "Detected JPEG compression mode." << std::endl;
@@ -236,16 +235,16 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		bytes += istream.gcount();
 		std::list<dword>::iterator offset = mipMapOffsets.begin();
 		std::list<dword>::iterator size = mipMapSizes.begin();
-		
+
 		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{
 			std::streampos position = istream.tellg();
 			istream.seekg(*offset);
 			std::size_t nullBytes = istream.tellg() - position;
-			
+
 			if (nullBytes > 0)
 				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
-			
+
 			// all mipmaps use the same header.
 			std::size_t bufferSize = boost::numeric_cast<std::size_t>(*size) + jpegHeaderSize;
 			unsigned char *buffer = new unsigned char[bufferSize];
@@ -355,7 +354,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 
 				throw;
 			}
-			
+
 			++offset;
 			++size;
 		}
@@ -367,12 +366,12 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	else if (this->m_compression == Blp::Paletted)
 	{
 		std::cout << "Detected paletted compression." << std::endl;
-		
+
 		if (this->m_flags == Blp::Alpha)
 			std::cout << "With alphas!" << std::endl;
 		else
 			std::cout << "Without alphas!" << std::endl;
-		
+
 		std::vector<color> palette(Blp::compressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
 
 		for (std::size_t i = 0; i < Blp::compressedPaletteSize; ++i)
@@ -382,10 +381,10 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			bytes += istream.gcount();
 			palette[i] = paletteColor;
 		}
-	
+
 		std::list<dword>::iterator offset = mipMapOffsets.begin();
 		std::list<dword>::iterator size = mipMapSizes.begin();
-		
+
 		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{
 			std::streampos position = istream.tellg();
@@ -394,10 +393,10 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 			std::streampos newPosition = istream.tellg();
 			std::cout << "New position is " << newPosition << std::endl;
 			std::size_t nullBytes = newPosition - position;
-			
+
 			if (nullBytes > 0)
 				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
-			
+
 			dword toReadBytes = *size;
 
 			for (dword j = 0; j < mipMap->width(); ++j)
@@ -419,24 +418,24 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 					}
 
 					mipMap->setColor(j, k, palette[index], alpha);
-					
+
 					/*
 					if (istream.eof())
 					{
 						std::cout << "End of File" << std::endl;
-						
+
 						throw Exception("");
 					}
 					*/
 				}
 			}
-			
+
 			if (toReadBytes != 0)
 			{
 				istream.seekg(toReadBytes, std::ios_base::cur);
 				std::cout << "Skipping " << toReadBytes << " unnecessary bytes." << std::endl;
 			}
-			
+
 			++offset;
 			++size;
 
@@ -447,7 +446,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		throw Exception(boost::str(boost::format( _("Unknown compression mode: %1%.")) % this->m_compression));
 
 	std::cout << "Read " << bytes << " bytes." << std::endl;
-	
+
 	// check mip maps
 	/*
 	- A full mipmap chain must be present. The last mipmap must be 1x1 (no larger).
@@ -457,35 +456,35 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	*/
 	if (this->m_mipMaps.empty() || this->m_mipMaps.back()->width() != 1 || this->m_mipMaps.back()->height() != 1)
 		throw Exception(_("Last mip map does not exist or has not a size of 1x1."));
-	
+
 	return bytes;
 }
 
 std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize bytes = 0;
-	
+
 	switch (this->m_version)
 	{
 		case Blp::Blp0:
 			ostream.write(reinterpret_cast<const char*>(Blp::identifier0), sizeof(Blp::identifier0));
 			bytes += sizeof(identifier0);
-			
+
 			break;
-			
+
 		case Blp::Blp1:
 			ostream.write(reinterpret_cast<const char*>(Blp::identifier1), sizeof(Blp::identifier1));
 			bytes += sizeof(identifier1);
-			
+
 			break;
-			
+
 		case Blp::Blp2:
 			ostream.write(reinterpret_cast<const char*>(Blp::identifier2), sizeof(Blp::identifier2));
 			bytes += sizeof(identifier2);
-			
+
 			break;
 	}
-	
+
 	ostream.write(reinterpret_cast<const char*>(&this->m_compression), sizeof(this->m_compression));
 	bytes += sizeof(this->m_compression);
 	ostream.write(reinterpret_cast<const char*>(&this->m_flags), sizeof(this->m_flags));
@@ -497,27 +496,27 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 	ostream.write(reinterpret_cast<const char*>(&this->m_pictureType), sizeof(this->m_pictureType));
 	bytes += sizeof(this->m_pictureType);
 	ostream.write(reinterpret_cast<const char*>(&this->m_pictureSubType), sizeof(this->m_pictureSubType));
-	bytes += sizeof(this->m_pictureSubType);	
+	bytes += sizeof(this->m_pictureSubType);
 	dword startOffset = ostream.tellp();
 	std::list<dword> mipMapOffsets;
 	std::list<dword> mipMapSizes;
-	
+
 	/// @todo change for JPEG?
 	BOOST_FOREACH (const class MipMap *mipMap, this->m_mipMaps)
 	{
 		mipMapOffsets.push_back(startOffset);
 		dword size = mipMap->colors().size() * sizeof(byte);
-		
+
 		if (this->m_flags == Blp::Alpha)
 			size *= 2;
-			
+
 		mipMapSizes.push_back(size);
 		startOffset += size;
 	}
-	
+
 	std::list<dword>::const_iterator offsetIterator = mipMapOffsets.begin();
 	std::list<dword>::const_iterator sizeIterator = mipMapSizes.begin();
-	
+
 	for (std::size_t i = 0; i < Blp::maxMipMaps; ++i)
 	{
 		// header data
@@ -541,9 +540,9 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 			bytes += sizeof(value);
 		}
 	}
-	
+
 	std::cout << "Wrote " << bytes << " bytes header data." << std::endl;
-	
+
 	// image data
 
 	if (this->m_compression == Blp::Jpeg)
@@ -555,12 +554,12 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 	else if (this->m_compression == Blp::Paletted)
 	{
 		std::cout << "Detected paletted compression." << std::endl;
-		
+
 		if (this->m_flags == Blp::Alpha)
 			std::cout << "With alphas!" << std::endl;
 		else
 			std::cout << "Without alphas!" << std::endl;
-		
+
 		// fill palette, palette has always size of Blp::compressedPaletteSize (remaining colors have value 0).
 		std::vector<const struct MipMap::Color*> palette(Blp::compressedPaletteSize, 0);
 
@@ -615,7 +614,7 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 		throw Exception(boost::str(boost::format(_("Unknown compression mode: %1%.")) % this->m_compression));
 
 	std::cout << "Wrote " << bytes << " bytes." << std::endl;
-	
+
 	return bytes;
 }
 
@@ -653,45 +652,45 @@ bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
 {
 	if (initialMipMap->width() != this->m_width || initialMipMap->height() != this->m_height)
 		return false;
-	
+
 	this->m_mipMaps.push_back(initialMipMap);
 	number = std::min<std::size_t>(number, Blp::maxMipMaps);
 	dword width = this->m_width;
 	dword height = this->m_height;
 	//std::list<byte> indexList = initialMipMap->m_indexList;
 	//std::list<byte> alphaList = initialMipMap->m_alphaList;
-	
+
 	for (std::size_t i = 1; i < number; ++i)
 	{
 		width /= 2;
 		height /= 2;
 		class MipMap *mipMap = new MipMap(width, height);
 		/// @todo Generate new scaled index and alpha list.
-			
-		
+
+
 		this->m_mipMaps.push_back(mipMap);
 	}
-	
+
 	return true;
 }
 
 dword Blp::mipMapWidth(std::size_t index) const
 {
 	dword width = this->m_width;
-	
+
 	for (std::size_t i = 0; i < index; ++i)
 		width /= 2;
-	
+
 	return width;
 }
 
 dword Blp::mipMapHeight(std::size_t index) const
 {
 	dword height = this->m_height;
-	
+
 	for (std::size_t i = 0; i < index; ++i)
 		height /= 2;
-	
+
 	return height;
 }
 

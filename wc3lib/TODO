@@ -1,3 +1,10 @@
+2010-07-08 Tamino Dauth <tamino@cdauth.eu>
+* Use class boost::noncopyable from "<boost/utilities.hpp>" for non-copyable classes.
+
+2010-07-05 Tamino Dauth <tamino@cdauth.eu>
+* Add Bison++ and Flex++ example as library.
+* Improve lang module.
+
 2010-06-05 Tamino Dauth <tamino@cdauth.eu>
 * Finding Qt and KDE packages seems to add unnecessary compile flags which prevent huffman from being compiled correctly.
 
@@ -125,7 +132,7 @@
 2010-01-23 Tamino Dauth <tamino@cdauth.eu>
 * New application tilesetter should allow user to modify tile data by changing data of each tilepoint of an user-defined w3e file.
 	The tool is required since "Die Macht des Feuers" needs it for its first map (which has some corrupted tileset data).
-	Command list: 
+	Command list:
 		* open
 		* close
 		* save

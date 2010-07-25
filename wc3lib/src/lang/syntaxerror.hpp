@@ -25,6 +25,7 @@
 #include <ostream>
 
 #include "sourcefile.hpp"
+#include "position.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -50,7 +51,7 @@ class SyntaxError
 /// Allows formatted output of syntax errors.
 inline std::ostream& operator<<(std::ostream &ostream, const class SyntaxError &syntaxError)
 {
-	ostream << boost::format(_("%1% (Line %2%, column %3%): %4%")) % syntaxError.sourceFile()->path().string() % syntaxError.position().line() % tsyntaxError.position().column() % syntaxError.message() << std::endl;
+	ostream << boost::format(_("%1% (Line %2%, column %3%): %4%")) % syntaxError.sourceFile()->path().string() % syntaxError.position().line() % syntaxError.position().column() % syntaxError.message() << std::endl;
 
 	return ostream;
 }
@@ -60,7 +61,7 @@ inline class SourceFile* SyntaxError::sourceFile() const
 	return this->m_sourceFile;
 }
 
-inline const class Position& SyntaxError::line() const
+inline const class Position& SyntaxError::position() const
 {
 	return this->m_position;
 }

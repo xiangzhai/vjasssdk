@@ -25,17 +25,20 @@
 
 #include <boost/filesystem/path.hpp>
 
+#include "position.hpp"
+
 namespace wc3lib
 {
-	
+
 namespace lang
 {
 
 class SourceFile
 {
 	public:
-		SourceFile(class Parser *parser, const boost::filesystem::path &path);
+		SourceFile(class Parser &parser, const boost::filesystem::path &path);
 		virtual ~SourceFile();
+		const class Parser& parser() const;
 		const boost::filesystem::path& path() const;
 		/// @return Returns all syntax errors of file sorted by their line numbers.
 		const std::map<class Position, class SyntaxError*> syntaxErrors() const;
@@ -43,10 +46,16 @@ class SourceFile
 		const std::map<class Position, class Token*> tokens() const;
 
 	protected:
+		class Parser *m_parser;
 		boost::filesystem::path m_path;
 		std::map<class Position, class SyntaxError*> m_syntaxErrors;
 		std::map<class Position, class Token*> m_tokens;
 };
+
+inline const class Parser& SourceFile::parser() const
+{
+	return *this->m_parser;
+}
 
 inline const boost::filesystem::path& SourceFile::path() const
 {

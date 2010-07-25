@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "token.hpp"
+#include "parser.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace lang
 {
 
-Token::Token(class Parser *parser, const class Position &position, const class Scope &scope, const std::string &expression) : m_parser(parser), m_language(language), m_position(position), m_scope(scope), m_expression(expression)
+Token::Token(class Parser *parser, const class Position &position, class Scope &scope, const std::string &expression) : m_parser(parser), m_language(parser->language()), m_position(position), m_scope(&scope), m_expression(expression)
 {
 }
 

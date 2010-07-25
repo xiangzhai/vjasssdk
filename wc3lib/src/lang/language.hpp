@@ -25,7 +25,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include <driver.h>
+#include "driver.hpp"
 
 namespace wc3lib
 {
@@ -53,7 +53,7 @@ class Language
 		/**
 		* Creates a new Bison/Flex driver for parsing the language.
 		*/
-		virtual class example::Driver* createDriver() const = 0;
+		virtual class Driver* createDriver() const = 0;
 
 	protected:
 		Language();

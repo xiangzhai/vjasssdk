@@ -50,27 +50,15 @@ static const char *version = "0.1";
 enum Format
 {
 	Blp,
-#ifdef JPEG
 	Jpeg,
-#endif
-#ifdef TGA
 	Tga,
-#endif
-#ifdef PNG
 	Png,
-#endif
 	Mdl,
 	Mdx,
-#ifdef BLEND
 	Blend,
-#endif
-#ifdef MAX
 	Max,
-#endif
 	Mpq,
-#ifdef TAR
 	Tar,
-#endif
 	MaxFormats,
 	InvalidFormat
 };
@@ -78,105 +66,57 @@ enum Format
 static const char *formatExpression[MaxFormats] =
 {
 	"blp",
-#ifdef JPEG
 	"jpeg",
-#endif
-#ifdef TGA
 	"tga",
-#endif
-#ifdef PNG
 	"png",
-#endif
 	"mdl",
 	"mdx",
-#ifdef BLEND
 	"blend",
-#endif
-#ifdef MAX
 	"3ds",
-#endif
-	"mpq"
-#ifdef TAR
-	,"tar"
-#endif
+	"mpq",
+	"tar"
 };
 
 static const char *formatDescription[MaxFormats] =
 {
 	_("Blizzard's texture format."),
-#ifdef JPEG
-	"",
-#endif
-#ifdef TGA
-	"",
-#endif
-#ifdef PNG
-	"",
-#endif
+	_("The common JPEG format."),
+	_("The common TGA format."),
+	_("The common PNG format."),
 	_("Blizzard's text model format."),
 	_("Blizzard's binary model format."),
-#ifdef BLEND
-	"",
-#endif
-#ifdef MAX
-	"",
-#endif
-	_("Blizzard's archive format.")
-#ifdef TAR
-	,""
-#endif
+	_("The common BLEND format."),
+	_("The common 3ds Max format."),
+	_("Blizzard's archive format."),
+	_("The common TAR format.")
 };
 
 static const char *formatExtension[MaxFormats] =
 {
 	"blp",
-#ifdef JPEG
 	"jpeg",
-#endif
-#ifdef TGA
 	"tga",
-#endif
-#ifdef PNG
 	"png",
-#endif
 	"mdl",
 	"mdx",
-#ifdef BLEND
 	"blend",
-#endif
-#ifdef MAX	
 	"3ds",
-#endif
-	"mpq"
-#ifdef TAR
-	,"tar"
-#endif
-};	
+	"mpq",
+	"tar"
+};
 
 static const bool formatIsBinary[MaxFormats] =
 {
 	true,
-#ifdef JPEG
-	true,
-#endif
-#ifdef TGA
-	true,
-#endif
-#ifdef PNG
-	true,
-#endif
-	false,
-	true,
-#ifdef BLEND
-	true,	
-#endif
-#ifdef MAX
-	true,
-#endif
-	true // mpq
-#ifdef TAR
-	, true
-#endif
+	true, // JPEG
+	true, // TGA
+	true, // PNG
+	false, // MDL
+	true, // MDX
+	true, // BLEND
+	true, // MAX
+	true, // MPQ
+	true // TAR
 };
 
 static const bool formatConvertibility[MaxFormats][MaxFormats] =
@@ -184,260 +124,137 @@ static const bool formatConvertibility[MaxFormats][MaxFormats] =
 	// blp   jpeg   tga    png    mdl    mdx   blend  3ds   mpq   tar
 	{
 		true,
-#ifdef JPEG
 		true,
-#endif
-#ifdef TGA
 		true,
-#endif
-#ifdef PNG
 		true,
-#endif
 		false,
 		false,
-#ifdef BLEND
 		false,
-#endif
-#ifdef MAX
 		false,
-#endif
+		false,
 		false
-#ifdef TAR
-		, false
-#endif
 	},
-#ifdef JPEG
+
 	{
 		true,
-#ifdef JPEG
 		true,
-#endif
-#ifdef TGA
 		true,
-#endif
-#ifdef PNG
 		true,
-#endif
 		false,
 		false,
-#ifdef BLEND
 		false,
-#endif
-#ifdef MAX
+		false,
+		false,
 		false
-#endif
-		false
-#ifdef TAR
-		, false
-#endif
 	},
-#endif
-#ifdef TGA
+
 	{
 		true,
-#ifdef JPEG
 		true,
-#endif
-#ifdef TGA
 		true,
-#endif
-#ifdef PNG
 		true,
-#endif
 		false,
 		false,
-#ifdef BLEND
 		false,
-#endif
-#ifdef MAX
 		false,
-#endif
+		false,
 		false
-#ifdef TAR
-		, false
-#endif
 	},
-#endif
-#ifdef PNG
+
 	{
 		true,
-#ifdef JPEG
 		true,
-#endif
-#ifdef TGA
 		true,
-#endif
-#ifdef PNG
 		true,
-#endif
 		false,
 		false,
-#ifdef BLEND
 		false,
-#endif
-#ifdef MAX
 		false,
-#endif
+		false,
 		false
-#ifdef TAR
-		, false
-#endif
 	},
-#endif
+
 	// mdl
 	{
 		false,
-#ifdef JPEG
 		false,
-#endif
-#ifdef TGA
 		false,
-#endif
-#ifdef PNG
 		false,
-#endif
 		true,
 		true,
-#ifdef BLEND
 		true,
-#endif
-#ifdef MAX
 		true,
-#endif
+		false,
 		false
-#ifdef TAR
-		, false
-#endif
 	},
+
 	// mdx
 	{
 		false,
-#ifdef JPEG
 		false,
-#endif
-#ifdef TGA
 		false,
-#endif
-#ifdef PNG
 		false,
-#endif
 		true,
 		true,
-#ifdef BLEND
 		true,
-#endif
-#ifdef MAX
 		true,
-#endif
+		false,
 		false
-#ifdef TAR
-		, false
-#endif
 	},
-#ifdef BLEND
+
 	{
 		false,
-#ifdef JPEG
 		false,
-#endif
-#ifdef TGA
 		false,
-#endif
-#ifdef PNG
 		false,
-#endif
 		true,
 		true,
-#ifdef BLEND
 		true,
-#endif
-#ifdef MAX
 		true,
-#endif
+		false,
 		false
-#ifdef TAR
-		, false
-#endif
 	},
-#endif
-#ifdef MAX
+
 	{
 		false,
-#ifdef JPEG
 		false,
-#endif
-#ifdef TGA
 		false,
-#endif
-#ifdef PNG
 		false,
-#endif
 		true,
 		true,
-#ifdef BLEND
 		true,
-#endif
-#ifdef MAX
 		true,
-#endif
+		false,
 		false
-#ifdef TAR
-		, false
-#endif
 	},
-#endif
+
 	// mpq
 	{
 		false,
-#ifdef JPEG
-		false,
-#endif
-#ifdef TGA
-		false,
-#endif
-#ifdef PNG
-		false,
-#endif
 		false,
 		false,
-#ifdef BLEND
 		false,
-#endif
-#ifdef MAX
 		false,
-#endif
+		false,
+		false,
+		false,
+		true,
 		true
-#ifdef TAR
-		, true
-#endif
-	}
-#ifdef TAR
-	// mpq
-	, {
-		false,
-#ifdef JPEG
-		false,
-#endif
-#ifdef TGA
-		false,
-#endif
-#ifdef PNG
-		false,
-#endif
+	},
+
+	// TAR
+	{
 		false,
 		false,
-#ifdef BLEND
 		false,
-#endif
-#ifdef MAX
 		false,
-#endif
+		false,
+		false,
+		false,
+		false,
+		true,
 		true
-#ifdef TAR
-		, true
-#endif
 	}
-#endif
 };
 
 static inline std::string getFormatExpression(enum Format format)
@@ -452,7 +269,7 @@ static inline enum Format getFormatByExpression(const char *formatString)
 		if (strcmp(formatString, formatExpression[i]) == 0)
 			return Format(i);
 	}
-	
+
 	return InvalidFormat;
 }
 
@@ -471,145 +288,149 @@ static inline bool checkFormatConvertibility(enum Format format0, enum Format fo
 	return formatConvertibility[format0][format1];
 }
 
-static bool addFilePath(const boost::filesystem::path &path, std::list<boost::filesystem::path> &filePaths, bool recursive, std::string extension)
+static bool addFilePath(const boost::filesystem::path &path, std::list<boost::filesystem::path> &filePaths, bool recursive, std::string extension, bool quiet)
 {
 	if (!boost::filesystem::exists(path))
 	{
-		std::cerr << boost::format(_("Error, path \"%1%\" does not exist.\nContinue process (y/n)?")) % path.string() << std::endl;
-		
-		return expectInput();
+		if (!quiet)
+		{
+			std::cerr << boost::format(_("Error, path \"%1%\" does not exist.\nContinue process (y/n)?")) % path.string() << std::endl;
+
+			return expectInput();
+		}
+		else
+			return true;
 	}
-	
+
 	if (boost::filesystem::is_directory(path))
 	{
 		if (recursive)
 		{
 			boost::filesystem::directory_iterator endIterator;
-			
+
 			for (boost::filesystem::directory_iterator iterator(path); iterator != endIterator; ++iterator)
-				addFilePath(iterator->path(), filePaths, recursive, extension);
+				addFilePath(iterator->path(), filePaths, recursive, extension, quiet);
 		}
 		else
 		{
-			std::cerr << boost::format(_("Error, path \"%1%\" seems to be a directory and option -R is not used.\nContinue process (ignore file, y/n)?")) % path.string() << std::endl;
-			
-			return expectInput();
+			if (!quiet)
+			{
+				std::cerr << boost::format(_("Error, path \"%1%\" seems to be a directory and option -R is not used.\nContinue process (ignore file, y/n)?")) % path.string() << std::endl;
+
+				return expectInput();
+			}
+			else
+				return true;
 		}
 	}
 	else if (extension != "*")
 	{
 		std::string::size_type index = path.string().find_last_of(extension);
-		
-		if (index == std::string::npos)	
+
+		if (index == std::string::npos)
 			return false;
 	}
-	
+
 	filePaths.push_back(path);
-	
+
 	return true;
 }
 
 static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	class blp::Blp blp;
-	
+
 	switch (inputFormat)
 	{
 		case Blp:
 		{
 			blp::dword bytes = blp.readBlp(ifstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Read BLP file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#ifdef JPEG
+
 		case Jpeg:
 		{
 			blp::dword bytes = blp.readJpeg(ifstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Read JPEG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#endif
-#ifdef TGA			
+
 		case Tga:
 		{
 			blp::dword bytes = blp.readTga(ifstream);
-			
+
 			if (verbose)
-				std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
-			
+				std::cout << boost::format(_("Read TGA file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
+
 			break;
 		}
-#endif
-#ifdef PNG					
+
 		case Png:
 		{
 			blp::dword bytes = blp.readPng(ifstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Read PNG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#endif			
-			
+
 		default:
 			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input BLP format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
-	
+
 	if (readonly)
 		return;
-	
+
 	switch (outputFormat)
 	{
 		case Blp:
 		{
 			blp::dword bytes = blp.writeBlp(ofstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Wrote BLP file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#ifdef JPEG
+
 		case Jpeg:
 		{
 			blp::dword bytes = blp.writeJpeg(ofstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Wrote JPEG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#endif
-#ifdef TGA			
+
 		case Tga:
 		{
 			blp::dword bytes = blp.writeTga(ofstream);
-			
+
 			if (verbose)
-				std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
-			
+				std::cout << boost::format(_("Wrote TGA file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
+
 			break;
 		}
-#endif
-#ifdef PNG					
+
 		case Png:
 		{
 			blp::dword bytes = blp.writePng(ofstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Wrote PNG file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#endif			
-			
+
 		default:
 			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output BLP format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
@@ -618,98 +439,94 @@ static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstr
 static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	class mdlx::Mdlx mdlx;
-	
+
 	switch (inputFormat)
 	{
 		case Mdl:
 			mdlx.readMdl(ifstream);
-			
+
 			if (verbose)
 				std::cout << _("Read MDL file successfully.") << std::endl;
-			
+
 			break;
-		
+
 		case Mdx:
 		{
 			mdlx::long32 bytes = mdlx.readMdx(ifstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Read MDX file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#ifdef BLEND					
+
 		case Blend:
 		{
 			mdlx::long32 bytes = mdlx.readBlend(ifstream);
-			
+
 			if (verbose)
-				std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
-			
+				std::cout << boost::format(_("Read Blender file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
+
 			break;
 		}
-#endif
-#ifdef MAX					
+
 		case Max:
 		{
-			mdlx::long32 bytes = mdlx.readMax(ifstream);
-			
+			mdlx::long32 bytes = mdlx.read3ds(ifstream);
+
 			if (verbose)
 				std::cout << boost::format(_("Read 3ds Max file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#endif			
-			
+
 		default:
 			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input MDLX format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
-	
+
 	if (readonly)
 		return;
-	
+
 	switch (outputFormat)
 	{
 		case Mdl:
 			mdlx.writeMdl(ofstream);
-			
+
 			if (verbose)
 				std::cout << _("Wrote MDL file successfully.") << std::endl;
-			
+
 			break;
-		
+
 		case Mdx:
 		{
 			mdlx::long32 bytes = mdlx.writeMdx(ofstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Wrote MDX file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#ifdef BLEND					
+
 		case Blend:
 		{
 			mdlx::long32 bytes = mdlx.writeBlend(ofstream);
-			
+
 			if (verbose)
-				std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
-			
+				std::cout << boost::format(_("Wrote Blender file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
+
 			break;
 		}
-#endif
-#ifdef MAX					
+
 		case Max:
 		{
-			mdlx::long32 bytes = mdlx.writeMax(ofstream);
-			
+			mdlx::long32 bytes = mdlx.write3ds(ofstream);
+
 			if (verbose)
 				std::cout << boost::format(_("Wrote 3ds Max file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#endif			
-			
+
 		default:
 			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output MDLX format.\nUsed output format is %2%.")) % path.string() % outputFormat));
 	}
@@ -718,60 +535,58 @@ static void convertMdlx(const boost::filesystem::path &path, std::ifstream &ifst
 static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	class mpq::Mpq mpq;
-	
+
 	switch (inputFormat)
 	{
 		case Mpq:
 		{
 			std::streamsize bytes = mpq.open(path);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Read MPQ file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#ifdef TAR
+
 		case Tar:
 		{
 			std::streamsize bytes = mpq.openTar(path);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Read TAR file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#endif
-			
+
 		default:
 			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid input MPQ format.\nUsed input format is %2%.")) % path.string() % inputFormat));
 	}
-	
+
 	if (readonly)
 		return;
-	
+
 	switch (outputFormat)
 	{
 		case Mpq:
 		{
 			std::streamsize bytes = mpq.writeMpq(ofstream);
-			
+
 			if (verbose)
 				std::cout << boost::format(_("Wrote MPQ file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
-			
+
 			break;
 		}
-#ifdef TAR					
+
 		case Tar:
 		{
 			std::streamsize bytes = mpq.writeTar(ofstream);
-			
+
 			if (verbose)
-				std::cout << boost::format(_("Wrote TAR file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl; bytes);
-			
+				std::cout << boost::format(_("Wrote TAR file successfully. %1%.\n")) % sizeStringBinary(bytes) << std::endl;
+
 			break;
 		}
-#endif
-			
+
 		default:
 			throw Exception(boost::str(boost::format(_("File \"%1%\" is not converted with a valid output MPQ format.\nUsed output format is %2%.")) % path.string() % outputFormat));
 	}
@@ -780,78 +595,66 @@ static void convertMpq(const boost::filesystem::path &path, std::ifstream &ifstr
 static void convertFile(const boost::filesystem::path &path, const boost::filesystem::path &dirPath, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	std::ios_base::openmode openMode = std::ifstream::in;
-		
+
 	if (isFormatBinary(inputFormat))
 		openMode |= std::ifstream::binary;
-	
+
 	if (verbose)
 		std::cout << boost::format(_("Reading file \"%1%\".")) % path.string() << std::endl;
-	
+
 	std::ifstream ifstream(path.string().c_str(), openMode);
-	
+
 	if (!ifstream)
 		throw Exception(boost::str(boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % path.string()));
-	
+
 	boost::filesystem::ofstream ofstream;
-	
+
 	if (!readonly)
 	{
 		openMode = std::ofstream::out;
-		
+
 		if (isFormatBinary(outputFormat))
 			openMode |= std::ofstream::binary;
-		
+
 		boost::filesystem::path filePath = path.string();
-	
+
 		if (!dirPath.string().empty())
 			filePath = dirPath / filePath.filename();
-	
+
 		filePath.replace_extension(getFormatExtension(outputFormat));
 		ofstream.open(filePath, openMode);
-		
+
 		if (!ofstream)
 			throw Exception(boost::str(boost::format(_("Error while opening file \"%1%\". Continuing with next one.")) % filePath));
 	}
-	
+
 	switch (inputFormat)
 	{
 		case Blp:
-#ifdef JPEG
 		case Jpeg:
-#endif
-#ifdef TGA
 		case Tga:
-#endif
-#ifdef PNG
 		case Png:
-#endif
 			convertBlp(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
-		
-			break;	
+
+			break;
 
 		case Mdl:
 		case Mdx:
-#ifdef BLEND
 		case Blend:
-#endif
-#ifdef MAX
 		case Max:
-#endif
 			convertMdlx(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
-		
+
 			break;
-			
+
 		case Mpq:
-#ifdef TAR
 		case Tar:
-#endif
 			convertMpq(path, ifstream, ofstream, inputFormat, outputFormat, verbose, readonly);
-			
+
 			break;
-	}			
-		
+	}
+
 	ifstream.close();
-	
+
 	if (!readonly)
 		ofstream.close();
 }
@@ -863,7 +666,7 @@ int main(int argc, char *argv[])
 	// Set the text message domain.
 	bindtextdomain("wc3lib", LOCALE_DIR);
 	textdomain("wc3lib");
-	
+
 	static struct option options[] =
 	{
 		{"version",     no_argument,             0, 'v'},
@@ -871,13 +674,14 @@ int main(int argc, char *argv[])
 		{"formats",     no_argument,             0, 'f'},
 		{"iformat",     required_argument,       0, 'i'},
 		{"oformat",     required_argument,       0, 'o'},
-		{"dir",         required_argument,       0, 'D'},
+		{"dir",         required_argument,       0, 'd'},
 		{"recursive",   no_argument,             0, 'R'},
 		{"verbose",     no_argument,             0, 'V'}, /// @todo Probably reserved for --version, too
 		{"readonly",    no_argument,             0, 'O'},
+		{"quiet",       no_argument,             0, 'Q'},
 		{0, 0, 0, 0}
 	};
-	
+
 	bool optionFormats = false;
 	enum Format optionIformat = InvalidFormat;
 	enum Format optionOformat = InvalidFormat;
@@ -885,17 +689,18 @@ int main(int argc, char *argv[])
 	bool optionRecursive = false;
 	bool optionVerbose = false;
 	bool optionReadonly = false;
+	bool optionQuiet = false;
 	std::list<boost::filesystem::path> optionFiles;
 	int optionShortcut;
-	
+
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "vhfi:o:D:RVO", options, &optionIndex);
+		optionShortcut = getopt_long(argc, argv, "vhfi:o:d:RVOQ", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
-     
+
 		switch (optionShortcut)
 		{
 			case 'v':
@@ -909,10 +714,10 @@ int main(int argc, char *argv[])
 				"This is free software: you are free to change and redistribute it.\n"
 				"There is NO WARRANTY, to the extent permitted by law."
 				) << std::endl;
-				
+
 				return EXIT_SUCCESS;
 			}
-			
+
 			case 'h':
 			{
 				std::cout <<
@@ -921,17 +726,18 @@ int main(int argc, char *argv[])
 				_("\tconverter [-vhioRV] <input files/directories>\n") <<
 				_("\nOptions:\n") <<
 				_("\t-v, --version             Shows the current version of mdlxtest.\n") <<
-				_("\tf, --formats              Lists all possible input and output formats.\n") <<
+				_("\t-f, --formats             Lists all possible input and output formats.\n") <<
 				("\t-h, --help                 Shows this text.\n") <<
 				_("\t-i, --iformat <arg>       <arg> has to be replaced by input files format.\n") <<
 				_("\t-o, --oformat <arg>       <arg> has to be replaced by output files format.\n") <<
-				_("\t-D, --dir <arg>           <arg> has to be replaced by output directory.\n") <<
+				_("\t-d, --dir <arg>           <arg> has to be replaced by output directory.\n") <<
 				_("\t-R, --recursive           If some of the input files are directories they will be iterated recursively and searched for other files with the input format extension.\n") <<
 				_("\t-V, --verbose             Enables verbose mode and shows more detailed output information.\n") <<
 				_("\t-O, --readonly            Enables read-only mode. Output format is not necessary in read-only mode. This mode can be useful if you just want to try some format reading.\n") <<
+				_("\t-Q, --quiet               Disables interactive mode. You won't be asked anything while the program runs.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
-				
+
 				return EXIT_SUCCESS;
 			}
 
@@ -941,36 +747,36 @@ int main(int argc, char *argv[])
 
 				break;
 			}
-			
+
 			case 'i':
 			{
 				if (getFormatByExpression(optarg) == InvalidFormat)
 				{
 					std::cerr << boost::format(_("Invalid format \"%1%\".")) % optarg << std::endl;
-					
+
 					return EXIT_FAILURE;
 				}
-				
+
 				optionIformat = getFormatByExpression(optarg);
-				
+
 				break;
 			}
-			
+
 			case 'o':
 			{
 				if (getFormatByExpression(optarg) == InvalidFormat)
 				{
 					std::cerr << boost::format(_("Invalid format \"%1%\".")) % optarg << std::endl;
-					
+
 					return EXIT_FAILURE;
 				}
-				
+
 				optionOformat = getFormatByExpression(optarg);
-				
+
 				break;
 			}
 
-			case 'D':
+			case 'd':
 			{
 				if (!boost::filesystem::is_directory(optarg))
 				{
@@ -983,40 +789,47 @@ int main(int argc, char *argv[])
 
 				break;
 			}
-			
+
 			case 'R':
 			{
 				optionRecursive = true;
-				
+
 				break;
 			}
-			
+
 			case 'V':
 			{
 				optionVerbose = true;
-				
+
 				break;
 			}
-			
+
 			case 'O':
 			{
 				optionReadonly = true;
-				
+
+				break;
+			}
+
+			case 'Q':
+			{
+				optionQuiet = true;
+
 				break;
 			}
 		}
 	}
-	
+
 	if (optind < argc)
 	{
 		while (optind < argc)
 		{
 			boost::filesystem::path path = argv[optind++];
-			
-			if (!addFilePath(path, optionFiles, optionRecursive, getFormatExtension(optionIformat)))
+
+			if (!addFilePath(path, optionFiles, optionRecursive, getFormatExtension(optionIformat), optionQuiet))
 			{
 				std::cerr << _("Canceled process.") << std::endl;
-				
+
 				return EXIT_FAILURE;
 			}
 		}
@@ -1025,7 +838,7 @@ int main(int argc, char *argv[])
 	else if (!optionFormats)
 	{
 		std::cerr << _("Missing file arguments.") << std::endl;
-		
+
 		return EXIT_FAILURE;
 	}
 
@@ -1039,41 +852,41 @@ int main(int argc, char *argv[])
 		if (optionFiles.empty())
 			return EXIT_SUCCESS;
 	}
-	
+
 	if (optionIformat == InvalidFormat)
 	{
 		std::cerr << _("Input format was not defined.") << std::endl;
-		
+
 		return EXIT_FAILURE;
 	}
-	
+
 	if (optionOformat == InvalidFormat && !optionReadonly)
 	{
 		std::cerr << _("Output format was not defined.") << std::endl;
-		
+
 		return EXIT_FAILURE;
 	}
-	
+
 	if (!optionReadonly && !checkFormatConvertibility(optionIformat, optionOformat))
 	{
 		std::cerr << boost::format(_("Format \"%1%\" can not be converted into format \"%2%\".")) % getFormatExpression(optionIformat) % getFormatExpression(optionOformat) << std::endl;
-		
+
 		return EXIT_FAILURE;
 	}
-	
+
 	if (optionFiles.empty())
 	{
 		std::cerr << _("No input files were chosen.") << std::endl;
-		
+
 		return EXIT_FAILURE;
 	}
-	
+
 
 	/// @todo If it's multithreaded make sure that there aren't doubled file paths
 	BOOST_FOREACH(boost::filesystem::path path, optionFiles)
 	{
 		std::cout << "Loop" << std::endl;
-		
+
 		try
 		{
 			convertFile(path, optionDir, optionIformat, optionOformat, optionVerbose, optionReadonly);
@@ -1082,10 +895,10 @@ int main(int argc, char *argv[])
 		{
 			std::cerr << exception.what() << std::endl;
 			std::cerr << _("Skipping file.") << std::endl;
-			
+
 			continue;
 		}
-		
+
 		/*
 		try
 		{
@@ -1093,12 +906,12 @@ int main(int argc, char *argv[])
 		}
 		catch (boost::thread_interrupted &threadInterrupted)
 		{
-			
+
 		}
 		catch (...)
 		{
 			std::cerr << _("Unknown exception. Canceling.") << std::endl;
-			
+
 			break;
 		}
 		*/

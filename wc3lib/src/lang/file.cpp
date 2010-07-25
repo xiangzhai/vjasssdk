@@ -18,13 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <string>
-#include <cstdio>
-#include <cstring>
-#include <iostream>
-#include <sstream>
-#include <list>
-
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 
@@ -33,56 +26,61 @@
 #include "language.hpp"
 #include "syntaxerror.hpp"
 #include "../internationalisation.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace lang
 {
 
-File::File() : yyFlexLexer(), m_parser(0), m_language(0), m_lines(0), m_docComment(0)
+File::File() : yyFlexLexer(), m_parser(0), m_language(0), m_position(0)
 {
 }
 
-std::size_t File::parse(class Parser *parser, class SourceFile *sourceFile, std::istream &istream)
+std::size_t File::parse(class Parser &parser, class SourceFile &sourceFile, std::istream &istream) throw (class Exception)
 {
-	this->m_parser = parser;
-	this->m_language = parser->m_currentLanguage;
-	
+	if (this->m_parses)
+		throw Exception(_("Is already parsing."));
+
+	this->m_parses = true;
+	this->m_parser = &parser;
+	this->m_sourceFile = &sourceFile;
+	this->m_language = parser.language();
+	this->m_position = new Position(this->m_sourceFile);
+
 	istream.seekg(0, std::ios_base::end);
 	std::streampos position = istream.tellg();
 	struct yy_buffer_state *bufferState = this->yy_create_buffer(&istream, int(position) + 1);
-	
+
 	if (bufferState == 0)
 		throw Exception(_("Error while creating buffer."));
-	
+
 	this->yy_switch_to_buffer(bufferState);
-	
+
 	/// @todo Parse
-	
+
 	while (true)
 	{
 		if (this->yylex() == 0)
 		{
 			this->yy_delete_buffer(bufferState);
-			
+
 			throw Exception(_("Parsing error!"));
 		}
 	}
-	
+
 	this->yy_delete_buffer(bufferState);
 	bufferState = 0;
-	
-	std::size_t lines = this->m_lines;
-	
+
+	std::size_t lines = this->position().line() + 1;
+
 	// reset members
 	this->m_parser = 0;
 	this->m_sourceFile = 0;
 	this->m_language = 0;
-	this->m_lines = 0;
-	this->m_docComment = 0;
-	
+	delete this->m_position;
+	this->m_position = 0;
+
 	return lines;
 }
 

@@ -21,6 +21,8 @@
 #ifndef WC3LIB_LANG_PARSER_HPP
 #define WC3LIB_LANG_PARSER_HPP
 
+#include <list>
+
 #include <boost/filesystem.hpp>
 
 #include "../exception.hpp"

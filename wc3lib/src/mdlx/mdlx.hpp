@@ -86,10 +86,11 @@ class Mdlx : public MdxBlock
 		void writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-		void readBlend(const std::string &filePath) throw (class Exception);
-		void writeBlend(std::ostream &ostream) const throw (class Exception);
-		void read3ds(std::istream &istream) throw (class Exception);
-		void write3ds(std::ostream &ostream) const throw (class Exception);
+		std::streamsize readBlend(const std::string &filePath) throw (class Exception);
+		std::streamsize readBlend(std::istream &istream) throw (class Exception);
+		std::streamsize writeBlend(std::ostream &ostream) const throw (class Exception);
+		std::streamsize read3ds(std::istream &istream) throw (class Exception);
+		std::streamsize write3ds(std::ostream &ostream) const throw (class Exception);
 
 		/**
 		* @param number If this value is 0 all matching paths will be changed.

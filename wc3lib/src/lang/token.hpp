@@ -21,6 +21,10 @@
 #ifndef WC3LIB_LANG_TOKEN_HPP
 #define WC3LIB_LANG_TOKEN_HPP
 
+#include <string>
+
+#include "position.hpp"
+
 namespace wc3lib
 {
 
@@ -36,21 +40,21 @@ namespace lang
 class Token
 {
 	public:
-		Token(class Parser *parser, const class Position &position, const class Scope &scope, const std::string &expression);
+		Token(class Parser *parser, const class Position &position, class Scope &scope, const std::string &expression);
 		virtual ~Token();
 
 		virtual void init() = 0; /// Some tokens has to be initialized after finding all tokens of all files.
 		class Parser* parser() const;
-		class Language* language() const;
+		const class Language* language() const;
 		const class Position& position() const;
 		const class Scope& scope() const;
 		const std::string& expression() const;
 
 	protected:
 		class Parser *m_parser;
-		class Language *m_language;
+		const class Language *m_language;
 		class Position m_position;
-		class Scope m_scope;
+		class Scope *m_scope;
 		std::string m_expression;
 
 	private:

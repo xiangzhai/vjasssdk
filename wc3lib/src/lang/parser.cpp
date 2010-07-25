@@ -22,6 +22,7 @@
 
 #include "parser.hpp"
 #include "jass/jass.hpp"
+#include "syntaxerror.hpp"
 
 namespace wc3lib
 {
@@ -29,14 +30,14 @@ namespace wc3lib
 namespace lang
 {
 
-Parser::Parser() : m_file(0), m_currentLanguage(Jass::language())
+Parser::Parser() : m_file(0), m_language(jass::Jass::language())
 {
 }
 
 Parser::~Parser()
 {
 	BOOST_FOREACH(class SyntaxError *syntaxError, this->m_syntaxErrors)
-			delete syntaxError;
+		delete syntaxError;
 }
 
 }

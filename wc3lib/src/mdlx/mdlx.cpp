@@ -167,7 +167,7 @@ std::streamsize Mdlx::readMdx(std::istream &istream) throw (class Exception)
 	bytes += this->m_cameras->readMdx(istream);
 	bytes += this->m_events->readMdx(istream);
 	bytes += this->m_collisionShapes->readMdx(istream);
-	
+
 	return bytes;
 }
 
@@ -194,11 +194,11 @@ std::streamsize Mdlx::writeMdx(std::ostream &ostream) const throw (class Excepti
 	bytes += this->m_cameras->writeMdx(ostream);
 	bytes += this->m_events->writeMdx(ostream);
 	bytes += this->m_collisionShapes->writeMdx(ostream);
-	
+
 	return bytes;
 }
 
-#ifdef BLEND
+/*
 struct BlendReader
 {
 	std::list<bObj> m_objects;
@@ -213,14 +213,14 @@ static BLENDBLOCKCALLBACK_RETURN blendBlockIterator(BLENDBLOCKCALLBACK_ARGS)
 	const char *typeName = blend_block_get_typename(blend_file, block);
 	int entryCount = blend_block_get_entry_count(blend_file, block);
 	fprintf(stdout, _("Blend block:\nTag = %s\nType = %s\nEntries = %d\n"), tagName, typeName, entryCount);
-	
+
 	struct BlendReader blendReader = *reinterpret_cast<struct BlendReader*>(userdata);
-	
+
 	for (int i = 0; i < entryCount; ++i)
 	{
 		BlendObject blendObject = blend_block_get_object(blend_file, block, i);
 		const char *objectTypeName = blend_file->types[blendObject.type].name;
-		
+
 		if (strcmp(objectTypeName, "Object") == 0)
 		{
 			bObj object;
@@ -239,31 +239,31 @@ static BLENDBLOCKCALLBACK_RETURN blendBlockIterator(BLENDBLOCKCALLBACK_ARGS)
 			blend_acquire_texlayer_from_obj(blend_file, &blendObject, &textureLayer);
 			blendReader.m_textureLayers.push_back(textureLayer);
 		}
-		
+
 		BlendObject dataObject;
-		
+
 		if (blend_object_structure_getfield(blend_file, &dataObject, blendObject, "curscene"))
 		{
 			if (blend_object_type(blend_file, dataObject) == BLEND_OBJ_POINTER)
 			{
 				BlendBlock *tmpBlock = 0;
-				
+
 				if (blend_object_getdata(blend_file, &tmpBlock, dataObject))
 				{
 					BlendObject scene = blend_block_get_object(blend_file, tmpBlock, 0);
-					
-					if (blend_object_structure_getfield(blend_file, &dataObject, scene, "id")) 
+
+					if (blend_object_structure_getfield(blend_file, &dataObject, scene, "id"))
 					{
-						if (blend_object_type(blend_file, dataObject) == BLEND_OBJ_STRUCT) 
+						if (blend_object_type(blend_file, dataObject) == BLEND_OBJ_STRUCT)
 						{
 							BlendObject dataObject2;
-							
-							if (blend_object_structure_getfield(blend_file, &dataObject2, dataObject, "name")) 
+
+							if (blend_object_structure_getfield(blend_file, &dataObject2, dataObject, "name"))
 							{
 								char dest[19];
 								int max_chars = 20;
-							
-								if (blend_object_getstring(blend_file, dataObject2, dest, max_chars)) 
+
+								if (blend_object_getstring(blend_file, dataObject2, dest, max_chars))
 								{
 									printf("dest=%s\n",dest);
 								}
@@ -280,22 +280,24 @@ static BLENDBLOCKCALLBACK_RETURN blendBlockIterator(BLENDBLOCKCALLBACK_ARGS)
 			}
 		}
 	}
-	     
+
 	return 1;
 }
+*/
 
-void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
+std::streamsize Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 {
+	/*
 	MY_FILETYPE *file = MY_OPEN_FOR_READ(filePath.c_str());
-	
+
 	if (!file)
 	{
 		char message[50];
 		sprintf(message, _("Was unable to open file \"%s\".\n"), filePath.c_str());
-		
+
 		throw Exception(message);
 	}
-	
+
 	BlendFile *blendFile = blend_read(file);
 
 	if (!blendFile)
@@ -303,17 +305,17 @@ void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 		MY_CLOSE(file);
 		char message[50];
 		sprintf(message, _("Was unable to read Blender file \"%s\".\n"), filePath.c_str());
-		
+
 		throw Exception(message);
 	}
 
 	// print file information
 	blend_dump_typedefs(blendFile);
 	blend_dump_blocks(blendFile);
-	
+
 	struct BlendReader blendReader;
 	blend_foreach_block(blendFile, blendBlockIterator, &blendReader);
-	
+
 	for (std::list<bObj> ::iterator iterator = blendReader.m_objects.begin(); iterator != blendReader.m_objects.end(); ++iterator)
 	{
 		fprintf(stdout, _("Got object with name \"%s\".\n"), iterator->name);
@@ -334,31 +336,40 @@ void Mdlx::readBlend(const std::string &filePath) throw (class Exception)
 
 
 	*/
-	
+
+	/*
 	blend_free(blendFile);
 	MY_CLOSE(file);
+	*/
+
+	return 0;
 }
 
-void Mdlx::writeBlend(std::istream &ostream) const throw (class Exception)
+std::streamsize Mdlx::readBlend(std::istream &istream) throw (class Exception)
 {
-}
-#endif
-
-#ifdef MAX
-void Mdlx::read3ds(std::istream &istream) throw (class Exception)
-{
+	return 0;
 }
 
-void Mdlx::write3ds(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mdlx::writeBlend(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
-#endif
+
+std::streamsize Mdlx::read3ds(std::istream &istream) throw (class Exception)
+{
+	return 0;
+}
+
+std::streamsize Mdlx::write3ds(std::ostream &ostream) const throw (class Exception)
+{
+	return 0;
+}
 
 /*
 void Mdlx::writeMdlGlobalSequences(std::fstream &fstream) throw (Exception)
 {
 	fstream << "GlobalSequences " << this->m_globalSequencesDurations.size() << " {\n";
-	
+
 	for (std::list<long32>::iterator iterator = this->m_globalSequencesDurations.begin(); iterator != this->m_globalSequencesDurations.end(); ++iterator)
 		fstream << "\tDuration " << *iterator << ",\n";
 
@@ -404,7 +415,7 @@ void Mdlx::writeMdlMaterials(std::fstream &fstream) throw (Exception)
 
 		if ((*iterator)->renderMode & 32)
 			fstream << "\t\tFullResolution,\n";
-		
+
 		if ((*iterator)->priorityPlane != 0)
 			fstream << "\t\tPriorityPlane " << (*iterator)->priorityPlane << ",\n";
 
@@ -482,14 +493,14 @@ void Mdlx::writeMdlMaterials(std::fstream &fstream) throw (Exception)
 
 			if (showCoordId)
 				fstream << "\t\t\tCoordId " << (*iterator1)->coordId << ",\n";
-			
+
 			fstream << "\t\t\tstatic (Alpha " << (*iterator1)->alpha << "),\n"
 			<< "\t\t}\n";
 		}
 
 		fstream << "\t}\n";
 	}
-	
+
 	fstream << "}\n";
 }
 
@@ -500,17 +511,17 @@ void Mdlx::writeMdlTextureAnimations(std::fstream &fstream) throw (Exception)
 	for (std::list<struct TextureAnimation*>::iterator iterator = this->m_textureAnimations.begin(); iterator != this->m_textureAnimations.end(); ++iterator)
 	{
 		fstream << "\tTVertexAnim {\n";
-		
+
 		if ((*iterator)->translation != 0)
 			fstream << "\t\t(Translation { " << (*iterator)->translation->x << ", " << (*iterator)->translation->y << ", " << (*iterator)->translation->y << " })\n";
-		
+
 		/// @todo InTan and OutTan only appear when Hermite or Bezier. GlobalSeqId only appears when its value is not 0xFFFFFFFF.
 		if ((*iterator)->rotation != 0)
 			fstream << "\t\t(Rotation { " << (*iterator)->rotation->a << ", " << (*iterator)->rotation->b << ", " << (*iterator)->rotation->c << ", " << (*iterator)->rotation->d << " })\n";
 
 		if ((*iterator)->scaling != 0)
 			fstream << "\t\t(Scaling { " << (*iterator)->scaling->x << ", " << (*iterator)->scaling->y << ", " << (*iterator)->scaling->y << " })\n";
-	
+
 		fstream << "\t}\n";
 	}
 
@@ -544,12 +555,12 @@ void Mdlx::writeMdlGeoset(std::fstream &fstream) throw (Exception)
 		fstream << "\t\t{ " << (*iterator)->x << ", " << (*iterator)->y << "},\n";
 
 	fstream << "\t}\n";
-	
+
 	fstream << "\tVertexGroup {\n";
 
 	for (std::list<byte::iterator iterator = this->m_geoset->vertexGroups->vertexGroups.begin(); iterator != this->m_geoset->vertexGroups->vertexGroups.end(); ++iterator)
 		fstream << "\t\t" << *iterator << ",\n";
-	
+
 	fstream << "\t}\n";
 	/// @todo Group size this->m_geoset->vertexGroups->vertexGroups.size() as before?!
 	fstream << "\tFaces " << this->m_geoset->vertexGroups->vertexGroups.size() << " " << this->m_geoset->primitiveVertices->triangles.size() << " {\n"
@@ -577,7 +588,7 @@ void Mdlx::writeMdlGeoset(std::fstream &fstream) throw (Exception)
 
 	if (this->m_geoset->m_minExtX != 0.0 || this->m_geoset->m_minExtY != 0.0 || this->m_geoset->m_minExtZ != 0.0)
 		fstream << "\tMinimumExtent { " << this->m_geoset->m_minExtX << ", " << this->m_geoset->m_minExtY << ", " << this->m_geoset->m_minExtZ << " },\n";
-	
+
 	if (this->m_geoset->m_maxExtX != 0.0 || this->m_geoset->m_maxExtY != 0.0 || this->m_geoset->m_maxExtZ != 0.0)
 		fstream << "\tMaximumExtent { " << this->m_geoset->m_minExtX << ", " << this->m_geoset->m_minExtY << ", " << this->m_geoset->m_minExtZ << " },\n";
 
@@ -599,7 +610,7 @@ void Mdlx::writeMdlGeoset(std::fstream &fstream) throw (Exception)
 
 		fstream << "\t}\n";
 	}
-	
+
 	fstream
 	<< "\tMaterialID " << this->m_geoset->materialId << ",\n"
 	<< "\tSelectionGroup " << this->m_geoset->selectionGroup << ",\n";
@@ -618,9 +629,9 @@ void Mdlx::writeMdlGeosetAnimations(std::fstream &fstream) throw (Exception)
 
 		if ((*iterator)->colorAnimation == 1 || (*iterator)->colorAnimation == 3)
 			fstream << "\tDropShadow,\n";
-	
+
 		fstream << "\tstatic (Alpha " << (*iterator)->staticAlpha << "),\n";
-	
+
 		/// @todo This flag?
 		if ((*iterator)->colorAnimation > 1)
 			fstream << "\tstatic (Color { " << (*iterator)->colorBlue << ", " << (*iterator)->colorGreen << ", " << (*iterator)->colorRed << " }),\n";

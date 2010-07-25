@@ -93,7 +93,7 @@ class Mpq
 			Mpq1, // original format
 			Mpq2 // Burning Crusade, large files
 		};
-		
+
 		enum ExtendedAttributes
 		{
 			None = 0x0,
@@ -102,7 +102,7 @@ class Mpq
 			FileMd5s = 0x00000004
 		};
 
-		static const uint32* cryptTable();		
+		static const uint32* cryptTable();
 		static bool hasStrongDigitalSignature(std::istream &istream);
 		static std::streamsize strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception);
 
@@ -112,9 +112,9 @@ class Mpq
 		std::streamsize create(const boost::filesystem::path &path, bool overwriteExisting = false, std::streampos startPosition = 0, enum Format format = Mpq1, enum ExtendedAttributes extendedAttributes = None, int32 sectorSize = 4096, bool hasStrongDigitalSignature = false, bool containsListfileFile = false, bool containsSignatureFile = false) throw (class Exception);
 		std::streamsize open(const boost::filesystem::path &path, std::istream *listfileIstream = 0) throw (class Exception);
 		void close();
-		
+
 		/**
-		* @param listfilefileIstream If you want to preselect your custom listfile file, use this value (entries will be appended to the already contained listfile file if it does exist). 
+		* @param listfilefileIstream If you want to preselect your custom listfile file, use this value (entries will be appended to the already contained listfile file if it does exist).
 		* @return Returns MPQ's size in bytes.
 		*/
 		std::streamsize readMpq(std::istream &istream, std::istream *listfileIstream = 0) throw (class Exception);
@@ -124,13 +124,11 @@ class Mpq
 		* @return Returns MPQ's size in bytes.
 		*/
 		std::streamsize writeMpq(std::ostream &ostream) const throw (class Exception);
-		
-#ifdef TAR
+
 		std::streamsize openTar(const boost::filesystem::path &path, std::istream *listfileIstream = 0) throw (class Exception);
 		std::streamsize readTar(std::istream &istream) throw (class Exception);
-		std::streamsize writeTar(std::istream &istream) const throw (class Exception);
-#endif
-		
+		std::streamsize writeTar(std::ostream &ostream) const throw (class Exception);
+
 		bool check() const;
 		bool fix() const;
 		/**
@@ -155,7 +153,7 @@ class Mpq
 		*/
 		const class MpqFile* createAttributesFile() throw (class Exception);
 		const class MpqFile* attributesFile() const;
-		
+
 		bool containsSignatureFile() const;
 		const class MpqFile* signatureFile() const;
 
@@ -167,10 +165,10 @@ class Mpq
 		* @return Returns unused block space of the archive.
 		*/
 		int64 unusedSpace() const;
-		
+
 		/**
 		* Note that the MPQ archive has no information about file paths if there is no "(listfile)" file. This function is the best way to get your required file.
-		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.		
+		* @return Returns the corresponding @class MpqFile instance of the searched file. If no file was found it returns 0.
 		*/
 		const class MpqFile* findFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
 		/**
@@ -241,7 +239,7 @@ class Mpq
 		const std::map<int32, class Block*>& blockMap() const;
 		const std::list<class Hash*>& hashes() const;
 		const std::list<class MpqFile*>& files() const;
-		
+
 		/**
 		* @return Returns the sum of all block sizes.
 		*/
@@ -252,7 +250,7 @@ class Mpq
 		* @return Returns the sum of all file sizes (uncompressed).
 		*/
 		int64 entireFileSize() const;
-		
+
 		/**
 		* @return Returns true if archive is not opened.
 		*/
@@ -279,13 +277,13 @@ class Mpq
 		static const int16 formatVersion1Identifier;
 		static const int16 formatVersion2Identifier;
 		static const int32 extendedAttributesVersion;
-		
+
 		/**
 		* 0xFFFFFFFE and 0xFFFFFFFF are reserved for deleted and empty blocks (by hashes).
 		*/
 		static const int32 maxBlockId = 0xFFFFFFFD;
 		static const int32 maxHashId = 0xFFFFFFFF;
-		
+
 	protected:
 		friend class MpqFile;
 		friend class Hash;
@@ -303,7 +301,7 @@ class Mpq
 		class MpqFile* findFile(const boost::filesystem::path &path);
 		class MpqFile* findFile(const std::string &name);
 		class MpqFile* findFile(const class MpqFile &mpqFile);
-		
+
 		/**
 		* This function is reserved for internal uses since it gets a non-constant parameter.
 		* @param mpqFile This file has to be contained by the MPQ archive and is completely deleted if function returns true (also its memory!). Note that the parameter has to be a reference of an MPQ file pointer and is set to 0.
@@ -346,12 +344,12 @@ class Mpq
 		* Same as function @fn Mpq.nextBlockOffset but divides large offset value into @param blockOffset and @param extendedBlockOffset.
 		*/
 		void nextBlockOffsets(int32 &blockOffset, int16 &extendedBlockOffset) const;
-		
+
 		class Mpq& operator=(const class Mpq &mpq);
-		
+
 		/// This value is required for getting the first block offset (relative to the beginning of archive).
 		static const std::size_t headerSize;
-		
+
 		std::size_t m_size;
 		boost::filesystem::path m_path;
 		std::streampos m_startPosition;
@@ -381,14 +379,14 @@ inline std::streamsize Mpq::strongDigitalSignature(std::istream &istream, char s
 inline std::ostream& operator<<(std::ostream &ostream, const class Mpq &mpq) throw (class Exception)
 {
 	mpq.writeMpq(ostream);
-	
+
 	return ostream;
 }
 
 inline std::istream& operator>>(std::istream &istream, class Mpq &mpq) throw (class Exception)
 {
 	mpq.readMpq(istream);
-	
+
 	return istream;
 }
 
@@ -427,13 +425,13 @@ inline bool Mpq::check() const
 	/// @todo Check format, size, extended attributes and signature.
 	if (this->extendedAttributes() != Mpq::None && !this->containsAttributesFile())
 		return false;
-	
+
 	if (!this->checkBlocks())
 		return false;
-	
+
 	if (!this->checkHashes())
 		return false;
-	
+
 	return true;
 }
 
@@ -452,21 +450,21 @@ inline const class MpqFile* Mpq::createListfileFile() throw (class Exception)
 {
 	if (this->containsListfileFile())
 		return this->listfileFile();
-	
+
 	std::list<std::string> entries;
-	
+
 	BOOST_FOREACH(const class MpqFile *mpqFile, this->m_files)
 	{
 		if (!mpqFile->m_path.empty() && mpqFile->m_path.string() != "(attributes)") /// @todo Exclude directories and file (signature)?
 			entries.push_back(mpqFile->m_path.string());
 	}
-	
+
 	entries.sort(); /// @todo Sort alphabetically?
 	std::stringstream sstream;
-	
+
 	BOOST_FOREACH(std::string entry, entries)
-		sstream << entry << std::endl;	
-			
+		sstream << entry << std::endl;
+
 	return this->addFile("(listfile)", MpqFile::Neutral, MpqFile::Default, &sstream);
 }
 
@@ -485,31 +483,31 @@ inline const class MpqFile* Mpq::createAttributesFile() throw (class Exception)
 {
 	if (this->containsAttributesFile())
 		return 0;
-	
+
 	struct ExtendedAttributesHeader extendedAttributesHeader;
 	extendedAttributesHeader.version = Mpq::extendedAttributesVersion;
 	extendedAttributesHeader.attributesPresent = this->extendedAttributes();
 	std::stringstream stream;
 	stream.write(reinterpret_cast<char*>(&extendedAttributesHeader), sizeof(extendedAttributesHeader));
-		
+
 	if (this->extendedAttributes() & Mpq::FileCrc32s)
 	{
 		BOOST_FOREACH(const class Block *block, this->m_blocks)
 			stream.write(reinterpret_cast<const char*>(&block->m_crc32), sizeof(block->m_crc32));
 	}
-	
+
 	if (this->extendedAttributes() & Mpq::FileTimeStamps)
 	{
 		BOOST_FOREACH(const class Block *block, this->m_blocks)
 			stream.write(reinterpret_cast<const char*>(&block->m_fileTime), sizeof(block->m_fileTime));
 	}
-	
+
 	if (this->extendedAttributes() & Mpq::FileMd5s)
 	{
 		BOOST_FOREACH(const class Block *block, this->m_blocks)
 			stream.write(reinterpret_cast<const char*>(&block->m_md5), sizeof(block->m_md5));
 	}
-	
+
 	return this->addFile("(attributes)", MpqFile::Neutral, MpqFile::Default, &stream);
 }
 
@@ -611,50 +609,50 @@ inline const std::list<class MpqFile*>& Mpq::files() const
 inline int64 Mpq::entireBlockSize() const
 {
 	int64 result = 0;
-	
+
 	BOOST_FOREACH(const Block *block, this->m_blocks)
 		result += block->m_blockSize;
-	
+
 	return result;
 }
 
 inline int64 Mpq::entireUsedBlockSize() const
 {
 	int64 result = 0;
-	
+
 	BOOST_FOREACH(const class Block *block, this->m_blocks)
 	{
 		if (!block->empty())
 			result += block->m_blockSize;
 	}
-	
+
 	return result;
 }
 
 inline int64 Mpq::entireUnusedBlockSize() const
 {
 	int64 result = 0;
-	
+
 	BOOST_FOREACH(const class Block *block, this->m_blocks)
 	{
 		if (block->empty())
 			result += block->m_blockSize;
 	}
-	
+
 	return result;
 }
 
 inline int64 Mpq::entireFileSize() const
 {
 	int64 result = 0;
-	
+
 	BOOST_FOREACH(const Block *block, this->m_blocks)
 	{
 		// usually size should be 0 if it's not a file but anyway we should check
 		if (block->flags() & Block::IsFile)
 			result += block->m_fileSize;
 	}
-	
+
 	return result;
 }
 
@@ -680,7 +678,7 @@ inline bool Mpq::checkBlocks() const
 		if (!block->check())
 			return false;
 	}
-	
+
 	return true;
 }
 
@@ -690,7 +688,7 @@ inline bool Mpq::checkHashes() const
 	{
 		if (!hash->check())
 			return false;
-		
+
 		BOOST_FOREACH(const class Hash *hash2, this->m_hashes)
 		{
 			/// @todo same block, ok?
@@ -698,7 +696,7 @@ inline bool Mpq::checkHashes() const
 				return false;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -709,7 +707,7 @@ inline class Block* Mpq::firstEmptyBlock() const
 		if (block->empty())
 			return block;
 	}
-	
+
 	return 0;
 }
 
@@ -720,7 +718,7 @@ inline class Block* Mpq::firstUnusedBlock() const
 		if (block->unused())
 			return block;
 	}
-	
+
 	return 0;
 }
 
@@ -728,18 +726,18 @@ inline class Block* Mpq::lastOffsetBlock() const
 {
 	uint64 offset = 0;
 	class Block *result = 0;
-	
+
 	BOOST_FOREACH(class Block *block, this->m_blocks)
 	{
 		uint64 newOffset = block->largeOffset();
-		
+
 		if (newOffset > offset)
 			result = block;
 	}
-	
+
 	return result;
 }
-	
+
 
 inline class Hash* Mpq::firstEmptyHash() const
 {
@@ -748,7 +746,7 @@ inline class Hash* Mpq::firstEmptyHash() const
 		if (hash->empty())
 			return hash;
 	}
-	
+
 	return 0;
 }
 
@@ -759,17 +757,17 @@ inline class Hash* Mpq::firstDeletedHash() const
 		if (hash->deleted())
 			return hash;
 	}
-	
+
 	return 0;
 }
 
 inline uint64 Mpq::nextBlockOffset() const
 {
 	class Block *block = this->lastOffsetBlock();
-	
+
 	if (block == 0)
 		return Mpq::headerSize;
-	
+
 	return block->largeOffset() + block->m_blockSize;
 }
 

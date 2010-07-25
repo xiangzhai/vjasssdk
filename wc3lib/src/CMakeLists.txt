@@ -11,7 +11,7 @@ target_link_libraries(wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} dl)
 
 add_subdirectory(blp)
 # lang is unusable
-#add_subdirectory(lang)
+add_subdirectory(lang)
 add_subdirectory(mdlx)
 add_subdirectory(mpq)
 add_subdirectory(slk)

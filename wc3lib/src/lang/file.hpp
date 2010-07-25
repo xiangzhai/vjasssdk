@@ -25,19 +25,21 @@
 
 #include <FlexLexer.h>
 
+#include "../exception.hpp"
+#include "position.hpp"
+
 namespace wc3lib
 {
-	
+
 namespace lang
 {
 
 class Parser;
 class SourceFile;
 class Language;
-class DocComment;
 
 /**
-* A Code file which is treated by a Parser instance.
+* Provides functionality of a code file which is treated by a Parser instance.
 * This class is able to handle the whole scripting languages syntax and to parse it.
 */
 class File : public yyFlexLexer
@@ -47,94 +49,81 @@ class File : public yyFlexLexer
 		/**
 		* @return Returns number of parsed lines.
 		*/
-		std::string::size_type parse(class Parser *parser, class SourceFile *sourceFile, std::istream &istream);
-		
-		const class Parser* parser() const;
-		const class SourceFile* sourceFile() const;
+		std::string::size_type parse(class Parser &parser, class SourceFile &sourceFile, std::istream &istream) throw (class Exception);
+
+		/**
+		* @returns Thread-safe boolean value which indicates if file is currently being used for parsing.
+		*/
+		bool parses() const;
+		const class Parser& parser() const throw (class Exception);
+		const class SourceFile& sourceFile() const throw (class Exception);
 		/**
 		* Required by Bison parser.
 		* @todo Replace and set in class function if possbile.
 		*/
-		void setLanguage(class Language *language);
+		void setLanguage(const class Language &language) throw (class Exception);
 		/**
 		* Returns the current interpreted language in file.
 		*/
-		const class Language* language() const;
+		const class Language& language() const throw (class Exception);
 		/**
-		* Required by Bison parser.
+		* Returns the current position of parser in file.
 		*/
-		void addLines(std::size_t lines);
-		std::size_t lines() const;
-		/**
-		* Similar to File.lines.
-		*/
-		std::size_t line() const;
-		/**
-		* Since documentation comments are object related there should be a current
-		* documentation comment which is related to the next added parsed object.
-		*/
-		void setDocComment(class DocComment *docComment);
-		void clearDocComment();
-		const class DocComment* docComment() const;
-		
+		const class Position& position() const throw (class Exception);
+
 	protected:
 		friend class Parser;
-		
+
+		volatile bool m_parses;
 		class Parser *m_parser;
 		class SourceFile *m_sourceFile;
-		class Language *m_language;
-		std::size_t m_lines;
-		class DocComment *m_docComment;
+		const class Language *m_language;
+		class Position *m_position;
 };
 
-inline const class Parser* File::parser() const
+inline bool File::parses() const
 {
-	return this->m_parser;
+	return this->m_parses;
 }
 
-inline const class SourceFile* File::sourceFile() const
+inline const class Parser& File::parser() const  throw (class Exception)
 {
-	return this->m_sourceFile;
+	if (!this->parses())
+		throw Exception("Is not parsing.");
+
+	return *this->m_parser;
 }
 
-inline void File::setLanguage(class Language *language)
+inline const class SourceFile& File::sourceFile() const throw (class Exception)
 {
-	this->m_language = language;
+	if (!this->parses())
+		throw Exception("Is not parsing.");
+
+	return *this->m_sourceFile;
 }
 
-inline const class Language* File::language() const
+inline void File::setLanguage(const class Language &language) throw (class Exception)
 {
-	return this->m_language;
+	if (!this->parses())
+		throw Exception("Is not parsing.");
+
+	this->m_language = &language;
 }
 
-inline void File::addLines(std::size_t lines)
+inline const class Language& File::language() const throw (class Exception)
 {
-	this->m_lines += lines;
+	if (!this->parses())
+		throw Exception("Is not parsing.");
+
+	return *this->m_language;
 }
 
-inline std::size_t File::lines() const
+inline const class Position& File::position() const throw (class Exception)
 {
-	return this->m_lines;
-}
+	if (!this->parses())
+		throw Exception("Is not parsing.");
 
-inline std::size_t File::line() const
-{
-	return this->m_lines;
-}
-
-inline void File::setDocComment(class DocComment *docComment)
-{
-	this->m_docComment = docComment;
-}
-
-inline void File::clearDocComment()
-{
-	this->m_docComment = 0;
-}
-
-inline const class DocComment* File::docComment() const
-{
-	return this->m_docComment;
+	return *this->m_position;
 }
 
 }
