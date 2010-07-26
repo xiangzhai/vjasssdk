@@ -293,8 +293,8 @@ library AStructCoreGeneralList requires AInterfaceCoreGeneralContainer, optional
 			* The list container is extended by inserting new elements before the element at position @param position with value @param value.
 			* This effectively increases the container size by @param number.
 			*/
-			public method insertNumber takes $NAME$Iterator position, integer number,  $ELEMENTTYPE$ value returns nothing
-				local $NAME$Node node = position.node().previous()
+			public method insertNumber takes $NAME$Iterator position, integer number, $ELEMENTTYPE$ value returns nothing
+				local $NAME$Node previousNode = position.node().previous()
 				local $NAME$Node tmpNode
 				local integer i = 0
 
@@ -302,19 +302,23 @@ library AStructCoreGeneralList requires AInterfaceCoreGeneralContainer, optional
 					exitwhen (i == number)
 					set tmpNode = $NAME$Node.create()
 					call tmpNode.setData(value)
-					call tmpNode.setPrevious(node)
-					call tmpNode.setNext(position.node()) // this call actually can be removed
-					if (node != 0) then
-						call node.setNext(tmpNode)
+					call tmpNode.setPrevious(previousNode)
+
+					// is not the first element/position is not the first element of container
+					if (previousNode != 0) then
+						call previousNode.setNext(tmpNode)
 					else
 						set this.m_front = tmpNode
 					endif
+
+					set previousNode = tmpNode
 					set i = i + 1
 				endloop
-				set this.m_size = this.m_size + i
-				if (i > 0) then
-					call position.node().setPrevious(tmpNode)
-				endif
+				// last inserted element before element at position
+				call tmpNode.setNext(position.node())
+				call position.node().setPrevious(tmpNode)
+
+				set this.m_size = this.m_size + number
 			endmethod
 
 			public method insert takes $NAME$Iterator position, $ELEMENTTYPE$ value returns nothing

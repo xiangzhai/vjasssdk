@@ -1,3 +1,8 @@
+2010-07-26 Tamino Dauth <tamino@cdauth.eu>
+* Fixed method insertNumber of struct of text macro A_LIST.
+* AHeroIcon is now available for non-hero units, too.
+* AHeroIcon can recognize alliance changes now.
+
 2010-07-25 Tamino Dauth <tamino@cdauth.eu>
 * Added shortcut index methods to struct ADialog.
 * Fixed AFormat bug which prevented it from formatting tokens more than one times.

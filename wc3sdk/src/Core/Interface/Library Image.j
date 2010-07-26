@@ -16,23 +16,20 @@ library ALibraryCoreInterfaceImage requires optional ALibraryCoreDebugMisc
 	* Creates an image being visible for only one player.
 	* @author PitzerMike
 	* Local variable is being needed because of rendering.
-	* @todo Crashes game!
+	* @todo Crashes game when showing image!
 	*/
 	function CreateImageForPlayer takes player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY returns image
-		debug call PrintFunctionError("CreateImageForPlayer", "Is bugged!")
-		return null
-		/*
-		local player localPlayer = GetLocalPlayer()
+		//debug call PrintFunctionError("CreateImageForPlayer", "Is bugged!")
+		//return null
 		local image whichImage
 		local string localFile = ""
-		if (whichPlayer == localPlayer) then
+		if (whichPlayer == GetLocalPlayer()) then
 			set localFile = file
 		endif
 		set whichImage = CreateImage(localFile, sizeX, sizeY, 0.0, (x - (sizeX / 2.0)), (y - (sizeY / 2.0)), z, 0.0, 0.0, 0.0, 2) // image is placed in centre
 		call SetImageRenderAlways(whichImage, true)
-		set localPlayer = null
+
 		return whichImage
-		*/
 	endfunction
 
 	/**

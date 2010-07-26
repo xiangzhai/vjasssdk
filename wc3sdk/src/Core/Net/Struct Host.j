@@ -55,23 +55,13 @@ library AStructCoreNetHost requires ALibraryCoreDebugMisc, AStructCoreGeneralVec
 			return result
 		endmethod
 
-		private method treatClientCommand takes integer command returns nothing
-			if (command == thistype.commandConnect) then
-				if (this.m_clients < this.m_maxClients) then
-					call this.connect(SocGetLastInIP(), SocGetLastInPort())
-				debug else
-					debug call this.print("Reached player maximum.")
-				endif
-			elseif (command == thistype.
-			endif
-		endmethod
-
 		private method receiver takes nothing returns nothing
 			local integer message
 			local integer command
 			loop
 				exitwhen (not SocTCPConnected(this.m_listener))
 				set message = SocReceiveMessage(this.m_listener, 100, this.m_buffer)
+				/// @todo Get sender?!
 				set command = BufferReadInt(this.m_buffer)
 				debug call this.print("Received command " + I2S(command))
 				if (command == thistype.commandConnect) then
@@ -81,7 +71,7 @@ library AStructCoreNetHost requires ALibraryCoreDebugMisc, AStructCoreGeneralVec
 						debug call this.print("Reached player maximum.")
 					endif
 				elseif (command == thistype.commandDisconnect) then
-					if (
+					//if (
 				endif
 				call BufferClear(this.m_buffer)
 			endloop
@@ -93,9 +83,9 @@ library AStructCoreNetHost requires ALibraryCoreDebugMisc, AStructCoreGeneralVec
 				debug call this.print("Connect socket network.")
 				call SocStart()
 			endif
-			//start members
+			// construction members
 			set this.m_maxClients = m_maxClients
-			//members
+			// members
 			set this.m_clients = 0
 			set this.m_buffer = CreateBuffer()
 			set this.m_listener = SocTCPListen(6112, 255, 1)
@@ -105,7 +95,7 @@ library AStructCoreNetHost requires ALibraryCoreDebugMisc, AStructCoreGeneralVec
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//members
+			// members
 			call DestroyBuffer(this.m_buffer)
 			call SocCloseSocket(this.m_listener)
 			loop

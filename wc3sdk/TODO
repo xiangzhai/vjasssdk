@@ -1,3 +1,7 @@
+2010-07-26 Tamino Dauth <tamino@cdauth.eu>
+* Test alliance changing of struct AHeroIcon.
+* Change member names of struct AHeroIcon and AUnitCopy.
+
 2010-07-19 Tamino Dauth <tamino@cdauth.eu>
 * Add backwards iterator types to container macros.
 * FIXED: As I introduced list type instead of vector for struct ADialog buttons can't be showned second time.
