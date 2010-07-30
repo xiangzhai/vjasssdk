@@ -1,4 +1,4 @@
-library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibraryCoreStringConversion, AStructCoreGeneralHashTable, AStructCoreGeneralList, AStructCoreStringFormat, AStructSystemsGuiDialogButton
+library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibraryCoreStringConversion, AStructCoreGeneralHashTable, AStructCoreGeneralVector, AStructCoreStringFormat, AStructSystemsGuiDialogButton
 
 	/**
 	* Provides a kind of wrapper struct for common Warcraft 3 dialogs.
@@ -9,7 +9,6 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 	*/
 	struct ADialog
 		// static constant members
-		public static constant integer maxDialogButtons = 100
 		private static constant integer maxPageButtons = 10
 		// static construction members
 		private static integer shortcutPreviousPage
@@ -24,7 +23,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 		private player m_player
 		// members
 		private dialog m_dialog
-		private AIntegerList m_dialogButtons
+		private AIntegerVector m_dialogButtons // use vector since you need the index
 		private integer m_currentPage
 		private integer m_maxPageNumber
 		private button m_previousPageButton
@@ -51,16 +50,14 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 		public method setDisplayed takes boolean displayed returns nothing
 			local integer i = this.m_currentPage * thistype.maxPageButtons
 			local integer exitValue = (this.m_currentPage + 1) * thistype.maxPageButtons
-			local AIntegerListIterator iterator = this.m_dialogButtons.begin()
 			set this.m_isDisplayed = displayed
 			if (displayed) then
 				/// @todo Fix InsertLineBreaks
 				call DialogSetMessage(this.m_dialog, this.modifiedMessage()) //InsertLineBreaks(message, 10)
 				loop
-					exitwhen (i == exitValue or not iterator.isValid())
-					call ADialogButton(iterator.data()).addButton()
+					exitwhen (i == exitValue or i == this.m_dialogButtons.size())
+					call ADialogButton(this.m_dialogButtons[i]).addButton()
 					set i = i + 1
-					call iterator.next()
 				endloop
 				if (this.m_maxPageNumber > 0) then
 					call this.createPreviousPageButton.evaluate()
@@ -68,10 +65,9 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 				endif
 			else
 				loop
-					exitwhen (i == exitValue or not iterator.isValid())
-					call ADialogButton(iterator.data()).removeButton()
+					exitwhen (i == exitValue or i == this.m_dialogButtons.size())
+					call ADialogButton(this.m_dialogButtons[i]).removeButton()
 					set i = i + 1
-					call iterator.next()
 				endloop
 				if (this.m_maxPageNumber > 0) then
 					call this.removePreviousPageButton.evaluate()
@@ -79,7 +75,6 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 				endif
 				call DialogClear(this.m_dialog)
 			endif
-			call iterator.destroy()
 			call DialogDisplay(this.m_player, this.m_dialog, displayed)
 		endmethod
 
@@ -145,7 +140,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 		* Uses dialog button's index as shortcut and adds string "[<shortcut index>]" before button's text.
 		*/
 		public method addExtendedDialogButtonIndex takes string text, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns ADialogButton
-			return this.addExtendedDialogButton(Format(tr("[%1%] %2%")).i(this.m_dialogButtons.size()).s(text).result(), '0' + this.m_dialogButtons.size(), isQuitButton, doScoreScreen, action)
+			return this.addExtendedDialogButton(Format(tr("[%1%] %2%")).i(this.m_dialogButtons.size()).s(text).result(), '0' + this.m_dialogButtons.size() - (this.m_dialogButtons.size() / thistype.maxPageButtons) * thistype.maxPageButtons, isQuitButton, doScoreScreen, action)
 		endmethod
 
 		public method addDialogButton takes string text, integer shortcut, ADialogButtonAction action returns ADialogButton
@@ -172,19 +167,19 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 
 		/// @todo Friend relation to struct ADialogButton, do not use!
 		public method addDialogButtonInstance takes ADialogButton instance returns integer
-			if (this.m_dialogButtons.size() - this.m_maxPageNumber * ADialog.maxPageButtons == ADialog.maxPageButtons) then
+			if (this.m_dialogButtons.size() - this.m_maxPageNumber * thistype.maxPageButtons == ADialog.maxPageButtons) then
 				set this.m_maxPageNumber = this.m_maxPageNumber + 1
 			endif
 			call this.m_dialogButtons.pushBack(instance)
-			return this.m_dialogButtons.size() - 1
+			return this.m_dialogButtons.backIndex()
 		endmethod
 
 		/// @todo Friend relation to struct ADialogButton, do not use!
-		public method removeDialogButtonInstance takes ADialogButton instance returns nothing
-			if (this.m_dialogButtons.size() - this.m_maxPageNumber * ADialog.maxPageButtons == 0) then
+		public method removeDialogButtonInstanceByIndex takes integer index returns nothing
+			if (this.m_dialogButtons.size() - this.m_maxPageNumber * thistype.maxPageButtons == 0) then
 				set this.m_maxPageNumber = this.m_maxPageNumber - 1
 			endif
-			call this.m_dialogButtons.remove(instance)
+			call this.m_dialogButtons.erase(index)
 		endmethod
 
 		public method dialogButtons takes nothing returns integer
@@ -292,7 +287,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			set this.m_player = usedPlayer
 			// members
 			set this.m_dialog = DialogCreate()
-			set this.m_dialogButtons = AIntegerList.create()
+			set this.m_dialogButtons = AIntegerVector.create()
 			set this.m_currentPage = 0
 			set this.m_maxPageNumber = 0
 

@@ -7,10 +7,13 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 	* @see ASpawnPoint
 	*/
 	struct AItemSpawnPoint extends ASpawnPointInterface
+		// static construction members
 		private static real m_time
 		private static real m_removalRange
+		// static members
 		private static AIntegerList m_itemSpawnPoints
 		private static timer m_respawnTimer
+		// members
 		private real m_x
 		private real m_y
 		private itempool m_itemPool
@@ -94,20 +97,26 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 
 		private static method timerFunctionRespawn takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetExpiredTimer(), "this")
+			debug call this.print("Timer expired!")
 			call this.spawn()
 		endmethod
 
 		private method respawn takes nothing returns nothing
 			if (not this.runs() and this.m_isEnabled and (this.m_item == null or IsItemOwned(this.m_item) or GetWidgetLife(this.m_item) <= 0.0 or GetDistanceBetweenPoints(GetItemX(this.m_item), GetItemY(this.m_item), 0.0, this.m_x, this.m_y, 0.0) > thistype.m_removalRange)) then
-				debug call this.print("Starting item respawn")
+				debug call this.print("Starting item respawn with time: " + R2S(thistype.m_time))
 				set this.m_item = null
 				if (this.m_timer == null) then
+					debug call this.print("Creating timer")
 					set this.m_timer = CreateTimer()
 					call AHashTable.global().setHandleInteger(this.m_timer, "this", this)
+				debug else
+					debug call this.print("Not creating timer!!!")
 				endif
+				debug call this.print("Before timer start")
 				call TimerStart(this.m_timer, thistype.m_time, false, function thistype.timerFunctionRespawn)
-			debug else
-				debug call this.print("Do not start item respawn!")
+				debug call this.print("After timer start with remaining time " + R2S(TimerGetRemaining(this.m_timer)))
+			//debug else
+				//debug call this.print("Do not start item respawn!")
 			endif
 		endmethod
 
@@ -160,7 +169,7 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 
 		private static method timerFunctionRespawnCheck takes nothing returns nothing
 			local AIntegerListIterator iterator = thistype.m_itemSpawnPoints.begin()
-			debug call thistype.staticPrint("Calling item spawn points check with count of " + I2S(thistype.m_itemSpawnPoints.size()))
+			//debug call thistype.staticPrint("Calling item spawn points check with count of " + I2S(thistype.m_itemSpawnPoints.size()))
 			loop
 				exitwhen (not iterator.isValid())
 				call thistype(iterator.data()).respawn() // checks if item has to be respawned!
@@ -169,6 +178,11 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 			call iterator.destroy()
 		endmethod
 
+		/**
+		* @param checkRate There's a global timer which checks for items every n seconds. This is required because of the limited engine which doesn't allow you to get "item is being killed" events etc.
+		* @param time This is the value of the time (in seconds) which has to expired until the item is respawned.
+		* @param removalRange This is the value of the range where the item is checked for its removal. If the item is not owned and not dead it could have been dropped somewhere.
+		*/
 		public static method init takes real checkRate, real time, real removalRange returns nothing
 			set thistype.m_time = time
 			set thistype.m_removalRange = removalRange
@@ -176,6 +190,14 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 			set thistype.m_respawnTimer = CreateTimer()
 			call TimerStart(thistype.m_respawnTimer, checkRate, true, function thistype.timerFunctionRespawnCheck)
 			call thistype.initialize()
+		endmethod
+
+		public static method time takes nothing returns real
+			return thistype.m_time
+		endmethod
+
+		public static method removalRange takes nothing returns real
+			return thistype.m_removalRange
 		endmethod
 
 		public static method pauseAll takes nothing returns nothing

@@ -19,8 +19,9 @@ library ALibraryCoreInterfaceImage requires optional ALibraryCoreDebugMisc
 	* @todo Crashes game when showing image!
 	*/
 	function CreateImageForPlayer takes player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY returns image
-		//debug call PrintFunctionError("CreateImageForPlayer", "Is bugged!")
-		//return null
+		debug call PrintFunctionError("CreateImageForPlayer", "Is bugged!")
+		return null
+		/*
 		local image whichImage
 		local string localFile = ""
 		if (whichPlayer == GetLocalPlayer()) then
@@ -30,6 +31,7 @@ library ALibraryCoreInterfaceImage requires optional ALibraryCoreDebugMisc
 		call SetImageRenderAlways(whichImage, true)
 
 		return whichImage
+		*/
 	endfunction
 
 	/**

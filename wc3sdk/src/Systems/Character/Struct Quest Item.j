@@ -61,9 +61,7 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 
 		public stub method setStateWithoutCondition takes integer state returns nothing
 			local boolean result
-static if (DEBUG_MODE) then
-			call this.print("Warning: Set state to not used. Can not destroy quest items.")
-endif
+
 			if (AQuest.isQuestLogUsed()) then
 				if (this.m_questItem == null) then
 					set this.m_questItem = QuestCreateItem(this.m_quest.questLogQuest())
@@ -76,18 +74,18 @@ endif
 			call this.m_quest.checkQuestItemsForState(state)
 		endmethod
 
-		public static method create takes AQuest usedQuest, string description returns thistype
-			local thistype this = thistype.allocate(usedQuest.character(), description)
-			debug if (usedQuest <= 0) then
+		public static method create takes AQuest whichQuest, string description returns thistype
+			local thistype this = thistype.allocate(whichQuest.character(), description)
+			debug if (whichQuest <= 0) then
 				debug call this.print("Invalid used quest.")
 			debug endif
 			// construction members
-			set this.m_quest = usedQuest
+			set this.m_quest = whichQuest
 			// members
 			if (AQuest.isQuestLogUsed()) then
 				set this.m_questItem = null
 			endif
-			set this.m_index = usedQuest.addQuestItem(this)
+			set this.m_index = whichQuest.addQuestItem(this)
 			return this
 		endmethod
 

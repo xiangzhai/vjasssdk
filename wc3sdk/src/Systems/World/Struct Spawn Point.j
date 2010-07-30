@@ -455,6 +455,10 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 			endif
 		endmethod
 
+		public static method time takes nothing returns real
+			return thistype.m_time
+		endmethod
+
 		public static method distributeDroppedItem takes item whichItem returns nothing
 			local player itemOwner = thistype.getRandomItemOwner.evaluate()
 			local player user

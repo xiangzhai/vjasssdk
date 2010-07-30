@@ -1,3 +1,6 @@
+2010-07-30 Tamino Dauth <tamino@cdauth.eu>
+* Fix dialog button indices (next page starts with 0 again!).
+
 2010-07-26 Tamino Dauth <tamino@cdauth.eu>
 * Test alliance changing of struct AHeroIcon.
 * Change member names of struct AHeroIcon and AUnitCopy.

@@ -131,7 +131,7 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			call this.m_dialog.removeDialogButtonInstance.evaluate(this)
+			call this.m_dialog.removeDialogButtonInstanceByIndex.evaluate(this.m_index)
 			if (this.m_button != null) then
 				set this.m_button = null // can not be destroyed
 				call this.destroyTrigger()

@@ -6,7 +6,7 @@ library AStructCoreNetHost requires ALibraryCoreDebugMisc, AStructCoreGeneralVec
 	struct AHost
 		public static constant integer commandConnect = 0
 		public static constant integer commandDisconnect = 1
-		public static contant integer commandAccepted = 2
+		public static constant integer commandAccepted = 2
 		public static constant integer commandChat = 3
 		public static constant integer commandNetMessage = 4 // placeholder for extra messages
 		private static constant real connectionTimeOut = 5.0
