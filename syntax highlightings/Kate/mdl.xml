@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="MDL" section="Other" version="1.0" kateversion="3.3.4" extensions="*.mdl;*.MDL" author="Tamino Dauth">
+<language name="MDL" section="Other" version="1.0" kateversion="3.4.5" extensions="*.mdl;*.MDL" author="Tamino Dauth">
 	<highlighting>
 		<list name="keywords">
 			<item>static</item>
@@ -192,45 +192,45 @@
 				<keyword attribute="String Section" context="String" String="stringsections" />
 				<keyword attribute="Long Section" context="Long" String="longsections" />
 				<keyword attribute="Long 2 Section" context="Long2" String="long2sections" />
-				
+
 				<keyword attribute="Property" context="#stay" String="properties" />
 				<keyword attribute="String Property" context="String" String="stringproperties" />
 				<keyword attribute="Float Property" context="Float" String="floatproperties" />
-				<keyword attribute="Long Property" context="Long" String="longproperties" />			
+				<keyword attribute="Long Property" context="Long" String="longproperties" />
 				<keyword attribute="Value Property" context="Value" String="valueproperties" />
-				
+
 				<Detect2Chars attribute="Comment" context="Commentar" char="/" char1="/" />
 				<DetectChar attribute="Symbol" context="#stay" char="{" beginRegion="Brace1" />
 				<DetectChar attribute="Symbol" context="#stay" char="}" endRegion="Brace1" />
 			</context>
-			
+
 			<context attribute="String" lineEndContext="#pop" name="String">
 				<DetectChar attribute="String" context="#stay" char="&quot;"/>
 				<LineContinue attribute="String" context="#stay"/>
 				<DetectChar attribute="String" context="#pop" char="&quot;"/>
 			</context>
-			
+
 			<context attribute="Float" lineEndContext="#pop" name="Float">
 				<Float attribute="Float" context="#pop" />
 			</context>
-			
+
 			<context attribute="Decimal" lineEndContext="#pop" name="Long">
 				<Int attribute="Decimal" context="#pop" />
 			</context>
-			
+
 			<context attribute="Decimal" lineEndContext="#pop" name="Long2">
 				<Int attribute="Decimal" context="#stay" />
 				<DetectSpaces />
 				<Int attribute="Decimal" context="#pop" />
 			</context>
-			
+
 			<context attribute="Value" lineEndContext="#pop" name="Value">
 				<keyword attribute="Value" context="#pop" String="values" />
 			</context>
-			
+
 			<context attribute="Region Marker" lineEndContext="#pop" name="Region Marker">
 			</context>
-			
+
 			<context attribute="Comment" lineEndContext="#pop" name="Commentar">
 				<LineContinue attribute="Comment" context="#stay"/>
 				<DetectSpaces />
@@ -244,13 +244,13 @@
 			<itemData name="String Section"         defStyleNum="dsKeyword" spellChecking="false"/>
 			<itemData name="Long Section"           defStyleNum="dsKeyword" spellChecking="false"/>
 			<itemData name="Long 2 Section"         defStyleNum="dsKeyword" spellChecking="false"/>
-			
+
 			<itemData name="Property"               defStyleNum="dsKeyword" spellChecking="false"/>
 			<itemData name="String Property"        defStyleNum="dsDataType" spellChecking="false"/>
 			<itemData name="Float Property"         defStyleNum="dsDataType" spellChecking="false"/>
 			<itemData name="Long Property"          defStyleNum="dsDataType" spellChecking="false"/>
 			<itemData name="Value Property"         defStyleNum="dsDataType" spellChecking="false"/>
-			
+
 			<itemData name="Decimal"                defStyleNum="dsDecVal" spellChecking="false"/>
 			<itemData name="Float"                  defStyleNum="dsFloat" spellChecking="false"/>
 			<itemData name="String"			defStyleNum="dsString"/>
