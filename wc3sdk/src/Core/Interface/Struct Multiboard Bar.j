@@ -1,4 +1,32 @@
-library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMisc, ALibraryCoreMathsReal, AStructCoreGeneralHashTable
+library AStructCoreInterfaceMultiboardBar requires AInterfaceCoreInterfaceBarInterface, optional ALibraryCoreDebugMisc, ALibraryCoreMathsReal, AStructCoreGeneralHashTable, AStructCoreGeneralVector
+
+	private struct AMultiboardBarItem
+		private string m_valueIcon
+		private string m_emptyIcon
+
+		public method setValueIcon takes string valueIcon returns nothing
+			set this.m_valueIcon = valueIcon
+		endmethod
+
+		public method valueIcon takes nothing returns string
+			return this.m_valueIcon
+		endmethod
+
+		public method setEmptyIcon takes string emptyIcon returns nothing
+			set this.m_emptyIcon = emptyIcon
+		endmethod
+
+		public method emptyIcon takes nothing returns string
+			return this.m_emptyIcon
+		endmethod
+
+		public static method create takes nothing returns thistype
+			local thistype this = thistype.allocate()
+			set this.m_valueIcon = ""
+			set this.m_emptyIcon = ""
+			return this
+		endmethod
+	endstruct
 
 	/**
 	* @todo vJass bug, should be a part of @struct AMultiboardBar.
@@ -11,28 +39,32 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 	* Multiboard bars can be used to show values in form of progress bars in the Warcraft 3 TFT multiboard.
 	* They can either be horizontal or vertical and use custom icons.
 	*/
-	struct AMultiboardBar
-		// static constant members
-		private static constant integer maxLength = 20
+	struct AMultiboardBar extends ABarInterface
 		// construction members
 		private multiboard m_multiboard
 		private integer m_column
 		private integer m_row
-		private integer m_length
 		private real m_refreshRate
 		private boolean m_horizontal
 		// dynamic members
 		private real m_value
 		private real m_maxValue
-		private string array m_valueIcon[AMultiboardBar.maxLength]
-		private string array m_emptyIcon[AMultiboardBar.maxLength]
 		private AMultiboardBarValueFunction m_valueFunction
 		private AMultiboardBarValueFunction m_maxValueFunction
 		// members
+		private AIntegerVector m_items
 		private integer m_colouredPart
-		private trigger m_refreshTrigger
+		private timer m_refreshTimer
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AMultiboardBar\"")
+
+		debug private method checkLength takes integer length returns boolean
+			debug if (length >= this.m_length or length < 0) then
+				debug call this.print("Wrong length " + I2S(length) + " has to be between 0 and " + I2S(this.m_length - 1) + ".")
+				debug return true
+			debug endif
+			debug return false
+		debug endmethod
 
 		// dynamic member methods
 
@@ -53,22 +85,39 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 		endmethod
 
 		public method setValueIcon takes integer length, string valueIcon returns nothing
-			set this.m_valueIcon[length] = valueIcon
+			debug if (this.checkLength(length)) then
+				debug return
+			debug
+			call AMultiboardBarItem(this.m_items[length]).setValueIcon(valueIcon)
 		endmethod
 
 		public method valueIcon takes integer length returns string
-			return this.m_valueIcon[length]
+			debug if (this.checkLength(length)) then
+				debug return null
+			debug
+			return AMultiboardBarItem(this.m_items[length]).valueIcon()
 		endmethod
 
 		public method setEmptyIcon takes integer length, string emptyIcon returns nothing
-			set this.m_emptyIcon[length] = emptyIcon
+			debug if (this.checkLength(length)) then
+				debug return
+			debug
+			call AMultiboardBarItem(this.m_items[length]).setEmptyIcon(emptyIcon)
 		endmethod
 
 		public method emptyIcon takes integer length returns string
-			return this.m_emptyIcon[length]
+			debug if (this.checkLength(length)) then
+				debug return null
+			debug
+			return AMultiboardBarItem(this.m_items[length]).emptyIcon()
 		endmethod
 
-		/// Sets the function which should return the value of the multiboard bar when it refreshs.
+		/**
+		* Sets the function which should return the value of the multiboard bar when it is being refreshed.
+		* If this function is 0 nothing will be called.
+		* Consider that you can also overwrite method AMultiboardBar.onRefresh.
+		* @see AMultiboardBar.onRefresh.
+		*/
 		public method setValueFunction takes AMultiboardBarValueFunction valueFunction returns nothing
 			set this.m_valueFunction = valueFunction
 		endmethod
@@ -77,6 +126,12 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			return this.m_valueFunction
 		endmethod
 
+		/**
+		* Sets the function which should return the maximum value of the multiboard bar when it is being refreshed.
+		* If this function is 0 nothing will be called.
+		* Consider that you can also overwrite method AMultiboardBar.onRefresh.
+		* @see AMultiboardBar.onRefresh.
+		*/
 		public method setMaxValueFunction takes AMultiboardBarValueFunction maxValueFunction returns nothing
 			set this.m_maxValueFunction = maxValueFunction
 		endmethod
@@ -85,20 +140,73 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			return this.m_maxValueFunction
 		endmethod
 
+		// construction member methods
+
+		public method multiboard takes nothing returns multiboard
+			return this.m_multiboard
+		endmethod
+
+		public method column takes nothing returns integer
+			return this.m_column
+		endmethod
+
+		public method row takes nothing returns integer
+			return this.m_row
+		endmethod
+
+		public method length takes nothing returns integer
+			return this.m_items.size()
+		endmethod
+
+		public method refreshRate takes nothing returns real
+			return this.m_refreshRate
+		endmethod
+
+		public method horizontal takes nothing returns boolean
+			return this.m_horizontal
+		endmethod
+
 		// methods
 
-		/// Refreshes multiboard bar.
+		public method enable takes nothing returns nothing
+			call ResumeTimer(this.m_refreshTimer)
+		endmethod
+
+		public method disable takes nothing returns nothing
+			call PauseTimer(this.m_refreshTimer)
+		endmethod
+
+		/**
+		* This method is called before the multiboard bar evaluates the coloured part so users can set value and max value in this method instead of using function values.
+		* Usually it calls the function which are refered by the two function pointers of the value and the maximum value function.
+		* If they're 0 nothing will be set.
+		* @see AMultiboardBar.setValue, AMultiboardBar.setMaxValue, AMultiboardBar.setValueFunction, AMultiboardBar.setMaxValueFunction.
+		*/
+		public stub method onRefresh takes nothing returns nothing
+			if (this.m_valueFunction != 0) then
+				set this.m_value = this.m_valueFunction.evaluate(this)
+			endif
+			if (this.m_maxValueFunction != 0) then
+				set this.m_maxValue = this.m_maxValueFunction.evaluate(this)
+			endif
+		endmethod
+
+		/**
+		* Refreshes multiboard bar.
+		* AMultiboardBar.onRefresh will be called before evaluating the coloured part.
+		*/
 		public method refresh takes nothing returns nothing
 			local integer i
 			local multiboarditem multiboardItem
+			call this.onRefresh()
 			if (this.m_maxValue != 0) then
-				set this.m_colouredPart = R2I(this.m_value * I2R(this.m_length) / this.m_maxValue)//R2I(RoundTo(this.m_value * I2R(this.m_length) / this.m_maxValue, 1.0))
+				set this.m_colouredPart = R2I(this.m_value * I2R(this.length()) / this.m_maxValue)//R2I(RoundTo(this.m_value * I2R(this.length()) / this.m_maxValue, 1.0))
 			else
 				set this.m_colouredPart = 0
 			endif
 			set i = 0
 			loop
-				exitwhen (i == this.m_length)
+				exitwhen (i == this.length())
 				if (this.m_horizontal) then
 					set multiboardItem = MultiboardGetItem(this.m_multiboard, this.m_row, this.m_column + i)
 				else
@@ -106,29 +214,30 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 				endif
 				// coloured part
 				if (i < this.m_colouredPart) then
-					call MultiboardSetItemIcon(multiboardItem, this.m_valueIcon[i])
+					call MultiboardSetItemIcon(multiboardItem, AMultiboardBarItem(this.m_items[i]).valueIcon())
 				// plain Part
 				else
-					call MultiboardSetItemIcon(multiboardItem, this.m_emptyIcon[i])
+					call MultiboardSetItemIcon(multiboardItem, AMultiboardBarItem(this.m_items[i]).emptyIcon())
 				endif
-				call MultiboardReleaseItem(multiboardItem) //TEST
+				call MultiboardReleaseItem(multiboardItem) // TEST
 				set multiboardItem = null
 				set i = i + 1
 			endloop
 		endmethod
 
-		/// First call after setting the length.
+		// convenience methods
+
 		public method setIcons takes integer start, integer end, string icon, boolean valueIcon returns nothing
 			local integer i
-			debug if ((start >= 0) and (start < this.m_length)) then
-				debug if ((end > 0) and (end < this.m_length)) then
+			debug if ((start >= 0) and (start < this.length())) then
+				debug if ((end > 0) and (end < this.length())) then
 					set i = start
 					loop
 						exitwhen(i == end + 1)
 						if (valueIcon) then
-							set this.m_valueIcon[i] = icon
+							call AMultiboardBarItem(this.m_items[i]).setValueIcon(icon)
 						else
-							set this.m_emptyIcon[i] = icon
+							call AMultiboardBarItem(this.m_items[i]).setEmptyIcon(icon)
 						endif
 						set i = i + 1
 					endloop
@@ -140,25 +249,22 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			debug endif
 		endmethod
 
-		// convenience methods
-
-		/// Do only call after setting length!
 		public method setAllIcons takes string icon, boolean valueIcon returns nothing
-			call this.setIcons(0, this.m_length - 1, icon, valueIcon)
+			call this.setIcons(0, this.length() - 1, icon, valueIcon)
 		endmethod
 
 		/// @return The index of the first field (column or row) which is not used by the bar (alignment is left to right and up to bottom).
 		public method firstFreeField takes nothing returns integer
 			if (this.m_horizontal) then
-				return this.m_column + this.m_length
+				return this.m_column + this.length()
 			endif
-			return this.m_row + this.m_length
+			return this.m_row + this.length()
 		endmethod
 
 		private method resizeMultiboard takes nothing returns nothing
 			if (this.m_horizontal) then
-				if (MultiboardGetColumnCount(this.m_multiboard) < (this.m_column + this.m_length)) then
-					call MultiboardSetColumnCount(this.m_multiboard, this.m_column + this.m_length)
+				if (MultiboardGetColumnCount(this.m_multiboard) < (this.m_column + this.length())) then
+					call MultiboardSetColumnCount(this.m_multiboard, this.m_column + this.length())
 				endif
 				if (MultiboardGetRowCount(this.m_multiboard) <= this.m_row) then
 					call MultiboardSetRowCount(this.m_multiboard, this.m_row + 1)
@@ -167,8 +273,8 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 				if (MultiboardGetColumnCount(this.m_multiboard) <= this.m_column) then
 					call MultiboardSetColumnCount(this.m_multiboard, this.m_column + 1)
 				endif
-				if (MultiboardGetRowCount(this.m_multiboard) < (this.m_row + this.m_length)) then
-					call MultiboardSetRowCount(this.m_multiboard, (this.m_row + this.m_length))
+				if (MultiboardGetRowCount(this.m_multiboard) < (this.m_row + this.length())) then
+					call MultiboardSetRowCount(this.m_multiboard, (this.m_row + this.length()))
 				endif
 			endif
 		endmethod
@@ -178,7 +284,8 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			local multiboarditem multiboardItem
 			set i = 0
 			loop
-				exitwhen (i == this.m_length)
+				exitwhen (i == this.length())
+				set this.m_items[i] = AMultiboardBarItem.create()
 				if (this.m_horizontal) then
 					set multiboardItem = MultiboardGetItem(this.m_multiboard, this.m_row, this.m_column + i)
 				else
@@ -192,25 +299,16 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			endloop
 		endmethod
 
-		private static method triggerActionRefresh takes nothing returns nothing
-			local trigger triggeringTrigger = GetTriggeringTrigger()
-			local AMultiboardBar this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			set this.m_value = this.m_valueFunction.evaluate(this)
-			set this.m_maxValue = this.m_maxValueFunction.evaluate(this)
+		private static method timerFunctionRefresh takes nothing returns nothing
+			local thistype this = AHashTable.global().handleInteger(GetExpiredTimer(), "this")
 			call this.refresh()
-			set triggeringTrigger = null
 		endmethod
 
-		private method createRefreshTrigger takes nothing returns nothing
-			local event triggerEvent
-			local triggeraction triggerAction
+		private method createRefreshTimer takes nothing returns nothing
 			if (this.m_refreshRate > 0.0) then
-				set this.m_refreshTrigger = CreateTrigger()
-				set triggerEvent = TriggerRegisterTimerEvent(this.m_refreshTrigger, this.m_refreshRate, true)
-				set triggerAction = TriggerAddAction(this.m_refreshTrigger, function AMultiboardBar.triggerActionRefresh)
-				call AHashTable.global().setHandleInteger(this.m_refreshTrigger, "this", this)
-				set triggerEvent = null
-				set triggerAction = null
+				set this.m_refreshTimer = CreateTimer()
+				call AHashTable.global().setHandleInteger(this.m_refreshTimer, "this", this)
+				call TimerStart(this.m_refreshTimer, this.m_refreshRate, true, function thistype.timerFunctionRefresh)
 			endif
 		endmethod
 
@@ -219,26 +317,26 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 		* @param refreshRate If this value is bigger than 0 multiboard bar will be refreshed.
 		* @param horizontal This value is not dynamic.
 		*/
-		public static method create takes multiboard usedMultiboard, integer column, integer row, integer length, real refreshRate, boolean horizontal, real value, real maxValue, AMultiboardBarValueFunction valueFunction, AMultiboardBarValueFunction maxValueFunction returns thistype
+		public static method create takes multiboard whichMultiboard, integer column, integer row, integer length, real refreshRate, boolean horizontal returns thistype
 			local thistype this = thistype.allocate()
 			// construction members
-			set this.m_multiboard = usedMultiboard
+			set this.m_multiboard = whichMultiboard
 			set this.m_column = column
 			set this.m_row = row
-			set this.m_length = length
 			set this.m_refreshRate = refreshRate
 			set this.m_horizontal = horizontal
 			// dynamic members
-			set this.m_value = value
-			set this.m_maxValue = maxValue
-			set this.m_valueFunction = valueFunction
-			set this.m_maxValueFunction = maxValueFunction
+			set this.m_value = 0
+			set this.m_maxValue = 0
+			set this.m_valueFunction = 0
+			set this.m_maxValueFunction = 0
 			// members
+			set this.m_items = AIntegerVector.create(length) // are filled in setupMultiboardItems
 			set this.m_colouredPart = 0
 
 			call this.resizeMultiboard()
 			call this.setupMultiboardItems()
-			call this.createRefreshTrigger()
+			call this.createRefreshTimer()
 			return this
 		endmethod
 
@@ -246,9 +344,15 @@ library AStructCoreInterfaceMultiboardBar requires optional ALibraryCoreDebugMis
 			// construction members
 			set this.m_multiboard = null
 			// members
+			loop
+				exitwhen (this.m_items.empty())
+				call AMultiboardBarItem(this.m_items.back()).destroy()
+				call this.m_items.popBack()
+			endloop
+			call this.m_items.destroy()
 			if (this.m_refreshRate > 0.0) then
-				call AHashTable.global().destroyTrigger(this.m_refreshTrigger)
-				set this.m_refreshTrigger = null
+				call AHashTable.global().destroyTimer(this.m_refreshTimer)
+				set this.m_refreshTimer = null
 			endif
 		endmethod
 	endstruct

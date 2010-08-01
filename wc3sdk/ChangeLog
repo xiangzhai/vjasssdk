@@ -1,3 +1,7 @@
+2010-08-01 Tamino Dauth <tamino@cdauth.eu>
+* Revised and hopefully improved struct AMultiboardBar.
+* Added interface ABarInterface.
+
 2010-07-30 Tamino Dauth <tamino@cdauth.eu>
 * Added various static member functions.
 * Replaced list implementation in struct ADialog by vector one.

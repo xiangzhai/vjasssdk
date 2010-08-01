@@ -1,3 +1,9 @@
+2010-08-01 Tamino Dauth <tamino@cdauth.eu>
+* Add global sort algorithm functions using container and iterator interfaces (vJass bug, can not extend size-limited structs by interfaces).
+* Add bar interface.
+* Add image and text tag bar structs.
+* Extend AMultiboardBar by bar interface.
+
 2010-07-30 Tamino Dauth <tamino@cdauth.eu>
 * Fix dialog button indices (next page starts with 0 again!).
 

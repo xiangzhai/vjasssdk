@@ -1,3 +1,4 @@
+//! import "Core/Interface/Interface Bar Interface.j"
 //! import "Core/Interface/Struct Arrow Keys.j"
 //! import "Core/Interface/Struct Hero Icon.j"
 //! import "Core/Interface/Struct Indicator.j"
@@ -16,5 +17,5 @@
 //! import "Core/Interface/Library Text Tag.j"
 //! import "Core/Interface/Library Trackable.j"
 
-library ACoreInterface requires AStructCoreInterfaceArrowKeys, AStructCoreInterfaceHeroIcon, AStructCoreInterfaceIndicator, AStructCoreInterfaceMultiboardBar, AStructCoreInterfacePlayerSelection, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceImage, ALibraryCoreInterfaceLeaderboard, ALibraryCoreInterfaceMinimap, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceMultiboard, ALibraryCoreInterfaceSelection, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceTrackable
+library ACoreInterface requires AInterfaceCoreInterfaceBarInterface, AStructCoreInterfaceArrowKeys, AStructCoreInterfaceHeroIcon, AStructCoreInterfaceIndicator, AStructCoreInterfaceMultiboardBar, AStructCoreInterfacePlayerSelection, AStructCoreInterfaceThirdPersonCamera, ALibraryCoreInterfaceCamera, ALibraryCoreInterfaceCinematic, ALibraryCoreInterfaceCinematicFilter, ALibraryCoreInterfaceImage, ALibraryCoreInterfaceLeaderboard, ALibraryCoreInterfaceMinimap, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceMultiboard, ALibraryCoreInterfaceSelection, ALibraryCoreInterfaceTextTag, ALibraryCoreInterfaceTrackable
 endlibrary
