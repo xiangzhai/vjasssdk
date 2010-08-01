@@ -1,4 +1,14 @@
 File						Authors			Source
+BTNBoletus.tga					Crazyrussian		http://www.wc3c.net/
+DISBTNBoletus.tga				Crazyrussian		http://www.wc3c.net/
+BTNFlameMixture.tga				Crazyrussian		http://www.wc3c.net/
+DISBTNFlameMixture.tga				Crazyrussian		http://www.wc3c.net/
+BTNFlyAgaric.tga				Crazyrussian		http://www.wc3c.net/
+DISBTNFlyAgaric.tga				Crazyrussian		http://www.wc3c.net/
+BTNBloodyChainsaw.blp				tee.dubs		http://www.hiveworkshop.com/
+DISBTNBloodyChainsaw.blp			tee.dubs		http://www.hiveworkshop.com/
+PASBloodyChainsaw.blp				tee.dubs		http://www.hiveworkshop.com/
+DISPASBloodyChainsaw.blp			tee.dubs		http://www.hiveworkshop.com/
 ATCABTNGoldCoinsBag.blp				KelThuzad		http://www.hiveworkshop.com/
 ATTATBTNGoldCoinsBag.blp			KelThuzad		http://www.hiveworkshop.com/
 BTNBook.blp					Mc !			http://www.hiveworkshop.com/

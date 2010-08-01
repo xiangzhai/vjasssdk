@@ -1,4 +1,11 @@
 File				Authors		Source
+LeatherPlate.mdx		Kitabatake	http://www.hiveworkshop.com/
+BoneBow.mdx			Gottfrei	http://www.hiveworkshop.com/
+KnightsArmour.mdx		Kitabatake	http://www.hiveworkshop.com/
+EnchantedNordicKingSword.mdx	shamanyouranus	http://www.hiveworkshop.com/
+BloodyChainsaw.mdx		tee.dubs	http://www.hiveworkshop.com/
+ScepterOfDestiny.mdx		War_Golum	http://www.hiveworkshop.com/
+MagicalBlade.mdx		Usedwell	http://www.hiveworkshop.com/
 Axt.mdx				Rondo		http://www.rondo.eu.tp/
 Bag1.mdx			!!GORO!!	http://www.hiveworkshop.com/
 Bag2.mdx			!!GORO!!	http://www.hiveworkshop.com/
