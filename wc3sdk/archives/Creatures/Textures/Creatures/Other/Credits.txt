@@ -9,3 +9,4 @@ GnollRedRidge.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
 GnollRiverPaw.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
 GnollRotHideSkin.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
 GnollShadowHideSkin.blp			Wolverine, Blizzard Entertainment		http://www.xgm.ru/
+HillGiant.blp				EvilShade					http://www.hiveworkshop.com/

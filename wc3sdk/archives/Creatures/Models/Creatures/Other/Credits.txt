@@ -1,5 +1,7 @@
-File		Authors					Source
-Gnoll.gif	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
-Gnoll.mdx	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
-GnollCaster.gif	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
-GnollCaster.mdx	Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+File			Authors					Source
+Gnoll.gif		Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+Gnoll.mdx		Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+GnollCaster.gif		Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+GnollCaster.mdx		Wolverine, Blizzard Entertainment	http://www.xgm.ru/
+HillGiant.mdx		Makuza					http://www.hiveworkshop.com/
+HillGiant_Portrait.mdx	Makuza					http://www.hiveworkshop.com/
