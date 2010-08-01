@@ -16,11 +16,11 @@ library ALibraryCoreDebugInterface requires ALibraryCoreDebugMisc, AStructCoreIn
 		local AMultiboardBar multiboardBar
 		if (usedMultiboard[GetPlayerId(user)] == null) then
 			set usedMultiboard[GetPlayerId(user)] = CreateMultiboard()
-			//function ShowMultiboardForPlayer takes player user, multiboard usedMultiboard, boolean show
+			call MultiboardSetTitleText(usedMultiboard[GetPlayerId(user)], "Test Multiboard")
 			call ShowMultiboardForPlayer(user, usedMultiboard[GetPlayerId(user)], true)
-			//static method create takes multiboard usedMultiboard, integer column, integer row, integer length, real refreshRate, boolean horizontal, real value, real maxValue, AMultiboardBarValueFunction valueFunction, AMultiboardBarValueFunction maxValueFunction returns AMultiboardBar
-			set multiboardBar = AMultiboardBar.create(usedMultiboard[GetPlayerId(user)], 0, 0, 10, 1.0, true, 100.0, 100.0, AMultiboardBarValueFunction.MultiboardBarValueFunctionGetValue, AMultiboardBarValueFunction.MultiboardBarValueFunctionGetMaxValue)
-			//method setAllIcons takes string icon, boolean valueIcon
+			set multiboardBar = AMultiboardBar.create(usedMultiboard[GetPlayerId(user)], 0, 0, 10, 1.0, true)
+			call multiboardBar.setValueFunction(MultiboardBarValueFunctionGetValue)
+			call multiboardBar.setMaxValueFunction(MultiboardBarValueFunctionGetMaxValue)
 			call multiboardBar.setAllIcons("ReplaceableTextures\\CommandButtons\\BTNAlleriaFlute.blp", true)
 			call multiboardBar.setAllIcons("ReplaceableTextures\\CommandButtons\\BTNSpellShieldAmulet.blp", false)
 			call multiboardBar.refresh()

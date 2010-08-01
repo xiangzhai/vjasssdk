@@ -59,8 +59,8 @@ library AStructCoreInterfaceMultiboardBar requires AInterfaceCoreInterfaceBarInt
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AMultiboardBar\"")
 
 		debug private method checkLength takes integer length returns boolean
-			debug if (length >= this.m_length or length < 0) then
-				debug call this.print("Wrong length " + I2S(length) + " has to be between 0 and " + I2S(this.m_length - 1) + ".")
+			debug if (length >= this.length() or length < 0) then
+				debug call this.print("Wrong length " + I2S(length) + " has to be between 0 and " + I2S(this.length() - 1) + ".")
 				debug return true
 			debug endif
 			debug return false
@@ -87,28 +87,28 @@ library AStructCoreInterfaceMultiboardBar requires AInterfaceCoreInterfaceBarInt
 		public method setValueIcon takes integer length, string valueIcon returns nothing
 			debug if (this.checkLength(length)) then
 				debug return
-			debug
+			debug endif
 			call AMultiboardBarItem(this.m_items[length]).setValueIcon(valueIcon)
 		endmethod
 
 		public method valueIcon takes integer length returns string
 			debug if (this.checkLength(length)) then
 				debug return null
-			debug
+			debug endif
 			return AMultiboardBarItem(this.m_items[length]).valueIcon()
 		endmethod
 
 		public method setEmptyIcon takes integer length, string emptyIcon returns nothing
 			debug if (this.checkLength(length)) then
 				debug return
-			debug
+			debug endif
 			call AMultiboardBarItem(this.m_items[length]).setEmptyIcon(emptyIcon)
 		endmethod
 
 		public method emptyIcon takes integer length returns string
 			debug if (this.checkLength(length)) then
 				debug return null
-			debug
+			debug endif
 			return AMultiboardBarItem(this.m_items[length]).emptyIcon()
 		endmethod
 
@@ -331,7 +331,7 @@ library AStructCoreInterfaceMultiboardBar requires AInterfaceCoreInterfaceBarInt
 			set this.m_valueFunction = 0
 			set this.m_maxValueFunction = 0
 			// members
-			set this.m_items = AIntegerVector.create(length) // are filled in setupMultiboardItems
+			set this.m_items = AIntegerVector.createWithSize(length, 0) // are filled in setupMultiboardItems
 			set this.m_colouredPart = 0
 
 			call this.resizeMultiboard()

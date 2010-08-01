@@ -3,6 +3,9 @@
 * Add bar interface.
 * Add image and text tag bar structs.
 * Extend AMultiboardBar by bar interface.
+* Instance of ABooleanVector in struct AItemType is not created correctly!
+* AHeroIcon is not run correctly.
+* Fix HighlightShortcut.
 
 2010-07-30 Tamino Dauth <tamino@cdauth.eu>
 * Fix dialog button indices (next page starts with 0 again!).

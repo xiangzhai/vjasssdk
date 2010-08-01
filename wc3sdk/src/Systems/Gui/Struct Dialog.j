@@ -132,15 +132,19 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			return result
 		endmethod
 
+		private static method formatText takes string text, integer shortcut returns string
+			return HighlightShortcut(text, shortcut, "ffffffff")
+		endmethod
+
 		public method addExtendedDialogButton takes string text, integer shortcut, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns ADialogButton
-			return ADialogButton.create(this, text, shortcut, isQuitButton, doScoreScreen, action)
+			return ADialogButton.create(this, thistype.formatText(text, shortcut), shortcut, isQuitButton, doScoreScreen, action)
 		endmethod
 
 		/**
 		* Uses dialog button's index as shortcut and adds string "[<shortcut index>]" before button's text.
 		*/
 		public method addExtendedDialogButtonIndex takes string text, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns ADialogButton
-			return this.addExtendedDialogButton(Format(tr("[%1%] %2%")).i(this.m_dialogButtons.size()).s(text).result(), '0' + this.m_dialogButtons.size() - (this.m_dialogButtons.size() / thistype.maxPageButtons) * thistype.maxPageButtons, isQuitButton, doScoreScreen, action)
+			return this.addExtendedDialogButton(Format(tr("[%1%] %2%")).i(this.m_dialogButtons.size()).s(text).result(), '0' + this.m_dialogButtons.size() - (this.maxPageNumber() + 1) * thistype.maxPageButtons, isQuitButton, doScoreScreen, action)
 		endmethod
 
 		public method addDialogButton takes string text, integer shortcut, ADialogButtonAction action returns ADialogButton
@@ -239,7 +243,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 		private method createPreviousPageButton takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.m_previousPageButton = DialogAddButton(this.m_dialog, thistype.textPreviousPage, thistype.shortcutPreviousPage)
+			set this.m_previousPageButton = DialogAddButton(this.m_dialog, thistype.formatText(thistype.textPreviousPage, thistype.shortcutPreviousPage), thistype.shortcutPreviousPage)
 			set this.m_previousPageTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterDialogButtonEvent(this.m_previousPageTrigger, this.m_previousPageButton)
 			set triggerAction = TriggerAddAction(this.m_previousPageTrigger, function thistype.triggerActionPreviousPage)
@@ -264,7 +268,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 		private method createNextPageButton takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.m_nextPageButton = DialogAddButton(this.m_dialog, thistype.textNextPage, thistype.shortcutNextPage)
+			set this.m_nextPageButton = DialogAddButton(this.m_dialog, thistype.formatText(thistype.textNextPage, thistype.shortcutNextPage), thistype.shortcutNextPage)
 			set this.m_nextPageTrigger = CreateTrigger()
 			set triggerEvent = TriggerRegisterDialogButtonEvent(this.m_nextPageTrigger, this.m_nextPageButton)
 			set triggerAction = TriggerAddAction(this.m_nextPageTrigger, function thistype.triggerActionNextPage)

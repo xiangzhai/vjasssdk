@@ -190,7 +190,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 						else
 							set column = 0
 						endif
-						set thistype.m_experienceBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_experienceLength, 0.0, true, 0.0, 0.0, 0, 0)
+						set thistype.m_experienceBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_experienceLength, 0.0, true)
 					endif
 
 					if (thistype.m_hitPointsLength > 0) then
@@ -202,7 +202,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 							set column = 0
 						endif
 
-						set thistype.m_hitPointsBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_hitPointsLength, 0.0, true, 0.0, 0.0, 0, 0)
+						set thistype.m_hitPointsBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, thistype.m_hitPointsLength, 0.0, true)
 					endif
 
 					if (thistype.m_manaLength > 0) then
@@ -216,7 +216,7 @@ library AStructSystemsCharacterCharactersScheme requires AModuleCoreGeneralSyste
 							set column = 0
 						endif
 
-						set thistype.m_manaBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, 10, 0.0, true, 0.0, 0.0, 0, 0)
+						set thistype.m_manaBar[i] = AMultiboardBar.create(thistype.m_multiboard, column, i, 10, 0.0, true)
 					endif
 
 					set thistype.m_maxPlayers = i + 1

@@ -366,17 +366,16 @@ endif
 static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 	hook Player DebugPlayer
 	hook InitGameCache DebugInitGameCache
-	//debug hook DestroyTimer SCOPE_PRIVATEDestroyTimer
 	hook SetUnitX DebugSetUnitX
 	hook SetUnitY DebugSetUnitY
 	hook CreateUnit DebugCreateUnit
 	hook RestoreUnit DebugRestoreUnit
 	hook SetImageRender DebugSetImageRender
 	hook DestroyTrigger DebugDestroyTrigger
-	hook TimerStart DebugTimerStart
-	hook PauseTimer DebugPauseTimer
-	hook ResumeTimer DebugResumeTimer
-	hook DestroyTimer DebugDestroyTimer
+	//hook TimerStart DebugTimerStart
+	//hook PauseTimer DebugPauseTimer
+	//hook ResumeTimer DebugResumeTimer
+	//hook DestroyTimer DebugDestroyTimer
 endif
 
 	//GroupEnumUnitsInRectCounted und GroupEnumUnitsInRangeCounted

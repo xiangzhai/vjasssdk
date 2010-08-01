@@ -5,7 +5,7 @@ library AInterfaceCoreInterfaceBarInterface
 	*/
 	interface ABarInterface
 		// dynamic member methods
-		public method setValue takes nothing returns nothing
+		public method setValue takes real value returns nothing
 		public method value takes nothing returns real
 		public method setMaxValue takes real maxValue returns nothing
 		public method maxValue takes nothing returns real
@@ -20,10 +20,10 @@ library AInterfaceCoreInterfaceBarInterface
 		// methods
 		public method enable takes nothing returns nothing
 		public method disable takes nothing returns nothing
-		public stub method onRefresh takes nothing returns nothing
+		public method onRefresh takes nothing returns nothing
 		public method refresh takes nothing returns nothing
-		// convenience methds
-		public method setIcons takes integer start, integer end, string icon, boolean valueIcon
+		// convenience methods
+		public method setIcons takes integer start, integer end, string icon, boolean valueIcon returns nothing
 		public method setAllIcons takes string icon, boolean valueIcon returns nothing
 	endinterface
 

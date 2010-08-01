@@ -32,6 +32,8 @@ globals
 	constant boolean A_DEBUG_NATIVES = false
 	constant boolean A_NET = false
 	constant boolean A_FPS_MOVEMENT = false
+	constant real A_MAX_COLLISION_SIZE = 300.0
+	constant integer A_MAX_COLLISION_ITERATIONS = 10
 endglobals
 
 //! import "Import Asl.j"
@@ -50,6 +52,9 @@ Momentan existiert nur die unfertige Struktur AHost, welche später einmal Teil 
 A_FPS_MOVEMENT gibt an, ob die Struktur AMovement des Charaktersystems das FPS-System des Projekts RtC verwenden soll und kann deshalb ebenfalls nur den Wert true enthalten, falls A_RTC dies auch tut.
 Mit der Import-Anweisung wird die Hauptdatei der ASL in die Karte importiert.
 Alle weiteren benötigten ASL-Dateien werden von ihr ausgehend in einer Art Baumstruktur automatisch importiert.
+A_MAX_COLLISION_SIZE und A_MAX_COLLISION_ITERATIONS werden von Einheitenkollisionsgrößenermittlungsfunktionen verwendet und geben die maximale Kollisionsgröße einer
+Einheit in der Karte und die Anzahl der Durchläufe der Auswertungsfunktionen an.
+Eine Erhöhung der Durchläufe liefert ein genaueres Ergebnis, verlangsamt jedoch gleichzeitig die Funktionen.
 
 Die Konstante DEBUG_MODE wird von vJass automatisch im Debug-Modus auf true gesetzt, weshalb man hierbei nichts angeben muss. Speichert man also
 die Karte im Debug-Modus, so werden automatisch alle Debug-Dateien importiert. Anderenfalls nicht. Man sollte als nie das debug-Schlüsselwort

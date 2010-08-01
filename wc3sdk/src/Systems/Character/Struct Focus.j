@@ -1,52 +1,59 @@
 /// Do not use this library, it is unfinished!
-library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructSystemsCharacterAbstractCharacterSystem
+library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructCoreStringFormat, AStructSystemsCharacterAbstractCharacterSystem
 
-	/// @todo Untested!
+	/**
+	* Should provide character focusing as in games like Gothic.
+	* Text tags are used as focus titles.
+	* @todo Untested!
+	* @todo Remove worker trigger options and add hero icon of target -> AHeroIcon!
+	*/
 	struct AFocus extends AAbstractCharacterSystem
-		//static start members
-		private static real refreshRate
-		private static real range
-		private static real angle
-		private static integer workerUnitType
-		private static boolean showText
-		private static boolean indicateTarget
-		private static string textLevel
-		//members
-		private trigger focusTrigger
-		private texttag textTag
-		private trigger workerTrigger
-		private unit worker
-		private unit target
-		private boolean fixedTarget
+		// static construction membes
+		private static real m_refreshRate
+		private static integer m_workerUnitType
+		// dynamic members
+		private real m_range
+		private real m_angle
+		private real m_height
+		private boolean m_showText
+		private boolean m_indicateTarget
+		private string m_textTargetName // string arguments: color, name, level
+		// members
+		private trigger m_focusTrigger
+		private texttag m_textTag
+		private trigger m_workerTrigger
+		private unit m_worker
+		private unit m_target
+		private boolean m_fixedTarget
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AFocus\"")
 
 		public method enable takes nothing returns nothing
 			call super.enable()
-			call EnableTrigger(this.focusTrigger)
-			call ShowTextTagForPlayer(this.character().player(), this.textTag, true)
-			call EnableTrigger(this.workerTrigger)
+			call EnableTrigger(this.m_focusTrigger)
+			call ShowTextTagForPlayer(this.character().player(), this.m_textTag, this.m_target != null and this.m_showText)
+			call EnableTrigger(this.m_workerTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
 			call super.disable()
-			call DisableTrigger(this.focusTrigger)
-			call ShowTextTagForPlayer(this.character().player(), this.textTag, false)
-			call DisableTrigger(this.workerTrigger)
+			call DisableTrigger(this.m_focusTrigger)
+			call ShowTextTagForPlayer(this.character().player(), this.m_textTag, false)
+			call DisableTrigger(this.m_workerTrigger)
 		endmethod
 
 		private method isTargetInFocus takes nothing returns boolean
-			if (GetDistanceBetweenUnits(this.character().unit(), this.target, 0.0, 0.0) > AFocus.range) then
-			//Optional kann man auch mit Z-Wert (Extrafunktion) überprfen lassen, würde aber mehr Speicher ziehen
+			if (GetDistanceBetweenUnits(this.character().unit(), this.m_target, 0.0, 0.0) > this.m_range) then
+			// Optional kann man auch mit Z-Wert (Extrafunktion) überprfen lassen, würde aber mehr Speicher benötigen
 				return false
-			//Erst überprfen
-			elseif (GetAngleBetweenUnits(this.character().unit(), this.target) > AFocus.angle) then
+			// Erst überprfen
+			elseif (GetAngleBetweenUnits(this.character().unit(), this.m_target) > this.m_angle) then
 				return false
 			endif
 			return true
 		endmethod
 
-		//Don't destroy the group!
+		// Don't destroy the group!
 		private method getNearestTarget takes group usedGroup returns unit
 			local unit first = null
 			local unit nearest = null
@@ -65,50 +72,50 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		private method getTargetName takes nothing returns string
-			local integer state = GetUnitAllianceStateToUnit(this.character().unit(), this.target)
+			local integer state = GetUnitAllianceStateToUnit(this.character().unit(), this.m_target)
 			local string colour
 			if (state == bj_ALLIANCE_UNALLIED) then
-				set colour = "|c00ff0000"
+				set colour = "ff0000"
 			elseif (state == bj_ALLIANCE_ALLIED) then
-				set colour = "|c0000ff00"
-			else //Neutral
-				set colour = "|c00ffcc00"
+				set colour = "00ff00"
+			else // neutral
+				set colour = "ffcc00"
 			endif
-			return (colour + GetUnitName(this.target) + "|r " + AFocus.textLevel + ":" + I2S(GetUnitLevel(this.target)))
+			return Format(this.m_textTargetName).s(colour).s(GetUnitName(this.m_target)).i(GetUnitLevel(this.m_target)).result()
 		endmethod
 
 		private method showTargetText takes nothing returns nothing
-			if (AFocus.showText) then
-				call SetTextTagTextBJ(this.textTag, this.getTargetName(), 12.0)
-				call SetTextTagPos(this.textTag, GetUnitX(this.target), GetUnitY(this.target), (GetUnitFlyHeight(this.target) + 70.0))
-				call ShowTextTagForPlayer(this.character().player(), this.textTag, true)
+			if (this.m_showText) then
+				call SetTextTagTextBJ(this.m_textTag, this.getTargetName(), 12.0)
+				call SetTextTagPos(this.m_textTag, GetUnitX(this.m_target), GetUnitY(this.m_target), (GetUnitFlyHeight(this.m_target) + this.m_height))
+				call ShowTextTagForPlayer(this.character().player(), this.m_textTag, true)
 			endif
 		endmethod
 
 		private method indicateTheTarget takes real red, real green, real blue, real alpha returns nothing
-			if (AFocus.indicateTarget) then
-				call SetUnitVertexColourForPlayer(this.character().player(), this.target, red, green, blue, alpha)
+			if (this.m_indicateTarget) then
+				call SetUnitVertexColourForPlayer(this.character().player(), this.m_target, red, green, blue, alpha)
 			endif
 		endmethod
 
 		private method getNewTarget takes nothing returns nothing
 			local real x1 = GetUnitX(this.character().unit())
 			local real y1 = GetUnitY(this.character().unit())
-			local real x3 = GetUnitPolarProjectionX(this.character().unit(), (GetUnitFacing(this.character().unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real y3 = GetUnitPolarProjectionY(this.character().unit(), (GetUnitFacing(this.character().unit()) + AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real x4 = GetUnitPolarProjectionX(this.character().unit(), (GetUnitFacing(this.character().unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
-			local real y4 = GetUnitPolarProjectionY(this.character().unit(), (GetUnitFacing(this.character().unit()) - AFocus.angle), AFocus.range) //ALibraryMathsHandle
+			local real x3 = GetUnitPolarProjectionX(this.character().unit(), (GetUnitFacing(this.character().unit()) + this.m_angle), this.m_range)
+			local real y3 = GetUnitPolarProjectionY(this.character().unit(), (GetUnitFacing(this.character().unit()) + this.m_angle), this.m_range)
+			local real x4 = GetUnitPolarProjectionX(this.character().unit(), (GetUnitFacing(this.character().unit()) - this.m_angle), this.m_range)
+			local real y4 = GetUnitPolarProjectionY(this.character().unit(), (GetUnitFacing(this.character().unit()) - this.m_angle), this.m_range)
 			local group targetGroup = GetGroupInRectByCoordinates(x1, y1, x1, y1, x3, y3, x4, y4)
 			debug if (IsUnitGroupEmptyBJ(targetGroup)) then
 				debug call Print("Group is empty")
 			debug else
 				debug call Print("Group is not empty")
 			debug endif
-			set this.target = this.getNearestTarget(targetGroup) //Gruppe wird verändert
+			set this.m_target = this.getNearestTarget(targetGroup) // group will be changed
 			call DestroyGroup(targetGroup)
 			set targetGroup = null
-			if (this.target == null) then
-				call ShowTextTagForPlayer(this.character().player(), this.textTag, false)
+			if (this.m_target == null) then
+				call ShowTextTagForPlayer(this.character().player(), this.m_textTag, false)
 				return
 			endif
 			call this.showTargetText()
@@ -118,14 +125,14 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		private static method triggerActionFocus takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local AFocus this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			//Hat bereits ein Ziel
-			if (this.target != null) then
-				//Altes Objekt ist außer Reichweite - Bentige neues Ziel
+			// already has target
+			if (this.m_target != null) then
+				// old target is out of range -> need new one
 				if (not this.isTargetInFocus()) then
 					call this.indicateTheTarget(100.0, 100.0, 100.0, 0.0)
 					call this.getNewTarget()
 				endif
-			//Hat kein Ziel
+			// doesn't have target
 			else
 				call this.getNewTarget()
 			endif
@@ -135,32 +142,41 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		private method createFocusTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			set this.focusTrigger = CreateTrigger()
-			set triggerEvent = TriggerRegisterTimerEvent(this.focusTrigger, AFocus.refreshRate, true)
-			set triggerAction = TriggerAddAction(this.focusTrigger, function AFocus.triggerActionFocus)
-			call AHashTable.global().setHandleInteger(this.focusTrigger, "this", this)
+			set this.m_focusTrigger = CreateTrigger()
+			set triggerEvent = TriggerRegisterTimerEvent(this.m_focusTrigger, thistype.m_refreshRate, true)
+			set triggerAction = TriggerAddAction(this.m_focusTrigger, function thistype.triggerActionFocus)
+			call AHashTable.global().setHandleInteger(this.m_focusTrigger, "this", this)
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
 
 		private method createTextTag takes nothing returns nothing
-			set this.textTag = CreateTextTag()
-			call SetTextTagVisibility(this.textTag, false)
+			set this.m_textTag = CreateTextTag()
+			call SetTextTagVisibility(this.m_textTag, false)
 		endmethod
 
 		private method createWorkerTrigger takes nothing returns nothing
 			local event triggerEvent
 			local triggeraction triggerAction
-			//set this.worker = CreateUnit(this.getCharacter().user(), AFocus.workerUnitType,
+			set this.m_worker = CreateUnit(this.character().player(), thistype.m_workerUnitType, 0.0, 0.0, 0.0)
+			call SetUnitInvulnerable(this.m_worker, true)
+			call PauseUnit(this.m_worker, true)
 
-			set this.workerTrigger = CreateTrigger()
-			//Noch ausarbeiten
+			set this.m_workerTrigger = CreateTrigger()
+			/// @todo Add events and action
 		endmethod
 
-		public static method create takes ACharacter character returns AFocus
-			local AFocus this = AFocus.allocate(character)
-			//members
-			set this.fixedTarget = false
+		public static method create takes ACharacter character returns thistype
+			local thistype this = thistype.allocate(character)
+			// dynamic members
+			set this.m_range = 500.0
+			set this.m_angle = 30.0
+			set this.m_height = 70.0
+			set this.m_showText = true
+			set this.m_indicateTarget = true
+			set this.m_textTargetName = tr("|cff%1%%2%|r (%2%)")
+			// members
+			set this.m_fixedTarget = false
 
 			call this.createFocusTrigger()
 			call this.createTextTag()
@@ -169,20 +185,20 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		private method destroyFocusTrigger takes nothing returns nothing
-			call AHashTable.global().destroyTrigger(this.focusTrigger)
-			set this.focusTrigger = null
+			call AHashTable.global().destroyTrigger(this.m_focusTrigger)
+			set this.m_focusTrigger = null
 		endmethod
 
 		private method destroyTextTag takes nothing returns nothing
-			call DestroyTextTag(this.textTag)
-			set this.textTag = null
+			call DestroyTextTag(this.m_textTag)
+			set this.m_textTag = null
 		endmethod
 
 		private method destroyWorkerTrigger takes nothing returns nothing
-			call RemoveUnit(this.worker)
-			set this.worker = null
-			call AHashTable.global().destroyTrigger(this.workerTrigger)
-			set this.workerTrigger = null
+			call RemoveUnit(this.m_worker)
+			set this.m_worker = null
+			call AHashTable.global().destroyTrigger(this.m_workerTrigger)
+			set this.m_workerTrigger = null
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
@@ -197,19 +213,15 @@ library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AS
 		* @param range 500.0
 		* @param angle 30.0 //Grad 0-360
 		* @param workerUnitType 'HPEA'
-		* @param showText true
-		* @param indicateTarget true
-		* @param textLevel Stufe
 		*/
-		public static method init takes real refreshRate, real range, real angle, integer workerUnitType, boolean showText, boolean indicateTarget, string textLevel returns nothing
-			//static start members
-			set AFocus.refreshRate = refreshRate
-			set AFocus.range = range
-			set AFocus.angle = angle
-			set AFocus.workerUnitType = workerUnitType
-			set AFocus.showText = showText
-			set AFocus.indicateTarget = indicateTarget
-			set AFocus.textLevel = textLevel
+		public static method init takes real refreshRate, integer workerUnitType returns nothing
+			// static construction members
+			debug if (refreshRate <= 0.0) then
+				debug call thistype.staticPrint("Refresh rate is less or equal to 0")
+				debug set refreshRate = 1.0
+			debug endif
+			set thistype.m_refreshRate = refreshRate
+			set thistype.m_workerUnitType = workerUnitType
 		endmethod
 	endstruct
 

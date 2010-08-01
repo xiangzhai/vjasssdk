@@ -1,12 +1,17 @@
 library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
 
+	/**
+	* Provides access to a three-dimensional vector.
+	* Three-dimensional vectors are often used in 3d graphics to define positions or speed.
+	* They can simplify calculations.
+	*/
 	struct AVector3
-		//dynamic members
+		// dynamic members
 		private real m_x
 		private real m_y
 		private real m_z
 
-		//dynamic members
+		// dynamic members
 
 		public method setX takes real x returns nothing
 			set this.m_x = x
@@ -32,7 +37,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			return this.m_z
 		endmethod
 
-		//convenience methods
+		// convenience methods
 
 		public method setWidget takes widget usedWidget returns nothing
 			set this.m_x = GetWidgetX(usedWidget)
@@ -58,7 +63,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_z = GetDestructableZ(whichDestructable)
 		endmethod
 
-		//methods
+		// methods
 
 		/**
 		* Multiplies all values with the value of @param factor.

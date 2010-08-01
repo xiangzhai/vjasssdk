@@ -1,6 +1,11 @@
 2010-08-01 Tamino Dauth <tamino@cdauth.eu>
 * Revised and hopefully improved struct AMultiboardBar.
 * Added interface ABarInterface.
+* Added functions FlushUnitCollisionSizes, FlushUnitTypeCollisionSize, GetUnitCollisionSizeEx and GetUnitCollisionSize.
+* Added map constants A_MAX_COLLISION_SIZE and A_MAX_COLLISION_SIZE_ITERATIONS.
+* Revised struct AFocus.
+* Fixed shortcut highlighting in dialogs.
+* Improved struct AUnitCopy.
 
 2010-07-30 Tamino Dauth <tamino@cdauth.eu>
 * Added various static member functions.

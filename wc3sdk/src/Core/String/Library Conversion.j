@@ -83,6 +83,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 
 	/**
 	* I changed the function and called my own string functions.
+	* @param colour If this value is null function will use "ffffcc00".
 	* @author Peppar
 	* @link http://www.wc3jass.com/
 	*/

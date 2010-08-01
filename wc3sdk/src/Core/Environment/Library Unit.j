@@ -1,6 +1,6 @@
 /// Provides several functions for unit handling.
 /// @author Tamino Dauth
-library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
+library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal, AStructCoreGeneralHashTable
 
 	/**
 	* Adds or removes the move ability to unit @param usedUnit.
@@ -229,6 +229,59 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal
 
 	function GetHeroMaxXP takes unit hero returns integer
 		return GetHeroLevelMaxXP(GetHeroLevel(hero))
+	endfunction
+
+	/// @see FlushUnitTypeCollisionSize, GetUnitCollisionSizeEx, GetUnitCollisionSize
+	function FlushUnitCollisionSizes takes nothing returns nothing
+		call AHashTable.global().flushKey("UnitCollisionSizes")
+	endfunction
+
+	/// @see FlushUnitCollisionSizes, GetUnitCollisionSizeEx, GetUnitCollisionSize
+	function FlushUnitTypeCollisionSize takes integer unitTypeId returns nothing
+		call AHashTable.global().removeReal("UnitCollisionSizes", I2S(unitTypeId))
+	endfunction
+
+	/**
+	* Caches collision sizes of unit types.
+	* Use FlushUnitCollisionSizes or FlushUnitTypeCollisionSize to flush cached data.
+	* Use GetUnitCollisionSize to use predefined maximum collision size and iterations of map.
+	* @author Vexoiran, Tamino Dauth
+	* @see FlushUnitCollisionSizes, FlushUnitTypeCollisionSize, GetUnitCollisionSize
+	* @link http://www.wc3c.net/showthread.php?t=101309
+	*/
+	function GetUnitCollisionSizeEx takes unit u, real maxCollisionSize, integer iterations returns real
+		local integer i = 0
+		local real x = GetUnitX(u)
+		local real y = GetUnitY(u)
+		local real hi
+		local real lo
+		local real mid
+		local string unitType = I2S(GetUnitTypeId(u))
+		if (AHashTable.global().hasReal("UnitCollisionSizes", unitType)) then
+			return AHashTable.global().real("UnitCollisionSizes", unitType)
+		endif
+		set hi = maxCollisionSize
+		set lo = 0.0
+		loop
+			set mid = (lo+hi) / 2.0
+			exitwhen (i== iterations)
+			if (IsUnitInRangeXY(u, x + mid,y,0)) then
+				set lo=mid
+			else
+				set hi=mid
+			endif
+			set i=i+1
+		endloop
+		call AHashTable.global().setReal("UnitCollisionSizes", unitType, mid)
+		return mid
+	endfunction
+
+	/**
+	* Same as GetUnitCollisionSizeEx but uses predefined constants.
+	* @see FlushUnitCollisionSizes, FlushUnitTypeCollisionSize, GetUnitCollisionSizeEx
+	*/
+	function GetUnitCollisionSize takes unit u returns real
+		return GetUnitCollisionSizeEx(u, A_MAX_COLLISION_SIZE, A_MAX_COLLISION_SIZE_ITERATIONS)
 	endfunction
 
 endlibrary

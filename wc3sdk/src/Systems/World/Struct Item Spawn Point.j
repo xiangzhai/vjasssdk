@@ -88,6 +88,7 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 
 		public method spawn takes nothing returns boolean
 			if (this.m_item != null) then
+				debug call this.print("Item is still there, NOT SPAWNING!!!")
 				return false
 			endif
 			debug call this.print("Spawning item")

@@ -65,8 +65,8 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 		endmethod
 
 		public method disable takes nothing returns nothing
-			call ShowUnit(this.unitCopy(), false)
 			call this.m_unitCopy.disable()
+			call ShowUnit(this.unitCopy(), false)
 			call DisableTrigger(this.m_selectionTrigger)
 			call DisableTrigger(this.m_orderTrigger)
 			// do never disable alliance trigger
@@ -133,7 +133,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			call this.m_unitCopy.setCopyDeath(false)
 			//call ShowUnit(this.unit(), false) // starting enabled, has to be visible!
 			call SetUnitOwner(this.unitCopy(), iconOwner, false)
-			call SetUnitInvulnerable(this.unitCopy(), true)
+			//call SetUnitInvulnerable(this.unitCopy(), true) // has to be attackable!
 			call SetUnitPathing(this.unitCopy(), false)
 			call this.m_unitCopy.start()
 

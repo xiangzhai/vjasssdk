@@ -101,12 +101,10 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 
 		public method addEntryRegion takes region whichRegion returns nothing
 			call this.m_entryRegions.pushBack(whichRegion)
-			call TriggerRegisterEnterRegion(this.m_enterTrigger, whichRegion, null)
 		endmethod
 
 		public method removeEntryRegion takes region whichRegion returns nothing
 			call this.m_entryRegions.remove(whichRegion)
-			/// @todo Remove event
 		endmethod
 
 		public method addExitRegion takes region whichRegion returns nothing
@@ -121,6 +119,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 
 		public method addRegion takes region whichRegion, real flyHeight returns nothing
 			call this.m_regions.pushBack(ARegionData.create(whichRegion, flyHeight))
+			call TriggerRegisterEnterRegion(this.m_enterTrigger, whichRegion, null)
 			call TriggerRegisterLeaveRegion(this.m_regionTrigger, whichRegion, null)
 			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, whichRegion, null)
 		endmethod
@@ -184,7 +183,7 @@ endif
 			local ARegionData data = this.regionDataByRegion(whichRegion)
 static if (DEBUG_MODE) then
 			if (data == 0) then
-				call this.print(Format("Region %1% is not being contained by layer.").h(whichRegion).result())
+				call this.print(Format("Region %1% is not contained by layer.").h(whichRegion).result())
 				return
 			endif
 endif
@@ -276,10 +275,25 @@ endif
 			return result
 		endmethod
 
+		private method enterRegionContainsUnit takes unit whichUnit returns boolean
+			local ARegionListIterator iterator = this.m_entryRegions.begin()
+			local boolean result = false
+			loop
+				exitwhen (not iterator.isValid())
+				if (IsUnitInRegion(iterator.data(), whichUnit)) then
+					set result = true
+					exitwhen (true)
+				endif
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			return result
+		endmethod
+
 		private static method triggerConditionEnter takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			debug call this.print("Run condition with trigger unit " + GetUnitName(GetTriggerUnit()))
-			return not this.containsUnit(GetTriggerUnit())
+			return not this.containsUnit(GetTriggerUnit()) and this.enterRegionContainsUnit(GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionEnter takes nothing returns nothing

@@ -1,5 +1,10 @@
-library AStructCoreEnvironmentUnitCopy requires ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, AStructCoreGeneralHashTable
+library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, AStructCoreGeneralHashTable
 
+	/**
+	* Unit copies can be used to create copies of units which will be refreshed.
+	* User can specify which properties should be copied.
+	* @see AHeroIcon
+	*/
 	struct AUnitCopy
 		// dynamic members
 		private boolean m_copyVisibility
@@ -12,6 +17,8 @@ library AStructCoreEnvironmentUnitCopy requires ALibraryCoreEnvironmentUnit, ALi
 		// members
 		private unit m_unit
 		private timer m_refreshTimer
+
+		//! runtextmacro A_STRUCT_DEBUG("\"AUnitCopy\"")
 
 		// dynamic members
 
@@ -62,14 +69,19 @@ library AStructCoreEnvironmentUnitCopy requires ALibraryCoreEnvironmentUnit, ALi
 		public stub method onCopy takes nothing returns nothing
 			/// @todo Copy revival?
 			if (this.m_copyDeath) then
+				call SetUnitState(this.m_unit, UNIT_STATE_MAX_LIFE, GetUnitState(this.m_realUnit, UNIT_STATE_MAX_LIFE))
 				call SetUnitState(this.m_unit, UNIT_STATE_LIFE, GetUnitState(this.m_realUnit, UNIT_STATE_LIFE))
 			else
+				call SetUnitState(this.m_unit, UNIT_STATE_MAX_LIFE, RMaxBJ(GetUnitState(this.m_realUnit, UNIT_STATE_MAX_LIFE), 1.0))
 				call SetUnitState(this.m_unit, UNIT_STATE_LIFE, RMaxBJ(GetUnitState(this.m_realUnit, UNIT_STATE_LIFE), 1.0))
 			endif
+			call SetUnitState(this.m_unit, UNIT_STATE_MAX_MANA, GetUnitState(this.m_realUnit, UNIT_STATE_MAX_MANA))
 			call SetUnitState(this.m_unit, UNIT_STATE_MANA, GetUnitState(this.m_realUnit, UNIT_STATE_MANA))
 			if (IsUnitType(this.m_unit, UNIT_TYPE_HERO)) then
 				call SetHeroLevel(this.m_unit, GetHeroLevel(this.m_realUnit), false)
+				call SuspendHeroXP(this.m_unit, false)
 				call SetHeroXP(this.m_unit, GetHeroXP(this.m_realUnit), false)
+				call SuspendHeroXP(this.m_unit, true)
 				call UnitModifySkillPoints(this.m_unit, GetHeroSkillPoints(this.m_realUnit) - GetHeroSkillPoints(this.m_unit))
 				call SetHeroStr(this.m_unit, GetHeroStr(this.m_realUnit, false), true)
 				call SetHeroStr(this.m_unit, GetHeroStrBonus(this.m_realUnit), false)
@@ -77,6 +89,8 @@ library AStructCoreEnvironmentUnitCopy requires ALibraryCoreEnvironmentUnit, ALi
 				call SetHeroAgi(this.m_unit, GetHeroAgiBonus(this.m_realUnit), false)
 				call SetHeroInt(this.m_unit, GetHeroInt(this.m_realUnit, false), true)
 				call SetHeroInt(this.m_unit, GetHeroIntBonus(this.m_realUnit), false)
+			debug else
+				debug call this.print("Is no hero!")
 			endif
 			if (this.m_copyVisibility) then
 				call ShowUnit(this.m_unit, not IsUnitHidden(this.m_realUnit))
@@ -126,6 +140,9 @@ library AStructCoreEnvironmentUnitCopy requires ALibraryCoreEnvironmentUnit, ALi
 			set this.m_refreshTime = refreshTime
 			// members
 			set this.m_unit = CopyUnit(realUnit, x, y, facing, bj_UNIT_STATE_METHOD_MAXIMUM)
+			if (IsUnitType(this.m_unit, UNIT_TYPE_HERO)) then
+				call SuspendHeroXP(this.m_unit, true)
+			endif
 			set this.m_refreshTimer = CreateTimer()
 			call AHashTable.global().setHandleInteger(this.m_refreshTimer, "this", this)
 
