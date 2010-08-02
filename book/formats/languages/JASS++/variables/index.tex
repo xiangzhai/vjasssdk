@@ -8,11 +8,10 @@ automatisch gelöscht werden.
 Sie können ausschließlich global oder in Gültigkeitsbereichen deklariert werden und tragen implizit den Qualifizerer "dynamic",
 können aber auch als "static" deklariert werden. Es gilt zu beachten, dass diese statischen Variable wie andere globale
 bei ihrer Deklaration bzw. dem Programmstart ein einziges Mal initialisiert werden und nicht wie bei lokalen z. B. bei jedem Funktionsaufruf.
-Statische und nicht statische Variable können mit dem Schlüsselwort "const" als Variablen mit konstantem Inhalt deklariert werden.
 Man sollte des Weiteren beachten, dass auch Variable innerhalb von Funktionen und Methoden Zugriffsmodifikatoren haben können (siehe "Funktionen").
 Variable innerhalb von Funktionen und Methoden, die nicht statisch sind, dürfen nur am Anfang des Funktionskörpers deklariert werden.
 Statische dagegen an beliebiger Stelle innerhalb der Funktion bzw. Methode.
-Da nicht statische Variablen in Funktionen und Methoden nur vom Aufruf bis zum Ablaufsende leben, kann auf sie auch nicht zugegriffen werden, wenn sie
+Da nicht statische Variable in Funktionen und Methoden nur vom Aufruf bis zum Ablaufsende leben, kann auf sie auch nicht zugegriffen werden, wenn sie
 öffentlich sind (siehe "Zugriffsmodifikatoren"). Auch nicht wenn es sich um eine Funktionsvariable handelt!
 
 \section{Initialisierungsnotation}
@@ -22,21 +21,30 @@ Da nicht statische Variablen in Funktionen und Methoden nur vom Aufruf bis zum A
 <Variablenbezeichner>[[[<Variablengröße der 1. Dimension>]][<Variablengröße der n. Dimension>]] [= <Initialisierungsnotation>]
 
 \section{Notation}
-[Zugriffsmodifikatoren] [static] [const] [var] <Variablentyp> | <Typendeklaration> <Bezeichnernotation 1>[, <Bezeichnernotation 2>, <Bezeichnernotation n>];
+[Zugriffsmodifikatoren] [static] [const | var] <Variablentyp> | <Typendeklaration> <Bezeichnernotation 1>[, <Bezeichnernotation 2>, <Bezeichnernotation n>];
 
+\section{var}
 Das Schlüsselwort "var" ist optional und dient besserer Lesbarkeit des Codes.
-Variable mit konstantem Inhalt müssen bei ihrer Deklaration initialisiert werden. Ihr Inhalt ist bis zu ihrer Löschung unveränderbar.
+Konstanten werden dagegen zwingend mit "const" deklariert.
 
+\section{Konstanten}
+Statische und nicht statische Variablendeklarationen können mit dem Schlüsselwort "const" als Konstantendeklarationen definiert
+werden.
+In diesem Fall entfällt das optionale Schlüsselwort "var" und die Konstante muss bei ihrer Deklaration initialisiert werden.
+Der Inhalt von Konstanten darf nicht nachträglich geändert werden.
+
+\section{Gültigkeitsbereiche}
 Variable können global oder in Gültigkeitsbereichen deklariert werden.
-Klassen, Funktionen und Methoden können statische Variablen enthalten:
-static integer test;
+Klassen, Funktionen und Methoden können statische Variable enthalten:
+static var integer test;
 static const integer test = 10;
 
+\section{Typen}
 Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
-dagegen 0 (siehe Abschnitt Literale).
+dagegen 0 (siehe Abschnitt "Literale").
 Es gilt zu beachten, dass die Objekte, auf welche bei Variablen mit referenzierbasierten Typen verwiesen wird, mit speziellen Funktionen
 und nicht mit einer einfachen 0-Setzung gelöscht werden.
-Die Sprache garantiert jedoch, dass Variablen nach einer Löschung des verwiesenen Objekts den Inhalt 0 haben, insofern die Löschung
+Die Sprache garantiert jedoch, dass Variable nach einer Löschung des verwiesenen Objekts den Inhalt 0 haben, insofern die Löschung
 erfolgreich war (keine Ausnahme wurde geworfen) (siehe "Ausnahmen" und "Methoden - Destruktor").
 
 \section{Arrays}
@@ -59,5 +67,3 @@ und am Ende ihres Gültigkeitsbereiches wieder freigegeben werden müssen.
 
 \subsection{Notation}
 <Typ> <Bezeichner>[<Größe der 1. Dimension>][ [<Größe der 2. Dimension>] ][ [<Größe der 3. Dimension>] ] [= Initialisierungsnotation]
-
-

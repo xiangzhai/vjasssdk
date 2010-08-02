@@ -31,9 +31,9 @@ scope jasspp
 		public function string I2A(integer value, string charPool);
 		public function integer A2I(string value, string charPool);
 		public function string I2Roman(integer value);
-		public function string	I2Binary(integer value);
+		public function string I2Binary(integer value);
 		public function integer Binary2I(string value);
-		public function string	I2Octal(integer value);
+		public function string I2Octal(integer value);
 		public function integer Octal2I(string value);
 		public function string I2Hexadecimal(integer value);
 		public function integer Hexadicmal2I(string value);
@@ -242,6 +242,12 @@ scope jasspp
 		public function integer GetHeroStrBonus(unit hero)
 		public function integer GetHeroAgiBonus(unit hero)
 		public function integer GetHeroIntBonus(unit hero)
+
+		public function void MakeUnitMovable(unit whichUnit, boolean movable)
+		public function void MakeUnitFlyable(unit whichUnit)
+		public function void MakeUnitAttackable(unit whichUnit, boolean attackable)
+		public function boolean IsUnitInvulnerable(unit const whichUnit)
+		public function integer GetUnitAlliance(unit const whichUnit, unit otherUnit)
 	}
 
 	public scope GroupApi
@@ -255,9 +261,6 @@ scope jasspp
 
 	public scope MiscApi
 	{
-		template < abstract function SlotFunction >
-		public class Signal
-
 		public function boolean IsInGame()
 		public function boolean IsInGameEx()
 		public function item CopyItem(item whichItem, real x, real y)
@@ -265,27 +268,24 @@ scope jasspp
 		public function boolean IsPlayerPlayingUser(player whichPlayer)
 		public function integer CountPlayingPlayers()
 		public function integer CountPlayingUsers()
-
-
-
 	}
 
 	public scope EnvironmentApi
 	{
-		public function boolean IsDestructableDead(destructable whichDestructable)
-		public function boolean IsDestructableTree(destructable whichDestructable)
+		public function boolean IsDestructableDead(destructable const whichDestructable)
+		public function boolean IsDestructableTree(destructable const whichDestructable)
 		public function boolean TreeFilter()
 
-		public function lightning CreateLightning(player whichPlayer, string whichCode, real x0, real y0, real z0, real x1, real y1, real z1)
-		public function lightning CreateLightning(force whichForce, string whichCode, real x0, real y0, real z0, real x1, real y1, real z1)
-		public function lightning CreateLightning(location location0, location location1)
-		public function lightning CreateLightning(player whichPlayer, location location0, location location1)
-		public function lightning CreateLightning(force whichForce, location location0, location location1)
+		public function lightning CreateLightning(player const whichPlayer, string whichCode, real x0, real y0, real z0, real x1, real y1, real z1)
+		public function lightning CreateLightning(force const whichForce, string whichCode, real x0, real y0, real z0, real x1, real y1, real z1)
+		public function lightning CreateLightning(location const location0, location const location1)
+		public function lightning CreateLightning(player const whichPlayer, location const location0, location const location1)
+		public function lightning CreateLightning(force const whichForce, location const location0, location const location1)
 
-		public function void PlaySound(player whichPlayer, sound whichSound)
+		public function void PlaySound(player const whichPlayer, sound const whichSound)
 		public function void PlaySound(string filePath)
 		public function void PlaySound(string filePath, real x, real y, real z)
-		public function void PlaySound(string filePath, unit whichUnit)
+		public function void PlaySound(string filePath, unit const whichUnit)
 
 		public function void PlaySound(player whichPlayer, string filePath)
 		public function void PlaySound(player whichPlayer, string filePath, real x, real y, real z)
@@ -297,7 +297,7 @@ scope jasspp
 
 		public alias AddSpecialEffect CreateSpecialEffect;
 
-		public void ResetTerrainFog(player whichPlayer)
+		public function void ResetTerrainFog(player whichPlayer)
 
 		public function void SetTerrainSpacePathable(real x, real y, pathingtype pathingType, boolean flag)
 		public function boolean IsTerrainDeepWater(real x, real y)
@@ -306,22 +306,30 @@ scope jasspp
 		public function boolean IsTerrainPlatform(real x, real y)
 		public function boolean IsTerrainWalkable(real x, real y, real maxRange)
 
-		GetTimeOfDayElapsedHours takes nothing returns integer
-		GetTimeOfDayElapsedMinutesInHour takes nothing returns integer
-		GetTimeOfDayElapsedMinutes takes nothing returns integer
-		GetTimeOfDayElapsedSecondsInMinute takes nothing returns integer
-		GetTimeOfDayRemainingMinutes takes nothing returns integer
-		GetTimeOfDayElapsedSeconds takes nothing returns integer
-		GetTimeOfDayRemainingSeconds takes nothing returns integer
-		GetTimeOfDayString takes nothing returns string
-
-		MakeUnitMovable takes unit whichUnit, boolean movable returns nothing
-		MakeUnitFlyable takes unit whichUnit returns nothing
-		MakeUnitAttackable takes unit whichUnit, boolean attackable returns nothing
-		IsUnitInvulnerable takes unit whichUnit returns boolean
-		GetUnitAlliance( unit whichUnit, unit otherUnit returns integer
+		public function integer GetTimeOfDayElapsedHours()
+		public function integer GetTimeOfDayRemainingHours()
+		public function integer GetTimeOfDayElapsedMinutes()
+		public function integer GetTimeOfDayRemainingMinutes()
+		public function integer GetTimeOfDayElapsedMinutesInHour()
+		public function integer GetTimeOfDayRemainingMinutesInHour()
+		public function integer GetTimeOfDayElapsedSeconds()
+		public function integer GetTimeOfDayRemainingSeconds()
+		public function integer GetTimeOfDayElapsedSecondsInHour()
+		public function integer GetTimeOfDayRemainingSecondsInHour()
+		public function integer GetTimeOfDayElapsedSecondsInMinute()
+		public function integer GetTimeOfDayRemainingSecondsInMinute()
+		/**
+		* @return Returns string with localized time format.
+		*/
+		public function string GetTimeOfDayString()
 
 		public class TimeOfDay
+		{
+			public static function integer hours() const;
+			public static function integer minutes() const;
+			public static function integer seconds() const;
+		};
+
 		public class DamageRecorder
 		public class DynamicLightning
 		public class Jump
@@ -357,15 +365,57 @@ scope jasspp
 		public unit GetFirstSelectedUnitOfPlayer(player whichPlayer)
 		public void MakeUnitSelectable(unit whichUnit, boolean selectable)
 
-		public class MultiboardBar
+		template<T = real>
+		public abstract class Bar
+		{
+			public void value(T value);
+			public T const value() const
+			public void maxValue(T maxValue);
+			public T const maxValue() const
+			public integer const percentage() const
 
+			public abstract virtual refresh()
+			public abstract virtual enable()
+			public abstract virtual disable()
+			public abstract virtual show()
+			public abstract virtual hide()
+		};
 
+		template<T = real>
+		public class MultiboardBar (public class Bar<T>)
+		{
+		};
+
+		/**
+		* Health is real.
+		*/
 		public class MultiboardWidgetHealthBar (public MultiboardBar)
+		{
+			public widget const object() const;
+		};
+		/**
+		* States are real.
+		*/
 		public class MultiboardUnitStateBar (public MultiboardBar)
+		{
+			public unit const object() const;
+			public unitstate state() const;
+		};
 
+		public abstract class Selection
+		{
+			public abstract store();
+			public abstract restore();
+		};
 
-		public class PlayerSelection
-		public class ForceSelection
+		/**
+		* Stores player selection.
+		*/
+		public class PlayerSelection (public Selection)
+		/**
+		* Stores force selection.
+		*/
+		public class ForceSelection (public Selection)
 
 		// Streitmachtbasierter Dialog, auch in gemeinsamer Kontrolle anwendbar!
 		public class ForceDialog
@@ -431,31 +481,41 @@ scope jasspp
 	public scope RpgApi
 	{
 		public class UnitCamera
+		{
+		};
 
 		public class UnitRucksackItemData
 		{
-			private integer m_charges;
-			private integer m_itemType;
-		}
+			public integer page() const;
+			public integer slot() const;
+
+			public integer charges() const;
+			public integer itemType() const;
+			public boolean invulnerable() const;
+			public boolean hidden() const;
+		};
 
 		// Verwendet das Standard-Warcraft-Inventar um eine seitenbasierte Ausrüstung und einen seitenbasierten Rucksack zur Verfügung zu stellen.
 		// Der unterschied zwischen Ausrüstung und Rucksack besteht darin, dass Ausrüstungsgegenstände stets eine Wirkung auf den Träger haben.
 		public class UnitRucksack
 		{
+			public unit const whichUnit() const;
+
+			public void pages(integer pages);
 			public integer pages() const;
-			public void setPages(integer pages);
 
-			public bool addItem(item whichItem);
-			public UnitRucksackItemData containedItem(integer index);
-			public UnitRucksackItemData containedItem(integer page, integer index);
+			public boolean addItem(item whichItem);
+			public boolean addItem(item const whichItem);
+			/**
+			* @return Returns items as 2-dimensional array with first dimension used for page and second dimension used for slot.
+			*/
+			public UnitRucksackItemData[][] const containedItems() const;
+			public UnitRucksackItemData const containedItem(integer page, integer slot) const;
 
-			public void changePage(integer page);
+			public boolean changePage(integer page);
 			public void show();
 			public void hide();
-			public bool isShown() const;
-
-			private unit m_whichUnit
-			private UnitRucksackItemData m_itemData[][];
+			public boolean isShown() const;
 		};
 	}
 
@@ -474,14 +534,11 @@ scope jasspp
 			public new (unit storedUnit);
 			public delete { };
 
-			public threaded store();
-			public threaded restore();
+			public threaded void store();
+			public threaded void restore();
 
-			public unit storedUnit();
-			public unit actorUnit();
-
-			private unit m_storedUnit;
-			private unit m_actorUnit;
+			public unit const storedUnit();
+			public unit const actorUnit();
 		};
 
 		public alias unitactor (class UnitActor);
@@ -491,14 +548,11 @@ scope jasspp
 			public new (destructable storedDestructable)
 			public delete { };
 
-			public threaded store();
-			public threaded restore();
+			public threaded void store();
+			public threaded void restore();
 
 			public destructable storedDestructable();
 			public destructable actorDestructable();
-
-			private destructable m_storedDestructable;
-			private destructable m_actorDestructable;
 		};
 
 		public alias destructableactor (class DestructableActor);
@@ -546,7 +600,7 @@ scope jasspp
 			public abstract ElementType const operator [](integer index) const;
 
 			public abstract void clear() const;
-			public abstract bool isEmpty() const;
+			public abstract boolean isEmpty() const;
 			public abstract ElementType random();
 			// Verwendet die nativen Zufallsfunktionen von JASS, daher für alle Container.
 			public abstract ElementType const random() const;
@@ -566,4 +620,23 @@ scope jasspp
 		public class Map (public Container)
 		public class Bitset (public Container)
 	}
+
+	/**
+	* @todo How to call slots?
+	*/
+	public scope SignalApi
+	{
+		template < abstract function SlotFunctionType = abstract function void () >
+		public class Signal
+		{
+			public alias SlotFunction (SlotFunctionType);
+
+			/**
+			* Calls all registered slots.
+			*/
+			public void emit()
+			public void addSlot(self.SlotFunction slot)
+			public void removeSlot(self.SlotFunction slot)
+		};
+	};
 }

@@ -185,6 +185,29 @@
 			<item>null</item>
 			<item>this</item>
 			<item>base</item>
+			<item>self</item>
+		</list>
+		<list name="preprocessor_constants">
+			<item>LANGUAGE</item>
+			<item>LANGUAGE_VERSION</item>
+			<item>JASS</item>
+			<item>ZINC</item>
+			<item>VJASS</item>
+			<item>JASSPP</item>
+			<item>COMPILER</item>
+			<item>COMPILER_VERSION</item>
+			<item>WC3_VERSION</item>
+			<item>WC3_TFT_VERSION</item>
+			<item>DEBUG_MODE</item>
+			<item>FILE_NAME</item>
+			<item>FILE_NAME_FULL</item>
+			<item>LINE_NUMBER</item>
+			<item>SCOPE_NAME</item>
+			<item>SCOPE_NAME_FULL</item>
+			<item>OPTIMIZATION_INLINE_FUNCTIONS</item>
+			<item>OPTIMIZATION_REMOVE_WHITE_SPACES</item>
+			<item>OPTIMIZATION_REMOVE_CONSTANTS</item>
+			<item>OPTIMIZATION_REMOVE_COMMENTS</item>
 		</list>
 		<list name="preprocessors">
 			<item>include</item>
@@ -208,11 +231,38 @@
 			<item>endcjass</item>
 			<item>external</item>
 		</list>
+		<list name="include_languages">
+			<item>jass</item>
+			<item>zinc</item>
+			<item>vjass</item>
+			<item>jasspp</item>
+			<item>cjass</item>
+			<item>once</item>
+		</list>
+		<list name="inject_functions">
+			<item>CustomMapScript</item>
+			<item>InitGlobals</item>
+			<item>InitSounds</item>
+			<item>CreateNeutralHostile</item>
+			<item>CreateNeutralPassiveBuildings</item>
+			<item>CreatePlayerBuildings</item>
+			<item>CreatePlayerUnits</item>
+			<item>CreateAllUnits</item>
+			<item>InitCustomTriggers</item>
+			<item>RunInitializationTriggers</item>
+			<item>InitCustomPlayerSlots</item>
+			<item>InitCustomTeams</item>
+			<item>InitAllyPriorities</item>
+			<item>main</item>
+			<item>config</item>
+		</list>
 		<contexts>
 			<context attribute="Normal Text" lineEndContext="#pop" name="Normal Text" >
 				<DetectSpaces />
 				<keyword attribute="Keyword" context="#stay" String="keywords" />
 				<keyword attribute="Data Type" context="#stay" String="type_keywords" />
+				<keyword attribute="Preprocessor Constant" context="#stay" String="preprocessor_constants" />
+				<keyword attribute="Inject Function" context="#stay" String="inject_functions" />
 
 				<HlCChar attribute="Char" context="#stay" />
 				<DetectChar attribute="String" context="String" char="&quot;" />
@@ -228,7 +278,7 @@
 				<Detect2Chars attribute="Comment" context="Commentar 2" char="/" char1="*" beginRegion="Comment"/>
 				<DetectChar attribute="Symbol" context="#stay" char="{" beginRegion="Brace1" />
 				<DetectChar attribute="Symbol" context="#stay" char="}" endRegion="Brace1" />
-				<!-- TODO Operators? -->
+				<!-- TODO Operators? +-/*%[](){}=;!><:~^. -->
 				<AnyChar attribute="Symbol" context="#stay" String=":!%&amp;()+,-/.*&lt;=&gt;?[]{|}~^&#59;"/>
 				<DetectChar context="#stay" char="#" context="Preprocessor" />
 			</context>
@@ -256,23 +306,25 @@
 				<!-- <keyword attribute="Keyword" context="vJass" String="vjass" beginRegion="vJass" >
 				<keyword attribute="Keyword" context="vJass" String="endvjass" endRegion="vJass" >
 				-->
+				<DetectSpaces />
 				<keyword attribute="Keyword" context="#stay" String="preprocessors" />
+				<keyword attribute="Preprocessor Constant" context="#stay" String="preprocessor_constants" />
+				<keyword attribute="Inject Function" context="#stay" String="inject_functions" />
+
+				<DetectString attribute="Keyword" context="vJass" String="vjass" beginRegion="vJass Region" />
+				<DetectString attribute="Keyword" context="#stay" String="endvjass" endRegion="vJass Region" />
+
 				<LineContinue attribute="Preprocessor" context="#stay"/>
+
 				<IncludeRules context="##Doxygen" />
 				<Detect2Chars attribute="Comment" context="Commentar/Preprocessor" char="/" char1="*" beginRegion="Comment2" />
 
 				<Detect2Chars attribute="Comment" context="Commentar 1" char="/" char1="/"/>
 			</context>
 
-			<!--
-			<context attribute="vJass" lineEndContext="#stay" name="vJass">
-				<IncludeRules context="##vJass" />
+			<context attribute="Normal Text" lineEndContext="#stay" name="vJass">
+				<!-- <IncludeRules context="##vJass" /> -->
 				<DetectChar context="#stay" char="#" context="Preprocessor" />
-			</context>
-			-->
-
-			<context attribute="Preprocessor" lineEndContext="#pop" name="Define">
-				<LineContinue attribute="Preprocessor" context="#stay"/>
 			</context>
 
 			<context attribute="Comment" lineEndContext="#stay" name="Commentar/Preprocessor">
@@ -297,6 +349,8 @@
 			<itemData name="Comment"      defStyleNum="dsComment"/>
 			<itemData name="Symbol"       defStyleNum="dsNormal" spellChecking="false"/>
 			<itemData name="Preprocessor" defStyleNum="dsOthers" spellChecking="false"/>
+			<itemData name="Preprocessor Constant" defSytleNum="dsKeyword" spellChecking="false" />
+			<itemData name="Inject Function" defStyleNum="dsKeyword" spellChecking="false" />
 			<itemData name="Region Marker" defStyleNum="dsRegionMarker" spellChecking="false"/>
 			<itemData name="Error"        defStyleNum="dsError" spellChecking="false"/>
 		</itemDatas>

@@ -1,5 +1,4 @@
-\chapter { Präprozessoren }
-
+\chapter{Präprozessoren}
 Präprozessoren werden vor der restlichen Syntaxvalidierung ausgewertet.
 Sie können zur Vorauswertung verwendet werden, um zu bestimmen, welcher Code kompiliert und welcher vom Compiler ignoriert werden soll.
 Präprozessoren werden mit dem #-Zeichen eingeleitet. Darauf muss eine der Anweisungen folgen.
@@ -7,15 +6,16 @@ Eine Anweisung mehrzeilig zu gestalten wird momentan nicht unterstützt und ist 
 notwendig, da man keine eigenen Makros (wie in C und C++) definieren kann.
 Zwischen dem #-Zeichen und der Anweisung können beliebig viele Leerzeichen bzw. Tabulatoren stehen.
 
-#include [ jass | zinc | vjass | jasspp | cjass ] [ once ] "<Dateipfad>" Wird cjass verwendet, so wird die gesamte Datei ignoriert! Wird once angegeben, wird die Datei nur einmal eingebunden.
-#inject CustomMapScript | InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config // injectet die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an)
+\section{Präprozessoranweisungen}
+#include [ jass | zinc | vjass | jasspp | cjass ] [ once ] "< [<]Dateipfad[>] >" Wird cjass verwendet, so wird die gesamte Datei ignoriert! Wird once angegeben, wird die Datei nur einmal eingebunden. Bei den anderen Sprachangaben wird der Inhalt als Code der jeweiligen Sprache interpretiert. Bei keiner Angabe wird die aktuelle Sprache des Codes verwendet. Der Compiler sollte eine Warnung ausgeben, falls eine Datei innerhalb einer Sprachpräprozessoranweisung ohne spezielle Sprachangabe eingebunden wird.
+#inject CustomMapScript | InitGlobals | InitSounds | CreateNeutralHostile | CreateNeutralPassiveBuildings | CreatePlayerBuildings | CreatePlayerUnits | CreateAllUnits | InitCustomTriggers | RunInitializationTriggers | InitCustomPlayerSlots | InitCustomTeams | InitAllyPriorities | main | config                Infiltriert die entsprechende Funktion und ersetzt ihren Inhalt durch den Inhalt des Inject-Blocks. Existiert die Funktion nicht (z. B. da es keine eigenen Teams gibt, so zeigt der Compiler eine Fehlermeldung an).
 #endinject
-#initjasspp				Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion
-#if (<konstanter Ausdruck>)		Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10)
-#else if (<konstanter Ausdruck>)
+#initjasspp                                       Initialisiert die globale Hashtable und erzeugt sämtliche Prototypauslöser. Nützlich für eine Injection der main-Funktion. Diese Anweisung darf nur einmal im Code vorkommen!
+#if (<konstanter Wahrheitsausdruck>)              Zum Beispiel (WC3_VERSION == "1.21" && constantValue > 10)
+#else if (<konstanter Wahrheitsausdruck>)
 #else
 #endif
-#error <konstanter Ausdruck>		Bricht den Kompiliervorgang ab und gibt den konstanten Ausdruck als Fehlermeldung aus.
+#error <konstanter Zeichenkettenausdruck>         Bricht den Kompiliervorgang ab und gibt den konstanten Ausdruck als Fehlermeldung aus. Der Zeichenkettenausdruck muss wie bei gewöhnlichen Zeichnketten in Anführungszeichen gesetzt werden, falls es sich nicht um eine Konstante handelt. Außerdem wird er wie eine gewöhnliche Zeichenkette ausgewertet (Escape-Sequenzen usw.).
 #jass
 #endjass
 #zinc
@@ -24,35 +24,39 @@ Zwischen dem #-Zeichen und der Anweisung können beliebig viele Leerzeichen bzw.
 #endvjass
 #jasspp
 #endjasspp
-#cjass					Nur reserviert. Code wird momentan noch ignoriert.
-#endcjass				Nur reserviert. Code wird momentan noch ignoriert.
-#external <Ausdruck> <Parameter>	Ruft einen externen Befehl mit Parametern auf. Externe Befehle müssen vom Compiler ausgeliefert und ausgewertet werden.
+#cjass                                            Nur reserviert. Code wird momentan noch ignoriert.
+#endcjass                                         Nur reserviert. Code wird momentan noch ignoriert.
+#external <Ausdruck> <Parameter>                  Ruft einen externen Befehl mit Parametern auf. Externe Befehle müssen vom Compiler zur Verfügung gestellt und ausgewertet werden.
 
-\section { Vordefinierte Konstanten }
+\section{Vordefinierte Konstanten}
 Es gilt zu beachten, dass die folgenden Konstanten normale JASS++-Konstanten eines nativen Typs sind und somit auch in Nicht-Präprozessor-Anweisungen verwendet werden können.
-Typ Bezeichner					Beschreibung
-string LANGUAGE					Enthält eine Zeichenkette mit der aktuellen Skriptsprache ("JASS++", "Zinc", "vJass", "JASS")
-string LANGUAGE_VERSION				Enthält eine Zeichenkette mit der Version der aktuellen Skriptsprache
-boolean JASS					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache JASS ist.
-boolean ZINC					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Zinc ist.
-boolean VJASS					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache vJass ist.
-boolean JASSPP					Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache JASS++ ist.
-string COMPILER					Enthält eine Zeichenkette mit dem Namen des verwendeten Compilers.
-string COMPILER_VERSION				Enthält eine Zeichenkette mit der Version des verwendeten Compilers.
-string WC3_VERSION				Enthält eine Zeichenkette mit der Warcraft-3-Version (ist zur Laufzeit aktuell!).
-string WC3_TFT_VERSION				Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-Version. Falls The Frozen Throne nicht verwendet wird, ist der Wert gleich 0 gesetzt (ist zur Laufzeit aktuell!).
-boolean DEBUG_MODE				Enthält einen boolean-Wert, der angibt, ob der Debug-Modus aktiviert ist.
-string FILE_NAME				Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
-string LINE_NUMBER				Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
-string SCOPE_NAME				Enthält eine Zeichenkette des Namens des aktuellen Gültigkeitsbereichs.
-string SCOPE_NAME_FULL				Enthält eine Zeichenkette des gesamten Namens (auch alle oberen Gültigkeitsbereiche) des aktuellen Gültigkeitsbereichs.
-boolean OPTIMIZATION_INLINE_FUNCTIONS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
-boolean OPTIMIZATION_REMOVE_WHITE_SPACES	Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
-boolean OPTIMIZATION_REMOVE_CONSTANTS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
-boolean OPTIMIZATION_REMOVE_COMMENTS		Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+Typ Bezeichner                                    Beschreibung
+string LANGUAGE                                   Enthält eine Zeichenkette mit der aktuellen Skriptsprache ("JASS++", "Zinc", "vJass", "JASS")
+string LANGUAGE_VERSION                           Enthält eine Zeichenkette mit der Version der aktuellen Skriptsprache
+boolean JASS                                      Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache JASS ist.
+boolean ZINC                                      Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache Zinc ist.
+boolean VJASS                                     Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache vJass ist.
+boolean JASSPP                                    Enthält einen boolean-Wert, der angibt, ob die aktuelle Skriptsprache JASS++ ist.
+string COMPILER                                   Enthält eine Zeichenkette mit dem Namen des verwendeten Compilers.
+string COMPILER_VERSION                           Enthält eine Zeichenkette mit der Version des verwendeten Compilers.
+string WC3_VERSION                                Enthält eine Zeichenkette mit der Warcraft-3-Version (ist zur Laufzeit aktuell!).
+string WC3_TFT_VERSION                            Enthält eine Zeichenkette mit der Warcraft-3-The-Frozen-Throne-Version. Falls The Frozen Throne nicht verwendet wird, ist der Wert gleich 0 gesetzt (ist zur Laufzeit aktuell!).
+boolean DEBUG_MODE                                Enthält einen boolean-Wert, der angibt, ob der Debug-Modus aktiviert ist.
+string FILE_NAME                                  Enthält eine Zeichenkette des Dateinamens der aktuellen Datei.
+string FILE_NAME_FULL                             Enthält eine Zeichenkette des Dateinamens und dessen relativem Pfad vom Einbindungsverzeichnis aus.
+string LINE_NUMBER                                Enthält eine Zeichenkette der Zeilennummer der aktuellen Zeile.
+string SCOPE_NAME                                 Enthält eine Zeichenkette des Namens des aktuellen Gültigkeitsbereichs.
+string SCOPE_NAME_FULL                            Enthält eine Zeichenkette des gesamten Namens (auch alle oberen Gültigkeitsbereiche) des aktuellen Gültigkeitsbereichs.
+boolean OPTIMIZATION_INLINE_FUNCTIONS             Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_WHITE_SPACES          Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_CONSTANTS             Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
+boolean OPTIMIZATION_REMOVE_COMMENTS              Enthält einen boolean-Wert, der angibt, ob die Optimierungsoption im Compiler aktiviert ist.
 TODO: Hier noch weitere Optimierungsoptionen hinzufügen.
 
-\section { Dateipfade für die "include"-Anweisung }
+\section{Dateipfade für die "include"-Anweisung}
 Dateipfade müssen wie bei UNIX-Systemen geschrieben werden. . steht für das aktuelle und ..
 für das darüber liegende Verzeichnis. Verzeichnisse werden durch das /-Zeichen getrennt.
 Standardmäßig wird im Verzeichnis der aktuellen Code-Datei nach angegebenen Dateinamen gesucht.
+Dateipfade, die in ein Größer- und ein Kleinerzeichen eingeschlossen werden, werden je nach Konfiguration
+des Compilers und des Systems ausgewertet. In der Regel sollte in den Standard-Include-Verzeichnissen
+des Systems gesucht werden (z. B. /usr/include).

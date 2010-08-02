@@ -1,6 +1,7 @@
 \chapter{Funktionen}
 
-Mehrere Funktionsdefinitionen können den gleichen Namen haben, insofern sich mindestens die Parametertypen oder die Parameteranzahl unterscheiden.
+\section{Funktionsaufrufe}
+Mehrere Funktionsdefinitionen können den gleichen Bezeichner haben, insofern sich mindestens die Parametertypen oder die Parameteranzahl unterscheiden.
 Unterscheidet sich lediglich der Rückgabetyp, so gelten beide Definition nicht als unterschiedlich, da im Falle eines Aufrufes ohne eine Speicherung
 des Rückgabetyps nicht sichergestellt werden könnte, welche Version der Funktion aufgerufen werden sollte.
 Parametertypen unterscheiden sich auch, sobald nur einer der beiden als "const" deklariert wurde. In diesem Fall wird je nach konstanter oder nicht
@@ -8,13 +9,22 @@ konstanter Parameterübergabe die jeweilge Version der Funktionsdeklaration ausg
 Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
 Parameter, welche kein Standardargument besitzen gesetzt werden:
 MyFunction(y = 10, x = 100, 100, 3, 5);
+
+\section{Standardargumente}
 Parameter mit Standardargumenten erhalten automatisch das Standardargument, insofern sie nicht explizit beim Aufruf gesetzt werden.
+Standardargumente müssen keine konstanten Ausdrücke sein, jedoch sollte der Compiler in diesem Fall eine Warnung ausgeben!
+
+\section{Rückgabewerte}
 Eine Funktion, die einen Rückgabetyp ungleich "void" besitzt und keine "return"-Anweisung in ihrem äußersten Gültigkeitsbereich, liefert an dieser Stelle
 automatisch einen Nullwert ihres Rückgabetyps zurück. Der Compiler sollte jedoch in diesem Fall eine Warnung ausgeben.
 Dies dient z. B. Situationen, in denen z. B. durch "return"-Anweisungen im Block einer "default"-Anweisung in einer "switch"-Verzweigung
 garantiert ist, dass die Funktion immer einen Wert zurückgibt und dennoch keine "return"-Anweisung im äußersten Gültigkeitsbereich steht.
-Lokale nicht statische Variablen der Funktion dürfen nur am Anfang des Funktionskörpers stattfinden. Innerhalb einer Funktion deklarierte
-Variablen können ebenfalls Zugriffsmodifikatoren besitzen.
+
+\section{Variablendeklarationen}
+Lokale nicht statische Variable der Funktion dürfen nur am Anfang des Funktionskörpers stattfinden. Innerhalb einer Funktion deklarierte
+Variable können ebenfalls Zugriffsmodifikatoren besitzen, da der Funktionskörper als Gültigkeitsbereich zählt.
+
+\section{Ausnahmebehandlung}
 Es können nur Ausnahmen der Typen direkt geworfen werden, die nach dem Schlüsselwort "throw" angegeben wurden.
 Mit direkt ist gemeint, dass sie nicht von einer verschachtelten Funktion geworfen werden (siehe "Ausnahmebehandlung").
 
@@ -71,7 +81,7 @@ executions <Funktionsbezeichner>
 evaluations <Funktionsbezeichner>
 <Funktionsbezeichner>.executions
 <Funktionsbezeichner>.evaluations
- 
+
 Mittels des Schlüsselwortes "sleep", kann in einer "threaded"-Funktion gewartet werden.
 Sie entspricht einem Aufruf der Funktion "TriggerSleepAction".
 
@@ -100,8 +110,8 @@ abbricht. Dies gilt für sämtliche "execute"- und "executewait"-Aufrufe der Fun
 reset <Funktionsname> // Setzt den Thread der Funktion zurück.
 
 \section{Karteninitialisierer}
-Ist eine Funktion als "mapinit" deklariert, so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers 
-aufgerufen. Eine "mapinit"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt, 
+Ist eine Funktion als "mapinit" deklariert, so wird diese während der Karteninitialisierung exakt vor der Funktion RunInitializationTriggers
+aufgerufen. Eine "mapinit"-Funktion darf keine Parameter entgegennehmen. Außerdem sollte der Compiler warnen, falls sie einen Rückgabetyp besitzt,
 manuell aufgerufen wird oder "threaded" ist (einstellbar, "threaded" ist ebenfalls eher unnötig).
 Exisitieren mehrere Funktionen, die als "mapinit" deklariert wurden, so lässt sich die exakte Aufrufreihenfolge nur durch Deklarationsvoraussetzungen
 bestimmen.
@@ -111,4 +121,4 @@ aufgerufen wird.
 \section{Konstante Funktionen}
 Ist eine Funktion als "const" deklariert, so muss sie einen global konstanten Wert zurückgeben. Beim Kompilieren, wird
 sie normalerweise als "constant" JASS-Funktion erzeugt. Global konstant bedeutet in diesem Zusammenhang, dass der Wert
-zur Laufzeit immer je nach übergebenen Parametern derselbe ist. 
+zur Laufzeit immer je nach übergebenen Parametern derselbe ist.

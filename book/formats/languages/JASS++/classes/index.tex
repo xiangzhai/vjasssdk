@@ -1,5 +1,4 @@
 \chapter{Klassen}
-
 Mit dem Schlüsselwort "base" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
 Gültigkeitsbereichen, angesprochen werden. Da sie normalerweise kein äußerer Gültigkeitsbereich sind, funktioniert die Verwendung des "."-Operators nicht.
 Mit dem Schlüsselwort "self" spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
@@ -7,7 +6,8 @@ die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren
 der Elternklassen und nicht zur Klasse für die der Aufruf galt gehört.
 Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Gültigkeitsbereichen, über ihren Namen oder den .-Operator angesprochen werden.
 In diesem Fall wird ebenfalls überprüft, ob es sich um eine virtuelle statische Methode handelt und die der korrekten Klasse aufgerufen.
-Mit dem Schlüsselwort "this" spricht man die verwendete Instanz an.
+Mit dem Schlüsselwort "this" spricht man die verwendete Instanz an. "this" ist wie ein referenzbasierter Parameter mit dem Typ
+der Klasse, der jeder nicht statischen Methode übergeben wird.
 Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert (Zweiteres ist in der Regel der Fall).
 In diesem Fall werden die Instanzdaten in der globalen Hash-Tabelle oder in zusätzlichen globalen Variablen gespeichert.
 Falls die angegebene Maximalgröße den Wert 8192 übersteigt und keine globale Hash-Tabelle existiert,
