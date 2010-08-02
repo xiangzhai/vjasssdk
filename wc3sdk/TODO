@@ -1,11 +1,17 @@
+2010-08-02 Tamino Dauth <tamino@cdauth.eu>
+* DONE: AHeroIcon: Change view on double not single click!
+* AInfoLog: Fix index out of range messages!
+* DONE: AInventory: Rucksack item should at least have 1 charge -> charges = real charges.
+* DONE: AInventory: Equipment items should never have charges.
+
 2010-08-01 Tamino Dauth <tamino@cdauth.eu>
 * Add global sort algorithm functions using container and iterator interfaces (vJass bug, can not extend size-limited structs by interfaces).
 * Add bar interface.
 * Add image and text tag bar structs.
 * Extend AMultiboardBar by bar interface.
-* Instance of ABooleanVector in struct AItemType is not created correctly!
+* FIXED: Instance of ABooleanVector in struct AItemType is not created correctly!
 * AHeroIcon is not run correctly.
-* Fix HighlightShortcut.
+* DONE: Fix HighlightShortcut.
 
 2010-07-30 Tamino Dauth <tamino@cdauth.eu>
 * Fix dialog button indices (next page starts with 0 again!).

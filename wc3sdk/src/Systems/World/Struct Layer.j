@@ -64,10 +64,12 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 	* that the layer can be used correctly.
 	* This image should describe what each region means to the layer:
 	* @image TODO
+	* As you can see entry rects has to be inside the layer rects since you need a fly height which will be adjusted on the entering unit.
+	* Exit rects can be anywhere you want to have them but you should consider that units can not leave region consisting of all layer rects.
+	* When a unit leaves a layer rect it will be reset if it did not enter a new one!
 	* @note Added regions and units won't be removed from game by the layer at any time! You'll have to take care yourself.
 	*/
 	struct ALayer
-		private real m_height
 		private ALayerOnEnterFunction m_onEnterFunction
 		private ALayerOnLeaveFunction m_onLeaveFunction
 		private ARegionList m_entryRegions
@@ -290,6 +292,21 @@ endif
 			return result
 		endmethod
 
+		private method regionContainsUnit takes unit whichUnit returns boolean
+			local ARegionListIterator iterator = this.m_regions.begin()
+			local boolean result = false
+			loop
+				exitwhen (not iterator.isValid())
+				if (IsUnitInRegion(iterator.data(), whichUnit)) then
+					set result = true
+					exitwhen (true)
+				endif
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			return result
+		endmethod
+
 		private static method triggerConditionEnter takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			debug call this.print("Run condition with trigger unit " + GetUnitName(GetTriggerUnit()))
@@ -339,7 +356,7 @@ endif
 		private static method triggerConditionBounds takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 
-			return this.containsUnit(GetTriggerUnit()) and not this.isUnitInExitRegion(GetTriggerUnit())
+			return this.containsUnit(GetTriggerUnit()) and not this.isUnitInExitRegion(GetTriggerUnit()) and not this.regionContainsUnit(GetTriggerUnit())
 		endmethod
 
 		/// @todo Pause Unit/Move unit back correctly.

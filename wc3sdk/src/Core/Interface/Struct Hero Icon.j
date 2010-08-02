@@ -15,6 +15,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 		// dynamic members
 		private boolean m_recognizeAllianceChanges
 		// members
+		private integer m_selectionCounter
 		private AUnitCopy m_unitCopy
 		private trigger m_selectionTrigger
 		private trigger m_orderTrigger
@@ -81,8 +82,11 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 		endmethod
 
 		public stub method onSelect takes nothing returns nothing
-			call SmartCameraPanWithZForPlayer(this.playerCopy(), GetUnitX(this.unit()), GetUnitY(this.unit()), 0.0, 0.0)
 			call SelectUnitForPlayerSingle(this.unit(), this.playerCopy())
+		endmethod
+
+		public stub method onDoubleSelect takes nothing returns nothing
+			call SmartCameraPanWithZForPlayer(this.playerCopy(), GetUnitX(this.unit()), GetUnitY(this.unit()), 0.0, 0.0)
 		endmethod
 
 		public stub method onOrder takes nothing returns nothing
@@ -92,12 +96,23 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 
 		private static method triggerConditionSelection takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
-			return GetTriggerPlayer() == this.playerCopy()
+			if (GetTriggerUnit() == this.unitCopy()) then
+				return GetTriggerPlayer() == this.playerCopy()
+			endif
+			if (GetTriggerUnit() != this.unit()) then // unit is always selected automatically!
+				set this.m_selectionCounter = 0 // selecting other unit, no double click!
+			endif
+			return false
 		endmethod
 
 		private static method triggerActionSelection takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
+			set this.m_selectionCounter = this.m_selectionCounter + 1
 			call this.onSelect.evaluate()
+			if (this.m_selectionCounter == 2) then
+				set this.m_selectionCounter = 0
+				call this.onDoubleSelect.evaluate()
+			endif
 		endmethod
 
 		private static method triggerConditionOrder takes nothing returns boolean
@@ -118,7 +133,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 		private static method triggerActionAlliance takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			call this.setEnabled(not GetPlayerAlliance(this.playerCopy(), this.player(), ALLIANCE_SHARED_CONTROL))
-			debug call this.print("Changing alliance")
+			debug call this.print("Changing alliance!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		endmethod
 
 		public static method create takes unit whichUnit, player iconOwner, real x, real y, real facing returns thistype
@@ -126,6 +141,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			// dynamic members
 			set this.m_recognizeAllianceChanges = not (GetOwningPlayer(whichUnit) == iconOwner)
 			// members
+			set this.m_selectionCounter = 0
 			set this.m_unitCopy = AUnitCopy.create(whichUnit, thistype.m_refreshTime, x, y, facing)
 			call this.m_unitCopy.setCopyVisibility(false)
 			call this.m_unitCopy.setCopyPause(false)
@@ -138,7 +154,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			call this.m_unitCopy.start()
 
 			set this.m_selectionTrigger = CreateTrigger()
-			call TriggerRegisterUnitEvent(this.m_selectionTrigger, this.unitCopy(), EVENT_UNIT_SELECTED)
+			call TriggerRegisterAnyUnitEventBJ(this.m_selectionTrigger, EVENT_PLAYER_UNIT_SELECTED)
 			call TriggerAddCondition(this.m_selectionTrigger, Condition(function thistype.triggerConditionSelection))
 			call TriggerAddAction(this.m_selectionTrigger, function thistype.triggerActionSelection)
 			call AHashTable.global().setHandleInteger(this.m_selectionTrigger, "this", this)
@@ -169,6 +185,9 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			set this.m_allianceTrigger = null
 		endmethod
 
+		/**
+		* @param refreshTime Hero icons do use a gobal refresh time.
+		*/
 		public static method init takes real refreshTime returns nothing
 			// static construction members
 			set thistype.m_refreshTime = refreshTime

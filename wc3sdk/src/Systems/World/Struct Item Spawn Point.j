@@ -20,6 +20,7 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 		private item m_item
 		private timer m_timer
 		private boolean m_isEnabled
+		private boolean m_runs // required because of restarting before finishing!
 
 		implement ASystemStruct
 
@@ -57,7 +58,7 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 		endmethod
 
 		public method runs takes nothing returns boolean
-			return this.remainingTime() > 0.0
+			return this.m_runs
 		endmethod
 
 		public method pause takes nothing returns boolean
@@ -100,11 +101,13 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 			local thistype this = AHashTable.global().handleInteger(GetExpiredTimer(), "this")
 			debug call this.print("Timer expired!")
 			call this.spawn()
+			set this.m_runs = false
 		endmethod
 
 		private method respawn takes nothing returns nothing
 			if (not this.runs() and this.m_isEnabled and (this.m_item == null or IsItemOwned(this.m_item) or GetWidgetLife(this.m_item) <= 0.0 or GetDistanceBetweenPoints(GetItemX(this.m_item), GetItemY(this.m_item), 0.0, this.m_x, this.m_y, 0.0) > thistype.m_removalRange)) then
 				debug call this.print("Starting item respawn with time: " + R2S(thistype.m_time))
+				set this.m_runs = true
 				set this.m_item = null
 				if (this.m_timer == null) then
 					debug call this.print("Creating timer")
@@ -130,6 +133,7 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 			set this.m_item = whichItem
 			set this.m_timer = null
 			set this.m_isEnabled = true
+			set this.m_runs = false
 			call thistype.m_itemSpawnPoints.pushBack(this)
 
 			return this
@@ -146,6 +150,7 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 			set this.m_item = null
 			set this.m_timer = null
 			set this.m_isEnabled = true
+			set this.m_runs = false
 			call thistype.m_itemSpawnPoints.pushBack(this)
 			call this.respawn()
 

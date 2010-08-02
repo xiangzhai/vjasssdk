@@ -1,8 +1,20 @@
 library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreMathsConversion, AStructSystemsCharacterClass, AStructSystemsCharacterCharacter
 
-	/// Represents an item type, not an item object!
+	/**
+	* Represents an item type, not an item object!
+	* Custom item types have to exist during the whole game.
+	* They provide more information than is reachable by default JASS item natives.
+	* You can check some usual item type requirements such as character strength, level or class.
+	* Besides you can specify all item type abilities to get real inventory support since
+	* permanent abilities have to be added to character's unit when rucksack/equipment is closed.
+	* Non-equipment item types usually do not have to be created explicity. If an item type
+	* has no custom it is treated like a usual rucksack item.
+	* @note Requirement is only checked by AInventory when item is equipped!
+	* @todo Add struct AEquipmentType as more abstract type.
+	*/
 	struct AItemType
-		//static constant members
+		// static constant members
+		public static constant integer equipmentTypeNone = -1 /// Use this as equipment type if it's a rucksack item.
 		public static constant integer equipmentTypeHeaddress = 0
 		public static constant integer equipmentTypeArmour = 1
 		public static constant integer equipmentTypePrimaryWeapon = 2
@@ -67,7 +79,11 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			return this.m_abilities.backIndex()
 		endmethod
 
-		public method checkRequirement takes ACharacter character returns boolean
+		/**
+		* This method can be overwritten to check requirements manually.
+		* It is used by AInventory for instance.
+		*/
+		public stub method checkRequirement takes ACharacter character returns boolean
 			if (GetHeroLevel(character.unit()) < this.m_requiredLevel) then
 				call character.displayMessage(ACharacter.messageTypeError, thistype.textLevel)
 				return false
@@ -156,7 +172,12 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			endloop
 		endmethod
 
-		/// @param equipmentType If this value is -1 it will always be added to rucksack.
+		/**
+		* Each custom item type is associated with an item type id when it is created.
+		* Each item type id should only have one custom item type!
+		* @param equipmentType If this value is -1 (AItemType.equipmentTypeNone) it will always be added to rucksack.
+		* @param requiredClass If this value is 0 no specific class is required.
+		*/
 		public static method create takes integer itemType, integer equipmentType, integer requiredLevel, integer requiredStrength, integer requiredAgility, integer requiredIntelligence, AClass requiredClass returns thistype
 			local thistype this = thistype.allocate()
 			// construction members
@@ -171,20 +192,25 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			set this.m_abilities = AIntegerVector.create()
 			set this.m_permanent = ABooleanVector.create()
 
-			debug if (AHashTable.global().integer("AItemTypes", I2S(itemType)) != 0) then
-				debug call this.print("Item type " + I2S(itemType) + " already has an item type.")
+			debug if (AHashTable.global().hasInteger("AItemTypes", I2S(itemType))) then
+				debug call this.print("Item type " + I2S(itemType) + " already has a custom item type.")
 			debug endif
 			call AHashTable.global().setInteger("AItemTypes", I2S(itemType), this)
 			//debug call this.print("Storing item type " + I2S(itemType))
 			return this
 		endmethod
 
-		public method onDestroy takes nothing returns nothing
+		public static method createSimple takes integer itemType, integer equipmentType returns thistype
+			return thistype.create(itemType, equipmentType, 0, 0, 0, 0, 0)
+		endmethod
+
+		/// Custom item types should never be destroyed since they're heavily used by systems like AInventory at game runtime (equipment).
+		private method onDestroy takes nothing returns nothing
 			// members
 			call this.m_abilities.destroy()
 			call this.m_permanent.destroy()
 
-			call AHashTable.global().removeInteger("AItemTypes", I2Hexadecimal(this.m_itemType))
+			call AHashTable.global().removeInteger("AItemTypes", I2S(this.m_itemType))
 		endmethod
 
 		public static method init takes string textLevel, string textStrength, string textAgility, string textIntelligence, string textClass returns nothing
@@ -196,13 +222,17 @@ library AStructSystemsCharacterItemType requires optional ALibraryCoreDebugMisc,
 			set thistype.textClass = textClass
 		endmethod
 
-		public static method getItemTypeOfItemTypeId takes integer itemTypeId returns thistype
+		public static method itemTypeIdHasItemType takes integer itemTypeId returns boolean
+			return AHashTable.global().hasInteger("AItemTypes", I2S(itemTypeId))
+		endmethod
+
+		public static method itemTypeOfItemTypeId takes integer itemTypeId returns thistype
 			//debug call thistype.staticPrint("Getting item type of item type id " + I2S(itemTypeId))
 			return AHashTable.global().integer("AItemTypes", I2S(itemTypeId))
 		endmethod
 
-		public static method getItemTypeOfItem takes item usedItem returns thistype
-			return thistype.getItemTypeOfItemTypeId(GetItemTypeId(usedItem))
+		public static method itemTypeOfItem takes item whichItem returns thistype
+			return thistype.itemTypeOfItemTypeId(GetItemTypeId(whichItem))
 		endmethod
 	endstruct
 

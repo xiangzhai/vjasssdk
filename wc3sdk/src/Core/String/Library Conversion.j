@@ -16,7 +16,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		elseif ((i >= 12) and (i <= 13)) then
 			return SubString("\f\r", i - 12, i - 11)
 		elseif ((i >= 32) and (i <= 127)) then
-			return SubString(" !\"#$%%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", i - 32, i - 31) //syntax error?
+			return SubString(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", i - 32, i - 31) //syntax error?
 		endif
 		return ""
 	endfunction
@@ -88,16 +88,13 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	* @link http://www.wc3jass.com/
 	*/
 	function HighlightShortcut takes string whichString, integer shortcut, string colour returns string
-		local string result
 		local string newShortcut = AsciiToChar(shortcut)
-		local integer shortcutPosition = FindString(whichString, newShortcut)
-		if (shortcutPosition != -1) then
+		local integer index = FindString(whichString, newShortcut)
+		if (index != -1) then
 			if (colour == null) then
 				set colour = "ffffcc00"
 			endif
-			set result = InsertString(whichString, shortcutPosition + 1, "|r")
-			set result = InsertString(whichString, shortcutPosition, ("|c" + colour))
-			return result
+			return SubString(whichString, 0, index) + "|c" + colour + newShortcut + "|r" + SubString(whichString, index + 1, StringLength(whichString))
 		endif
 		return whichString
 	endfunction

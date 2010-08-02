@@ -82,24 +82,24 @@ library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, 
 				call SuspendHeroXP(this.m_unit, false)
 				call SetHeroXP(this.m_unit, GetHeroXP(this.m_realUnit), false)
 				call SuspendHeroXP(this.m_unit, true)
-				call UnitModifySkillPoints(this.m_unit, GetHeroSkillPoints(this.m_realUnit) - GetHeroSkillPoints(this.m_unit))
 				call SetHeroStr(this.m_unit, GetHeroStr(this.m_realUnit, false), true)
 				call SetHeroStr(this.m_unit, GetHeroStrBonus(this.m_realUnit), false)
 				call SetHeroAgi(this.m_unit, GetHeroAgi(this.m_realUnit, false), true)
 				call SetHeroAgi(this.m_unit, GetHeroAgiBonus(this.m_realUnit), false)
 				call SetHeroInt(this.m_unit, GetHeroInt(this.m_realUnit, false), true)
 				call SetHeroInt(this.m_unit, GetHeroIntBonus(this.m_realUnit), false)
+				call UnitModifySkillPoints(this.m_unit, GetHeroSkillPoints(this.m_realUnit) - GetHeroSkillPoints(this.m_unit))
 			debug else
 				debug call this.print("Is no hero!")
 			endif
 			if (this.m_copyVisibility) then
 				call ShowUnit(this.m_unit, not IsUnitHidden(this.m_realUnit))
 			endif
-			if (this.m_copyPause) then
-				call PauseUnit(this.m_unit, IsUnitPaused(this.m_realUnit))
-			endif
 			if (this.m_copyVulnerbility) then
 				call SetUnitInvulnerable(this.m_unit, IsUnitInvulnerable(this.m_realUnit))
+			endif
+			if (this.m_copyPause) then
+				call PauseUnit(this.m_unit, IsUnitPaused(this.m_realUnit))
 			endif
 		endmethod
 

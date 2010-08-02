@@ -1,3 +1,14 @@
+2010-08-02 Tamino Dauth <tamino@cdauth.eu>
+* Fixed various item type checks in struct AInventory.
+* Renamed some identifiers of structs AInventory and AItemType.
+* AItemType.checkRequirements is stub now.
+* Added AItemType.createSimple.
+* Fixed function AsciiToChar (returned correct index + 1).
+* Improved struct ALayer and added better documentation.
+* Fixed dialog button indices and highlightings.
+* Implemented double clicking treatment in struct AHeroIcon.
+* Revised charges of struct AInventory.
+
 2010-08-01 Tamino Dauth <tamino@cdauth.eu>
 * Revised and hopefully improved struct AMultiboardBar.
 * Added interface ABarInterface.
