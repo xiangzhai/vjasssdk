@@ -1,5 +1,6 @@
 2010-08-12 Tamino Dauth <tamino@cdauth.eu>
 * AClass.generateUnit is stub now.
+* Added default instance AIntegerMap of text macro A_MAP.
 
 2010-08-02 Tamino Dauth <tamino@cdauth.eu>
 * Fixed various item type checks in struct AInventory.
