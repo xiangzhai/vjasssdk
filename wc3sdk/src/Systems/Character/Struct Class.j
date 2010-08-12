@@ -85,10 +85,17 @@ library AStructSystemsCharacterClass requires AStructCoreGeneralVector
 			return false
 		endmethod
 
-		public method generateUnit takes player whichPlayer, real x, real y, real facing returns unit
+		/**
+		* Creates a unit for the given player at the given position with unit type of class and its start level and start skill point if unit type is hero.
+		* Since this method is stub you can overwrite it and create another unit.
+		* This can be useful if you want to provide various unit types for the same class for example.
+		*/
+		public stub method generateUnit takes player whichPlayer, real x, real y, real facing returns unit
 			local unit whichUnit = CreateUnit(whichPlayer, this.m_unitType, x, y, facing)
-			call SetHeroLevelBJ(whichUnit, thistype.m_startLevel, false)
-			call UnitModifySkillPoints(whichUnit, (thistype.m_startSkillPoints - GetHeroSkillPoints(whichUnit))) // sets the skill points
+			if (IsUnitType(whichUnit, UNIT_TYPE_HERO)) then
+				call SetHeroLevelBJ(whichUnit, thistype.m_startLevel, false)
+				call UnitModifySkillPoints(whichUnit, (thistype.m_startSkillPoints - GetHeroSkillPoints(whichUnit))) // sets the skill points
+			endif
 			return whichUnit
 		endmethod
 

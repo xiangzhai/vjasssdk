@@ -1,3 +1,6 @@
+2010-08-12 Tamino Dauth <tamino@cdauth.eu>
+* AClass.generateUnit is stub now.
+
 2010-08-02 Tamino Dauth <tamino@cdauth.eu>
 * Fixed various item type checks in struct AInventory.
 * Renamed some identifiers of structs AInventory and AItemType.

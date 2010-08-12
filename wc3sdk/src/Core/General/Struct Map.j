@@ -548,5 +548,6 @@ library AStructCoreGeneralMap requires AInterfaceCoreGeneralContainer, optional 
 	* max instances = 8192 / 1 = 8192 since there is no array member
 	*/
 	//! runtextmacro A_MAP("", "AUnitMap", "unit", "string", "null", "null", "8192", "40000", "8192")
+	//! runtextmacro A_MAP("", "AIntegerMap", "integer", "integer", "null", "null", "8192", "40000", "8192")
 
 endlibrary
