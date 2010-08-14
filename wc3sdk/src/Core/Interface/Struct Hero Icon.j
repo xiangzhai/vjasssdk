@@ -3,7 +3,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 	/**
 	* This struct provides the feature to add custom hero icons.
 	* Customly added hero icons can be used to refer to heroes of allied players if you have no
-	* shared control.
+	* shared advanced control.
 	* There will be usual hero icons in the left of screen and all unit orders which have the icons
 	* as targets will be forwarded to the actual hero.
 	* For providing the hero icon internally an invulnerable, paused unit is created on map which is
@@ -14,8 +14,15 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 		private static real m_refreshTime
 		// dynamic members
 		private boolean m_recognizeAllianceChanges
+		// construction members
+		private unit m_unit
+		private player m_playerCopy
+		private real m_x
+		private real m_y
+		private real m_facing
 		// members
 		private integer m_selectionCounter
+		private unit m_copiedUnit
 		private AUnitCopy m_unitCopy
 		private trigger m_selectionTrigger
 		private trigger m_orderTrigger
@@ -26,7 +33,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 		// dynamic members
 
 		/**
-		* @param recognizeAllianceChanges This value is initially true if icon owner is not the same as unit owner. If this value is true hero icon will be disabled automatically when alliance is changed to shared control and unit is a hero that there aren't two hero icons.
+		* @param recognizeAllianceChanges This value is initially true if icon owner is not the same as unit owner. If this value is true hero icon will be disabled automatically when alliance is changed to shared advaned control (ALLIANCE_SHARED_ADVANCED_CONTROL) and unit is a hero that there aren't two hero icons.
 		*/
 		public method setRecognizeAllianceChanges takes boolean recognizeAllianceChanges returns nothing
 			set this.m_recognizeAllianceChanges = recognizeAllianceChanges
@@ -36,38 +43,74 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			return this.m_recognizeAllianceChanges
 		endmethod
 
-		// members
+		// construction members
 
 		public method unit takes nothing returns unit
-			return this.m_unitCopy.realUnit()
+			return this.m_unit
 		endmethod
 
+		public method playerCopy takes nothing returns player
+			return this.m_playerCopy
+		endmethod
+
+		public method x takes nothing returns real
+			return this.m_x
+		endmethod
+
+		public method y takes nothing returns real
+			return this.m_y
+		endmethod
+
+		public method facing takes nothing returns real
+			return this.m_facing
+		endmethod
+
+		// members
+
 		public method unitCopy takes nothing returns unit
-			return this.m_unitCopy.unit()
+			return this.m_copiedUnit
 		endmethod
 
 		public method player takes nothing returns player
 			return GetOwningPlayer(this.unit())
 		endmethod
 
-		public method playerCopy takes nothing returns player
-			return GetOwningPlayer(this.unitCopy())
+		public method isEnabled takes nothing returns boolean
+			return this.m_unitCopy != 0
 		endmethod
 
-		public method isEnabled takes nothing returns boolean
-			return not IsUnitHidden(this.unitCopy())
+		private method createUnitCopy takes nothing returns nothing
+			set this.m_unitCopy = AUnitCopy.create(this.unit(), thistype.m_refreshTime, this.x(), this.y(), this.facing())
+			set this.m_copiedUnit = this.m_unitCopy.unit()
+			call this.m_unitCopy.setCopyVisibility(false)
+			call this.m_unitCopy.setCopyPause(false)
+			call this.m_unitCopy.setCopyVulnerbility(false)
+			call this.m_unitCopy.setCopyDeath(false)
+			//call ShowUnit(this.unit(), false) // starting enabled, has to be visible!
+			call SetUnitOwner(this.unitCopy(), this.playerCopy(), false)
+			//call SetUnitInvulnerable(this.unitCopy(), true) // has to be attackable!
+			call SetUnitPathing(this.unitCopy(), false)
+			call this.m_unitCopy.start()
 		endmethod
 
 		public method enable takes nothing returns nothing
-			call ShowUnit(this.unitCopy(), true)
-			call this.m_unitCopy.enable()
+			if (this.isEnabled()) then
+				return
+			endif
+			call this.createUnitCopy() // we need to create since hero icon is not hidden when unit is
 			call EnableTrigger(this.m_selectionTrigger)
 			call EnableTrigger(this.m_orderTrigger)
 		endmethod
 
 		public method disable takes nothing returns nothing
-			call this.m_unitCopy.disable()
-			call ShowUnit(this.unitCopy(), false)
+			if (not this.isEnabled()) then
+				return
+			endif
+			//call this.m_unitCopy.disable()
+			//call ShowUnit(this.unitCopy(), false)
+			call this.m_unitCopy.destroy() // we need to destroy since hero icon is not hidden when unit is
+			set this.m_unitCopy = 0
+			set this.m_copiedUnit = null
 			call DisableTrigger(this.m_selectionTrigger)
 			call DisableTrigger(this.m_orderTrigger)
 			// do never disable alliance trigger
@@ -132,7 +175,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 
 		private static method triggerActionAlliance takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
-			call this.setEnabled(not GetPlayerAlliance(this.playerCopy(), this.player(), ALLIANCE_SHARED_CONTROL))
+			call this.setEnabled(not GetPlayerAlliance(this.player(), this.playerCopy(), ALLIANCE_SHARED_ADVANCED_CONTROL))
 			debug call this.print("Changing alliance!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		endmethod
 
@@ -140,18 +183,16 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			local thistype this = thistype.allocate()
 			// dynamic members
 			set this.m_recognizeAllianceChanges = not (GetOwningPlayer(whichUnit) == iconOwner)
+
+			// construction members
+			set this.m_unit = whichUnit
+			set this.m_playerCopy = iconOwner
+			set this.m_x = x
+			set this.m_y = y
+			set this.m_facing = facing
 			// members
 			set this.m_selectionCounter = 0
-			set this.m_unitCopy = AUnitCopy.create(whichUnit, thistype.m_refreshTime, x, y, facing)
-			call this.m_unitCopy.setCopyVisibility(false)
-			call this.m_unitCopy.setCopyPause(false)
-			call this.m_unitCopy.setCopyVulnerbility(false)
-			call this.m_unitCopy.setCopyDeath(false)
-			//call ShowUnit(this.unit(), false) // starting enabled, has to be visible!
-			call SetUnitOwner(this.unitCopy(), iconOwner, false)
-			//call SetUnitInvulnerable(this.unitCopy(), true) // has to be attackable!
-			call SetUnitPathing(this.unitCopy(), false)
-			call this.m_unitCopy.start()
+			call this.createUnitCopy()
 
 			set this.m_selectionTrigger = CreateTrigger()
 			call TriggerRegisterAnyUnitEventBJ(this.m_selectionTrigger, EVENT_PLAYER_UNIT_SELECTED)
@@ -170,6 +211,16 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			call TriggerAddCondition(this.m_allianceTrigger, Condition(function thistype.triggerConditionAlliance))
 			call TriggerAddAction(this.m_allianceTrigger, function thistype.triggerActionAlliance)
 			call AHashTable.global().setHandleInteger(this.m_allianceTrigger, "this", this)
+
+			if (this.m_recognizeAllianceChanges) then
+				debug call this.print("Recognizing alliance changes!")
+				call this.setEnabled(not GetPlayerAlliance(this.player(), this.playerCopy(), ALLIANCE_SHARED_ADVANCED_CONTROL))
+				debug if (GetPlayerAlliance(this.player(), this.playerCopy(), ALLIANCE_SHARED_ADVANCED_CONTROL)) then
+					debug call this.print("Has shared advanced control")
+				debug else
+					debug call this.print("Has not!")
+				debug endif
+			endif
 
 			return this
 		endmethod

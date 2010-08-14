@@ -1,3 +1,9 @@
+2010-08-14 Tamino Dauth <tamino@cdauth.eu>
+* AHeroIcon: If there is shared control it should not be hidden but if player has left the game!
+* AInventory: Attempt to destroy 0 struct instance of AInventoryItemData when dropping item dropped for another player (maybe just when adding item to rucksack of non-human player?!).
+* AInventory: Giving items to other doesn't work (no charges and crash).
+* ASpawnPoint: Fix respawn.
+
 2010-08-12 Tamino Dauth <tamino@cdauth.eu>
 * DEPRECATED: AInventory: When an equipment item was dropped and you open rucksack and equipment again it crashes the game?
 

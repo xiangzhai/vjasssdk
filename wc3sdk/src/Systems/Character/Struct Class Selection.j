@@ -32,6 +32,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		private static string m_textAbilities
 		private static string m_textDescription
 		// static members
+		private static thistype array m_playerClassSelection[12] /// @todo bj_MAX_PLAYERS, JassHelper bug
 		private static integer m_stack //required for the start game action
 		// construction members
 		private player m_user
@@ -72,6 +73,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		// methods
 
 		private method selectClass takes nothing returns nothing
+			local integer i
 			local ACharacter character = 0
 			local unit whichUnit = this.m_class.generateUnit(this.m_user, this.m_startX, this.m_startY, this.m_startFacing)
 
@@ -84,6 +86,15 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 
 			if (GetPlayerController(this.m_user) == MAP_CONTROL_COMPUTER or (GetPlayerSlotState(this.m_user) == PLAYER_SLOT_STATE_LEFT and ACharacter.shareOnPlayerLeaves())) then
 				call character.shareControl(true)
+				// show info sheet since multiboard with team resources is displayed!
+				set i = 0
+				loop
+					exitwhen (i == bj_MAX_PLAYERS)
+					if (IsPlayerPlayingUser(Player(i)) and ACharacter.playerCharacter(Player(i)) == 0) then
+						call ShowMultiboardForPlayer(Player(i), thistype.playerClassSelection(Player(i)).m_infoSheet, true)
+					endif
+					set i = i + 1
+				endloop
 			endif
 			if (thistype.m_hideUserInterface) then
 				call SetUserInterfaceForPlayer(this.m_user, true, true)
@@ -419,6 +430,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			// members
 			set this.m_class = thistype.m_firstClass
 			// static members
+			set thistype.m_playerClassSelection[GetPlayerId(user)] = this
 			set thistype.m_stack = thistype.m_stack + 1
 
 			call this.createLeaveTrigger()
@@ -485,6 +497,7 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 		endmethod
 
 		public static method init takes camerasetup cameraSetup, boolean hideUserInterface, real x, real y, real facing, real refreshRate, real rotationAngle, AClass firstClass, AClass lastClass, AClassSelectionCharacterCreationAction characterCreationAction, AClassSelectionStartGameAction startGameAction, string strengthIconPath, string agilityIconPath, string intelligenceIconPath, string textTitle, string textStrength, string textAgility, string textIntelligence, string textAbilities, string textDescription returns nothing
+			local integer i
 			// static construction members
 			set thistype.m_cameraSetup = cameraSetup
 			set thistype.m_hideUserInterface = hideUserInterface
@@ -507,7 +520,17 @@ library AStructSystemsCharacterClassSelection requires optional ALibraryCoreDebu
 			set thistype.m_textAbilities = textAbilities
 			set thistype.m_textDescription = textDescription
 			//static members
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				set thistype.m_playerClassSelection[i] = 0
+				set i = i + 1
+			endloop
 			set thistype.m_stack = 0
+		endmethod
+
+		public static method playerClassSelection takes player whichPlayer returns thistype
+			return thistype.m_playerClassSelection[GetPlayerId(whichPlayer)]
 		endmethod
 	endstruct
 

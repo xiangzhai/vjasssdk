@@ -197,6 +197,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 	* Otherwise there will be some errors regarding their displayed charges (dropping, stacking, moving items etc).
 	* @todo Use UnitDropItemSlot instead of item removals.
 	* @todo Maybe there should be an implementation of equipment pages, too (for more than 5 equipment types). You could add something like AEquipmentType.
+	* @todo Implement static item methods for paused units!!!
 	*/
 	struct AInventory extends AAbstractCharacterSystem
 		// static constant members, useful for GUIs
@@ -346,7 +347,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 					call thistype.clearItemIndex(slotItem)
 					call DisableTrigger(this.m_dropTrigger)
 					if (drop) then
-						call UnitDropItemPoint(characterUnit, slotItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
+						call thistype.unitDropItemPoint(characterUnit, slotItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
 						if (GetItemType(slotItem) != ITEM_TYPE_CHARGED) then
 							call SetItemCharges(slotItem, GetItemCharges(slotItem) - 1)
 						endif
@@ -480,7 +481,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 				call itemType.removePermanentAbilities(characterUnit)
 			//endif
 			call DisableTrigger(this.m_pickupTrigger)
-			call UnitAddItemToSlotById(characterUnit, this.m_equipmentItemData[equipmentType].itemTypeId(), equipmentType)
+			call thistype.unitAddItemToSlotById(characterUnit, this.m_equipmentItemData[equipmentType].itemTypeId(), equipmentType)
 			call EnableTrigger(this.m_pickupTrigger)
 			set slotItem = UnitItemInSlot(characterUnit, equipmentType)
 			call this.m_equipmentItemData[equipmentType].assignToItem(slotItem)
@@ -508,7 +509,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			local item slotItem
 			local AItemType itemType = AItemType.itemTypeOfItemTypeId(this.m_rucksackItemData[index].itemTypeId())
 			call DisableTrigger(this.m_pickupTrigger)
-			call UnitAddItemToSlotById(characterUnit, this.m_rucksackItemData[index].itemTypeId(), slot)
+			call thistype.unitAddItemToSlotById(characterUnit, this.m_rucksackItemData[index].itemTypeId(), slot)
 			call EnableTrigger(this.m_pickupTrigger)
 			set slotItem = UnitItemInSlot(characterUnit, slot)
 			call this.m_rucksackItemData[index].assignToItem(slotItem)
@@ -559,8 +560,8 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			set this.m_rucksackIsEnabled = true
 			call this.showRucksackPage(this.m_rucksackPage, true)
 			call DisableTrigger(this.m_pickupTrigger)
-			call UnitAddItemToSlotById(characterUnit, thistype.m_leftArrowItemType, AInventory.maxRucksackItemsPerPage)
-			call UnitAddItemToSlotById(characterUnit, thistype.m_rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
+			call thistype.unitAddItemToSlotById(characterUnit, thistype.m_leftArrowItemType, AInventory.maxRucksackItemsPerPage)
+			call thistype.unitAddItemToSlotById(characterUnit, thistype.m_rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
 			call EnableTrigger(this.m_pickupTrigger)
 			set leftArrowItem = UnitItemInSlot(characterUnit, thistype.maxRucksackItemsPerPage)
 			set rightArrowItem = UnitItemInSlot(characterUnit, thistype.maxRucksackItemsPerPage + 1)
@@ -745,7 +746,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 					call thistype.clearItemIndex(slotItem)
 					call DisableTrigger(this.m_dropTrigger)
 					if (drop) then
-						call UnitDropItemPoint(characterUnit, slotItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
+						call thistype.unitDropItemPoint(characterUnit, slotItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
 					else
 						call RemoveItem(slotItem)
 					endif
@@ -823,24 +824,11 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			local integer equipmentType = itemType.equipmentType()
 			local player itemPlayer = GetItemPlayer(usedItem)
 			local unit characterUnit = this.character().unit()
-			local boolean isBeingPaused
 			local item equippedItem
 			local string itemName
 			if (not this.m_rucksackIsEnabled and UnitHasItem(characterUnit, usedItem)) then // already picked up
 				call DisableTrigger(this.m_dropTrigger)
-				/// @todo TEST, Workaround (character inventory system has to work - adding items - when character is being paused e. g. during talks)
-				if (IsUnitPaused(characterUnit)) then
-					debug call this.print("Unpause")
-					set isBeingPaused = true
-					call PauseUnit(characterUnit, false)
-				else
-					set isBeingPaused = false
-				endif
-				call UnitDropItemPoint(characterUnit, usedItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
-				if (isBeingPaused) then
-					debug call this.print("Pause")
-					call PauseUnit(characterUnit, true)
-				endif
+				call thistype.unitDropItemPoint(characterUnit, usedItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
 				call EnableTrigger(this.m_dropTrigger)
 			endif
 
@@ -885,23 +873,10 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			local integer i
 			local player itemPlayer = GetItemPlayer(usedItem)
 			local unit characterUnit = this.character().unit()
-			local boolean isBeingPaused
 			local string itemName
 			if (this.m_rucksackIsEnabled and UnitHasItem(characterUnit, usedItem)) then // already picked up
 				call DisableTrigger(this.m_dropTrigger)
-				/// @todo TEST, Workaround (character inventory system has to work - adding items - when character is being paused e. g. during talks)
-				if (IsUnitPaused(characterUnit)) then
-					debug call this.print("Unpause")
-					set isBeingPaused = true
-					call PauseUnit(characterUnit, false)
-				else
-					set isBeingPaused = false
-				endif
-				call UnitDropItemPoint(characterUnit, usedItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
-				if (isBeingPaused) then
-					debug call this.print("Pause")
-					call PauseUnit(characterUnit, true)
-				endif
+				call thistype.unitDropItemPoint(characterUnit, usedItem, GetUnitX(characterUnit), GetUnitY(characterUnit))
 				call EnableTrigger(this.m_dropTrigger)
 			endif
 			set characterUnit = null
@@ -979,7 +954,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			call EnableTrigger(this.m_dropTrigger)
 			call DisableTrigger(this.m_pickupTrigger)
 			if (currentItemData != 0) then
-				call UnitAddItemToSlotById(characterUnit, currentItemData.itemTypeId(), oldSlot)
+				call thistype.unitAddItemToSlotById(characterUnit, currentItemData.itemTypeId(), oldSlot)
 				set currentItem = UnitItemInSlot(characterUnit, oldSlot)
 				call currentItemData.assignToItem(currentItem)
 				if (currentItemData.itemTypeId() != thistype.m_leftArrowItemType and currentItemData.itemTypeId() != thistype.m_rightArrowItemType) then
@@ -989,7 +964,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 				set currentItem = null
 			endif
 			if (otherItemData != 0) then
-				call UnitAddItemToSlotById(characterUnit, otherItemData.itemTypeId(), currentSlot)
+				call thistype.unitAddItemToSlotById(characterUnit, otherItemData.itemTypeId(), currentSlot)
 				set otherItem = UnitItemInSlot(characterUnit, currentSlot)
 				call otherItemData.assignToItem(otherItem)
 				if (otherItemData.itemTypeId() != thistype.m_leftArrowItemType and otherItemData.itemTypeId() != thistype.m_rightArrowItemType) then
@@ -1274,7 +1249,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 					call RemoveItem(usedItem)
 					set usedItem = null
 					call DisableTrigger(this.m_pickupTrigger)
-					call UnitAddItemToSlotById(this.character().unit(), thistype.m_leftArrowItemType, thistype.maxRucksackItemsPerPage)
+					call thistype.unitAddItemToSlotById(this.character().unit(), thistype.m_leftArrowItemType, thistype.maxRucksackItemsPerPage)
 					call EnableTrigger(this.m_pickupTrigger)
 					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textDropPageItem)
 				elseif (GetItemTypeId(usedItem) == thistype.m_rightArrowItemType) then
@@ -1282,7 +1257,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 					call RemoveItem(usedItem)
 					set usedItem = null
 					call DisableTrigger(this.m_pickupTrigger)
-					call UnitAddItemToSlotById(this.character().unit(), thistype.m_rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
+					call thistype.unitAddItemToSlotById(this.character().unit(), thistype.m_rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
 					call EnableTrigger(this.m_pickupTrigger)
 					set usedItem = UnitItemInSlot(this.character().unit(), thistype.maxRucksackItemsPerPage + 1)
 					call SetItemCharges(usedItem, this.m_rucksackPage + 1)
@@ -1461,6 +1436,40 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			set thistype.m_textDropPageItem = textDropPageItem
 			set thistype.m_textMovePageItem = textMovePageItem
 			set thistype.m_textOwnedByOther = textOwnedByOther
+		endmethod
+
+		private static method unitAddItemToSlotById takes unit whichUnit, integer itemType, integer slot returns boolean
+			local boolean result
+			local boolean isBeingPaused
+			/// @todo TEST, Workaround (character inventory system has to work - adding items - when character is being paused e. g. during talks)
+			if (IsUnitPaused(whichUnit)) then
+				set isBeingPaused = true
+				call PauseUnit(whichUnit, false)
+			else
+				set isBeingPaused = false
+			endif
+			set result = UnitAddItemToSlotById(whichUnit, itemType, slot)
+			if (isBeingPaused) then
+				call PauseUnit(whichUnit, true)
+			endif
+			return result
+		endmethod
+
+		private static method unitDropItemPoint takes unit whichUnit, item whichItem, real x, real y returns boolean
+			local boolean result
+			local boolean isBeingPaused
+			/// @todo TEST, Workaround (character inventory system has to work - adding items - when character is being paused e. g. during talks)
+			if (IsUnitPaused(whichUnit)) then
+				set isBeingPaused = true
+				call PauseUnit(whichUnit, false)
+			else
+				set isBeingPaused = false
+			endif
+			set result = UnitDropItemPoint(whichUnit, whichItem, x, y)
+			if (isBeingPaused) then
+				call PauseUnit(whichUnit, true)
+			endif
+			return result
 		endmethod
 	endstruct
 

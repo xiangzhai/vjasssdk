@@ -9,7 +9,8 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 	*/
 	struct ADialog
 		// static constant members
-		private static constant integer maxPageButtons = 10
+		public static constant integer maxPageButtons = 10
+		public static constant integer maxMessageChars = 10
 		// static construction members
 		private static integer shortcutPreviousPage
 		private static integer shortcutNextPage
@@ -35,14 +36,24 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 
 		// dynamic members
 
+		/**
+		* Changes the dialog's message.
+		* Dialog messages are displayed in the top of the dialog window.
+		* The shown message can be queried by ADialog.modifiedMessage.
+		* @note Line breaks will be inserted automatically so there won't be any long messages which cross the window's border (ADialog.maxMessageChars).
+		* @see ADialog.message, ADialog.modifiedMessage
+		*/
 		public method setMessage takes string message returns nothing
 			set this.m_message = message
 			if (this.m_isDisplayed) then
-				/// @todo Fix InsertLineBreaks
-				call DialogSetMessage(this.m_dialog, this.modifiedMessage()) //InsertLineBreaks(message, 10)
+				call DialogSetMessage(this.m_dialog, this.modifiedMessage())
 			endif
 		endmethod
 
+		/**
+		* @return Returns the unmodified message of the dialog.
+		* @see ADialog.modifiedMessage
+		*/
 		public method message takes nothing returns string
 			return this.m_message
 		endmethod
@@ -52,8 +63,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			local integer exitValue = (this.m_currentPage + 1) * thistype.maxPageButtons
 			set this.m_isDisplayed = displayed
 			if (displayed) then
-				/// @todo Fix InsertLineBreaks
-				call DialogSetMessage(this.m_dialog, this.modifiedMessage()) //InsertLineBreaks(message, 10)
+				call DialogSetMessage(this.m_dialog, this.modifiedMessage())
 				loop
 					exitwhen (i == exitValue or i == this.m_dialogButtons.size())
 					call ADialogButton(this.m_dialogButtons[i]).addButton()
@@ -111,7 +121,8 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 			if (this.m_maxPageNumber == 0) then
 				return this.m_message
 			endif
-			return IntegerArg(IntegerArg(StringArg(thistype.m_textMessage, this.m_message), this.m_currentPage + 1), this.m_maxPageNumber + 1)
+			/// @todo Fix InsertLineBreaks
+			return InsertLineBreaks(IntegerArg(IntegerArg(StringArg(thistype.m_textMessage, this.m_message), this.m_currentPage + 1), this.m_maxPageNumber + 1), thistype.maxMessageChars)
 		endmethod
 
 		public method show takes nothing returns nothing

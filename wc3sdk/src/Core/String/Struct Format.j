@@ -5,7 +5,8 @@ library AStructCoreStringFormat requires ALibraryCoreStringMisc, optional ALibra
 	* @code
 	local string message = Format(tr("It's %1% o'clock and you're going to die in %2% hours. Maybe you should ask %3% why you're still alive.")).t(GetTimeOfDay()).i(3).s("Peter").result()
 	* @endcode
-	* Instead of AFormat.result you can use the global String function.
+	* Instead of AFormat.create you can use the global function Format.
+	* Instead of AFormat.result you can use the global function String.
 	* This struct has been inspired by Boost C++ Libraries projects's format module (@link http://www.boost.org/doc/libs/1_43_0/libs/format/index.html).
 	* Unfortunately vJass does not allow operator and method overloading.
 	* @see String, Format, tr, sc, IntegerArg, RealArg, RealArgW, StringArg, HandleArg
@@ -17,10 +18,17 @@ library AStructCoreStringFormat requires ALibraryCoreStringMisc, optional ALibra
 
 		//! runtextmacro A_STRUCT_DEBUG("\"AFormat\"")
 
+		/**
+		* Ordered arguments formatting is implemented by storing the current format position.
+		* @return Returns the current formatting position/argument.
+		*/
 		public method position takes nothing returns integer
 			return this.m_position
 		endmethod
 
+		/**
+		* @return Returns the current formatted text/string.
+		*/
 		public method text takes nothing returns string
 			return this.m_text
 		endmethod
@@ -89,12 +97,21 @@ library AStructCoreStringFormat requires ALibraryCoreStringMisc, optional ALibra
 		/// Use seconds as parameter!
 		//! runtextmacro AFormatMethod("time", "integer", "t", "GetTimeString(value)", "")
 
+		/**
+		* @return Returns the formatted string result and destroys the instance.
+		* @note Don't use the destroyed instance afterwards!
+		* @see String
+		*/
 		public method result takes nothing returns string
 			local string result = this.m_text
 			call this.destroy()
 			return result
 		endmethod
 
+		/**
+		* Creates a new instance based on text @param text.
+		* @see Format
+		*/
 		public static method create takes string text returns AFormat
 			local thistype this = thistype.allocate()
 			set this.m_position = 0
@@ -103,12 +120,20 @@ library AStructCoreStringFormat requires ALibraryCoreStringMisc, optional ALibra
 		endmethod
 	endstruct
 
+	/**
+	* Global function and alternative to AFormat.result.
+	* @return Returns the formatted result and destroys the formatting instance.
+	* @see AFormat.result
+	*/
 	function String takes AFormat format returns string
-		local string result = format.text()
-		call format.destroy()
-		return result
+		return format.result()
 	endfunction
 
+	/**
+	* Global function and alternative to AFormat.create.
+	* @return Returns a newly created formatting instance.
+	* @see AFormat.create
+	*/
 	function Format takes string text returns AFormat
 		return AFormat.create(text)
 	endfunction

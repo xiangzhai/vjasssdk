@@ -150,14 +150,14 @@ library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, 
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
+			call PauseTimer(this.m_refreshTimer)
+			call AHashTable.global().destroyTimer(this.m_refreshTimer)
+			set this.m_refreshTimer = null
 			// construction members
 			set this.m_realUnit = null
 			// members
 			call RemoveUnit(this.m_unit)
 			set this.m_unit = null
-			call PauseTimer(this.m_refreshTimer)
-			call AHashTable.global().destroyTimer(this.m_refreshTimer)
-			set this.m_refreshTimer = null
 		endmethod
 	endstruct
 

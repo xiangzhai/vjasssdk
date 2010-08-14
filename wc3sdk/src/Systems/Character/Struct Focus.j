@@ -1,4 +1,4 @@
-/// Do not use this library, it is unfinished!
+/// @todo Do not use this library, it is unfinished!
 library AStructSystemsCharacterFocus requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreMathsRect, ALibraryCoreMathsHandle, ALibraryCoreInterfaceMisc, ALibraryCoreInterfaceTextTag, ALibraryCoreEnvironmentUnit, AStructCoreStringFormat, AStructSystemsCharacterAbstractCharacterSystem
 
 	/**

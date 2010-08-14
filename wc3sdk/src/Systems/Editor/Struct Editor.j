@@ -1,9 +1,13 @@
 library AStructSystemsEditorEditor requires AStructCoreGeneralGroup, AStructCoreGeneralVector, AStructSystemsGuiGui
 
+	/**
+	* Provides a selection storage.
+	* @todo Should store containers of different types.
+	*/
 	private struct AEditorSelection
-		//start members
+		// construction members
 		private AEditor m_editor
-		//members
+		// members
 		private trigger m_waitTrigger
 		private player m_player
 		private location m_location
@@ -68,19 +72,24 @@ library AStructSystemsEditorEditor requires AStructCoreGeneralGroup, AStructCore
 		endmethod
 	endstruct
 
+	/**
+	* Editor implementation for game runtime.
+	* Could be useful for Dungeon Master-like maps.
+	* @todo Completely unfinished.
+	*/
 	struct AEditor
-		//static members
+		// static members
 		private static thistype array m_playerEditor[bj_MAX_PLAYERS]
-		//start members
+		// construction members
 		private player m_player
 		private AEditorSelection m_selection
-		
+
 		//start member
-		
+
 		public method player takes nothing returns player
 			return this.m_player
 		endmethod
-		
+
 		//methods
 
 		private static method buttonFunctionClearSelection takes ADialogButton dialogButton returns nothing
@@ -123,7 +132,7 @@ library AStructSystemsEditorEditor requires AStructCoreGeneralGroup, AStructCore
 		private static method buttonFunctionShowEditMenu takes ADialogButton dialogButton returns nothing
 			local thistype this = thistype.m_playerEditor[GetPlayerId(dialogButton.dialog().player())]
 		endmethod
-		
+
 		public method showMenu takes nothing returns nothing
 			call AGui.playerGui(this.m_player).dialog().clear()
 			call AGui.playerGui(this.m_player).dialog().setMessage(tr("Menü"))
@@ -133,13 +142,13 @@ library AStructSystemsEditorEditor requires AStructCoreGeneralGroup, AStructCore
 			call AGui.playerGui(this.m_player).dialog().addButton(tr("Zurück zum Spiel"), 0)
 			call AGui.playerGui(this.m_player).dialog().show()
 		endmethod
-		
+
 		public static method create takes player whichPlayer returns thistype
 			local thistype this = thistype.allocate()
 			//start members
 			set this.m_player = whichPlayer
 			set this.m_selection = AEditorSelection.create(this)
-			
+
 			return this
 		endmethod
 

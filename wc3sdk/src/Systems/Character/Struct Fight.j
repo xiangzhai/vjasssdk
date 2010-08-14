@@ -1,15 +1,15 @@
 /// The fps common.j file is required.
-/// Do not use this library, it is unfinished!
+/// @todo Do not use this library, it is unfinished!
 library AStructSystemsCharacterFight requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructSystemsCharacterAbstractCharacterSystem, AStructSystemsCharacterCharacter
 
 	struct AFight extends AAbstractCharacterSystem
-		//static start members
+		// static construction members
 		private static boolean m_useFps
 		private static string m_order
 		private static real m_time
 		private static string m_hitAnimation
 		private static real m_angle
-		//members
+		// members
 		private trigger m_fightTrigger
 		private timer m_timer
 		private boolean m_hasOrdered

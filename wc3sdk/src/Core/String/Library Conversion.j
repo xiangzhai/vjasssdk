@@ -152,7 +152,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 			set i = i + maxLineLength
 		endloop
 
-		if (i != StringLength(whichString)) then
+		if (i < StringLength(whichString)) then
 			set result = result + SubString(whichString, i - maxLineLength, StringLength(whichString))
 		endif
 

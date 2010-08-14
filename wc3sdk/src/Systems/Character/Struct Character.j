@@ -6,10 +6,10 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 	* Each module makes the system requiring more memory, so clearly think of which system modules are required and which aren't.
 	*/
 	struct ACharacter
-		//static constant members
+		// static constant members
 		public static constant integer messageTypeInfo = 0
 		public static constant integer messageTypeError = 1
-		//static start members
+		// static construction members
 		private static boolean m_doAlwaysAddExperience
 		private static boolean m_removeUnitOnDestruction
 		private static boolean m_destroyOnPlayerLeaves
@@ -22,17 +22,17 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 		private static boolean m_useRevivalSystem
 		private static boolean m_useInventorySystem
 		private static boolean m_useTalkLogSystem
-		//static members
+		// static members
 		private static thistype array m_playerCharacter[12] //[bj_MAX_PLAYERS] vjass bug
-		//dynamic members
+		// dynamic members
 		private boolean m_isMovable
 		private AClass m_class //No system
 		private ATalk m_talk //No system
 		private AShrine m_shrine //No system
-		//start members
+		// construction members
 		private player m_player
 		private unit m_unit
-		//members
+		// members
 		private trigger m_leaveTrigger
 		private trigger m_deathTrigger
 		//insert the character systems here
@@ -348,6 +348,20 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 			return CopyUnit(this.m_unit, GetUnitX(this.m_unit), GetUnitY(this.m_unit), GetUnitFacing(this.m_unit), stateMethod)
 		endmethod
 
+		/// @return Returns if player has shared advanced control (ALLIANCE_SHARED_CONTROL and ALLIANCE_SHARED_ADVANCED_CONTROL) to all other players.
+		public method isControlShared takes nothing returns boolean
+			local integer i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				if (i != GetPlayerId(this.m_player) and (not GetPlayerAlliance(this.m_player, Player(i), ALLIANCE_SHARED_CONTROL) or not GetPlayerAlliance(this.m_player, Player(i), ALLIANCE_SHARED_ADVANCED_CONTROL))) then
+					return false
+				endif
+				set i = i + 1
+			endloop
+			return true
+		endmethod
+
+		/// Shares advanced player control (ALLIANCE_SHARED_CONTROL and ALLIANCE_SHARED_ADVANCED_CONTROL) to players.
 		public method shareControl takes boolean share returns nothing
 			local player whichPlayer
 			local integer i = 0
@@ -356,6 +370,7 @@ library AStructSystemsCharacterCharacter requires optional ALibraryCoreDebugMisc
 				if (i != GetPlayerId(this.m_player)) then
 					set whichPlayer = Player(i)
 					call SetPlayerAlliance(this.m_player, whichPlayer, ALLIANCE_SHARED_CONTROL, share)
+					call SetPlayerAlliance(this.m_player, whichPlayer, ALLIANCE_SHARED_ADVANCED_CONTROL, share)
 					set whichPlayer = null
 				endif
 				set i = i + 1
