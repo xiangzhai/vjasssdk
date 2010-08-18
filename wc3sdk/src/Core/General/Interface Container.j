@@ -73,5 +73,15 @@ library AInterfaceCoreGeneralContainer
 		endloop
 		call aIterator.destroy()
 	//! endtextmacro
-	
+
+	/// Use this to clean up integer containers which store struct instances which has to be destroyed before removing them from container.
+	//! textmacro A_DESTROY takes CONTAINERVARIABLE, MEMBERTYPE
+		loop
+			exitwhen ($CONTAINERVARIABLE$.empty())
+			call $MEMBERTYPE$($CONTAINERVARIABLE$.back()).destroy()
+			call $CONTAINERVARIABLE$.popBack()
+		endloop
+		call $CONTAINERVARIABLE$.destroy()
+	//! endtextmacro
+
 endlibrary

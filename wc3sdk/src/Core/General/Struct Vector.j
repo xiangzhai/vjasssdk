@@ -1,4 +1,4 @@
-library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
+library AStructCoreGeneralVector requires AInterfaceCoreGeneralContainer, optional ALibraryCoreDebugMisc
 
 	/**
 	* @author Tamino Dauth
@@ -23,7 +23,7 @@ library AStructCoreGeneralVector requires optional ALibraryCoreDebugMisc
 
 		/// @todo Should be a part of @struct $NAME$, vJass bug.
 		$STRUCTPREFIX$ function interface $NAME$BinaryOperation takes $ELEMENTTYPE$ value0, $ELEMENTTYPE$ value1 returns $ELEMENTTYPE$
-		
+
 		$STRUCTPREFIX$ struct $NAME$Iterator[$ITERATORSPACE$]
 			private $NAME$ m_container
 			private integer m_index

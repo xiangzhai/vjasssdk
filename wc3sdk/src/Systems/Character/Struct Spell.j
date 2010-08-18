@@ -213,6 +213,11 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			return this
 		endmethod
 
+		/// Use this constructor if you either don't any event response functions or you overwrite the stub methods.
+		public static method createSimple takes ACharacter character, integer whichAbility returns thistype
+			return thistype.create(character, whichAbility, 0, 0, 0)
+		endmethod
+
 		public static method createRestored takes ACharacter character, gamecache cache, string missionKey, string labelPrefix returns thistype
 			local thistype this = thistype.allocate(character)
 			return this

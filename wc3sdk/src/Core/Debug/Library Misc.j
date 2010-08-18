@@ -372,10 +372,10 @@ static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 	hook RestoreUnit DebugRestoreUnit
 	hook SetImageRender DebugSetImageRender
 	hook DestroyTrigger DebugDestroyTrigger
-	//hook TimerStart DebugTimerStart
-	//hook PauseTimer DebugPauseTimer
-	//hook ResumeTimer DebugResumeTimer
-	//hook DestroyTimer DebugDestroyTimer
+	hook TimerStart DebugTimerStart
+	hook PauseTimer DebugPauseTimer
+	hook ResumeTimer DebugResumeTimer
+	hook DestroyTimer DebugDestroyTimer
 endif
 
 	//GroupEnumUnitsInRectCounted und GroupEnumUnitsInRangeCounted

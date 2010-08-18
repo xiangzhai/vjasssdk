@@ -1,3 +1,13 @@
+2010-08-18 Tamino Dauth <tamino@cdauth.eu>
+* AInventory: Improved method cleanUpRucksack and fixed dropping behaviour when dropping items on other characters.
+* ASpell: Added constructor createSimple.
+* AVote: Revised completely, usable for specific forces and players now.
+* Added text macro A_DESTROY for cleaning up struct instances storing containers.
+* Added functions GetPlayingUsers and GetPlayingPlayers.
+
+2010-08-17 Tamino Dauth <tamino@cdauth.eu>
+* Enabled timer debugging functions again, test it!
+
 2010-08-13 Tamino Dauth <tamino@cdauth.eu>
 * AHeroIcon: Icon is removed now if hero icon is disabled.
 * Fixed various character related share methods which share control (using ALLIANCE_SHARED_ADVANCED_CONTROL now).

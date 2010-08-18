@@ -89,38 +89,38 @@ library AStructSystemsWorldItemSpawnPoint requires AInterfaceSystemsWorldSpawnPo
 
 		public method spawn takes nothing returns boolean
 			if (this.m_item != null) then
-				debug call this.print("Item is still there, NOT SPAWNING!!!")
 				return false
 			endif
-			debug call this.print("Spawning item")
 			set this.m_item = PlaceRandomItem(this.m_itemPool, this.m_x, this.m_y)
+			debug if (this.m_item == null) then
+				debug call this.print("Could not spawn item.")
+			debug endif
 			return true
+		endmethod
+
+		/**
+		* Since you can't recognize when an item is killed we check its position and life manually.
+		* @return Returns true if the item will be respawned next time.
+		*/
+		public method willBeRespawned takes nothing returns boolean
+			return (not this.runs() and this.m_isEnabled and (this.m_item == null or IsItemOwned(this.m_item) or GetWidgetLife(this.m_item) <= 0.0 or GetDistanceBetweenPoints(GetItemX(this.m_item), GetItemY(this.m_item), 0.0, this.m_x, this.m_y, 0.0) > thistype.m_removalRange))
 		endmethod
 
 		private static method timerFunctionRespawn takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetExpiredTimer(), "this")
-			debug call this.print("Timer expired!")
 			call this.spawn()
 			set this.m_runs = false
 		endmethod
 
 		private method respawn takes nothing returns nothing
-			if (not this.runs() and this.m_isEnabled and (this.m_item == null or IsItemOwned(this.m_item) or GetWidgetLife(this.m_item) <= 0.0 or GetDistanceBetweenPoints(GetItemX(this.m_item), GetItemY(this.m_item), 0.0, this.m_x, this.m_y, 0.0) > thistype.m_removalRange)) then
-				debug call this.print("Starting item respawn with time: " + R2S(thistype.m_time))
+			if (this.willBeRespawned()) then
 				set this.m_runs = true
 				set this.m_item = null
 				if (this.m_timer == null) then
-					debug call this.print("Creating timer")
 					set this.m_timer = CreateTimer()
 					call AHashTable.global().setHandleInteger(this.m_timer, "this", this)
-				debug else
-					debug call this.print("Not creating timer!!!")
 				endif
-				debug call this.print("Before timer start")
 				call TimerStart(this.m_timer, thistype.m_time, false, function thistype.timerFunctionRespawn)
-				debug call this.print("After timer start with remaining time " + R2S(TimerGetRemaining(this.m_timer)))
-			//debug else
-				//debug call this.print("Do not start item respawn!")
 			endif
 		endmethod
 

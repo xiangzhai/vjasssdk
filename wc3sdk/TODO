@@ -1,8 +1,14 @@
+2010-08-18 Tamino Dauth <tamino@cdauth.eu>
+* AInventory: Dropping page items is not prevented correctly.
+
+2010-08-17 Tamino Dauth <tamino@cdauth.eu>
+* Test timer debugging functions.
+
 2010-08-14 Tamino Dauth <tamino@cdauth.eu>
-* AHeroIcon: If there is shared control it should not be hidden but if player has left the game!
+* FIXED: AHeroIcon: If shared advanced control is given it should be hidden.
 * AInventory: Attempt to destroy 0 struct instance of AInventoryItemData when dropping item dropped for another player (maybe just when adding item to rucksack of non-human player?!).
 * AInventory: Giving items to other doesn't work (no charges and crash).
-* ASpawnPoint: Fix respawn.
+* ASpawnPoint: Fix respawn, sometimes units can not be created.
 
 2010-08-12 Tamino Dauth <tamino@cdauth.eu>
 * DEPRECATED: AInventory: When an equipment item was dropped and you open rucksack and equipment again it crashes the game?
@@ -26,7 +32,7 @@
 * Fix dialog button indices (next page starts with 0 again!).
 
 2010-07-26 Tamino Dauth <tamino@cdauth.eu>
-* Test alliance changing of struct AHeroIcon.
+* DONE: Test alliance changing of struct AHeroIcon.
 * Change member names of struct AHeroIcon and AUnitCopy.
 
 2010-07-19 Tamino Dauth <tamino@cdauth.eu>
@@ -41,16 +47,16 @@
 * FIXED: Items which are owned by other players are only dropped from equipment not from rucksack but message
 is shown in rucksack only.
 * Just add AInventory which is inherited by ARucksack and AEquipment.
-* Unit of AHeroIcon has to be visible on map (for attacks and movement!).
-* Fix ItemSpawnPoint.
-* ALayer should allow multiple heights with corresponding rects.
+* FIXED: Unit of AHeroIcon has to be visible on map (for attacks and movement!).
+* DONE: Fix ItemSpawnPoint.
+* DONE: ALayer should allow multiple heights with corresponding rects.
 
 2010-05-30 Tamino Dauth <tamino@cdauth.eu>
-* Add struct AHeroIcon for allied heroes which can be used to see allied hero data and to do some orders on them.
-* Add option "useHeroIcons" for character system.
+* DONE: Add struct AHeroIcon for allied heroes which can be used to see allied hero data and to do some orders on them.
+* DONE: Add option "useHeroIcons" for character system.
 
 2010-05-24 Tamino Dauth <tamino@cdauth.eu>
-* Change quest messages that they're more like Warcraft 3 TFT.
+* DONE: Change quest messages that they're more like Warcraft 3 TFT.
 
 2010-05-11 Tamino Dauth <tamino@cdauth.eu>
 * Fix function GetHeroMaxXP (probably correct but multiboard bar doesn show correct value).
