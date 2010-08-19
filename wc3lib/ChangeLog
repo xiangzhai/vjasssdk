@@ -1,3 +1,6 @@
+2010-08-19 Tamino Dauth <tamino@cdauth.eu>
+* blp: Improved libjpeg.so loading and decompressing of images.
+
 2010-07-25 Tamino Dauth <tamino@cdauth.eu>
 * Fixed various bugs in language module.
 * Improved application "converter" and added option quiet.

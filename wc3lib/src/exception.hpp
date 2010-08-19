@@ -40,12 +40,22 @@ class Exception : public virtual std::exception, public virtual boost::exception
 		Exception(const std::string &what = "") throw ();
 		Exception(const boost::format &what) throw ();
 		virtual ~Exception() throw ();
-		void appendWhat(const std::string &what);
 		const char* what() const throw ();
+		std::string& what();
 
 	protected:
 		std::string m_what;
 };
+
+inline const char* Exception::what() const throw ()
+{
+	return this->m_what.c_str();
+}
+
+inline std::string& Exception::what()
+{
+	return this->m_what;
+}
 
 }
 

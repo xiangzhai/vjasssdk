@@ -41,11 +41,35 @@ namespace blp
 
 /**
 * @brief Provides access to the BLP format.
-*
+* BLP is Blizzard Entertainment's texture format.
+* There are two different format specifications: BLP1 and BLP2.
+* Besides there is a BLP0 format which isn't really different from BLP1.
+* BLP0 and BLP1 are used in games Warcraft 3 and Warcraft 3 The Frozen Throne.
+* BLP2 is used in World of Warcraft.
+* BLP0 and BLP1 images can have two different compression modes:
+* <ul>
+* <li>JPEG compression (JFIF)</li>
+* <li>Paletted compression</li>
+* </ul>
+* Additionally the BLP format allows you to save up to 16 mip maps per file.
 * A full mipmap chain must be present. The last mipmap must be 1x1 (no larger).
 * If an image is 32x8 the mipmap chain must be 32x8, 16x4, 8x2, 4x1, 2x1, 1x1.
 * Sizes not of powers of 2 seems to work fine too, the same rules for mipmaps
 * still applies. Ex: 24x17, 12x8 (rounded down), 6x4, 3x2, 1x1 (rounded down).
+*
+* Little loading example:
+* @code
+* #include <fstream>
+* #include <iostream>
+* #include <boost/foreach.hpp>
+* ...
+* std::ifstream ifstream("test.blp", std::ifstream::binary);
+* class Blp blp;
+* blp.readBlp(istream);
+* std::cout << "We have " << blp.mipMaps().size() << " mip maps here." << std::endl;
+* BOOST_FOREACH(const class Blp::MipMap *mipMap, blp.mipMaps())
+	* std::cout << "This mip map has height " << mipMap->height() << " and width " << mipMap->width() << std::endl;
+* @endcode
 */
 class Blp
 {
@@ -66,12 +90,12 @@ class Blp
 				};
 
 				MipMap(dword width, dword height);
-				
+
 				void scale(dword newWidth, dword newHeight) throw (class Exception);
-				
+
 				dword width() const;
 				dword height() const;
-				
+
 				void setColor(dword width, dword height, color rgb, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
 				const std::map<std::pair<dword, dword>, struct Color>& colors() const;
 				const struct Color& colorAt(dword width, dword height) const;
@@ -91,7 +115,7 @@ class Blp
 			TgaFormat,
 			PngFormat
 		};
-		
+
 		enum Version
 		{
 			Blp0, /// Reign of Chaos
@@ -104,13 +128,13 @@ class Blp
 			Jpeg = 0, /// JFIF!
 			Paletted = 1
 		};
-		
+
 		enum Flags
 		{
 			NoAlpha = 0,
 			Alpha = 8
 		};
-		
+
 		/// File header identifier of format BLP0.
 		static const byte identifier0[4];
 		/// File header identifier of format BLP1.
@@ -162,11 +186,11 @@ class Blp
 		* @return Returns true if mip map generation was successfully otherwise it returns false.
 		*/
 		bool generateMipMaps(class MipMap *initialMipMap, std::size_t number = Blp::maxMipMaps);
-		
+
 	protected:
 		dword mipMapWidth(std::size_t index) const;
 		dword mipMapHeight(std::size_t index) const;
-		
+
 		// header
 		enum Version m_version;
 		enum Compression m_compression;		//0 - Uses JPEG compression
