@@ -106,7 +106,7 @@
 
 2010-05-14 Tamino Dauth <tamino@cdauth.eu>
 * Added dialog message modification in struct ADialog for multi page dialogs.
-* Added struct AFormat and some corresponding global functions.
+* Added struct AFormat and some corresponding global functions (String and Format).
 * Improved internal text macro AStringArgumentMacro.
 * RealArgW is called RealWidthArg now.
 * Added many new string argument types (globally and for struct AFormat).
@@ -139,7 +139,7 @@
 
 2010-04-28 Tamino Dauth <tamino@cdauth.eu>
 * Revised structs AMainWindow and AWindow.
-* Added library ALibraryCoreEnvironmentTimeOfDay.
+* Added library ALibraryCoreEnvironmentTimeOfDay with functions GetTimeOfDayElapsedHours, GetTimeOfDayElapsedMinutesInHour, GetTimeOfDayRemainingHours, GetTimeOfDayElapsedMinutes, GetTimeOfDayElapsedSecondsInMinute, GetTimeOfDayRemainingMinutes, GetTimeOfDayElapsedSeconds, GetTimeOfDayRemainingSeconds and GetTimeOfDayString.
 * Improved function GetTimeString.
 * Added debugging cheat "timeofday".
 * Dropped camera setup option of struct AInfo and replaced it by "thirdPersonCamera".
