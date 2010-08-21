@@ -1,4 +1,6 @@
 File				Authors		Source
+Ore.blp				Frotty		Die Macht des Feuers
+Spoon.blp			Frotty		Die Macht des Feuers
 Poker.blp			Frotty		Die Macht des Feuers
 Saw.blp				Frotty		Die Macht des Feuers
 Bier.blp			Frotty		Die Macht des Feuers

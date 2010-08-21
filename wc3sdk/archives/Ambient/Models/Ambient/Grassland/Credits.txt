@@ -1,4 +1,6 @@
 File				Authors			Source
+Ore.mdx				Frotty			Die Macht des Feuers
+Spoon.mdx			Frotty			Die Macht des Feuers
 Poker.mdx			Frotty			Die Macht des Feuers
 Saw.mdx				Frotty			Die Macht des Feuers
 Bier.mdx			Frotty			Die Macht des Feuers
