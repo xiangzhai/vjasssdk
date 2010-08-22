@@ -1,4 +1,26 @@
 File							Authors				Source
+HorseSkinBlack.blp					Blizzard Entertainment		Die Macht des Feuers
+HorseSkinBrown.blp					Blizzard Entertainment		Die Macht des Feuers
+HorseSkinChessnut.blp					Blizzard Entertainment		Die Macht des Feuers
+HorseSkinEvil.blp					Blizzard Entertainment		Die Macht des Feuers
+HorseSkinPalamino.blp					Blizzard Entertainment		Die Macht des Feuers
+HorseSkinPinto.blp					Blizzard Entertainment		Die Macht des Feuers
+HorseSkinWhite.blp					Blizzard Entertainment		Die Macht des Feuers
+HorseSkinZebra.blp					Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinBlueBrownAlpha.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinBlueBrown.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinBrownAlpha.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinBrown.blp					Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinDarkBlackAlpha.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinDarkBlack.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinDarkBrownAlpha.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinDarkBrown.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinDarkGreyAlpha.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinDarkGrey.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinLightGreyAlpha.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinLightGrey.blp				Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinReddishBrownAlpha.blp			Blizzard Entertainment		Die Macht des Feuers
+DireWolfSkinReddishBrown.blp				Blizzard Entertainment		Die Macht des Feuers
 Baer.blp						Blizzard Entertainment		http://xgm.ru/
 BaerBlau.blp						Blizzard Entertainment		http://xgm.ru/
 BaerDunkelbraun.blp					Blizzard Entertainment		http://xgm.ru/
@@ -6,7 +28,7 @@ BaerenformBlau.blp					Blizzard Entertainment		http://xgm.ru/
 BaerenformBraun.blp					Blizzard Entertainment		http://xgm.ru/
 BaerSchwarz.blp						Blizzard Entertainment		http://xgm.ru/
 BaerWeiss.blp						Blizzard Entertainment		http://xgm.ru/
-BearSkinBlack.blp					Blizzard Entertainment		http://xgm.ru/                       
+BearSkinBlack.blp					Blizzard Entertainment		http://xgm.ru/
 BearSkinBlue.blp					Blizzard Entertainment		http://xgm.ru/
 BearSkinBrown.blp					Blizzard Entertainment		http://xgm.ru/
 BearSkinDrkBrown.blp					Blizzard Entertainment		http://xgm.ru/

@@ -1,4 +1,6 @@
 File				Authors				Source
+Horse.mdx			Blizzard Entertainment		Die Macht des Feuers
+DireWolf.mdx			Blizzard Entertainment		Die Macht des Feuers
 Baer.mdx			Blizzard Entertainment		http://xgm.ru/
 Bear.mdx			Blizzard Entertainment		http://xgm.ru/
 Baerenform.mdx			Blizzard Entertainment		http://xgm.ru/

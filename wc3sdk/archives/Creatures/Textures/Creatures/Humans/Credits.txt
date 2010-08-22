@@ -1,4 +1,30 @@
 File					Authors					Source
+HumanFemaleBlacksmith.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleCaster.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleFarmer.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleKid.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleMerchantFat.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleMerchantThin.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanFemalePeasant.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleWarriorHeavy.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleWarriorLight.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleWarriorMedium.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanMaleBlacksmith.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleCaster.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleFarmer.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleGuard.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleKid.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleMarshal.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleNoble.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMalePeasant.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanMalePirateCaptain.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanMalePirateCrewman.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanMalePirateSwashbuckler.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWarriorHeavy.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWarriorLight.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWarriorMedium.blp		Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWizard.blp			Blizzard Entertainment			Die Macht des Feuers
+HumanThief.blp				Blizzard Entertainment			Die Macht des Feuers
 Armbrustschuetze.blp			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 ArmbrustschuetzeSchild.blp		Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Attentaeter.blp				���					http://www.xgm.ru/

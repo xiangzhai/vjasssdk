@@ -1,4 +1,30 @@
 File						Authors					Source
+HumanFemaleBlacksmith.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleCaster.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleFarmer.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleKid.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleMerchantFat.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleMerchantThin.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanFemalePeasant.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleWarriorHeavy.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleWarriorLight.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanFemaleWarriorMedium.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleBlacksmith.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMaleCaster.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMaleFarmer.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMaleGuard.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMaleKid.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMaleMarshal.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMaleNoble.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMalePeasant.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanMalePirateCaptain.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanMalePirateCrewman.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanMalePirateSwashbuckler.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWarriorHeavy.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWarriorLight.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWarriorMedium.mdx			Blizzard Entertainment			Die Macht des Feuers
+HumanMaleWizard.mdx				Blizzard Entertainment			Die Macht des Feuers
+HumanThief.mdx					Blizzard Entertainment			Die Macht des Feuers
 Armbrustschuetze.mdx				Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Armbrustschuetze_Portrait.mdx			Blizzard Entertainment, Wolverine	http://www.xgm.ru/
 Attentaeter.mdx					���					http://www.xgm.ru/
