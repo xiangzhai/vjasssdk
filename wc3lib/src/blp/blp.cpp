@@ -262,8 +262,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 
 			try
 			{
-				std::cout << boost::format(_("Using header of jpeglib version %1%.")) % JPEG_LIB_VERSION << std::endl;
-
+				std::cout << boost::format(_("Using header of library \"jpeglib\" version %1%.")) % JPEG_LIB_VERSION << std::endl;
 
 				JSAMPARRAY scanlines = 0; // will be filled later
 
@@ -275,15 +274,13 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 				try
 				{
 					jpeg_mem_src(&cinfo, buffer, bufferSize);
-					std::cout << "Buffer size is " << bufferSize << std::endl;
+					std::cout << "Buffer size is " << bufferSize << " and header size is " << jpegHeaderSize << std::endl;
 					//jpeg_mem_dest(cinfo, &buffer, &bufferSize);
 
 					if (jpeg_read_header(&cinfo, true) != JPEG_HEADER_OK)
 						throw Exception(jpegError(jpeg_std_error, _("Did not find header. Error: %1%.")));
 
-					if (!cinfo.saw_JFIF_marker)
-						std::cerr << boost::format(_("Warning: Did not find JFIF marker. JFIF format is used by default!\nThis is the JFIF version of the image %1%.%2%")) % cinfo.JFIF_major_version % cinfo.JFIF_minor_version << std::endl;
-
+					std::cout << "After reading header ... " << std::endl;
 
 					if (!jpeg_start_decompress(&cinfo))
 						throw Exception(jpegError(jpeg_std_error, _("Could not start decompress. Error: %1%.")));
@@ -297,28 +294,47 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 					std::cout << "JPEG image has width " << cinfo.image_width << " and height " << cinfo.image_height << std::endl;
 					std::cout << "JPEG image has scaled width " << cinfo.output_width << " and scaled height " << cinfo.output_height << std::endl;
 					std::cout << "Color map has size " << cinfo.actual_number_of_colors << std::endl;
-					//cinfo->colormap
-					/// @todo Color map has size 0. Get correct lines and values!
+
+					// JSAMPLEs per row in output buffer
 					JDIMENSION scanlinesSize = cinfo.output_width * cinfo.output_components;
-					scanlines = new JSAMPROW[scanlinesSize];
+					scanlines = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, scanlinesSize, 1); /// @todo Memory should be allocated before but we don't have size?!
+					//scanlines = new JSAMPROW[scanlinesSize];
 					std::size_t i = 0;
 					std::cout << "Number of scanlines " << scanlinesSize << std::endl;
+					std::cout << "we do have " << cinfo.output_components << " components/color channels." << std::endl;
 
 					// per scanline
 					while (cinfo.output_scanline < cinfo.output_height)
 					{
-						scanlines[cinfo.output_scanline] = new JSAMPLE[cinfo.output_height];
-						JDIMENSION dimension = jpeg_read_scanlines(&cinfo, scanlines, scanlinesSize);
+						//std::cout << "Output scanline is " << cinfo.output_scanline << " and buffer size is " << scanlinesSize << " and height is " <<  cinfo.output_height << std::endl;
+
+						//scanlines[cinfo.output_scanline] = new JSAMPLE[cinfo.output_height];
+						JDIMENSION dimension = jpeg_read_scanlines(&cinfo, scanlines, 1); // scanlinesSize
+
+						if (dimension == 0)
+							std::cerr << _("Warning: Number of scanned lines is 0.") << std::endl;
+
+						int width = 0;
+						int height = cinfo.output_scanline - 1; // cinfo.output_scanline is increased by one after calling jpeg_read_scanlines
+
+						/// @todo Check if we got the right values!
+						for (int component = 0; component < scanlinesSize; component += cinfo.output_components)
+						{
+							color rgb = (scanlines[0][component] << 2) + (scanlines[0][component + 1] << 1) + (scanlines[0][component + 2]);
+							byte alpha = 0;
+
+							if (cinfo.output_components == 4) // we do have an alpha channel
+								alpha = scanlines[0][component + 3];
+
+							mipMap->setColor(width, height, rgb, alpha);
+							width++;
+						}
+
+
 						//put_scanline_someplace(scanlines[0], scanlinesSize);
-						std::cout << "I is " << i << std::endl;
+						std::cout << "I is " << i << " and read lines " << dimension << std::endl;
 						++i;
 					}
-					std::cout << "AFTERWARDS" << std::endl;
-					/*
-					jpeg_has_multiple_scans JPP((j_decompress_ptr cinfo));
-					1043 EXTERN(boolean) jpeg_start_output JPP((j_decompress_ptr cinfo,
-					1044                                        int scan_number))
-					*/
 				}
 				catch (...)
 				{
@@ -330,39 +346,10 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 
 				jpeg_finish_decompress(&cinfo);
 
-				// fill mip map with JPEG data.
-				for (dword width = 0; width < mipMap->width(); ++width)
-				{
-					for (dword height = 0; height < mipMap->height(); ++height)
-					{
-						JDIMENSION dimension = 0;
-						color rgb = 0;
-						//JCS_GRAYSCALE
-						//std::bitset<color> rgb;
-						//rgb.set()
-
-						// 3 pixels
-						if (cinfo.out_color_space == JCS_RGB)
-						{
-							//std::bitset
-							rgb = scanlines[width + dimension][height];
-							++dimension;
-							rgb = rgb << 1;
-							rgb |= scanlines[width + dimension][height];
-							++dimension;
-							rgb = rgb << 1;
-							rgb |= scanlines[width + dimension][height];
-						}
-						else
-							std::cerr << _("Unknown color space.") << std::endl;
-
-						//mipMap->setColor(width, height, color);
-					}
-				}
+				if (!cinfo.saw_JFIF_marker)
+					std::cerr << boost::format(_("Warning: Did not find JFIF marker. JFIF format is used by default!\nThis is the JFIF version of the image %1%.%2%")) % cinfo.JFIF_major_version % cinfo.JFIF_minor_version << std::endl;
 
 				jpeg_destroy_decompress(&cinfo);
-				delete[] scanlines;
-				scanlines = 0;
 				delete[] buffer;
 				buffer = 0;
 			}
@@ -533,50 +520,16 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 	bytes += sizeof(this->m_pictureType);
 	ostream.write(reinterpret_cast<const char*>(&this->m_pictureSubType), sizeof(this->m_pictureSubType));
 	bytes += sizeof(this->m_pictureSubType);
-	dword startOffset = ostream.tellp();
-	std::list<dword> mipMapOffsets;
-	std::list<dword> mipMapSizes;
+	dword startOffset = ostream.tellp(); // offset where mip map header data starts, required by later mip map writing operations
 
-	/// @todo change for JPEG?
-	BOOST_FOREACH (const class MipMap *mipMap, this->m_mipMaps)
-	{
-		mipMapOffsets.push_back(startOffset);
-		dword size = mipMap->colors().size() * sizeof(byte);
-
-		if (this->m_flags == Blp::Alpha)
-			size *= 2;
-
-		mipMapSizes.push_back(size);
-		startOffset += size;
-	}
-
-	std::list<dword>::const_iterator offsetIterator = mipMapOffsets.begin();
-	std::list<dword>::const_iterator sizeIterator = mipMapSizes.begin();
-
-	for (std::size_t i = 0; i < Blp::maxMipMaps; ++i)
-	{
-		// header data
-		if (offsetIterator != mipMapOffsets.end())
-		{
-			ostream.write(reinterpret_cast<const char*>(&(*offsetIterator)), sizeof(*offsetIterator));
-			bytes += sizeof(*offsetIterator);
-			std::cout << "Wrote " << sizeof(*offsetIterator) << " bytes offset header data." << std::endl;
-			ostream.write(reinterpret_cast<const char*>(&(*sizeIterator)), sizeof(*sizeIterator));
-			bytes += sizeof(*sizeIterator);
-			++offsetIterator;
-			++sizeIterator;
-		}
-		else
-		{
-			std::cout << "Writing 0 size and 0 offset for mip map " << i << std::endl;
-			dword value = 0;
-			ostream.write(reinterpret_cast<const char*>(&value), sizeof(value));
-			bytes += sizeof(value);
-			ostream.write(reinterpret_cast<const char*>(&value), sizeof(value));
-			bytes += sizeof(value);
-		}
-	}
-
+	// First write mip maps and set header data afterwards but hold header data free until!
+	// this is necessary because we don't know the exact size or offset of mip maps which use the JPEG format!
+	// omit Blp::maxMipMaps * 2 = offsets and sizes
+	std::size_t emptyBufferSize = Blp::maxMipMaps * 2;
+	dword emptyBuffer[emptyBufferSize];
+	memset(reinterpret_cast<void*>(&emptyBuffer), 0, emptyBufferSize);
+	ostream.write(reinterpret_cast<const char*>(&emptyBuffer), emptyBufferSize);
+	bytes += emptyBufferSize;
 	std::cout << "Wrote " << bytes << " bytes header data." << std::endl;
 
 	// image data
@@ -622,10 +575,16 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 		}
 
 		std::cout << "Wrote " << bytes << " with palette." << std::endl;
+		std::vector<dword> offsets(this->m_mipMaps.size(), 0);
+		std::vector<dword> sizes(this->m_mipMaps.size(), 0);
+		std::size_t index = 0;
 
 		// write mip maps
 		BOOST_FOREACH(const class MipMap *mipMap, this->m_mipMaps)
 		{
+			dword offset = ostream.tellp();
+			dword size = bytes;
+
 			for (dword width = 0; width < mipMap->width(); ++width)
 			{
 				for (dword height = 0; height < mipMap->height(); ++height)
@@ -642,6 +601,24 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 					}
 				}
 			}
+
+			// set header data
+			size = bytes - size;
+
+			offsets[index] = offset;
+			sizes[index] = size;
+
+			++index;
+		}
+
+		// write header data, jump to header
+		ostream.seekp(startOffset);
+
+		for (index = 0; index < this->m_mipMaps.size(); ++index)
+		{
+			ostream.write(reinterpret_cast<const char*>(&offsets[index]), sizeof(dword));
+			ostream.write(reinterpret_cast<const char*>(&sizes[index]), sizeof(dword));
+			bytes += 2 * sizeof(dword);
 		}
 
 		std::cout << "BYTES " << bytes << std::endl;

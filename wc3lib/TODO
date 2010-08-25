@@ -1,3 +1,6 @@
+2010-07-25 Tamino Dauth <tamino@cdauth.eu>
+* Blp: Second mip map gets an error in header although header must be equal for every mip map.
+
 2010-07-08 Tamino Dauth <tamino@cdauth.eu>
 * Use class boost::noncopyable from "<boost/utilities.hpp>" for non-copyable classes.
 

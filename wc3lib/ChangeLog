@@ -1,3 +1,6 @@
+2010-08-25 Tamino Dauth <tamino@cdauth.eu>
+* blp: Fixed JPEG compression components loading and scanning lines.
+
 2010-08-19 Tamino Dauth <tamino@cdauth.eu>
 * blp: Improved libjpeg.so loading and decompressing of images.
 
