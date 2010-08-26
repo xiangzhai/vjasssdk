@@ -21,14 +21,12 @@
 #ifndef WC3LIB_MAP_ENVIRONMENT_HPP
 #define WC3LIB_MAP_ENVIRONMENT_HPP
 
-#include <istream>
-#include <ostream>
 #include <list>
 #include <map>
 #include <string>
 
 #include "platform.hpp"
-#include "../exception.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -39,12 +37,13 @@ namespace map
 class W3m;
 class Tilepoint;
 
-class Environment
+class Environment : public Format
 {
 	public:
-		static const int32 currentVersion;
+		static const int32 version;
+		static const char* fileName;
 		static const int32 maxTilesets;
-	
+
 		enum MainTileset
 		{
 			Ashenvale,
@@ -66,26 +65,26 @@ class Environment
 			Outland,
 			BlackCitadel
 		};
-		
+
 		Environment(class W3m *w3m);
-		
+
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
-		
+
 		int32 mapWidth() const;
 		int32 mapHeight() const;
 
 		const class Tilepoint* tilepoint(const class Position &position) const;
-		
+
 		/**
 		* @return Returns a newly allocated C string which you'll have to free.
 		*/
 		static char8* tilesetIdToCString(int32 tilesetId);
 		static std::string tilesetIdToString(int32 tilesetId);
-		
+
 	protected:
 		static enum MainTileset convertCharToMainTileset(char value) throw (class Exception);
-		
+
 		class W3m *m_w3m;
 		int32 m_version;
 		enum MainTileset m_mainTileset;
@@ -97,7 +96,7 @@ class Environment
 		float32 m_centerOffsetX;
 		float32 m_centerOffsetY;
 		std::map<class Position, class Tilepoint*> m_tilepoints;
-		
+
 };
 
 inline int32 Environment::mapWidth() const

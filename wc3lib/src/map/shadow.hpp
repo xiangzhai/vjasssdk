@@ -89,8 +89,9 @@ class Shadow
 		* Does also check all 16 layer points.
 		*/
 		bool tilepointContainsShadow(const class Tilepoint &tilepoint) const;
-		
-		static const int32 shadowPointsPerTileset = 16;
+
+		static const int32 shadowPointsPerTileset;
+		static const char* fileName;
 
 	protected:
 		class W3m *m_w3m;

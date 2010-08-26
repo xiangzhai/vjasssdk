@@ -26,9 +26,12 @@
 
 namespace wc3lib
 {
-	
+
 namespace map
 {
+
+const int32 Shadow::shadowPointsPerTileset = 16;
+const char* Shadow::fileName = "war3map.shd";
 
 Shadow::Shadow(class W3m *w3m) : m_w3m(w3m)
 {
@@ -54,7 +57,7 @@ std::streamsize Shadow::read(std::istream &istream) throw (class Exception)
 			}
 		}
 	}
-	
+
 	return size;
 }
 
@@ -72,7 +75,7 @@ std::streamsize Shadow::write(std::ostream &ostream) throw (class Exception)
 
 	return size;
 }
-	
+
 }
 
 }

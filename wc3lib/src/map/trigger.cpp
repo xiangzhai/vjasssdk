@@ -21,6 +21,9 @@
 #include <boost/foreach.hpp>
 
 #include "trigger.hpp"
+#include "triggers.hpp"
+#include "triggerfunction.hpp"
+#include "triggercategory.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -29,7 +32,7 @@ namespace wc3lib
 namespace map
 {
 
-Trigger::Trigger(class Triggers *triggers) : m_trigger(triggers)
+Trigger::Trigger(class Triggers *triggers) : m_triggers(triggers)
 {
 }
 
@@ -38,15 +41,19 @@ std::streamsize Trigger::read(std::istream &istream) throw (class Exception)
 	std::streamsize size = 0;
 	readString(istream, this->m_name, size);
 	readString(istream, this->m_description, size);
-	read<int32>(istream, this->m_isEnabled, size);
-	read<int32>(istream, this->m_isCustomText, size);
-	read<int32>(istream, this->m_isInitiallyOn, size);
-	read<int32>(istream, this->m_unknown, size);
+	int32 value;
+	wc3lib::read<int32>(istream, value, size);
+	this->m_isEnabled = value;
+	wc3lib::read<int32>(istream, value, size);
+	this->m_isCustomText = value;
+	wc3lib::read<int32>(istream, value, size);
+	this->m_isInitiallyOn = value;
+	wc3lib::read(istream, this->m_unknown, size);
 	int32 categoryIndex;
-	read<int32>(istream, categoryIndex, size);
-	this->m_triggerCategory = this->m_triggers->category(categoryIndex);
+	wc3lib::read(istream, categoryIndex, size);
+	this->m_category = this->m_triggers->category(categoryIndex);
 	int32 functions;
-	read<int32>(istream, functions, size);
+	wc3lib::read(istream, functions, size);
 
 	for (int32 i = 0; i < functions; ++i)
 	{
@@ -64,14 +71,14 @@ std::streamsize Trigger::write(std::ostream &ostream) const throw (class Excepti
 
 	writeString(ostream, this->m_name, size);
 	writeString(ostream, this->m_description, size);
-	write<int32>(ostream, this->m_isEnabled, size);
-	write<int32>(ostream, this->m_isCustomText, size);
-	write<int32>(ostream, this->m_isInitiallyOn, size);
-	write<int32>(ostream, this->m_unknown, size);
-	write<int32>(ostream, this->m_category->index(), size);
-	write<int32>(ostream, this->m_functions.size(), size);
+	wc3lib::write<int32>(ostream, this->m_isEnabled, size);
+	wc3lib::write<int32>(ostream, this->m_isCustomText, size);
+	wc3lib::write<int32>(ostream, this->m_isInitiallyOn, size);
+	wc3lib::write(ostream, this->m_unknown, size);
+	wc3lib::write(ostream, this->m_category->index(), size);
+	wc3lib::write(ostream, this->m_functions.size(), size);
 
-	BOOST_FOREACH(const class TriggerFunction *function)
+	BOOST_FOREACH(const class TriggerFunction *function, this->m_functions)
 		size += function->write(ostream);
 
 	return size;

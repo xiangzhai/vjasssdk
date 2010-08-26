@@ -21,13 +21,16 @@
 #include <cstring>
 #include <sstream>
 
+#include <boost/filesystem/fstream.hpp>
+
 #include "w3m.hpp"
 #include "shadow.hpp"
 #include "triggers.hpp"
-//#include "mpq/mpq.hpp"
-//#include "mpq/mpqfile.hpp"
+#include "mpq/mpq.hpp"
+#include "mpq/mpqfile.hpp"
 #include "blp/blp.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -61,78 +64,107 @@ std::streamsize W3m::read(class mpq::Mpq *mpq) throw (class Exception)
 }
 
 std::streamsize W3m::read(std::istream &istream) throw (class Exception)
-{/*
-	std::streamsize bytes = 0;
-	struct Header header;
-	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
-	bytes += istream.gcount();
-	this->m_name = header.name;
-	this->m_flags = header.flags;
-	this->m_maxPlayers = header.maxPlayers;
-	std::size_t byteCount = 512 - istream.gcount(); //followed by 00 bytes until the 512 bytes of the header are filled.
-	istream.ignore(byteCount);
-	bytes += byteCount;
-
-	class mpq::Mpq *mpq = new mpq::Mpq;
-	bytes += mpq->readMpq(istream, mpq::Mpq::Read); // starts reading after header's position
-	const class mpq::MpqFile *mpqFile = mpq->findFile("(listfile)");
-
-	if (mpqFile == 0)
-		std::cerr << _("W3m: Warning, file \"(listfile)\" was not found.") << std::endl;
-
-	mpqFile = mpq->findFile("(signature)");
-
-	if (mpqFile == 0)
-		std::cerr << _("W3m: Warning, file \"(signature)\" was not found.") << std::endl;
-
-	mpqFile = mpq->findFile("war3map.w3e");
+{
+	std::streamsize size = this->readHeader(istream);
+/*
+	class mpq::Mpq mpq;
+	size += mpq.readMpq(istream); // starts reading after header's position
+	const class mpq::MpqFile *mpqFile = const_cast<const class mpq::Mpq>(mpq).findFile(std::string(Environment::fileName));
 
 	if (mpqFile == 0)
 		throw Exception(_("W3m: Missing file \"war3map.w3e\"."));
 
 	std::stringstream iostream;
-	mpqFile->write(iostream);
-	bytes += this->m_environment->read(iostream);
+	mpqFile->writeData(iostream);
+	size += this->m_environment->read(iostream);
 	iostream.flush();
 
-	mpqFile = mpq->findFile("war3map.shd");
+	mpqFile = const_cast<const class mpq::Mpq*>(mpq)->findFile(std::string(Shadow::fileName));
 
 	if (mpqFile == 0)
 		throw Exception(_("W3m: Missing file \"war3map.shd\"."));
 
-	mpqFile->write(iostream);
-	bytes += this->m_shadow->read(iostream);
+	mpqFile->writeData(iostream);
+	size += this->m_shadow->read(iostream);
 	iostream.flush();
 
-	delete mpq;
-	mpq = 0;
+	mpq.close();
+*/
+	size += this->readSignature(istream);
 
-	this->m_hasSignature = false;
+	return size;
+}
 
-	if (!iostream.eof())
+std::streamsize W3m::read(std::istream &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception)
+{
+	std::streamsize result = this->readHeader(headerStream);
+	boost::filesystem::path path;
+
+	if (findPath(paths, path, Shadow::fileName))
 	{
-		char8 signId[4];
-		istream.read(signId, sizeof(signId));
-		bytes += istream.gcount();
-
-		// footer is optional!
-		if (memcmp(signId, "NGIS", sizeof(signId)) == 0)
-		{
-			istream.read(this->m_authentification, sizeof(this->m_authentification));
-			bytes += istream.gcount();
-			this->m_hasSignature = true;
-		}
+		boost::filesystem::ifstream ifstream(path, std::ios_base::binary | std::ios_base::in);
+		this->m_shadow->read(ifstream);
 	}
 
-	return bytes;
-	*/
-
-	return 0;
+	return result;
 }
 
 std::streamsize W3m::write(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
+}
+
+std::streamsize W3m::readHeader(std::istream &istream) throw (class Exception)
+{
+	std::streamsize size = 0;
+	struct Header header;
+	wc3lib::read(istream, header, size);
+	this->m_name = header.name;
+	this->m_flags = header.flags;
+	this->m_maxPlayers = header.maxPlayers;
+	std::size_t byteCount = 512 - istream.gcount(); // followed by 00 bytes until the 512 bytes of the header are filled.
+	istream.ignore(byteCount);
+	size += byteCount;
+
+	return size;
+}
+
+std::streamsize W3m::readSignature(std::istream &istream) throw (class Exception)
+{
+	std::streamsize result = 0;
+	this->m_hasSignature = false;
+
+	if (!istream.eof())
+	{
+		char8 signId[4];
+		istream.read(signId, sizeof(signId));
+		result += istream.gcount();
+
+		// footer is optional!
+		if (memcmp(signId, "NGIS", sizeof(signId)) == 0)
+		{
+			istream.read(this->m_authentification, sizeof(this->m_authentification));
+			result += istream.gcount();
+			this->m_hasSignature = true;
+		}
+	}
+
+	return result;
+}
+
+bool W3m::findPath(const std::list<boost::filesystem::path> paths, boost::filesystem::path &path, const std::string &fileName)
+{
+	BOOST_FOREACH(const boost::filesystem::path iteratorPath, paths)
+	{
+		if (iteratorPath.filename() == fileName)
+		{
+			path = iteratorPath;
+
+			return true;
+		}
+	}
+
+	return false;
 }
 
 }

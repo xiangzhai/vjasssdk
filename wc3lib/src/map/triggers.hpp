@@ -41,14 +41,19 @@ class Triggers : public Format
 	public:
 		typedef std::pair<int32, class TriggerCategory*> CategoryType;
 
+		static const int32 version;
+		static const char* fileName;
+
 		Triggers(class W3m *w3m);
 
 		virtual std::streamsize read(std::istream &istream) throw (class Exception);
 		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
 
-		static const int32 currentVersion = 4;
-
 	protected:
+		friend class Trigger;
+
+		class TriggerCategory* category(int32 index);
+
 		class W3m *m_w3m;
 		int32 m_version;
 		int32 m_unknown0;

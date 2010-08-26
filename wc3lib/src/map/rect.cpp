@@ -21,7 +21,10 @@
 #include "rect.hpp"
 #include "../utilities.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 Rect::Rect(class Rects *rects) : m_rects(rects)
@@ -31,15 +34,15 @@ Rect::Rect(class Rects *rects) : m_rects(rects)
 std::streamsize Rect::read(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size;
-	read(istream, this->m_left, size);
-	read(istream, this->m_right, size);
-	read(istream, this->m_bottom, size);
-	read(istream, this->m_top, size);
+	wc3lib::read(istream, this->m_left, size);
+	wc3lib::read(istream, this->m_right, size);
+	wc3lib::read(istream, this->m_bottom, size);
+	wc3lib::read(istream, this->m_top, size);
 	readString(istream, this->m_name, size);
-	read(istream, this->m_index, size);
-	read(istream, this->m_weatherEffectId, size);
-	readString(istream, this->m_soundName, size);
-	read(istream, this->m_color, size);
+	wc3lib::read(istream, this->m_index, size);
+	wc3lib::read(istream, this->m_weatherEffectId, size);
+	wc3lib::readString(istream, this->m_soundName, size);
+	wc3lib::read(istream, this->m_color, size);
 
 	return size;
 }
@@ -47,17 +50,19 @@ std::streamsize Rect::read(std::istream &istream) throw (class Exception)
 std::streamsize Rect::write(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size;
-	write(ostream, this->m_left, size);
-	write(ostream, this->m_right, size);
-	write(ostream, this->m_bottom, size);
-	write(ostream, this->m_top, size);
+	wc3lib::write(ostream, this->m_left, size);
+	wc3lib::write(ostream, this->m_right, size);
+	wc3lib::write(ostream, this->m_bottom, size);
+	wc3lib::write(ostream, this->m_top, size);
 	writeString(ostream, this->m_name, size);
-	write(ostream, this->m_index, size);
-	write(ostream, this->m_weatherEffectId, size);
-	writeString(ostream, this->m_soundName, size);
-	write(ostream, this->m_color, size);
+	wc3lib::write(ostream, this->m_index, size);
+	wc3lib::write(ostream, this->m_weatherEffectId, size);
+	wc3lib::writeString(ostream, this->m_soundName, size);
+	wc3lib::write(ostream, this->m_color, size);
 
 	return size;
+}
+
 }
 
 }

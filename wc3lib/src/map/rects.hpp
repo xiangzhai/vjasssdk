@@ -21,14 +21,15 @@
 #ifndef WC3LIB_MAP_RECTS_HPP
 #define WC3LIB_MAP_RECTS_HPP
 
-#include <istream>
-#include <ostream>
 #include <map>
 
 #include "platform.hpp"
-#include "../exception.hpp"
+#include "../format.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 class W3m;
@@ -36,9 +37,11 @@ class W3m;
 /**
 * "war3map.w3r" file usually contains rects of map.
 */
-class Rects
+class Rects : public Format
 {
 	public:
+		typedef std::pair<int32, class Rect*> RectType;
+
 		static const int32 version;
 
 		Rects(class W3m *w3m);
@@ -50,6 +53,8 @@ class Rects
 		int32 m_version;
 		std::map<int32, class Rect*> m_rects;
 };
+
+}
 
 }
 

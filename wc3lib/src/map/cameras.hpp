@@ -22,13 +22,14 @@
 #define WC3LIB_MAP_CAMERAS_HPP
 
 #include <list>
-#include <istream>
-#include <ostream>
 
 #include "platform.hpp"
-#include "../exception.hpp"
+#include "../format.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 class W3m;
@@ -37,7 +38,7 @@ class Camera;
 /**
 * "war3map.w3c" file of maps contains camera information.
 */
-class Cameras
+class Cameras : public Format
 {
 	public:
 		static const int32 version;
@@ -53,6 +54,8 @@ class Cameras
 		int32 m_version;
 		std::list<class Camera*> m_cameras;
 };
+
+}
 
 }
 

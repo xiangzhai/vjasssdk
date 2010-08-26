@@ -21,6 +21,8 @@
 #ifndef WC3LIB_MAP_W3M_HPP
 #define WC3LIB_MAP_W3M_HPP
 
+#include <boost/filesystem.hpp>
+
 #include "environment.hpp"
 #include "platform.hpp"
 #include "../format.hpp"
@@ -89,6 +91,45 @@ class W3m : public Format
 		*/
 		virtual std::streamsize read(std::istream &istream) throw (class Exception);
 		/**
+		* @param headerStream Each map is a file with an MPQ archive and a header before. This stream should contain the map's header data.
+		* @param paths List which should contain all necessary file paths. Files will be deteced automatically by names.
+		* Here's a list of all possible file names:
+		* <ul>
+		* <li>war3map.w3e</li>
+		* <li>war3map.w3i</li>
+		* <li>war3map.wtg</li>
+		* <li>war3map.wct</li>
+		* <li>war3map.wts</li>
+		* <li>war3map.j</li>
+		* <li>war3map.shd</li>
+		* <li>war3mapMap.blp</li>
+		* <li>war3mapMap.b00</li>
+		* <li>war3mapMap.tga</li>
+		* <li>war3mapPreview.tga</li>
+		* <li>war3map.mmp</li>
+		* <li>war3mapPath.tga</li>
+		* <li>war3map.wpm</li>
+		* <li>war3map.doo</li>
+		* <li>war3mapUnits.doo</li>
+		* <li>war3map.w3r</li>
+		* <li>war3map.w3c</li>
+		* <li>war3map.w3s</li>
+		* <li>war3map.w3u</li>
+		* <li>war3map.w3t</li>
+		* <li>war3map.w3a</li>
+		* <li>war3map.w3b</li>
+		* <li>war3map.w3d</li>
+		* <li>war3map.w3q</li>
+		* <li>war3mapMisc.txt</li>
+		* <li>war3mapSkin.txt</li>
+		* <li>war3mapExtra.txt</li>
+		* <li>war3map.imp</li>
+		* <li>war3mapImported\*.*</li>
+		* </ul>
+		* @note You can use classes's static members called "fileName" to get the corresponding file name of the class's format.
+		*/
+		virtual std::streamsize read(std::istream &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception);
+		/**
 		* Creates an MPQ archive with map header and all required files.
 		*/
 		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
@@ -97,6 +138,10 @@ class W3m : public Format
 		int32 height() const;
 
 	protected:
+		std::streamsize readHeader(std::istream &istream) throw (class Exception);
+		std::streamsize readSignature(std::istream &istream) throw (class Exception);
+		bool findPath(const std::list<boost::filesystem::path> paths, boost::filesystem::path &path, const std::string &fileName);
+
 		std::string m_name;
 		int32 m_flags;
 		int32 m_maxPlayers;

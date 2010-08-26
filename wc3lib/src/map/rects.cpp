@@ -23,8 +23,12 @@
 #include "rects.hpp"
 #include "rect.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 const int32 Rects::version = 5;
@@ -36,13 +40,13 @@ Rects::Rects(class W3m *w3m) : m_w3m(w3m)
 std::streamsize Rects::read(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size;
-	read(istream, this->m_version, size);
+	wc3lib::read(istream, this->m_version, size);
 
 	if (this->m_version != Rects::version)
 		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Rects::version);
 
 	int32 number;
-	read(istream, number, size);
+	wc3lib::read(istream, number, size);
 
 	for ( ; number >= 0; --number)
 	{
@@ -60,14 +64,15 @@ std::streamsize Rects::write(std::ostream &ostream) const throw (class Exception
 		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Rects::version);
 
 	std::streamsize size;
-	write(ostream, this->m_version, size);
-	int32 number = this->m_rects.size();
-	write(ostream, number, size);
+	wc3lib::write(ostream, this->m_version, size);
+	wc3lib::write<int32>(ostream, this->m_rects.size(), size);
 
-	BOOST_FOREACH(const class Rect *rect, this->m_rects)
-		size += rect->write(ostream);
+	BOOST_FOREACH(const RectType rect, this->m_rects)
+		size += rect.second->write(ostream);
 
 	return size;
+}
+
 }
 
 }

@@ -43,7 +43,7 @@ inline T readValue(std::istream &istream, bool byteSwap = false)
 	char bytes[sizeof(T)];
 	istream.read(bytes, sizeof(T));
 	T result = 0;
-	
+
 	// i has to be signed?!
 	if (byteSwap)
 	{
@@ -53,11 +53,11 @@ inline T readValue(std::istream &istream, bool byteSwap = false)
 	else
 	{
 		std::size_t j =  sizeof(T) - 1;
-		
+
 		for (std::size_t i = 0; i < sizeof(T); ++i, --j)
 			result |= (bytes[i] << (j << 3));
 	}
-	
+
 	return result;
 }
 
@@ -70,7 +70,7 @@ inline std::istream& read(std::istream &istream, T &value, std::streamsize &size
 		throw Exception(_("Input stream error."));
 
 	sizeCounter += istream.gcount();
-	
+
 	return istream;
 }
 
@@ -119,7 +119,7 @@ inline std::istream& readString(std::istream &istream, std::string &value, std::
 }
 
 template<typename T>
-inline std::ostream& write(std::ostream &ostream, T &value, std::streamsize &sizeCounter)
+inline std::ostream& write(std::ostream &ostream, const T &value, std::streamsize &sizeCounter)
 {
 	ostream.write(reinterpret_cast<const char*>(&value), sizeof(value));
 
@@ -152,7 +152,7 @@ inline std::ostream& writeCString(std::ostream &ostream, const char *value, std:
 	return ostream;
 }
 
-inline std::ostream& writeString(std::ostream &ostream, std::string &value, std::streamsize &sizeCounter)
+inline std::ostream& writeString(std::ostream &ostream, const std::string &value, std::streamsize &sizeCounter)
 {
 	writeCString(ostream, value.data(), sizeCounter);
 
@@ -164,7 +164,7 @@ std::string sizeStringBinary(T size)
 {
 	std::string unit;
 	T remainder;
-	
+
 	if (size >= pow(1024, 3))
 	{
 		remainder = size % T(pow(1024, 3));
@@ -191,12 +191,12 @@ std::string sizeStringBinary(T size)
 
 	std::stringstream sstream;
 	sstream << size;
-	
+
 	if (remainder != 0)
 		sstream << _(".") << remainder;
-	
+
 	sstream << ' ' << unit;
-	
+
 	return sstream.str();
 }
 
@@ -205,7 +205,7 @@ std::string sizeStringDecimal(T size)
 {
 	std::string unit;
 	T remainder;
-	
+
 	if (size >= pow(1000, 3))
 	{
 		remainder = size % T(pow(1000, 3));
@@ -232,12 +232,12 @@ std::string sizeStringDecimal(T size)
 
 	std::stringstream sstream;
 	sstream << size;
-	
+
 	if (remainder != 0)
 		sstream << _(".") << remainder;
-	
+
 	sstream << ' ' << unit;
-	
+
 	return sstream.str();
 }
 

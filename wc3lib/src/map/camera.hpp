@@ -21,19 +21,20 @@
 #ifndef WC3LIB_MAP_CAMERA_HPP
 #define WC3LIB_MAP_CAMERA_HPP
 
-#include <istream>
-#include <ostream>
 #include <string>
 
 #include "platform.hpp"
-#include "../exception.hpp"
+#include "../format.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 class Cameras;
 
-class Camera
+class Camera : public Format
 {
 	public:
 		Camera(class Cameras *cameras);
@@ -79,6 +80,8 @@ class Camera
 		float32 m_unknown; // 100
 		std::string m_name;
 };
+
+}
 
 }
 

@@ -21,25 +21,26 @@
 #ifndef WC3LIB_MAP_RECT_HPP
 #define WC3LIB_MAP_RECT_HPP
 
-#include <istream>
-#include <ostream>
 #include <string>
 
 #include "platform.hpp"
-#include "../exception.hpp"
+#include "../format.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 class Rects;
 
-class Rect
+class Rect : public Format
 {
 	public:
 		Rect(class Rects *rects);
 
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize read(std::istream &istream) throw (class Exception);
+		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
 
 		float32 left() const;
 		float32 right() const;
@@ -70,7 +71,7 @@ inline float32 Rect::left() const
 	return this->m_left;
 }
 
-inline float32 Rect::right() const;
+inline float32 Rect::right() const
 {
 	return this->m_right;
 }
@@ -108,6 +109,8 @@ inline const std::string& Rect::soundName() const
 inline const struct Rgb& Rect::color() const
 {
 	return this->m_color;
+}
+
 }
 
 }

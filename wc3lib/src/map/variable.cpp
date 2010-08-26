@@ -27,7 +27,7 @@ namespace wc3lib
 namespace map
 {
 
-Variable::Variable(class Triggers *triggers) : m_name(), m_type() m_number(0), m_isArray(false), m_isInitialized(false), m_initialValue()
+Variable::Variable(class Triggers *triggers) : m_name(), m_type(), m_number(0), m_isArray(false), m_isInitialized(false), m_initialValue()
 {
 }
 
@@ -36,9 +36,13 @@ std::streamsize Variable::read(std::istream &istream) throw (class Exception)
 	std::streamsize size;
 	readString(istream, this->m_name, size);
 	readString(istream, this->m_type, size);
-	read<int32>(istream, this->m_number, size);
-	read<int32>(istream, this->m_isArray, size);
-	read<int32>(istream, this->m_isInitialized, size);
+	wc3lib::read<int32>(istream, this->m_number, size);
+	int32 isArray;
+	wc3lib::read(istream, isArray, size);
+	this->m_isArray = static_cast<bool>(isArray);
+	int32 isInitialized;
+	wc3lib::read(istream, isInitialized, size);
+	this->m_isInitialized = static_cast<bool>(isInitialized);
 	readString(istream, this->m_initialValue, size);
 
 	return size;
@@ -49,9 +53,9 @@ std::streamsize Variable::write(std::ostream &ostream) const throw (class Except
 	std::streamsize size;
 	writeString(ostream, this->m_name, size);
 	writeString(ostream, this->m_type, size);
-	write<int32>(ostream, this->m_number, size);
-	write<int32>(ostream, this->m_isArray, size);
-	write<int32>(ostream, this->m_isInitialized, size);
+	wc3lib::write<int32>(ostream, this->m_number, size);
+	wc3lib::write<int32>(ostream, this->m_isArray, size);
+	wc3lib::write<int32>(ostream, this->m_isInitialized, size);
 	writeString(ostream, this->m_initialValue, size);
 
 	return size;

@@ -25,7 +25,10 @@
 #include "../utilities.hpp"
 #include "../internationalisation.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 const int32 Cameras::version = 0;
@@ -44,13 +47,13 @@ Cameras::~Cameras()
 std::streamsize Cameras::read(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size;
-	read(istream, this->m_version, size);
+	wc3lib::read(istream, this->m_version, size);
 
 	if (this->m_version != Cameras::version)
-		throw Exeption(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
+		throw Exception(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
 
 	int32 number;
-	read(istream, number, size);
+	wc3lib::read(istream, number, size);
 
 	for ( ; number >= 0; --number)
 	{
@@ -65,17 +68,18 @@ std::streamsize Cameras::read(std::istream &istream) throw (class Exception)
 std::streamsize Cameras::write(std::ostream &ostream) const throw (class Exception)
 {
 	if (this->m_version != Cameras::version)
-		throw Exeption(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
+		throw Exception(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
 
 	std::streamsize size;
-	write(ostream, this->m_version, size);
-	int32 number = this->m_cameras.size();
-	read(istream, number, size);
+	wc3lib::write(ostream, this->m_version, size);
+	wc3lib::write<int32>(ostream, this->m_cameras.size(), size);
 
 	BOOST_FOREACH(const class Camera *camera, this->m_cameras)
 		size += camera->write(ostream);
 
 	return size;
+}
+
 }
 
 }

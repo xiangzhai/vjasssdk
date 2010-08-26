@@ -21,7 +21,10 @@
 #include "camera.hpp"
 #include "../utilities.hpp"
 
-namespace wc3lib::map
+namespace wc3lib
+{
+
+namespace map
 {
 
 Camera::Camera(class Cameras *cameras) : m_cameras(cameras)
@@ -35,17 +38,17 @@ Camera::~Camera()
 
 std::streamsize Camera::read(std::istream &istream) throw (class Exception)
 {
-	streamsize size = istream.gcount();
-	read(istream, this->m_targetX, size);
-	read(istream, this->m_targetY, size);
-	read(istream, this->m_zOffset, size);
-	read(istream, this->m_rotation, size);
-	read(istream, this->m_angleOfAttack, size);
-	read(istream, this->m_distance, size);
-	read(istream, this->m_roll, size);
-	read(istream, this->m_fieldOfView, size);
-	read(istream, this->m_farZ, size);
-	read(istream, this->m_unknown, size);
+	std::streamsize size = istream.gcount();
+	wc3lib::read(istream, this->m_targetX, size);
+	wc3lib::read(istream, this->m_targetY, size);
+	wc3lib::read(istream, this->m_zOffset, size);
+	wc3lib::read(istream, this->m_rotation, size);
+	wc3lib::read(istream, this->m_angleOfAttack, size);
+	wc3lib::read(istream, this->m_distance, size);
+	wc3lib::read(istream, this->m_roll, size);
+	wc3lib::read(istream, this->m_fieldOfView, size);
+	wc3lib::read(istream, this->m_farZ, size);
+	wc3lib::read(istream, this->m_unknown, size);
 	readString(istream, this->m_name, size);
 
 	return size;
@@ -54,19 +57,21 @@ std::streamsize Camera::read(std::istream &istream) throw (class Exception)
 std::streamsize Camera::write(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size;
-	write(ostream, this->m_targetX, size);
-	write(ostream, this->m_targetY, size);
-	write(ostream, this->m_zOffset, size);
-	write(ostream, this->m_rotation, size);
-	write(ostream, this->m_angleOfAttack, size);
-	write(ostream, this->m_distance, size);
-	write(ostream, this->m_roll, size);
-	write(ostream, this->m_fieldOfView, size);
-	write(ostream, this->m_farZ, size);
-	write(ostream, this->m_unknown, size);
+	wc3lib::write(ostream, this->m_targetX, size);
+	wc3lib::write(ostream, this->m_targetY, size);
+	wc3lib::write(ostream, this->m_zOffset, size);
+	wc3lib::write(ostream, this->m_rotation, size);
+	wc3lib::write(ostream, this->m_angleOfAttack, size);
+	wc3lib::write(ostream, this->m_distance, size);
+	wc3lib::write(ostream, this->m_roll, size);
+	wc3lib::write(ostream, this->m_fieldOfView, size);
+	wc3lib::write(ostream, this->m_farZ, size);
+	wc3lib::write(ostream, this->m_unknown, size);
 	writeString(ostream, this->m_name, size);
 
 	return size;
+}
+
 }
 
 }

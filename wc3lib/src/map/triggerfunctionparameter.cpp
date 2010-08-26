@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "triggerfunctionparameer.hpp"
+#include "triggerfunctionparameter.hpp"
 #include "utilities.hpp"
 
 namespace wc3lib
@@ -35,10 +35,12 @@ TriggerFunctionParameter::TriggerFunctionParameter(class TriggerFunction *functi
 std::streamsize TriggerFunctionParameter::read(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size;
-	read<int32>(istream, this->m_type, size);
+	int32 type;
+	wc3lib::read<int32>(istream, type, size);
+	this->m_type = static_cast<enum Type>(type);
 	readString(istream, this->m_value, size);
-	read<int32>(istream, this->m_unknown0, size);
-	read<int32>(istream, this->m_unknown1, size);
+	wc3lib::read(istream, this->m_unknown0, size);
+	wc3lib::read(istream, this->m_unknown1, size);
 
 	return size;
 }
@@ -47,10 +49,11 @@ std::streamsize TriggerFunctionParameter::read(std::istream &istream) throw (cla
 std::streamsize TriggerFunctionParameter::write(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size;
-	write<int32>(ostream, this->m_type, size);
+	int32 type = static_cast<int32>(this->m_type);
+	wc3lib::write<int32>(ostream, type, size);
 	writeString(ostream, this->m_value, size);
-	write<int32>(ostream, this->m_unknown0, size);
-	write<int32>(ostream, this->m_unknown1, size);
+	wc3lib::write(ostream, this->m_unknown0, size);
+	wc3lib::write(ostream, this->m_unknown1, size);
 
 	return size;
 }
