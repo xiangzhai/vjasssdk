@@ -18,33 +18,48 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#ifndef WC3LIB_MAP_TRIGGERFUNCTIONPARAMETER_HPP
+#define WC3LIB_MAP_TRIGGERFUNCTIONPARAMETER_HPP
+
+#include <string>
+
+#include "platform.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
 /**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
+* @see TriggerFunctionParameterEx
 */
-class Scope
+class TriggerFunctionParameter : public Format
 {
 	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+		enum Type
+		{
+			Preset,
+			Variable,
+			Function
+		};
 
-	private:
-		std::queue<class Token*> m_tokens;
+		TriggerFunctionParameter(class TriggerFunction *function);
+
+		virtual std::streamsize read(std::istream &istream) throw (class Exception);
+		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+
+	protected:
+		class TriggerFunction *m_function;
+		enum Type m_type;
+		std::string m_value;
+		int32 m_unknown0;
+		int32 m_unknown1;
 };
 
 }
 
 }
+
+#endif

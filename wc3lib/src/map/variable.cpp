@@ -18,32 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#include "variable.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
-/**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
-*/
-class Scope
+Variable::Variable(class Triggers *triggers) : m_name(), m_type() m_number(0), m_isArray(false), m_isInitialized(false), m_initialValue()
 {
-	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+}
 
-	private:
-		std::queue<class Token*> m_tokens;
-};
+std::streamsize Variable::read(std::istream &istream) throw (class Exception)
+{
+	std::streamsize size;
+	readString(istream, this->m_name, size);
+	readString(istream, this->m_type, size);
+	read<int32>(istream, this->m_number, size);
+	read<int32>(istream, this->m_isArray, size);
+	read<int32>(istream, this->m_isInitialized, size);
+	readString(istream, this->m_initialValue, size);
+
+	return size;
+}
+
+std::streamsize Variable::write(std::ostream &ostream) const throw (class Exception)
+{
+	std::streamsize size;
+	writeString(ostream, this->m_name, size);
+	writeString(ostream, this->m_type, size);
+	write<int32>(ostream, this->m_number, size);
+	write<int32>(ostream, this->m_isArray, size);
+	write<int32>(ostream, this->m_isInitialized, size);
+	writeString(ostream, this->m_initialValue, size);
+
+	return size;
+}
 
 }
 

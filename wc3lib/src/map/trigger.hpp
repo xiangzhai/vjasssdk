@@ -18,33 +18,47 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#ifndef WC3LIB_MAP_TRIGGER_HPP
+#define WC3LIB_MAP_TRIGGER_HPP
+
+#include <string>
+#include <list>
+
+#include "platform.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
 /**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
+* Definition of a Warcraft 3 trigger. For Warcraft 3 The Frozen Trigger use TriggerEx.
+* @see TriggerEx
 */
-class Scope
+class Trigger : public Format
 {
 	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+		Trigger(class Triggers *triggers);
 
-	private:
-		std::queue<class Token*> m_tokens;
+		virtual std::streamsize read(std::istream &istream) throw (class Exception);
+		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+
+	protected:
+		class Triggers *m_triggers;
+		std::string m_name;
+		std::string m_description;
+		bool m_isEnabled;
+		bool m_isCustomText;
+		bool m_isInitiallyOn;
+		int32 m_unknown;
+		class TriggerCategory *m_category;
+		std::list<class TriggerFunction*> m_functions;
 };
 
 }
 
 }
+
+#endif

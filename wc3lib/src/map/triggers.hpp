@@ -18,33 +18,47 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#ifndef WC3LIB_MAP_TRIGGERS_HPP
+#define WC3LIB_MAP_TRIGGERS_HPP
+
+#include <map>
+#include <list>
+
+#include "platform.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
 /**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
+* @see TriggersEx
 */
-class Scope
+class Triggers : public Format
 {
 	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+		typedef std::pair<int32, class TriggerCategory*> CategoryType;
 
-	private:
-		std::queue<class Token*> m_tokens;
+		Triggers(class W3m *w3m);
+
+		virtual std::streamsize read(std::istream &istream) throw (class Exception);
+		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+
+		static const int32 currentVersion = 4;
+
+	protected:
+		class W3m *m_w3m;
+		int32 m_version;
+		int32 m_unknown0;
+		std::map<int32, class TriggerCategory*> m_categories;
+		std::list<class Variable*> m_variables;
+		std::list<class Trigger*> m_triggers;
 };
 
 }
 
 }
+
+#endif

@@ -18,32 +18,45 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#include <boost/foreach.hpp>
+
+#include "triggerfunction.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
-/**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
-*/
-class Scope
+TriggerFunction::TriggerFunction(class Trigger *trigger) : m_trigger(trigger), m_type(TriggerFunction::Event), m_name(), m_isEnabled(false), m_parameters()
 {
-	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+}
 
-	private:
-		std::queue<class Token*> m_tokens;
-};
+std::streamsize TriggerFunction::read(std::istream &istream) throw (class Exception)
+{
+	std::streamsize size;
+	read<int32>(istream, this->m_type, size);
+	readString(istream, this->m_name, size);
+	read<int32>(istream, this->m_isEnabled, size);
+
+	/// @todo get trigger parameters, hardcoded
+
+	return size;
+}
+
+std::streamsize TriggerFunction::write(std::ostream &ostream) const throw (class Exception)
+{
+	std::streamsize size;
+	write<int32>(ostream, this->m_type, size);
+	writeString(ostream, this->m_name, size);
+	write<int32>(ostream, this->m_isEnabled, size);
+
+	BOOST_FOREACH(const class TriggerFunctionParameter *parameter, this->m_parameters)
+		size += parameter->write(ostream);
+
+	return size;
+}
 
 }
 

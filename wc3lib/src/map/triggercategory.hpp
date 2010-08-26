@@ -18,33 +18,52 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#ifndef WC3LIB_MAP_TRIGGERCATEGORY_HPP
+#define WC3LIB_MAP_TRIGGERCATEGORY_HPP
+
+#include <string>
+
+#include "platform.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
 /**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
+* @see TriggerCategoryEx
 */
-class Scope
+class TriggerCategory : public Format
 {
 	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+		TriggerCategory(class Triggers *triggers);
 
-	private:
-		std::queue<class Token*> m_tokens;
+		virtual std::streamsize read(std::istream &istream) throw (class Exception);
+		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+
+		int32 index() const;
+		const std::string& name() const;
+
+	protected:
+		class Triggers *m_triggers;
+		int32 m_index;
+		std::string m_name;
 };
 
+inline const std::string& TriggerCategory::name() const
+{
+	return this->m_name;
+}
+
+inline int32 TriggerCategory::index() const
+{
+	return this->m_index;
 }
 
 }
+
+}
+
+#endif

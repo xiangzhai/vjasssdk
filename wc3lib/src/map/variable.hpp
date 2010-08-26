@@ -18,33 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#ifndef WC3LIB_MAP_VARIABLE_HPP
+#define WC3LIB_MAP_VARIABLE_HPP
+
+#include <istream>
+#include <ostream>
+#include <string>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
 /**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
+* @see VariableEx
 */
-class Scope
+class Variable
 {
 	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+		Variable(class Triggers *triggers);
 
-	private:
-		std::queue<class Token*> m_tokens;
+		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+
+	protected:
+		std::string m_name;
+		std::string m_type;
+		int32 m_number;
+		bool m_isArray;
+		bool m_isInitialized;
+		std::string m_initialValue;
 };
 
 }
 
 }
+
+#endif

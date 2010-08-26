@@ -1,3 +1,6 @@
+2010-08-26 Tamino Dauth <tamino@cdauth.eu>
+* map: Added trigger classes.
+
 2010-08-25 Tamino Dauth <tamino@cdauth.eu>
 * blp: Fixed JPEG compression components loading and scanning lines.
 

@@ -18,32 +18,42 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LANG_SCOPE_HPP
-#define WC3LIB_LANG_SCOPE_HPP
+#include "triggerfunctionparameer.hpp"
+#include "utilities.hpp"
 
 namespace wc3lib
 {
 
-namespace lang
+namespace map
 {
 
-/**
-* Scopes can be encapsulated. Therefore each scope instance has a queue which holds all tokens.
-* The first one in queue is the outermost one.
-*/
-class Scope
+TriggerFunctionParameter::TriggerFunctionParameter(class TriggerFunction *function) : m_function(function), m_type(TriggerFunctionParameter::Preset),  m_value(), m_unknown0(0), m_unknown1(0)
 {
-	public:
-		Scope(class Token *token);
-		Scope(std::queue<class Token*> &tokens);
-		/**
-		* @return Returns the innermost token of token queue.
-		*/
-		const class Token* token() const;
+}
 
-	private:
-		std::queue<class Token*> m_tokens;
-};
+
+std::streamsize TriggerFunctionParameter::read(std::istream &istream) throw (class Exception)
+{
+	std::streamsize size;
+	read<int32>(istream, this->m_type, size);
+	readString(istream, this->m_value, size);
+	read<int32>(istream, this->m_unknown0, size);
+	read<int32>(istream, this->m_unknown1, size);
+
+	return size;
+}
+
+
+std::streamsize TriggerFunctionParameter::write(std::ostream &ostream) const throw (class Exception)
+{
+	std::streamsize size;
+	write<int32>(ostream, this->m_type, size);
+	writeString(ostream, this->m_value, size);
+	write<int32>(ostream, this->m_unknown0, size);
+	write<int32>(ostream, this->m_unknown1, size);
+
+	return size;
+}
 
 }
 

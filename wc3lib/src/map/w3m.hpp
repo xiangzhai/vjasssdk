@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MAP_W3M_HPP
 #define WC3LIB_MAP_W3M_HPP
 
-#include <istream>
-#include <ostream>
-
 #include "environment.hpp"
 #include "platform.hpp"
-#include "../exception.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -63,7 +60,7 @@ class Sounds;
 class CustomTextTriggers;
 class ImportedFiles;
 
-class W3m
+class W3m : public Format
 {
 	public:
 		enum Flags
@@ -85,7 +82,7 @@ class W3m
 
 		W3m();
 		virtual ~W3m();
-		
+
 		virtual std::streamsize read(class mpq::Mpq *mpq) throw (class Exception);
 		/**
 		* @param istream has to contain the map MPQ archive.
@@ -94,16 +91,16 @@ class W3m
 		/**
 		* Creates an MPQ archive with map header and all required files.
 		*/
-		virtual std::streamsize write(std::ostream &ostream) throw (class Exception);
+		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
 
 		int32 width() const;
 		int32 height() const;
-		
+
 	protected:
 		std::string m_name;
 		int32 m_flags;
 		int32 m_maxPlayers;
-	
+
 		class Environment *m_environment;
 		class Shadow *m_shadow;
 		class PathMap *m_pathMap;
@@ -127,10 +124,10 @@ w3x
 		class Skin *m_skin;
 		class Extra *m_extra;
 */
-		
+
 		bool m_hasSignature;
 		char8 m_authentification[256];
-		
+
 };
 
 inline int32 W3m::width() const
