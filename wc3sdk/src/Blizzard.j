@@ -836,6 +836,10 @@ function OffsetRectBJ takes rect r, real dx, real dy returns rect
 endfunction
 
 //===========================================================================
+/**
+* @return Returns a newly created rect.
+* @see RectFromPointSize
+*/
 function RectFromCenterSizeBJ takes location center, real width, real height returns rect
     local real x = GetLocationX( center )
     local real y = GetLocationY( center )

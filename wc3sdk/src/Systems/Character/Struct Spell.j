@@ -73,7 +73,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 			return UnitRemoveAbility(this.character().unit(), this.m_ability)
 		endmethod
 
-		//methods
+		// methods
 
 		public stub method store takes gamecache cache, string missionKey, string labelPrefix returns nothing
 			call super.store(cache, missionKey, labelPrefix)
@@ -129,7 +129,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 		private static method triggerActionUpgrade takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.onUpgradeAction()
+			call this.onUpgradeAction.execute()
 			set triggeringTrigger = null
 		endmethod
 
@@ -171,7 +171,7 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 		private static method triggerActionCast takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.onCastAction()
+			call this.onCastAction.execute()
 			set triggeringTrigger = null
 		endmethod
 

@@ -1,0 +1,77 @@
+//Infos
+- Wenn man eine Karte speichert, wird das Archiv in einem temporären Ordner zwischengelagert. Der Ordner heißt "<Kartenname>Temp".
+Dies kann nützlich sein, wenn man Daten, die nach einem Absturz während des Speicherns verloren gegangen sind, wiederherstellen will.
+
+//Compiler-Bugs
+//Bugs des Jass-Compilers.
+
+//Endif und endloop
+- Der Editor stürzt ab, wenn man mit ungeschlossenen Bedingungen ('endif') oder Schleifen ('endloop') im Skript speichert.
+
+//Ungültige Integer-Werte
+- Ungültige Werte für Integers, zum Beispiel nicht-numerische Zeichen, können den Editor beim Speichern zum Absturz bringen.
+
+//Einzelne Backslashes in Strings
+- Einzelne Backslashes in Dateinamen verursachen beim Speichern mit dem Editor einen Absturz. Verwenden Sie nie einen einzelnen Backslash in einem String.
+Der Editor wandelt zwei Backslashes immer automatisch in einen um.
+
+//Weglassen der Ausgabe
+- Funktionen, die etwas zurückgeben sollen, dies aber nicht tun, bringen den Editor beim Speichern zum Absturz.
+
+//Falsche Zeile bei Code-Überprüfung
+- Der Compiler gibt oft eine Zeile unter der eigentlichen Fehlerquelle als Fehlerquelle aus.
+Man sollte immer die Zeile darüber überprüfen, wenn man in der angegebenen keinen Fehler findet.
+
+//String-Größenmaximum
+- Strings, die mehr als 860 Zeichen enthalten, bringen den Editor beim Speichern zum Absturz.
+Dies ist ein allgemeines Limit, kein wirklicher Bug.
+
+//Ausgabetyp
+- Der Compiler überprüft nur den letzten Rückgabewert einer Funktion. Dadurch kann man alle möglichen Typen in anderen Typen umwandeln, wie auch ein Handle zu einem Integer.
+Dieser Bug ist sehr nützlich für die Speicherung von Daten in einem Cache.
+
+//Parameter-Name
+- In einer Funktion kann ein Parameter den selben Namen haben wie eine lokale Variable. Es wird immer die Referenz des neusten Objekts benutzt.
+
+//%-Zeichen
+- Einzelne '%'-Zeichen werden in der Eigenes-Skript-Sektion beim Speichern entfernt.
+
+//Native-Bugs
+//Bugs in den Native-Funktionen aus der common.j
+
+//IsUnitType-Vergleich
+- Benutzt man IsUnitType ohne es mit true oder false zu vergleichen, funktioniert es nicht richtig, da das boolean, welches zurückgegeben wird
+ein abstraktes ist, welches nicht nur den Wert 1 besitzen muss.
+
+//Gamecache-Maximum
+- Man kann maximal 256 Spiel-Caches speichern.
+
+//Timer-Ablauf
+- Zerstörte Timer laufen trotz ihrer Zerstörung ab. Man muss einen Timer anhalten bevor man ihn zerstört.
+
+//SetUnitX- und SetUnitY-Koordinaten
+- SetUnitX und SetUnitY verursachen einen Absturtz des Spiels, falls die Koordinaten außerhalb der spielbaren Karte sind ('bj_mapInitialPlayableArea').
+
+//Einheiten außerhalb der spielbaren Karte erschaffen
+- Das Erschaffen einer Einheit verursacht einen Absturtz des Spiels, falls die Koordinaten außerhalb der spielbaren Karte sind ('bj_mapInitialPlayableArea').
+
+//RestoreUnit
+- Restore verursacht einen Absturz des Spiels, falls die Einheit nicht im Cache gespeichert ist.
+
+//GroupEnumUnitsInRectCounted und GroupEnumUnitsInRangeCounted
+- Die Funktionen GroupEnumUnitsInRectCounted und GroupEnumUnitsInRangeCounted können sich unterschiedlich verhalten, falls sie eine große Anzahl von Einheiten haben.
+
+//GetExpiredTimer
+- GetExpiredTimer() kann einen Absturtz des Spiels verursachen, wenn es keinen Timer gibt.
+
+//Einheitengruppen – vom InWarcraft-Nutzer gexxo
+- Werden Einheiten per RemoveUnit() aus dem Spiel entfernt und befinden sich bereits in einer Einheitengruppe, so kann es zu Fehlern kommen, da die erste Einheit der Gruppe nun immer null ist.
+
+
+// http://www.wc3c.net/showthread.php?t=107737
+native SetImageConstantHeight takes image whichImage, boolean flag, real height returns nothing
+Untested, but if its description can account for anthing, it locks the Z position to the given height, if the flag is true.
+After a bit of testing i concluded that this is the only function thats able to modify an images Z offset.
+
+native SetImageRender takes image whichImage, boolean flag returns nothing
+Does not work. Use SetImageRenderAlways instead.

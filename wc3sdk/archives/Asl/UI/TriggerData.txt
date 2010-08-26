@@ -56,6 +56,7 @@ TC_VISIBILITY=WESTRING_TRIGCAT_VISIBILITY,ReplaceableTextures\WorldEditUI\Action
 // ASL
 TC_ASL_CORE_GENERAL=WESTRING_ASL_TRIGCAT_CORE_GENERAL,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_ASL_CORE_DEBUG=WESTRING_ASL_TRIGCAT_CORE_DEBUG,ReplaceableTextures\WorldEditUI\Actions-Nothing
+TC_ASL_SYSTEMS_BONUS_MOD=WESTRING_ASL_TRIGCAT_SYSTEMS_BONUS_MOD,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_ASL_SYSTEMS_CHARACTER=WESTRING_ASL_TRIGCAT_SYSTEMS_CHARACTER,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_ASL_SYSTEMS_WORLD=WESTRING_ASL_TRIGCAT_SYSTEMS_WORLD,ReplaceableTextures\WorldEditUI\Actions-Nothing
 
@@ -143,6 +144,7 @@ fogmodifier=0,1,0,WESTRING_TRIGTYPE_fogmodifier
 weathereffect=0,1,0,WESTRING_TRIGTYPE_weathereffect
 
 // ASL
+A_BONUS_TYPE=0,1,1,WESTRING_ASL_TRIGTYPE_A_BONUS_TYPE,integer
 ACharacter=0,1,1,WESTRING_ASL_TRIGTYPE_ACHARACTER,integer
 ARoutine=0,1,1,WESTRING_ASL_TRIGTYPE_AROUTINE,integer
 ASpawnPoint=0,1,1,WESTRING_ASL_TRIGTYPE_ASPAWNPOINT,integer
@@ -309,6 +311,8 @@ group=CreateGroup(),WESTRING_TRIGDEFAULT_GROUP
 force=CreateForce(),WESTRING_TRIGDEFAULT_FORCE
 timer=CreateTimer(),WESTRING_TRIGDEFAULT_TIMER
 dialog=DialogCreate(),WESTRING_TRIGDEFAULT_DIALOG
+// virtual type for integer constants and type safety
+ABonusType=0,WESTRING_ASL_BONUS_TYPE_DAMAGE
 ACharacter=0,WESTRING_ASL_TRIGDEFAULT_CHARACTER
 ARoutine=0,WESTRING_ASL_TRIGDEFAULT_ROUTINE
 ASpawnPoint=0,WESTRING_ASL_TRIGDEFAULT_SPAWNPOINT
@@ -2174,6 +2178,13 @@ AJapi=1,boolean,A_JAPI,WESTRING_ASL_JAPIAVAILABILITY
 AMesgHelloWorld=1,string,WESTRING_ASL_HELLO_WORLD
 AMesgASpawnPointInit=1,string,WESTRING_ASL_ASPAWNPOINTINIT_MESG
 
+ABonusTypeDamage=1,ABonusType,A_BONUS_TYPE_DAMAGE,WESTRING_ASL_BONUS_TYPE_DAMAGE
+ABonusTypeArmor=1,ABonusType,A_BONUS_TYPE_ARMOR,WESTRING_ASL_BONUS_TYPE_ARMOR
+ABonusTypeLife=1,ABonusType,A_BONUS_TYPE_LIFE,WESTRING_ASL_BONUS_TYPE_LIFE
+ABonusTypeMana=1,ABonusType,A_BONUS_TYPE_MANA,WESTRING_ASL_BONUS_TYPE_MANA
+ABonusTypeSightRange=1,ABonusType,A_BONUS_TYPE_SIGHT_RANGE,WESTRING_ASL_BONUS_TYPE_SIGHT_RANGE
+ABonusTypeLifeRegeneration=1,ABonusType,A_BONUS_TYPE_LIFE_REGENERATION,WESTRING_ASL_BONUS_TYPE_LIFE_REGENERATION
+ABonusTypeManaRegeneration=1,ABonusType,A_BONUS_TYPE_MANA_REGENERATION,WESTRING_ASL_BONUS_TYPE_MANA_REGENERATION
 
  //A_RTC = false
 //	constant boolean A_JAPI = false
@@ -4704,6 +4715,12 @@ _PrintIf_Defaults=true,AMesgHelloWorld
 _PrintIf_Limits=
 _PrintIf_Category=TC_ASL_CORE_DEBUG
 
+// Bonus Mod
+AInitBonusMod=1,nothing
+_AInitBonusMod_Defaults=
+_AInitBonusMod_Limits=
+_AInitBonusMod_Category=TC_ASL_SYSTEMS_BONUS_MOD
+
 sc__ASpawnPoint_init=1,real,modelfile,soundfile,integer,boolean,player,StringExt
 _sc__ASpawnPoint_init_Defaults=60.0,"Objects\\Spawnmodels\\NightElf\\EntBirthTarget\\EntBirthTarget.mdl","Abilities\\Spells\\Orc\\EtherealForm\\SpiritWalkerMorph.wav",50,false,PlayerNA,AMesgASpawnPointInit
 _sc__ASpawnPoint_init_Limits=
@@ -6431,17 +6448,47 @@ _GetLastCreatedTextTag_Category=TC_LAST
 
 // ASL
 
+// returns integer
+AUnitGetBonus=1,0,integer,unit,ABonusType
+_AUnitGetBonus_Defaults=GetTriggerUnit,ABonusTypeDamage
+_AUnitGetBonus_Limits=_,_
+_AUnitGetBonus_Category=TC_ASL_SYSTEMS_BONUS_MOD
+
+// returns boolean
+AUnitSetBonus=1,0,boolean,unit,ABonusType,integer
+_AUnitSetBonus_Defaults=GetTriggerUnit,ABonusTypeDamage,0
+_AUnitSetBonus_Limits=_,_,_
+_AUnitSetBonus_Category=TC_ASL_SYSTEMS_BONUS_MOD
+
+// returns boolean
+AUnitClearBonus=1,0,boolean,unit,ABonusType
+_AUnitClearBonus_Defaults=GetTriggerUnit,ABonusTypeDamage
+_AUnitClearBonus_Limits=_,_
+_AUnitClearBonus_Category=TC_ASL_SYSTEMS_BONUS_MOD
+
+// returns boolean
+AUnitAddBonus=1,0,boolean,unit,ABonusType,integer
+_AUnitAddBonus_Defaults=GetTriggerUnit,ABonusTypeDamage,0
+_AUnitAddBonus_Limits=_,_,_
+_AUnitAddBonus_Category=TC_ASL_SYSTEMS_BONUS_MOD
+
+// returns boolean
+AUnitRemoveBonus=1,0,boolean,unit,ABonusType,integer
+_AUnitRemoveBonus_Defaults=GetTriggerUnit,ABonusTypeDamage,0
+_AUnitRemoveBonus_Limits=_,_,_
+_AUnitRemoveBonus_Category=TC_ASL_SYSTEMS_BONUS_MOD
+
 // returns ASpawnPoint
 sc__ASpawnPoint_create=1,0,ASpawnPoint,real,real,real
 _sc__ASpawnPoint_create_Defaults=0.0,0.0,0.0
 _sc__ASpawnPoint_create_Limits=_,_,_,_
-_sc__ASpawnPoint_create_Category=TC_ASL_WORLD
+_sc__ASpawnPoint_create_Category=TC_ASL_SYSTEMS_WORLD
 
 // returns ARoutine
 sc__ARoutine_create=1,0,ARoutine,boolean,boolean,integer,integer,integer
 _sc__ARoutine_create_Defaults=false,false,0,0,0
 _sc__ARoutine_create_Limits=_,_,_,_
-_sc__ARoutine_create_Category=TC_ASL_WORLD
+_sc__ARoutine_create_Category=TC_ASL_SYSTEMS_WORLD
 
 
 //***************************************************************************

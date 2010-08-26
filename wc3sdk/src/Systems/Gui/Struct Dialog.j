@@ -155,7 +155,7 @@ library AStructSystemsGuiDialog requires optional ALibraryCoreDebugMisc, ALibrar
 		* Uses dialog button's index as shortcut and adds string "[<shortcut index>]" before button's text.
 		*/
 		public method addExtendedDialogButtonIndex takes string text, boolean isQuitButton, boolean doScoreScreen, ADialogButtonAction action returns ADialogButton
-			local integer shortcut = ModuloInteger(this.m_dialogButtons.size(), thistype.maxPageButtons)
+			local integer shortcut = ModuloInteger(this.m_dialogButtons.size(), thistype.maxPageButtons) // faster than ADialog.pageIndex() + 1
 			return this.addExtendedDialogButton(Format(tr("[%1%] %2%")).i(shortcut).s(text).result(), '0' + shortcut, isQuitButton, doScoreScreen, action)
 		endmethod
 

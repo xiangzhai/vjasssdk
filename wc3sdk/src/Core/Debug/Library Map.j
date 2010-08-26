@@ -13,12 +13,22 @@ static if (DEBUG_MODE) then
 		call iterator.destroy()
 		call Print("Popped back one element, map size " + I2S(unitMap.size()) + ".")
 
+		// set new elements
 		loop
 			exitwhen(unitMap.size() == 10)
 			set unitMap["I" + I2S(unitMap.size() - 1)] = null
 		endloop
 
-		call Print("Unit map size " + I2S(unitMap.size()))
+		call Print("Unit map size " + I2S(unitMap.size()) + " after setting new elements.")
+
+		// clean up
+		loop
+			exitwhen (unitMap.empty())
+			call unitMap.popBack()
+		endloop
+
+		call Print("Unit map size " + I2S(unitMap.size()) + " after cleaning up.")
+
 		call unitMap.destroy()
 
 endif

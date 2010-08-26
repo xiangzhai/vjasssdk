@@ -29,7 +29,7 @@
 * signal - Runs signal debug.
 * list - Runs list debug.
 * map - Runs map debug.
-* @todo Causes crash in debug mode!!!
+* timer - Runs timer debugging hook function.
 */
 library ALibrarySystemsDebugUtilities requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
 
@@ -68,6 +68,9 @@ static if (DEBUG_MODE) then
 		call Print("signal")
 		call Print("list")
 		call Print("map")
+endif
+static if (DEBUG_MODE and A_DEBUG_NATIVES) then
+		call Print("timer")
 endif
 		set triggerPlayer = null
 	endfunction
@@ -393,6 +396,15 @@ static if (DEBUG_MODE) then
 	endfunction
 endif
 
+static if (DEBUG_MODE and A_DEBUG_NATIVES) then
+	private function timerDebug takes ACheat cheat returns nothing
+		local timer whichTimer = CreateTimer()
+		call TimerStart(whichTimer, 20.0, false, null)
+		call DestroyTimer(whichTimer) // destroy running timer, should be paused
+		set whichTimer = null
+	endfunction
+endif
+
 	function AInitUtilityCheats takes nothing returns nothing
 static if (DEBUG_MODE) then
 		call ACheat.create("help", true, help)
@@ -431,6 +443,11 @@ static if (DEBUG_MODE) then
 		call ACheat.create("list", true, listDebug)
 		call ACheat.create("map", true, mapDebug)
 endif
+
+static if (DEBUG_MODE and A_DEBUG_NATIVES) then
+		call ACheat.create("timer", true, timerDebug)
+endif
+
 	endfunction
 
 endlibrary

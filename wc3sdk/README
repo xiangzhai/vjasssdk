@@ -25,5 +25,18 @@ For using the object data (e. g. BonusMod) you have to make an entry in the "jas
 the object merger tool.
 It should always be named "ObjectMerger".
 Note that many parts of the ASL are not finished yet.
+The following list shows you which constants have to specified in your custom code that ASL works properly:
+globals
+	constant boolean A_RTC = false
+	constant boolean A_JAPI = false
+	constant boolean A_SYSTEMS = true
+	constant boolean A_OBJECTS = false
+	constant boolean A_DEBUG_HANDLES = false
+	constant boolean A_DEBUG_NATIVES = false
+	constant boolean A_NET = false
+	constant boolean A_FPS_MOVEMENT = false
+	constant real A_MAX_COLLISION_SIZE = 500.0 // used by function GetUnitCollisionSize
+	constant integer A_MAX_COLLISION_SIZE_ITERATIONS = 10 // used by function GetUnitCollisionSize
+endglobals
 
-Tamino Dauth <tamino@cdauth.eu>, 2010-04-08
+Tamino Dauth <tamino@cdauth.eu>, 2010-08-25

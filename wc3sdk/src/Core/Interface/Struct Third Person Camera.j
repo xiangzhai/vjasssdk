@@ -7,9 +7,8 @@ library AStructCoreInterfaceThirdPersonCamera requires AStructCoreInterfaceArrow
 	* limitations of third person cameras. Using this camera you can basically use any kind
 	* of terrain on your map without caring about the cam falling below the terrain or
 	* clipping parts of the terrain.
-	* Note that you have to initialize @struct AArrowKeys before initializing this struct.
-	* @author Opossum
-	* @author Tamino Dauth
+	* Note that you have to initialize AArrowKeys before initializing this struct.
+	* @author Opossum, Tamino Dauth
 	* @link http://www.wc3c.net/showthread.php?t=104786
 	*/
 	struct AThirdPersonCamera

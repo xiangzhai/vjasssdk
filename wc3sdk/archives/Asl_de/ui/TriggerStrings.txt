@@ -2578,6 +2578,12 @@ PrintIf="Zeige bedingte Testausgabe"
 PrintIf="Falls die ",~Bedingung," wahr ist, zeige ",~Testausgabe," an."
 PrintIf="Zeigt eine bedingte Testausgabe an."
 
+// Bonus Mod
+AInitBonusMod="Initialisiere Bonus-Mod"
+AInitBonusModHint="Initialisiert den Bonus-Mod."
+
+AUnitGetBonus takes unit whichUnit, integer bonusType
+
 sc__ASpawnPoint_init="Initialisiere Erzeugungspunktsystem"
 sc__ASpawnPoint_init="Initialisiere das Erzeugungspunktsystem mit der ",~Erzeugungszeit,", dem  ",~Erzeugungseffekt,", dem ",~Erzeugungsgeräusch," und der prozentualen ",~Chance,", Gegenstände fallen zu lassen. Außerdem ",~werden," fallen gelassene Gegenstände an Spieler verteilt. Die erzeugten Einheiten haben einen bestimmten",~Besitzer," und dieser ",~Text," wird beim Verteilen der fallen gelassenen Gegenstände angezeigt."
 
@@ -4484,6 +4490,19 @@ GetLastCreatedTextTag="Last created floating text"
 GetLastCreatedTextTagHint="This is the last floating text created via a 'Floating Text - Create Floating Text' trigger action."
 
 // ASL
+
+// returns integer
+AUnitGetBonus="Bonus einer Einheit"
+AUnitGetBonus="Bonus von ",~Einheit," des Typs ",~Typ,"."
+AUnitGetBonusHint="Liefert den Bonus einer Einheit."
+
+// returns boolean
+AUnitSetBonus="Gesetzter Bonus einer Einheit"
+AUnitSetBonus="Setzt den Bonus von ",~Einheit," des Typs ",~Typ," auf den Wert ",~Wert,"."
+AUnitGetBonusHint="Setzt den Bonus einer Einheit auf einen bestimmten Wert."
+
+/// @todo Add bonus mod implementations.
+
 sc__ASpawnPoint_create="Erschaffe Erzeugungspunkt"
 sc__ASpawnPoint_create="Erschaffe einen Erzeugungspunkt am Punkt (",~X,"|",~Y,") mit dem Radius ",~Radius,"."
 sc__ASpawnPoint_createHint="Erschafft einen Erzeugungspunkt an einem bestimmten Punkt, mit einem festgelegten Radius. An diesem Punkt können innerhalb des festgelegten Radius Kreaturen in regelmäßigen Zeitintervallen erzeugt werden."

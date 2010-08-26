@@ -50,6 +50,10 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 
 		// members
 
+		/**
+		* @return Returns the button's index of dialog. Dialog button indices start at 0.
+		* @see ADialogButton.pageIndex
+		*/
 		public method index takes nothing returns integer
 			return this.m_index
 		endmethod
@@ -65,6 +69,14 @@ library AStructSystemsGuiDialogButton requires optional ALibraryCoreDebugMisc, A
 			//if (this.m_action != 0) then
 				call this.m_action.execute(this)
 			//endif
+		endmethod
+
+		/**
+		* @return Returns the button's page and not global index. Dialog button page indices start at 0.
+		* @see ADialogButton.index
+		*/
+		public method pageIndex takes nothing returns integer
+			return ModuloInteger(this.m_index, ADialog.maxPageButtons)
 		endmethod
 
 		/**

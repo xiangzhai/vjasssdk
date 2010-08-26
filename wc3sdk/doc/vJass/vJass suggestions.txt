@@ -1,0 +1,17 @@
+- Types should be able to be private or public members of libraries and scopes.
+- Types should be able to be contained by a struct or an interface.
+- Function interfaces should be able to be private or public members of libraries and scopes.
+- Function interfaces should be able to be contained by a struct or an interface.
+- Functions which are using function interfaces should be able to be contained by a struct or an interface.
+- Text macros should be able to be private or public members of libraries and scopes.
+- Text macros should be able to be contained by a struct or an interface.
+- Text macro instances should be able to be private or public members of libraries and scopes.
+- Text macro instances should be able to be contained by a struct or an interface.
+- The keyword self should point at the current struct.
+- The keyword protected should be added.
+
+Bugs:
+- Constants from common.j or Blizzard.j can not be used as array sizes.
+- Private destructors are not really private.
+- The debug keyword can not be used for the globals and endglobals keyword.
+- You can not define the size of an array struct (struct bla extends array[10]).

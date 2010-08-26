@@ -1,3 +1,10 @@
+2010-08-25 Tamino Dauth <tamino@cdauth.eu>
+* Add JassHelper options and make the whole ASL compliant before releasing 1.1!!!!!!!
+* Test all options (A_NET etc.).
+
+2010-08-24 Tamino Dauth <tamino@cdauth.eu>
+* DONE: ADialogButton: Add method pageIndex for page index.
+
 2010-08-18 Tamino Dauth <tamino@cdauth.eu>
 * AInventory: Dropping page items is not prevented correctly.
 
@@ -29,7 +36,7 @@
 * DONE: Fix HighlightShortcut.
 
 2010-07-30 Tamino Dauth <tamino@cdauth.eu>
-* Fix dialog button indices (next page starts with 0 again!).
+* DEPRECATED: Fix dialog button indices (next page starts with 0 again!).
 
 2010-07-26 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Test alliance changing of struct AHeroIcon.

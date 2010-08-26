@@ -1,3 +1,11 @@
+2010-08-24 Tamino Dauth <tamino@cdauth.eu>
+* Added cheat "timer".
+* Improved map debugging function.
+* AUnitCopy: Changed identifiers, added documentation, added method isPaused.
+* AHeroIcon: Extends AUnitCopy now.
+* Revised trigger data and string files.
+* APoint: Added many methods.
+
 2010-08-18 Tamino Dauth <tamino@cdauth.eu>
 * AInventory: Improved method cleanUpRucksack and fixed dropping behaviour when dropping items on other characters.
 * ASpell: Added constructor createSimple.

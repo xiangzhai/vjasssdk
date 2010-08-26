@@ -5,7 +5,7 @@ library ALibraryCoreMathsPoint
 		local location usedLocation = Location(x, y)
 		local real z = GetLocationZ(usedLocation)
 		call RemoveLocation(usedLocation)
-		set usedLocation = null		
+		set usedLocation = null
 		return z
 	endfunction
 
@@ -35,12 +35,12 @@ library ALibraryCoreMathsPoint
 		set z2 = GetTerrainZ(x2, y2)
 
 		set A = y1*(z2 - z3) + y2*(z3 - z1) + y3*(z1 - z2) //
-	
+
 		//http://local.wasp.uwa.edu.au/~pbourke/geometry/planeeq/ ftw
 		set B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2)
 		set C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)
 		set D = -(x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1))
-	
+
 		return -(A * x + B * y + D) / C
 	endfunction
 
@@ -69,7 +69,7 @@ library ALibraryCoreMathsPoint
 	* @see GetPolarProjectionOfPoint
 	*/
 	function GetPolarProjectionX takes real x, real angle, real distance returns real
-		return (x + distance * Cos(angle * bj_DEGTORAD))
+		return (x + distance * CosBJ(angle))
 	endfunction
 
 	/**
@@ -77,8 +77,8 @@ library ALibraryCoreMathsPoint
 	* @see GetPolarProjectionX
 	* @see GetPolarProjectionOfPoint
 	*/
-	function GetPolarProjectionY takes real Y, real angle, real distance returns real
-		return (Y + distance * Sin(angle * bj_DEGTORAD))
+	function GetPolarProjectionY takes real y, real angle, real distance returns real
+		return (y + distance * SinBJ(angle))
 	endfunction
 
 	/**
@@ -88,8 +88,8 @@ library ALibraryCoreMathsPoint
 	* @see PolarProjectionBJ
 	*/
 	function GetPolarProjectionOfPoint takes real x, real y, real angle, real distance returns location
-		local real resultX = (x + distance * Cos(angle * bj_DEGTORAD))
-		local real resultY = (y + distance * Sin(angle * bj_DEGTORAD))
+		local real resultX = GetPolarProjectionX(x, angle, distance)
+		local real resultY = GetPolarProjectionY(y, angle, distance)
 		return Location(resultX, resultY)
 	endfunction
 
