@@ -27,14 +27,14 @@
 
 namespace wc3lib
 {
-	
+
 namespace mpq
 {
 
 class Mpq;
 
 }
-	
+
 namespace editor
 {
 
@@ -42,18 +42,18 @@ class MpqEditor : public Module
 {
 	public:
 		MpqEditor(class Editor *editor);
-		
+
 	public slots:
 		void newMpqArchive();
 		void openMpqArchive();
 		void closeMpqArchive();
-		
+
 		void addFiles();
 		void extractFiles(); // selected files
 		void removeFiles();
-		
+
 	protected:
-		std::list<class mpq::Mpq> m_mpqArchives;
+		std::list<class mpq::Mpq*> m_mpqArchives;
 };
 
 }

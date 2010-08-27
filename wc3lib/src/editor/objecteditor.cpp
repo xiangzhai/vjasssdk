@@ -19,19 +19,21 @@
  ***************************************************************************/
 
 #include "objecteditor.hpp"
+#include "editor.hpp"
 #include "../slk/data.hpp"
 #include "../mpq/mpqfile.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
-	
-ObjectEditor::ObjectEditor(class Editor *editor) : SubEditor(editor), m_data(0)
+
+ObjectEditor::ObjectEditor(class Editor *editor) : Module(editor), m_data(0)
 {
+	/*
 	const class mpq::MpqFile *unitEditorDataFile = editor->loadMpqFile("UI/UnitEditorData.txt");
-	
+
 	if (unitEditorDataFile != 0)
 	{
 		this->m_data = new slk::Data;
@@ -39,6 +41,7 @@ ObjectEditor::ObjectEditor(class Editor *editor) : SubEditor(editor), m_data(0)
 		unitEditorDataFile->write(iostream);
 		this->m_data->read(iostream);
 	}
+	*/
 }
 
 ObjectEditor::~ObjectEditor()
@@ -46,7 +49,7 @@ ObjectEditor::~ObjectEditor()
 	if (this->m_data != 0)
 		delete this->m_data;
 }
-	
+
 }
 
 }

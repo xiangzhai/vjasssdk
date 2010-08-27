@@ -82,6 +82,7 @@ function (WC3LIB_GET_COMPILE_DEFINITION variable definitionName)
 	message(STATUS "Definition \"${definitionName}\" is ${input}.")
 endfunction ()
 
+# TODO: Also setup C flags since we're using C code, too (e. g. huffman lib), CMAKE_C_FLAGS
 function (WC3LIB_COMPILER_SETUP)
 	# GCC options setup, has to be AFTER finding packages - Qt and KDE do overwrite CMAKE_CXX_FLAGS!
 	if (CMAKE_COMPILER_IS_GNUCC)
@@ -106,7 +107,7 @@ WC3LIB_GET_COMPILE_DEFINITION("FLAG_DEBUG_USE" "DEBUG")
 WC3LIB_GET_COMPILE_DEFINITION("FLAG_STATIC_USE" "STATIC")
 WC3LIB_GET_COMPILE_DEFINITION("FLAG_EDITOR_USE" "EDITOR")
 
-find_package(Gettext REQUIRED) 
+find_package(Gettext REQUIRED)
 
 set(Boost_USE_MULTITHREADED TRUE)
 if (FLAG_DEBUG_USE)
@@ -123,7 +124,8 @@ endif ()
 
 if (FLAG_EDITOR_USE)
 	message(STATUS "You're using -DEDITOR=1 which will probably prevent from compiling correctly since Qt or KDE does change GCC options.")
-	find_package(Qt4 REQUIRED)
+	find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
+	include(${QT_USE_FILE})
 	find_package(KDE4 REQUIRED)
 	add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 	include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
@@ -140,9 +142,11 @@ include_directories(/usr/include/OGRE)
 
 # Reset flags, Qt and KDE do set them to CRAP!
 set(CMAKE_CXX_FLAGS "")
+set(CMAKE_C_FLAGS "")
 WC3LIB_COMPILER_SETUP()
 
-message(STATUS "Compile flags are: \"${CMAKE_CXX_FLAGS}\".")
+message(STATUS "C++ Compile flags are: \"${CMAKE_CXX_FLAGS}\".")
+message(STATUS "C Compile flags are: \"${CMAKE_C_FLAGS}\".")
 
 # required for locale files - gettext
 add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")

@@ -30,6 +30,10 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* Provides access to Blizzard's image format.
+* @see BlpIOHandler
+*/
 class BlpIOPlugin : public QImageIOPlugin
 {
 	public:

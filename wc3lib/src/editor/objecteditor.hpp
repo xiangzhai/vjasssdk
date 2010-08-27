@@ -21,14 +21,14 @@
 #ifndef WC3LIB_EDITOR_OBJECTEDITOR_HPP
 #define WC3LIB_EDITOR_OBJECTEDITOR_HPP
 
-#include "subeditor.hpp"
+#include "module.hpp"
 
 namespace wc3lib
 {
 
 namespace slk
 {
-	
+
 class Data;
 
 }
@@ -36,13 +36,13 @@ class Data;
 namespace editor
 {
 
-class ObjectEditor : public SubEditor
+class ObjectEditor : public Module
 {
 	public:
 		ObjectEditor(class Editor *editor);
 		~ObjectEditor();
-		
-		
+
+
 	protected:
 		class slk::Data *m_data;
 };

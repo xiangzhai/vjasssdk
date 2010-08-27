@@ -89,6 +89,8 @@ class Blp
 					};
 				};
 
+				typedef std::pair<dword, dword> Coordinates;
+
 				MipMap(dword width, dword height);
 
 				void scale(dword newWidth, dword newHeight) throw (class Exception);
@@ -97,7 +99,7 @@ class Blp
 				dword height() const;
 
 				void setColor(dword width, dword height, color rgb, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
-				const std::map<std::pair<dword, dword>, struct Color>& colors() const;
+				const std::map<Coordinates, struct Color>& colors() const;
 				const struct Color& colorAt(dword width, dword height) const;
 
 			protected:
@@ -105,7 +107,7 @@ class Blp
 
 				dword m_width;
 				dword m_height;
-				std::map<std::pair<dword, dword>, struct Color> m_colors; //[mip map width * mip map height];
+				std::map<Coordinates, struct Color> m_colors; //[mip map width * mip map height];
 		};
 
 		enum Format

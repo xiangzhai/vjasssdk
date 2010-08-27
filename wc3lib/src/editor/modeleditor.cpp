@@ -22,14 +22,14 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
-	
-ModelEditor::ModelEditor(class Editor *editor) : SubEditor(editor)
+
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor)
 {
 }
-	
+
 }
 
 }

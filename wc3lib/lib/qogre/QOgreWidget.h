@@ -33,7 +33,8 @@
 /** A QWidget specialised for embedding an Ogre window. */
 class QOgreWidget : public QWidget
 {
-	Q_OBJECT
+	// TODO: Prevents from correct compilation
+	//Q_OBJECT
 
 	public:
 		QOgreWidget (QWidget *parent = 0, Qt::WFlags f = 0);

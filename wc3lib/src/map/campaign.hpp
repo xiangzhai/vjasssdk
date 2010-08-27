@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,22 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_MODELEDITOR_HPP
-#define WC3LIB_EDITOR_MODELEDITOR_HPP
+#ifndef WC3LIB_MAP_CAMPAIGN_HPP
+#define WC3LIB_MAP_CAMPAIGN_HPP
 
-#include "module.hpp"
-#include "ui_modeleditor.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
 
-namespace editor
+namespace map
 {
 
-class ModelEditor : public Module, Ui::ModelEditor
+class Campaign : public Format
 {
 	public:
-		ModelEditor(class Editor *editor);
+		Campaign();
+
+	protected:
+		/**
+		war3campaign.w3u
+		war3campaign.w3t
+		war3campaign.w3a
+		war3campaign.w3b
+		war3campaign.w3d
+		war3campaign.w3q
+		war3campaign.w3f
+		war3campaign.imp
+		war3campaignImported\*.*
+		*/
 };
 
 }

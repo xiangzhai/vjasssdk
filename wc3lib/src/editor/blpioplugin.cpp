@@ -26,12 +26,12 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
 Q_EXPORT_PLUGIN2(blpioplugin, BlpIOPlugin)
-	
+
 BlpIOPlugin::BlpIOPlugin(QObject *parent) : QImageIOPlugin(parent)
 {
 }
@@ -44,15 +44,15 @@ BlpIOPlugin::Capabilities BlpIOPlugin::capabilities(QIODevice *device, const QBy
 {
 	if (QString(format.data()) == "blp")
 		return QImageIOPlugin::CanRead | QImageIOPlugin::CanWrite;
-	
-	char identifier[4];
-	
-	if (device != 0 && device->peek(identifier, sizeof(identifier)) == sizeof(identifier)) /// @todo peek?
-	{	
-		if (memcmp(identifier, blp::Blp::identifier0, sizeof(blp::Blp::identifier0)) || memcmp(identifier, blp::Blp::identifier1, sizeof(blp::Blp::identifier1)) || memcmp(identifier, blp::Blp::identifier2, sizeof(blp::Blp::identifier2)))
+
+	blp::dword identifier;
+
+	if (device != 0 && device->peek(reinterpret_cast<char*>(&identifier), sizeof(identifier)) == sizeof(identifier)) /// @todo peek?
+	{
+		if (memcmp(reinterpret_cast<const void*>(&identifier), reinterpret_cast<const void*>(blp::Blp::identifier0), sizeof(identifier)) == 0 || memcmp(reinterpret_cast<const void*>(&identifier), reinterpret_cast<const void*>(blp::Blp::identifier1), sizeof(identifier)) == 0 || memcmp(reinterpret_cast<const void*>(&identifier), reinterpret_cast<const void*>(blp::Blp::identifier2), sizeof(identifier)) == 0)
 			return QImageIOPlugin::CanRead;
 	}
-	
+
 	return 0;
 }
 
@@ -61,7 +61,7 @@ QImageIOHandler* BlpIOPlugin::create(QIODevice *device, const QByteArray &format
 	class BlpIOHandler *result = new BlpIOHandler();
 	result->setDevice(device);
 	result->setFormat(format);
-	
+
 	return result;
 }
 

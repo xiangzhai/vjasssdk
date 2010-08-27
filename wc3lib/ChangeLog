@@ -1,3 +1,8 @@
+2010-08-27 Tamino Dauth <tamino@cdauth.eu>
+* map: Added class Campaign.
+* editor: Improved BLP classes.
+* C flags will also be cleared now which prevents from aborting compilation.
+
 2010-08-26 Tamino Dauth <tamino@cdauth.eu>
 * map: Added trigger classes.
 * core: Fixed utility functions.

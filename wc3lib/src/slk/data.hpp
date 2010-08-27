@@ -21,22 +21,23 @@
 #ifndef WC3LIB_SLK_DATA_HPP
 #define WC3LIB_SLK_DATA_HPP
 
-#include <istream>
-#include <ostream>
+#include <list>
+
+#include "../format.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace slk
 {
-	
+
 class DataEntry;
 
 /**
 * Default class for reading <Prefix>Data.txt files like WorldEditData.txt or TriggerStrings.txt.
 * @todo Should use a Bison file which defines the possible syntax for these files. Maybe we could use Boost's parser library instead.
 */
-class Data
+class Data : public Format
 {
 	public:
 		Data();

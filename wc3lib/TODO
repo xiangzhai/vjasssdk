@@ -1,5 +1,6 @@
 2010-08-26 Tamino Dauth <tamino@cdauth.eu>
 * map: Fix trigger classes and add trigger class for expansion (TFT).
+* map: Map classes need static members version and fileName.
 
 2010-07-25 Tamino Dauth <tamino@cdauth.eu>
 * Blp: Second mip map gets an error in header although header must be equal for every mip map.
