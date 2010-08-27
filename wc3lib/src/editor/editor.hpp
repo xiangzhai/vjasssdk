@@ -29,51 +29,40 @@
 
 namespace wc3lib
 {
-	
+
 namespace mpq
 {
 
 class Mpq;
-class MpqFile;	
+class MpqFile;
 
 }
 
 namespace editor
 {
 
-class TerrainEditor;
-class TriggerEditor;
-class SoundEditor;
-class ObjectEditor;
-class CampaignEditor;
-class AiEditor;
-class ObjectManager;
-class ImportManager;
-class MpqEditor;
-class ModelEditor;
-class TextureEditor;
-class NewMapDialog;
-
 /**
-* @todo Each @class SubEditor has it's own tool bar with all other sub editors.
+* All modules are stored as pointers and created on request. Therefore their initial value is 0 and they're allocated when needed.
+* @todo Each Module has it's own tool bar with all other modules.
+* @todo Add class MpqPriorityList which is hold for loaded MPQ archives -> map specific?
 */
 class Editor : public KMainWindow
 {
 	Q_OBJECT
-	
+
 	public:
 		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
 		~Editor();
-		
+
 		/**
 		* Each time a file has to searched for, all editor MPQ archives will be checked for in the ordering of their priority.
 		* Higher priority means it will be searched through befor MPQ archives with less priority.
 		* @return Returns the MPQ's position in editor MPQ list.
 		*/
 		std::size_t addMpq(const class Mpq *mpq, std::size_t priority);
-		
+
 		const class mpq::MpqFile* loadMpqFile(const boost::filesystem::path &path);
-	
+
 	public slots:
 		void newMap();
 		void showTerrainEditor();
@@ -87,10 +76,8 @@ class Editor : public KMainWindow
 		void showMpqEditor();
 		void showModelEditor();
 		void showTextureEditor();
-		
-	protected:
-		void readSettings();
 
+	protected:
 		std::list<class mpq::Mpq*> m_mpqs;
 		std::list<std::size_t> m_mpqsPriorities;
 		class TerrainEditor *m_terrainEditor;

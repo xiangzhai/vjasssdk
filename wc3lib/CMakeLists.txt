@@ -130,11 +130,11 @@ if (FLAG_EDITOR_USE)
 	add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 	include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
 	link_directories(${KDE4_LIB_DIR})
+	find_library(OGRE REQUIRED)
 endif ()
 
-#find_library(Ogre REQUIRED) # todo Use custom cmake module to find Ogre.
-# todo: is only required when using -DJPEG
-find_library(OPENJPEG_LIBS openjpeg) # todo Use custom cmake module to find openjpeg.
+# TODO: is only required when using -DJPEG and -DSTATIC
+#find_library(OPENJPEG_LIBS openjpeg) # todo Use custom cmake module to find openjpeg.
 
 link_directories(${Boost_LIBRARY_DIRS})
 include_directories(${GETTEXT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${Ogre_INCLUDE_DIR})

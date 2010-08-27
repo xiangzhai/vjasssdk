@@ -23,9 +23,9 @@ Description: Base class for all the OGRE examples
 
 
 
-#include "QOgreWidget.h"
+#include <QOgreWidget.h>
 
-#include "ExampleFrameListener.h"
+#include <ExampleFrameListener.h>
 
 #include <Ogre.h>
 #include <OgreConfigFile.h>
@@ -90,7 +90,7 @@ protected:
         if (myRenderWindow) {
             myRenderWindow->resize (width(), height());
             myRenderWindow->windowMovedOrResized();
-        } 
+        }
         if (mCamera)
             mCamera->setAspectRatio(Ogre::Real(m_vp->getActualWidth()) / Ogre::Real(m_vp->getActualHeight()));
     }

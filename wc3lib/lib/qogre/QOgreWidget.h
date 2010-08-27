@@ -30,7 +30,7 @@
 #include <Ogre.h>
 
 
-/** A QWidget specialised for embedding an Ogre window. */
+/** QWidget specialised for embedding an Ogre window. */
 class QOgreWidget : public QWidget
 {
 	// TODO: Prevents from correct compilation

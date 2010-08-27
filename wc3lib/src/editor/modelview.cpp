@@ -20,15 +20,15 @@
 
 #include <OGRE/Ogre.h>
 
+#include <qogre/ExampleFrameListener.h>
+
 #include "modelview.hpp"
-#include "ogremdlx.hpp"
-#include "mdlx.hpp"
-#include "model.hpp"
-#include "qogre/ExampleFrameListener.h"
+#include "../mdlx/ogremdlx.hpp"
+#include "../mdlx/mdlx.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
@@ -45,12 +45,12 @@ ModelView::~ModelView()
 void ModelView::show()
 {
 	static bool isInitialized;
-	
+
 	if (isInitialized)
 		return;
-	
+
 	isInitialized = true;
-	
+
         // Load resource paths from config file
         class Ogre::ConfigFile configFile;
         configFile.load("resources.cfg");
@@ -58,13 +58,13 @@ void ModelView::show()
         // Go through all sections & settings in the file
         Ogre::ConfigFile::SectionIterator sectionIterator = configFile.getSectionIterator();
         Ogre::String sectionName, typeName, archiveName;
-	
+
         while (sectionIterator.hasMoreElements())
         {
             sectionName = sectionIterator.peekNextKey();
             Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
             Ogre::ConfigFile::SettingsMultiMap::iterator iterator;
-            
+
 	    for (iterator = settings->begin(); iterator != settings->end(); ++iterator)
             {
                 typeName = iterator->first;
@@ -72,7 +72,7 @@ void ModelView::show()
                 Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archiveName, typeName, sectionName);
             }
         }
-	
+
 	this->m_sceneManager = theOgreRoot->createSceneManager(ST_GENERIC, "ExampleSMInstance" + Ogre::StringConverter::toString((unsigned long)this));
 	 // Create the camera
         this->m_camera = this->m_sceneManager->createCamera("EditorCamera" + Ogre::StringConverter::toString((unsigned long)this));
@@ -87,20 +87,20 @@ void ModelView::show()
 
         // Alter the camera aspect ratio to match the viewport
         this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
-	
+
 	// Set default mipmap level (NB some APIs ignore this)
 	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
-	
+
 	// Create any resource listeners (for loading screens)
 	/// Optional override method where you can create resource listeners (e.g. for loading screens)
 	//createResourceListener();
 	// Load resources
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-	
+
 	// Create the scene
 	// pure virtual - this has to be overridden
 	//createScene();
-	
+
 	this->m_frameListener = new Ogre::ExampleFrameListener(this->m_renderWindow, this->m_camera);
         this->m_frameListener->showDebugOverlay(true);
         theOgreRoot->addFrameListener(this->m_frameListener);
@@ -109,7 +109,7 @@ void ModelView::show()
 void ModelView::addOgreMdlx(class mdlx::OgreMdlx *ogreMdlx)
 {
 	ogreMdlx->refresh();
-	
+
 	this->m_models.push_back(ogreMdlx);
 }
 
@@ -133,7 +133,7 @@ void ModelView::resizeEvent(QResizeEvent *event)
 	{
 		this->m_renderWindow->resize(this->width(), this->height());
 		this->m_renderWindow->windowMovedOrResized();
-	} 
+	}
 
 	if (this->m_camera)
 		this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
