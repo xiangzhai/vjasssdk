@@ -17,11 +17,16 @@ add_subdirectory(mpq)
 add_subdirectory(slk)
 add_subdirectory(vm)
 add_subdirectory(map)
+
+# libraries without editor
+set(wc3lib_CORE_LIBRARIES wc3libcore wc3libblp wc3liblang wc3libmdlx wc3libmpq wc3libslk wc3libvm wc3libmap)
+
 if (FLAG_EDITOR_USE)
 	add_subdirectory(editor) # last one
 endif ()
 
-set(wc3lib_LIBRARIES wc3libblp wc3libcore wc3libmdlx wc3libmpq wc3libslk wc3libvm wc3libmap)
+# all available libraries
+set(wc3lib_LIBRARIES ${wc3lib_CORE_LIBRARIES})
 # wc3liblang
 if (FLAG_EDITOR_USE)
 	set(wc3lib_LIBRARIES "${wc3lib_LIBRARIES} wc3libeditor")

@@ -30,6 +30,14 @@ TerrainBrush::TerrainBrush(class TerrainEditor *terrainEditor) : Brush(terrainEd
 {
 }
 
+TerrainBrush::~TerrainBrush()
+{
+}
+
+void TerrainBrush::onPlace(map::int32 x, map::int32 y)
+{
+}
+
 }
 
 }

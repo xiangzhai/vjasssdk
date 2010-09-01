@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -37,21 +37,21 @@
 
 namespace wc3lib
 {
-	
+
 namespace mdlx
 {
 
-OgreMdlx::OgreMdlx(class Mdlx *mdlx) : m_mdlx(mdlx), m_mesh(0)
+OgreMdlx::OgreMdlx(const class Mdlx &mdlx) : m_mdlx(&mdlx), m_mesh(0)
 {
 }
 
 void OgreMdlx::refresh() throw (class Exception)
 {
 	class Ogre::MeshManager *meshManager = Ogre::MeshManager::getSingletonPtr();
-	
+
 	if (this->m_mesh.isNull())
 		this->m_mesh = meshManager->createManual(this->m_mdlx->model()->name(), "MDLX");
-	
+
 	//else if (this->m_mesh->
 	/// @todo bounds radius, minimum and maximum extent are for Warcraft rendering only?
 	this->m_mesh->_setBoundingSphereRadius(this->m_mdlx->model()->boundsRadius());
@@ -64,10 +64,10 @@ void OgreMdlx::refresh() throw (class Exception)
 		this->m_mdlx->model()->maximumExtent().z
 		)
 	);
-	
+
 	/// ...
 	std::size_t i = 0;
-	
+
 	BOOST_FOREACH(const class Geoset *geoset, this->m_mdlx->geosets()->geosets())
 	{
 		std::string name = boost::str(boost::format(_("Geoset - %1%")) % i);
@@ -75,29 +75,29 @@ void OgreMdlx::refresh() throw (class Exception)
 		std::string verticesPoseName = boost::str(boost::format(_("%1% - Vertices Pose")) % name);
 		class Ogre::Pose *verticesPose = this->m_mesh->createPose(i + 1, verticesPoseName.c_str());
 		std::size_t j = 0;
-		
+
 		BOOST_FOREACH(const class Vertex *vertex, geoset->vertices()->vertices())
 		{
 			verticesPose->addVertex(j, Ogre::Vector3(vertex->x(), vertex->y(), vertex->z()));
 			++j;
 		}
-		
+
 		std::string normalsPoseName = boost::str(boost::format(_("%1% - Normals Pose")) % name);
 		class Ogre::Pose *normalsPose = this->m_mesh->createPose(i + 1, normalsPoseName.c_str());
 		j = 0;
-		
+
 		BOOST_FOREACH(const class Normal *normal, geoset->normals()->normals())
 		{
 			normalsPose->addVertex(j, Ogre::Vector3(normal->x(), normal->y(), normal->z()));
 			++j;
 		}
-		
+
 		// primitives data
 		// vertex group data
-			
+
 		//subMesh->vertexData()
-		//subMesh->vertexData()void 	setMaterialName (const String &matName)		
-		
+		//subMesh->vertexData()void 	setMaterialName (const String &matName)
+
 		++i;
 	}
 }

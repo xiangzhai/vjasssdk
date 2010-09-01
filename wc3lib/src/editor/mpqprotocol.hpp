@@ -26,9 +26,6 @@
 namespace wc3lib
 {
 
-namespace editor
-{
-
 namespace mpq
 {
 
@@ -36,6 +33,13 @@ class Mpq;
 
 }
 
+namespace editor
+{
+
+/**
+* Implementation for Blizzard's MPQ format which should be usable in KDE applications as normal archive format (I/O slave).
+* @todo Finish and make installable as KDE plugin (such like qblp).
+*/
 class MpqArchive : public KArchive
 {
 	public:
@@ -44,17 +48,19 @@ class MpqArchive : public KArchive
 		virtual ~MpqArchive();
 
 	protected:
+		/*
 		virtual bool closeArchive();
 		virtual bool doFinishWriting(qint64 size);
 		virtual bool doPrepareWriting(const QString &name, const QString &user, const QString &group, qint64 size, mode_t perm, time_t atime, time_t mtime, time_t ctime);
 		virtual bool doWriteDir(const QString &name, const QString &user, const QString &group, mode_t perm, time_t atime, time_t mtime, time_t ctime);
-		virtual bool doWriteSymLink (const QString &name, const QString &target, const QString &user, const QString &group, mode_t perm, time_t atime, time_t mtime, time_t ctime);
+		virtual bool doWriteSymLink(const QString &name, const QString &target, const QString &user, const QString &group, mode_t perm, time_t atime, time_t mtime, time_t ctime);
 		KArchiveDirectory* findOrCreate(const QString &path);
 		virtual bool openArchive(QIODevice::OpenMode mode);
 		virtual KArchiveDirectory* rootDir();
 		void setDevice(QIODevice *dev);
 		void setRootDir(KArchiveDirectory *rootDir);
 		virtual void virtual_hook(int id, void *data);
+		*/
 
 		class mpq::Mpq *m_mpq;
 };

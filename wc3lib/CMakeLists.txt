@@ -124,7 +124,7 @@ endif ()
 
 if (FLAG_EDITOR_USE)
 	message(STATUS "You're using -DEDITOR=1 which will probably prevent from compiling correctly since Qt or KDE does change GCC options.")
-	find_package(Qt4 COMPONENTS QtCore QtGui REQUIRED)
+	find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 	include(${QT_USE_FILE})
 	find_package(KDE4 REQUIRED)
 	add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})

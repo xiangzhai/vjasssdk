@@ -18,13 +18,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <OGRE/Ogre.h>
+#include <QtCore>
+#include <QtGui>
+#include <QtOpenGL>
+#include <QX11Info>
 
-#include <qogre/ExampleFrameListener.h>
+//#include <qogre/ExampleFrameListener.h>
 
 #include "modelview.hpp"
 #include "../mdlx/ogremdlx.hpp"
 #include "../mdlx/mdlx.hpp"
+#include "../mdlx/model.hpp"
 
 namespace wc3lib
 {
@@ -32,30 +36,32 @@ namespace wc3lib
 namespace editor
 {
 
-ModelView::ModelView(QWidget *parent, Qt::WFlags f) : QOgreWidget (parent, f)
+ModelView::ModelView(QWidget *parent, const QGLWidget *shareWidget, Qt::WFlags f, const Ogre::NameValuePairList *ogreParameters) : QGLWidget(parent, shareWidget, f), m_parameters(ogreParameters), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0)
 {
 }
 
 ModelView::~ModelView()
 {
-	if (this->m_frameListener)
-		delete this->m_frameListener;
+	//if (this->m_frameListener)
+		//delete this->m_frameListener;
 }
 
-void ModelView::show()
-{
+//void ModelView::show()
+//{
+	/*
 	static bool isInitialized;
 
 	if (isInitialized)
 		return;
 
 	isInitialized = true;
-
+	*/
         // Load resource paths from config file
-        class Ogre::ConfigFile configFile;
-        configFile.load("resources.cfg");
+        //class Ogre::ConfigFile configFile;
+        //configFile.load("resources.cfg");
 
         // Go through all sections & settings in the file
+        /*
         Ogre::ConfigFile::SectionIterator sectionIterator = configFile.getSectionIterator();
         Ogre::String sectionName, typeName, archiveName;
 
@@ -74,70 +80,162 @@ void ModelView::show()
         }
 
 	this->m_sceneManager = theOgreRoot->createSceneManager(ST_GENERIC, "ExampleSMInstance" + Ogre::StringConverter::toString((unsigned long)this));
+	*/
 	 // Create the camera
-        this->m_camera = this->m_sceneManager->createCamera("EditorCamera" + Ogre::StringConverter::toString((unsigned long)this));
+        //this->m_camera = this->m_sceneManager->createCamera("EditorCamera" + Ogre::StringConverter::toString((unsigned long)this));
 
         // Position it at 500 in Z direction
-        this->m_camera->setPosition(Ogre::Vector3(0, 0, 500));
+        //this->m_camera->setPosition(Ogre::Vector3(0, 0, 500));
         // Look back along -Z
+        /*
         this->m_camera->lookAt(Ogre::Vector3(0, 0, -300));
         this->m_camera->setNearClipDistance(5);
 	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
         this->m_viewPort->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
-
+	*/
         // Alter the camera aspect ratio to match the viewport
-        this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
+        //this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
 
 	// Set default mipmap level (NB some APIs ignore this)
-	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
+	//Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 
 	// Create any resource listeners (for loading screens)
 	/// Optional override method where you can create resource listeners (e.g. for loading screens)
 	//createResourceListener();
 	// Load resources
-	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	//Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	// Create the scene
 	// pure virtual - this has to be overridden
 	//createScene();
-
+	/*
 	this->m_frameListener = new Ogre::ExampleFrameListener(this->m_renderWindow, this->m_camera);
         this->m_frameListener->showDebugOverlay(true);
         theOgreRoot->addFrameListener(this->m_frameListener);
-}
+	*/
+//}
 
-void ModelView::addOgreMdlx(class mdlx::OgreMdlx *ogreMdlx)
-{
-	ogreMdlx->refresh();
-
-	this->m_models.push_back(ogreMdlx);
-}
-
-Ogre::Entity* ModelView::createOgreMdlxEntity(class mdlx::OgreMdlx *ogreMdlx, const Ogre::Vector3 &position)
-{
-	Ogre::SceneNode *sceneNode = this->m_sceneManager->createSceneNode("Scene node");
-	sceneNode->setPosition(position);
-	Ogre::Entity *entity = this->m_sceneManager->createEntity("entity", ogreMdlx->mdlx()->model()->name());
-	sceneNode->attachObject(entity);
-}
-
-Ogre::Entity* ModelView::createOgreMdlx(class mdlx::Mdlx *mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx)
+class Ogre::Entity* ModelView::createModel(const class mdlx::Mdlx &mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx)
 {
 	ogreMdlx = new mdlx::OgreMdlx(mdlx);
-	return this->createOgreMdlxEntity(ogreMdlx, position);
+
+	return this->createModel(*ogreMdlx, position);
+}
+
+class Ogre::Entity* ModelView::createModel(const class mdlx::OgreMdlx &ogreMdlx, const Ogre::Vector3 &position)
+{
+	class Ogre::SceneNode *sceneNode = this->m_sceneManager->createSceneNode("Scene node");
+	sceneNode->setPosition(position);
+	Ogre::Entity *entity = this->m_sceneManager->createEntity("entity", ogreMdlx.mdlx()->model()->name());
+	sceneNode->attachObject(entity);
+
+	return entity;
 }
 
 void ModelView::resizeEvent(QResizeEvent *event)
 {
-	if (this->m_renderWindow)
+	if(this->m_renderWindow)
 	{
-		this->m_renderWindow->resize(this->width(), this->height());
+		this->m_renderWindow->resize(width(), height());
 		this->m_renderWindow->windowMovedOrResized();
-	}
 
-	if (this->m_camera)
-		this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
+		for(int ct = 0; ct < this->m_renderWindow->getNumViewports(); ++ct)
+		{
+			Ogre::Viewport* viewport = this->m_renderWindow->getViewport(ct);
+			Ogre::Camera* camera = viewport->getCamera();
+			camera->setAspectRatio(static_cast<Ogre::Real>(viewport->getActualWidth()) / static_cast<Ogre::Real>(viewport->getActualHeight()));
+		}
+	}
 }
+
+void ModelView::paintGL()
+{
+	/// @todo Render window only?
+	Ogre::Root::getSingletonPtr()->renderOneFrame();
+
+	/*
+	Ogre::Root::getSingleton()._fireFrameStarted();
+	this->m_renderWindow->update();
+	Ogre::Root::getSingleton()._fireFrameRenderingQueued();
+	Ogre::Root::getSingleton()._fireFrameEnded();
+	*/
+}
+
+void ModelView::resizeGL(int width, int height)
+{
+	if(this->m_renderWindow)
+		this->m_renderWindow->windowMovedOrResized();
+}
+
+void ModelView::initializeGL()
+{
+	// Parameters to pass to Ogre::Root::createRenderWindow()
+	Ogre::NameValuePairList params;
+
+	// If the user passed in any parameters then be sure to copy them into our own parameter set.
+	// NOTE: Many of the parameters the user can supply (left, top, border, etc) will be ignored
+	// as they are overridden by Qt. Some are still useful (such as FSAA).
+	if(this->m_parameters != 0)
+		params.insert(this->m_parameters->begin(), this->m_parameters->end());
+
+	// The external windows handle parameters are platform-specific
+	Ogre::String externalWindowHandleParams;
+
+	// Accept input focus
+	setFocusPolicy(Qt::StrongFocus);
+
+#if defined(Q_WS_WIN)
+	// positive integer for W32 (HWND handle) - According to Ogre Docs
+	externalWindowHandleParams = Ogre::StringConverter::toString((unsigned int)(winId()));
+#endif
+
+#if defined(Q_WS_X11)
+	// poslong:posint:poslong:poslong (display*:screen:windowHandle:XVisualInfo*) for GLX - According to Ogre Docs
+	QX11Info info = x11Info();
+	externalWindowHandleParams  = Ogre::StringConverter::toString((unsigned long)(info.display()));
+	externalWindowHandleParams += ":";
+	externalWindowHandleParams += Ogre::StringConverter::toString((unsigned int)(info.screen()));
+	externalWindowHandleParams += ":";
+	externalWindowHandleParams += Ogre::StringConverter::toString((unsigned long)(winId()));
+	//externalWindowHandleParams += ":";
+	//externalWindowHandleParams += Ogre::StringConverter::toString((unsigned long)(info.visual()));
+#endif
+
+	// Add the external window handle parameters to the existing params set.
+#if defined(Q_WS_WIN)
+	params["externalWindowHandle"] = externalWindowHandleParams;
+#endif
+
+#if defined(Q_WS_X11)
+	params["parentWindowHandle"] = externalWindowHandleParams;
+#endif
+
+	// Finally create our window.
+	this->m_renderWindow = Ogre::Root::getSingletonPtr()->createRenderWindow("OgreWindow", width(), height(), false, &params);
+	this->m_renderWindow->setActive(true);
+	// old stuff, added stuff from QtOgreWidget
+	//WId ogreWinId = 0x0;
+	//this->m_renderWindow->getCustomAttribute( "WINDOW", &ogreWinId);
+	//assert(ogreWinId);
+	//this->create(ogreWinId);
+
+	setAttribute(Qt::WA_PaintOnScreen, true);
+	setAttribute(Qt::WA_NoBackground);
+
+	//== Ogre Initialization ==//
+	Ogre::SceneType scene_manager_type = Ogre::ST_EXTERIOR_CLOSE;
+
+	// default scene
+	this->m_sceneManager = Ogre::Root::getSingletonPtr()->createSceneManager(scene_manager_type);
+	this->m_sceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
+	this->m_camera = this->m_sceneManager->createCamera("Widget_Cam");
+	this->m_camera->setPosition(Ogre::Vector3(0,1,0));
+	this->m_camera->lookAt(Ogre::Vector3(0,0,0));
+	this->m_camera->setNearClipDistance(1.0);
+	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
+	this->m_viewPort->setBackgroundColour(Ogre::ColourValue( 0.8,0.8,1 ));
+}
+
 
 void ModelView::setupResources()
 {

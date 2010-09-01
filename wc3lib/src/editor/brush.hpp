@@ -35,7 +35,7 @@ class Brush
 {
 	public:
 		Brush(class TerrainEditor *terrainEditor);
-		virtual ~Brush() = 0;
+		virtual ~Brush();
 
 		virtual void onPlace(map::int32 x, map::int32 y) = 0;
 

@@ -35,16 +35,18 @@ class TerrainBrush : public Brush
 {
 	public:
 		TerrainBrush(class TerrainEditor *terrainEditor);
+		virtual ~TerrainBrush();
+
+		virtual void onPlace(map::int32 x, map::int32 y);
 
 	protected:
-		map::uint16_t m_groundHeight;
-		bool m_boundary:1;
-		map::uint16_t waterLevel:15;
+		map::short16 m_groundHeight;
+		map::short16 m_waterLevel:15;
 		enum map::Tilepoint::Flags m_flags;
-		map::uint16_t groundTextureType:4;
-		map::uint8_t textureDetails;
-		map::uint16_t m_cliffTextureType:4;
-		map::uint16_t m_layerHeight:4;
+		unsigned int m_groundTextureType:4;
+		map::char8 m_textureDetails;
+		unsigned int m_cliffTextureType:4;
+		unsigned int m_layerHeight:4;
 };
 
 }

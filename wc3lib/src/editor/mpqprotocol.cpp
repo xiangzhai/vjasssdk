@@ -27,6 +27,7 @@ namespace wc3lib
 namespace editor
 {
 
+/*
 MpqArchive::MpqArchive(QIODevice *dev) : KArchive(dev), m_mpq(new mpq::Mpq())
 {
 }
@@ -64,8 +65,7 @@ void MpqArchive::setDevice(QIODevice *dev)
 {
 
 }
-
-virtual void virtual_hook(int id, void *data);
+*/
 
 }
 

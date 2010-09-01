@@ -1,12 +1,7 @@
 WC3LIB_ENABLE_EXCEPTIONS()
 
-set(wc3lib_SLK_SRC
-	slk.cpp
-)
-
-set(wc3lib_SLK_H
-	slk.hpp
-)
+WC3LIB_GET_H(wc3lib_SLK_H)
+WC3LIB_GET_SRC(wc3lib_SLK_SRC)
 
 add_library(wc3libslk SHARED ${wc3lib_SLK_SRC})
 target_link_libraries(wc3libslk ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})

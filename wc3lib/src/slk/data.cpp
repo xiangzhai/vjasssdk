@@ -22,12 +22,26 @@
 
 namespace wc3lib
 {
-	
+
 namespace slk
 {
 
 Data::Data()
 {
+}
+
+Data::~Data()
+{
+}
+
+std::streamsize Data::read(std::istream &istream) throw (class Exception)
+{
+	return 0;
+}
+
+std::streamsize Data::write(std::ostream &ostream) const throw (class Exception)
+{
+	return 0;
 }
 
 }

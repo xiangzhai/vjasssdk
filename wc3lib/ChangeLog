@@ -1,3 +1,8 @@
+2010-09-01 Tamino Dauth <tamino@cdauth.eu>
+* editor: Revised class ModelView and dropped depency to qogre (custom implementation).
+* mdlx: Revised class OgreMdlx.
+* editor: Improved build file.
+
 2010-08-27 Tamino Dauth <tamino@cdauth.eu>
 * map: Added class Campaign.
 * editor: Improved BLP classes.

@@ -22,11 +22,11 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
-TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), ModelView(editor, f)
+TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), ModelView(0, 0, f)
 {
 }
 

@@ -30,6 +30,10 @@ Brush::Brush(class TerrainEditor *terrainEditor) : m_terrainEditor(terrainEditor
 {
 }
 
+Brush::~Brush()
+{
+}
+
 }
 
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,10 +27,10 @@
 
 namespace wc3lib
 {
-	
+
 namespace mdlx
 {
-	
+
 class Mdlx;
 
 /**
@@ -39,21 +39,21 @@ class Mdlx;
 class OgreMdlx
 {
 	public:
-		OgreMdlx(class Mdlx *mdlx);
-		
-		class Mdlx* mdlx() const;
-		
+		OgreMdlx(const class Mdlx &mdlx);
+
+		const class Mdlx* mdlx() const;
+
 		/**
 		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
 		*/
 		void refresh() throw (class Exception);
-		
+
 	protected:
-		class Mdlx *m_mdlx;
+		const class Mdlx *m_mdlx;
 		class Ogre::MeshPtr m_mesh;
 };
 
-inline class Mdlx* OgreMdlx::mdlx() const
+inline const class Mdlx* OgreMdlx::mdlx() const
 {
 	return this->m_mdlx;
 }

@@ -21,20 +21,20 @@
 #ifndef WC3LIB_SLK_DATAENTRY_HPP
 #define WC3LIB_SLK_DATAENTRY_HPP
 
+#include <string>
+#include <list>
+
 namespace wc3lib
 {
-	
+
 namespace slk
 {
-	
-class Data;
-class DataSubEntry;
 
 class DataEntry
 {
 	public:
 		DataEntry(class Data *data);
-	    
+
 	protected:
 		class Data *m_data;
 		std::string m_name;

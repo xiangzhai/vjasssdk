@@ -20,7 +20,7 @@
 
 #include <iostream>
 
-#include <OGRE/Ogre.h>	
+#include <OGRE/Ogre.h>
 //#include <OGRE/OgreErrorDialog.h>
 
 //#include "../exception.hpp"
@@ -34,17 +34,18 @@ namespace editor
 
 void Renderer::start()
 {
+	/*
 	try
 	{
 		this->m_root = new Ogre::Root("../../plugins.cfg", "../ogre.cfg", "ogre.log");
-		
+
 		if (!this->m_root->restoreConfig())
 		{
 			if (!this->m_root->showConfigDialog())
 				return;
 		}
 		this->m_renderWindow = this->m_root->initialise(true, "Renderer Application");
-		
+
 		this->m_sceneManager = this->m_root->createSceneManager(Ogre::ST_GENERIC, "sceneManager");
 		// create main camera (for editor)
 		this->m_camera = this->m_sceneManager->createCamera("Camera");
@@ -52,11 +53,11 @@ void Renderer::start()
 		this->m_camera->lookAt(Ogre::Vector3(0.0f, 0.0f, 0.0f));
 		this->m_camera->setNearClipDistance(5.0f);
 		this->m_camera->setFarClipDistance(5000.0f);
-		
+
 		this->m_viewport = this->m_renderWindow->addViewport(this->m_camera);
 		this->m_viewport->setBackgroundColour(Ogre::ColourValue(0.0f, 0.0f, 0.0f));
 		this->m_camera->setAspectRatio(Ogre::Real(this->m_viewport->getActualWidth()) / Ogre::Real(this->m_viewport->getActualHeight()));
-		
+
 		this->m_root->startRendering();
 	}
 	catch (class Ogre::Exception &exception)
@@ -66,6 +67,7 @@ void Renderer::start()
 		dialog->display(exception.getFullDescription());
 		delete dialog;
 	}
+	*/
 }
 
 }
