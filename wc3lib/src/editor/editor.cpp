@@ -153,9 +153,13 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 	// Read shortcuts
 	newMapAction->setShortcut(settings.value("newmap", KShortcut(i18n("Strg+N"))).toString());
 	*/
+	/*
 	showTerrainEditor(); // test
 	this->m_terrainEditor->resize(QSize(300, 300));
-	//showModelEditor();
+	showTextureEditor();
+	this->m_textureEditor->openFile();
+	showModelEditor();
+	*/
 }
 
 Editor::~Editor()

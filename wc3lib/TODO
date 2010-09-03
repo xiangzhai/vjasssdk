@@ -9,7 +9,7 @@
 * editor: Drop class Renderer.
 
 2010-08-27 Tamino Dauth <tamino@cdauth.eu>
-* qogre: Requires OGRE 1.4, 1.6 hasn't key event classes anymore.
+* DEPRECATED: qogre: Requires OGRE 1.4, 1.6 hasn't key event classes anymore.
 
 2010-08-26 Tamino Dauth <tamino@cdauth.eu>
 * map: Fix trigger classes and add trigger class for expansion (TFT).

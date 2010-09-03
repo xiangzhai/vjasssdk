@@ -21,18 +21,25 @@
 #ifndef WC3LIB_EDITOR_TEXTUREEDITOR_HPP
 #define WC3LIB_EDITOR_TEXTUREEDITOR_HPP
 
+#include <kurl.h>
+
 #include "module.hpp"
+#include "ui_textureeditor.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
-class TextureEditor : public Module
+class TextureEditor : public Module, public Ui::TextureEditor
 {
 	public:
 		TextureEditor(class Editor *editor);
+		void openFile();
+
+	protected:
+		KUrl m_recentUrl;
 };
 
 }

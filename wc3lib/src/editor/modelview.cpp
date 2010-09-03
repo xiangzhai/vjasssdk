@@ -147,8 +147,6 @@ class Ogre::Entity* ModelView::createModel(const class mdlx::OgreMdlx &ogreMdlx,
 
 void ModelView::resizeEvent(QResizeEvent *event)
 {
-	qDebug() << "Resizing!";
-
 	if(this->m_renderWindow)
 	{
 		this->m_renderWindow->resize(width(), height());

@@ -20,6 +20,8 @@
 
 #include <QtGui>
 
+#include <klocale.h>
+
 #include "terraineditor.hpp"
 #include "editor.hpp"
 
@@ -31,6 +33,7 @@ namespace editor
 
 TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), m_modelView(this, 0, f)
 {
+	setWindowTitle(i18n("Terrain Editor"));
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	mainLayout->addWidget(&this->m_modelView);
 	setLayout(mainLayout);

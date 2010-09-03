@@ -21,7 +21,8 @@
 #include <sstream>
 #include <utility>
 
-#include <Qt/QtGui>
+#include <QtCore>
+#include <QtGui>
 
 #include "blpiohandler.hpp"
 #include "../blp/blp.hpp"
@@ -65,13 +66,18 @@ bool BlpIOHandler::read(QImage *image)
 	// write blp data into image
 	//if (this->m_blp->flags() == blp::Blp::Alpha)
 		//image->
+	blp::Blp::MipMap *mipMap = blpImage.mipMaps().front();
+
+	*image = QImage(mipMap->width(), mipMap->height(), blpImage.flags() == blp::Blp::Alpha ? QImage::Format_ARGB32 : QImage::Format_RGB32);
+
 	typedef std::pair<blp::Blp::MipMap::Coordinates, struct blp::Blp::MipMap::Color> MapType;
 
-	foreach (MapType mapEntry, blpImage.mipMaps().front()->colors())
+	foreach (MapType mapEntry, mipMap->colors())
 	{
 		const blp::Blp::MipMap::Coordinates coordinates = mapEntry.first;
 		const struct blp::Blp::MipMap::Color color = mapEntry.second;
 		QRgb pixelColor = (color.alpha << 3) + color.rgb; // QRgb starts with alpha
+		//qDebug() << "(Width " << coordinates.first << ", Height " << coordinates.second << ") RGBA value: " << qRed(color.rgb) << ' ' << qGreen(color.rgb) << ' ' << qBlue(color.rgb) << color.alpha;
 		image->setPixel(coordinates.first, coordinates.second, pixelColor);
 	}
 

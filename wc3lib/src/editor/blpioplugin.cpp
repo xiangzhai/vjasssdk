@@ -42,12 +42,12 @@ BlpIOPlugin::~BlpIOPlugin()
 
 BlpIOPlugin::Capabilities BlpIOPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-	if (QString(format.data()) == "blp")
+	if (format == "blp" || format == "BLP")
 		return QImageIOPlugin::CanRead | QImageIOPlugin::CanWrite;
 
 	blp::dword identifier;
 
-	if (device != 0 && device->peek(reinterpret_cast<char*>(&identifier), sizeof(identifier)) == sizeof(identifier)) /// @todo peek?
+	if (format.isEmpty() && device != 0 && device->isOpen() && device->isReadable() && device->peek(reinterpret_cast<char*>(&identifier), sizeof(identifier)) == sizeof(identifier)) /// @todo peek?
 	{
 		if (memcmp(reinterpret_cast<const void*>(&identifier), reinterpret_cast<const void*>(blp::Blp::identifier0), sizeof(identifier)) == 0 || memcmp(reinterpret_cast<const void*>(&identifier), reinterpret_cast<const void*>(blp::Blp::identifier1), sizeof(identifier)) == 0 || memcmp(reinterpret_cast<const void*>(&identifier), reinterpret_cast<const void*>(blp::Blp::identifier2), sizeof(identifier)) == 0)
 			return QImageIOPlugin::CanRead;
