@@ -24,6 +24,7 @@
 #include <list>
 
 #include <kmainwindow.h>
+#include <kaboutdata.h>
 
 #include <boost/filesystem.hpp>
 
@@ -48,9 +49,12 @@ namespace editor
 */
 class Editor : public KMainWindow
 {
-	Q_OBJECT
+	//Q_OBJECT
 
 	public:
+		static const KAboutData& aboutData();
+		static const KAboutData& wc3libAboutData();
+
 		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
 		~Editor();
 
@@ -78,6 +82,13 @@ class Editor : public KMainWindow
 		void showTextureEditor();
 
 	protected:
+		/// Enables or disables actions which can only be used with an opened map.
+		void setMapActionsEnabled(bool enabled);
+
+		static KAboutData m_aboutData;
+		static KAboutData m_wc3libAboutData;
+
+		class KActionCollection *m_actionCollection;
 		std::list<class mpq::Mpq*> m_mpqs;
 		std::list<std::size_t> m_mpqsPriorities;
 		class TerrainEditor *m_terrainEditor;

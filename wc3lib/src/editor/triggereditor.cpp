@@ -22,12 +22,13 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
 TriggerEditor::TriggerEditor(class Editor *editor) : Module(editor)
 {
+	setupUi(this);
 }
 
 }

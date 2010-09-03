@@ -26,8 +26,19 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor)
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(this, 0)
 {
+	setupUi(this);
+
+	QHBoxLayout *mainLayout = new QHBoxLayout;
+	mainLayout->addWidget(&this->m_modelView);
+	this->m_modelViewWidget->setLayout(mainLayout);
+}
+
+void ModelEditor::show()
+{
+	Module::show();
+	this->m_modelView.show();
 }
 
 }

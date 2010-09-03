@@ -22,14 +22,15 @@
 #define WC3LIB_EDITOR_TRIGGEREDITOR_HPP
 
 #include "module.hpp"
+#include "ui_triggereditor.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
-class TriggerEditor : public Module
+class TriggerEditor : public Module, Ui::TriggerEditor
 {
 	public:
 		TriggerEditor(class Editor *editor);

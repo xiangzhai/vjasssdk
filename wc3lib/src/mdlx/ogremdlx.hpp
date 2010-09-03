@@ -35,6 +35,10 @@ class Mdlx;
 
 /**
 * This class can be used to display MDLX models by using the OGRE 3d rendering engine.
+* It maintains a single mesh instance in a scene which contains all converted data of the original
+* MDLX model.
+* Geosets are implemented as sub meshes.
+* @todo This class should be moved to wc3lib module "editor".
 */
 class OgreMdlx
 {
@@ -42,6 +46,7 @@ class OgreMdlx
 		OgreMdlx(const class Mdlx &mdlx);
 
 		const class Mdlx* mdlx() const;
+		const Ogre::MeshPtr mesh() const;
 
 		/**
 		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
@@ -56,6 +61,11 @@ class OgreMdlx
 inline const class Mdlx* OgreMdlx::mdlx() const
 {
 	return this->m_mdlx;
+}
+
+inline const Ogre::MeshPtr OgreMdlx::mesh() const
+{
+	return this->m_mesh;
 }
 
 }

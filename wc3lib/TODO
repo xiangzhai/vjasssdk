@@ -1,3 +1,10 @@
+2010-09-03 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Class OgreMdlx should be moved to editor module.
+* OgreMdlx: Should read a constant Mdlx pointer and implement its creation, storing and refreshment.
+* ModelView: Should maintain an OGRE window instance which contains scenes etc. and also entities from OgreMdlx instances.
+* Editor: Is a main window class which provides World Editor clone.
+* editor: Trigger editor cannot be displayed (maybe just impossible at the same time as model editor).
+
 2010-09-01 Tamino Dauth <tamino@cdauth.eu>
 * editor: Drop class Renderer.
 

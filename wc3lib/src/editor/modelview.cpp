@@ -36,8 +36,21 @@ namespace wc3lib
 namespace editor
 {
 
-ModelView::ModelView(QWidget *parent, const QGLWidget *shareWidget, Qt::WFlags f, const Ogre::NameValuePairList *ogreParameters) : QGLWidget(parent, shareWidget, f), m_parameters(ogreParameters), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0)
+ModelView::ModelView(QWidget *parent, const QGLWidget *shareWidget, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QGLWidget(parent, shareWidget, f), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0)
 {
+	// setup a renderer
+	Ogre::RenderSystemList *renderers = this->m_root->getAvailableRenderers();
+	assert(!renderers->empty()); // we need at least one renderer to do anything useful
+	Ogre::RenderSystem *renderSystem;
+	renderSystem = renderers->front();
+	assert(renderSystem); // user might pass back a null renderer, which would be bad!
+	this->m_root->setRenderSystem(renderSystem);
+	QString dimensions = QString("%1x%2").arg(this->width()).arg(this->height());
+	renderSystem->setConfigOption("Video Mode", dimensions.toAscii().data());
+	// initialize without creating window
+	this->m_root->getRenderSystem()->setConfigOption("Full Screen", "No");
+	this->m_root->saveConfig();
+	this->m_root->initialise(false); // don't create a window
 }
 
 ModelView::~ModelView()
@@ -134,6 +147,8 @@ class Ogre::Entity* ModelView::createModel(const class mdlx::OgreMdlx &ogreMdlx,
 
 void ModelView::resizeEvent(QResizeEvent *event)
 {
+	qDebug() << "Resizing!";
+
 	if(this->m_renderWindow)
 	{
 		this->m_renderWindow->resize(width(), height());
@@ -151,7 +166,7 @@ void ModelView::resizeEvent(QResizeEvent *event)
 void ModelView::paintGL()
 {
 	/// @todo Render window only?
-	Ogre::Root::getSingletonPtr()->renderOneFrame();
+	this->m_root->renderOneFrame();
 
 	/*
 	Ogre::Root::getSingleton()._fireFrameStarted();
@@ -211,22 +226,26 @@ void ModelView::initializeGL()
 #endif
 
 	// Finally create our window.
-	this->m_renderWindow = Ogre::Root::getSingletonPtr()->createRenderWindow("OgreWindow", width(), height(), false, &params);
+	/// FIXME Crashes
+	this->m_renderWindow = this->m_root->createRenderWindow("OgreWindow", width(), height(), false, &params);
 	this->m_renderWindow->setActive(true);
 	// old stuff, added stuff from QtOgreWidget
 	//WId ogreWinId = 0x0;
 	//this->m_renderWindow->getCustomAttribute( "WINDOW", &ogreWinId);
 	//assert(ogreWinId);
-	//this->create(ogreWinId);
+#if defined(Q_WS_X11)
+	WId ogreWinId = 0x0;
+	this->m_renderWindow->getCustomAttribute("WINDOW", &ogreWinId);
+	assert(ogreWinId);
+	this->create(winId());
+#endif
 
 	setAttribute(Qt::WA_PaintOnScreen, true);
 	setAttribute(Qt::WA_NoBackground);
 
 	//== Ogre Initialization ==//
-	Ogre::SceneType scene_manager_type = Ogre::ST_EXTERIOR_CLOSE;
-
 	// default scene
-	this->m_sceneManager = Ogre::Root::getSingletonPtr()->createSceneManager(scene_manager_type);
+	this->m_sceneManager = this->m_root->createSceneManager(this->m_sceneType);
 	this->m_sceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
 	this->m_camera = this->m_sceneManager->createCamera("Widget_Cam");
 	this->m_camera->setPosition(Ogre::Vector3(0,1,0));

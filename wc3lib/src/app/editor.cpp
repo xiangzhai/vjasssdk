@@ -19,17 +19,24 @@
  ***************************************************************************/
 
 #include <kapplication.h>
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
+#include <klocale.h>
 
 #include "../editor/editor.hpp"
 
 using namespace wc3lib::editor;
-	
+
 int main(int argc, char *argv[])
 {
+	KAboutData aboutData(Editor::aboutData());
+
+	KCmdLineArgs::init(argc, argv, &aboutData);
+
 	class KApplication app;
-	
+
 	class Editor editor;
 	editor.show();
-	
+
 	return app.exec();
 }

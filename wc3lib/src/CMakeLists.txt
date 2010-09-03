@@ -29,7 +29,7 @@ endif ()
 set(wc3lib_LIBRARIES ${wc3lib_CORE_LIBRARIES})
 # wc3liblang
 if (FLAG_EDITOR_USE)
-	set(wc3lib_LIBRARIES "${wc3lib_LIBRARIES} wc3libeditor")
+	set(wc3lib_LIBRARIES ${wc3lib_LIBRARIES} wc3libeditor)
 endif ()
 
 add_subdirectory(app)

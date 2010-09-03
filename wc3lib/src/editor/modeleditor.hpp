@@ -23,6 +23,7 @@
 
 #include "module.hpp"
 #include "ui_modeleditor.hpp"
+#include "modelview.hpp"
 
 namespace wc3lib
 {
@@ -34,6 +35,11 @@ class ModelEditor : public Module, Ui::ModelEditor
 {
 	public:
 		ModelEditor(class Editor *editor);
+
+		virtual void show();
+
+	protected:
+		class ModelView m_modelView;
 };
 
 }

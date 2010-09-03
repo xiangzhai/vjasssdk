@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,7 +24,7 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kmenubar.h>
-#include <klocalizedstring.h>
+#include <klocale.h>
 
 #include <boost/foreach.hpp>
 
@@ -50,26 +50,102 @@ namespace wc3lib
 namespace editor
 {
 
-Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_terrainEditor(0), m_triggerEditor(0), m_soundEditor(0), m_objectEditor(0), m_campaignEditor(0), m_aiEditor(0), m_objectManager(0), m_importManager(0), m_mpqEditor(0), m_modelEditor(0), m_textureEditor(0), m_newMapDialog(0)
+KAboutData Editor::m_aboutData = KAboutData("editor", "", ki18n("World Editor"), "0.1", ki18n("Clone of Blizzard's Warcraft 3 TFT World Editor."), KAboutData::License_GPL_V2, ki18n("Copyright (C) 2009 by Tamino Dauth <tamino@cdauth.eu>"), ki18n("Other"), "http://sourceforge.net/projects/vjasssdk/", "tamino@cdauth.eu")
+.addAuthor(ki18n("Tamino Dauth"), ki18n("Maintainer"), "tamino@cdauth.eu", "http://tdauth.cdauth.eu/")
+;
+KAboutData Editor::m_wc3libAboutData = KAboutData("wc3lib", "", ki18n("Warcraft 3 Library"), "0.1", ki18n("Library which supports some of Blizzard's file formats used in Warcraft 3 TFT."), KAboutData::License_GPL_V2, ki18n("Copyright (C) 2009 by Tamino Dauth <tamino@cdauth.eu>"), ki18n("Other"), "http://sourceforge.net/projects/vjasssdk/", "tamino@cdauth.eu")
+.addAuthor(ki18n("Tamino Dauth"), ki18n("Maintainer"), "tamino@cdauth.eu", "http://tdauth.cdauth.eu/")
+;
+
+const KAboutData& Editor::aboutData()
+{
+	return Editor::m_aboutData;
+}
+
+
+const KAboutData& Editor::wc3libAboutData()
+{
+	return Editor::m_wc3libAboutData;
+}
+
+Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_actionCollection(new KActionCollection(this)), m_terrainEditor(0), m_triggerEditor(0), m_soundEditor(0), m_objectEditor(0), m_campaignEditor(0), m_aiEditor(0), m_objectManager(0), m_importManager(0), m_mpqEditor(0), m_modelEditor(0), m_textureEditor(0), m_newMapDialog(0)
 {
 	/// @todo Actions should get the same entry names and shortcuts as in the original World Editor
-	class KActionCollection *actionCollection = new KActionCollection(this);
-	actionCollection->setConfigGroup("Shortcuts");
+	this->m_actionCollection->setConfigGroup("Shortcuts");
 
-	class KMenu *fileMenu = new KMenu(tr("File"), this);
-	this->menuBar()->addMenu(fileMenu);
+	class KMenu *menu = new KMenu(tr("File"), this);
+	this->menuBar()->addMenu(menu);
 
 	class KAction *action = new KAction(KIcon(":/actions/newmap.png"), i18n("New map ..."), this);
-	action->setShortcut(KShortcut(i18n("Strg+N")));
+	action->setShortcut(KShortcut(i18n("Ctrl+N")));
 	connect(action, SIGNAL(triggered()), this, SLOT(newMap()));
-	actionCollection->addAction("newmap", action);
+	this->m_actionCollection->addAction("newmap", action);
+	menu->addAction(action);
 
 	action = new KAction(KIcon(":/actions/openmap.png"), i18n("Open map ..."), this);
-	action->setShortcut(KShortcut(i18n("Strg+O")));
+	action->setShortcut(KShortcut(i18n("Ctrl+O")));
 	connect(action, SIGNAL(triggered()), this, SLOT(openMap()));
-	actionCollection->addAction("openmap", action);
+	this->m_actionCollection->addAction("openmap", action);
+	menu->addAction(action);
 
-	actionCollection->readSettings(); // load shortcuts after setting default
+	action = new KAction(KIcon(":/actions/closemap.png"), i18n("Close map"), this);
+	action->setShortcut(KShortcut(i18n("Strg+W")));
+	connect(action, SIGNAL(triggered()), this, SLOT(closeMap()));
+	this->m_actionCollection->addAction("closemap", action);
+	menu->addAction(action);
+
+	menu->addSeparator();
+
+	action = new KAction(KIcon(":/actions/savemap.png"), i18n("Save map"), this);
+	action->setShortcut(KShortcut(i18n("Ctrl+S")));
+	connect(action, SIGNAL(triggered()), this, SLOT(saveMap()));
+	this->m_actionCollection->addAction("savemap", action);
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/savemapas.png"), i18n("Save map as ..."), this);
+	//action->setShortcut(KShortcut(i18n("Strg+S")));
+	connect(action, SIGNAL(triggered()), this, SLOT(saveMapAs()));
+	this->m_actionCollection->addAction("savemapas", action);
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/savemapshadows.png"), i18n("Calculate shadows and save map ..."), this);
+	//action->setShortcut(KShortcut(i18n("Strg+S")));
+	connect(action, SIGNAL(triggered()), this, SLOT(saveMapShadow()));
+	this->m_actionCollection->addAction("savemapshadows", action);
+	menu->addAction(action);
+
+	menu->addSeparator();
+
+	action = KStandardAction::quit(this, SLOT(close()), this);
+	this->m_actionCollection->addAction("quit", action);
+	menu->addAction(action);
+
+	// module
+	menu = new KMenu(tr("Module"), this);
+	this->menuBar()->addMenu(menu);
+
+	action = new KAction(KIcon(":/actions/terraineditor.png"), i18n("Terrain Editor"), this);
+	action->setShortcut(KShortcut(i18n("F3")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showTerrainEditor()));
+	this->m_actionCollection->addAction("terraineditor", action);
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/triggereditor.png"), i18n("Trigger Editor"), this);
+	action->setShortcut(KShortcut(i18n("F4")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showTriggerEditor()));
+	this->m_actionCollection->addAction("triggereditor", action);
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/soundeditor.png"), i18n("Sound Editor"), this);
+	action->setShortcut(KShortcut(i18n("F5")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showSoundEditor()));
+	this->m_actionCollection->addAction("soundeditor", action);
+	menu->addAction(action);
+
+
+	this->setMapActionsEnabled(false);
+
+	this->m_actionCollection->readSettings(); // load shortcuts after setting default
 
 	/*
 	QSettings settings("Blizzard Entertainment", "WorldEdit", this);
@@ -77,6 +153,9 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_t
 	// Read shortcuts
 	newMapAction->setShortcut(settings.value("newmap", KShortcut(i18n("Strg+N"))).toString());
 	*/
+	showTerrainEditor(); // test
+	this->m_terrainEditor->resize(QSize(300, 300));
+	//showModelEditor();
 }
 
 Editor::~Editor()
@@ -258,6 +337,14 @@ void Editor::newMap()
 		this->m_newMapDialog = new NewMapDialog(this);
 
 	this->m_newMapDialog->show();
+}
+
+void Editor::setMapActionsEnabled(bool enabled)
+{
+	this->m_actionCollection->action("closemap")->setEnabled(enabled);
+	this->m_actionCollection->action("savemap")->setEnabled(enabled);
+	this->m_actionCollection->action("savemapas")->setEnabled(enabled);
+	this->m_actionCollection->action("savemapshadows")->setEnabled(enabled);
 }
 
 }

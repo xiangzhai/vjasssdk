@@ -51,7 +51,7 @@
     </widget>
    </item>
    <item row="0" column="2" rowspan="3">
-    <widget class="wc3lib::editor::ModelView" name="rendererWidget" native="true">
+    <widget class="QWidget" name="m_modelViewWidget" native="true">
      <property name="minimumSize">
       <size>
        <width>400</width>
@@ -167,12 +167,6 @@
    <class>KTabWidget</class>
    <extends>QTabWidget</extends>
    <header>ktabwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>wc3lib::editor::ModelView</class>
-   <extends>QWidget</extends>
-   <header>modelview.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -18,7 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <QtGui>
+
 #include "terraineditor.hpp"
+#include "editor.hpp"
 
 namespace wc3lib
 {
@@ -26,8 +29,11 @@ namespace wc3lib
 namespace editor
 {
 
-TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), ModelView(0, 0, f)
+TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), m_modelView(this, 0, f)
 {
+	QHBoxLayout *mainLayout = new QHBoxLayout;
+	mainLayout->addWidget(&this->m_modelView);
+	setLayout(mainLayout);
 }
 
 TerrainEditor::~TerrainEditor()
@@ -37,7 +43,7 @@ TerrainEditor::~TerrainEditor()
 void TerrainEditor::show()
 {
 	Module::show();
-	ModelView::show();
+	this->m_modelView.show();
 }
 
 }

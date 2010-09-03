@@ -47,6 +47,7 @@ namespace editor
 * Therefore well known rendering engine OGRE is used in this class.
 * The rendering viewport should be scaled correctly automatically since Qt GUI events are implemented.
 * MDLX files can be converted into OGRE entities by creating an OgreMdlx instance which manages an OGRE mesh and sub mesh instance.
+* @todo Since each model view widget uses its own OGRE root object there should be a possibility to assign plugins.cfg file path.
 * @link http://qt-apps.org/content/show.php/QtOgre+Framework?content=92912, http://www.ogre3d.org/tikiwiki/QtOgre
 * @see Mdlx, OgreMdlx
 */
@@ -54,9 +55,10 @@ class ModelView : public QGLWidget
 {
 	public:
 		/**
+		* @param ogreSceneType OGRE scene type which will be set for the scene manager of the widget. Should be changed for terrain (ST_EXTERIOR_FAR, ST_EXTERIOR_REAL_FAR).
 		* @param ogreParameters OGRE window parameters.
 		*/
-		ModelView(QWidget *parent = 0, const QGLWidget *shareWidget = 0, Qt::WFlags f = 0, const Ogre::NameValuePairList *ogreParameters = 0);
+		ModelView(QWidget *parent = 0, const QGLWidget *shareWidget = 0, Qt::WFlags f = 0, Ogre::SceneType ogreSceneType = Ogre::ST_EXTERIOR_CLOSE, const Ogre::NameValuePairList *ogreParameters = 0);
 		virtual ~ModelView();
 
 		//virtual void show();
@@ -88,9 +90,11 @@ class ModelView : public QGLWidget
 		virtual void configure();
 
 		const Ogre::NameValuePairList *m_parameters;
+		Ogre::Root *m_root;
 		Ogre::RenderWindow *m_renderWindow;
 
 		// default scene
+		Ogre::SceneType m_sceneType;
 		Ogre::SceneManager *m_sceneManager;
 		Ogre::Camera *m_camera;
 		Ogre::Viewport *m_viewPort;
