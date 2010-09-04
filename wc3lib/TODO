@@ -1,3 +1,14 @@
+2010-09-04 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Rename class Rotation0s to MdlxRotations, rename class Translation1s to MdlxTranslations, rename class Scaling0s to MdlxScalings and implement corresponding Mdlx functions.
+* mdlx: Add global enum LineType.
+* mdlx: Add class MdlxTransforms which is derived from MdlxRotations, MdlxTranslations and MdlxScalings.
+* mdlx: OgreMdlx: Implement curve modifiers.
+* mdlx: Use struct VertexData to store vertices.
+* mdlx: OgreMdlx needs splitted up methods since sometimes you only want to refresh single nodes etc.
+* mdlx: Add generic interpolation functions (http://www.wc3c.net/showthread.php?t=79038).
+* editor: BLP images aren't displayed correctly in QPixmap (of QLabel instance) although they're read without any troubles.
+* mdlx: All Object deriving classes have to register theirself on Mdlx by using Mdlx::addObject!
+
 2010-09-03 Tamino Dauth <tamino@cdauth.eu>
 * mdlx: Class OgreMdlx should be moved to editor module.
 * OgreMdlx: Should read a constant Mdlx pointer and implement its creation, storing and refreshment.
@@ -12,7 +23,7 @@
 * DEPRECATED: qogre: Requires OGRE 1.4, 1.6 hasn't key event classes anymore.
 
 2010-08-26 Tamino Dauth <tamino@cdauth.eu>
-* map: Fix trigger classes and add trigger class for expansion (TFT).
+* DONE: map: Fix trigger classes and add trigger class for expansion (TFT).
 * map: Map classes need static members version and fileName.
 
 2010-07-25 Tamino Dauth <tamino@cdauth.eu>

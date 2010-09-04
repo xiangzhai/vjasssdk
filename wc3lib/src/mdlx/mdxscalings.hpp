@@ -27,7 +27,7 @@
 
 namespace wc3lib
 {
-	
+
 namespace mdlx
 {
 
@@ -43,22 +43,25 @@ class MdxScalings : public MdxBlock
 			Hermite = 2,
 			Bezier = 3
 		};
-	
+
 		MdxScalings(byte blockName[4], bool optional = true);
 		virtual ~MdxScalings();
-		
+
 		long32 lineType() const;
-		
+		long32 globalSequenceId() const;
+
+		bool hasGlobalSequence() const;
+
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-		
+
 	protected:
 		/**
 		* This method should be overwritten in child class.
 		* @return Returns a new allocated group member which will be added to list.
 		*/
 		virtual class MdxScaling* createNewMember();
-		
+
 		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class MdxScaling*> m_scalings;
@@ -67,6 +70,16 @@ class MdxScalings : public MdxBlock
 inline long32 MdxScalings::lineType() const
 {
 	return this->m_lineType;
+}
+
+inline long32 MdxScalings::globalSequenceId() const
+{
+	return this->m_globalSequenceId;
+}
+
+inline bool MdxScalings::hasGlobalSequence() const
+{
+	return this->m_globalSequenceId != 0xFFFFFFFF;
 }
 
 }

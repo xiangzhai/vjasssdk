@@ -40,11 +40,12 @@ class AttachmentVisibilities;
 
 /**
 * No MDX block!
-* Object types can have parent relationships and inherit rotation, scaling and translation of their parent.
-* Note that @fn Object.translations, @fn Object.rotations and @fn Object.scalings won't return 0
-* if the object does inherit any of them.
-* Use @fn Object.hasParent, @fn Object.inheritsTranslation, @fn Object.inheritsRotation and @fn Object.inheritsScaling to
-* check if there is any parent inheritance relationship.
+* Object types can have parent relationships and inherit rotation, scaling and translation of their parent if flags are set (Object::inheritsTranslation, Object::inheritsRotation, Object::inheritsScaling).
+* Consider that Object::translations, Object::rotations and Object::scalings won't return 0
+* if the object does inherit any of them. They do only have empty lists.
+* Use Object::hasParent to check if there is any parent inheritance relationship.
+* All objects are stored in a map of the Mdlx instance indicated with their id for easier and faster access (Mdlx::object).
+* @note MDLX format brings its own dynamic type system by saving the type of each object in its structure. Use Object::type to get an object's type.
 */
 class Object
 {
@@ -59,7 +60,7 @@ class Object
 			Attachment = 2048,
 			CollisionShape = 8192
 		};
-		
+
 		enum TypeAddition
 		{
 			DontInheritTranslation = 1,
@@ -82,7 +83,7 @@ class Object
 		long32 objectId() const;
 		void setParent(long32 parent);
 		long32 parent() const;
-		
+
 		/**
 		* Type additions will be hold.
 		*/
@@ -90,7 +91,7 @@ class Object
 		enum Type type() const;
 		void addTypeAddition(enum TypeAddition typeAddition);
 		enum TypeAddition typeAddition() const;
-		
+
 		void setTranslations(class Translation1s *translations);
 		class Translation1s* translations() const;
 		void setRotations(class Rotation0s *rotations);
@@ -104,7 +105,7 @@ class Object
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-		
+
 		bool hasParent() const;
 		bool inheritsTranslation() const;
 		bool inheritsRotation() const;
@@ -114,7 +115,7 @@ class Object
 		class Mdlx *m_mdlx;
 		ascii m_name[0x50];
 		long32 m_objectId;
-		long32 m_parent;
+		long32 m_parent; // 0xFFFFFFFF if none
 		long32 m_type;
 		class Translation1s *m_translations; //(KGTR)
 		class Rotation0s *m_rotations; //(KGRT)
@@ -177,7 +178,7 @@ inline enum Object::Type Object::type() const
 		return Object::EventObject;
 	else if (this->m_type < Object::CollisionShape)
 		return Object::Attachment;
-	
+
 	return Object::CollisionShape;
 }
 
@@ -189,7 +190,7 @@ inline void Object::addTypeAddition(enum Object::TypeAddition typeAddition)
 inline enum Object::TypeAddition Object::typeAddition() const
 {
 	enum Object::Type type = this->type();
-	
+
 	return Object::TypeAddition(this->m_type - long32(type));
 }
 

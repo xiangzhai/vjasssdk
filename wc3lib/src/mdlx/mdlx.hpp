@@ -21,6 +21,9 @@
 #ifndef WC3LIB_MDLX_MDLX_HPP
 #define WC3LIB_MDLX_MDLX_HPP
 
+#include <list>
+#include <map>
+
 #include "mdxblock.hpp"
 
 namespace wc3lib
@@ -98,7 +101,30 @@ class Mdlx : public MdxBlock
 		*/
 		std::size_t replaceTexturePaths(const ascii oldTexturePath[0x100], const ascii newTexturePath[0x100], std::size_t number = 0);
 
+		/**
+		* @return Returns the corresponding pivot point of object object if some exists (searched by id).
+		*/
+		const class PivotPoint* objectPivotPoint(const class Object &object) const;
+		const class Geoset* boneGeoset(const class Bone &bone) const;
+		const class Object* objectParent(const class Object &object) const;
+
+		std::list<const class Object*> objects() const;
+
+		const class Object* object(long32 id) const;
+
+		std::list<const class Object*> children(const class Object &object) const;
+
 	protected:
+		friend class Object;
+
+		typedef std::pair<long32, class Object*> ObjectPairType;
+
+		/**
+		* Objects have to register theirself when being readed.
+		* @note Throws an exception if id is already being used.
+		*/
+		void addObject(long32 id, class Object *object) throw (class Exception);
+
 		class Version *m_version; //VERS
 		class Model *m_model; //MODL
 		class Sequences *m_sequences; //SEQS
@@ -125,6 +151,8 @@ class Mdlx : public MdxBlock
 		class Cameras *m_cameras;
 		class Events *m_events;
 		class CollisionShapes *m_collisionShapes;
+
+		std::map<long32, class Object*> m_objects;
 };
 
 inline class Version* Mdlx::version() const

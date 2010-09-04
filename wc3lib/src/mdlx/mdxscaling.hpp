@@ -29,21 +29,26 @@
 
 namespace wc3lib
 {
-	
+
 namespace mdlx
 {
 
 class MdxScalings;
-	
+
 class MdxScaling
 {
 	public:
 		MdxScaling(class MdxScalings *scalings);
 		virtual ~MdxScaling();
-		
+
 		std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-		
+
+		long32 frame() const;
+		float32 x() const;
+		float32 y() const;
+		float32 z() const;
+
 	protected:
 		class MdxScalings *m_scalings;
 		long32 m_frame;
@@ -53,6 +58,26 @@ class MdxScaling
 		float32	m_outTanX, m_outTanY, m_outTanZ;
 		//}
 };
+
+inline long32 MdxScaling::frame() const
+{
+	return this->m_frame;
+}
+
+inline float32 MdxScaling::x() const
+{
+	return this->m_x;
+}
+
+inline float32 MdxScaling::y() const
+{
+	return this->m_y;
+}
+
+inline float32 MdxScaling::z() const
+{
+	return this->m_z;
+}
 
 }
 

@@ -1,5 +1,11 @@
+2010-09-04 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Revised class OgreMdlx.
+* mdlx: Added various functions to class Mdlx.
+
 2010-09-03 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improved classes Editor, ModelView, TerrainEditor and ModelEditor.
+* mdlx: Revised class OgreMdlx.
+* mdlx: Added various functions and objects storing map to class Mdlx.
 
 2010-09-01 Tamino Dauth <tamino@cdauth.eu>
 * editor: Revised class ModelView and dropped depency to qogre (custom implementation).

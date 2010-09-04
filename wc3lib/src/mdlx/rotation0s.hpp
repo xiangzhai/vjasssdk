@@ -52,6 +52,7 @@ class Rotation0s : public MdxBlock
 		class Mdlx* mdlx() const;
 		long32 lineType() const;
 		long32 globalSequenceId() const;
+		bool hasGlobalSequence() const;
 		const std::list<class Rotation0*>& rotations() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
@@ -79,6 +80,11 @@ inline long32 Rotation0s::lineType() const
 inline long32 Rotation0s::globalSequenceId() const
 {
 	return this->m_globalSequenceId;
+}
+
+inline bool Rotation0s::hasGlobalSequence() const
+{
+	return this->m_globalSequenceId != 0xFFFFFFFF;
 }
 
 inline const std::list<class Rotation0*>& Rotation0s::rotations() const

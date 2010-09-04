@@ -1,4 +1,4 @@
-#include <iostream> //debug
+#include <iostream> // debug
 #include <string>
 #include <cstring>
 
@@ -26,6 +26,10 @@
 #include "cameras.hpp"
 #include "events.hpp"
 #include "collisionshapes.hpp"
+
+#include "object.hpp"
+#include "bone.hpp"
+#include "geoset.hpp"
 
 #ifdef BLEND
 #include "readblend/abs-file.h"
@@ -722,6 +726,88 @@ std::size_t Mdlx::replaceTexturePaths(const ascii oldTexturePath[0x100], const a
 	}
 
 	return result;
+}
+
+const class PivotPoint* Mdlx::objectPivotPoint(const class Object &object) const
+{
+	long32 id = 0;
+
+	BOOST_FOREACH(const class PivotPoint *pivotPoint, this->m_pivotPoints->pivotPoints())
+	{
+		if (object.objectId() == id)
+			return pivotPoint;
+
+		++id;
+	}
+
+	return 0;
+}
+
+const class Geoset* Mdlx::boneGeoset(const class Bone &bone) const
+{
+	long32 id = 0;
+
+	BOOST_FOREACH(const class Geoset *geoset, this->m_geosets->geosets())
+	{
+		if (id == bone.geosetId())
+			return geoset;
+
+		++id;
+	}
+
+	return 0;
+}
+
+const class Object* Mdlx::objectParent(const class Object &object) const
+{
+	BOOST_FOREACH(ObjectPairType objectPair, this->m_objects)
+	{
+		if (objectPair.first == object.parent())
+			return objectPair.second;
+	}
+
+	return 0;
+}
+
+std::list<const class Object*> Mdlx::objects() const
+{
+	std::list<const class Object*> result;
+
+	BOOST_FOREACH(ObjectPairType objectPair, this->m_objects)
+		result.push_back(objectPair.second);
+
+	return result;
+}
+
+const class Object* Mdlx::object(long32 id) const
+{
+	std::map<long32, class Object*>::const_iterator iterator = this->m_objects.find(id);
+
+	if (iterator == this->m_objects.end())
+		return 0;
+
+	return iterator->second;
+}
+
+std::list<const class Object*> Mdlx::children(const class Object &object) const
+{
+	std::list<const class Object*> result;
+
+	BOOST_FOREACH(ObjectPairType objectPair, this->m_objects)
+	{
+		if (objectPair.second->parent() == object.objectId())
+			result.push_back(objectPair.second);
+	}
+
+	return result;
+}
+
+void Mdlx::addObject(long32 id, class Object *object) throw (class Exception)
+{
+	if (this->m_objects.find(id) != this->m_objects.end() && this->m_objects[id] != object)
+		throw Exception(boost::format(_("Mdlx: Object id %1% is already being used by object \"%2%\".")) % id % this->m_objects[id]->name());
+
+	this->m_objects[id] = object;
 }
 
 }

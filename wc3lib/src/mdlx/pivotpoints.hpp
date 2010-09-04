@@ -30,10 +30,10 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
+
 class PivotPoint;
 
-//PIVT
+/// PIVT
 class PivotPoints : public MdxBlock
 {
 	public:
