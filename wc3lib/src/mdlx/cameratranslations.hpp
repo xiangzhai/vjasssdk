@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_CAMERATRANSLATIONS_HPP
 #define WC3LIB_MDLX_CAMERATRANSLATIONS_HPP
 
-#include "mdxscalings.hpp"
+#include "mdlxscalings.hpp"
 
 namespace wc3lib
 {
@@ -29,26 +29,23 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Camera;
-class CameraTranslation;
-
 /**
 * KCTR, like KGSC (Scalings)
 * Camera translations.
 */
-class CameraTranslations : public MdxScalings
+class CameraTranslations : public MdlxScalings
 {
 	public:
 		CameraTranslations(class Camera *camera);
 		virtual ~CameraTranslations();
 
 		class Camera* camera() const;
-		
+
 		const std::list<class CameraTranslation*>& translations() const;
 
 	protected:
-		virtual class MdxScaling* createNewMember();
-		
+		virtual class MdlxScaling* createNewMember();
+
 		class Camera *m_camera;
 };
 

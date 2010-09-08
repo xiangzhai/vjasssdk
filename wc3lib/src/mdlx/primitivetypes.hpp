@@ -29,10 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-class PrimitiveType;
-
-//PTYP
+/// PTYP
 class PrimitiveTypes : public GroupMdxBlock
 {
 	public:
@@ -42,12 +39,12 @@ class PrimitiveTypes : public GroupMdxBlock
 		class Geoset* geoset() const;
 		const std::list<class PrimitiveType*>& primitiveTypes() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();
-		
+
 		class Geoset *m_geoset;
 };
 

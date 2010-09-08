@@ -58,20 +58,21 @@ class OgreMdlx
 		void refresh() throw (class Exception);
 
 	protected:
-		typedef std::pair<const class Object*, Ogre::Node*> NodePairType;
+		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
+
+		Ogre::Node* createNode(const class Node &node);
 
 		/**
 		* Creates all necessary OGRE nodes with correct inheritane and returns the resulting map with all nodes and objects.
 		* @todo Allocate objects by using type information (Object::type).
 		*/
-		std::map<const class Object*, Ogre::Node*> setupInheritance(const std::list<const class Object*> &objects);
+		std::map<const class Node*, Ogre::Node*> setupInheritance(const std::list<const class Node*> &nodes);
 
 		const class Mdlx *m_mdlx;
-		class Ogre::MeshPtr m_mesh;
-		std::list<class Ogre::MeshPtr> m_geosets;
+		Ogre::MeshPtr m_mesh;
+		std::map<const class Geoset*, Ogre::MeshPtr> m_geosets;
+		std::map<const class Node*, Ogre::Node*> m_nodes;
 		std::map<const class Bone*, Ogre::Bone*> m_bones;
-
-		std::map<const class Object*, Ogre::Node*> m_nodes;
 };
 
 inline const class Mdlx* OgreMdlx::mdlx() const

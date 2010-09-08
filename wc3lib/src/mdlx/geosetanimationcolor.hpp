@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
 
-#include "mdxscaling.hpp"
+#include "mdlxscaling.hpp"
 #include "geosetanimationcolors.hpp"
 
 namespace wc3lib
@@ -30,17 +30,15 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimationColors;
-
-class GeosetAnimationColor : public MdxScaling
+class GeosetAnimationColor : public MdlxScaling
 {
 	public:
 		GeosetAnimationColor(class GeosetAnimationColors *geosetAnimationColors);
-		
+
 		class GeosetAnimationColors* geosetAnimationColors() const;
-		
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class GeosetAnimationColors* GeosetAnimationColor::geosetAnimationColors() const

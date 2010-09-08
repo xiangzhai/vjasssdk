@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_PARTICLE_EMITTER_VISIBILITIES_HPP
-#define WC3LIB_MDLX_PARTICLE_EMITTER_VISIBILITIES_HPP
+#ifndef WC3LIB_MDLX_PARTICLEEMITTERVISIBILITIES_HPP
+#define WC3LIB_MDLX_PARTICLEEMITTERVISIBILITIES_HPP
 
 #include "mdxalphas.hpp"
 
@@ -44,7 +44,7 @@ class ParticleEmitterVisibilities : public MdxAlphas
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		
+
 	protected:
 		virtual class MdxAlpha* createNewMember();
 

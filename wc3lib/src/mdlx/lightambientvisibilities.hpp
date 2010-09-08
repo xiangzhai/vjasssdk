@@ -29,9 +29,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Light;
-class LightAmbientVisbility;
-
 /// KLAV
 class LightAmbientVisibilities : public MdxAlphas
 {
@@ -47,7 +44,7 @@ class LightAmbientVisibilities : public MdxAlphas
 
 	protected:
 		virtual class MdxAlpha* createNewMember();
-		
+
 		class Light *m_light;
 };
 

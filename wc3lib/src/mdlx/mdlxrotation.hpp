@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.eu                                                      *
+ *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,10 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
-#define WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
+#ifndef WC3LIB_MDLX_MDLXROTATION_HPP
+#define WC3LIB_MDLX_MDLXROTATION_HPP
 
-#include "mdxalphas.hpp"
+#include <istream>
+#include <ostream>
+
+#include "platform.hpp"
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -29,27 +33,50 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CameraRotationLengths : public MdxAlphas
+class MdlxRotation
 {
 	public:
-		CameraRotationLengths(class Camera *camera);
+		MdlxRotation(class MdlxRotations *rotations);
+		virtual ~MdlxRotation();
 
-		class Camera* camera() const;
-		const std::list<class CameraRotationLength*>& lengths() const;
+		class MdlxRotations* rotations() const;
+		float32 frame() const;
+		const struct QuaternionData& quaternionData() const;
+		const struct InterpolationRotationData& interpolationData() const;
 
-	private:
-		class Camera *m_camera;
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
+	protected:
+		class MdlxRotations *m_rotations;
+		long32 m_frame;
+		struct QuaternionData m_quaternionData;
+		//if (LineType > 1)
+		//{
+		struct InterpolationRotationData m_interpolationData;
+		//}
 };
 
-inline class Camera* CameraRotationLengths::camera() const
+inline class MdlxRotations* MdlxRotation::rotations() const
 {
-	return this->m_camera;
+	return this->m_rotations;
 }
 
-inline const std::list<class CameraRotationLength*>& CameraRotationLengths::lengths() const
+inline float32 MdlxRotation::frame() const
 {
-	return reinterpret_cast<const std::list<class CameraRotationLength*>&>(this->m_alphas);
+	return this->m_frame;
+}
+
+inline const struct QuaternionData& MdlxRotation::quaternionData() const
+{
+	return this->m_quaternionData;
+}
+
+inline const struct InterpolationRotationData&  MdlxRotation::interpolationData() const
+{
+	return this->m_interpolationData;
 }
 
 }

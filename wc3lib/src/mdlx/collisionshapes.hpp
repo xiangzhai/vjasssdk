@@ -31,10 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class CollisionShape;
-
-//CLID
+/// CLID
 class CollisionShapes : public MdxBlock
 {
 	public:
@@ -44,8 +41,8 @@ class CollisionShapes : public MdxBlock
 		class Mdlx* mdlx() const;
 		const std::list<class CollisionShape*>& collisionShapes() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,23 +29,20 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Attachments;
-class AttachmentVisibilities;
-
 class Attachment : public Object
 {
 	public:
 		Attachment(class Attachments *attachments);
 		virtual ~Attachment();
-		
+
 		class Attachments* attachments() const;
 		const ascii* path() const;
 		long32 unknown0() const;
 		long32 attachmentId() const;
 		class AttachmentVisibilities* visibilities() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 

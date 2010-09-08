@@ -32,7 +32,7 @@ namespace mdlx
 
 class Mdlx;
 
-// MODL
+/// MODL
 class Model : public MdxBlock, public Bounds
 {
 	public:
@@ -44,8 +44,8 @@ class Model : public MdxBlock, public Bounds
 		long32 unknown0() const;
 		long32 blendTime() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 

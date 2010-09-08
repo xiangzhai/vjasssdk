@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,23 +30,33 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
+
 class PrimitiveType : public GroupMdxBlockMember
 {
 	public:
+		//4   - Triangles
+		//??? - Triangle fan
+		//??? - Triangle strip
+		//??? - Quads
+		//??? - Quad strip
+		enum Type
+		{
+			Triangles = 4
+		};
+
 		PrimitiveType(class PrimitiveTypes *primitiveTypes);
 		virtual ~PrimitiveType();
 
 		class PrimitiveTypes* primitiveTypes() const;
-		long32 value() const;
+		enum Type type() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		long32 m_value;
+		enum Type m_type;
 };
 
 inline class PrimitiveTypes* PrimitiveType::primitiveTypes() const
@@ -54,9 +64,9 @@ inline class PrimitiveTypes* PrimitiveType::primitiveTypes() const
 	return dynamic_cast<class PrimitiveTypes*>(this->m_parent);
 }
 
-inline long32 PrimitiveType::value() const
+inline enum PrimitiveType::Type PrimitiveType::type() const
 {
-	return this->m_value;
+	return this->m_type;
 }
 
 }

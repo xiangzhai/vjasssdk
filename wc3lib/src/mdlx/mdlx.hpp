@@ -32,27 +32,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Version;
-class Model;
-class Sequences;
-class GlobalSequences;
-class Materials;
-class Textures;
-class TextureAnimations;
-class Geosets;
-class GeosetAnimations;
-class Bones;
-class Lights;
-class Helpers;
-class Attachments;
-class PivotPoints;
-class ParticleEmitters;
-class ParticleEmitter2s;
-class RibbonEmitters;
-class Cameras;
-class Events;
-class CollisionShapes;
-
 /**
 * long/float size: 32-bit
 * @todo OBJ == ?!
@@ -101,29 +80,26 @@ class Mdlx : public MdxBlock
 		*/
 		std::size_t replaceTexturePaths(const ascii oldTexturePath[0x100], const ascii newTexturePath[0x100], std::size_t number = 0);
 
-		/**
-		* @return Returns the corresponding pivot point of object object if some exists (searched by id).
-		*/
-		const class PivotPoint* objectPivotPoint(const class Object &object) const;
 		const class Geoset* boneGeoset(const class Bone &bone) const;
-		const class Object* objectParent(const class Object &object) const;
-
-		std::list<const class Object*> objects() const;
-
-		const class Object* object(long32 id) const;
-
-		std::list<const class Object*> children(const class Object &object) const;
+		/**
+		* @return Returns the corresponding pivot point of node node if some exists (searched by id).
+		*/
+		const class PivotPoint* nodePivotPoint(const class Node &node) const;
+		const class Node* nodeParent(const class Node &node) const;
+		std::list<const class Node*> nodes() const;
+		const class Node* node(long32 id) const;
+		std::list<const class Node*> children(const class Node &node) const;
 
 	protected:
-		friend class Object;
+		friend class Node;
 
-		typedef std::pair<long32, class Object*> ObjectPairType;
+		typedef std::pair<long32, class Node*> NodePairType;
 
 		/**
-		* Objects have to register theirself when being readed.
+		* Nodes have to register theirself when being readed.
 		* @note Throws an exception if id is already being used.
 		*/
-		void addObject(long32 id, class Object *object) throw (class Exception);
+		void addNode(long32 id, class Node *node) throw (class Exception);
 
 		class Version *m_version; //VERS
 		class Model *m_model; //MODL
@@ -152,7 +128,7 @@ class Mdlx : public MdxBlock
 		class Events *m_events;
 		class CollisionShapes *m_collisionShapes;
 
-		std::map<long32, class Object*> m_objects;
+		std::map<long32, class Node*> m_nodes;
 };
 
 inline class Version* Mdlx::version() const

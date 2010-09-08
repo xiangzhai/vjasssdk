@@ -33,14 +33,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class RibbonEmitters;
-class Translation1s;
-class Rotation0s;
-class Scaling0s;
-class RibbonEmitterVisibilities;
-class RibbonEmitterHeightsAbove;
-class RibbonEmitterHeightsBelow;
-
 class RibbonEmitter
 {
 	public:
@@ -62,9 +54,9 @@ class RibbonEmitter
 		long32 m_objectId;
 		long32 m_parent; //(0xFFFFFFFF if none)
 		long32 m_flags; //(0x00400000)
-		class Translation1s *m_translations; //(KGTR)
-		class Rotation0s *m_rotations; //(KGRT)
-		class Scaling0s *m_scalings; //(KGSC)
+		class MdlxTranslations *m_translations; //(KGTR)
+		class MdlxRotations *m_rotations; //(KGRT)
+		class MdlxScalings *m_scalings; //(KGSC)
 		float32 m_heightAboveValue;
 		float32 m_heightBelowValue;
 		float32 m_alpha;

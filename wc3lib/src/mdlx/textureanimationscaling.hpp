@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TEXTURE_ANIMATION_SCALING_HPP
-#define WC3LIB_MDLX_TEXTURE_ANIMATION_SCALING_HPP
+#ifndef WC3LIB_MDLX_TEXTUREANIMATIONSCALING_HPP
+#define WC3LIB_MDLX_TEXTUREANIMATIONSCALING_HPP
 
-#include "mdxscaling.hpp"
+#include "mdlxscaling.hpp"
 #include "textureanimationscalings.hpp"
 
 namespace wc3lib
@@ -30,11 +30,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureAnimationScaling : public MdxScaling
+class TextureAnimationScaling : public MdlxScaling
 {
 	public:
 		TextureAnimationScaling(class TextureAnimationScalings *scalings);
-		
+
 		class TextureAnimationScalings* scalings() const;
 };
 

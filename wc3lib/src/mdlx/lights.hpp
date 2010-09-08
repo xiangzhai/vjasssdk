@@ -33,7 +33,7 @@ namespace mdlx
 
 class Light;
 
-//LITE
+/// LITE
 class Lights : public MdxBlock
 {
 	public:

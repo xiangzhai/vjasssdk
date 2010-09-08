@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,8 +25,7 @@
 #include <ostream>
 #include <list>
 
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "node.hpp"
 
 namespace wc3lib
 {
@@ -34,32 +33,9 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter2s;
-class Translation1s;
-class Rotation0s;
-class Scaling0s;
-class SegmentColor;
-class ParticleEmitter2Speeds;
-class ParticleEmitter2Latitudes;
-class EmissionRates;
-class ParticleEmitter2Visibilities;
-class Lengths;
-class ParticleEmitter2Widths;
-
-class ParticleEmitter2
+class ParticleEmitter2 : public Node
 {
 	public:
-		enum Flags
-		{
-			DontInheritRotation = 0x26,
-			Unshaded = 0x23,
-			XYQuad = 0x12,
-			Unfogged = 0x10,
-			ModelSpace = 0x11,
-			LineEmitter = 0x09,
-			SortPrimsFarZ = 0x08
-		};
-
 		enum FilterMode
 		{
 			Blend = 0,
@@ -68,7 +44,7 @@ class ParticleEmitter2
 			AlphaKey = 4
 		};
 
-		enum Flag2
+		enum Flags
 		{
 			Head = 0,
 			Tail = 1,
@@ -79,13 +55,6 @@ class ParticleEmitter2
 		virtual ~ParticleEmitter2();
 
 		class ParticleEmitter2s* particleEmitters() const;
-		const ascii* name() const;
-		long32 objectId() const;
-		long32 parent() const;
-		long32 flags() const;
-		class Translation1s* translations() const;
-		class Rotation0s* rotations() const;
-		class Scaling0s* scalings() const;
 		float32 speed() const;
 		float32 variation() const;
 		float32 latitidue() const;
@@ -94,10 +63,10 @@ class ParticleEmitter2
 		float32 emissionRate() const;
 		float32 length() const;
 		float32 width() const;
-		long32 filterMode() const;
+		enum FilterMode filterMode() const;
 		long32 rows() const;
 		long32 columns() const;
-		long32 flag2() const;
+		enum Flags flags() const;
 		float32 tailLength() const;
 		float32 time() const;
 		const std::list<class SegmentColor*>& segmentColors() const;
@@ -130,8 +99,8 @@ class ParticleEmitter2
 		class Lengths* numbers() const;
 		class ParticleEmitter2Widths* widths() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
@@ -139,13 +108,6 @@ class ParticleEmitter2
 		class ParticleEmitter2s *m_particleEmitters;
 		//long32 nbytesi;
 		//long32 nbytesikg; // inclusive bytecount including KGXXs
-		ascii m_name[0x50]; //(0x50 bytes)
-		long32 m_objectId;
-		long32 m_parent; //(0xFFFFFFFF if none)
-		long32 m_flags; //(bit20)	// +bit26(DontInherit Rotation)
-		class Translation1s *m_translations; //(KGTR) // +bit23(Unshaded)	+bit10(Unfogged)
-		class Rotation0s *m_rotations; //(KGRT) // +bit12(XYQuad)	+bit9(LineEmitter)
-		class Scaling0s *m_scalings; //(KGSC) // +bit11(ModelSpace)	+bit8(SortPrimsFarZ)
 		float32 m_speed;
 		float32 m_variation;
 		float32 m_latitidue;
@@ -154,10 +116,10 @@ class ParticleEmitter2
 		float32 m_emissionRate;
 		float32 m_length;
 		float32 m_width;
-		long32 m_filterMode; //(0:Blend;1:Additive;2:Modulate;4:AlphaKey)
+		enum FilterMode m_filterMode; //(0:Blend;1:Additive;2:Modulate;4:AlphaKey)
 		long32 m_rows;
 		long32 m_columns;
-		long32 m_flag2; //(0:Head;1:Tail;2:Both)
+		enum Flags m_flags; //(0:Head;1:Tail;2:Both)
 		float32 m_tailLength;
 		float32 m_time;
 		std::list<class SegmentColor*> m_segmentColors;
@@ -182,41 +144,6 @@ class ParticleEmitter2
 inline class ParticleEmitter2s* ParticleEmitter2::particleEmitters() const
 {
 	return this->m_particleEmitters;
-}
-
-inline const ascii* ParticleEmitter2::name() const
-{
-	return this->m_name;
-}
-
-inline long32 ParticleEmitter2::objectId() const
-{
-	return this->m_objectId;
-}
-
-inline long32 ParticleEmitter2::parent() const
-{
-	return this->m_parent;
-}
-
-inline long32 ParticleEmitter2::flags() const
-{
-	return this->m_flags;
-}
-
-inline class Translation1s* ParticleEmitter2::translations() const
-{
-	return this->m_translations;
-}
-
-inline class Rotation0s* ParticleEmitter2::rotations() const
-{
-	return this->m_rotations;
-}
-
-inline class Scaling0s* ParticleEmitter2::scalings() const
-{
-	return this->m_scalings;
 }
 
 inline float32 ParticleEmitter2::speed() const
@@ -259,7 +186,7 @@ inline float32 ParticleEmitter2::width() const
 	return this->m_width;
 }
 
-inline long32 ParticleEmitter2::filterMode() const
+inline enum ParticleEmitter2::FilterMode ParticleEmitter2::filterMode() const
 {
 	return this->m_filterMode;
 }
@@ -274,9 +201,9 @@ inline long32 ParticleEmitter2::columns() const
 	return this->m_columns;
 }
 
-inline long32 ParticleEmitter2::flag2() const
+inline enum ParticleEmitter2::Flags ParticleEmitter2::flags() const
 {
-	return this->m_flag2;
+	return this->m_flags;
 }
 
 inline float32 ParticleEmitter2::tailLength() const

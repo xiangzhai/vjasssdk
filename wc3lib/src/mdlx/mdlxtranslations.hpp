@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
-#define WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
+#ifndef WC3LIB_MDLX_MDLXTRANSLATIONS_HPP
+#define WC3LIB_MDLX_MDLXTRANSLATIONS_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxscalings.hpp"
 
 namespace wc3lib
 {
@@ -29,27 +29,25 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CameraRotationLengths : public MdxAlphas
+/// Block name KGTR, like KGSC (MdlxScalings)
+class MdlxTranslations : public MdlxScalings
 {
 	public:
-		CameraRotationLengths(class Camera *camera);
+		MdlxTranslations(class Mdlx *mdlx);
+		virtual ~MdlxTranslations();
 
-		class Camera* camera() const;
-		const std::list<class CameraRotationLength*>& lengths() const;
+		const std::list<class MdlxTranslation*>& mdlxTranslations() const;
 
-	private:
-		class Camera *m_camera;
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
+	protected:
+		virtual class MdlxScaling* createNewMember();
 };
 
-inline class Camera* CameraRotationLengths::camera() const
+inline const std::list<class MdlxTranslation*>& MdlxTranslations::mdlxTranslations() const
 {
-	return this->m_camera;
-}
-
-inline const std::list<class CameraRotationLength*>& CameraRotationLengths::lengths() const
-{
-	return reinterpret_cast<const std::list<class CameraRotationLength*>&>(this->m_alphas);
+	return reinterpret_cast<const std::list<class MdlxTranslation*>&>(this->m_scalings);
 }
 
 }
@@ -57,3 +55,4 @@ inline const std::list<class CameraRotationLength*>& CameraRotationLengths::leng
 }
 
 #endif
+

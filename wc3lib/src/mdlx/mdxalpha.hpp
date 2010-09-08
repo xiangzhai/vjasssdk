@@ -29,21 +29,19 @@
 
 namespace wc3lib
 {
-	
+
 namespace mdlx
 {
 
-class MdxAlphas;
-	
 class MdxAlpha
 {
 	public:
 		MdxAlpha(class MdxAlphas *alphas);
 		virtual ~MdxAlpha();
-		
+
 		std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-		
+
 	protected:
 		class MdxAlphas *m_alphas;
 		long32 m_frame;

@@ -40,9 +40,9 @@ class MaterialAlphas : public MdxAlphas
 		virtual ~MaterialAlphas();
 
 		class Layer* layer() const;
-	
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Layer *m_layer;

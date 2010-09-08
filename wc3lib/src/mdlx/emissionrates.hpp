@@ -29,10 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class EmissionRate;
-
-//KP2E	// [EmissionRate]:  KMTA;
+/// KP2E same as KMTA (MdxAlphas)
 class EmissionRates : public MdxAlphas
 {
 	public:
@@ -40,12 +37,12 @@ class EmissionRates : public MdxAlphas
 		virtual ~EmissionRates();
 
 		class Mdlx* mdlx() const;
-		
+
 		const std::list<class EmissionRate*>& emissionRates() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-		
+
 	protected:
 		class Mdlx *m_mdlx;
 };

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_TEXTURE_ANIMATION_SCALINGS_HPP
-#define WC3LIB_MDLX_TEXTURE_ANIMATION_SCALINGS_HPP
+#ifndef WC3LIB_MDLX_TEXTUREANIMATIONSCALINGS_HPP
+#define WC3LIB_MDLX_TEXTUREANIMATIONSCALINGS_HPP
 
-#include "mdxscalings.hpp"
+#include "mdlxscalings.hpp"
 
 namespace wc3lib
 {
@@ -29,11 +29,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureAnimation;
-class TextureAnimationScaling;
-
 /// tag KTAS
-class TextureAnimationScalings : public MdxScalings
+class TextureAnimationScalings : public MdlxScalings
 {
 	public:
 		TextureAnimationScalings(class TextureAnimation *textureAnimation);
@@ -42,12 +39,12 @@ class TextureAnimationScalings : public MdxScalings
 		class TextureAnimation* textureAnimation() const;
 		const std::list<class TextureAnimationScaling*>& scalings() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		virtual class MdxScaling* createNewMember();
-		
+		virtual class MdlxScaling* createNewMember();
+
 		class TextureAnimation *m_textureAnimation;
 };
 

@@ -29,9 +29,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class RibbonEmitter;
-class RibbonEmitterHeightAbove;
-
 /// KRHA
 class RibbonEmitterHeightsAbove : public MdxAlphas
 {

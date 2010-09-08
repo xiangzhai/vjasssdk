@@ -32,7 +32,7 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
+
 class TextureVertices;
 
 class TextureVertex
@@ -45,8 +45,8 @@ class TextureVertex
 		float32 x() const;
 		float32 y() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 

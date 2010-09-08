@@ -38,16 +38,23 @@ class MdxBlock
 	public:
 		static const std::size_t blockNameSize = 4;
 
-		MdxBlock(byte blockName[blockNameSize], bool optional = true);
+		MdxBlock(const byte blockName[blockNameSize], bool optional = true);
 		virtual ~MdxBlock();
 
+		/**
+		* @return Returns the block name with size MdxBlock::blockNameSize.
+		*/
 		const byte* blockName() const;
+		/**
+		* Some MDX blocks such as translations, scalings and rotations are optional and do only appear if they're not inherited by parent object.
+		* @return Returns true if the MDX block is optional which means it doesn't appear in output stream.
+		*/
 		bool optional() const;
 		bool exists() const;
 
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-		
+
 		bool moveToBlockName(std::iostream &iostream);
 
 	protected:

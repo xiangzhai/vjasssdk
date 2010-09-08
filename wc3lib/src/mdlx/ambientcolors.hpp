@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_AMBIENTCOLORS_HPP
 #define WC3LIB_MDLX_AMBIENTCOLORS_HPP
 
-#include "mdxscalings.hpp"
+#include "mdlxscalings.hpp"
 
 namespace wc3lib
 {
@@ -29,11 +29,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Light;
-class AmbientColor;
-
-//KLBC
-class AmbientColors : public MdxScalings
+/// KLBC
+class AmbientColors : public MdlxScalings
 {
 	public:
 		AmbientColors(class Light *light);
@@ -42,11 +39,11 @@ class AmbientColors : public MdxScalings
 		class Light* light() const;
 		const std::list<class AmbientColor*>& colors() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
-		virtual class MdxScaling* createNewMember();
+		virtual class MdlxScaling* createNewMember();
 
 		class Light *m_light;
 };

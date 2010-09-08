@@ -33,11 +33,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureAnimations;
-class TextureAnimationTranslations;
-class TextureAnimationRotations;
-class TextureAnimationScalings;
-
 class TextureAnimation
 {
 	public:

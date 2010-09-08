@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,8 +28,6 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
-class Normals;
 
 class Normal : public GroupMdxBlockMember
 {
@@ -38,17 +36,15 @@ class Normal : public GroupMdxBlockMember
 		virtual ~Normal();
 
 		//class Normals* normals() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
+		const struct VertexData& vertexData() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		float32 m_x, m_y, m_z;
+		struct VertexData m_vertexData;
 };
 
 /*
@@ -58,19 +54,9 @@ inline class Normals* Normal::normals() const
 }
 */
 
-inline float32 Normal::x() const
+inline const struct VertexData& Normal::vertexData() const
 {
-	return this->m_x;
-}
-
-inline float32 Normal::y() const
-{
-	return this->m_y;
-}
-
-inline float32 Normal::z() const
-{
-	return this->m_z;
+	return this->m_vertexData;
 }
 
 }

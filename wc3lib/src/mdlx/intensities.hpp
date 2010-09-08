@@ -29,10 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Light;
-class Intensity;
-
-//KLAI	// [Intensity]:   KMTA;
+/// KLAI same as KMTA
 class Intensities : public MdxAlphas
 {
 	public:

@@ -37,17 +37,15 @@ class Vertex : public GroupMdxBlockMember
 		virtual ~Vertex();
 
 		class Vertices* vertices() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
+		const struct VertexData& vertexData() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		float32 m_x, m_y, m_z;
+		struct VertexData m_vertexData;
 };
 
 inline class Vertices* Vertex::vertices() const
@@ -55,19 +53,9 @@ inline class Vertices* Vertex::vertices() const
 	return dynamic_cast<class Vertices*>(this->m_parent);
 }
 
-inline float32 Vertex::x() const
+inline const struct VertexData& Vertex::vertexData() const
 {
-	return this->m_x;
-}
-
-inline float32 Vertex::y() const
-{
-	return this->m_y;
-}
-
-inline float32 Vertex::z() const
-{
-	return this->m_z;
+	return this->m_vertexData;
 }
 
 }

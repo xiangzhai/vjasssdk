@@ -31,10 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class Camera;
-
-//CAMS
+/// CAMS
 class Cameras : public MdxBlock
 {
 	public:

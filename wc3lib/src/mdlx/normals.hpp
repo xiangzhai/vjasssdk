@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,9 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-
-//NRMS // [Normals]
+/// NRMS // [Normals]
 class Normals : public GroupMdxBlock
 {
 	public:
@@ -43,12 +41,12 @@ class Normals : public GroupMdxBlock
 		class Geoset* geoset() const;
 		const std::list<class Normal*>& normals() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();
-		
+
 		class Geoset *m_geoset;
 
 };

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_LIGHTAMBIENTCOLOR_HPP
 #define WC3LIB_MDLX_LIGHTAMBIENTCOLOR_HPP
 
-#include "mdxscaling.hpp"
+#include "mdlxscaling.hpp"
 #include "lightambientcolors.hpp"
 
 namespace wc3lib
@@ -29,12 +29,12 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
-class LightAmbientColor : public MdxScaling
+
+class LightAmbientColor : public MdlxScaling
 {
 	public:
 		LightAmbientColor(class LightAmbientColors *colors);
-		
+
 		class LightAmbientColors* colors() const;
 };
 

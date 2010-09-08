@@ -29,19 +29,52 @@ namespace wc3lib
 namespace mdlx
 {
 
+/// @todo Check signed and unsigned!
 typedef float float32;
-typedef short short16; /// @todo undefined length?!
-typedef unsigned long long32; /// @todo are there any fstream >> operators which support int32_t?
-typedef char ascii; /// @todo int8_t can not be used with \" \", signed or unsigned?
-typedef char byte; /// @todo int8_t can not be used with \" \", signed or unsigned?
+typedef uint16_t short16; /// @todo undefined length?!
+typedef uint32_t long32;
+typedef char ascii;
+typedef char byte;
+
+/**
+* MDLX format supports interpolation for scalings, translations and rotations.
+* If interpolation is not used value should be DontInterpolate.
+* If line type is Hermite or Bezier additional interpolation data is used (see structures).
+* Line type is stored as long32 in MDX files.
+* @see InterpolationData, InterpolationRotationData
+*/
+enum LineType
+{
+	DontInterpolate = 0,
+	Linear = 1,
+	Hermite = 2,
+	Bezier = 3
+};
 
 struct VertexData
 {
 	float32 x, y, z;
 };
 
-}
+struct QuaternionData
+{
+	float32 a, b, c, d;
+};
+
+struct InterpolationData
+{
+	float32 inTanX, inTanY, inTanZ;
+	float32	outTanX, outTanY, outTanZ;
+};
+
+struct InterpolationRotationData
+{
+	float32 inTanA, inTanB, inTanC, inTanD;
+	float32 outTanA, outTanB, outTanC, outTanD;
+};
 
 }
 
-#endif 
+}
+
+#endif

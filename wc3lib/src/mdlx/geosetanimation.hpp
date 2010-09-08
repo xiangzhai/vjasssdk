@@ -32,10 +32,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimations;
-class GeosetAnimationAlphas;
-class GeosetAnimationColors;
-
 class GeosetAnimation
 {
 	public:
@@ -60,8 +56,8 @@ class GeosetAnimation
 		class GeosetAnimationAlphas* alphas() const;
 		class GeosetAnimationColors* colors() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 

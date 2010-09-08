@@ -29,8 +29,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CollisionShapes;
-
 class CollisionShape : public Object
 {
 	public:
@@ -42,28 +40,24 @@ class CollisionShape : public Object
 
 		CollisionShape(class CollisionShapes *collisionShapes);
 		virtual ~CollisionShape();
-		
+
 		class CollisionShapes* collisionShapes() const;
-		long32 shape() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
-		float32 x2() const;
-		float32 y2() const;
-		float32 z2() const;
+		enum Shape shape() const;
+		const struct VertexData& vertexData() const;
+		const struct VertexData& vertexData2() const;
 		float32 boundsRadius() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class CollisionShapes *m_collisionShapes;
-		long32 m_shape; //(0:box;2:sphere)
-		float32 m_x, m_y, m_z;
+		enum Shape m_shape; //(0:box;2:sphere)
+		struct VertexData m_vertexData;
 		//if (Shape == 0)
-		float32 m_x2, m_y2, m_z2;
+		struct VertexData m_vertexData2;
 		//else
 		float32 m_boundsRadius;
 };
@@ -73,39 +67,19 @@ inline class CollisionShapes* CollisionShape::collisionShapes() const
 	return this->m_collisionShapes;
 }
 
-inline long32 CollisionShape::shape() const
+inline enum CollisionShape::Shape CollisionShape::shape() const
 {
 	return this->m_shape;
 }
 
-inline float32 CollisionShape::x() const
+inline const struct VertexData& CollisionShape::vertexData() const
 {
-	return this->m_x;
+	return this->m_vertexData;
 }
 
-inline float32 CollisionShape::y() const
+inline const struct VertexData& CollisionShape::vertexData2() const
 {
-	return this->m_y;
-}
-
-inline float32 CollisionShape::z() const
-{
-	return this->m_z;
-}
-
-inline float32 CollisionShape::x2() const
-{
-	return this->m_x2;
-}
-
-inline float32 CollisionShape::y2() const
-{
-	return this->m_y2;
-}
-
-inline float32 CollisionShape::z2() const
-{
-	return this->m_z2;
+	return this->m_vertexData2;
 }
 
 inline float32 CollisionShape::boundsRadius() const

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,16 +31,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-class GroupVertex;
-
-//GNDX
+/// GNDX
 class GroupVertices : public MdxBlock
 {
 	public:
 		GroupVertices(class Geoset *geoset);
 		virtual ~GroupVertices();
-		
+
 		class Geoset* geoset() const;
 		const std::list<class GroupVertex*>& groupVertices() const;
 

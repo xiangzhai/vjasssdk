@@ -29,10 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter2;
-class Length;
-
-//KP2N	// [Length]: 	  KMTA;
+/// KP2N same as KMTA;
 class Lengths : public MdxAlphas
 {
 	public:

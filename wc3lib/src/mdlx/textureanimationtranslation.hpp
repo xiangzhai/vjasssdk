@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATION_HPP
 #define WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATION_HPP
 
-#include "mdxscaling.hpp"
+#include "mdlxscaling.hpp"
 #include "textureanimationtranslations.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureAnimationTranslation : public MdxScaling
+class TextureAnimationTranslation : public MdlxScaling
 {
 	public:
 		TextureAnimationTranslation(class TextureAnimationTranslations *translations);
@@ -38,8 +38,8 @@ class TextureAnimationTranslation : public MdxScaling
 
 		class TextureAnimationTranslations* translations() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class TextureAnimationTranslations* TextureAnimationTranslation::translations() const

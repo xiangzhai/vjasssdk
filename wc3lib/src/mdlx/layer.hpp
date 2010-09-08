@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,19 +33,38 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Layers;
-class MaterialAlphas;
-class TextureIds;
-
 class Layer
 {
 	public:
+		enum FilterMode
+		{
+			None = 0,
+			Transparent = 1,
+			Blend = 2,
+			Additive = 3,
+			AddAlpha = 4,
+			Modulate = 5,
+			Modulate2x = 6
+		};
+
+		enum Shading
+		{
+			Unshaded = 1,
+			SphereEnvironmentMap = 2,
+			Unknown0 = 4,
+			Unknown1 = 8,
+			TwoSided = 16,
+			Unfogged = 32,
+			NoDepthTest = 64,
+			NoDepthSet = 128
+		};
+
 		Layer(class Layers *layers);
 		virtual ~Layer();
 
 		class Layers* layers() const;
-		long32 filterMode() const;
-		long32 shading() const;
+		enum FilterMode filterMode() const;
+		enum Shading shading() const;
 		long32 textureId() const;
 		long32 tvertexAnimationId() const;
 		long32 coordinatesId() const;
@@ -53,18 +72,18 @@ class Layer
 		class MaterialAlphas* alphas() const;
 		class TextureIds* textureIds() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Layers *m_layers;
-		long32	m_filterMode; //(0:none;1:transparent;2:blend;3:additive;4:addalpha;5:modulate)
-		long32	m_shading; //+1:unshaded;+2:SphereEnvMap;+16:twosided;
-		long32	m_textureId; //  +32:unfogged;+64:NoDepthTest;+128:NoDepthSet)
-		long32 	m_tvertexAnimationId; // 0xFFFFFFFF if none
-		long32	m_coordinatesId;
+		enum FilterMode	m_filterMode;
+		enum Shading m_shading;
+		long32 m_textureId;
+		long32 m_tvertexAnimationId; // 0xFFFFFFFF if none
+		long32 m_coordinatesId;
 		float32	m_alpha; //(0(transparent)->1(opaque))
 		class MaterialAlphas *m_alphas; //(KMTA)
 		class TextureIds *m_textureIds; //(KMTF) // state is long not float
@@ -75,12 +94,12 @@ inline class Layers* Layer::layers() const
 	return this->m_layers;
 }
 
-inline long32 Layer::filterMode() const
+inline enum Layer::FilterMode Layer::filterMode() const
 {
 	return this->m_filterMode;
 }
 
-inline long32 Layer::shading() const
+inline enum Layer::Shading Layer::shading() const
 {
 	return this->m_shading;
 }

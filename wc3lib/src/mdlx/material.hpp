@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,17 +33,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Materials;
-class Layers;
-
 class Material
 {
 	public:
 		enum RenderMode
 		{
 			ConstantColor = 1,
-			SortPrimsFarZ = 0x16,
-			FullResolution = 0x32
+			Unknown0 = 2,
+			Unknown1 = 4,
+			SortPrimitivesNearZ = 8,
+			SortPrimitivesFarZ = 16,
+			FullResolution = 32
 		};
 
 		Material(class Materials *materials);
@@ -51,11 +51,11 @@ class Material
 
 		class Materials* materials() const;
 		float32 priorityPlane() const;
-		float32 renderMode() const;
+		enum RenderMode renderMode() const;
 		class Layers* layers() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
@@ -63,7 +63,7 @@ class Material
 		class Materials *m_materials;
 		//long nbytesi;
 		long32 m_priorityPlane;
-		long32 m_renderMode; //(+1:ConstantColor;+16:SortPrimsFarZ;+32:FullResolution)
+		enum RenderMode m_renderMode;
 		class Layers *m_layers;
 };
 
@@ -77,7 +77,7 @@ inline float32 Material::priorityPlane() const
 	return this->m_priorityPlane;
 }
 
-inline float32 Material::renderMode() const
+inline enum Material::RenderMode Material::renderMode() const
 {
 	return this->m_renderMode;
 }

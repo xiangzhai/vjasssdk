@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATIONS_HPP
 #define WC3LIB_MDLX_TEXTUREANIMATIONTRANSLATIONS_HPP
 
-#include "mdxscalings.hpp"
+#include "mdlxscalings.hpp"
 
 namespace wc3lib
 {
@@ -29,11 +29,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureAnimation;
-class TranslationAnimationTranslation;
-
 /// KTAT, like KGSC (Scalings)
-class TextureAnimationTranslations : public MdxScalings
+class TextureAnimationTranslations : public MdlxScalings
 {
 	public:
 		TextureAnimationTranslations(class TextureAnimation *textureAnimation);
@@ -42,12 +39,12 @@ class TextureAnimationTranslations : public MdxScalings
 		class TextureAnimation* textureAnimation() const;
 		const std::list<class TextureAnimationTranslation*>& translations() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		virtual class MdxScaling* createNewMember();
-		
+		virtual class MdlxScaling* createNewMember();
+
 		class TextureAnimation *m_textureAnimation;
 };
 

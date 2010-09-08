@@ -18,10 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
-#define WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
+#ifndef WC3LIB_MDLX_MDLXTRANSLATION_HPP
+#define WC3LIB_MDLX_MDLXTRANSLATION_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxscaling.hpp"
+#include "mdlxtranslations.hpp"
 
 namespace wc3lib
 {
@@ -29,27 +30,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CameraRotationLengths : public MdxAlphas
+/// Same values as scaling
+class MdlxTranslation : public MdlxScaling
 {
 	public:
-		CameraRotationLengths(class Camera *camera);
+		MdlxTranslation(class MdlxTranslations *translations);
 
-		class Camera* camera() const;
-		const std::list<class CameraRotationLength*>& lengths() const;
-
-	private:
-		class Camera *m_camera;
-
+		class MdlxTranslations* translations() const;
 };
 
-inline class Camera* CameraRotationLengths::camera() const
+inline class MdlxTranslations* MdlxTranslation::translations() const
 {
-	return this->m_camera;
-}
-
-inline const std::list<class CameraRotationLength*>& CameraRotationLengths::lengths() const
-{
-	return reinterpret_cast<const std::list<class CameraRotationLength*>&>(this->m_alphas);
+	return dynamic_cast<class MdlxTranslations*>(this->m_scalings);
 }
 
 }

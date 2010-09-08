@@ -31,37 +31,26 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Materials;
-class Layer;
-
 /// (KMTF), state of TextureId is long not float, therefore this class does not inherit MdxAlphas.
 class TextureIds : public MdxBlock
 {
 	public:
-		enum LineType
-		{
-			DontInterp = 0,
-			Linear = 1,
-			Hermite = 2,
-			Bezier = 3
-		};
-
 		TextureIds(class Layer *layer);
 		virtual ~TextureIds();
 
 		class Layer* layer() const;
-		long32 lineType() const;
+		enum LineType lineType() const;
 		long32 globalSequenceId() const;
 		const std::list<class TextureId*>& textureIds() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Layer *m_layer;
-		long32 m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		enum LineType m_lineType;
 		long32 m_globalSequenceId; // 0xFFFFFFFF if none
 		std::list<class TextureId*> m_textureIds;
 };
@@ -71,7 +60,7 @@ inline class Layer* TextureIds::layer() const
 	return this->m_layer;
 }
 
-inline long32 TextureIds::lineType() const
+inline enum LineType TextureIds::lineType() const
 {
 	return this->m_lineType;
 }

@@ -23,19 +23,16 @@
 
 #include <list>
 
-#include "mdxscalings.hpp"
+#include "mdlxscalings.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-	
-class GeosetAnimation;
-class GeosetAnimationColor;
 
-//KGAC
-class GeosetAnimationColors : public MdxScalings
+/// KGAC
+class GeosetAnimationColors : public MdlxScalings
 {
 	public:
 		GeosetAnimationColors(class GeosetAnimation *geosetAnimation);
@@ -44,8 +41,8 @@ class GeosetAnimationColors : public MdxScalings
 		class GeosetAnimation* geosetAnimation() const;
 		const std::list<class GeosetAnimationColor*>& geosetAnimationColors() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class GeosetAnimation *m_geosetAnimation;

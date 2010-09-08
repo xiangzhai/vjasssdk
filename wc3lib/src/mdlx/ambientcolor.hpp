@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_AMBIENTCOLOR_HPP
 #define WC3LIB_MDLX_AMBIENTCOLOR_HPP
 
-#include "mdxscaling.hpp"
+#include "mdlxscaling.hpp"
 #include "ambientcolors.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class AmbientColor : public MdxScaling
+class AmbientColor : public MdlxScaling
 {
 	public:
 		AmbientColor(class AmbientColors *colors);

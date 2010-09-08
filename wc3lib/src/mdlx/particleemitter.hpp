@@ -24,8 +24,7 @@
 #include <istream>
 #include <ostream>
 
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "node.hpp"
 
 namespace wc3lib
 {
@@ -33,32 +32,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitters;
-class Translation1s;
-class Rotation0s;
-class Scaling0s;
-class ParticleEmitterVisibilities;
-
-class ParticleEmitter
+class ParticleEmitter : public Node
 {
 	public:
-		enum Flags
-		{
-			EmitterUsesMdl = 0x23,
-			EmitterUsesTga = 0x08
-		};
-
 		ParticleEmitter(class ParticleEmitters *particleEmitters);
 		virtual ~ParticleEmitter();
 
 		class ParticleEmitters* particleEmitters() const;
-		const ascii* name() const;
-		long32 objectId() const;
-		long32 parent() const;
-		long32 flags() const;
-		class Translation1s* translations() const;
-		class Rotation0s* rotations() const;
-		class Scaling0s* scalings() const;
 		float32 emissionRate() const;
 		float32 gravity() const;
 		float32 longitude() const;
@@ -69,8 +49,8 @@ class ParticleEmitter
 		float32 initVelocity() const;
 		class ParticleEmitterVisibilities* visibilities() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
@@ -78,13 +58,6 @@ class ParticleEmitter
 		class ParticleEmitters *m_particleEmitters;
 		//long32 nbytesi;
 		//long32 nbytesikg; // inclusive bytecount including KGXXs
-		ascii m_name[0x50]; //(0x50 bytes)
-		long32 m_objectId;
-		long32 m_parent; //(0xFFFFFFFF if none)
-		long32 m_flags; //(bit20)	// +bit23(EmitterUsesMDL) +bit8(EmitterUsesTGA)
-		class Translation1s *m_translations; //(KGTR)
-		class Rotation0s *m_rotations; //(KGRT)
-		class Scaling0s *m_scalings; //(KGSC)
 		float32 m_emissionRate;
 		float32 m_gravity;
 		float32 m_longitude;
@@ -99,41 +72,6 @@ class ParticleEmitter
 inline class ParticleEmitters* ParticleEmitter::particleEmitters() const
 {
 	return this->m_particleEmitters;
-}
-
-inline const ascii* ParticleEmitter::name() const
-{
-	return this->m_name;
-}
-
-inline long32 ParticleEmitter::objectId() const
-{
-	return this->m_objectId;
-}
-
-inline long32 ParticleEmitter::parent() const
-{
-	return this->m_parent;
-}
-
-inline long32 ParticleEmitter::flags() const
-{
-	return this->m_flags;
-}
-
-inline class Translation1s* ParticleEmitter::translations() const
-{
-	return this->m_translations;
-}
-
-inline class Rotation0s* ParticleEmitter::rotations() const
-{
-	return this->m_rotations;
-}
-
-inline class Scaling0s* ParticleEmitter::scalings() const
-{
-	return this->m_scalings;
 }
 
 inline float32 ParticleEmitter::emissionRate() const

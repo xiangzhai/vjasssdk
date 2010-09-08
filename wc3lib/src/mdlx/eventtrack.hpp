@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,8 @@
 #ifndef WC3LIB_MDLX_EVENTTRACK_HPP
 #define WC3LIB_MDLX_EVENTTRACK_HPP
 
-#include <iostream>
+#include <istream>
+#include <ostream>
 
 #include "platform.hpp"
 #include "../exception.hpp"
@@ -31,8 +32,6 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
-class EventTracks;
 
 class EventTrack
 {
@@ -41,20 +40,26 @@ class EventTrack
 		virtual ~EventTrack();
 
 		class EventTracks* eventTracks() const;
+		long32 frames() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class EventTracks *m_eventTracks;
-		/// @todo Unkown data.
+		long32 m_frames;
 };
 
 inline class EventTracks* EventTrack::eventTracks() const
 {
 	return this->m_eventTracks;
+}
+
+inline long32 EventTrack::frames() const
+{
+	return this->m_frames;
 }
 
 }

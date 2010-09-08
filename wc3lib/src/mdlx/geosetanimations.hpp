@@ -31,10 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class GeosetAnimation;
-
-//GEOA
+/// GEOA
 class GeosetAnimations : public MdxBlock
 {
 	public:

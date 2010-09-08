@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.eu                                                      *
+ *   tamino@cdauth.de                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_EVENTTRACKS_HPP
-#define WC3LIB_MDLX_EVENTTRACKS_HPP
+#ifndef WC3LIB_MDLX_MDLXROTATIONS_HPP
+#define WC3LIB_MDLX_MDLXROTATIONS_HPP
 
 #include <list>
 
@@ -31,16 +31,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-/// KEVT
-class EventTracks : public MdxBlock
+/// Block name KGRT.
+class MdlxRotations : public MdxBlock
 {
 	public:
-		EventTracks(class Event *event);
-		virtual ~EventTracks();
+		MdlxRotations(class Mdlx *mdlx);
+		virtual ~MdlxRotations();
 
-		class Event* event() const;
+		class Mdlx* mdlx() const;
+		enum LineType lineType() const;
 		long32 globalSequenceId() const;
-		const std::list<class EventTrack*>& tracks() const;
+		bool hasGlobalSequence() const;
+		const std::list<class MdlxRotation*>& mdlxRotations() const;
 
 		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
@@ -48,24 +50,35 @@ class EventTracks : public MdxBlock
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Event *m_event;
-		long32 m_globalSequenceId;
-		std::list<class EventTrack*> m_tracks;
+		class Mdlx *m_mdlx;
+		enum LineType m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class MdlxRotation*> m_rotations;
 };
 
-inline class Event* EventTracks::event() const
+inline class Mdlx* MdlxRotations::mdlx() const
 {
-	return this->m_event;
+	return this->m_mdlx;
 }
 
-inline long32 EventTracks::globalSequenceId() const
+inline enum LineType MdlxRotations::lineType() const
+{
+	return this->m_lineType;
+}
+
+inline long32 MdlxRotations::globalSequenceId() const
 {
 	return this->m_globalSequenceId;
 }
 
-inline const std::list<class EventTrack*>& EventTracks::tracks() const
+inline bool MdlxRotations::hasGlobalSequence() const
 {
-	return this->m_tracks;
+	return this->m_globalSequenceId != 0xFFFFFFFF;
+}
+
+inline const std::list<class MdlxRotation*>& MdlxRotations::mdlxRotations() const
+{
+	return this->m_rotations;
 }
 
 }
@@ -73,3 +86,4 @@ inline const std::list<class EventTrack*>& EventTracks::tracks() const
 }
 
 #endif
+
