@@ -36,39 +36,47 @@ Des Weiteren können Eigenschaften sogenannter Objekttypen, die einen bestimmten
 Objekttypen erhalten in Warcraft 3 The Frozen Throne eine vierstellige, hexadezimale Id. Daher können Objekttypen im Wertebereich von 16^4 definiert werden.
 Jede Id identifiziert genau einen Objekttyp.
 Ein Objekttyp kann in JASS++ folgendes sein:
-* ein Einheitentyp
-* ein Gegenstandstyp
-* ein Doodad-Typ
-* ein Zerstörbares-Typ
-* ein Fähigkeitentyp
-* ein Zauberverstärkertyp
-* ein Forschungstyp
-* ein Wettereffekttyp
-* ein Blitzeffekttyp
-* ein Geländeset
+\begin{enumerate}
+\item ein Einheitentyp
+\item ein Gegenstandstyp
+\item ein Doodad-Typ
+\item ein Zerstörbares-Typ
+\item ein Fähigkeitentyp
+\item ein Zauberverstärkertyp
+\item ein Forschungstyp
+\item ein Wettereffekttyp
+\item ein Blitzeffekttyp
+\item ein Geländeset
+\end{enumerate}
 
-Die Objekttypen stammen aus eine der folgenden Dateien:
-* UI/UnitData.slk
-*
-*
-* war3map.u
-* war3map.d
+Die Objekttypen stammen aus eine der folgenden Dateien (aufsteigend nach Priorität geordnet):
+\begin{enumerate}
+\item war3map.u
+\item war3map.d
+\item UI/UnitData.slk
+\item *
+\item *
+\end{enumerate}
 TODO
 
 Dabei werden die angegebenen Dateien in den folgenden Archiven in absteigender Reihenfolge durchsucht:
-* Karte
-* Kampagne
-* War3Patch.mpq
-* War3Locale.mpq (richtigen Namen finden)
-* War3X.mpq
-* War3.mpq
+\begin{enumerate}
+\item Karte
+\item Kampagne
+\item War3Patch.mpq
+\item War3Locale.mpq (richtigen Namen finden)
+\item War3X.mpq
+\item War3.mpq
+\end{enumerate}
 TODO
 
 Die Eigenschaften eines Objekttyps können einen der folgenden nativen, kopierbasierten Typen haben:
-* string
-* integer
-* real
-* boolean
+\begin{enumerate}
+\item string
+\item integer
+\item real
+\item boolean
+\end{enumerate}
 TODO
 
 Die Eigenschaften eines Objekttyps haben selbst nochmals eine eigene Id.
@@ -98,10 +106,12 @@ Notation:
 Eine Escape-Sequenz ist ein Zeichen, welchem das \-Zeichen vorangestellt wird und welches ausschließlich ein einem
 Zeichenkettenliteral vorkommen darf.
 Es gibt folgende Escape-Sequenzen:
-n				Zeilenumbruch
-t				Horizontaler Tabulator
-\				Backslash
-"				Doppeltes Anführungszeichen
+\begin(enumerate}
+\item n				Zeilenumbruch
+\item t				Horizontaler Tabulator
+\item \				Backslash
+\item "				Doppeltes Anführungszeichen
+\end{enumerate}
 
 Zusätzlich existieren spezielle Escape-Sequenzen für Objekttypen-Ids (siehe "Literale - Objekttypen-Ids") und Farben (siehe "Literale - Farbliterale").
 Farbkodierungen und Objekttypen-Ids in Zeichenketten werden zum Kompilierzeitpunkt validiert bzw. kompiliert.

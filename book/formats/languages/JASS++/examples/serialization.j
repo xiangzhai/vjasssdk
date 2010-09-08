@@ -31,7 +31,7 @@ endfunction
 
 function Test takes nothing returns nothing
 	local hashtable table = InitHashtable()
-	call LoadNpc(table, 0)	
+	call LoadNpc(table, 0)
 	call SaveNpc(table, 0)
 	call FlushNpc(table, 0)
 endfunction
@@ -79,10 +79,10 @@ endfunction
 
 class Npc
 {
-	private string m_name
-	private integer m_age
-	private unit m_unit
-	private location m_location
+	private string m_name;
+	private integer m_age;
+	private unit m_unit;
+	private location m_location;
 
 	public void operator save (hashtable table) const
 	{

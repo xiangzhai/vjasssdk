@@ -1,10 +1,93 @@
-\chapter { Modelle }
-\paragraph { In Warcraft 3 können zwei unterschiedliche Formate zur Darstellung von Modellen verwendet werden. Zum einen existiert }
-\paragraph { Die im Internet zu findenden Spezifikationen basieren auf einem von Jimmy "Nub" Campbell (jcampbelly@gmail.com) erstellten Dokument und stammen, wie auch die anderen Formatspezifikationen, nicht offiziell von Blizzard Entertainment. }
-\paragraph { Laut Campbell, basiert sämtlicher Inhalt bzw. sämtliches Wissen über das MDX-Format in der Spezifikation auf statistischen Analysen. Zudem gibt es einige unbekannte Werte, welche jedoch bei sämtlichen Dateien durchgehend gleich sind und somit vermutlich nur eine geringe Bedeutung haben. }
-\paragraph { In diesem Kapitel wird sowohl auf die Bedeutung als auch auf die Spezifikation der beiden Formate eingegangen. Es wird dabei versucht, die Daten möglich exakt wiederzugeben, damit es dem Lese theoretisch ermöglicht wird, eine eigene Implementation der Formate zu entwickeln. }
-\section { Das Modell }
-\paragraph { Zunächst einmal gilt es die Frage zu klären, was im Folgenden eigentlich unter einem Modell zu verstehen ist. Ein Modell ist im Folgenden die Darstellung  bzw. Abbildung eines dreidimensionalen Körpers, welcher für gewöhnlich in Warcraft 3 dateiweise getrennt wird. Das bedeutet, dass jedes Modell in genau einer Datei gespeichert wird. Dies kann entweder eine MDX- oder eine MDL-Datei sein. }
+\chapter{Modelle}
 
-\include{objectelements}
+\section{Vorwort}
+Da Warcraft 3 ein 3d-Echtzeit-Strategiespiel ist, liegt es nahe, dass für die 3d-Grafiken im Spiel ein bestimmtes Format verwendet werden muss.
+Blizzard Entertainment hat dieses bestimmte Format selbst entwickelt und die Dokumentation bzw. Spezifikation dessen nicht öffentlich zugänglich gemacht.
+Eigentlich handelt es sich um zwei verschiedene Formate, die aber nur exakt das Gleiche beschreiben können.
+Diese beiden Formate gibt es nicht etwa, um die Komplexität spaßeshalber zu erhöhen, sondern viel mehr,
+um einerseits eine relativ hohe Geschwindigkeit bei der Darstellung einer 3d-Grafik und andererseits
+einen einfache Möglichkeit der Bearbeitung dieser zu gewährleisten.
+Wie sich der Leser nun sicher schon denken kann handelt es sich beim ersten Format um ein für Menschen
+lesbares Textformat, wie etwa XML. Es heißt MDL und ermöglicht Grafikern bzw. Entwicklern eine relativ
+einfache Form der Bearbeitung mittels eines ganz normalen Texteditors, insofern man natürlich die Bedeutung
+der Elemente kennt.
+Das zweite Format ist das binäre Gegenstück dazu und ermöglicht daher eine relativ geringe Ladezeit und zudem noch kleinere
+Dateigrößen.
+Es heißt MDX und sollte besser nicht mit einem einfachen Texteditor bearbeitet werden.
+Beide Formate lassen sich sowohl im Spiel als auch im Welteditor darstellen, wenn auch beide Programme bei
+bestimmten Situationen dadurch zum Absturz gebracht werden können.
+In diesem Kapitel wird sowohl auf die Bedeutung als auch auf die Spezifikation der beiden Formate eingegangen. Es wird dabei versucht, die Daten möglich exakt wiederzugeben, damit es dem Leser theoretisch ermöglicht wird, eine eigene Implementation der Formate zu entwickeln, so wie es der Autor selbst mit dem
+Projekt "wc3lib" versucht.
+
+\section{Spezifikation}
+Wie bereits genannt, gibt es keine offizielle Spezifikation. Blizzard veröffentlichte lediglich die sogenannten "Art Tools".
+Eine Erweiterung für das recht bekannte 3d-Graikprogramm "3ds Max". Leider ist es maximal mit Version 5 des Grafikprogramms kompatibel,
+welche schon lange nicht mehr vertrieben wird.
+Zudem binden diese "Art Tool" den Grafiker an ein kommerzielles Programm. Alternativen wie etwa Blender,
+können so nicht verwendet werden.
+So liegt es sehr nahe, dass Personen, die 3d-Grafiken für Warcraft 3 erstellen wollen irgendwann hergehen
+und Konvertierungs- oder sogar Anzeigeprogramme für das Grafikformat schreiben wollen.
+Dazu musste das Format jedoch erstmal spezifiziert werden. Das ging vermutlich leichter als z. B. beim MPQ-Format,
+da man die Unterschiede einzelner Werte sofort sichtbar machen konnte und man durch die "Art Tools" und das
+nicht binäre Format MDL sehr einfache Möglichkeiten hatte, die Auswirkungen der Werte zu analysieren.
+Schließlich entstand eine Spezifikation von Jimmy "Nub" Campbell (jcampbelly@gmail.com).
+Laut Campbell, basiert sämtlicher Inhalt bzw. sämtliches Wissen über das MDX-Format in der Spezifikation auf statistischen Analysen. Zudem gibt es einige unbekannte Werte, welche jedoch bei sämtlichen Dateien durchgehend gleich sind und somit vermutlich nur eine geringe Bedeutung haben.
+Eine neuere und auch bessere Spezifikation wurde später von Magnus Ostberg (aka Magos, MagosX@GMail.com), der den Warcraft-3-Modifizierern
+noch heute für sein Programm "War3ModelEditor" bekannt ist, erstellt.
+Dadurch, dass er jenes in C++ geschriebene und auf die Windows-Plattform beschränkte Programm entwickelte,
+konnte er sich vermutlich ein noch wesentlich präzieseres Bild der beiden Formate machen als Campbell.
+Das Programm kann 3d-Grafiken nicht nur relativ korrekt darstellen, es ermöglicht auch eine einfache Form
+der Bearbeitung verschiedener Elemente und besitzt einen integrierten MPQ-Browser für Archive.
+Magos erstellte auch eine BLP-Spezifikation. Das Texturformat wird selbstverständlich ebenfalls benötigt,
+wenn man 3d-Grafiken aus Warcraft 3 anzeigen möchte.
+Die Spezifikationen der beiden Formate in diesem Buch basieren hauptsächlich auf Ostbergs Versionen, jedoch auch auf eigenen Erfahrungen und derer anderer.
+Sie befinden sich am Ende dieses Kapitels.
+Für eigene Implementationen empfehle ich jedem, auch mal einen Blick in den Quell-Code verfügbarer Programme
+zu werfen.
+
+\section{Implementationen}
+Wie bereits oben beschrieben wurde, existiert das Programm "War3ModelEditor". Zudem gibt es noch das Programm "Warcraft 3 Viewer", welches angeblich auf die vorhandene API der Warcraft-3-Engine
+setzt, um Grafiken darzustellen.
+Es enthält ebenfalls einen MPQ-Browser, ist jedoch insgesamt weniger komfortabel als Ostbergs'.
+Des Weiteren existieren viele kleinere Werkzeuge zur Bearbeitung bestimmter Eigenschaften oder schlichtweg zur Konvertierung.
+Bei manchen davon handelt es sich um Skripte, die nur mit zugehörigen Programmen verwendet werden können.
+So stieß ich im Jahr 2009 als ich mit den Arbeiten an meinem Programm "wc3lib" begann auf das unfertige
+Projekt "warblender", bei welchem es sich um eine Reihe von Python-Skripte handelt, die zusammen eine
+Erweiterungen für das freie und kostenlose 3d-Grafikprogramm "Blender" ermöglichen.
+Leider funktionierte jene Version der Erweiterung nicht einmal mit der aktuellen von "Blender". Nachdem
+ich einige Zeilen umgeschrieben und an die neue Python-API "Blenders" angepasst hatte, konnte ich immerhin
+die einfache Geometrie einer Datei importieren.
+Der Leser sollte bedenken, dass die Implementation eines Konvertierungsprogramm zwischen zwei 3d-Grafikformaten oftmals
+eine beträchtliche Menge Aufwand mit sich bringt, da manche Unterschiede nicht einfach ausgeglichen oder umgangen
+werden können.
+Hätte ich nicht mit dem Projekt "wc3lib" begonnen, um sämtliche Formate zu implementieren, so hätte für mich die Weiterentwicklung des Projekts "warblender"
+vermutlich an erster Stelle gestanden.
+Zwar kann ein Grafiker, der Blender benutzt, sein Modell erst in das 3ds-Max-Format und dann über irgendwelche "legalen" Versionen von "3ds Max" in das MDX- oder MDL-Format
+konvertieren, jedoch ist das nicht gerade ein empfehlenswerter Arbeitsaufwand.
+Das Problem der beiden Darstellungsprogramme "War3ModelEditor" und "Warcraft 3 Viewer" ist, dass sie keine
+Konvertierung in ein externes Format erlauben. Dies ist vermutlich deshalb genauso schwer wie ohne die Programme zu bewerkstelligen,
+weil sie keinen Nutzen von einer 3d-Rendering-Engine machen, die eigene Formate mit sich bringt.
+Das Programm "War3ModelEditor" rendert die Grafiken mit einfachen Direct3d-Befehlen.
+Daher setzte ich bei meinem Projekt auf die 3d-Rendering-Engine "OGRE", die eigene Mesh-Formate mit sich bringt und so
+Konvertierungen von dargestellten Modellen von sich aus erlaubt.
+Selbstverständlich, muss man dazu die Warcraft-3-Grafik korrekt mit dem Format der Rendering-Engine abgleichen.
+Hier ist nun eine Liste verschiedener Programme zur Bearbeitung und Anzeige der beiden Formate:
+\begin{enumerate}
+\item War3ModelEditor - in C++ geschrieben, verwendet eine ältere Version des Programms "StormLib", Direct3d und die Windows-API).
+\item MdxLib - Ostbergs Nachfolgeprojekt, in C# geschrieben.
+\end{enumerate}
+
+\section{Das Modell}
+Zunächst einmal gilt es die Frage zu klären, was im Folgenden eigentlich unter einem Modell zu verstehen ist. Ein Modell ist im Folgenden die Darstellung  bzw. Abbildung eines dreidimensionalen Körpers, welcher für gewöhnlich in Warcraft 3 dateiweise getrennt wird. Das bedeutet, dass jedes Modell in genau einer Datei gespeichert wird. Dies kann entweder eine MDX- oder eine MDL-Datei sein.
+Es gilt dabei zu beachten, dass die Texturen, also die 2d-Grafiken bzw. Bilder, die auf das Modell gelegt werden,
+um diesem eine Art Haut zu verleihen und somit die Grenzen der möglichen Punkte im virtuellen dreidimensionalen Raum nicht zu sprengen, separat abgespeichert werden.
+Eine Textur wird also in der Regel auch in einer eigenen Datei abgespeichert, kann aber von einem
+Modell mehrmals verwendet werden.
+Ein Modell enthält unterschiedliche Elemente, die es beschreiben. Diese Elemente sind in anderen 3d-Grafikformaten meist ähnlich oder sogar gleich,
+da die Technik für die Darstellung und Bearbeitung von 3d-Grafiken auf Softwareebene zum Zeitpunkt der Entwicklung des Formats bereits fortgeschritten genug war, sodass eine gewisser inoffizieller Standard existierte,
+der bei den Formaten MDX und MDLX sicherlich auch durch Blizzard's Verwendung des Bearbeitungsprogramms
+3ds Max und dessen eigenes Format (.3ds) beeinflusst wurde.
+In den einzelnen Kapiteln wird auf die Bedeutung jedes Elements genauer eingegangen.
+
+\include{nodes}
 \include{sequences}

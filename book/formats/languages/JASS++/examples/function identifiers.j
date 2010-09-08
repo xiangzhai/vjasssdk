@@ -17,7 +17,7 @@ void ShowTextTag(boolean show, texttag tt, player const whichPlayer)
 	}
 }
 
-alias ShowTextTagForceBJ ShowTextTag;
+alias ShowTextTagForceBJ(ShowTextTag);
 
-ShowTextTag(true, tt, whichPlayer)
-ShowTextTag(true, tt, whichForce)
+ShowTextTag(true, tt, whichPlayer);
+ShowTextTag(true, tt, whichForce);

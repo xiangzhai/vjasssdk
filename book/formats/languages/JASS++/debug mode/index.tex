@@ -1,4 +1,4 @@
-\chapter { Testmodus (debug mode) }
+\chapter{Testmodus (debug mode)}
 
 Der Testmodus kann für gewöhnlich per Option des Compilers aktiviert werden und bewirkt einige Änderungen
 am Verhalten von bestimmten nativen Funktionen als auch von vom Compiler für die Sprachfunktionalität generierten,
@@ -6,24 +6,24 @@ was das Testen bzw. die Fehlerfindung erleichtern und Abstürze vermeiden soll.
 In der Regel bewirkt der Testmodus die Überprüfung von Laufzeitfehlern, die sich so nicht zur Kompilierzeit
 überprüfen lassen, zusätzliche Daten erforden und somit den Programmablauf verlangsamen.
 
-\section { ExecuteFunc }
+\section{ExecuteFunc}
 Diese native Funktion wird in allen Aufrufen ersetzt und eine Liste aller parameter- und rückgabetyplosen Funktionsnamen
 generiert, die bei jedem Aufruf der Nativen mit dem Funktionsnamenparameter abgeglichen wird.
 Ist der Funktionsnamenparameter nicht in der Liste vorhanden, wird eine Fehlermeldung mit diesem ausgegeben und der Aufruf
 abgebrochen.
 
-\section { Player }
+\section{Player}
 Sollte die Funktion zur Laufzeit mit einer Ganzzahl außerhalb des Bereichs 0-bj_MAX_PLAYER_SLOTS aufgerufen werden, so
 sollte eine Fehlermeldung ausgegeben und "null" zurückgegeben werden.
 
-\section { TriggerSleepAction }
+\section{TriggerSleepAction}
 "TriggerSleepAction" braucht anscheinend eine Mindestlaufzeit von 0,25 Sekunden. Daher sollten Anweisungen mit kleineren Literalen oder Werten zur Laufzeit und nach Möglichkeit auch zur Kompilierzeit die Ausgabe einer Warnung verursachen.
 
-\section { Synchronisationsblöcke }
+\section{Synchronisationsblöcke}
 Siehe "Synchronisationsblöcke".
 
-\section { Variablensperrung (locking) }
+\section{Variablensperrung (locking)}
 Siehe "Variablensperrung (locking)".
 
-\section { Arrays }
-Siehe "Variablen". 
+\section{Arrays}
+Siehe "Variablen".

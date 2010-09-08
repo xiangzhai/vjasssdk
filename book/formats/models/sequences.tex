@@ -1,26 +1,26 @@
-\chapter { Sequenzen }
+\chapter{Sequenzen}
 \paragraph { Sequenzen beschreiben Animationen mit einem Namen und einer Dauer, damit diese im Spiel abspielbar werden. Oftmals werden Sequenzen fälschlicherweise als Animationen bezeichnet, eventuell um Verwirrung zu vermeiden, da auch Video- bzw. Zwischensequenzen des Spiels gemeint sein könnten. So gibt es in JASS z. B. die Funktionen SetUnitAnimation und QueueUnitAnimation, die trotz ihres Namens Sequenz- und keine Animationsname, da es solche auch gar nicht gibt, als Parameter entgegen nehmen. }
 \paragraph { Es gibt einige Sequenznamen, die in Warcraft 3 eine besondere Bedeutung haben und in bestimmten Fällen automatisch abgespielt werden. }
 \paragraph { Beim Abspielen einer Sequenz eines Modells durch das Spiel geschieht nichts anderes als das Abspielen der von der Sequenz verwendeten Animation in dem angegebenen Zeitraum der Sequenz. }
 \paragraph { Folgende Liste zeigt alle Sequenznamen mit besonderer Bedeutung im Spiel. Groß- und Kleinschreibung muss dabei nicht beachtet werden und (PRÜFEN!!!) die Zahl hinter dem Sequenznamen kann auch als englisches Wort ausgeschrieben werden. Der Wertebereich reicht dabei von X - Y. Wertebereiche ermöglichen ein zufälliges Abspielen einer Sequenz eines Bereiches, damit z. B. nicht immer die gleiche Stehanimation einer EInheit im Spiel abgespielt wird. }
 \paragraph { Wird keine Zahl angegeben, so wird die Sequenz standardmäßig als erste interpretiert. Bei mehreren Sequenzen mit dem gleichen Namen wird stets die erste verwendet (PRÜFEN!!!). }
 \begin{enumerate}
-	\item Stand
-	\item Attack
-	\item Attack Slam
-	\item Spell
-	\item Portrait Talk
-	\item Morph
-	\item Walk
-	\item Death
-	\item Decay
-	\item Victory
+\item Stand
+\item Attack
+\item Attack Slam
+\item Spell
+\item Portrait Talk
+\item Morph
+\item Walk
+\item Death
+\item Decay
+\item Victory
 \end{enumerate}
 
 \paragraph { Es gibt noch weitere Namen, die den obigen Sequenznamen folgen können und der Sequenz dadurch eine für das Spiel zusätzliche Bedeutung geben: }
 \begin{enumerate}
-	\item Alternate
-	\item Small
-	\item Medium
-	\item Large
+\item Alternate
+\item Small
+\item Medium
+\item Large
 \end{enumerate}

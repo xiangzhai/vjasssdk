@@ -1,0 +1,28 @@
+\section{Knoten-Elemente}
+Einige Modell-Elemente haben eine Reihe von Eigenschaften gemeinsam, sodass sich diese auch als sogenannte Knoten-Elemente zusammenfassen lassen, da die Reihe von Eigenschaften allgemeine Daten eines Knotens enthält, wie zum Beispiel einen Namen und eine einzigartige Id. Diese Eigenschaften werden im MDX-Format binär direkt hintereinander gespeichert, was die Implementation vereinfacht.
+Dennoch kommen bestimmte Eigenschaften wie Verschiebungen und Rotationen nur in speziellen Fällen vor.
+Knoten-Elemente unterstützen spezielle Funktionen wie Kind-Eltern-Beziehungen zu anderen Knoten-Elementen, was eine besondere Bedeutung bei Sequenzen hat.
+Zudem beziehen sich einige weitere Elemente des Modells, wie z. B. Achsenpunkte, auf eine bestimmte Knoten-Id und somit auf ein bestimmtes Knoten-Element des Modells.
+Das MDLX-Format bringt hierbei keine einzigartige Neuheit mit sich, da dieses Prinzip bei den meisten
+anderen 3d-Formaten ebenfalls verwendet wird.
+Der Typ jedes Knotens wird ebenfalls gespeichert, was Programmierern eine leichtere Bestimmung bei einer
+nötigen Konvertierung erlaubt.
+Lediglich bei Partikel-Emittern muss aufgepasst werden, um welchen der beiden möglichen Implementationen
+es sich handelt.
+
+Knoten-Elemente enthalten folgende Eigenschaften:
+* einen Namen (maximal 80 Zeichen lang)
+* eine einzigartige Id (in Form einer Zahl)
+* [einen Elternknoten]
+* [Verschiebungen, Drehungen und Skalierungen, falls diese nicht vom Elternknoten geerbt werden]
+
+Folgende Elemente eines Modells sind Objektelemente:
+* Helfer
+* Knochen
+* Lichter
+* Ereignisobjekte
+* Anhänge
+* Partikel-Emitter (zwei unterschiedliche Typen)
+* Kollisionsformen
+* Bändel-Emitter
+
