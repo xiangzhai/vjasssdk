@@ -38,7 +38,7 @@ Camera::~Camera()
 
 std::streamsize Camera::read(std::istream &istream) throw (class Exception)
 {
-	std::streamsize size = istream.gcount();
+	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_targetX, size);
 	wc3lib::read(istream, this->m_targetY, size);
 	wc3lib::read(istream, this->m_zOffset, size);
@@ -56,7 +56,7 @@ std::streamsize Camera::read(std::istream &istream) throw (class Exception)
 
 std::streamsize Camera::write(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_targetX, size);
 	wc3lib::write(ostream, this->m_targetY, size);
 	wc3lib::write(ostream, this->m_zOffset, size);

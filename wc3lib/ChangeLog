@@ -1,3 +1,9 @@
+2010-09-08 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Added class Node and adjusted classes to specification of Magos.
+
+2010-09-07 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Revised classes.
+
 2010-09-04 Tamino Dauth <tamino@cdauth.eu>
 * mdlx: Revised class OgreMdlx.
 * mdlx: Added various functions to class Mdlx.

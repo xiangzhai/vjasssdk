@@ -1,5 +1,18 @@
 1. MDLX property classes
 
+Node classes:
+* Helper
+* Bone
+* Light
+* EventObject
+* Attachment
+* CollisionShape
+
+New:
+* ParticleEmitter
+* ParticleEmitter2
+* RibbonEmitter
+
 MDX block name			MDL tag name			wc3lib class name		Parent class (not inheritance!)		Expected class name				Blender object			OGRE class			3ds object
 MDLX				-				Mdlx				-					-
 -								MaterialAlpha			Alphas					MaterialAlpha
@@ -17,7 +30,7 @@ KP2L				-				ParticleEmitter2Latitudes	ParticleEmitter2			ParticleEmitter2Latitu
 -				-				ParticleEmitter2Width		ParticleEmitter2Widths			ParticleEmitter2Width
 KP2W				-				ParticleEmitter2Widths		ParticleEmitter2			ParticleEmitter2Widths
 -				-				Camera				Cameras					Camera
-CAMS				-				Cameras				Mdlx					Cameras				
+CAMS				-				Cameras				Mdlx					Cameras
 -				-				CollisionShape			CollisionShapes				CollisionShape
 CLID				-				CollisionShapes			Mdlx					CollisionShapes
 -				-				LightAmbientColor		LightAmbientColors			LightAmbientColor
@@ -127,7 +140,7 @@ RibbonEmitterHeightsBelow		KRHB			RibbonEmitter
 2. Abstract MDLX property classes
 Name					Child classes
 GroupMdxBlock
-GroupMdxBlockMember			
+GroupMdxBlockMember
 Object
 MdxAlpha
 MdxAlphas

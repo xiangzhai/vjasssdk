@@ -1,13 +1,19 @@
+2010-09-07 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Rename class MdxAlpha to MdlxAplha and rename class MdxAlphas to MdlxAlphas.
+* DONE: mdlx: There are more object types which do not inherit all Object properties (e. g. no type -> RibbonEmitters, Attachment). Add more abstract class Node which is derived by Object and those types for better object id storing in class Mdlx.
+* mdlx: Sine you can specifiy exact write and read length of strings now, we should use type std::string for names and not ascii[0x60] -> maybe something like limited string.
+* mdlx: Class Geoset reads too little bytes, something is missing.
+
 2010-09-04 Tamino Dauth <tamino@cdauth.eu>
-* mdlx: Rename class Rotation0s to MdlxRotations, rename class Translation1s to MdlxTranslations, rename class Scaling0s to MdlxScalings and implement corresponding Mdlx functions.
-* mdlx: Add global enum LineType.
+* DONE: mdlx: Rename class Rotation0s to MdlxRotations, rename class Translation1s to MdlxTranslations, rename class Scaling0s to MdlxScalings and implement corresponding Mdlx functions.
+* DONE: mdlx: Add global enum LineType.
 * mdlx: Add class MdlxTransforms which is derived from MdlxRotations, MdlxTranslations and MdlxScalings.
 * mdlx: OgreMdlx: Implement curve modifiers.
 * mdlx: Use struct VertexData to store vertices.
 * mdlx: OgreMdlx needs splitted up methods since sometimes you only want to refresh single nodes etc.
 * mdlx: Add generic interpolation functions (http://www.wc3c.net/showthread.php?t=79038).
 * editor: BLP images aren't displayed correctly in QPixmap (of QLabel instance) although they're read without any troubles.
-* mdlx: All Object deriving classes have to register theirself on Mdlx by using Mdlx::addObject!
+* DONE: mdlx: All Object deriving classes have to register theirself on Mdlx by using Mdlx::addObject!
 
 2010-09-03 Tamino Dauth <tamino@cdauth.eu>
 * mdlx: Class OgreMdlx should be moved to editor module.

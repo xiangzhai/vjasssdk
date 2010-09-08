@@ -46,7 +46,7 @@ Cameras::~Cameras()
 
 std::streamsize Cameras::read(std::istream &istream) throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_version, size);
 
 	if (this->m_version != Cameras::version)
@@ -70,7 +70,7 @@ std::streamsize Cameras::write(std::ostream &ostream) const throw (class Excepti
 	if (this->m_version != Cameras::version)
 		throw Exception(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
 
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_version, size);
 	wc3lib::write<int32>(ostream, this->m_cameras.size(), size);
 

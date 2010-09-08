@@ -62,101 +62,99 @@ inline T readValue(std::istream &istream, bool byteSwap = false)
 }
 
 template<typename T>
-inline std::istream& read(std::istream &istream, T &value, std::streamsize &sizeCounter)
+inline std::istream& read(std::istream &istream, T &value, std::streamsize &sizeCounter, std::size_t size = sizeof(T))
 {
-	istream.read(reinterpret_cast<char*>(&value), sizeof(value));
+	istream.read(reinterpret_cast<char*>(&value), size);
 
 	if (!istream)
 		throw Exception(_("Input stream error."));
+
+	if (istream.gcount() != size)
+		throw Exception(boost::format(_("Input stream read size %1% is not equal to expected size %2%.")) % istream.gcount() % size);
 
 	sizeCounter += istream.gcount();
 
 	return istream;
 }
 
-template<typename T>
-inline std::istream& readArray(std::istream &istream, T value, std::size_t valueSize, std::streamsize &sizeCounter)
+/**
+* Reads C string char into value "value" (with 0-terminating if size is 0).
+* @param size If this value is 0 it will stop when reaching 0-terminating char.
+*/
+inline std::istream& readCString(std::istream &istream, char *value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
-	istream.read(value, valueSize);
+	if (value != 0)
+		throw Exception(_("readCString: Value should be 0."));
 
-	if (!istream)
-		throw Exception(_("Input stream error."));
-
-	sizeCounter += istream.gcount();
-
-	return istream;
-}
-
-inline std::istream& readCString(std::istream &istream, char *value, std::streamsize &sizeCounter)
-{
-	// get 0 terminating character, get name
-	std::streampos position = istream.tellg();
-	char character;
-	istream.get(character);
-	std::size_t i = position;
-
-	while (character != '\0')
+	if (size == 0)
 	{
-		++i;
+		// get 0 terminating character, get name
+		std::streampos position = istream.tellg();
+		char character;
+
+		if (!istream)
+			throw Exception(_("Input stream error."));
+
 		istream.get(character);
+
+		std::size_t i = position;
+		std::size_t length = 1;
+
+		while (character != '\0')
+		{
+			++i;
+			++length;
+
+			if (!istream)
+				throw Exception(_("Input stream error."));
+
+			istream.get(character);
+		}
+
+		istream.seekg(position);
+		size = length; // assign new length
 	}
 
-	std::size_t length = i - position;
-	istream.seekg(position, std::ios_base::cur);
-	value = new char[length];
-	readArray(istream, value, length, sizeCounter);
+	value = new char[size];
+	read(istream, value, sizeCounter, size);
 
 	return istream;
 }
 
-inline std::istream& readString(std::istream &istream, std::string &value, std::streamsize &sizeCounter)
+inline std::istream& readString(std::istream &istream, std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
 	char *cString = 0;
-	readCString(istream, cString, sizeCounter);
+	readCString(istream, cString, sizeCounter, size);
 	value = cString;
 
 	return istream;
 }
 
 template<typename T>
-inline std::ostream& write(std::ostream &ostream, const T &value, std::streamsize &sizeCounter)
+inline std::ostream& write(std::ostream &ostream, const T &value, std::streamsize &sizeCounter, std::size_t size = sizeof(T))
 {
-	ostream.write(reinterpret_cast<const char*>(&value), sizeof(value));
+	ostream.write(reinterpret_cast<const char*>(&value), size);
 
 	if (!ostream)
 		throw Exception(_("Output stream error."));
 
-	sizeCounter += sizeof(value);
+	sizeCounter += size; /// @todo Why isn't there any .pcount, throw exception if it is not written completely
 
 	return ostream;
 }
 
-template<typename T>
-inline std::ostream& writeArray(std::ostream &ostream, const T value, std::size_t valueSize, std::streamsize &sizeCounter)
+/**
+* Writes C string of value "value" into output (with 0 terminating char if size is 0).
+* @param size If size is 0 it will stop writing when reached 0-terminating char.
+*/
+inline std::ostream& writeCString(std::ostream &ostream, const char *value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
-	ostream.write(value, valueSize);
-
-	if (!ostream)
-		throw Exception(_("Output stream error."));
-
-	sizeCounter += valueSize;
-
-	return ostream;
+	return write(ostream, value, sizeCounter, size == 0 ? strlen(value) + 1 : size);
 }
 
-inline std::ostream& writeCString(std::ostream &ostream, const char *value, std::streamsize &sizeCounter)
+inline std::ostream& writeString(std::ostream &ostream, const std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
-	ostream.write(value, strlen(value) + 1); // write 0 terminating character
-	sizeCounter += strlen(value) + 1;
-
-	return ostream;
-}
-
-inline std::ostream& writeString(std::ostream &ostream, const std::string &value, std::streamsize &sizeCounter)
-{
-	writeCString(ostream, value.data(), sizeCounter);
-
-	return ostream;
+	return writeCString(ostream, value.data(), sizeCounter, size);
 }
 
 template<typename T>
