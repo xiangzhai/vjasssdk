@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,27 +41,29 @@ Bones::~Bones()
 		delete bone;
 }
 
-void Bones::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Bones::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Bones::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Bones::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Bones::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
+
 	if (bytes == 0)
 		return 0;
-	
+
 	long32 nbytes = 0;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	
+
 	if (nbytes <= 0)
 		throw Exception(boost::str(boost::format(_("Bones: Byte count error, %1% bytes.\n")) % nbytes));
-	
+
 	while (nbytes > 0)
 	{
 		class Bone *bone = new Bone(this);
@@ -70,7 +72,7 @@ std::streamsize Bones::readMdx(std::istream &istream) throw (class Exception)
 		nbytes -= readBytes;
 		this->m_bones.push_back(bone);
 	}
-	
+
 	return bytes;
 }
 

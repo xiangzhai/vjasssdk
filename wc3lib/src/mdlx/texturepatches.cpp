@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
-
 #include <boost/foreach.hpp>
 
 #include "texturepatches.hpp"
@@ -54,43 +52,47 @@ void TexturePatches::writeMdl(std::ostream &ostream) const throw (class Exceptio
 std::streamsize TexturePatches::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
+
 	if (bytes == 0)
 		return 0;
-	
+
 	long32 ntvrts = 0;
 	istream.read(reinterpret_cast<char*>(&ntvrts), sizeof(ntvrts));
-	
+	// According to Mago's specification it's followed by nothing!
+
+	/*
+
 	if (ntvrts <= 0)
 	{
 		char message[50];
 		sprintf(message, _("Texture Patches: 0 byte texture patches.\n"));
-		
+
 		throw Exception(message);
 	}
-	
+
 	bytes += istream.gcount();
 	std::cout << "Before " << ntvrts << " texture patches." << std::endl;
-	
+
 	for ( ; ntvrts > 0; --ntvrts)
 	{
 		class TexturePatch *texturePatch = new TexturePatch(this);
 		bytes += texturePatch->readMdx(istream);
 		this->m_texturePatches.push_back(texturePatch);
 	}
-	
+
 	std::cout << "After texture patches." << std::endl;
-	
+	*/
+
 	return bytes;
 }
 
 std::streamsize TexturePatches::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	long32 bytes = MdxBlock::writeMdx(ostream);
-	
+
 	if (bytes == 0)
 		return 0;
-	
+
 	return bytes;
 }
 

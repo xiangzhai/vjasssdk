@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,12 +41,14 @@ GeosetAnimation::~GeosetAnimation()
 	delete this->m_colors;
 }
 
-void GeosetAnimation::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize GeosetAnimation::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void GeosetAnimation::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize GeosetAnimation::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize GeosetAnimation::readMdx(std::istream &istream) throw (class Exception)
@@ -66,20 +68,20 @@ std::streamsize GeosetAnimation::readMdx(std::istream &istream) throw (class Exc
 	bytes += istream.gcount();
 	istream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
 	bytes += istream.gcount();
-	
+
 	std::cout << "Static alpha is " << this->m_staticAlpha << std::endl;
-	
+
 	if (this->m_staticAlpha == 1.0)
 	{
 		bytes += this->m_alphas->readMdx(istream);
 	}
-	
+
 	bytes += this->m_colors->readMdx(istream); /// @todo Seems to be optional, file Krieger.mdx doesn't have this block.
 	std::cout << "After colors" << std::endl;
-	
+
 	if (nbytesi != bytes)
 		throw Exception(boost::str(boost::format(_("Geoset animation: File byte count isn't equal to real byte count:\nFile byte count %1%.\nReal byte count %2%.\n")) % nbytesi % bytes));
-	
+
 	return bytes;
 }
 

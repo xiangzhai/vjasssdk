@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,10 +20,14 @@
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <boost/cast.hpp>
 
 #include "geosets.hpp"
 #include "geoset.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
+
+#include "../mdlx.hpp" /// TEST!!!!!!!!!!!
 
 namespace wc3lib
 {
@@ -41,39 +45,55 @@ Geosets::~Geosets()
 		delete geoset;
 }
 
-void Geosets::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Geosets::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Geosets::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Geosets::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Geosets::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
+	std::streamsize size = MdxBlock::readMdx(istream);
+
+	if (size == 0)
 		return 0;
-	
+
 	long32 nbytes = 0; //nbytes
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	
+	wc3lib::read(istream, nbytes, size);
+	std::cout << "Expecting " << nbytes << " geosets bytes." << std::endl;
+
 	if (nbytes <= 0)
 		throw Exception(_("Geosets: 0 byte geosets.\n"));
-	
-	bytes += istream.gcount();
-	
+
 	while (nbytes > 0)
 	{
+		std::cout << "READING GEOSET!" << std::endl;
 		class Geoset *geoset = new Geoset(this);
-		long32 readBytes = geoset->readMdx(istream); 	
-		nbytes -= readBytes;
-		bytes += readBytes;
+		std::streamsize readSize = geoset->readMdx(istream);
+		nbytes -= boost::numeric_cast<long32>(readSize);
+		size += readSize;
 		this->m_geosets.push_back(geoset);
+
+		std::cout << "GEOSET INFORMATION: " << std::endl
+		<< "Vertices: " << geoset->vertices()->vertices().size() << std::endl
+		<< "Normals: " << geoset->normals()->normals().size() << std::endl
+		<< "Primitive types: " << geoset->primitiveTypes()->primitiveTypes().size() << std::endl
+		<< "Primitive sizes: " << geoset->primitiveSizes()->primitiveSizes().size() << std::endl
+		<< "Primitive vertices: " << geoset->primitiveVertices()->primitiveVertices().size() << std::endl
+		<< "Group vertices: " << geoset->groupVertices()->groupVertices().size() << std::endl
+		<< "Matrix group counts: " << geoset->matrixGroupCounts()->matrixGroupCounts().size() << std::endl
+		<< "Matrices: " << geoset->matrices()->matrices().size() << std::endl
+		<< "Ganimations: " << geoset->ganimations().size() << std::endl
+		<< "Texture patches: " << geoset->texturePatches()->texturePatches().size() << std::endl
+		<< "Texture vertices: " << geoset->textureVertices()->textureVertices().size() << std::endl
+		;
 	}
-	
-	return bytes;
+
+	return size;
 }
 
 std::streamsize Geosets::writeMdx(std::ostream &ostream) const throw (class Exception)

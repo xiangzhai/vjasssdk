@@ -45,12 +45,14 @@ Light::~Light()
 	delete this->m_ambientIntensities;
 }
 
-void Light::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Light::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Light::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Light::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Light::readMdx(std::istream &istream) throw (class Exception)

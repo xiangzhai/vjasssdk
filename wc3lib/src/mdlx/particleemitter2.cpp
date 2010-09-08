@@ -23,9 +23,9 @@
 
 #include "particleemitter2.hpp"
 #include "particleemitter2s.hpp"
-#include "translation1s.hpp"
-#include "rotation0s.hpp"
-#include "scaling0s.hpp"
+#include "mdlxtranslations.hpp"
+#include "mdlxrotations.hpp"
+#include "mdlxscalings.hpp"
 #include "segmentcolor.hpp"
 #include "particleemitter2speeds.hpp"
 #include "particleemitter2latitudes.hpp"
@@ -33,6 +33,7 @@
 #include "particleemitter2visibilities.hpp"
 #include "lengths.hpp"
 #include "particleemitter2widths.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -40,19 +41,15 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2::ParticleEmitter2(class ParticleEmitter2s *particleEmitters) : m_particleEmitters(particleEmitters), m_translations(new Translation1s(particleEmitters->mdlx())), m_rotations(new Rotation0s(particleEmitters->mdlx())), m_scalings(new Scaling0s(particleEmitters->mdlx())), m_speeds(new ParticleEmitter2Speeds(this)), m_latitudes(new ParticleEmitter2Latitudes(this)), m_emissionRates(new EmissionRates(particleEmitters->mdlx())), m_visibilities(new ParticleEmitter2Visibilities(this)), m_numbers(new Lengths(this)), m_widths(new ParticleEmitter2Widths(this))
+ParticleEmitter2::ParticleEmitter2(class ParticleEmitter2s *particleEmitters) : Node(particleEmitters->mdlx()), m_particleEmitters(particleEmitters), m_speeds(new ParticleEmitter2Speeds(this)), m_latitudes(new ParticleEmitter2Latitudes(this)), m_emissionRates(new EmissionRates(particleEmitters->mdlx())), m_visibilities(new ParticleEmitter2Visibilities(this)), m_numbers(new Lengths(this)), m_widths(new ParticleEmitter2Widths(this))
 {
 }
 
 ParticleEmitter2::~ParticleEmitter2()
 {
-	delete this->m_translations;
-	delete this->m_rotations;
-	delete this->m_scalings;
-		
 	BOOST_FOREACH(class SegmentColor *segmentColor, this->m_segmentColors)
 		delete segmentColor;
-				
+
 	delete this->m_speeds;
 	delete this->m_latitudes;
 	delete this->m_emissionRates;
@@ -61,132 +58,86 @@ ParticleEmitter2::~ParticleEmitter2()
 	delete this->m_widths;
 }
 
-void ParticleEmitter2::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter2::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void ParticleEmitter2::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize ParticleEmitter2::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
 {
+	std::streamsize size = 0;
 	long32 nbytesi;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::streamsize bytes = istream.gcount();
+	wc3lib::read(istream, nbytesi, size);
 	long32 nbytesikg;
-	istream.read(reinterpret_cast<char*>(&nbytesikg), sizeof(nbytesikg));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(this->m_name), sizeof(this->m_name));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_objectId), sizeof(this->m_objectId));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_parent), sizeof(this->m_parent));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_flags), sizeof(this->m_flags));
-	bytes += istream.gcount();
-	bytes += this->m_translations->readMdx(istream);
-	/// @todo Missing rotations
-	bytes += this->m_rotations->readMdx(istream);
-	bytes += this->m_scalings->readMdx(istream);
-	istream.read(reinterpret_cast<char*>(&this->m_speed), sizeof(this->m_speed));
-	bytes += istream.gcount();	
-	istream.read(reinterpret_cast<char*>(&this->m_variation), sizeof(this->m_variation));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_latitidue), sizeof(this->m_latitidue));
-	bytes += istream.gcount();
-	
-	istream.read(reinterpret_cast<char*>(&this->m_gravity), sizeof(this->m_gravity));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_lifespan), sizeof(this->m_lifespan));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_emissionRate), sizeof(this->m_emissionRate));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_length), sizeof(this->m_length));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_width), sizeof(this->m_width));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_filterMode), sizeof(this->m_filterMode));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_rows), sizeof(this->m_rows));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_columns), sizeof(this->m_columns));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_flag2), sizeof(this->m_flag2));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailLength), sizeof(this->m_tailLength));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_time), sizeof(this->m_time));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailLength), sizeof(this->m_tailLength));
-	bytes += istream.gcount();
-	
+	wc3lib::read(istream, nbytesikg, size);
+	wc3lib::read(istream, this->m_name, size);
+	size += Node::readMdx(istream);
+	wc3lib::read(istream, this->m_speed, size);
+	wc3lib::read(istream, this->m_variation, size);
+	wc3lib::read(istream, this->m_latitidue, size);
+	wc3lib::read(istream, this->m_gravity, size);
+	wc3lib::read(istream, this->m_lifespan, size);
+	wc3lib::read(istream, this->m_emissionRate, size);
+	wc3lib::read(istream, this->m_length, size);
+	wc3lib::read(istream, this->m_width, size);
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_filterMode), size);
+	wc3lib::read(istream, this->m_rows, size);
+	wc3lib::read(istream, this->m_columns, size);
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_flags), size);
+	wc3lib::read(istream, this->m_tailLength, size);
+	wc3lib::read(istream, this->m_time, size);
+
 	for (std::size_t i = 0; i < 3; ++i) /// @todo Usually 3 segment colors?!
 	{
 		class SegmentColor *segmentColor = new SegmentColor(this);
-		bytes += segmentColor->readMdx(istream);
+		size += segmentColor->readMdx(istream);
 		this->m_segmentColors.push_back(segmentColor);
 	}
 
-	istream.read(reinterpret_cast<char*>(&this->m_alpha1), sizeof(this->m_alpha1));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_alpha2), sizeof(this->m_alpha2));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_alpha3), sizeof(this->m_alpha3));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_scalingX), sizeof(this->m_scalingX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_scalingY), sizeof(this->m_scalingY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_scalingZ), sizeof(this->m_scalingZ));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_lifeSpanUvAnim1), sizeof(this->m_lifeSpanUvAnim1));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_lifeSpanUvAnim2), sizeof(this->m_lifeSpanUvAnim2));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_decayUvAnim3), sizeof(this->m_decayUvAnim3));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_decayUvAnim1), sizeof(this->m_decayUvAnim1));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_decayUvAnim2), sizeof(this->m_decayUvAnim2));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_decayUvAnim3), sizeof(this->m_decayUvAnim3));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailUvAnim1), sizeof(this->m_tailUvAnim1));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailUvAnim2), sizeof(this->m_tailUvAnim2));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailUvAnim3), sizeof(this->m_tailUvAnim3));
-	bytes += istream.gcount();
-		
-	istream.read(reinterpret_cast<char*>(&this->m_tailDecayUvAnim1), sizeof(this->m_tailDecayUvAnim1));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailDecayUvAnim2), sizeof(this->m_tailDecayUvAnim2));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailDecayUvAnim3), sizeof(this->m_tailDecayUvAnim3));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_textureId), sizeof(this->m_textureId));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_squirt), sizeof(this->m_squirt));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_tailUvAnim3), sizeof(this->m_tailUvAnim3));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_priorityPlane), sizeof(this->m_priorityPlane));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_replaceableId), sizeof(this->m_replaceableId));
-	bytes += istream.gcount();
-	bytes += this->m_speeds->readMdx(istream);
-	bytes += this->m_latitudes->readMdx(istream);
-	bytes += this->m_emissionRates->readMdx(istream);
-	bytes += this->m_visibilities->readMdx(istream);
-	bytes += this->m_numbers->readMdx(istream);
-	bytes += this->m_widths->readMdx(istream);
-	
-	return bytes;
+	wc3lib::read(istream, this->m_alpha1, size);
+	wc3lib::read(istream, this->m_alpha2, size);
+	wc3lib::read(istream, this->m_alpha3, size);
+	wc3lib::read(istream, this->m_scalingX, size);
+	wc3lib::read(istream, this->m_scalingY, size);
+	wc3lib::read(istream, this->m_scalingZ, size);
+	wc3lib::read(istream, this->m_lifeSpanUvAnim1, size);
+	wc3lib::read(istream, this->m_lifeSpanUvAnim2, size);
+	wc3lib::read(istream, this->m_lifeSpanUvAnim3, size);
+	wc3lib::read(istream, this->m_decayUvAnim1, size);
+	wc3lib::read(istream, this->m_decayUvAnim2, size);
+	wc3lib::read(istream, this->m_decayUvAnim3, size);
+	wc3lib::read(istream, this->m_tailUvAnim1, size);
+	wc3lib::read(istream, this->m_tailUvAnim2, size);
+	wc3lib::read(istream, this->m_tailUvAnim3, size);
+	wc3lib::read(istream, this->m_tailDecayUvAnim1, size);
+	wc3lib::read(istream, this->m_tailDecayUvAnim2, size);
+	wc3lib::read(istream, this->m_tailDecayUvAnim3, size);
+	wc3lib::read(istream, this->m_textureId, size);
+	wc3lib::read(istream, this->m_squirt, size);
+	wc3lib::read(istream, this->m_priorityPlane, size);
+	wc3lib::read(istream, this->m_replaceableId, size);
+	size += this->m_speeds->readMdx(istream);
+	size += this->m_latitudes->readMdx(istream);
+	size += this->m_emissionRates->readMdx(istream);
+	size += this->m_visibilities->readMdx(istream);
+	size += this->m_numbers->readMdx(istream);
+	size += this->m_widths->readMdx(istream);
+
+	return size;
 }
 
 std::streamsize ParticleEmitter2::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
+	/*
+	std::streampos position = istream.tellg();
+	istream.seekg(2 * sizeof(long32), std::ios_base::dasdsadsd); /// @todo Skip!, nbytesi and nbytesikg
+	*/
+
 	return 0;
 }
 

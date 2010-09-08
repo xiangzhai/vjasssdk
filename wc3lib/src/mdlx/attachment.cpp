@@ -44,8 +44,9 @@ Attachment::~Attachment()
 	delete this->m_visibilities;
 }
 
-void Attachment::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Attachment::readMdl(std::istream &istream) throw (class Exception)
 {
+	/*
 	std::string line;
 	std::getline(istream, line);
 	boost::tokenizer<> tokenizer(line);
@@ -78,17 +79,20 @@ void Attachment::readMdl(std::istream &istream) throw (class Exception)
 	std::stringstream sstream;
 	sstream << (*iterator);
 	sstream >> this->m_objectId;
+	*/
+	return 0;
 }
 
-void Attachment::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Attachment::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	// Observe properties of an Object.
-	// Path only appears if its length is greater than 0. 
+	// Path only appears if its length is greater than 0.
 	// Maximum size is 256 characters (0x100 bytes)
 	// I am unsure as to how it is determined that AttachmentID be shown...
 	// NightElfCampaign3D and UndeadCampaign3D.mdl are the only two MDLs
 	// that utilize this attribute. Their only exclusive similarity is the
 	// underscore prefixing their name string. "_Blah"
+	/*
 	ostream
 	<< "Attachment " << this->name() << " {\n"
 	<< "\tObjectId " << this->objectId() << ",\n"
@@ -102,13 +106,13 @@ void Attachment::writeMdl(std::ostream &ostream) const throw (class Exception)
 
 	if (this->type() & Object::BillboardedLockY)
 		ostream << "\tBillboardedLockY,\n";
-	
+
 	if (this->type() & Object::BillboardedLockX)
 		ostream << "\tBillboardedLockX,\n";
-	
+
 	if (this->type() & Object::Billboarded)
 		ostream << "\tBillboarded,\n";
-	
+
 	if (this->type() & Object::CameraAnchored)
 		ostream << "\tCameraAnchored,\n";
 
@@ -129,6 +133,8 @@ void Attachment::writeMdl(std::ostream &ostream) const throw (class Exception)
 	//fstream << "\tScaling { " << this->scalings()->x() << ", " << this->scalings()->y() << ", " << this->scalings()->z() << " }\n";
 	//fstream << "\tVisibility " << this->visibilities()->value() << '\n';
 	ostream << "}\n";
+	*/
+	return 0;
 }
 
 
@@ -145,10 +151,10 @@ std::streamsize Attachment::readMdx(std::istream &istream) throw (class Exceptio
 	istream.read(reinterpret_cast<char*>(&this->m_attachmentId), sizeof(this->m_attachmentId));
 	bytes += istream.gcount();
 	bytes += this->m_visibilities->readMdx(istream);
-	
-	if (bytes != nbytesi)	
+
+	if (bytes != nbytesi)
 		throw Exception(boost::str(boost::format(_("Attachment: File byte count is not equal to real byte count.\nFile byte count: %1%.\nReal byte count: %2%.\n")) % nbytesi % bytes));
-	
+
 	return bytes;
 }
 

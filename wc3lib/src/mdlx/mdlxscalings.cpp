@@ -18,13 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/cast.hpp>
 #include <boost/foreach.hpp>
 
-#include "layers.hpp"
-#include "layer.hpp"
-#include "material.hpp"
-#include "../internationalisation.hpp"
+#include "mdlxscalings.hpp"
+#include "mdlxscaling.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -33,60 +30,77 @@ namespace wc3lib
 namespace mdlx
 {
 
-Layers::Layers(class Material *material) : MdxBlock("LAYS"), m_material(material)
+MdlxScalings::MdlxScalings(class Mdlx *mdlx) : MdxBlock("KGSC", true), m_mdlx(mdlx)
 {
 }
 
-Layers::~Layers()
+MdlxScalings::~MdlxScalings()
 {
+	BOOST_FOREACH(class MdlxScaling *scaling, this->m_scalings)
+		delete scaling;
 }
 
-std::streamsize Layers::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize Layers::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdlxScalings::readMdl(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
+std::streamsize MdlxScalings::writeMdl(std::ostream &ostream) const throw (class Exception)
+{
+	return 0;
+}
 
-std::streamsize Layers::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdlxScalings::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size = MdxBlock::readMdx(istream);
 
+	// is optional!
 	if (size == 0)
 		return 0;
 
-	long32 number = 0;
+	long32 number;
 	wc3lib::read(istream, number, size);
+	long32 lineType;
+	wc3lib::read(istream, lineType, size);
+	this->m_lineType = static_cast<enum LineType>(lineType);
+	wc3lib::read(istream, this->m_globalSequenceId, size);
 
 	for ( ; number > 0; --number)
 	{
-		class Layer *layer = new Layer(this);
-		std::streamsize readSize = layer->readMdx(istream);
-
-		if (readSize == 0)
-			throw Exception(_("Layers: 0 byte layer."));
-
-		size += readSize;
-		this->m_layers.push_back(layer);
+		class MdlxScaling *scaling = this->createNewMember();
+		size += scaling->readMdx(istream);
+		this->m_scalings.push_back(scaling);
 	}
 
 	return size;
 }
 
-std::streamsize Layers::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdlxScalings::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = MdxBlock::writeMdx(ostream);
-	long32 number = boost::numeric_cast<long32>(this->m_layers.size());
-	wc3lib::write(ostream, number, size);
 
-	BOOST_FOREACH(const class Layer *layer, this->m_layers)
-		size += layer->writeMdx(ostream);
+	// is optional!
+	if (size == 0)
+		return 0;
+
+	long32 number = this->m_scalings.size();
+	wc3lib::write(ostream, number, size);
+	wc3lib::write(ostream, static_cast<long32>(this->m_lineType), size);
+	wc3lib::write(ostream, this->m_globalSequenceId, size);
+
+	BOOST_FOREACH(const class MdlxScaling *scaling, this->m_scalings)
+		size += scaling->writeMdx(ostream);
 
 	return size;
+}
+
+MdlxScalings::MdlxScalings(class Mdlx *mdlx, byte blockName[4], bool optional) : MdxBlock(blockName, optional), m_mdlx(mdlx)
+{
+}
+
+class MdlxScaling* MdlxScalings::createNewMember()
+{
+	return new MdlxScaling(this);
 }
 
 }

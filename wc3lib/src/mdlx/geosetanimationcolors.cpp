@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "geosetanimationcolors.hpp"
+#include "geosetanimation.hpp"
+#include "geosetanimations.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +28,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimationColors::GeosetAnimationColors(class GeosetAnimation *geosetAnimation) : MdxScalings("KGAC"), m_geosetAnimation(geosetAnimation)
+GeosetAnimationColors::GeosetAnimationColors(class GeosetAnimation *geosetAnimation) : MdlxScalings(geosetAnimation->geosetAnimations()->mdlx(), "KGAC"), m_geosetAnimation(geosetAnimation)
 {
 }
 
@@ -34,11 +36,11 @@ GeosetAnimationColors::~GeosetAnimationColors()
 {
 }
 
-void GeosetAnimationColors::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize GeosetAnimationColors::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void GeosetAnimationColors::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize GeosetAnimationColors::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 

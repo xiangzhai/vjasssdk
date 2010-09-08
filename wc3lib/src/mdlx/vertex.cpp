@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "vertex.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -34,30 +35,30 @@ Vertex::~Vertex()
 {
 }
 
-void Vertex::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Vertex::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Vertex::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Vertex::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Vertex::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = 0;
-	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
-	bytes += istream.gcount();
-	
-	return bytes;
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_vertexData, size);
+
+	return size;
 }
 
 std::streamsize Vertex::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_vertexData, size);
+
+	return size;
 }
 
 }

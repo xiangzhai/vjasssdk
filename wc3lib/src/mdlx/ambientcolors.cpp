@@ -20,6 +20,8 @@
 
 #include "ambientcolors.hpp"
 #include "ambientcolor.hpp"
+#include "light.hpp"
+#include "lights.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-AmbientColors::AmbientColors(class Light *light) : MdxScalings("KLBC"), m_light(light)
+AmbientColors::AmbientColors(class Light *light) : MdlxScalings(light->lights()->mdlx(), "KLBC"), m_light(light)
 {
 }
 
@@ -35,15 +37,17 @@ AmbientColors::~AmbientColors()
 {
 }
 
-void AmbientColors::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize AmbientColors::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void AmbientColors::writeMdl(std::ostream &ostream) throw (class Exception)
+std::streamsize AmbientColors::writeMdl(std::ostream &ostream) throw (class Exception)
 {
+	return 0;
 }
 
-class MdxScaling* AmbientColors::createNewMember()
+class MdlxScaling* AmbientColors::createNewMember()
 {
 	return new AmbientColor(this);
 }

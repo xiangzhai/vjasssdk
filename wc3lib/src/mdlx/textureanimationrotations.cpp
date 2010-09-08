@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,8 @@
 
 #include "textureanimationrotations.hpp"
 #include "textureanimationrotation.hpp"
+#include "textureanimation.hpp"
+#include "textureanimations.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimationRotations::TextureAnimationRotations(class TextureAnimation *textureAnimation) : MdxScalings("KTAR", false), m_textureAnimation(textureAnimation)
+TextureAnimationRotations::TextureAnimationRotations(class TextureAnimation *textureAnimation) : MdlxScalings(textureAnimation->textureAnimations()->mdlx(), "KTAR"), m_textureAnimation(textureAnimation)
 {
 }
 
@@ -35,19 +37,21 @@ TextureAnimationRotations::~TextureAnimationRotations()
 {
 }
 
-void TextureAnimationRotations::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize TextureAnimationRotations::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void TextureAnimationRotations::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize TextureAnimationRotations::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-class MdxScaling* TextureAnimationRotations::createNewMember()
+class MdlxScaling* TextureAnimationRotations::createNewMember()
 {
 	return new TextureAnimationRotation(this);
 }
-	
+
 }
 
 }

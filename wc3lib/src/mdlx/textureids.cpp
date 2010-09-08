@@ -18,8 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/cast.hpp>
+#include <boost/foreach.hpp>
+
 #include "textureids.hpp"
 #include "textureid.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -35,44 +39,50 @@ TextureIds::~TextureIds()
 {
 }
 
-void TextureIds::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize TextureIds::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void TextureIds::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize TextureIds::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize TextureIds::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
+	std::streamsize size = MdxBlock::readMdx(istream);
+
+	if (size == 0)
 		return 0;
-	
-	long32 nunks;
-	istream.read(reinterpret_cast<char*>(&nunks), sizeof(nunks));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_lineType), sizeof(this->m_lineType));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_globalSequenceId), sizeof(this->m_globalSequenceId));
-	bytes += istream.gcount();
-	
-	for ( ; nunks > 0; --nunks)
+
+	long32 number;
+	wc3lib::read(istream, number, size);
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_lineType), size);
+	wc3lib::read(istream, this->m_globalSequenceId, size);
+
+	for ( ; number > 0; --number)
 	{
 		class TextureId *textureId = new TextureId(this);
-		bytes += textureId->readMdx(istream);
+		size += textureId->readMdx(istream);
 		this->m_textureIds.push_back(textureId);
 	}
-	
-	return bytes;
+
+	return size;
 }
 
 std::streamsize TextureIds::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	return bytes;
+	std::streamsize size = MdxBlock::writeMdx(ostream);
+	long32 number = boost::numeric_cast<long32>(this->m_textureIds.size());
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&number), size);
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_lineType), size);
+	wc3lib::write(ostream, this->m_globalSequenceId, size);
+
+	BOOST_FOREACH(const class TextureId *textureId, this->m_textureIds)
+		size += textureId->writeMdx(ostream);
+
+	return size;
 }
 
 }

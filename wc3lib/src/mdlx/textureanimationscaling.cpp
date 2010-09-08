@@ -25,8 +25,8 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
-TextureAnimationScaling::TextureAnimationScaling(class TextureAnimationScalings *scalings) : MdxScaling(scalings)
+
+TextureAnimationScaling::TextureAnimationScaling(class TextureAnimationScalings *scalings) : MdlxScaling(scalings)
 {
 }
 

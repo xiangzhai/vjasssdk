@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,14 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> /// @todo debug?
-
 #include <boost/format.hpp>
 
 #include "material.hpp"
 #include "materials.hpp"
 #include "layers.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -42,45 +41,50 @@ Material::~Material()
 	delete this->m_layers;
 }
 
-void Material::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Material::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Material::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Material::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Material::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 nbytesi = 0;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	long32 bytes = istream.gcount();
-	
-	if (nbytesi <= 0)
-		throw Exception(boost::format(_("Material: Small byte count.\nBytes %d.\n")) % nbytesi);
-	
-	istream.read(reinterpret_cast<char*>(&this->m_priorityPlane), sizeof(this->m_priorityPlane));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_renderMode), sizeof(this->m_renderMode));
-	bytes += istream.gcount();
-	
-	if (this->m_renderMode != 1 && this->m_renderMode != 16 && this->m_renderMode != 32)
-		std::cerr << boost::format(_("Material: Warning, unknown render mode.\nRender mode %1%.")) % this->m_renderMode << std::endl;
-	
-	bytes += this->m_layers->readMdx(istream);
-	
-	if (nbytesi != bytes)
-		std::cerr << boost::format(_("Material: Real byte count is not equal to file byte count.\nReal byte count %1%.\nFile byte count %2%.")) % bytes % nbytesi << std::endl;
-	
-	return bytes;
+	std::streamsize size = 0;
+	long32 includingSize; // including size itself!
+	wc3lib::read(istream, includingSize, size);
+
+	if (size <= 0)
+		throw Exception(boost::format(_("Material: Small byte count.\nBytes %d.\n")) % size);
+
+	wc3lib::read(istream, this->m_priorityPlane, size);
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_renderMode), size);
+	size += this->m_layers->readMdx(istream);
+
+	return size;
 }
 
 std::streamsize Material::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = 0;
-	
-	
-	return bytes;
+	std::streampos position = ostream.tellp();
+	ostream.seekp(sizeof(long32), std::ios_base::cur);
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_priorityPlane, size);
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_renderMode), size);
+	size += this->m_layers->writeMdx(ostream);
+
+	// jump back and write byte count
+	std::streampos currentPosition = ostream.tellp();
+	ostream.seekp(position);
+	long32 byteCount = size + sizeof(size); // including size itself!
+	wc3lib::write(ostream, byteCount, size);
+	// jump forward
+	ostream.seekp(currentPosition);
+
+	return size;
 }
 
 }

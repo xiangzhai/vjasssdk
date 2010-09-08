@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,7 @@
 
 #include "eventtrack.hpp"
 #include "eventtracks.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -35,22 +36,30 @@ EventTrack::~EventTrack()
 {
 }
 
-void EventTrack::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize EventTrack::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void EventTrack::writeMdl(std::ostream &ostream) const throw (Exception)
+std::streamsize EventTrack::writeMdl(std::ostream &ostream) const throw (Exception)
 {
+	return 0;
 }
 
 std::streamsize EventTrack::readMdx(std::istream &istream) throw (class Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_frames, size);
+
+	return size;
 }
 
 std::streamsize EventTrack::writeMdx(std::ostream &ostream) const throw (Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_frames, size);
+
+	return size;
 }
 
 }

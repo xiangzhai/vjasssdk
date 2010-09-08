@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,8 @@
 
 #include "textureanimationscalings.hpp"
 #include "textureanimationscaling.hpp"
+#include "textureanimation.hpp"
+#include "textureanimations.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimationScalings::TextureAnimationScalings(class TextureAnimation *textureAnimation) : MdxScalings("KTAS", false), m_textureAnimation(textureAnimation)
+TextureAnimationScalings::TextureAnimationScalings(class TextureAnimation *textureAnimation) : MdlxScalings(textureAnimation->textureAnimations()->mdlx(), "KTAS"), m_textureAnimation(textureAnimation)
 {
 }
 
@@ -35,15 +37,15 @@ TextureAnimationScalings::~TextureAnimationScalings()
 {
 }
 
-void TextureAnimationScalings::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize TextureAnimationScalings::readMdl(std::istream &istream) throw (class Exception)
 {
 }
 
-void TextureAnimationScalings::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize TextureAnimationScalings::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 }
 
-class MdxScaling* TextureAnimationScalings::createNewMember()
+class MdlxScaling* TextureAnimationScalings::createNewMember()
 {
 	return new TextureAnimationScaling(this);
 }

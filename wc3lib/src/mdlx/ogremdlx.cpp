@@ -37,19 +37,21 @@ OgreMdlx::OgreMdlx(const class Mdlx &mdlx) : m_mdlx(&mdlx), m_mesh(0)
 void OgreMdlx::refresh() throw (class Exception)
 {
 	// get new objects
-	std::list<const class Object*> objects = this->m_mdlx->objects();
+	std::list<const class Node*> nodes = this->m_mdlx->nodes();
 
-	BOOST_FOREACH(const class Object *object, objects)
+	BOOST_FOREACH(const class Node *node, nodes)
 	{
-		if (this->m_nodes.find(object) != this->m_nodes.end())
-			objects.remove(object);
+		if (this->m_nodes.find(node) != this->m_nodes.end())
+			nodes.remove(node);
 	}
 
 	// setup nodes of new objects (inheritance)
-	std::map<const class Object*, Ogre::Node*> newNodes(this->setupInheritance(objects));
+	/*
+	std::map<const class Node*, Ogre::Node*> newNodes(this->setupInheritance(nodes));
 
 	BOOST_FOREACH(NodePairType nodePair, newNodes)
 		this->m_nodes.insert(nodePair);
+	*/
 
 
 	// refresh model
@@ -94,11 +96,24 @@ void OgreMdlx::refresh() throw (class Exception)
 
 	BOOST_FOREACH(const class Geoset *geoset, this->m_mdlx->geosets()->geosets())
 	{
-		std::string name(boost::str(boost::format(_("Geoset - %1%")) % i));
-		Ogre::MeshPtr geosetMesh = meshManager->createManual(boost::str(boost::format(_("%1% - %2%")) % this->m_mdlx->model()->name() % name), "MDLX");
+		std::map<const class Geoset*, Ogre::MeshPtr>::iterator iterator = this->m_geosets.find(geoset);
+		Ogre::MeshPtr geosetMesh;
+		std::string name;
 
-		this->m_mesh->_setBoundingSphereRadius(geoset->boundsRadius());
-		this->m_mesh->_setBounds(Ogre::AxisAlignedBox(
+		if (iterator == this->m_geosets.end())
+		{
+			name = boost::str(boost::format(_("Geoset - %1%")) % i);
+			geosetMesh = meshManager->createManual(boost::str(boost::format(_("%1% - %2%")) % this->m_mdlx->model()->name() % name), "MDLX");
+			this->m_geosets[geoset] = geosetMesh;
+		}
+		else
+		{
+			geosetMesh = iterator->second;
+			name = geosetMesh->getName();
+		}
+
+		geosetMesh->_setBoundingSphereRadius(geoset->boundsRadius());
+		geosetMesh->_setBounds(Ogre::AxisAlignedBox(
 			geoset->minimumExtent().x,
 			geoset->minimumExtent().y,
 			geoset->minimumExtent().z,
@@ -110,22 +125,22 @@ void OgreMdlx::refresh() throw (class Exception)
 
 		//Ogre::SubMesh *subMesh = this->m_mesh->createSubMesh(name.c_str());
 		std::string verticesPoseName = boost::str(boost::format(_("%1% - Vertices Pose")) % name);
-		class Ogre::Pose *verticesPose = this->m_mesh->createPose(i + 1, verticesPoseName.c_str());
+		class Ogre::Pose *verticesPose = geosetMesh->createPose(i + 1, verticesPoseName.c_str());
 		std::size_t j = 0;
 
 		BOOST_FOREACH(const class Vertex *vertex, geoset->vertices()->vertices())
 		{
-			verticesPose->addVertex(j, Ogre::Vector3(vertex->x(), vertex->y(), vertex->z()));
+			verticesPose->addVertex(j, Ogre::Vector3(vertex->vertexData().x, vertex->vertexData().y, vertex->vertexData().z));
 			++j;
 		}
 
 		std::string normalsPoseName = boost::str(boost::format(_("%1% - Normals Pose")) % name);
-		class Ogre::Pose *normalsPose = this->m_mesh->createPose(i + 1, normalsPoseName.c_str());
+		class Ogre::Pose *normalsPose = geosetMesh->createPose(i + 1, normalsPoseName.c_str());
 		j = 0;
 
 		BOOST_FOREACH(const class Normal *normal, geoset->normals()->normals())
 		{
-			normalsPose->addVertex(j, Ogre::Vector3(normal->x(), normal->y(), normal->z()));
+			normalsPose->addVertex(j, Ogre::Vector3(normal->vertexData().x, normal->vertexData().y, normal->vertexData().z));
 			++j;
 		}
 
@@ -135,6 +150,7 @@ void OgreMdlx::refresh() throw (class Exception)
 		//subMesh->vertexData()
 		//subMesh->vertexData()void 	setMaterialName (const String &matName)
 
+		/*
 		std::list<const class Bone*> geosetBones;
 
 		// Bones
@@ -155,24 +171,26 @@ void OgreMdlx::refresh() throw (class Exception)
 
 				Ogre::Bone *ogreBone = this->m_bones[bone];
 
-				std::list<const class Object*> children = this->m_mdlx->children(*bone);
+				std::list<const class Node*> children = this->m_mdlx->children(*bone);
 
-				BOOST_FOREACH(const class Object *object, children)
+				BOOST_FOREACH(const class Node *node, children)
 				{
-					const class Bone *childBone = static_cast<const class Bone*>(object);
+					const class Bone *childBone = static_cast<const class Bone*>(node);
 					Ogre::Bone *ogreChildBone = geosetMesh->getSkeleton()->createBone(childBone->name());
 					ogreBone->addChild(ogreChildBone);
 				}
 			}
 		}
+		*/
 
 	}
 
 	// apply object inhertance modifiers with pivot points
 	/// @todo Consider pivot points and the fact that this function is called for refreshment not initial placement.
+	/*
 	BOOST_FOREACH(NodePairType nodePair, this->m_nodes)
 	{
-		const class Object *object = nodePair.first;
+		const class Node *node = nodePair.first;
 		Ogre::Node *node = nodePair.second;
 		long32 currentSequenceId = 0; /// @todo Set by animation?
 		long32 currentFrame = 0; /// @todo Set by animation?
@@ -199,28 +217,28 @@ void OgreMdlx::refresh() throw (class Exception)
 		{
 			if (object->inheritsTranslation() && (!object->translations()->hasGlobalSequence() || object->translations()->globalSequenceId() == currentSequenceId))
 			{
-				BOOST_FOREACH(const class Translation1 *translation, object->translations()->translations())
+				BOOST_FOREACH(const class MdlxTranslation *translation, object->translations()->mdlxTranslations())
 				{
 					if (translation->frame() == currentFrame)
 					{
 						switch (object->translations()->lineType())
 						{
-							case Translation1s::DontInterp:
-								node->translate(translation->x(), translation->y(), translation->z(), Ogre::Node::TS_PARENT);
+							case DontInterpolate:
+								node->translate(translation->vertexData().x, translation->vertexData().y, translation->vertexData().z, Ogre::Node::TS_PARENT);
 
 								break;
 
-							case Translation1s::Linear:
+							case Linear:
 								/// @todo FIXME
 
 								break;
 
-							case Translation1s::Hermite:
+							case Hermite:
 								/// @todo FIXME
 
 								break;
 
-							case Translation1s::Bezier:
+							case Bezier:
 								/// @todo FIXME
 
 								break;
@@ -231,28 +249,28 @@ void OgreMdlx::refresh() throw (class Exception)
 
 			if (object->inheritsRotation() && (!object->rotations()->hasGlobalSequence() || object->rotations()->globalSequenceId() == currentSequenceId))
 			{
-				BOOST_FOREACH(const class Rotation0 *rotation, object->rotations()->rotations())
+				BOOST_FOREACH(const class MdlxRotation *rotation, object->rotations()->mdlxRotations())
 				{
 					if (rotation->frame() == currentFrame)
 					{
 						switch (object->rotations()->lineType())
 						{
-							case Rotation0s::DontInterp:
-								node->rotate(Ogre::Vector3(rotation->a(), rotation->b(), rotation->c()), rotation->d(), Ogre::Node::TS_PARENT);
+							case DontInterpolate:
+								node->rotate(Ogre::Quaternion(rotation->quaternionData().a, rotation->quaternionData().b, rotation->quaternionData().c, rotation->quaternionData().d), Ogre::Node::TS_PARENT);
 
 								break;
 
-							case Translation1s::Linear:
+							case Linear:
 								/// @todo FIXME
 
 								break;
 
-							case Translation1s::Hermite:
+							case Hermite:
 								/// @todo FIXME
 
 								break;
 
-							case Translation1s::Bezier:
+							case Bezier:
 								/// @todo FIXME
 
 								break;
@@ -265,28 +283,28 @@ void OgreMdlx::refresh() throw (class Exception)
 			{
 				node->setInheritScale(true);
 
-				BOOST_FOREACH(const class Scaling0 *scaling, object->scalings()->scalings())
+				BOOST_FOREACH(const class MdlxScaling *scaling, object->scalings()->mdlxScalings())
 				{
 					if (scaling->frame() == currentFrame)
 					{
 						switch (object->scalings()->lineType())
 						{
-							case MdxScalings::DontInterp:
-								node->scale(Ogre::Vector3(scaling->x(), scaling->y(), scaling->z()));
+							case DontInterpolate:
+								node->scale(Ogre::Vector3(scaling->vertexData().x, scaling->vertexData().y, scaling->vertexData().z));
 
 								break;
 
-							case MdxScalings::Linear:
+							case Linear:
 								/// @todo FIXME
 
 								break;
 
-							case MdxScalings::Hermite:
+							case Hermite:
 								/// @todo FIXME
 
 								break;
 
-							case MdxScalings::Bezier:
+							case Bezier:
 								/// @todo FIXME
 
 								break;
@@ -296,30 +314,63 @@ void OgreMdlx::refresh() throw (class Exception)
 			}
 		}
 	}
+	*/
 }
 
-std::map<const class Object*, Ogre::Node*> OgreMdlx::setupInheritance(const std::list<const class Object*> &objects)
+Ogre::Node* OgreMdlx::createNode(const class Node &node)
 {
-	std::list<const class Object*> resultingObjects(objects);
-	std::map<const class Object*, Ogre::Node*> nodes;
+	Ogre::Node *result = 0;
 
-	BOOST_FOREACH(const class Object *object, resultingObjects)
+	if (node.type() & Node::Helper)
+		return 0;
+
+	if (node.type() & Node::Bone)
+		return 0;
+
+	if (node.type() & Node::Light)
+		return 0;
+
+	if (node.type() & Node::EventObject)
+		return 0;
+
+	if (node.type() & Node::Attachment)
+		return 0;
+
+	if (node.type() & Node::ParticleEmitter)
+		return 0;
+
+	if (node.type() & Node::CollisionShape)
+		return 0;
+
+	if (node.type() & Node::RibbonEmitter)
+		return 0;
+
+	return result;
+}
+
+std::map<const class Node*, Ogre::Node*> OgreMdlx::setupInheritance(const std::list<const class Node*> &initialNodes)
+{
+	std::list<const class Node*> resultingNodes(initialNodes);
+	std::map<const class Node*, Ogre::Node*> nodes;
+
+	/*
+	BOOST_FOREACH(const class Node *node, resultingNodes)
 	{
 		// is parent
-		if (!object->hasParent())
+		if (!node->hasParent())
 		{
-			nodes[object] = new Ogre::Node(object->name());
-			resultingObjects.remove(object);
+			nodes[node] = new Ogre::Node(node->name());
+			resultingNodes.remove(node);
 
 			continue;
 		}
 
 		bool contained = false;
-		const class Object *parent = this->m_mdlx->objectParent(object);
+		const class Node *parent = this->m_mdlx->objectNode(*node);
 
-		BOOST_FOREACH(const class Object *object, resultingObjects)
+		BOOST_FOREACH(const class Node *node, resultingNodes)
 		{
-			if (object == parent)
+			if (node == parent)
 			{
 				contained = true;
 
@@ -330,10 +381,11 @@ std::map<const class Object*, Ogre::Node*> OgreMdlx::setupInheritance(const std:
 		// create as child, parent is already in map!
 		if (!contained)
 		{
-			nodes[object] = nodes[parent]->createChild(object.name());
-			resultingObjects.remove(object);
+			nodes[node] = nodes[parent]->createChild(node->name());
+			resultingNodes.remove(node);
 		}
 	}
+	*/
 
 	return nodes;
 }

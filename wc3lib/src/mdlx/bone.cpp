@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include "bone.hpp"
 #include "bones.hpp"
 #include "../exception.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -40,36 +41,39 @@ Bone::~Bone()
 {
 }
 
-void Bone::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Bone::readMdl(std::istream &istream) throw (class Exception)
 {
 	std::string line;
 	std::getline(istream, line);
 	boost::tokenizer<> tokenizer(line);
 	boost::tokenizer<>::iterator iterator = tokenizer.begin();
 	/// @todo FIXME
+
+	return 0;
 }
 
-void Bone::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Bone::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	/// @todo FIXME
+	return 0;
 }
 
 std::streamsize Bone::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = Object::readMdx(istream);
-	istream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_geosetAnimationId), sizeof(this->m_geosetAnimationId));
-	bytes += istream.gcount();
-	
-	return bytes;
+	std::streamsize size = Object::readMdx(istream);
+	wc3lib::read(istream, this->m_geosetId, size);
+	wc3lib::read(istream, this->m_geosetAnimationId, size);
+
+	return size;
 }
 
 std::streamsize Bone::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = Object::writeMdx(ostream);
-	
-	return bytes;
+	std::streamsize size = Object::writeMdx(ostream);
+	wc3lib::write(ostream, this->m_geosetId, size);
+	wc3lib::write(ostream, this->m_geosetAnimationId, size);
+
+	return size;
 }
 
 }

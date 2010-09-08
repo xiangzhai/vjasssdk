@@ -20,10 +20,11 @@
 
 #include "particleemitter.hpp"
 #include "particleemitters.hpp"
-#include "translation1s.hpp"
-#include "rotation0s.hpp"
-#include "scaling0s.hpp"
+#include "mdlxtranslations.hpp"
+#include "mdlxrotations.hpp"
+#include "mdlxscalings.hpp"
 #include "particleemittervisibilities.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -31,69 +32,71 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter::ParticleEmitter(class ParticleEmitters *particleEmitters) : m_particleEmitters(particleEmitters), m_translations(new Translation1s(particleEmitters->mdlx())),  m_rotations(new Rotation0s(particleEmitters->mdlx())), m_scalings(new Scaling0s(particleEmitters->mdlx())), m_visibilities(new ParticleEmitterVisibilities(this))
+ParticleEmitter::ParticleEmitter(class ParticleEmitters *particleEmitters) : Node(particleEmitters->mdlx()), m_particleEmitters(particleEmitters), m_visibilities(new ParticleEmitterVisibilities(this))
 {
 }
 
 ParticleEmitter::~ParticleEmitter()
 {
-	delete this->m_translations;
-	delete this->m_rotations;
-	delete this->m_scalings;
 	delete this->m_visibilities;
 }
 
-void ParticleEmitter::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void ParticleEmitter::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize ParticleEmitter::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize ParticleEmitter::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::streamsize bytes = istream.gcount();
+	std::streamsize size = 0;
+	wc3lib::read(istream, nbytesi, size);
 	long32 nbytesikg; // inclusive bytecount including KGXXs
-	istream.read(reinterpret_cast<char*>(&nbytesikg), sizeof(nbytesikg));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(this->m_name), sizeof(this->m_name));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_objectId), sizeof(this->m_objectId));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_parent), sizeof(this->m_parent));
-	bytes += istream.gcount(); //(0xFFFFFFFF if none)
-	istream.read(reinterpret_cast<char*>(&this->m_flags), sizeof(this->m_flags));
-	bytes += istream.gcount();
-	bytes += this->m_translations->readMdx(istream); //(KGTR)
-	bytes += this->m_rotations->readMdx(istream);
-	bytes += this->m_scalings->readMdx(istream);
-	istream.read(reinterpret_cast<char*>(&this->m_emissionRate), sizeof(this->m_emissionRate));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_gravity), sizeof(this->m_gravity));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_longitude), sizeof(this->m_longitude));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_latitidue), sizeof(this->m_latitidue));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(this->m_modelPath), sizeof(this->m_modelPath));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_lifeSpan), sizeof(this->m_lifeSpan));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_initVelocity), sizeof(this->m_initVelocity));
-	bytes += istream.gcount();
-	bytes += this->m_visibilities->readMdx(istream);
-	
-	return bytes;
+	wc3lib::read(istream, nbytesikg, size);
+	size += Node::readMdx(istream);
+	wc3lib::read(istream, this->m_emissionRate, size);
+	wc3lib::read(istream, this->m_gravity, size);
+	wc3lib::read(istream, this->m_longitude, size);
+	wc3lib::read(istream, this->m_latitidue, size);
+	wc3lib::read(istream, this->m_modelPath, size);
+	wc3lib::read(istream, this->m_unknown0, size);
+	wc3lib::read(istream, this->m_lifeSpan, size);
+	wc3lib::read(istream, this->m_initVelocity, size);
+	size += this->m_visibilities->readMdx(istream);
+
+	return size;
 }
 
 std::streamsize ParticleEmitter::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streampos position = ostream.tellp();
+	ostream.seekp(2 * sizeof(long32), std::ios_base::cur);
+
+	std::streamsize size = Node::writeMdx(ostream);
+	wc3lib::write(ostream, this->m_emissionRate, size);
+	wc3lib::write(ostream, this->m_gravity, size);
+	wc3lib::write(ostream, this->m_longitude, size);
+	wc3lib::write(ostream, this->m_latitidue, size);
+	wc3lib::write(ostream, this->m_modelPath, size);
+	wc3lib::write(ostream, this->m_unknown0, size);
+	wc3lib::write(ostream, this->m_lifeSpan, size);
+	wc3lib::write(ostream, this->m_initVelocity, size);
+	size += this->m_visibilities->writeMdx(ostream);
+
+	long32 nbytesi = size + sizeof(long32) * 2;
+	long32 nbytesikg = size + sizeof(long32); /// @todo Same as nbytesi without its size? (inclusive bytecount including KGXXs)
+	std::streampos currentPosition = ostream.tellp();
+	ostream.seekp(position);
+	wc3lib::write(ostream, nbytesi, size);
+	wc3lib::write(ostream, nbytesikg, size);
+	ostream.seekp(currentPosition);
+
+	return size;
 }
 
 }

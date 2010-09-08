@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,8 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
-#include <iostream> //debug
 
 #include "vertices.hpp"
 #include "vertex.hpp"
@@ -37,12 +35,14 @@ Vertices::~Vertices()
 {
 }
 
-void Vertices::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Vertices::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Vertices::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Vertices::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 class GroupMdxBlockMember* Vertices::createNewMember()

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "primitivetype.hpp"
+#include "node.hpp"
+#include "mdlxtranslations.hpp"
+#include "mdlxrotations.hpp"
+#include "mdlxscalings.hpp"
 #include "../utilities.hpp"
+#include "mdlx.hpp"
 
 namespace wc3lib
 {
@@ -27,36 +31,65 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveType::PrimitiveType(class PrimitiveTypes *primitiveTypes) : GroupMdxBlockMember(primitiveTypes)
+Node::Node(class Mdlx *mdlx) : m_mdlx(mdlx), m_translations(new MdlxTranslations(mdlx)), m_rotations(new MdlxRotations(mdlx)), m_scalings(new MdlxScalings(mdlx))
 {
 }
 
-PrimitiveType::~PrimitiveType()
+Node::~Node()
 {
+	delete this->m_translations;
+	delete this->m_rotations;
+	delete this->m_scalings;
 }
 
-std::streamsize PrimitiveType::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize PrimitiveType::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Node::readMdl(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize PrimitiveType::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Node::writeMdl(std::ostream &ostream) const throw (class Exception)
+{
+	return 0;
+}
+
+std::streamsize Node::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_name, size);
+	wc3lib::read(istream, this->m_id, size);
+	// register!
+	this->m_mdlx->addNode(this->id(), this);
+	wc3lib::read(istream, this->m_parentId, size);
 	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_type), size);
+
+	if (!this->inheritsTranslation())
+		size += this->m_translations->readMdx(istream);
+
+	if (!this->inheritsRotation())
+		size += this->m_rotations->readMdx(istream);
+
+	if (!this->inheritsScaling())
+		size += this->m_scalings->readMdx(istream);
 
 	return size;
 }
 
-std::streamsize PrimitiveType::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Node::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_name, size);
+	wc3lib::write(ostream, this->m_id, size);
+	wc3lib::write(ostream, this->m_parentId, size);
 	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_type), size);
+
+	if (!this->inheritsTranslation())
+		size += this->m_translations->writeMdx(ostream);
+
+	if (!this->inheritsRotation())
+		size += this->m_rotations->writeMdx(ostream);
+
+	if (!this->inheritsScaling())
+		size += this->m_scalings->writeMdx(ostream);
 
 	return size;
 }

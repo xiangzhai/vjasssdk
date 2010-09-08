@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,7 @@
 
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
+#include <boost/cast.hpp>
 
 #include "geoset.hpp"
 #include "geosets.hpp"
@@ -35,6 +36,7 @@
 #include "texturepatches.hpp"
 #include "texturevertices.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -63,56 +65,54 @@ Geoset::~Geoset()
 	delete this->m_textureVertices;
 }
 
-void Geoset::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Geoset::readMdl(std::istream &istream) throw (class Exception)
 {
 	throw Exception(_("Geoset::readMdl: Not implemented yet."));
 }
 
-void Geoset::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Geoset::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	throw Exception(_("Geoset::writeMdl: Not implemented yet."));
 }
 
 std::streamsize Geoset::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	
-	if (nbytes <= 0)
-		throw Exception(boost::format(_("Geoset: To small byte count (%1%).")) % nbytes);
-	
-	std::streamsize bytes = istream.gcount();
-	bytes += this->m_vertices->readMdx(istream);
-	bytes += this->m_normals->readMdx(istream);
-	bytes += this->m_primitveTypes->readMdx(istream);
-	bytes += this->m_primitiveSizes->readMdx(istream);
-	bytes += this->m_primitiveVertices->readMdx(istream);
-	bytes += this->m_groupVertices->readMdx(istream);
-	bytes += this->m_matrixGroupCounts->readMdx(istream);
-	bytes += this->m_matrices->readMdx(istream);
-	istream.read(reinterpret_cast<char*>(&this->m_materialId), sizeof(this->m_materialId));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_selectionGroup), sizeof(this->m_selectionGroup));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_selectable), sizeof(this->m_selectable));
-	bytes += istream.gcount();
-	bytes += Bounds::readMdx(istream);
-	long32 nanim = 0;
-	istream.read(reinterpret_cast<char*>(&nanim), sizeof(nanim));
-	bytes += istream.gcount();
-	
-	for ( ; nanim > 0; --nanim)
+	std::streamsize size = 0;
+	long32 includingByteCount;
+	wc3lib::read(istream, includingByteCount, size);
+
+	if (includingByteCount - sizeof(includingByteCount) <= 0)
+		throw Exception(boost::format(_("Geoset: To small including byte count (%1%).")) % includingByteCount);
+
+	size += this->m_vertices->readMdx(istream);
+	size += this->m_normals->readMdx(istream);
+	size += this->m_primitveTypes->readMdx(istream);
+	size += this->m_primitiveSizes->readMdx(istream);
+	size += this->m_primitiveVertices->readMdx(istream);
+	size += this->m_groupVertices->readMdx(istream);
+	size += this->m_matrixGroupCounts->readMdx(istream);
+	size += this->m_matrices->readMdx(istream);
+	wc3lib::read(istream, this->m_materialId, size);
+	wc3lib::read(istream, this->m_selectionGroup, size);
+	wc3lib::read(istream, this->m_selectable, size);
+	size += Bounds::readMdx(istream);
+	long32 geosetAnimationNumber;
+	wc3lib::read(istream, geosetAnimationNumber, size);
+
+	for ( ; geosetAnimationNumber > 0; --geosetAnimationNumber)
 	{
 		class Ganimation *ganimation = new Ganimation(this);
-		bytes += ganimation->readMdx(istream);
+		size += ganimation->readMdx(istream);
 		this->m_ganimations.push_back(ganimation);
 	}
-	
-	bytes += this->m_texturePatches->readMdx(istream);
-	/// @todo Doesn't exist!!!!
-	bytes += this->m_textureVertices->readMdx(istream);
-	
-	return bytes;
+
+	size += this->m_texturePatches->readMdx(istream);
+	size += this->m_textureVertices->readMdx(istream);
+
+	if (includingByteCount != size)
+		throw Exception(boost::format(_("Geoset: Expected byte count %1% is not equal to read size %2%.")) % includingByteCount % size);
+
+	return size;
 }
 
 std::streamsize Geoset::writeMdx(std::ostream &ostream) const throw (class Exception)

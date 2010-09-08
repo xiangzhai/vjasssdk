@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "bounds.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -37,32 +38,8 @@ Bounds::~Bounds()
 {
 }
 
-std::streamsize Bounds::readMdx(std::istream &istream) throw (class Exception)
-{
-	istream.read(reinterpret_cast<char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	std::streamsize size = istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_minimumExtent), sizeof(this->m_minimumExtent));
-	size += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maximumExtent), sizeof(this->m_maximumExtent));
-	size += istream.gcount();
-
-	return size;
-}
-
-std::streamsize Bounds::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	ostream.write(reinterpret_cast<const char*>(&this->m_boundsRadius), sizeof(this->m_boundsRadius));
-	std::streamsize size = sizeof(this->m_boundsRadius);
-	ostream.write(reinterpret_cast<const char*>(&this->m_minimumExtent), sizeof(this->m_minimumExtent));
-	size += sizeof(this->m_minimumExtent);
-	ostream.write(reinterpret_cast<const char*>(&this->m_maximumExtent), sizeof(this->m_maximumExtent));
-	size += sizeof(this->m_maximumExtent);
-
-	return size;
-}
-
 // MinimumExtent, MaximumExtent and BoundsRadius only appear when their values are not 0.0.
-void Bounds::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Bounds::readMdl(std::istream &istream) throw (class Exception)
 {
 	/// @todo If values do not exist they're always 0.0.
 	//boost::tokenizer<> tokenizer(istream);
@@ -76,10 +53,12 @@ void Bounds::readMdl(std::istream &istream) throw (class Exception)
 	if ((*iterator)->boundsRadius() != 0.0)
 		ostream << "\t\tBoundsRadius " << (*iterator)->boundsRadius() << ",\n";
 	*/
+
+	return 0;
 }
 
 // MinimumExtent, MaximumExtent and BoundsRadius only appear when their values are not 0.0.
-void Bounds::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Bounds::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	if (this->minimumExtent().x != 0.0 || this->minimumExtent().y != 0.0 || this->minimumExtent().z != 0.0)
 		ostream
@@ -99,6 +78,28 @@ void Bounds::writeMdl(std::ostream &ostream) const throw (class Exception)
 
 	if (this->boundsRadius() != 0.0)
 		ostream << "BoundsRadius " << this->boundsRadius() << ", " << std::endl;
+
+	return 0;
+}
+
+std::streamsize Bounds::readMdx(std::istream &istream) throw (class Exception)
+{
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_boundsRadius, size);
+	wc3lib::read(istream, this->m_minimumExtent, size);
+	wc3lib::read(istream, this->m_maximumExtent, size);
+
+	return size;
+}
+
+std::streamsize Bounds::writeMdx(std::ostream &ostream) const throw (class Exception)
+{
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_boundsRadius, size);
+	wc3lib::write(ostream, this->m_minimumExtent, size);
+	wc3lib::write(ostream, this->m_maximumExtent, size);
+
+	return size;
 }
 
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,7 @@
 
 #include "texturevertex.hpp"
 #include "texturevertices.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -35,27 +36,32 @@ TextureVertex::~TextureVertex()
 {
 }
 
-void TextureVertex::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize TextureVertex::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void TextureVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize TextureVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize TextureVertex::readMdx(std::istream &istream) throw (class Exception)
 {
-	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	std::streamsize bytes = istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += istream.gcount();
-	
-	return bytes;
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_x, size);
+	wc3lib::read(istream, this->m_y, size);
+
+	return size;
 }
 
 std::streamsize TextureVertex::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_x, size);
+	wc3lib::write(ostream, this->m_y, size);
+
+	return size;
 }
 
 }

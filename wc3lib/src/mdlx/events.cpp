@@ -19,9 +19,11 @@
  ***************************************************************************/
 
 #include <boost/foreach.hpp>
+#include <boost/cast.hpp>
 
 #include "events.hpp"
 #include "event.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -39,50 +41,45 @@ Events::~Events()
 		delete event;
 }
 
-void Events::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Events::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Events::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Events::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Events::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
+	std::streamsize size = MdxBlock::readMdx(istream);
+
+	if (size == 0)
 		return 0;
-	
+
 	long32 nbytes;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	
-	/// @todo Zwerg.mdx has 32 bytes left, all events before seem to work fine.
+	wc3lib::read(istream, nbytes, size);
+
 	while (nbytes > 0)
 	{
 		class Event *event = new Event(this);
-		long32 readBytes = event->readMdx(istream);
-		nbytes -= readBytes;
-		bytes += readBytes;
+		std::streamsize readSize = event->readMdx(istream);
+		nbytes -= boost::numeric_cast<long32>(readSize);
+		size += readSize;
 		this->m_events.push_back(event);
-		std::cout << "Got " << readBytes << " bytes event " << nbytes << " bytes left." << std::endl;
-
-		/// @todo Workaround for file Zwerg.mdx
-		if (nbytes == 32)
-			return bytes;
 	}
-	
-	return bytes;
+
+	return size;
 }
 
 std::streamsize Events::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
+
 	if (bytes == 0)
 		return 0;
-	
+
 	return bytes;
 }
 

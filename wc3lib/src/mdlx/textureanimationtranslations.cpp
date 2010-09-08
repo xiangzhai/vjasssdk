@@ -20,6 +20,8 @@
 
 #include "textureanimationtranslations.hpp"
 #include "textureanimationtranslation.hpp"
+#include "textureanimation.hpp"
+#include "textureanimations.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimationTranslations::TextureAnimationTranslations(class TextureAnimation *textureAnimation) : MdxScalings("KTAT"), m_textureAnimation(textureAnimation)
+TextureAnimationTranslations::TextureAnimationTranslations(class TextureAnimation *textureAnimation) : MdlxScalings(textureAnimation->textureAnimations()->mdlx(), "KTAT"), m_textureAnimation(textureAnimation)
 {
 }
 
@@ -35,15 +37,17 @@ TextureAnimationTranslations::~TextureAnimationTranslations()
 {
 }
 
-void TextureAnimationTranslations::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize TextureAnimationTranslations::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void TextureAnimationTranslations::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize TextureAnimationTranslations::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-class MdxScaling* TextureAnimationTranslations::createNewMember()
+class MdlxScaling* TextureAnimationTranslations::createNewMember()
 {
 	return new TextureAnimationTranslation(this);
 }

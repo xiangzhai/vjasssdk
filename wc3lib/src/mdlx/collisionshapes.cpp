@@ -39,25 +39,27 @@ CollisionShapes::~CollisionShapes()
 		delete collisionShape;
 }
 
-void CollisionShapes::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize CollisionShapes::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void CollisionShapes::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize CollisionShapes::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize CollisionShapes::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
+
 	if (bytes == 0)
 		return 0;
-	
+
 	long32 nbytes;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	bytes += istream.gcount();
-	
+
 	while (nbytes > 0)
 	{
 		class CollisionShape *collisionShape = new CollisionShape(this);
@@ -66,17 +68,17 @@ std::streamsize CollisionShapes::readMdx(std::istream &istream) throw (class Exc
 		bytes += readBytes;
 		this->m_collisionShapes.push_back(collisionShape);
 	}
-	
+
 	return bytes;
 }
 
 std::streamsize CollisionShapes::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
+
 	if (bytes == 0)
 		return 0;
-	
+
 	return bytes;
 }
 

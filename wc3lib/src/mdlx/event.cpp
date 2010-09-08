@@ -21,6 +21,7 @@
 #include "event.hpp"
 #include "events.hpp"
 #include "eventtracks.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -37,38 +38,30 @@ Event::~Event()
 	delete this->m_tracks;
 }
 
-void Event::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Event::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Event::writeMdl(std::ostream &ostream) const throw (Exception)
+std::streamsize Event::writeMdl(std::ostream &ostream) const throw (Exception)
 {
+	return 0;
 }
 
 std::streamsize Event::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = Object::readMdx(istream);
-	bytes += this->m_tracks->readMdx(istream);
-	long32 ntrks = 0; // usually (1)
-	istream.read(reinterpret_cast<char*>(&ntrks), sizeof(ntrks));
-	bytes += istream.gcount();
-	long32 tmpValue; //0xFFFFFFFF, 8 byte value
-	istream.read(reinterpret_cast<char*>(&tmpValue), sizeof(tmpValue));
-	
-	for ( ; ntrks > 0; --ntrks)
-	{
-		long32 frame;
-		istream.read(reinterpret_cast<char*>(&frame), sizeof(frame));
-		bytes += istream.gcount();
-		this->m_frames.push_back(frame);
-	}
-	
-	return bytes;
+	std::streamsize size = Object::readMdx(istream);
+	size += this->m_tracks->readMdx(istream);
+
+	return size;
 }
 
 std::streamsize Event::writeMdx(std::ostream &ostream) const throw (Exception)
 {
-	return 0;
+	std::streamsize size = Object::writeMdx(ostream);
+	size += this->m_tracks->writeMdx(ostream);
+
+	return size;
 }
 
 }

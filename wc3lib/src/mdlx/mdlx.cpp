@@ -728,21 +728,6 @@ std::size_t Mdlx::replaceTexturePaths(const ascii oldTexturePath[0x100], const a
 	return result;
 }
 
-const class PivotPoint* Mdlx::objectPivotPoint(const class Object &object) const
-{
-	long32 id = 0;
-
-	BOOST_FOREACH(const class PivotPoint *pivotPoint, this->m_pivotPoints->pivotPoints())
-	{
-		if (object.objectId() == id)
-			return pivotPoint;
-
-		++id;
-	}
-
-	return 0;
-}
-
 const class Geoset* Mdlx::boneGeoset(const class Bone &bone) const
 {
 	long32 id = 0;
@@ -758,56 +743,71 @@ const class Geoset* Mdlx::boneGeoset(const class Bone &bone) const
 	return 0;
 }
 
-const class Object* Mdlx::objectParent(const class Object &object) const
+const class PivotPoint* Mdlx::nodePivotPoint(const class Node &node) const
 {
-	BOOST_FOREACH(ObjectPairType objectPair, this->m_objects)
+	long32 id = 0;
+
+	BOOST_FOREACH(const class PivotPoint *pivotPoint, this->m_pivotPoints->pivotPoints())
 	{
-		if (objectPair.first == object.parent())
-			return objectPair.second;
+		if (node.id() == id)
+			return pivotPoint;
+
+		++id;
 	}
 
 	return 0;
 }
 
-std::list<const class Object*> Mdlx::objects() const
+const class Node* Mdlx::nodeParent(const class Node &node) const
 {
-	std::list<const class Object*> result;
+	BOOST_FOREACH(NodePairType nodePair, this->m_nodes)
+	{
+		if (nodePair.first == node.parentId())
+			return nodePair.second;
+	}
 
-	BOOST_FOREACH(ObjectPairType objectPair, this->m_objects)
-		result.push_back(objectPair.second);
+	return 0;
+}
+
+std::list<const class Node*> Mdlx::nodes() const
+{
+	std::list<const class Node*> result;
+
+	BOOST_FOREACH(NodePairType nodePair, this->m_nodes)
+		result.push_back(nodePair.second);
 
 	return result;
 }
 
-const class Object* Mdlx::object(long32 id) const
+const class Node* Mdlx::node(long32 id) const
 {
-	std::map<long32, class Object*>::const_iterator iterator = this->m_objects.find(id);
+	std::map<long32, class Node*>::const_iterator iterator = this->m_nodes.find(id);
 
-	if (iterator == this->m_objects.end())
+	if (iterator == this->m_nodes.end())
 		return 0;
 
 	return iterator->second;
 }
 
-std::list<const class Object*> Mdlx::children(const class Object &object) const
+std::list<const class Node*> Mdlx::children(const class Node &node) const
 {
-	std::list<const class Object*> result;
+	std::list<const class Node*> result;
 
-	BOOST_FOREACH(ObjectPairType objectPair, this->m_objects)
+	BOOST_FOREACH(NodePairType nodePair, this->m_nodes)
 	{
-		if (objectPair.second->parent() == object.objectId())
-			result.push_back(objectPair.second);
+		if (nodePair.second->parentId() == node.id())
+			result.push_back(nodePair.second);
 	}
 
 	return result;
 }
 
-void Mdlx::addObject(long32 id, class Object *object) throw (class Exception)
+void Mdlx::addNode(long32 id, class Node *node) throw (class Exception)
 {
-	if (this->m_objects.find(id) != this->m_objects.end() && this->m_objects[id] != object)
-		throw Exception(boost::format(_("Mdlx: Object id %1% is already being used by object \"%2%\".")) % id % this->m_objects[id]->name());
+	if (this->m_nodes.find(id) != this->m_nodes.end() && this->m_nodes[id] != node)
+		throw Exception(boost::format(_("Mdlx: Node id %1% is already being used by node \"%2%\" and can not be overwritten by node \"%3%\".")) % id % this->m_nodes[id]->name() % node->name());
 
-	this->m_objects[id] = object;
+	this->m_nodes[id] = node;
 }
 
 }

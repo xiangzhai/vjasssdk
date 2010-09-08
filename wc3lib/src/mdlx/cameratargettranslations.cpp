@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,8 @@
 
 #include "cameratargettranslations.hpp"
 #include "cameratargettranslation.hpp"
+#include "camera.hpp"
+#include "cameras.hpp"
 
 namespace wc3lib
 {
@@ -27,11 +29,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-CameraTargetTranslations::CameraTargetTranslations(class Camera *camera) : MdxScalings("KTTR"), m_camera(camera)
+CameraTargetTranslations::CameraTargetTranslations(class Camera *camera) : MdlxScalings(camera->cameras()->mdlx(), "KTTR"), m_camera(camera)
 {
 }
 
-class MdxScaling* CameraTargetTranslations::createNewMember()
+class MdlxScaling* CameraTargetTranslations::createNewMember()
 {
 	return new CameraTargetTranslation(this);
 }

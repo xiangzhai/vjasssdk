@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,17 +35,20 @@ Ganimation::~Ganimation()
 }
 
 /// @todo Implement.
-void Ganimation::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Ganimation::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Ganimation::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Ganimation::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream
 	<< "Anim {\n"
 	;
 	Bounds::writeMdl(ostream);
 	ostream << "}";
+
+	return 0;
 }
 
 std::streamsize Ganimation::readMdx(std::istream &istream) throw (class Exception)

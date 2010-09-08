@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,11 +35,12 @@ Sequence::~Sequence()
 {
 }
 
-void Sequence::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Sequence::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Sequence::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Sequence::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream
 	<< "Anim " << this->name() << " {\n"
@@ -58,6 +59,8 @@ void Sequence::writeMdl(std::ostream &ostream) const throw (class Exception)
 	Bounds::writeMdl(ostream);
 
 	ostream << "}\n";
+
+	return 0;
 }
 
 std::streamsize Sequence::readMdx(std::istream &istream) throw (class Exception)
@@ -78,7 +81,7 @@ std::streamsize Sequence::readMdx(std::istream &istream) throw (class Exception)
 	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
 	bytes += istream.gcount();
 	bytes += Bounds::readMdx(istream);
-	
+
 	return bytes;
 }
 
@@ -100,7 +103,7 @@ std::streamsize Sequence::writeMdx(std::ostream &ostream) const throw (class Exc
 	ostream.write(reinterpret_cast<const char*>(&this->m_unknown0), sizeof(this->m_unknown0));
 	bytes += sizeof(this->m_unknown0);
 	bytes += Bounds::writeMdx(ostream);
-	
+
 	return bytes;
 }
 

@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream>
-
 #include <boost/format.hpp>
 
 #include "model.hpp"
@@ -49,11 +47,12 @@ Model::~Model()
 {
 }
 
-void Model::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Model::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Model::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Model::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	ostream << "Model \"" << this->m_name << "\" {\n";
 
@@ -89,10 +88,12 @@ void Model::writeMdl(std::ostream &ostream) const throw (class Exception)
 	if (this->mdlx()->events()->events().size() > 0)
 		ostream << "\tNumEvents " << this->mdlx()->events()->events().size() << ",\n";
 */
-	
+
 	Bounds::writeMdl(ostream);
 
 	ostream << "}\n";
+
+	return 0;
 }
 
 std::streamsize Model::readMdx(std::istream &istream) throw (class Exception)
@@ -100,10 +101,10 @@ std::streamsize Model::readMdx(std::istream &istream) throw (class Exception)
 	std::streamsize bytes = MdxBlock::readMdx(istream);
 	long32 nbytes = 0;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	
+
 	if (nbytes == 0)
 		throw Exception(_("Model: 0 byte model."));
-	
+
 	bytes += istream.gcount();
 	istream.read(this->m_name, sizeof(this->m_name));
 	bytes += istream.gcount();
@@ -112,11 +113,11 @@ std::streamsize Model::readMdx(std::istream &istream) throw (class Exception)
 	bytes += Bounds::readMdx(istream);
 	istream.read(reinterpret_cast<char*>(&this->m_blendTime), sizeof(this->m_blendTime));
 	bytes += istream.gcount();
-	
+
 	/// @todo Exception required?
-	if (bytes - MdxBlock::blockNameSize - sizeof(nbytes) != nbytes) //- identifier length
-		std::cerr << boost::format(_("Model: Warning - Read byte count doesn't fit with real byte count.\nRead byte count: %1%.\nReal byte count: %2%.")) % nbytes % bytes << std::endl;
-	
+	//if (bytes - MdxBlock::blockNameSize - sizeof(nbytes) != nbytes) //- identifier length
+		//std::cerr << boost::format(_("Model: Warning - Read byte count doesn't fit with real byte count.\nRead byte count: %1%.\nReal byte count: %2%.")) % nbytes % bytes << std::endl;
+
 	return bytes;
 }
 
@@ -133,7 +134,7 @@ std::streamsize Model::writeMdx(std::ostream &ostream) const throw (class Except
 	bytes += Bounds::writeMdx(ostream);
 	ostream.write(reinterpret_cast<const char*>(&this->m_blendTime), sizeof(this->m_blendTime));
 	bytes += sizeof(this->m_blendTime);
-	
+
 	return bytes;
 }
 

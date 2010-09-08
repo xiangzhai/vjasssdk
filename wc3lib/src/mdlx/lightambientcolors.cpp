@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,8 @@
 
 #include "lightambientcolors.hpp"
 #include "lightambientcolor.hpp"
+#include "light.hpp"
+#include "lights.hpp"
 
 namespace wc3lib
 {
@@ -27,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-LightAmbientColors::LightAmbientColors(class Light *light) : MdxScalings("KLAC"), m_light(light)
+LightAmbientColors::LightAmbientColors(class Light *light) : MdlxScalings(light->lights()->mdlx(), "KLAC"), m_light(light)
 {
 }
 
@@ -35,15 +37,17 @@ LightAmbientColors::~LightAmbientColors()
 {
 }
 
-void LightAmbientColors::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize LightAmbientColors::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void LightAmbientColors::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize LightAmbientColors::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-class MdxScaling* LightAmbientColors::createNewMember()
+class MdlxScaling* LightAmbientColors::createNewMember()
 {
 	return new LightAmbientColor(this);
 }

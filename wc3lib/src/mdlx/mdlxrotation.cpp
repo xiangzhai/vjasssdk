@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "collisionshape.hpp"
-#include "collisionshapes.hpp"
+#include "mdlxrotation.hpp"
+#include "mdlxrotations.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -28,50 +28,44 @@ namespace wc3lib
 namespace mdlx
 {
 
-CollisionShape::CollisionShape(class CollisionShapes *collisionShapes) : Object(collisionShapes->mdlx()), m_collisionShapes(collisionShapes)
+MdlxRotation::MdlxRotation(class MdlxRotations *rotations) : m_rotations(rotations)
 {
 }
 
-CollisionShape::~CollisionShape()
+MdlxRotation::~MdlxRotation()
 {
 }
 
-std::streamsize CollisionShape::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize MdlxRotation::readMdl(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize CollisionShape::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdlxRotation::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize CollisionShape::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdlxRotation::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize size = Object::readMdx(istream);
-	long32 shape;
-	wc3lib::read(istream, shape, size);
-	this->m_shape = static_cast<enum Shape>(shape);
-	wc3lib::read(istream, this->m_vertexData, size);
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_frame, size);
+	wc3lib::read(istream, this->m_quaternionData, size);
 
-	if (this->m_shape == Box)
-		wc3lib::read(istream, this->m_vertexData2, size);
-	else
-		wc3lib::read(istream, this->m_boundsRadius, size);
+	if (this->m_rotations->lineType() > Linear)
+		wc3lib::read(istream, this->m_interpolationData, size);
 
 	return size;
 }
 
-std::streamsize CollisionShape::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdlxRotation::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize size = Object::writeMdx(ostream);
-	wc3lib::write(ostream, static_cast<long32>(this->m_shape), size);
-	wc3lib::write(ostream, this->m_vertexData, size);
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_frame, size);
+	wc3lib::write(ostream, this->m_quaternionData, size);
 
-	if (this->m_shape == Box)
-		wc3lib::write(ostream, this->m_vertexData2, size);
-	else
-		wc3lib::write(ostream, this->m_boundsRadius, size);
+	if (this->m_rotations->lineType() > Linear)
+		wc3lib::write(ostream, this->m_interpolationData, size);
 
 	return size;
 }

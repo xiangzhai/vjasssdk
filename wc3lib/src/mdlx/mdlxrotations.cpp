@@ -20,9 +20,9 @@
 
 #include <boost/foreach.hpp>
 
-#include "texturevertices.hpp"
-#include "texturevertex.hpp"
-#include "../internationalisation.hpp"
+#include "mdlxrotations.hpp"
+#include "mdlxrotation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -30,59 +30,65 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureVertices::TextureVertices(class Geoset *geoset) : MdxBlock("UVBS"), m_geoset(geoset)
+MdlxRotations::MdlxRotations(class Mdlx *mdlx) : MdxBlock("KGRT"), m_mdlx(mdlx)
 {
 }
 
-TextureVertices::~TextureVertices()
+MdlxRotations::~MdlxRotations()
 {
-	BOOST_FOREACH(class TextureVertex *textureVertex, this->m_textureVertices)
-		delete textureVertex;
+	BOOST_FOREACH(class MdlxRotation *rotation, this->m_rotations)
+		delete rotation;
 }
 
-std::streamsize TextureVertices::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize MdlxRotations::readMdl(std::istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize TextureVertices::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdlxRotations::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize TextureVertices::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdlxRotations::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
+	std::streamsize size = MdxBlock::readMdx(istream);
 
-	if (bytes == 0)
+	// is optional!
+	if (size == 0)
 		return 0;
 
-	long32 nvrts = 0;
-	istream.read(reinterpret_cast<char*>(&nvrts), sizeof(nvrts));
+	long32 number;
+	wc3lib::read(istream, number, size);
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_lineType), size);
+	wc3lib::read(istream, this->m_globalSequenceId, size);
 
-	if (nvrts <= 0)
-		throw Exception(_("Texture Vertices: 0 byte texture vertices."));
-
-	bytes += istream.gcount();
-
-	for ( ; nvrts > 0; --nvrts)
+	for ( ; number > 0; --number)
 	{
-		class TextureVertex *textureVertex = new TextureVertex(this);
-		bytes += textureVertex->readMdx(istream);
-		this->m_textureVertices.push_back(textureVertex);
+		class MdlxRotation *rotation = new MdlxRotation(this);
+		size += rotation->readMdx(istream);
+		this->m_rotations.push_back(rotation);
 	}
 
-	return bytes;
+	return size;
 }
 
-std::streamsize TextureVertices::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdlxRotations::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize size = MdxBlock::writeMdx(ostream);
 
-	if (bytes == 0)
+	// is optional!
+	if (size == 0)
 		return 0;
 
-	return bytes;
+	wc3lib::write(ostream, static_cast<long32>(this->m_rotations.size()), size);
+	wc3lib::write(ostream, static_cast<long32>(this->m_lineType), size);
+	wc3lib::write(ostream, this->m_globalSequenceId, size);
+
+	BOOST_FOREACH(const class MdlxRotation *rotation, this->m_rotations)
+		size += rotation->writeMdx(ostream);
+
+	return size;
 }
 
 }

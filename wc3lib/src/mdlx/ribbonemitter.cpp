@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,9 +20,9 @@
 
 #include "ribbonemitter.hpp"
 #include "ribbonemitters.hpp"
-#include "translation1s.hpp"
-#include "rotation0s.hpp"
-#include "scaling0s.hpp"
+#include "mdlxtranslations.hpp"
+#include "mdlxrotations.hpp"
+#include "mdlxscalings.hpp"
 #include "ribbonemittervisibilities.hpp"
 #include "ribbonemitterheightsabove.hpp"
 #include "ribbonemitterheightsbelow.hpp"
@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : m_ribbonEmitters(ribbonEmitters), m_translations(new Translation1s(ribbonEmitters->mdlx())), m_rotations(new Rotation0s(ribbonEmitters->mdlx())), m_scalings(new Scaling0s(ribbonEmitters->mdlx())), m_visibilities(new RibbonEmitterVisibilities(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
+RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : m_ribbonEmitters(ribbonEmitters), m_translations(new MdlxTranslations(ribbonEmitters->mdlx())), m_rotations(new MdlxRotations(ribbonEmitters->mdlx())), m_scalings(new MdlxScalings(ribbonEmitters->mdlx())), m_visibilities(new RibbonEmitterVisibilities(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
 {
 }
 
@@ -105,7 +105,7 @@ std::streamsize RibbonEmitter::readMdx(std::istream &istream) throw (class Excep
 	bytes += this->m_visibilities->readMdx(istream);
 	bytes += this->m_heightsAbove->readMdx(istream);
 	bytes += this->m_heightsBelow->readMdx(istream);
-	
+
 	return bytes;
 }
 

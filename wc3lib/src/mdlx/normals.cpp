@@ -34,12 +34,14 @@ Normals::~Normals()
 {
 }
 
-void Normals::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Normals::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Normals::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Normals::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 class GroupMdxBlockMember* Normals::createNewMember()

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,12 +35,14 @@ PrimitiveTypes::~PrimitiveTypes()
 {
 }
 
-void PrimitiveTypes::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveTypes::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void PrimitiveTypes::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize PrimitiveTypes::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 class GroupMdxBlockMember* PrimitiveTypes::createNewMember()

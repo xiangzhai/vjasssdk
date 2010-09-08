@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,9 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "collisionshape.hpp"
-#include "collisionshapes.hpp"
-#include "../utilities.hpp"
+#include "mdlxtranslation.hpp"
 
 namespace wc3lib
 {
@@ -28,52 +26,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-CollisionShape::CollisionShape(class CollisionShapes *collisionShapes) : Object(collisionShapes->mdlx()), m_collisionShapes(collisionShapes)
+MdlxTranslation::MdlxTranslation(class MdlxTranslations *translations) : MdlxScaling(translations)
 {
-}
-
-CollisionShape::~CollisionShape()
-{
-}
-
-std::streamsize CollisionShape::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize CollisionShape::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize CollisionShape::readMdx(std::istream &istream) throw (class Exception)
-{
-	std::streamsize size = Object::readMdx(istream);
-	long32 shape;
-	wc3lib::read(istream, shape, size);
-	this->m_shape = static_cast<enum Shape>(shape);
-	wc3lib::read(istream, this->m_vertexData, size);
-
-	if (this->m_shape == Box)
-		wc3lib::read(istream, this->m_vertexData2, size);
-	else
-		wc3lib::read(istream, this->m_boundsRadius, size);
-
-	return size;
-}
-
-std::streamsize CollisionShape::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	std::streamsize size = Object::writeMdx(ostream);
-	wc3lib::write(ostream, static_cast<long32>(this->m_shape), size);
-	wc3lib::write(ostream, this->m_vertexData, size);
-
-	if (this->m_shape == Box)
-		wc3lib::write(ostream, this->m_vertexData2, size);
-	else
-		wc3lib::write(ostream, this->m_boundsRadius, size);
-
-	return size;
 }
 
 }

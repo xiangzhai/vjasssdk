@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,15 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream>
-
 #include <boost/format.hpp>
 
 #include "layer.hpp"
 #include "layers.hpp"
 #include "materialalphas.hpp"
 #include "textureids.hpp"
-#include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -44,60 +42,54 @@ Layer::~Layer()
 	delete this->m_textureIds;
 }
 
-void Layer::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Layer::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Layer::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Layer::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Layer::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	long32 nbytesi = 0;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::cout << "nbytesi is " << nbytesi << std::endl;
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_filterMode), sizeof(this->m_filterMode)); //(0:none;1:transparent;2:blend;3:additive;4:addalpha;5:modulate)
-	bytes += istream.gcount();
-	std::cout << "filterMode is " << this->m_filterMode << std::endl;
-	
-	if (this->m_filterMode < 0 || this->m_filterMode > 5)
-		std::cerr << boost::format(_("Layer: Warning, unknown filter mode.\nFilter mode %1%.")) % this->m_filterMode << std::endl;
-	
-	istream.read(reinterpret_cast<char*>(&this->m_shading), sizeof(this->m_shading)); //+1:unshaded;+2:SphereEnvMap;+16:twosided;
-	bytes += istream.gcount();
-	
-	if (this->m_shading != 1 && this->m_shading != 2 && this->m_shading != 16)
-		std::cerr << boost::format(_("Layer: Warning, unknown shading.\nShading %1%.")) % this->m_shading << std::endl;
-	
-	istream.read(reinterpret_cast<char*>(&this->m_textureId), sizeof(this->m_textureId)); //  +32:unfogged;+64:NoDepthTest;+128:NoDepthSet)
-	bytes += istream.gcount();
-	
-	if (this->m_textureId != 32 && this->m_textureId != 64 && this->m_textureId != 128)
-		std::cerr << boost::format(_("Layer: Warning, unknown texture id.\nTexture id %1%.")) % this->m_textureId << std::endl;
-	
-	istream.read(reinterpret_cast<char*>(&this->m_tvertexAnimationId), sizeof(this->m_tvertexAnimationId)); // 0xFFFFFFFF if none
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_coordinatesId), sizeof(this->m_coordinatesId));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_alpha), sizeof(this->m_alpha));
-	bytes += istream.gcount();
-	bytes += this->m_alphas->readMdx(istream);
-	std::cout << "Before texture ids with " << bytes << " bytes." << std::endl;
-	bytes += this->m_textureIds->readMdx(istream);
-	std::cout << "After texture ids with " << bytes << " bytes." << std::endl;
-	
-	if (nbytesi != bytes)
-		std::cerr << boost::format(_("Layer: Real byte count is not equal to file byte count.\nReal byte count %1%.\nFile byte count %2%.")) % bytes % nbytesi << std::endl;
-	
-	return bytes;
+	std::streamsize size = 0;
+	long32 nbytesi;
+	wc3lib::read(istream, nbytesi, size);
+	wc3lib::read(istream, *reinterpret_cast<enum FilterMode*>(&this->m_filterMode), size);
+	wc3lib::read(istream, *reinterpret_cast<enum Shading*>(&this->m_shading), size);
+	wc3lib::read(istream, this->m_textureId, size);
+	wc3lib::read(istream, this->m_tvertexAnimationId, size);
+	wc3lib::read(istream, this->m_coordinatesId, size);
+	wc3lib::read(istream, this->m_alpha, size);
+	size += this->m_alphas->readMdx(istream);
+	size += this->m_textureIds->readMdx(istream);
+
+	return size;
 }
 
 std::streamsize Layer::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streampos position = ostream.tellp();
+	ostream.seekp(sizeof(long32), std::ios_base::cur);
+	std::streamsize size = 0;
+	wc3lib::write(ostream, *reinterpret_cast<const enum FilterMode*>(&this->m_filterMode), size);
+	wc3lib::write(ostream, *reinterpret_cast<const enum Shading*>(&this->m_shading), size);
+	wc3lib::write(ostream, this->m_textureId, size);
+	wc3lib::write(ostream, this->m_tvertexAnimationId, size);
+	wc3lib::write(ostream, this->m_coordinatesId, size);
+	wc3lib::write(ostream, this->m_alpha, size);
+	size += this->m_alphas->writeMdx(ostream);
+	size += this->m_textureIds->writeMdx(ostream);
+
+	// jump back and write including byte count
+	std::streampos currentPosition = ostream.tellp();
+	ostream.seekp(position);
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&size), size);
+	ostream.seekp(currentPosition);
+
+	return size;
 }
 
 }

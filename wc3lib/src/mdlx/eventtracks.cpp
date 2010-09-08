@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+#include <boost/cast.hpp>
+
 #include "eventtracks.hpp"
 #include "eventtrack.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -33,38 +37,48 @@ EventTracks::EventTracks(class Event *event) : MdxBlock("KEVT"), m_event(event)
 
 EventTracks::~EventTracks()
 {
-	for (std::list<class EventTrack*>::iterator iterator = this->m_tracks.begin(); iterator != this->m_tracks.end(); ++iterator)
-		delete *iterator;
+	BOOST_FOREACH(class EventTrack *track, this->m_tracks)
+		delete track;
 }
 
-void EventTracks::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize EventTracks::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void EventTracks::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize EventTracks::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize EventTracks::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	/// @todo Unspecified
-	
-	return bytes;
+	std::streamsize size = MdxBlock::readMdx(istream);
+	long32 number;
+	wc3lib::read(istream, number, size);
+	wc3lib::read(istream, this->m_globalSequenceId, size);
+
+	for ( ; number > 0; --number)
+	{
+		class EventTrack *track = new EventTrack(this);
+		size += track->readMdx(istream);
+		this->m_tracks.push_back(track);
+	}
+
+	return size;
 }
 
 std::streamsize EventTracks::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	return 0;
+	std::streamsize size = MdxBlock::writeMdx(ostream);
+	long32 number = boost::numeric_cast<long32>(this->m_tracks.size());
+	wc3lib::write(ostream, number, size);
+	wc3lib::write(ostream, this->m_globalSequenceId, size);
+
+	BOOST_FOREACH(const class EventTrack *track, this->m_tracks)
+		size += track->writeMdx(ostream);
+
+	return size;
 }
 
 }

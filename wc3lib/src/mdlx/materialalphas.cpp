@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,12 +35,14 @@ MaterialAlphas::~MaterialAlphas()
 {
 }
 
-void MaterialAlphas::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize MaterialAlphas::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void MaterialAlphas::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize MaterialAlphas::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 }

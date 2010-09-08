@@ -35,35 +35,36 @@ Helpers::~Helpers()
 {
 }
 
-void Helpers::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Helpers::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Helpers::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Helpers::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Helpers::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
+
 	if (bytes == 0)
 		return 0;
-	
+
 	long32 nbytes = 0;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	bytes += istream.gcount();
-	
+
 	while (nbytes > 0)
 	{
 		class Helper *helper = new Helper(this);
 		long32 readBytes = helper->readMdx(istream);
-		std::cout << "Got " << readBytes << " bytes helper." << std::endl;
 		bytes += readBytes;
 		nbytes -= readBytes;
 		this->m_helpers.push_back(helper);
 	}
-	
+
 	return bytes;
 }
 
@@ -71,9 +72,9 @@ std::streamsize Helpers::writeMdx(std::ostream &ostream) const throw (class Exce
 {
 	if (!this->exists())
 		return 0;
-	
+
 	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
+
 	return bytes;
 }
 

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,7 @@
 
 #include "normal.hpp"
 #include "normals.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -35,29 +36,30 @@ Normal::~Normal()
 {
 }
 
-void Normal::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Normal::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Normal::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Normal::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize Normal::readMdx(std::istream &istream) throw (class Exception)
 {
-	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	std::streamsize bytes = istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
-	bytes += istream.gcount();
-	
-	return bytes;
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_vertexData, size);
+
+	return size;
 }
 
 std::streamsize Normal::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_vertexData, size);
+
+	return size;
 }
 
 }

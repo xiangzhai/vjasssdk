@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "ambientcolor.hpp"
+#include "ambientcolors.hpp"
 
 namespace wc3lib
 {
@@ -26,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-AmbientColor::AmbientColor(class AmbientColors *colors) : MdxScaling(colors)
+AmbientColor::AmbientColor(class AmbientColors *colors) : MdlxScaling(colors)
 {
 }
 
