@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -80,8 +80,9 @@ inline std::istream& read(std::istream &istream, T &value, std::streamsize &size
 /**
 * Reads C string char into value "value" (with 0-terminating if size is 0).
 * @param size If this value is 0 it will stop when reaching 0-terminating char.
+* @param terminatingChar Customizable terminating char.
 */
-inline std::istream& readCString(std::istream &istream, char *value, std::streamsize &sizeCounter, std::size_t size = 0)
+inline std::istream& readCString(std::istream &istream, char *value, std::streamsize &sizeCounter, std::size_t size = 0, char terminatingChar = '\0')
 {
 	if (value != 0)
 		throw Exception(_("readCString: Value should be 0."));
@@ -98,9 +99,9 @@ inline std::istream& readCString(std::istream &istream, char *value, std::stream
 		istream.get(character);
 
 		std::size_t i = position;
-		std::size_t length = 1;
+		std::size_t length = 0;
 
-		while (character != '\0')
+		while (character != terminatingChar)
 		{
 			++i;
 			++length;
@@ -115,8 +116,9 @@ inline std::istream& readCString(std::istream &istream, char *value, std::stream
 		size = length; // assign new length
 	}
 
-	value = new char[size];
+	value = new char[size + 1];
 	read(istream, value, sizeCounter, size);
+	value[size] = '\0';
 
 	return istream;
 }
@@ -126,6 +128,17 @@ inline std::istream& readString(std::istream &istream, std::string &value, std::
 	char *cString = 0;
 	readCString(istream, cString, sizeCounter, size);
 	value = cString;
+	delete[] cString;
+
+	return istream;
+}
+
+inline std::istream& readLine(std::istream &istream, std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
+{
+	char *cString = 0;
+	readCString(istream, cString, sizeCounter, size, '\n');
+	value = cString;
+	delete[] cString;
 
 	return istream;
 }
@@ -155,6 +168,13 @@ inline std::ostream& writeCString(std::ostream &ostream, const char *value, std:
 inline std::ostream& writeString(std::ostream &ostream, const std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
 	return writeCString(ostream, value.data(), sizeCounter, size);
+}
+
+inline std::ostream& writeLine(std::ostream &ostream, const std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
+{
+	std::string newValue = value + '\n';
+
+	return writeCString(ostream, newValue.data(), sizeCounter, size);
 }
 
 template<typename T>

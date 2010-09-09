@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,13 +21,13 @@
 #ifndef WC3LIB_MAP_HPP
 #define WC3LIB_MAP_HPP
 
-#error Map module is not usable yet!
-
 #include "map/environment.hpp"
 #include "map/itemset.hpp"
 #include "map/pathmap.hpp"
 #include "map/platform.hpp"
 #include "map/shadow.hpp"
+#include "map/string.hpp"
+#include "map/strings.hpp"
 #include "map/tilepoint.hpp"
 #include "map/tree.hpp"
 #include "map/trees.hpp"

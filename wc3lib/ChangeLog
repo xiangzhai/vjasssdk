@@ -1,3 +1,9 @@
+2010-09-09 Tamino Dauth <tamino@cdauth.eu>
+* map: Added classes Strings and String.
+* core: Added utility functions readLine and writeLine and improved others.
+* core: Added stream operators for class Format.
+* app: Added application jasstrans.
+
 2010-09-08 Tamino Dauth <tamino@cdauth.eu>
 * mdlx: Added class Node and adjusted classes to specification of Magos.
 
