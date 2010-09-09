@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	// Set the text message domain.
 	bindtextdomain("jassc", LOCALE_DIR);
 	textdomain("jassc");
-	
+
 	static struct option options[] =
 	{
 		{"version",                 no_argument,             0, 'V'},
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 		{"language",                required_argument,       0, 'A'},
 		{0, 0, 0, 0}
 	};
-	
+
 	static const char *version = "0.1";
 	boost::filesystem::path recursivePath;
 	std::list<boost::filesystem::path> includeDirs;
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 	std::string optimize;
 	std::string language;
 	int optionShortcut;
-	
+
 	while (true)
 	{
 		int optionIndex = 0;
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
 		if (optionShortcut == -1)
 			break;
-     
+
 		switch (optionShortcut)
 		{
 			case 'V':
@@ -104,10 +104,10 @@ int main(int argc, char *argv[])
 				"This is free software: you are free to change and redistribute it.\n"
 				"There is NO WARRANTY, to the extent permitted by law."
 				)) % version << std::endl;
-				
+
 				return EXIT_SUCCESS;
 			}
-			
+
 			case 'h':
 			{
 				std::cout <<
@@ -135,32 +135,32 @@ int main(int argc, char *argv[])
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
-	
+
 				return EXIT_SUCCESS;
 			}
-			
+
 			/// @todo Parse options
 	}
-	
+
 	std::list<boost::filesystem::path> filePaths;
-	
+
 	if (optind < argc)
 	{
 		for ( ; optind < argc; ++optind)
 		{
 			bool found = false;
-			
+
 			BOOST_FPREACH(const boost::filesystem::path &path, filePaths)
 			{
 				if (path == argv[optind])
 				{
 						std::cerr << boost::format(_("File path \"%1%\" has already been added to list.")) % argv[optind] << std::endl;
 						found = true;
-						
+
 						break;
 				}
 			}
-			
+
 			if (!found)
 				filePaths.push_back(argv[optind]);
 		}
@@ -169,21 +169,21 @@ int main(int argc, char *argv[])
 	else
 	{
 		std::cerr << _("Missing file arguments.") << std::endl;
-		
+
 		return EXIT_FAILURE;
 	}
-	
+
 	class Parser parser();
 	parser.setCurrentLanguage( ); /// @todo Set current language by option or jass.
 	std::size_t lines = parser.parse(filePaths);
 	std::cout << boost::format(_("Parsed %1% files with %2% lines at all.")) % paths.size() % lines << std::endl;
-	
+
 	if (verify)
 		parser.prepareObjects();
-	
+
 	if (showErrors)
 		parser.showSyntaxErrors(std::cout);
-	
+
 	if (
 #ifdef HTML
 		!htmlPath.empty() ||
@@ -196,9 +196,9 @@ int main(int argc, char *argv[])
 	{
 		if (!verify)
 			parser.prepareObjects();
-		
+
 		class Compiler compiler;
-		
+
 		if (
 	}
 	std::string optimize;

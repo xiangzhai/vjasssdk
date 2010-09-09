@@ -13,6 +13,9 @@ endif ()
 #add_executable(tilesetter tilesetter.cpp)
 #target_link_libraries(tilesetter ${wc3lib_CORE_LIBRARIES} ${Boost_LIBRARIES})
 
+add_executable(jasstrans jasstrans.cpp)
+target_link_libraries(jasstrans ${wc3lib_CORE_LIBRARIES} ${Boost_LIBRARIES})
+
 add_executable(mpq mpq.cpp)
 target_link_libraries(mpq ${wc3lib_CORE_LIBRARIES} ${Boost_LIBRARIES})
 
