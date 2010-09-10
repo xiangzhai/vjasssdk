@@ -1,3 +1,9 @@
+2010-09-10 Tamino Dauth <tamino@cdauth.eu>
+* editor: Improved class ModelView and Editor.
+* editor: Moved UI files into sub directory.
+* editor: Added and revised various UI files.
+* editor: Added class ModuleMenu.
+
 2010-09-09 Tamino Dauth <tamino@cdauth.eu>
 * map: Added classes Strings and String.
 * core: Added utility functions readLine and writeLine and improved others.

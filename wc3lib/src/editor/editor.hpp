@@ -49,14 +49,14 @@ namespace editor
 */
 class Editor : public KMainWindow
 {
-	//Q_OBJECT
+	Q_OBJECT
 
 	public:
 		static const KAboutData& aboutData();
 		static const KAboutData& wc3libAboutData();
 
 		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
-		~Editor();
+		virtual ~Editor();
 
 		/**
 		* Each time a file has to searched for, all editor MPQ archives will be checked for in the ordering of their priority.
@@ -89,8 +89,7 @@ class Editor : public KMainWindow
 		static KAboutData m_wc3libAboutData;
 
 		class KActionCollection *m_actionCollection;
-		std::list<class mpq::Mpq*> m_mpqs;
-		std::list<std::size_t> m_mpqsPriorities;
+		class MpqPriorityList *m_mpqs;
 		class TerrainEditor *m_terrainEditor;
 		class TriggerEditor *m_triggerEditor;
 		class SoundEditor *m_soundEditor;

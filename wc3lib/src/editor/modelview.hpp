@@ -89,6 +89,12 @@ class ModelView : public QGLWidget
 		virtual void setupResources();
 		virtual void configure();
 
+
+		// key events
+		virtual void keyPressEvent(QKeyEvent *event);
+		virtual void keyReleaseEvent(QKeyEvent *event);
+		virtual void wheelEvent(QWheelEvent *event);
+
 		const Ogre::NameValuePairList *m_parameters;
 		Ogre::Root *m_root;
 		Ogre::RenderWindow *m_renderWindow;
@@ -100,6 +106,9 @@ class ModelView : public QGLWidget
 		Ogre::Viewport *m_viewPort;
 
 		//Ogre::ExampleFrameListener *m_frameListener;
+
+		// event values
+		bool m_changeFarClip;
 };
 
 }

@@ -24,7 +24,7 @@
 #include <kurl.h>
 
 #include "module.hpp"
-#include "ui_textureeditor.hpp"
+#include "ui/ui_textureeditor.hpp"
 
 namespace wc3lib
 {

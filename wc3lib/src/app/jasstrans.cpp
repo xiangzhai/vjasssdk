@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
 				std::cerr << boost::format(_("Warning: File \"%1%\" has unknown extension (\"%2%\") and will be handled as Jass script file.")) % path.string() % extension << std::endl;
 		}
 
-		boost::filesystem::fstream fstream(path);
+		boost::filesystem::fstream fstream(path, std::ios_base::in | std::ios_base::out); // we need out if optionReplace is true
 		strings.parse(path, fstream, &fstream, optionReplace, optionFill, true, optionTrans, conflictFunction);
 	}
 

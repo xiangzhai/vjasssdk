@@ -36,7 +36,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelView::ModelView(QWidget *parent, const QGLWidget *shareWidget, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QGLWidget(parent, shareWidget, f), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0)
+ModelView::ModelView(QWidget *parent, const QGLWidget *shareWidget, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QGLWidget(parent, shareWidget, f), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false)
 {
 	// setup a renderer
 	Ogre::RenderSystemList *renderers = this->m_root->getAvailableRenderers();
@@ -209,6 +209,7 @@ void ModelView::initializeGL()
 	externalWindowHandleParams += ":";
 	externalWindowHandleParams += Ogre::StringConverter::toString((unsigned int)(info.screen()));
 	externalWindowHandleParams += ":";
+	qDebug() << "This is the WINDOW ID " << winId();
 	externalWindowHandleParams += Ogre::StringConverter::toString((unsigned long)(winId()));
 	//externalWindowHandleParams += ":";
 	//externalWindowHandleParams += Ogre::StringConverter::toString((unsigned long)(info.visual()));
@@ -224,19 +225,21 @@ void ModelView::initializeGL()
 #endif
 
 	// Finally create our window.
-	/// FIXME Crashes
 	this->m_renderWindow = this->m_root->createRenderWindow("OgreWindow", width(), height(), false, &params);
 	this->m_renderWindow->setActive(true);
 	// old stuff, added stuff from QtOgreWidget
 	//WId ogreWinId = 0x0;
 	//this->m_renderWindow->getCustomAttribute( "WINDOW", &ogreWinId);
 	//assert(ogreWinId);
+/*
+OLD!
 #if defined(Q_WS_X11)
 	WId ogreWinId = 0x0;
 	this->m_renderWindow->getCustomAttribute("WINDOW", &ogreWinId);
 	assert(ogreWinId);
 	this->create(winId());
 #endif
+*/
 
 	setAttribute(Qt::WA_PaintOnScreen, true);
 	setAttribute(Qt::WA_NoBackground);
@@ -244,13 +247,14 @@ void ModelView::initializeGL()
 	//== Ogre Initialization ==//
 	// default scene
 	this->m_sceneManager = this->m_root->createSceneManager(this->m_sceneType);
-	this->m_sceneManager->setAmbientLight(Ogre::ColourValue(1,1,1));
+	this->m_sceneManager->setAmbientLight(Ogre::ColourValue(1, 1, 1));
 	this->m_camera = this->m_sceneManager->createCamera("Widget_Cam");
-	this->m_camera->setPosition(Ogre::Vector3(0,1,0));
-	this->m_camera->lookAt(Ogre::Vector3(0,0,0));
+	this->m_camera->setPosition(Ogre::Vector3(0, 1, 0));
+	this->m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	this->m_camera->setNearClipDistance(1.0);
+	this->m_camera->setFarClipDistance(50000);
 	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
-	this->m_viewPort->setBackgroundColour(Ogre::ColourValue( 0.8,0.8,1 ));
+	this->m_viewPort->setBackgroundColour(Ogre::ColourValue(0.8, 0.8, 1));
 }
 
 
@@ -260,6 +264,51 @@ void ModelView::setupResources()
 
 void ModelView::configure()
 {
+}
+
+void ModelView::keyPressEvent(QKeyEvent *event)
+{
+	switch (event->key())
+	{
+		case Qt::Key_Control:
+			this->m_changeFarClip = true;
+
+			break;
+	}
+
+	event->accept();
+}
+
+void ModelView::keyReleaseEvent(QKeyEvent *event)
+{
+	switch (event->key())
+	{
+		case Qt::Key_Control:
+			this->m_changeFarClip = false;
+
+			break;
+	}
+
+	event->accept();
+}
+
+void ModelView::wheelEvent(QWheelEvent *event)
+{
+	//QGLWidget::wheelEvent(event);
+
+	// Ctrl is pressed, change far clip distance
+	if (this->m_changeFarClip)
+	{
+		this->m_camera->setFarClipDistance(this->m_camera->getFarClipDistance() + event->delta());
+	}
+	// move camera
+	else
+	{
+		this->m_camera->setDirection(Ogre::Vector3(event->x(), event->y(), this->m_camera->getDirection().z));
+		this->m_camera->moveRelative(Ogre::Vector3(event->delta()));
+	}
+
+	event->accept();
 }
 
 }

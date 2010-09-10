@@ -73,6 +73,8 @@ class OgreMdlx
 		std::map<const class Geoset*, Ogre::MeshPtr> m_geosets;
 		std::map<const class Node*, Ogre::Node*> m_nodes;
 		std::map<const class Bone*, Ogre::Bone*> m_bones;
+
+		class GlobalSequence *m_globalSequence; /// Current global sequence which is played.
 };
 
 inline const class Mdlx* OgreMdlx::mdlx() const

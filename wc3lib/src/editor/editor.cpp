@@ -29,6 +29,7 @@
 #include <boost/foreach.hpp>
 
 #include "editor.hpp"
+#include "modulemenu.hpp"
 #include "terraineditor.hpp"
 #include "triggereditor.hpp"
 #include "soundeditor.hpp"
@@ -121,27 +122,8 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 	menu->addAction(action);
 
 	// module
-	menu = new KMenu(tr("Module"), this);
+	menu = new ModuleMenu(this, this);
 	this->menuBar()->addMenu(menu);
-
-	action = new KAction(KIcon(":/actions/terraineditor.png"), i18n("Terrain Editor"), this);
-	action->setShortcut(KShortcut(i18n("F3")));
-	connect(action, SIGNAL(triggered()), this, SLOT(showTerrainEditor()));
-	this->m_actionCollection->addAction("terraineditor", action);
-	menu->addAction(action);
-
-	action = new KAction(KIcon(":/actions/triggereditor.png"), i18n("Trigger Editor"), this);
-	action->setShortcut(KShortcut(i18n("F4")));
-	connect(action, SIGNAL(triggered()), this, SLOT(showTriggerEditor()));
-	this->m_actionCollection->addAction("triggereditor", action);
-	menu->addAction(action);
-
-	action = new KAction(KIcon(":/actions/soundeditor.png"), i18n("Sound Editor"), this);
-	action->setShortcut(KShortcut(i18n("F5")));
-	connect(action, SIGNAL(triggered()), this, SLOT(showSoundEditor()));
-	this->m_actionCollection->addAction("soundeditor", action);
-	menu->addAction(action);
-
 
 	this->setMapActionsEnabled(false);
 
@@ -199,52 +181,6 @@ Editor::~Editor()
 
 	if (this->m_newMapDialog != 0)
 		delete this->m_newMapDialog;
-}
-
-std::size_t Editor::addMpq(const class Mpq *mpq, std::size_t priority)
-{
-	std::list<class mpq::Mpq*>::const_iterator mpqIterator = this->m_mpqs.begin();
-	std::list<std::size_t>::const_iterator priorityIterator = this->m_mpqsPriorities.begin();
-	std::size_t i = 0;
-
-	while (mpqIterator != this->m_mpqs.end())
-	{
-		if (*priorityIterator < priority)
-		{
-			/*
-			this->m_mpqs.insert(mpqIterator, mpq);
-			this->m_mpqsPriorities.insert(priorityIterator, priority);
-			*/
-
-			return i;
-		}
-
-		++mpqIterator;
-		++priorityIterator;
-		++i;
-	}
-
-	/*
-	this->m_mpqs.push_back(mpq);
-	this->m_mpqsPriorities.push_back(priority);
-	*/
-
-	return i;
-}
-
-const class mpq::MpqFile* Editor::loadMpqFile(const boost::filesystem::path &path)
-{
-	const class mpq::MpqFile *result = 0;
-
-	BOOST_FOREACH(const class mpq::Mpq *mpq, this->m_mpqs)
-	{
-		result = mpq->findFile(path);
-
-		if (result != 0)
-			break;
-	}
-
-	return result;
 }
 
 void Editor::showTerrainEditor()

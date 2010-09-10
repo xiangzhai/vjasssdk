@@ -1,18 +1,22 @@
 WC3LIB_ENABLE_EXCEPTIONS()
 
+add_subdirectory(ui)
+#WC3LIB_GET_UI(wc3lib_EDITOR_UI)
+
+#QT4_WRAP_UI(wc3lib_EDITOR_MOC_UI_SRC ${wc3lib_EDITOR_UI})
+
 WC3LIB_GET_H(wc3lib_EDITOR_H)
 WC3LIB_GET_SRC(wc3lib_EDITOR_SRC)
-WC3LIB_GET_UI(wc3lib_EDITOR_UI)
 
 QT4_WRAP_CPP(wc3lib_EDITOR_MOC_SRC ${wc3lib_EDITOR_H})
-QT4_WRAP_UI(wc3lib_EDITOR_MOC_UI_SRC ${wc3lib_EDITOR_UI})
+
 #QT4_GENERATE_MOC(inputfile outputfile )
 #QT4_AUTOMOC(${wc3lib_EDITOR_MOC_SRC})
 
 # get SRC again (new moc files)
-set(wc3lib_EDITOR_SRC "")
-WC3LIB_GET_SRC(wc3lib_EDITOR_SRC)
-message(STATUS "This is SRC ${wc3lib_EDITOR_SRC}")
+#set(wc3lib_EDITOR_SRC "")
+#WC3LIB_GET_SRC(wc3lib_EDITOR_SRC)
+#message(STATUS "This is SRC ${wc3lib_EDITOR_SRC}")
 
 # BLP plugin
 add_library(qblp SHARED blpiohandler.cpp blpioplugin.cpp)

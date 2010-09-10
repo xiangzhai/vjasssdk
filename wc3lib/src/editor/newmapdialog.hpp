@@ -22,11 +22,11 @@
 #define WC3LIB_EDITOR_NEWMAPDIALOG_HPP
 
 #include <kdialog.h>
-#include "ui_newmapdialog.hpp"
+#include "ui/ui_newmapdialog.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 

@@ -22,7 +22,7 @@
 #define WC3LIB_EDITOR_TRIGGEREDITOR_HPP
 
 #include "module.hpp"
-#include "ui_triggereditor.hpp"
+#include "ui/ui_triggereditor.hpp"
 
 namespace wc3lib
 {
