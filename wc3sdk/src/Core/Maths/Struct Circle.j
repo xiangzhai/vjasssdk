@@ -24,7 +24,7 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 			return Pow(this.m_radius, 2.0) * bj_PI
 		endmethod
 
-		public method containsPoint takes real x, real y returns boolean
+		public method areaContainsPoint takes real x, real y returns boolean
 			return (GetDistanceBetweenPoints(x, y, 0.0, this.x(), this.y(), 0.0) <= this.m_radius)
 		endmethod
 
@@ -35,8 +35,8 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 		endmethod
 
 		//! textmacro ACircleMacro takes TYPE, TYPENAME
-			public method contains$TYPENAME$ takes $TYPE$ circle$TYPENAME$ returns boolean
-				return this.containsPoint(Get$TYPENAME$X(circle$TYPENAME$), Get$TYPENAME$Y(circle$TYPENAME$)) //Because of the location type I use the 'Circle' prefix
+			public method areaContains$TYPENAME$ takes $TYPE$ circle$TYPENAME$ returns boolean
+				return this.areaContainsPoint(Get$TYPENAME$X(circle$TYPENAME$), Get$TYPENAME$Y(circle$TYPENAME$)) //Because of the location type I use the 'Circle' prefix
 			endmethod
 
 			public method borderContains$TYPENAME$ takes $TYPE$ circle$TYPENAME$ returns boolean
@@ -54,7 +54,7 @@ library AStructCoreMathsCircle requires AStructCoreMathsPoint, ALibraryCoreMaths
 			return GetPolarProjectionOfPoint(this.x(), this.y(), angle, this.m_radius)
 		endmethod
 
-		public method randomLocation takes nothing returns location
+		public method randomAreaLocation takes nothing returns location
 			local real distance = (SquareRoot(GetRandomReal(0.0, 1.0)) * this.m_radius)
 			local real angle = GetRandomReal(0.0, (2.0 * bj_PI))
 			return Location((this.x() + (distance * Cos(angle))), (this.y() + (distance * Sin(angle))))

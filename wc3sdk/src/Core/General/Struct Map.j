@@ -355,18 +355,18 @@ library AStructCoreGeneralMap requires AInterfaceCoreGeneralContainer, optional 
 			* The list container is extended by inserting a new element before the element at position @param position with value @param value and key @param key.
 			* This effectively increases the container size by @param number.
 			* The element can't be inserted if key @param key is already used by another one.
-			* @param position If this value is 0 or less the new inserted element will become front and back (only element in map) if map is empty. Otherwise it won't be added.
+			* @param position If this value's node is 0 the new inserted element will become front and back (only element in map) if map is empty. Otherwise it won't be added.
 			*/
 			public method insert takes $NAME$Iterator position, $KEYTYPE$ key, $ELEMENTTYPE$ value returns nothing
 				local $NAME$Node node
 				local $NAME$Node tmpNode
-				if (this.containsKey(key) or (position == 0 and not this.empty()) or (position != 0 and not this.contains(position))) then
+				if (this.containsKey(key) or (position.node() == 0 and not this.empty()) or (position.node() != 0 and not this.contains(position))) then
 					return
 				endif
 				set node = $NAME$Node.create()
 				call node.setKey(key)
 				call node.setData(value)
-				if (position == 0) then
+				if (position.node() == 0) then
 					set this.m_front = node
 					set this.m_back = node
 				else
@@ -548,6 +548,6 @@ library AStructCoreGeneralMap requires AInterfaceCoreGeneralContainer, optional 
 	* max instances = 8192 / 1 = 8192 since there is no array member
 	*/
 	//! runtextmacro A_MAP("", "AUnitMap", "unit", "string", "null", "null", "8192", "40000", "8192")
-	//! runtextmacro A_MAP("", "AIntegerMap", "integer", "integer", "null", "null", "8192", "40000", "8192")
+	//! runtextmacro A_MAP("", "AIntegerMap", "integer", "integer", "0", "0", "8192", "40000", "8192")
 
 endlibrary

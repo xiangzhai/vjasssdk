@@ -24,7 +24,9 @@ static if (DEBUG_MODE) then
 		// clean up
 		loop
 			exitwhen (unitMap.empty())
-			call unitMap.popBack()
+			set iterator = unitMap.end()
+			call unitMap.erase(iterator)
+			call iterator.destroy()
 		endloop
 
 		call Print("Unit map size " + I2S(unitMap.size()) + " after cleaning up.")

@@ -1,3 +1,20 @@
+2010-09-12 Tamino Dauth <tamino@cdauth.eu>
+* core: Added several camera related functions including text macro ACameraTextMacro.
+* core: Added functions GetRectX and GetRectY for easier text macro implementation.
+* ATokenizer: Added method tokens.
+* core: Added global function StringSplit.
+* A_MAP: Fixed method insert.
+* ASignal: Fixed vector construction and destruction.
+* core: Cheats "kill" and "copy" are group related now.
+* core: Fixed time of day functions.
+* core: Added functions GetTimeOfDayMinutesPercentage and GetTimeOfDaySecondsPercentage.
+* core: Fixed function GetTimeString.
+* Released version 1.2.
+
+2010-09-06 Tamino Dauth <tamino@cdauth.eu>
+* Added function trp.
+* Improved and added documentation comments.
+
 2010-08-24 Tamino Dauth <tamino@cdauth.eu>
 * Added cheat "timer".
 * Improved map debugging function.

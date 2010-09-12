@@ -40,7 +40,7 @@ library AStructCoreNetHost requires ALibraryCoreDebugMisc, AStructCoreGeneralVec
 			endif
 
 			set time = connectionTimeOut
-			loop
+			//loop
 
 			debug call this.print("Connected to " + ip + ":" + I2S(port) + " successfully.")
 			call this.m_clients.pushBack(ip)

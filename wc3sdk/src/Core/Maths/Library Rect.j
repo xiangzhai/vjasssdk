@@ -1,6 +1,26 @@
 library ALibraryCoreMathsRect
 
 	/**
+	* Similar to GetRectCenterX.
+	* Allows easier implementation of generic text macros for rect data type.
+	* @author Tamino Dauth
+	* @see GetRectCenterX
+	*/
+	function GetRectX takes rect whichRect returns real
+		return GetRectCenterX(whichRect)
+	endfunction
+
+	/**
+	* Similar to GetRectCenterY.
+	* Allows easier implementation of generic text macros for rect data type.
+	* @author Tamino Dauth
+	* @see GetRectCenterY
+	*/
+	function GetRectY takes rect whichRect returns real
+		return GetRectCenterY(whichRect)
+	endfunction
+
+	/**
 	* @return Returns the rect where rect @param rect0 and @param rect1 cross each other. If both rects do not cross anywhere function will return null.
 	*/
 	function GetRectsBorderRect takes rect rect0, rect rect1 returns rect

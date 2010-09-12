@@ -58,6 +58,19 @@ library AStructCoreGeneralSignal requires AStructCoreGeneralVector, optional ALi
 					set i = i + 1
 				endloop
 			endmethod
+
+			public static method create takes nothing returns thistype
+				local thistype this = thistype.allocate()
+				set this.m_slots = AIntegerVector.create()
+				set this.m_slotIsBlocked = ABooleanVector.create()
+
+				return this
+			endmethod
+
+			public method onDestroy takes nothing returns nothing
+				call this.m_slots.destroy()
+				call this.m_slotIsBlocked.destroy()
+			endmethod
 		endstruct
 	//! endtextmacro
 

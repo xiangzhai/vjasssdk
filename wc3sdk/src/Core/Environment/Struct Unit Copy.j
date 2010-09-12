@@ -112,17 +112,17 @@ library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, 
 			call SetUnitState(this.unitCopy(), UNIT_STATE_MAX_MANA, GetUnitState(this.unit(), UNIT_STATE_MAX_MANA))
 			call SetUnitState(this.unitCopy(), UNIT_STATE_MANA, GetUnitState(this.unit(), UNIT_STATE_MANA))
 			if (IsUnitType(this.unitCopy(), UNIT_TYPE_HERO)) then
-				call SetHeroLevel(this.unitCopy(), GetHeroLevel(this.m_realUnit), false)
+				call SetHeroLevel(this.unitCopy(), GetHeroLevel(this.unit()), false)
 				call SuspendHeroXP(this.unitCopy(), false)
-				call SetHeroXP(this.unitCopy(), GetHeroXP(this.m_realUnit), false)
+				call SetHeroXP(this.unitCopy(), GetHeroXP(this.unit()), false)
 				call SuspendHeroXP(this.unitCopy(), true)
-				call SetHeroStr(this.unitCopy(), GetHeroStr(this.m_realUnit, false), true)
-				call SetHeroStr(this.unitCopy(), GetHeroStrBonus(this.m_realUnit), false)
-				call SetHeroAgi(this.unitCopy(), GetHeroAgi(this.m_realUnit, false), true)
-				call SetHeroAgi(this.unitCopy(), GetHeroAgiBonus(this.m_realUnit), false)
-				call SetHeroInt(this.unitCopy(), GetHeroInt(this.m_realUnit, false), true)
-				call SetHeroInt(this.unitCopy(), GetHeroIntBonus(this.m_realUnit), false)
-				call UnitModifySkillPoints(this.m_unit, GetHeroSkillPoints(this.m_realUnit) - GetHeroSkillPoints(this.m_unit))
+				call SetHeroStr(this.unitCopy(), GetHeroStr(this.unit(), false), true)
+				call SetHeroStr(this.unitCopy(), GetHeroStrBonus(this.unit()), false)
+				call SetHeroAgi(this.unitCopy(), GetHeroAgi(this.unit(), false), true)
+				call SetHeroAgi(this.unitCopy(), GetHeroAgiBonus(this.unit()), false)
+				call SetHeroInt(this.unitCopy(), GetHeroInt(this.unit(), false), true)
+				call SetHeroInt(this.unitCopy(), GetHeroIntBonus(this.unit()), false)
+				call UnitModifySkillPoints(this.unitCopy(), GetHeroSkillPoints(this.unit()) - GetHeroSkillPoints(this.unit()))
 			debug else
 				debug call this.print("Is no hero!")
 			endif
@@ -138,11 +138,11 @@ library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, 
 		endmethod
 
 		public method setX takes real x returns nothing
-			call SetUnitX(this.m_unitCopy, x)
+			call SetUnitX(this.unitCopy(), x)
 		endmethod
 
 		public method x takes nothing returns real
-			return GetUnitX(this.m_unitCopy)
+			return GetUnitX(this.unitCopy())
 		endmethod
 
 		public method setY takes real y returns nothing
@@ -246,7 +246,7 @@ library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, 
 			set this.m_unit = whichUnit
 			set this.m_refreshTime = refreshTime
 			// members
-			set this.m_unitCopy = CopyUnit(realUnit, x, y, facing, bj_UNIT_STATE_METHOD_MAXIMUM)
+			set this.m_unitCopy = CopyUnit(whichUnit, x, y, facing, bj_UNIT_STATE_METHOD_MAXIMUM)
 			// suspend XP since we want to copy the exact value
 			if (IsUnitType(this.m_unitCopy, UNIT_TYPE_HERO)) then
 				call SuspendHeroXP(this.m_unitCopy, true)

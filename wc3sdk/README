@@ -7,7 +7,7 @@ It contains some useful systems which can be used for creating custom Warcraft 3
 Help me to find bugs and give me suggestions on http://sourceforge.net/projects/vjasssdk or by e-mail:
 tamino@cdauth.eu
 
-I moved the scripts into extern code files since I'm working on a Linux system and the trigger
+I've moved the scripts into extern code files since I'm working on a Linux system and the trigger
 editor is very bugged if you use it by wine. Additionally some files can be excluded easily
 which decreases map file size.
 Use file "src/Import Asl.j" to import all required scripts.
@@ -31,10 +31,10 @@ globals
 	constant boolean A_JAPI = false
 	constant boolean A_SYSTEMS = true
 	constant boolean A_OBJECTS = false
-	constant boolean A_DEBUG_HANDLES = false
+	constant boolean A_DEBUG_HANDLES = false // not usable yet!
 	constant boolean A_DEBUG_NATIVES = false
-	constant boolean A_NET = false
-	constant boolean A_FPS_MOVEMENT = false
+	constant boolean A_NET = false // not usable yet!
+	constant boolean A_FPS_MOVEMENT = false // not usable yet!
 	constant real A_MAX_COLLISION_SIZE = 500.0 // used by function GetUnitCollisionSize
 	constant integer A_MAX_COLLISION_SIZE_ITERATIONS = 10 // used by function GetUnitCollisionSize
 endglobals

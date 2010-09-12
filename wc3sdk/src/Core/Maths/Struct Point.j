@@ -49,7 +49,7 @@ library AStructCoreMathsPoint requires ALibraryCoreMathsPoint, ALibraryCoreMaths
 		endmethod
 
 		public method containsWidget takes widget whichWidget returns boolean
-			return this.containsCoordinates(GetWidgetX(whichWidget), GetWidgetY(whichWidget)
+			return this.containsCoordinates(GetWidgetX(whichWidget), GetWidgetY(whichWidget))
 		endmethod
 
 		public method angleBetween takes thistype other returns real

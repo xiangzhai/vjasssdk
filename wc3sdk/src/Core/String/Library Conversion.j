@@ -5,7 +5,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	* ASCII is the American Keyboard Standard.
 	* Conversion of a char to ASCII works with the integer type: 'a' = 97.
 	* @author Peppar
-	* @source http://www.wc3jass.com/
+	* @link http://www.wc3jass.com/
 	* @todo Syntax error?!
 	*/
 	function AsciiToChar takes integer i returns string
@@ -16,7 +16,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		elseif ((i >= 12) and (i <= 13)) then
 			return SubString("\f\r", i - 12, i - 11)
 		elseif ((i >= 32) and (i <= 127)) then
-			return SubString(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", i - 32, i - 31) //syntax error?
+			return SubString(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", i - 32, i - 31) // syntax error?
 		endif
 		return ""
 	endfunction
@@ -116,29 +116,51 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	endfunction
 
 	/**
-	* It is possible to search in the string files of the mpq directory "ui/FrameDef".
-	* There are some general string files.
-	* tr means translation.
-	* @code
-	* native GetLocalizedString takes string source returns string
-	* @endcode
+	* Same function as GetLocalizedString with shorted identifier.
+	* @return Returns translated string from map string file ("war3map.wts") or game string files ("UI/FrameDef/.fdf").
+	* @note If string won't be found it returns value of parameter source.
+	* Usually World Editor's trigger editor replaces all function usages automatically by string source identifiers and adds strings to "war3map.wts" file.
+	* @note Shortcuts and tooltips can be customized in file "CustomKeys.txt" in Warcraft 3 installation directory.
+	* If you use source code you'll have to use tools like vjasstrans to generate that file.
+	* @see GetLocalizedString, trp, sc, AFormat
 	*/
 	function tr takes string source returns string
 		return GetLocalizedString(source)
 	endfunction
 
 	/**
-	* sc means shortcut.
+	* Useful for expressions which have to be different when value unequal to one is used (plural).
+	* @return Returns translated string from source singularSource if count is 1, otherwise it returns translated string from source pluralSource.
+	* This is a very simple example of the function's usage with an English-language expression:
 	* @code
-	* native GetLocalizedHotkey takes string source returns integer
+	* local integer eggs = GetRandomInt(0, 100)
+	* call Print(Format(trp("Find %1% egg", "Find %1% eggs", eggs)).i(eggs).result())
 	* @endcode
+	* @see GetLocalizedString, tr, sc, AFormat
+	*/
+	function trp takes string singularSource, string pluralSource, integer count returns string
+		if (count == 1) then
+			return tr(singularSource)
+		endif
+		return tr(pluralSource)
+	endfunction
+
+	/**
+	* Same function as GetLocalizedHotkey with shorted identifier.
+	* @return Returns localized shortcut.
+	* @note Shortcuts and tooltips can be customized in file "CustomKeys.txt" in Warcraft 3 installation directory.
+	* @see GetLocalizedString, trp, sc, AFormat
 	*/
 	function sc takes string source returns integer
 		return GetLocalizedHotkey(source)
 	endfunction
 
-	/// Not checked yet.
-	/// @todo Bugged?
+	/**
+	* Inserts line break escape sequence characters into string whichString by separating it into sub strings of length maxLineLength.
+	* Useful for displaying text paragraphs (such as dialog messages).
+	* @return Returns whichString separated into sub strings of length maxLineLength ending with '|n' character.
+	* @todo bugged?
+	*/
 	function InsertLineBreaks takes string whichString, integer maxLineLength returns string
 		local integer i
 		local string result = ""
@@ -160,8 +182,10 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	endfunction
 
 	/**
-	* Converts a specific number of seconds to a string with minutes and hours.
-	* Example: 120 seconds - 02:00.
+	* Converts specific number of seconds into a string with minutes and hours.
+	* Examples:
+	* 120 seconds - 02:00
+	* 7200 seconds - 02:00:00
 	*/
 	function GetTimeString takes integer seconds returns string
 		local integer minutes = seconds / 60
@@ -186,16 +210,22 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		else
 			set hoursString = IntegerArg.evaluate(tr("0%i"), hours)
 		endif
-		return IntegerArg.evaluate(IntegerArg.evaluate(IntegerArg.evaluate(tr("%i:%i:%i"), hours), minutes), seconds)
+		return StringArg.evaluate(StringArg.evaluate(StringArg.evaluate(tr("%s:%s:%s"), hoursString), minutesString), secondsString)
 	endfunction
 
 	/**
-	* New argument function.
-	* Is much faster because you don't have to filter all the arguments and don't have to convert the types by yourself.
+	* Old argument function text macro for internationalisation of your code.
+	* Usage of structure AFormat is highly recommended since it allows you to use argument numbers instead of types.
+	* Allows you to create string-formatting function for any type.
+	* Usage example:
 	* @code
 	* StringArg(StringArg(IntegerArg("You're %i years old and you're called %s. Besides you're %s.", 0), "Peter"), "gay")
 	* @endcode
-	* @see AFormat
+	* Compared to AFormat usage:
+	* @code
+	* Format("You're %1% years old and you're called %2%. Besides you're %3%.").i(0).s("Peter").("gay").result()
+	* @endcode
+	* @see AFormat, Format, String
 	*/
 	//! textmacro AStringArgumentMacro takes NAME, TYPE, TYPECHARS, CONVERSION, PARAMETERS
 		function $NAME$ takes string whichString, $TYPE$ value $PARAMETERS$ returns string

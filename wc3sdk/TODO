@@ -1,3 +1,16 @@
+2010-09-12 Tamino Dauth <tamino@cdauth.eu>
+* FIXED: A_MAP: Inserting new map element doesn't work.
+* DONE (works): AGroup: Test orders since groups are being destroyed immediatly after getting their orders!
+
+2010-09-08 Tamino Dauth <tamino@cdauth.eu>
+* Core: Add text macro A_PAIR, implement pair functions in A_MAP.
+
+2010-09-03 Tamino Dauth <tamino@cdauth.eu>
+* DONE: Core: Add trp(string singular, string plural, integer count) for plural formats.
+
+2010-09-02 Tamino Dauth <tamino@cdauth.eu>
+* AInventory: Add methods integer totalRucksackCharges(integer itemType), boolean hasEquipped(integer itemType, integer charges), boolean hasInRucksack(integer itemType, integer charges), boolean remove(integer itemType, integer charges), boolean removeEquipment(integer itemType, integer charges), boolean removeFromRucksack(integer itemType, integer charges), boolean has(integer itemType, integer charges), boolean add(integer itemType) etc.
+
 2010-08-25 Tamino Dauth <tamino@cdauth.eu>
 * Add JassHelper options and make the whole ASL compliant before releasing 1.1!!!!!!!
 * Test all options (A_NET etc.).
@@ -92,7 +105,7 @@ is shown in rucksack only.
 * FIXED: Changing dialog pages seems to clear the dialog title.
 
 2010-02-14 Tamino Dauth <tamino@cdauth.eu>
-* Fix AWeather (DMdF crashes).
+* DEPRECATED: Fix AWeather (DMdF crashes).
 
 2010-02-13 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Add some time and time of day functions for calculating remaining seconds and minutes etc.

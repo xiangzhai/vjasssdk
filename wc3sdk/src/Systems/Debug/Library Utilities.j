@@ -8,8 +8,8 @@
 * foodcap - Gives player foot capacity or shows his current amount.
 * info - Shows some information about selected unit of cheating player.
 * setlevel - Sets level for selected unit of cheating player.
-* kill - Kills selected unit of cheating player.
-* copy - Copies selected unit of cheating player.
+* kill - Kills selected units of cheating player.
+* copy - Copies selected units of cheating player.
 * giveall - Resets hit points, mana and all ability cooldowns of selected unit of cheating player.
 * damage - Damages selected unit.
 * xp - Adds experience to selected hero or shows experience information about selected unit.
@@ -31,7 +31,7 @@
 * map - Runs map debug.
 * timer - Runs timer debugging hook function.
 */
-library ALibrarySystemsDebugUtilities requires AStructCoreDebugBenchmark, AStructCoreDebugCheat, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection
+library ALibrarySystemsDebugUtilities requires ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection, AStructCoreDebugBenchmark, AStructCoreDebugCheat, AStructCoreStringFormat
 
 	private function help takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
@@ -183,26 +183,32 @@ endif
 		set triggerPlayer = null
 	endfunction
 
+	private function KillUnitFunction takes nothing returns nothing
+		debug call Print(Format(tr("Killing unit \"%1%\".")).u(GetEnumUnit()).result())
+		call KillUnit(GetEnumUnit())
+	endfunction
+
 	/// @todo If no unit is selected, kill an item or a destructable
 	private function kill takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
-		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
-		if (selectedUnit != null) then
-			call KillUnit(selectedUnit)
-			set selectedUnit = null
-		endif
+		local group selectedUnits = GetUnitsSelectedAll(triggerPlayer)
+		call ForGroup(selectedUnits, function KillUnitFunction)
+		call DestroyGroup(selectedUnits)
+		set selectedUnits = null
 		set triggerPlayer = null
+	endfunction
+
+	private function CopyUnitFunction takes nothing returns nothing
+		debug call Print(Format(tr("Copying unit \"%1%\".")).u(GetEnumUnit()).result())
+		call CopyUnit(GetEnumUnit(), GetUnitX(GetEnumUnit()), GetUnitY(GetEnumUnit()), GetUnitFacing(GetEnumUnit()), bj_UNIT_STATE_METHOD_ABSOLUTE)
 	endfunction
 
 	private function copy takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
-		local unit selectedUnit = GetFirstSelectedUnitOfPlayer(triggerPlayer)
-		local unit copiedUnit
-		if (selectedUnit != null) then
-			set copiedUnit = CopyUnit(selectedUnit, GetUnitX(selectedUnit), GetUnitY(selectedUnit), GetUnitFacing(selectedUnit), bj_UNIT_STATE_METHOD_ABSOLUTE)
-			debug call Print(tr("Copying unit."))
-			set copiedUnit = null
-		endif
+		local group selectedUnits = GetUnitsSelectedAll(triggerPlayer)
+		call ForGroup(selectedUnits, function CopyUnitFunction)
+		call DestroyGroup(selectedUnits)
+		set selectedUnits = null
 		set triggerPlayer = null
 	endfunction
 
@@ -314,6 +320,7 @@ endif
 		elseif (argument == "continue") then
 			call SuspendTimeOfDay(false)
 		else
+			debug call Print("Time of day function returns: " + R2S(GetTimeOfDay())) /// @todo TEST!
 			debug call Print(StringArg(tr("Current time of day: %s"), GetTimeOfDayString()))
 			debug call Print("Test, elapsed hours: " + I2S(GetTimeOfDayElapsedHours()))
 			debug call Print("Test, elapsed minutes in hour: " + I2S(GetTimeOfDayElapsedMinutesInHour()))

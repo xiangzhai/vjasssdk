@@ -1,19 +1,21 @@
-library AStructCoreStringTokenizer requires optional ALibraryCoreDebugMisc
+library AStructCoreStringTokenizer requires optional ALibraryCoreDebugMisc, AStructCoreGeneralList
 
 	/**
 	* @link http://www.wc3c.net/showthread.php?t=106830
 	* @author ToukoAozaki, Tamino Dauth
+	* @todo We need backwards functionality and ATokenizer should be implemented as container!
+	* @see StringSplit
 	*/
 	struct ATokenizer
-		//dynamic members
+		// dynamic members
 		private string m_separators
 		private integer m_position
-		//start members
+		// construction members
 		private string m_string
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ATokenizer\"")
 
-		//dynamic members
+		// dynamic members
 
 		/**
 		* @param separators Should be list of separating characters.
@@ -38,7 +40,7 @@ library AStructCoreStringTokenizer requires optional ALibraryCoreDebugMisc
 			return this.m_position
 		endmethod
 
-		//start members
+		// construction members
 
 		public method string takes nothing returns string
 			return this.m_string
@@ -46,10 +48,10 @@ library AStructCoreStringTokenizer requires optional ALibraryCoreDebugMisc
 
 		public static method create takes string whichString returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_separators = " \t"
 			set this.m_position = 0
-			//start members
+			// construction members
 			set this.m_string = whichString
 			return this
 		endmethod
@@ -66,7 +68,7 @@ library AStructCoreStringTokenizer requires optional ALibraryCoreDebugMisc
 			local string result
 			if (not this.hasMore()) then
 				return null
-			//invalid separator
+			// invalid separator
 			elseif (this.m_separators == null or this.m_separators == "") then
 				set i = StringLength(this.m_string)
 			else
@@ -96,6 +98,35 @@ library AStructCoreStringTokenizer requires optional ALibraryCoreDebugMisc
 		public method reset takes nothing returns nothing
 			set this.m_position = 0
 		endmethod
+
+		/**
+		* Creates string list with all available tokens.
+		* @note Resets tokenizer after getting all available tokens.
+		* @return Returns newly created string list with all tokens.
+		*/
+		public method tokens takes nothing returns AStringList
+			local AStringList result = AStringList.create()
+			loop
+				exitwhen (not this.hasMore())
+				call result.pushBack(this.next())
+			endloop
+			call this.reset()
+			return result
+		endmethod
 	endstruct
+
+	/**
+	* Global function which splits string whichString into tokens separated by one character of string separators.
+	* @author Tamino Dauth
+	* @see ATokenizer, ATokenizer.tokens
+	*/
+	function StringSplit takes string whichString, string separators returns AStringList
+		local ATokenizer tokenizer = ATokenizer.create(whichString)
+		local AStringList result
+		call tokenizer.setSeparators(separators)
+		set result = tokenizer.tokens()
+		call tokenizer.destroy()
+		return result
+	endfunction
 
 endlibrary
