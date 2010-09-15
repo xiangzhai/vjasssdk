@@ -46,11 +46,11 @@ MdxBlock::~MdxBlock()
 }
 
 /// @todo Consider optional like in Python script.
-std::streamsize MdxBlock::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdxBlock::readMdx(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize bytes = 0;
 	byte identifier[sizeof(this->m_blockName)];
-	std::istream::pos_type position = istream.tellg();
+	std::basic_istream<byte>::pos_type position = istream.tellg();
 	istream.read(identifier, sizeof(identifier));
 	bytes += istream.gcount();
 
@@ -72,7 +72,7 @@ std::streamsize MdxBlock::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-std::streamsize MdxBlock::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdxBlock::writeMdx(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	if (!this->m_exists)
 		return 0;
@@ -83,7 +83,7 @@ std::streamsize MdxBlock::writeMdx(std::ostream &ostream) const throw (class Exc
 
 }
 
-bool MdxBlock::moveToBlockName(std::iostream &iostream)
+bool MdxBlock::moveToBlockName(std::basic_iostream<byte> &iostream)
 {
 	byte readBlockName[4];
 

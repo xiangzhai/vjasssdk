@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,8 +31,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GroupMdxBlockMember;
-
 /**
 * Some MDX blocks are structured like:
 * byte[4]	MDX block name
@@ -45,17 +43,17 @@ class GroupMdxBlock : public MdxBlock
 	public:
 		GroupMdxBlock(byte blockName[4], bool optional = true);
 		~GroupMdxBlock();
-		
+
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-		
+
 	protected:
 		/**
 		* This method should be overwritten in child class.
 		* @return Returns a new allocated group member which will be added to list.
 		*/
 		virtual class GroupMdxBlockMember* createNewMember();
-		
+
 		/**
 		* Provides access to all read members for child class.
 		*/

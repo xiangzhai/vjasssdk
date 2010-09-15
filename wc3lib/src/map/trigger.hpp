@@ -37,13 +37,13 @@ namespace map
 * Definition of a Warcraft 3 trigger. For Warcraft 3 The Frozen Trigger use TriggerEx.
 * @see TriggerEx
 */
-class Trigger : public Format
+class Trigger : public Format<byte>
 {
 	public:
 		Trigger(class Triggers *triggers);
 
-		virtual std::streamsize read(std::istream &istream) throw (class Exception);
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 	protected:
 		class Triggers *m_triggers;

@@ -35,13 +35,13 @@ namespace map
 /**
 * @see TriggerCategoryEx
 */
-class TriggerCategory : public Format
+class TriggerCategory : public Format<byte>
 {
 	public:
 		TriggerCategory(class Triggers *triggers);
 
-		virtual std::streamsize read(std::istream &istream) throw (class Exception);
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 		int32 index() const;
 		const std::string& name() const;

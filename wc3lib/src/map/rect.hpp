@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MAP_RECT_HPP
 #define WC3LIB_MAP_RECT_HPP
 
-#include <string>
-
 #include "platform.hpp"
 #include "../format.hpp"
 
@@ -32,24 +30,22 @@ namespace wc3lib
 namespace map
 {
 
-class Rects;
-
-class Rect : public Format
+class Rect : public Format<byte>
 {
 	public:
 		Rect(class Rects *rects);
 
-		virtual std::streamsize read(std::istream &istream) throw (class Exception);
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 		float32 left() const;
 		float32 right() const;
 		float32 bottom() const;
 		float32 top() const;
-		const std::string& name() const;
+		const string& name() const;
 		int32 index() const;
 		id weatherEffectId() const;
-		const std::string& soundName() const;
+		const string& soundName() const;
 		const struct Rgb& color() const;
 
 	protected:
@@ -58,10 +54,10 @@ class Rect : public Format
 		float32 m_right;
 		float32 m_bottom;
 		float32 m_top;
-		std::string m_name;
+		string m_name;
 		int32 m_index;
 		id m_weatherEffectId;
-		std::string m_soundName; // class Sound *m _sound
+		string m_soundName; // class Sound *m _sound
 		struct Rgb m_color; // no alpha!
 
 };
@@ -86,7 +82,7 @@ inline float32 Rect::top() const
 	return this->m_top;
 }
 
-inline const std::string& Rect::name() const
+inline const string& Rect::name() const
 {
 	return this->m_name;
 }
@@ -101,7 +97,7 @@ inline id Rect::weatherEffectId() const
 	return this->m_weatherEffectId;
 }
 
-inline const std::string& Rect::soundName() const
+inline const string& Rect::soundName() const
 {
 	return this->m_soundName;
 }

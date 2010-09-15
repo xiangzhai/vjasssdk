@@ -18,8 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/cast.hpp>
+
 #include "helpers.hpp"
 #include "helper.hpp"
+#include "../utilities.hpp"
+
+#include "mdlxrotations.hpp"
+#include "mdlxtranslations.hpp"
 
 namespace wc3lib
 {
@@ -47,25 +53,32 @@ std::streamsize Helpers::writeMdl(std::ostream &ostream) const throw (class Exce
 
 std::streamsize Helpers::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
+	std::streamsize size = MdxBlock::readMdx(istream);
 
-	if (bytes == 0)
+	if (size == 0)
 		return 0;
 
 	long32 nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
+	wc3lib::read(istream, nbytes, size);
+	std::cout << "Nbytes: " << nbytes << std::endl;
 
 	while (nbytes > 0)
 	{
 		class Helper *helper = new Helper(this);
-		long32 readBytes = helper->readMdx(istream);
-		bytes += readBytes;
-		nbytes -= readBytes;
+		std::streamsize readSize = helper->readMdx(istream);
+		size += readSize;
+		nbytes -= boost::numeric_cast<long32>(readSize);
 		this->m_helpers.push_back(helper);
+		std::cout << "Helper: "
+		<< helper->name() << std::endl
+		<< helper->id() << std::endl
+		<< helper->parentId() << std::endl
+		<< helper->translations()->mdlxTranslations().size() << std::endl
+		<< helper->rotations()->mdlxRotations().size() << std::endl
+		<< std::endl;
 	}
 
-	return bytes;
+	return size;
 }
 
 std::streamsize Helpers::writeMdx(std::ostream &ostream) const throw (class Exception)

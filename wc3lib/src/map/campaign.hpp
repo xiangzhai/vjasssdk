@@ -21,6 +21,7 @@
 #ifndef WC3LIB_MAP_CAMPAIGN_HPP
 #define WC3LIB_MAP_CAMPAIGN_HPP
 
+#include "platform.hpp"
 #include "../format.hpp"
 
 namespace wc3lib
@@ -29,7 +30,7 @@ namespace wc3lib
 namespace map
 {
 
-class Campaign : public Format
+class Campaign : public Format<byte>
 {
 	public:
 		Campaign();

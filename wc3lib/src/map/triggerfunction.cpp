@@ -23,7 +23,6 @@
 #include "triggerfunction.hpp"
 #include "triggerfunctionparameter.hpp"
 #include "../utilities.hpp"
-#include "platform.hpp"
 
 namespace wc3lib
 {
@@ -35,7 +34,7 @@ TriggerFunction::TriggerFunction(class Trigger *trigger) : m_trigger(trigger), m
 {
 }
 
-std::streamsize TriggerFunction::read(std::istream &istream) throw (class Exception)
+std::streamsize TriggerFunction::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size;
 	int32 type;
@@ -51,12 +50,12 @@ std::streamsize TriggerFunction::read(std::istream &istream) throw (class Except
 	return size;
 }
 
-std::streamsize TriggerFunction::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize TriggerFunction::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size;
-	wc3lib::write<int32>(ostream, this->m_type, size);
+	wc3lib::write(ostream, static_cast<const int32&>(this->m_type), size);
 	writeString(ostream, this->m_name, size);
-	wc3lib::write<int32>(ostream, this->m_isEnabled, size);
+	wc3lib::write(ostream, static_cast<const int32&>(this->m_isEnabled), size);
 
 	BOOST_FOREACH(const class TriggerFunctionParameter *parameter, this->m_parameters)
 		size += parameter->write(ostream);

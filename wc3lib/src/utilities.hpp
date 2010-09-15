@@ -24,7 +24,10 @@
 #include <cmath>
 #include <cstring>
 #include <sstream>
-#include <iostream>
+#include <iostream> // include iostream since cout is often used as utility for general output
+
+#include <boost/cstdint.hpp>
+#include <boost/cast.hpp>
 
 #include "exception.hpp"
 #include "internationalisation.hpp"
@@ -61,10 +64,21 @@ inline T readValue(std::istream &istream, bool byteSwap = false)
 	return result;
 }
 
-template<typename T>
-inline std::istream& read(std::istream &istream, T &value, std::streamsize &sizeCounter, std::size_t size = sizeof(T))
+/**
+* Common input stream read function mainly required for binary format implementations.
+* Reads converted value from input stream istream and increases sizeCounter by read size.
+* Supports different types of input streams (with various char types).
+* Size of read value can be specified, otherwise size of type T in user-defined char type _CharT is used.
+* @param istream Input stream which is read from.
+* @param value Reference of value which is filled by function. Can be uninitialised when calling this function (assignment operator is used).
+* @param sizeCounter Counter of read chars which is increased by function. @note Do not forget to initialise before calling this function since += operator is used.
+* @param size Size of value which is filled. Default value is size of type T in user-defined char type _CharT. Consider that real size is taken and not sizeof(T) since it only returns size in C++ language implementation char type.
+* @return Returns input stream istream for further treatment.
+*/
+template<typename T, typename _CharT>
+inline std::basic_istream<_CharT>& read(std::basic_istream<_CharT> &istream, T &value, std::streamsize &sizeCounter, std::size_t size = sizeof(T) * sizeof(_CharT)) throw (class Exception)
 {
-	istream.read(reinterpret_cast<char*>(&value), size);
+	istream.read(reinterpret_cast<_CharT*>(&value), size);
 
 	if (!istream)
 		throw Exception(_("Input stream error."));
@@ -79,11 +93,14 @@ inline std::istream& read(std::istream &istream, T &value, std::streamsize &size
 
 /**
 * Reads C string char into value "value" (with 0-terminating if size is 0).
+* Usually you should use type "char" but other types may also be supported by stream.
 * @param size If this value is 0 it will stop when reaching 0-terminating char.
 * @param terminatingChar Customizable terminating char.
 */
-inline std::istream& readCString(std::istream &istream, char *value, std::streamsize &sizeCounter, std::size_t size = 0, char terminatingChar = '\0')
+template<typename _CharT>
+inline std::basic_istream<_CharT>& readCString(std::basic_istream<_CharT> &istream, _CharT *&value, std::streamsize &sizeCounter, std::size_t size = 0, _CharT terminatingChar = '\0') throw (class Exception)
 {
+	// value is filled by this function
 	if (value != 0)
 		throw Exception(_("readCString: Value should be 0."));
 
@@ -91,7 +108,7 @@ inline std::istream& readCString(std::istream &istream, char *value, std::stream
 	{
 		// get 0 terminating character, get name
 		std::streampos position = istream.tellg();
-		char character;
+		_CharT character;
 
 		if (!istream)
 			throw Exception(_("Input stream error."));
@@ -116,26 +133,46 @@ inline std::istream& readCString(std::istream &istream, char *value, std::stream
 		size = length; // assign new length
 	}
 
-	value = new char[size + 1];
-	read(istream, value, sizeCounter, size);
+	value = new _CharT[size + 1];
+	read(istream, value[0], sizeCounter, size + 1); // read terminating char but replace afterwards with user-defined, if you don't read you'll always read the same string with size 1 (0-terminating char)
 	value[size] = '\0';
 
 	return istream;
 }
 
-inline std::istream& readString(std::istream &istream, std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
+template<typename _CharT>
+inline std::basic_istream<_CharT>& readString(std::basic_istream<_CharT> &istream, std::basic_string<_CharT> &value, std::streamsize &sizeCounter, std::size_t size = 0) throw (class Exception)
 {
-	char *cString = 0;
+	_CharT *cString = 0;
 	readCString(istream, cString, sizeCounter, size);
-	value = cString;
+	value = cString; // uses const cString and copies content
 	delete[] cString;
 
 	return istream;
 }
 
-inline std::istream& readLine(std::istream &istream, std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
+template<typename _CharT>
+inline std::streampos endPosition(std::basic_istream<_CharT> &istream)
 {
-	char *cString = 0;
+	std::streampos pos = istream.tellg();
+	istream.seekg(0, std::ios_base::end);
+	std::streampos end = istream.tellg();
+	istream.seekg(pos);
+
+	return end;
+}
+
+template<typename _CharT>
+inline bool eof(std::basic_istream<_CharT> &istream)
+{
+	//return istream.rdstate() & std::ios_base::eofbit;
+	return istream.tellg() == endPosition(istream);
+}
+
+template<typename _CharT>
+inline std::basic_istream<_CharT>& readLine(std::basic_istream<_CharT> &istream, std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
+{
+	_CharT *cString = 0;
 	readCString(istream, cString, sizeCounter, size, '\n');
 	value = cString;
 	delete[] cString;
@@ -143,10 +180,10 @@ inline std::istream& readLine(std::istream &istream, std::string &value, std::st
 	return istream;
 }
 
-template<typename T>
-inline std::ostream& write(std::ostream &ostream, const T &value, std::streamsize &sizeCounter, std::size_t size = sizeof(T))
+template<typename _CharT, typename T>
+inline std::basic_ostream<_CharT>& write(std::basic_ostream<_CharT> &ostream, const T &value, std::streamsize &sizeCounter, std::size_t size = sizeof(T) * sizeof(_CharT))
 {
-	ostream.write(reinterpret_cast<const char*>(&value), size);
+	ostream.write(reinterpret_cast<const _CharT*>(&value), size);
 
 	if (!ostream)
 		throw Exception(_("Output stream error."));
@@ -160,19 +197,33 @@ inline std::ostream& write(std::ostream &ostream, const T &value, std::streamsiz
 * Writes C string of value "value" into output (with 0 terminating char if size is 0).
 * @param size If size is 0 it will stop writing when reached 0-terminating char.
 */
-inline std::ostream& writeCString(std::ostream &ostream, const char *value, std::streamsize &sizeCounter, std::size_t size = 0)
+template<typename _CharT>
+inline std::basic_ostream<_CharT>& writeCString(std::basic_ostream<_CharT> &ostream, const _CharT *value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
 	return write(ostream, value, sizeCounter, size == 0 ? strlen(value) + 1 : size);
 }
 
-inline std::ostream& writeString(std::ostream &ostream, const std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
+template<typename _CharT>
+inline std::basic_ostream<_CharT>& writeString(std::basic_ostream<_CharT> &ostream, const std::basic_string<_CharT> &value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
 	return writeCString(ostream, value.data(), sizeCounter, size);
 }
 
-inline std::ostream& writeLine(std::ostream &ostream, const std::string &value, std::streamsize &sizeCounter, std::size_t size = 0)
+template<typename _CharT>
+inline std::basic_ostream<_CharT>& writeLine(std::basic_ostream<_CharT> &ostream, const _CharT *value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
-	std::string newValue = value + '\n';
+	_CharT newValue[strlen(value) + 2];
+	memcpy(newValue, value, strlen(value));
+	newValue[strlen(value)] = '\n';
+	newValue[strlen(value) + 1] = '\0';
+
+	return writeCString(ostream, newValue, sizeCounter, size);
+}
+
+template<typename _CharT>
+inline std::basic_ostream<_CharT>& writeLine(std::basic_ostream<_CharT> &ostream, const std::basic_string<_CharT> &value, std::streamsize &sizeCounter, std::size_t size = 0)
+{
+	std::basic_string<_CharT> newValue = value + '\n';
 
 	return writeCString(ostream, newValue.data(), sizeCounter, size);
 }
@@ -180,34 +231,45 @@ inline std::ostream& writeLine(std::ostream &ostream, const std::string &value, 
 template<typename T>
 std::string sizeStringBinary(T size)
 {
-	std::string unit;
-	T remainder;
+	typedef uint64_t SizeType;
+	static const std::size_t tableSize = 4;
+	static const SizeType table[tableSize] =
+	{
+		pow(1024, 3),
+		pow(1024, 2),
+		1024,
+		0
+	};
+	static const char *identifierTable[tableSize] =
+	{
+		_("Gi"),
+		_("Mi"),
+		_("Ki"),
+		_("B")
+	};
 
-	if (size >= pow(1024, 3))
+	std::string unit = "";
+	SizeType remainder = 0;
+
+	for (std::size_t i = tableSize - 1; i >= 0; --i)
 	{
-		remainder = size % T(pow(1024, 3));
-		size /= pow(1024, 3);
-		unit = _("Gi");
-	}
-	else if (size >= pow(1024, 2))
-	{
-		remainder = size % T(pow(1024, 2));
-		size /= pow(1024, 2);
-		unit = _("Mi");
-	}
-	else if (size >= 1024)
-	{
-		remainder = size % 1024;
-		size /= 1024;
-		unit = _("Ki");
-	}
-	else
-	{
-		remainder = 0;
-		unit = _("B");
+		if (size >= table[i])
+		{
+			if (table[i] > 0)
+			{
+				remainder = boost::numeric_cast<SizeType>(size) % table[i];
+				size /= boost::numeric_cast<T>(table[i]);
+			}
+			else
+				remainder = 0;
+
+			unit = identifierTable[i];
+
+			break;
+		}
 	}
 
-	std::stringstream sstream;
+	std::ostringstream sstream;
 	sstream << size;
 
 	if (remainder != 0)
@@ -221,34 +283,45 @@ std::string sizeStringBinary(T size)
 template<typename T>
 std::string sizeStringDecimal(T size)
 {
-	std::string unit;
-	T remainder;
+	typedef uint64_t SizeType;
+	static const std::size_t tableSize = 4;
+	static const SizeType table[tableSize] =
+	{
+		pow(1000, 3),
+		pow(1000, 2),
+		1000,
+		0
+	};
+	static const char *identifierTable[tableSize] =
+	{
+		_("G"),
+		_("M"),
+		_("k"),
+		_("B")
+	};
 
-	if (size >= pow(1000, 3))
+	std::string unit = "";
+	SizeType remainder = 0;
+
+	for (std::size_t i = tableSize - 1; i >= 0; --i)
 	{
-		remainder = size % T(pow(1000, 3));
-		size /= pow(1000, 3);
-		unit = _("G");
-	}
-	else if (size >= pow(1000, 2))
-	{
-		remainder = size % T(pow(1000, 2));
-		size /= pow(1000, 2);
-		unit = _("M");
-	}
-	else if (size >= 1000)
-	{
-		remainder = size % 1000;
-		size /= 1000;
-		unit = _("k");
-	}
-	else
-	{
-		remainder = 0;
-		unit = _("B");
+		if (size >= table[i])
+		{
+			if (table[i] > 0)
+			{
+				remainder = boost::numeric_cast<SizeType>(size) % table[i];
+				size /= boost::numeric_cast<T>(table[i]);
+			}
+			else
+				remainder = 0;
+
+			unit = identifierTable[i];
+
+			break;
+		}
 	}
 
-	std::stringstream sstream;
+	std::ostringstream sstream;
 	sstream << size;
 
 	if (remainder != 0)

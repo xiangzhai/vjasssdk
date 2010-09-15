@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_TEXTUREVERTEX_HPP
 #define WC3LIB_MDLX_TEXTUREVERTEX_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "texturevertices.hpp"
 
 namespace wc3lib
 {
@@ -33,9 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureVertices;
-
-class TextureVertex
+class TextureVertex : public GroupMdxBlockMember
 {
 	public:
 		TextureVertex(class TextureVertices *textureVertices);
@@ -51,13 +46,12 @@ class TextureVertex
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		class TextureVertices *m_textureVertices;
 		float32 m_x, m_y;
 };
 
 inline class TextureVertices* TextureVertex::textureVertices() const
 {
-	return this->m_textureVertices;
+	return dynamic_cast<class TextureVertices*>(this->m_parent);
 }
 
 inline float32 TextureVertex::x() const

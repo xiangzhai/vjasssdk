@@ -32,16 +32,14 @@ namespace wc3lib
 namespace map
 {
 
-class W3m;
-class Camera;
-
 /**
 * "war3map.w3c" file of maps contains camera information.
 */
-class Cameras : public Format
+class Cameras : public Format<byte>
 {
 	public:
 		static const int32 version;
+		static const string fileName;
 
 		Cameras(class W3m *w3m);
 		~Cameras();

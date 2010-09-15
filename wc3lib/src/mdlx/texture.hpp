@@ -34,8 +34,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Textures;
-
 class Texture
 {
 	public:

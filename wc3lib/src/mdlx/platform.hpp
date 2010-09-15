@@ -30,6 +30,12 @@ namespace mdlx
 {
 
 /// @todo Check signed and unsigned!
+/**
+* MDL notes:
+* Floating point numbers are in IEEE scientific notation format with 6 significant
+* figures. Exponent is not shown for exponents of ±4. If the number is an integral
+* float, decimal point is not shown.
+*/
 typedef float float32;
 typedef uint16_t short16; /// @todo undefined length?!
 typedef uint32_t long32;

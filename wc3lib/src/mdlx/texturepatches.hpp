@@ -42,7 +42,7 @@ class TexturePatches : public MdxBlock
 		virtual ~TexturePatches();
 
 		class Geoset* geoset() const;
-		const std::list<class TexturePatch*>& texturePatches() const;
+		long32 number() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
@@ -51,7 +51,7 @@ class TexturePatches : public MdxBlock
 
 	protected:
 		class Geoset *m_geoset;
-		std::list<class TexturePatch*> m_texturePatches;
+		long32 m_number;
 };
 
 inline class Geoset* TexturePatches::geoset() const
@@ -59,9 +59,9 @@ inline class Geoset* TexturePatches::geoset() const
 	return this->m_geoset;
 }
 
-inline const std::list<class TexturePatch*>& TexturePatches::texturePatches() const
+inline long32 TexturePatches::number() const
 {
-	return this->m_texturePatches;
+	return this->m_number;
 }
 
 }

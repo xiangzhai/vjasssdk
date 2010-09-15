@@ -62,7 +62,7 @@ class Sounds;
 class CustomTextTriggers;
 class ImportedFiles;
 
-class W3m : public Format
+class W3m : public Format<byte>
 {
 	public:
 		enum Flags

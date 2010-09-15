@@ -49,6 +49,7 @@ std::streamsize PrimitiveType::readMdx(std::istream &istream) throw (class Excep
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_type), size);
+	std::cout << "Primitive type size " << size << std::endl;
 
 	return size;
 }

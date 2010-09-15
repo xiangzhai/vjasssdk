@@ -35,7 +35,7 @@ namespace map
 {
 
 const int32 Triggers::version = 4;
-const char* Triggers::fileName = "war3map.wtg";
+const string Triggers::fileName = "war3map.wtg";
 
 Triggers::Triggers(class W3m *w3m) : m_w3m(w3m)
 {
@@ -44,13 +44,13 @@ Triggers::Triggers(class W3m *w3m) : m_w3m(w3m)
 std::streamsize Triggers::read(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size;
-	wc3lib::read<int32>(istream, this->m_version, size);
+	wc3lib::read(istream, this->m_version, size);
 
 	if (this->m_version != Triggers::version)
 		throw Exception(boost::format(_("Triggers: Version %1% is not supported (version %2% only).")) % this->m_version % Triggers::version);
 
 	int32 number;
-	wc3lib::read<int32>(istream, number, size);
+	wc3lib::read(istream, number, size);
 
 	for (int32 i = 0; i < number; ++i)
 	{
@@ -59,8 +59,8 @@ std::streamsize Triggers::read(std::istream &istream) throw (class Exception)
 		this->m_categories.insert(std::make_pair(category->index(), category));
 	}
 
-	wc3lib::read<int32>(istream, this->m_unknown0, size);
-	wc3lib::read<int32>(istream, number, size);
+	wc3lib::read(istream, this->m_unknown0, size);
+	wc3lib::read(istream, number, size);
 
 	for (int32 i = 0; i < number; ++i)
 	{
@@ -69,7 +69,7 @@ std::streamsize Triggers::read(std::istream &istream) throw (class Exception)
 		size += variable->read(istream);
 	}
 
-	wc3lib::read<int32>(istream, number, size);
+	wc3lib::read(istream, number, size);
 
 	for (int32 i = 0; i < number; ++i)
 	{
@@ -84,19 +84,22 @@ std::streamsize Triggers::read(std::istream &istream) throw (class Exception)
 std::streamsize Triggers::write(std::ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size;
-	wc3lib::write<int32>(ostream, this->m_version, size);
-	wc3lib::write<int32>(ostream, this->m_categories.size(), size);
+	wc3lib::write(ostream, this->m_version, size);
+	int32 number = this->m_categories.size();
+	wc3lib::write(ostream, number, size);
 
 	BOOST_FOREACH(const CategoryType category, this->m_categories)
 		size += category.second->write(ostream);
 
-	wc3lib::write<int32>(ostream, this->m_unknown0, size);
-	wc3lib::write<int32>(ostream, this->m_variables.size(), size);
+	wc3lib::write(ostream, this->m_unknown0, size);
+	number = this->m_variables.size();
+	wc3lib::write(ostream, number, size);
 
 	BOOST_FOREACH(const class Variable *variable, this->m_variables)
 		size += variable->write(ostream);
 
-	wc3lib::write<int32>(ostream, this->m_triggers.size(), size);
+	number = this->m_triggers.size();
+	wc3lib::write(ostream, number, size);
 
 	BOOST_FOREACH(const class Trigger *trigger, this->m_triggers)
 		size += trigger->write(ostream);

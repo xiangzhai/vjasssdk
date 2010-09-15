@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
 #define WC3LIB_MDLX_MATRIXGROUPCOUNTS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,11 +29,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-class MatrixGroupCount;
-
-//MTGC
-class MatrixGroupCounts : public MdxBlock
+/// MDX tag MTGC
+class MatrixGroupCounts : public GroupMdxBlock
 {
 	public:
 		MatrixGroupCounts(class Geoset *geoset);
@@ -46,12 +41,11 @@ class MatrixGroupCounts : public MdxBlock
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+
 		class Geoset *m_geoset;
-		std::list<class MatrixGroupCount*> m_matrixGroupCounts;
 };
 
 inline class Geoset* MatrixGroupCounts::geoset() const
@@ -61,7 +55,7 @@ inline class Geoset* MatrixGroupCounts::geoset() const
 
 inline const std::list<class MatrixGroupCount*>& MatrixGroupCounts::matrixGroupCounts() const
 {
-	return this->m_matrixGroupCounts;
+	return *reinterpret_cast<const std::list<class MatrixGroupCount*>*>(&this->m_members);
 }
 
 }

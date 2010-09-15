@@ -32,6 +32,7 @@ namespace map
 {
 
 const int32 Cameras::version = 0;
+const string Cameras::fileName = "war3map.w3c";
 
 Cameras::Cameras(class W3m *w3m) : m_w3m(w3m)
 {
@@ -72,7 +73,8 @@ std::streamsize Cameras::write(std::ostream &ostream) const throw (class Excepti
 
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_version, size);
-	wc3lib::write<int32>(ostream, this->m_cameras.size(), size);
+	int32 number = this->m_cameras.size();
+	wc3lib::write(ostream, number, size);
 
 	BOOST_FOREACH(const class Camera *camera, this->m_cameras)
 		size += camera->write(ostream);

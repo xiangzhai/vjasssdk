@@ -36,13 +36,13 @@ namespace map
 /**
 * @see TriggersEx
 */
-class Triggers : public Format
+class Triggers : public Format<byte>
 {
 	public:
 		typedef std::pair<int32, class TriggerCategory*> CategoryType;
 
 		static const int32 version;
-		static const char* fileName;
+		static const string fileName;
 
 		Triggers(class W3m *w3m);
 

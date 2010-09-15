@@ -60,16 +60,20 @@ static enum Strings::ConflictResult conflictFunction(const class String &string1
 	return Strings::UseBoth;
 }
 
-static void addDirectory(const boost::filesystem::path &directoryPath, std::list<boost::filesystem::path> &filePaths, bool recursive)
+static void addDirectory(const boost::filesystem::path &directoryPath, std::list<boost::filesystem::path> &filePaths, bool recursive, bool verbose)
 {
-	std::cout << boost::format(_("Reading directory \"%1%\".")) % directoryPath.string() << std::endl;
+	if (verbose)
+		std::cout << boost::format(_("Reading directory \"%1%\".")) % directoryPath.string() << std::endl;
+
 	boost::filesystem::directory_iterator endIterator;
 
+	/// @todo BOOST_FOREACH is not usable on directy paths?
 	for (boost::filesystem::directory_iterator iterator(directoryPath); iterator != endIterator; ++iterator)
 	{
 		if (!boost::filesystem::exists(iterator->status()))
 		{
-			std::cerr << boost::format(_("Error while reading file \"%1%\".")) % iterator->path().string() << std::endl;
+			if (verbose)
+				std::cerr << boost::format(_("Error while reading file \"%1%\".")) % iterator->path().string() << std::endl;
 
 			continue;
 		}
@@ -77,8 +81,8 @@ static void addDirectory(const boost::filesystem::path &directoryPath, std::list
 		if (boost::filesystem::is_directory(iterator->status()))
 		{
 			if (recursive)
-				addDirectory(iterator->path(), filePaths, recursive);
-			else
+				addDirectory(iterator->path(), filePaths, recursive, verbose);
+			else if (verbose)
 				std::cerr << boost::format(_("\"%1%\" is another directory and is being skipped.")) % iterator->path().string() << std::endl;
 		}
 		else
@@ -110,24 +114,22 @@ int main(int argc, char *argv[])
 	{
 		{"version",                 no_argument,             0, 'v'},
 		{"help",                    no_argument,             0, 'h'},
-		{"verbose",                 no_argument,             reinterpret_cast<int*>(&optionVerbose), 'V'},
-		{"fill",                    no_argument,             reinterpret_cast<int*>(&optionFill), 'F'},
-		{"replace",                 no_argument,             reinterpret_cast<int*>(&optionReplace), 'P'},
-		{"recursive",               no_argument,             reinterpret_cast<int*>(&optionRecursive), 'R'},
-		{"overwrite",               no_argument,             reinterpret_cast<int*>(&optionOverwrite), 'O'},
-		{"skipunknown",             no_argument,             reinterpret_cast<int*>(&optionSkipunknown), 'S'},
+		{"verbose",                 no_argument,             0, 'V'},
+		{"fill",                    no_argument,             0, 'F'},
+		{"replace",                 no_argument,             0, 'P'},
+		{"recursive",               no_argument,             0, 'R'},
+		{"overwrite",               no_argument,             0, 'O'},
+		{"skipunknown",             no_argument,             0, 'S'},
 		{"trans",                   required_argument,       0, 't'},
 		{"wtspath",                 required_argument,       0, 'w'},
 		{"fdfpath",                 required_argument,       0, 'f'},
 		{0, 0, 0, 0}
 	};
 
-	int optionShortcut;
-
 	while (true)
 	{
 		int optionIndex = 0;
-		optionShortcut = getopt_long(argc, argv, "vhVFPROSt:w:f:", options, &optionIndex);
+		int optionShortcut = getopt_long(argc, argv, "vhVFPROSt:w:f:", options, &optionIndex);
 
 		if (optionShortcut == -1)
 			break;
@@ -158,8 +160,6 @@ int main(int argc, char *argv[])
 				_("-F, --fill                      Fills string values with default strings when adding them from code files.\n") <<
 				_("-P, --replace                   Replaces all translated strings by STRING_<id> in code files.\n") <<
 				_("-R, --recursive                 Parses all source files in sub directories.\n") <<
-				_("-D, --fdf                       Creates file with all parsed strings.\n") <<
-				_("-W, --wts                       Creates file with all parsed strings.\n") <<
 				_("-O, --overwrite                 Overwrites existing FDF and WTS files and does not read them first.\n") <<
 				_("-S, --skipunknown               Skips files with unknown extension, otherwise they will be interpreted as WTS files.")
 				<< std::endl
@@ -172,6 +172,36 @@ int main(int argc, char *argv[])
 				std::endl;
 
 				return EXIT_SUCCESS;
+
+			case 'V':
+				optionVerbose = true;
+
+				break;
+
+			case 'F':
+				optionFill = true;
+
+				break;
+
+			case 'P':
+				optionReplace = true;
+
+				break;
+
+			case 'R':
+				optionRecursive = true;
+
+				break;
+
+			case 'O':
+				optionOverwrite = true;
+
+				break;
+
+			case 'S':
+				optionSkipunknown = true;
+
+				break;
 
 			case 't':
 				typedef std::list<std::string> SplitContainerType;
@@ -236,10 +266,10 @@ int main(int argc, char *argv[])
 		// is directory
 		else if (boost::filesystem::is_directory(path))
 		{
-			if (optionRecursive)
-				addDirectory(path, filePaths, optionRecursive);
+			addDirectory(path, filePaths, optionRecursive, optionVerbose); // if option recursive is true, sub directory entries will also be added
 
 			//filePaths.erase(iterator);
+			invalidFilePaths.push_back(path);
 		}
 	}
 
@@ -259,7 +289,7 @@ int main(int argc, char *argv[])
 	{
 		std::string extension(path.extension());
 		boost::algorithm::to_lower(extension);
-		boost::filesystem::ifstream ifstream(path);
+		boost::filesystem::ifstream ifstream;
 
 
 		if (extension == ".fdf")
@@ -291,6 +321,7 @@ int main(int argc, char *argv[])
 		}
 
 		boost::filesystem::fstream fstream(path, std::ios_base::in | std::ios_base::out); // we need out if optionReplace is true
+		std::cout << "Test 1 with path " << path << std::endl;
 		strings.parse(path, fstream, &fstream, optionReplace, optionFill, true, optionTrans, conflictFunction);
 	}
 
@@ -325,7 +356,9 @@ int main(int argc, char *argv[])
 		BOOST_FOREACH(Strings::StringListValueConst value, strings.stringList())
 			averageLength += value.second->defaultString().length();
 
-		averageLength /= strings.stringList().size();
+		std::cout << "Whole length is " << averageLength << std::endl;
+		if (strings.stringList().size() != 0)
+			averageLength /= strings.stringList().size();
 
 		std::cout << boost::format(_("Result: %1% strings, %2% is average length.")) % strings.stringList().size() % averageLength << std::endl;
 	}

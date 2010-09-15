@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,10 +22,11 @@
 
 #include "groupmdxblock.hpp"
 #include "groupmdxblockmember.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace mdlx
 {
 
@@ -41,46 +42,44 @@ GroupMdxBlock::~GroupMdxBlock()
 
 std::streamsize GroupMdxBlock::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
+	std::streamsize size = MdxBlock::readMdx(istream);
+
+	if (size == 0)
 		return 0;
 
 	long32 groupCount = 0;
-	istream.read(reinterpret_cast<char*>(&groupCount), sizeof(groupCount));
-	bytes += istream.gcount();
-	
+	wc3lib::read(istream, groupCount, size);
+
 	for ( ; groupCount > 0; --groupCount)
 	{
 		class GroupMdxBlockMember *member = this->createNewMember();
-		bytes += member->readMdx(istream);
+		size += member->readMdx(istream);
 		this->m_members.push_back(member);
 	}
-	
-	return bytes;
+
+	return size;
 }
 
 std::streamsize GroupMdxBlock::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
 	if (!this->exists())
 		return 0;
-	
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
+
+	std::streamsize size = MdxBlock::writeMdx(ostream);
+
 	long32 groupCount = this->m_members.size();
-	ostream.write(reinterpret_cast<const char*>(&groupCount), sizeof(groupCount));
-	bytes += sizeof(groupCount);
-	
+	wc3lib::write(ostream, groupCount, size);
+
 	BOOST_FOREACH(const class GroupMdxBlockMember *groupMdxBlockMember, this->m_members)
-		bytes += groupMdxBlockMember->writeMdx(ostream);
-	
-	return bytes;
+		size += groupMdxBlockMember->writeMdx(ostream);
+
+	return size;
 }
 
 class GroupMdxBlockMember* GroupMdxBlock::createNewMember()
 {
 	class GroupMdxBlockMember *member = new GroupMdxBlockMember(this);
-	
+
 	return member;
 }
 

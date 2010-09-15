@@ -37,7 +37,7 @@ namespace map
 class W3m;
 class Tilepoint;
 
-class Environment : public Format
+class Environment : public Format<byte>
 {
 	public:
 		static const int32 version;

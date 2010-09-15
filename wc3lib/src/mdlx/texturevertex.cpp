@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "texturevertex.hpp"
-#include "texturevertices.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -28,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureVertex::TextureVertex(class TextureVertices *textureVertices) : m_textureVertices(textureVertices)
+TextureVertex::TextureVertex(class TextureVertices *textureVertices) : GroupMdxBlockMember(textureVertices)
 {
 }
 

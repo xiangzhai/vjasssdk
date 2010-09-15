@@ -32,11 +32,11 @@ TriggerFunctionParameter::TriggerFunctionParameter(class TriggerFunction *functi
 }
 
 
-std::streamsize TriggerFunctionParameter::read(std::istream &istream) throw (class Exception)
+std::streamsize TriggerFunctionParameter::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size;
 	int32 type;
-	wc3lib::read<int32>(istream, type, size);
+	wc3lib::read(istream, type, size);
 	this->m_type = static_cast<enum Type>(type);
 	readString(istream, this->m_value, size);
 	wc3lib::read(istream, this->m_unknown0, size);
@@ -46,11 +46,11 @@ std::streamsize TriggerFunctionParameter::read(std::istream &istream) throw (cla
 }
 
 
-std::streamsize TriggerFunctionParameter::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize TriggerFunctionParameter::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size;
 	int32 type = static_cast<int32>(this->m_type);
-	wc3lib::write<int32>(ostream, type, size);
+	wc3lib::write(ostream, type, size);
 	writeString(ostream, this->m_value, size);
 	wc3lib::write(ostream, this->m_unknown0, size);
 	wc3lib::write(ostream, this->m_unknown1, size);

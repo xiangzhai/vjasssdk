@@ -21,9 +21,9 @@
 #ifndef WC3LIB_MAP_TRIGGERFUNCTION_HPP
 #define WC3LIB_MAP_TRIGGERFUNCTION_HPP
 
-#include <string>
 #include <list>
 
+#include "platform.hpp"
 #include "../format.hpp"
 
 namespace wc3lib
@@ -35,7 +35,7 @@ namespace map
 /**
 * @see TriggerFunctionEx
 */
-class TriggerFunction : public Format
+class TriggerFunction : public Format<byte>
 {
 	public:
 		enum Type
@@ -47,14 +47,14 @@ class TriggerFunction : public Format
 
 		TriggerFunction(class Trigger *trigger);
 
-		virtual std::streamsize read(std::istream &istream) throw (class Exception);
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 
 	protected:
 		class Trigger *m_trigger;
 		enum Type m_type;
-		std::string m_name;
+		string m_name;
 		bool m_isEnabled;
 		std::list<class TriggerFunctionParameter*> m_parameters;
 };

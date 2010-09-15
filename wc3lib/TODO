@@ -1,8 +1,21 @@
+2010-09-15 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: PrimitiveSizes and GroupVertices need to derive GroupMdxBlock.
+* mdlx: Class TexturePatch is deprecated because texture patches aren't really stored (number only).
+* mdlx: Something is read wrongly -> node id 0 should be used by strange node (probably helper - wrong list size see debug output).
+* mdlx: According to Mago's specification class Helper should derive Node not Object.
+
+2010-09-14 Tamino Dauth <tamino@cdauth.eu>
+* map: Use types string and char8Array.
+
+2010-09-13 Tamino Dauth <tamino@cdauth.eu>
+* app: Use Boost program options instead of get_opt.
+* mdlx: Use Boost quaternion library.
+
 2010-09-07 Tamino Dauth <tamino@cdauth.eu>
 * mdlx: Rename class MdxAlpha to MdlxAplha and rename class MdxAlphas to MdlxAlphas.
 * DONE: mdlx: There are more object types which do not inherit all Object properties (e. g. no type -> RibbonEmitters, Attachment). Add more abstract class Node which is derived by Object and those types for better object id storing in class Mdlx.
-* mdlx: Sine you can specifiy exact write and read length of strings now, we should use type std::string for names and not ascii[0x60] -> maybe something like limited string.
-* mdlx: Class Geoset reads too little bytes, something is missing.
+* mdlx: Since you can specifiy exact write and read length of strings now, we should use type std::string for names and not ascii[0x60] -> maybe something like limited string (texture pathes are [0x100]).
+* FIXED: mdlx: Class Geoset reads too little bytes, something is missing (missing 4 bytes if byte count is including).
 
 2010-09-04 Tamino Dauth <tamino@cdauth.eu>
 * DONE: mdlx: Rename class Rotation0s to MdlxRotations, rename class Translation1s to MdlxTranslations, rename class Scaling0s to MdlxScalings and implement corresponding Mdlx functions.

@@ -30,38 +30,45 @@ namespace wc3lib
 {
 
 /// @brief Abstract class for formats.
+template<typename _CharT>
 class Format
 {
 	public:
-		virtual std::streamsize read(std::istream &istream) throw (class Exception) = 0;
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception) = 0;
+		typedef _CharT CharType;
 
-		class Format& operator<<(std::istream &istream) throw (class Exception);
-		const class Format& operator>>(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<_CharT> &istream) throw (class Exception) = 0;
+		virtual std::streamsize write(std::basic_ostream<_CharT> &ostream) const throw (class Exception) = 0;
+
+		class Format& operator<<(std::basic_istream<_CharT> &istream) throw (class Exception);
+		const class Format& operator>>(std::basic_ostream<_CharT> &ostream) const throw (class Exception);
 };
 
-inline class Format& Format::operator<<(std::istream &istream) throw (class Exception)
+template<typename _CharT>
+inline class Format<_CharT>& Format<_CharT>::operator<<(std::basic_istream<_CharT> &istream) throw (class Exception)
 {
 	this->read(istream);
 
 	return *this;
 }
 
-inline const class Format& Format::operator>>(std::ostream &ostream) const throw (class Exception)
+template<typename _CharT>
+inline const class Format<_CharT>& Format<_CharT>::operator>>(std::basic_ostream<_CharT> &ostream) const throw (class Exception)
 {
 	this->write(ostream);
 
 	return *this;
 }
 
-inline std::istream& operator>>(std::istream &istream, class Format &format) throw (class Exception)
+template<typename _CharT>
+inline std::basic_istream<_CharT>& operator>>(std::basic_istream<_CharT> &istream, class Format<_CharT> &format) throw (class Exception)
 {
 	format.read(istream);
 
 	return istream;
 }
 
-inline std::ostream& operator<<(std::ostream &ostream, const class Format &format) throw (class Exception)
+template<typename _CharT>
+inline std::basic_ostream<_CharT>& operator<<(std::basic_ostream<_CharT> &ostream, const class Format<_CharT> &format) throw (class Exception)
 {
 	format.write(ostream);
 

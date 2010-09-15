@@ -1,8 +1,16 @@
+2010-09-15 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Fixed geoset read bug.
+* mdlx: Revised various classes.
+
+2010-09-13 Tamino Dauth <tamino@cdauth.eu>
+* core: Revised default size value of functions read and write.
+
 2010-09-10 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improved class ModelView and Editor.
 * editor: Moved UI files into sub directory.
 * editor: Added and revised various UI files.
 * editor: Added class ModuleMenu.
+* core: Fixed function readCString.
 
 2010-09-09 Tamino Dauth <tamino@cdauth.eu>
 * map: Added classes Strings and String.

@@ -47,7 +47,7 @@ class MdlxTranslations : public MdlxScalings
 
 inline const std::list<class MdlxTranslation*>& MdlxTranslations::mdlxTranslations() const
 {
-	return reinterpret_cast<const std::list<class MdlxTranslation*>&>(this->m_scalings);
+	return *reinterpret_cast<const std::list<class MdlxTranslation*>*>(&this->m_scalings);
 }
 
 }

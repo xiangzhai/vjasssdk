@@ -88,7 +88,7 @@ std::streamsize Geosets::readMdx(std::istream &istream) throw (class Exception)
 		<< "Matrix group counts: " << geoset->matrixGroupCounts()->matrixGroupCounts().size() << std::endl
 		<< "Matrices: " << geoset->matrices()->matrices().size() << std::endl
 		<< "Ganimations: " << geoset->ganimations().size() << std::endl
-		<< "Texture patches: " << geoset->texturePatches()->texturePatches().size() << std::endl
+		<< "Texture patches: " << geoset->texturePatches()->number() << std::endl
 		<< "Texture vertices: " << geoset->textureVertices()->textureVertices().size() << std::endl
 		;
 	}

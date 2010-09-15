@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,12 +21,10 @@
 #ifndef WC3LIB_MDLX_MATRIXGROUPCOUNT_HPP
 #define WC3LIB_MDLX_MATRIXGROUPCOUNT_HPP
 
-#include <istream>
-#include <ostream>
 #include <list>
 
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "matrixgroupcounts.hpp"
 
 namespace wc3lib
 {
@@ -34,9 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class MatrixGroupCounts;
-
-class MatrixGroupCount
+class MatrixGroupCount : public GroupMdxBlockMember
 {
 	public:
 		MatrixGroupCount(class MatrixGroupCounts *matrixGroupCounts);
@@ -51,13 +47,12 @@ class MatrixGroupCount
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		class MatrixGroupCounts *m_matrixGroupCounts;
 		long32 m_data;
 };
 
 inline class MatrixGroupCounts* MatrixGroupCount::matrixGroupCounts() const
 {
-	return this->m_matrixGroupCounts;
+	return dynamic_cast<class MatrixGroupCounts*>(this->m_parent);
 }
 
 inline long32 MatrixGroupCount::data() const

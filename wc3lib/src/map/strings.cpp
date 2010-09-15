@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <sstream>
 #include <list>
 
 #include <boost/tokenizer.hpp>
@@ -36,11 +35,10 @@ namespace map
 {
 
 /// Returns true if a string has been found.
-static bool getNextTranslationFunctionCall(const std::string &line, const std::list<std::string> &translationFunctions, std::string::size_type &position, std::string::size_type &length, const bool ignoreReplacedValues = true)
+static bool getNextTranslationFunctionCall(const std::string &line, const std::list<std::string> &translationFunctions, string::size_type &position, std::string::size_type &length, const bool ignoreReplacedValues = true)
 {
 	BOOST_FOREACH(const std::string &translationFunction, translationFunctions)
 	{
-
 		std::string searchedString = translationFunction + "(\"";
 		position = line.find(searchedString, position);
 
@@ -128,20 +126,24 @@ Strings::~Strings()
 {
 }
 
-std::pair<std::streamsize, std::streamsize> Strings::parse(const boost::filesystem::path &path, std::istream &istream, std::ostream *ostream, const bool replace, const bool fill, const bool ignoreReplacedValues, const std::list<std::string> &translationFunctions, ConflictFunction conflictFunction) throw (class Exception)
+std::pair<std::streamsize, std::streamsize> Strings::parse(const boost::filesystem::path &path, std::basic_istream<byte> &istream, std::basic_ostream<byte> *ostream, const bool replace, const bool fill, const bool ignoreReplacedValues, const std::list<string> &translationFunctions, ConflictFunction conflictFunction) throw (class Exception)
 {
-	std::string line;
+	string line;
 	std::streamsize gSize = 0;
 	std::streamsize pSize = 0;
 
-	for (std::size_t i = 0; readLine(istream, line, gSize); ++i)
+	//  && !eof(istream)
+	for (std::size_t i = 0; !eof(istream) && readLine(istream, line, gSize); ++i)
 	{
-		std::string::size_type position = 0;
-		std::string::size_type length = 0;
+		string::size_type position = 0;
+		string::size_type length = 0;
+		std::cout << "End position " << endPosition(istream) << " and current position " << istream.tellg() << std::endl;
+		std::cout << "Line gna " << i << std::endl;
 
 		while (getNextTranslationFunctionCall(line, translationFunctions, position, length, ignoreReplacedValues))
 		{
-			std::string defaultString = line.substr(position, length);
+			//std::cout << "TRANSLATION CALL " << i << std::endl;
+			string defaultString = line.substr(position, length);
 			String::IdType id = 0;
 			bool exists = false;
 			String::IdType j = 0;
@@ -175,9 +177,9 @@ std::pair<std::streamsize, std::streamsize> Strings::parse(const boost::filesyst
 				}
 				while (true);
 
-				std::stringstream sstream;
+				stringstream sstream;
 				sstream << "STRING_" << id;
-				std::string valueString = fill ? defaultString : "";
+				string valueString = fill ? defaultString : "";
 				class String *string = new String(sstream.str(), defaultString, valueString);
 				string->addUsage(path, i);
 				this->m_stringList.insert(std::make_pair(id, string));
@@ -196,27 +198,27 @@ std::pair<std::streamsize, std::streamsize> Strings::parse(const boost::filesyst
 	return std::make_pair(gSize, pSize);
 }
 
-std::streamsize Strings::read(std::istream &istream) throw (class Exception)
+std::streamsize Strings::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
-	std::string line;
+	string line;
 	std::streamsize size = 0;
 
 	for (std::size_t i = 0; readLine(istream, line, size); ++i)
 	{
-		std::string::size_type position = line.find("STRING");
+		string::size_type position = line.find("STRING");
 
 		if (line.substr(0, 6) != "STRING")
 			continue;
 
-		std::string idString = line.substr(0, 6) + "_" + line.substr(7);
+		string idString = line.substr(0, 6) + "_" + line.substr(7);
 
 		if (readLine(istream, line, size) && ++i && line.substr(0, 2) == "//")
 		{
-			std::string defaultString = line.length() < 4 ? "" : line.substr(3);
+			string defaultString = line.length() < 4 ? "" : line.substr(3);
 
 			if (readLine(istream, line, size) && ++i && line == "{" && readLine(istream, line, size) && ++i)
 			{
-				std::string valueString = line;
+				string valueString = line;
 				class String *string = new String(idString, defaultString, line);
 				checkForStringConflict(this->m_stringList, string);
 			}
@@ -230,13 +232,13 @@ std::streamsize Strings::read(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Strings::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize Strings::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 
 	BOOST_FOREACH(StringListValueConst value, this->m_stringList)
 	{
-		std::ostringstream sstream;
+		ostringstream sstream;
 		sstream
 		<< "STRING " << value.second->id() << '\n'
 		<< "// " << value.second->defaultString() << '\n'
@@ -251,11 +253,11 @@ std::streamsize Strings::write(std::ostream &ostream) const throw (class Excepti
 }
 
 /// @todo Add better is in comment etc. support.
-std::streamsize Strings::readFdf(std::istream &istream) throw (class Exception)
+std::streamsize Strings::readFdf(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	bool foundEndCharacter = false;
 	bool isInComment = false;
-	std::string line;
+	string line;
 	std::streamsize size = 0;
 
 	for (std::size_t i = 0; readLine(istream, line, size); ++i)
@@ -285,39 +287,39 @@ std::streamsize Strings::readFdf(std::istream &istream) throw (class Exception)
 			else if ((*iterator).length() > 7 && (*iterator).substr(0, 7)  == "STRING_")
 			{
 				//std::cout << "Length is bigger than 7." << std::endl;
-				std::string idString = *iterator;
-				std::size_t index = line.find_last_of("/*");
+				string idString = *iterator;
+				string::size_type index = line.find_last_of("/*");
 
-				if (index == std::string::npos)
+				if (index == string::npos)
 					continue;
 
 				isInComment = true;
 				index += 3;
-				std::size_t length = line.find_last_of("*/", index);
+				string::size_type length = line.find_last_of("*/", index);
 
-				if (length == std::string::npos)
+				if (length == string::npos)
 					continue;
 
 				isInComment = false;
 				length -= index + 3;
-				std::string defaultString = line.substr(index, length);
+				string defaultString = line.substr(index, length);
 
 				if (defaultString.empty())
 					continue;
 
 				index = line.find('"');
 
-				if (index == std::string::npos)
+				if (index == string::npos)
 					continue;
 
 				index += 2;
 				length = line.find("\"", index);
 
-				if (length == std::string::npos)
+				if (length == string::npos)
 					continue;
 
 				length -= index + 2;
-				std::string valueString = line.substr(index, length);
+				string valueString = line.substr(index, length);
 				class String *string = new String(idString, defaultString, valueString);
 				checkForStringConflict(this->m_stringList, string);
 			}
@@ -330,7 +332,7 @@ std::streamsize Strings::readFdf(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Strings::writeFdf(std::ostream &ostream) const throw (class Exception)
+std::streamsize Strings::writeFdf(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 	writeLine(ostream, "StringList {", size);
@@ -339,7 +341,7 @@ std::streamsize Strings::writeFdf(std::ostream &ostream) const throw (class Exce
 
 	BOOST_FOREACH(const StringListValueConst value, this->m_stringList)
 	{
-		std::string string("\t");
+		string string("\t");
 		string.append(value.second->idString()).append("\t\t\t\"").append(value.second->valueString()).append("\"");
 
 		if (i != this->m_stringList.size() - 1)
@@ -355,7 +357,7 @@ std::streamsize Strings::writeFdf(std::ostream &ostream) const throw (class Exce
 	return size;
 }
 
-void Strings::list(std::ostream &ostream) const
+void Strings::list(std::basic_ostream<byte> &ostream) const
 {
 	BOOST_FOREACH(StringListValueConst value, this->m_stringList)
 		ostream << boost::format(_("- %1%\t\t%2%")) % value.second->idString() % value.second->defaultString() << std::endl;

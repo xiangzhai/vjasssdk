@@ -78,7 +78,7 @@ std::streamsize Geoset::writeMdl(std::ostream &ostream) const throw (class Excep
 std::streamsize Geoset::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
-	long32 includingByteCount;
+	long32 includingByteCount; // Magos specification says including byte count!
 	wc3lib::read(istream, includingByteCount, size);
 
 	if (includingByteCount - sizeof(includingByteCount) <= 0)

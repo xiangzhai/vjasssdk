@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,12 +21,10 @@
 #ifndef WC3LIB_MDLX_MATRIX_HPP
 #define WC3LIB_MDLX_MATRIX_HPP
 
-#include <istream>
-#include <ostream>
 #include <list>
 
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "matrices.hpp"
 
 namespace wc3lib
 {
@@ -34,9 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Matrices;
-
-class Matrix
+class Matrix : public GroupMdxBlockMember
 {
 	public:
 		Matrix(class Matrices *matrices);
@@ -51,13 +47,12 @@ class Matrix
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Matrices *m_matrices;
 		long32 m_data;
 };
 
 inline class Matrices* Matrix::matrices() const
 {
-	return this->m_matrices;
+	return dynamic_cast<class Matrices*>(this->m_parent);
 }
 
 inline long32 Matrix::data() const

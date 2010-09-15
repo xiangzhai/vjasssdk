@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "primitivesize.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -44,16 +45,18 @@ void PrimitiveSize::writeMdl(std::ostream &ostream) const throw (class Exception
 
 std::streamsize PrimitiveSize::readMdx(std::istream &istream) throw (class Exception)
 {
-	long32 bytes = 0;
-	istream.read(reinterpret_cast<char*>(&this->m_value), sizeof(this->m_value));
-	bytes += istream.gcount();
-	
-	return bytes;
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_value, size);
+
+	return size;
 }
 
 std::streamsize PrimitiveSize::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_value, size);
+
+	return size;
 }
 
 }

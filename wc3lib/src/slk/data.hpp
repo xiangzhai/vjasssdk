@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,7 @@
 #include <list>
 
 #include "../format.hpp"
+#include "../map/platform.hpp"
 
 namespace wc3lib
 {
@@ -31,13 +32,11 @@ namespace wc3lib
 namespace slk
 {
 
-class DataEntry;
-
 /**
 * Default class for reading <Prefix>Data.txt files like WorldEditData.txt or TriggerStrings.txt.
 * @todo Should use a Bison file which defines the possible syntax for these files. Maybe we could use Boost's parser library instead.
 */
-class Data : public Format
+class Data : public Format<map::byte>
 {
 	public:
 		Data();

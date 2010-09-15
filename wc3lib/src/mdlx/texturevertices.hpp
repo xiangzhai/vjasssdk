@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +23,7 @@
 
 #include <list>
 
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +32,7 @@ namespace mdlx
 {
 
 /// UVBS
-class TextureVertices : public MdxBlock
+class TextureVertices : public GroupMdxBlock
 {
 	public:
 		TextureVertices(class Geoset *geoset);
@@ -43,12 +43,11 @@ class TextureVertices : public MdxBlock
 
 		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+
 		class Geoset *m_geoset;
-		std::list<class TextureVertex*> m_textureVertices;
 };
 
 inline class Geoset* TextureVertices::geoset() const
@@ -58,7 +57,7 @@ inline class Geoset* TextureVertices::geoset() const
 
 inline const std::list<class TextureVertex*>& TextureVertices::textureVertices() const
 {
-	return this->m_textureVertices;
+	return *reinterpret_cast<const std::list<class TextureVertex*>*>(&this->m_members);
 }
 
 }

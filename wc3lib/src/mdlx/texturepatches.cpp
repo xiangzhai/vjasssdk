@@ -18,12 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "texturepatches.hpp"
-#include "texturepatch.hpp"
 #include "geoset.hpp"
-#include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -37,8 +34,6 @@ TexturePatches::TexturePatches(class Geoset *geoset) : MdxBlock("UVAS"), m_geose
 
 TexturePatches::~TexturePatches()
 {
-	BOOST_FOREACH(class TexturePatch *texturePatch, this->m_texturePatches)
-		delete texturePatch;
 }
 
 void TexturePatches::readMdl(std::istream &istream) throw (class Exception)
@@ -51,14 +46,13 @@ void TexturePatches::writeMdl(std::ostream &ostream) const throw (class Exceptio
 
 std::streamsize TexturePatches::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
+	std::streamsize size = MdxBlock::readMdx(istream);
 
-	if (bytes == 0)
+	if (size == 0)
 		return 0;
 
-	long32 ntvrts = 0;
-	istream.read(reinterpret_cast<char*>(&ntvrts), sizeof(ntvrts));
-	// According to Mago's specification it's followed by nothing!
+	wc3lib::read(istream, this->m_number, size);
+	// According to Mago's specification it's followed by nothing (works correctly)!
 
 	/*
 
@@ -83,17 +77,19 @@ std::streamsize TexturePatches::readMdx(std::istream &istream) throw (class Exce
 	std::cout << "After texture patches." << std::endl;
 	*/
 
-	return bytes;
+	return size;
 }
 
 std::streamsize TexturePatches::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	long32 bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize size = MdxBlock::writeMdx(ostream);
 
-	if (bytes == 0)
+	if (size == 0)
 		return 0;
 
-	return bytes;
+	wc3lib::write(ostream, this->m_number, size);
+
+	return size;
 }
 
 }

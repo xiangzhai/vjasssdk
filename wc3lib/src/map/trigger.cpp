@@ -36,17 +36,17 @@ Trigger::Trigger(class Triggers *triggers) : m_triggers(triggers)
 {
 }
 
-std::streamsize Trigger::read(std::istream &istream) throw (class Exception)
+std::streamsize Trigger::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	readString(istream, this->m_name, size);
 	readString(istream, this->m_description, size);
 	int32 value;
-	wc3lib::read<int32>(istream, value, size);
+	wc3lib::read(istream, value, size);
 	this->m_isEnabled = value;
-	wc3lib::read<int32>(istream, value, size);
+	wc3lib::read(istream, value, size);
 	this->m_isCustomText = value;
-	wc3lib::read<int32>(istream, value, size);
+	wc3lib::read(istream, value, size);
 	this->m_isInitiallyOn = value;
 	wc3lib::read(istream, this->m_unknown, size);
 	int32 categoryIndex;
@@ -65,18 +65,22 @@ std::streamsize Trigger::read(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Trigger::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize Trigger::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 
 	writeString(ostream, this->m_name, size);
 	writeString(ostream, this->m_description, size);
-	wc3lib::write<int32>(ostream, this->m_isEnabled, size);
-	wc3lib::write<int32>(ostream, this->m_isCustomText, size);
-	wc3lib::write<int32>(ostream, this->m_isInitiallyOn, size);
+	int32 value = this->m_isEnabled;
+	wc3lib::write(ostream, value, size);
+	value = this->m_isCustomText;
+	wc3lib::write(ostream, value, size);
+	value = this->m_isInitiallyOn;
+	wc3lib::write(ostream, value, size);
 	wc3lib::write(ostream, this->m_unknown, size);
 	wc3lib::write(ostream, this->m_category->index(), size);
-	wc3lib::write(ostream, this->m_functions.size(), size);
+	value = this->m_functions.size();
+	wc3lib::write(ostream, value, size);
 
 	BOOST_FOREACH(const class TriggerFunction *function, this->m_functions)
 		size += function->write(ostream);

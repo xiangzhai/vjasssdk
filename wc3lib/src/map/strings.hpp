@@ -22,10 +22,10 @@
 #define WC3LIB_MAP_STRINGS_HPP
 
 #include <map>
-#include <string>
 
 #include <boost/filesystem.hpp>
 
+#include "platform.hpp"
 #include "../format.hpp"
 
 namespace wc3lib
@@ -37,7 +37,7 @@ namespace map
 /**
 * Class for FDF and WTS file formats.
 */
-class Strings : public Format
+class Strings : public Format<byte>
 {
 	public:
 		typedef std::map<std::size_t, class String*> StringList; // key is string id
@@ -69,21 +69,21 @@ class Strings : public Format
 		* @param conflictFunction If this value is not 0 function will be called when two strings have the same default string. Use Strings::ConflictResult as return value to solve such conflicts.
 		* @return Returns pair with get and put stream sizes.
 		*/
-		virtual std::pair<std::streamsize, std::streamsize> parse(const boost::filesystem::path &path, std::istream &istream, std::ostream *ostream = 0, const bool replace = false, const bool fill = true, const bool ignoreReplacedValues = true, const std::list<std::string> &translationFunctions = std::list<std::string>(1, "GetLocalizedString"), ConflictFunction conflictFunction = 0) throw (class Exception);
+		virtual std::pair<std::streamsize, std::streamsize> parse(const boost::filesystem::path &path, std::basic_istream<byte> &istream, std::basic_ostream<byte> *ostream = 0, const bool replace = false, const bool fill = true, const bool ignoreReplacedValues = true, const std::list<std::string> &translationFunctions = std::list<std::string>(1, "GetLocalizedString"), ConflictFunction conflictFunction = 0) throw (class Exception);
 
 		/**
 		* Reads WTS format.
 		*/
-		virtual std::streamsize read(std::istream &istream) throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
 		/**
 		* Writes WTS format.
 		*/
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
-		virtual std::streamsize readFdf(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeFdf(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readFdf(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize writeFdf(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
-		virtual void list(std::ostream &ostream) const;
+		virtual void list(std::basic_ostream<byte> &ostream) const;
 
 	protected:
 		boost::filesystem::path m_path;

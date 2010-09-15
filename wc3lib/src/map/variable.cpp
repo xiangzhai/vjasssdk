@@ -36,7 +36,7 @@ std::streamsize Variable::read(std::istream &istream) throw (class Exception)
 	std::streamsize size;
 	readString(istream, this->m_name, size);
 	readString(istream, this->m_type, size);
-	wc3lib::read<int32>(istream, this->m_number, size);
+	wc3lib::read(istream, this->m_number, size);
 	int32 isArray;
 	wc3lib::read(istream, isArray, size);
 	this->m_isArray = static_cast<bool>(isArray);
@@ -53,9 +53,9 @@ std::streamsize Variable::write(std::ostream &ostream) const throw (class Except
 	std::streamsize size;
 	writeString(ostream, this->m_name, size);
 	writeString(ostream, this->m_type, size);
-	wc3lib::write<int32>(ostream, this->m_number, size);
-	wc3lib::write<int32>(ostream, this->m_isArray, size);
-	wc3lib::write<int32>(ostream, this->m_isInitialized, size);
+	wc3lib::write(ostream, this->m_number, size);
+	wc3lib::write(ostream, *reinterpret_cast<const int32*>(&this->m_isArray), size);
+	wc3lib::write(ostream, *reinterpret_cast<const int32*>(&this->m_isInitialized), size);
 	writeString(ostream, this->m_initialValue, size);
 
 	return size;
