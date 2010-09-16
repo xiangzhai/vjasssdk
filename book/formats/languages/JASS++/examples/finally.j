@@ -16,7 +16,7 @@ function GetUnitTypeStringAndRemove takes unit whichUnit returns string
 	return result
 endfunction
 
-// Jass++
+// JASS++
 
 // We don't need any local variable since finally statement will be called when function returns something.
 string GetUnitTypeStringAndRemove(unit whichUnit)

@@ -31,6 +31,11 @@ Wie oben dargestellt erhalten kopierbasierte Typen einen Nullwert mit dem Litera
 Der Zugriff auf Nullwerte kann in manchen Fällen zu einem undefinierten Verhalten führen.
 In der Regel ist er im Testmodus jedoch abgesichert und führt zu Fehlermeldungen (siehe "Klassen").
 
+\section{Id-Literale}
+Für Id-Literale gelten bei der Validierung selbige Regeln wie in der Sektion "Objekttypen-Literale" definiert. Es wird also
+eine Warnung vom Compiler ausgegeben, falls sich die Id statisch überprüfen lässt und in keiner der entsprechenden Dateien
+zu finden ist.
+
 \section{Objekttypen-Literale}
 Des Weiteren können Eigenschaften sogenannter Objekttypen, die einen bestimmten nativen, kopierbasierten Typ haben abgefragt werden.
 Objekttypen erhalten in Warcraft 3 The Frozen Throne eine vierstellige, hexadezimale Id. Daher können Objekttypen im Wertebereich von 16^4 definiert werden.

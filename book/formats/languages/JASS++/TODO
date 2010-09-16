@@ -1,4 +1,10 @@
+2010-09-16 Tamino Dauth <tamino@cdauth.eu>
+* Überprüfungsregeln für virtuelle Elemente und Methoden präzisieren.
+* Generik verbessern.
+* SLK-Zugriffsprioritäten definieren.
+* Id's im Syntaxhighlighting zulassen (DONE: statische Überprüfung von Ids mit Warnung?).
+
 2010-08-02 Tamino Dauth <tamino@cdauth.eu>
-* Mehrfachvererbungsregeln aus den ODT-Dokumenten und C++ präzisieren.
+* DONE: Mehrfachvererbungsregeln aus den ODT-Dokumenten und C++ präzisieren.
 * Standardbibliothek verbessern.
 * Compilerimplementation weiter ausführen.

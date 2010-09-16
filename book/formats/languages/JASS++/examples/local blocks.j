@@ -11,7 +11,7 @@ function ShowImageToForce takes force whichForce, image whichImage, boolean show
 	endif
 endfunction
 
-// Jass++
+// JASS++
 
 void ShowImageToPlayer(player const whichPlayer, image whichImage, boolean show)
 {

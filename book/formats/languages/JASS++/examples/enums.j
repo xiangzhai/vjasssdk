@@ -26,7 +26,7 @@ struct Character
 	endmethod
 endstruct
 
-// Jass++
+// JASS++
 class Character
 	public enum Class
 	{
@@ -36,7 +36,7 @@ class Character
 	};
 
 	private Class m_class;
-	
+
 	public new(Class class)
 	{
 		this.m_class = class;

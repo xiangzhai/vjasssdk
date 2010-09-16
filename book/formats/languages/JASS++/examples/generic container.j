@@ -37,7 +37,7 @@ globals
 	IntegerContainer container = IntegerContainer.create2(10)
 endglobals
 
-// Jass++
+// JASS++
 template < T = type integer, integer valuesSize = 8192 >
 class Container
 {
@@ -68,4 +68,4 @@ class Container
 };
 
 class Container container = new (10);
-	
+

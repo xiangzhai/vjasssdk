@@ -1,4 +1,4 @@
-// Jass
+// JASS
 
 globals
 	string array npcName
@@ -75,7 +75,7 @@ function Test takes nothing returns nothing
 	call npc.flush(table)
 endfunction
 
-// Jass++
+// JASS++
 
 class Npc
 {

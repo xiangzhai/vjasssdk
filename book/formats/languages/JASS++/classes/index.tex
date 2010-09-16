@@ -1,26 +1,32 @@
 \chapter{Klassen}
-Mit dem Schlüsselwort "base" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
-Gültigkeitsbereichen, angesprochen werden. Da sie normalerweise kein äußerer Gültigkeitsbereich sind, funktioniert die Verwendung des "."-Operators nicht.
-Mit dem Schlüsselwort "self" spricht man die eigene Klasse an. Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
+JASS++ ist eine objektorientierte Sprache, die ein relativ herkömmliches Klassenkonzept verwendet, welches jedoch um einige
+besondere Neuerungen erweitert wurde, um eine gewisse Konsistenz verschiedener Schlüsselwörter aufzubauen und vor allem dem
+Entwickler neue Möglichkeiten zu bieten, Code einfacher zu implementieren und das Verhalten seines Programms besser abschätzen
+zu können.
+JASS++ unterstützt Mehrfachvererbung, abstrakte Klassen, statische, konstante und virtuelle Klassenelemente und -methoden, sowie
+Behälterklassen und native Klassen.
+Bei den letzteren beiden handelt es sich um spezielle Neuerungen, die für ein konsistentes Konzept eingeführt wurden.
+Behälterklassen erlauben die Deklaration eines eigenen Behältertyps.
+Native Klassen erlauben die Deklaration eines Typs, welcher rein funktional, sprich ohne Objektorientierung, verwendet werden kann.
+Mit dem Schlüsselwort "virtual" überlässt es JASS++ dem Entwickler, auf welche Art er seine Methoden und Elemente implementiert und
+welche Typsicherheiten bzw. Ableitungsmöglichkeiten er dabei garantieren möchte
+
+\section{Grundlegendes}
+Mit dem Schlüsselwort "self" spricht man die eigene Klasse bzw. deren Gültigkeitsbereich an.
+Bei virtuellen statischen Methoden muss darauf geachtet werden, mit welcher Klasse
 die erste statische Methode aufgerufen wurde, damit diese die korrekten weiteren statischen Methoden aufruft, insofern sie selbst z. B. zu einer
 der Elternklassen und nicht zur Klasse für die der Aufruf galt gehört.
-Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Gültigkeitsbereichen, über ihren Namen oder den .-Operator angesprochen werden.
+Der Zugriff auf die Klasse kann allerdings auch, wie bei gewöhnlichen Gültigkeitsbereichen, über ihren Namen oder den .-Operator erfolgen.
 In diesem Fall wird ebenfalls überprüft, ob es sich um eine virtuelle statische Methode handelt und die der korrekten Klasse aufgerufen.
 Mit dem Schlüsselwort "this" spricht man die verwendete Instanz an. "this" ist wie ein referenzbasierter Parameter mit dem Typ
 der Klasse, der jeder nicht statischen Methode übergeben wird.
-Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert (Zweiteres ist in der Regel der Fall).
-In diesem Fall werden die Instanzdaten in der globalen Hash-Tabelle oder in zusätzlichen globalen Variablen gespeichert.
-Falls die angegebene Maximalgröße den Wert 8192 übersteigt und keine globale Hash-Tabelle existiert,
-sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
-Die Maximalgröße einer Klasse kann mit dem "size"-Operator abgefragt werden: <Klassenbezeichner>.size
-Im Test-Modus muss zur Laufzeit 0 vom "new"-Operator zurückgegeben und eine Fehlermeldung ausgegeben werden, falls die Instanzgrenze
-überschritten wurde.
-Außerdem muss im Test-Modus eine Fehlermeldung zurückgegeben bzw. abgebrochen werden, wenn der "delete"-Operator auf eine 0-Instanz angewandt wird.
+Konstanten Methoden wird der Parameter mit einem konstanten Typ übergeben.
 
 \section{Abstrakte Klassen}
 Abstrakte Klassen werden mit dem Schlüsselwort "abstract" deklariert. Von ihnen können keine
-Instanzen erzeugt werden. Erbt eine Klasse, eine andere abstrakte Klasse, so muss sie sämtliche
-abstrakte Methoden implementieren, um nicht mehr selbst als abstrakt zu gelten.
+Instanzen erzeugt werden. Wird eine abstrakte Klasse abgeleitet, so muss die abgeleitete Klasse sämtliche
+abstrakte Methoden und Elemente implementieren, um nicht mehr selbst als abstrakt zu gelten.
+Klassen mit mindestens einem abstrakten Element oder einer abstrakten Methode müssen als abstrakt deklariert werden.
 
 \section{Native Klassen}
 Native Klassen werden mit dem Schlüsselwort "native" deklariert. Sie können abstrakt sein.
@@ -46,43 +52,105 @@ Dabei sollte der "size"-Operator die Größe des Behälters und der "[]" Zugriff
 Die Instanz entspricht somit einem eindimensionalen Array (siehe "Behältertypen").
 
 \section{Vererbung}
+Mit dem Schlüsselwort "base" spricht man die Elternklassen an. Diese können aber auch über ihren Namen, wie bei gewöhnlichen
+Gültigkeitsbereichen, angesprochen werden. Da sie normalerweise kein äußerer Gültigkeitsbereich sind, funktioniert die Verwendung des "."-Operators nicht.
+Innerhalb der abgeleiteten Klasse können sämtliche Methoden und Elemente aller Elternklassen verwendet werden, sie nicht als "private" deklariert wurden.
 
 \subsection{Mehrfachvererbung}
-Überschneiden sich Elemente mehrerer geerbter Klassen, so wird vom Compiler eine Warnung ausgegeben.
-Handelt es sich um Elementvariablen, so wird lediglich die erste Elementvariable der geerbten Klassen belegt.
-Bei den Methoden wird ebenfalls die Methode der zu erst geerbten Klasse (von unten nach oben, von links nach rechts) aufgerufen.
+Haben mehrere geerbte Klassen eine identische Methode (gleicher Bezeichner, gleiche Parameter, konstant/nicht konstant) bzw. ein
+identisches Element (gleicher Bezeichner, gleicher Typ, statisch/nicht statisch), so
+muss beim Aufruf der Methode bzw. dem Zugriff auf das Element der Gültigkeitsbereich der jeweiligen Klasse vorangestellt werden,
+um zu spezifizieren, welche Methode aufgerufen bzw. auf welches Element zugegriffen werden soll.
+Unnötig wird dies erst, sobald eine Implementation der Methode bzw. des Elements in der abgeleiteten Klasse selbst existiert.
+Dabei gilt es unbedingt zu beachten, dass im Falle einer Implementation der Speicher für alle Elemente belegt wird und
+die Elemente der anderen Klassen weiterhin in deren Methoden verwendet werden. Das gleiche gilt auch für Methoden.
+Wird also eine Instanz zu einer jeweiligen Elternklasse konvertiert, so wird im Falle einer nicht virutellen, mehrfach
+vorhandenen Methode, die Implementation der Elternklasse aufgerufen.
+Eine Ausnahme hierbei machen lediglich virtuelle Elemente bzw. Methoden, da sie Objektweise gespeichert werden.
+Der Compiler sollte im Fall von Überschneidungen eine Warnung ausgeben, falls diese nicht virtuell "ausgeglichen" werden.
 
-\section{protected}
+Implementation:
+Die Implementation virtueller Methoden und Elemente ist eine nicht besonders einfach zu lösende Aufgabe, besonders ohne eine
+globale Hash-Tabelle. Man muss sämtliche Überprüfungen bei Zugriffen (vor allem auch in statischen Methoden) beachten!
+
+\subsection{protected}
 Ist eine Deklaration innerhalb des Klassengültigkeitsbereiches "protected", so kann darauf nur von abgleiteten Klassen
 der Klasse zugegriffen werden.
 
-\section{Notation}
-[native][abstract] class <Klassenbezeichner> [ [<Maximalgröße>] ] (public | private | protected <Klassenbezeichner>, ...)
-{
-	[<Deklarationen>]
-} [globale Instanzen durch Kommata getrennt];
+\subsection{Notation}
+(public | private | protected <Klassenbezeichner>, ...)
+
+\section{Instanzen}
+Instanzen werden mit Hilfe des Konstruktors einer Klasse erzeugt und mit Hilfe des Destruktors wieder freigegeben werden.
+Es können nur mehr als 8192 Instanzen erzeugt werden, wenn eine Klasse eine Maximalgrößenangabe hat oder eine globale Hashtable exisitiert (Zweiteres ist in der Regel der Fall).
+In diesem Fall werden die Instanzdaten in der globalen Hash-Tabelle oder in zusätzlichen globalen Variablen gespeichert.
+Falls die angegebene Maximalgröße den Wert 8192 übersteigt und keine globale Hash-Tabelle existiert,
+sollte der Compiler eine Warnung bzw. einen Hinweis ausgeben.
+Die Maximalgröße einer Klasse kann mit dem "size"-Operator abgefragt werden: <Klassenbezeichner>.size
+Im Test-Modus muss zur Laufzeit 0 vom "new"-Operator zurückgegeben und eine Fehlermeldung ausgegeben werden, falls die Instanzgrenze
+überschritten wurde.
+Außerdem muss im Test-Modus eine Fehlermeldung zurückgegeben bzw. abgebrochen werden, wenn der "delete"-Operator auf eine 0-Instanz angewandt wird.
 
 \section{Elemente}
 Klassenelemente entsprechen Variablendeklarationen mit Zugriffsmodifikatoren, die zusätzlich statisch oder mutabel (veränderlich/mutable) sein können.
-Elemente, die statisch sind, können niemals als "mutable" deklariert werden und umgekehrt.
 Statische Elemente werden zur Laufzeit pro Klasse einmal erzeugt und sind wie globale Variablen innerhalb des Gültigkeitsbereiches der Klasse.
 Nicht statische Elemente exisitieren zur Laufzeit pro Klasseninstanz einmal.
-Sie können per <Klasseninstanzvariable>.<Elementname> angesprochen werden.
+Sie können per <Klasseninstanzvariable>.<Elementbezeichner> angesprochen werden.
+Ihr erster Zugriff findet im Konstruktor statt.
 Als "mutable" deklarierte Elemente können auch von konstanten Methoden oder bei einem Direktzugriff bei konstanten Instanzen verändert werden.
 Eine Klasse kann ebenfalls Array-Elemente enthalten (siehe "Typen - Arrays").
 
+\subsection{Virtuelle Elemente}
+Elemente können mit Hilfe des Schlüsselworts "virutal" als virtuell deklariert werden. Virtuelle nicht statische Elemente werden pro
+Klasseninstanz gespeichert. Daher wird nicht das Element einer Basisklasse angesprochen, falls eine Konvertierung der Instanz zu
+dieser erfolgt, sondern das virtuelle.
+Statische virtuelle Elemente garantieren ebenfalls einen korrekten Zugriff auf die Implementation des eigentlichen Typs der Instanz.
+So wird bei Zugriffen auf ein statisches virtuelles Element in einer Methode der Instanz stets überprüft, welches zugehörige für die
+Instanz hinterlegt wurde.
+Wird in einer virtuellen Methode auf ein nicht virtuelles Element zugegriffen, sollte der Compiler eine Warnung ausgeben.
+
+\subsection{Abstrakte Elemente}
+Klassenelemente, die mit dem Schlüsselwort "abstract" deklariert wurden, müssen in der abgeleiteten Klasse implementiert werden,
+damit diese nicht als abstrakt gilt, falls sie nicht selbst als abstrakt deklariert wurde.
+Sie können erst in der abgeleiteten Klasse bzw. nach ihrer Implementation verwendet werden.
+Eine Klasse mit mindestens einem abstrakten Element, muss als abstrakt deklariert werden.
+
+\subsection{Zugriffsmodifikatoren}
+Zugriffsmodifikatoren von nicht privaten bzw. vererbten Klassenelementen können in der abgeleiteten Klasse umdeklariert werden,
+was ihre Zugreifbarkeit verändert, ohne dass sie neu definiert werden müssen.
+Dies geschieht, indem man in der abgeleiteten Klasse lediglich die Zugriffsmodifikatoren und den Bezeichner verwendet:
+[ Zugriffsmodfikatoren ] <Bezeichner>;
+
+\subsection{Elemente der Basisklasse}
+Mit base.<Elementname> oder <Basisklasse>.<Elementname> kann ein Element der Basisklasse angesprochen werden.
+Mehrdeutigkeiten müssen jedoch über den eigentlichen Bezeichner der Basisklasse aufgelöst werden.
+
+\subsection{Mutable Elemente}
+Klassenelemente, die als "mutable" deklariert wurden, können auch von konstanten Methoden verändert werden. Dies gestattet die
+Verwendung einer Ausnahme, da es in seltenen Fällen vorkommen kann, dass ein Element von bestimmten Stellen aus veränderbar sein
+muss.
+
+\subsection{Elementeüberschreibung}
+Sämtliche geerbte Elemente der Basisklassen können überschrieben werden.
+Wird ein nicht virtuelles Element einer Basisklasse überschrieben und der Typ der Basisklasse irgendwo im Code verwendet, so sollte
+der Compiler eine Warnung ausgeben, dass möglicherweise nicht das richtige verwendet wird.
+Es gilt zu beachten, dass nicht virtuelle Elemente in der abgeleiteten Klasse mehrfach existieren können (siehe "Mehrfachvererbung").
+
 \subsection{Notation}
-[Zugriffsmodifikatoren] [static | mutable] <Variablendeklaration>;
+[Zugriffsmodifikatoren] [static] [mutable] [virtual] [abstract] <Variablendeklaration>;
 
 \section{Methoden}
-Als virtuell deklarierte Methoden, werden pro Klasseninstanz gespeichert. So wird immer die unterste virtuelle Methode aufgerufen.
-Virtuelle Methoden müssen zwingend threaded sein.
-Achtung: Virtuelle Methoden sollten nicht im Konstruktor aufgerufen werden, da sie durch die Konstruktoren erst überschrieben
-und der Klasseninstanz zugewiesen werden. Der Compiler sollte in diesem Fall eine Warnung ausgeben.
+
+\subsection{Virtuelle Methoden}
+Als virtuell deklarierte nicht statische Methoden, werden pro Klasseninstanz gespeichert.
+So wird immer die Methode der Klasse aufgerufen, welche bei der Erzeugung der Instanz angegeben wurde.
+Virtuelle Methoden müssen zwingend "threaded" sein.
+Achtung: Virtuelle nicht statische Methoden sollten nicht im Konstruktor aufgerufen werden, da sie durch die Konstruktoren
+erst überschrieben und der Klasseninstanz zugewiesen werden. Der Compiler sollte in diesem Fall eine Warnung ausgeben.
 Der Konstruktor selbst kann nicht virtuell sein.
 Statische Methoden können ebenfalls virtuell sein und werden entsprechend des zugehörigen Objekts innerhalb einer Methode aufgerufen.
 Wird eine nicht virtuelle statische Methode aus einer virtuellen Methode heraus aufgerufen, sollte der Compiler eine Warnung ausgeben.
-Virtuelle Methoden bewirken, dass diese auch aufgerufen werden, wenn das Objekt zu einem Elterntyp konvertiert wurde, da pro
+Virtuelle Methoden bewirken, dass diese auch aufgerufen werden, wenn das Objekt zu einem Basistyp konvertiert wurde, da pro
 Objekt Verweise auf die entsprechenden Methoden gespeichert werden. Dies gilt für statische und nicht statische virtuelle Methoden.
 Bei virtuellen statischen Methoden kommt noch die Besonderheit hinzu, dass bei einem Aufruf der statischen Methode Kindklasse.statischeMethode(),
 welche jedoch in der Kindklasse nicht neu definiert wurde, weshalb automatisch die der Elternklasse aufgerufen wird, von der statischen Methode
@@ -92,34 +160,39 @@ Wird also eine virtuelle Methode aufgerufen, so ist garantiert, dass sämtliche 
 sich auf der selben bzw. niedrigsten Klassenebene des Objekts befinden, falls sie dort deklariert wurden.
 
 \subsection{Abstrakte Methoden}
-Abstrakte Methoden besitzen keinen Gültigkeitsbereich, sondern werden mit einem Semikolon abgeschlossen.
+Abstrakte Methoden werden mit dem Schlüsselwort "abstract" deklariert.
+Sie besitzen keinen eigenen inneren Gültigkeitsbereich, sondern werden mit einem Semikolon abgeschlossen.
 Außerdem müssen sie als virtuell deklariert werden.
-Abstrakte Methoden müssen allesamt implementiert werden, falls die Kindklasse nicht als "abstract" deklariert wurde.
+Abstrakte Methoden müssen allesamt implementiert werden, falls die abgeleitete Klasse nicht ebenfalls als abstrakt deklariert wurde.
 
 \subsection{Zugriffsmodifikatoren}
-Zugriffsmodifikatoren von Methoden können in der Kindklasse "umdeklariert" werden, was ihre zugreifbarkeit verändert,
+Zugriffsmodifikatoren von geerbten Methoden können in der abgeleiteten Klasse "umdeklariert" werden, was ihre Zugreifbarkeit verändert,
 ohne dass sie neu definiert werden müssen.
-Dies geschieht, indem man bei der Methodendeklaration den Gültigkeitsberech weglässt und die Deklaration mit einem Semikolon abschließt.
+Dies geschieht, indem man in der abgeleiteten Klasse lediglich die Zugriffsmodifikatoren und den Bezeichner verwendet:
+[ Zugriffsmodfikatoren ] <Bezeichner>;
 
-\subsection{Methoden der abgleiteten Klasse}
-Mit base.<Methodenname> oder <Elternklasse>.<Methodenname> kann eine Elternmethode angesprochen werden.
-Dabei gilt die Priorität von unten nach oben, von links nach rechts, bei sämtlichen geerbten Klassen.
+\subsection{Methoden der Basisklasse}
+Mit base.<Methodenname> oder <Basisklasse>.<Methodenname> kann eine Methode der Basisklasse angesprochen werden.
+Mehrdeutigkeiten müssen jedoch über den eigentlichen Bezeichner der Basisklasse aufgelöst werden.
 
 \subsection{Konstante Methoden}
-Nichtstatische Methoden, die mit dem Suffix "const" deklariert wurden, erhalten das Argument this als konstantes Objekt
+Nichtstatische Methoden, die mit dem Suffix "const" deklariert wurden, erhalten das Argument "this" mit konstantem Typ
 und gelten somit auch als eine andere Deklaration der gleichen Methode, welche nicht als "const"
 deklariert wurde (siehe Funktionen).
+Innerhalb ihrer Definition dürfen keine Elemente der Klasse verändert bzw. keine nicht konstanten Methoden der Klasse
+aufgerufen werden. Bei nicht statischen Methoden erscheint dies logisch, da der Parameter "this" einen konstanten Typ besitzt
+und sowieso nicht übergeben werden könnte.
 
 Statische Methoden, die mit dem Suffix "const" deklariert wurden, dürfen keinerlei nicht als "const" deklarierte, statische
 Methoden der Klasse aufrufen, geschweigedenn irgendwelche statischen Elemente der Klasse verändern, sondern nur zurückgeben.
 
 Bei beiden Arten von "const"-Methoden gilt die Ausnahme für "mutable"-Elemente.
-Diese dürfen auch von "const"-Methoden verändert werden.
+Diese dürfen auch von konstanten Methoden verändert werden.
 
 \subsection{Methodenüberschreibung}
-Sämtliche nicht private Methoden der Elternklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
+Sämtliche geerbte Methoden der Basisklassen können überschrieben werden. Dabei ist es optional, ob die ursprünglichen Methoden innerhalb
 der Methode aufgerufen werden.
-Wird eine nicht virtuelle Methode einer Elternklasse überschrieben und der Typ der Elternklasse irgendwo im Code verwendet, so sollte
+Wird eine nicht virtuelle Methode einer Basisklasse überschrieben und der Typ der Basisklasse irgendwo im Code verwendet, so sollte
 der Compiler eine Warnung ausgeben, dass möglicherweise nicht die richtige aufgerufen wird.
 
 \subsection{Notation}
@@ -199,3 +272,9 @@ Daher benötigt er bei der Deklaration wie der Initialisierer (siehe "Gültigkei
 
 \subsubsection{Aufrufs-Notation}
 delete <Ausdruck>
+
+\section{Notation}
+[native][abstract] class <Klassenbezeichner> [ [<Maximalgröße>] ] [ Vererbungsnotation ]
+{
+	[ Deklarationen ]
+} [globale Instanzen durch Kommata getrennt];

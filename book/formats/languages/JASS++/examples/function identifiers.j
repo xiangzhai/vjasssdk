@@ -8,7 +8,7 @@ endfunction
 call ShowTextTagPlayerBJ(true, tt, whichPlayer)
 call ShowTextTagForceBJ(true, tt, whichForce)
 
-// Jass++
+// JASS++
 void ShowTextTag(boolean show, texttag tt, player const whichPlayer)
 {
 	local (whichPlayer)
