@@ -173,14 +173,14 @@ class Blp
 		/**
 		* @return Read bytes. Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
 		*/
-		std::streamsize readBlp(std::istream &istream) throw (class Exception);
-		std::streamsize writeBlp(std::ostream &ostream) const throw (class Exception);
-		std::streamsize readJpeg(std::istream &istream) throw (class Exception);
-		std::streamsize writeJpeg(std::ostream &ostream) const throw (class Exception);
-		std::streamsize readTga(std::istream &istream) throw (class Exception);
-		std::streamsize writeTga(std::ostream &ostream) const throw (class Exception);
-		std::streamsize readPng(std::istream &istream) throw (class Exception);
-		std::streamsize writePng(std::ostream &ostream) const throw (class Exception);
+		std::streamsize readBlp(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize writeBlp(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize readJpeg(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize writeJpeg(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize readTga(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize writeTga(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize readPng(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize writePng(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 		/**
 		* Adds mip map @param initialMipMap to mip map list and generates number - 1 new mip maps which are added to mip map list, too.

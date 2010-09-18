@@ -73,9 +73,6 @@ std::streamsize ParticleEmitter2::readMdx(std::istream &istream) throw (class Ex
 	std::streamsize size = 0;
 	long32 nbytesi;
 	wc3lib::read(istream, nbytesi, size);
-	long32 nbytesikg;
-	wc3lib::read(istream, nbytesikg, size);
-	wc3lib::read(istream, this->m_name, size);
 	size += Node::readMdx(istream);
 	wc3lib::read(istream, this->m_speed, size);
 	wc3lib::read(istream, this->m_variation, size);
@@ -120,7 +117,7 @@ std::streamsize ParticleEmitter2::readMdx(std::istream &istream) throw (class Ex
 	wc3lib::read(istream, this->m_textureId, size);
 	wc3lib::read(istream, this->m_squirt, size);
 	wc3lib::read(istream, this->m_priorityPlane, size);
-	wc3lib::read(istream, this->m_replaceableId, size);
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_replaceableId), size);
 	size += this->m_speeds->readMdx(istream);
 	size += this->m_latitudes->readMdx(istream);
 	size += this->m_emissionRates->readMdx(istream);

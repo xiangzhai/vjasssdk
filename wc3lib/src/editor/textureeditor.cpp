@@ -40,7 +40,7 @@ TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
 
 void TextureEditor::openFile()
 {
-	KUrl url = KFileDialog::getOpenUrl(this->m_recentUrl, "*.blp|BLP textures\n*.jpeg|JPEG images", this);
+	KUrl url = KFileDialog::getOpenUrl(this->m_recentUrl, i18n("*.blp|BLP textures\n*.png|PNG images"), this);
 
 	if (url.isEmpty())
 		return;

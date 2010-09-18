@@ -35,8 +35,6 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-
 /**
 * This class can be used to display MDLX models by using the OGRE 3d rendering engine.
 * It maintains a single mesh instance in a scene which contains all converted data of the original

@@ -336,7 +336,7 @@ static bool addFilePath(const boost::filesystem::path &path, std::list<boost::fi
 	return true;
 }
 
-static void convertBlp(const boost::filesystem::path &path, std::ifstream &ifstream, std::ofstream &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
+static void convertBlp(const boost::filesystem::path &path, std::basic_ifstream<blp::byte> &ifstream, std::basic_ofstream<blp::byte> &ofstream, enum Format inputFormat, enum Format outputFormat, bool verbose, bool readonly) throw (class Exception)
 {
 	class blp::Blp blp;
 

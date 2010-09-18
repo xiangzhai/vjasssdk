@@ -69,13 +69,6 @@ std::streamsize Helpers::readMdx(std::istream &istream) throw (class Exception)
 		size += readSize;
 		nbytes -= boost::numeric_cast<long32>(readSize);
 		this->m_helpers.push_back(helper);
-		std::cout << "Helper: "
-		<< helper->name() << std::endl
-		<< helper->id() << std::endl
-		<< helper->parentId() << std::endl
-		<< helper->translations()->mdlxTranslations().size() << std::endl
-		<< helper->rotations()->mdlxRotations().size() << std::endl
-		<< std::endl;
 	}
 
 	return size;

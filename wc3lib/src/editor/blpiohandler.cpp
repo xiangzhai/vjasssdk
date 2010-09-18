@@ -55,10 +55,20 @@ bool BlpIOHandler::read(QImage *image)
 {
 	// read buffer into input stream
 	QByteArray all = this->device()->readAll();
-	std::istringstream isstream;
-	isstream.rdbuf()->pubsetbuf(all.data(), all.size());
+	std::basic_istringstream<blp::byte> istream;
+	istream.rdbuf()->pubsetbuf(reinterpret_cast<unsigned char*>(all.data()), all.size());
 	class blp::Blp blpImage;
-	blpImage.readBlp(isstream);
+
+	try
+	{
+		blpImage.readBlp(istream);
+	}
+	catch (class Exception &exception)
+	{
+		qDebug() << "BLP Input Exception: " << exception.what().c_str();
+
+		return false;
+	}
 
 	if (blpImage.mipMaps().empty()) // no mip maps
 		return false;
@@ -140,12 +150,22 @@ bool BlpIOHandler::write(const QImage &image)
 	}
 
 	blpImage.generateMipMaps(mipMap);
+	std::basic_ostringstream<blp::byte> ostream;
 
-	std::ostringstream osstream;
-	blpImage.writeBlp(osstream);
-	std::streamsize bufferSize = osstream.rdbuf()->in_avail();
+	try
+	{
+		blpImage.writeBlp(ostream);
+	}
+	catch (class Exception &exception)
+	{
+		qDebug() << "BLP Output Exception: " << exception.what().c_str();
+
+		return false;
+	}
+
+	std::streamsize bufferSize = ostream.rdbuf()->in_avail();
 	char buffer[bufferSize];
-	osstream.rdbuf()->sgetn(buffer, bufferSize);
+	ostream.rdbuf()->sgetn(reinterpret_cast<blp::byte*>(buffer), bufferSize);
 	this->device()->write(buffer, bufferSize);
 
 	/// @todo Recognize image IO handler options!

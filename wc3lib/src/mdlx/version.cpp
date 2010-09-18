@@ -38,7 +38,7 @@ namespace mdlx
 
 const long32 Version::currentVersion = 800;
 
-Version::Version(class Mdlx *mdlx) : MdxBlock("VERS"), m_mdlx(mdlx)
+Version::Version(class Mdlx *mdlx) : MdxBlock("VERS", false), m_mdlx(mdlx)
 {
 }
 
@@ -55,10 +55,10 @@ void Version::readMdl(std::istream &istream) throw (class Exception)
 	{
 		if (line.empty())
 			continue;
-		
+
 		boost::tokenizer<> tokenizer(line);
 		boost::tokenizer<>::iterator iterator = tokenizer.begin();
-		
+
 		if (iterator == tokenizer.end())
 			throw Exception(_("Version: Missing tokens."));
 
@@ -90,7 +90,7 @@ void Version::readMdl(std::istream &istream) throw (class Exception)
 		else if ((*iterator) == "}")
 			break;
 	}
-	
+
 	if (!gotVersion)
 		throw Exception(_("Version: Missing format version number."));
 }
@@ -111,16 +111,16 @@ std::streamsize Version::readMdx(std::istream &istream) throw (class Exception)
 	long32 nbytes;
 	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
 	bytes += istream.gcount();
-	
+
 	if (nbytes != sizeof(this->m_version))
 		throw Exception(boost::format(_("Versions with more than %1% bytes are not supported. Read version has %1% bytes.")) % sizeof(this->m_version) % nbytes);
-	
+
 	istream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
 	bytes += istream.gcount();
-	
+
 	if (this->m_version != Version::currentVersion)
 		std::cerr << boost::format(_("Warning: Version %1% is probably not supported. Current version is %2$.")) % this->m_version % Version::currentVersion << std::endl;
-	
+
 	return bytes;
 }
 
@@ -132,7 +132,7 @@ std::streamsize Version::writeMdx(std::ostream &ostream) const throw (class Exce
 	bytes += sizeof(nbytes);
 	ostream.write(reinterpret_cast<const char*>(&this->m_version), sizeof(this->m_version));
 	bytes += sizeof(this->m_version);
-	
+
 	return bytes;
 }
 

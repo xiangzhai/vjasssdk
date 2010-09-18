@@ -25,6 +25,7 @@
 #include "texture.hpp"
 #include "textures.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -50,26 +51,24 @@ void Texture::writeMdl(std::ostream &ostream) const throw (class Exception)
 
 std::streamsize Texture::readMdx(std::istream &istream) throw (class Exception)
 {
-	istream.read(reinterpret_cast<char*>(&this->m_replaceableId), sizeof(this->m_replaceableId));
-	std::streamsize bytes = istream.gcount();
-	istream.read(this->m_texturePath, sizeof(this->m_texturePath));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_wrapping), sizeof(this->m_wrapping));
-	bytes += istream.gcount();
-	
-	if (this->m_wrapping != 1 && this->m_wrapping != 2 && this->m_wrapping != 3)
-		std::cerr << boost::format(_("Texture: Warning, unknown wrapping %1%.")) % this->m_wrapping << std::endl;
-	
-	return bytes;
+	std::streamsize size = 0;
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_replaceableId), size);
+	wc3lib::read(istream, this->m_texturePath, size);
+	wc3lib::read(istream, this->m_unknown0, size);
+	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_wrapping), size);
+
+	return size;
 }
 
 std::streamsize Texture::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = 0;
-	
-	return bytes;
+	std::streamsize size = 0;
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_replaceableId), size);
+	wc3lib::write(ostream, this->m_texturePath, size);
+	wc3lib::write(ostream, this->m_unknown0, size);
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_wrapping), size);
+
+	return size;
 }
 
 }

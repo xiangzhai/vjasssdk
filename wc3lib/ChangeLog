@@ -1,3 +1,10 @@
+2010-09-18 Tamino Dauth <tamino@cdauth.eu>
+* core: Added utilities functions writeByteCount and skipByteCount.
+* mdlx: Fixed missing node byte count read- and writing.
+* mdlx: Fixed size utilities functions.
+* blp: Revised stream functions.
+* editor: Added function openFile to class ModelView.
+
 2010-09-15 Tamino Dauth <tamino@cdauth.eu>
 * mdlx: Fixed geoset read bug.
 * mdlx: Revised various classes.

@@ -41,6 +41,7 @@ namespace mdlx
 * Use Node::hasParent to check if there is any parent inheritance relationship.
 * All objects are stored in a map of the Mdlx instance indicated with their id for easier and faster access (Mdlx::node).
 * @note MDLX format brings its own dynamic type system by saving the type of each node in its structure. Use Node::type to get an node's type.
+* @note Inclusive byte count is only related to the note structure itself (excluding any further chunk data).
 */
 class Node
 {
@@ -99,6 +100,8 @@ class Node
 		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+
+		std::ostream& print(std::ostream &ostream) const;
 
 	protected:
 		class Mdlx *m_mdlx;

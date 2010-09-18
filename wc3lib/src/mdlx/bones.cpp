@@ -20,10 +20,12 @@
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <boost/cast.hpp>
 
 #include "bones.hpp"
 #include "bone.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -53,27 +55,33 @@ std::streamsize Bones::writeMdl(std::ostream &ostream) const throw (class Except
 
 std::streamsize Bones::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
+	std::streamsize size = MdxBlock::readMdx(istream);
 
-	if (bytes == 0)
+	if (size == 0)
 		return 0;
 
 	long32 nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	wc3lib::read(istream, nbytes, size);
+	std::cout << "Bones bytes: " << nbytes << std::endl;
 
 	if (nbytes <= 0)
 		throw Exception(boost::str(boost::format(_("Bones: Byte count error, %1% bytes.\n")) % nbytes));
 
+	std::size_t i = 0;
+
 	while (nbytes > 0)
 	{
+		std::cout << "Bone " << i + 1 << " nbytes: " << nbytes << std::endl;
 		class Bone *bone = new Bone(this);
-		long32 readBytes = bone->readMdx(istream);
-		bytes += readBytes;
-		nbytes -= readBytes;
+		std::streamsize readSize = bone->readMdx(istream);
+		size += readSize;
+		nbytes -= boost::numeric_cast<long32>(readSize);
 		this->m_bones.push_back(bone);
+		++i;
+		bone->print(std::cout);
 	}
 
-	return bytes;
+	return size;
 }
 
 std::streamsize Bones::writeMdx(std::ostream &ostream) const throw (class Exception)

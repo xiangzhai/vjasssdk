@@ -91,7 +91,7 @@ class ParticleEmitter2 : public Node
 		long32 textureId() const;
 		long32 squirt() const;
 		long32 priorityPlane() const;
-		long32 replaceableId() const;
+		enum ReplaceableId replaceableId() const;
 		class ParticleEmitter2Speeds* speeds() const;
 		class ParticleEmitter2Latitudes* latitudes() const;
 		class EmissionRates* emissionRates() const;
@@ -132,7 +132,7 @@ class ParticleEmitter2 : public Node
 		long32 m_textureId;
 		long32 m_squirt; //(1:Squirt)
 		long32 m_priorityPlane;
-		long32 m_replaceableId;
+		enum ReplaceableId m_replaceableId;
 		class ParticleEmitter2Speeds *m_speeds; //(KP2S)
 		class ParticleEmitter2Latitudes *m_latitudes; //(KP2L)
 		class EmissionRates *m_emissionRates; //(KP2E)
@@ -326,7 +326,7 @@ inline long32 ParticleEmitter2::priorityPlane() const
 	return this->m_priorityPlane;
 }
 
-inline long32 ParticleEmitter2::replaceableId() const
+inline enum ReplaceableId ParticleEmitter2::replaceableId() const
 {
 	return this->m_replaceableId;
 }

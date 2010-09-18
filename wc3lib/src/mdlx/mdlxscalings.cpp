@@ -60,6 +60,7 @@ std::streamsize MdlxScalings::readMdx(std::istream &istream) throw (class Except
 
 	long32 number;
 	wc3lib::read(istream, number, size);
+	std::cout << "Number of scalings " << number << std::endl;
 	long32 lineType;
 	wc3lib::read(istream, lineType, size);
 	this->m_lineType = static_cast<enum LineType>(lineType);

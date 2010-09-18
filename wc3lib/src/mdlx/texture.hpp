@@ -50,11 +50,11 @@ class Texture
 		virtual ~Texture();
 
 		class Textures* textures() const;
-		long32 replaceableId() const;
+		enum ReplaceableId replaceableId() const;
 		void setTexturePath(const ascii texturePath[texturePathSize]);
 		const ascii* texturePath() const;
 		long32 unknown0() const;
-		long32 wrapping() const;
+		enum Wrapping wrapping() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
@@ -63,10 +63,10 @@ class Texture
 
 	protected:
 		class Textures *m_textures;
-		long32 m_replaceableId;
+		enum ReplaceableId m_replaceableId;
 		ascii m_texturePath[texturePathSize]; //(0x100 bytes)
 		long32 m_unknown0; //(0)
-		long32 m_wrapping; //(1:WrapWidth;2:WrapHeight;3:Both)
+		enum Wrapping m_wrapping; //(1:WrapWidth;2:WrapHeight;3:Both)
 };
 
 inline class Textures* Texture::textures() const
@@ -74,7 +74,7 @@ inline class Textures* Texture::textures() const
 	return this->m_textures;
 }
 
-inline long32 Texture::replaceableId() const
+inline enum ReplaceableId Texture::replaceableId() const
 {
 	return this->m_replaceableId;
 }
@@ -94,7 +94,7 @@ inline long32 Texture::unknown0() const
 	return this->m_unknown0;
 }
 
-inline long32 Texture::wrapping() const
+inline enum Texture::Wrapping Texture::wrapping() const
 {
 	return this->m_wrapping;
 }

@@ -56,8 +56,6 @@ std::streamsize ParticleEmitter::readMdx(std::istream &istream) throw (class Exc
 	long32 nbytesi;
 	std::streamsize size = 0;
 	wc3lib::read(istream, nbytesi, size);
-	long32 nbytesikg; // inclusive bytecount including KGXXs
-	wc3lib::read(istream, nbytesikg, size);
 	size += Node::readMdx(istream);
 	wc3lib::read(istream, this->m_emissionRate, size);
 	wc3lib::read(istream, this->m_gravity, size);
@@ -74,10 +72,13 @@ std::streamsize ParticleEmitter::readMdx(std::istream &istream) throw (class Exc
 
 std::streamsize ParticleEmitter::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streampos position = ostream.tellp();
-	ostream.seekp(2 * sizeof(long32), std::ios_base::cur);
+	// skipping inclusive byte counts of particle emitter and node
+	std::streampos position0, position1;
+	skipByteCount<long32>(ostream, position0);
+	skipByteCount<long32>(ostream, position1);
 
 	std::streamsize size = Node::writeMdx(ostream);
+	std::streamsize nodeSize = size;
 	wc3lib::write(ostream, this->m_emissionRate, size);
 	wc3lib::write(ostream, this->m_gravity, size);
 	wc3lib::write(ostream, this->m_longitude, size);
@@ -88,13 +89,8 @@ std::streamsize ParticleEmitter::writeMdx(std::ostream &ostream) const throw (cl
 	wc3lib::write(ostream, this->m_initVelocity, size);
 	size += this->m_visibilities->writeMdx(ostream);
 
-	long32 nbytesi = size + sizeof(long32) * 2;
-	long32 nbytesikg = size + sizeof(long32); /// @todo Same as nbytesi without its size? (inclusive bytecount including KGXXs)
-	std::streampos currentPosition = ostream.tellp();
-	ostream.seekp(position);
-	wc3lib::write(ostream, nbytesi, size);
-	wc3lib::write(ostream, nbytesikg, size);
-	ostream.seekp(currentPosition);
+	writeByteCount(ostream, *reinterpret_cast<long32*>(&size), position0, size, true);
+	writeByteCount(ostream, *reinterpret_cast<long32*>(&nodeSize), position1, size, true);
 
 	return size;
 }

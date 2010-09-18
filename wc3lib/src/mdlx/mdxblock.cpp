@@ -68,6 +68,7 @@ std::streamsize MdxBlock::readMdx(std::basic_istream<byte> &istream) throw (clas
 	}
 
 	this->m_exists = true;
+	std::cout << boost::format(_("Block: %1%")) % this->m_blockName << std::endl;
 
 	return bytes;
 }

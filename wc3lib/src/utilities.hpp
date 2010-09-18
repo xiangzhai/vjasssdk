@@ -180,7 +180,7 @@ inline std::basic_istream<_CharT>& readLine(std::basic_istream<_CharT> &istream,
 	return istream;
 }
 
-template<typename _CharT, typename T>
+template<typename T, typename _CharT>
 inline std::basic_ostream<_CharT>& write(std::basic_ostream<_CharT> &ostream, const T &value, std::streamsize &sizeCounter, std::size_t size = sizeof(T) * sizeof(_CharT))
 {
 	ostream.write(reinterpret_cast<const _CharT*>(&value), size);
@@ -223,9 +223,45 @@ inline std::basic_ostream<_CharT>& writeLine(std::basic_ostream<_CharT> &ostream
 template<typename _CharT>
 inline std::basic_ostream<_CharT>& writeLine(std::basic_ostream<_CharT> &ostream, const std::basic_string<_CharT> &value, std::streamsize &sizeCounter, std::size_t size = 0)
 {
-	std::basic_string<_CharT> newValue = value + '\n';
+	const std::basic_string<_CharT> newValue = value + '\n';
 
 	return writeCString(ostream, newValue.data(), sizeCounter, size);
+}
+
+/**
+* Writes byte count at a previous position. Required by binary formats which need to store byte counts (inclusive and exclusive) after writing all data into output stream.
+* @param ostream Output stream which byte count is written into.
+* @param byteCount Byte count which is written into output stream at position "position".
+* @param position Position in output stream where byte count is written into.
+* @param sizeCounter Counter of written output size which is increased by written size of byte count. @note Do not forget to initialise this value since increment assignment operator (+=) is used.
+* @param inclusive If this value is true size of value "byteCount" will by added automatically to byte count. Therefore it writes inclusive byte count (useful for the MDLX format for instance).
+* @return Returns output stream "ostream" for any further treatment.
+* @see skipByteCount
+*/
+template<typename T, typename _CharT>
+inline std::basic_ostream<_CharT>& writeByteCount(std::basic_ostream<_CharT> &ostream, const T &byteCount, std::streampos position, std::streamsize &sizeCounter, bool inclusive = false)
+{
+	const std::streampos backPosition = ostream.tellp();
+	ostream.seekp(position);
+	const T realByteCount = inclusive ? byteCount + sizeof(byteCount) * sizeof(T) : byteCount; // inclusive means size of byte count as well
+	write<T, _CharT>(ostream, realByteCount, sizeCounter);
+	ostream.seekp(backPosition); // jump back to the end or somewhere else
+
+	return ostream;
+}
+
+/**
+* Some binary formats require chunk byte counts which can only be detected during write process after all chunk data (without the byte count itself) has been written into the output stream.
+* This function helps you to easily skip the byte counts position.
+* @see writeByteCount
+*/
+template<typename T, typename _CharT>
+inline std::basic_ostream<_CharT>& skipByteCount(std::basic_ostream<_CharT> &ostream, std::streampos &position)
+{
+	position = ostream.tellp();
+	ostream.seekp(sizeof(T) * sizeof(_CharT), std::ios_base::cur);
+
+	return ostream;
 }
 
 template<typename T>
@@ -251,7 +287,7 @@ std::string sizeStringBinary(T size)
 	std::string unit = "";
 	SizeType remainder = 0;
 
-	for (std::size_t i = tableSize - 1; i >= 0; --i)
+	for (std::size_t i = 0; i < tableSize; ++i)
 	{
 		if (size >= table[i])
 		{
@@ -303,7 +339,7 @@ std::string sizeStringDecimal(T size)
 	std::string unit = "";
 	SizeType remainder = 0;
 
-	for (std::size_t i = tableSize - 1; i >= 0; --i)
+	for (std::size_t i = 0; i < tableSize; ++i)
 	{
 		if (size >= table[i])
 		{

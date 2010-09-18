@@ -21,9 +21,12 @@
 #ifndef WC3LIB_EDITOR_MODELEDITOR_HPP
 #define WC3LIB_EDITOR_MODELEDITOR_HPP
 
+#include <kurl.h>
+
 #include "module.hpp"
 #include "ui/ui_modeleditor.hpp"
 #include "modelview.hpp"
+#include "../mdlx.hpp"
 
 namespace wc3lib
 {
@@ -38,8 +41,12 @@ class ModelEditor : public Module, Ui::ModelEditor
 
 		virtual void show();
 
+		void openFile();
+
 	protected:
 		class ModelView m_modelView;
+		KUrl m_recentUrl;
+		std::list<class mdlx::OgreMdlx*> m_models;
 };
 
 }

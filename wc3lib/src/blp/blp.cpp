@@ -31,6 +31,7 @@
 
 #include "blp.hpp"
 #include "../libraryloader.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -118,70 +119,70 @@ std::string jpegError(jpeg_std_errorType jpeg_std_error, const std::string &mess
 
 }
 
-std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readBlp(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	this->clean();
 	// header
 	dword identifier;
-	istream.read(reinterpret_cast<char*>(&identifier), sizeof(identifier));
-	std::streamsize bytes = istream.gcount();
+	std::streamsize size = 0;
+	wc3lib::read(istream, identifier, size);
 
-	if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier0, sizeof(Blp::identifier0)) == 0)
+	if (memcmp(reinterpret_cast<const void*>(&identifier), Blp::identifier0, sizeof(Blp::identifier0)) == 0)
 		this->m_version = Blp::Blp0;
-	else if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier1, sizeof(Blp::identifier1)) == 0)
+	else if (memcmp(reinterpret_cast<const void*>(&identifier), Blp::identifier1, sizeof(Blp::identifier1)) == 0)
 		this->m_version = Blp::Blp1;
-	else if (memcmp(reinterpret_cast<char*>(&identifier), Blp::identifier2, sizeof(Blp::identifier2)) == 0)
+	else if (memcmp(reinterpret_cast<const void*>(&identifier), Blp::identifier2, sizeof(Blp::identifier2)) == 0)
 		this->m_version = Blp::Blp2;
 	else
 		throw Exception(boost::str(boost::format(_("Error while reading BLP file. Missing BLP identifier, got \"%1%\".")) % reinterpret_cast<const char*>(&identifier)));
 
-	istream.read(reinterpret_cast<char*>(&this->m_compression), sizeof(this->m_compression));
-	bytes += istream.gcount();
+	dword compression;
+	wc3lib::read(istream, compression, size);
+	this->m_compression = static_cast<enum Compression>(compression);
 	//dword mipMaps;
 	//istream.read(reinterpret_cast<char*>(&mipMaps), sizeof(mipMaps));
 	//bytes += istream.gcount();
 	//std::cout << "Number of mip maps is " << mipMaps << std::endl;
-	istream.read(reinterpret_cast<char*>(&this->m_flags), sizeof(this->m_flags));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_width), sizeof(this->m_width));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_height), sizeof(this->m_height));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_pictureType), sizeof(this->m_pictureType));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_pictureSubType), sizeof(this->m_pictureSubType));
-	bytes += istream.gcount();
-	std::size_t mipMaps = requiredMipMaps(this->m_width, this->m_height);
-	std::cout << "Required mip maps are " << mipMaps << std::endl;
-	std::list<dword> mipMapOffsets;
-	std::list<dword> mipMapSizes;
+	dword flags;
+	wc3lib::read(istream, flags, size);
+	this->m_flags = static_cast<enum Flags>(flags);
+	wc3lib::read(istream, this->m_width, size);
+	wc3lib::read(istream, this->m_height, size);
+	wc3lib::read(istream, this->m_pictureType, size);
+	wc3lib::read(istream, this->m_pictureSubType, size);
+	std::size_t mipMapsCount = requiredMipMaps(this->m_width, this->m_height);
+	std::cout << "Required mip maps are " << mipMapsCount << " with width " << this->m_width << " and height " << this->m_height << std::endl; // TEST
+	dword offsets[Blp::maxMipMaps];
+	wc3lib::read(istream, offsets, size);
+	dword sizes[Blp::maxMipMaps];
+	wc3lib::read(istream, sizes, size);
 
-	for (std::size_t i = 0; i < Blp::maxMipMaps; ++i)
+	std::map<class MipMap*, struct MipMapHeaderData> mipMaps;
+	struct MipMapHeaderData
 	{
-		// header data
-		dword offset;
-		istream.read(reinterpret_cast<char*>(&offset), sizeof(offset));
-		bytes += istream.gcount();
-		dword size;
-		istream.read(reinterpret_cast<char*>(&size), sizeof(size));
-		bytes += istream.gcount();
+		dword offset, size;
+	};
 
-		if (i < mipMaps)
+	for (std::size_t i = 0; i < mipMapsCount; ++i)
+	{
+		class MipMap *mipMap = new MipMap(this->mipMapWidth(i), this->mipMapHeight(i));
+		//struct MipMapHeaderData mipMapHeaderData;
+		struct MipMapHeaderData mipMapHeaderData =
 		{
-			std::cout << "Reading mip map's " << i << " offset " << offset << " and size " << size << std::endl;
-			mipMapOffsets.push_back(offset);
-			mipMapSizes.push_back(size);
+			offsets[i],
+			sizes[i]
+		};
 
-			class MipMap *mipMap = new MipMap(this->mipMapWidth(i), this->mipMapHeight(i));
+		//mipMapHeaderData.offset = offsets[i];
+		//mipMapHeaderData.size = sizes[i];
+		mipMaps[mipMap] = mipMapHeaderData;
 
-			if (this->m_flags != Blp::Alpha && size != mipMap->width() * mipMap->height())
-				std::cout << "Size " << size << " is not equal to " << mipMap->width() * mipMap->height() << std::endl;
-			else if (this->m_flags == Blp::Alpha && size != mipMap->width() * mipMap->height() * 2)
-				std::cout << "Size " << size << " is not equal to " << mipMap->width() * mipMap->height() * 2 << std::endl;
+		if (this->m_flags != Blp::Alpha && mipMapHeaderData.size != mipMap->width() * mipMap->height())
+			std::cout << "Size " << mipMapHeaderData.size << " is not equal to " << mipMap->width() * mipMap->height() << std::endl;
+		else if (this->m_flags == Blp::Alpha && mipMapHeaderData.size != mipMap->width() * mipMap->height() * 2)
+			std::cout << "Size " << mipMapHeaderData.size << " is not equal to " << mipMap->width() * mipMap->height() * 2 << std::endl;
 
-			this->m_mipMaps.push_back(mipMap);
-		}
-
+		this->m_mipMaps.push_back(mipMap);
 	}
 
 	if (this->m_compression == Blp::Jpeg)
@@ -234,31 +235,30 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		}
 
 		dword jpegHeaderSize;
-		istream.read(reinterpret_cast<char*>(&jpegHeaderSize), sizeof(jpegHeaderSize));
-		bytes += istream.gcount();
+		wc3lib::read(istream, jpegHeaderSize, size);
 		byte *jpegHeader = new byte[jpegHeaderSize];
-		istream.read(reinterpret_cast<char*>(jpegHeader), jpegHeaderSize);
-		bytes += istream.gcount();
-		std::list<dword>::iterator offset = mipMapOffsets.begin();
-		std::list<dword>::iterator size = mipMapSizes.begin();
+		wc3lib::read(istream, jpegHeader, size, jpegHeaderSize);
+
 
 		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{
+			dword mipMapOffset = mipMaps[mipMap].offset;
+			dword mipMapSize = mipMaps[mipMap].size;
 			// all mipmaps use the same header, jpeg header has been allocated before and is copied into each mip map buffer.
-			std::size_t bufferSize = jpegHeaderSize + boost::numeric_cast<std::size_t>(*size);
+			std::size_t bufferSize = jpegHeaderSize + boost::numeric_cast<std::size_t>(mipMapSize);
 			unsigned char *buffer = new unsigned char[bufferSize];
 			memcpy(reinterpret_cast<void*>(buffer), reinterpret_cast<const void*>(jpegHeader), jpegHeaderSize); // copy header data
 
 			// moving to offset, skipping null bytes
 			std::streampos position = istream.tellg();
-			istream.seekg(*offset);
+			istream.seekg(mipMapOffset);
 			std::size_t nullBytes = istream.tellg() - position;
 
 			if (nullBytes > 0)
 				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
 
 			// read mip map data starting at header offset, header has already been copied into buffer
-			istream.read((char*)(&buffer[jpegHeaderSize]), boost::numeric_cast<std::streamsize>(*size));
+			wc3lib::read(istream, buffer[jpegHeaderSize], size, boost::numeric_cast<std::streamsize>(mipMapSize));
 
 			try
 			{
@@ -377,8 +377,8 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 				throw;
 			}
 
-			++offset;
-			++size;
+			++mipMapOffset;
+			++mipMapSize;
 		}
 
 		LibraryLoader::unloadLibrary(libraryHandle);
@@ -398,69 +398,47 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 		std::vector<color> palette(Blp::compressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
 
 		for (std::size_t i = 0; i < Blp::compressedPaletteSize; ++i)
-		{
-                        color paletteColor;
-                        istream.read(reinterpret_cast<char*>(&paletteColor), sizeof(paletteColor));
-			bytes += istream.gcount();
-			palette[i] = paletteColor;
-		}
-
-		std::list<dword>::iterator offset = mipMapOffsets.begin();
-		std::list<dword>::iterator size = mipMapSizes.begin();
+                        wc3lib::read(istream, palette[i], size);
 
 		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{
+			dword mipMapOffset = mipMaps[mipMap].offset;
+			dword mipMapSize = mipMaps[mipMap].size;
 			std::streampos position = istream.tellg();
-			std::cout << "Position is " << position << std::endl;
-			istream.seekg(*offset);
-			std::streampos newPosition = istream.tellg();
-			std::cout << "New position is " << newPosition << std::endl;
-			std::size_t nullBytes = newPosition - position;
+			istream.seekg(mipMapOffset);
+			std::size_t nullBytes = istream.tellg() - position;
 
 			if (nullBytes > 0)
 				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
 
-			dword toReadBytes = *size;
-
-			for (dword j = 0; j < mipMap->width(); ++j)
+			for (dword width = 0; width < mipMap->width(); ++width)
 			{
-				for (dword k = 0; k < mipMap->height(); ++k)
+				for (dword height = 0; height < mipMap->height(); ++height)
 				{
 					byte index;
-					istream.read(reinterpret_cast<char*>(&index), sizeof(index));
-					bytes += istream.gcount();
-					toReadBytes -= istream.gcount();
-					//std::cout << "To read bytes " << toReadBytes << std::endl;
+					std::streamsize readSize = 0;
+					wc3lib::read(istream, index, readSize);
+					size += readSize;
+					mipMapSize -= boost::numeric_cast<dword>(readSize);
 					byte alpha = 0;
 
 					if (this->m_flags == Blp::Alpha)
 					{
-						istream.read(reinterpret_cast<char*>(&alpha), sizeof(alpha));
-						bytes += istream.gcount();
-						toReadBytes -= istream.gcount();
+						readSize = 0;
+						wc3lib::read(istream, alpha, readSize);
+						size += readSize;
+						mipMapSize -= readSize;
 					}
 
-					mipMap->setColor(j, k, palette[index], alpha);
-
-					/*
-					if (istream.eof())
-					{
-						std::cout << "End of File" << std::endl;
-
-						throw Exception("");
-					}
-					*/
+					mipMap->setColor(width, height, palette[index], alpha);
 				}
 			}
 
-			if (toReadBytes != 0)
+			if (mipMapSize != 0)
 			{
-				istream.seekg(toReadBytes, std::ios_base::cur);
-				std::cout << "Skipping " << toReadBytes << " unnecessary bytes." << std::endl;
+				istream.seekg(mipMapSize, std::ios_base::cur);
+				std::cout << "Skipping " << mipMapSize << " unnecessary bytes." << std::endl;
 			}
-
-			++offset;
-			++size;
 
 			std::cout << "Mip map colors map size " << mipMap->m_colors.size() << std::endl;
 		}
@@ -468,7 +446,7 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	else
 		throw Exception(boost::str(boost::format( _("Unknown compression mode: %1%.")) % this->m_compression));
 
-	std::cout << "Read " << bytes << " bytes." << std::endl;
+	std::cout << "Read " << size << " bytes." << std::endl;
 
 	// check mip maps
 	/*
@@ -480,46 +458,37 @@ std::streamsize Blp::readBlp(std::istream &istream) throw (class Exception)
 	if (this->m_mipMaps.empty() || this->m_mipMaps.back()->width() != 1 || this->m_mipMaps.back()->height() != 1)
 		throw Exception(_("Last mip map does not exist or has not a size of 1x1."));
 
-	return bytes;
+	return size;
 }
 
-std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exception)
+std::streamsize Blp::writeBlp(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = 0;
+	std::streamsize size = 0;
 
 	switch (this->m_version)
 	{
 		case Blp::Blp0:
-			ostream.write(reinterpret_cast<const char*>(Blp::identifier0), sizeof(Blp::identifier0));
-			bytes += sizeof(identifier0);
+			wc3lib::write(ostream, Blp::identifier0, size);
 
 			break;
 
 		case Blp::Blp1:
-			ostream.write(reinterpret_cast<const char*>(Blp::identifier1), sizeof(Blp::identifier1));
-			bytes += sizeof(identifier1);
+			wc3lib::write(ostream, Blp::identifier1, size);
 
 			break;
 
 		case Blp::Blp2:
-			ostream.write(reinterpret_cast<const char*>(Blp::identifier2), sizeof(Blp::identifier2));
-			bytes += sizeof(identifier2);
+			wc3lib::write(ostream, Blp::identifier2, size);
 
 			break;
 	}
 
-	ostream.write(reinterpret_cast<const char*>(&this->m_compression), sizeof(this->m_compression));
-	bytes += sizeof(this->m_compression);
-	ostream.write(reinterpret_cast<const char*>(&this->m_flags), sizeof(this->m_flags));
-	bytes += sizeof(this->m_flags);
-	ostream.write(reinterpret_cast<const char*>(&this->m_width), sizeof(this->m_width));
-	bytes += sizeof(this->m_width);
-	ostream.write(reinterpret_cast<const char*>(&this->m_height), sizeof(this->m_height));
-	bytes += sizeof(this->m_height);
-	ostream.write(reinterpret_cast<const char*>(&this->m_pictureType), sizeof(this->m_pictureType));
-	bytes += sizeof(this->m_pictureType);
-	ostream.write(reinterpret_cast<const char*>(&this->m_pictureSubType), sizeof(this->m_pictureSubType));
-	bytes += sizeof(this->m_pictureSubType);
+	wc3lib::write(ostream, *reinterpret_cast<const dword*>(&this->m_compression), size);
+	wc3lib::write(ostream, *reinterpret_cast<const dword*>(&this->m_flags), size);
+	wc3lib::write(ostream, this->m_width, size);
+	wc3lib::write(ostream, this->m_height, size);
+	wc3lib::write(ostream, this->m_pictureType, size);
+	wc3lib::write(ostream, this->m_pictureSubType, size);
 	dword startOffset = ostream.tellp(); // offset where mip map header data starts, required by later mip map writing operations
 
 	// First write mip maps and set header data afterwards but hold header data free until!
@@ -528,9 +497,7 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 	std::size_t emptyBufferSize = Blp::maxMipMaps * 2;
 	dword emptyBuffer[emptyBufferSize];
 	memset(reinterpret_cast<void*>(&emptyBuffer), 0, emptyBufferSize);
-	ostream.write(reinterpret_cast<const char*>(&emptyBuffer), emptyBufferSize);
-	bytes += emptyBufferSize;
-	std::cout << "Wrote " << bytes << " bytes header data." << std::endl;
+	wc3lib::write(ostream, *emptyBuffer, size, emptyBufferSize);
 
 	// image data
 
@@ -570,11 +537,9 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 		BOOST_FOREACH(const struct MipMap::Color *paletteColor, palette)
 		{
 			color value = paletteColor == 0 ? 0 : paletteColor->rgb; // check if empty
-			ostream.write(reinterpret_cast<const char*>(&value), sizeof(value));
-			bytes += sizeof(value);
+			wc3lib::write(ostream, value, size);
 		}
 
-		std::cout << "Wrote " << bytes << " with palette." << std::endl;
 		std::vector<dword> offsets(this->m_mipMaps.size(), 0);
 		std::vector<dword> sizes(this->m_mipMaps.size(), 0);
 		std::size_t index = 0;
@@ -582,31 +547,29 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 		// write mip maps
 		BOOST_FOREACH(const class MipMap *mipMap, this->m_mipMaps)
 		{
-			dword offset = ostream.tellp();
-			dword size = bytes;
+			dword mipMapOffset = ostream.tellp();
+			dword mipMapSize = size;
 
 			for (dword width = 0; width < mipMap->width(); ++width)
 			{
 				for (dword height = 0; height < mipMap->height(); ++height)
 				{
 					byte index = mipMap->colorAt(width, height).paletteIndex;
-					ostream.write(reinterpret_cast<const char*>(&index), sizeof(index));
-					bytes += sizeof(index);
+					wc3lib::write(ostream, index, size);
 
 					if (this->m_flags == Blp::Alpha)
 					{
 						byte alpha = mipMap->colorAt(width, height).alpha;
-						ostream.write(reinterpret_cast<const char*>(&alpha), sizeof(alpha));
-						bytes += sizeof(alpha);
+						wc3lib::write(ostream, alpha, size);
 					}
 				}
 			}
 
 			// set header data
-			size = bytes - size;
+			mipMapSize = size - mipMapSize;
 
-			offsets[index] = offset;
-			sizes[index] = size;
+			offsets[index] = mipMapOffset;
+			sizes[index] = mipMapSize;
 
 			++index;
 		}
@@ -616,47 +579,42 @@ std::streamsize Blp::writeBlp(std::ostream &ostream) const throw (class Exceptio
 
 		for (index = 0; index < this->m_mipMaps.size(); ++index)
 		{
-			ostream.write(reinterpret_cast<const char*>(&offsets[index]), sizeof(dword));
-			ostream.write(reinterpret_cast<const char*>(&sizes[index]), sizeof(dword));
-			bytes += 2 * sizeof(dword);
+			wc3lib::write(ostream, offsets[index], size);
+			wc3lib::write(ostream, sizes[index], size);
 		}
-
-		std::cout << "BYTES " << bytes << std::endl;
 	}
 	else
 		throw Exception(boost::str(boost::format(_("Unknown compression mode: %1%.")) % this->m_compression));
 
-	std::cout << "Wrote " << bytes << " bytes." << std::endl;
-
-	return bytes;
+	return size;
 }
 
-std::streamsize Blp::readJpeg(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readJpeg(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Blp::writeJpeg(std::ostream &ostream) const throw (class Exception)
+std::streamsize Blp::writeJpeg(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Blp::readTga(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readTga(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Blp::writeTga(std::ostream &ostream) const throw (class Exception)
+std::streamsize Blp::writeTga(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Blp::readPng(std::istream &istream) throw (class Exception)
+std::streamsize Blp::readPng(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Blp::writePng(std::ostream &ostream) const throw (class Exception)
+std::streamsize Blp::writePng(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	return 0;
 }

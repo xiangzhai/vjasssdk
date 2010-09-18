@@ -41,7 +41,7 @@ class Model : public MdxBlock, public Bounds
 
 		class Mdlx* mdlx() const;
 		const ascii* name() const;
-		long32 unknown0() const;
+		const ascii* animationFileName() const;
 		long32 blendTime() const;
 
 		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
@@ -52,8 +52,8 @@ class Model : public MdxBlock, public Bounds
 	protected:
 		class Mdlx *m_mdlx;
 		//long nbytes;
-		ascii m_name[0x150]; //(0x150 bytes)
-		long32 m_unknown0; //(0)
+		ascii m_name[80];
+		ascii m_animationFileName[260];
 		long32 m_blendTime;
 };
 
@@ -67,9 +67,9 @@ inline const ascii* Model::name() const
 	return this->m_name;
 }
 
-inline long32 Model::unknown0() const
+inline const ascii* Model::animationFileName() const
 {
-	return this->m_unknown0;
+	return this->m_animationFileName;
 }
 
 inline long32 Model::blendTime() const

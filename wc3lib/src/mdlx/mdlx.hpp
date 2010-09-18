@@ -64,8 +64,8 @@ class Mdlx : public MdxBlock
 		class Events* events() const;
 		class CollisionShapes* collisionShapes() const;
 
-		void readMdl(std::istream &istream) throw (class Exception);
-		void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 		std::streamsize readBlend(const std::string &filePath) throw (class Exception);

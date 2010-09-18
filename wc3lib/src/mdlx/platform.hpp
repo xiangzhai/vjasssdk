@@ -57,6 +57,23 @@ enum LineType
 	Bezier = 3
 };
 
+/**
+* @todo Finish enum.
+* @see Texture, ParticleEmitter2
+*/
+enum ReplaceableId
+{
+	None = 0,
+	TeamColor = 1,
+	TeamGlow = 2,
+	Cliff = 11,
+	LordaeronTree = 31,
+	AshenvaleTree = 32,
+	BarrensTree = 33,
+	NorthrendTree = 34,
+	MushroomTree = 35
+};
+
 struct VertexData
 {
 	float32 x, y, z;

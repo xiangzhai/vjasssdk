@@ -138,10 +138,11 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 	/*
 	showTerrainEditor(); // test
 	this->m_terrainEditor->resize(QSize(300, 300));
+	*/
 	showTextureEditor();
 	this->m_textureEditor->openFile();
 	showModelEditor();
-	*/
+	this->m_modelEditor->openFile();
 }
 
 Editor::~Editor()

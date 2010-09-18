@@ -1,5 +1,5 @@
-add_executable(converter converter.cpp)
-target_link_libraries(converter ${wc3lib_CORE_LIBRARIES} ${Boost_LIBRARIES})
+#add_executable(converter converter.cpp)
+#target_link_libraries(converter ${wc3lib_CORE_LIBRARIES} ${Boost_LIBRARIES})
 message("These are the Boost libraries: ${Boost_LIBRARIES}.")
 
 if (FLAG_EDITOR_USE)

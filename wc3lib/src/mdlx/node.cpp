@@ -55,6 +55,8 @@ std::streamsize Node::writeMdl(std::ostream &ostream) const throw (class Excepti
 std::streamsize Node::readMdx(std::istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
+	long32 nbytesi;
+	wc3lib::read(istream, nbytesi, size);
 	wc3lib::read(istream, this->m_name, size);
 	wc3lib::read(istream, this->m_id, size);
 	// register!
@@ -62,13 +64,13 @@ std::streamsize Node::readMdx(std::istream &istream) throw (class Exception)
 	wc3lib::read(istream, this->m_parentId, size);
 	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_type), size);
 
-	if (!this->inheritsTranslation())
+	//if (!this->inheritsTranslation())
 		size += this->m_translations->readMdx(istream);
 
-	if (!this->inheritsRotation())
+	//if (!this->inheritsRotation())
 		size += this->m_rotations->readMdx(istream);
 
-	if (!this->inheritsScaling())
+	//if (!this->inheritsScaling())
 		size += this->m_scalings->readMdx(istream);
 
 	return size;
@@ -76,22 +78,40 @@ std::streamsize Node::readMdx(std::istream &istream) throw (class Exception)
 
 std::streamsize Node::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_name, size);
 	wc3lib::write(ostream, this->m_id, size);
 	wc3lib::write(ostream, this->m_parentId, size);
 	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_type), size);
 
-	if (!this->inheritsTranslation())
+	//if (!this->inheritsTranslation())
 		size += this->m_translations->writeMdx(ostream);
 
-	if (!this->inheritsRotation())
+	//if (!this->inheritsRotation())
 		size += this->m_rotations->writeMdx(ostream);
 
-	if (!this->inheritsScaling())
+	//if (!this->inheritsScaling())
 		size += this->m_scalings->writeMdx(ostream);
 
+	writeByteCount(ostream, *reinterpret_cast<const long32*>(&size), position, size, true);
+
 	return size;
+}
+
+std::ostream& Node::print(std::ostream &ostream) const
+{
+	ostream << "Node: "
+	<< "Name: " << this->name() << std::endl
+	<< "ID: " << this->id() << std::endl
+	<< "Parent ID: " << this->parentId() << std::endl
+	<< "Translations: " << this->translations()->mdlxTranslations().size() << std::endl
+	<< "Rotations: " << this->rotations()->mdlxRotations().size() << std::endl
+	<< "Scalings: " << this->scalings()->mdlxScalings().size() << std::endl
+	<< std::endl;
+
+	return ostream;
 }
 
 }

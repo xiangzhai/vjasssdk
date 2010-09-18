@@ -47,7 +47,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Mdlx::Mdlx() : MdxBlock("MDLX"), m_version(new Version(this)), m_model(new Model(this)), m_sequences(new Sequences(this)), m_globalSequences(new GlobalSequences(this)), m_materials(new Materials(this)), m_textures(new Textures(this)), m_textureAnimations(new TextureAnimations(this)), m_geosets(new Geosets(this)), m_geosetAnimations(new GeosetAnimations(this)), m_bones(new Bones(this)), m_lights(new Lights(this)), m_helpers(new Helpers(this)), m_attachments(new Attachments(this)), m_pivotPoints(new PivotPoints(this)), m_particleEmitters(new ParticleEmitters(this)), m_particleEmitter2s(new ParticleEmitter2s(this)), m_ribbonEmitters(new RibbonEmitters(this)), m_cameras(new Cameras(this)), m_events(new Events(this)), m_collisionShapes(new CollisionShapes(this))
+Mdlx::Mdlx() : MdxBlock("MDLX", false), m_version(new Version(this)), m_model(new Model(this)), m_sequences(new Sequences(this)), m_globalSequences(new GlobalSequences(this)), m_materials(new Materials(this)), m_textures(new Textures(this)), m_textureAnimations(new TextureAnimations(this)), m_geosets(new Geosets(this)), m_geosetAnimations(new GeosetAnimations(this)), m_bones(new Bones(this)), m_lights(new Lights(this)), m_helpers(new Helpers(this)), m_attachments(new Attachments(this)), m_pivotPoints(new PivotPoints(this)), m_particleEmitters(new ParticleEmitters(this)), m_particleEmitter2s(new ParticleEmitter2s(this)), m_ribbonEmitters(new RibbonEmitters(this)), m_cameras(new Cameras(this)), m_events(new Events(this)), m_collisionShapes(new CollisionShapes(this))
 {
 
 }
@@ -100,7 +100,7 @@ struct BlendFileBlock
 };
 #endif
 
-void Mdlx::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Mdlx::readMdl(std::istream &istream) throw (class Exception)
 {
 	this->m_version->readMdl(istream);
 	this->m_model->readMdl(istream);
@@ -122,9 +122,11 @@ void Mdlx::readMdl(std::istream &istream) throw (class Exception)
 	this->m_cameras->readMdl(istream);
 	this->m_events->readMdl(istream);
 	this->m_collisionShapes->readMdl(istream);
+
+	return 0;
 }
 
-void Mdlx::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mdlx::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
 	this->m_version->writeMdl(ostream);
 	this->m_model->writeMdl(ostream);
@@ -146,6 +148,8 @@ void Mdlx::writeMdl(std::ostream &ostream) const throw (class Exception)
 	this->m_cameras->writeMdl(ostream);
 	this->m_events->writeMdl(ostream);
 	this->m_collisionShapes->writeMdl(ostream);
+
+	return 0;
 }
 
 std::streamsize Mdlx::readMdx(std::istream &istream) throw (class Exception)

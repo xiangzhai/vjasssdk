@@ -32,6 +32,7 @@
 #include "particleemitters.hpp"
 #include "particleemitter2s.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -39,7 +40,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Model::Model(class Mdlx *mdlx) : MdxBlock("MODL"), m_mdlx(mdlx)
+Model::Model(class Mdlx *mdlx) : MdxBlock("MODL", false), m_mdlx(mdlx)
 {
 }
 
@@ -98,44 +99,31 @@ std::streamsize Model::writeMdl(std::ostream &ostream) const throw (class Except
 
 std::streamsize Model::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
+	std::streamsize size = MdxBlock::readMdx(istream);
 	long32 nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
+	wc3lib::read(istream, nbytes, size);
+	wc3lib::read(istream, this->m_name, size);
+	wc3lib::read(istream, this->m_animationFileName, size);
+	size += Bounds::readMdx(istream);
+	wc3lib::read(istream, this->m_blendTime, size);
 
-	if (nbytes == 0)
-		throw Exception(_("Model: 0 byte model."));
-
-	bytes += istream.gcount();
-	istream.read(this->m_name, sizeof(this->m_name));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += istream.gcount();
-	bytes += Bounds::readMdx(istream);
-	istream.read(reinterpret_cast<char*>(&this->m_blendTime), sizeof(this->m_blendTime));
-	bytes += istream.gcount();
-
-	/// @todo Exception required?
-	//if (bytes - MdxBlock::blockNameSize - sizeof(nbytes) != nbytes) //- identifier length
-		//std::cerr << boost::format(_("Model: Warning - Read byte count doesn't fit with real byte count.\nRead byte count: %1%.\nReal byte count: %2%.")) % nbytes % bytes << std::endl;
-
-	return bytes;
+	return size;
 }
 
 std::streamsize Model::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	long32 nbytes = sizeof(*this); //nbytes, excluding byte count
-	ostream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
-	bytes += sizeof(nbytes);
-	ostream.write(this->m_name, sizeof(this->m_name));
-	bytes += sizeof(this->m_name);
-	ostream.write(reinterpret_cast<const char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += sizeof(this->m_unknown0);
-	bytes += Bounds::writeMdx(ostream);
-	ostream.write(reinterpret_cast<const char*>(&this->m_blendTime), sizeof(this->m_blendTime));
-	bytes += sizeof(this->m_blendTime);
+	std::streamsize size = MdxBlock::writeMdx(ostream);
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
 
-	return bytes;
+	wc3lib::write(ostream, this->m_name, size);
+	wc3lib::write(ostream, this->m_animationFileName, size);
+	size += Bounds::writeMdx(ostream);
+	wc3lib::write(ostream, this->m_blendTime, size);
+
+	writeByteCount(ostream, *reinterpret_cast<const long32*>(&size), position, size, false);
+
+	return size;
 }
 
 }

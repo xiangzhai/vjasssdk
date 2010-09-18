@@ -1,7 +1,15 @@
+2010-09-18 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Use new byte count output stream functions.
+
+2010-09-17 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: According to Mago's specification class Bone should derive Node not Object.
+* DEPRECATED: mdlx: Add function writeBytes which places nbytes or nbytesi and jumps back to end of stream.
+* mdlx: Check out value Multiple for GeosetId.
+
 2010-09-15 Tamino Dauth <tamino@cdauth.eu>
 * mdlx: PrimitiveSizes and GroupVertices need to derive GroupMdxBlock.
 * mdlx: Class TexturePatch is deprecated because texture patches aren't really stored (number only).
-* mdlx: Something is read wrongly -> node id 0 should be used by strange node (probably helper - wrong list size see debug output).
+* mdlx: Something is read wrongly -> node id 0 should be used by strange node (probably bone Archa.mdx).
 * mdlx: According to Mago's specification class Helper should derive Node not Object.
 
 2010-09-14 Tamino Dauth <tamino@cdauth.eu>
