@@ -39,14 +39,14 @@ namespace editor
 ModelView::ModelView(QWidget *parent, const QGLWidget *shareWidget, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QGLWidget(parent, shareWidget, f), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false)
 {
 	// setup a renderer
-	Ogre::RenderSystemList *renderers = this->m_root->getAvailableRenderers();
-	assert(!renderers->empty()); // we need at least one renderer to do anything useful
-	Ogre::RenderSystem *renderSystem;
-	renderSystem = renderers->front();
+	const Ogre::RenderSystemList &renderers = this->m_root->getAvailableRenderers();
+	assert(!renderers.empty()); // we need at least one renderer to do anything useful
+	Ogre::RenderSystem *renderSystem = renderers.front();
 	assert(renderSystem); // user might pass back a null renderer, which would be bad!
-	this->m_root->setRenderSystem(renderSystem);
 	QString dimensions = QString("%1x%2").arg(this->width()).arg(this->height());
+	qDebug() << "Dimensions " << dimensions.toAscii().data();
 	renderSystem->setConfigOption("Video Mode", dimensions.toAscii().data());
+	this->m_root->setRenderSystem(renderSystem);
 	// initialize without creating window
 	this->m_root->getRenderSystem()->setConfigOption("Full Screen", "No");
 	this->m_root->saveConfig();

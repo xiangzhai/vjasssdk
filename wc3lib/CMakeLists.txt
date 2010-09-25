@@ -105,20 +105,34 @@ endmacro ()
 # custom compilation definitions
 WC3LIB_GET_COMPILE_DEFINITION("FLAG_DEBUG_USE" "DEBUG")
 WC3LIB_GET_COMPILE_DEFINITION("FLAG_STATIC_USE" "STATIC")
+WC3LIB_GET_COMPILE_DEFINITION("FLAG_NORUNTIME_USE" "NORUNTIME")
 WC3LIB_GET_COMPILE_DEFINITION("FLAG_EDITOR_USE" "EDITOR")
+WC3LIB_GET_COMPILE_DEFINITION("FLAG_DOC_USE" "DOC")
+
+if (FLAG_STATIC_USE)
+	set(wc3lib_CREATION_MODE STATIC)
+else ()
+	set(wc3lib_CREATION_MODE SHARED)
+endif ()
 
 find_package(Gettext REQUIRED)
 
-set(Boost_USE_MULTITHREADED TRUE)
-if (FLAG_DEBUG_USE)
-	set(Boost_DEBUG TRUE)
+# Boost
+if (FLAG_STATIC_USE)
+	set(Boost_USE_STATIC_LIBS ON)
+else ()
+	set(Boost_USE_STATIC_LIBS OFF)
 endif ()
-set(Boost_DETAILED_FAILURE_MSG TRUE)
+set(Boost_USE_MULTITHREADED ON)
+if (FLAG_DEBUG_USE)
+	set(Boost_DEBUG ON)
+endif ()
+set(Boost_DETAILED_FAILURE_MSG ON)
 set(Boost_ADDITIONAL_VERSIONS "1.78" "1.78.0" "1.79" "1.79.0")
 find_package(Boost 1.42.0 COMPONENTS system filesystem thread REQUIRED)
 
 # Static linking with JPEG (BLP library)
-if (FLAG_STATIC_USE)
+if (FLAG_STATIC_USE OR FLAG_NORUNTIME_USE)
 	find_library(jpeg REQUIRED)
 endif ()
 
@@ -131,6 +145,9 @@ if (FLAG_EDITOR_USE)
 	include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR})
 	link_directories(${KDE4_LIB_DIR})
 	find_library(OGRE REQUIRED)
+	include_directories(lib/extern/OGRE/ogre_src_v1-7-1/OgreMain/include/ lib/extern/OGRE/ogre_src_v1-7-1/include/)
+	link_directories(lib/extern/OGRE/ogre_src_v1-7-1/lib)
+	set(OGRE_LIBRARIES OgreMain OgrePaging)
 endif ()
 
 # TODO: is only required when using -DJPEG and -DSTATIC
@@ -138,7 +155,6 @@ endif ()
 
 link_directories(${Boost_LIBRARY_DIRS})
 include_directories(${GETTEXT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${Ogre_INCLUDE_DIR})
-include_directories(/usr/include/OGRE)
 
 # Reset flags, Qt and KDE do set them to CRAP!
 set(CMAKE_CXX_FLAGS "")
@@ -157,6 +173,7 @@ include_directories(src lib)
 #add_subdirectory(ui)
 add_subdirectory(lib)
 add_subdirectory(src)
+add_subdirectory(doc)
 #add_subdirectory(icons)
 
 #include(CPack)

@@ -23,7 +23,7 @@
 
 #include <QGLWidget>
 
-#include <OGRE/Ogre.h>
+#include <Ogre.h>
 
 //#include "qogre/QOgreWidget.h"
 

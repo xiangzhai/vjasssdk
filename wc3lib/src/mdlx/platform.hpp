@@ -21,6 +21,8 @@
 #ifndef WC3LIB_MDLX_PLATFORM_HPP
 #define WC3LIB_MDLX_PLATFORM_HPP
 
+#include <string>
+
 #include <boost/cstdint.hpp>
 
 namespace wc3lib
@@ -41,6 +43,7 @@ typedef uint16_t short16; /// @todo undefined length?!
 typedef uint32_t long32;
 typedef char ascii;
 typedef char byte;
+typedef std::basic_string<ascii> string; /// Required for MDL format.
 
 /**
 * MDLX format supports interpolation for scalings, translations and rotations.

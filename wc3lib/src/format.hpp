@@ -35,16 +35,18 @@ class Format
 {
 	public:
 		typedef _CharT CharType;
+		typedef std::basic_istream<_CharT> InputStream;
+		typedef std::basic_ostream<_CharT> OutputStream;
 
-		virtual std::streamsize read(std::basic_istream<_CharT> &istream) throw (class Exception) = 0;
-		virtual std::streamsize write(std::basic_ostream<_CharT> &ostream) const throw (class Exception) = 0;
+		virtual std::streamsize read(InputStream &istream) throw (class Exception) = 0;
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception) = 0;
 
-		class Format& operator<<(std::basic_istream<_CharT> &istream) throw (class Exception);
-		const class Format& operator>>(std::basic_ostream<_CharT> &ostream) const throw (class Exception);
+		class Format& operator<<(InputStream &istream) throw (class Exception);
+		const class Format& operator>>(OutputStream &ostream) const throw (class Exception);
 };
 
 template<typename _CharT>
-inline class Format<_CharT>& Format<_CharT>::operator<<(std::basic_istream<_CharT> &istream) throw (class Exception)
+inline class Format<_CharT>& Format<_CharT>::operator<<(Format<_CharT>::InputStream &istream) throw (class Exception)
 {
 	this->read(istream);
 
@@ -52,7 +54,7 @@ inline class Format<_CharT>& Format<_CharT>::operator<<(std::basic_istream<_Char
 }
 
 template<typename _CharT>
-inline const class Format<_CharT>& Format<_CharT>::operator>>(std::basic_ostream<_CharT> &ostream) const throw (class Exception)
+inline const class Format<_CharT>& Format<_CharT>::operator>>(Format<_CharT>::OutputStream &ostream) const throw (class Exception)
 {
 	this->write(ostream);
 

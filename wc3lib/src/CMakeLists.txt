@@ -4,10 +4,12 @@ WC3LIB_GET_H(wc3lib_CORE_H)
 WC3LIB_GET_SRC(wc3lib_CORE_SRC)
 
 # message(STATUS "These are the source files of core: ${wc3lib_CORE_SRC}")
-add_library(wc3libcore SHARED ${wc3lib_CORE_SRC})
-# TODO: dl is required for using dlopen etc. (cross platform?)
-# message("Boost libraries are ${Boost_LIBRARIES}")
-target_link_libraries(wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} dl)
+add_library(wc3libcore ${wc3lib_CREATION_MODE} ${wc3lib_CORE_SRC})
+if (NOT FLAG_STATIC_USE)
+	# TODO: dl is required for using dlopen etc. (cross platform?)
+	target_link_libraries(wc3libcore dl)
+endif ()
+target_link_libraries(wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
 add_subdirectory(blp)
 # lang is unusable
@@ -34,18 +36,6 @@ endif ()
 
 add_subdirectory(app)
 
-# TODO: generate API documentation
-if (BUILD_DOCUMENTATION)
-	find_package(Doxygen REQUIRED)
-
-	if (DOXYGEN_FOUND)
-		#execute_process(COMMAND ${DOXYGEN_EXECUTABLE} "doxygen.conf")
-	endif ()
-endif ()
-
 # install
 install(TARGETS wc3libcore DESTINATION lib/wc3lib)
 install(FILES ${wc3lib_CORE_H} DESTINATION include/wc3lib)
-if (BUILD_DOCUMENTATION)
-	install(FILES ../doc/api DESTINATION share/doc/wc3lib/api)
-endif ()

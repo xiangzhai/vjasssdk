@@ -1,9 +1,6 @@
 WC3LIB_ENABLE_EXCEPTIONS()
 
 add_subdirectory(ui)
-#WC3LIB_GET_UI(wc3lib_EDITOR_UI)
-
-#QT4_WRAP_UI(wc3lib_EDITOR_MOC_UI_SRC ${wc3lib_EDITOR_UI})
 
 WC3LIB_GET_H(wc3lib_EDITOR_H)
 WC3LIB_GET_SRC(wc3lib_EDITOR_SRC)
@@ -22,8 +19,7 @@ QT4_WRAP_CPP(wc3lib_EDITOR_MOC_SRC ${wc3lib_EDITOR_H})
 add_library(qblp SHARED blpiohandler.cpp blpioplugin.cpp)
 target_link_libraries(qblp wc3libblp ${QT_LIBRARIES})
 add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
-# TODO use OGRE_LIBRARIES from custom cmake module
-target_link_libraries(wc3libeditor ${wc3lib_CORE_LIBRARIES} ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} OgreMain ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
+target_link_libraries(wc3libeditor ${wc3lib_CORE_LIBRARIES} ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} ${OGRE_LIBRARIES} ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 
 # install
 install(TARGETS qblp DESTINATION lib/qt4/plugins/imageformats)
