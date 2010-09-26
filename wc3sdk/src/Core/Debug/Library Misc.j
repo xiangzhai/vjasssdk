@@ -325,9 +325,15 @@ endif
 		/// @todo CHECK IF TRIGGER RUNS
 	endfunction
 
+	private function FlushTimer takes timer whichTimer returns nothing
+		call AHashTable.global().removeHandleBoolean(whichTimer, "DebugTimerIsPeriodic")
+		call AHashTable.global().removeHandleBoolean(whichTimer, "DebugTimerRuns")
+		call AHashTable.global().removeHandleTrigger(whichTimer, "DebugTimerTrigger")
+	endfunction
+
 	private function TriggerActionTimerExpires takes nothing returns nothing
 		if (not AHashTable.global().handleBoolean(GetExpiredTimer(), "DebugTimerIsPeriodic")) then
-			call AHashTable.global().flushHandle(GetExpiredTimer())
+			call FlushTimer(GetExpiredTimer()) // do not flush everything!
 			call DestroyTrigger(GetTriggeringTrigger())
 		endif
 	endfunction

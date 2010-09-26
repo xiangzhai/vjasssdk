@@ -1,3 +1,10 @@
+2010-09-25 Tamino Dauth <tamino@cdauth.eu>
+* ARoutine: Fixed target trigger condition.
+* ADynamicLightning: Dropped static initializer and members.
+
+2010-09-25 Tamino Dauth <tamino@cdauth.eu>
+* core: Fixed timer debugging flushing.
+
 2010-09-12 Tamino Dauth <tamino@cdauth.eu>
 * core: Added several camera related functions including text macro ACameraTextMacro.
 * core: Added functions GetRectX and GetRectY for easier text macro implementation.

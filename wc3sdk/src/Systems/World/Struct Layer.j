@@ -57,14 +57,14 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 	* Layers can be used to create multiple movable rects for units on the same position of map using
 	* the z-axis.
 	* As you can't do this by using the terrain editor or the Warcraft engine itself this struct
-	* uses the native function @function SetUnitFlyHeight and turns off units pathing (by using
-	* native function @function SetUnitPathing) to be usable on water and other blocking rects.
+	* uses the native function SetUnitFlyHeight and turns off units pathing (by using
+	* native function SetUnitPathing) to be usable on water and other blocking rects.
 	* Each layer consists of several regions which can be extended by adding rects.
 	* Each region has its own specific meaning and all rects should be placed in specific order
 	* that the layer can be used correctly.
 	* This image should describe what each region means to the layer:
 	* @image TODO
-	* As you can see entry rects has to be inside the layer rects since you need a fly height which will be adjusted on the entering unit.
+	* As you can see entry rects has to at the beginning of another layer rect since you need a fly height which will be adjusted on the entering unit.
 	* Exit rects can be anywhere you want to have them but you should consider that units can not leave region consisting of all layer rects.
 	* When a unit leaves a layer rect it will be reset if it did not enter a new one!
 	* @note Added regions and units won't be removed from game by the layer at any time! You'll have to take care yourself.
@@ -282,6 +282,7 @@ endif
 			local boolean result = false
 			loop
 				exitwhen (not iterator.isValid())
+				debug call this.print("Is not in entry region!")
 				if (IsUnitInRegion(iterator.data(), whichUnit)) then
 					set result = true
 					exitwhen (true)

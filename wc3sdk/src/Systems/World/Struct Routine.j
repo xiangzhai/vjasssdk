@@ -122,7 +122,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			return GetFloatGameState(GAME_STATE_TIME_OF_DAY) >= this.m_startTimeOfDay and GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.m_endTimeOfDay
 		endmethod
 
-		private static method filterTarget takes nothing returns boolean
+		private static method triggerConditionTarget takes nothing returns boolean
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local unit triggerUnit = GetTriggerUnit()
@@ -143,18 +143,16 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		private method createTargetTrigger takes nothing returns nothing
-			local boolexpr filter
 			local event triggerEvent
 			local triggeraction triggerAction
 			set this.m_targetRegion = CreateRegion()
 			call RegionAddRect(this.m_targetRegion, this.m_targetRect)
 			set this.m_targetTrigger = CreateTrigger()
-			set filter = Condition(function thistype.filterTarget)
-			set triggerEvent = TriggerRegisterEnterRegion(this.m_targetTrigger, this.m_targetRegion, filter)
+			set triggerEvent = TriggerRegisterEnterRegion(this.m_targetTrigger, this.m_targetRegion, null)
+			call TriggerAddCondition(this.m_targetTrigger, Condition(function thistype.triggerConditionTarget))
 			set triggerAction = TriggerAddAction(this.m_targetTrigger, function thistype.triggerActionTarget)
 			call AHashTable.global().setHandleInteger(this.m_targetTrigger, "this", this)
 			call IssueRectOrder(this.m_routineUnitData.unit(), "move", this.m_targetRect)
-			set filter = null
 			set triggerEvent = null
 			set triggerAction = null
 		endmethod
