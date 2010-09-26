@@ -4016,6 +4016,7 @@
 			<item>loaddata</item>
 			<item>textmacro</item>
 			<item>textmacro_once</item>
+			<item>runtextmacro</item>
 			<item>endtextmacro</item>
 			<item>inject</item>
 			<item>endinject</item>

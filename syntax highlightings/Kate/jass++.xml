@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="JASS++" version="1.0" kateversion="3.4.5" section="Scripts" extensions="*.j;*.J;*.ai;*.AI;*.jpp;*.JPP" author="Tamino Dauth">
+<language name="JASS++" version="1.0" kateversion="3.4.5" section="Scripts" extensions="*.aipp;*.AIPP;*.jpp;*.JPP" author="Tamino Dauth">
 	<highlighting>
 		<list name="type_keywords">
 			<item>void</item>
