@@ -46,7 +46,7 @@ typedef uint8_t byte;
 typedef uint16_t word;
 typedef uint32_t dword;
 typedef float float32;
-typedef int32_t color;
+typedef uint32_t color;
 
 struct BlpHeader
 {
@@ -75,4 +75,4 @@ struct Blp2Header
 
 }
 
-#endif 
+#endif

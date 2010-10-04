@@ -30,6 +30,7 @@
 #include <boost/format.hpp>
 
 #include "platform.hpp"
+#include "../format.hpp"
 #include "../exception.hpp"
 #include "../internationalisation.hpp"
 
@@ -59,55 +60,86 @@ namespace blp
 *
 * Little loading example:
 * @code
-* #include <fstream>
 * #include <iostream>
+* #include <boost/filesystem/fstream.hpp>
 * #include <boost/foreach.hpp>
 * ...
 * std::ifstream ifstream("test.blp", std::ifstream::binary);
 * class Blp blp;
-* blp.readBlp(istream);
+* blp.read(istream);
 * std::cout << "We have " << blp.mipMaps().size() << " mip maps here." << std::endl;
 * BOOST_FOREACH(const class Blp::MipMap *mipMap, blp.mipMaps())
 	* std::cout << "This mip map has height " << mipMap->height() << " and width " << mipMap->width() << std::endl;
 * @endcode
+* @section Conversion
+* If you want to convert BLP images into other formats (e. g. JPEG or PNG) you can either write your own converter or use wc3lib's BLP Qt plugin.
 */
-class Blp
+class Blp : public Format<byte>
 {
 	public:
+		/**
+		* Imagine each mip map as single image containing several pixels with various colors (and alpha values).
+		* Mip map colors are stored in a map hashed by their coordinates for fast access.
+		* Palette index is also stored for providing paletted compression support when writing the BLP/mip map into output stream.
+		* BLP supports RGBA colors.
+		*/
 		class MipMap
 		{
 			public:
-				struct Color
+				class Color
 				{
-					color rgb;
-					byte alpha;
-					byte paletteIndex; // only used for paletted compression
+					public:
+						bool operator==(const class Color &other) const;
+						bool operator!=(const class Color &other) const;
 
-					bool compareRgb(const Color &other) const
-					{
-						return this->rgb == other.rgb;
-					};
+						Color();
+						~Color();
+
+						class MipMap* mipMap() const;
+						color rgba() const;
+						byte alpha() const;
+						byte paletteIndex() const;
+
+					protected:
+						friend class MipMap;
+
+
+						Color(class MipMap *mipMap, color rgba, byte alpha, byte paletteIndex);
+
+						class MipMap *m_mipMap;
+						color m_rgba;
+						byte m_alpha;
+						byte m_paletteIndex; // only used for paletted compression
 				};
 
+				/**
+				* @brief Each color is hashed by it's 2-dimensional coordinates on the image. So this is the hash/key type of color values on mip maps.
+				*/
 				typedef std::pair<dword, dword> Coordinates;
-
-				MipMap(dword width, dword height);
+				/**
+				* @brief This type can be used for constant iteration access to color map of mip map.
+				*/
+				typedef std::pair<const Coordinates&, const class Color&> MapEntryType;
 
 				void scale(dword newWidth, dword newHeight) throw (class Exception);
 
 				dword width() const;
 				dword height() const;
 
-				void setColor(dword width, dword height, color rgb, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
-				const std::map<Coordinates, struct Color>& colors() const;
-				const struct Color& colorAt(dword width, dword height) const;
+				void setColor(dword width, dword height, color rgba, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
+				const std::map<Coordinates, class Color>& colors() const;
+				const class Color& colorAt(dword width, dword height) const;
 
 			protected:
 				friend class Blp;
 
+				MipMap(class Blp *blp, dword width, dword height);
+				~MipMap();
+
+				class Blp *m_blp;
 				dword m_width;
 				dword m_height;
-				std::map<Coordinates, struct Color> m_colors; //[mip map width * mip map height];
+				std::map<Coordinates, class Color> m_colors; //[mip map width * mip map height];
 		};
 
 		enum Format
@@ -173,14 +205,13 @@ class Blp
 		/**
 		* @return Read bytes. Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
 		*/
-		std::streamsize readBlp(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize writeBlp(std::basic_ostream<byte> &ostream) const throw (class Exception);
-		std::streamsize readJpeg(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize writeJpeg(std::basic_ostream<byte> &ostream) const throw (class Exception);
-		std::streamsize readTga(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize writeTga(std::basic_ostream<byte> &ostream) const throw (class Exception);
-		std::streamsize readPng(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize writePng(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+
+		/**
+		* Clears all mip maps and adds initial mip map.
+		*/
+		class MipMap* addInitialMipMap(dword width, dword height);
 
 		/**
 		* Adds mip map @param initialMipMap to mip map list and generates number - 1 new mip maps which are added to mip map list, too.
@@ -207,6 +238,26 @@ class Blp
 		std::list<class MipMap*> m_mipMaps;
 };
 
+inline class Blp::MipMap* Blp::MipMap::Color::mipMap() const
+{
+	return this->m_mipMap;
+}
+
+inline color Blp::MipMap::Color::rgba() const
+{
+	return this->m_rgba;
+}
+
+inline byte Blp::MipMap::Color::alpha() const
+{
+	return this->m_alpha;
+}
+
+inline byte Blp::MipMap::Color::paletteIndex() const
+{
+	return this->m_paletteIndex;
+}
+
 inline dword Blp::MipMap::width() const
 {
 	return this->m_width;
@@ -217,14 +268,12 @@ inline dword Blp::MipMap::height() const
 	return this->m_height;
 }
 
-inline void Blp::MipMap::setColor(dword width, dword height, color rgb, byte alpha, byte paletteIndex) throw (class Exception)
+inline void Blp::MipMap::setColor(dword width, dword height, color rgba, byte alpha, byte paletteIndex) throw (class Exception)
 {
 	if (width >= this->m_width || height >= this->m_height)
 		throw Exception(boost::str(boost::format(_("Mip map: Invalid indices (width %1%, height %2%).")) % width % height));
 
-	this->m_colors[std::make_pair(width, height)].rgb = rgb;
-	this->m_colors[std::make_pair(width, height)].alpha = alpha;
-	this->m_colors[std::make_pair(width, height)].paletteIndex = paletteIndex;
+	this->m_colors[std::make_pair(width, height)] = Color(this, rgba, alpha, paletteIndex);
 }
 
 inline const std::map<std::pair<dword, dword>, struct Blp::MipMap::Color>& Blp::MipMap::colors() const

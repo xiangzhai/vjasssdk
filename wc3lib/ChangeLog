@@ -1,3 +1,10 @@
+2010-10-06 Tamino Dauth <tamino@cdauth.eu>
+* blp: Revised classes.
+* editor: Revised BLP IO handler.
+
+2010-10-05 Tamino Dauth <tamino@cdauth.eu>
+* blp: Revised classes.
+
 2010-09-25 Tamino Dauth <tamino@cdauth.eu>
 * editor: Detected crash of Ogre3d's GL renderer and reported bug.
 * Revised cmake files and added better doxygen API generation support.

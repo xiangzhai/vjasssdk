@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,10 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> // debug
-
-#include <boost/foreach.hpp>
-
 #include "primitivesizes.hpp"
 #include "primitivesize.hpp"
 
@@ -31,14 +27,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveSizes::PrimitiveSizes(class Geoset *geoset) : MdxBlock("PCNT"), m_geoset(geoset)
+PrimitiveSizes::PrimitiveSizes(class Geoset *geoset) : GroupMdxBlock("PCNT"), m_geoset(geoset)
 {
 }
 
 PrimitiveSizes::~PrimitiveSizes()
 {
-	BOOST_FOREACH(class PrimitiveSize *primitiveSize, this->m_primitiveSizes)
-		delete primitiveSize;
 }
 
 void PrimitiveSizes::readMdl(std::istream &istream) throw (class Exception)
@@ -49,38 +43,9 @@ void PrimitiveSizes::writeMdl(std::ostream &ostream) const throw (class Exceptio
 {
 }
 
-std::streamsize PrimitiveSizes::readMdx(std::istream &istream) throw (class Exception)
+class GroupMdxBlockMember* PrimitiveSizes::createNewMember()
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 npcnts = 0;
-	istream.read(reinterpret_cast<char*>(&npcnts), sizeof(npcnts));
-	bytes += istream.gcount();
-	std::cout << "Primitive sizes " << npcnts << std::endl;
-	
-	for ( ; npcnts > 0; --npcnts)
-	{
-		class PrimitiveSize *primitiveSize = new PrimitiveSize(this);
-		bytes += primitiveSize->readMdx(istream);
-		this->m_primitiveSizes.push_back(primitiveSize);
-	}
-	
-	std::cout << "Primitive sizes bytes " << bytes << std::endl;
-	
-	return bytes;
-}
-
-std::streamsize PrimitiveSizes::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	return bytes;
+	return new PrimitiveSize(this);
 }
 
 }

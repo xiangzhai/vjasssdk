@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_PRIMITIVESIZE_HPP
 #define WC3LIB_MDLX_PRIMITIVESIZE_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "primitivesizes.hpp"
 
 namespace wc3lib
 {
@@ -33,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class PrimitiveSize
+class PrimitiveSize : public GroupMdxBlockMember
 {
 	public:
 		PrimitiveSize(class PrimitiveSizes *primitiveSizes);
@@ -48,13 +45,12 @@ class PrimitiveSize
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		class PrimitiveSizes *m_primitiveSizes;
 		long32 m_value;
 };
 
 inline class PrimitiveSizes* PrimitiveSize::primitiveSizes() const
 {
-	return this->m_primitiveSizes;
+	return dynamic_cast<class PrimitiveSizes*>(this->m_parent);
 }
 
 inline long32 PrimitiveSize::value() const

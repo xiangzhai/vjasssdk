@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_GROUPVERTICES_HPP
 #define WC3LIB_MDLX_GROUPVERTICES_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +30,7 @@ namespace mdlx
 {
 
 /// GNDX
-class GroupVertices : public MdxBlock
+class GroupVertices : public GroupMdxBlock
 {
 	public:
 		GroupVertices(class Geoset *geoset);
@@ -43,13 +41,11 @@ class GroupVertices : public MdxBlock
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+
 		class Geoset *m_geoset;
-		//long	nbytes;
-		std::list<class GroupVertex*> m_groupVertices;
 };
 
 inline class Geoset* GroupVertices::geoset() const
@@ -59,7 +55,7 @@ inline class Geoset* GroupVertices::geoset() const
 
 inline const std::list<class GroupVertex*>& GroupVertices::groupVertices() const
 {
-	return this->m_groupVertices;
+	return reinterpret_cast<const std::list<class GroupVertex*>&>(this->m_members);
 }
 
 }

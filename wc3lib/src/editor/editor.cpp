@@ -141,7 +141,7 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 	*/
 	showTextureEditor();
 	this->m_textureEditor->openFile();
-	showModelEditor();
+	//showModelEditor();
 	//this->m_modelEditor->openFile();
 }
 

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,7 +52,38 @@ typedef JDIMENSION (*jpeg_read_scanlinesType)(j_decompress_ptr cinfo, JSAMPARRAY
 typedef boolean (*jpeg_finish_decompressType)(j_decompress_ptr cinfo);
 //#endif
 
-Blp::MipMap::MipMap(dword width, dword height) : m_width(width), m_height(height)
+bool Blp::MipMap::Color::operator==(const class Color &other) const
+{
+	/*
+	color rgba0 = this->rgba();
+	byte alpha0 = 0;
+	color rgba1 = other.rgba();
+	byte alpha1 = 0;
+
+	if (this->m_mipMap->m_blp->flags() & Alpha)
+		alpha0 = this->alpha();
+
+	if (other.m_mipMap->m_blp->flags() & Alpha)
+		alpha1 = other.alpha();
+	*/
+
+	return this->rgba() == other.rgba() && this->alpha() == other.alpha();
+}
+
+bool Blp::MipMap::Color::operator!=(const class Color &other) const
+{
+	return !(*this == other);
+}
+
+Blp::MipMap::Color::Color() : m_mipMap(0), m_rgba(0), m_alpha(0), m_paletteIndex(0)
+{
+}
+
+Blp::MipMap::Color::~Color()
+{
+}
+
+Blp::MipMap::Color::Color(class Blp::MipMap *mipMap, color rgba, byte alpha, byte paletteIndex) : m_mipMap(mipMap), m_rgba(rgba), m_alpha(alpha), m_paletteIndex(paletteIndex)
 {
 }
 
@@ -60,6 +91,14 @@ Blp::MipMap::MipMap(dword width, dword height) : m_width(width), m_height(height
 void Blp::MipMap::scale(dword newWidth, dword newHeight) throw (class Exception)
 {
 	throw Exception(_("MipMap::scale - Not implemented yet!"));
+}
+
+Blp::MipMap::MipMap(class Blp *blp, dword width, dword height) : m_blp(blp), m_width(width), m_height(height)
+{
+}
+
+Blp::MipMap::~MipMap()
+{
 }
 
 const byte Blp::identifier0[4] = { 'B', 'L', 'P', '0' };
@@ -119,7 +158,7 @@ std::string jpegError(jpeg_std_errorType jpeg_std_error, const std::string &mess
 
 }
 
-std::streamsize Blp::readBlp(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	this->clean();
 	// header
@@ -165,7 +204,7 @@ std::streamsize Blp::readBlp(std::basic_istream<byte> &istream) throw (class Exc
 
 	for (std::size_t i = 0; i < mipMapsCount; ++i)
 	{
-		class MipMap *mipMap = new MipMap(this->mipMapWidth(i), this->mipMapHeight(i));
+		class MipMap *mipMap = new MipMap(this, this->mipMapWidth(i), this->mipMapHeight(i));
 		//struct MipMapHeaderData mipMapHeaderData;
 		struct MipMapHeaderData mipMapHeaderData =
 		{
@@ -320,13 +359,13 @@ std::streamsize Blp::readBlp(std::basic_istream<byte> &istream) throw (class Exc
 						/// @todo Check if we got the right values!
 						for (int component = 0; component < scanlinesSize; component += cinfo.output_components)
 						{
-							color rgb = (scanlines[0][component] << 2) + (scanlines[0][component + 1] << 1) + (scanlines[0][component + 2]);
+							color rgba = (scanlines[0][component] << 2) + (scanlines[0][component + 1] << 1) + (scanlines[0][component + 2]);
 							byte alpha = 0;
 
 							if (cinfo.output_components == 4) // we do have an alpha channel
 								alpha = scanlines[0][component + 3];
 
-							mipMap->setColor(width, height, rgb, alpha);
+							mipMap->setColor(width, height, rgba, alpha);
 							width++;
 						}
 
@@ -461,7 +500,7 @@ std::streamsize Blp::readBlp(std::basic_istream<byte> &istream) throw (class Exc
 	return size;
 }
 
-std::streamsize Blp::writeBlp(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Blp::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 
@@ -525,18 +564,18 @@ std::streamsize Blp::writeBlp(std::basic_ostream<byte> &ostream) const throw (cl
 			{
 				for (dword height = 0; height < mipMap->height(); ++height)
 				{
-					if (palette[mipMap->colorAt(width, height).paletteIndex] == 0)
-						palette[mipMap->colorAt(width, height).paletteIndex] = &mipMap->colorAt(width, height);
-					else if (!palette[mipMap->colorAt(width, height).paletteIndex]->compareRgb(mipMap->colorAt(width, height)))
+					if (palette[mipMap->colorAt(width, height).paletteIndex()] == 0)
+						palette[mipMap->colorAt(width, height).paletteIndex()] = &mipMap->colorAt(width, height);
+					else if (*palette[mipMap->colorAt(width, height).paletteIndex()] != mipMap->colorAt(width, height))
 						std::cerr << _("Warning: There are different mip map colors with same index.") << std::endl;
 				}
 			}
 		}
 
 		// write palette
-		BOOST_FOREACH(const struct MipMap::Color *paletteColor, palette)
+		BOOST_FOREACH(const class MipMap::Color *paletteColor, palette)
 		{
-			color value = paletteColor == 0 ? 0 : paletteColor->rgb; // check if empty
+			color value = paletteColor == 0 ? 0 : paletteColor->rgba(); // check if empty
 			wc3lib::write(ostream, value, size);
 		}
 
@@ -554,12 +593,12 @@ std::streamsize Blp::writeBlp(std::basic_ostream<byte> &ostream) const throw (cl
 			{
 				for (dword height = 0; height < mipMap->height(); ++height)
 				{
-					byte index = mipMap->colorAt(width, height).paletteIndex;
+					byte index = mipMap->colorAt(width, height).paletteIndex();
 					wc3lib::write(ostream, index, size);
 
 					if (this->m_flags == Blp::Alpha)
 					{
-						byte alpha = mipMap->colorAt(width, height).alpha;
+						byte alpha = mipMap->colorAt(width, height).alpha();
 						wc3lib::write(ostream, alpha, size);
 					}
 				}
@@ -589,34 +628,16 @@ std::streamsize Blp::writeBlp(std::basic_ostream<byte> &ostream) const throw (cl
 	return size;
 }
 
-std::streamsize Blp::readJpeg(std::basic_istream<byte> &istream) throw (class Exception)
+class Blp::MipMap* Blp::addInitialMipMap(dword width, dword height)
 {
-	return 0;
-}
+	BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
+		delete mipMap;
 
-std::streamsize Blp::writeJpeg(std::basic_ostream<byte> &ostream) const throw (class Exception)
-{
-	return 0;
-}
+	this->m_mipMaps.clear();
+	class MipMap *result = new MipMap(this, width, height);
+	this->m_mipMaps.push_back(result);
 
-std::streamsize Blp::readTga(std::basic_istream<byte> &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize Blp::writeTga(std::basic_ostream<byte> &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize Blp::readPng(std::basic_istream<byte> &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize Blp::writePng(std::basic_ostream<byte> &ostream) const throw (class Exception)
-{
-	return 0;
+	return result;
 }
 
 bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
@@ -635,7 +656,7 @@ bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
 	{
 		width /= 2;
 		height /= 2;
-		class MipMap *mipMap = new MipMap(width, height);
+		class MipMap *mipMap = new MipMap(this, width, height);
 		/// @todo Generate new scaled index and alpha list.
 
 

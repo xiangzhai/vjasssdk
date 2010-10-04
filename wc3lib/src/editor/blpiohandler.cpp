@@ -21,6 +21,8 @@
 #include <sstream>
 #include <utility>
 
+#include <boost/foreach.hpp>
+
 #include <QtCore>
 #include <QtGui>
 
@@ -32,6 +34,21 @@ namespace wc3lib
 
 namespace editor
 {
+
+namespace
+{
+
+inline blp::color rgbaToColor(QRgb rgba)
+{
+	return rgba << 1 + qAlpha(rgba);
+}
+
+inline QRgb colorToRgba(blp::color c)
+{
+	return qRgba(c & 0xFF000000, c & 0x00FF0000, c & 0x0000FF00, c & 0x000000FF);
+}
+
+}
 
 BlpIOHandler::BlpIOHandler() : QImageIOHandler()
 {
@@ -61,7 +78,7 @@ bool BlpIOHandler::read(QImage *image)
 
 	try
 	{
-		blpImage.readBlp(istream);
+		blpImage.read(istream);
 	}
 	catch (class Exception &exception)
 	{
@@ -80,14 +97,13 @@ bool BlpIOHandler::read(QImage *image)
 
 	*image = QImage(mipMap->width(), mipMap->height(), blpImage.flags() == blp::Blp::Alpha ? QImage::Format_ARGB32 : QImage::Format_RGB32);
 
-	typedef std::pair<blp::Blp::MipMap::Coordinates, struct blp::Blp::MipMap::Color> MapType;
+	typedef std::pair<const blp::Blp::MipMap::Coordinates&, const class blp::Blp::MipMap::Color&> MapType;
 
-	foreach (MapType mapEntry, mipMap->colors())
+	foreach (blp::Blp::MipMap::MapEntryType mapEntry, mipMap->colors())
 	{
-		const blp::Blp::MipMap::Coordinates coordinates = mapEntry.first;
-		const struct blp::Blp::MipMap::Color color = mapEntry.second;
-		QRgb pixelColor = (color.alpha << 3) + color.rgb; // QRgb starts with alpha
-		//qDebug() << "(Width " << coordinates.first << ", Height " << coordinates.second << ") RGBA value: " << qRed(color.rgb) << ' ' << qGreen(color.rgb) << ' ' << qBlue(color.rgb) << color.alpha;
+		const blp::Blp::MipMap::Coordinates &coordinates = mapEntry.first;
+		const struct blp::Blp::MipMap::Color &color = mapEntry.second;
+		QRgb pixelColor =  colorToRgba(color.rgba());
 		image->setPixel(coordinates.first, coordinates.second, pixelColor);
 	}
 
@@ -131,8 +147,8 @@ bool BlpIOHandler::write(const QImage &image)
 	*/
 
 	// create mip map
-	/// @todo Fill palett if paletted!!!!!!
-	class blp::Blp::MipMap *mipMap = new blp::Blp::MipMap(image.width(), image.height());
+	/// @todo Fill palette if paletted!!!!!!
+	class blp::Blp::MipMap *mipMap = blpImage.addInitialMipMap(image.width(), image.height());
 
 	for (int width = 0; width < image.size().width(); ++width)
 	{
@@ -145,7 +161,8 @@ bool BlpIOHandler::write(const QImage &image)
 			if (blpImage.compression() == blp::Blp::Paletted)
 				index = image.pixelIndex(width, height); // index has to be set because paletted compression can also be used
 
-			mipMap->setColor(width, height, rgb << 1, qAlpha(rgb), index); // move rgb and discard alpha
+			blp::color rgba = rgbaToColor(rgb);
+			mipMap->setColor(width, height, rgba, qAlpha(rgb), index);
 		}
 	}
 
@@ -154,7 +171,7 @@ bool BlpIOHandler::write(const QImage &image)
 
 	try
 	{
-		blpImage.writeBlp(ostream);
+		blpImage.write(ostream);
 	}
 	catch (class Exception &exception)
 	{

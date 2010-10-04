@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_PRIMITIVESIZES_HPP
 #define WC3LIB_MDLX_PRIMITIVESIZES_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,11 +29,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-class PrimitiveSize;
-
 /// PCNT
-class PrimitiveSizes : public MdxBlock
+class PrimitiveSizes : public GroupMdxBlock
 {
 	public:
 		PrimitiveSizes(class Geoset *geoset);
@@ -46,12 +41,11 @@ class PrimitiveSizes : public MdxBlock
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+
 		class Geoset *m_geoset;
-		std::list<class PrimitiveSize*> m_primitiveSizes;
 };
 
 inline class Geoset* PrimitiveSizes::geoset() const
@@ -61,7 +55,7 @@ inline class Geoset* PrimitiveSizes::geoset() const
 
 inline const std::list<class PrimitiveSize*>& PrimitiveSizes::primitiveSizes() const
 {
-	return this->m_primitiveSizes;
+	return reinterpret_cast<const std::list<class PrimitiveSize*>&>(this->m_members);
 }
 
 }

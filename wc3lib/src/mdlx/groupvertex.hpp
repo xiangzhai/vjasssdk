@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_GROUPVERTEX_HPP
 #define WC3LIB_MDLX_GROUPVERTEX_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "groupvertices.hpp"
 
 namespace wc3lib
 {
@@ -33,9 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GroupVertices;
-
-class GroupVertex
+class GroupVertex : public GroupMdxBlockMember
 {
 	public:
 		GroupVertex(class GroupVertices *groupVertices);
@@ -50,13 +45,12 @@ class GroupVertex
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		class GroupVertices *m_groupVertices;
 		byte m_data;
 };
 
 inline class GroupVertices* GroupVertex::groupVertices() const
 {
-	return this->m_groupVertices;
+	return dynamic_cast<class GroupVertices*>(this->m_parent);
 }
 
 inline byte GroupVertex::data() const

@@ -1,3 +1,6 @@
+2010-10-03 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: PrimitiveVertices -> GroupMdxBlock.
+
 2010-09-25 Tamino Dauth <tamino@cdauth.eu>
 * editor: http://www.ogre3d.org/mantis/view.php?id=349
 
@@ -10,7 +13,7 @@
 * mdlx: Check out value Multiple for GeosetId.
 
 2010-09-15 Tamino Dauth <tamino@cdauth.eu>
-* mdlx: PrimitiveSizes and GroupVertices need to derive GroupMdxBlock.
+* DONE: mdlx: PrimitiveSizes and GroupVertices need to derive GroupMdxBlock.
 * mdlx: Class TexturePatch is deprecated because texture patches aren't really stored (number only).
 * mdlx: Something is read wrongly -> node id 0 should be used by strange node (probably bone Archa.mdx).
 * mdlx: According to Mago's specification class Helper should derive Node not Object.

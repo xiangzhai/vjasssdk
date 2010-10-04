@@ -40,6 +40,18 @@ TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
 
 void TextureEditor::openFile()
 {
+	/*
+	QPluginLoader loader("libqblp.so");
+	loader.load();
+
+	if (!loader.isLoaded())
+	{
+		KMessageBox::error(this, i18n("Unable to load BLP plugin: \"%1\".", loader.errorString()));
+
+		return;
+	}
+	*/
+
 	KUrl url = KFileDialog::getOpenUrl(this->m_recentUrl, i18n("*.blp|BLP textures\n*.png|PNG images"), this);
 
 	if (url.isEmpty())
@@ -53,20 +65,21 @@ void TextureEditor::openFile()
 	}
 
 	QFile file(url.toLocalFile());
-	BlpIOHandler handler;
-	handler.setDevice(&file);
+	//BlpIOHandler handler;
+	//handler.setDevice(&file);
 	file.open(QIODevice::ReadOnly);
 
-	if (!handler.canRead())
+	/*if (!handler.canRead())
 	{
 		KMessageBox::error(this, i18n("Unable to detect any BLP format in file \"%1\".", url.toLocalFile()));
 
 		return;
 	}
+	*/
 
 	QImage image;
 
-	if (!handler.read(&image))
+	if (!image.load(&file, 0))//(!handler.read(&image))
 	{
 		KMessageBox::error(this, i18n("Unable to read BLP image from file \"%1\".", url.toLocalFile()));
 
