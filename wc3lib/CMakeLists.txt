@@ -147,6 +147,8 @@ if (FLAG_EDITOR_USE)
 	find_library(OGRE REQUIRED)
 	include_directories(lib/extern/OGRE/ogre_src_v1-7-1/OgreMain/include/ lib/extern/OGRE/ogre_src_v1-7-1/include/)
 	link_directories(lib/extern/OGRE/ogre_src_v1-7-1/lib)
+	#include_directories(/usr/include/OGRE)
+	#link_directories(/usr/lib/OGRE)
 	set(OGRE_LIBRARIES OgreMain OgrePaging)
 endif ()
 

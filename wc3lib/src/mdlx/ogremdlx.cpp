@@ -20,6 +20,7 @@
 
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
+#include <boost/cast.hpp>
 
 #include "ogremdlx.hpp"
 #include "../internationalisation.hpp"
@@ -30,13 +31,14 @@ namespace wc3lib
 namespace mdlx
 {
 
-OgreMdlx::OgreMdlx(const class Mdlx &mdlx) : m_mdlx(&mdlx), m_mesh(0)
+OgreMdlx::OgreMdlx(const class Mdlx &mdlx) : m_mdlx(&mdlx)
 {
 }
 
 void OgreMdlx::refresh() throw (class Exception)
 {
 	// get new objects
+	/*
 	std::list<const class Node*> nodes = this->m_mdlx->nodes();
 
 	BOOST_FOREACH(const class Node *node, nodes)
@@ -44,6 +46,7 @@ void OgreMdlx::refresh() throw (class Exception)
 		if (this->m_nodes.find(node) != this->m_nodes.end())
 			nodes.remove(node);
 	}
+	*/
 
 	// setup nodes of new objects (inheritance)
 	/*
@@ -55,6 +58,7 @@ void OgreMdlx::refresh() throw (class Exception)
 
 
 	// refresh model
+	/*
 	class Ogre::MeshManager *meshManager = Ogre::MeshManager::getSingletonPtr();
 
 	if (this->m_mesh.isNull())
@@ -72,6 +76,7 @@ void OgreMdlx::refresh() throw (class Exception)
 		this->m_mdlx->model()->maximumExtent().z
 		)
 	);
+	*/
 
 	// refresh sequences
 
@@ -92,10 +97,14 @@ void OgreMdlx::refresh() throw (class Exception)
 
 	// refresh geosets
 	/// ...
-	std::size_t i = 0;
+	// std::size_t i = 0;
 
 	BOOST_FOREACH(const class Geoset *geoset, this->m_mdlx->geosets()->geosets())
 	{
+		const class Geoset &rGeoset = *geoset;
+		this->createGeoset(rGeoset);
+	}
+		/*
 		std::map<const class Geoset*, Ogre::MeshPtr>::iterator iterator = this->m_geosets.find(geoset);
 		Ogre::MeshPtr geosetMesh;
 		std::string name;
@@ -149,7 +158,7 @@ void OgreMdlx::refresh() throw (class Exception)
 
 		//subMesh->vertexData()
 		//subMesh->vertexData()void 	setMaterialName (const String &matName)
-
+		*/
 		/*
 		std::list<const class Bone*> geosetBones;
 
@@ -183,7 +192,7 @@ void OgreMdlx::refresh() throw (class Exception)
 		}
 		*/
 
-	}
+	//}
 
 	// apply object inhertance modifiers with pivot points
 	/// @todo Consider pivot points and the fact that this function is called for refreshment not initial placement.
@@ -346,6 +355,104 @@ Ogre::Node* OgreMdlx::createNode(const class Node &node)
 		return 0;
 
 	return result;
+}
+
+/*
+Ogre::Material& OgreMdlx::createMaterial(const class mdlx::Material &material) throw (class Exception)
+{
+	//Ogre::Material material(Ogre::MaterialManager->getSingleton(), "Material", ResourceHandle handle, const String &group, bool isManual=false, ManualResourceLoader *loader=0)
+	return 0;
+}
+*/
+
+Ogre::ManualObject& OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) throw (class Exception)
+{
+	Ogre::ManualObject object("geoset");
+
+	// set bounds
+	/// @todo Set Bounding radius
+	//object->setBoundingSphereRadius(geoset->boundsRadius());
+	object.setBoundingBox(Ogre::AxisAlignedBox(
+		geoset.minimumExtent().x,
+		geoset.minimumExtent().y,
+		geoset.minimumExtent().z,
+		geoset.maximumExtent().x,
+		geoset.maximumExtent().y,
+		geoset.maximumExtent().z
+		)
+	);
+
+	// get material
+	const class mdlx::Material *material = 0;
+	mdlx::long32 id = 0;
+
+	BOOST_FOREACH(material, this->m_mdlx->materials()->materials())
+	{
+		if (id == geoset.materialId())
+			break;
+
+		++id;
+	}
+
+	if (id != geoset.materialId())
+		throw Exception(boost::format(_("Missing material %1%")) % id);
+
+	// increase processor efficiency
+	object.estimateVertexCount(geoset.vertices()->vertices().size());
+	object.estimateIndexCount(geoset.vertices()->vertices().size());
+	object.begin("material", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+
+	// build vertices
+	std::list<class mdlx::Vertex*>::const_iterator vertexIterator = geoset.vertices()->vertices().begin();
+	std::list<class mdlx::Normal*>::const_iterator normalIterator = geoset.normals()->normals().begin();
+	std::list<class mdlx::TextureVertex*>::const_iterator textureVertexIterator = geoset.textureVertices()->textureVertices().begin();
+	Ogre::uint32 index = 0;
+
+	while (vertexIterator != geoset.vertices()->vertices().end())
+	{
+		object.position((*vertexIterator)->vertexData().x, (*vertexIterator)->vertexData().y, (*vertexIterator)->vertexData().z);
+		object.normal((*normalIterator)->vertexData().x, (*normalIterator)->vertexData().y, (*normalIterator)->vertexData().z);
+		object.textureCoord((*textureVertexIterator)->x(), (*textureVertexIterator)->y());
+		object.index(index);
+
+		++vertexIterator;
+		++normalIterator;
+		++textureVertexIterator;
+	}
+
+	object.end();
+
+	// build primitives
+	std::list<class mdlx::PrimitiveType*>::const_iterator pTypeIterator = geoset.primitiveTypes()->primitiveTypes().begin();
+	std::list<class mdlx::PrimitiveSize*>::const_iterator pSizeIterator = geoset.primitiveSizes()->primitiveSizes().begin();
+	std::list<class mdlx::PrimitiveVertex*>::const_iterator pVertexIterator = geoset.primitiveVertices()->primitiveVertices().begin();
+
+	while (pTypeIterator != geoset.primitiveTypes()->primitiveTypes().end())
+	{
+		if ((*pTypeIterator)->type() == mdlx::PrimitiveType::Triangles)
+		{
+			Ogre::uint32 indices[3];
+
+			for (mdlx::long32 size = 0; size < (*pSizeIterator)->value(); ++size)
+			{
+				mdlx::short16 vertexIndex = (*++pVertexIterator)->value();
+				indices[size] = boost::numeric_cast<Ogre::uint32>(vertexIndex);
+				++pVertexIterator;
+			}
+
+			object.triangle(indices[0], indices[1], indices[2]);
+		}
+		else
+		{
+			/// @todo build other primitives (other than triangles)
+			for (mdlx::long32 size = 0; size < (*pSizeIterator)->value(); ++size)
+				++pVertexIterator;
+		}
+
+		++pTypeIterator;
+		++pSizeIterator;
+		++pVertexIterator;
+	}
 }
 
 std::map<const class Node*, Ogre::Node*> OgreMdlx::setupInheritance(const std::list<const class Node*> &initialNodes)

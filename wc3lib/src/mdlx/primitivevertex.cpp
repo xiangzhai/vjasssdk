@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "primitivevertex.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -44,16 +45,18 @@ void PrimitiveVertex::writeMdl(std::ostream &ostream) const throw (class Excepti
 
 std::streamsize PrimitiveVertex::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = 0;
-	istream.read(reinterpret_cast<char*>(&this->m_triangle), sizeof(this->m_triangle));
-	bytes += istream.gcount();
-	
-	return bytes;
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_value, size);
+
+	return size;
 }
 
 std::streamsize PrimitiveVertex::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->m_value, size);
+
+	return size;
 }
 
 }

@@ -48,7 +48,6 @@ class OgreMdlx
 		OgreMdlx(const class Mdlx &mdlx);
 
 		const class Mdlx* mdlx() const;
-		const Ogre::MeshPtr mesh() const;
 
 		/**
 		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
@@ -57,6 +56,11 @@ class OgreMdlx
 
 	protected:
 		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
+
+		/**
+		* Creates manual object for specified geoset.
+		*/
+		Ogre::ManualObject& createGeoset(const class Geoset &geoset) throw (class Exception);
 
 		Ogre::Node* createNode(const class Node &node);
 
@@ -67,8 +71,10 @@ class OgreMdlx
 		std::map<const class Node*, Ogre::Node*> setupInheritance(const std::list<const class Node*> &nodes);
 
 		const class Mdlx *m_mdlx;
-		Ogre::MeshPtr m_mesh;
-		std::map<const class Geoset*, Ogre::MeshPtr> m_geosets;
+
+		std::map<const class Material*, Ogre::Material&> m_materials;
+		std::map<const class Geoset*, Ogre::ManualObject&> m_geosets;
+
 		std::map<const class Node*, Ogre::Node*> m_nodes;
 		std::map<const class Bone*, Ogre::Bone*> m_bones;
 
@@ -78,11 +84,6 @@ class OgreMdlx
 inline const class Mdlx* OgreMdlx::mdlx() const
 {
 	return this->m_mdlx;
-}
-
-inline const Ogre::MeshPtr OgreMdlx::mesh() const
-{
-	return this->m_mesh;
 }
 
 }

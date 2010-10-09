@@ -42,7 +42,7 @@ class PrimitiveVertex
 		virtual ~PrimitiveVertex();
 
 		class PrimitiveVertices* primitiveVertices() const;
-		short16 triangle() const;
+		short16 value() const;
 
 		virtual void readMdl(std::istream &istream) throw (class Exception);
 		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
@@ -51,7 +51,7 @@ class PrimitiveVertex
 
 	protected:
 		class PrimitiveVertices *m_primitiveVertices;
-		short16 m_triangle;
+		short16 m_value;
 };
 
 inline class PrimitiveVertices* PrimitiveVertex::primitiveVertices() const
@@ -59,9 +59,9 @@ inline class PrimitiveVertices* PrimitiveVertex::primitiveVertices() const
 	return this->m_primitiveVertices;
 }
 
-inline short16 PrimitiveVertex::triangle() const
+inline short16 PrimitiveVertex::value() const
 {
-	return this->m_triangle;
+	return this->m_value;
 }
 
 }
