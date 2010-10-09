@@ -29,13 +29,17 @@ Des Weiteren gilt es zu anzumerken, dass auch Arrays und Array-Eigenschaften pro
 
 Folgende native Datentypen können nicht in Hash-Tabellen serialisiert werden:
 -
-TODO
 
-Folgende native Datentypen können nicht in Spiel-Caches serialisiert werden:
--
-TODO
+Folgende native Datentypen können in Spiel-Caches serialisiert werden:
+\begin{enumerate}
+\item integer
+\item real
+\item boolean
+\item unit
+\item string
+\end{enumerate}
 
-Sollte dennoch versucht werden ein Objekt eines solchen Typs zu serialisieren, ob direkt oder indirekt (z. B. in Form eines Klassenelements), so muss der Compiler eine Fehlermeldung ausgeben.
+Sollte versucht werden ein Objekt eines anderen Typs zu serialisieren, ob direkt oder indirekt (z. B. in Form eines Klassenelements), so muss der Compiler eine Fehlermeldung ausgeben.
 Die Beschränkungen existieren aufgrund der Beschränkungen der nativen JASS-Funktionen.
 
 \section{Notation}
@@ -43,4 +47,4 @@ save <Variable> <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenau
 load <Variable> <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>
 exists <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>
 <Hash-Tabelle | Spiel-Cache>.exists <Ganzzahlausdruck | Zeichenkettenausdruck>
-flush <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck> 
+flush <Hash-Tabelle | Spiel-Cache> <Ganzzahlausdruck | Zeichenkettenausdruck>

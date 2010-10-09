@@ -29,39 +29,24 @@ endstruct
 // JASS++
 class Character
 	public enum Class
-	{
 		Cleric,
 		Wizard,
 		Knight
-	};
 
-	private Class m_class;
+	private Class m_class
 
 	public new(Class class)
-	{
-		this.m_class = class;
-	}
+		this.m_class = class
 
 	public string className() const
-	{
-		enum Class.*;
+		enum Class.*
 
 		switch (this.m_class)
-		{
 			case (Cleric)
-			{
-				return "Cleric";
-			}
+				return "Cleric"
 
 			case (Wizard)
-			{
-				return "Wizard";
-			}
+				return "Wizard"
 
 			case (Knight)
-			{
-				return "Knight";
-			}
-		}
-	}
-};
+				return "Knight"

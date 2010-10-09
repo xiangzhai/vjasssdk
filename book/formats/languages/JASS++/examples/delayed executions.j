@@ -1,4 +1,4 @@
-// Jass and vJass
+// JASS and vJass
 globals
 	hashtable table
 endglobals
@@ -44,36 +44,28 @@ function Test3 takes nothing returns nothing
 	call DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Finished function call!")
 endfunction
 
-// Jass++
+// JASS++
 
 void ShowResult(integer result)
-{
-	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Your result is: " + string(result));
-}
+	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Your result is: " + string(result))
 
 // Won't wait for calling ShowResult.
 threaded void Test1()
-{
-	integer result = GetRandomInt(0, 100);
-	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "We will show you the result in 20 seconds.");
-	executewait 20.0 ShowResult(result);
-	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Finished function call!");
-}
+	integer result = GetRandomInt(0, 100)
+	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "We will show you the result in 20 seconds.")
+	executewait 20.0 ShowResult(result)
+	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Finished function call!")
 
 threaded void Test2()
-{
-	integer result = GetRandomInt(0, 100);
-	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "We will show you the result in 20 seconds (synchronized time).");
-	wait 20.0;
-	ShowResult(result);
-	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Finished function call!");
-}
+	integer result = GetRandomInt(0, 100)
+	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "We will show you the result in 20 seconds (synchronized time).")
+	wait 20.0
+	ShowResult(result)
+	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Finished function call!")
 
 threaded void Test3()
-{
-	integer result = GetRandomInt(0, 100);
-	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "We will show you the result in 20 seconds (local time).");
-	sleep 20.0;
-	ShowResult(result);
-	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Finished function call!");
-}
+	integer result = GetRandomInt(0, 100)
+	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "We will show you the result in 20 seconds (local time).")
+	sleep 20.0
+	ShowResult(result)
+	DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 20.0, "Finished function call!")

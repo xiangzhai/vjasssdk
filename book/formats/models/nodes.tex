@@ -14,15 +14,31 @@ Knoten-Elemente enthalten folgende Eigenschaften:
 * einen Namen (maximal 80 Zeichen lang)
 * eine einzigartige Id (in Form einer Zahl)
 * [einen Elternknoten]
+* einen Typ
 * [Verschiebungen, Drehungen und Skalierungen, falls diese nicht vom Elternknoten geerbt werden]
 
-Folgende Elemente eines Modells sind Objektelemente:
-* Helfer
-* Knochen
-* Lichter
-* Ereignisobjekte
-* Anhänge
-* Partikel-Emitter (zwei unterschiedliche Typen)
-* Kollisionsformen
-* Bändel-Emitter
+\subsection{Typ}
+Zum einen wird im Typ-Flag der Typ des Knotens angegeben (z. B. Knochen oder Licht) und zum anderen bestimmte Eigenschaften,
+die das Verhalten des Knotens bzw. dessen Darstellung beeinflussen.
+Folgende Elemente eines Modells sind Knotenelemente:
+\enumerate{begin}
+\item Helfer
+\item Knochen
+\item Lichter
+\item Ereignisobjekte
+\item Anhänge
+\item Partikel-Emitter (zwei unterschiedliche Typen)
+\item Kollisionsformen
+\item Bändel-Emitter
+\enumerate{end}
+
+Folgende Eigenschaften können im Typ bestimmt werden:
+\enumerate{begin}
+\item Die Z-Koordinaten (der Bewegungen?) befinden sich immer relativ zur Benutzeransicht - BillboardedLockZ
+\item Die Y-Koordinaten (der Bewegungen?) befinden sich immer relativ zur Benutzeransicht - BillboardedLockY
+\item Die X-Koordinaten (der Bewegungen?) befinden sich immer relativ zur Benutzeransicht - BillboardedLockX
+\item Billboarded,
+\item CameraAnchored,
+\item DontInherit { <Rotation|Translation|Scaling> },
+
 

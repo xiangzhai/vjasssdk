@@ -14,18 +14,10 @@ endfunction
 // JASS++
 
 void ShowImageToPlayer(player const whichPlayer, image whichImage, boolean show)
-{
 	local (whichPlayer)
-	{
-		ShowImage(whichImage, show);
-	}
-}
+		ShowImage(whichImage, show)
 
 void ShowImageToForce(force const whichForce, image whichImage, boolean show)
-{
 	local (whichForce)
-	{
-		ShowImage(whichImage, show);
-	}
-}
+		ShowImage(whichImage, show)
 

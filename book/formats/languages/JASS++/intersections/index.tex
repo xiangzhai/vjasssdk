@@ -9,16 +9,14 @@ Optional können mit "else if" weitere Ausdrücke überprüft werden, falls der 
 "else" Anweisungen ausgeführt werden, falls keiner der überprüften Ausdrücke wahr ist.
 Falls ein konstanter Ausdruck überprüft wird, sollte der Compiler einen Hinweis ausgeben, falls der konstante Ausdruck nicht wahr ist, eine Warnung.
 
-Notationen:
+\subsection{Notationen}
 if (<Wahrheitsausdruck>)
-{
-}
+	<Anweisungen>
 [else if (<Wahrheitsausdruck>)
-{
-}
+	<Anweisungen>
 else (<Wahrheitsausdruck>)
-{
-}]
+	<Anweisungen>
+]
 
 \section{Fall-Verzweigungen}
 Fall-Verzweigungen können anders als in herkömmlichen Sprachen wie C/C++ jede Art von Datentyp behandeln. Außerdem müssen die Ausdrücke in den "case"-
@@ -30,21 +28,13 @@ Der Compiler sollte eine Warnung ausgeben, falls sich weder eine direkte "break"
 es eventuell zu einer ewigen Rekursion führen könnte.
 Mit direkt ist gemeint, dass sie sich nicht in einer Wenn-Dann-Ansonsten-Verzweigung befindet.
 
-Notation:
+\subsection{Notation}
 switch (<Ausdruck>)
-{
 	case (<Ausdruck>)
-	{
-		break;
-	}
+		<Anweisungen>
 
 	case (<Ausdruck>) // Ein Ausdruck kann auch aus mehreren durch Kommata getrennten Werten bestehen: 1,10,2
-	{
-		break;
-	}
+		<Anweisungen>
 
 	default
-	{
-		break;
-	}
-} 
+		<Anweisungen>

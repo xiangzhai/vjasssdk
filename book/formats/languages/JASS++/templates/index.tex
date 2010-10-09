@@ -26,13 +26,13 @@ template < [<Bezeichnerqualifizierer>] <Datentypparameterbezeichner> [= <Standar
 <Vorlagenbezeichner>< [<Parameterwert>] ... >
 
 \section{Beispiel}
-template < T = integer > class Vector {};
-Vector<integer> myVector1 = new Vector<integer>();
-Vector myVector2 = new Vector();
-Vector<T = integer > myVector3 = new Vector< T = integer >();
-template < type T = integer > class List {};
-List list1;
-List<integer> list2;
-List<T=integer> list3;
-List<> list4;
-List<class CustomType> list5; // Ungültig: Parameter "T" muss ein Typ sein.
+template < T = integer > class Vector
+Vector<integer> myVector1 = new Vector<integer>()
+Vector myVector2 = new Vector()
+Vector<T = integer > myVector3 = new Vector< T = integer >()
+template < type T = integer > class List {}
+List list1
+List<integer> list2
+List<T=integer> list3
+List<> list4
+List<class CustomType> list5 // Ungültig: Parameter "T" muss ein Typ sein.

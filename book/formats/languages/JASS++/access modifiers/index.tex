@@ -1,18 +1,17 @@
-\chapter { Zugriffsmodifikatoren }
-
+\chapter{Zugriffsmodifikatoren}
 Zugriffsmodifikatoren bestimmten die Zugriffsmöglichkeiten auf bestimmte Deklarationen innerhalb eines Gültigkeitsbereiches.
 "private", "public" und "protected" bestimmten je nach Verwendung, von wo aus das Code-Objekt verwendet werden darf.
 Werden die Zugriffsmodifikatoren weggelassen, so gilt standardmäßig der Zugriffsmodifikator "private".
 Innere Gültigkeitsbereiche haben unabhängig der Zugriffsmodifikatoren einer Deklaration Zugriff auf diese.
 Es gelten folgende Regeln für die Zugriffsmodifikatoren:
-\begin {enumerate}
+\begin{enumerate}
      \item "private" erlaubt einen Zugriff innerhalb des aktuellen Gültigkeitsbereiches und aller Untergültigkeitsbereiche dessen.
      \item "protected" erlaubt einen Zugriff innerhalb des aktuellen Gültigkeitsbereiches, aller Untergültigkeitsbereiche dessen und das Gleiche in abgleiteten
 Deklarationen (nur bei Klassen möglich).
      \item "public" erlaubt einen Zugriff von überall und ist daher bei nicht statischen Deklarationen verboten.
-\end {enumerate}
+\end{enumerate}
 
-\section { Zugriffsebenenmodifikation }
+\section{Zugriffsebenenmodifikation}
 Zudem kann dem Modifikator das Schlüsselwort "scope" beliebig oft vorangestellt werden, insofern es sich nicht
 um den Modifikator "public" handelt.
 Geschieht dies, so haben, je nach Anzahl der Voranstellungen, entsprechend viele äußere Gültigkeitsbereiche
@@ -23,5 +22,5 @@ Bei einer expliziten Voranstellung, wird beim äußeren Gültigkeitsbereich bego
 Deklaration befindet ist implizit erlaubt. Gibt es nicht genügend äußere Gültigkeitsbereiche, so muss der Compiler eine
 Fehlermeldung ausgeben.
 
-\section { Notation }
-[scope] [private | public | protected] <Deklaration> 
+\section{Notation}
+[scope] [private | public | protected] <Deklaration>

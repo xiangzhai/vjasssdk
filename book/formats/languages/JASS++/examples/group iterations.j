@@ -41,17 +41,11 @@ endfunction
 // JASS++
 
 void IterateMyGroup(group const whichGroup)
-{
-	local unit const whichUnit;
+	unit const whichUnit
 
 	foreach (whichUnit; whichGroup)
-	{
-		DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 5.0, GetUnitName(whichUnit));
-	}
-}
+		DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 5.0, GetUnitName(whichUnit))
 
 // Similar to vJass - using lambda function.
 void IterateMyGroup2(group whichGroup)
-{
-	ForGroup(whichGroup, DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 5.0, GetUnitName(GetEnumUnit())));
-}
+	ForGroup(whichGroup, DisplayTimedTextToPlayer(Player(0), 0.0, 0.0, 5.0, GetUnitName(GetEnumUnit())))

@@ -9,14 +9,14 @@ Ein Gültigkeitsbereich besitzt in JASS++ nicht zwingend einen Bezeichner und is
 Klammer definiert.
 Dies gilt jedoch nicht für den äußersten Gültigkeitsbereich, welcher nirgends explizit deklariert wird und ebenfalls keinen Bezeichner trägt.
 Er erlaubt es dem Entwickler, eine Funktion direkt zu deklarieren, ohne einen Gültigkeitsbereich für sie zu definieren.
-Gültigkeitsbereiche können beliebig verschachtelt werden, unabhängig ihrer Art. Das bedeutet, dass z. B. auch Klassen innerhalb von 
+Gültigkeitsbereiche können beliebig verschachtelt werden, unabhängig ihrer Art. Das bedeutet, dass z. B. auch Klassen innerhalb von
 Klassendeklarationen deklariert werden können.
 Je tiefer der Gültigkeitsbereich, desto höher ist die Priorität des Bezeichners. Die Bezeichner können sich gegenseitig überdecken.
 Dies ist explizit gewollt. Über die Bezeichner der äußeren Gültigkeitsbereiche bzw. den .-Operator kann auf Bezeichner höherer
 Gültigkeitsbereiche zugegriffen werden. Dies ermöglicht eine Verschachtelung beliebig vieler Gültigkeitsbreiche.
 Zu beachten gilt, dass lokale Variablen nur im Funktionskopf deklariert werden können, wodurch eine erneute Deklaration und Überlagerung
 der äußeren lokalen Variablen, durch innere in neuen Gültigkeitsbereichen nicht möglich ist.
-Ein Gültigkeitsbereich kann mit dem optionalen Schlüsselwort "scope" eingeleitet werden. Dieses wird den weiteren Qualifizierern vorangstellt. 
+Ein Gültigkeitsbereich kann mit dem optionalen Schlüsselwort "scope" eingeleitet werden. Dieses wird den weiteren Qualifizierern vorangestellt.
 
 Es existieren folgende Arten von Gültigkeitsbereichen:
 \begin{enumerate}
@@ -27,9 +27,7 @@ Es existieren folgende Arten von Gültigkeitsbereichen:
 
 Es existieren folgende sprachenspezifische Arten von Gültigkeitsbereichen:
 \begin{enumerate}
-\item Verzweigungen
-\item Schleifen
-\item Ausnahmebehandlungen
+\item Anweisungsblöcke
 \item Funktionsdeklarationen
 \item Aufzählungsdeklarationen
 \item Klassendeklarationen
@@ -72,41 +70,31 @@ ANMERKUNG: Zunächst wurde der Initialisierer mit dem Schlüsselwort "static" de
 den Qualifizierer-Gültigkeitsbereichen.
 
 \subsection{Notation}
-static { <Anweisungen> }
+static
+	<Anweisungen>
 
 \section{Notation von Gültigkeitsbereichen}
 [scope] [<weitere Qualifizierer>] [<Bezeichner>] [<Eigenschaften des jeweiligen Sprachkonstrukts>] [<Deklarationsvoraussetzungen>]
-{
 	[Initialisierer]
 	[<Zugriffsmodifikatoren>] [<Deklarationen>]
-}
 
 \section{Bespiele}
 void test()
-{
-	int x = 0;
+	int x = 0
 
-	{
-		.x = .x; // Expliziter Verweis auf den äußeren Gültigkeitsbereich mit dem .-Operator
-		.x = 10; // x im äußeren Gültigkeitsbereich erhält den Wert 10
-		x = 12; // x im äußeren Gültigkeitsbereich erhält den Wert 12, da im aktuellen Gültigkeitsbereich keine Variable namens x deklariert wurde
-	}
-}
+	// nächster Gültigkeitsbereich
+		.x = .x // Expliziter Verweis auf den äußeren Gültigkeitsbereich mit dem .-Operator
+		.x = 10 // x im äußeren Gültigkeitsbereich erhält den Wert 10
+		x = 12 // x im äußeren Gültigkeitsbereich erhält den Wert 12, da im aktuellen Gültigkeitsbereich keine Variable namens x deklariert wurde
 
 scope
-{
-	int y = 10;
+	int y = 10
 
 	scope test
-	{
 		int y = 12; // Neue Deklaration, andere Variable!
 		y = .y; // Zuweisung des Wertes der Variablen des äußeren Gültigkeitsbereiches.
-	}
-}
 
 class Test
-{
-	public static const integer i = 10;
-	public static const integer j = i; // Der Bezeichner kann innerhalb des Gültigkeitsbereiches weggelassen werden.
-	public static const integer k = Test.j; // Er ist optional.
-}
+	public static const integer i = 10
+	public static const integer j = i // Der Bezeichner kann innerhalb des Gültigkeitsbereiches weggelassen werden.
+	public static const integer k = Test.j // Er ist optional.

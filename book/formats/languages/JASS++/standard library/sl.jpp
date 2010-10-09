@@ -1,13 +1,10 @@
 // Use same identifiers (there can be several versions of a function with same identifier.
 // Use aliases like CreateSpecialEffect and aliases for BJs
 scope jasspp
-{
-	scope jass.*;
+	scope jass.*
 
 	debug
-	{
 		public scope DebugApi
-		{
 			public integer allocateArrayInstance()
 			public integer allocateClassInstance()
 			public boolean freeArrayInstance(integer index)
@@ -21,29 +18,26 @@ scope jasspp
 			public void Echo(handle value)
 
 			public void EchoGlobalHashTableInformation()
-		}
-	}
 
 	// Scope uses types real, integer, location, rect and region (geometric)
 	public scope MathApi
-	{
 		// conversion
-		public function string I2A(integer value, string charPool);
-		public function integer A2I(string value, string charPool);
-		public function string I2Roman(integer value);
-		public function string I2Binary(integer value);
-		public function integer Binary2I(string value);
-		public function string I2Octal(integer value);
-		public function integer Octal2I(string value);
-		public function string I2Hexadecimal(integer value);
-		public function integer Hexadicmal2I(string value);
+		public function string I2A(integer value, string charPool)
+		public function integer A2I(string value, string charPool)
+		public function string I2Roman(integer value)
+		public function string I2Binary(integer value)
+		public function integer Binary2I(string value)
+		public function string I2Octal(integer value)
+		public function integer Octal2I(string value)
+		public function string I2Hexadecimal(integer value)
+		public function integer Hexadicmal2I(string value)
 
 		// real
-		public function real RoundTo(real base, real interval)
+		public function real RoundTo(real whichBase, real interval)
 		public function real JumpParabola(real distance, real maxDistance, real curve)
 		public function real ParabolaZ(real maxHeight, real distance, real x)
 		public function real Log(real x, integer iterations)
-		public function real Logarithm(real base, real x, integer iterations)
+		public function real Logarithm(real whichBase, real x, integer iterations)
 		public function real GetRandomFacing()
 
 		// point
@@ -66,7 +60,6 @@ scope jasspp
 
 		// handle
 		private template < T, function FunctionX, function FunctionY >
-		{
 			function real GetZ(T value);
 			function real GetDistanceBetween(T value0, T value1, real z0, real z1)
 			function location GetCentreBetween(T value0, T value1)
@@ -74,26 +67,25 @@ scope jasspp
 			function real GetPolarProjectionY(T value, real angle, real distance)
 			function real GetAngleBetween(T value0, T value1)
 			function rect RectFromSize(T value, real width, real height)
-		}
 
 		// widget
 		// Create templates for types widget, unit, destructable and item.
-		public alias GetWidgetZ ( GetZ<widget, GetWidgetX, GetWidgetY> );
-		public alias GetDistanceBetweenWidgets ( GetDistanceBetween<widget, GetWidgetX, GetWidgetY> );
-		public alias GetCentreBetweenWidgets ( GetCentreBetween<widget, GetWidgetX, GetWidgetY> );
-		public alias GetWidgetPolarProjectionX ( GetPolarProjectionX<widget, GetWidgetX, GetWidgetY> );
-		public alias GetWidgetPolarProjectionY ( GetPolarProjectionY<widget, GetWidgetX, GetWidgetY> );
-		public alias GetAngleBetweenWidgets ( GetAngleBetween<unit, GetWidgetX, GetWidgetY> );
-		public alias RectFromWidgetsSize ( RectFromSize<widget, GetWidgetX, GetWidgetY> );
+		public alias GetWidgetZ ( GetZ<widget, GetWidgetX, GetWidgetY> )
+		public alias GetDistanceBetweenWidgets ( GetDistanceBetween<widget, GetWidgetX, GetWidgetY> )
+		public alias GetCentreBetweenWidgets ( GetCentreBetween<widget, GetWidgetX, GetWidgetY> )
+		public alias GetWidgetPolarProjectionX ( GetPolarProjectionX<widget, GetWidgetX, GetWidgetY> )
+		public alias GetWidgetPolarProjectionY ( GetPolarProjectionY<widget, GetWidgetX, GetWidgetY> )
+		public alias GetAngleBetweenWidgets ( GetAngleBetween<unit, GetWidgetX, GetWidgetY> )
+		public alias RectFromWidgetsSize ( RectFromSize<widget, GetWidgetX, GetWidgetY> )
 
 		// unit
-		public alias GetUnitZ ( GetZ<unit, GetUnitX, GetUnitY> );
-		public alias GetDistanceBetweenUnits ( GetDistanceBetween<unit, GetUnitX, GetUnitY> );
-		public alias GetCentreBetweenUnits ( GetCentreBetween<unit, GetUnitX, GetUnitY> );
-		public alias GetUnitPolarProjectionX ( GetPolarProjectionX<unit, GetUnitX, GetUnitY> );
-		public alias GetUnitPolarProjectionY ( GetPolarProjectionY<unit, GetUnitX, GetUnitY> );
-		public alias GetAngleBetweenUnits ( GetAngleBetween<unit, GetUnitX, GetUnitY> );
-		public alias RectFromUnitsSize ( RectFromSize<unit, GetUnitX, GetUnitY> );
+		public alias GetUnitZ ( GetZ<unit, GetUnitX, GetUnitY> )
+		public alias GetDistanceBetweenUnits ( GetDistanceBetween<unit, GetUnitX, GetUnitY> )
+		public alias GetCentreBetweenUnits ( GetCentreBetween<unit, GetUnitX, GetUnitY> )
+		public alias GetUnitPolarProjectionX ( GetPolarProjectionX<unit, GetUnitX, GetUnitY> )
+		public alias GetUnitPolarProjectionY ( GetPolarProjectionY<unit, GetUnitX, GetUnitY> )
+		public alias GetAngleBetweenUnits ( GetAngleBetween<unit, GetUnitX, GetUnitY> )
+		public alias RectFromUnitsSize ( RectFromSize<unit, GetUnitX, GetUnitY> )
 
 		public function real GetDistanceBetweenUnitsWithZ(unit unit1, unit unit2)
 		public function void SetUnitPolarProjectionPosition(unit whichUnit, real angle, real distance)
@@ -140,16 +132,16 @@ scope jasspp
 			IssueNeutralPointOrderById, //takes player forWhichPlayer,unit neutralStructure, integer unitId, real x, real y returns boolean
 			IssueNeutralTargetOrder, //takes player forWhichPlayer,unit neutralStructure, string unitToBuild, widget target returns boolean
 			IssueNeutralTargetOrderById //takes player forWhichPlayer,unit neutralStructure, integer unitId, widget target returns boolean
-		);
+		)
 
 		// item
-		public alias GetItemZ ( GetZ<item, GetItemX, GetItemY> );
-		public alias GetDistanceBetweenItems ( GetDistanceBetween<item, GetItemX, GetItemY> );
-		public alias GetCentreBetweenItems ( GetCentreBetween<item, GetItemX, GetItemY> );
-		public alias GetItemPolarProjectionX ( GetPolarProjectionX<item, GetItemX, GetItemY> );
-		public alias GetItemPolarProjectionY ( GetPolarProjectionY<item, GetItemX, GetItemY> );
-		public alias GetAngleBetweenItems ( GetAngleBetween<item, GetItemX, GetItemY> );
-		public alias RectFromItemsSize ( RectFromSize<item, GetItemX, GetItemY> );
+		public alias GetItemZ ( GetZ<item, GetItemX, GetItemY> )
+		public alias GetDistanceBetweenItems ( GetDistanceBetween<item, GetItemX, GetItemY> )
+		public alias GetCentreBetweenItems ( GetCentreBetween<item, GetItemX, GetItemY> )
+		public alias GetItemPolarProjectionX ( GetPolarProjectionX<item, GetItemX, GetItemY> )
+		public alias GetItemPolarProjectionY ( GetPolarProjectionY<item, GetItemX, GetItemY> )
+		public alias GetAngleBetweenItems ( GetAngleBetween<item, GetItemX, GetItemY> )
+		public alias RectFromItemsSize ( RectFromSize<item, GetItemX, GetItemY> )
 
 		public function void SetItemPolarProjectionPosition(item whichItem, real angle, real distance)
 
@@ -157,42 +149,34 @@ scope jasspp
 
 
 		// location
-		public alias GetDistanceBetweenLocations ( GetDistanceBetween<location, GetLocationX, GetLocationY> );
-		public alias GetCentreBetweenLocations ( GetCentreBetweenLocations<location, GetLocationX, GetLocationY> );
-		public alias GetAngleBetweenLocationsFromCentre ( GetAngleBetween<location, GetLocationX, GetLocationY> );
+		public alias GetDistanceBetweenLocations ( GetDistanceBetween<location, GetLocationX, GetLocationY> )
+		public alias GetCentreBetweenLocations ( GetCentreBetweenLocations<location, GetLocationX, GetLocationY> )
+		public alias GetAngleBetweenLocationsFromCentre ( GetAngleBetween<location, GetLocationX, GetLocationY> )
 
 		public class Vector2
-		{
 			public void x(real x)
 			public real x() const
 			public void y(real y)
 			public real y() const
-		};
 
-		public alias Location ( Vector2 );
+		public alias Location ( Vector2 )
 
 		public class Vector3
-		{
 			public void x(real x)
 			public real x() const
 			public void y(real y)
 			public real y() const
 			public void z(real z)
 			public real z() const
-		};
 
-		public alias Vertex ( Vector3 );
+		public alias Vertex ( Vector3 )
 
 		public class Circle : public Vector3
-		{
 			public real radius() const
-		};
 
 		public class Matrix
-	}
 
 	public scope StringApi
-	{
 		public boolean StringIsAscii(string value)
 		public boolean StringIsBinary(string value)
 		public boolean StringIsOctal(string value)
@@ -221,10 +205,8 @@ scope jasspp
 
 		public string StringModifiedPlayerName(player whichPlayer, boolean showColor = true, boolean showNumber = true)
 		public string StringBar(real value, real maxValue, integer length, string colour, string barCharacter = "|")
-	}
 
 	public scope UnitApi
-	{
 		public function boolean UnitMoveItemToSlot(unit whichUnit, item whichItem, integer slot)
 		public function boolean UnitUseItemOfSlot(unit whichUnit, integer slot)
 		public function boolean UnitUseItemOfSlotOnTarget(unit whichUnit, integer slot, widget target)
@@ -248,19 +230,15 @@ scope jasspp
 		public function void MakeUnitAttackable(unit whichUnit, boolean attackable)
 		public function boolean IsUnitInvulnerable(unit const whichUnit)
 		public function integer GetUnitAlliance(unit const whichUnit, unit otherUnit)
-	}
 
 	public scope GroupApi
-	{
 		public function group CreateUnitsAtPoint(integer count, integer unitTypeId, player whichPlayer, real x, real y, real face)
 		public function group CreateUnitsAtRect(integer count, integer unitTypeId, player whichPlayer, rect whichRect, real face)
 		public function group CreateCorpsesAtPoint(integer count, integer unitTypeId, player whichPlayer, real x, real y, real face)
 
 		public function unit FirstOfGroupEx(group whichGroup)
-	}
 
 	public scope MiscApi
-	{
 		public function boolean IsInGame()
 		public function boolean IsInGameEx()
 		public function item CopyItem(item whichItem, real x, real y)
@@ -268,10 +246,8 @@ scope jasspp
 		public function boolean IsPlayerPlayingUser(player whichPlayer)
 		public function integer CountPlayingPlayers()
 		public function integer CountPlayingUsers()
-	}
 
 	public scope EnvironmentApi
-	{
 		public function boolean IsDestructableDead(destructable const whichDestructable)
 		public function boolean IsDestructableTree(destructable const whichDestructable)
 		public function boolean TreeFilter()
@@ -324,20 +300,16 @@ scope jasspp
 		public function string GetTimeOfDayString()
 
 		public class TimeOfDay
-		{
-			public static function integer hours() const;
-			public static function integer minutes() const;
-			public static function integer seconds() const;
-		};
+			public static function integer hours() const
+			public static function integer minutes() const
+			public static function integer seconds() const
 
 		public class DamageRecorder
 		public class DynamicLightning
 		public class Jump
 		public class Missile
-	}
 
 	public scope InterfaceApi
-	{
 		public void CreateImageForPlayer(player whichPlayer, string file, real x, real y, real z, real sizeX, real sizeY)
 		public void ShowImageToPlayer(player whichPlayer, image whichImage, boolean show)
 
@@ -367,10 +339,9 @@ scope jasspp
 
 		template<T = real>
 		public abstract class Bar
-		{
-			public void value(T value);
+			public void value(T value)
 			public T const value() const
-			public void maxValue(T maxValue);
+			public void maxValue(T maxValue)
 			public T const maxValue() const
 			public integer const percentage() const
 
@@ -379,34 +350,26 @@ scope jasspp
 			public abstract virtual disable()
 			public abstract virtual show()
 			public abstract virtual hide()
-		};
 
 		template<T = real>
 		public class MultiboardBar (public class Bar<T>)
-		{
-		};
 
 		/**
 		* Health is real.
 		*/
 		public class MultiboardWidgetHealthBar (public MultiboardBar)
-		{
-			public widget const object() const;
-		};
+			public widget const object() const
+
 		/**
 		* States are real.
 		*/
 		public class MultiboardUnitStateBar (public MultiboardBar)
-		{
-			public unit const object() const;
-			public unitstate state() const;
-		};
+			public unit const object() const
+			public unitstate state() const
 
 		public abstract class Selection
-		{
-			public abstract store();
-			public abstract restore();
-		};
+			public abstract store()
+			public abstract restore()
 
 		/**
 		* Stores player selection.
@@ -427,32 +390,20 @@ scope jasspp
 	* you call them by passing the string literal.
 	*/
 	public scope FormatApi
-	{
 		public Format Format(string value)
-		{
-			return Format.new(value);
-		}
+			return Format.new(value)
 
 		public string String(Format value)
-		{
-			return string(value);
-		}
+			return string(value)
 
 		public class Format
-		{
 			private new ()
-			{
-			}
 
 			private new (string value)
-			{
-				this.m_value = value;
-			}
+				this.m_value = value
 
 			public string value() const
-			{
-				return this.m_value;
-			}
+				return this.m_value
 
 			/**
 			* Appends a string argument.
@@ -467,169 +418,141 @@ scope jasspp
 			* Deletes the object and returns the formatted string.
 			*/
 			public string operator string ()
-			{
-				string result = this.m_value;
-				delete this;
+				string result = this.m_value
+				delete this
 
-				return result;
-			}
+				return result
 
-			private string m_value;
-		};
-	}
+			private string m_value
 
 	public scope RpgApi
-	{
 		public class UnitCamera
-		{
-		};
+
 
 		public class UnitRucksackItemData
-		{
-			public integer page() const;
-			public integer slot() const;
+			public integer page() const
+			public integer slot() const
 
-			public integer charges() const;
-			public integer itemType() const;
-			public boolean invulnerable() const;
-			public boolean hidden() const;
-		};
+			public integer charges() const
+			public integer itemType() const
+			public boolean invulnerable() const
+			public boolean hidden() const
 
 		// Verwendet das Standard-Warcraft-Inventar um eine seitenbasierte Ausrüstung und einen seitenbasierten Rucksack zur Verfügung zu stellen.
 		// Der unterschied zwischen Ausrüstung und Rucksack besteht darin, dass Ausrüstungsgegenstände stets eine Wirkung auf den Träger haben.
 		public class UnitRucksack
-		{
-			public unit const whichUnit() const;
+			public unit const whichUnit() const
 
-			public void pages(integer pages);
-			public integer pages() const;
+			public void pages(integer pages)
+			public integer pages() const
 
-			public boolean addItem(item whichItem);
-			public boolean addItem(item const whichItem);
+			public boolean addItem(item whichItem)
+			public boolean addItem(item const whichItem)
 			/**
 			* @return Returns items as 2-dimensional array with first dimension used for page and second dimension used for slot.
 			*/
-			public UnitRucksackItemData[][] const containedItems() const;
-			public UnitRucksackItemData const containedItem(integer page, integer slot) const;
+			public UnitRucksackItemData[][] const containedItems() const
+			public UnitRucksackItemData const containedItem(integer page, integer slot) const
 
-			public boolean changePage(integer page);
-			public void show();
-			public void hide();
-			public boolean isShown() const;
-		};
-	}
+			public boolean changePage(integer page)
+			public void show()
+			public void hide()
+			public boolean isShown() const
 
 	public class VideoApi
-	{
 		public native abstract class Actor
-		{
-			public abstract threaded void store();
-			public abstract threaded void restore();
-		};
+			public abstract threaded void store()
+			public abstract threaded void restore()
 
-		public alias actor (class Actor);
+		public alias actor (class Actor)
 
-		public native class UnitActor : public Actor
-		{
-			public new (unit storedUnit);
-			public delete { };
+		public native class UnitActor (public Actor)
+			public new (unit storedUnit)
+			public delete
 
-			public threaded void store();
-			public threaded void restore();
+			public threaded void store()
+			public threaded void restore()
 
-			public unit const storedUnit();
-			public unit const actorUnit();
-		};
+			public unit const storedUnit()
+			public unit const actorUnit()
 
-		public alias unitactor (class UnitActor);
+		public alias unitactor (class UnitActor)
 
-		public native class DestructableActor : public Actor
-		{
+		public native class DestructableActor (public Actor)
 			public new (destructable storedDestructable)
-			public delete { };
+			public delete
 
-			public threaded void store();
-			public threaded void restore();
+			public threaded void store()
+			public threaded void restore()
 
-			public destructable storedDestructable();
-			public destructable actorDestructable();
+			public destructable storedDestructable()
+			public destructable actorDestructable()
 		};
 
-		public alias destructableactor (class DestructableActor);
+		public alias destructableactor (class DestructableActor)
 
 
 		public native class Video
-		{
-			public new(force whichForce);
-			public threaded delete;
+			public new(force whichForce)
+			public virtual threaded delete
 
 			protected virtual threaded void setup()
 			protected virtual threaded void play()
 			protected virtual threaded void stop()
 			protected virtual threaded void skip()
 
-			private force m_players;
-			private List<class Actor> m_actors;
-		};
-	}
+			private force m_players
+			private List<class Actor> m_actors
 
 	public scope ContainerApi
-	{
 		template < Type >
-		public abstract function UnaryPredicate bool (Type const);
+		public abstract function UnaryPredicate boolean (Type const)
 
 		template < Type1, Type2 >
-		public abstract function BinaryPredicate bool (Type1 const, Type2 const);
+		public abstract function BinaryPredicate boolean (Type1 const, Type2 const)
 
 		template < Type >
-		public abstract function Generator void (Type const);
+		public abstract function Generator void (Type const)
 
 		template < class ContainerType >
 		public abstract class ContainerIterator
-		{
-			private friend class ContainerType;
+			private friend class ContainerType
 
-			public abstract self operator ++();
-			public abstract self operator --();
-		};
+			public abstract self operator ++()
+			public abstract self operator --()
 
 		template < ElementType, ContainerIteratorType, ConstantContainerIteratorType, ReverseContainerIteratorType, ConstantReverseContainerIteratorType >
 		public abstract class Container
-		{
-			public abstract integer operator size() const;
-			public abstract ElementType const operator [](integer index) const;
+			public abstract integer operator size() const
+			public abstract ElementType const operator [](integer index) const
 
-			public abstract void clear() const;
-			public abstract boolean isEmpty() const;
-			public abstract ElementType random();
+			public abstract void clear() const
+			public abstract boolean isEmpty() const
+			public abstract ElementType random()
 			// Verwendet die nativen Zufallsfunktionen von JASS, daher für alle Container.
-			public abstract ElementType const random() const;
+			public abstract ElementType const random() const
 
-			public abstract ContainerIteratorType begin();
-			public abstract ConstantContainerIteratorType begin() const;
-			public abstract ReverseContainerIteratorType rBegin();
-			public abstract ConstantReverseContainerIteratorType rBegin() const;
-			public abstract ContainerIteratorType end();
-			public abstract ConstantContainerIteratorType end() const;
-			public abstract ReverseContainerIteratorType rEnd();
-			public abstract ConstantReverseContainerIteratorType rEnd() const;
-		};
+			public abstract ContainerIteratorType begin()
+			public abstract ConstantContainerIteratorType begin() const
+			public abstract ReverseContainerIteratorType rBegin()
+			public abstract ConstantReverseContainerIteratorType rBegin() const
+			public abstract ContainerIteratorType end()
+			public abstract ConstantContainerIteratorType end() const
+			public abstract ReverseContainerIteratorType rEnd()
+			public abstract ConstantReverseContainerIteratorType rEnd() const
 
 		public class List (public Container)
 		public class Vector (public Container)
 		public class Map (public Container)
 		public class Bitset (public Container)
-	}
 
 	/**
 	* @todo How to call slots?
 	*/
 	public scope SignalApi
-	{
 		template < abstract function SlotFunctionType = abstract function void () >
 		public class Signal
-		{
-			public alias SlotFunction (SlotFunctionType);
+			public alias SlotFunction (SlotFunctionType)
 
 			/**
 			* Calls all registered slots.
@@ -637,6 +560,3 @@ scope jasspp
 			public void emit()
 			public void addSlot(self.SlotFunction slot)
 			public void removeSlot(self.SlotFunction slot)
-		};
-	};
-}

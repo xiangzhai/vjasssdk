@@ -5,6 +5,12 @@ Dies kann global oder innerhalb eines Gültigkeitsbereiches geschehen (mit den j
 Wird ein Typ und kein Operatorzeichen als Bezeichner gewählt, so ermöglicht dies Klassenobjekten eine explizite Konvertierung zum Typ der den Bezeichner trägt.
 Es gilt zu beachten, dass innerhalb der Operatordefinition nicht der überladene Operator gilt (also keine Rekursion möglich). Dies soll ermöglichen,
 dass man den originalen zumindest nocht innerhalb der eigenen Definition aufrufen kann.
+
+\section{Beschränkungen}
+Der Zuweisungsoperator darf nur innerhalb einer Klassendefinition (also als Methode - statische und nicht statische) überladen werden.
+Anders als in C++ dürfen Konvertierungsoperatoren auch außerhalb von Klassendefinitionen deklariert werden.
+
+\section{Liste möglicher Operatoren}
 Folgende Operatoren können nach folgenden Schemata als nicht statische Methoden überladen werden:
 Bezeichner			Rückgabetyp			Parametertypen		Parameteranzahl
 =				self				self			1
@@ -56,8 +62,6 @@ Als Typ können sowohl native als auch eigene Typen genommen werden. Zu beachten
 zum Typ "integer" konvertieren lassen.
 Eine eigene Definition des Operators "integer" hat eine höhere Priorität als die Standardimplementierung.
 
-\section{Konvertierungsoperatorennotation} 
+\section{Konvertierungsoperatorennotation}
 <Zugriffsmodifikatoren> operator <Typbezeichner>() [const]
-{
 	<Anweisungen>
-}

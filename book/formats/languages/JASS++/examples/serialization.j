@@ -78,31 +78,21 @@ endfunction
 // JASS++
 
 class Npc
-{
-	private string m_name;
-	private integer m_age;
-	private unit m_unit;
-	private location m_location;
+	private string m_name
+	private integer m_age
+	private unit m_unit
+	private location m_location
 
 	public void operator save (hashtable table) const
-	{
-		save this table integer(this);
-	}
+		save this table integer(this)
 
 	public boolean operator load (hashtable table)
-	{
 		if (!exists table integer(this))
-		{
-			return false;
-		}
+			return false
 
-		load this table integer(this);
+		load this table integer(this)
 
-		return true;
-	}
+		return true
 
 	public void operator flush (hashtable table) const
-	{
-		flush table integer(this);
-	}
-};
+		flush table integer(this)

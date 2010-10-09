@@ -20,29 +20,17 @@ endfunction
 
 // We don't need any local variable since finally statement will be called when function returns something.
 string GetUnitTypeStringAndRemove(unit whichUnit)
-{
 	switch (GetUnitTypeId(whichUnit))
-	{
 		case ('h000')
-		{
-			return "It's cool!";
-		}
+			return "It's cool!"
 
 		case ('h001')
-		{
-			return  "It's almost cool!";
-		}
+			return  "It's almost cool!"
 
 		case ('h002')
-		{
-			return "It's amazing";
-		}
-	}
+			return "It's amazing"
 
-	return "Unknown";
+	return "Unknown"
 
 	finally
-	{
-		RemoveUnit(whichUnit);
-	}
-}
+		RemoveUnit(whichUnit)

@@ -1,5 +1,4 @@
 \chapter{Lambda-Funktionen}
-
 Lambda-Funktionen sind namenlose Funktionen, sozusagen Funktionen, bei denen nur der Code-Inhalt angegeben werden muss.
 In JASS++ ist es möglich Lambda-Funktionen zu deklarieren, welche keinen Rückgabewert haben und keine Parameter entgegennehmen.
 Lambda-Funktionen können entweder in Variablen des Typs code oder in Funktionsvariablen gespeichert werden. Bei letzterer Variablenart
@@ -9,26 +8,30 @@ werden.
 Lambda-Funktionen könne auch direkt an Paramater der beiden Typen übergeben werden.
 
 \section{Notation}
-code <Variablenname> = [threaded] { <Funktions-Code> };
-void () <Variablenname> = threaded { <Funktions-Code> };
+code <Variablenname> = [threaded]
+	<Funktions-Code>
+abstract void () <Variablenname> = threaded
+	<Funktions-Code>
 
 \section{code-Beispiel}
 void test()
-{
-	code testCode = { integer i; for (i = 0; i < 100; i++) { Print("Iteration " + I2S(i)); } };
-}
+	code testCode =
+		integer i
+		for (i = 0; i < 100; i++)
+			Print("Iteration " + I2S(i))
 
 \section{Funktionsvariablen-Beispiel}
 void test()
-{
-	void () testFunctionVariable = { integer i; for (i = 0; i < 100; i++) { Print("Iteration " + I2S(i)); } };
-	testFunctionVariable.execute();
-	testFunctionVariable.evaluate(); // Illegal!
-}
+	abstract void () testFunctionVariable = threaded
+		integer i
+		for (i = 0; i < 100; i++)
+			Print("Iteration " + I2S(i))
+	execute testFunctionVariable
+	evaluate testFunctionVariable
 
 \section{Parameter-Beispiel}
 void test()
-{
-	timer testTimer = CreateTimer();
-	TimerStart(testTimer, 2.0, true, { Print("Timer function runs!"); });
-} 
+	timer testTimer = CreateTimer()
+	TimerStart(testTimer, 2.0, true,
+		Print("Timer function runs!")
+	)

@@ -15,18 +15,13 @@ Solange dieser wahr ist, wird der Schleifenkörper ausgeführt.
 
 \subsubsection{Notation}
 while (<Wahrheitsausdruck>)
-{
-	[break; | continue;]
-}
+	[break | continue]
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
-{
-}
+	<Anweisungen>
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 else // Schleife wurde durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 
 \subsection{do-while-Schleifen}
 do-while-Schleifen sind fußgesteuerte Schleifen, bei welchen zunächst der Schleifenkörper ausgeführt wird und danach
@@ -34,19 +29,14 @@ solange der angegebene Wahrheitsausdruck wahr ist.
 
 \subsubsection{Notation}
 do
-{
-	[break; | continue;]
-}
-while (<Wahrheitsausdruck>);
+	[break | continue]
+while (<Wahrheitsausdruck>)
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
-{
-}
+	<Anweisungen>
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 else // Schleife wurde durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 
 \subsection{until-Schleifen}
 until-Schleifen sind kopfgesteuerte Schleifen, bei welchen zunächst ein Wahrheitsausdruck angegeben werden muss.
@@ -54,18 +44,13 @@ Solange dieser falsch ist, wird der Schleifenkörper ausgeführt.
 
 \subsubsection{Notation}
 until (<Wahrheitsausdruck>)
-{
-	[break; | continue;]
-}
+	[break | continue]
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
-{
-}
+	<Anweisungen>
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 else // Schleife wurde durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 
 \subsection{do-until-Schleifen}
 do-until-Schleifen sind fußgesteuerte Schleifen, bei welchen zunächst der Schleifenkörper ausgeführt wird und danach
@@ -73,53 +58,40 @@ solange der angegebene Wahrheitsausdruck falsch ist.
 
 \subsubsection{Notation}
 do
-{
-	[break; | continue;]
-}
-until (<Wahrheitsausdruck>);
+	[break | continue]
+until (<Wahrheitsausdruck>)
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
-{
-}
+	<Anweisungen>
 default // Schleife wurde nicht durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 else // Schleife wurde durch eine break-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 
 \section{Zählerschleifen}
 
 \subsection{for-Schleifen}
 for (<Anweisung>; <Wahrheitsausdruck>; <Anweisung>)
-{
-	[break; | continue;]
-}
+	[break | continue]
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
-{
-}
+	<Anweisungen>
 default // Schleife wurde nicht durch eine "break"-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 else // Schleife wurde durch eine "break"-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 
 \section{Behälter-Schleifen}
 
 \subsection{foreach-Schleifen}
 foreach (<Variablenname>; <Behälterausdruck>) // siehe "Typen - Behältertypen"
 {
-	[break; | continue;]
+	[break | continue]
 }
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
-{
-}
+	<Anweisungen>
 default // Schleife wurde nicht durch eine "break"-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 else // Schleife wurde durch eine "break"-Anweisung abgebrochen
-{
-}
+	<Anweisungen>
 
 \section{Endlosschleifen}
 Diese Schleifen können nur mit "break" abgebrochen werden. Besitzt eine Schleife dieser Art keine oder nur eine indirekte
@@ -130,12 +102,8 @@ Die Verwendung des "default"-Blocks ist selbstverständlich nicht möglich.
 
 \subsubsection{Notation}
 forever
-{
-	[break; | continue;]
-}
+	[break | continue]
 case (<Ganzzahlausdruck>) // Schleife wurde <Ganzzahlausdruck> mal durchlaufen.
-{
-}
+	<Anweisungen>
 else // Schleife wurde durch eine "break"-Anweisung abgebrochen
-{
-}
+	<Anweisungen>

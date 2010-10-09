@@ -8,7 +8,7 @@ Parametertypen unterscheiden sich auch, sobald nur einer der beiden als "const" 
 konstanter Parameterübergabe die jeweilge Version der Funktionsdeklaration ausgewählt.
 Wird eine Funktion aufgerufen, so können Werte für einzelne Parameter, in beliebiger Reihenfolge übergeben werden, insofern sämtliche
 Parameter, welche kein Standardargument besitzen gesetzt werden:
-MyFunction(y = 10, x = 100, 100, 3, 5);
+MyFunction(y = 10, x = 100, 100, 3, 5)
 
 \section{Standardargumente}
 Parameter mit Standardargumenten erhalten automatisch das Standardargument, insofern sie nicht explizit beim Aufruf gesetzt werden.
@@ -30,10 +30,8 @@ Mit direkt ist gemeint, dass sie nicht von einer verschachtelten Funktion geworf
 
 \section{Notation}
 [threaded] [mapinit] [const] [function] [Rückgabetyp] Funktionsname([Parametertyp Parametername [= Standardargument]] ...) [<Deklarationsvoraussetzungen>] [throw (Typen getrennt durch Kommata)]
-{
 	<Deklarationen lokaler nicht statischer Variablen>
 	<Anweisungen>
-}
 
 Das Schlüsselwort "function" ist optional und dient besserer Lesbarkeit des Codes.
 

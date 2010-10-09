@@ -1,3 +1,11 @@
+2010-10-09 Tamino Dauth <tamino@cdauth.eu>
+* DONE: Vorschlag der neuen Anweisungs- und Gültigkeitsbereichnotationen ausarbeiten und ggf. einfügen.
+* Extradokumente über Anweisungen und Blöcke hinzufügen.
+* Gültigkeitsbereiche in Lambdafunktionen.
+* Mehrzeilige Anweisungen bei Klammern.
+* Gültigkeitsbereichsverwendung mit Schlüsselwort (ansonsten Konflikt mit Deklarationen).
+* ACHTUNG: Präprozessoranweisungen ohne End-Anweisungen und auch mit Einrückung?
+
 2010-09-16 Tamino Dauth <tamino@cdauth.eu>
 * Überprüfungsregeln für virtuelle Elemente und Methoden präzisieren.
 * Generik verbessern.

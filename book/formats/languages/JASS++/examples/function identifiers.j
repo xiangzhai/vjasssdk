@@ -1,4 +1,4 @@
-// Jass and vJass
+// JASS and vJass
 function ShowTextTagPlayerBJ takes boolean show, texttag tt, player whichPlayer returns nothing
 	if (whichPlayer == GetLocalPlayer()) then
 		call SetTextTagVisibility(tt, show)
@@ -10,14 +10,10 @@ call ShowTextTagForceBJ(true, tt, whichForce)
 
 // JASS++
 void ShowTextTag(boolean show, texttag tt, player const whichPlayer)
-{
 	local (whichPlayer)
-	{
-		SetTextTagVisibility(tt, show);
-	}
-}
+		SetTextTagVisibility(tt, show)
 
-alias ShowTextTagForceBJ(ShowTextTag);
+alias ShowTextTagForceBJ(ShowTextTag)
 
-ShowTextTag(true, tt, whichPlayer);
-ShowTextTag(true, tt, whichForce);
+ShowTextTag(true, tt, whichPlayer)
+ShowTextTag(true, tt, whichForce)

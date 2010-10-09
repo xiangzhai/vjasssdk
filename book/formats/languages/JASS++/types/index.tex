@@ -33,7 +33,7 @@ Der Typ kann dann von nirgendwo sonst aus im Code verwendet werden. Man spricht 
 Typendeklarationen in der Regel am Ende erzeugt werden (siehe "Variablen").
 
 \section{Typendeklaration-Notation}
-[<benötigte Schlüsselwörter>] [<Typbezeichner>] [<benötigte Angaben>] [<Variablendeklaration 1>, ...];
+[<benötigte Schlüsselwörter>] [<Typbezeichner>] [<benötigte Angaben>] [<Variablendeklaration 1>, ...]
 
 \section{Typenverwendung-Notation}
 <Typbezeichner> [const]
@@ -64,17 +64,17 @@ Sie im Abschnitt "Operatoren" und im Unterabschnitt des jeweiligen Typs.
 <Konvertierungstyp>(Ausdruck)
 
 \subsection{Beispiele}
-MyClass myClassValue = new MyClass;
-integer myValue = integer(myClassValue);
-MyParentClass myParentClassValue = myClassValue;
-myClassValue = myParentClassValue; // illegal!
-myClassValue = MyClass(myParentClassValue);
-unit myUnit = null;
-widget myWidget = myUnit;
-myUnit = myWidget; // illegal!
-myUnit = widget(myWidget); // illegal!
-unit const myUnit = myOtherNonConstantUnit;
-unit myUnit= myOtherConstantUnit; // illegal!
+MyClass myClassValue = new MyClass
+integer myValue = integer(myClassValue)
+MyParentClass myParentClassValue = myClassValue
+myClassValue = myParentClassValue // illegal!
+myClassValue = MyClass(myParentClassValue)
+unit myUnit = null
+widget myWidget = myUnit
+myUnit = myWidget // illegal!
+myUnit = widget(myWidget) // illegal!
+unit const myUnit = myOtherNonConstantUnit
+unit myUnit= myOtherConstantUnit // illegal!
 
 \section{Behältertypen}
 Ein Behältertyp ist ein Typ, welcher mindestens die Verwendung des "size"- und des "[]"-Operators erlaubt.
@@ -103,18 +103,35 @@ Daher wird ein Element, das mehrfach in einem Behälter vorhanden ist genau einm
 verwendet wird.
 Außerdem kann der zweite Ausdruck bei ihnen auch ein einzelnes Element sein!
 \begin{enumerate}
+\item = - Zuweisungsoperator (siehe "Mengen").
 \item + - Addiert zwei Behälter und erzeugt daraus einen neuen Behälter mit dem Inhalt beider Behälter.
 \item - - Subtrahiert zwei Behälter und erzeugt daraus einen neuen Behälter mit dem Inhalt des ersten Behälters ohne die Elemente des zweiten Behälters.
 \item += - Addiert einen anderen Behälter zu einem bestehenden.
 \item -= - Subtrahiert einen anderen Behälter von einem bestehenden.
 \item size - Liefert die Anzahl der Elemente eines Behälters.
-\item [] - Liefert ein Element oder einen Bereich eines Behälters.
-\item []= - Setzt ein Element oder einen Bereich eines Behälters.
+\item [] - Liefert ein Element oder einen Bereich eines Behälters (siehe auch "Intervalle").
+\item []= - Setzt ein Element oder einen Bereich eines Behälters (siehe auch "Intervalle").
 \item >= Vergleicht die Größe zweier Behälter.
 \item <= Vergleicht die Größe zweier Behälter.
 \item > Vergleicht die Größe zweier Behälter.
 \item < Vergleicht die Größe zweier Behälter.
 \end{enumerate}
+
+\subsection{Mengen}
+Mit einem Mengenausdruck kann einem Behälter eine Reihe von Werten zugewiesen werden. Diese Reihe von Werten wird durch
+geschweifte Klammern eingeschlossen. Die Werte werden durch Kommata getrennt.
+Einen Zusatz bieten hierbei Zeichenketten an, die auch eine Zuweisung eines Literals, welches mit doppelten Anführungszeichen
+eingeschlossen wird, erlauben.
+Anders als in C, muss in JASS++ nicht darauf geachtet werden, ein null terminierendes Zeichen anzuhängen.
+
+\subsubsection{Implementationsanmerkung}
+Bei der internen Zuweisung wird bei referenzbasierten Typen überprüft, ob der Behälter zunächst erzeugt werden muss (Initialisierung).
+Ansonsten wird der Behälter vorher automatisch geleert.
+Wird der Ausdruck als Parameter übergeben, so muss selbstverständlich jedes Mal ein neuer Behälter erzeugt werden.
+
+\subsubsection{Notation}
+{ <Wert 1>, <Wert 2>, <Wert 3> }
+
 
 \subsection{Intervalle}
 Mit dem "[]"-Operator können nicht nur einzelne Elemente gesetzt bzw. ausgelesen werden, sondern auch Bereiche bzw. Intervalle.
@@ -141,4 +158,4 @@ playercolor, race, playergameresult, alliancetype, version, attacktype, damagety
 mapcontrol, gametype, mapflag, placement, startlocprio, mapdensity, gamedifficulty, gamespeed, playerslotstate, volumegroup,
 igamestate, fgamestate, playerstate, unitstate, aidifficulty, playerscore, gameevent, playerevent, playerunitevent, unitevent
 widgetevent, dialogevent, gameevent, playerevent, playerunitevent, limitop, unittype, itemtype, camerafield, blendmode, raritycontrol,
-texmapflags, fogstate, effecttype, soundtype 
+texmapflags, fogstate, effecttype, soundtype

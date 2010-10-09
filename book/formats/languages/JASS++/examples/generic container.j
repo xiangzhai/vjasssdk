@@ -40,32 +40,21 @@ endglobals
 // JASS++
 template < T = type integer, integer valuesSize = 8192 >
 class Container
-{
 	private T m_values[valuesSize]
 
 	public new(T initValue, integer values = valuesSize)
-	{
-		integer i;
+		integer i
 
 		for (i = 0; i < values; i++)
-			this.m_values[i] = initValue;
-	}
+			this.m_values[i] = initValue
 
 	public const T operator[](integer index) const
-	{
-		return this.m_values[index];
-	}
+		return this.m_values[index]
 
 	public T operator[](integer index)
-	{
-		return this.m_values[index];
-	}
+		return this.m_values[index]
 
 	public operator[]=(integer index, T value)
-	{
-		this.m_values[index] = value;
-	}
-};
+		this.m_values[index] = value
 
-class Container container = new (10);
-
+class Container container = new (10)

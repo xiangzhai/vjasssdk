@@ -15,13 +15,13 @@ Da nicht statische Variable in Funktionen und Methoden nur vom Aufruf bis zum Ab
 öffentlich sind (siehe "Zugriffsmodifikatoren"). Auch nicht wenn es sich um eine Funktionsvariable handelt!
 
 \section{Initialisierungsnotation}
-{ <Ausdruck 1>[, <Ausdruck 2>] } | <Ausdruck>
+Mengennotation | <einzelner Ausdruck>
 
 \section{Bezeichnernotation}
 <Variablenbezeichner>[[[<Variablengröße der 1. Dimension>]][<Variablengröße der n. Dimension>]] [= <Initialisierungsnotation>]
 
 \section{Notation}
-[Zugriffsmodifikatoren] [static] [const | var] <Variablentyp> | <Typendeklaration> <Bezeichnernotation 1>[, <Bezeichnernotation 2>, <Bezeichnernotation n>];
+[Zugriffsmodifikatoren] [static] [const | var] <Variablentyp> | <Typendeklaration> <Bezeichnernotation 1>[, <Bezeichnernotation 2>, <Bezeichnernotation n>]
 
 \section{var}
 Das Schlüsselwort "var" ist optional und dient besserer Lesbarkeit des Codes.
@@ -36,8 +36,8 @@ Der Inhalt von Konstanten darf nicht nachträglich geändert werden.
 \section{Gültigkeitsbereiche}
 Variable können global oder in Gültigkeitsbereichen deklariert werden.
 Klassen, Funktionen und Methoden können statische Variable enthalten:
-static var integer test;
-static const integer test = 10;
+static var integer test
+static const integer test = 10
 
 \section{Typen}
 Bei kopierbasierten Typen wird das Literal "null" für eine Leerung des Variableninhalts benutzt. Bei referenzbasierten Typen
@@ -50,11 +50,12 @@ erfolgreich war (keine Ausnahme wurde geworfen) (siehe "Ausnahmen" und "Methoden
 \section{Arrays}
 Arrays dienen einer generischen Schnittstelle für beliebige Behältertypen. Daher können Variable eines jeden Typs (ausgenommen "code")
 als Array deklariert werden.
-Array-Größenangaben müssen Ganzzahlwerte sein. Sie können weggelassen werden, falls sich die Größe aus der Initialisierung heraus
+Array-Größenangaben müssen wie bei Behältertypen Ganzzahlwerte sein. Sie können weggelassen werden, falls sich die Größe aus der Initialisierung heraus
 ermitteln lässt.
-Der Variableninhalt wird bei Arrays wie in C/C++ mittels geschweifter Klammern eingeschlossen. Es können mehrdimensionale
-Arrays deklariert werden. Die Größe von Arrays ist durchgehend dynamisch. Außerdem können Arrays im Gegensatz zu Arrays in JASS
-als Parameter und Rückgabewert übergeben werden. Zudem kann einem Array der Inhalt eines anderen Arrays zugewiesen werden.
+Der Variableninhalt kann wie bei normalen Behältertypen zugewiesen werden (geschweifte Mengenklammern).
+Im Gegensatz zu einfachen Behältertypen, können Arrays mehrdimensional deklariert werden.
+Die Größe von Arrays ist ebenfalls durchgehend dynamisch. Außerdem können Arrays im Gegensatz zu Arrays in JASS
+als Parameter und Rückgabewert übergeben werden.
 Des Weiteren gelten für Arrays die selben Regeln wie für alle Behältertypen (siehe "Behältertypen"), jedoch sind Arrays kopier-
 und nicht referenzbasiert!
 
@@ -62,8 +63,9 @@ und nicht referenzbasiert!
 Arrays in JASS++ müssen mit Hash-Tabellen oder Spiel-Caches umgesetzt werden. Es gilt dabei zu beachten, dass sie kopierbasiert sind
 und am Ende ihres Gültigkeitsbereiches wieder freigegeben werden müssen.
 
-\subsection{Initialisierungsnotation}
-{ { <Wert 1>, <Wert 2>, <Wert 3>, <Wert n> }, { <Wert 1>, <Wert 2>, <Wert 3>, <Wert n> } };
+\subsection{Mengennotation}
+Menge eines zweidimensionalen Arrays:
+{ Mengennotation eines Behältertyps, Mengennotation eines Behältertyps }
 
 \subsection{Notation}
-<Typ> <Bezeichner>[<Größe der 1. Dimension>][ [<Größe der 2. Dimension>] ][ [<Größe der 3. Dimension>] ] [= Initialisierungsnotation]
+<Typ> <Bezeichner>[<Größe der 1. Dimension>][ [<Größe der 2. Dimension>] ] ... [ [<Größe der n. Dimension>] ] [= Mengennotation]
