@@ -15,3 +15,17 @@ Bugs:
 - Private destructors are not really private.
 - The debug keyword can not be used for the globals and endglobals keyword.
 - You can not define the size of an array struct (struct bla extends array[10]).
+
+Reported Bugs:
+http://www.wc3c.net/showpost.php?p=1124945&postcount=3566
+http://www.wc3c.net/showpost.php?p=1122504&postcount=3556
+http://www.wc3c.net/showpost.php?p=1115249&postcount=3220
+http://www.wc3c.net/showpost.php?p=1113594&postcount=3084
+http://www.wc3c.net/showpost.php?p=1092010&postcount=2036
+http://www.wc3c.net/showpost.php?p=1113647&postcount=3090
+http://www.wc3c.net/showpost.php?p=1120884&postcount=3511
+http://www.wc3c.net/showpost.php?p=1114829&postcount=3152
+http://www.wc3c.net/showpost.php?p=1114678&postcount=3144
+http://www.wc3c.net/showpost.php?p=1114682&postcount=3147
+http://www.wc3c.net/showpost.php?p=1114130&postcount=3107
+http://www.wc3c.net/showpost.php?p=1114312&postcount=3119

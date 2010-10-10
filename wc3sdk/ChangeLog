@@ -1,3 +1,7 @@
+2010-10-10 Tamino Dauth <tamino@cdauth.eu>
+* AArrowButton: Added missing code file to SVN repository.
+* Revised README file and mentioned JassHelper bug.
+
 2010-09-25 Tamino Dauth <tamino@cdauth.eu>
 * ARoutine: Fixed target trigger condition.
 * ADynamicLightning: Dropped static initializer and members.

@@ -1,6 +1,6 @@
 Parts of the current script version are not stable yet!
 
-This is the Jass and vJass script part of the vjasssdk
+This is the JASS and vJass script part of the wc3sdk
 consisting of many useful code files.
 It's called "Advanced Script Library" or just "ASL".
 It contains some useful systems which can be used for creating custom Warcraft 3 TFT projects.
@@ -10,21 +10,31 @@ tamino@cdauth.eu
 I've moved the scripts into extern code files since I'm working on a Linux system and the trigger
 editor is very bugged if you use it by wine. Additionally some files can be excluded easily
 which decreases map file size.
+
+Installation/Usage:
+
+IMPORTANT NOTE: JassHelper 0.A.2.A is required since there is an unknown bug in higher version (0.A.2.B) which prevents
+code from being compiled correctly.
+
 Use file "src/Import Asl.j" to import all required scripts.
 Usually you have to change the lookup folder entry in the "jasshelper.conf" file of your JassHelper
 program before.
 The JassHelper has to lookup folder "src" in this directory. If configured correctly you're able to
 write a simple statement like //! import "Import Asl.j" into your own code or map script.
+
 If you're using a huge amount of code (like me) I recommend dropping "pjass" usage and replacing it
 by JassParser (http://www.wc3c.net/showthread.php?t=105235) since there is a memory exhausted bug in
 "pjass".
+
 ASL supports "japi" and "RtC". Just set A_JAPI or A_RTC variables to true.
 If you set A_FPS_MOVEMENT true (which needs A_RTC set to be true, too) the character movement system
 should be usable by mouse keys.
-For using the object data (e. g. BonusMod) you have to make an entry in the "jasshelper.conf" file for
-the object merger tool.
+
+
+For using Bonus Mod you have to make an entry in the "jasshelper.conf" file for the object merger tool.
 It should always be named "ObjectMerger".
-Note that many parts of the ASL are not finished yet.
+You have to import file "Systems/BonusMod/Creation Bonus Mod.j" once to create all object editor data required by Bonus Mod code.
+
 The following list shows you which constants have to specified in your custom code that ASL works properly:
 globals
 	constant boolean A_RTC = false
@@ -39,4 +49,4 @@ globals
 	constant integer A_MAX_COLLISION_SIZE_ITERATIONS = 10 // used by function GetUnitCollisionSize
 endglobals
 
-Tamino Dauth <tamino@cdauth.eu>, 2010-08-25
+Tamino Dauth <tamino@cdauth.eu>, 2010-10-10
