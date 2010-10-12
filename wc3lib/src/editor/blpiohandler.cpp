@@ -40,12 +40,15 @@ namespace
 
 inline blp::color rgbaToColor(QRgb rgba)
 {
-	return rgba << 1 + qAlpha(rgba);
+	return (blp::color)(qAlpha(rgba)) << 32 + (rgba & 0x00FFFFFF);
 }
 
 inline QRgb colorToRgba(blp::color c)
 {
-	return qRgba(c & 0xFF000000, c & 0x00FF0000, c & 0x0000FF00, c & 0x000000FF);
+	//return qRgba(c & 0xFF000000, c & 0x00FF0000, c & 0x0000FF00, c & 0x000000FF);
+	/// @todo ARGB!
+	return qRgba((c & 0x00FF0000) >> 16, (c & 0x0000FF00) >> 8, (c & 0x000000FF), 0xFF - ((c & 0xFF000000) >> 32));
+	//return qRgba((c & 0xFF000000) >> 0xFFFFFF, (c & 0x00FF0000) >> 0xFFFF, (c & 0x0000FF00) >> 0xFF, (c & 0x000000FF));
 }
 
 }
@@ -93,7 +96,7 @@ bool BlpIOHandler::read(QImage *image)
 	// write blp data into image
 	//if (this->m_blp->flags() == blp::Blp::Alpha)
 		//image->
-	blp::Blp::MipMap *mipMap = blpImage.mipMaps().front();
+	blp::Blp::MipMap *mipMap = blpImage.mipMaps().front(); // first mip map has original size
 
 	*image = QImage(mipMap->width(), mipMap->height(), blpImage.flags() == blp::Blp::Alpha ? QImage::Format_ARGB32 : QImage::Format_RGB32);
 
@@ -103,7 +106,7 @@ bool BlpIOHandler::read(QImage *image)
 	{
 		const blp::Blp::MipMap::Coordinates &coordinates = mapEntry.first;
 		const struct blp::Blp::MipMap::Color &color = mapEntry.second;
-		QRgb pixelColor =  colorToRgba(color.rgba());
+		QRgb pixelColor = colorToRgba(color.rgba());
 		image->setPixel(coordinates.first, coordinates.second, pixelColor);
 	}
 

@@ -437,7 +437,14 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 		std::vector<color> palette(Blp::compressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
 
 		for (std::size_t i = 0; i < Blp::compressedPaletteSize; ++i)
+		{
                         wc3lib::read(istream, palette[i], size);
+			std::cout << "Palette Color:" << std::endl;
+			std::cout << "Red: " << ((palette[i] & 0xFF000000) >> 32) << std::endl;
+			std::cout << "Green: " << ((palette[i] & 0xFF0000 ) >> 16) << std::endl;
+			std::cout << "Blue: " << ((palette[i] & 0xFF00) >> 8) << std::endl;
+			std::cout << "Alpha: " << (palette[i]& 0xFF) << std::endl;
+		}
 
 		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{
@@ -450,9 +457,10 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 			if (nullBytes > 0)
 				std::cout << boost::format(_("Ignoring %1% 0 bytes.")) % nullBytes << std::endl;
 
-			for (dword width = 0; width < mipMap->width(); ++width)
+
+			for (dword height = 0; height < mipMap->height(); ++height)
 			{
-				for (dword height = 0; height < mipMap->height(); ++height)
+				for (dword width = 0; width < mipMap->width(); ++width)
 				{
 					byte index;
 					std::streamsize readSize = 0;
@@ -469,7 +477,7 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 						mipMapSize -= readSize;
 					}
 
-					mipMap->setColor(width, height, palette[index], alpha);
+					mipMap->setColor(width, height, palette[index], alpha, index);
 				}
 			}
 

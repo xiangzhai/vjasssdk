@@ -113,7 +113,7 @@ class Blp : public Format<byte>
 				};
 
 				/**
-				* @brief Each color is hashed by it's 2-dimensional coordinates on the image. So this is the hash/key type of color values on mip maps.
+				* @brief Each color is hashed by it's 2-dimensional coordinates on the image. So this is the hash/key type of color values on mip maps. First is width, second is height.
 				*/
 				typedef std::pair<dword, dword> Coordinates;
 				/**
@@ -276,14 +276,14 @@ inline void Blp::MipMap::setColor(dword width, dword height, color rgba, byte al
 	this->m_colors[std::make_pair(width, height)] = Color(this, rgba, alpha, paletteIndex);
 }
 
-inline const std::map<std::pair<dword, dword>, struct Blp::MipMap::Color>& Blp::MipMap::colors() const
+inline const std::map<Blp::MipMap::Coordinates, class Blp::MipMap::Color>& Blp::MipMap::colors() const
 {
 	return this->m_colors;
 }
 
-inline const struct Blp::MipMap::Color& Blp::MipMap::colorAt(dword width, dword height) const
+inline const class Blp::MipMap::Color& Blp::MipMap::colorAt(dword width, dword height) const
 {
-	return const_cast<const struct Blp::MipMap::Color&>(const_cast<class MipMap*>(this)->m_colors[std::make_pair(width, height)]);
+	return const_cast<const class Blp::MipMap::Color&>(const_cast<class MipMap*>(this)->m_colors[std::make_pair(width, height)]);
 }
 
 inline void Blp::setCompression(enum Blp::Compression compression)
