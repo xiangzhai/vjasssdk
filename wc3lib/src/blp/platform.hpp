@@ -46,6 +46,9 @@ typedef uint8_t byte;
 typedef uint16_t word;
 typedef uint32_t dword;
 typedef float float32;
+/**
+* @brief RGBA color stored in order ARGB withd one byte per channel.
+*/
 typedef uint32_t color;
 
 struct BlpHeader
@@ -70,6 +73,26 @@ struct Blp2Header
 	int mipMapOffsets[16];
 	int mipMapLengths[16];
 };
+
+inline byte red(color c)
+{
+	return (c & 0x00FF0000) >> 16;
+}
+
+inline byte green(color c)
+{
+	return (c & 0x0000FF00) >> 8;
+}
+
+inline byte blue(color c)
+{
+	return (c & 0x000000FF);
+}
+
+inline byte alpha(color c)
+{
+	return byte(0xFF) - (color(c & 0xFF000000) >> 24);
+}
 
 }
 

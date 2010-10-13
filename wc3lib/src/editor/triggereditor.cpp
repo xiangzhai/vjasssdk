@@ -28,7 +28,7 @@ namespace editor
 
 TriggerEditor::TriggerEditor(class Editor *editor) : Module(editor)
 {
-	setupUi(this);
+	Ui::TriggerEditor::setupUi(this);
 }
 
 }

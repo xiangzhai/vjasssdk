@@ -45,10 +45,7 @@ inline blp::color rgbaToColor(QRgb rgba)
 
 inline QRgb colorToRgba(blp::color c)
 {
-	//return qRgba(c & 0xFF000000, c & 0x00FF0000, c & 0x0000FF00, c & 0x000000FF);
-	/// @todo ARGB!
-	return qRgba((c & 0x00FF0000) >> 16, (c & 0x0000FF00) >> 8, (c & 0x000000FF), 0xFF - ((c & 0xFF000000) >> 32));
-	//return qRgba((c & 0xFF000000) >> 0xFFFFFF, (c & 0x00FF0000) >> 0xFFFF, (c & 0x0000FF00) >> 0xFF, (c & 0x000000FF));
+	return qRgba(blp::red(c), blp::green(c), blp::blue(c), blp::alpha(c));
 }
 
 }

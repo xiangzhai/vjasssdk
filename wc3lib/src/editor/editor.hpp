@@ -58,6 +58,8 @@ class Editor : public KMainWindow
 		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
 		virtual ~Editor();
 
+		class KActionCollection* actionCollection() const;
+
 		/**
 		* Each time a file has to searched for, all editor MPQ archives will be checked for in the ordering of their priority.
 		* Higher priority means it will be searched through befor MPQ archives with less priority.
@@ -103,6 +105,11 @@ class Editor : public KMainWindow
 		class TextureEditor *m_textureEditor; // new
 		class NewMapDialog *m_newMapDialog;
 };
+
+inline class KActionCollection* Editor::actionCollection() const
+{
+	return this->m_actionCollection;
+}
 
 }
 

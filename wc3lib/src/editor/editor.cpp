@@ -74,56 +74,103 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 	/// @todo Actions should get the same entry names and shortcuts as in the original World Editor
 	this->m_actionCollection->setConfigGroup("Shortcuts");
 
-	class KMenu *menu = new KMenu(tr("File"), this);
-	this->menuBar()->addMenu(menu);
-
 	class KAction *action = new KAction(KIcon(":/actions/newmap.png"), i18n("New map ..."), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+N")));
 	connect(action, SIGNAL(triggered()), this, SLOT(newMap()));
 	this->m_actionCollection->addAction("newmap", action);
-	menu->addAction(action);
 
 	action = new KAction(KIcon(":/actions/openmap.png"), i18n("Open map ..."), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+O")));
 	connect(action, SIGNAL(triggered()), this, SLOT(openMap()));
 	this->m_actionCollection->addAction("openmap", action);
-	menu->addAction(action);
 
 	action = new KAction(KIcon(":/actions/closemap.png"), i18n("Close map"), this);
 	action->setShortcut(KShortcut(i18n("Strg+W")));
 	connect(action, SIGNAL(triggered()), this, SLOT(closeMap()));
 	this->m_actionCollection->addAction("closemap", action);
-	menu->addAction(action);
 
-	menu->addSeparator();
+	// --
 
 	action = new KAction(KIcon(":/actions/savemap.png"), i18n("Save map"), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+S")));
 	connect(action, SIGNAL(triggered()), this, SLOT(saveMap()));
 	this->m_actionCollection->addAction("savemap", action);
-	menu->addAction(action);
 
 	action = new KAction(KIcon(":/actions/savemapas.png"), i18n("Save map as ..."), this);
 	//action->setShortcut(KShortcut(i18n("Strg+S")));
 	connect(action, SIGNAL(triggered()), this, SLOT(saveMapAs()));
 	this->m_actionCollection->addAction("savemapas", action);
-	menu->addAction(action);
 
 	action = new KAction(KIcon(":/actions/savemapshadows.png"), i18n("Calculate shadows and save map ..."), this);
 	//action->setShortcut(KShortcut(i18n("Strg+S")));
 	connect(action, SIGNAL(triggered()), this, SLOT(saveMapShadow()));
 	this->m_actionCollection->addAction("savemapshadows", action);
-	menu->addAction(action);
 
-	menu->addSeparator();
+	// --
 
-	action = KStandardAction::quit(this, SLOT(close()), this);
-	this->m_actionCollection->addAction("quit", action);
-	menu->addAction(action);
+	action = new KAction(KIcon(":/actions/testmap.png"), i18n("Test map"), this);
+	action->setShortcut(KShortcut(i18n("Ctrl+F9")));
+	connect(action, SIGNAL(triggered()), this, SLOT(testMap()));
+	this->m_actionCollection->addAction("testmap", action);
 
-	// module
-	menu = new ModuleMenu(this, this);
-	this->menuBar()->addMenu(menu);
+	// --
+
+	action = new KAction(KIcon(":/actions/closemodule.png"), i18n("Close module"), this);
+	action->setShortcut(KShortcut(i18n("Ctrl+Shift+W")));
+	connect(action, SIGNAL(triggered()), this, SLOT(closeModule()));
+	this->m_actionCollection->addAction("closemodule", action);
+
+	// module actions
+
+	action = new KAction(KIcon(":/actions/terraineditor.png"), i18n("Terrain Editor"), this);
+	action->setShortcut(KShortcut(i18n("F3")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showTerrainEditor()));
+	this->m_actionCollection->addAction("terraineditor", action);
+
+	action = new KAction(KIcon(":/actions/triggereditor.png"), i18n("Trigger Editor"), this);
+	action->setShortcut(KShortcut(i18n("F4")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showTriggerEditor()));
+	this->m_actionCollection->addAction("triggereditor", action);
+
+	action = new KAction(KIcon(":/actions/soundeditor.png"), i18n("Sound Editor"), this);
+	action->setShortcut(KShortcut(i18n("F5")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showSoundEditor()));
+	this->m_actionCollection->addAction("soundeditor", action);
+
+	action = new KAction(KIcon(":/actions/objecteditor.png"), i18n("Object Editor"), this);
+	action->setShortcut(KShortcut(i18n("F6")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showObjectEditor()));
+	this->m_actionCollection->addAction("objecteditor", action);
+
+	action = new KAction(KIcon(":/actions/campaigneditor.png"), i18n("Campaign Editor"), this);
+	action->setShortcut(KShortcut(i18n("F7")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showCampaignEditor()));
+	this->m_actionCollection->addAction("campaigneditor", action);
+
+	action = new KAction(KIcon(":/actions/aieditor.png"), i18n("AI Editor"), this);
+	action->setShortcut(KShortcut(i18n("F8")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showAiEditor()));
+	this->m_actionCollection->addAction("aieditor", action);
+
+	action = new KAction(KIcon(":/actions/modeleditor.png"), i18n("Model Editor"), this);
+	action->setShortcut(KShortcut(i18n("F9")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showModelEditor()));
+	this->m_actionCollection->addAction("modeleditor", action);
+
+	action = new KAction(KIcon(":/actions/textureeditor.png"), i18n("Texture Editor"), this);
+	action->setShortcut(KShortcut(i18n("F10")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showTextureEditor()));
+	this->m_actionCollection->addAction("textureeditor", action);
+
+	action = new KAction(KIcon(":/actions/objectmanager.png"), i18n("Object Manager"), this);
+	action->setShortcut(KShortcut(i18n("F11")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showObjectManager()));
+	this->m_actionCollection->addAction("objectmanager", action);
+
+	action = new KAction(KIcon(":/actions/importmanager.png"), i18n("Import Manager"), this);
+	action->setShortcut(KShortcut(i18n("F12")));
+	connect(action, SIGNAL(triggered()), this, SLOT(showImportManager()));
+	this->m_actionCollection->addAction("importmanager", action);
 
 	this->setMapActionsEnabled(false);
 

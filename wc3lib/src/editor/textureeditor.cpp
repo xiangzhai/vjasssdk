@@ -35,7 +35,8 @@ namespace editor
 
 TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
 {
-	setupUi(this);
+	Ui::TextureEditor::setupUi(this);
+	Module::setupUi();
 }
 
 void TextureEditor::openFile()

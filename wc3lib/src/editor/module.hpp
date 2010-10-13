@@ -25,20 +25,38 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
-class Editor;
-	
 class Module : public QWidget
 {
 	public:
 		Module(class Editor *editor);
-		
+		class Editor* editor() const;
+		class KMenuBar* menuBar() const;
+
 	protected:
+		virtual void setupUi();
+
+		/**
+		* @todo Should all be abstract (= 0).
+		*/
+		virtual void createFileActions(class KMenu *menu) { };
+		virtual void createEditActions(class KMenu *menu) { };
+		virtual void createMenus(class KMenuBar *menuBar) { };
+		virtual void createWindowsActions(class KMenu *menu) { };
+		virtual void createToolButtons(class KToolBar *toolBar) { };
+
+	private:
 		class Editor *m_editor;
+		class KMenuBar *m_menuBar;
 };
+
+inline class Editor* Module::editor() const
+{
+	return this->m_editor;
+}
 
 }
 

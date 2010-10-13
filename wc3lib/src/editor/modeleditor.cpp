@@ -37,7 +37,7 @@ namespace editor
 
 ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(this, 0), m_recentUrl("")
 {
-	setupUi(this);
+	Ui::ModelEditor::setupUi(this);
 
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	mainLayout->addWidget(&this->m_modelView);

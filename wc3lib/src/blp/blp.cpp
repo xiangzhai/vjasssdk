@@ -440,10 +440,10 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 		{
                         wc3lib::read(istream, palette[i], size);
 			std::cout << "Palette Color:" << std::endl;
-			std::cout << "Red: " << ((palette[i] & 0xFF000000) >> 32) << std::endl;
-			std::cout << "Green: " << ((palette[i] & 0xFF0000 ) >> 16) << std::endl;
-			std::cout << "Blue: " << ((palette[i] & 0xFF00) >> 8) << std::endl;
-			std::cout << "Alpha: " << (palette[i]& 0xFF) << std::endl;
+			std::cout << "Red: " << red(palette[i]) << std::endl;
+			std::cout << "Green: " << green(palette[i]) << std::endl;
+			std::cout << "Blue: " << blue(palette[i]) << std::endl;
+			std::cout << "Alpha: " << alpha(palette[i]) << std::endl;
 		}
 
 		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)

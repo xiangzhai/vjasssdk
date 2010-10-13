@@ -1,3 +1,7 @@
+2010-10-13 Tamino Dauth <tamino@cdauth.eu>
+* editor: Moved action and tool button creation to class Modul.
+* editor: Class Editor contains a global action collection now.
+
 2010-10-12 Tamino Dauth <tamino@cdauth.eu>
 * editor: Fixed blp color conversion.
 

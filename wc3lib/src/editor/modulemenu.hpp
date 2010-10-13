@@ -21,6 +21,8 @@
 #ifndef WC3LIB_EDITOR_MODULEMENU_HPP
 #define WC3LIB_EDITOR_MODULEMENU_HPP
 
+#include <QList>
+
 #include <kmenu.h>
 
 namespace wc3lib
@@ -33,10 +35,20 @@ class ModuleMenu : public KMenu
 {
 	public:
 		ModuleMenu(QWidget *widget, class Editor *editor);
+		/**
+		* Holds all modules actions (without separators).
+		* Required by class Module.
+		*/
+		const QList<class QAction*>& actions() const;
 
 	protected:
-		class KActionCollection *m_actionCollection;
+		QList<class QAction*> m_actions;
 };
+
+inline const QList<class QAction*>& ModuleMenu::actions() const
+{
+	return this->m_actions;
+}
 
 }
 

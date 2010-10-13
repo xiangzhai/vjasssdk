@@ -18,16 +18,91 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <kmenu.h>
+#include <kmenubar.h>
+#include <ktoolbar.h>
+#include <kactioncollection.h>
+
 #include "module.hpp"
+#include "modulemenu.hpp"
+#include "editor.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
-Module::Module(class Editor *editor) : m_editor(editor)
+Module::Module(class Editor *editor) : m_editor(editor), m_menuBar(0)
 {
+}
+
+KMenuBar* Module::menuBar() const
+{
+	if (this->m_menuBar == 0)
+		const_cast<Module*>(this)->m_menuBar = new KMenuBar(const_cast<Module*>(this));
+
+	return this->m_menuBar;
+}
+
+void Module::setupUi()
+{
+	KMenu *menu = new KMenu(tr("File"), this);
+	this->menuBar()->addMenu(menu);
+
+	// use actions from editor
+	menu->addAction(this->editor()->actionCollection()->action("newmap"));
+	menu->addAction(this->editor()->actionCollection()->action("openmap"));
+	menu->addAction(this->editor()->actionCollection()->action("closemap"));
+	menu->addSeparator();
+	menu->addAction(this->editor()->actionCollection()->action("savemap"));
+	menu->addAction(this->editor()->actionCollection()->action("savemapas"));
+	menu->addAction(this->editor()->actionCollection()->action("savemapshadows"));
+	menu->addSeparator();
+
+	// create user-defined actions in file menu
+	this->createFileActions(menu);
+
+	// use actions from editor
+	menu->addSeparator();
+	menu->addAction(this->editor()->actionCollection()->action("testmap"));
+	menu->addSeparator();
+	menu->addAction(this->editor()->actionCollection()->action("closemodule"));
+
+	menu = new KMenu(tr("Edit"), this);
+	this->menuBar()->addMenu(menu);
+
+	// create user-defined actions in edit menu
+	this->createEditActions(menu);
+
+	// module menu
+	class ModuleMenu *moduleMenu = new ModuleMenu(this, this->editor());
+	this->menuBar()->addMenu(moduleMenu);
+
+	// create user-defined menus
+	this->createMenus(this->menuBar());
+
+	menu = new KMenu(tr("Windows"), this);
+	this->menuBar()->addMenu(menu);
+
+	// create user-defined actions in windows menu
+	this->createWindowsActions(menu);
+
+	// tool bar
+	KToolBar *toolBar = new KToolBar(this);
+	toolBar->addSeparator();
+
+	// user defined tool buttons
+	this->createToolButtons(toolBar);
+
+	toolBar->addSeparator();
+
+	// modules tool buttons
+	foreach (QAction *action, moduleMenu->actions())
+		toolBar->addAction(action);
+
+	// test map tool button
+	toolBar->addAction(this->editor()->actionCollection()->action("testmap"));
 }
 
 }
