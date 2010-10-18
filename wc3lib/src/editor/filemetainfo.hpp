@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef FILEMETAINFO_HPP
-#define FILEMETAINFO_HPP
+#ifndef WC3LIB_EDITOR_FILEMETAINFO_HPP
+#define WC3LIB_EDITOR_FILEMETAINFO_HPP
 
 #include <kfilemetainfo.h>
 
@@ -29,6 +29,9 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* Custom file meta info class for integrated file system browser MPQ support.
+*/
 class FileMetaInfo : public KFileMetaInfo
 {
 	public:

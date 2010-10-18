@@ -34,6 +34,9 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* @todo Should use a customized version of model view for selection and editing models.
+*/
 class ModelEditor : public Module, Ui::ModelEditor
 {
 	public:

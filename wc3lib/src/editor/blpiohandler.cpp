@@ -95,9 +95,13 @@ bool BlpIOHandler::read(QImage *image)
 		//image->
 	blp::Blp::MipMap *mipMap = blpImage.mipMaps().front(); // first mip map has original size
 
+	if (blpImage.flags() == blp::Blp::Alpha)
+		std::cout << "Image has alpha channel" << std::endl;
+
 	*image = QImage(mipMap->width(), mipMap->height(), blpImage.flags() == blp::Blp::Alpha ? QImage::Format_ARGB32 : QImage::Format_RGB32);
 
 	typedef std::pair<const blp::Blp::MipMap::Coordinates&, const class blp::Blp::MipMap::Color&> MapType;
+	std::cout << "Color map size " << mipMap->colors().size() << std::endl;
 
 	foreach (blp::Blp::MipMap::MapEntryType mapEntry, mipMap->colors())
 	{

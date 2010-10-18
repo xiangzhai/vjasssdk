@@ -28,6 +28,8 @@
 #include <klocale.h>
 
 #include "modeleditor.hpp"
+#include "../mdlx.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -38,6 +40,7 @@ namespace editor
 ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(this, 0), m_recentUrl("")
 {
 	Ui::ModelEditor::setupUi(this);
+	Module::setupUi();
 
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	mainLayout->addWidget(&this->m_modelView);
@@ -89,7 +92,7 @@ void ModelEditor::openFile()
 		else
 			size = model.readMdl(ifstream);
 
-		KMessageBox::information(this, i18n("Read %1 file \"%2\" successfully.\nSize %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), size));
+		KMessageBox::information(this, i18n("Read %1 file \"%2\" successfully.\nSize %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
 	}
 	catch (class Exception &exception)
 	{
@@ -99,10 +102,12 @@ void ModelEditor::openFile()
 	}
 
 	const Ogre::Vector3 position(0.0, 0.0, 0.0);
-	class mdlx::OgreMdlx *ogreModel;
-	this->m_modelView.createModel(model, position, ogreModel);
+	mdlx::OgreMdlx *ogreModel = new mdlx::OgreMdlx(model);
+	//ogreModel->refresh()
+	//this->m_modelView.createModel(model, position, ogreModel);
 	this->m_models.push_back(ogreModel);
-	ogreModel->refresh();
+	ogreModel->refresh(*this->m_modelView.sceneManager());
+	this->m_modelView.root()->addFrameListener(ogreModel);
 }
 
 }

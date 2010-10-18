@@ -149,7 +149,7 @@ if (FLAG_EDITOR_USE)
 	link_directories(lib/extern/OGRE/ogre_src_v1-7-1/lib)
 	#include_directories(/usr/include/OGRE)
 	#link_directories(/usr/lib/OGRE)
-	set(OGRE_LIBRARIES OgreMain OgrePaging)
+	set(OGRE_LIBRARIES OgreMain) #  OgrePaging
 endif ()
 
 # TODO: is only required when using -DJPEG and -DSTATIC

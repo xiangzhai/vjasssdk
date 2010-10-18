@@ -49,7 +49,8 @@ ModelView::ModelView(QWidget *parent, const QGLWidget *shareWidget, Qt::WFlags f
 	this->m_root->setRenderSystem(renderSystem);
 	// initialize without creating window
 	this->m_root->getRenderSystem()->setConfigOption("Full Screen", "No");
-	this->m_root->saveConfig();
+	// TODO Segmentation fault.
+	//this->m_root->saveConfig();
 	this->m_root->initialise(false); // don't create a window
 }
 
@@ -128,6 +129,7 @@ ModelView::~ModelView()
 	*/
 //}
 
+/*
 class Ogre::Entity* ModelView::createModel(const class mdlx::Mdlx &mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx)
 {
 	ogreMdlx = new mdlx::OgreMdlx(mdlx);
@@ -144,6 +146,7 @@ class Ogre::Entity* ModelView::createModel(const class mdlx::OgreMdlx &ogreMdlx,
 
 	return entity;
 }
+*/
 
 void ModelView::resizeEvent(QResizeEvent *event)
 {
@@ -163,6 +166,7 @@ void ModelView::resizeEvent(QResizeEvent *event)
 
 void ModelView::paintGL()
 {
+	qDebug() << "Render";
 	/// @todo Render window only?
 	this->m_root->renderOneFrame();
 
@@ -255,6 +259,13 @@ OLD!
 	this->m_camera->setFarClipDistance(50000);
 	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
 	this->m_viewPort->setBackgroundColour(Ogre::ColourValue(0.8, 0.8, 1));
+	Ogre::Light *light = this->m_sceneManager->createLight("Light1");
+	light->setType(Ogre::Light::LT_POINT);
+	light->setPosition(Ogre::Vector3(250, 150, 250));
+	light->setDiffuseColour(Ogre::ColourValue::White);
+	light->setSpecularColour(Ogre::ColourValue::White);
+
+	this->m_root->startRendering(); /// @todo Error!
 }
 
 

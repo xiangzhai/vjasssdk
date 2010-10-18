@@ -437,14 +437,7 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 		std::vector<color> palette(Blp::compressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
 
 		for (std::size_t i = 0; i < Blp::compressedPaletteSize; ++i)
-		{
                         wc3lib::read(istream, palette[i], size);
-			std::cout << "Palette Color:" << std::endl;
-			std::cout << "Red: " << red(palette[i]) << std::endl;
-			std::cout << "Green: " << green(palette[i]) << std::endl;
-			std::cout << "Blue: " << blue(palette[i]) << std::endl;
-			std::cout << "Alpha: " << alpha(palette[i]) << std::endl;
-		}
 
 		BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
 		{

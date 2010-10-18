@@ -41,8 +41,9 @@ namespace mdlx
 * MDLX model.
 * Geosets are implemented as sub meshes.
 * @todo This class should be moved to wc3lib module "editor".
+* @todo Use inherited event functions of frame listener to apply animation track data (each model instance should have its own time marker for sequences).
 */
-class OgreMdlx
+class OgreMdlx  : public Ogre::FrameListener
 {
 	public:
 		OgreMdlx(const class Mdlx &mdlx);
@@ -52,15 +53,17 @@ class OgreMdlx
 		/**
 		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
 		*/
-		void refresh() throw (class Exception);
+		void refresh(Ogre::SceneManager &sceneManager) throw (class Exception);
 
 	protected:
 		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
 
+		//Ogre::TexturePtr createTexture(const class mdlx::Texture &texture) throw (class Exception);
+		Ogre::MaterialPtr createMaterial(const class mdlx::Material &material) throw (class Exception);
 		/**
 		* Creates manual object for specified geoset.
 		*/
-		Ogre::ManualObject& createGeoset(const class Geoset &geoset) throw (class Exception);
+		Ogre::ManualObject* createGeoset(const class Geoset &geoset) throw (class Exception);
 
 		Ogre::Node* createNode(const class Node &node);
 

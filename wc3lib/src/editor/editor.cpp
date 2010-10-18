@@ -309,6 +309,7 @@ void Editor::showModelEditor()
 		this->m_modelEditor = new ModelEditor(this);
 
 	this->m_modelEditor->show();
+	this->m_modelEditor->openFile(); // TODO test
 }
 
 void Editor::showTextureEditor()

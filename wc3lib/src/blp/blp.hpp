@@ -27,6 +27,8 @@
 #include <utility>
 #include <list>
 
+#include <iostream> // DEBUG
+
 #include <boost/format.hpp>
 
 #include "platform.hpp"
@@ -272,6 +274,9 @@ inline void Blp::MipMap::setColor(dword width, dword height, color rgba, byte al
 {
 	if (width >= this->m_width || height >= this->m_height)
 		throw Exception(boost::str(boost::format(_("Mip map: Invalid indices (width %1%, height %2%).")) % width % height));
+
+	if (this->m_colors.find(std::make_pair(width, height)) != this->m_colors.end())
+		std::cout << "Warning: Color at " << width << " | " << height << " does already exist." << std::endl;
 
 	this->m_colors[std::make_pair(width, height)] = Color(this, rgba, alpha, paletteIndex);
 }

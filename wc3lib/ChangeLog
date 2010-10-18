@@ -1,3 +1,9 @@
+2010-10-18 Tamino Dauth <tamino@cdauth.eu>
+* editor: Tried versions 1.6.5 and 1.7.1 of OGRE.
+
+2010-10-16 Tamino Dauth <tamino@cdauth.eu>
+* editor: Improved MDLX model creation.
+
 2010-10-13 Tamino Dauth <tamino@cdauth.eu>
 * editor: Moved action and tool button creation to class Modul.
 * editor: Class Editor contains a global action collection now.
@@ -156,7 +162,7 @@
 
 2010-04-30 Tamino Dauth <tamino@cdauth.de>
 * Added compressPklib and decompressPklib functions and imploded sectors support.
-* Added section "Gültigkeitsbereichverwendung" to Jass++ definition.
+* Added section "G?ltigkeitsbereichverwendung" to Jass++ definition.
 * Added Doxygen settings file.
 * Revised cmake files.
 

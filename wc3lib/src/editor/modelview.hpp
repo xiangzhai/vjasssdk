@@ -74,6 +74,9 @@ class ModelView : public QGLWidget
 		Ogre::Entity* createModel(const class mdlx::Mdlx &mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx);
 		Ogre::Entity* createModel(const class mdlx::OgreMdlx &ogreMdlx, const Ogre::Vector3 &position);
 
+		Ogre::Root* root() const;
+		Ogre::SceneManager* sceneManager() const;
+
 	protected:
 		//virtual void paintEvent(QPaintEvent* event);
 		virtual void resizeEvent(QResizeEvent *event);
@@ -110,6 +113,16 @@ class ModelView : public QGLWidget
 		// event values
 		bool m_changeFarClip;
 };
+
+inline Ogre::Root* ModelView::root() const
+{
+	return this->m_root;
+}
+
+inline Ogre::SceneManager* ModelView::sceneManager() const
+{
+	return this->m_sceneManager;
+}
 
 }
 
