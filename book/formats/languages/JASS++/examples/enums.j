@@ -29,8 +29,8 @@ endstruct
 // JASS++
 class Character
 	public enum Class
-		Cleric,
-		Wizard,
+		Cleric
+		Wizard
 		Knight
 
 	private Class m_class

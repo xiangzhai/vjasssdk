@@ -1,17 +1,53 @@
 \chapter{Aufzählungen}
 Aufzählungselemente dürfen nur konstante Ausdrücke als Werte enthalten.
-Alle Aufzählungselemente müssen den geerbten Typ haben.
-Wird der geerbte Typ weggelassen, so ist die Aufzählung standardmäßig vom nativen Typ "integer".
 Aufzählungen sind konstante Behältertypen (siehe "Behältertypen") und können daher auch in "foreach"-Schleifen verwendet werden.
 Wird ein Aufzählungselement bei der Deklaration gesetzt, so werden alle darauffolgenden nicht explizit gesetzten Elemente,
 auf die noch nicht verwendeten nachfolgenden Werte gesetzt, falls solche existieren.
 Bei Ganz- und Fließkommazahlen wird dabei einfach in 1er-Schritten hochgezählt.
 Beim Typ "boolean" gilt die Reihenfolge "true", "false". Bei vordefinierten Typen (siehe "Typen") gilt die aufsteigende
 Reihenfolge Ihrer Ganzzahlwerte.
-Ist das letzte Element einer Reihenfolge erreicht, so erhalten alle weiteren Elemente ebenfalls das letzte
-und der Compiler gibt eine Warnung aus.
+Bei geerbten anderen Aufzählungen wird beim ersten freien Wert fortgefahren und jeder nächste freie belegt.
+Ist das letzte Element einer Reihenfolge erreicht, so erhalten alle weiteren Elemente ebenfalls das letzte.
+Besitzen mehrere Elemente einer Aufzählung den gleichen Wert, so sollte der Compiler eine Warnung ausgeben.
 Der "size"-Operator kann verwendet werden, um die Anzahl der Aufzählungselemente zu erhalten.
+Elemente einer Aufzählung können explizit in den nativen abgleiteten Typ konvertiert werden.
+Ausdrücke des abgleiteten nativen Typs können explizit in ein Element der Aufzählung konvertiert werden. In diesem Fall
+sollte der Compiler jedoch eine Warnung ausgeben.
+Das Schlüsselwort "self" verweist innerhalb des Gültigkeitsbereichs der Aufzählung auf diesen.
+
+\section{Vererbung}
+Mehrfachvererbung von Aufzählungen ist ausdrücklich erlaubt.
+Alle Aufzählungselemente haben automatisch den geerbten Typ bzw. den Typ der geerbten Aufzählungen.
+Es dürfen nur mehrere Aufzählungen geerbt werden, die vom gleichen nativen Typ abgeleitet wurden.
+Wird der geerbte Typ weggelassen, so ist die Aufzählung standardmäßig vom nativen Typ "integer".
+Als "protected" deklarierte Elemente einer Aufzählung können nur als Wert eines Elements einer abgeleiteten Aufzählung
+verwendet werden.
+Als "private" deklarierte Elemente einer Aufzählung können nur als Wert eines Elements der selben Aufzählung
+verwendet werden.
+Elemente dürfen in der abgleiteten Aufzählung neu definiert werden.
+Das Schlüsselwort "base" verweist auf die Gültigkeitsbereiche aller abgleiteten Typen.
+
+\subsection{Notation}
+(Zugriffsmodifikator <Aufzählungsbezeichner>, ...)
 
 \section{Notation}
-enum <Bezeichner> (<geerbter Typ>) [Deklarationsvoraussetzungen]
-    <Elementname> [= <Elementwert>] [,] // Nach dem letzten Element muss kein Komma gesetzt werden.
+enum <Bezeichner> [Vererbung] [Deklarationsvoraussetzungen]
+	[Zugriffsmodifikatoren] <Elementbezeichner 1> [= <Elementwert>]
+	[Zugriffsmodifikatoren] <Elementbezeichner 2> [= <Elementwert>]
+	...
+	[Zugriffsmodifikatoren] <Elementbezeichner n> [= <Elementwert>]
+
+\section{Beispiel}
+enum EquipmentTypes
+	public Sword
+	public Helmet
+	public Armor
+
+enum RucksackItemTypes
+	public Pawnable
+	public Quest
+
+// Völlig nutzlos, aber möglich!!!
+enum ItemTypes (public EquipmentTypes, public RucksackItemTypes)
+	public Pawnable = EquipmentTypes.size()
+	public Quest = (integer)self.Pawnable + 1

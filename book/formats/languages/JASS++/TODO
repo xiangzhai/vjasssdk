@@ -1,9 +1,17 @@
+2010-10-19 Tamino Dauth <tamino@cdauth.eu>
+* DONE: Vererbung von Aufzählungen (die Vererbung bleibt speziell, native Typen können geerbt werden, aber auch andere Aufzählungen, Mehrfachvererbung zulassen).
+* Gültigkeitsbereiche präzisieren (Stufen durch Tabulatoren).
+* DONE: Anweisungen präzisieren (getrennt durch Zeilenumbrüche).
+* Lambda-Funktionen wurden aus dem Standard geworfen. Grund: Anonymisierte Typen passen nicht mehr in das Deklarationsschema ohne durch geschweifte Klammern definierte Gültigkeitsbereiche. Außerdem sind sie für eine einfache Skriptsprache ein wenig zu komplex und nicht zwingend notwendig, eher als kleines, oft auch verwirrendes Extra zu betrachten.
+* Zugriffsmodifikatoren abstrakter beschreiben, auch für Vererbungen.
+* Abstraktes Kapitel über Vererbung hinzufügen, dass abstrakte Bestandteile dessen aufzählt (Aufzählungen, Klassen).
+
 2010-10-09 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Vorschlag der neuen Anweisungs- und Gültigkeitsbereichnotationen ausarbeiten und ggf. einfügen.
 * Extradokumente über Anweisungen und Blöcke hinzufügen.
-* Gültigkeitsbereiche in Lambdafunktionen.
-* Mehrzeilige Anweisungen bei Klammern.
-* Gültigkeitsbereichsverwendung mit Schlüsselwort (ansonsten Konflikt mit Deklarationen).
+* DEPRECATED: Gültigkeitsbereiche in Lambdafunktionen.
+* DONE: Mehrzeilige Anweisungen bei Klammern.
+* DONE: Gültigkeitsbereichsverwendung mit Schlüsselwort (ansonsten Konflikt mit Deklarationen).
 * ACHTUNG: Präprozessoranweisungen ohne End-Anweisungen und auch mit Einrückung?
 
 2010-09-16 Tamino Dauth <tamino@cdauth.eu>

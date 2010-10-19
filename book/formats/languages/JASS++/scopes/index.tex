@@ -5,9 +5,8 @@ Innerhalb kann der Bezeichner mit dem .-Operator optional verwendet werden.
 In bestimmten Fällen geschieht dies implizit (Methodenaufruf, Pseudonyme, Gültigkeitsbereichverwendung usw.).
 Außerdem können außerhalb eines Gültigkeitsbereiches nur statische Deklarationen dessen verwendet werden.
 Dies sind z. B. statische Variablen, Klassendeklarationen usw. (siehe unten).
-Ein Gültigkeitsbereich besitzt in JASS++ nicht zwingend einen Bezeichner und ist zwischen einer geöffneten und einer geschlossenen eckigen
-Klammer definiert.
-Dies gilt jedoch nicht für den äußersten Gültigkeitsbereich, welcher nirgends explizit deklariert wird und ebenfalls keinen Bezeichner trägt.
+Ein Gültigkeitsbereich besitzt in JASS++ nicht zwingend einen Bezeichner und ist durch eine durch einen Tabulator eingerückte Ebene definiert.
+Der äußerste Gültigkeitsbereich trägt keinen Bezeichner und befindet sich auf der Ebene ohne jegliche Einrückung.
 Er erlaubt es dem Entwickler, eine Funktion direkt zu deklarieren, ohne einen Gültigkeitsbereich für sie zu definieren.
 Gültigkeitsbereiche können beliebig verschachtelt werden, unabhängig ihrer Art. Das bedeutet, dass z. B. auch Klassen innerhalb von
 Klassendeklarationen deklariert werden können.

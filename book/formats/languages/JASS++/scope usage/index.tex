@@ -18,12 +18,12 @@ VERALTET: Ihr innerer Gültigkeitsbereich kann nicht von außerhalb verwendet we
 Elemente die in einem Gültigkeitsbereich enthalten sind, müssen niemals zwingend dessen Bezeichner angeben.
 
 \section{Notation}
-<Gültigkeitsbereichbezeichner>[* | -]
+use <Gültigkeitsbereichbezeichner>[* | -]
 
 \section{Beispiele}
-scope gna.gnu.gni*
-class gna.gnu.gni.Test
-enum gna.gnu.gni.Test.Type
+use scope gna.gnu.gni*
+use class gna.gnu.gni.Test
+use enum gna.gnu.gni.Test.Type
 
 Test var = new Test()
 scope gna.gnu.gni-
