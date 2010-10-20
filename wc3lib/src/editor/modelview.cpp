@@ -21,7 +21,9 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtOpenGL>
+#if defined(Q_WS_X11)
 #include <QX11Info>
+#endif
 
 //#include <qogre/ExampleFrameListener.h>
 
@@ -171,6 +173,18 @@ void ModelView::paintGL()
 	this->m_root->renderOneFrame();
 
 	/*
+	mRoot->_fireFrameStarted();
+	mRenderWindow->update();
+
+	mCamera->moveRelative(mDirection);
+	mCamera->yaw(Radian(angleX));
+	mCamera->pitch(Radian(angleY));
+
+	updateStats();
+	mRoot->_fireFrameEnded();
+	*/
+
+	/*
 	Ogre::Root::getSingleton()._fireFrameStarted();
 	this->m_renderWindow->update();
 	Ogre::Root::getSingleton()._fireFrameRenderingQueued();
@@ -265,6 +279,12 @@ OLD!
 	light->setDiffuseColour(Ogre::ColourValue::White);
 	light->setSpecularColour(Ogre::ColourValue::White);
 
+	// default graphics settings
+	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
+	Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
+	Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(2);
+
+	// if this function is called background becomes blue but program hangs up
 	this->m_root->startRendering(); /// @todo Error!
 }
 
@@ -320,6 +340,16 @@ void ModelView::wheelEvent(QWheelEvent *event)
 	}
 
 	event->accept();
+}
+
+void ModelView::dragEnterEvent(QDragEnterEvent *event)
+{
+	/// @todo If it's an MDLX file event->acceptProposedAction();
+}
+
+void ModelView::dropEvent(QDropEvent *event)
+{
+    /// @todo If it's an MDLX file event->acceptProposedAction();
 }
 
 }

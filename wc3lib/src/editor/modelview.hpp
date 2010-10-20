@@ -98,6 +98,10 @@ class ModelView : public QGLWidget
 		virtual void keyReleaseEvent(QKeyEvent *event);
 		virtual void wheelEvent(QWheelEvent *event);
 
+		// load file events
+		virtual void dragEnterEvent(QDragEnterEvent *event);
+		virtual void dropEvent(QDropEvent *event);
+
 		const Ogre::NameValuePairList *m_parameters;
 		Ogre::Root *m_root;
 		Ogre::RenderWindow *m_renderWindow;

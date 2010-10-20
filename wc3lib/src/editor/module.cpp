@@ -39,14 +39,14 @@ Module::Module(class Editor *editor) : m_editor(editor), m_menuBar(0)
 
 KMenuBar* Module::menuBar() const
 {
-	if (this->m_menuBar == 0)
-		const_cast<Module*>(this)->m_menuBar = new KMenuBar(const_cast<Module*>(this));
-
 	return this->m_menuBar;
 }
 
 void Module::setupUi()
 {
+	this->m_menuBar = new KMenuBar(this);
+	m_topLayout.addWidget(this->m_menuBar);
+
 	KMenu *menu = new KMenu(tr("File"), this);
 	this->menuBar()->addMenu(menu);
 
@@ -90,6 +90,7 @@ void Module::setupUi()
 
 	// tool bar
 	KToolBar *toolBar = new KToolBar(this);
+	m_topLayout.addWidget(toolBar);
 	toolBar->addSeparator();
 
 	// user defined tool buttons

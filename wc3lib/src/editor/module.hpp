@@ -22,6 +22,7 @@
 #define WC3LIB_EDITOR_MODULE_HPP
 
 #include <QWidget>
+#include <QHBoxLayout>
 
 namespace wc3lib
 {
@@ -51,6 +52,8 @@ class Module : public QWidget
 	private:
 		class Editor *m_editor;
 		class KMenuBar *m_menuBar;
+
+		QHBoxLayout m_topLayout;
 };
 
 inline class Editor* Module::editor() const
