@@ -56,6 +56,8 @@ TC_VISIBILITY=WESTRING_TRIGCAT_VISIBILITY,ReplaceableTextures\WorldEditUI\Action
 // ASL
 TC_ASL_CORE_GENERAL=WESTRING_ASL_TRIGCAT_CORE_GENERAL,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_ASL_CORE_DEBUG=WESTRING_ASL_TRIGCAT_CORE_DEBUG,ReplaceableTextures\WorldEditUI\Actions-Nothing
+TC_ASL_CORE_ENVIRONMENT=WESTRING_ASL_TRIGCAT_CORE_ENVIRONMENT,ReplaceableTextures\WorldEditUI\Actions-Nothing
+TC_ASL_CORE_STRING=WESTRING_ASL_TRIGCAT_CORE_STRING,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_ASL_SYSTEMS_BONUS_MOD=WESTRING_ASL_TRIGCAT_SYSTEMS_BONUS_MOD,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_ASL_SYSTEMS_CHARACTER=WESTRING_ASL_TRIGCAT_SYSTEMS_CHARACTER,ReplaceableTextures\WorldEditUI\Actions-Nothing
 TC_ASL_SYSTEMS_WORLD=WESTRING_ASL_TRIGCAT_SYSTEMS_WORLD,ReplaceableTextures\WorldEditUI\Actions-Nothing
@@ -144,12 +146,15 @@ fogmodifier=0,1,0,WESTRING_TRIGTYPE_fogmodifier
 weathereffect=0,1,0,WESTRING_TRIGTYPE_weathereffect
 
 // ASL
-A_BONUS_TYPE=0,1,1,WESTRING_ASL_TRIGTYPE_A_BONUS_TYPE,integer
+ABonusType=0,1,1,WESTRING_ASL_TRIGTYPE_A_BONUS_TYPE,integer
 ACharacter=0,1,1,WESTRING_ASL_TRIGTYPE_ACHARACTER,integer
 ARoutine=0,1,1,WESTRING_ASL_TRIGTYPE_AROUTINE,integer
 ASpawnPoint=0,1,1,WESTRING_ASL_TRIGTYPE_ASPAWNPOINT,integer
 AWeather=0,1,1,WESTRING_ASL_TRIGTYPE_AWEATHER,integer
 
+// ASL - Non-Variable Types
+AMovableValue=0,0,1,WESTRING_ASL_TRIGTYPE_AMOVABLEVALUE,boolean
+AAttackableValue=0,0,1,WESTRING_ASL_TRIGTYPE_AATTACKABLEVALUE,boolean
 
 // Trigger Non-Variable Types - Atomic (built-in to the language)
 code=0,0,0,WESTRING_TRIGTYPE_code
@@ -2177,6 +2182,12 @@ ARtc=1,boolean,A_RTC,WESTRING_ASL_RTCAVAILABILITY
 AJapi=1,boolean,A_JAPI,WESTRING_ASL_JAPIAVAILABILITY
 AMesgHelloWorld=1,string,WESTRING_ASL_HELLO_WORLD
 AMesgASpawnPointInit=1,string,WESTRING_ASL_ASPAWNPOINTINIT_MESG
+
+AMovableValueTrue=1,AMovableValue,A_MOVABLE_VALUE_TRUE
+AMovableValueFalse=1,AMovableValue,A_MOVABLE_VALUE_FALSE
+
+AAttackableValueTrue=1,AAttackableValue,A_ATTACKABLE_VALUE_TRUE
+AAttackableValueFalse=1,AAttackableValue,A_ATTACKABLE_VALUE_FALSE
 
 ABonusTypeDamage=1,ABonusType,A_BONUS_TYPE_DAMAGE,WESTRING_ASL_BONUS_TYPE_DAMAGE
 ABonusTypeArmor=1,ABonusType,A_BONUS_TYPE_ARMOR,WESTRING_ASL_BONUS_TYPE_ARMOR
@@ -4715,6 +4726,17 @@ _PrintIf_Defaults=true,AMesgHelloWorld
 _PrintIf_Limits=
 _PrintIf_Category=TC_ASL_CORE_DEBUG
 
+MakeUnitMovable=1,unit,AMovableValue
+_MakeUnitMovable_Defaults=_,AMovableValueTrue
+_MakeUnitMovable_Limits=
+_MakeUnitMovable_Category=TC_ASL_CORE_ENVIRONMENT
+
+
+MakeUnitAttackable=1,unit,AAttackableValue
+_MakeUnitAttackable_Defaults=_,AAttackableValueTrue
+_MakeUnitAttackable_Limits=
+_MakeUnitAttackable_Category=TC_ASL_CORE_ENVIRONMENT
+
 // Bonus Mod
 AInitBonusMod=1,nothing
 _AInitBonusMod_Defaults=
@@ -6447,6 +6469,60 @@ _GetLastCreatedTextTag_Defaults=
 _GetLastCreatedTextTag_Category=TC_LAST
 
 // ASL
+
+// returns integer
+FindString=1,0,integer,string,string
+_FindString_Defaults=_,_
+_FindString_Category=TC_ASL_CORE_STRING
+
+// returns string
+ReplaceSubString=1,0,string,string,integer,string
+_ReplaceSubString_Defaults=_,0,_
+_ReplaceSubString_Category=TC_ASL_CORE_STRING
+
+// returns string
+ReplaceString=1,0,string,string,string,string
+_ReplaceString_Defaults=_,_,_
+_ReplaceString_Category=TC_ASL_CORE_STRING
+
+// returns string
+RemoveSubString=1,0,string,string,integer,integer
+_RemoveSubString_Defaults=_,0,StringLength
+_RemoveSubString_Category=TC_ASL_CORE_STRING
+
+// returns string
+RemoveString=1,0,string,string,string
+_RemoveString_Defaults=_,SubStringBJ
+_RemoveString_Category=TC_ASL_CORE_STRING
+
+// ASL - Core - Environment
+
+// returns boolean
+IsUnitInvulnerable=1,0,boolean,unit
+_IsUnitInvulnerable_Defaults=_
+_IsUnitInvulnerable_Category=TC_ASL_CORE_ENVIRONMENT
+
+// returns integer
+GetUnitAllianceStateToUnit=1,0,alliancesetting,unit,unit
+_GetUnitAllianceStateToUnit_Defaults=_,_
+_GetUnitAllianceStateToUnit_Category=TC_ASL_CORE_ENVIRONMENT
+
+// returns boolean
+IsUnitSpellResistant=1,0,boolean,unit
+_IsUnitSpellResistant_Defaults=_
+_IsUnitSpellResistant_Category=TC_ASL_CORE_ENVIRONMENT
+
+// returns boolean
+IsUnitSpellImmune=1,0,boolean,unit
+_IsUnitSpellImmune_Defaults=_
+_IsUnitSpellImmune_Category=TC_ASL_CORE_ENVIRONMENT
+
+// returns real
+GetUnitArmor=1,0,real,unit
+_GetUnitArmor_Defaults=_
+_GetUnitArmor_Category=TC_ASL_CORE_ENVIRONMENT
+
+// ASL - BonusMod
 
 // returns integer
 AUnitGetBonus=1,0,integer,unit,ABonusType

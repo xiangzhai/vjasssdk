@@ -127,6 +127,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			local unit triggerUnit = GetTriggerUnit()
 			local boolean result = triggerUnit == this.m_routineUnitData.unit.evaluate()
+			debug call Print("Target condition, entering unit: " + GetUnitName(triggerUnit) + " and name of required unit: " + GetUnitName(this.m_routineUnitData.unit.evaluate()))
 			set triggeringTrigger = null
 			set triggerUnit = null
 			return result
@@ -135,10 +136,11 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		private static method triggerActionTarget takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
+			call DisableTrigger(triggeringTrigger)
+			call this.m_routineUnitData.routine.evaluate().onTarget.evaluate(this)
+			debug call Print("Before destroying target trigger")
 			call this.destroyTargetTrigger.evaluate() // destroys this trigger
-			if (this.m_routineUnitData.routine.evaluate().targetAction() != 0) then
-				call this.m_routineUnitData.routine.evaluate().targetAction().execute(this)
-			endif
+			debug call Print("After target trigger destruction")
 			set triggeringTrigger = null
 		endmethod
 
@@ -166,14 +168,10 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 					call thistype.clearNextRoutineDataOfUnit.evaluate(this.m_routineUnitData.unit.evaluate())
 				endif
 				call thistype.setCurrentRoutineDataForUnit.evaluate(this.m_routineUnitData.unit.evaluate(), this)
-				if (this.m_routineUnitData.routine.evaluate().startAction() != 0) then
-					call this.m_routineUnitData.routine.evaluate().startAction().execute(this)
-				endif
+				call this.m_routineUnitData.routine.evaluate().onStart.evaluate(this)
 				if (this.m_routineUnitData.routine.evaluate().hasTarget()) then
 					if (RectContainsUnit(this.m_targetRect, this.m_routineUnitData.unit.evaluate())) then
-						if (this.m_routineUnitData.routine.evaluate().targetAction() != 0) then
-							call this.m_routineUnitData.routine.evaluate().targetAction().execute(this)
-						endif
+						call this.m_routineUnitData.routine.evaluate().onTarget.evaluate(this)
 					else
 						call this.createTargetTrigger()
 					endif
@@ -202,9 +200,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			if (this.m_routineUnitData.routine.evaluate().hasTarget() and this.m_targetTrigger != null) then
 				call this.destroyTargetTrigger.evaluate()
 			endif
-			if (this.m_routineUnitData.routine.evaluate().endAction() != 0) then
-				call this.m_routineUnitData.routine.evaluate().endAction().execute(this)
-			endif
+			call this.m_routineUnitData.routine.evaluate().onEnd.evaluate(this)
 			set triggeringTrigger = null
 		endmethod
 
@@ -322,8 +318,8 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 								call EnableTrigger(this.m_targetTrigger)
 							endif
 							call IssueRectOrder(this.m_routineUnitData.unit.evaluate(), "move", this.m_targetRect)
-						elseif (this.m_routineUnitData.routine.evaluate().isLoop() and this.m_routineUnitData.routine.evaluate().targetAction() != 0) then
-							call this.m_routineUnitData.routine.evaluate().targetAction().execute(this)
+						elseif (this.m_routineUnitData.routine.evaluate().isLoop()) then
+							call this.m_routineUnitData.routine.evaluate().onTarget.evaluate(this)
 						endif
 					endif
 				// not in time
@@ -335,9 +331,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 					set this = thistype.nextRoutineDataOfUnit(whichUnit)
 					call thistype.clearNextRoutineDataOfUnit.evaluate(whichUnit)
 					call thistype.setCurrentRoutineDataForUnit.evaluate(whichUnit, this)
-					if (this.m_routineUnitData.routine.evaluate().startAction() != 0) then
-						call this.m_routineUnitData.routine.evaluate().startAction().execute(this)
-					endif
+					call this.m_routineUnitData.routine.evaluate().onStart.evaluate(this)
 				endif
 			endif
 		endmethod
@@ -378,6 +372,9 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 	* continue action, otherwise it will be stopped!
 	*/
 	function AContinueRoutineLoop takes ARoutineData routineData, ARoutineAction routineAction returns nothing
+		debug if (not routineData.routineUnitData().routine().isLoop()) then
+			debug call Print("Warning: Routine " + I2S(routineData.routineUnitData().routine()) + " with routine data for unit " + GetUnitName(routineData.routineUnitData().unit()) + " is not marked as loop (isLoop).")
+		debug endif
 		if (not IsUnitPaused(routineData.routineUnitData().unit.evaluate()) and routineData.isEnabled()) then
 			call routineAction.execute(routineData)
 		endif
@@ -463,10 +460,11 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 	function interface ARoutineAction takes ARoutineData routineData returns nothing
 
 	/**
-	* Provides NPC routine handling like in the game Gothic or Gothic II.
-	* You are able to assign day times and routine actions using the function interface @functioninterface ARouteAction.
-	* Additionally you can make periodic routines by setting a 'run rate'.
-	* If the assigned unit is paused, routine won't be runned until unit gets unpaused.
+	* Provides NPC routine handling like in the games series Gothic.
+	* You are able to assign day times and routine actions either by using the function interface ARouteAction or by overwriting stub event methods in your derived structure.
+	* There are start, end and target actions which can be specified by user.
+	* Additionally you can make periodic routines by calling AContinueRoutineLoop in your routine action.
+	* If the assigned unit is paused, routine won't be run until unit gets unpaused.
 	*/
 	struct ARoutine
 		// static members
@@ -506,6 +504,24 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		// methods
+
+		public stub method onStart takes ARoutineData routineData returns nothing
+			if (this.startAction() != 0) then
+				call this.startAction().execute(routineData)
+			endif
+		endmethod
+
+		public stub method onEnd takes ARoutineData routineData returns nothing
+			if (this.endAction() != 0) then
+				call this.endAction().execute(routineData)
+			endif
+		endmethod
+
+		public stub method onTarget takes ARoutineData routineData returns nothing
+			if (this.targetAction() != 0) then
+				call this.targetAction().execute(routineData)
+			endif
+		endmethod
 
 		public method unitIndex takes unit whichUnit returns integer
 			local integer i = 0
@@ -564,6 +580,10 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 		*/
 
+		/**
+		* Adds unit @param whichUnit without adding any assigned day times.
+		* @see ARoutine.addUnitTime, ARoutine.removeUnitByIndex, ARoutine.removeUnit
+		*/
 		public method addUnit takes unit whichUnit returns integer
 			if (this.hasUnit(whichUnit)) then
 				return -1
@@ -573,7 +593,15 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		/**
+		* Adds unit @param whichUnit starting routine at @param startTimeOfDay and finishing it at @param endTimeOfDay.
+		* If routine has no target @param targetRect can be null.
+		* @param whichUnit Unit which is added to routine.
+		* @param startTimeOfDay Time of day when unit has to start routine.
+		* @param endTimeOfDay Time of day when unit has to finish routine.
+		* @param targetRect Rect where unit has to move before starting routine if routine has target.
 		* @return Returns index of routine unit data. If unit has not been added yet, method returns -1.
+		* @note If unit has already been added to routine (e. g. by calling ARoutine.addUnit) it won't be added again!
+		* @see ARoutine.addUnit, ARoutine.removeUnitByIndex, ARoutine.removeUnit
 		*/
 		public method addUnitTime takes unit whichUnit, real startTimeOfDay, real endTimeOfDay, rect targetRect returns integer
 			local integer index = this.unitIndex(whichUnit)
@@ -617,36 +645,51 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			return this.setEnabledForUnit(whichUnit, false)
 		endmethod
 
-		public method setTimeEnabledForUnitByIndex takes integer index, real startTimeOfDay, real endTimeOfDay, boolean enabled returns nothing
-			call ARoutineUnitData(this.m_unitData[index]).setTimeEnabled(startTimeOfDay, endTimeOfDay, enabled)
+		/**
+		* Enables or disables given time of day values for unit with specified index.
+		* If unit hasn't the given time it returns 0, otherwise it returns matching routine data.
+		* @param index Routine's internal index of unit.
+		* @param startTimeOfDay Time of day when unit has to start routine.
+		* @param endTimeOfDay Time of day when unit has to finish routine.
+		* @param enabled If this value is true, time of day values for unit will be enabled, otherwise they will be disabled and no more actions will be called until they will be enabled again.
+		* @return Returns routine's unit data of the given index. Returns 0 if none were found.
+		*/
+		public method setTimeEnabledForUnitByIndex takes integer index, real startTimeOfDay, real endTimeOfDay, boolean enabled returns ARoutineData
+			debug if (index < 0 or index >= this.m_unitData.size()) then
+				debug call this.printMethodError("setTimeEnabledForUnitByIndex", "Wrong index: " + I2S(index))
+				debug return 0
+			debug endif
+			return ARoutineUnitData(this.m_unitData[index]).setTimeEnabled(startTimeOfDay, endTimeOfDay, enabled)
 		endmethod
 
-		public method setTimeEnabledForUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay, boolean enabled returns integer
+		/**
+		*
+		*/
+		public method setTimeEnabledForUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay, boolean enabled returns ARoutineData
 			local integer i = 0
 			loop
 				exitwhen (i == this.m_unitData.size())
 				if (ARoutineUnitData(this.m_unitData[i]).unit() == whichUnit) then
-					call this.setTimeEnabledForUnitByIndex(i, startTimeOfDay, endTimeOfDay, enabled)
-					return i
+					return this.setTimeEnabledForUnitByIndex(i, startTimeOfDay, endTimeOfDay, enabled)
 				endif
 				set i = i + 1
 			endloop
-			return -1
+			return 0
 		endmethod
 
-		public method enableTimeForUnitByIndex takes integer index, real startTimeOfDay, real endTimeOfDay returns nothing
-			call this.setTimeEnabledForUnitByIndex(index, startTimeOfDay, endTimeOfDay, true)
+		public method enableTimeForUnitByIndex takes integer index, real startTimeOfDay, real endTimeOfDay returns ARoutineData
+			return this.setTimeEnabledForUnitByIndex(index, startTimeOfDay, endTimeOfDay, true)
 		endmethod
 
-		public method enableTimeForUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay returns integer
+		public method enableTimeForUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay returns ARoutineData
 			return this.setTimeEnabledForUnit(whichUnit, startTimeOfDay, endTimeOfDay, true)
 		endmethod
 
-		public method disableTimeForUnitByIndex takes integer index, real startTimeOfDay, real endTimeOfDay returns nothing
-			call this.setTimeEnabledForUnitByIndex(index, startTimeOfDay, endTimeOfDay, false)
+		public method disableTimeForUnitByIndex takes integer index, real startTimeOfDay, real endTimeOfDay returns ARoutineData
+			return this.setTimeEnabledForUnitByIndex(index, startTimeOfDay, endTimeOfDay, false)
 		endmethod
 
-		public method disableTimeForUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay returns integer
+		public method disableTimeForUnit takes unit whichUnit, real startTimeOfDay, real endTimeOfDay returns ARoutineData
 			return this.setTimeEnabledForUnit(whichUnit, startTimeOfDay, endTimeOfDay, false)
 		endmethod
 
@@ -668,6 +711,14 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			return -1
 		endmethod
 
+		/**
+		* @param hasTarget If this value is true routine's unit will be send to its target rect before starting its target action.
+		* @param isLoop If this value is true target action will be called as loop.
+		* @param startAction This action is called when the routine starts for a unit. It's called in ARoutine.onStart.
+		* @param endAction This action is called when the routine ends for a unit. It's called in ARoutine.onEnd.
+		* @param targetAction This action is either be called (if routine has target) when a unit reaches target rect or when the routine starts. It's called in ARoutine.onTarget.
+		* @return Returns a newly created routine.
+		*/
 		public static method create takes boolean hasTarget, boolean isLoop, ARoutineAction startAction, ARoutineAction endAction, ARoutineAction targetAction returns thistype
 			local thistype this = thistype.allocate()
 			// construction members

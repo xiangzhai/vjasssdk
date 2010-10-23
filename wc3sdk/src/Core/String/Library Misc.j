@@ -35,6 +35,7 @@ endif
 
 	/**
 	* Replaces a part of a string and returns the resulting string.
+	* @note The newly created string can be longer than the old of old string until position + replacing string is longer!
 	* @param whichString String which is used for replacement operation.
 	* @param position Position where replacement should start.
 	* @param replacingString String which should replace a sub string of string @param whichString.
@@ -85,6 +86,7 @@ endif
 
 	/**
 	* Removes string @param removedString from string @param whichString and returns the resulting string.
+	* If @param removedString is not contained by @param whichString it is returned unmodified.
 	* @param whichString String from which @param subString should be removed.
 	* @param removedString String which should be removed.
 	* @return Returns the new string without the removed string.

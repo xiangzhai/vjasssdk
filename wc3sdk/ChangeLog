@@ -1,3 +1,7 @@
+2010-10-23 Tamino Dauth <tamino@cdauth.eu>
+* ARoutine: Improved documentation. Added stub on<identifier> methods for overwriting in structure extensions. Enable/disable time methods return ARoutineData now.
+* Trigger Editor: Revised files "TriggerData.txt", "TriggerStrings.txt" and "WorldEditStrings.txt".
+
 2010-10-10 Tamino Dauth <tamino@cdauth.eu>
 * AArrowButton: Added missing code file to SVN repository.
 * Revised README file and mentioned JassHelper bug.

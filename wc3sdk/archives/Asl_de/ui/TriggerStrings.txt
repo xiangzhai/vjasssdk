@@ -87,39 +87,39 @@ TriggerRegisterPlayerStateEvent="Eigenschaften"
 TriggerRegisterPlayerStateEvent=~Spieler,"s ",~Eigenschaft," wird ",~Operation," ",~Wert
 TriggerRegisterPlayerStateEventHint=
 
-TriggerRegisterPlayerEventAllianceChanged="Alliance Change (Any)"
-TriggerRegisterPlayerEventAllianceChanged=~Player," changes alliance settings"
+TriggerRegisterPlayerEventAllianceChanged="Bündnisänderung (beliebig)"
+TriggerRegisterPlayerEventAllianceChanged=~Spieler," ändert Bündniseinstellungen"
 TriggerRegisterPlayerEventAllianceChangedHint=
 
-TriggerRegisterPlayerAllianceChange="Alliance Change (Specific)"
-TriggerRegisterPlayerAllianceChange=~Player," changes ",~Alliance Type," settings"
+TriggerRegisterPlayerAllianceChange="Bündnisänderung (speziell)"
+TriggerRegisterPlayerAllianceChange=~Spieler," ändert ",~Bündnistyp,"-Einstellungen"
 TriggerRegisterPlayerAllianceChangeHint=
 
-TriggerRegisterPlayerEventVictory="Victory"
-TriggerRegisterPlayerEventVictory=~Player," leaves the game with a victory"
+TriggerRegisterPlayerEventVictory="Sieg"
+TriggerRegisterPlayerEventVictory=~Spieler," verlässt das Spiel mit einem Sieg"
 TriggerRegisterPlayerEventVictoryHint=
 
-TriggerRegisterPlayerEventDefeat="Defeat"
-TriggerRegisterPlayerEventDefeat=~Player," leaves the game with a defeat"
+TriggerRegisterPlayerEventDefeat="Niederlage"
+TriggerRegisterPlayerEventDefeat=~Spieler," verlässt das Spiel mit einer Niederlage"
 TriggerRegisterPlayerEventDefeatHint=
 
-TriggerRegisterPlayerEventLeave="Leaves Game"
-TriggerRegisterPlayerEventLeave=~Player," leaves the game"
-TriggerRegisterPlayerEventLeaveHint="This event occurs regardless of how the player left the game."
+TriggerRegisterPlayerEventLeave="Verlässt das Spiel"
+TriggerRegisterPlayerEventLeave=~Spieler," verlässt das Spiel."
+TriggerRegisterPlayerEventLeaveHint="Dieses Ereignis tritt ein; ungeachtet dessen wie der Spieler das Spiel verlässt"
 
 
 // Timer events
-TriggerRegisterTimerEventSingle="Time Elapsed"
-TriggerRegisterTimerEventSingle="Elapsed game time is ",~Time," seconds"
+TriggerRegisterTimerEventSingle="Zeit ist vergangen"
+TriggerRegisterTimerEventSingle="Vergangene Spielzeit beträgt ",~Zeit," Sekunden"
 TriggerRegisterTimerEventSingleHint=
 
-TriggerRegisterTimerEventPeriodic="Periodic Event"
-TriggerRegisterTimerEventPeriodic="Every ",~Time," seconds of game time"
+TriggerRegisterTimerEventPeriodic="Periodisches Ereignis"
+TriggerRegisterTimerEventPeriodic="Alle ",~Zeit," Sekunden der Spielzeit"
 TriggerRegisterTimerEventPeriodicHint=
 
-TriggerRegisterTimerExpireEventBJ="Timer Expires"
-TriggerRegisterTimerExpireEventBJ=~Timer," expires"
-TriggerRegisterTimerExpireEventBJHint="A timer expires when it reaches 0.  Repeating timers expire every time they reach 0.  Use 'Event Response - Expiring Timer' to refer to the timer that is expiring."
+TriggerRegisterTimerExpireEventBJ="Zeitgeber läuft ab"
+TriggerRegisterTimerExpireEventBJ=~Zeitgeber," läuft ab"
+TriggerRegisterTimerExpireEventBJHint="Ein Zeitgeber läuft ab wenn er 0 erreicht.  Wiederholende Zeitgeber laufen jedes Mal wenn sie 0 erreichen ab.  Verwenden Sie 'Ereignis-Reaktion - Abgelaufener Zeitgeber', um auf den Zeitgeber zu verweisen, der gerade abgelaufen ist."
 
 
 // Unit events
@@ -147,28 +147,28 @@ TriggerRegisterUnitInRangeSimple="Unit Within Range"
 TriggerRegisterUnitInRangeSimple="A unit comes within ",~Range," of ",~Unit
 TriggerRegisterUnitInRangeSimpleHint="Use 'Event Response - Triggering Unit' to refer to the unit that is entering within range."
 
-TriggerRegisterUnitLifeEvent="Life"
-TriggerRegisterUnitLifeEvent=~Unit,"'s life becomes ",~Operation," ",~Value
+TriggerRegisterUnitLifeEvent="Leben"
+TriggerRegisterUnitLifeEvent=~Einheit,"s Leben wird ",~Operation," ",~Wert
 TriggerRegisterUnitLifeEventHint=
 
 TriggerRegisterUnitManaEvent="Mana"
-TriggerRegisterUnitManaEvent=~Unit,"'s mana becomes ",~Operation," ",~Value
+TriggerRegisterUnitManaEvent=~Unit,"s Mana wird ",~Operation," ",~Wert
 TriggerRegisterUnitManaEventHint=
 
 
 //***************************************************************************
 [TriggerConditionStrings]
 
-OperatorCompareBoolean="Boolean Comparison"
-OperatorCompareBoolean=~Value," ",~Operator," ",~Value
+OperatorCompareBoolean="Boolean-Vergleich"
+OperatorCompareBoolean=~Wert," ",~Operator," ",~Wert
 OperatorCompareBooleanHint=
 
-OperatorCompareAbilityId="Ability Comparison"
-OperatorCompareAbilityId=~Value," ",~Operator," ",~Value
+OperatorCompareAbilityId="Fähigkeitenvergleich"
+OperatorCompareAbilityId=~Wert," ",~Operator," ",~Wert
 OperatorCompareAbilityIdHint=
 
-OperatorCompareBuffId="Buff Comparison"
-OperatorCompareBuffId=~Value," ",~Operator," ",~Value
+OperatorCompareBuffId="Zauberverstärkervergleich"
+OperatorCompareBuffId=~Wert," ",~Operator," ",~Wert
 OperatorCompareBuffIdHint=
 
 OperatorCompareDestructible="Destructible Comparison"
@@ -251,9 +251,9 @@ OperatorCompareRealHint=
 //OperatorCompareRegion=~Value," ",~Operator," ",~Value
 //OperatorCompareRegionHint=
 
-OperatorCompareString="String Comparison"
-OperatorCompareString=~Value," ",~Operator," ",~Value
-OperatorCompareStringHint="For two strings to be equal, they must be of equal length and content."
+OperatorCompareString="Zeichenkettenvergleich"
+OperatorCompareString=~Wert," ",~Operator," ",~Wert
+OperatorCompareStringHint="Damit zwei Zeichenketten gleich sind, müssen sie die gleiche Länge und den gleichen Inhalt haben."
 
 OperatorCompareTechCode="Tech-Type Comparison"
 OperatorCompareTechCode=~Value," ",~Operator," ",~Value
@@ -275,91 +275,91 @@ OperatorCompareTerrainType="Terrain Type Comparison"
 OperatorCompareTerrainType=~Value," ",~Operator," ",~Value
 OperatorCompareTerrainTypeHint=
 
-GetBooleanAnd="And"
-GetBooleanAnd=~Condition 1," and ",~Condition 2
+GetBooleanAnd="Und"
+GetBooleanAnd=~Bedingung 1," und ",~Bedingung 2
 GetBooleanAndHint=
 
-GetBooleanOr="Or"
-GetBooleanOr=~Condition 1," or ",~Condition 2
+GetBooleanOr="Oder"
+GetBooleanOr=~Bedingung 1," oder ",~Bedingung 2
 GetBooleanOrHint=
 
-AndMultiple="And, Multiple Conditions"
-AndMultiple="And - All (Conditions) are true"
-AndMultipleHint="Add conditions to this function in the main display."
+AndMultiple="Und, mehrere Bedingungen"
+AndMultiple="Und - Alle (Bedingungen) sind wahr"
+AndMultipleHint="Fügen Sie Bedingungen zu dieser Funktion in der Hauptanzeige hinzu."
 
-OrMultiple="Or, Multiple Conditions"
-OrMultiple="Or - Any (Conditions) are true"
-OrMultipleHint="Add conditions to this function in the main display."
+OrMultiple="Oder, mehrere Bedingungen"
+OrMultiple="Oder - Irgendeine (Bedingungen) ist wahr"
+OrMultipleHint="Fügen Sie Bedingungen zu dieser Funktion in der Hauptanzeige hinzu."
 
 
 //***************************************************************************
 [TriggerActionStrings]
 
-DoNothing="Do Nothing"
-DoNothing="Do nothing"
+DoNothing="Tue nichts"
+DoNothing="Tue nichts"
 DoNothingHint=
 
-CommentString="Comment"
-CommentString="-------- ",~Comment Text," --------"
+CommentString="Kommentar"
+CommentString="-------- ",~Kommentartext," --------"
 CommentStringHint=
 
-CustomScriptCode="Custom Script"
-CustomScriptCode="Custom script:   ",~Script Code
-CustomScriptCodeHint="Enter one line of script code.  Example: 'call my_func(udg_my_var)'"
+CustomScriptCode="Eigenes Skript"
+CustomScriptCode="Eigenes Skript:   ",~Skript-Code
+CustomScriptCodeHint="Geben Sie eine Zeile des Skript-Codes ein.  Beispiel: 'call my_func(udg_my_var)'"
 
-TriggerSleepAction="Wait"
-TriggerSleepAction="Wait ",~Time," seconds"
-TriggerSleepActionHint="The duration of this wait is specified in real-time seconds."
+TriggerSleepAction="Warte"
+TriggerSleepAction="Warte ",~Zeit," Sekunden"
+TriggerSleepActionHint="Die Dauer dieses Wartens wird in Echtzeitsekunden angegeben."
 
-PolledWait="Wait (Game-Time)"
-PolledWait="Wait ",~Time," game-time seconds"
-PolledWaitHint="The duration of this wait is specified in game-time seconds.  This is a polled wait, so it may last slightly longer than requested."
+PolledWait="Wait (Spielzeit)"
+PolledWait="Warte ",~Zeit," Spielzeitsekunden"
+PolledWaitHint="Die Dauer dieses Wartens wird in Spielzeitsekunden angegeben. Dies ist ein 'polled' Warten, weshalb es geringfügig länger als benötigt dauern kann."
 
-WaitForCondition="Wait For Condition"
-WaitForCondition="Wait until ",~Condition,", checking every ",~Interval," seconds"
+WaitForCondition="Warte auf Bedingung"
+WaitForCondition="Warte bis ",~Bedingung,", überprüfe alle ",~Intervall," Sekunden"
 WaitForConditionHint=
 
-WaitForSoundBJ="Wait For Sound"
-WaitForSoundBJ="Wait for ",~Sound," to be ",~Time," seconds from finished playing"
-WaitForSoundBJHint="This action only waits if the sound is currently playing.  If the sound has not yet started, or has already finished, this action does nothing."
+WaitForSoundBJ="Warte auf Geräusch"
+WaitForSoundBJ="Warte auf ",~Geräusch," ist vor ",~Zeit," Sekunden abgespielt worden"
+WaitForSoundBJHint="Diese Aktion wartet nur falls das Geräusch gerade abgespielt wird.  Falls das Geräusch noch nicht gestartet wurde oder bereits fertig ist, tut diese Aktion nichts."
 
 
 // Specially handled by the editor
-SetVariable="Set Variable"
-SetVariable="Set ",~Variable," = ",~Value
+SetVariable="Setze Variable"
+SetVariable="Setze ",~Variable," = ",~Wert
 SetVariableHint=
 
 
 // Specially handled by the editor
-ReturnAction="Skip Remaining Actions"
-ReturnAction="Skip remaining actions"
-ReturnActionHint="This causes all remaining actions in the trigger to be skipped."
+ReturnAction="Überspringe verbleibende Aktionen"
+ReturnAction="Überspringe verbleibende Aktionen"
+ReturnActionHint="Dies verursacht, dass alle verbleibenden Aktionen im Auslöser übersprungen werden."
 
 
 // Specially handled by the editor
-IfThenElseMultiple="If / Then / Else, Multiple Functions"
-IfThenElseMultiple="If (All Conditions are True) then do (Then Actions) else do (Else Actions)"
-IfThenElseMultipleHint="Add conditions and actions to this function in the main display."
+IfThenElseMultiple="Falls / Dann / Ansonsten, mehrere Aktionen"
+IfThenElseMultiple="Falls (alle Bedingungen sind wahr) dann führe aus (Dann-Aktionen) ansonsten führe aus (Ansonsten-Aktionen)"
+IfThenElseMultipleHint="Fügen Sie Bedingungen und Aktionen zu dieser Funktion in der Hauptanzeige hinzu."
 
 // Specially handled by the editor
-IfThenElse="If / Then / Else"
-IfThenElse="If ",~Condition," then do ",~Action," else do ",~Action
+IfThenElse="Falls / Dann / Ansonsten"
+IfThenElse="Falls ",~Bedingung," dann führe aus ",~Aktion," ansonsten führe aus ",~Aktion
 IfThenElseHint=
 
 // Specially handled by the editor
-ForLoopAMultiple="For Each Integer A, Do Multiple Actions
-ForLoopAMultiple="For each (Integer A) from ",~Start," to ",~End,", do (Actions)"
-ForLoopAMultipleHint="Add actions to this function in the main display. The end value is assumed to be larger than the start value."
+ForLoopAMultiple="Für jede Ganzzahl A, führe mehrere Aktionen aus"
+ForLoopAMultiple="Für jede (Ganzzahl A) von ",~Start," bis ",~Ende,", führe aus (Aktionen)"
+ForLoopAMultipleHint="Fügen Sie Aktionen zu dieser Funktion in der Hauptanzeige hinzu. Voraussetzung ist, dass der Endwert größer als der Startwert ist."
 
 // Specially handled by the editor
-ForLoopBMultiple="For Each Integer B, Do Multiple Actions
-ForLoopBMultiple="For each (Integer B) from ",~Start," to ",~End,", do (Actions)"
-ForLoopBMultipleHint="Add actions to this function in the main display. The end value is assumed to be larger than the start value."
+ForLoopBMultiple="Für jede Ganzzahl B, führe mehrere Aktionen aus"
+ForLoopBMultiple="Für jede (Ganzzahl B) von ",~Start," bis ",~Ende,", führe aus (Aktionen)"
+ForLoopBMultipleHint="Fügen Sie Aktionen zu dieser Funktion in der Hauptanzeige hinzu. Voraussetzung ist, dass der Endwert größer als der Startwert ist."
 
 // Specially handled by the editor
-ForLoopVarMultiple="For Each Integer Variable, Do Multiple Actions
-ForLoopVarMultiple="For each (Integer ",~Variable,") from ",~Start," to ",~End,", do (Actions)"
-ForLoopVarMultipleHint="Add actions to this function in the main display. The end value is assumed to be larger than the start value."
+ForLoopVarMultiple="Für jede Ganzzahlvariable, führe mehrere Aktionen aus"
+ForLoopVarMultiple="Für jede (Ganzzahl ",~Variable,") von ",~Start," bis ",~Ende,", führe aus (Aktionen)"
+ForLoopVarMultipleHint="Fügen Sie Aktionen zu dieser Funktion in der Hauptanzeige hinzu. Voraussetzung ist, dass der Endwert größer als der Startwert ist."
 
 // Specially handled by the editor
 ForLoopA="For Each Integer A, Do Action"
@@ -2578,6 +2578,9 @@ PrintIf="Zeige bedingte Testausgabe"
 PrintIf="Falls die ",~Bedingung," wahr ist, zeige ",~Testausgabe," an."
 PrintIf="Zeigt eine bedingte Testausgabe an."
 
+MakeUnitMovable="Mache Einheit bewegbar"
+MakeUnitMovable="Mache ",~Einheit," ",~bewegbar,"."
+
 // Bonus Mod
 AInitBonusMod="Initialisiere Bonus-Mod"
 AInitBonusModHint="Initialisiert den Bonus-Mod."
@@ -4489,7 +4492,56 @@ GetLastCreatedTextTag="Last Created Floating Text"
 GetLastCreatedTextTag="Last created floating text"
 GetLastCreatedTextTagHint="This is the last floating text created via a 'Floating Text - Create Floating Text' trigger action."
 
-// ASL
+// ASL - Core - String
+
+// returns integer
+FindString="Position einer Zeichenkette"
+FindString="Position in ",~Zeichenkette," der gesuchten ",~anderen Zeichenkette,"."
+FindStringHint="Liefert die Position einer Zeichenkette in einer anderen. Befindet sich die Zeichenkette nicht in der anderen, so liefert die Funktion -1 (ungültige Position)."
+
+// returns string
+ReplaceSubString="Ersetze Teilzeichenkette"
+ReplaceSubString="Ersetze in ",~Zeichenkette," an ",~Stelle," den Inhalt durch ",~andere Zeichenkette,"."
+ReplaceSubStringHint="Ersetzt einen Teil einer Zeichenkette durch eine andere. Die gelieferte Zeichenkette kann dadurch länger werden als die ursprüngliche."
+
+// returns string
+ReplaceString="Ersetze Zeichenkette"
+ReplaceString="Ersetze in ",~Zeichenkette," Teil ",~enthaltene Zeichenkette," durch ",~andere Zeichenkette,"."
+ReplaceStringHint="Ersetzt eine in einer Zeichenkette enthaltene Zeichenkette durch eine andere. Die Zeichenketten müssen nicht gleich lang sein. In diesem Fall werden keine anderen Zeichen, die nicht zur ersetzten Zeichenkette gehören überschrieben. Die gelieferte Zeichenkette wird lediglich um zusätzliche Zeichen erweitert oder um fehlende verkürzt."
+
+// returns string
+RemoveSubString="Entferne Teilzeichenkette"
+RemoveSubString="Entferne aus ",~Zeichenkette," an ",~Position," eine Zeichenkette mit ",~n," Zeichen."
+RemoveSubStringHint="Entfernt den Teil einer Zeichenkette und liefert die daraus resultierende Zeichenkette."
+
+// returns string
+RemoveString="Entferne Zeichenkette"
+RemoveString="Entferne aus ",~Zeichenkette," den Inhalt von ",~anderer Zeichenkette,"."
+RemoveStringHint="Entfernt aus einer Zeichenkette eine andere. Ist diese nicht enthalten, wird die ursprüngliche Zeichenkette zurückgegeben."
+
+// ASL - Core - Environment
+
+// returns boolean
+IsUnitInvulnerable="Einheit ist unverwundbar"
+IsUnitInvulnerable=~Einheit," ist unverwundbar."
+
+// returns alliancesetting (integer)
+GetUnitAllianceStateToUnit="Bündniseinstellung zu Einheit"
+GetUnitAllianceStateToUnit="Bündniseinstellung von ",~Einheit," zu ",~anderer Einheit,"."
+
+// returns boolean
+IsUnitSpellResistant="Einheit ist zauberresistent"
+IsUnitSpellResistant=~Einheit," ist zauberresistent."
+
+// returns boolean
+IsUnitSpellImmune="Einheit ist zauberimmun"
+IsUnitSpellImmune=~Einheit," ist zauberimmun."
+
+// returns real
+GetUnitArmor="Rüstung einer Einheit"
+GetUnitArmor="Rüstung von ",~Einheit,"."
+
+// ASL - Systems - BonusMod
 
 // returns integer
 AUnitGetBonus="Bonus einer Einheit"

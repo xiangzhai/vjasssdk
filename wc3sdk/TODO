@@ -1,3 +1,9 @@
+2010-10-23 Tamino Dauth <tamino@cdauth.eu>
+* ARoutine: Fix routine target actions (DMdF - enter/leave houses).
+
+2010-10-22 Tamino Dauth <tamino@cdauth.eu>
+* DEPRECATED: ARoutine: If it has target and is loop it will be called as loop without target (loops with target -> target and begin action should be called as loop)!
+
 2010-09-12 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: A_MAP: Inserting new map element doesn't work.
 * DONE (works): AGroup: Test orders since groups are being destroyed immediatly after getting their orders!

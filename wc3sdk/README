@@ -13,27 +13,15 @@ which decreases map file size.
 
 Installation/Usage:
 
-IMPORTANT NOTE: JassHelper 0.A.2.A is required since there is an unknown bug in higher version (0.A.2.B) which prevents
+-- IMPORTANT NOTE: JassHelper 0.A.2.A is required since there is an unknown bug in higher version (0.A.2.B) which prevents
 code from being compiled correctly.
 
+-- Code integration:
 Use file "src/Import Asl.j" to import all required scripts.
 Usually you have to change the lookup folder entry in the "jasshelper.conf" file of your JassHelper
 program before.
 The JassHelper has to lookup folder "src" in this directory. If configured correctly you're able to
 write a simple statement like //! import "Import Asl.j" into your own code or map script.
-
-If you're using a huge amount of code (like me) I recommend dropping "pjass" usage and replacing it
-by JassParser (http://www.wc3c.net/showthread.php?t=105235) since there is a memory exhausted bug in
-"pjass".
-
-ASL supports "japi" and "RtC". Just set A_JAPI or A_RTC variables to true.
-If you set A_FPS_MOVEMENT true (which needs A_RTC set to be true, too) the character movement system
-should be usable by mouse keys.
-
-
-For using Bonus Mod you have to make an entry in the "jasshelper.conf" file for the object merger tool.
-It should always be named "ObjectMerger".
-You have to import file "Systems/BonusMod/Creation Bonus Mod.j" once to create all object editor data required by Bonus Mod code.
 
 The following list shows you which constants have to specified in your custom code that ASL works properly:
 globals
@@ -49,4 +37,36 @@ globals
 	constant integer A_MAX_COLLISION_SIZE_ITERATIONS = 10 // used by function GetUnitCollisionSize
 endglobals
 
-Tamino Dauth <tamino@cdauth.eu>, 2010-10-10
+-- Trigger editor integration:
+Import the following files with their corresponding paths to enable various data types and functions in World Editor's trigger editor:
+
+"archives/Asl/UI/TriggerData.txt"
+Import path:
+"UI\TriggerData.txt"
+
+"archives/Asl_<language id>/UI/TriggerStrings.txt"
+Import path:
+"UI\TriggerStrings.txt"
+
+"archives/Asl_<language id>/UI/WorldEditStrings.txt"
+Import path:
+"UI\WorldEditStrings.txt"
+
+Remember that you have to import all ASL code into your map (script) to use those trigger actions and types.
+
+-- Parser/pjass bug:
+If you're using a huge amount of code (like me) I recommend dropping "pjass" usage and replacing it
+by JassParser (http://www.wc3c.net/showthread.php?t=105235) since there is a memory exhausted bug in
+"pjass".
+
+-- jAPI and RtC support:
+ASL supports "japi" and "RtC". Just set A_JAPI or A_RTC variables to true.
+If you set A_FPS_MOVEMENT true (which needs A_RTC set to be true, too) the character movement system
+should be usable by mouse keys.
+
+-- BonusMod support:
+For using Bonus Mod you have to make an entry in the "jasshelper.conf" file for the object merger tool.
+It should always be named "ObjectMerger".
+You have to import file "Systems/BonusMod/Creation Bonus Mod.j" once to create all object editor data required by Bonus Mod code.
+
+Tamino Dauth <tamino@cdauth.eu>, 2010-10-23
