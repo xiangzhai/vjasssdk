@@ -1,3 +1,9 @@
+2010-11-01 Tamino Dauth <tamino@cdauth.eu>
+* AVideo: Added function interface AVideoCondition, function waitForCondition, method onSkip and improved documentation comments.
+
+2010-10-24 Tamino Dauth <tamino@cdauth.eu>
+* AInventory: Fixed item destacking of usable items in rucksack.
+
 2010-10-23 Tamino Dauth <tamino@cdauth.eu>
 * ARoutine: Improved documentation. Added stub on<identifier> methods for overwriting in structure extensions. Enable/disable time methods return ARoutineData now.
 * Trigger Editor: Revised files "TriggerData.txt", "TriggerStrings.txt" and "WorldEditStrings.txt".

@@ -623,12 +623,17 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			if (not this.m_rucksackIsEnabled or this.m_rucksackPage != this.itemRucksackPage(index) or this.m_rucksackItemData[index] == 0) then
 				return
 			endif
-			set characterUnit = this.character().unit()
-			set slot = this.rucksackItemSlot(index)
-			set slotItem = UnitItemInSlot(characterUnit, slot)
-			call SetItemCharges(slotItem, this.m_rucksackItemData[index].charges())
-			set characterUnit = null
-			set slotItem = null
+
+			if (this.m_rucksackItemData[index].charges() <= 0) then // all items have charges starting at least with 1 in rucksack
+				call this.clearRucksackItem(index, false)
+			else
+				set characterUnit = this.character().unit()
+				set slot = this.rucksackItemSlot(index)
+				set slotItem = UnitItemInSlot(characterUnit, slot)
+				call SetItemCharges(slotItem, this.m_rucksackItemData[index].charges())
+				set characterUnit = null
+				set slotItem = null
+			endif
 		endmethod
 
 		/// Stacks everything in rucksack which is stackable and moves it to the front of it.

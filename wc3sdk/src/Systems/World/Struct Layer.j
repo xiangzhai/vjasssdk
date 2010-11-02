@@ -103,6 +103,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 
 		public method addEntryRegion takes region whichRegion returns nothing
 			call this.m_entryRegions.pushBack(whichRegion)
+			call TriggerRegisterEnterRegion(this.m_enterTrigger, whichRegion, null)
 		endmethod
 
 		public method removeEntryRegion takes region whichRegion returns nothing
@@ -121,8 +122,7 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 
 		public method addRegion takes region whichRegion, real flyHeight returns nothing
 			call this.m_regions.pushBack(ARegionData.create(whichRegion, flyHeight))
-			call TriggerRegisterEnterRegion(this.m_enterTrigger, whichRegion, null)
-			call TriggerRegisterLeaveRegion(this.m_regionTrigger, whichRegion, null)
+			call TriggerRegisterEnterRegion(this.m_regionTrigger, whichRegion, null) // for height refresh!
 			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, whichRegion, null)
 		endmethod
 
@@ -311,7 +311,7 @@ endif
 		private static method triggerConditionEnter takes nothing returns boolean
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			debug call this.print("Run condition with trigger unit " + GetUnitName(GetTriggerUnit()))
-			return not this.containsUnit(GetTriggerUnit()) and this.enterRegionContainsUnit(GetTriggerUnit())
+			return not this.containsUnit(GetTriggerUnit())
 		endmethod
 
 		private static method triggerActionEnter takes nothing returns nothing
@@ -347,7 +347,7 @@ endif
 			local ARegionData regionData = this.unitRegionData(whichUnit)
 static if (DEBUG_MODE) then
 			if (regionData == 0) then
-				call this.print(Format("Unit %1% is not being contained by layer.").u(whichUnit).result())
+				call this.print(Format("Unit %1% is not contained by layer.").u(whichUnit).result())
 				return false
 			endif
 endif

@@ -23,16 +23,16 @@ MapInitializationEventHint="Die Karteninitialisierung findet während des Ladens
 
 // Destructible events
 TriggerRegisterDeathEvent="Zerstörbares stirbt"
-TriggerRegisterDeathEvent="Das ",~Zerstörbare," stirbt."
+TriggerRegisterDeathEvent=~Zerstörbares," stirbt."
 TriggerRegisterDeathEventHint="Benutzen Sie 'Ereignis-Reaktion - Sterbendes Zerstörbares', um das Zerstörbare, welches stirbt, zu erhalten."
 
 TriggerRegisterDestDeathInRegionEvent="Zerstörbares innerhalb einer Region stirbt"
-TriggerRegisterDestDeathInRegionEvent="Ein Zerstörbares innerhalb der ",~Region," stirbt"
+TriggerRegisterDestDeathInRegionEvent="Ein Zerstörbares innerhalb von ",~Region," stirbt"
 TriggerRegisterDestDeathInRegionEventHint="Nur die ersten 64 Zerstörbaren innerhalb der Region werden auf ihren Tod hin überprüft, wenn dieses Ereignis registriert wird. Es ist das Beste, dieses Ereignis für Regionen, welche nur ein paar Zerstörbare enthalten, zu verwenden."
 
 // Dialog events
 TriggerRegisterDialogEventBJ="Dialog-Button-Klick"
-TriggerRegisterDialogEventBJ="Ein Dialog-Button des ",~Dialogs," wird angeklickt"
+TriggerRegisterDialogEventBJ="Ein Dialog-Button von ",~Dialog," wird angeklickt"
 TriggerRegisterDialogEventBJHint=
 
 
@@ -57,13 +57,13 @@ TriggerRegisterShowSkillEventBJ="Hero Abilities Button Clicked"
 TriggerRegisterShowSkillEventBJ="The 'Hero Abilities' button is clicked"
 TriggerRegisterShowSkillEventBJHint="This event should only be used in single-player maps."
 
-TriggerRegisterBuildSubmenuEventBJ="Build Structure Button Clicked"
-TriggerRegisterBuildSubmenuEventBJ="The 'Build Structure' button is clicked"
-TriggerRegisterBuildSubmenuEventBJHint="This event should only be used in single-player maps."
+TriggerRegisterBuildSubmenuEventBJ="Baue-Gebäude-Button wird ausgewählt"
+TriggerRegisterBuildSubmenuEventBJ="Der 'Baue Gebäude'-Button wird ausgewählt"
+TriggerRegisterBuildSubmenuEventBJHint="Dieses Ereignis sollte nur in Einzelspielerkarten verwendet werden."
 
-TriggerRegisterGameEvent="Tournament Event"
-TriggerRegisterGameEvent="The tournament game must end ",~Event Type
-TriggerRegisterGameEventHint="This event only occurs during automated tournament games on Battle.net."
+TriggerRegisterGameEvent="Turnier-Ereignis"
+TriggerRegisterGameEvent="Das Turnier-Ereignis muss enden ",~Ereignistyp
+TriggerRegisterGameEventHint="Dieses Ereignis tritt nur während automatischen Turnier-Spielen im Battle.net ein."
 
 
 // Player events
@@ -75,9 +75,9 @@ TriggerRegisterPlayerEventEndCinematic="Cinematic Skipped"
 TriggerRegisterPlayerEventEndCinematic=~Player," skips a cinematic sequence"
 TriggerRegisterPlayerEventEndCinematicHint="This event occurs whenever the player presses the 'Escape' key (regardless of whether or not they are viewing a cinematic)."
 
-TriggerRegisterPlayerSelectionEventBJ="Selection Event"
-TriggerRegisterPlayerSelectionEventBJ=~Player," ",~Selects/Deselects," a unit"
-TriggerRegisterPlayerSelectionEventBJHint="Use 'Event Response - Triggering Unit' to refer to the unit being selected or deselected."
+TriggerRegisterPlayerSelectionEventBJ="Auswahl-Ereignis"
+TriggerRegisterPlayerSelectionEventBJ=~Spieler," ",~wählt aus/wählt ab," eine Einheit"
+TriggerRegisterPlayerSelectionEventBJHint="Verwenden Sie 'Ereignisreaktion - Auslösungseinheit', um auf die Einheit, welche aus- oder abgewählt wird, zu verweisen."
 
 TriggerRegisterPlayerKeyEventBJ="Tastatur-Ereignis"
 TriggerRegisterPlayerKeyEventBJ=~Spieler," ",~drückt/lässt ," die ",~Taste," los"
@@ -135,13 +135,13 @@ TriggerRegisterAnyUnitEventBJ="Generic Unit Event"
 TriggerRegisterAnyUnitEventBJ="A unit ",~Event
 TriggerRegisterAnyUnitEventBJHint=
 
-TriggerRegisterEnterRectSimple="Unit Enters Region"
-TriggerRegisterEnterRectSimple="A unit enters ",~Region
-TriggerRegisterEnterRectSimpleHint="Use 'Event Response - Entering Unit' to refer to the unit entering the region."
+TriggerRegisterEnterRectSimple="Einheit betritt Region"
+TriggerRegisterEnterRectSimple="Eine Einheit betritt ",~Region
+TriggerRegisterEnterRectSimpleHint="Verwenden Sie 'Ereignisreaktion - Betretende Einheit', um auf die Einheit zu verweisen, die die Region betritt."
 
-TriggerRegisterLeaveRectSimple="Unit Leaves Region"
-TriggerRegisterLeaveRectSimple="A unit leaves ",~Region
-TriggerRegisterLeaveRectSimpleHint="Use 'Event Response - Leaving Unit' to refer to the unit leaving the region."
+TriggerRegisterLeaveRectSimple="Einheit verlässt Region"
+TriggerRegisterLeaveRectSimple="Eine Einheit verlässt ",~Region
+TriggerRegisterLeaveRectSimpleHint="Verwenden Sie 'Ereignisreaktion - Verlassende Einheit', um auf die Einheit zu verweisen, die die Region verlässt."
 
 TriggerRegisterUnitInRangeSimple="Unit Within Range"
 TriggerRegisterUnitInRangeSimple="A unit comes within ",~Range," of ",~Unit
@@ -171,16 +171,16 @@ OperatorCompareBuffId="Zauberverstärkervergleich"
 OperatorCompareBuffId=~Wert," ",~Operator," ",~Wert
 OperatorCompareBuffIdHint=
 
-OperatorCompareDestructible="Destructible Comparison"
-OperatorCompareDestructible=~Value," ",~Operator," ",~Value
+OperatorCompareDestructible="Zerstörbares-Vergleich"
+OperatorCompareDestructible=~Wert," ",~Operator," ",~Wert
 OperatorCompareDestructibleHint=
 
-OperatorCompareDestructableCode="Destructible-Type Comparison"
-OperatorCompareDestructableCode=~Value," ",~Operator," ",~Value
+OperatorCompareDestructableCode="Zerstörbares-Typ-Vergleich"
+OperatorCompareDestructableCode=~Wert," ",~Operator," ",~Wert
 OperatorCompareDestructableCodeHint=
 
-OperatorCompareButton="Dialog Button Comparison"
-OperatorCompareButton=~Value," ",~Operator," ",~Value
+OperatorCompareButton="Dialog-Button-Vergleich"
+OperatorCompareButton=~Wert," ",~Operator," ",~Wert
 OperatorCompareButtonHint=
 
 OperatorCompareGameDifficulty="Game Difficulty Comparison"
@@ -419,9 +419,9 @@ QueueUnitAnimationBJ="Queue Unit Animation"
 QueueUnitAnimationBJ="Queue ",~Unit,"'s ",~Animation Name," animation"
 QueueUnitAnimationBJHint=
 
-ResetUnitAnimation="Reset Unit Animation"
-ResetUnitAnimation="Reset ",~Unit,"'s animation"
-ResetUnitAnimationHint="Sets the unit's animation back to whatever the unit is doing."
+ResetUnitAnimation="Setze Einheitenanimation zurück"
+ResetUnitAnimation="Setze ",~Einheit,"s Animation zurück"
+ResetUnitAnimationHint="Setzt die Animation der Einheit zu dem was auch immer sie tut zurück."
 
 AddUnitAnimationPropertiesBJ="Add/Remove Unit Animation Tag"
 AddUnitAnimationPropertiesBJ=~Add/Remove," the ",~Tag," animation tag to ",~Unit
@@ -435,9 +435,9 @@ ResetUnitLookAt="Reset Body-Part Facing"
 ResetUnitLookAt="Reset ",~Unit,"'s body-part facing"
 ResetUnitLookAtHint="Returns a unit's body-part facing to normal."
 
-SetUnitScalePercent="Change Unit Size"
-SetUnitScalePercent="Change ",~Unit,"'s size to (",~X,"%, ",~Y,"%, ",~Z,"%) of its original size"
-SetUnitScalePercentHint="The scaling values apply to (Length, Width, Height) when viewing a unit head-on."
+SetUnitScalePercent="Verändere Einheitengröße"
+SetUnitScalePercent="Verändere ",~Einheit,"s Größe zu (",~X,"%, ",~Y,"%, ",~Z,"%) ihrer ursprünglichen Größe"
+SetUnitScalePercentHint="Die Skalierungswerte treffen zu (Länge, Breite, Höhe) wenn eine Einheit frontal betrachtet wird."
 
 SetUnitVertexColorBJ="Change Unit Vertex Coloring"
 SetUnitVertexColorBJ="Change ",~Unit,"'s vertex coloring to (",~Red,"%, ",~Green,"%, ",~Blue,"%) with ",~Transparency,"% transparency"
@@ -521,12 +521,12 @@ SetCinematicCameraForPlayer="Play Cinematic Camera"
 SetCinematicCameraForPlayer="Run camera for ",~Player," through ",~Camera File," cinematic camera"
 SetCinematicCameraForPlayerHint=
 
-StopCameraForPlayerBJ="Stop Camera"
-StopCameraForPlayerBJ="Stop the camera for ",~Player
+StopCameraForPlayerBJ="Stoppe Kamera"
+StopCameraForPlayerBJ="Stoppe Kamera für ",~Spieler
 StopCameraForPlayerBJHint=
 
-ResetToGameCameraForPlayer="Reset Game Camera"
-ResetToGameCameraForPlayer="Reset camera for ",~Player," to standard game-view over ",~Time," seconds"
+ResetToGameCameraForPlayer="Setze Spielkamera zurück"
+ResetToGameCameraForPlayer="Setze Kamera für ",~Spieler," zur Standardspielansicht innerhalb von ",~Zeit," Sekunden zurück"
 ResetToGameCameraForPlayerHint=
 
 CameraSetSmoothingFactorBJ="Change Camera Smoothing Factor"
@@ -579,8 +579,8 @@ ForceCinematicSubtitlesBJ="Subtitle Display Override"
 ForceCinematicSubtitlesBJ="Turn subtitle display override ",~On/Off
 ForceCinematicSubtitlesBJHint="Turning this on will cause transmission text to be displayed on the screen even if the user normally has subtitles turned off."
 
-CinematicModeBJ="Cinematic Mode"
-CinematicModeBJ="Turn cinematic mode ",~On/Off," for ",~Player Group
+CinematicModeBJ="Filmmodus"
+CinematicModeBJ="Schalte Filmmodus ",~Ein/Aus," für ",~Spielergruppe
 CinematicModeBJHint=
 
 CinematicModeExBJ="Cinematic Mode (Timed)"
@@ -619,8 +619,8 @@ ItemAddIndicatorBJ="Flash Speech Indicator For Item"
 ItemAddIndicatorBJ="Flash a speech indicator for ",~Item," of color (",~Red,"%, ",~Green,"%, ",~Blue,"%) with ",~Transparency,"% transparency"
 ItemAddIndicatorBJHint="The color values are (Red, Green, Blue).  A 100% transparent color is completely invisible."
 
-ClearTextMessagesBJ="Clear Text Messages"
-ClearTextMessagesBJ="Clear the screen of text messages for ",~Player Group
+ClearTextMessagesBJ="Entferne Textnachrichten"
+ClearTextMessagesBJ="Befreit den Bildschirm für ",~Spielergruppe," von Textnachrichten
 ClearTextMessagesBJHint=
 
 ShowInterfaceForceOff="Letterbox Mode On"
@@ -631,12 +631,12 @@ ShowInterfaceForceOn="Letterbox Mode Off"
 ShowInterfaceForceOn="Turn off letterbox mode (show interface) for ",~Player Group,": fade in over ",~Duration," seconds"
 ShowInterfaceForceOnHint="Puts the camera into normal (non-letterbox) mode, displaying the game interface."
 
-SetUserControlForceOff="Disable User Control"
-SetUserControlForceOff="Disable user control for ",~Player Group
+SetUserControlForceOff="Deaktivere Benutzerkontrolle"
+SetUserControlForceOff="Deaktiviere Benutzerkontrolle für  ",~Spielergruppe
 SetUserControlForceOffHint=
 
-SetUserControlForceOn="Enable User Control"
-SetUserControlForceOn="Enable user control for ",~Player Group
+SetUserControlForceOn="Aktiviere Benutzerkontrolle"
+SetUserControlForceOn="Aktiviere Benutzerkontrolle für ",~Spielergruppe
 SetUserControlForceOnHint=
 
 EnableOcclusionBJ="Enable/Disable Occlusion"
@@ -649,8 +649,8 @@ EnableWorldFogBoundaryBJHint=
 
 
 // Countdown Timer actions
-StartTimerBJ="Start Timer"
-StartTimerBJ="Start ",~Timer," as a ",~One-Shot/Repeating," timer that will expire in ",~Time," seconds"
+StartTimerBJ="Starte Zeitgeber"
+StartTimerBJ="Starte ",~Zeitgeber," als einen ",~Einmaligen/Wiederholenden," Zeitgeber, der in ",~Time," Sekunden ablaufen wird"
 StartTimerBJHint=
 
 PauseTimerBJ="Pause Timer"
@@ -2568,33 +2568,36 @@ DestroyFogModifierHint=
 
 // ASL
 sc__Asl_init="Initialisiere ASL"
+sc__Asl_init="Initialisiere ASL."
 sc__Asl_initHint="Initialisiert die Advanced Script Library. Diese Aktion sollte vor jeglicher Verwendung von ASL-Elementen aufgerufen werden (zum Beispiel während der Karteninitialisierung)."
 
 Print="Zeige Testausgabe"
-Print="Zeige ",~Testausgabe," an."
+Print="Zeige ",~Testausgabe," an"
 PrintHint="Zeigt eine Testausgabe an."
 
 PrintIf="Zeige bedingte Testausgabe"
 PrintIf="Falls die ",~Bedingung," wahr ist, zeige ",~Testausgabe," an."
-PrintIf="Zeigt eine bedingte Testausgabe an."
+PrintIfHint="Zeigt eine bedingte Testausgabe an."
 
-MakeUnitMovable="Mache Einheit bewegbar"
-MakeUnitMovable="Mache ",~Einheit," ",~bewegbar,"."
+MakeUnitMovable="Mache Einheit bewegbar/nicht bewegbar"
+MakeUnitMovable=~Einheit," wird ",~bewegbar,"."
+
+MakeUnitAttackable="Einheit wird angriffsfähig/nicht angriffsfähig"
+MakeUnitAttackable=~Einheit," wird ",~angriffsfähig,"."
 
 // Bonus Mod
 AInitBonusMod="Initialisiere Bonus-Mod"
+AInitBonusMod="Initialisiere Bonus-Mod."
 AInitBonusModHint="Initialisiert den Bonus-Mod."
 
-AUnitGetBonus takes unit whichUnit, integer bonusType
-
 sc__ASpawnPoint_init="Initialisiere Erzeugungspunktsystem"
-sc__ASpawnPoint_init="Initialisiere das Erzeugungspunktsystem mit der ",~Erzeugungszeit,", dem  ",~Erzeugungseffekt,", dem ",~Erzeugungsgeräusch," und der prozentualen ",~Chance,", Gegenstände fallen zu lassen. Außerdem ",~werden," fallen gelassene Gegenstände an Spieler verteilt. Die erzeugten Einheiten haben einen bestimmten",~Besitzer," und dieser ",~Text," wird beim Verteilen der fallen gelassenen Gegenstände angezeigt."
+sc__ASpawnPoint_init="Initialisiere das Erzeugungspunktsystem mit der Erzeugungszeit von ",~Zeit," Sekunden, dem Erzeugungseffekt ",~Effekt,", dem Erzeugungsgeräusch ",~Geräusch," und der prozentualen Chance von ",~Chance,"%, Gegenstände fallen zu lassen. Außerdem ",~werden," fallen gelassene Gegenstände an Spieler verteilt. Die erzeugten Einheiten haben einen bestimmten",~Besitzer," und dieser ",~Text," wird beim Verteilen der fallen gelassenen Gegenstände angezeigt."
 
 sc__ASpawnPoint_destroy="Entferne Erzeugungspunkt"
-sc__ASpawnPoint_destroy="Entferne den ",~Erzeugungspunkt,"."
+sc__ASpawnPoint_destroy="Entferne ",~Erzeugungspunkt,"."
 
 sc__ARoutine_destroy="Entferne Tagesablauf"
-sc__ARoutine_destroy="Entferne den ",~Tagesablauf,"."
+sc__ARoutine_destroy="Entferne ",~Tagesablauf,"."
 
 
 // Obsolete actions
@@ -2668,9 +2671,9 @@ UnitHasItemOfTypeBJ="Hero Has Item Of Type"
 UnitHasItemOfTypeBJ=~Hero," has an item of type ",~Item-Type
 UnitHasItemOfTypeBJHint=
 
-IsSuspendedXP="Experience Is Disabled For Hero"
-IsSuspendedXP="Experience is disabled for ",~Hero
-IsSuspendedXPHint="Use the 'Hero - Enable/Disable Experience' action to disable a Hero's experience."
+IsSuspendedXP="Erfahrung ist für Held deaktiviert"
+IsSuspendedXP="Erfahring ist für ",~Held," deaktiviert"
+IsSuspendedXPHint="Verwenden Sie die 'Held - Aktiviere/Deaktiviere Erfahrung'-Aktion, um die Erfahrung eines Helden zu deaktivieren."
 
 CheckItemStatus="Item Status Check"
 CheckItemStatus=~Item," is ",~Status
@@ -2680,9 +2683,9 @@ CheckItemcodeStatus="Item-Type Status Check"
 CheckItemcodeStatus=~Item-Type," is ",~Status
 CheckItemcodeStatusHint=
 
-IsItemHiddenBJ="Item Is Hidden"
-IsItemHiddenBJ=~Item," is hidden"
-IsItemHiddenBJHint="Items held by units are considered hidden."
+IsItemHiddenBJ="Gegenstand ist verborgen"
+IsItemHiddenBJ=~Gegenstand," ist verborgen"
+IsItemHiddenBJHint="Von Einheiten aufgenommene Gegenstände werden als verborgen betrachtet."
 
 IsItemOwned="Item Is Owned"
 IsItemOwned=~Item," is owned"
@@ -2828,8 +2831,8 @@ DoesUnitGenerateAlarms="Unit Generates Alarms"
 DoesUnitGenerateAlarms=~Unit," generates alarms"
 DoesUnitGenerateAlarmsHint=
 
-IsUnitLoadedBJ="Unit Is Being Transported"
-IsUnitLoadedBJ=~Unit," is being transported"
+IsUnitLoadedBJ="Einheit wird gerade transportiert"
+IsUnitLoadedBJ=~Einheit," wird gerade transportiert"
 IsUnitLoadedBJHint=
 
 IsUnitInTransportBJ="Unit Is In Transport"
@@ -2864,8 +2867,8 @@ IsUnitGroupDeadBJ="Units Of Unit Group Are Dead"
 IsUnitGroupDeadBJ="All units of ",~Unit Group," are dead"
 IsUnitGroupDeadBJHint="This is true if every unit in the unit group is dead."
 
-IsFogEnabled="Fog Of War Enabled"
-IsFogEnabled="Fog of war is enabled"
+IsFogEnabled="Nebel des Krieges ist aktiviert"
+IsFogEnabled="Nebel des Krieges ist aktiviert"
 IsFogEnabledHint=
 
 IsFogMaskEnabled="Black Mask Enabled"
@@ -2902,8 +2905,8 @@ IsLocationMaskedToPlayerHint=
 
 
 // returns integer
-OperatorInt="Arithmetic"
-OperatorInt=~Value," ",~Operator," ",~Value
+OperatorInt="Arithmetik"
+OperatorInt=~Wert," ",~Operator," ",~Wert
 OperatorIntHint=
 
 GetForLoopIndexA="For Loop Integer A"
@@ -2942,12 +2945,12 @@ GetLearnedSkillLevel="Learned Skill Level"
 GetLearnedSkillLevel="Learned skill level"
 GetLearnedSkillLevelHint=
 
-GetPlayers="Number Of Players"
-GetPlayers="Number of players"
+GetPlayers="Anzahl der Spieler"
+GetPlayers="Anzahl der Spieler"
 GetPlayersHint=
 
-GetTeams="Number Of Teams"
-GetTeams="Number of teams"
+GetTeams="Anzahl der Teams"
+GetTeams="Anzahl der Teams"
 GetTeamsHint=
 
 GetAllyColorFilterState="Ally Color Filter Setting"
@@ -2974,21 +2977,21 @@ GetHeroXP="Hero Experience"
 GetHeroXP="Hero experience of ",~Hero
 GetHeroXPHint=
 
-GetHeroStatBJ="Hero Attribute"
-GetHeroStatBJ=~Attribute," of ",~Hero," (",~Include/Exclude," bonuses)"
+GetHeroStatBJ="Helden-Attribut"
+GetHeroStatBJ=~Attribut," von ",~Held," (",~Einschließlich/Ausschließlich," Boni)"
 GetHeroStatBJHint=
 
 GetHeroSkillPoints="Unspent Skill Points"
 GetHeroSkillPoints="Unspent skill points of ",~Hero
 GetHeroSkillPointsHint=
 
-GetItemLevel="Item Level"
-GetItemLevel="Item level of ",~Item
+GetItemLevel="Gegenstandsstufe"
+GetItemLevel="Gegenstandsstufe von ",~Gegenstand
 GetItemLevelHint=
 
-GetItemCharges="Item Charges Remaining"
-GetItemCharges="Charges remaining in ",~Item
-GetItemChargesHint="Items with unlimited charges will return zero."
+GetItemCharges="Verbliebene Gegenstandsaufladungen"
+GetItemCharges="Verbliebene Aufladungen von ",~Gegenstand
+GetItemChargesHint="Gegenstände mit unbegrenzten Aufladungen geben null zurück."
 
 GetItemUserData="Custom Value Of Item"
 GetItemUserData="Custom value of ",~Item
@@ -2998,25 +3001,25 @@ LeaderboardGetPlayerIndexBJ="Leaderboard Position"
 LeaderboardGetPlayerIndexBJ="Position of ",~Player," in ",~Leaderboard
 LeaderboardGetPlayerIndexBJHint=
 
-GetRandomInt="Random Number"
-GetRandomInt="Random integer number between ",~Minimum," and ",~Maximum
+GetRandomInt="Zufällige Zahl"
+GetRandomInt="Zufällige Ganzzahl zwischen ",~Minimum," und ",~Maximum
 GetRandomIntHint=
 
 IMinBJ="Min"
-IMinBJ="Min(",~Value 1,", ",~Value 2,")"
+IMinBJ="Min(",~Wert 1,", ",~Wert 2,")"
 IMinBJHint=
 
 IMaxBJ="Max"
-IMaxBJ="Max(",~Value 1,", ",~Value 2,")"
+IMaxBJ="Max(",~Wert 1,", ",~Wert 2,")"
 IMaxBJHint=
 
 IAbsBJ="Abs"
 IAbsBJ="Abs(",~Value,")"
-IAbsBJHint="Calculates the absolute value of a number."
+IAbsBJHint="Berechnet den absoluten Wert einer Zahl."
 
 ISignBJ="Sign"
 ISignBJ="Sign(",~Value,")"
-ISignBJHint="Calculates the sign of a number.  The sign of a negative number is -1.  The sign of a nonnegative number is 1."
+ISignBJHint="Berechnet das Vorzeichen einer Zahl.  Das Vorzeichen einer negativen Zahl ist -1.  Das Vorzeichen einer nicht negativen Zahl ist 1."
 
 ModuloInteger="Modulo"
 ModuloInteger=~Dividend," mod ",~Divisor
@@ -3122,8 +3125,8 @@ UnitInventoryCount="Count Items Carried"
 UnitInventoryCount="Number of items carried by ",~Unit
 UnitInventoryCountHint=
 
-UnitInventorySizeBJ="Size of Inventory"
-UnitInventorySizeBJ="Size of inventory for ",~Unit
+UnitInventorySizeBJ="Größe des Inventars"
+UnitInventorySizeBJ="Größe des Inventars von ",~Einheit
 UnitInventorySizeBJHint=
 
 UnitCountBuffsExBJ="Count Buffs By Type"
@@ -4541,7 +4544,7 @@ IsUnitSpellImmune=~Einheit," ist zauberimmun."
 GetUnitArmor="Rüstung einer Einheit"
 GetUnitArmor="Rüstung von ",~Einheit,"."
 
-// ASL - Systems - BonusMod
+// ASL - Systems - Bonus Mod
 
 // returns integer
 AUnitGetBonus="Bonus einer Einheit"
@@ -4549,11 +4552,24 @@ AUnitGetBonus="Bonus von ",~Einheit," des Typs ",~Typ,"."
 AUnitGetBonusHint="Liefert den Bonus einer Einheit."
 
 // returns boolean
-AUnitSetBonus="Gesetzter Bonus einer Einheit"
+AUnitSetBonus="Setzung eines Bonus einer Einheit"
 AUnitSetBonus="Setzt den Bonus von ",~Einheit," des Typs ",~Typ," auf den Wert ",~Wert,"."
 AUnitGetBonusHint="Setzt den Bonus einer Einheit auf einen bestimmten Wert."
 
-/// @todo Add bonus mod implementations.
+// returns boolean
+AUnitClearBonus="Entfernung eines Bonus einer Einheit"
+AUnitClearBonus="Entfernt den Bonus von ",~Einheit," des Typs ",~Typ,"."
+AUnitClearBonusHint="Entfernt den Bonus einer Einheit."
+
+// returns boolean
+AUnitAddBonus="Hinzufügung eines Bonus bei einer Einheit"
+AUnitAddBonus="Gibt ",~Einheit," einen Bonus des Typs ",~Typ," von ",~Wert,"."
+AUnitAddBonus="Gibt einer Einheit einen Bonus."
+
+// returns boolean
+AUnitRemoveBonus="Entfernung eines Bonus einer Einheit"
+AUnitRemoveBonus="Entfernt von ",~Einheit," einen Bonus des Typs ",~Typ," von ",~Wert,"."
+AUnitRemoveBonusHint="Entfernt einen Bonus von einer Einheit."
 
 sc__ASpawnPoint_create="Erschaffe Erzeugungspunkt"
 sc__ASpawnPoint_create="Erschaffe einen Erzeugungspunkt am Punkt (",~X,"|",~Y,") mit dem Radius ",~Radius,"."

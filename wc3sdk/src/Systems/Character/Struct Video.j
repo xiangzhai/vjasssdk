@@ -76,6 +76,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	* Since you don't use character units (beside the copied one) they will be hidden in video initialization.
 	* Besides all units will be paused so you have to unpause a unit if you want to give orders (like move) to it.
 	* Videos can be skipped by pressing a user-defined key. If at least half of players want to skip a video (have pressed that key) it will be skipped.
+	* @see wait, waitForVideo, waitForCondition, AVideoAction, AVideoCondition
 	*/
 	struct AVideo
 		// static construction members
@@ -205,6 +206,21 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 		endmethod
 
+		/**
+		* Usually there must be at least half of playing players which want to skip the video so that it will be skipped.
+		* You can overwrite this method in your custom derived structure to avoid this default behaviour.
+		* This method is called every time a player skips the video.
+		*/
+		public stub method onSkip takes integer skipablePlayers returns boolean
+			debug call Print("ON SKIP")
+			if (thistype.m_skippingPlayers >= skipablePlayers / 2) then
+				debug call Print("SKIP")
+				call this.skip()
+				return true
+			endif
+			return false
+		endmethod
+
 		public method play takes nothing returns nothing
 			local force playersAll
 			debug if (thistype.m_runningVideo != 0) then
@@ -240,10 +256,12 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		/// Since there is an execution of the action, TriggerSleepAction functions will be ignored, so this method could not be called by the play method.
 		public method stop takes nothing returns nothing
 			local force playersAll
+			debug call Print("1111111")
 			debug if (thistype.m_runningVideo != this) then
 				debug call this.print("Video is not being run.")
 				debug return
 			debug endif
+			debug call Print("22222")
 			call DisableTrigger(thistype.m_skipTrigger)
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
@@ -261,7 +279,9 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 			call ACharacter.showAll(true)
 			call PauseAllUnits(false)
+			debug call Print("333333333333")
 			call this.onStopAction()
+			debug call Print("4444444444444")
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			call thistype.restorePlayerData()
@@ -274,20 +294,28 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		public method skip takes nothing returns nothing
+			debug call Print("1")
 			debug if (thistype.m_runningVideo != this) then
 				debug call this.print("Video is not being run.")
+				debug call Print("AAHHH")
 				debug return
 			debug endif
+			debug call Print("2")
 			if (thistype.m_playedSound != null) then
 				call StopSound(thistype.m_playedSound, false, false)
 				set thistype.m_playedSound = null
 			endif
+			debug call Print("3")
 			call EndCinematicScene()
 			set thistype.m_skipped = true
 			call DisableTrigger(thistype.m_skipTrigger) // do not allow skipping at twice!
+			debug call Print("4")
 			call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.m_textSkip)
+			debug call Print("5")
 			call this.onSkipAction()
+			debug call Print("6")
 			call this.stop()
+			debug call Print("7")
 		endmethod
 
 		public static method create takes nothing returns thistype
@@ -313,7 +341,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set thistype.m_skippingPlayers = thistype.m_skippingPlayers + 1
 			call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, StringArg(thistype.m_textPlayerSkips, GetPlayerName(whichPlayer)))
 
-			// Jedes Mal neu berechnen, da Spieler as Spiel auch verlassen haben könnten.
+			// recalculate every time since players could have left the game by now
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
@@ -325,12 +353,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				set i = i + 1
 			endloop
 
-			if (thistype.m_skippingPlayers >= skipablePlayers / 2) then
-				call thistype.m_runningVideo.skip()
-				return true
-			endif
-
-			return false
+			return thistype.m_runningVideo.onSkip.evaluate(skipablePlayers)
 		endmethod
 
 		public static method transmissionFromUnitType takes integer unitType, player owner, string name, string text, sound playedSound returns nothing
@@ -546,4 +569,27 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		return false
 	endfunction
 
+	/**
+	* @see waitForCondition
+	*/
+	function interface AVideoCondition takes AVideo video returns boolean
+
+	/**
+	* Advanced video wait function.
+	* Checks every x seconds for condition. If video is being skipped during this time it returns true.
+	* Otherwise it returns false when condition is true.
+	* @param interval Interval in seconds in which the condition will be checked.
+	* @param condition Condition which will be checked. Use AVideoCondition to create and pass a correct function.
+	* @return Returns true if the video had been skipped before the condition became true. Otherwise it returns false when the condition becomes true.
+	* @see AVideoCondition
+	*/
+	function waitForCondition takes real interval, AVideoCondition condition returns boolean
+		loop
+			exitwhen (condition.evaluate(AVideo.runningVideo()))
+			if (wait(interval)) then
+				return true
+			endif
+		endloop
+		return false
+	endfunction
 endlibrary
