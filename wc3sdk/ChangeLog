@@ -1,3 +1,10 @@
+2010-11-02 Tamino Dauth <tamino@cdauth.eu>
+* AVideo: Fixed skip action bug. Improved documentation of stub method treatment.
+* ATalk: Added methods isInfoShown, infos, shownInfos, isOpen and isClosed. If there aren't displayed any infos start page will be displayed automatically and there will be a debug warning message.
+* AQuest: Fixed double state/completion bug.
+* AUnitCopy: Added hero unit type safety.
+* AHeroIcon: Fixed hero unit type.
+
 2010-11-01 Tamino Dauth <tamino@cdauth.eu>
 * AVideo: Added function interface AVideoCondition, function waitForCondition, method onSkip and improved documentation comments.
 

@@ -148,6 +148,10 @@ endif
 			return AInfo(this.m_infos[index]).hasBeenShownToCharacter.evaluate(character.userId())
 		endmethod
 
+		public method isOpen takes nothing returns boolean
+			return this.m_character != 0
+		endmethod
+
 		/// Usually you don't have to call this method since talks will be activated by a specific unit order.
 		public method openForCharacter takes ACharacter character returns nothing
 			debug if (this.m_character != 0) then
@@ -172,6 +176,10 @@ endif
 			call AGui.playerGui(character.player()).dialog().clear()
 			call AGui.playerGui(character.player()).dialog().setMessage(GetUnitName(this.m_unit))
 			call this.m_startAction.execute(this) //create buttons
+		endmethod
+
+		public method isClosed takes nothing returns boolean
+			return this.m_character == 0
 		endmethod
 
 		public method close takes nothing returns nothing
@@ -218,6 +226,27 @@ endif
 			endif
 		endmethod
 
+		public method isInfoShown takes integer index returns boolean
+			return AInfo(this.m_infos[index]).isShown.evaluate()
+		endmethod
+
+		public method infos takes nothing returns integer
+			return this.m_infos.size()
+		endmethod
+
+		public method shownInfos takes nothing returns integer
+			local integer result = 0
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_infos.size())
+				if (this.isInfoShown(i)) then
+					set result = result + 1
+				endif
+				set i = i + 1
+			endloop
+			return result
+		endmethod
+
 		/// Used by @struct AInfo.
 		public method showInfo takes integer index returns boolean
 			return AInfo(this.m_infos[index]).show.evaluate()
@@ -226,6 +255,10 @@ endif
 		/// Used by @function ADialogButtonAction.
 		public method runInfo takes integer index returns nothing
 			call AInfo(this.m_infos[index]).run.evaluate()
+			debug if (not this.isClosed() and this.shownInfos() == 0) then
+				debug call this.print("No infos were shown anymore after last one although talk hasn't been closed yet.")
+				debug call this.showStartPage()
+			debug endif
 		endmethod
 
 		public method getInfoByDialogButtonIndex takes integer dialogButtonIndex returns AInfo

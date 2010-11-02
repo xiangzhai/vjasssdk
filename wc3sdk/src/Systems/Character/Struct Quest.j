@@ -224,7 +224,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 				loop
 					exitwhen (i == this.m_questItems.size())
 					if (AQuestItem(this.m_questItems[i]).state() == AAbstractQuest.stateNew) then
-						call AQuestItem(this.m_questItems[i]).setStateWithoutCondition(state)
+						call AQuestItem(this.m_questItems[i]).setStateWithoutConditionAndCheck(state) // if you call it with check it will be completed twice
 					endif
 					set i = i + 1
 				endloop

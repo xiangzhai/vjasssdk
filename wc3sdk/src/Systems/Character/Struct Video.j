@@ -184,7 +184,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 		public stub method onInitAction takes nothing returns nothing
 			if (this.m_initAction != 0) then
-				call this.m_initAction.evaluate(this)
+				call this.m_initAction.evaluate(this) // evaluate since it is called between fading
 			endif
 		endmethod
 
@@ -196,29 +196,14 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 		public stub method onStopAction takes nothing returns nothing
 			if (this.m_stopAction != 0) then
-				call this.m_stopAction.evaluate(this)
+				call this.m_stopAction.evaluate(this) // evaluate since it is called between fading
 			endif
 		endmethod
 
 		public stub method onSkipAction takes nothing returns nothing
 			if (this.m_skipAction != 0) then
-				call this.m_skipAction.execute(this)
+				call this.m_skipAction.evaluate(this) // evaluate since it is called before stop action
 			endif
-		endmethod
-
-		/**
-		* Usually there must be at least half of playing players which want to skip the video so that it will be skipped.
-		* You can overwrite this method in your custom derived structure to avoid this default behaviour.
-		* This method is called every time a player skips the video.
-		*/
-		public stub method onSkip takes integer skipablePlayers returns boolean
-			debug call Print("ON SKIP")
-			if (thistype.m_skippingPlayers >= skipablePlayers / 2) then
-				debug call Print("SKIP")
-				call this.skip()
-				return true
-			endif
-			return false
 		endmethod
 
 		public method play takes nothing returns nothing
@@ -256,12 +241,10 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		/// Since there is an execution of the action, TriggerSleepAction functions will be ignored, so this method could not be called by the play method.
 		public method stop takes nothing returns nothing
 			local force playersAll
-			debug call Print("1111111")
 			debug if (thistype.m_runningVideo != this) then
 				debug call this.print("Video is not being run.")
 				debug return
 			debug endif
-			debug call Print("22222")
 			call DisableTrigger(thistype.m_skipTrigger)
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
@@ -279,9 +262,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 			call ACharacter.showAll(true)
 			call PauseAllUnits(false)
-			debug call Print("333333333333")
 			call this.onStopAction()
-			debug call Print("4444444444444")
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			call thistype.restorePlayerData()
@@ -294,28 +275,33 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		public method skip takes nothing returns nothing
-			debug call Print("1")
 			debug if (thistype.m_runningVideo != this) then
 				debug call this.print("Video is not being run.")
-				debug call Print("AAHHH")
 				debug return
 			debug endif
-			debug call Print("2")
 			if (thistype.m_playedSound != null) then
 				call StopSound(thistype.m_playedSound, false, false)
 				set thistype.m_playedSound = null
 			endif
-			debug call Print("3")
 			call EndCinematicScene()
 			set thistype.m_skipped = true
 			call DisableTrigger(thistype.m_skipTrigger) // do not allow skipping at twice!
-			debug call Print("4")
 			call ACharacter.displayMessageToAll(ACharacter.messageTypeInfo, thistype.m_textSkip)
-			debug call Print("5")
-			call this.onSkipAction()
-			debug call Print("6")
-			call this.stop()
-			debug call Print("7")
+			call this.onSkipAction.evaluate()
+			call this.stop.execute() // execute, since it uses TriggerSleepAction calls
+		endmethod
+
+		/**
+		* Usually there must be at least half of playing players which want to skip the video so that it will be skipped.
+		* You can overwrite this method in your custom derived structure to avoid this default behaviour.
+		* This method is called every time a player skips the video.
+		*/
+		public stub method onSkip takes integer skipablePlayers returns boolean
+			if (thistype.m_skippingPlayers >= skipablePlayers / 2) then
+				call this.skip()
+				return true
+			endif
+			return false
 		endmethod
 
 		public static method create takes nothing returns thistype
@@ -334,7 +320,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			local player user
 			local integer skipablePlayers = 0
 
-			if (thistype.m_runningVideo == 0) then
+			if (thistype.m_runningVideo == 0 or thistype.m_skipped) then
 				return false
 			endif
 

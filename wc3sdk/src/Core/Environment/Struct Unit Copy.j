@@ -111,7 +111,8 @@ library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, 
 			endif
 			call SetUnitState(this.unitCopy(), UNIT_STATE_MAX_MANA, GetUnitState(this.unit(), UNIT_STATE_MAX_MANA))
 			call SetUnitState(this.unitCopy(), UNIT_STATE_MANA, GetUnitState(this.unit(), UNIT_STATE_MANA))
-			if (IsUnitType(this.unitCopy(), UNIT_TYPE_HERO)) then
+			// sometimes you'll change unit type in derived structures, so it can differ from original one, also prevents from crashes
+			if (IsUnitType(this.unit(), UNIT_TYPE_HERO) and IsUnitType(this.unitCopy(), UNIT_TYPE_HERO)) then
 				call SetHeroLevel(this.unitCopy(), GetHeroLevel(this.unit()), false)
 				call SuspendHeroXP(this.unitCopy(), false)
 				call SetHeroXP(this.unitCopy(), GetHeroXP(this.unit()), false)
@@ -123,8 +124,6 @@ library AStructCoreEnvironmentUnitCopy requires optional ALibraryCoreDebugMisc, 
 				call SetHeroInt(this.unitCopy(), GetHeroInt(this.unit(), false), true)
 				call SetHeroInt(this.unitCopy(), GetHeroIntBonus(this.unit()), false)
 				call UnitModifySkillPoints(this.unitCopy(), GetHeroSkillPoints(this.unit()) - GetHeroSkillPoints(this.unit()))
-			debug else
-				debug call this.print("Is no hero!")
 			endif
 			if (this.m_copyVisibility) then
 				call ShowUnit(this.unitCopy(), not IsUnitHidden(this.unit()))

@@ -59,9 +59,8 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 			return false
 		endmethod
 
-		public stub method setStateWithoutCondition takes integer state returns nothing
-			local boolean result
-
+		/// @note Required by structure AQuest, don't call manually.
+		public method setStateWithoutConditionAndCheck takes integer state returns nothing
 			if (AQuest.isQuestLogUsed()) then
 				if (this.m_questItem == null) then
 					set this.m_questItem = QuestCreateItem(this.m_quest.questLogQuest())
@@ -71,6 +70,10 @@ library AStructSystemsCharacterQuestItem requires optional ALibraryCoreDebugMisc
 				call QuestItemSetCompleted(this.m_questItem, state == AAbstractQuest.stateCompleted)
 			endif
 			call super.setStateWithoutCondition(state)
+		endmethod
+
+		public stub method setStateWithoutCondition takes integer state returns nothing
+			call this.setStateWithoutConditionAndCheck(state)
 			call this.m_quest.checkQuestItemsForState(state)
 		endmethod
 

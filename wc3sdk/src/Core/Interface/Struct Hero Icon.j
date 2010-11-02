@@ -121,7 +121,6 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 		private static method triggerActionAlliance takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
 			call this.enableByRecognition()
-			debug call this.print("Changing alliance!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		endmethod
 
 		public static method create takes unit whichUnit, player whichPlayer, real refreshTime, real x, real y, real facing returns thistype
@@ -132,6 +131,12 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			set this.m_player = whichPlayer
 			// members
 			set this.m_selectionCounter = 0
+
+			// unit has to be hero that it can be shown as icon
+			if (not IsUnitType(this.unitCopy(), UNIT_TYPE_HERO)) then
+				//call UnitAddType(this.unitCopy(), UNIT_TYPE_HERO) /// @todo Hero icon isn't shown
+				debug call this.print("WARNING: AHeroIcon - Unit is not a hero. Icon will be missing.")
+			endif
 
 			call this.setCopyVisibility(false)
 			call this.setCopyPause(false)
@@ -161,13 +166,7 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 			call AHashTable.global().setHandleInteger(this.m_allianceTrigger, "this", this)
 
 			if (this.m_recognizeAllianceChanges) then
-				debug call this.print("Recognizing alliance changes!")
 				call this.enableByRecognition()
-				debug if (GetPlayerAlliance(GetOwningPlayer(whichUnit), this.player(), ALLIANCE_SHARED_ADVANCED_CONTROL)) then
-					debug call this.print("Has shared advanced control")
-				debug else
-					debug call this.print("Has not!")
-				debug endif
 			endif
 
 			return this
