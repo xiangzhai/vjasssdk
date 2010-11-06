@@ -30,8 +30,9 @@
 * list - Runs list debug.
 * map - Runs map debug.
 * timer - Runs timer debugging hook function.
+* execution - Runs execution speed test.
 */
-library ALibrarySystemsDebugUtilities requires ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection, AStructCoreDebugBenchmark, AStructCoreDebugCheat, AStructCoreStringFormat
+library ALibrarySystemsDebugUtilities requires ALibraryCoreDebugExecution, ALibraryCoreDebugInterface, ALibraryCoreDebugList, ALibraryCoreDebugMap, ALibraryCoreDebugMisc, ALibraryCoreDebugSignal, ALibraryCoreDebugString, ALibraryCoreEnvironmentUnit, ALibraryCoreGeneralUnit, ALibraryCoreStringConversion, ALibraryCoreInterfaceSelection, AStructCoreDebugBenchmark, AStructCoreDebugCheat, AStructCoreStringFormat
 
 	private function help takes ACheat cheat returns nothing
 		local player triggerPlayer = GetTriggerPlayer()
@@ -71,6 +72,9 @@ static if (DEBUG_MODE) then
 endif
 static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 		call Print("timer")
+endif
+static if (DEBUG_MODE) then
+		call Print("execution")
 endif
 		set triggerPlayer = null
 	endfunction
@@ -320,12 +324,7 @@ endif
 		elseif (argument == "continue") then
 			call SuspendTimeOfDay(false)
 		else
-			debug call Print("Time of day function returns: " + R2S(GetTimeOfDay())) /// @todo TEST!
 			debug call Print(StringArg(tr("Current time of day: %s"), GetTimeOfDayString()))
-			debug call Print("Test, elapsed hours: " + I2S(GetTimeOfDayElapsedHours()))
-			debug call Print("Test, elapsed minutes in hour: " + I2S(GetTimeOfDayElapsedMinutesInHour()))
-			debug call Print("Test, remaining hours: " + I2S(GetTimeOfDayRemainingHours()))
-			debug call Print("Test, elapsed minutes: " + I2S(GetTimeOfDayElapsedMinutes()))
 		endif
 	endfunction
 
@@ -412,6 +411,12 @@ static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 	endfunction
 endif
 
+static if (DEBUG_MODE) then
+	private function executionDebug takes ACheat cheat returns nothing
+		call AExecution()
+	endfunction
+endif
+
 	function AInitUtilityCheats takes nothing returns nothing
 static if (DEBUG_MODE) then
 		call ACheat.create("help", true, help)
@@ -453,6 +458,10 @@ endif
 
 static if (DEBUG_MODE and A_DEBUG_NATIVES) then
 		call ACheat.create("timer", true, timerDebug)
+endif
+
+static if (DEBUG_MODE) then
+		call ACheat.create("execution", true, executionDebug)
 endif
 
 	endfunction

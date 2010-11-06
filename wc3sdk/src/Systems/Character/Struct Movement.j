@@ -35,14 +35,14 @@ library AStructSystemsCharacterMovement requires optional ALibraryCoreDebugMisc,
 	//endfunction
 
 	struct AMovement extends AAbstractCharacterSystem
-		//static constant members
+		// static constant members
 		private static constant integer stateMoveForward = 0
 		private static constant integer stateMoveBackward = 1
 		private static constant integer stateTurnRight = 2
 		private static constant integer stateTurnLeft = 3
 		private static constant integer maxStates = 4
 		private static constant integer maxMovementTriggers = 8
-		//static start members
+		// static construction members
 static if (A_RTC and A_FPS_MOVEMENT) then
 		private static integer fpsKeyMoveForward
 		private static integer fpsKeyMoveBackward
@@ -53,7 +53,7 @@ endif
 		private static real speed
 		private static real angle
 		private static boolean stopWhileStanding
-		//members
+		// members
 		private trigger m_movementTrigger
 static if (A_RTC and A_FPS_MOVEMENT) then
 		private trigger m_fpsTriggerUp
@@ -66,27 +66,39 @@ endif
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AMovement\"")
 
 		public method enable takes nothing returns nothing
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 			local integer i
+endif
 			call super.enable()
 			call EnableTrigger(this.m_movementTrigger)
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 			set i = 0
 			loop
 				exitwhen(i == thistype.maxMovementTriggers)
 				call EnableTrigger(this.m_startMovementTrigger[i])
 				set i = i + 1
 			endloop
+endif
 		endmethod
 
 		public method disable takes nothing returns nothing
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 			local integer i
+endif
 			call super.disable()
 			call DisableTrigger(this.m_movementTrigger)
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
+static if (not A_FPS_MOVEMENT) then
 			set i = 0
 			loop
 				exitwhen(i == thistype.maxMovementTriggers)
 				call DisableTrigger(this.m_startMovementTrigger[i])
 				set i = i + 1
 			endloop
+endif
 		endmethod
 
 		private method moveToPoint takes real x, real y returns nothing
@@ -201,8 +213,8 @@ endif
 			endif //Stop wird in den Start-Aktionen aufgerufen
 			set triggeringTrigger = null
 		endmethod
-//static if (not A_RTC or not A_FPS_MOVEMENT) then
 static if (not A_FPS_MOVEMENT) then
+//static if (not A_RTC or not A_FPS_MOVEMENT) then
 		private static method triggerActionMoveForward takes nothing returns nothing
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
@@ -395,7 +407,7 @@ static if (A_RTC and A_FPS_MOVEMENT) then
 
 		private method createFpsTriggerDown takes nothing returns nothing
 			local triggeraction triggerAction
-			set this.fpsTriggerDown = CreateTrigger()
+			set this.m_fpsTriggerDown = CreateTrigger()
 			call TriggerRegisterKeyEvent(this.m_fpsTriggerDown, 1) //rtc.j
 			set triggerAction = TriggerAddAction(this.m_fpsTriggerDown, function thistype.triggerActionFpsDown)
 			call AHashTable.global().setHandleInteger(this.m_fpsTriggerDown, "this", this)
@@ -435,12 +447,12 @@ endif
 static if (A_RTC and A_FPS_MOVEMENT) then
 		private method destroyFpsTriggerUp takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(this.m_fpsTriggerUp)
-			set this.fpsTriggerUp = null
+			set this.m_fpsTriggerUp = null
 		endmethod
 
 		private method destroyFpsTriggerDown takes nothing returns nothing
 			call AHashTable.global().destroyTrigger(this.m_fpsTriggerDown)
-			set this.fpsTriggerDown = null
+			set this.m_fpsTriggerDown = null
 		endmethod
 endif
 		public method onDestroy takes nothing returns nothing
@@ -460,7 +472,7 @@ static if (not A_FPS_MOVEMENT) then
 		* @param stopWhileStanding false Character stops if no key is pressed.
 		*/
 		public static method init takes real refreshRate, real speed, real angle, boolean stopWhileStanding returns nothing
-			//static start members
+			// static construction members
 			set thistype.refreshRate = refreshRate
 			set thistype.speed = speed
 			set thistype.angle = angle
@@ -478,7 +490,7 @@ else
 		* @param stopWhileStanding false Character stops if no key is pressed.
 		*/
 		public static method init takes integer fpsKeyMoveForward, integer fpsKeyMoveBackward, integer fpsKeyTurnRight, integer fpsKeyTurnLeft, real refreshRate, real speed, real angle, boolean stopWhileStanding returns nothing
-			//static start members
+			// static construction members
 			set thistype.fpsKeyMoveForward = fpsKeyMoveForward
 			set thistype.fpsKeyMoveBackward = fpsKeyMoveBackward
 			set thistype.fpsKeyTurnRight = fpsKeyTurnRight

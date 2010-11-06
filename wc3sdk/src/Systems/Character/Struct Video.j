@@ -96,6 +96,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		private static APlayerSelection array m_playerSelection[12] /// @todo bj_MAX_PLAYERS
 		private static boolean array m_playerHadDialog[12] /// @todo bj_MAX_PLAYERS
 		private static AIntegerVector m_actorData
+		private static real m_timeOfDay
 		// dynamic members
 		private AVideoAction m_initAction
 		private AVideoAction m_playAction
@@ -217,6 +218,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call TriggerSleepAction(thistype.m_waitTime)
 			/// @todo disable experience gain of all characters?
 			call thistype.savePlayerData()
+			set thistype.m_timeOfDay = GetTimeOfDay()
 			if (ATalk.initialized() and ATalk.disableEffectsInCinematicMode()) then
 				call ATalk.hideAllEffects()
 			endif
@@ -264,6 +266,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call PauseAllUnits(false)
 			call this.onStopAction()
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
+			call SetTimeOfDay(thistype.m_timeOfDay)
 			call TriggerSleepAction(thistype.m_waitTime)
 			call thistype.restorePlayerData()
 
@@ -292,12 +295,12 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		/**
-		* Usually there must be at least half of playing players which want to skip the video so that it will be skipped.
+		* Usually there must be at least playing players / divident of playing players who want to skip the video so that it will be skipped.
 		* You can overwrite this method in your custom derived structure to avoid this default behaviour.
 		* This method is called every time a player skips the video.
 		*/
 		public stub method onSkip takes integer skipablePlayers returns boolean
-			if (thistype.m_skippingPlayers >= skipablePlayers / 2) then
+			if (thistype.m_skippingPlayers >= skipablePlayers / thistype.m_divident) then
 				call this.skip()
 				return true
 			endif
@@ -417,6 +420,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				set user = null
 				set i = i + 1
 			endloop
+			set thistype.m_timeOfDay = 0.0
 
 			call thistype.createSkipTrigger()
 		endmethod

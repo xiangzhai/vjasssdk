@@ -1,3 +1,6 @@
+2010-11-06 Tamino Dauth <tamino@cdauth.eu>
+* AVideo: Find function which prevents unit portraits from being shown correctly.
+
 2010-11-02 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: AVideo: Skip action isn't called correctly.
 
@@ -31,7 +34,7 @@
 * AInventory: Dropping page items is not prevented correctly.
 
 2010-08-17 Tamino Dauth <tamino@cdauth.eu>
-* Test timer debugging functions.
+* DONE: Test timer debugging functions.
 
 2010-08-14 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: AHeroIcon: If shared advanced control is given it should be hidden.
@@ -62,7 +65,7 @@
 
 2010-07-26 Tamino Dauth <tamino@cdauth.eu>
 * DONE: Test alliance changing of struct AHeroIcon.
-* Change member names of struct AHeroIcon and AUnitCopy.
+* DEPRECATED: Change member names of struct AHeroIcon and AUnitCopy.
 
 2010-07-19 Tamino Dauth <tamino@cdauth.eu>
 * Add backwards iterator types to container macros.

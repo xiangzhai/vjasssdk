@@ -242,17 +242,11 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 				return 0
 			endif
 
+			set charges = IMaxBJ(0, charges)
 			call this.m_rucksackItemData[index].setCharges(charges)
+			call this.refreshRucksackItemCharges(index)
 
-			// set charges to 0, remove
-			if (this.m_rucksackItemData[index].charges() > 0) then
-				call this.refreshRucksackItemCharges(index)
-				return this.m_rucksackItemData[index].charges()
-			else
-				call this.clearRucksackItem(index, false)
-			endif
-
-			return 0
+			return charges
 		endmethod
 
 		public method rucksackItemData takes integer index returns AInventoryItemData
@@ -625,14 +619,20 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			endif
 
 			if (this.m_rucksackItemData[index].charges() <= 0) then // all items have charges starting at least with 1 in rucksack
+				debug call this.print("Clear rucksack item!")
 				call this.clearRucksackItem(index, false)
 			else
 				set characterUnit = this.character().unit()
 				set slot = this.rucksackItemSlot(index)
 				set slotItem = UnitItemInSlot(characterUnit, slot)
-				call SetItemCharges(slotItem, this.m_rucksackItemData[index].charges())
+				if (slotItem != null) then
+					call SetItemCharges(slotItem, this.m_rucksackItemData[index].charges())
+					set slotItem = null
+				// item could have been dropped (e. g. in drop trigger action)
+				else
+					call this.showRucksackItem(index)
+				endif
 				set characterUnit = null
-				set slotItem = null
 			endif
 		endmethod
 

@@ -2,20 +2,20 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 
 	private struct ARegionData
 		private region m_region
-		private real m_flyHeight
+		private real m_z
 
 		public method region takes nothing returns region
 			return this.m_region
 		endmethod
 
-		public method flyHeight takes nothing returns real
-			return this.m_flyHeight
+		public method z takes nothing returns real
+			return this.m_z
 		endmethod
 
-		public static method create takes region whichRegion, real flyHeight returns thistype
+		public static method create takes region whichRegion, real z returns thistype
 			local thistype this = thistype.allocate()
 			set this.m_region = whichRegion
-			set this.m_flyHeight = flyHeight
+			set this.m_z = z
 
 			return this
 		endmethod
@@ -53,21 +53,22 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 	function interface ALayerOnLeaveFunction takes unit whichUnit returns nothing
 
 	/**
-	* @todo Untested!
 	* Layers can be used to create multiple movable rects for units on the same position of map using
 	* the z-axis.
-	* As you can't do this by using the terrain editor or the Warcraft engine itself this struct
-	* uses the native function SetUnitFlyHeight and turns off units pathing (by using
-	* native function SetUnitPathing) to be usable on water and other blocking rects.
-	* Each layer consists of several regions which can be extended by adding rects.
-	* Each region has its own specific meaning and all rects should be placed in specific order
+	* As you can't do this by using the terrain editor or the Warcraft engine itself this structure
+	* uses the native function SetUnitZ and turns off units pathing (by using
+	* native function SetUnitPathing) to be usable on water and other blocking regions.
+	* Each layer consists of several regions.
+	* Each region has its own specific meaning and all regions should be placed in specific order
 	* that the layer can be used correctly.
 	* This image should describe what each region means to the layer:
 	* @image TODO
-	* As you can see entry rects has to at the beginning of another layer rect since you need a fly height which will be adjusted on the entering unit.
-	* Exit rects can be anywhere you want to have them but you should consider that units can not leave region consisting of all layer rects.
-	* When a unit leaves a layer rect it will be reset if it did not enter a new one!
-	* @note Added regions and units won't be removed from game by the layer at any time! You'll have to take care yourself.
+	* As you can see entry regions have to be in another layer region since you need a z value which will be adjusted on the entering unit (when it enters the region, see note below).
+	* Therefore, when a unit enters the layer (entry region) the system will search for the current region with a specified fly height and assign it to the entering unit.
+	* Exit regions have to be at the end of a layer region since otherwise the unit will be reset into the region if it does not enter an exit region.
+	* As already mentioned, when a unit leaves a layer region it will be reset if it did not enter a new one or an exit region!
+	* @note Added regions and units won't be removed from game by the layer at any time! You'll have to take care yourself if you want to prevent memory leaks.
+	* @note Region z values will be adjusted when the unit enters a region and are set relatively to the units current z value. Remember that the unit z values won't be refreshed automatically in one single region. Hence, we recommend to place one region for each different z value.
 	*/
 	struct ALayer
 		private ALayerOnEnterFunction m_onEnterFunction
@@ -120,8 +121,8 @@ library AStructSystemsWorldLayer requires AModuleCoreGeneralSystemStruct, AStruc
 			/// @todo Remove event
 		endmethod
 
-		public method addRegion takes region whichRegion, real flyHeight returns nothing
-			call this.m_regions.pushBack(ARegionData.create(whichRegion, flyHeight))
+		public method addRegion takes region whichRegion, real z returns nothing
+			call this.m_regions.pushBack(ARegionData.create(whichRegion, z))
 			call TriggerRegisterEnterRegion(this.m_regionTrigger, whichRegion, null) // for height refresh!
 			call TriggerRegisterLeaveRegion(this.m_boundsTrigger, whichRegion, null)
 		endmethod
@@ -181,24 +182,48 @@ endif
 			return result
 		endmethod
 
-		private method refreshUnit takes unit whichUnit, region whichRegion returns nothing
-			local ARegionData data = this.regionDataByRegion(whichRegion)
-static if (DEBUG_MODE) then
-			if (data == 0) then
-				call this.print(Format("Region %1% is not contained by layer.").h(whichRegion).result())
-				return
-			endif
-endif
-			call SetUnitFlyHeight(whichUnit, data.flyHeight(), 0.0)
+		/**
+		* Unit has to be refreshed if it already belongs to layer and enters another layer region or when it enters an entry region.
+		*/
+		private method refreshUnit takes unit whichUnit, ARegionData data returns nothing
+			call SetUnitZ(whichUnit, data.z())
 		endmethod
 
-		public method unitEnters takes unit whichUnit, region whichRegion returns nothing
+		public method containsUnit takes unit whichUnit returns boolean
+			local AIntegerListIterator iterator = this.m_units.begin()
+			local boolean result = false
+			loop
+				exitwhen (not iterator.isValid())
+				if (AUnitData(iterator.data()).unit() == whichUnit) then
+					set result = true
+					exitwhen (true)
+				endif
+				call iterator.next()
+			endloop
+			call iterator.destroy()
+			return result
+		endmethod
+
+		/**
+		* @return Returns true if unit could properly newly enter the layer. Otherwise it returns false.
+		*/
+		public method unitEnters takes unit whichUnit returns boolean
+			local ARegionData data = this.unitRegionData(whichUnit)
+			if (data == 0) then
+				debug call this.print(Format("Unit %1% is not on region of layer.").u(whichUnit).result())
+				return false
+			endif
+			if (this.containsUnit(whichUnit)) then
+				debug call this.print(Format("Unit %1% does alread belong to layer.").u(whichUnit).result())
+				return false
+			endif
 			call this.m_units.pushBack(AUnitData.create(whichUnit))
 			call MakeUnitFlyable(whichUnit)
 			call SetUnitPathing(whichUnit, false)
-			call this.refreshUnit(whichUnit, whichRegion)
+			call this.refreshUnit(whichUnit, data)
 			debug call this.print("Unit " + GetUnitName(whichUnit) + " enters.")
 			call this.onUnitEnters(whichUnit)
+			return true
 		endmethod
 
 		private method unitUnitData takes unit whichUnit returns AUnitData
@@ -216,14 +241,8 @@ endif
 			return result
 		endmethod
 
-		public method unitLeaves takes unit whichUnit returns nothing
-			local AUnitData data = this.unitUnitData(whichUnit)
-static if (DEBUG_MODE) then
-			if (data == 0) then
-				call this.print(Format("Unit %1% is not being contained by layer.").u(whichUnit).result())
-				return
-			endif
-endif
+		private method unitLeavesByData takes AUnitData data returns nothing
+			local unit whichUnit = data.unit()
 			call this.m_units.remove(data)
 			call data.restore()
 			call data.destroy()
@@ -231,13 +250,24 @@ endif
 			debug call this.print("Unit " + GetUnitName(whichUnit) + " leaves.")
 
 			call this.onUnitLeaves(whichUnit)
+			set whichUnit = null
+		endmethod
+
+		public method unitLeaves takes unit whichUnit returns boolean
+			local AUnitData data = this.unitUnitData(whichUnit)
+			if (data == 0) then
+				debug call this.print(Format("Unit %1% does not belong to layer.").u(whichUnit).result())
+				return false
+			endif
+			call this.unitLeavesByData(data)
+			return true
 		endmethod
 
 		public method unitsLeaveAll takes nothing returns nothing
 			local AIntegerListIterator iterator = this.m_units.begin()
 			loop
 				exitwhen (not iterator.isValid())
-				call this.unitLeaves(AUnitData(iterator.data()).unit())
+				call this.unitLeavesByData(AUnitData(iterator.data()))
 				call iterator.next()
 			endloop
 			call iterator.destroy()
@@ -262,43 +292,12 @@ endif
 			return IsTriggerEnabled(this.m_boundsTrigger)
 		endmethod
 
-		public method containsUnit takes unit whichUnit returns boolean
-			local AIntegerListIterator iterator = this.m_units.begin()
-			local boolean result = false
-			loop
-				exitwhen (not iterator.isValid())
-				if (AUnitData(iterator.data()).unit() == whichUnit) then
-					set result = true
-					exitwhen (true)
-				endif
-				call iterator.next()
-			endloop
-			call iterator.destroy()
-			return result
-		endmethod
-
-		private method enterRegionContainsUnit takes unit whichUnit returns boolean
-			local ARegionListIterator iterator = this.m_entryRegions.begin()
-			local boolean result = false
-			loop
-				exitwhen (not iterator.isValid())
-				debug call this.print("Is not in entry region!")
-				if (IsUnitInRegion(iterator.data(), whichUnit)) then
-					set result = true
-					exitwhen (true)
-				endif
-				call iterator.next()
-			endloop
-			call iterator.destroy()
-			return result
-		endmethod
-
 		private method regionContainsUnit takes unit whichUnit returns boolean
-			local ARegionListIterator iterator = this.m_regions.begin()
+			local AIntegerListIterator iterator = this.m_regions.begin()
 			local boolean result = false
 			loop
 				exitwhen (not iterator.isValid())
-				if (IsUnitInRegion(iterator.data(), whichUnit)) then
+				if (IsUnitInRegion(ARegionData(iterator.data()).region(), whichUnit)) then
 					set result = true
 					exitwhen (true)
 				endif
@@ -316,8 +315,7 @@ endif
 
 		private static method triggerActionEnter takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
-			debug call this.print("Unit " + GetUnitName(GetTriggerUnit()) + " enters.")
-			call this.unitEnters(GetTriggerUnit(), GetTriggeringRegion())
+			call this.unitEnters(GetTriggerUnit())
 		endmethod
 
 		private static method triggerConditionLeave takes nothing returns boolean
@@ -328,7 +326,6 @@ endif
 
 		private static method triggerActionLeave takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
-			debug call this.print("Unit " + GetUnitName(GetTriggerUnit()) + " leaves.")
 			call this.unitLeaves(GetTriggerUnit())
 		endmethod
 
@@ -340,7 +337,8 @@ endif
 
 		private static method triggerActionRegion takes nothing returns nothing
 			local thistype this = AHashTable.global().handleInteger(GetTriggeringTrigger(), "this")
-			call this.refreshUnit(GetTriggerUnit(), GetTriggeringRegion())
+			local ARegionData data = this.regionDataByRegion(GetTriggeringRegion())
+			call this.refreshUnit(GetTriggerUnit(), data)
 		endmethod
 
 		private method isUnitInExitRegion takes unit whichUnit returns boolean

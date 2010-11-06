@@ -91,6 +91,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 			local trigger triggeringTrigger = GetTriggeringTrigger()
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
 			call DisableTrigger(triggeringTrigger)
+			debug call Print("Routine is " + I2S(this.m_routineUnitData.routine.evaluate()))
 			call this.m_routineUnitData.routine.evaluate().onTarget.evaluate(this)
 			debug call Print("Before destroying target trigger")
 			call this.destroyTargetTrigger.evaluate() // destroys this trigger

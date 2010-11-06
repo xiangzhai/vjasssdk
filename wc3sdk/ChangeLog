@@ -1,3 +1,10 @@
+2010-11-06 Tamino Dauth <tamino@cdauth.eu>
+* ALayer: Uses SetUnitZ now. Improved height refreshing. Enter and leave methods return results now and do not crash if unit belongs or belongs not to layer. Improved performance of method unitLeaveAll. Revised documentation. Fixed double free of ARegionListIterator.
+* AVideo: Uses static member divident now. Stores and restores time of day now.
+* AInventor: Method refreshRucksackItemCharges considers dropped items now.
+* AMovement: Fixed syntax errors which occured when A_RTC and A_FPS_MOVEMENT were enabled.
+* Added cheat debugging "execution" and its corresponding library.
+
 2010-11-02 Tamino Dauth <tamino@cdauth.eu>
 * AVideo: Fixed skip action bug. Improved documentation of stub method treatment.
 * ATalk: Added methods isInfoShown, infos, shownInfos, isOpen and isClosed. If there aren't displayed any infos start page will be displayed automatically and there will be a debug warning message.
