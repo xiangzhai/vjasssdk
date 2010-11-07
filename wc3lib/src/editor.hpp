@@ -29,6 +29,6 @@
 #include "editor/modeleditor.hpp"
 #include "editor/modelview.hpp"
 #include "editor/mpqeditor.hpp"
-
+#include "mdlx/ogremdlx.hpp"
 
 #endif

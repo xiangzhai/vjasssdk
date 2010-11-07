@@ -28,7 +28,6 @@
 #include <klocale.h>
 
 #include "modeleditor.hpp"
-#include "../mdlx.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -102,11 +101,20 @@ void ModelEditor::openFile()
 	}
 
 	const Ogre::Vector3 position(0.0, 0.0, 0.0);
-	mdlx::OgreMdlx *ogreModel = new mdlx::OgreMdlx(model);
+	OgreMdlx *ogreModel = new OgreMdlx(model);
 	//ogreModel->refresh()
 	//this->m_modelView.createModel(model, position, ogreModel);
 	this->m_models.push_back(ogreModel);
-	ogreModel->refresh(*this->m_modelView.sceneManager());
+
+	try
+	{
+		ogreModel->refresh(*this->m_modelView.sceneManager());
+	}
+	catch (class Exception &exception)
+	{
+		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what().c_str()));
+	}
+
 	this->m_modelView.root()->addFrameListener(ogreModel);
 }
 

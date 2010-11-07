@@ -1,3 +1,10 @@
+2010-11-07 Tamino Dauth <tamino@cdauth.eu>
+* editor: Improved texture treatment of class OgreMdlx.
+* editor: Improved layout creation of class Module.
+
+2010-11-03 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fixed model view OGRE renderer widget.
+
 2010-10-21 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improved model view.
 

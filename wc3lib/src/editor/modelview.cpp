@@ -28,9 +28,6 @@
 //#include <qogre/ExampleFrameListener.h>
 
 #include "modelview.hpp"
-#include "../mdlx/ogremdlx.hpp"
-#include "../mdlx/mdlx.hpp"
-#include "../mdlx/model.hpp"
 
 namespace wc3lib
 {
@@ -62,98 +59,11 @@ ModelView::~ModelView()
 		//delete this->m_frameListener;
 }
 
-//void ModelView::show()
-//{
-	/*
-	static bool isInitialized;
-
-	if (isInitialized)
-		return;
-
-	isInitialized = true;
-	*/
-        // Load resource paths from config file
-        //class Ogre::ConfigFile configFile;
-        //configFile.load("resources.cfg");
-
-        // Go through all sections & settings in the file
-        /*
-        Ogre::ConfigFile::SectionIterator sectionIterator = configFile.getSectionIterator();
-        Ogre::String sectionName, typeName, archiveName;
-
-        while (sectionIterator.hasMoreElements())
-        {
-            sectionName = sectionIterator.peekNextKey();
-            Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
-            Ogre::ConfigFile::SettingsMultiMap::iterator iterator;
-
-	    for (iterator = settings->begin(); iterator != settings->end(); ++iterator)
-            {
-                typeName = iterator->first;
-                archiveName = iterator->second;
-                Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archiveName, typeName, sectionName);
-            }
-        }
-
-	this->m_sceneManager = theOgreRoot->createSceneManager(ST_GENERIC, "ExampleSMInstance" + Ogre::StringConverter::toString((unsigned long)this));
-	*/
-	 // Create the camera
-        //this->m_camera = this->m_sceneManager->createCamera("EditorCamera" + Ogre::StringConverter::toString((unsigned long)this));
-
-        // Position it at 500 in Z direction
-        //this->m_camera->setPosition(Ogre::Vector3(0, 0, 500));
-        // Look back along -Z
-        /*
-        this->m_camera->lookAt(Ogre::Vector3(0, 0, -300));
-        this->m_camera->setNearClipDistance(5);
-	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
-        this->m_viewPort->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
-	*/
-        // Alter the camera aspect ratio to match the viewport
-        //this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
-
-	// Set default mipmap level (NB some APIs ignore this)
-	//Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
-
-	// Create any resource listeners (for loading screens)
-	/// Optional override method where you can create resource listeners (e.g. for loading screens)
-	//createResourceListener();
-	// Load resources
-	//Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
-	// Create the scene
-	// pure virtual - this has to be overridden
-	//createScene();
-	/*
-	this->m_frameListener = new Ogre::ExampleFrameListener(this->m_renderWindow, this->m_camera);
-        this->m_frameListener->showDebugOverlay(true);
-        theOgreRoot->addFrameListener(this->m_frameListener);
-	*/
-//}
-
-/*
-class Ogre::Entity* ModelView::createModel(const class mdlx::Mdlx &mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx)
-{
-	ogreMdlx = new mdlx::OgreMdlx(mdlx);
-
-	return this->createModel(*ogreMdlx, position);
-}
-
-class Ogre::Entity* ModelView::createModel(const class mdlx::OgreMdlx &ogreMdlx, const Ogre::Vector3 &position)
-{
-	class Ogre::SceneNode *sceneNode = this->m_sceneManager->createSceneNode("Scene node");
-	sceneNode->setPosition(position);
-	Ogre::Entity *entity = this->m_sceneManager->createEntity("entity", ogreMdlx.mdlx()->model()->name());
-	sceneNode->attachObject(entity);
-
-	return entity;
-}
-*/
-
 void ModelView::resizeEvent(QResizeEvent *event)
 {
 	if(this->m_renderWindow)
 	{
+		qDebug() << QString("Resize to %1|%2").arg(width()).arg(height());
 		this->m_renderWindow->resize(width(), height());
 		this->m_renderWindow->windowMovedOrResized();
 
@@ -169,31 +79,20 @@ void ModelView::resizeEvent(QResizeEvent *event)
 void ModelView::paintGL()
 {
 	qDebug() << "Render";
-	/// @todo Render window only?
-	this->m_root->renderOneFrame();
 
-	/*
-	mRoot->_fireFrameStarted();
-	mRenderWindow->update();
+	this->m_root->_fireFrameStarted();
 
-	mCamera->moveRelative(mDirection);
-	mCamera->yaw(Radian(angleX));
-	mCamera->pitch(Radian(angleY));
+	if (this->m_renderWindow)
+		this->m_renderWindow->update();
 
-	updateStats();
-	mRoot->_fireFrameEnded();
-	*/
-
-	/*
-	Ogre::Root::getSingleton()._fireFrameStarted();
-	this->m_renderWindow->update();
-	Ogre::Root::getSingleton()._fireFrameRenderingQueued();
-	Ogre::Root::getSingleton()._fireFrameEnded();
-	*/
+	this->m_root->_fireFrameRenderingQueued();
+	this->m_root->_fireFrameEnded();
 }
 
 void ModelView::resizeGL(int width, int height)
 {
+	qDebug() << QString("Resize GL to %1|%2").arg(width).arg(height);
+
 	if(this->m_renderWindow)
 		this->m_renderWindow->windowMovedOrResized();
 }
@@ -285,7 +184,7 @@ OLD!
 	Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(2);
 
 	// if this function is called background becomes blue but program hangs up
-	this->m_root->startRendering(); /// @todo Error!
+	// this->m_root->startRendering(); /// @todo Error!
 }
 
 

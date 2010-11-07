@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <QtGui>
+
 #include <kmenu.h>
 #include <kmenubar.h>
 #include <ktoolbar.h>
@@ -33,7 +35,7 @@ namespace wc3lib
 namespace editor
 {
 
-Module::Module(class Editor *editor) : m_editor(editor), m_menuBar(0)
+Module::Module(class Editor *editor) : m_editor(editor), m_menuBar(0), m_topLayout(new QVBoxLayout(this))
 {
 }
 
@@ -45,7 +47,7 @@ KMenuBar* Module::menuBar() const
 void Module::setupUi()
 {
 	this->m_menuBar = new KMenuBar(this);
-	m_topLayout.addWidget(this->m_menuBar);
+	m_topLayout->addWidget(this->m_menuBar);
 
 	KMenu *menu = new KMenu(tr("File"), this);
 	this->menuBar()->addMenu(menu);
@@ -90,7 +92,7 @@ void Module::setupUi()
 
 	// tool bar
 	KToolBar *toolBar = new KToolBar(this);
-	m_topLayout.addWidget(toolBar);
+	m_topLayout->addWidget(toolBar);
 	toolBar->addSeparator();
 
 	// user defined tool buttons

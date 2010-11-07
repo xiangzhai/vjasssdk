@@ -99,7 +99,6 @@
 #include "mdlx/normal.hpp"
 #include "mdlx/normals.hpp"
 #include "mdlx/object.hpp"
-#include "mdlx/ogremdlx.hpp"
 #include "mdlx/particleemitter2.hpp"
 #include "mdlx/particleemitter2latitude.hpp"
 #include "mdlx/particleemitter2latitudes.hpp"

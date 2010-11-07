@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_OGREMDLX_HPP
-#define WC3LIB_MDLX_OGREMDLX_HPP
+#ifndef WC3LIB_EDITOR_OGREMDLX_HPP
+#define WC3LIB_EDITOR_OGREMDLX_HPP
 
 #include <map>
 #include <list>
@@ -32,8 +32,10 @@
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
+
+using namespace mdlx;
 
 /**
 * This class can be used to display MDLX models by using the OGRE 3d rendering engine.
@@ -58,8 +60,8 @@ class OgreMdlx  : public Ogre::FrameListener
 	protected:
 		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
 
-		//Ogre::TexturePtr createTexture(const class mdlx::Texture &texture) throw (class Exception);
-		Ogre::MaterialPtr createMaterial(const class mdlx::Material &material) throw (class Exception);
+		Ogre::TexturePtr createTexture(const class Texture &texture) throw (class Exception);
+		Ogre::MaterialPtr createMaterial(const class Material &material) throw (class Exception);
 		/**
 		* Creates manual object for specified geoset.
 		*/
@@ -75,8 +77,9 @@ class OgreMdlx  : public Ogre::FrameListener
 
 		const class Mdlx *m_mdlx;
 
-		std::map<const class Material*, Ogre::Material&> m_materials;
-		std::map<const class Geoset*, Ogre::ManualObject&> m_geosets;
+		std::map<const class Texture*, Ogre::TexturePtr> m_textures;
+		std::map<const class Material*, Ogre::MaterialPtr> m_materials;
+		std::map<const class Geoset*, Ogre::SharedPtr<Ogre::ManualObject> > m_geosets;
 
 		std::map<const class Node*, Ogre::Node*> m_nodes;
 		std::map<const class Bone*, Ogre::Bone*> m_bones;

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,6 @@
 #define WC3LIB_EDITOR_MODULE_HPP
 
 #include <QWidget>
-#include <QHBoxLayout>
 
 namespace wc3lib
 {
@@ -49,16 +48,23 @@ class Module : public QWidget
 		virtual void createWindowsActions(class KMenu *menu) { };
 		virtual void createToolButtons(class KToolBar *toolBar) { };
 
+		class QVBoxLayout* topLayout() const;
+
 	private:
 		class Editor *m_editor;
 		class KMenuBar *m_menuBar;
 
-		QHBoxLayout m_topLayout;
+		class QVBoxLayout *m_topLayout;
 };
 
 inline class Editor* Module::editor() const
 {
 	return this->m_editor;
+}
+
+inline class QVBoxLayout* Module::topLayout() const
+{
+	return this->m_topLayout;
 }
 
 }

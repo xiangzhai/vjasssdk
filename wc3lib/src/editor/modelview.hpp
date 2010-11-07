@@ -25,18 +25,8 @@
 
 #include <Ogre.h>
 
-//#include "qogre/QOgreWidget.h"
-
 namespace wc3lib
 {
-
-namespace mdlx
-{
-
-class OgreMdlx;
-class Mdlx;
-
-}
 
 namespace editor
 {
@@ -62,17 +52,6 @@ class ModelView : public QGLWidget
 		virtual ~ModelView();
 
 		//virtual void show();
-
-		/**
-		* @brief Creates a model by using the MDLX's data.
-		* @note If you do already have an OGRE MDLX instance you could call the other version of the function. This one helps the user to create an MDLX model instance first time.
-		* @param mdlx MDLX which is used for model data.
-		* @param position Position where the model entity will be created.
-		* @param ogreMdlx OGRE version of MDLX model data which will be set by the function.
-		* @return Returns pointer to the created entity.
-		*/
-		Ogre::Entity* createModel(const class mdlx::Mdlx &mdlx, const Ogre::Vector3 &position, class mdlx::OgreMdlx *&ogreMdlx);
-		Ogre::Entity* createModel(const class mdlx::OgreMdlx &ogreMdlx, const Ogre::Vector3 &position);
 
 		Ogre::Root* root() const;
 		Ogre::SceneManager* sceneManager() const;

@@ -31,22 +31,23 @@ namespace wc3lib
 namespace editor
 {
 
-TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), m_modelView(this, 0, f)
+TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), m_modelView(new ModelView(this, 0, f))
 {
 	setWindowTitle(i18n("Terrain Editor"));
 	QHBoxLayout *mainLayout = new QHBoxLayout;
-	mainLayout->addWidget(&this->m_modelView);
+	mainLayout->addWidget(this->m_modelView);
 	setLayout(mainLayout);
 }
 
 TerrainEditor::~TerrainEditor()
 {
+	delete this->m_modelView;
 }
 
 void TerrainEditor::show()
 {
 	Module::show();
-	this->m_modelView.show();
+	this->m_modelView->show();
 }
 
 }

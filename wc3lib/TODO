@@ -1,3 +1,6 @@
+2010-11-07 Tamino Dauth <tamino@cdauth.eu>
+* editor: Improve layout creation of class Module. All other widgets should be contained by a sub layout.
+
 2010-10-13 Tamino Dauth <tamino@cdauth.eu>
 * editor: Fix module widget tool bar and menu bar creation.
 

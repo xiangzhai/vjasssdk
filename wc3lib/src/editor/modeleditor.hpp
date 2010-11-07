@@ -26,7 +26,7 @@
 #include "module.hpp"
 #include "ui/ui_modeleditor.hpp"
 #include "modelview.hpp"
-#include "../mdlx.hpp"
+#include "ogremdlx.hpp"
 
 namespace wc3lib
 {
@@ -49,7 +49,7 @@ class ModelEditor : public Module, Ui::ModelEditor
 	protected:
 		class ModelView m_modelView;
 		KUrl m_recentUrl;
-		std::list<class mdlx::OgreMdlx*> m_models;
+		std::list<class OgreMdlx*> m_models;
 };
 
 }

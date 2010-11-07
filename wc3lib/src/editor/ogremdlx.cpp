@@ -23,8 +23,12 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/cast.hpp>
+#include <boost/filesystem.hpp>
 
 #include <QtGui>
+
+#include <kmessagebox.h>
+#include <klocale.h>
 
 #include "ogremdlx.hpp"
 #include "../internationalisation.hpp"
@@ -32,7 +36,7 @@
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
 
 OgreMdlx::OgreMdlx(const class Mdlx &mdlx) : m_mdlx(&mdlx)
@@ -41,6 +45,10 @@ OgreMdlx::OgreMdlx(const class Mdlx &mdlx) : m_mdlx(&mdlx)
 
 void OgreMdlx::refresh(Ogre::SceneManager &sceneManager) throw (class Exception)
 {
+	// create textures
+	BOOST_FOREACH(const mdlx::Texture *texture, this->m_mdlx->textures()->textures())
+		this->m_textures[texture] = this->createTexture(*texture);
+
 	// get new objects
 	/*
 	std::list<const class Node*> nodes = this->m_mdlx->nodes();
@@ -103,12 +111,12 @@ void OgreMdlx::refresh(Ogre::SceneManager &sceneManager) throw (class Exception)
 	/// ...
 	// std::size_t i = 0;
 
-	BOOST_FOREACH(const class Geoset *geoset, this->m_mdlx->geosets()->geosets())
-	{
-		const class Geoset &rGeoset = *geoset;
-		Ogre::SceneNode *node = sceneManager.createSceneNode();
-		node->attachObject(this->createGeoset(rGeoset));
-	}
+	//BOOST_FOREACH(const class Geoset *geoset, this->m_mdlx->geosets()->geosets())
+	//{
+	//	const class Geoset &rGeoset = *geoset;
+	//	Ogre::SceneNode *node = sceneManager.createSceneNode();
+	//	node->attachObject(this->createGeoset(rGeoset));
+	//}
 		/*
 		std::map<const class Geoset*, Ogre::MeshPtr>::iterator iterator = this->m_geosets.find(geoset);
 		Ogre::MeshPtr geosetMesh;
@@ -362,21 +370,25 @@ Ogre::Node* OgreMdlx::createNode(const class Node &node)
 	return result;
 }
 
-/*
-Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
+namespace
 {
-	QFile file(texture.texturePath());
-	file.open(QIODevice::ReadOnly);
+
+Ogre::Image* blpToOgre(const boost::filesystem::path &path) throw (class Exception)
+{
+	QFile file(path.string().c_str());
+
+	if (!file.open(QIODevice::ReadOnly))
+		throw Exception(boost::format(_("Unable to open texture image \"%1%\".")) % path);
 
 	QImage qImage;
 
 	if (!qImage.load(&file, 0))
-		throw Exception();
+		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % path);
 
 	QByteArray ba;
 	QBuffer buffer(&ba);
 	buffer.open(QIODevice::WriteOnly);
-	qImage.save(&buffer);
+	qImage.save(&buffer, "PNG");
 
 	// load for OGRE
 	void *memory[ba.size()];
@@ -384,12 +396,40 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 	Ogre::MemoryDataStream ms(memory, ba.size());
 	ba.clear();
 	Ogre::DataStreamPtr dsPtr(&ms);
-	Ogre::Image image;
-	image.load(dsPtr);
+	Ogre::Image *image = new Ogre::Image();
+	image->load(dsPtr);
 
-	//return 0;
+	return image;
 }
-*/
+
+}
+
+Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
+{
+	Ogre::Image *image = 0;
+	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create("Texture", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	// if image could not be loaded continue with empty texture
+	try
+	{
+		image = blpToOgre(texture.texturePath());
+	}
+	catch (class Exception &exception)
+	{
+		KMessageBox::error(0, i18n("Texture loading error:\n%1", exception.what().c_str()));
+	}
+
+
+	if (image != 0)
+	{
+		tex->loadImage(*image);
+
+		delete image;
+		image = 0;
+	}
+
+	return tex;
+}
 
 Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material) throw (class Exception)
 {
@@ -408,6 +448,8 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 	// layers do have texture id!!!
 
 	//return 0;
+
+	return mat;
 }
 
 Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) throw (class Exception)

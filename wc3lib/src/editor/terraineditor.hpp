@@ -32,6 +32,7 @@ namespace editor
 
 /**
 * @todo Model view (Ogre view) should be splittable.
+* @todo Use customized version of model view which sends selection events to terrain editor.
 * @todo Maybe you should add a custom UI like for other sub editors.
 */
 class TerrainEditor : public Module
@@ -43,7 +44,7 @@ class TerrainEditor : public Module
 		virtual void show();
 
 	protected:
-		class ModelView m_modelView;
+		class ModelView *m_modelView;
 };
 
 }
