@@ -197,7 +197,22 @@ scope jasspp
 		public string StringRemove(string value, string oldValue)
 		public string StringInsert(string value, string newValue, integer position = 0)
 		public string StringAppend(string value, string newValue)
+		public string StringPrepend(string whichString, string newValue)
 		public string StringMove(string value, string movedValue, integer position = 0)
+
+		public string StringRepeated(string whichString, integer number)
+		/// Appends ' ' characters if size is larger than original size.
+		public string StringResize(string whichString, integer size)
+		/// Truncates string at the given position.
+		public string StringTruncate(string whichString, integer position)
+
+		public string StringTrim(string value)
+		public string StringTrimLeft(string value)
+		public string StringTrimRight(string value)
+		public string StringLeft(string value, integer number)
+		public string StringRight(string value, integer number)
+
+
 		public boolean StringMatch(string value, string otherValue)
 		public boolean StringMatchRegEx(string value, string otherValue, string regEx)
 
@@ -212,24 +227,24 @@ scope jasspp
 		public function boolean UnitUseItemOfSlotOnTarget(unit whichUnit, integer slot, widget target)
 		public function boolean UnitUseItemOfSlotOnPoint(unit whichUnit, integer slot, real x, real y)
 		public function boolean UnitDropSlot(unit whichUnit, integer slot, integer newSlot)
-		public function real GetUnitMissingLife(unit whichUnit)
+		public function real GetUnitMissingLife(unit const whichUnit)
 		public function real GetUnitMissingLifePercent(unit whichUnit)
-		public function real GetUnitMissingMana(unit whichUnit)
-		public function real GetUnitMissingManaPercent(unit whichUnit)
-		public function unit CopyUnit(unit whichUnit, real x, real y, real facing, integer stateMethod)
+		public function real GetUnitMissingMana(unit const whichUnit)
+		public function real GetUnitMissingManaPercent(unit const whichUnit)
+		public function unit CopyUnit(unit const whichUnit, real x, real y, real facing, integer stateMethod)
 
 		public function unit CreateUnitAtRect(player whichPlayer, integer unitTypeId, rect whichRect, real facing)
 		public function unit CreateCorpseAtRect(player whichPlayer, integer unitTypeId, rect whichRect, real facing)
 		public function void PauseAllUnits(boolean pause)
-		public function integer GetHeroStrBonus(unit hero)
-		public function integer GetHeroAgiBonus(unit hero)
-		public function integer GetHeroIntBonus(unit hero)
+		public function integer GetHeroStrBonus(unit const hero)
+		public function integer GetHeroAgiBonus(unit const hero)
+		public function integer GetHeroIntBonus(unit const hero)
 
 		public function void MakeUnitMovable(unit whichUnit, boolean movable)
 		public function void MakeUnitFlyable(unit whichUnit)
 		public function void MakeUnitAttackable(unit whichUnit, boolean attackable)
 		public function boolean IsUnitInvulnerable(unit const whichUnit)
-		public function integer GetUnitAlliance(unit const whichUnit, unit otherUnit)
+		public function integer GetUnitAlliance(unit const whichUnit, unit const otherUnit)
 
 	public scope GroupApi
 		public function group CreateUnitsAtPoint(integer count, integer unitTypeId, player whichPlayer, real x, real y, real face)

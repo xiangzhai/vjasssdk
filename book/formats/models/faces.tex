@@ -1,8 +1,12 @@
 \section{Flächen}
 Flächen können im MDLX-Format entweder Dreiecke oder Vierecke sein, die aus mehreren Vertices bestehen.
+Zudem muss jeder Vertex, der Teil einer solchen Fläche ist, einen zugehörtigen TVertex besitzen, welcher seinen Bezugspunkt
+auf der zugehörigen Textur darstellt. So kann die Fläche auf der Textur, die von mindestens drei zweidimensionalen Vertices gebildet wird, auf die Fläche der zugehörigen dreidimensionalen gelegt werden.
+Wie sie darauf gelegt wird, bestimmt das Material des Geosets bzw. dessen Ebenen.
+TODO: Bilden die zugehörigen TVertices tatsächlich dieselben Faces im zweidimensionalen Raum (Anzahl entspricht zumindest im Testmodell der von Vertices).
 
 VERVOLLSTÄNDIGEN/ÜBERPRÜFEN: Auf die Flächen können Ebenen (Materialebenen) gelegt werden, was dem Modell erst seine eigentliche Form gibt. Die Koordinaten der Ebenen werden ..
 
 Gespeichert werden Flächen mit ihrem Typ und ihren zugehörigen Vertices.
 Tatsächlich ist die Anzahl der zugehörigen Vertices nicht vom Typ abhängig und wird separat angegeben, was eigentlich unnötig sein dürfte.
-Die mit einem großen P beginnenden MDX-Bezeichner sorgen für ein wenig Verwirrung, da damit auch Primitive gemeint sein könnten, zu denen eigentlich Formen wie Würfel, Kugeln oder Ähnliches zählt.
+Die mit einem großen P beginnenden MDX-Bezeichner sorgen für ein wenig Verwirrung, da damit auch Primitive gemeint sein könnten, zu denen eigentlich Formen wie Würfel, Kugeln oder Ähnliches zählen.
