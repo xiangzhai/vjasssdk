@@ -26,8 +26,11 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kmenu.h>
+#include <kaction.h>
 
 #include "modeleditor.hpp"
+#include "modelview.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -36,20 +39,20 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(this, 0), m_recentUrl("")
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(this, 0)), m_recentUrl("")
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
 
-	QHBoxLayout *mainLayout = new QHBoxLayout;
-	mainLayout->addWidget(&this->m_modelView);
+	QHBoxLayout *mainLayout = new QHBoxLayout(this);
+	mainLayout->addWidget(this->m_modelView);
 	this->m_modelViewWidget->setLayout(mainLayout);
 }
 
 void ModelEditor::show()
 {
 	Module::show();
-	this->m_modelView.show();
+	this->m_modelView->show();
 }
 
 void ModelEditor::openFile()
@@ -108,14 +111,40 @@ void ModelEditor::openFile()
 
 	try
 	{
-		ogreModel->refresh(*this->m_modelView.sceneManager());
+		ogreModel->refresh(*this->m_modelView->sceneManager());
 	}
 	catch (class Exception &exception)
 	{
 		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what().c_str()));
 	}
 
-	this->m_modelView.root()->addFrameListener(ogreModel);
+	this->m_modelView->root()->addFrameListener(ogreModel);
+}
+
+void ModelEditor::createFileActions(class KMenu *menu)
+{
+	class KAction *action;
+
+	action = new KAction(KIcon(":/actions/openmodel.png"), i18n("Open model"), this);
+	action->setShortcut(KShortcut(i18n("Ctrl+O")));
+	connect(action, SIGNAL(triggered()), this, SLOT(openFile()));
+	menu->addAction(action);
+}
+
+void ModelEditor::createEditActions(class KMenu *menu)
+{
+}
+
+void ModelEditor::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void ModelEditor::createWindowsActions(class KMenu *menu)
+{
+}
+
+void ModelEditor::createToolButtons(class KToolBar *toolBar)
+{
 }
 
 }

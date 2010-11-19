@@ -3,9 +3,8 @@ WC3LIB_ENABLE_EXCEPTIONS()
 add_subdirectory(ui)
 
 WC3LIB_GET_H(wc3lib_EDITOR_H)
-WC3LIB_GET_SRC(wc3lib_EDITOR_SRC)
-
 QT4_WRAP_CPP(wc3lib_EDITOR_MOC_SRC ${wc3lib_EDITOR_H})
+WC3LIB_GET_SRC(wc3lib_EDITOR_SRC) # regular cpp files and cxx moc files (wc3lib_EDITOR_MOC_SRC)
 
 #QT4_GENERATE_MOC(inputfile outputfile )
 #QT4_AUTOMOC(${wc3lib_EDITOR_MOC_SRC})

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,6 +34,13 @@ class TriggerEditor : public Module, Ui::TriggerEditor
 {
 	public:
 		TriggerEditor(class Editor *editor);
+
+	protected:
+		virtual void createFileActions(class KMenu *menu);
+		virtual void createEditActions(class KMenu *menu);
+		virtual void createMenus(class KMenuBar *menuBar);
+		virtual void createWindowsActions(class KMenu *menu);
+		virtual void createToolButtons(class KToolBar *toolBar);
 };
 
 }

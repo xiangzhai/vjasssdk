@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_PRIMITIVEVERTEX_HPP
 #define WC3LIB_MDLX_PRIMITIVEVERTEX_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "primitivevertices.hpp"
 
 namespace wc3lib
 {
@@ -33,9 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class PrimitiveVertices;
-
-class PrimitiveVertex
+class PrimitiveVertex : public GroupMdxBlockMember
 {
 	public:
 		PrimitiveVertex(class PrimitiveVertices *primitiveVertices);
@@ -50,13 +45,12 @@ class PrimitiveVertex
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		class PrimitiveVertices *m_primitiveVertices;
 		short16 m_value;
 };
 
 inline class PrimitiveVertices* PrimitiveVertex::primitiveVertices() const
 {
-	return this->m_primitiveVertices;
+	return dynamic_cast<class PrimitiveVertices*>(this->m_parent);
 }
 
 inline short16 PrimitiveVertex::value() const

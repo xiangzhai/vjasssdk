@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,6 +29,26 @@ namespace editor
 TriggerEditor::TriggerEditor(class Editor *editor) : Module(editor)
 {
 	Ui::TriggerEditor::setupUi(this);
+}
+
+void TriggerEditor::createFileActions(class KMenu *menu)
+{
+}
+
+void TriggerEditor::createEditActions(class KMenu *menu)
+{
+}
+
+void TriggerEditor::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void TriggerEditor::createWindowsActions(class KMenu *menu)
+{
+}
+
+void TriggerEditor::createToolButtons(class KToolBar *toolBar)
+{
 }
 
 }

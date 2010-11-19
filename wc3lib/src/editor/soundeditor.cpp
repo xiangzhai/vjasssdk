@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,14 +22,34 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
 
 SoundEditor::SoundEditor(class Editor *editor) : Module(editor)
 {
 }
-	
+
+void SoundEditor::createFileActions(class KMenu *menu)
+{
+}
+
+void SoundEditor::createEditActions(class KMenu *menu)
+{
+}
+
+void SoundEditor::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void SoundEditor::createWindowsActions(class KMenu *menu)
+{
+}
+
+void SoundEditor::createToolButtons(class KToolBar *toolBar)
+{
+}
+
 }
 
 }

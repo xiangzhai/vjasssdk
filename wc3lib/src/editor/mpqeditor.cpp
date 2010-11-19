@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,14 +22,58 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
-	
+
 MpqEditor::MpqEditor(class Editor *editor) : Module(editor)
 {
 }
-	
+
+void MpqEditor::newMpqArchive()
+{
+}
+
+void MpqEditor::openMpqArchive()
+{
+}
+
+void MpqEditor::closeMpqArchive()
+{
+}
+
+void MpqEditor::addFiles()
+{
+}
+
+void MpqEditor::extractFiles()
+{
+}
+
+void MpqEditor::removeFiles()
+{
+}
+
+void MpqEditor::createFileActions(class KMenu *menu)
+{
+}
+
+void MpqEditor::createEditActions(class KMenu *menu)
+{
+}
+
+void MpqEditor::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void MpqEditor::createWindowsActions(class KMenu *menu)
+{
+}
+
+void MpqEditor::createToolButtons(class KToolBar *toolBar)
+{
+}
+
 }
 
 }

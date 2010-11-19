@@ -8,7 +8,7 @@
 * blp: colors are stored as ARGB (paletted compression)?
 
 2010-10-03 Tamino Dauth <tamino@cdauth.eu>
-* mdlx: PrimitiveVertices -> GroupMdxBlock.
+* DONE: mdlx: PrimitiveVertices -> GroupMdxBlock.
 
 2010-09-25 Tamino Dauth <tamino@cdauth.eu>
 * editor: http://www.ogre3d.org/mantis/view.php?id=349

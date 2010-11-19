@@ -29,6 +29,10 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* @brief Abstract class for module implementation such as model or terrain editors.
+* Implement the pure virtual functions to customize your module's menu, actions and tool buttons.
+*/
 class Module : public QWidget
 {
 	public:
@@ -39,14 +43,11 @@ class Module : public QWidget
 	protected:
 		virtual void setupUi();
 
-		/**
-		* @todo Should all be abstract (= 0).
-		*/
-		virtual void createFileActions(class KMenu *menu) { };
-		virtual void createEditActions(class KMenu *menu) { };
-		virtual void createMenus(class KMenuBar *menuBar) { };
-		virtual void createWindowsActions(class KMenu *menu) { };
-		virtual void createToolButtons(class KToolBar *toolBar) { };
+		virtual void createFileActions(class KMenu *menu) = 0;
+		virtual void createEditActions(class KMenu *menu) = 0;
+		virtual void createMenus(class KMenuBar *menuBar) = 0;
+		virtual void createWindowsActions(class KMenu *menu) = 0;
+		virtual void createToolButtons(class KToolBar *toolBar) = 0;
 
 		class QVBoxLayout* topLayout() const;
 

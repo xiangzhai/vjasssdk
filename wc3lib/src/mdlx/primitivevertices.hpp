@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_PRIMITIVEVERTICES_HPP
 #define WC3LIB_MDLX_PRIMITIVEVERTICES_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,11 +29,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset;
-class PrimitiveVertex;
-
 /// PVTX
-class PrimitiveVertices : public MdxBlock
+/**
+* Primitives consist of at least three vertices which the indices are used of.
+* PrimitiveVertex provides such a single index value (type short16).
+* The number of vertices which belong to a single primitive depends on the primitive's type (PrimitiveType).
+*/
+class PrimitiveVertices : public GroupMdxBlock
 {
 	public:
 		PrimitiveVertices(class Geoset *geoset);
@@ -44,14 +44,10 @@ class PrimitiveVertices : public MdxBlock
 		class Geoset* geoset() const;
 		const std::list<class PrimitiveVertex*>& primitiveVertices() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+
 		class Geoset *m_geoset;
-		std::list<class PrimitiveVertex*> m_primitiveVertices;
 };
 
 inline class Geoset* PrimitiveVertices::geoset() const
@@ -61,7 +57,7 @@ inline class Geoset* PrimitiveVertices::geoset() const
 
 inline const std::list<class PrimitiveVertex*>& PrimitiveVertices::primitiveVertices() const
 {
-	return this->m_primitiveVertices;
+	return *reinterpret_cast<const std::list<class PrimitiveVertex*>*>(&this->m_members);
 }
 
 }

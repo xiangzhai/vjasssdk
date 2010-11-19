@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -100,6 +100,26 @@ void TextureEditor::openFile()
 	this->m_imageLabel->resize(this->m_imageLabel->pixmap()->size());
 	qDebug() << "Set pixmap to label ";
 	qDebug() << "Label size is " << this->m_imageLabel->width() << " | " << this->m_imageLabel->height();
+}
+
+void TextureEditor::createFileActions(class KMenu *menu)
+{
+}
+
+void TextureEditor::createEditActions(class KMenu *menu)
+{
+}
+
+void TextureEditor::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void TextureEditor::createWindowsActions(class KMenu *menu)
+{
+}
+
+void TextureEditor::createToolButtons(class KToolBar *toolBar)
+{
 }
 
 }

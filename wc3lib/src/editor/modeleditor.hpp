@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,7 +25,6 @@
 
 #include "module.hpp"
 #include "ui/ui_modeleditor.hpp"
-#include "modelview.hpp"
 #include "ogremdlx.hpp"
 
 namespace wc3lib
@@ -39,15 +38,24 @@ namespace editor
 */
 class ModelEditor : public Module, Ui::ModelEditor
 {
+	Q_OBJECT
+
 	public:
 		ModelEditor(class Editor *editor);
 
 		virtual void show();
 
+	public slots:
 		void openFile();
 
 	protected:
-		class ModelView m_modelView;
+		virtual void createFileActions(class KMenu *menu);
+		virtual void createEditActions(class KMenu *menu);
+		virtual void createMenus(class KMenuBar *menuBar);
+		virtual void createWindowsActions(class KMenu *menu);
+		virtual void createToolButtons(class KToolBar *toolBar);
+
+		class ModelView *m_modelView;
 		KUrl m_recentUrl;
 		std::list<class OgreMdlx*> m_models;
 };

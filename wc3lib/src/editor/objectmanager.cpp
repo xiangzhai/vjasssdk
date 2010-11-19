@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,14 +22,34 @@
 
 namespace wc3lib
 {
-	
+
 namespace editor
 {
-	
+
 ObjectManager::ObjectManager(class Editor *editor) : Module(editor)
 {
 }
-	
+
+void ObjectManager::createFileActions(class KMenu *menu)
+{
+}
+
+void ObjectManager::createEditActions(class KMenu *menu)
+{
+}
+
+void ObjectManager::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void ObjectManager::createWindowsActions(class KMenu *menu)
+{
+}
+
+void ObjectManager::createToolButtons(class KToolBar *toolBar)
+{
+}
+
 }
 
 }

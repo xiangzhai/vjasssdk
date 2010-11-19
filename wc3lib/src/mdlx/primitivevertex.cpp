@@ -27,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PrimitiveVertex::PrimitiveVertex(class PrimitiveVertices *primitiveVertices) : m_primitiveVertices(primitiveVertices)
+PrimitiveVertex::PrimitiveVertex(class PrimitiveVertices *primitiveVertices) : GroupMdxBlockMember(primitiveVertices)
 {
 }
 

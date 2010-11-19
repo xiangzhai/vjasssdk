@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -48,6 +48,26 @@ void TerrainEditor::show()
 {
 	Module::show();
 	this->m_modelView->show();
+}
+
+void TerrainEditor::createFileActions(class KMenu *menu)
+{
+}
+
+void TerrainEditor::createEditActions(class KMenu *menu)
+{
+}
+
+void TerrainEditor::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void TerrainEditor::createWindowsActions(class KMenu *menu)
+{
+}
+
+void TerrainEditor::createToolButtons(class KToolBar *toolBar)
+{
 }
 
 }

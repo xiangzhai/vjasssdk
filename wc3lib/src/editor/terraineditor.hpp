@@ -44,6 +44,12 @@ class TerrainEditor : public Module
 		virtual void show();
 
 	protected:
+		virtual void createFileActions(class KMenu *menu);
+		virtual void createEditActions(class KMenu *menu);
+		virtual void createMenus(class KMenuBar *menuBar);
+		virtual void createWindowsActions(class KMenu *menu);
+		virtual void createToolButtons(class KToolBar *toolBar);
+
 		class ModelView *m_modelView;
 };
 

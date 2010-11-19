@@ -1,3 +1,9 @@
+2010-11-18 Tamino Dauth <tamino@cdauth.eu>
+* editor: Implemented pure virtual functions in Module-based classes.
+
+2010-11-15 Tamino Dauth <tamino@cdauth.eu>
+* mdlx: Classes PrimitiveVertices and PrimitiveVertex use new base classes now.
+
 2010-11-07 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improved texture treatment of class OgreMdlx.
 * editor: Improved layout creation of class Module.

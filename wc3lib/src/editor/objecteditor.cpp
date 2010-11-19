@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -48,6 +48,26 @@ ObjectEditor::~ObjectEditor()
 {
 	if (this->m_data != 0)
 		delete this->m_data;
+}
+
+void ObjectEditor::createFileActions(class KMenu *menu)
+{
+}
+
+void ObjectEditor::createEditActions(class KMenu *menu)
+{
+}
+
+void ObjectEditor::createMenus(class KMenuBar *menuBar)
+{
+}
+
+void ObjectEditor::createWindowsActions(class KMenu *menu)
+{
+}
+
+void ObjectEditor::createToolButtons(class KToolBar *toolBar)
+{
 }
 
 }
