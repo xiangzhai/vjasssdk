@@ -25,7 +25,7 @@
 
 #include <boost/operators.hpp>
 
-#include <KUrl>
+#include <kurl.h>
 
 #include "../mpq.hpp"
 
@@ -108,7 +108,7 @@ class MpqPriorityList : public std::map<MpqPriorityListEntry::Priority, MpqPrior
 		/**
 		* @return Returns true if the URL is an valid entry.
 		*/
-		bool addEntry(const KUrl &url, Priority priority);
+		bool addEntry(const KUrl &url, MpqPriorityListEntry::Priority priority);
 
 		/**
 		* Checks the whole priority list in the specified order for the given path.
@@ -119,7 +119,20 @@ class MpqPriorityList : public std::map<MpqPriorityListEntry::Priority, MpqPrior
 		* @note Does not use the list's internal locale!
 		*/
 		const KUrl& findFile(const KUrl &url, mpq::MpqFile::Locale locale) const;
+
+	protected:
+		mpq::MpqFile::Locale m_locale;
 };
+
+inline void MpqPriorityList::setLocale(mpq::MpqFile::Locale locale)
+{
+	this->m_locale = locale;
+}
+
+inline mpq::MpqFile::Locale MpqPriorityList::locale() const
+{
+	return this->m_locale;
+}
 
 }
 

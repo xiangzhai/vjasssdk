@@ -1,5 +1,6 @@
 2010-11-21 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improved class MpqPriorityList and added class MpqPriorityListEntry.
+* editor: Fixed layout of texture editor.
 
 2010-11-19 Tamino Dauth <tamino@cdauth.eu>
 * editor: Model editor uses centralized layout of class Module now.

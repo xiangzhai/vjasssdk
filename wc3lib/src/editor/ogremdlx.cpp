@@ -29,8 +29,11 @@
 
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kurl.h>
 
 #include "ogremdlx.hpp"
+#include "modelview.hpp"
+#include "editor.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -39,12 +42,13 @@ namespace wc3lib
 namespace editor
 {
 
-OgreMdlx::OgreMdlx(const class Mdlx &mdlx, class Editor *editor) : m_mdlx(&mdlx), m_editor(editor)
+OgreMdlx::OgreMdlx(const class Mdlx &mdlx, class ModelView *modelView) : m_mdlx(&mdlx), m_modelView(modelView)
 {
 }
 
-void OgreMdlx::refresh(Ogre::SceneManager &sceneManager) throw (class Exception)
+void OgreMdlx::refresh() throw (class Exception)
 {
+	Ogre::SceneManager &sceneManager = *this->m_modelView->sceneManager();
 	// create textures
 	BOOST_FOREACH(const mdlx::Texture *texture, this->m_mdlx->textures()->textures())
 		this->m_textures[texture] = this->createTexture(*texture);
@@ -373,17 +377,18 @@ Ogre::Node* OgreMdlx::createNode(const class Node &node)
 namespace
 {
 
-Ogre::Image* blpToOgre(const boost::filesystem::path &path) throw (class Exception)
+/// @todo Use KUrl and IO slaves (MPQ protocol)
+Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 {
-	QFile file(path.string().c_str());
+	QFile file(url.toLocalFile());
 
 	if (!file.open(QIODevice::ReadOnly))
-		throw Exception(boost::format(_("Unable to open texture image \"%1%\".")) % path);
+		throw Exception(boost::format(_("Unable to open texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
 
 	QImage qImage;
 
 	if (!qImage.load(&file, 0))
-		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % path);
+		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
 
 	QByteArray ba;
 	QBuffer buffer(&ba);
@@ -412,7 +417,8 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 	// if image could not be loaded continue with empty texture
 	try
 	{
-		image = blpToOgre(texture.texturePath());
+		KUrl url = this->modelView()->editor()->findFile(KUrl(texture.texturePath()));
+		image = blpToOgre(url);
 	}
 	catch (class Exception &exception)
 	{

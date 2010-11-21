@@ -39,7 +39,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(this, 0)), m_recentUrl("")
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_recentUrl("")
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -106,14 +106,14 @@ void ModelEditor::openFile()
 	}
 
 	const Ogre::Vector3 position(0.0, 0.0, 0.0);
-	OgreMdlx *ogreModel = new OgreMdlx(model);
+	OgreMdlx *ogreModel = new OgreMdlx(model, this->m_modelView);
 	//ogreModel->refresh()
 	//this->m_modelView.createModel(model, position, ogreModel);
 	this->m_models.push_back(ogreModel);
 
 	try
 	{
-		ogreModel->refresh(*this->m_modelView->sceneManager());
+		ogreModel->refresh();
 	}
 	catch (class Exception &exception)
 	{

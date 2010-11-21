@@ -48,15 +48,15 @@ using namespace mdlx;
 class OgreMdlx  : public Ogre::FrameListener
 {
 	public:
-		OgreMdlx(const class Mdlx &mdlx, class Editor *editor);
+		OgreMdlx(const class Mdlx &mdlx, class ModelView *modelView);
 
 		const class Mdlx* mdlx() const;
-		class Editor* editor() const;
+		class ModelView* modelView() const;
 
 		/**
 		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
 		*/
-		void refresh(Ogre::SceneManager &sceneManager) throw (class Exception);
+		void refresh() throw (class Exception);
 
 	protected:
 		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
@@ -77,7 +77,7 @@ class OgreMdlx  : public Ogre::FrameListener
 		std::map<const class Node*, Ogre::Node*> setupInheritance(const std::list<const class Node*> &nodes);
 
 		const class Mdlx *m_mdlx;
-		class Editor *m_editor;
+		class ModelView *m_modelView;
 
 		std::map<const class Texture*, Ogre::TexturePtr> m_textures;
 		std::map<const class Material*, Ogre::MaterialPtr> m_materials;
@@ -92,6 +92,11 @@ class OgreMdlx  : public Ogre::FrameListener
 inline const class Mdlx* OgreMdlx::mdlx() const
 {
 	return this->m_mdlx;
+}
+
+inline class ModelView* OgreMdlx::modelView() const
+{
+	return this->m_modelView;
 }
 
 }

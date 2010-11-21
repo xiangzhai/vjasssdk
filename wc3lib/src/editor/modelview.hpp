@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -48,11 +48,12 @@ class ModelView : public QGLWidget
 		* @param ogreSceneType OGRE scene type which will be set for the scene manager of the widget. Should be changed for terrain (ST_EXTERIOR_FAR, ST_EXTERIOR_REAL_FAR).
 		* @param ogreParameters OGRE window parameters.
 		*/
-		ModelView(QWidget *parent = 0, const QGLWidget *shareWidget = 0, Qt::WFlags f = 0, Ogre::SceneType ogreSceneType = Ogre::ST_EXTERIOR_CLOSE, const Ogre::NameValuePairList *ogreParameters = 0);
+		ModelView(class Editor *editor, QWidget *parent = 0, const QGLWidget *shareWidget = 0, Qt::WFlags f = 0, Ogre::SceneType ogreSceneType = Ogre::ST_EXTERIOR_CLOSE, const Ogre::NameValuePairList *ogreParameters = 0);
 		virtual ~ModelView();
 
 		//virtual void show();
 
+		class Editor* editor() const;
 		Ogre::Root* root() const;
 		Ogre::SceneManager* sceneManager() const;
 
@@ -81,6 +82,7 @@ class ModelView : public QGLWidget
 		virtual void dragEnterEvent(QDragEnterEvent *event);
 		virtual void dropEvent(QDropEvent *event);
 
+		class Editor *m_editor;
 		const Ogre::NameValuePairList *m_parameters;
 		Ogre::Root *m_root;
 		Ogre::RenderWindow *m_renderWindow;
@@ -96,6 +98,11 @@ class ModelView : public QGLWidget
 		// event values
 		bool m_changeFarClip;
 };
+
+inline class Editor* ModelView::editor() const
+{
+	return this->m_editor;
+}
 
 inline Ogre::Root* ModelView::root() const
 {

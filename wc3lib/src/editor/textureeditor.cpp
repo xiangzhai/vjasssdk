@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QtCore>
+#include <QtGui>
 
 #include <kfiledialog.h>
 #include <kmessagebox.h>
@@ -38,7 +38,7 @@ TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
 	Module::setupUi();
 	Ui::TextureEditor::setupUi(this);
 
-	topLayout()->addWidget(gridLayout2);
+	topLayout()->addLayout(gridLayout_2);
 }
 
 void TextureEditor::openFile()

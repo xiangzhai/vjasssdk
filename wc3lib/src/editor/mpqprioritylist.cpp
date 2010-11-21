@@ -36,8 +36,15 @@ MpqPriorityListEntry::MpqPriorityListEntry(const KUrl &url, Priority priority) :
 	// else it will stay invalid
 }
 
+const KUrl& MpqPriorityList::findFile(const KUrl &url) const
+{
+	return this->findFile(url, this->locale());
+}
+
 const KUrl& MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale locale) const
 {
+	return url; // TEST
+
 	if (!url.isValid() || !url.isLocalFile()) /// @todo Support non-local files (mpq: protocol).
 		return KUrl("");
 
@@ -53,8 +60,8 @@ const KUrl& MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale loca
 
 	// usually map should be sorted in correct order
 	// this is an additional, optional safety sorting statement!
-	std::sort(validEntries.begin(), validEntries.end());
-	std::map<KUrl, MpqListPriorityEntry::Priority> urlEntries;
+	//std::sort(validEntries.begin(), validEntries.end());
+	std::map<KUrl, MpqPriorityListEntry::Priority> urlEntries;
 
 	BOOST_FOREACH(const MpqPriorityListEntry *entry, validEntries)
 	{
@@ -96,7 +103,7 @@ const KUrl& MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale loca
 	if (urlEntries.empty())
 		return KUrl("");
 
-	return urlEntries.first();
+	return KUrl(""); // TODO Return first matching entry.
 }
 
 }

@@ -25,9 +25,11 @@
 
 #include <kmainwindow.h>
 #include <kaboutdata.h>
-#include <kpath.h>
+#include <kurl.h>
 
 #include <boost/filesystem.hpp>
+
+#include "mpqprioritylist.hpp"
 
 namespace wc3lib
 {
@@ -48,7 +50,7 @@ namespace editor
 * @todo Each Module has it's own tool bar with all other modules.
 * @todo Add class MpqPriorityList which is hold for loaded MPQ archives -> map specific?
 */
-class Editor : public KMainWindow
+class Editor : public KMainWindow, public MpqPriorityList
 {
 	Q_OBJECT
 
@@ -60,20 +62,6 @@ class Editor : public KMainWindow
 		virtual ~Editor();
 
 		class KActionCollection* actionCollection() const;
-
-		/**
-		* @return Returns first valid file path (including MPQ and folder priority list).
-		*/
-		const KPath& filePath(const KPath &path) const;
-
-		/**
-		* Each time a file has to searched for, all editor MPQ archives will be checked for in the ordering of their priority.
-		* Higher priority means it will be searched through befor MPQ archives with less priority.
-		* @return Returns the MPQ's position in editor MPQ list.
-		*/
-		std::size_t addMpq(const class Mpq *mpq, std::size_t priority);
-
-		const class mpq::MpqFile* loadMpqFile(const boost::filesystem::path &path);
 
 	public slots:
 		void newMap();
