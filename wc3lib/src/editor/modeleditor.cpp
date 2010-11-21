@@ -43,10 +43,12 @@ ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
-
+	/*
 	QHBoxLayout *mainLayout = new QHBoxLayout(this);
 	mainLayout->addWidget(this->m_modelView);
 	this->m_modelViewWidget->setLayout(mainLayout);
+	*/
+	topLayout()->addWidget(this->m_modelView);
 }
 
 void ModelEditor::show()

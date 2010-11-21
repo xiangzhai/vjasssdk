@@ -35,8 +35,10 @@ namespace editor
 
 TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
 {
-	Ui::TextureEditor::setupUi(this);
 	Module::setupUi();
+	Ui::TextureEditor::setupUi(this);
+
+	topLayout()->addWidget(gridLayout2);
 }
 
 void TextureEditor::openFile()

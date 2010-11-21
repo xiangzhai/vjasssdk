@@ -48,9 +48,10 @@ using namespace mdlx;
 class OgreMdlx  : public Ogre::FrameListener
 {
 	public:
-		OgreMdlx(const class Mdlx &mdlx);
+		OgreMdlx(const class Mdlx &mdlx, class Editor *editor);
 
 		const class Mdlx* mdlx() const;
+		class Editor* editor() const;
 
 		/**
 		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
@@ -76,6 +77,7 @@ class OgreMdlx  : public Ogre::FrameListener
 		std::map<const class Node*, Ogre::Node*> setupInheritance(const std::list<const class Node*> &nodes);
 
 		const class Mdlx *m_mdlx;
+		class Editor *m_editor;
 
 		std::map<const class Texture*, Ogre::TexturePtr> m_textures;
 		std::map<const class Material*, Ogre::MaterialPtr> m_materials;

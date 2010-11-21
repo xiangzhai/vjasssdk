@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,7 +38,7 @@ namespace wc3lib
 
 namespace mpq
 {
-	
+
 class Mpq;
 class Sector;
 
@@ -67,7 +67,7 @@ class MpqFile
 			Russsian = 0x419,
 			EnglishUK = 0x809
 		};
-		
+
 		/// There seems to be only one platform.
 		enum Platform
 		{
@@ -96,7 +96,7 @@ class MpqFile
 		* @return Returns the file path. Note that MPQ archives without list file don't have any information about the file paths.
 		*/
 		const boost::filesystem::path& path() const;
-		
+
 		// block attributes
 		uint32 fileKey() const;
 		/// @return Reurns file size in bytes.
@@ -107,14 +107,14 @@ class MpqFile
 		bool isEncrypted() const;
 		bool isCompressed() const;
 		bool isImploded() const;
-		
+
 		// extended attributes
 		CRC32 crc32() const;
 		void setFileTime(const time_t &time);
 		const struct FILETIME& fileTime() const;
 		bool fileTime(time_t &time) const;
 		MD5 md5() const;
-		
+
 		const std::list<class Sector*>& sectors() const;
 
 		/**
@@ -133,12 +133,12 @@ class MpqFile
 
 	protected:
 		friend class Mpq;
-		
+
 		static int16 localeToInt(enum Locale locale);
 		static enum Locale intToLocale(int16 value);
 		static int8 platformToInt(enum Platform platform);
 		static enum Platform intToPlatform(int8 value);
-		
+
 		/**
 		* MPQ files are created by @class Mpq only.
 		*/
@@ -153,7 +153,7 @@ class MpqFile
 		* Writes the file sector meta data.
 		*/
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
-		
+
 		/**
 		* Remove file (clears file hash and block data which frees the file's used space).
 		*/
@@ -163,7 +163,7 @@ class MpqFile
 		*/
 		bool rename(const std::string &newName, bool overwriteExisting = false) throw (class Exception);
 		bool move(const boost::filesystem::path &newPath, bool overwriteExisting = false) throw (class Exception);
-		
+
 		class Mpq *m_mpq;
 		class Hash *m_hash;
 		boost::filesystem::path m_path;

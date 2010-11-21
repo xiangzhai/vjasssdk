@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 
 #include <kmainwindow.h>
 #include <kaboutdata.h>
+#include <kpath.h>
 
 #include <boost/filesystem.hpp>
 
@@ -59,6 +60,11 @@ class Editor : public KMainWindow
 		virtual ~Editor();
 
 		class KActionCollection* actionCollection() const;
+
+		/**
+		* @return Returns first valid file path (including MPQ and folder priority list).
+		*/
+		const KPath& filePath(const KPath &path) const;
 
 		/**
 		* Each time a file has to searched for, all editor MPQ archives will be checked for in the ordering of their priority.

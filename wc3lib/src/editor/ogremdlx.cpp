@@ -39,7 +39,7 @@ namespace wc3lib
 namespace editor
 {
 
-OgreMdlx::OgreMdlx(const class Mdlx &mdlx) : m_mdlx(&mdlx)
+OgreMdlx::OgreMdlx(const class Mdlx &mdlx, class Editor *editor) : m_mdlx(&mdlx), m_editor(editor)
 {
 }
 

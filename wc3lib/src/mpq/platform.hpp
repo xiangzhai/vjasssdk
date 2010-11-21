@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,7 +41,7 @@ typedef int32 CRC32;
 
 /// Windows-like file time. Redefined for compatibility.
 struct FILETIME
-{ 
+{
 	uint32_t lowDateTime;
 	uint32_t highDateTime;
 };
@@ -102,7 +102,7 @@ struct ExtendedAttributesHeader
 };
 
 struct WeakDigitalSignature
-{	
+{
 	int32 unknown0;
 	int32 unknown1;
 };

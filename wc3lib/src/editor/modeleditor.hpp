@@ -36,16 +36,16 @@ namespace editor
 /**
 * @todo Should use a customized version of model view for selection and editing models.
 */
-class ModelEditor : public Module, Ui::ModelEditor
+class ModelEditor : public Module, protected Ui::ModelEditor
 {
-	Q_OBJECT
+	//Q_OBJECT
 
 	public:
 		ModelEditor(class Editor *editor);
 
 		virtual void show();
 
-	public slots:
+	//public slots:
 		void openFile();
 
 	protected:

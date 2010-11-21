@@ -32,7 +32,7 @@ namespace wc3lib
 namespace editor
 {
 
-class TextureEditor : public Module, Ui::TextureEditor
+class TextureEditor : public Module, protected Ui::TextureEditor
 {
 	public:
 		TextureEditor(class Editor *editor);
