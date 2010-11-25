@@ -1,21 +1,22 @@
 library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, ALibraryCoreInterfaceMisc, AStructSystemsCharacterAbstractCharacterSystem
 
 	struct ARevival extends AAbstractCharacterSystem
-		//static start members
+		// static construction members
 		private static boolean m_showDialog
-		//dynamic members
+		// dynamic members
 		private real m_time
 		private real m_x
 		private real m_y
 		private real m_facing
-		//members
+		// members
 		private trigger m_revivalTrigger
 		private timer m_timer
 		private timerdialog m_timerDialog
+		private boolean m_runs
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"ARevival\"")
 
-		//dynamic members
+		// dynamic members
 
 		public method setTime takes real time returns nothing
 			set this.m_time = time
@@ -49,12 +50,12 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 			return this.m_facing
 		endmethod
 
-		//methods
+		// methods
 
-		public method enable takes nothing returns nothing
+		public stub method enable takes nothing returns nothing
 			call super.enable()
 			call EnableTrigger(this.m_revivalTrigger)
-			if (TimerGetRemaining(this.m_timer) > 0.0) then
+			if (this.m_runs) then
 				call PauseTimerBJ(false, this.m_timer)
 				if (thistype.m_showDialog) then //Der bersicht halber nicht in die Funktion bergeben
 					call TimerDialogDisplay(this.m_timerDialog, true)
@@ -62,10 +63,10 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 			endif
 		endmethod
 
-		public method disable takes nothing returns nothing
+		public stub method disable takes nothing returns nothing
 			call super.disable()
 			call DisableTrigger(this.m_revivalTrigger)
-			if (TimerGetRemaining(this.m_timer) > 0.0) then
+			if (this.m_runs) then
 				call PauseTimerBJ(true, this.m_timer)
 				if (thistype.m_showDialog) then
 					call TimerDialogDisplay(this.m_timerDialog, false)
@@ -81,6 +82,7 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 		private static method timerFunctionRevival takes nothing returns nothing
 			local timer expiredTimer = GetExpiredTimer()
 			local thistype this = AHashTable.global().handleInteger(expiredTimer, "this")
+			set this.m_runs = false
 			call this.revive()
 			call this.end.evaluate()
 			set expiredTimer = null
@@ -88,6 +90,7 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 
 		private method start takes nothing returns nothing
 			call TimerStart(this.m_timer, this.m_time, false, function thistype.timerFunctionRevival)
+			set this.m_runs = true
 			if (thistype.m_showDialog) then
 				call TimerDialogDisplay(this.m_timerDialog, true)
 			endif
@@ -135,6 +138,7 @@ library AStructSystemsCharacterRevival requires optional ALibraryCoreDebugMisc, 
 
 		public static method create takes ACharacter character returns thistype
 			local thistype this = thistype.allocate(character)
+			set this.m_runs = false
 			call this.createTimer()
 			call this.createRevivalTrigger()
 			return this

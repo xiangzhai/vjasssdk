@@ -1,3 +1,6 @@
+2010-11-25 Tamino Dauth <tamino@cdauth.eu>
+* ARevival: Run check in methods enable and disable doesn't work correctly.
+
 2010-11-06 Tamino Dauth <tamino@cdauth.eu>
 * AVideo: Find function which prevents unit portraits from being shown correctly.
 

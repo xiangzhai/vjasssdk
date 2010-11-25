@@ -94,8 +94,10 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 
 			/// @todo For corresponding player only.
 			if (thistype.m_useQuestLog) then
-				call FlashQuestDialogButton()
-				call ForceQuestDialogUpdate() //required?
+				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
+					call FlashQuestDialogButton()
+					call ForceQuestDialogUpdate() //required?
+				endif
 			endif
 		endmethod
 
@@ -212,6 +214,26 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			return false
 		endmethod
 
+		private method setQuestLogState takes integer state returns nothing
+			if (state == AAbstractQuest.stateNotUsed) then
+				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
+					call QuestSetDiscovered(this.m_questLogQuest, false)
+				endif
+			elseif (state == AAbstractQuest.stateNew) then
+				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
+					call QuestSetDiscovered(this.m_questLogQuest, true)
+				endif
+			elseif (state == AAbstractQuest.stateCompleted) then
+				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
+					call QuestSetCompleted(this.m_questLogQuest, true)
+				endif
+			elseif (state == AAbstractQuest.stateFailed) then
+				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
+					call QuestSetFailed(this.m_questLogQuest, true)
+				endif
+			endif
+		endmethod
+
 		/// Note that if quest's state is changed quest items states will be changed automatically without checking conditions.
 		public stub method setStateWithoutCondition takes integer state returns nothing
 			local integer i
@@ -241,15 +263,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 				endif
 				call QuestSetTitle(this.m_questLogQuest, title)
 				//call QuestSetDescription(this.questLogQuest, this.description)
-				if (state == AAbstractQuest.stateNotUsed) then
-					call QuestSetDiscovered(this.m_questLogQuest, false)
-				elseif (state == AAbstractQuest.stateNew) then
-					call QuestSetDiscovered(this.m_questLogQuest, true)
-				elseif (state == AAbstractQuest.stateCompleted) then
-					call QuestSetCompleted(this.m_questLogQuest, true)
-				elseif (state == AAbstractQuest.stateFailed) then
-					call QuestSetFailed(this.m_questLogQuest, true)
-				endif
+				call this.setQuestLogState(state)
 			endif
 
 			call super.setStateWithoutCondition(state)
@@ -290,7 +304,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		private method createQuestLogQuest takes nothing returns nothing
 			if (thistype.m_useQuestLog) then
 				set this.m_questLogQuest = CreateQuest()
-				call QuestSetDiscovered(this.m_questLogQuest, false) // hide quest before setting state
+				call this.setQuestLogState(this.state()) // hide quest before setting state
 				call QuestSetRequired(this.m_questLogQuest, this.character() == 0)
 			endif
 		endmethod

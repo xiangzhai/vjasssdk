@@ -1,24 +1,24 @@
 library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematic, AStructCoreInterfacePlayerSelection, ALibraryCoreInterfaceMisc, ALibraryCoreStringConversion, AStructSystemsCharacterCharacter, AStructSystemsCharacterTalk
 
 	private struct AActorData
-		//start members
+		// construction members
 		private unit m_unit
-		//members
+		// members
 		private unit m_actor
 
-		//start members
+		// construction members
 
 		public method unit takes nothing returns unit
 			return this.m_unit
 		endmethod
 
-		//members
+		// members
 
 		public method actor takes nothing returns unit
 			return this.m_actor
 		endmethod
 
-		//methods
+		// methods
 
 		public method restore takes nothing returns nothing
 			call RemoveUnit(this.m_actor)
@@ -63,6 +63,33 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 	endstruct
 
+	/**
+	* Stores all necessary character data which has to be restored after video.
+	*/
+	private struct AVideoCharacterData
+		// construction members
+		private ACharacter m_character
+		// members
+		private boolean m_isMovable
+
+		public method store takes nothing returns nothing
+			set this.m_isMovable = this.m_character.isMovable()
+		endmethod
+
+		public method restore takes nothing returns nothing
+			if (this.m_character.isMovable() != this.m_isMovable) then
+				call this.m_character.setMovable(this.m_isMovable)
+			endif
+		endmethod
+
+		public static method create takes ACharacter character returns thistype
+			local thistype this = thistype.allocate()
+			set this.m_character = character
+
+			return this
+		endmethod
+	endstruct
+
 	/// @todo Should be a part of @struct AVideo, vJass bug.
 	function interface AVideoAction takes AVideo video returns nothing
 
@@ -95,6 +122,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		private static AActorData m_actor //copy of first character
 		private static APlayerSelection array m_playerSelection[12] /// @todo bj_MAX_PLAYERS
 		private static boolean array m_playerHadDialog[12] /// @todo bj_MAX_PLAYERS
+		private static AVideoCharacterData array m_playerCharacterData[12] /// @todo bj_MAX_PLAYERS
 		private static AIntegerVector m_actorData
 		private static real m_timeOfDay
 		// dynamic members
@@ -159,6 +187,10 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 						set thistype.m_playerHadDialog[i] = false
 					endif
 				endif
+				if (ACharacter.playerCharacter(user) != 0) then
+					set thistype.m_playerCharacterData[i] = AVideoCharacterData.create(ACharacter.playerCharacter(user))
+					call thistype.m_playerCharacterData[i].store()
+				endif
 				set user = null
 				set i = i + 1
 			endloop
@@ -177,6 +209,13 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				endif
 				if (thistype.m_playerSelection[i] != 0) then
 					call thistype.m_playerSelection[i].restore()
+				endif
+				if (thistype.m_playerCharacterData[i] != 0) then
+					if (ACharacter.playerCharacter(user) != 0) then
+						call thistype.m_playerCharacterData[i].restore()
+					endif
+					call thistype.m_playerCharacterData[i].destroy()
+					set thistype.m_playerCharacterData[i] = 0
 				endif
 				set user = null
 				set i = i + 1
@@ -268,9 +307,8 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call SetTimeOfDay(thistype.m_timeOfDay)
 			call TriggerSleepAction(thistype.m_waitTime)
-			call thistype.restorePlayerData()
-
 			call ACharacter.setAllMovable(true)
+			call thistype.restorePlayerData()
 			set thistype.m_runningVideo = 0
 			set thistype.m_skipped = false
 			set thistype.m_skippingPlayers = 0
@@ -431,7 +469,8 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		public static method cleanUp takes nothing returns nothing
-			//static members
+			local integer i
+			// static members
 			loop
 				exitwhen (thistype.m_actorData.empty())
 				call AActorData(thistype.m_actorData.back()).destroy()
@@ -439,16 +478,25 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endloop
 			call thistype.m_actorData.destroy()
 
+			set i = 0
+			loop
+				exitwhen (i == bj_MAX_PLAYERS)
+				if (thistype.m_playerCharacterData[i] != 0) then
+					call thistype.m_playerCharacterData[i].destroy()
+				endif
+				set i = i + 1
+			endloop
+
 			call thistype.destroySkipTrigger()
 		endmethod
 
-		//static start members
+		// static construction members
 
 		public static method waitInterval takes nothing returns real
 			return thistype.m_waitInterval
 		endmethod
 
-		//static members
+		// static members
 
 		public static method runningVideo takes nothing returns thistype
 			return thistype.m_runningVideo

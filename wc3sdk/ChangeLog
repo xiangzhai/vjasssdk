@@ -1,3 +1,7 @@
+2010-11-25 Tamino Dauth <tamino@cdauth.eu>
+* ARevival: Methods enable and disable are stub now.
+* AVideo: Added structure AVideoCharacterData to store movability of characters before video starts.
+
 2010-11-06 Tamino Dauth <tamino@cdauth.eu>
 * ALayer: Uses SetUnitZ now. Improved height refreshing. Enter and leave methods return results now and do not crash if unit belongs or belongs not to layer. Improved performance of method unitLeaveAll. Revised documentation. Fixed double free of ARegionListIterator.
 * AVideo: Uses static member divident now. Stores and restores time of day now.
