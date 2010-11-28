@@ -363,6 +363,47 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 			set owner = null
 		endmethod
 
+		public method select takes nothing returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				call SelectUnit(this.m_units[i], true)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public method deselect takes nothing returns nothing
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				call SelectUnit(this.m_units[i], false)
+				set i = i + 1
+			endloop
+		endmethod
+
+		public method selectOnly takes nothing returns nothing
+			call ClearSelection()
+			call this.select()
+		endmethod
+
+		public method selectForPlayer takes player whichPlayer returns nothing
+			if (whichPlayer == GetLocalPlayer()) then
+				call this.select()
+			endif
+		endmethod
+
+		public method deselectForPlayer takes player whichPlayer returns nothing
+			if (whichPlayer == GetLocalPlayer()) then
+				call this.deselect()
+			endif
+		endmethod
+
+		public method selectOnlyForPlayer takes player whichPlayer returns nothing
+			if (whichPlayer == GetLocalPlayer()) then
+				call this.selectOnly()
+			endif
+		endmethod
+
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
 			// members

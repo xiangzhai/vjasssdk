@@ -110,7 +110,7 @@ library AStructSystemsGuiGui requires optional ALibraryCoreDebugMisc, AStructCor
 
 		/// Saves GUI users camera data and selection in game.
 		public method savePlayerData takes nothing returns nothing
-			call this.m_playerSelection.save()
+			call this.m_playerSelection.store()
 		endmethod
 
 		/// Loads GUI users camera data and selection from time before he has enabled the GUI.

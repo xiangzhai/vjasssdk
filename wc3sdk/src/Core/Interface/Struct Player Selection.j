@@ -1,56 +1,56 @@
-library AStructCoreInterfacePlayerSelection requires optional ALibraryCoreDebugMisc
+library AStructCoreInterfacePlayerSelection requires optional ALibraryCoreDebugMisc, AStructCoreGeneralGroup
 
 	struct APlayerSelection
-		//start members
+		// construction members
 		private player m_player
-		//members
-		private group m_group
-		
+		// members
+		private AGroup m_group
+
 		//! runtextmacro optional A_STRUCT_DEBUG("\"APlayerSelection\"")
-		
-		//start members
-		
+
+		// construction members
+
 		public method player takes nothing returns player
 			return this.m_player
 		endmethod
-		
-		//members
-		
-		public method group takes nothing returns group
+
+		// members
+
+		public method group takes nothing returns AGroup
 			return this.m_group
 		endmethod
-		
-		//methods
-		
-		public method save takes nothing returns nothing
+
+		// methods
+
+		public method store takes nothing returns nothing
 			debug call this.print("Saving player selection.")
-			call GroupClear(this.m_group)
+			call this.m_group.units().clear()
 			call SyncSelections()
-			call GroupEnumUnitsSelected(this.m_group, this.m_player, null)
-			debug call this.print("Group size " + I2S(CountUnitsInGroup(this.m_group)))
+			call this.m_group.addUnitsSelected(this.m_player, null)
+			debug call this.print("Group size " + I2S(this.m_group.units().size()))
 		endmethod
-		
+
 		/// @todo Desync
 		public method restore takes nothing returns nothing
 			debug call this.print("Restoring for player " + GetPlayerName(this.m_player))
-			//call SelectGroupForPlayerBJ(this.m_group, this.m_player) /// @todo Desync
+			call this.m_group.selectOnlyForPlayer(this.m_player) /// @todo Desync?
+			debug call this.print("After restoration")
 		endmethod
-		
+
 		public static method create takes player user returns thistype
 			local thistype this = thistype.allocate()
-			//start members
+			// construction members
 			set this.m_player = user
-			//members
-			set this.m_group = CreateGroup()
+			// members
+			set this.m_group = AGroup.create()
 			return this
 		endmethod
-		
+
 		public method onDestroy takes nothing returns nothing
-			//start members
+			// construction members
 			set this.m_player = null
-			//members
-			call DestroyGroup(this.m_group)
-			set this.m_group = null
+			// members
+			call this.m_group.destroy()
 		endmethod
 	endstruct
 

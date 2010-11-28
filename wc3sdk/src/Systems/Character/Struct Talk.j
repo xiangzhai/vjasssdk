@@ -164,7 +164,7 @@ endif
 			endif
 			call character.setTalk(this)
 			call character.setMovable(false)
-			call PauseUnit(this.m_unit, true) //Disables routines or something else
+			call PauseUnit(this.m_unit, true) // disables routines or something else of NPC
 			call SetUnitFacing(character.unit(), GetAngleBetweenUnits(character.unit(), this.m_unit))
 			call SetUnitFacing(this.m_unit, GetAngleBetweenUnits(this.m_unit, character.unit()))
 			call SetUnitLookAt(character.unit(), "bone_head", this.m_unit, 0.0, 0.0, GetUnitFlyHeight(this.m_unit) + 90.0)
@@ -175,7 +175,7 @@ endif
 			call AThirdPersonCamera.playerThirdPersonCamera(character.player()).enable(character.unit(), 0.0)
 			call AGui.playerGui(character.player()).dialog().clear()
 			call AGui.playerGui(character.player()).dialog().setMessage(GetUnitName(this.m_unit))
-			call this.m_startAction.execute(this) //create buttons
+			call this.m_startAction.execute(this) // create buttons
 		endmethod
 
 		public method isClosed takes nothing returns boolean

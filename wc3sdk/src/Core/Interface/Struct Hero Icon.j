@@ -47,13 +47,14 @@ library AStructCoreInterfaceHeroIcon requires ALibraryCoreDebugMisc, ALibraryCor
 				return
 			endif
 			// change owner that hero icon is displayed again
+			debug call Print("Enable hero icon of unit " + GetUnitName(this.unit()) + " with unit copy unit " + GetUnitName(this.unitCopy()) + " for player " + GetPlayerName(this.player()))
 			call SetUnitOwner(this.unitCopy(), this.player(), false)
 			call super.enable()
 			call EnableTrigger(this.m_selectionTrigger)
 			call EnableTrigger(this.m_orderTrigger)
 		endmethod
 
-		public method disable takes nothing returns nothing
+		public stub method disable takes nothing returns nothing
 			if (not this.isEnabled()) then
 				return
 			endif

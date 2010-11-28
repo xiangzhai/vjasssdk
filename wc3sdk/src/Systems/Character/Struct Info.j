@@ -24,7 +24,7 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		public static string m_listenAnimation /// Do not use.
 		// static members
 		private static trigger m_skipTrigger
-		public static boolean array m_playerHasSkipped[12] //bj_MAX_PLAYERS /// Do not use.
+		public static boolean array m_playerHasSkipped[12] /// @todo bj_MAX_PLAYERS Do not use.
 		// construction members
 		private ATalk m_talk
 		private boolean m_permanent
@@ -35,7 +35,7 @@ library AStructSystemsCharacterInfo requires optional ALibraryCoreDebugMisc, ALi
 		// members
 		private ADialogButton m_dialogButton
 		private integer m_talkIndex
-		private boolean array m_hasBeenShownToCharacter[12] //bj_MAX_PLAYERS
+		private boolean array m_hasBeenShownToCharacter[12] /// @todo bj_MAX_PLAYERS
 
 		//! runtextmacro optional A_STRUCT_DEBUG("\"AInfo\"")
 

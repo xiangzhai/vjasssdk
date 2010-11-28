@@ -63,6 +63,50 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 	endstruct
 
+	private struct AVideoPlayerData
+		private player m_player
+		private APlayerSelection m_selection
+		private boolean m_hadDialog
+
+		public method store takes nothing returns nothing
+			if (this.m_selection != 0) then
+				call this.m_selection.destroy()
+			endif
+			set this.m_selection = APlayerSelection.create(this.m_player)
+			call this.m_selection.store()
+			if (AGui.playerGui(this.m_player).dialog().isDisplayed()) then
+				set this.m_hadDialog = true
+				call AGui.playerGui(this.m_player).dialog().hide()
+			else
+				set this.m_hadDialog = false
+			endif
+		endmethod
+
+		public method restore takes nothing returns nothing
+			if (this.m_selection != 0) then
+				call this.m_selection.restore()
+			endif
+			if (this.m_hadDialog) then
+				call AGui.playerGui(this.m_player).dialog().show()
+			endif
+		endmethod
+
+		public static method create takes player whichPlayer returns thistype
+			local thistype this = thistype.allocate()
+			set this.m_player = whichPlayer
+			set this.m_selection = 0
+			set this.m_hadDialog = false
+
+			return this
+		endmethod
+
+		public method onDestroy takes nothing returns nothing
+			if (this.m_selection != 0) then
+				call this.m_selection.destroy()
+			endif
+		endmethod
+	endstruct
+
 	/**
 	* Stores all necessary character data which has to be restored after video.
 	*/
@@ -98,7 +142,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	* The ASL character system doesn't support local videos which means videos for each single character owner.
 	* Videos can have initialization, play and stop actions which has to be defined as function interface functions.
 	* User can easily save and restore actors data by using methods @method saveActor and @method restoreActor.
-	* Additionally there is a method called @method actor which gives user access to an almost exact copy of the "first character".
+	* Additionally there is a method called actor which gives user access to an almost exact copy of the "first character".
 	* The first character is always the character of first player in list which still is online. List is starting with player 1 (id 0).
 	* Since you don't use character units (beside the copied one) they will be hidden in video initialization.
 	* Besides all units will be paused so you have to unpause a unit if you want to give orders (like move) to it.
@@ -120,8 +164,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		private static integer m_skippingPlayers
 		private static trigger m_skipTrigger
 		private static AActorData m_actor //copy of first character
-		private static APlayerSelection array m_playerSelection[12] /// @todo bj_MAX_PLAYERS
-		private static boolean array m_playerHadDialog[12] /// @todo bj_MAX_PLAYERS
+		private static AVideoPlayerData array m_playerData[12] /// @todo bj_MAX_PLAYERS
 		private static AVideoCharacterData array m_playerCharacterData[12] /// @todo bj_MAX_PLAYERS
 		private static AIntegerVector m_actorData
 		private static real m_timeOfDay
@@ -170,54 +213,37 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		// methods
 
 		private static method savePlayerData takes nothing returns nothing
-			local player user
 			local integer i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					if (thistype.m_playerSelection[i] == 0) then
-						set thistype.m_playerSelection[i] = APlayerSelection.create(user)
+				if (IsPlayerPlayingUser(Player(i))) then
+					if (thistype.m_playerData[i] == 0) then
+						set thistype.m_playerData[i] = AVideoPlayerData.create(Player(i))
 					endif
-					call thistype.m_playerSelection[i].save()
-					if (AGui.playerGui(user).dialog().isDisplayed()) then
-						set thistype.m_playerHadDialog[i] = true
-						call AGui.playerGui(user).dialog().hide()
-					else
-						set thistype.m_playerHadDialog[i] = false
-					endif
+					call thistype.m_playerData[i].store()
 				endif
-				if (ACharacter.playerCharacter(user) != 0) then
-					set thistype.m_playerCharacterData[i] = AVideoCharacterData.create(ACharacter.playerCharacter(user))
+				if (ACharacter.playerCharacter(Player(i)) != 0) then
+					if (thistype.m_playerCharacterData[i] == 0) then
+						set thistype.m_playerCharacterData[i] = AVideoCharacterData.create(ACharacter.playerCharacter(Player(i)))
+					endif
 					call thistype.m_playerCharacterData[i].store()
 				endif
-				set user = null
 				set i = i + 1
 			endloop
 		endmethod
 
 		private static method restorePlayerData takes nothing returns nothing
-			local player user
 			local integer i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					if (thistype.m_playerHadDialog[i]) then
-						call AGui.playerGui(user).dialog().show()
-					endif
-				endif
-				if (thistype.m_playerSelection[i] != 0) then
-					call thistype.m_playerSelection[i].restore()
+				if (thistype.m_playerData[i] != 0) then
+					call thistype.m_playerData[i].restore()
 				endif
 				if (thistype.m_playerCharacterData[i] != 0) then
-					if (ACharacter.playerCharacter(user) != 0) then
+					if (ACharacter.playerCharacter(Player(i)) != 0) then
 						call thistype.m_playerCharacterData[i].restore()
 					endif
-					call thistype.m_playerCharacterData[i].destroy()
-					set thistype.m_playerCharacterData[i] = 0
 				endif
-				set user = null
 				set i = i + 1
 			endloop
 		endmethod
@@ -230,7 +256,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 		public stub method onPlayAction takes nothing returns nothing
 			if (this.m_playAction != 0) then
-				call this.m_playAction.execute(this)
+				call this.m_playAction.execute(this) // execute since we need to be able to use TriggerSleepAction calls (stop has to be called in this function)
 			endif
 		endmethod
 
@@ -246,6 +272,16 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 		endmethod
 
+		/**
+		* In addition to the usual game properties which are stored and restored by function CinematicModeExBJ the following things will be stored by this method and restored by AVideo.stop:
+		* <ul>
+		* <li>if any dialog was shown to a player</li>
+		* <li>player selection</li>
+		* <li>character movability</li>
+		* <li>time of day</li>
+		* </ul>
+		* @see CinematicModeExBJ
+		*/
 		public method play takes nothing returns nothing
 			local force playersAll
 			debug if (thistype.m_runningVideo != 0) then
@@ -270,12 +306,12 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call CinematicModeExBJ(true, playersAll, 0.0)
 			set playersAll = null
 			set thistype.m_runningVideo = this
-			call this.onInitAction()
+			call this.onInitAction.evaluate()
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			call EnableTrigger(thistype.m_skipTrigger)
 			//call EnableUserControl(true) //otherwise we could not catch the press event (just the escape key)
-			call this.onPlayAction.execute()
+			call this.onPlayAction.execute() // execute since we need to be able to use TriggerSleepAction calls (stop method has to be called in this method)
 		endmethod
 
 		/// You have to call this method at the end of your video action.
@@ -303,12 +339,13 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 			call ACharacter.showAll(true)
 			call PauseAllUnits(false)
-			call this.onStopAction()
+			call this.onStopAction.evaluate()
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call SetTimeOfDay(thistype.m_timeOfDay)
 			call TriggerSleepAction(thistype.m_waitTime)
-			call ACharacter.setAllMovable(true)
+			debug call Print("Before restoring")
 			call thistype.restorePlayerData()
+			debug call Print("After restoring")
 			set thistype.m_runningVideo = 0
 			set thistype.m_skipped = false
 			set thistype.m_skippingPlayers = 0
@@ -433,7 +470,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		/// @param divident This value represents the divident which is used for comparing the number of skipping players with the number of requested skipping players for skipping the video.
 		public static method init takes integer divident, real filterDuration, real waitInterval, string textPlayerSkips, string textSkip returns nothing
 			local integer i
-			local player user
 			// static construction members
 			set thistype.m_divident = divident
 			set thistype.m_filterDuration = filterDuration
@@ -451,11 +487,8 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
-				set user = Player(i)
-				if (IsPlayerPlayingUser(user)) then
-					set thistype.m_playerSelection[i] = 0
-				endif
-				set user = null
+				set thistype.m_playerData[i] = 0
+				set thistype.m_playerCharacterData[i] = 0
 				set i = i + 1
 			endloop
 			set thistype.m_timeOfDay = 0.0
@@ -481,6 +514,9 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set i = 0
 			loop
 				exitwhen (i == bj_MAX_PLAYERS)
+				if (thistype.m_playerData[i] != 0) then
+					call thistype.m_playerData[i].destroy()
+				endif
 				if (thistype.m_playerCharacterData[i] != 0) then
 					call thistype.m_playerCharacterData[i].destroy()
 				endif
@@ -506,7 +542,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			return thistype.m_skipped
 		endmethod
 
-		//static methods
+		// static methods
 
 		public static method isRunning takes nothing returns boolean
 			return thistype.m_runningVideo != 0

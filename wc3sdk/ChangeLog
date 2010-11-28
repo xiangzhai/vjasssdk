@@ -1,3 +1,15 @@
+2010-11-28 Tamino Dauth <tamino@cdauth.eu>
+* Improved some documentation comments of the main libraries.
+* ASystems: Fixed optional requirement by library Asl.
+
+2010-11-27 Tamino Dauth <tamino@cdauth.eu>
+* AHeroIcon: Method disable is stub now.
+* AVideo: Added structure AVideoPlayerData to store selection and dialog visibility of players before video starts.
+* APlayerSelection: Renamed method save to store. Uses AGroup now.
+* AGroup: Added various selection methods.
+* APlayerSelection: Fixed selection restoring.
+* AVideo: Added missing library requirement.
+
 2010-11-25 Tamino Dauth <tamino@cdauth.eu>
 * ARevival: Methods enable and disable are stub now.
 * AVideo: Added structure AVideoCharacterData to store movability of characters before video starts.

@@ -8,7 +8,11 @@ endif
 
 /**
 * Requests all sub systems of the ASL.
-* A system covers a specific range like character treatment or graphical user interfaces.
+* Each system covers a specific range like character treatment or graphical user interfaces.
+* @see Asl, ACore
+* @if A_OBJECTS
+* @see AObjects
+* @endif
 */
 library ASystems requires ASystemsCharacter, optional ASystemsDebug, ASystemsBonusMod, ASystemsGui, ASystemsWorld
 endlibrary
