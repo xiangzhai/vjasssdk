@@ -31,6 +31,7 @@
 
 #include "modeleditor.hpp"
 #include "modelview.hpp"
+#include "editor.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -49,6 +50,10 @@ ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new
 	this->m_modelViewWidget->setLayout(mainLayout);
 	*/
 	topLayout()->addWidget(this->m_modelView);
+}
+
+ModelEditor::~ModelEditor()
+{
 }
 
 void ModelEditor::show()
@@ -106,7 +111,8 @@ void ModelEditor::openFile()
 	}
 
 	const Ogre::Vector3 position(0.0, 0.0, 0.0);
-	OgreMdlx *ogreModel = new OgreMdlx(model, this->m_modelView);
+	OgreMdlx *ogreModel = new OgreMdlx(url, model, this->m_modelView);
+	this->editor()->addResource(ogreModel);
 	//ogreModel->refresh()
 	//this->m_modelView.createModel(model, position, ogreModel);
 	this->m_models.push_back(ogreModel);

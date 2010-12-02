@@ -42,7 +42,7 @@ namespace wc3lib
 namespace editor
 {
 
-OgreMdlx::OgreMdlx(const class Mdlx &mdlx, class ModelView *modelView) : m_mdlx(&mdlx), m_modelView(modelView)
+OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView) : Resource(url, Resource::Model), m_mdlx(&mdlx), m_modelView(modelView)
 {
 }
 
@@ -390,6 +390,7 @@ Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 	if (!qImage.load(&file, 0))
 		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
 
+	file.close();
 	QByteArray ba;
 	QBuffer buffer(&ba);
 	buffer.open(QIODevice::WriteOnly);
@@ -398,11 +399,19 @@ Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 	// load for OGRE
 	void *memory[ba.size()];
 	memcpy(memory, (const void*)(ba), ba.size());
-	Ogre::MemoryDataStream ms(memory, ba.size());
+	Ogre::DataStreamPtr dsPtr(new Ogre::MemoryDataStream(memory, ba.size()));
 	ba.clear();
-	Ogre::DataStreamPtr dsPtr(&ms);
+	//dsPtr.bind(dynamic_cast<Ogre::DataStream*>(ms));
 	Ogre::Image *image = new Ogre::Image();
-	image->load(dsPtr);
+
+	try
+	{
+		image->load(dsPtr);
+	}
+	catch (Ogre::InvalidParametersException &exception)
+	{
+		throw Exception(boost::format(_("Unable to open texture image \"%1%\".\nOGRE error: \"%2%\"")) % url.toLocalFile().toAscii().data() % exception.what());
+	}
 
 	return image;
 }
@@ -418,6 +427,14 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 	try
 	{
 		KUrl url = this->modelView()->editor()->findFile(KUrl(texture.texturePath()));
+
+		// if no editor resource has been found file directory will be tried
+		if (!url.isValid())
+		{
+			url = this->url().directory();
+			url.addPath(texture.texturePath());
+		}
+
 		image = blpToOgre(url);
 	}
 	catch (class Exception &exception)
@@ -425,10 +442,35 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		KMessageBox::error(0, i18n("Texture loading error:\n%1", exception.what().c_str()));
 	}
 
-
 	if (image != 0)
 	{
 		tex->loadImage(*image);
+
+		/// @todo Apply texture properties:
+		/*
+		enum Wrapping
+		{
+			WrapWidth = 1,
+			WrapHeight = 2,
+			Both = 3
+		};
+		*/
+		// enum ReplaceableId replaceableId() const;
+		// Use m_teamColor and m_teamGlowColor for color values!
+		/*
+		enum ReplaceableId
+		{
+			None = 0,
+			TeamColor = 1,
+			TeamGlow = 2,
+			Cliff = 11,
+			LordaeronTree = 31,
+			AshenvaleTree = 32,
+			BarrensTree = 33,
+			NorthrendTree = 34,
+			MushroomTree = 35
+		};
+		*/
 
 		delete image;
 		image = 0;

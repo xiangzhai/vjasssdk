@@ -63,6 +63,16 @@ class Editor : public KMainWindow, public MpqPriorityList
 
 		class KActionCollection* actionCollection() const;
 
+		/**
+		* Each resource which is added to the editor creates a new MPQ priority list entry with the resources URL.
+		* This policy helps you to prevent missing files errors since the file loader does also check the resources directories.
+		*/
+		void addResource(class Resource *resource);
+		/**
+		* @return Returns true if the resource has been found and removed properly.
+		*/
+		bool removeResource(class Resource *resource);
+
 	public slots:
 		void newMap();
 		void showTerrainEditor();
@@ -98,6 +108,7 @@ class Editor : public KMainWindow, public MpqPriorityList
 		class ModelEditor *m_modelEditor; // new
 		class TextureEditor *m_textureEditor; // new
 		class NewMapDialog *m_newMapDialog;
+		std::list<class Resource*> m_resources;
 };
 
 inline class KActionCollection* Editor::actionCollection() const

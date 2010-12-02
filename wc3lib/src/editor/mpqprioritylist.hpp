@@ -21,9 +21,11 @@
 #ifndef WC3LIB_EDITOR_MPQPRIORITYLIST_HPP
 #define WC3LIB_EDITOR_MPQPRIORITYLIST_HPP
 
-#include <map>
+#include <list>
+#include <algorithm>
 
 #include <boost/operators.hpp>
+#include <boost/foreach.hpp>
 
 #include <kurl.h>
 
@@ -40,7 +42,7 @@ namespace editor
 * An entry can either be an MPQ archive or a URL of a directory.
 * Each entry has its own priority. Entries with higher priority will be returned more likely than those with less priority.
 */
-class MpqPriorityListEntry : public boost::operators<MpqPriorityListEntry>
+class MpqPriorityListEntry //: public boost::operators<MpqPriorityListEntry>
 {
 	public:
 		typedef MpqPriorityListEntry self;
@@ -96,19 +98,30 @@ inline bool MpqPriorityListEntry::operator==(const self& other) const
 	return this->priority() == other.priority();
 }
 
-class MpqPriorityList : public std::map<MpqPriorityListEntry::Priority, MpqPriorityListEntry*>
+class MpqPriorityList : public std::list<MpqPriorityListEntry*>
 {
 	public:
+		typedef std::list<MpqPriorityListEntry*> base;
 		typedef MpqPriorityList self;
-		typedef std::pair<MpqPriorityListEntry::Priority, MpqPriorityListEntry*> EntryType;
 
 		void setLocale(mpq::MpqFile::Locale locale);
 		mpq::MpqFile::Locale locale() const;
 
 		/**
-		* @return Returns true if the URL is an valid entry.
+		* @return Returns entries list sorted by the entries priorities.
+		*/
+		const base& sortedValids() const;
+
+		/**
+		* Several URLs should never be the same.
+		* @return Returns true if the URL has been added to the list (this doesn't happen if there already is an entry with the given URL).
 		*/
 		bool addEntry(const KUrl &url, MpqPriorityListEntry::Priority priority);
+		/**
+		* Removes an entry by its corresponding URL.
+		* @return Returns true if URL corresponds to some entry and that entry has been removed properly.
+		*/
+		bool removeEntry(const KUrl &url);
 
 		/**
 		* Checks the whole priority list in the specified order for the given path.
@@ -132,6 +145,21 @@ inline void MpqPriorityList::setLocale(mpq::MpqFile::Locale locale)
 inline mpq::MpqFile::Locale MpqPriorityList::locale() const
 {
 	return this->m_locale;
+}
+
+inline const MpqPriorityList::base& MpqPriorityList::sortedValids() const
+{
+	MpqPriorityList::base result;
+
+	BOOST_FOREACH(MpqPriorityListEntry *entry, *this)
+	{
+		if (entry->isValid())
+			result.push_back(entry);
+	}
+
+	result.sort();
+
+	return result;
 }
 
 }

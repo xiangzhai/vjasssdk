@@ -21,7 +21,7 @@
 #ifndef WC3LIB_EDITOR_MODELVIEW_HPP
 #define WC3LIB_EDITOR_MODELVIEW_HPP
 
-#include <QGLWidget>
+#include <QWidget>
 
 #include <Ogre.h>
 
@@ -41,14 +41,14 @@ namespace editor
 * @link http://qt-apps.org/content/show.php/QtOgre+Framework?content=92912, http://www.ogre3d.org/tikiwiki/QtOgre
 * @see Mdlx, OgreMdlx
 */
-class ModelView : public QGLWidget
+class ModelView : public QWidget
 {
 	public:
 		/**
 		* @param ogreSceneType OGRE scene type which will be set for the scene manager of the widget. Should be changed for terrain (ST_EXTERIOR_FAR, ST_EXTERIOR_REAL_FAR).
 		* @param ogreParameters OGRE window parameters.
 		*/
-		ModelView(class Editor *editor, QWidget *parent = 0, const QGLWidget *shareWidget = 0, Qt::WFlags f = 0, Ogre::SceneType ogreSceneType = Ogre::ST_EXTERIOR_CLOSE, const Ogre::NameValuePairList *ogreParameters = 0);
+		ModelView(class Editor *editor, QWidget *parent = 0, Qt::WFlags f = 0, Ogre::SceneType ogreSceneType = Ogre::ST_EXTERIOR_CLOSE, const Ogre::NameValuePairList *ogreParameters = 0);
 		virtual ~ModelView();
 
 		//virtual void show();
@@ -59,19 +59,9 @@ class ModelView : public QGLWidget
 
 	protected:
 		//virtual void paintEvent(QPaintEvent* event);
+		virtual void showEvent(QShowEvent *event);
 		virtual void resizeEvent(QResizeEvent *event);
-
-		// GL events
-		// Renders the OpenGL scene. Gets called whenever the widget needs to be updated
-		virtual void paintGL();
-		// Sets up the OpenGL viewport, projection, etc. Gets called whenever the widget has been resized (and also when it is shown for the first time because all newly created widgets get a resize event automatically).
-		virtual void resizeGL(int width, int height);
-		// Sets up the OpenGL rendering context, defines display lists, etc. Gets called once before the first time resizeGL() or paintGL() is called.
-		virtual  void initializeGL();
-
-		virtual void setupResources();
-		virtual void configure();
-
+		virtual void paintEvent(QPaintEvent *event);
 
 		// key events
 		virtual void keyPressEvent(QKeyEvent *event);
@@ -81,6 +71,8 @@ class ModelView : public QGLWidget
 		// load file events
 		virtual void dragEnterEvent(QDragEnterEvent *event);
 		virtual void dropEvent(QDropEvent *event);
+
+		virtual void initRenderWindow();
 
 		class Editor *m_editor;
 		const Ogre::NameValuePairList *m_parameters;

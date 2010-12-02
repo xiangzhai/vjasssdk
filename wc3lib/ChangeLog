@@ -1,3 +1,10 @@
+2010-12-02 Tamino Dauth <tamino@cdauth.eu>
+* editor: Revised class MpqPriorityList.
+* editor: Revised resource element functions of class Editor.
+
+2010-11-22 Tamino Dauth <tamino@cdauth.eu>
+* editor: Added class Resource.
+
 2010-11-21 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improved class MpqPriorityList and added class MpqPriorityListEntry.
 * editor: Fixed layout of texture editor.

@@ -1,3 +1,8 @@
+2010-12-02 Tamino Dauth <tamino@cdauth.eu>
+* editor: Improve performance of class MpqPriorityList (maybe use map, sorted by priority).
+* DONE: editor: Fix crash in function blpToOgre.
+* editor: blpToOgre -> PNG files can not be loaded.
+
 2010-11-21 Tamino Dauth <tamino@cdauth.eu>
 * editor: Write web log article about the design of editor (Module classes, MpqPriorityList etc.).
 * editor: Fix MpqPriorityList::findFile.

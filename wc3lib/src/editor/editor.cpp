@@ -42,6 +42,7 @@
 #include "modeleditor.hpp"
 #include "textureeditor.hpp"
 #include "newmapdialog.hpp"
+#include "resource.hpp"
 #include "../mpq/mpq.hpp"
 #include "../mpq/mpqfile.hpp"
 
@@ -318,6 +319,27 @@ void Editor::showTextureEditor()
 		this->m_textureEditor = new TextureEditor(this);
 
 	this->m_textureEditor->show();
+}
+
+void Editor::addResource(Resource *resource)
+{
+	assert(resource);
+
+	this->m_resources.push_back(resource);
+	this->addEntry(resource->url(), 0);
+}
+
+bool Editor::removeResource(Resource *resource)
+{
+	assert(resource);
+
+	std::list<Resource*>::iterator iterator = std::find(this->m_resources.begin(), this->m_resources.end(), resource);
+
+	if (iterator == this->m_resources.end())
+		return false;
+
+	this->m_resources.erase(iterator);
+	this->removeEntry(resource->url()); // remove from MPQ priority list
 }
 
 void Editor::newMap()

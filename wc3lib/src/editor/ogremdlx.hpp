@@ -24,8 +24,11 @@
 #include <map>
 #include <list>
 
+#include <kurl.h>
+
 #include <Ogre.h>
 
+#include "resource.hpp"
 #include "../mdlx.hpp"
 #include "../exception.hpp"
 
@@ -45,10 +48,10 @@ using namespace mdlx;
 * @todo This class should be moved to wc3lib module "editor".
 * @todo Use inherited event functions of frame listener to apply animation track data (each model instance should have its own time marker for sequences).
 */
-class OgreMdlx  : public Ogre::FrameListener
+class OgreMdlx  : public Resource, public Ogre::FrameListener
 {
 	public:
-		OgreMdlx(const class Mdlx &mdlx, class ModelView *modelView);
+		OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView);
 
 		const class Mdlx* mdlx() const;
 		class ModelView* modelView() const;
@@ -87,6 +90,9 @@ class OgreMdlx  : public Ogre::FrameListener
 		std::map<const class Bone*, Ogre::Bone*> m_bones;
 
 		class GlobalSequence *m_globalSequence; /// Current global sequence which is played.
+
+		QColor m_teamColor;
+		QColor m_teamGlowColor;
 };
 
 inline const class Mdlx* OgreMdlx::mdlx() const

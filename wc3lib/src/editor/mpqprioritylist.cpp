@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "mpqprioritylist.hpp"
 
 namespace wc3lib
@@ -36,6 +34,34 @@ MpqPriorityListEntry::MpqPriorityListEntry(const KUrl &url, Priority priority) :
 	// else it will stay invalid
 }
 
+bool MpqPriorityList::addEntry(const KUrl &url, MpqPriorityListEntry::Priority priority)
+{
+	BOOST_FOREACH(const MpqPriorityListEntry *entry, *this)
+	{
+		if (entry->url() == url)
+			return false;
+	}
+
+	this->push_back(new MpqPriorityListEntry(url, priority));
+
+	return true;
+}
+
+bool MpqPriorityList::removeEntry(const KUrl &url)
+{
+	BOOST_FOREACH(MpqPriorityListEntry *entry, *this)
+	{
+		if (entry->url() == url)
+		{
+			this->remove(entry);
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
 const KUrl& MpqPriorityList::findFile(const KUrl &url) const
 {
 	return this->findFile(url, this->locale());
@@ -43,24 +69,12 @@ const KUrl& MpqPriorityList::findFile(const KUrl &url) const
 
 const KUrl& MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale locale) const
 {
-	return url; // TEST
-
 	if (!url.isValid() || !url.isLocalFile()) /// @todo Support non-local files (mpq: protocol).
 		return KUrl("");
 
-	std::list<const MpqPriorityListEntry*> validEntries;
+	base validEntries(sortedValids());
 
-	BOOST_FOREACH(EntryType entry, *this)
-	{
-		if (!entry.second->isValid())
-			continue;
-
-		validEntries.push_back(entry.second);
-	}
-
-	// usually map should be sorted in correct order
-	// this is an additional, optional safety sorting statement!
-	//std::sort(validEntries.begin(), validEntries.end());
+	// creating map with matching URLs and corresponding priorities
 	std::map<KUrl, MpqPriorityListEntry::Priority> urlEntries;
 
 	BOOST_FOREACH(const MpqPriorityListEntry *entry, validEntries)
@@ -100,10 +114,12 @@ const KUrl& MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale loca
 	}
 
 
+	// no matching entry has been left
 	if (urlEntries.empty())
 		return KUrl("");
 
-	return KUrl(""); // TODO Return first matching entry.
+
+	return urlEntries.begin()->first; // return first entry because it must have the highest priority since entries has been sorted before
 }
 
 }

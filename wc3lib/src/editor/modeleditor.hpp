@@ -42,6 +42,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 	public:
 		ModelEditor(class Editor *editor);
+		virtual ~ModelEditor();
 
 		virtual void show();
 
