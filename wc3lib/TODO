@@ -1,7 +1,12 @@
+2010-12-03 Tamino Dauth <tamino@cdauth.eu>
+* editor: Add "editor/resource.hpp" to SVN repository.
+
 2010-12-02 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improve performance of class MpqPriorityList (maybe use map, sorted by priority).
 * DONE: editor: Fix crash in function blpToOgre.
 * editor: blpToOgre -> PNG files can not be loaded.
+* lang: Add CMakeLists.txt files in "lang/zinc" and "lang/jasspp" to SVN repository.
+* lang: Add "lang/driver.hpp" and "lang/driver.cpp" to SVN repository.
 
 2010-11-21 Tamino Dauth <tamino@cdauth.eu>
 * editor: Write web log article about the design of editor (Module classes, MpqPriorityList etc.).
