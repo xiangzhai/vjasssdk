@@ -15,9 +15,11 @@ WC3LIB_GET_SRC(wc3lib_EDITOR_SRC) # regular cpp files and cxx moc files (wc3lib_
 #message(STATUS "This is SRC ${wc3lib_EDITOR_SRC}")
 
 # BLP plugin
+
 add_library(qblp SHARED blpiohandler.cpp blpioplugin.cpp)
 target_link_libraries(qblp wc3libblp ${QT_LIBRARIES})
 # wc3libeditor
+
 add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
 target_link_libraries(wc3libeditor ${wc3lib_CORE_LIBRARIES} ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} ${OGRE_LIBRARIES} ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 

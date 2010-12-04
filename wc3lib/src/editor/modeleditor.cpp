@@ -33,6 +33,7 @@
 #include "modelview.hpp"
 #include "editor.hpp"
 #include "../utilities.hpp"
+#include "resource.hpp"
 
 namespace wc3lib
 {

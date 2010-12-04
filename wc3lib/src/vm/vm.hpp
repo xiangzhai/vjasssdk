@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,14 +28,10 @@
 
 namespace wc3lib
 {
-    
+
 namespace vm
 {
-    
-class Type;
-class Function;
-class Variable;
-    
+
 class Vm
 {
     public:
@@ -43,12 +39,12 @@ class Vm
 	* Reads Jass code and interprets it.
 	*/
 	void read(std::istream &istream) throw (class Exception);
-	
+
 	/**
 	* Runs interpreted Jass code.
 	*/
 	void run() throw (class Exception);
-	
+
     protected:
 	std::map<std::string, class Type*> m_types;
 	std::map<std::string, class Function*> m_functions;

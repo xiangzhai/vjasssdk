@@ -28,6 +28,8 @@
 *
 * @section introduction Introduction
 * This is the introduction.
+* @section mpq MPQ library
+* This is the description of the MPQ library.
 *
 * @section blp BLP library
 * This is the description of the BLP library.

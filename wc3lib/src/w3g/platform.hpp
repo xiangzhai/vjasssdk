@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #ifndef WC3LIB_W3G_PLATFORM_HPP
 #define WC3LIB_W3G_PLATFORM_HPP
 
@@ -13,41 +33,40 @@ typedef uint16_t word;
 
 struct Header
 {
- 	   byte identifier[28]; // Warcraft III recorded game\0x1A\0
- 	   dword size;
-	   dword fileSize;
-	   dword fileVersion; // 0x00 for WarCraft III with patch <= 1.06, 0x01 for WarCraft III patch >= 1.07 and TFT replays
+	byte identifier[28]; // Warcraft III recorded game\0x1A\0
+	dword size;
+	dword fileSize;
+	dword fileVersion; // 0x00 for WarCraft III with patch <= 1.06, 0x01 for WarCraft III patch >= 1.07 and TFT replays
 
-	   dword decompressedSize; // excluding header
-	   dword dataBlocks; // number
-
+	dword decompressedSize; // excluding header
+	dword dataBlocks; // number
 };
 
 struct SubHeader0
 {
- 	   word unknown;
-	   word version;
-	   word build;
-	   word flags;
-	   dword length; // replay length in msec
-	   dword checksum;
+	word unknown;
+	word version;
+	word build;
+	word flags;
+	dword length; // replay length in msec
+	dword checksum;
 };
 
 struct SubHeader1
 {
- 	   dword identifier;
- 	   dword version;
- 	   dword build;
- 	   word flags;
- 	   dword length; // replay length in msec
- 	   dword checksum;
+	dword identifier;
+	dword version;
+	dword build;
+	word flags;
+	dword length; // replay length in msec
+	dword checksum;
 };
 
 struct DataBlockHeader
 {
- 	   word compressedSize;
- 	   word size;
- 	   dword unknown; // probably checksum
+	word compressedSize;
+	word size;
+	dword unknown; // probably checksum
 };
 
 struct PlayerRecord
@@ -72,11 +91,11 @@ struct MapAndCreatorName
 
 enum VersionInformationEntry
 {
- 	 GameVersion,
- 	 ReplayVersion,
- 	 War3Version,
- 	 ReleaseData,
- 	 MaxVersionInformationEntries
+	GameVersion,
+	ReplayVersion,
+	War3Version,
+	ReleaseData,
+	MaxVersionInformationEntries
 };
 
 // this table should be used by class W3g to get some information about the replay

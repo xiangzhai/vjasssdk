@@ -12,7 +12,6 @@ endif ()
 target_link_libraries(wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
 add_subdirectory(blp)
-# lang is unusable
 add_subdirectory(lang)
 add_subdirectory(mdlx)
 add_subdirectory(mpq)

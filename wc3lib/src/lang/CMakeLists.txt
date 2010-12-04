@@ -3,10 +3,10 @@ WC3LIB_ENABLE_EXCEPTIONS()
 WC3LIB_GET_H(wc3lib_LANG_H)
 WC3LIB_GET_SRC(wc3lib_LANG_SRC)
 
-add_subdirectory(jass)
-add_subdirectory(jasspp)
+#add_subdirectory(jass) TODO Add driver.hpp to SVN repository
+#add_subdirectory(jasspp) TODO Add CMakeLists.txt to SVN repository
 add_subdirectory(vjass)
-add_subdirectory(zinc)
+#add_subdirectory(zinc) TODO Add CMakeLists.txt to SVN repository
 
 # library
 add_library(wc3liblang ${wc3lib_LANG_SRC} ${wc3lib_LANG_JASS_SRC} ${wc3lib_LANG_JASSPP_SRC} ${wc3lib_LANG_VJASS_SRC} ${wc3lib_LANG_ZINC_SRC})

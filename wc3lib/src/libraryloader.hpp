@@ -30,6 +30,11 @@
 namespace wc3lib
 {
 
+/**
+* Static class which allows you to load shared objects (or dynamic link libraries) dynamically which means at the program's runtime.
+* It provides a consistent interface which is usable on UNIX and Windows platforms.
+* @todo Add Windows support.
+*/
 class LibraryLoader
 {
 	public:
