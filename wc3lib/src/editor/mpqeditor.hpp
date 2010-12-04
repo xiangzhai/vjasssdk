@@ -40,7 +40,7 @@ namespace editor
 
 class MpqEditor : public Module
 {
-	Q_OBJECT
+	//Q_OBJECT
 
 	public:
 		MpqEditor(class Editor *editor);

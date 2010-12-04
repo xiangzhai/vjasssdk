@@ -68,7 +68,7 @@ class Layer
 		long32 textureId() const;
 		long32 tvertexAnimationId() const;
 		long32 coordinatesId() const;
-		float32	alpha() const;
+		float32 alpha() const;
 		class MaterialAlphas* alphas() const;
 		class TextureIds* textureIds() const;
 

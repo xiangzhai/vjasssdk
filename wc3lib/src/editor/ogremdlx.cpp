@@ -30,6 +30,9 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kfiledialog.h> /// TEST
+
+#include <OgreCodec.h>
 
 #include "ogremdlx.hpp"
 #include "modelview.hpp"
@@ -52,6 +55,14 @@ void OgreMdlx::refresh() throw (class Exception)
 	// create textures
 	BOOST_FOREACH(const mdlx::Texture *texture, this->m_mdlx->textures()->textures())
 		this->m_textures[texture] = this->createTexture(*texture);
+
+	// create materials
+	BOOST_FOREACH(const mdlx::Material *material, this->m_mdlx->materials()->materials())
+		this->m_materials[material] = this->createMaterial(*material);
+
+	// create geosets
+	BOOST_FOREACH(const mdlx::Geoset *geoset, this->m_mdlx->geosets()->geosets())
+		this->m_geosets[geoset] = this->createGeoset(*geoset);
 
 	// get new objects
 	/*
@@ -378,6 +389,10 @@ namespace
 {
 
 /// @todo Use KUrl and IO slaves (MPQ protocol)
+/**
+* Opens external image file with the given URL and reads it by using Qt which allows you to read BLP files, too and converts it into an OGRE image.
+* @note OGRE has to be compiled and linked with FreeImage (PNG support).
+*/
 Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 {
 	QFile file(url.toLocalFile());
@@ -396,11 +411,28 @@ Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 	buffer.open(QIODevice::WriteOnly);
 	qImage.save(&buffer, "PNG");
 
+	// TEST (writing buffer on disk)
+	/*
+	KUrl fileUrl = KFileDialog::getSaveUrl(KUrl(""), i18n("*.png|PNG"));
+
+	if (!fileUrl.isEmpty() && fileUrl.isLocalFile())
+	{
+		QFile newFile(fileUrl.toLocalFile());
+		newFile.open(QIODevice::WriteOnly);
+		newFile.write(ba.data(), ba.size());
+		newFile.close();
+
+		KMessageBox::information(0, i18n("Hat geklappt!"));
+	}
+	*/
+	// END TEST
+	// bis hierher klappt alles, die PNG-Bilder sehen korrekt aus, wenn sie auf die Festplatte geschrieben werden
+
 	// load for OGRE
-	void *memory[ba.size()];
-	memcpy(memory, (const void*)(ba), ba.size());
-	Ogre::DataStreamPtr dsPtr(new Ogre::MemoryDataStream(memory, ba.size()));
-	ba.clear();
+	//void *memory[ba.size()];
+	//memcpy(memory, (const void*)(ba), ba.size());
+	Ogre::DataStreamPtr dsPtr(new Ogre::MemoryDataStream(static_cast<void*>(ba.data()), ba.size()));
+	//ba.clear();
 	//dsPtr.bind(dynamic_cast<Ogre::DataStream*>(ms));
 	Ogre::Image *image = new Ogre::Image();
 
@@ -408,7 +440,7 @@ Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 	{
 		image->load(dsPtr);
 	}
-	catch (Ogre::InvalidParametersException &exception)
+	catch (Ogre::Exception &exception)
 	{
 		throw Exception(boost::format(_("Unable to open texture image \"%1%\".\nOGRE error: \"%2%\"")) % url.toLocalFile().toAscii().data() % exception.what());
 	}
@@ -421,7 +453,17 @@ Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
 {
 	Ogre::Image *image = 0;
-	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create("Texture", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	mdlx::long32 id = 0;
+
+	BOOST_FOREACH(const class mdlx::Texture *tex, this->m_mdlx->textures()->textures())
+	{
+		if (tex == &texture)
+			break;
+
+		++id;
+	}
+
+	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create("Texture" + id, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 	// if image could not be loaded continue with empty texture
 	try
@@ -483,10 +525,8 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 {
 	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create("Material", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
 
-	/*
-	material
-
 	// properties
+	/*
 	ConstantColor,
 	SortPrimsFarZ,
 	FullResolution,
@@ -494,8 +534,86 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 	*/
 
 	// layers do have texture id!!!
+	// use Ogre::Technique?
 
 	//return 0;
+
+	BOOST_FOREACH(const class mdlx::Layer *layer, material.layers()->layers())
+	{
+		Ogre::Technique *technique = mat->createTechnique();
+		Ogre::Pass *pass = technique->createPass();
+		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState("Texture" + layer->textureId());
+		//textureUnitState->setTextureFiltering();
+		//textureUnitState->setAlphaOperation(Ogre::LBX_MODULATE_X4);
+		textureUnitState->setTextureCoordSet(layer->coordinatesId());
+
+		switch (layer->filterMode())
+		{
+			case mdlx::Layer::Transparent:
+				break;
+
+			case mdlx::Layer::Blend:
+				textureUnitState->setColourOperation(Ogre::LBO_ALPHA_BLEND);
+
+				break;
+
+			case mdlx::Layer::Additive:
+				textureUnitState->setColourOperation(Ogre::LBO_ADD);
+
+				break;
+
+			case mdlx::Layer::AddAlpha:
+				break;
+
+			case mdlx::Layer::Modulate:
+				textureUnitState->setColourOperation(Ogre::LBO_MODULATE);
+
+				break;
+
+			case mdlx::Layer::Modulate2x:
+				break;
+		}
+
+		/*
+		enum FilterMode
+		{
+			None = 0,
+			Transparent = 1,
+			Blend = 2,
+			Additive = 3,
+			AddAlpha = 4,
+			Modulate = 5,
+			Modulate2x = 6
+		};
+
+		enum Shading
+		{
+			Unshaded = 1,
+			SphereEnvironmentMap = 2,
+			Unknown0 = 4,
+			Unknown1 = 8,
+			TwoSided = 16,
+			Unfogged = 32,
+			NoDepthTest = 64,
+			NoDepthSet = 128
+		};
+
+		Non-animation properties of layer:
+		enum FilterMode filterMode() const;
+		enum Shading shading() const;
+		long32 textureId() const;
+		long32 coordinatesId() const;
+		float32	alpha() const;
+		*/
+
+		/*
+		Texture animation stuff
+		BOOST_FOREACH(const class mdlx::TextureId *textureId, layer->textureIds())
+		{
+			//textureId->frame()
+		}
+		*/
+	}
 
 	return mat;
 }

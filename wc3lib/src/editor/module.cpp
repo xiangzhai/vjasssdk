@@ -39,6 +39,10 @@ Module::Module(class Editor *editor) : m_editor(editor), m_menuBar(0), m_topLayo
 {
 }
 
+Module::~Module()
+{
+}
+
 KMenuBar* Module::menuBar() const
 {
 	return this->m_menuBar;

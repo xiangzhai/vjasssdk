@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 #***************************************************************************
 #*   Copyright (C) 2009 by Tamino Dauth                                    *
-#*   tamino@cdauth.de                                                      *
+#*   tamino@cdauth.eu                                                      *
 #*                                                                         *
 #*   This program is free software; you can redistribute it and/or modify  *
 #*   it under the terms of the GNU General Public License as published by  *
@@ -80,16 +81,16 @@ class MainWindow(KMainWindow):
 
 	def fileCalculateShadowsAndSave(self):
 		print "Calculate shadows and save file"
-		
+
 	def fileExportScript(self):
 		print "Export file script"
-	
+
 	def fileExportMinimap(self):
 		print "Export file minimap"
-	
+
 	def fileExportStrings(self):
 		print "Export file strings"
-	
+
 	def fileImportStrings(self):
 		print "Import file strings"
 

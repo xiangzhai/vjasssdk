@@ -84,7 +84,7 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 
 		std::map<const class Texture*, Ogre::TexturePtr> m_textures;
 		std::map<const class Material*, Ogre::MaterialPtr> m_materials;
-		std::map<const class Geoset*, Ogre::SharedPtr<Ogre::ManualObject> > m_geosets;
+		std::map<const class Geoset*, Ogre::ManualObject* > m_geosets;
 
 		std::map<const class Node*, Ogre::Node*> m_nodes;
 		std::map<const class Bone*, Ogre::Bone*> m_bones;

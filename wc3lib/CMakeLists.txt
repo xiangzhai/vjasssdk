@@ -137,7 +137,7 @@ if (FLAG_STATIC_USE OR FLAG_NORUNTIME_USE)
 endif ()
 
 if (FLAG_EDITOR_USE)
-	message(STATUS "You're using -DEDITOR=1 which will probably prevent from compiling correctly since Qt or KDE does change GCC options.")
+	message(WARNING "You're using -DEDITOR=1 which requires Qt and KDE and therefore will increase the compile time.")
 	find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 	include(${QT_USE_FILE})
 	find_package(KDE4 REQUIRED)

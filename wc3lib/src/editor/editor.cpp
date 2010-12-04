@@ -195,41 +195,7 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 
 Editor::~Editor()
 {
-	if (this->m_terrainEditor != 0)
-		delete this->m_terrainEditor;
-
-	if (this->m_triggerEditor != 0)
-		delete this->m_triggerEditor;
-
-	if (this->m_soundEditor != 0)
-		delete this->m_soundEditor;
-
-	if (this->m_objectEditor != 0)
-		delete this->m_objectEditor;
-
-	if (this->m_campaignEditor != 0)
-		delete this->m_campaignEditor;
-
-	if (this->m_aiEditor != 0)
-		delete this->m_aiEditor;
-
-	if (this->m_objectManager != 0)
-		delete this->m_objectManager;
-
-	if (this->m_importManager != 0)
-		delete this->m_importManager;
-
-	if (this->m_mpqEditor != 0)
-		delete this->m_mpqEditor;
-
-	if (this->m_modelEditor != 0)
-		delete this->m_modelEditor;
-
-	if (this->m_textureEditor != 0)
-		delete this->m_textureEditor;
-
-	if (this->m_newMapDialog != 0)
-		delete this->m_newMapDialog;
+	// do not delete allocated sub widgets (parent system of Qt already considers)
 }
 
 void Editor::showTerrainEditor()

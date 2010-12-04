@@ -37,6 +37,7 @@ class Module : public QWidget
 {
 	public:
 		Module(class Editor *editor);
+		virtual ~Module();
 		class Editor* editor() const;
 		class KMenuBar* menuBar() const;
 

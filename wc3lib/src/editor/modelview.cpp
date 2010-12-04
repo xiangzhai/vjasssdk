@@ -137,25 +137,45 @@ void ModelView::wheelEvent(QWheelEvent *event)
 	if (this->m_changeFarClip)
 	{
 		this->m_camera->setFarClipDistance(this->m_camera->getFarClipDistance() + event->delta());
+		qDebug() << "Changing far clip distance to: " << this->m_camera->getFarClipDistance();
 	}
 	// move camera
 	else
 	{
-		this->m_camera->setDirection(Ogre::Vector3(event->x(), event->y(), this->m_camera->getDirection().z));
-		this->m_camera->moveRelative(Ogre::Vector3(event->delta()));
+		this->moveCamera(Ogre::Vector3(event->x(), event->y(), this->m_camera->getDirection().z), Ogre::Vector3(event->delta()));
+		qDebug() << "Moving camera to: (" << this->m_camera->getPosition().x << "|" << this->m_camera->getPosition().y << "|" << this->m_camera->getPosition().z << ")";
 	}
 
 	event->accept();
 }
 
-void ModelView::dragEnterEvent(QDragEnterEvent *event)
+void ModelView::mouseMoveEvent(QMouseEvent *event)
 {
-	/// @todo If it's an MDLX file event->acceptProposedAction();
+	/// @todo If right mouse button is being pressed
+	if (true)
+	{
+		// moves camera along to x- and y-axis
+		this->moveCamera(Ogre::Vector3(event->x(), event->y(), 0));
+		event->accept();
+	}
+	/// @todo If middle mouse button is being pressed
+	else if (true)
+	{
+		// rotates camera around its current position
+		//this->m_camera->rotate();
+		event->accept();
+	}
 }
 
-void ModelView::dropEvent(QDropEvent *event)
+void ModelView::mousePressEvent(QMouseEvent *event)
 {
-    /// @todo If it's an MDLX file event->acceptProposedAction();
+	/// @todo When right button is being pressed mouse movement is possible
+	/// @todo When left button is being pressed selection is possible (in editor only, not in view)
+	/// @todo When middle button is being pressed camera rotation is possible
+}
+
+void ModelView::mouseReleaseEvent(QMouseEvent *event)
+{
 }
 
 void ModelView::initRenderWindow()
@@ -237,12 +257,13 @@ OLD!
 	this->m_sceneManager = this->m_root->createSceneManager(this->m_sceneType);
 	this->m_sceneManager->setAmbientLight(Ogre::ColourValue(1, 1, 1));
 	this->m_camera = this->m_sceneManager->createCamera("Widget_Cam");
-	this->m_camera->setPosition(Ogre::Vector3(0, 1, 0));
+	this->m_camera->setPosition(Ogre::Vector3(0, 0, 0));
 	this->m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	this->m_camera->setNearClipDistance(1.0);
 	this->m_camera->setFarClipDistance(50000);
 	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
 	this->m_viewPort->setBackgroundColour(Ogre::ColourValue(0.8, 0.8, 1));
+	this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
 	Ogre::Light *light = this->m_sceneManager->createLight("Light1");
 	light->setType(Ogre::Light::LT_POINT);
 	light->setPosition(Ogre::Vector3(250, 150, 250));
@@ -250,6 +271,8 @@ OLD!
 	light->setSpecularColour(Ogre::ColourValue::White);
 
 	// default graphics settings
+	// VSync
+	// Resolution
 	/// @todo Should be configurable for the whole editor (using singleton)
 	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 	Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
@@ -257,6 +280,25 @@ OLD!
 
 	// if this function is called background becomes blue but program hangs up
 	// this->m_root->startRendering(); /// @todo Error!
+}
+
+void ModelView::moveCamera(const Ogre::Vector3 &direction, const Ogre::Vector3 &delta)
+{
+	if (!this->m_camera)
+		return;
+
+	this->m_camera->setDirection(direction);
+	this->m_camera->moveRelative(delta);
+}
+
+void ModelView::moveCamera(const Ogre::Vector3 &delta)
+{
+	this->m_camera->moveRelative(delta);
+}
+
+void ModelView::rotateCamera(const Ogre::Radian &angle)
+{
+	this->m_camera->rotate(this->m_camera->getPosition(), angle);
 }
 
 }

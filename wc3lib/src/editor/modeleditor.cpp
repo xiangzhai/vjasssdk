@@ -77,6 +77,30 @@ void ModelEditor::openFile()
 		return;
 	}
 
+	this->openUrl(url);
+}
+
+void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
+{
+	/// @todo If it's an MDLX file event->acceptProposedAction();
+	if (event->mimeData()->hasUrls())
+		event->acceptProposedAction();
+}
+
+void ModelEditor::dropEvent(QDropEvent *event)
+{
+	/// @todo If it's an MDLX file event->acceptProposedAction();
+	if (event->mimeData()->hasUrls())
+	{
+		foreach (QUrl url, event->mimeData()->urls())
+			this->openUrl(url);
+
+		event->accept();
+	}
+}
+
+void ModelEditor::openUrl(const KUrl &url)
+{
 	std::ios_base::openmode openmode = std::ios_base::in;
 	bool isMdx;
 	qDebug() << "Extension is " << QString(boost::filesystem::path(url.toEncoded()).extension().c_str());
@@ -92,6 +116,7 @@ void ModelEditor::openFile()
 		isMdx = false;
 
 	std::ifstream ifstream(url.path().toAscii(), openmode);
+	/// @todo Should be allocated on heap (has to be used permanently by OgreMdlx?).
 	class mdlx::Mdlx model;
 
 	try
@@ -102,7 +127,7 @@ void ModelEditor::openFile()
 		else
 			size = model.readMdl(ifstream);
 
-		KMessageBox::information(this, i18n("Read %1 file \"%2\" successfully.\nSize %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
+		KMessageBox::information(this, i18n("Read %1 file \"%2\" successfully.\nSize: %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
 	}
 	catch (class Exception &exception)
 	{
@@ -120,7 +145,11 @@ void ModelEditor::openFile()
 
 	try
 	{
+		QTime ct = QTime::currentTime();
+		ct.start();
+		qDebug() << "Refresh";
 		ogreModel->refresh();
+		qDebug() << "After refresh. Duration " << ct.elapsed();
 	}
 	catch (class Exception &exception)
 	{

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,5 +39,4 @@ int main(int argc, char *argv[])
 	editor.show();
 
 	return app.exec();
-	// return 0;
 }

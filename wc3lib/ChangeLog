@@ -1,3 +1,10 @@
+2010-12-04 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fixed texture conversion by adding library FreeImage (required by OGRE).
+* editor: Improved camera functionality of class ModelView.
+* editor: Added drag & drop functionality to class ModelEditor.
+* editor: Improved texture and material creation of class OgreMdlx.
+* editor: Added default OGRE configuration files in directory "etc".
+
 2010-12-02 Tamino Dauth <tamino@cdauth.eu>
 * editor: Revised class MpqPriorityList.
 * editor: Revised resource element functions of class Editor.

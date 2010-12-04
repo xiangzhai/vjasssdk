@@ -46,7 +46,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 		virtual void show();
 
-	//public slots:
+	public slots:
 		void openFile();
 
 	protected:
@@ -55,6 +55,12 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		virtual void createMenus(class KMenuBar *menuBar);
 		virtual void createWindowsActions(class KMenu *menu);
 		virtual void createToolButtons(class KToolBar *toolBar);
+
+		// load file events
+		virtual void dragEnterEvent(QDragEnterEvent *event);
+		virtual void dropEvent(QDropEvent *event);
+
+		void openUrl(const KUrl &url);
 
 		class ModelView *m_modelView;
 		KUrl m_recentUrl;

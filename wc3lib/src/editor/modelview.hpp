@@ -68,11 +68,23 @@ class ModelView : public QWidget
 		virtual void keyReleaseEvent(QKeyEvent *event);
 		virtual void wheelEvent(QWheelEvent *event);
 
-		// load file events
-		virtual void dragEnterEvent(QDragEnterEvent *event);
-		virtual void dropEvent(QDropEvent *event);
+		virtual void mouseMoveEvent(QMouseEvent *event);
+		virtual void mousePressEvent(QMouseEvent *event);
+		virtual void mouseReleaseEvent(QMouseEvent *event);
 
 		virtual void initRenderWindow();
+
+
+		/**
+		* Moves camera relatively to its current position.
+		*/
+		void moveCamera(const Ogre::Vector3 &direction, const Ogre::Vector3 &delta);
+		/// @copydoc moveCamera
+		void moveCamera(const Ogre::Vector3 &delta);
+		/**
+		* Rotates camera relatively to its current position.
+		*/
+		void rotateCamera(const Ogre::Radian &angle);
 
 		class Editor *m_editor;
 		const Ogre::NameValuePairList *m_parameters;

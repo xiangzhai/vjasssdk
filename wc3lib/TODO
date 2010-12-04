@@ -1,12 +1,18 @@
+2010-12-04 Tamino Dauth <tamino@cdauth.eu>
+* editor: MDLX should be allocated on heap (class OgreMdlx)?
+* editor: Improve camera movement and rotation.
+* editor: Test drag & drop functionality of model editor.
+* editor: Fix automoc and uic functionality of CMake (again -.-).
+
 2010-12-03 Tamino Dauth <tamino@cdauth.eu>
-* editor: Add "editor/resource.hpp" to SVN repository.
+* DONE: editor: Add "editor/resource.hpp" to SVN repository.
 
 2010-12-02 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improve performance of class MpqPriorityList (maybe use map, sorted by priority).
 * DONE: editor: Fix crash in function blpToOgre.
-* editor: blpToOgre -> PNG files can not be loaded.
-* lang: Add CMakeLists.txt files in "lang/zinc" and "lang/jasspp" to SVN repository.
-* lang: Add "lang/driver.hpp" and "lang/driver.cpp" to SVN repository.
+* FIXED: editor: blpToOgre -> PNG files can not be loaded.
+* DONE: lang: Add CMakeLists.txt files in "lang/zinc" and "lang/jasspp" to SVN repository.
+* DONE: lang: Add "lang/driver.hpp" and "lang/driver.cpp" to SVN repository.
 
 2010-11-21 Tamino Dauth <tamino@cdauth.eu>
 * editor: Write web log article about the design of editor (Module classes, MpqPriorityList etc.).
