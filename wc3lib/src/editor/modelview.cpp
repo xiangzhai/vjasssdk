@@ -45,12 +45,11 @@ ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::
 	assert(!renderers.empty()); // we need at least one renderer to do anything useful
 	Ogre::RenderSystem *renderSystem = renderers.front();
 	assert(renderSystem); // user might pass back a null renderer, which would be bad!
-	QString dimensions = QString("%1x%2").arg(this->width()).arg(this->height());
-	qDebug() << "Dimensions " << dimensions.toAscii().data();
-	renderSystem->setConfigOption("Video Mode", dimensions.toAscii().data());
+	// configuration is setup automatically by ogre.cfg file
+	//renderSystem->setConfigOption("Video Mode", "1280x800");
+	//renderSystem->setConfigOption("Full Screen", "No");
 	this->m_root->setRenderSystem(renderSystem);
 	// initialize without creating window
-	this->m_root->getRenderSystem()->setConfigOption("Full Screen", "No");
 	this->m_root->saveConfig();
 	this->m_root->initialise(false); // don't create a window
 }

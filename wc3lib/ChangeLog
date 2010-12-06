@@ -1,3 +1,8 @@
+2010-12-06 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fixed wrong resolutin parameters of class ModelView.
+* editor: Added settings widget and class.
+* core: Improved DynamicLibrary's platform support (Windows and Mac OS, code has been taken from OGRE project).
+
 2010-12-04 Tamino Dauth <tamino@cdauth.eu>
 * editor: Fixed texture conversion by adding library FreeImage (required by OGRE).
 * editor: Improved camera functionality of class ModelView.

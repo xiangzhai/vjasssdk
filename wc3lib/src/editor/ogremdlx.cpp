@@ -465,57 +465,65 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 
 	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create("Texture" + id, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-	// if image could not be loaded continue with empty texture
-	try
+	if (texture.replaceableId() == mdlx::None)
 	{
-		KUrl url = this->modelView()->editor()->findFile(KUrl(texture.texturePath()));
-
-		// if no editor resource has been found file directory will be tried
-		if (!url.isValid())
+		// if image could not be loaded continue with empty texture
+		try
 		{
-			url = this->url().directory();
-			url.addPath(texture.texturePath());
+			KUrl url = this->modelView()->editor()->findFile(KUrl(texture.texturePath()));
+
+			// if no editor resource has been found file directory will be tried
+			if (!url.isValid())
+			{
+				url = this->url().directory();
+				url.addPath(texture.texturePath());
+			}
+
+			image = blpToOgre(url);
+		}
+		catch (class Exception &exception)
+		{
+			KMessageBox::error(0, i18n("Texture loading error:\n%1", exception.what().c_str()));
 		}
 
-		image = blpToOgre(url);
-	}
-	catch (class Exception &exception)
-	{
-		KMessageBox::error(0, i18n("Texture loading error:\n%1", exception.what().c_str()));
-	}
-
-	if (image != 0)
-	{
-		tex->loadImage(*image);
-
-		/// @todo Apply texture properties:
-		/*
-		enum Wrapping
+		if (image != 0)
 		{
-			WrapWidth = 1,
-			WrapHeight = 2,
-			Both = 3
-		};
-		*/
-		// enum ReplaceableId replaceableId() const;
-		// Use m_teamColor and m_teamGlowColor for color values!
-		/*
-		enum ReplaceableId
-		{
-			None = 0,
-			TeamColor = 1,
-			TeamGlow = 2,
-			Cliff = 11,
-			LordaeronTree = 31,
-			AshenvaleTree = 32,
-			BarrensTree = 33,
-			NorthrendTree = 34,
-			MushroomTree = 35
-		};
-		*/
+			tex->loadImage(*image);
 
-		delete image;
-		image = 0;
+			/// @todo Apply texture properties:
+			/*
+			enum Wrapping
+			{
+				WrapWidth = 1,
+				WrapHeight = 2,
+				Both = 3
+			};
+			*/
+			// enum ReplaceableId replaceableId() const;
+			// Use m_teamColor and m_teamGlowColor for color values!
+			/*
+			enum ReplaceableId
+			{
+				None = 0,
+				TeamColor = 1,
+				TeamGlow = 2,
+				Cliff = 11,
+				LordaeronTree = 31,
+				AshenvaleTree = 32,
+				BarrensTree = 33,
+				NorthrendTree = 34,
+				MushroomTree = 35
+			};
+			*/
+
+			delete image;
+			image = 0;
+		}
+	}
+	// replace with replaceable id
+	else
+	{
+
 	}
 
 	return tex;

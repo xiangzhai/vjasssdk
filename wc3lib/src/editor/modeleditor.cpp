@@ -34,6 +34,7 @@
 #include "editor.hpp"
 #include "../utilities.hpp"
 #include "resource.hpp"
+#include "settings.hpp"
 
 namespace wc3lib
 {
@@ -41,7 +42,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_recentUrl("")
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_recentUrl(""), m_settings(0)
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -78,6 +79,14 @@ void ModelEditor::openFile()
 	}
 
 	this->openUrl(url);
+}
+
+void ModelEditor::settings()
+{
+	if (this->m_settings == 0)
+		this->m_settings = new Settings(this->m_modelView);
+
+	this->m_settings->show();
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -179,6 +188,12 @@ void ModelEditor::createMenus(class KMenuBar *menuBar)
 
 void ModelEditor::createWindowsActions(class KMenu *menu)
 {
+	class KAction *action;
+
+	action = new KAction(KIcon(":/actions/settings.png"), i18n("Settings"), this);
+	//action->setShortcut(KShortcut(i18n("Ctrl+O")));
+	connect(action, SIGNAL(triggered()), this, SLOT(settings()));
+	menu->addAction(action);
 }
 
 void ModelEditor::createToolButtons(class KToolBar *toolBar)

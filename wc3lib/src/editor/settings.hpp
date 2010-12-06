@@ -18,50 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_LIBRARYLOADER_HPP
-#define WC3LIB_LIBRARYLOADER_HPP
+#ifndef WC3LIB_EDITOR_SETTINGS_HPP
+#define WC3LIB_EDITOR_SETTINGS_HPP
 
-#include <map>
+#include <QWidget>
 
-#include <boost/filesystem/path.hpp>
-
-#include "exception.hpp"
+#include "ui/ui_settings.hpp"
 
 namespace wc3lib
 {
 
-/**
-* Static class which allows you to load shared objects (or dynamic link libraries) dynamically which means at the program's runtime.
-* It provides a consistent interface which is usable on UNIX and Windows platforms.
-* @todo Add Windows support.
-*/
-class LibraryLoader
+namespace editor
 {
+
+class Settings : public QWidget, private Ui::SettingsTabWidget
+{
+	Q_OBJECT
+
 	public:
-		typedef LibraryLoader self;
+		Settings(class ModelView *modelView, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-#if defined (LINUX) || defined (MAC)
-		typedef void* HandleType;
-#elif defined WINDOWS
-		typedef hInstance HandleType;
-#endif
+	public slots:
+		void apply();
 
-		class Handle
-		{
-			public:
-				HandleType handle;
-				boost::filesystem::path path;
-		};
+	protected:
+		virtual void showEvent(QShowEvent *event);
 
-		static class Handle* loadLibrary(const boost::filesystem::path &path) throw (class Exception);
-		static void unloadLibrary(class Handle *handle) throw (class Exception);
-		static void* librarySymbol(const class Handle &handle, const std::string symbolName) throw (class Exception);
 
-	private:
-		LibraryLoader();
-		LibraryLoader(const self &);
-		~LibraryLoader();
+		class ModelView *m_modelView;
 };
+
+}
 
 }
 

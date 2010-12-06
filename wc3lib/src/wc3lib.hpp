@@ -21,6 +21,10 @@
 #ifndef WC3LIB_WC3LIB_HPP
 #define WC3LIB_WC3LIB_HPP
 
+#if !defined(LINUX) && !defined(MAC) && !defined(WINDOWS)
+#error Undefined platform.
+#endif
+
 /**
 * @mainpage wc3lib
 * @date Version date

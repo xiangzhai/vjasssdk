@@ -38,7 +38,7 @@ namespace editor
 */
 class ModelEditor : public Module, protected Ui::ModelEditor
 {
-	//Q_OBJECT
+	Q_OBJECT
 
 	public:
 		ModelEditor(class Editor *editor);
@@ -48,6 +48,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 	public slots:
 		void openFile();
+		void settings();
 
 	protected:
 		virtual void createFileActions(class KMenu *menu);
@@ -65,6 +66,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		class ModelView *m_modelView;
 		KUrl m_recentUrl;
 		std::list<class OgreMdlx*> m_models;
+		class Settings *m_settings;
 };
 
 }

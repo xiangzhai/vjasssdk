@@ -1,3 +1,6 @@
+2010-12-06 Tamino Dauth <tamino@cdauth.eu>
+* editor: Improve settings widget and functionality of ModelView (allows user to configure OGRE renderer).
+
 2010-12-04 Tamino Dauth <tamino@cdauth.eu>
 * editor: MDLX should be allocated on heap (class OgreMdlx)?
 * editor: Improve camera movement and rotation.
