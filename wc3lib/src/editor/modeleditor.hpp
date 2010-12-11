@@ -38,7 +38,7 @@ namespace editor
 */
 class ModelEditor : public Module, protected Ui::ModelEditor
 {
-	Q_OBJECT
+	//Q_OBJECT
 
 	public:
 		ModelEditor(class Editor *editor);

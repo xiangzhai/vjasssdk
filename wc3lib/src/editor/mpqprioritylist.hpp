@@ -110,7 +110,7 @@ class MpqPriorityList : public std::list<MpqPriorityListEntry*>
 		/**
 		* @return Returns entries list sorted by the entries priorities.
 		*/
-		const base& sortedValids() const;
+		base sortedValids() const;
 
 		/**
 		* Several URLs should never be the same.
@@ -147,7 +147,7 @@ inline mpq::MpqFile::Locale MpqPriorityList::locale() const
 	return this->m_locale;
 }
 
-inline const MpqPriorityList::base& MpqPriorityList::sortedValids() const
+inline MpqPriorityList::base MpqPriorityList::sortedValids() const
 {
 	MpqPriorityList::base result;
 

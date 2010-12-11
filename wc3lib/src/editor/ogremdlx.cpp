@@ -51,6 +51,7 @@ OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *mod
 
 void OgreMdlx::refresh() throw (class Exception)
 {
+	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
 	Ogre::SceneManager &sceneManager = *this->m_modelView->sceneManager();
 	// create textures
 	BOOST_FOREACH(const mdlx::Texture *texture, this->m_mdlx->textures()->textures())
@@ -64,6 +65,7 @@ void OgreMdlx::refresh() throw (class Exception)
 	BOOST_FOREACH(const mdlx::Geoset *geoset, this->m_mdlx->geosets()->geosets())
 		this->m_geosets[geoset] = this->createGeoset(*geoset);
 
+	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
 	// get new objects
 	/*
 	std::list<const class Node*> nodes = this->m_mdlx->nodes();
@@ -463,7 +465,7 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		++id;
 	}
 
-	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create("Texture" + id, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create((boost::format("Texture%1%") % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 	if (texture.replaceableId() == mdlx::None)
 	{
@@ -521,6 +523,7 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		}
 	}
 	// replace with replaceable id
+	/// @todo Load corresponding replacebale textures (from MPQ archives)
 	else
 	{
 
@@ -531,7 +534,17 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 
 Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material) throw (class Exception)
 {
-	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create("Material", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
+	mdlx::long32 id = 0;
+
+	BOOST_FOREACH(const class mdlx::Material *mat, this->m_mdlx->materials()->materials())
+	{
+		if (mat == &material)
+			break;
+
+		++id;
+	}
+
+	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create((boost::format("Material%1%") % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
 
 	// properties
 	/*
@@ -550,7 +563,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 	{
 		Ogre::Technique *technique = mat->createTechnique();
 		Ogre::Pass *pass = technique->createPass();
-		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState("Texture" + layer->textureId());
+		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState((boost::format("Texture%1%") % layer->textureId()).str().c_str());
 		//textureUnitState->setTextureFiltering();
 		//textureUnitState->setAlphaOperation(Ogre::LBX_MODULATE_X4);
 		textureUnitState->setTextureCoordSet(layer->coordinatesId());
@@ -629,6 +642,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) throw (class Exception)
 {
 	Ogre::ManualObject *object = new Ogre::ManualObject("geoset");
+	qDebug() << "Creating geoset";
 
 	// set bounds
 	/// @todo Set Bounding radius
@@ -664,7 +678,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	// increase processor efficiency
 	object->estimateVertexCount(geoset.vertices()->vertices().size());
 	object->estimateIndexCount(geoset.vertices()->vertices().size());
-	object->begin("material", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	object->begin(this->m_materials[material]->getName(), Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 	// build vertices
 	std::list<class mdlx::Vertex*>::const_iterator vertexIterator = geoset.vertices()->vertices().begin();
@@ -682,7 +696,10 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		++vertexIterator;
 		++normalIterator;
 		++textureVertexIterator;
+		++index;
 	}
+
+	qDebug() << "Built " << index << " vertices.";
 
 	// build primitives
 	std::list<class mdlx::PrimitiveType*>::const_iterator pTypeIterator = geoset.primitiveTypes()->primitiveTypes().begin();
@@ -693,27 +710,31 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	{
 		if ((*pTypeIterator)->type() == mdlx::PrimitiveType::Triangles)
 		{
-			Ogre::uint32 indices[(*pSizeIterator)->value()];
-
-			for (mdlx::long32 size = 0; size < (*pSizeIterator)->value(); ++size)
+			for (mdlx::long32 i = 0; i < (*pSizeIterator)->value(); i += 3)
 			{
-				mdlx::short16 vertexIndex = (*pVertexIterator)->value();
-				indices[size] = boost::numeric_cast<Ogre::uint32>(vertexIndex);
-				++pVertexIterator;
-			}
+				Ogre::uint32 indices[3];
+				//qDebug() << "Triangle with size " << 3;
 
-			object->triangle(indices[0], indices[1], indices[2]);
+				for (mdlx::long32 size = 0; size < 3; ++size)
+				{
+					mdlx::short16 vertexIndex = (*pVertexIterator)->value();
+					indices[size] = boost::numeric_cast<Ogre::uint32>(vertexIndex);
+					++pVertexIterator;
+				}
+
+				object->triangle(indices[0], indices[1], indices[2]);
+				//qDebug() << "Building triangle";
+			}
 		}
 		else
 		{
 			/// @todo build other primitives (other than triangles)
-			for (mdlx::long32 size = 0; size < (*pSizeIterator)->value(); ++size)
-				++pVertexIterator;
+			for (mdlx::long32 i = 0; i < (*pSizeIterator)->value(); ++i)
+				++pVertexIterator; /// @todo triangles have 3 vertices, how much?
 		}
 
 		++pTypeIterator;
 		++pSizeIterator;
-		++pVertexIterator;
 	}
 
 	object->end();

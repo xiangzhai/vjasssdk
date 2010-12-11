@@ -188,6 +188,7 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 	this->m_terrainEditor->resize(QSize(300, 300));
 	*/
 	showModelEditor(); // test
+	this->m_modelEditor->settings();
 }
 
 Editor::~Editor()

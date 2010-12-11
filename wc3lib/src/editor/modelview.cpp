@@ -46,8 +46,7 @@ ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::
 	Ogre::RenderSystem *renderSystem = renderers.front();
 	assert(renderSystem); // user might pass back a null renderer, which would be bad!
 	// configuration is setup automatically by ogre.cfg file
-	//renderSystem->setConfigOption("Video Mode", "1280x800");
-	//renderSystem->setConfigOption("Full Screen", "No");
+	renderSystem->setConfigOption("Full Screen", "No");
 	this->m_root->setRenderSystem(renderSystem);
 	// initialize without creating window
 	this->m_root->saveConfig();
@@ -278,7 +277,8 @@ OLD!
 	Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(2);
 
 	// if this function is called background becomes blue but program hangs up
-	// this->m_root->startRendering(); /// @todo Error!
+	// we use custom rendering calls
+	//this->m_root->startRendering(); /// @todo Error!
 }
 
 void ModelView::moveCamera(const Ogre::Vector3 &direction, const Ogre::Vector3 &delta)

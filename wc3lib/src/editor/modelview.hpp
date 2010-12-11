@@ -55,9 +55,14 @@ class ModelView : public QWidget
 
 		class Editor* editor() const;
 		Ogre::Root* root() const;
+		Ogre::RenderWindow* renderWindow() const;
 		Ogre::SceneManager* sceneManager() const;
+		Ogre::Camera* camera() const;
+		Ogre::Viewport* viewPort() const;
 
 	protected:
+		friend class Settings;
+
 		//virtual void paintEvent(QPaintEvent* event);
 		virtual void showEvent(QShowEvent *event);
 		virtual void resizeEvent(QResizeEvent *event);
@@ -113,9 +118,24 @@ inline Ogre::Root* ModelView::root() const
 	return this->m_root;
 }
 
+inline Ogre::RenderWindow* ModelView::renderWindow() const
+{
+	return this->m_renderWindow;
+}
+
 inline Ogre::SceneManager* ModelView::sceneManager() const
 {
 	return this->m_sceneManager;
+}
+
+inline Ogre::Camera* ModelView::camera() const
+{
+	return this->m_camera;
+}
+
+inline Ogre::Viewport* ModelView::viewPort() const
+{
+	return this->m_viewPort;
 }
 
 }

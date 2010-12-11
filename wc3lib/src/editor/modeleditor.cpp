@@ -145,7 +145,7 @@ void ModelEditor::openUrl(const KUrl &url)
 		return;
 	}
 
-	const Ogre::Vector3 position(0.0, 0.0, 0.0);
+	//const Ogre::Vector3 position(0.0, 0.0, 0.0);
 	OgreMdlx *ogreModel = new OgreMdlx(url, model, this->m_modelView);
 	this->editor()->addResource(ogreModel);
 	//ogreModel->refresh()
@@ -158,7 +158,7 @@ void ModelEditor::openUrl(const KUrl &url)
 		ct.start();
 		qDebug() << "Refresh";
 		ogreModel->refresh();
-		qDebug() << "After refresh. Duration " << ct.elapsed();
+		qDebug() << "After refresh. Duration " << ct.elapsed() << "ms";
 	}
 	catch (class Exception &exception)
 	{

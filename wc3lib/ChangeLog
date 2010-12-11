@@ -1,3 +1,8 @@
+2010-12-11 Tamino Dauth <tamino@cdauth.eu>
+* editor: Added question dialog for reinitialisation of render system to settings widget.
+* editor: Added view options to settings widget.
+* editor: Improved material/geoset relations.
+
 2010-12-06 Tamino Dauth <tamino@cdauth.eu>
 * editor: Fixed wrong resolutin parameters of class ModelView.
 * editor: Added settings widget and class.

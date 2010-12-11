@@ -31,6 +31,11 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* Settings widget for model view settings.
+* Allows you to configure OGRE rendering settings (e. g. resolution, renderer, lighting etc.).
+* @see ModelView, ModelEditor, TerrainEditor
+*/
 class Settings : public QWidget, private Ui::SettingsTabWidget
 {
 	Q_OBJECT
@@ -42,6 +47,8 @@ class Settings : public QWidget, private Ui::SettingsTabWidget
 		void apply();
 
 	protected:
+		bool hasToReinitialiseRenderer() const;
+
 		virtual void showEvent(QShowEvent *event);
 
 
