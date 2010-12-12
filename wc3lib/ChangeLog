@@ -1,3 +1,9 @@
+2010-12-12 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fixed technique creation (removed automatically created one).
+* editor: Added transparent material layer support.
+* editor: Camera polygon mode is configurable now.
+* editor: Camera enables auto tracking for added MDLX models now.
+
 2010-12-11 Tamino Dauth <tamino@cdauth.eu>
 * editor: Added question dialog for reinitialisation of render system to settings widget.
 * editor: Added view options to settings widget.

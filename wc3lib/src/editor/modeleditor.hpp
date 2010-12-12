@@ -61,7 +61,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		virtual void dragEnterEvent(QDragEnterEvent *event);
 		virtual void dropEvent(QDropEvent *event);
 
-		void openUrl(const KUrl &url);
+		bool openUrl(const KUrl &url);
 
 		class ModelView *m_modelView;
 		KUrl m_recentUrl;

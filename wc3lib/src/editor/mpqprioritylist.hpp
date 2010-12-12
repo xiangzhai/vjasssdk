@@ -126,12 +126,12 @@ class MpqPriorityList : public std::list<MpqPriorityListEntry*>
 		/**
 		* Checks the whole priority list in the specified order for the given path.
 		*/
-		const KUrl& findFile(const KUrl &url) const;
+		KUrl findFile(const KUrl &url) const;
 		/**
 		* @copydoc MpqPriorityList::findFile
 		* @note Does not use the list's internal locale!
 		*/
-		const KUrl& findFile(const KUrl &url, mpq::MpqFile::Locale locale) const;
+		KUrl findFile(const KUrl &url, mpq::MpqFile::Locale locale) const;
 
 	protected:
 		mpq::MpqFile::Locale m_locale;

@@ -51,7 +51,10 @@ ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new
 	mainLayout->addWidget(this->m_modelView);
 	this->m_modelViewWidget->setLayout(mainLayout);
 	*/
-	topLayout()->addWidget(this->m_modelView);
+	/// @todo Model view should be bigger than modules buttons
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(this->m_modelView);
+	this->topLayout()->addLayout(layout);
 }
 
 ModelEditor::~ModelEditor()
@@ -66,7 +69,7 @@ void ModelEditor::show()
 
 void ModelEditor::openFile()
 {
-	KUrl url = KFileDialog::getOpenUrl(this->m_recentUrl, i18n("*.mdl|Blizzard Model (*.mdl)\n*.mdx|Compressed Blizzard Model (*.mdx)"), this);
+	KUrl url = KFileDialog::getOpenUrl(this->m_recentUrl, i18n("*.mdl|Blizzard Model (*.mdl)\n*.mdx|Compressed Blizzard Model (*.mdx)\n*|All files (*)"), this);
 
 	if (url.isEmpty())
 		return;
@@ -108,7 +111,7 @@ void ModelEditor::dropEvent(QDropEvent *event)
 	}
 }
 
-void ModelEditor::openUrl(const KUrl &url)
+bool ModelEditor::openUrl(const KUrl &url)
 {
 	std::ios_base::openmode openmode = std::ios_base::in;
 	bool isMdx;
@@ -142,15 +145,12 @@ void ModelEditor::openUrl(const KUrl &url)
 	{
 		KMessageBox::error(this, i18n("Unable to read %1 file \"%2\".\nException \"%3\".", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), exception.what().c_str()));
 
-		return;
+		return false;
 	}
 
 	//const Ogre::Vector3 position(0.0, 0.0, 0.0);
 	OgreMdlx *ogreModel = new OgreMdlx(url, model, this->m_modelView);
-	this->editor()->addResource(ogreModel);
-	//ogreModel->refresh()
-	//this->m_modelView.createModel(model, position, ogreModel);
-	this->m_models.push_back(ogreModel);
+	this->editor()->addResource(ogreModel); // add to get URL
 
 	try
 	{
@@ -160,12 +160,19 @@ void ModelEditor::openUrl(const KUrl &url)
 		ogreModel->refresh();
 		qDebug() << "After refresh. Duration " << ct.elapsed() << "ms";
 	}
-	catch (class Exception &exception)
+	catch (class std::exception &exception)
 	{
-		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what().c_str()));
+		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
+		this->editor()->removeResource(ogreModel);
+		delete ogreModel;
+
+		return false;
 	}
 
+	this->m_models.push_back(ogreModel);
 	this->m_modelView->root()->addFrameListener(ogreModel);
+
+	return true;
 }
 
 void ModelEditor::createFileActions(class KMenu *menu)
@@ -175,6 +182,11 @@ void ModelEditor::createFileActions(class KMenu *menu)
 	action = new KAction(KIcon(":/actions/openmodel.png"), i18n("Open model"), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+O")));
 	connect(action, SIGNAL(triggered()), this, SLOT(openFile()));
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/settings.png"), i18n("Settings"), this);
+	//action->setShortcut(KShortcut(i18n("Ctrl+O")));
+	connect(action, SIGNAL(triggered()), this, SLOT(settings()));
 	menu->addAction(action);
 }
 
@@ -188,12 +200,6 @@ void ModelEditor::createMenus(class KMenuBar *menuBar)
 
 void ModelEditor::createWindowsActions(class KMenu *menu)
 {
-	class KAction *action;
-
-	action = new KAction(KIcon(":/actions/settings.png"), i18n("Settings"), this);
-	//action->setShortcut(KShortcut(i18n("Ctrl+O")));
-	connect(action, SIGNAL(triggered()), this, SLOT(settings()));
-	menu->addAction(action);
 }
 
 void ModelEditor::createToolButtons(class KToolBar *toolBar)

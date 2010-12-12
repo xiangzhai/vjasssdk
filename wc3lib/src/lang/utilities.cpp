@@ -23,11 +23,11 @@
 
 namespace wc3lib
 {
-	
+
 namespace lang
 {
 
-const std::string& getToken(const std::string &line, std::string::size_type &index, bool endOfLine)
+std::string getToken(const std::string &line, std::string::size_type &index, bool endOfLine)
 {
 	if (index >= line.length() || line.empty()) //important
 		return std::string();
@@ -73,37 +73,37 @@ void createHtmlHeader(std::ostream &ostream, const std::string &title, const std
 	;
 }
 
-const std::string& booleanToString(bool value)
+std::string booleanToString(bool value)
 {
 	if (value)
 		return _("Yes");
-	
+
 	return _("No");
 }
 #ifdef SQLITE
 const std::string& sqlFilteredString(const std::string &value)
 {
 	std::string result;
-	
+
 	for (std::string::size_type i = 0; i < value.length(); ++i)
 	{
 		char character = value[i];
-		
+
 		switch (character)
 		{
 			case '\'':
 				result += "\'\'";
-				
+
 				break;
-			
+
 			case '\"':
 				result += "\"\"";
-				
+
 				break;
-			
+
 			default:
 				result += character;
-				
+
 				break;
 		}
 	}

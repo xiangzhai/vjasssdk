@@ -45,14 +45,16 @@ namespace wc3lib
 namespace editor
 {
 
-OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView) : Resource(url, Resource::Model), m_mdlx(&mdlx), m_modelView(modelView)
+OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView) : Resource(url, Resource::Model), m_mdlx(&mdlx), m_modelView(modelView), m_sceneNode(modelView->sceneManager()->getRootSceneNode()->createChildSceneNode(mdlx.model()->name()))
 {
 }
 
-void OgreMdlx::refresh() throw (class Exception)
+void OgreMdlx::refresh() throw (class Exception, class Ogre::Exception)
 {
-	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
-	Ogre::SceneManager &sceneManager = *this->m_modelView->sceneManager();
+	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME); // TEST
+
+	this->modelView()->camera()->setAutoTracking(true, this->m_sceneNode); // camera follows ogre mdlx automatically
+
 	// create textures
 	BOOST_FOREACH(const mdlx::Texture *texture, this->m_mdlx->textures()->textures())
 		this->m_textures[texture] = this->createTexture(*texture);
@@ -65,7 +67,7 @@ void OgreMdlx::refresh() throw (class Exception)
 	BOOST_FOREACH(const mdlx::Geoset *geoset, this->m_mdlx->geosets()->geosets())
 		this->m_geosets[geoset] = this->createGeoset(*geoset);
 
-	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL);
+	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL); // TEST
 	// get new objects
 	/*
 	std::list<const class Node*> nodes = this->m_mdlx->nodes();
@@ -356,6 +358,23 @@ void OgreMdlx::refresh() throw (class Exception)
 	*/
 }
 
+void OgreMdlx::saveAs(const KUrl &url) throw (class Exception)
+{
+	/*
+	TODO
+	typedef std::pair<const mdlx::Geoset*, Ogre::ManualObject*> EntryType;
+
+
+	BOOST_FOREACH(EntryType entry, this->m_geosets)
+		;
+
+	Ogre::MeshSerializer serializer = new MeshSerializer();
+	*/
+
+
+//	serializer.ExportMesh(Target.ConvertToMesh(MeshName), "Ucgen.mesh");
+}
+
 Ogre::Node* OgreMdlx::createNode(const class Node &node)
 {
 	Ogre::Node *result = 0;
@@ -544,7 +563,8 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		++id;
 	}
 
-	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create((boost::format("Material%1%") % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
+	Ogre::MaterialPtr mat =
+	Ogre::MaterialManager::getSingleton().create((boost::format("Material%1%") % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
 
 	// properties
 	/*
@@ -558,15 +578,31 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 	// use Ogre::Technique?
 
 	//return 0;
+	qDebug() << "Layer count " << material.layers()->layers().size();
+	mat->removeAllTechniques(); // there's always one default technique
 
 	BOOST_FOREACH(const class mdlx::Layer *layer, material.layers()->layers())
 	{
 		Ogre::Technique *technique = mat->createTechnique();
+		technique->removeAllPasses(); // there shouldn't be any default pass, anyway, we want to make sure
 		Ogre::Pass *pass = technique->createPass();
+		// TEST
+		Ogre::Material::TechniqueIterator iterator = mat->getTechniqueIterator();
+		int i = 0;
+		while (iterator.hasMoreElements())
+		{
+			iterator.getNext();
+			++i;
+		}
+
+		qDebug() << "We have " << i << " techniques.";
+
 		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState((boost::format("Texture%1%") % layer->textureId()).str().c_str());
 		//textureUnitState->setTextureFiltering();
 		//textureUnitState->setAlphaOperation(Ogre::LBX_MODULATE_X4);
 		textureUnitState->setTextureCoordSet(layer->coordinatesId());
+		//float32	alpha() const; TODO set alpha!
+		technique->setLightingEnabled(false); // default value
 
 		switch (layer->filterMode())
 		{
@@ -595,37 +631,32 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 				break;
 		}
 
-		/*
-		enum FilterMode
+		if (layer->shading() == mdlx::Layer::Unshaded)
 		{
-			None = 0,
-			Transparent = 1,
-			Blend = 2,
-			Additive = 3,
-			AddAlpha = 4,
-			Modulate = 5,
-			Modulate2x = 6
-		};
-
-		enum Shading
+		}
+		else
 		{
-			Unshaded = 1,
-			SphereEnvironmentMap = 2,
-			Unknown0 = 4,
-			Unknown1 = 8,
-			TwoSided = 16,
-			Unfogged = 32,
-			NoDepthTest = 64,
-			NoDepthSet = 128
-		};
+			if (layer->shading() & mdlx::Layer::SphereEnvironmentMap)
+				;
 
-		Non-animation properties of layer:
-		enum FilterMode filterMode() const;
-		enum Shading shading() const;
-		long32 textureId() const;
-		long32 coordinatesId() const;
-		float32	alpha() const;
-		*/
+			if (layer->shading() & mdlx::Layer::Unknown0)
+				;
+
+			if (layer->shading() & mdlx::Layer::Unknown1)
+				;
+
+			if (layer->shading() & mdlx::Layer::TwoSided)
+				technique->setCullingMode(Ogre::CULL_NONE);
+
+			if (layer->shading() & mdlx::Layer::Unfogged)
+				;
+
+			if (layer->shading() & mdlx::Layer::NoDepthTest)
+				;
+
+			if (layer->shading() & mdlx::Layer::NoDepthSet)
+				;
+		}
 
 		/*
 		Texture animation stuff
@@ -641,44 +672,38 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 
 Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) throw (class Exception)
 {
-	Ogre::ManualObject *object = new Ogre::ManualObject("geoset");
-	qDebug() << "Creating geoset";
-
-	// set bounds
-	/// @todo Set Bounding radius
-	//object->setBoundingSphereRadius(geoset->boundsRadius());
-	object->setBoundingBox(Ogre::AxisAlignedBox(
-		geoset.minimumExtent().x,
-		geoset.minimumExtent().y,
-		geoset.minimumExtent().z,
-		geoset.maximumExtent().x,
-		geoset.maximumExtent().y,
-		geoset.maximumExtent().z
-		)
-	);
-
-	// get material
-	const class mdlx::Material *material = 0;
 	mdlx::long32 id = 0;
 
-	BOOST_FOREACH(material, this->m_mdlx->materials()->materials())
+	BOOST_FOREACH(const class mdlx::Geoset *geo, this->m_mdlx->geosets()->geosets())
 	{
-		if (id == geoset.materialId())
+		if (geo == &geoset)
 			break;
 
 		++id;
 	}
 
-	if (id != geoset.materialId())
-		throw Exception(boost::format(_("Missing material %1%")) % id);
+	Ogre::ManualObject *object = this->modelView()->sceneManager()->createManualObject((boost::format("Geoset%1%") % id).str().c_str());
+	qDebug() << "Creating geoset";
 
 	// get material
-	//this->m_materials[material]
+	const class mdlx::Material *material = 0;
+	mdlx::long32 materialId = 0;
+
+	BOOST_FOREACH(material, this->m_mdlx->materials()->materials())
+	{
+		if (materialId == geoset.materialId())
+			break;
+
+		++materialId;
+	}
+
+	if (materialId != geoset.materialId())
+		throw Exception(boost::format(_("Missing material %1%")) % id);
 
 	// increase processor efficiency
 	object->estimateVertexCount(geoset.vertices()->vertices().size());
 	object->estimateIndexCount(geoset.vertices()->vertices().size());
-	object->begin(this->m_materials[material]->getName(), Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	object->begin(this->m_materials[material]->getName(), Ogre::RenderOperation::OT_TRIANGLE_LIST); // get material
 
 	// build vertices
 	std::list<class mdlx::Vertex*>::const_iterator vertexIterator = geoset.vertices()->vertices().begin();
@@ -691,6 +716,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		object->position((*vertexIterator)->vertexData().x, (*vertexIterator)->vertexData().y, (*vertexIterator)->vertexData().z);
 		object->normal((*normalIterator)->vertexData().x, (*normalIterator)->vertexData().y, (*normalIterator)->vertexData().z);
 		object->textureCoord((*textureVertexIterator)->x(), (*textureVertexIterator)->y());
+		object->colour(1.0 - this->modelView()->viewPort()->getBackgroundColour().r, 1.0 - this->modelView()->viewPort()->getBackgroundColour().g, 1.0 - this->modelView()->viewPort()->getBackgroundColour().b, 1.0 - this->modelView()->viewPort()->getBackgroundColour().a);
 		object->index(index);
 
 		++vertexIterator;
@@ -738,6 +764,21 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	}
 
 	object->end();
+
+	// set bounds
+	/// @todo Set Bounding radius
+	//object->setBoundingSphereRadius(geoset->boundsRadius());
+	object->setBoundingBox(Ogre::AxisAlignedBox(
+		geoset.minimumExtent().x,
+		geoset.minimumExtent().y,
+		geoset.minimumExtent().z,
+		geoset.maximumExtent().x,
+		geoset.maximumExtent().y,
+		geoset.maximumExtent().z
+		)
+	);
+
+	this->m_sceneNode->attachObject(object);
 
 	return object;
 }

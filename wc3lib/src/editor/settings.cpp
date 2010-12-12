@@ -52,14 +52,18 @@ Settings::Settings(class ModelView *modelView, QWidget *parent, Qt::WindowFlags 
 {
 	KTabWidget *tabWidget = new KTabWidget(this);
 	setupUi(tabWidget);
-	//this->layout()->addWidget(tabWidget);
+
 	KDialogButtonBox *dialogButtonBox = new KDialogButtonBox(this);
 	dialogButtonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
 	connect(dialogButtonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(apply()));
 	connect(dialogButtonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(hide()));
 	connect(dialogButtonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 	connect(dialogButtonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(hide()));
-	//this->layout()->addWidget(dialogButtonBox);
+
+	QVBoxLayout *layout = new QVBoxLayout(this);
+	this->setLayout(layout);
+	this->layout()->addWidget(tabWidget);
+	this->layout()->addWidget(dialogButtonBox);
 }
 
 /// @todo Add VSync, RTT (already added?), FSAA and display frequency options
@@ -105,6 +109,7 @@ void Settings::apply()
 	this->m_modelView->sceneManager()->setAmbientLight(qColorTOOgreColourValue(this->m_ambientLightColorButton->color()));
 	this->m_modelView->camera()->setNearClipDistance(this->m_nearClipDistanceSpinBox->value());
 	this->m_modelView->camera()->setFarClipDistance(this->m_farClipDistanceSpinBox->value());
+	this->m_modelView->camera()->setPolygonMode((Ogre::PolygonMode)(this->m_polygonModeComboBox->currentIndex() + 1));
 
 	// textures
 	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(this->m_mipMapsSpinBox->value());
@@ -157,6 +162,7 @@ void Settings::showEvent(QShowEvent *event)
 	this->m_ambientLightColorButton->setColor(ogreColourValueToQColor(this->m_modelView->sceneManager()->getAmbientLight()));
 	this->m_nearClipDistanceSpinBox->setValue(this->m_modelView->camera()->getNearClipDistance());
 	this->m_farClipDistanceSpinBox->setValue(this->m_modelView->camera()->getFarClipDistance());
+	this->m_polygonModeComboBox->setCurrentIndex(this->m_modelView->camera()->getPolygonMode() - 1);
 
 	// textures
 	this->m_mipMapsSpinBox->setValue(Ogre::TextureManager::getSingleton().getDefaultNumMipmaps());

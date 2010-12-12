@@ -205,10 +205,11 @@ void ModelView::initRenderWindow()
 	externalWindowHandleParams += ":";
 	externalWindowHandleParams += Ogre::StringConverter::toString((unsigned int)(info.screen()));
 	externalWindowHandleParams += ":";
-	qDebug() << QString("Display: %1\nScreen: %2\nWindow: %3\nVisual: %4").arg((unsigned long)(info.display())).arg((unsigned long)(info.screen())).arg((unsigned long)(winId())).arg((unsigned long)(info.visual()));
 	externalWindowHandleParams += Ogre::StringConverter::toString((unsigned long)(winId()));
 	//externalWindowHandleParams += ":";
 	//externalWindowHandleParams += Ogre::StringConverter::toString((unsigned long)(info.visual()));
+
+	qDebug() << QString("Display: %1\nScreen: %2\nWindow: %3\nVisual: %4").arg((unsigned long)(info.display())).arg((unsigned long)(info.screen())).arg((unsigned long)(winId())).arg((unsigned long)(info.visual()));
 #endif
 
 	// Add the external window handle parameters to the existing params set.
@@ -227,7 +228,7 @@ void ModelView::initRenderWindow()
 	}
 	catch (const Ogre::RenderingAPIException &exception) // cancel
 	{
-		KMessageBox::detailedError(this, i18n("Fehler bei der Erzeugung eines Fensters mit der Rendering Engine OGRE"), exception.what());
+		KMessageBox::detailedError(this, i18n("Error during render window creation with rendering engine OGRE"), exception.what());
 
 		return;
 	}
@@ -247,7 +248,7 @@ OLD!
 #endif
 */
 
-	setAttribute(Qt::WA_PaintOnScreen, true);
+	setAttribute(Qt::WA_PaintOnScreen);
 	setAttribute(Qt::WA_NoBackground);
 
 	//== Ogre Initialization ==//

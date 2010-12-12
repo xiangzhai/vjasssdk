@@ -103,72 +103,6 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="title">
-       <string>Textures</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>MIP maps:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="KIntSpinBox" name="m_mipMapsSpinBox">
-             <property name="minimum">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Texture filtering:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="KComboBox" name="m_textureFilteringComboBox">
-             <item>
-              <property name="text">
-               <string>None</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Bilinear</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Trilinear</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Anisotropic</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox_3">
       <property name="title">
@@ -237,6 +171,102 @@
              <property name="maximum">
               <number>999999999</number>
              </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Polygon mode:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="KComboBox" name="m_polygonModeComboBox">
+             <item>
+              <property name="text">
+               <string>Points</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Solid</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Wireframe</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Textures</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>MIP maps:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="KIntSpinBox" name="m_mipMapsSpinBox">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Texture filtering:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="KComboBox" name="m_textureFilteringComboBox">
+             <item>
+              <property name="text">
+               <string>None</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bilinear</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Trilinear</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Anisotropic</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>

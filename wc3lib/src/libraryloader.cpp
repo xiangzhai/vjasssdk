@@ -21,11 +21,11 @@
 /**
 * Preprocessors has been taken from OGRE.
 */
-#if LINUX || MAC
+#ifdef UNIX
 #include <dlfcn.h>
 #endif
 
-#if WINDOWS
+#ifdef WINDOWS
 #define WIN32_LEAN_AND_MEAN
 	#if !defined(NOMINMAX) && defined(_MSC_VER)
 	#define NOMINMAX // required to stop windows.h messing up std::min
@@ -33,7 +33,7 @@
 #include <windows.h>
 #endif
 
-#if MAC
+#ifdef MAC
 #include "macUtils.h"
 #endif
 
@@ -49,27 +49,27 @@ class LibraryLoader::Handle* LibraryLoader::loadLibrary(const boost::filesystem:
 {
 	std::string libraryName = path.filename().c_str();
 
-#ifdef LINUX
+#ifdef MAC
+	libraryName.append(".dylib");
+#elif defined (UNIX)
 	libraryName.insert(0, "lib").append(".so");
 #elif defined WINDOWS
 	libraryName.append(".dll");
-#elif defined APPLE
-	libraryName.append(".dylib");
 #endif
 	boost::filesystem::path newPath(path.directory_string() + libraryName);
 
 	HandleType handle = 0;
 
-#ifdef LINUX
-	handle = dlopen(newPath.string().c_str(), RTLD_LAZY | RTLD_GLOBAL);
-#elif defined MAC
+#ifdef MAC
 	handle = mac_loadDylib(newPath.string().c_str());
-#elif defined WINDOWS
+#elif defined (UNIX)
+	handle = dlopen(newPath.string().c_str(), RTLD_LAZY | RTLD_GLOBAL);
+#elif defined (WINDOWS)
 	handle = LoadLibraryEx(newPath.string().c_str(), NULL, LOAD_WITH_ALTERED_SEARCH_PATH );
 #endif
 	std::string errorMessage;
 
-#ifdef LINUX || MAC
+#ifdef UNIX
 	errorMessage.append(dlerror());
 /// @todo Support other system errors
 #endif
@@ -90,7 +90,7 @@ void LibraryLoader::unloadLibrary(class Handle *handle) throw (class Exception)
 		throw Exception(_("Error while unloading shared object. Handle is 0."));
 
 	// Library hasn't already been loaded.
-#if defined (LINUX) || defined (MAC)
+#ifdef UNIX
 	if (dlclose(handle->handle) != 0)
 #elif defined WINDOWS
 	if (FreeLibrary(handle->handle))
@@ -102,21 +102,21 @@ void LibraryLoader::unloadLibrary(class Handle *handle) throw (class Exception)
 
 void* LibraryLoader::librarySymbol(const class Handle &handle, const std::string symbolName) throw (class Exception)
 {
-#ifdef LINUX || MAC
+#ifdef UNIX
 	dlerror(); // clean up errors
 #endif
 
 	// get symbol
 	HandleType symbolHandle = 0;
 
-#if defined (LINUX) || defined (MAC)
+#ifdef UNIX
 	symbolHandle = dlsym(handle.handle, symbolName.c_str());
 #elif defined WINDOWS
 	symbolHandle = GetProcAddress(handle.handle, symbolName.c_str());
 #endif
 
 	// got error
-#if defined (LINUX) || defined (MAC)
+#ifdef UNIX
 	if (dlerror() != NULL) {
 		std::string message(dlerror());
 #elif defined WINDOWS

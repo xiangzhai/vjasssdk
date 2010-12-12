@@ -62,12 +62,12 @@ bool MpqPriorityList::removeEntry(const KUrl &url)
 	return false;
 }
 
-const KUrl& MpqPriorityList::findFile(const KUrl &url) const
+KUrl MpqPriorityList::findFile(const KUrl &url) const
 {
 	return this->findFile(url, this->locale());
 }
 
-const KUrl& MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale locale) const
+KUrl MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale locale) const
 {
 	if (!url.isValid() || !url.isLocalFile()) /// @todo Support non-local files (mpq: protocol).
 		return KUrl("");
