@@ -50,6 +50,12 @@ void AiEditor::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* AiEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

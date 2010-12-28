@@ -116,7 +116,7 @@ class MpqPriorityList : public std::list<MpqPriorityListEntry*>
 		* Several URLs should never be the same.
 		* @return Returns true if the URL has been added to the list (this doesn't happen if there already is an entry with the given URL).
 		*/
-		bool addEntry(const KUrl &url, MpqPriorityListEntry::Priority priority);
+		bool addEntry(const KUrl &url, MpqPriorityListEntry::Priority priority = 0);
 		/**
 		* Removes an entry by its corresponding URL.
 		* @return Returns true if URL corresponds to some entry and that entry has been removed properly.

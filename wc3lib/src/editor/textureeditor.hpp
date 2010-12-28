@@ -39,7 +39,7 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 	public:
 		TextureEditor(class Editor *editor);
 
-	public slots:
+	//public slots:
 		void openFile();
 
 	protected:
@@ -48,6 +48,7 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 		virtual void createMenus(class KMenuBar *menuBar);
 		virtual void createWindowsActions(class KMenu *menu);
 		virtual void createToolButtons(class KToolBar *toolBar);
+		virtual class SettingsInterface* settings();
 
 		KUrl m_recentUrl;
 };

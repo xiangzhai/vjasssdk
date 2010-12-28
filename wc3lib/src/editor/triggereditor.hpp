@@ -41,6 +41,7 @@ class TriggerEditor : public Module, Ui::TriggerEditor
 		virtual void createMenus(class KMenuBar *menuBar);
 		virtual void createWindowsActions(class KMenu *menu);
 		virtual void createToolButtons(class KToolBar *toolBar);
+		virtual class SettingsInterface* settings();
 };
 
 }

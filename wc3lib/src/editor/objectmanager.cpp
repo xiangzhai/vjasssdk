@@ -50,6 +50,12 @@ void ObjectManager::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* ObjectManager::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

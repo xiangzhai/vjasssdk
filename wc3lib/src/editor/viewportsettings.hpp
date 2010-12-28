@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,40 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_OBJECTEDITOR_HPP
-#define WC3LIB_EDITOR_OBJECTEDITOR_HPP
+#ifndef WC3LIB_EDITOR_VIEWPORTSETTINGS_HPP
+#define WC3LIB_EDITOR_VIEWPORTSETTINGS_HPP
 
-#include "module.hpp"
+#include <Ogre.h>
+
+#include "settingsinterface.hpp"
 
 namespace wc3lib
 {
 
-namespace slk
-{
-
-class Data;
-
-}
-
 namespace editor
 {
 
-class ObjectEditor : public Module
+/// Each view port includes one camera (and of course its settings).
+class ViewPortSettings : public SettingsInterface
 {
 	public:
-		ObjectEditor(class Editor *editor);
-		~ObjectEditor();
+		ViewPortSettings(Ogre::Viewport *viewPort);
+		virtual void read(const KConfigGroup &group);
+		virtual void write(KConfigGroup &group) const;
+		virtual QString groupName() const;
+
+		void setViewPort(Ogre::Viewport *viewPort);
+		Ogre::Viewport* viewPort() const;
 
 	protected:
-		virtual void createFileActions(class KMenu *menu);
-		virtual void createEditActions(class KMenu *menu);
-		virtual void createMenus(class KMenuBar *menuBar);
-		virtual void createWindowsActions(class KMenu *menu);
-		virtual void createToolButtons(class KToolBar *toolBar);
-		virtual class SettingsInterface* settings();
-
-		class slk::Data *m_data;
+		Ogre::Viewport *m_viewPort;
 };
+
+inline void ViewPortSettings::setViewPort(Ogre::Viewport *viewPort)
+{
+	this->m_viewPort = viewPort;
+}
+
+inline Ogre::Viewport* ViewPortSettings::viewPort() const
+{
+	return this->m_viewPort;
+}
 
 }
 

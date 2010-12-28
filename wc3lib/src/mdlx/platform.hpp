@@ -79,6 +79,21 @@ enum ReplaceableId
 
 struct VertexData
 {
+	VertexData() : x(0), y(0), z(0) { };
+	VertexData(float32 x, float32 y, float32 z) : x(x), y(y), z(z)
+	{
+	}
+
+	float32 operator[](uint8_t index) const
+	{
+		if (index == 0)
+			return x;
+		else if (index == 1)
+			return y;
+
+		return z;
+	}
+
 	float32 x, y, z;
 };
 

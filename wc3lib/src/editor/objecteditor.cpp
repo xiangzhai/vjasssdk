@@ -70,6 +70,12 @@ void ObjectEditor::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* ObjectEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

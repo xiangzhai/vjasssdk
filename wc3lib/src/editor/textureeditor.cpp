@@ -23,6 +23,7 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <ktoolbar.h>
 
 #include "textureeditor.hpp"
 #include "blpiohandler.hpp"
@@ -122,6 +123,12 @@ void TextureEditor::createWindowsActions(class KMenu *menu)
 
 void TextureEditor::createToolButtons(class KToolBar *toolBar)
 {
+}
+
+class SettingsInterface* TextureEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
 }
 
 }

@@ -34,7 +34,7 @@
 #include "editor.hpp"
 #include "../utilities.hpp"
 #include "resource.hpp"
-#include "settings.hpp"
+#include "modeleditorsettings.hpp"
 
 namespace wc3lib
 {
@@ -42,7 +42,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_recentUrl(""), m_settings(0)
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_recentUrl("")
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -65,6 +65,8 @@ void ModelEditor::show()
 {
 	Module::show();
 	this->m_modelView->show();
+	/// @todo FIXME: Either create model view data in constructor or get the right position for this function call.
+	//readSettings(); // read settings when model view is being shown since its render window is also being created at that moment
 }
 
 void ModelEditor::openFile()
@@ -84,12 +86,8 @@ void ModelEditor::openFile()
 	this->openUrl(url);
 }
 
-void ModelEditor::settings()
+void ModelEditor::showSettings()
 {
-	if (this->m_settings == 0)
-		this->m_settings = new Settings(this->m_modelView);
-
-	this->m_settings->show();
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -192,19 +190,31 @@ void ModelEditor::createFileActions(class KMenu *menu)
 
 void ModelEditor::createEditActions(class KMenu *menu)
 {
+	qDebug() << "Edit actions";
 }
 
 void ModelEditor::createMenus(class KMenuBar *menuBar)
 {
+	qDebug() << "Menus";
 }
 
 void ModelEditor::createWindowsActions(class KMenu *menu)
 {
+	qDebug() << "Windows";
 }
 
 void ModelEditor::createToolButtons(class KToolBar *toolBar)
 {
+	qDebug() << "Tool buttons";
 }
+
+class SettingsInterface* ModelEditor::settings()
+{
+	return new ModelEditorSettings(this);
+}
+
+#include "modeleditor.moc"
+#include "moc_modeleditor.cpp"
 
 }
 

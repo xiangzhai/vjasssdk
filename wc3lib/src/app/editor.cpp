@@ -32,11 +32,20 @@ int main(int argc, char *argv[])
 	KAboutData aboutData(Editor::aboutData());
 
 	KCmdLineArgs::init(argc, argv, &aboutData);
+	KCmdLineOptions options;
+	options.add("", ki18n("Additional help."));
+    	options.add("+[file]", ki18n("File to open"));
+    	KCmdLineArgs::addCmdLineOptions(options);
 
 	class KApplication app;
 
 	class Editor editor;
 	editor.show();
+	/// @todo Allow parsing multiple files as arguments.
+	KCmdLineArgs *args = KCmdLineArgs::parsedArgs("+[file]");
+
+	for (int i = 0; i < args->count(); ++i)
+		editor.openMap(args->url(i));
 
 	return app.exec();
 }

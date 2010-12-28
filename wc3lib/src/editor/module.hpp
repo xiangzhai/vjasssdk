@@ -49,8 +49,12 @@ class Module : public QWidget
 		virtual void createMenus(class KMenuBar *menuBar) = 0;
 		virtual void createWindowsActions(class KMenu *menu) = 0;
 		virtual void createToolButtons(class KToolBar *toolBar) = 0;
+		virtual class SettingsInterface* settings() = 0;
 
 		class QVBoxLayout* topLayout() const;
+
+		void readSettings();
+		void writeSettings();
 
 	private:
 		class Editor *m_editor;

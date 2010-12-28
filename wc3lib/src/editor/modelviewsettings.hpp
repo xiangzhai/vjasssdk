@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,40 +18,36 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_OBJECTEDITOR_HPP
-#define WC3LIB_EDITOR_OBJECTEDITOR_HPP
+#ifndef WC3LIB_EDITOR_MODELVIEWSETTINGS_HPP
+#define WC3LIB_EDITOR_MODELVIEWSETTINGS_HPP
 
-#include "module.hpp"
+#include "settingsinterface.hpp"
 
 namespace wc3lib
 {
 
-namespace slk
-{
-
-class Data;
-
-}
-
 namespace editor
 {
 
-class ObjectEditor : public Module
+class ModelViewSettings : public SettingsInterface
 {
 	public:
-		ObjectEditor(class Editor *editor);
-		~ObjectEditor();
+		ModelViewSettings(class ModelView *modelView);
+
+		virtual void read(const KConfigGroup &group);
+		virtual void write(KConfigGroup &group) const;
+		virtual QString groupName() const;
+
+		class ModelView* modelView() const;
 
 	protected:
-		virtual void createFileActions(class KMenu *menu);
-		virtual void createEditActions(class KMenu *menu);
-		virtual void createMenus(class KMenuBar *menuBar);
-		virtual void createWindowsActions(class KMenu *menu);
-		virtual void createToolButtons(class KToolBar *toolBar);
-		virtual class SettingsInterface* settings();
-
-		class slk::Data *m_data;
+		class ModelView *m_modelView;
 };
+
+inline class ModelView* ModelViewSettings::modelView() const
+{
+	return this->m_modelView;
+}
 
 }
 

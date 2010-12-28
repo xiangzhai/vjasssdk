@@ -50,6 +50,10 @@ class Material
 		virtual ~Material();
 
 		class Materials* materials() const;
+		/**
+		* Taken from Art Tool manual:
+		* Alpha-queued geosets can be made to draw in a specific order with relation to each other in the same model. The lower the value is, the sooner it is rendererd. Values between -20 and 20 are regularly used.
+		*/
 		float32 priorityPlane() const;
 		enum RenderMode renderMode() const;
 		class Layers* layers() const;

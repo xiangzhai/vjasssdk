@@ -74,6 +74,12 @@ void MpqEditor::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* MpqEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

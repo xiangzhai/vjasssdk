@@ -70,6 +70,12 @@ void TerrainEditor::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* TerrainEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

@@ -18,17 +18,48 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#if !defined(EDITOR)
+#error Compile definition EDITOR has to be activated to use the editor module.
+#endif
 #ifndef WC3LIB_EDITOR_HPP
 #define WC3LIB_EDITOR_HPP
 
 #include "editor/aieditor.hpp"
 #include "editor/blpiohandler.hpp"
+#include "editor/blpioplugin.hpp"
+#include "editor/brush.hpp"
 #include "editor/campaigneditor.hpp"
 #include "editor/editor.hpp"
+#include "editor/filemetainfo.hpp"
 #include "editor/importmanager.hpp"
 #include "editor/modeleditor.hpp"
+#include "editor/modeleditorsettings.hpp"
 #include "editor/modelview.hpp"
+#include "editor/modelviewsettings.hpp"
+#include "editor/module.hpp"
+#include "editor/modulemenu.hpp"
 #include "editor/mpqeditor.hpp"
-#include "mdlx/ogremdlx.hpp"
+#include "editor/mpqprioritylist.hpp"
+#include "editor/mpqprotocol.hpp"
+#include "editor/newmapdialog.hpp"
+#include "editor/objecteditor.hpp"
+#include "editor/objectmanager.hpp"
+#include "editor/ogremdlx.hpp"
+#include "editor/polygonmodecombobox.hpp"
+#include "editor/renderer.hpp"
+#include "editor/rendersystemcombobox.hpp"
+#include "editor/rendersystemsettings.hpp"
+#include "editor/resource.hpp"
+#include "editor/settings.hpp"
+#include "editor/settingsinterface.hpp"
+#include "editor/soundeditor.hpp"
+#include "editor/terrainbrush.hpp"
+#include "editor/terraineditor.hpp"
+#include "editor/textureeditor.hpp"
+#include "editor/triggereditor.hpp"
+#include "editor/vertexwidget.hpp"
+#include "editor/viewportseditlistbox.hpp"
+#include "editor/viewportsettings.hpp"
+#include "editor/viewportsettingsdialog.hpp"
 
 #endif

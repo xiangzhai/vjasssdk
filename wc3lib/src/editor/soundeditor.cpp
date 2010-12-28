@@ -50,6 +50,12 @@ void SoundEditor::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* SoundEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

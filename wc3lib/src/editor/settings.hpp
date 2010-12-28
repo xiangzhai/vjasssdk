@@ -21,9 +21,7 @@
 #ifndef WC3LIB_EDITOR_SETTINGS_HPP
 #define WC3LIB_EDITOR_SETTINGS_HPP
 
-#include <QWidget>
-
-#include "ui/ui_settings.hpp"
+#include "settingsinterface.hpp"
 
 namespace wc3lib
 {
@@ -36,24 +34,25 @@ namespace editor
 * Allows you to configure OGRE rendering settings (e. g. resolution, renderer, lighting etc.).
 * @see ModelView, ModelEditor, TerrainEditor
 */
-class Settings : public QWidget, private Ui::SettingsTabWidget
+class Settings : public SettingsInterface
 {
-	Q_OBJECT
-
 	public:
-		Settings(class ModelView *modelView, QWidget *parent = 0, Qt::WindowFlags f = 0);
+		Settings(class Editor *editor);
 
-	public slots:
-		void apply();
+		virtual void read(const KConfigGroup &group);
+		virtual void write(KConfigGroup &group) const;
+		virtual QString groupName() const;
+
+		class Editor* editor() const;
 
 	protected:
-		bool hasToReinitialiseRenderer() const;
-
-		virtual void showEvent(QShowEvent *event);
-
-
-		class ModelView *m_modelView;
+		class Editor *m_editor;
 };
+
+inline class Editor* Settings::editor() const
+{
+	return this->m_editor;
+}
 
 }
 

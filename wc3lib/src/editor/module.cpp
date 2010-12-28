@@ -28,6 +28,7 @@
 #include "module.hpp"
 #include "modulemenu.hpp"
 #include "editor.hpp"
+#include "settingsinterface.hpp"
 
 namespace wc3lib
 {
@@ -110,6 +111,22 @@ void Module::setupUi()
 
 	// test map tool button
 	toolBar->addAction(this->editor()->actionCollection()->action("testmap"));
+}
+
+void Module::readSettings()
+{
+	SettingsInterface *settings = this->settings();
+	KConfigGroup configGroup(KGlobal::config(), settings->groupName());
+	settings->read(configGroup);
+	delete settings;
+}
+
+void Module::writeSettings()
+{
+	SettingsInterface *settings = this->settings();
+	KConfigGroup configGroup(KGlobal::config(), settings->groupName());
+	settings->write(configGroup);
+	delete settings;
 }
 
 }

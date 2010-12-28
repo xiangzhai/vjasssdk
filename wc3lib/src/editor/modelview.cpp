@@ -147,6 +147,7 @@ void ModelView::wheelEvent(QWheelEvent *event)
 	event->accept();
 }
 
+/// @todo USE VIEWPORT ELEMENT FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void ModelView::mouseMoveEvent(QMouseEvent *event)
 {
 	/// @todo If right mouse button is being pressed

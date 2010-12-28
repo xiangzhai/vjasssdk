@@ -51,6 +51,12 @@ void TriggerEditor::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* TriggerEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

@@ -50,6 +50,12 @@ void ImportManager::createToolButtons(class KToolBar *toolBar)
 {
 }
 
+class SettingsInterface* ImportManager::settings()
+{
+	/// @todo FIXME
+	return 0;
+}
+
 }
 
 }

@@ -49,14 +49,20 @@ bool MpqPriorityList::addEntry(const KUrl &url, MpqPriorityListEntry::Priority p
 
 bool MpqPriorityList::removeEntry(const KUrl &url)
 {
-	BOOST_FOREACH(MpqPriorityListEntry *entry, *this)
+	self::iterator iterator = this->begin();
+
+	while (iterator != this->end())
 	{
-		if (entry->url() == url)
+		if ((*iterator)->url() == url)
 		{
-			this->remove(entry);
+			MpqPriorityListEntry *entry = *iterator;
+			this->erase(iterator);
+			delete entry;
 
 			return true;
 		}
+
+		++iterator;
 	}
 
 	return false;

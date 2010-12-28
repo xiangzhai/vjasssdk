@@ -30,6 +30,14 @@ CampaignEditor::CampaignEditor(class Editor *editor) : Module(editor)
 {
 }
 
+void CampaignEditor::openCampaign(const KUrl &url)
+{
+}
+
+void CampaignEditor::closeCampaign()
+{
+}
+
 void CampaignEditor::createFileActions(class KMenu *menu)
 {
 }
@@ -48,6 +56,12 @@ void CampaignEditor::createWindowsActions(class KMenu *menu)
 
 void CampaignEditor::createToolButtons(class KToolBar *toolBar)
 {
+}
+
+class SettingsInterface* CampaignEditor::settings()
+{
+	/// @todo FIXME
+	return 0;
 }
 
 }

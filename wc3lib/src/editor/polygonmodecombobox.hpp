@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,40 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_OBJECTEDITOR_HPP
-#define WC3LIB_EDITOR_OBJECTEDITOR_HPP
+#ifndef WC3LIB_EDITOR_POLYGONMODECOMBOBOX_HPP
+#define WC3LIB_EDITOR_POLYGONMODECOMBOBOX_HPP
 
-#include "module.hpp"
+#include <kcombobox.h>
+
+#include <Ogre.h>
 
 namespace wc3lib
 {
 
-namespace slk
-{
-
-class Data;
-
-}
-
 namespace editor
 {
 
-class ObjectEditor : public Module
+/**
+* Combo box used to select a polygon mode.
+* Polygon modes are used by OGRE cameras to display rendered views in a specific way.
+*/
+class PolygonModeComboBox : public KComboBox
 {
 	public:
-		ObjectEditor(class Editor *editor);
-		~ObjectEditor();
+		explicit PolygonModeComboBox(QWidget* parent = 0);
 
-	protected:
-		virtual void createFileActions(class KMenu *menu);
-		virtual void createEditActions(class KMenu *menu);
-		virtual void createMenus(class KMenuBar *menuBar);
-		virtual void createWindowsActions(class KMenu *menu);
-		virtual void createToolButtons(class KToolBar *toolBar);
-		virtual class SettingsInterface* settings();
-
-		class slk::Data *m_data;
+		Ogre::PolygonMode polygonMode() const;
 };
+
+inline Ogre::PolygonMode PolygonModeComboBox::polygonMode() const
+{
+	return (Ogre::PolygonMode)(this->currentIndex());
+}
 
 }
 

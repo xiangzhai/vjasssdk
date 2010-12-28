@@ -1,3 +1,11 @@
+2010-12-25 Tamino Dauth <tamio@cdauth.eu>
+* editor: Added template element function "module" to class Editor.
+* editor: Added settings element functions to abstract class Module.
+* Improved API documentation.
+
+2010-12-? Tamino Dauth <tamino@cdauth.eu>
+* editor: Added settings interface and classes which use KDE configuration classes.
+
 2010-12-12 Tamino Dauth <tamino@cdauth.eu>
 * editor: Fixed technique creation (removed automatically created one).
 * editor: Added transparent material layer support.

@@ -25,6 +25,7 @@
 #include <kactioncollection.h>
 #include <kmenubar.h>
 #include <klocale.h>
+#include <kconfig.h>
 
 #include <boost/foreach.hpp>
 
@@ -45,6 +46,7 @@
 #include "resource.hpp"
 #include "../mpq/mpq.hpp"
 #include "../mpq/mpqfile.hpp"
+#include "settings.hpp"
 
 namespace wc3lib
 {
@@ -52,7 +54,7 @@ namespace wc3lib
 namespace editor
 {
 
-KAboutData Editor::m_aboutData = KAboutData("editor", "", ki18n("World Editor"), "0.1", ki18n("Clone of Blizzard's Warcraft 3 TFT World Editor."), KAboutData::License_GPL_V2, ki18n("Copyright (C) 2009 by Tamino Dauth <tamino@cdauth.eu>"), ki18n("Other"), "http://sourceforge.net/projects/vjasssdk/", "tamino@cdauth.eu")
+KAboutData Editor::m_aboutData = KAboutData("editor", "", ki18n("World Editor"), "0.1", ki18n("Clone of Blizzard's Warcraft 3 The Frozen Throne World Editor."), KAboutData::License_GPL_V2, ki18n("Copyright (C) 2009 by Tamino Dauth <tamino@cdauth.eu>"), ki18n("Other"), "http://sourceforge.net/projects/vjasssdk/", "tamino@cdauth.eu")
 .addAuthor(ki18n("Tamino Dauth"), ki18n("Maintainer"), "tamino@cdauth.eu", "http://tdauth.cdauth.eu/")
 ;
 KAboutData Editor::m_wc3libAboutData = KAboutData("wc3lib", "", ki18n("Warcraft 3 Library"), "0.1", ki18n("Library which supports some of Blizzard's file formats used in Warcraft 3 TFT."), KAboutData::License_GPL_V2, ki18n("Copyright (C) 2009 by Tamino Dauth <tamino@cdauth.eu>"), ki18n("Other"), "http://sourceforge.net/projects/vjasssdk/", "tamino@cdauth.eu")
@@ -72,9 +74,6 @@ const KAboutData& Editor::wc3libAboutData()
 
 Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_actionCollection(new KActionCollection(this)), m_terrainEditor(0), m_triggerEditor(0), m_soundEditor(0), m_objectEditor(0), m_campaignEditor(0), m_aiEditor(0), m_objectManager(0), m_importManager(0), m_mpqEditor(0), m_modelEditor(0), m_textureEditor(0), m_newMapDialog(0)
 {
-	/// @todo Actions should get the same entry names and shortcuts as in the original World Editor
-	this->m_actionCollection->setConfigGroup("Shortcuts");
-
 	class KAction *action = new KAction(KIcon(":/actions/newmap.png"), i18n("New map ..."), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+N")));
 	connect(action, SIGNAL(triggered()), this, SLOT(newMap()));
@@ -175,7 +174,7 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 
 	this->setMapActionsEnabled(false);
 
-	this->m_actionCollection->readSettings(); // load shortcuts after setting default
+	this->readSettings();
 
 	/*
 	QSettings settings("Blizzard Entertainment", "WorldEdit", this);
@@ -187,131 +186,92 @@ Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_a
 	showTerrainEditor(); // test
 	this->m_terrainEditor->resize(QSize(300, 300));
 	*/
+
+
 	showModelEditor(); // test
-	this->m_modelEditor->settings();
 }
 
 Editor::~Editor()
 {
+	this->writeSettings();
 	// do not delete allocated sub widgets (parent system of Qt already considers)
 }
 
 void Editor::showTerrainEditor()
 {
-	if (this->m_terrainEditor == 0)
-		this->m_terrainEditor = new TerrainEditor(this);
-
-	this->m_terrainEditor->show();
+	this->terrainEditor()->show();
 }
 
 void Editor::showTriggerEditor()
 {
-	if (this->m_triggerEditor == 0)
-		this->m_triggerEditor = new TriggerEditor(this);
-
-	this->m_triggerEditor->show();
+	this->triggerEditor()->show();
 }
 
 void Editor::showSoundEditor()
 {
-	if (this->m_soundEditor == 0)
-		this->m_soundEditor = new SoundEditor(this);
-
-	this->m_soundEditor->show();
+	this->soundEditor()->show();
 }
 
 void Editor::showObjectEditor()
 {
-	if (this->m_objectEditor == 0)
-		this->m_objectEditor = new ObjectEditor(this);
-
-	this->m_objectEditor->show();
+	this->objectEditor()->show();
 }
 
 void Editor::showCampaignEditor()
 {
-	if (this->m_campaignEditor == 0)
-		this->m_campaignEditor = new CampaignEditor(this);
-
-	this->m_campaignEditor->show();
+	this->campaignEditor()->show();
 }
 
 void Editor::showAiEditor()
 {
-	if (this->m_aiEditor == 0)
-		this->m_aiEditor = new AiEditor(this);
-
-	this->m_aiEditor->show();
+	this->aiEditor()->show();
 }
 
 void Editor::showObjectManager()
 {
-	if (this->m_objectManager == 0)
-		this->m_objectManager = new ObjectManager(this);
-
-	this->m_objectManager->show();
+	this->objectManager()->show();
 }
 
 void Editor::showImportManager()
 {
-	if (this->m_importManager == 0)
-		this->m_importManager = new ImportManager(this);
-
-	this->m_importManager->show();
+	this->importManager()->show();
 }
 
 void Editor::showMpqEditor()
 {
-	if (this->m_mpqEditor == 0)
-		this->m_mpqEditor = new MpqEditor(this);
-
-	this->m_mpqEditor->show();
+	this->mpqEditor()->show();
 }
 
 void Editor::showModelEditor()
 {
-	if (this->m_modelEditor == 0)
-		this->m_modelEditor = new ModelEditor(this);
-
-	this->m_modelEditor->show();
-	this->m_modelEditor->openFile(); // TODO test
+	this->modelEditor()->show();
+	this->modelEditor()->openFile(); // TODO test
 }
 
 void Editor::showTextureEditor()
 {
-	if (this->m_textureEditor == 0)
-		this->m_textureEditor = new TextureEditor(this);
-
-	this->m_textureEditor->show();
-}
-
-void Editor::addResource(Resource *resource)
-{
-	assert(resource);
-
-	this->m_resources.push_back(resource);
-	this->addEntry(resource->url(), 0);
-}
-
-bool Editor::removeResource(Resource *resource)
-{
-	assert(resource);
-
-	std::list<Resource*>::iterator iterator = std::find(this->m_resources.begin(), this->m_resources.end(), resource);
-
-	if (iterator == this->m_resources.end())
-		return false;
-
-	this->m_resources.erase(iterator);
-	this->removeEntry(resource->url()); // remove from MPQ priority list
+	this->textureEditor()->show();
 }
 
 void Editor::newMap()
 {
-	if (this->m_newMapDialog == 0)
-		this->m_newMapDialog = new NewMapDialog(this);
+	this->newMapDialog()->show();
+}
 
-	this->m_newMapDialog->show();
+void Editor::openMap(const KUrl &url)
+{
+	/*
+	Map map;
+	this->addResource(map);
+	*/
+}
+
+void Editor::switchToMap(const class Map *map)
+{
+}
+
+void Editor::closeMap(const class Map *map)
+{
 }
 
 void Editor::setMapActionsEnabled(bool enabled)
@@ -320,6 +280,39 @@ void Editor::setMapActionsEnabled(bool enabled)
 	this->m_actionCollection->action("savemap")->setEnabled(enabled);
 	this->m_actionCollection->action("savemapas")->setEnabled(enabled);
 	this->m_actionCollection->action("savemapshadows")->setEnabled(enabled);
+}
+
+void Editor::readSettings()
+{
+	/// @todo Actions should get the same entry names and shortcuts as in the original World Editor?
+	this->m_actionCollection->setConfigGroup("Shortcuts");
+	this->m_actionCollection->readSettings(); // load shortcuts after setting default
+
+	Settings settings(this);
+	settings.read(KGlobal::config()->group("Settings"));
+	/*
+	TODO create from component data?!
+	KConfig config(this->com
+	Settings settings(this);
+	settings.read(settings.groupName()
+	*/
+}
+
+void Editor::writeSettings()
+{
+	this->m_actionCollection->setConfigGroup("Shortcuts");
+	this->m_actionCollection->writeSettings();
+
+	Settings settings(this);
+	KConfigGroup settingsConfigGroup = KGlobal::config()->group("Settings");
+	settings.write(settingsConfigGroup);
+
+	/*
+	TODO create from component data?!
+	KConfig config
+	Settings settings(this);
+	settings.write(settings.groupName());
+	*/
 }
 
 }

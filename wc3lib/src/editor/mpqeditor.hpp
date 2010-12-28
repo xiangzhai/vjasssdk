@@ -40,7 +40,7 @@ namespace editor
 
 class MpqEditor : public Module
 {
-	//Q_OBJECT
+	Q_OBJECT
 
 	public:
 		MpqEditor(class Editor *editor);
@@ -60,6 +60,7 @@ class MpqEditor : public Module
 		virtual void createMenus(class KMenuBar *menuBar);
 		virtual void createWindowsActions(class KMenu *menu);
 		virtual void createToolButtons(class KToolBar *toolBar);
+		virtual class SettingsInterface* settings();
 
 		std::list<class mpq::Mpq*> m_mpqArchives;
 };

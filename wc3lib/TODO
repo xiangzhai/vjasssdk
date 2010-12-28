@@ -1,3 +1,14 @@
+2010-12-25 Tamino Dauth <tamino@cdauth.eu>
+* editor: Implement settings element function of all modules classes.
+
+2010-12-26 Tamino Dauth <tamino@cdauth.eu>
+* editor: Use KConfig XT for configuration of everything.
+* editor: Add wc3lib library target which is a big compilation of sub libraries.
+* editor: moc files has to be included by the cpp files (as in the KDE source files).
+
+2010-12-12 Tamino Dauth <tamino@cdauth.eu>
+* editor: Implement the new settings classes and add class SettingsWidget which allows you to configure everything required.
+
 2010-12-06 Tamino Dauth <tamino@cdauth.eu>
 * editor: Improve settings widget and functionality of ModelView (allows user to configure OGRE renderer).
 

@@ -21,7 +21,13 @@
 #ifndef WC3LIB_EDITOR_RESOURCE_HPP
 #define WC3LIB_EDITOR_RESOURCE_HPP
 
+#include <QByteArray>
+
 #include <kurl.h>
+#include <kio/scheduler.h>
+#include <kio/jobclasses.h>
+
+#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -29,6 +35,9 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* Resource class for holding data indicated by its URL.
+*/
 class Resource
 {
 	public:

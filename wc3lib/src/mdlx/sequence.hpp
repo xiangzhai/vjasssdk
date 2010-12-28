@@ -36,6 +36,9 @@ class Sequence : public Bounds
 		virtual ~Sequence();
 
 		class Sequences* sequences() const;
+		/**
+		* Comments: All text after the "-" and still inside the quotes is ignored.
+		*/
 		const ascii* name() const;
 		long32 intervalStart() const;
 		long32 intervalEnd() const;

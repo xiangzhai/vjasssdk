@@ -21,6 +21,8 @@
 #ifndef WC3LIB_EDITOR_CAMPAIGNEDITOR_HPP
 #define WC3LIB_EDITOR_CAMPAIGNEDITOR_HPP
 
+#include <kurl.h>
+
 #include "module.hpp"
 
 namespace wc3lib
@@ -29,10 +31,19 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* The campaign editor allows you to edit exactly one single campaign at the same time.
+*/
 class CampaignEditor : public Module
 {
+	Q_OBJECT
+
 	public:
 		CampaignEditor(class Editor *editor);
+
+	public slots:
+		void openCampaign(const KUrl &url);
+		void closeCampaign();
 
 	protected:
 		virtual void createFileActions(class KMenu *menu);
@@ -40,6 +51,7 @@ class CampaignEditor : public Module
 		virtual void createMenus(class KMenuBar *menuBar);
 		virtual void createWindowsActions(class KMenu *menu);
 		virtual void createToolButtons(class KToolBar *toolBar);
+		virtual class SettingsInterface* settings();
 };
 
 }
