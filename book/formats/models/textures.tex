@@ -1,0 +1,13 @@
+\chapter{Texturen}
+Texturen bestehen in der Regel aus einer externen Bilddatei, also einer 2d-Grafik und einigen Optionen. Eine Textur wird später auf eine bestimmte Art „gefaltet“ und auf die Flächen der 3d-Grafik gelegt. Sie stellt praktisch die Bemalung oder Haut des Modells dar.
+Für die Texturen des MDLX-Formats gelten einige Besonderheiten, die sich jedoch nur auf  Blizzard's eigene Implementation zurückzuführen sind. Als Standardbildformat wird Blizzard's eigenes „BLP“-Format verwendet, welches das sogenannte „MIP Mapping“ erlaubt (siehe auch „Das BLP-Format“).
+Warcraft 3 unterstützt aber auch das TGA-Format, welches jedoch keine Speicherung von „MIP Maps“ erlaubt.
+Blizzard's proprietäre Art Tools exportieren daher TGA-Texturen automatisch mit den entsprechenden „MIP Maps“ als BLP-Texturen.
+Texturen dürfen maximal 512x512 Pixel groß sein und ihre Länge und Breite müssen eine Zweierpotenz sein.
+Dies ermöglicht die Berechnung der sogenannten „MIP Maps“, die in BLP-Dateien gespeichert werden, um den Texturfilterprozess
+zu beschleunigen, da so verkleinerte Versionen der Textur einfach aus der Datei geladen werden können.
+Warcraft 3 unterstützt bilineare Texturfilterung.
+Zudem darf das Verhältnis zwischen Länge und Breite und umgekehrt maximal 8 zu 1 sein.
+Außerdem können ausschließlich entweder 24 oder 32 Bit als Farbtiefe der RGBA-Farben verwendet werden.
+Der Alphakanal hat bei bestimmten Materialeinstellungen eine besondere Bedeutung (Transparenz/Verlauf oder Team-Farbe/Leuchten).
+Schwarz (0x00) beim Alphakanal bedeutet Transparenz und weiß (0xFF) undurchsichtig.

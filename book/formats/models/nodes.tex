@@ -7,18 +7,19 @@ Das MDLX-Format bringt hierbei keine einzigartige Neuheit mit sich, da dieses Pr
 anderen 3d-Formaten ebenfalls verwendet wird.
 Der Typ jedes Knotens wird ebenfalls gespeichert, was Programmierern eine leichtere Bestimmung bei einer
 nötigen Konvertierung erlaubt.
-Lediglich bei Partikel-Emittern muss aufgepasst werden, um welchen der beiden möglichen Implementationen
+Lediglich bei Partikel-Emittern muss darauf geachtet werden, um welchen der beiden möglichen Implementationen
 es sich handelt.
 
 Knoten-Elemente enthalten folgende Eigenschaften:
-* einen Namen (maximal 80 Zeichen lang)
-* eine einzigartige Id (in Form einer Zahl)
-* [einen Elternknoten]
-* einen Typ
-* [Verschiebungen, Drehungen und Skalierungen, falls diese nicht vom Elternknoten geerbt werden]
+\enumerate{begin}
+\item einen Namen (maximal 80 Zeichen lang)
+\item eine einzigartige Id (in Form einer Zahl)
+\item einen Elternknoten (optional)
+\item einen Typ
+\item Verschiebungen, Drehungen und Skalierungen, falls diese nicht vom Elternknoten geerbt werden (optional)
 
 \subsection{Typ}
-Zum einen wird im Typ-Flag der Typ des Knotens angegeben (z. B. Knochen oder Licht) und zum anderen bestimmte Eigenschaften,
+Zum Einen wird im Typ-Flag der Typ des Knotens angegeben (z. B. Knochen oder Licht) und zum Anderen bestimmte Eigenschaften,
 die das Verhalten des Knotens bzw. dessen Darstellung beeinflussen.
 Folgende Elemente eines Modells sind Knotenelemente:
 \enumerate{begin}
@@ -39,6 +40,8 @@ Folgende Eigenschaften können im Typ bestimmt werden:
 \item Die X-Koordinaten (der Bewegungen?) befinden sich immer relativ zur Benutzeransicht - BillboardedLockX
 \item Billboarded,
 \item CameraAnchored,
-\item DontInherit { <Rotation|Translation|Scaling> },
+\item Bestimmte Bewegungen werden vom Elternknoten nicht mitübernommen - DontInherit { <Rotation|Translation|Scaling> },
 
+\subsection{Billboarded}
+Billboarded (engl. etwa "als Anschlagtafel angebracht") wird in der comptergesteuerten 3d-Grafik dazu verwendet, Grafiken immer an der Benutzeransicht auszurichten. Das bedeutet, dass sich Eigenschaften des Knoten-Elements immer automatisch in Richtung der Benutzeransicht ausrichten. Dabei können alle drei Achsen einzeln definiert werden. Dies wird z. B. für relativ einfach aufgebaute Grafiken, die nur aus einer zweidimensionalen Fläche bestehen, verwendet und spart Leistung.
 

@@ -1,0 +1,8 @@
+\chapter{Portraits}
+Da es sich bei Warcraft 3 um ein klassisches Strategiespiel handelt, bei dem Spielfiguren mit dem Cursor ausgewählt werden können, ist es möglich sogenannte Portraitmodelle dieser im Spiel anzeigen zu lassen.
+BILD EINFÜGEN
+Diese sind eigene Modelldateien, die das Postfix "_Portrait" im Dateinamen angehängt bekommen und den selben Verzeichnispfad wie die eigentliche Modelldatei besitzen müssen. Das Spiel ermittelt und lädt die Dateien automatisch.
+Die zu den Auswahlgeräuschen zugehörigen Animationen dieser Modelle können sogar in der Datei "UI/SoundInfo/PortraitAnims.slk" bestimmt werden.
+Dabei muss der Animationsindex und die Dauer der Animation bestimmt werden. "-1" bedeutet, dass die Originaldauer verwendet wird (PRÜFEN: Vielleicht auch die Dauer des Sounds?).
+
+Bei Zerstörbaren kann das der Dateipfad zur Portraitmodelldatei separat eingetragen werden und muss daher nicht in das oben beschriebene Schema passen.
