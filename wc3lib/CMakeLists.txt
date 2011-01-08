@@ -141,8 +141,8 @@ endif ()
 find_package(Gettext REQUIRED)
 find_package(BZip2 REQUIRED)
 include_directories(${BZIP2_INCLUDE_DIR})
-find_package(zlib REQUIRED)
-include_directories(${ZLIB_LIBRARIES})
+find_package(ZLIB REQUIRED)
+include_directories(${ZLIB_INCLUDE_DIRS})
 
 # Boost
 if (FLAG_STATIC_USE)
