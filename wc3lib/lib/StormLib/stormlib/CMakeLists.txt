@@ -23,7 +23,8 @@ else ()
 	message(FATAL_ERROR "StormLib: Unsupported platform. Supported platforms are Linux/UNIX, Mac OS and Windows.")
 endif ()
 
-add_library(StormLib SHARED ${wc3lib_LIB_STORMLIB_SRC} ${wc3lib_LIB_STORMLIB_HUFFMAN_SRC} ${wc3lib_LIB_STORMLIB_MISC_SRC} ${wc3lib_LIB_STORMLIB_PKLIB_SRC} ${wc3lib_LIB_WAVE_SRC})
+add_library(StormLib SHARED ${wc3lib_LIB_STORMLIB_SRC} ${wc3lib_LIB_STORMLIB_HUFFMAN_SRC} ${wc3lib_LIB_STORMLIB_MISC_SRC} ${wc3lib_LIB_STORMLIB_PKLIB_SRC} ${wc3lib_LIB_STORMLIB_WAVE_SRC})
+target_link_libraries(StormLib ${BZIP2_LIBRARIES} ${ZLIB_LIBRARIES})
 
 # install
 install(TARGETS StormLib DESTINATION lib/wc3lib/lib/)

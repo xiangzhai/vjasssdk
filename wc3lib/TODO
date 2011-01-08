@@ -1,3 +1,7 @@
+2011-01-08 Tamino Dauth <tamino@cdauth.eu>
+* SFmpqapi: Fix broken Linux support (warning: "__declspec" redefined and char* strdup(const char*)’ throws different exceptions).
+* SFmpqapi: Add support for static compilation (there are already some source and header files especially for static libraries).
+
 2010-12-25 Tamino Dauth <tamino@cdauth.eu>
 * editor: Implement settings element function of all modules classes.
 

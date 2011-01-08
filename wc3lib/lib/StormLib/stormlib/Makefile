@@ -485,6 +485,174 @@ StormPortLinux.cpp.s:
 	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/StormPortLinux.cpp.s
 .PHONY : StormPortLinux.cpp.s
 
+huffman/huff.o: huffman/huff.cpp.o
+.PHONY : huffman/huff.o
+
+# target to build an object file
+huffman/huff.cpp.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/huffman/huff.cpp.o
+.PHONY : huffman/huff.cpp.o
+
+huffman/huff.i: huffman/huff.cpp.i
+.PHONY : huffman/huff.i
+
+# target to preprocess a source file
+huffman/huff.cpp.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/huffman/huff.cpp.i
+.PHONY : huffman/huff.cpp.i
+
+huffman/huff.s: huffman/huff.cpp.s
+.PHONY : huffman/huff.s
+
+# target to generate assembly for a file
+huffman/huff.cpp.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/huffman/huff.cpp.s
+.PHONY : huffman/huff.cpp.s
+
+misc/crc32.o: misc/crc32.cpp.o
+.PHONY : misc/crc32.o
+
+# target to build an object file
+misc/crc32.cpp.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/misc/crc32.cpp.o
+.PHONY : misc/crc32.cpp.o
+
+misc/crc32.i: misc/crc32.cpp.i
+.PHONY : misc/crc32.i
+
+# target to preprocess a source file
+misc/crc32.cpp.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/misc/crc32.cpp.i
+.PHONY : misc/crc32.cpp.i
+
+misc/crc32.s: misc/crc32.cpp.s
+.PHONY : misc/crc32.s
+
+# target to generate assembly for a file
+misc/crc32.cpp.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/misc/crc32.cpp.s
+.PHONY : misc/crc32.cpp.s
+
+misc/md5.o: misc/md5.cpp.o
+.PHONY : misc/md5.o
+
+# target to build an object file
+misc/md5.cpp.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/misc/md5.cpp.o
+.PHONY : misc/md5.cpp.o
+
+misc/md5.i: misc/md5.cpp.i
+.PHONY : misc/md5.i
+
+# target to preprocess a source file
+misc/md5.cpp.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/misc/md5.cpp.i
+.PHONY : misc/md5.cpp.i
+
+misc/md5.s: misc/md5.cpp.s
+.PHONY : misc/md5.s
+
+# target to generate assembly for a file
+misc/md5.cpp.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/misc/md5.cpp.s
+.PHONY : misc/md5.cpp.s
+
+pklib/crc32.o: pklib/crc32.c.o
+.PHONY : pklib/crc32.o
+
+# target to build an object file
+pklib/crc32.c.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/crc32.c.o
+.PHONY : pklib/crc32.c.o
+
+pklib/crc32.i: pklib/crc32.c.i
+.PHONY : pklib/crc32.i
+
+# target to preprocess a source file
+pklib/crc32.c.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/crc32.c.i
+.PHONY : pklib/crc32.c.i
+
+pklib/crc32.s: pklib/crc32.c.s
+.PHONY : pklib/crc32.s
+
+# target to generate assembly for a file
+pklib/crc32.c.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/crc32.c.s
+.PHONY : pklib/crc32.c.s
+
+pklib/explode.o: pklib/explode.c.o
+.PHONY : pklib/explode.o
+
+# target to build an object file
+pklib/explode.c.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/explode.c.o
+.PHONY : pklib/explode.c.o
+
+pklib/explode.i: pklib/explode.c.i
+.PHONY : pklib/explode.i
+
+# target to preprocess a source file
+pklib/explode.c.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/explode.c.i
+.PHONY : pklib/explode.c.i
+
+pklib/explode.s: pklib/explode.c.s
+.PHONY : pklib/explode.s
+
+# target to generate assembly for a file
+pklib/explode.c.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/explode.c.s
+.PHONY : pklib/explode.c.s
+
+pklib/implode.o: pklib/implode.c.o
+.PHONY : pklib/implode.o
+
+# target to build an object file
+pklib/implode.c.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/implode.c.o
+.PHONY : pklib/implode.c.o
+
+pklib/implode.i: pklib/implode.c.i
+.PHONY : pklib/implode.i
+
+# target to preprocess a source file
+pklib/implode.c.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/implode.c.i
+.PHONY : pklib/implode.c.i
+
+pklib/implode.s: pklib/implode.c.s
+.PHONY : pklib/implode.s
+
+# target to generate assembly for a file
+pklib/implode.c.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/pklib/implode.c.s
+.PHONY : pklib/implode.c.s
+
+wave/wave.o: wave/wave.cpp.o
+.PHONY : wave/wave.o
+
+# target to build an object file
+wave/wave.cpp.o:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/wave/wave.cpp.o
+.PHONY : wave/wave.cpp.o
+
+wave/wave.i: wave/wave.cpp.i
+.PHONY : wave/wave.i
+
+# target to preprocess a source file
+wave/wave.cpp.i:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/wave/wave.cpp.i
+.PHONY : wave/wave.cpp.i
+
+wave/wave.s: wave/wave.cpp.s
+.PHONY : wave/wave.s
+
+# target to generate assembly for a file
+wave/wave.cpp.s:
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/wave/wave.cpp.s
+.PHONY : wave/wave.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -539,6 +707,27 @@ help:
 	@echo "... StormPortLinux.o"
 	@echo "... StormPortLinux.i"
 	@echo "... StormPortLinux.s"
+	@echo "... huffman/huff.o"
+	@echo "... huffman/huff.i"
+	@echo "... huffman/huff.s"
+	@echo "... misc/crc32.o"
+	@echo "... misc/crc32.i"
+	@echo "... misc/crc32.s"
+	@echo "... misc/md5.o"
+	@echo "... misc/md5.i"
+	@echo "... misc/md5.s"
+	@echo "... pklib/crc32.o"
+	@echo "... pklib/crc32.i"
+	@echo "... pklib/crc32.s"
+	@echo "... pklib/explode.o"
+	@echo "... pklib/explode.i"
+	@echo "... pklib/explode.s"
+	@echo "... pklib/implode.o"
+	@echo "... pklib/implode.i"
+	@echo "... pklib/implode.s"
+	@echo "... wave/wave.o"
+	@echo "... wave/wave.i"
+	@echo "... wave/wave.s"
 .PHONY : help
 
 

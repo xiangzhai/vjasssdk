@@ -1,6 +1,7 @@
 WC3LIB_ENABLE_EXCEPTIONS()
 include_directories(${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ) # include binary dir since the KDE configuration class will be generated there and has to be included (also include for moc cxx files)
 add_subdirectory(ui)
+
 include(${QT_USE_FILE})
 WC3LIB_GET_H(wc3lib_EDITOR_H)
 WC3LIB_GET_SRC(wc3lib_EDITOR_SRC)

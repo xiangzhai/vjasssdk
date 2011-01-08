@@ -41,7 +41,7 @@ function (WC3LIB_ENABLE_COMPILE_FLAG flagName)
 	WC3LIB_GET_COMPILE_FLAG(isSet "${flagName}")
 	if (NOT isSet)
 		message(STATUS "Enabling flag \"${flagName}\".")
-		set(CACHE FORCE CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flagName}" PARENT_SCOPE)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flagName}" PARENT_SCOPE)
 	endif ()
 endfunction ()
 
@@ -51,7 +51,7 @@ function (WC3LIB_DISABLE_COMPILE_FLAG flagName)
 	if (isSet)
 		message(STATUS "Disabling flag \"${flagName}\".")
 		string(REPLACE "${flagName}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-		set(CACHE FORCE CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
 	endif ()
 endfunction ()
 
@@ -60,7 +60,7 @@ function (WC3LIB_REPLACE_COMPILE_FLAG flagName newFlagName)
 	if (isSet)
 		message(STATUS "Replacing flag \"${flagName}\" by \"${newFlagName}\".")
 		string(REPLACE "${flagName}" "${newFlagName}" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-		set(CACHE FORCE CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
 	endif ()
 endfunction ()
 
@@ -78,7 +78,7 @@ function (WC3LIB_GET_COMPILE_DEFINITION variable definitionName)
 	if (NOT input)
 		set(input 0)
 	endif ()
-	set(CACHE FORCE "${variable}" ${input} PARENT_SCOPE)
+	set("${variable}" ${input} PARENT_SCOPE)
 	message(STATUS "Definition \"${definitionName}\" is ${input}.")
 endfunction ()
 
@@ -95,7 +95,7 @@ function (WC3LIB_COMPILER_SETUP)
 		WC3LIB_ENABLE_COMPILE_FLAG("-fms-extensions")
 		# set to parent scope since this is a function and these values should be the global C++ flags!
 		# TODO WC3LIB_ENABLE_COMPILE_FLAG doesn't set the flag in this scope!
-		set(CACHE FORCE CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} PARENT_SCOPE)
+		set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} PARENT_SCOPE)
 	endif ()
 endfunction ()
 
@@ -139,6 +139,10 @@ else ()
 endif ()
 
 find_package(Gettext REQUIRED)
+find_package(BZip2 REQUIRED)
+include_directories(${BZIP2_INCLUDE_DIR})
+find_package(zlib REQUIRED)
+include_directories(${ZLIB_LIBRARIES})
 
 # Boost
 if (FLAG_STATIC_USE)
@@ -183,8 +187,8 @@ link_directories(${Boost_LIBRARY_DIRS})
 include_directories(${GETTEXT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${Ogre_INCLUDE_DIR})
 
 # Reset flags, Qt and KDE do set them to CRAP!
-set(CACHE FORCE CMAKE_CXX_FLAGS "")
-set(CACHE FORCE CMAKE_C_FLAGS "")
+set(CMAKE_CXX_FLAGS "")
+set(CMAKE_C_FLAGS "")
 WC3LIB_COMPILER_SETUP()
 
 message(STATUS "C++ Compile flags are: \"${CMAKE_CXX_FLAGS}\".")

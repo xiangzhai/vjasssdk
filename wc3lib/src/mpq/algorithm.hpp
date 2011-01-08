@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,7 @@
 #define WC3LIB_MPQ_ALGORITHM_HPP
 
 /**
-* @file Includes all possible compression algorithm used in MPQ archives.
+* \file mpq/algorithm.hpp Includes all possible compression algorithm used in MPQ archives.
 */
 
 #include <cassert>
@@ -32,9 +32,9 @@
 
 //#include <huffman/huff.h>
 #include <huffman/huffman.h> // C implementation, libhuffman
-#include <zlib.h>
+#include <zlib.h> // system library
 #include <pklib/pklib.h>
-#include <bzlib.h>
+#include <bzlib.h> // system library
 #include <wave/wave.h>
 
 #include "platform.hpp"
@@ -42,7 +42,7 @@
 
 namespace wc3lib
 {
-	
+
 namespace mpq
 {
 

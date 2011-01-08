@@ -3,6 +3,10 @@
 * editor: Improved class NewMapDialog and its documentation.
 * Added support for compilation flag -DEBUG=1 which will be enabled automatically now.
 * StormLib: Added missing sub directory source code (CMake).
+* editor: UI files and UI source files variables are in parent scope now.
+* SFmpqapi: Improved cross-platform compilation.
+* SFmpqapi: Dropped from compilation until Linux support works properly.
+* Added BZip2 and zlib support (CMake).
 
 2010-01-07 Tamino Dauth <tamio@cdauth.eu>
 * editor: Added trigger editor UI files.

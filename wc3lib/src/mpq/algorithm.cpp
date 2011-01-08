@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,10 +27,10 @@
 
 namespace wc3lib
 {
-	
+
 namespace mpq
 {
-	
+
 void InitializeCryptTable(uint32 dwCryptTable[0x500])
 {
     uint32 seed = 0x00100001;
@@ -72,7 +72,7 @@ void EncryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLe
 
         dwKey = ((~dwKey << 0x15) + 0x11111111) | (dwKey >> 0x0B);
         seed = *lpdwBuffer + seed + (seed << 5) + 3;
-	
+
 	*lpdwBuffer++ = ch;
     }
 }
@@ -103,7 +103,7 @@ void DecryptData(const uint32 dwCryptTable[0x500], void *lpbyBuffer, uint32 dwLe
 uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum HashType hashType)
 {
     assert(lpszString);
-    
+
     uint32 dwHashType = uint32(hashType);
     uint32 seed1 = 0x7FED7FEDL;
     uint32 seed2 = 0xEEEEEEEEL;
@@ -116,7 +116,7 @@ uint32 HashString(const uint32 dwCryptTable[0x500], const char *lpszString, enum
         seed1 = dwCryptTable[(dwHashType * 0x100) + ch] ^ (seed1 + seed2);
         seed2 = ch + seed1 + seed2 + (seed2 << 5) + 3;
     }
-    
+
     return seed1;
 }
 
