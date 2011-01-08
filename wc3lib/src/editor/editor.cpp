@@ -315,6 +315,8 @@ void Editor::writeSettings()
 	*/
 }
 
+#include "moc_editor.cpp"
+
 }
 
 }

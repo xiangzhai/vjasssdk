@@ -24,7 +24,7 @@
 #include <kurl.h>
 
 #include "module.hpp"
-#include "ui/ui_modeleditor.hpp"
+#include "ui/ui_modeleditor.h"
 #include "ogremdlx.hpp"
 
 namespace wc3lib

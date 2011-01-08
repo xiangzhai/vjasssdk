@@ -1,3 +1,13 @@
+2010-01-08 Tamino Dauth <tamio@cdauth.eu>
+* editor: Restored missing classes.
+* editor: Improved class NewMapDialog and its documentation.
+* Added support for compilation flag -DEBUG=1 which will be enabled automatically now.
+* StormLib: Added missing sub directory source code (CMake).
+
+2010-01-07 Tamino Dauth <tamio@cdauth.eu>
+* editor: Added trigger editor UI files.
+* editor: Using KDE's UI file generator now (CMake).
+
 2010-12-25 Tamino Dauth <tamio@cdauth.eu>
 * editor: Added template element function "module" to class Editor.
 * editor: Added settings element functions to abstract class Module.

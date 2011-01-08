@@ -18,10 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_SETTINGS_HPP
-#define WC3LIB_EDITOR_SETTINGS_HPP
+#ifndef WC3LIB_EDITOR_SETTINGSINTERFACE_HPP
+#define WC3LIB_EDITOR_SETTINGSINTERFACE_HPP
 
-#include "settingsinterface.hpp"
+#include <QString>
+
+#include <kconfiggroup.h>
 
 namespace wc3lib
 {
@@ -30,29 +32,17 @@ namespace editor
 {
 
 /**
-* Settings widget for model view settings.
-* Allows you to configure OGRE rendering settings (e. g. resolution, renderer, lighting etc.).
-* \sa ModelView, ModelEditor, TerrainEditor
+* Interface which has to be implemented by all settings classes of Editor.
+* Uses KConfigGroup to store and restore various settings.
+* SettingsInterface::groupName returns the group's name which is used for a newly created group of another KConfigGroup instance.
 */
-class Settings : public SettingsInterface
+class SettingsInterface
 {
 	public:
-		Settings(class Editor *editor);
-
-		virtual void read(const KConfigGroup &group);
-		virtual void write(KConfigGroup &group) const;
-		virtual QString groupName() const;
-
-		class Editor* editor() const;
-
-	protected:
-		class Editor *m_editor;
+		virtual void read(const KConfigGroup &group) = 0;
+		virtual void write(KConfigGroup &group) const = 0;
+		virtual QString groupName() const = 0;
 };
-
-inline class Editor* Settings::editor() const
-{
-	return this->m_editor;
-}
 
 }
 

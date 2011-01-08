@@ -29,6 +29,7 @@
 * \mainpage wc3lib
 * \date Version date
 * 2010-12-25
+* \author Tamino Dauth <tamino@cdauth.eu>
 *
 * \section introduction Introduction
 * This is the API reference and documentation of the wc3lib project. wc3lib is an abbreviation and means "Warcraft 3 Library".
@@ -44,8 +45,23 @@
 * \section mpq MPQ module
 * Include file \ref "mpq.hpp" and use namspace \ref mpq to use this module.
 *
-* @section blp BLP module
+* \section blp BLP module
 * Include file \ref "blp.hpp" and use namspace \ref blp to use this module.
+*
+* \section mdlx MDLX module
+* This module provides several classes to read and write Blizzard's 3d graphics formats MDX (binary) and MDL (human-readable).
+* It does not provide any display/rendering functionality. Use module \ref editor for this.
+* Include file \ref "mdlx.hpp" and use namespace \ref mdlx to use this module.
+*
+* \section map Map module
+* Use this module to read, write and modify Warcraft 3 maps and campaigns and their corresponding files.
+* Warcraft 3 maps and campaigns are usual MPQ archives containing some specific files, most of them in a binary format.
+* Include file \ref "map.hpp" and use namespace \ref map to use this module.
+*
+* \section slk SLK module
+* The SLK format is a very basical, human-readable table format which is used by Blizzard's game Warcraft 3 to store many meta datas (e. g. unit type and sound data).
+* This module provides some classes to read, write and modify SLK files.
+* Include file \ref "slk.hpp" and use namespace \ref slk to use this module.
 *
 * \section editor Editor module
 * The editor module contains many classes to emulate the original World Editor created by Blizzard Entertainment.

@@ -28,6 +28,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/foreach.hpp>
 
 namespace wc3lib
 {

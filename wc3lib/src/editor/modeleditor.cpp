@@ -213,7 +213,7 @@ class SettingsInterface* ModelEditor::settings()
 	return new ModelEditorSettings(this);
 }
 
-#include "modeleditor.moc"
+//#include "modeleditor.moc"
 #include "moc_modeleditor.cpp"
 
 }

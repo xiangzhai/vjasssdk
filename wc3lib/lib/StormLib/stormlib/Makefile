@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib
+CMAKE_SOURCE_DIR = /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib
+CMAKE_BINARY_DIR = /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -101,7 +101,7 @@ list_install_components/fast: list_install_components
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && /usr/bin/cpack --config ./CPackConfig.cmake
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && /usr/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -111,7 +111,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/CPackSourceConfig.cmake
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -130,14 +130,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(CMAKE_COMMAND) -E cmake_progress_start /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/CMakeFiles /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/lib/StormLib/stormlib/CMakeFiles/progress.marks
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib/CMakeFiles 0
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(CMAKE_COMMAND) -E cmake_progress_start /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib/CMakeFiles /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib/lib/StormLib/stormlib/CMakeFiles/progress.marks
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/clean
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/clean
 .PHONY : clean
 
 # The main clean target
@@ -146,22 +146,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/preinstall
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/preinstall
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 lib/StormLib/stormlib/CMakeFiles/StormLib.dir/rule:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/CMakeFiles/StormLib.dir/rule
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f CMakeFiles/Makefile2 lib/StormLib/stormlib/CMakeFiles/StormLib.dir/rule
 .PHONY : lib/StormLib/stormlib/CMakeFiles/StormLib.dir/rule
 
 # Convenience name for target.
@@ -170,7 +170,7 @@ StormLib: lib/StormLib/stormlib/CMakeFiles/StormLib.dir/rule
 
 # fast build rule for target.
 StormLib/fast:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build
 .PHONY : StormLib/fast
 
 GfxDecode.o: GfxDecode.cpp.o
@@ -178,7 +178,7 @@ GfxDecode.o: GfxDecode.cpp.o
 
 # target to build an object file
 GfxDecode.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/GfxDecode.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/GfxDecode.cpp.o
 .PHONY : GfxDecode.cpp.o
 
 GfxDecode.i: GfxDecode.cpp.i
@@ -186,7 +186,7 @@ GfxDecode.i: GfxDecode.cpp.i
 
 # target to preprocess a source file
 GfxDecode.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/GfxDecode.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/GfxDecode.cpp.i
 .PHONY : GfxDecode.cpp.i
 
 GfxDecode.s: GfxDecode.cpp.s
@@ -194,7 +194,7 @@ GfxDecode.s: GfxDecode.cpp.s
 
 # target to generate assembly for a file
 GfxDecode.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/GfxDecode.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/GfxDecode.cpp.s
 .PHONY : GfxDecode.cpp.s
 
 SAttrFile.o: SAttrFile.cpp.o
@@ -202,7 +202,7 @@ SAttrFile.o: SAttrFile.cpp.o
 
 # target to build an object file
 SAttrFile.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SAttrFile.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SAttrFile.cpp.o
 .PHONY : SAttrFile.cpp.o
 
 SAttrFile.i: SAttrFile.cpp.i
@@ -210,7 +210,7 @@ SAttrFile.i: SAttrFile.cpp.i
 
 # target to preprocess a source file
 SAttrFile.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SAttrFile.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SAttrFile.cpp.i
 .PHONY : SAttrFile.cpp.i
 
 SAttrFile.s: SAttrFile.cpp.s
@@ -218,7 +218,7 @@ SAttrFile.s: SAttrFile.cpp.s
 
 # target to generate assembly for a file
 SAttrFile.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SAttrFile.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SAttrFile.cpp.s
 .PHONY : SAttrFile.cpp.s
 
 SCommon.o: SCommon.cpp.o
@@ -226,7 +226,7 @@ SCommon.o: SCommon.cpp.o
 
 # target to build an object file
 SCommon.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCommon.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCommon.cpp.o
 .PHONY : SCommon.cpp.o
 
 SCommon.i: SCommon.cpp.i
@@ -234,7 +234,7 @@ SCommon.i: SCommon.cpp.i
 
 # target to preprocess a source file
 SCommon.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCommon.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCommon.cpp.i
 .PHONY : SCommon.cpp.i
 
 SCommon.s: SCommon.cpp.s
@@ -242,7 +242,7 @@ SCommon.s: SCommon.cpp.s
 
 # target to generate assembly for a file
 SCommon.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCommon.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCommon.cpp.s
 .PHONY : SCommon.cpp.s
 
 SCompression.o: SCompression.cpp.o
@@ -250,7 +250,7 @@ SCompression.o: SCompression.cpp.o
 
 # target to build an object file
 SCompression.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCompression.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCompression.cpp.o
 .PHONY : SCompression.cpp.o
 
 SCompression.i: SCompression.cpp.i
@@ -258,7 +258,7 @@ SCompression.i: SCompression.cpp.i
 
 # target to preprocess a source file
 SCompression.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCompression.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCompression.cpp.i
 .PHONY : SCompression.cpp.i
 
 SCompression.s: SCompression.cpp.s
@@ -266,7 +266,7 @@ SCompression.s: SCompression.cpp.s
 
 # target to generate assembly for a file
 SCompression.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCompression.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SCompression.cpp.s
 .PHONY : SCompression.cpp.s
 
 SFileCompactArchive.o: SFileCompactArchive.cpp.o
@@ -274,7 +274,7 @@ SFileCompactArchive.o: SFileCompactArchive.cpp.o
 
 # target to build an object file
 SFileCompactArchive.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCompactArchive.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCompactArchive.cpp.o
 .PHONY : SFileCompactArchive.cpp.o
 
 SFileCompactArchive.i: SFileCompactArchive.cpp.i
@@ -282,7 +282,7 @@ SFileCompactArchive.i: SFileCompactArchive.cpp.i
 
 # target to preprocess a source file
 SFileCompactArchive.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCompactArchive.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCompactArchive.cpp.i
 .PHONY : SFileCompactArchive.cpp.i
 
 SFileCompactArchive.s: SFileCompactArchive.cpp.s
@@ -290,7 +290,7 @@ SFileCompactArchive.s: SFileCompactArchive.cpp.s
 
 # target to generate assembly for a file
 SFileCompactArchive.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCompactArchive.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCompactArchive.cpp.s
 .PHONY : SFileCompactArchive.cpp.s
 
 SFileCreateArchiveEx.o: SFileCreateArchiveEx.cpp.o
@@ -298,7 +298,7 @@ SFileCreateArchiveEx.o: SFileCreateArchiveEx.cpp.o
 
 # target to build an object file
 SFileCreateArchiveEx.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCreateArchiveEx.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCreateArchiveEx.cpp.o
 .PHONY : SFileCreateArchiveEx.cpp.o
 
 SFileCreateArchiveEx.i: SFileCreateArchiveEx.cpp.i
@@ -306,7 +306,7 @@ SFileCreateArchiveEx.i: SFileCreateArchiveEx.cpp.i
 
 # target to preprocess a source file
 SFileCreateArchiveEx.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCreateArchiveEx.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCreateArchiveEx.cpp.i
 .PHONY : SFileCreateArchiveEx.cpp.i
 
 SFileCreateArchiveEx.s: SFileCreateArchiveEx.cpp.s
@@ -314,7 +314,7 @@ SFileCreateArchiveEx.s: SFileCreateArchiveEx.cpp.s
 
 # target to generate assembly for a file
 SFileCreateArchiveEx.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCreateArchiveEx.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileCreateArchiveEx.cpp.s
 .PHONY : SFileCreateArchiveEx.cpp.s
 
 SFileExtractFile.o: SFileExtractFile.cpp.o
@@ -322,7 +322,7 @@ SFileExtractFile.o: SFileExtractFile.cpp.o
 
 # target to build an object file
 SFileExtractFile.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileExtractFile.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileExtractFile.cpp.o
 .PHONY : SFileExtractFile.cpp.o
 
 SFileExtractFile.i: SFileExtractFile.cpp.i
@@ -330,7 +330,7 @@ SFileExtractFile.i: SFileExtractFile.cpp.i
 
 # target to preprocess a source file
 SFileExtractFile.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileExtractFile.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileExtractFile.cpp.i
 .PHONY : SFileExtractFile.cpp.i
 
 SFileExtractFile.s: SFileExtractFile.cpp.s
@@ -338,7 +338,7 @@ SFileExtractFile.s: SFileExtractFile.cpp.s
 
 # target to generate assembly for a file
 SFileExtractFile.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileExtractFile.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileExtractFile.cpp.s
 .PHONY : SFileExtractFile.cpp.s
 
 SFileFindFile.o: SFileFindFile.cpp.o
@@ -346,7 +346,7 @@ SFileFindFile.o: SFileFindFile.cpp.o
 
 # target to build an object file
 SFileFindFile.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileFindFile.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileFindFile.cpp.o
 .PHONY : SFileFindFile.cpp.o
 
 SFileFindFile.i: SFileFindFile.cpp.i
@@ -354,7 +354,7 @@ SFileFindFile.i: SFileFindFile.cpp.i
 
 # target to preprocess a source file
 SFileFindFile.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileFindFile.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileFindFile.cpp.i
 .PHONY : SFileFindFile.cpp.i
 
 SFileFindFile.s: SFileFindFile.cpp.s
@@ -362,7 +362,7 @@ SFileFindFile.s: SFileFindFile.cpp.s
 
 # target to generate assembly for a file
 SFileFindFile.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileFindFile.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileFindFile.cpp.s
 .PHONY : SFileFindFile.cpp.s
 
 SFileOpenArchive.o: SFileOpenArchive.cpp.o
@@ -370,7 +370,7 @@ SFileOpenArchive.o: SFileOpenArchive.cpp.o
 
 # target to build an object file
 SFileOpenArchive.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenArchive.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenArchive.cpp.o
 .PHONY : SFileOpenArchive.cpp.o
 
 SFileOpenArchive.i: SFileOpenArchive.cpp.i
@@ -378,7 +378,7 @@ SFileOpenArchive.i: SFileOpenArchive.cpp.i
 
 # target to preprocess a source file
 SFileOpenArchive.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenArchive.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenArchive.cpp.i
 .PHONY : SFileOpenArchive.cpp.i
 
 SFileOpenArchive.s: SFileOpenArchive.cpp.s
@@ -386,7 +386,7 @@ SFileOpenArchive.s: SFileOpenArchive.cpp.s
 
 # target to generate assembly for a file
 SFileOpenArchive.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenArchive.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenArchive.cpp.s
 .PHONY : SFileOpenArchive.cpp.s
 
 SFileOpenFileEx.o: SFileOpenFileEx.cpp.o
@@ -394,7 +394,7 @@ SFileOpenFileEx.o: SFileOpenFileEx.cpp.o
 
 # target to build an object file
 SFileOpenFileEx.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenFileEx.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenFileEx.cpp.o
 .PHONY : SFileOpenFileEx.cpp.o
 
 SFileOpenFileEx.i: SFileOpenFileEx.cpp.i
@@ -402,7 +402,7 @@ SFileOpenFileEx.i: SFileOpenFileEx.cpp.i
 
 # target to preprocess a source file
 SFileOpenFileEx.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenFileEx.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenFileEx.cpp.i
 .PHONY : SFileOpenFileEx.cpp.i
 
 SFileOpenFileEx.s: SFileOpenFileEx.cpp.s
@@ -410,7 +410,7 @@ SFileOpenFileEx.s: SFileOpenFileEx.cpp.s
 
 # target to generate assembly for a file
 SFileOpenFileEx.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenFileEx.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileOpenFileEx.cpp.s
 .PHONY : SFileOpenFileEx.cpp.s
 
 SFileReadFile.o: SFileReadFile.cpp.o
@@ -418,7 +418,7 @@ SFileReadFile.o: SFileReadFile.cpp.o
 
 # target to build an object file
 SFileReadFile.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileReadFile.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileReadFile.cpp.o
 .PHONY : SFileReadFile.cpp.o
 
 SFileReadFile.i: SFileReadFile.cpp.i
@@ -426,7 +426,7 @@ SFileReadFile.i: SFileReadFile.cpp.i
 
 # target to preprocess a source file
 SFileReadFile.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileReadFile.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileReadFile.cpp.i
 .PHONY : SFileReadFile.cpp.i
 
 SFileReadFile.s: SFileReadFile.cpp.s
@@ -434,7 +434,7 @@ SFileReadFile.s: SFileReadFile.cpp.s
 
 # target to generate assembly for a file
 SFileReadFile.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileReadFile.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SFileReadFile.cpp.s
 .PHONY : SFileReadFile.cpp.s
 
 SListFile.o: SListFile.cpp.o
@@ -442,7 +442,7 @@ SListFile.o: SListFile.cpp.o
 
 # target to build an object file
 SListFile.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SListFile.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SListFile.cpp.o
 .PHONY : SListFile.cpp.o
 
 SListFile.i: SListFile.cpp.i
@@ -450,7 +450,7 @@ SListFile.i: SListFile.cpp.i
 
 # target to preprocess a source file
 SListFile.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SListFile.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SListFile.cpp.i
 .PHONY : SListFile.cpp.i
 
 SListFile.s: SListFile.cpp.s
@@ -458,7 +458,7 @@ SListFile.s: SListFile.cpp.s
 
 # target to generate assembly for a file
 SListFile.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SListFile.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/SListFile.cpp.s
 .PHONY : SListFile.cpp.s
 
 StormPortLinux.o: StormPortLinux.cpp.o
@@ -466,7 +466,7 @@ StormPortLinux.o: StormPortLinux.cpp.o
 
 # target to build an object file
 StormPortLinux.cpp.o:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/StormPortLinux.cpp.o
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/StormPortLinux.cpp.o
 .PHONY : StormPortLinux.cpp.o
 
 StormPortLinux.i: StormPortLinux.cpp.i
@@ -474,7 +474,7 @@ StormPortLinux.i: StormPortLinux.cpp.i
 
 # target to preprocess a source file
 StormPortLinux.cpp.i:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/StormPortLinux.cpp.i
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/StormPortLinux.cpp.i
 .PHONY : StormPortLinux.cpp.i
 
 StormPortLinux.s: StormPortLinux.cpp.s
@@ -482,7 +482,7 @@ StormPortLinux.s: StormPortLinux.cpp.s
 
 # target to generate assembly for a file
 StormPortLinux.cpp.s:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/StormPortLinux.cpp.s
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(MAKE) -f lib/StormLib/stormlib/CMakeFiles/StormLib.dir/build.make lib/StormLib/stormlib/CMakeFiles/StormLib.dir/StormPortLinux.cpp.s
 .PHONY : StormPortLinux.cpp.s
 
 # Help Target
@@ -550,6 +550,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/tamino/Dokumente/Projekte/Informatik/C++/vjasssdk/wc3lib && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/tamino/Dokumente/Projekte/Informatik/C++/wc3sdk/wc3lib && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

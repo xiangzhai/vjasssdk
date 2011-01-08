@@ -22,7 +22,9 @@
 #define WC3LIB_EDITOR_NEWMAPDIALOG_HPP
 
 #include <kdialog.h>
-#include "ui/ui_newmapdialog.hpp"
+
+#include "ui/ui_newmapdialog.h"
+#include "../map.hpp"
 
 namespace wc3lib
 {
@@ -30,10 +32,27 @@ namespace wc3lib
 namespace editor
 {
 
+/**
+* Dialog which is displayed when creating a new map in editor.
+* Allows you to select size, main tileset, filling tile, initial cliff and water level and if there is a randomized height level of map.
+*/
 class NewMapDialog : public KDialog, public Ui::NewMapDialog
 {
 	public:
 		NewMapDialog(class QWidget *parent);
+
+		void setSize(const QSize &size);
+		QSize size() const;
+		void setMainTileset(class Tileset *tileset);
+		class Tileset* tileset() const;
+		void setFillingTile(class Tile *tile);
+		class Tile* fillingTile() const;
+		void setInitialCliffLevel(map::short16 cliffLevel);
+		map::short16 initialCliffLevel() const;
+		void setInitialWaterLevel(map::short16 waterLevel);
+		map::short16 initialWaterLevel() const;
+		void setRandomizedHeightLevel(bool randomizedHeightLevel);
+		bool hasRandomizedHeightLevel() const;
 };
 
 }

@@ -18,6 +18,9 @@ target_link_libraries(jasstrans ${wc3lib_CORE_LIBRARIES} ${Boost_LIBRARIES})
 
 add_executable(mpq mpq.cpp)
 target_link_libraries(mpq ${wc3lib_CORE_LIBRARIES} ${Boost_LIBRARIES})
+if (FLAG_DEBUG_USE)
+	target_link_libraries(mpq StormLib)
+endif ()
 
 #install
 

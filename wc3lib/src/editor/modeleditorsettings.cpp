@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,19 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_RENDERER_HPP
-#define WC3LIB_RENDERER_HPP
+#include <kapplication.h>
 
-namespace Ogre
-{
-
-class Root;
-class RenderWindow;
-class SceneManager;
-class Camera;
-class Viewport;
-	
-}
+#include "modeleditorsettings.hpp"
+#include "modeleditor.hpp"
 
 namespace wc3lib
 {
@@ -38,25 +29,28 @@ namespace wc3lib
 namespace editor
 {
 
-/**
-* Provides simple Warcraft 3 editor-like render window and manager. Is able to render MDX, MDL and BLP files.
-* @todo Add methods like addMdx(<coordinates>), addMdl(<coordinates>).
-*/
-class Renderer
+ModelEditorSettings::ModelEditorSettings(class ModelEditor *modelEditor) : ModelViewSettings(modelEditor->modelView()), m_modelEditor(modelEditor)
 {
-	public:
-		void start();
-	
-	protected:
-		class Ogre::Root *m_root;
-		class Ogre::RenderWindow *m_renderWindow;
-		class Ogre::SceneManager *m_sceneManager; //class Ogre::DefaultSceneManager *m_defaultSceneManager;
-		class Ogre::Camera *m_camera; // main camera
-		class Ogre::Viewport *m_viewport;
-};
+}
 
+void ModelEditorSettings::read(const KConfigGroup &group)
+{
+	ModelViewSettings::read(group);
+	this->modelEditor()->m_recentUrl = group.readEntry("FilePath", "");
+	/// @todo Read some preview settings which are not related to OGRE rather than to Warcraft 3 (fog, environment lighting, time of day)
+}
+
+void ModelEditorSettings::write(KConfigGroup &group) const
+{
+	ModelViewSettings::write(group);
+	group.writeEntry("FilePath", this->modelEditor()->m_recentUrl);
+}
+
+QString ModelEditorSettings::groupName() const
+{
+	return "ModelEditor";
 }
 
 }
 
-#endif
+}

@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_SETTINGS_HPP
-#define WC3LIB_EDITOR_SETTINGS_HPP
+#ifndef WC3LIB_EDITOR_MODELEDITORSETTINGS_HPP
+#define WC3LIB_EDITOR_MODELEDITORSETTINGS_HPP
 
-#include "settingsinterface.hpp"
+#include "modelviewsettings.hpp"
 
 namespace wc3lib
 {
@@ -29,29 +29,24 @@ namespace wc3lib
 namespace editor
 {
 
-/**
-* Settings widget for model view settings.
-* Allows you to configure OGRE rendering settings (e. g. resolution, renderer, lighting etc.).
-* \sa ModelView, ModelEditor, TerrainEditor
-*/
-class Settings : public SettingsInterface
+class ModelEditorSettings : public ModelViewSettings
 {
 	public:
-		Settings(class Editor *editor);
+		ModelEditorSettings(class ModelEditor *modelEditor);
 
 		virtual void read(const KConfigGroup &group);
 		virtual void write(KConfigGroup &group) const;
 		virtual QString groupName() const;
 
-		class Editor* editor() const;
+		class ModelEditor* modelEditor() const;
 
 	protected:
-		class Editor *m_editor;
+		class ModelEditor *m_modelEditor;
 };
 
-inline class Editor* Settings::editor() const
+inline class ModelEditor* ModelEditorSettings::modelEditor() const
 {
-	return this->m_editor;
+	return this->m_modelEditor;
 }
 
 }

@@ -32,7 +32,7 @@
 
 #include <boost/timer.hpp>
 #ifdef DEBUG
-//#include <StormLib/stormlib/StormLib.h>
+#include <StormLib/stormlib/StormLib.h>
 #endif
 
 using namespace wc3lib;
@@ -48,10 +48,10 @@ static std::string sizeString(T size, bool humanReadable, bool decimal)
 		else
 			return sizeStringBinary<T>(size);
 	}
-	
+
 	std::stringstream result;
 	result << size;
-	
+
 	return result.str();
 }
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	// Set the text message domain.
 	bindtextdomain("mpq", LOCALE_DIR);
 	textdomain("mpq");
-	
+
 	static struct option options[] =
 	{
 		{"version",                 no_argument,             0, 'V'},
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 		{"benchmark",               no_argument,             0,  'b'},
 		{0, 0, 0, 0}
 	};
-	
+
 	static const char *version = "0.1";
 	std::list<boost::filesystem::path> filePaths;
 	int optionShortcut;
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 	bool optionDecimal = false;
 	bool optionList = false;
 	bool optionBenchmark = false;
-	
+
 	while (true)
 	{
 		int optionIndex = 0;
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
 		if (optionShortcut == -1)
 			break;
-     
+
 		switch (optionShortcut)
 		{
 			case 'V':
@@ -103,10 +103,10 @@ int main(int argc, char *argv[])
 				"This is free software: you are free to change and redistribute it.\n"
 				"There is NO WARRANTY, to the extent permitted by law."
 				)) % version << std::endl;
-				
+
 				return EXIT_SUCCESS;
 			}
-			
+
 			case 'H':
 			{
 				std::cout <<
@@ -124,35 +124,35 @@ int main(int argc, char *argv[])
 				_("Several arguments has to be separated by using the : character.\n") <<
 				_("\nReport bugs to tamino@cdauth.de or on http://sourceforge.net/projects/vjasssdk/") <<
 				std::endl;
-	
+
 				return EXIT_SUCCESS;
 			}
-			
+
 			case 'i':
 			{
 				optionInfo = true;
-				
+
 				break;
 			}
-			
+
 			case 'h':
 			{
 				optionHumanreadable = true;
-				
+
 				break;
 			}
-			
+
 			case 'd':
 			{
 				optionDecimal = true;
-				
+
 				break;
 			}
-			
+
 			case 'l':
 			{
 				optionList = true;
-				
+
 				break;
 			}
 
@@ -164,24 +164,24 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-		
+
 	if (optind < argc)
 	{
 		for ( ; optind < argc; ++optind)
 		{
 			bool found = false;
-			
+
 			BOOST_FOREACH(const boost::filesystem::path &path, filePaths)
 			{
 				if (path == argv[optind])
 				{
 						std::cerr << boost::format(_("File path \"%1%\" has already been added to list.")) % argv[optind] << std::endl;
 						found = true;
-						
+
 						break;
 				}
 			}
-			
+
 			if (!found)
 				filePaths.push_back(argv[optind]);
 		}
@@ -190,10 +190,10 @@ int main(int argc, char *argv[])
 	else
 	{
 		std::cerr << _("Missing file arguments.") << std::endl;
-		
+
 		return EXIT_FAILURE;
 	}
-	
+
 	if (optionInfo)
 	{
 		BOOST_FOREACH(const boost::filesystem::path &path, filePaths)
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 			}
 
 			class Mpq mpq;
-			
+
 			try
 			{
 				std::streamsize size = mpq.open(path);
@@ -214,10 +214,10 @@ int main(int argc, char *argv[])
 			catch (class wc3lib::Exception &exception)
 			{
 				std::cerr << boost::format(_("Error occured while opening file \"%1%\": \"%2%\"")) % path.string() % exception.what() << std::endl;
-				
+
 				continue;
 			}
-			
+
 			std::cout
 			<< mpq.path().string() << std::endl
 			<< boost::format(_("Size: %1%")) % sizeString<std::size_t>(mpq.size(), optionHumanreadable, optionDecimal) << std::endl
@@ -235,17 +235,17 @@ int main(int argc, char *argv[])
 			<< boost::format(_("Contains attributes file: %1%")) % boolString(mpq.containsAttributesFile()) << std::endl
 			<< boost::format(_("Contains signature file: %1%")) % boolString(mpq.containsSignatureFile()) << std::endl
 			;
-				
+
 			if (mpq.extendedAttributes() != Mpq::None)
 			{
 				std::cout << _("Extended attributes:") << std::endl;
-				
+
 				if (mpq.extendedAttributes() & Mpq::FileCrc32s)
 					std::cout << _("* File CRC32s") << std::endl;
-				
+
 				if (mpq.extendedAttributes() & Mpq::FileTimeStamps)
 					std::cout << _("* File time stamps") << std::endl;
-				
+
 				if (mpq.extendedAttributes() & Mpq::FileMd5s)
 					std::cout << _("* File MD5s") << std::endl;
 			}
@@ -307,14 +307,14 @@ int main(int argc, char *argv[])
 				std::cout << boost::format(_("Result: %1%s")) % timer.elapsed() << std::endl;
 /// @todo Add runtime linking support by using LibraryLoader.
 #ifdef DEBUG
-				std::cout << _("Opening MPQ archive (StormLib):") << std::endl;
+				std::cout << _("Opening MPQ archive (StormLib - read only):") << std::endl;
 				HANDLE stormLibArchive;
 				timer.restart();
 
-				if (SFileCreateArchiveEx(
+				if (SFileOpenArchive(
 				 path.string().c_str(),           // Archive file name
-				 MPQ_OPEN_EXISTING,      // How to open the archive
-				 HASH_TABLE_SIZE_MIN,            // Size of hash table for new archives
+				 0,      // Archive priority
+				 0,            // Open flags, TODO MPQ_OPEN_READ_ONLY?
 				 &stormLibArchive                    // Pointer to result HANDLE
 				 ))
 				{
@@ -332,6 +332,6 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	
+
 	return EXIT_SUCCESS;
 }
