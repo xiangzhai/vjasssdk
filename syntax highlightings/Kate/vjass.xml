@@ -12,7 +12,7 @@
 
 	 Creators Note:
 	  - This extension was created so KDE Linux users could have an easy and light way of programming in vJass. This extension is opensource and freeware, but please if you use it, credit me, because I lost many hours to make this work and to bring this to the world. Hoping it helps, Flame_Phoenix.-->
-<language name="vJass" version="1.26" kateversion="3.4.5" section="Scripts" extensions="*.j;*.J;*.ai;*.AI" author="Pedro Miguel Martins">
+<language name="vJass" version="1.30" kateversion="3.4.5" section="Scripts" extensions="*.j;*.J;*.ai;*.AI" author="Pedro Miguel Martins" priority="9">
 	<highlighting>
 		<!-- keywords of vJass-->
 		<list name="keywords">
@@ -58,6 +58,8 @@
 			<item>getType</item>
 			<item>typeid</item>
 			<item>size</item>
+			<item>width</item>
+			<item>height</item>
 			<item>allocate</item>
 			<item>exists</item>
 			<item>implement</item>
@@ -65,6 +67,7 @@
 			<item>hook</item>
 			<item>SCOPE_PREFIX</item>
 			<item>SCOPE_PRIVATE</item>
+			<item>name</item>
 			<!-- Zinc -->
 			<item>for</item>
 			<item>while</item>
@@ -1958,6 +1961,7 @@
 			<item>StoreRealBJ</item>
 			<item>StoreStringBJ</item>
 			<item>StoreUnitBJ</item>
+			<item>SaveRealBJ</item>
 			<item>String2OrderIdBJ</item>
 			<item>String2UnitIdBJ</item>
 			<item>StringIdentity</item>
@@ -2068,6 +2072,98 @@
 			<item>WaygateGetDestinationLocBJ</item>
 			<item>WaygateIsActiveBJ</item>
 			<item>WidgetDropItem</item>
+			<!-- New hashtable stuff -->
+			<item>InitHashtableBJ</item>
+			<item>GetLastCreatedHashtableBJ</item>
+			<item>SaveIntegerBJ</item>
+			<item>SaveBooleanBJ</item>
+			<item>SaveStringBJ</item>
+			<item>SavePlayerHandleBJ</item>
+			<item>SaveWidgetHandleBJ</item>
+			<item>SaveDestructableHandleBJ</item>
+			<item>SaveItemHandleBJ</item>
+			<item>SaveUnitHandleBJ</item>
+			<item>SaveAbilityHandleBJ</item>
+			<item>SaveTimerHandleBJ</item>
+			<item>SaveTriggerHandleBJ</item>
+			<item>SaveTriggerConditionHandleBJ</item>
+			<item>SaveTriggerActionHandleBJ</item>
+			<item>SaveTriggerEventHandleBJ</item>
+			<item>SaveForceHandleBJ</item>
+			<item>SaveGroupHandleBJ</item>
+			<item>SaveLocationHandleBJ</item>
+			<item>SaveRectHandleBJ</item>
+			<item>SaveBooleanExprHandleBJ</item>
+			<item>SaveSoundHandleBJ</item>
+			<item>SaveEffectHandleBJ</item>
+			<item>SaveUnitPoolHandleBJ</item>
+			<item>SaveItemPoolHandleBJ</item>
+			<item>SaveQuestHandleBJ</item>
+			<item>SaveQuestItemHandleBJ</item>
+			<item>SaveDefeatConditionHandleBJ</item>
+			<item>SaveTimerDialogHandleBJ</item>
+			<item>SaveLeaderboardHandleBJ</item>
+			<item>SaveMultiboardHandleBJ</item>
+			<item>SaveMultiboardItemHandleBJ</item>
+			<item>SaveTrackableHandleBJ</item>
+			<item>SaveDialogHandleBJ</item>
+			<item>SaveButtonHandleBJ</item>
+			<item>SaveTextTagHandleBJ</item>
+			<item>SaveLightningHandleBJ</item>
+			<item>SaveImageHandleBJ</item>
+			<item>SaveUbersplatHandleBJ</item>
+			<item>SaveRegionHandleBJ</item>
+			<item>SaveFogStateHandleBJ</item>
+			<item>SaveFogModifierHandleBJ</item>
+			<item>SaveAgentHandleBJ</item>
+			<item>SaveHashtableHandleBJ</item>
+			<item>LoadRealBJ</item>
+			<item>LoadIntegerBJ</item>
+			<item>LoadBooleanBJ</item>
+			<item>LoadStringBJ</item>
+			<item>LoadPlayerHandleBJ</item>
+			<item>LoadWidgetHandleBJ</item>
+			<item>LoadDestructableHandleBJ</item>
+			<item>LoadItemHandleBJ</item>
+			<item>LoadUnitHandleBJ</item>
+			<item>LoadAbilityHandleBJ</item>
+			<item>LoadTimerHandleBJ</item>
+			<item>LoadTriggerHandleBJ</item>
+			<item>LoadTriggerConditionHandleBJ</item>
+			<item>LoadTriggerActionHandleBJ</item>
+			<item>LoadTriggerEventHandleBJ</item>
+			<item>LoadForceHandleBJ</item>
+			<item>LoadGroupHandleBJ</item>
+			<item>LoadLocationHandleBJ</item>
+			<item>LoadRectHandleBJ</item>
+			<item>LoadBooleanExprHandleBJ</item>
+			<item>LoadSoundHandleBJ</item>
+			<item>LoadEffectHandleBJ</item>
+			<item>LoadUnitPoolHandleBJ</item>
+			<item>LoadItemPoolHandleBJ</item>
+			<item>LoadQuestHandleBJ</item>
+			<item>LoadQuestItemHandleBJ</item>
+			<item>LoadDefeatConditionHandleBJ</item>
+			<item>LoadTimerDialogHandleBJ</item>
+			<item>LoadLeaderboardHandleBJ</item>
+			<item>LoadMultiboardHandleBJ</item>
+			<item>LoadMultiboardItemHandleBJ</item>
+			<item>LoadTrackableHandleBJ</item>
+			<item>LoadDialogHandleBJ</item>
+			<item>LoadButtonHandleBJ</item>
+			<item>LoadTextTagHandleBJ</item>
+			<item>LoadLightningHandleBJ</item>
+			<item>LoadImageHandleBJ</item>
+			<item>LoadUbersplatHandleBJ</item>
+			<item>LoadRegionHandleBJ</item>
+			<item>LoadFogStateHandleBJ</item>
+			<item>LoadFogModifierHandleBJ</item>
+			<item>LoadHashtableHandleBJ</item>
+			<item>FlushParentHashtableBJ</item>
+			<item>FlushChildHashtableBJ</item>
+			<item>HaveSavedValue</item>
+			<!-- New other stuff -->
+			<item>GetFadeFromSecondsAsReal</item>
 		</list>
 
 		<!-- Most AI natives-->
@@ -2318,110 +2414,6 @@
 			<item>SetSkillArray</item>
 			<item>AwaitMeleeHeroes</item>
 			<item>PickMeleeHero</item>
-		</list>
-
-		<list name="JAPINatives">
-			<item>xGetUnitDefenseType</item>
-			<item>xGetDefenseType</item>
-			<item>xGetUnitAttackType1</item>
-			<item>xGetAttackType1</item>
-			<item>xGetUnitAttackType2</item>
-			<item>xGetAttackType2</item>
-			<item>xGetUnitWeaponType1</item>
-			<item>xGetWeaponType1</item>
-			<item>xGetUnitWeaponType2</item>
-			<item>xGetWeaponType2</item>
-			<item>DumpUnitInfo</item>
-			<item>ArrayAlloc</item>
-			<item>ArraySetI</item>
-			<item>ArrayGetI</item>
-			<item>ArrayFree</item>
-			<item>DequeNew</item>
-			<item>DequePushFrontI</item>
-			<item>DequePushBackI</item>
-			<item>DequeFrontI</item>
-			<item>DequeBackI</item>
-			<item>DequePopFrontI</item>
-			<item>DequePopBackI</item>
-			<item>DequeFree</item>
-			<item>MapNew</item>
-			<item>MapSetII</item>
-			<item>MapGetII</item>
-			<item>MapSetSI</item>
-			<item>MapGetSI</item>
-			<item>MapFree</item>
-			<item>consII</item>
-			<item>carI</item>
-			<item>cdrI</item>
-			<item>destroypair</item>
-			<item>StopWatchCreate</item>
-			<item>StopWatchMark</item>
-			<item>StopWatchDestroy</item>
-			<item>ItoR</item>
-			<item>RtoI</item>
-			<item>Encrypt</item>
-			<item>Decrypt</item>
-			<item>DebugPrint</item>
-			<item>CallByName</item>
-			<item>InitNatives</item>
-		</list>
-
-		<list name="RtCNatives">
-			<item>StopWatchCreate</item>
-			<item>StopWatchMark</item>
-			<item>StopWatchDestroy</item>
-			<item>TimeGetTimestamp</item>
-			<item>TimeGetSeconds</item>
-			<item>TimeGetMinutes</item>
-			<item>TimeGetHours</item>
-			<item>TimeGetDayMonth</item>
-			<item>TimeGetDayWeek</item>
-			<item>TimeGetMonth</item>
-			<item>TimeGetYear</item>
-			<item>TimeGetMilliseconds</item>
-			<item>GetTickCount</item>
-			<item>VectorCreate</item>
-			<item>VectorDestroy</item>
-			<item>VectorClear</item>
-			<item>VectorGetSize</item>
-			<item>VectorSetSize</item>
-			<item>VectorGet</item>
-			<item>VectorSet</item>
-			<item>VectorPushBack</item>
-			<item>VectorPopBack</item>
-			<item>VectorBack</item>
-			<item>VectorEmpty</item>
-			<item>GetMouseTerrainX</item>
-			<item>GetMouseTerrainY</item>
-			<item>GetMouseTerrainZ</item>
-			<item>GetMouseScaleX</item>
-			<item>GetMouseScaleY</item>
-			<item>GetMouseScreenX</item>
-			<item>GetMouseScreenY</item>
-			<item>SetMouseScreenX</item>
-			<item>SetMouseScreenY</item>
-			<item>SetMouseScreenPos</item>
-			<item>IsMouseOverUI</item>
-			<item>SetMouseBlock</item>
-			<item>GetTriggerWheelDelta</item>
-			<item>TriggerRegisterMouseEvent</item>
-			<item>TriggerRegisterKeyEvent</item>
-			<item>GetTriggerKey</item>
-			<item>SetKeyBlock</item>
-			<item>ForceKeyDown</item>
-			<item>ForceKeyUp</item>
-			<item>ForceKeyType</item>
-			<item>StringReplace</item>
-			<item>StringPos</item>
-			<item>StringRPos</item>
-			<item>BitAnd</item>
-			<item>BitOr</item>
-			<item>BitXor</item>
-			<item>BitBSL</item>
-			<item>BitBSR</item>
-			<item>BitFlip</item>
-			<item>Log</item>
-			<item>Ln</item>
 		</list>
 
 		<!-- datatypes of vJass-->
@@ -3320,6 +3312,11 @@
 			<item>bj_GAMECACHE_REAL</item>
 			<item>bj_GAMECACHE_UNIT</item>
 			<item>bj_GAMECACHE_STRING</item>
+			<item>bj_HASHTABLE_BOOLEAN</item>
+			<item>bj_HASHTABLE_INTEGER</item>
+			<item>bj_HASHTABLE_REAL</item>
+			<item>bj_HASHTABLE_STRING</item>
+			<item>bj_HASHTABLE_HANDLE</item>
 			<item>bj_ITEM_STATUS_HIDDEN</item>
 			<item>bj_ITEM_STATUS_OWNED</item>
 			<item>bj_ITEM_STATUS_INVULNERABLE</item>
@@ -3777,17 +3774,6 @@
 			<item>DEBUG_MODE</item>
 		</list>
 
-		<!-- Constant variables from RtC -->
-		<list name="RtCConstants">
-			<item>EVENT_LMOUSEUP</item>
-			<item>EVENT_LMOUSEDOWN</item>
-			<item>EVENT_RMOUSEUP</item>
-			<item>EVENT_RMOUSEDOWN</item>
-			<item>EVENT_MMOUSEUP</item>
-			<item>EVENT_MMOUSEDOWN</item>
-			<item>EVENT_MOUSEWHEEL</item>
-		</list>
-
 		<list name="BlizzardJVariables">
 			<item>bj_mapInitialPlayableArea</item>
 			<item>bj_mapInitialCameraBounds</item>
@@ -3938,6 +3924,7 @@
 			<item>bj_lastPlayedMusic</item>
 			<item>bj_lastTransmissionDuration</item>
 			<item>bj_lastCreatedGameCache</item>
+			<item>bj_lastCreatedHashtable</item>
 			<item>bj_lastLoadedUnit</item>
 			<item>bj_lastCreatedButton</item>
 			<item>bj_lastReplacedUnit</item>
@@ -4039,32 +4026,69 @@
 
 		<contexts>
 			<context attribute="Normal Text" lineEndContext="#pop" name="Normal Text" >
-			<DetectSpaces />
+				<DetectSpaces />
+
 				<keyword attribute="Keyword" context="#stay" String="keywords" />
-				<keyword attribute="CommonJBJs" context="#stay" String="CommonJBJs" />
-				<keyword attribute="CommonJNatives" context="#stay" String="CommonJNatives" />
-				<keyword attribute="CommonAINatives" context="#stay" String="CommonAINatives" />
-				<keyword attribute="CommonAIBJs" context="#stay" String="CommonAIBJs" />
-				<keyword attribute="JAPINatives" context="#stay" String="JAPINatives" />
-				<keyword attribute="RtCNatives" context="#stay" String="RtCNatives" />
+				<keyword attribute="Native" context="#stay" String="CommonJNatives" />
+				<keyword attribute="AI Native" context="#stay" String="CommonAINatives" />
+				<keyword attribute="Blizzard Function" context="#stay" String="CommonJBJs" />
+				<keyword attribute="AI Function" context="#stay" String="CommonAIBJs" />
 				<keyword attribute="DataType" context="#stay" String="datatypes" />
 				<keyword attribute="Extension" context="#stay" String="extensions" />
-				<keyword attribute="BlizzardJConstants" context="#stay" String="BlizzardJConstants"/>
-				<keyword attribute="CommonJConstants" context="#stay" String="CommonJConstants"/>
-				<keyword attribute="AIConstants" context="#stay" String="AIConstants"/>
-				<keyword attribute="VConstants" context="#stay" String="VConstants" />
-				<keyword attribute="RtCConstants" context="#stay" String="RtCConstants" />
-				<keyword attribute="BlizzardJVariables" context="#stay" String="BlizzardJVariables" />
-				<keyword attribute="AIVariables" context="#stay" String="AIVariables" />
+				<keyword attribute="Blizzard Constant" context="#stay" String="BlizzardJConstants"/>
+				<keyword attribute="Native Constant" context="#stay" String="CommonJConstants"/>
+				<keyword attribute="AI Constant" context="#stay" String="AIConstants"/>
+				<keyword attribute="vJass Constant" context="#stay" String="VConstants" />
+				<keyword attribute="Blizzard Variable" context="#stay" String="BlizzardJVariables" />
+				<keyword attribute="AI Variable" context="#stay" String="AIVariables" />
 
 				<HlCOct attribute="Octal" context="#stay"/>
 				<HlCHex attribute="Hex" context="#stay"/>
-				<DetectChar attribute="Hex" context="Hex2" char="$" />
+				<DetectChar attribute="Hex" context="HexOrTextMacroArgument" char="$" />
 
 				<DetectChar attribute="String" context="String" char="&quot;" />
 				<DetectChar attribute="Raw" context="raw" char="'" />
 
+
+
 				<!--The folowing allows me to define folding for a few special combinations of keywords-->
+				<StringDetect attribute="Keyword" String="globals" beginRegion="globalsRegion"/>
+				<StringDetect attribute="Keyword" String="endglobals" endRegion="globalsRegion"/>
+
+				<StringDetect attribute="Keyword" String="loop" beginRegion="loopRegion"/>
+				<StringDetect attribute="Keyword" String="endloop" endRegion="loopRegion"/>
+
+				<StringDetect attribute="Keyword" String="if" beginRegion="ifRegion"/>
+				<!--
+				TODO Handle else and elseif scopes, too (neither Bash highlighting for Kate does!
+				<StringDetect attribute="Keyword" String="elseif" insensitive="true" endRegion="ifRegion" beginRegion="elseifRegion"/>
+				<StringDetect attribute="Keyword" String="else" insensitive="true" endRegion="ifRegion" beginRegion="elseRegion"/>
+				-->
+				<StringDetect attribute="Keyword" String="endif" endRegion="ifRegion"/>
+
+				<StringDetect attribute="Keyword" String="function" beginRegion="functionRegion" context="FunctionContext"/>
+				<StringDetect attribute="Keyword" String="endfunction" endRegion="functionRegion" />
+
+				<StringDetect attribute="Keyword" String="scope" beginRegion="scopeRegion"/>
+				<StringDetect attribute="Keyword" String="endscope" endRegion="scopeRegion"/>
+
+				<StringDetect attribute="Keyword" String="library" beginRegion="libraryRegion"/>
+				<StringDetect attribute="Keyword" String="library_once" beginRegion="libraryRegion"/>
+				<StringDetect attribute="Keyword" String="endlibrary" endRegion="libraryRegion"/>
+
+				<StringDetect attribute="Keyword" String="interface" beginRegion="interfaceRegion"/>
+				<StringDetect attribute="Keyword" String="endinterface" endRegion="interfaceRegion"/>
+
+				<StringDetect attribute="Keyword" String="struct" beginRegion="structRegion"/>
+				<StringDetect attribute="Keyword" String="endstruct" endRegion="structRegion"/>
+
+				<StringDetect attribute="Keyword" String="module" beginRegion="moduleRegion"/>
+				<StringDetect attribute="Keyword" String="endmodule" endRegion="moduleRegion"/>
+
+				<StringDetect attribute="Keyword" String="method" beginRegion="methodRegion"/>
+				<StringDetect attribute="Keyword" String="endmethod" endRegion="methodRegion"/>
+
+				<!--
 				<RegExpr attribute="Keyword" context="#stay" String="\bglobals(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="globalRegion"/>
 				<RegExpr attribute="Keyword" context="#stay" String="\bendglobals(?=((\{[^}]*(\}|$)|\(\*.*(\*\)|$))*)([.;\s]|$)|//|$)" insensitive="true" endRegion="globalRegion"/>
 
@@ -4094,6 +4118,7 @@
 
 				<RegExpr attribute="Keyword" context="#stay" String="\bmodule(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="moduleRegion" firstNonSpace="true"/>
 				<RegExpr attribute="Keyword" context="#stay" String="\bendmodule(?=((\{[^}]*(\}|$)|\(\*.*(\*\)|$))*)([.;\s]|$)|//|$)" insensitive="true" endRegion="moduleRegion"/>
+				-->
 
 				<StringDetect attribute="Preprocessor" context="Preprocessor" String="//!"/>
 
@@ -4127,41 +4152,49 @@
 				<RegExpr attribute="String Char" context="#stay" String="%(%|n)" />
 			</context>
 
-			<context attribute="Hex" lineEndContext="#pop" name="Hex2">
+			<context attribute="Hex" lineEndContext="#pop" name="HexOrTextMacroArgument">
 				<LineContinue attribute="Hex" context="#stay"/>
 				<DetectChar attribute="Hex" context="#pop" char=" "/>
+				<DetectChar attribute="Hex" context="#pop" char="$"/> <!-- is vJass text macro argument -> ends with $ -->
 			</context>
-
 
 			<context attribute="Raw" lineEndContext="#stay" name="raw" >
 				<DetectChar attribute="Raw" context="#pop" char="'" />
 			</context>
 
+			<context attribute="Normal Text" lineEndContext="#pop" name="FunctionContext">
+				<DetectSpaces />
+				<StringDetect attribute="Keyword" String="interface" endRegion="functionRegion" context="#pop"/> <!-- is function interface -->
+				<!-- <RegExpr attribute="Normal Text" context="#pop" String="\b[a-zA-Z]([a-zA-Z0-9_]* [a-zA-Z0-9])?\b" /> -->
+				<keyword attribute="Blizzard Function" context="#pop" String="CommonJBJs" />
+				<keyword attribute="AI Function" context="#pop" String="CommonAIBJs" />
+				<DetectIdentifier context="#pop" />
+				<!-- function identifier -> do not end region -->
+			</context>
+
 			<context attribute="Preprocessor" lineEndContext="#pop" name="Preprocessor">
 
-				<keyword attribute="Preprocessors" context="#stay" String="Preprocessors" />
-
 				<!-- These are special folding regions-->
-				<StringDetect attribute="Region Marker" context="#stay" String=" textmacro" beginRegion="textMRegion"/>
-				<StringDetect attribute="Region Marker" context="#stay" String="endtextmacro" endRegion="textMRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="textmacro" beginRegion="textMRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="textmacro_once" beginRegion="textMRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="endtextmacro" endRegion="textMRegion"/>
 
-				<StringDetect attribute="Region Marker" context="#stay" String="textmacro_once" beginRegion="textMRegion"/>
-				<StringDetect attribute="Region Marker" context="#stay" String="endtextmacro" endRegion="textMRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="inject" beginRegion="injectMRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="endinject" endRegion="injectMRegion"/>
 
-				<StringDetect attribute="Region Marker" context="#stay" String="inject" beginRegion="injectMRegion"/>
-				<StringDetect attribute="Region Marker" context="#stay" String="endinject" endRegion="injectMRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="region" beginRegion="Region1"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="endregion" endRegion="Region1"/>
 
-				<StringDetect attribute="Region Marker" context="Region Marker" String="region" beginRegion="Region1"/>
-				<StringDetect attribute="Region Marker" context="Region Marker" String="endregion" endRegion="Region1"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="novjass" beginRegion="novjassRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="endnovjass" endRegion="novjassRegion"/>
 
-				<StringDetect attribute="Region Marker" context="Region Marker" String="novjass" beginRegion="novjassRegion"/>
-				<StringDetect attribute="Region Marker" context="Region Marker" String="endnovjass" endRegion="novjassRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="zinc" beginRegion="zincRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="endzinc" endRegion="zincRegion"/>
 
-				<StringDetect attribute="Region Marker" context="Region Marker" String="zinc" beginRegion="zincRegion"/>
-				<StringDetect attribute="Region Marker" context="Region Marker" String="endzinc" endRegion="zincRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="externalblock" beginRegion="externalRegion"/>
+				<StringDetect attribute="Preprocessor Statement" context="#stay" String="endexternalblock" endRegion="externalRegion"/>
 
-				<StringDetect attribute="Region Marker" context="Region Marker" String="externalblock" beginRegion="externalRegion"/>
-				<StringDetect attribute="Region Marker" context="Region Marker" String="endexternalblock" endRegion="externalRegion"/>
+				<keyword attribute="Preprocessor Statement" context="#stay" String="Preprocessors" />
 			</context>
 
 			<context attribute="Comment" lineEndContext="#pop" name="Commentar 1"/>
@@ -4170,8 +4203,6 @@
 				<Detect2Chars attribute="Comment" context="#pop" char="*" char1="/" endRegion="Comment"/>
 				<DetectIdentifier />
 			</context>
-			<context attribute="Region Marker" lineEndContext="#pop" name="Region Marker"/>
-      			<!-- </context> -->
 		</contexts>
 
 		<itemDatas>
@@ -4186,40 +4217,33 @@
 			<itemData name="Hex"          	defStyleNum="dsBaseN"/>
 			<itemData name="Raw" 		defStyleNum="dsOthers" />
 			<itemData name="Comment"	defStyleNum="dsComment"/>
-			<itemData name="Region Marker" 	defStyleNum="dsRegionMarker" />
 
 
-			<itemData name="CommonJNatives"   	defStyleNum="dsKeyword"	color="#ba55d3" selColor="#ffffff" bold="1" italic="0"/>
+			<itemData name="Native"   	defStyleNum="dsOthers"	color="#ba55d3" selColor="#ffffff" bold="1" italic="0"/>
 
-			<itemData name="CommonAINatives"   	defStyleNum="dsKeyword"	color="#008000" selColor="#ffffff" bold="1" italic="0"/>
+			<itemData name="AI Native"   	defStyleNum="dsOthers"	color="#218B21" selColor="#ffffff" bold="1" italic="0"/>
 
-			<itemData name="JAPINatives"   	defStyleNum="dsKeyword"	color="#ba55d3" selColor="#ffffff" bold="1" italic="0"/>
+			<itemData name="Blizzard Function"   	defStyleNum="dsOthers"	color="#ff0000" selColor="#ffffff" bold="1" italic="0"/>
 
-			<itemData name="RtCNatives"   	defStyleNum="dsKeyword"	color="#ba55d3" selColor="#ffffff" bold="1" italic="0"/>
+			<itemData name="AI Function"   	defStyleNum="dsOthers"	color="#00CD63" selColor="#ffffff" bold="1" italic="0"/>
 
-			<itemData name="CommonJBJs"   	defStyleNum="dsKeyword"	color="#ff0000" selColor="#ffffff" bold="1" italic="0"/>
+			<itemData name="Extension"   	defStyleNum="dsOthers"	color="#0095ff" selColor="#ffffff" bold="1" italic="0"/>
 
-			<itemData name="CommonAIBJs"   	defStyleNum="dsKeyword"	color="#d5e70c" selColor="#ffffff" bold="1" italic="0"/>
+			<itemData name="Native Constant"   	defStyleNum="dsOthers"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
 
-			<itemData name="Extension"   	defStyleNum="dsKeyword"	color="#0095ff" selColor="#ffffff" bold="1" italic="0"/>
+			<itemData name="Blizzard Constant"   	defStyleNum="dsOthers"	color="#00008b"	selColor="#ffffff" bold="0" italic="1"/>
 
-			<itemData name="CommonJConstants"   	defStyleNum="dsNormal"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="Native AI Constant"  	defStyleNum="dsOthers"	color="#6b8e23" selColor="#ffffff" bold="0" italic="1"/>
 
-			<itemData name="BlizzardJConstants"   	defStyleNum="dsNormal"	color="#00008b"	selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="vJass Constant"  	defStyleNum="dsOthers"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
 
-			<itemData name="AIConstants"  	defStyleNum="dsNormal"	color="#6b8e23" selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="Blizzard Variable"  	defStyleNum="dsOthers"	color="#497c8b" selColor="#ffffff" bold="0" italic="1"/>
 
-			<itemData name="VConstants"  	defStyleNum="dsNormal"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="Blizzard AI Variable"  	defStyleNum="dsOthers"	color="#5c8e6c" selColor="#ffffff" bold="0" italic="1"/>
 
-			<itemData name="RtCConstants"  	defStyleNum="dsNormal"	color="#ff7f50"	selColor="#ffffff" bold="0" italic="1"/>
+			<itemData name="Preprocessor" defStyleNum="dsOthers"	color="#00008b"	selColor="#ffffff" bold="0" italic="1"/>
 
-			<itemData name="BlizzardJVariables"  	defStyleNum="dsNormal"	color="#497c8b" selColor="#ffffff" bold="0" italic="1"/>
-
-			<itemData name="AIVariables"  	defStyleNum="dsNormal"	color="#5c8e6c" selColor="#ffffff" bold="0" italic="1"/>
-
-			<itemData name="Preprocessor" defStyleNum="dsComment"	color="#00008b"	selColor="#ffffff" bold="0" italic="1"/>
-
-			<itemData name="Preprocessors" defStyleNum="dsComment"	color="#00008b"	selColor="#ffffff" bold="1" italic="1"/>
+			<itemData name="Preprocessor Statement" defStyleNum="dsOthers"	color="#00008b"	selColor="#ffffff" bold="1" italic="1"/>
 		</itemDatas>
 	</highlighting>
 
