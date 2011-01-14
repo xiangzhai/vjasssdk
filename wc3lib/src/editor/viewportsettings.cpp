@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,14 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_MODELEDITOR_HPP
-#define WC3LIB_EDITOR_MODELEDITOR_HPP
-
-#include <kurl.h>
-
-#include "module.hpp"
-#include "ui/ui_modeleditor.h"
-#include "ogremdlx.hpp"
+#include "viewportsettings.hpp"
 
 namespace wc3lib
 {
@@ -33,54 +26,38 @@ namespace wc3lib
 namespace editor
 {
 
-/**
-* @todo Should use a customized version of model view for selection and editing models.
-*/
-class ModelEditor : public Module, protected Ui::ModelEditor
+ViewPortSettings::ViewPortSettings(Ogre::Viewport *viewPort) : m_viewPort(viewPort)
 {
-	Q_OBJECT
+}
 
-	public:
-		ModelEditor(class Editor *editor);
-		virtual ~ModelEditor();
-
-		virtual void show();
-
-		class ModelView* modelView() const;
-
-	public slots:
-		void openFile();
-		void showSettings();
-
-	protected:
-		friend class ModelEditorSettings;
-
-		virtual void createFileActions(class KMenu *menu);
-		virtual void createEditActions(class KMenu *menu);
-		virtual void createMenus(class KMenuBar *menuBar);
-		virtual void createWindowsActions(class KMenu *menu);
-		virtual void createToolButtons(class KToolBar *toolBar);
-		virtual class SettingsInterface* settings();
-
-		// load file events
-		virtual void dragEnterEvent(QDragEnterEvent *event);
-		virtual void dropEvent(QDropEvent *event);
-
-		bool openUrl(const KUrl &url);
-
-		class ModelView *m_modelView;
-		class ModelEditorSettingsDialog *m_settingsDialog;
-		KUrl m_recentUrl;
-		std::list<class OgreMdlx*> m_models;
-};
-
-inline class ModelView* ModelEditor::modelView() const
+void ViewPortSettings::read(const KConfigGroup &group)
 {
-	return this->m_modelView;
+	// read also camera settings (camera is assigned automatically by class ModelViewSettings)
+
+	/*
+	* - camera position
+	* - camera target/orientation
+	* - polygon mode
+	* - background color
+	* - auto update (if not there should be a refresh button, improves performance)
+	* - orientation mode
+	* - dimensions
+	* - skies enabled
+	* - shadows enabled
+	* - visibility mask
+	* - overlays enabled
+	*/
+}
+
+void ViewPortSettings::write(KConfigGroup &group) const
+{
+}
+
+QString ViewPortSettings::groupName() const
+{
+	return "ViewPort";
 }
 
 }
 
 }
-
-#endif

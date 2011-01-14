@@ -41,11 +41,14 @@ int main(int argc, char *argv[])
 
 	class Editor editor;
 	editor.show();
+	/*
 	/// @todo Allow parsing multiple files as arguments.
+	/// FIXME Crashes application when canceling file dialog.
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs("+[file]");
 
 	for (int i = 0; i < args->count(); ++i)
 		editor.openMap(args->url(i));
+	*/
 
 	return app.exec();
 }

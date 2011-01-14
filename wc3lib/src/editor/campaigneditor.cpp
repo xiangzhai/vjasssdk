@@ -64,6 +64,8 @@ class SettingsInterface* CampaignEditor::settings()
 	return 0;
 }
 
+#include "moc_campaigneditor.cpp"
+
 }
 
 }

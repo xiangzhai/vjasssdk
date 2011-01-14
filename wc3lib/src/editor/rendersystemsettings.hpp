@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,14 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_MODELEDITOR_HPP
-#define WC3LIB_EDITOR_MODELEDITOR_HPP
+#ifndef WC3LIB_EDITOR_RENDERSYSTEMSETTINGS_HPP
+#define WC3LIB_EDITOR_RENDERSYSTEMSETTINGS_HPP
 
-#include <kurl.h>
+#include <Ogre.h>
 
-#include "module.hpp"
-#include "ui/ui_modeleditor.h"
-#include "ogremdlx.hpp"
+#include "settingsinterface.hpp"
 
 namespace wc3lib
 {
@@ -33,51 +31,21 @@ namespace wc3lib
 namespace editor
 {
 
-/**
-* @todo Should use a customized version of model view for selection and editing models.
-*/
-class ModelEditor : public Module, protected Ui::ModelEditor
+class RenderSystemSettings : public SettingsInterface
 {
-	Q_OBJECT
-
 	public:
-		ModelEditor(class Editor *editor);
-		virtual ~ModelEditor();
+		RenderSystemSettings(Ogre::RenderSystem *renderSystem);
 
-		virtual void show();
+		virtual void read(const KConfigGroup &group);
+		virtual void write(KConfigGroup &group) const;
+		virtual QString groupName() const;
 
-		class ModelView* modelView() const;
-
-	public slots:
-		void openFile();
-		void showSettings();
+		void setRenderSystem(Ogre::RenderSystem *renderSystem);
+		Ogre::RenderSystem* renderSystem() const;
 
 	protected:
-		friend class ModelEditorSettings;
-
-		virtual void createFileActions(class KMenu *menu);
-		virtual void createEditActions(class KMenu *menu);
-		virtual void createMenus(class KMenuBar *menuBar);
-		virtual void createWindowsActions(class KMenu *menu);
-		virtual void createToolButtons(class KToolBar *toolBar);
-		virtual class SettingsInterface* settings();
-
-		// load file events
-		virtual void dragEnterEvent(QDragEnterEvent *event);
-		virtual void dropEvent(QDropEvent *event);
-
-		bool openUrl(const KUrl &url);
-
-		class ModelView *m_modelView;
-		class ModelEditorSettingsDialog *m_settingsDialog;
-		KUrl m_recentUrl;
-		std::list<class OgreMdlx*> m_models;
+		Ogre::RenderSystem *m_renderSystem;
 };
-
-inline class ModelView* ModelEditor::modelView() const
-{
-	return this->m_modelView;
-}
 
 }
 

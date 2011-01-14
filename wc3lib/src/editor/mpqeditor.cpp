@@ -80,6 +80,8 @@ class SettingsInterface* MpqEditor::settings()
 	return 0;
 }
 
+#include "moc_mpqeditor.cpp"
+
 }
 
 }

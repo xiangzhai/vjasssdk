@@ -35,6 +35,7 @@
 #include "../utilities.hpp"
 #include "resource.hpp"
 #include "modeleditorsettings.hpp"
+#include "modeleditorsettingsdialog.hpp"
 
 namespace wc3lib
 {
@@ -42,7 +43,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_recentUrl("")
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_settingsDialog(0), m_recentUrl("")
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -88,6 +89,12 @@ void ModelEditor::openFile()
 
 void ModelEditor::showSettings()
 {
+	/*
+	if (this->m_settingsDialog == 0)
+		this->m_settingsDialog = new ModelEditorSettingsDialog(this, tr("Model Editor Settings"), 0);
+
+	this->m_settingsDialog.show();
+	*/
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)

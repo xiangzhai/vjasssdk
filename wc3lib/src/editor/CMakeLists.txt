@@ -16,6 +16,10 @@ add_library(qblp SHARED blpiohandler.cpp blpioplugin.cpp)
 target_link_libraries(qblp wc3libblp ${QT_LIBRARIES})
 
 # wc3libeditor
+message(STATUS "These are the editor source files:")
+foreach (entry ${wc3lib_EDITOR_SRC})
+	message(STATUS "${entry}")
+endforeach ()
 kde4_add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
 target_link_libraries(wc3libeditor ${wc3lib_CORE_LIBRARIES} ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} ${OGRE_LIBRARIES} ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 
