@@ -4049,44 +4049,85 @@
 				<DetectChar attribute="String" context="String" char="&quot;" />
 				<DetectChar attribute="Raw" context="raw" char="'" />
 
+				<!-- Less than Kate 3.5 - Otherwise use WordDetect -->
+				<RegExpr attribute="Keyword" String="\bglobals\b" beginRegion="globalsRegion"/>
+				<RegExpr attribute="Keyword" String="\bendglobals\b" endRegion="globalsRegion"/>
 
+				<RegExpr attribute="Keyword" String="\bloop\b" beginRegion="loopRegion"/>
+				<RegExpr attribute="Keyword" String="\bendloop\b" endRegion="loopRegion"/>
 
-				<!--The folowing allows me to define folding for a few special combinations of keywords-->
-				<StringDetect attribute="Keyword" String="globals" beginRegion="globalsRegion"/>
-				<StringDetect attribute="Keyword" String="endglobals" endRegion="globalsRegion"/>
-
-				<StringDetect attribute="Keyword" String="loop" beginRegion="loopRegion"/>
-				<StringDetect attribute="Keyword" String="endloop" endRegion="loopRegion"/>
-
-				<StringDetect attribute="Keyword" String="if" beginRegion="ifRegion"/>
+				<RegExpr attribute="Keyword" String="\bif\b" beginRegion="ifRegion"/>
 				<!--
 				TODO Handle else and elseif scopes, too (neither Bash highlighting for Kate does!
 				<StringDetect attribute="Keyword" String="elseif" insensitive="true" endRegion="ifRegion" beginRegion="elseifRegion"/>
 				<StringDetect attribute="Keyword" String="else" insensitive="true" endRegion="ifRegion" beginRegion="elseRegion"/>
 				-->
-				<StringDetect attribute="Keyword" String="endif" endRegion="ifRegion"/>
+				<RegExpr attribute="Keyword" String="\bendif\b" endRegion="ifRegion"/>
 
-				<StringDetect attribute="Keyword" String="function" beginRegion="functionRegion" context="FunctionContext"/>
-				<StringDetect attribute="Keyword" String="endfunction" endRegion="functionRegion" />
+				<RegExpr attribute="Keyword" String="\bfunction\b" beginRegion="functionRegion" context="FunctionContext"/>
+				<RegExpr attribute="Keyword" String="endfunction" endRegion="functionRegion" />
 
-				<StringDetect attribute="Keyword" String="scope" beginRegion="scopeRegion"/>
-				<StringDetect attribute="Keyword" String="endscope" endRegion="scopeRegion"/>
+				<RegExpr attribute="Keyword" String="\bscope\b" beginRegion="scopeRegion"/>
+				<RegExpr attribute="Keyword" String="\bendscope\b" endRegion="scopeRegion"/>
 
-				<StringDetect attribute="Keyword" String="library" beginRegion="libraryRegion"/>
-				<StringDetect attribute="Keyword" String="library_once" beginRegion="libraryRegion"/>
-				<StringDetect attribute="Keyword" String="endlibrary" endRegion="libraryRegion"/>
+				<RegExpr attribute="Keyword" String="\blibrary\b" beginRegion="libraryRegion"/>
+				<RegExpr attribute="Keyword" String="\blibrary_once\b" beginRegion="libraryRegion"/>
+				<RegExpr attribute="Keyword" String="\bendlibrary\b" endRegion="libraryRegion"/>
 
-				<StringDetect attribute="Keyword" String="interface" beginRegion="interfaceRegion"/>
-				<StringDetect attribute="Keyword" String="endinterface" endRegion="interfaceRegion"/>
+				<RegExpr attribute="Keyword" String="\binterface\b" beginRegion="interfaceRegion"/>
+				<RegExpr attribute="Keyword" String="\bendinterface\b" endRegion="interfaceRegion"/>
 
-				<StringDetect attribute="Keyword" String="struct" beginRegion="structRegion"/>
-				<StringDetect attribute="Keyword" String="endstruct" endRegion="structRegion"/>
+				<RegExpr attribute="Keyword" String="\bstruct\b" beginRegion="structRegion"/>
+				<RegExpr attribute="Keyword" String="\bendstruct\b" endRegion="structRegion"/>
 
-				<StringDetect attribute="Keyword" String="module" beginRegion="moduleRegion"/>
-				<StringDetect attribute="Keyword" String="endmodule" endRegion="moduleRegion"/>
+				<RegExpr attribute="Keyword" String="\bmodule\b" beginRegion="moduleRegion"/>
+				<RegExpr attribute="Keyword" String="\bendmodule\b" endRegion="moduleRegion"/>
 
-				<StringDetect attribute="Keyword" String="method" beginRegion="methodRegion"/>
-				<StringDetect attribute="Keyword" String="endmethod" endRegion="methodRegion"/>
+				<RegExpr attribute="Keyword" String="\bmethod\b" beginRegion="methodRegion"/>
+				<RegExpr attribute="Keyword" String="\bendmethod\b" endRegion="methodRegion"/>
+
+				<!--The folowing allows me to define folding for a few special combinations of keywords-->
+				<!--
+				Kate 3.5
+				<WordDetect attribute="Keyword" String="globals" beginRegion="globalsRegion"/>
+				<WordDetect attribute="Keyword" String="endglobals" endRegion="globalsRegion"/>
+
+				<WordDetect attribute="Keyword" String="loop" beginRegion="loopRegion"/>
+				<WordDetect attribute="Keyword" String="endloop" endRegion="loopRegion"/>
+
+				<WordDetect attribute="Keyword" String="if" beginRegion="ifRegion"/>
+				-->
+				<!--
+				TODO Handle else and elseif scopes, too (neither Bash highlighting for Kate does!
+				<StringDetect attribute="Keyword" String="elseif" insensitive="true" endRegion="ifRegion" beginRegion="elseifRegion"/>
+				<StringDetect attribute="Keyword" String="else" insensitive="true" endRegion="ifRegion" beginRegion="elseRegion"/>
+				-->
+				<!--
+				Kate 3.5
+				<WordDetect attribute="Keyword" String="endif" endRegion="ifRegion"/>
+
+				<WordDetect attribute="Keyword" String="function" beginRegion="functionRegion" context="FunctionContext"/>
+				<WordDetect attribute="Keyword" String="endfunction" endRegion="functionRegion" />
+
+				<WordDetect attribute="Keyword" String="scope" beginRegion="scopeRegion"/>
+				<WordDetect attribute="Keyword" String="endscope" endRegion="scopeRegion"/>
+
+				<WordDetect attribute="Keyword" String="library" beginRegion="libraryRegion"/>
+				<WordDetect attribute="Keyword" String="library_once" beginRegion="libraryRegion"/>
+				<WordDetect attribute="Keyword" String="endlibrary" endRegion="libraryRegion"/>
+
+				<WordDetect attribute="Keyword" String="interface" beginRegion="interfaceRegion"/>
+				<WordDetect attribute="Keyword" String="endinterface" endRegion="interfaceRegion"/>
+
+				<WordDetect attribute="Keyword" String="struct" beginRegion="structRegion"/>
+				<WordDetect attribute="Keyword" String="endstruct" endRegion="structRegion"/>
+
+				<WordDetect attribute="Keyword" String="module" beginRegion="moduleRegion"/>
+				<WordDetect attribute="Keyword" String="endmodule" endRegion="moduleRegion"/>
+
+				<WordDetect attribute="Keyword" String="method" beginRegion="methodRegion"/>
+				<WordDetect attribute="Keyword" String="endmethod" endRegion="methodRegion"/>
+				-->
 
 				<!--
 				<RegExpr attribute="Keyword" context="#stay" String="\bglobals(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="globalRegion"/>
@@ -4164,10 +4205,12 @@
 
 			<context attribute="Normal Text" lineEndContext="#pop" name="FunctionContext">
 				<DetectSpaces />
-				<StringDetect attribute="Keyword" String="interface" endRegion="functionRegion" context="#pop"/> <!-- is function interface -->
+				<RegExpr attribute="Keyword" String="\binterface\b" endRegion="functionRegion" context="#pop"/>
+				<!-- is function interface -->
 				<!-- <RegExpr attribute="Normal Text" context="#pop" String="\b[a-zA-Z]([a-zA-Z0-9_]* [a-zA-Z0-9])?\b" /> -->
 				<keyword attribute="Blizzard Function" context="#pop" String="CommonJBJs" />
 				<keyword attribute="AI Function" context="#pop" String="CommonAIBJs" />
+				<RegExpr attribute="Keyword" String="\bthistype\b" context="#pop"/>
 				<DetectIdentifier context="#pop" />
 				<!-- function identifier -> do not end region -->
 			</context>
