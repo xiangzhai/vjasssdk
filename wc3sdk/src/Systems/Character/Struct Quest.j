@@ -1,5 +1,10 @@
 library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, ALibraryCoreEnvironmentSound, AStructCoreGeneralVector, ALibraryCoreStringConversion, AStructSystemsCharacterAbstractQuest
 
+	/**
+	* Some kind of more specific emulation of data type \ref quest.
+	* Allows you to create character-related quests and define it's state behaviour (extends AAbstractQuest).
+	* It's not necessarily required that AQuest instances create \ref quest objects. This must be defined in the initialization method.
+	*/
 	struct AQuest extends AAbstractQuest
 		// static construction members
 		private static boolean m_useQuestLog
@@ -10,7 +15,7 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		private static string m_textQuestFailed
 		private static string m_textQuestUpdate
 		private static string m_textListItem
-		//dynamic members
+		// dynamic members
 		private AIntegerVector m_questItems
 		private string m_iconPath
 		private string m_description
@@ -217,11 +222,13 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		private method setQuestLogState takes integer state returns nothing
 			if (state == AAbstractQuest.stateNotUsed) then
 				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
-					call QuestSetDiscovered(this.m_questLogQuest, false)
+					//call QuestSetDiscovered(this.m_questLogQuest, false)
+					call QuestSetEnabled(this.m_questLogQuest, false)
 				endif
 			elseif (state == AAbstractQuest.stateNew) then
 				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
-					call QuestSetDiscovered(this.m_questLogQuest, true)
+					//call QuestSetDiscovered(this.m_questLogQuest, true)
+					call QuestSetEnabled(this.m_questLogQuest, true)
 				endif
 			elseif (state == AAbstractQuest.stateCompleted) then
 				if (this.character() == 0 or GetLocalPlayer() == this.character().player()) then
@@ -290,13 +297,13 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 			return result
 		endmethod
 
-		/// Friend relationship to @struct AQuestItem, do not use.
+		/// Friend relationship to \ref AQuestItem, do not use.
 		public method addQuestItem takes AQuestItem questItem returns integer
 			call this.m_questItems.pushBack(questItem)
 			return this.m_questItems.backIndex()
 		endmethod
 
-		/// Friend relationship to @struct AQuestItem, do not use.
+		/// Friend relationship to \ref AQuestItem, do not use.
 		public method removeQuestItemByIndex takes integer index returns nothing
 			call this.m_questItems.erase(index)
 		endmethod
@@ -304,11 +311,17 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		private method createQuestLogQuest takes nothing returns nothing
 			if (thistype.m_useQuestLog) then
 				set this.m_questLogQuest = CreateQuest()
+				call QuestSetEnabled(this.m_questLogQuest, false)
 				call this.setQuestLogState(this.state()) // hide quest before setting state
 				call QuestSetRequired(this.m_questLogQuest, this.character() == 0)
 			endif
 		endmethod
 
+		/**
+		* Creates a new quest with state \ref AAbstractQuest.stateNotUsed.
+		* \param character If this value is 0 quest is being created for all character owners.
+		* \param title If quest will also be created as \ref quest object this title will be assigned to it. The quest title is not dynamic.
+		*/
 		public static method create takes ACharacter character, string title returns thistype
 			local thistype this = thistype.allocate(character, title)
 			// dynamic members
@@ -340,8 +353,10 @@ library AStructSystemsCharacterQuest requires optional ALibraryCoreDebugMisc, AL
 		endmethod
 
 		/**
-		* init is already used by struct @struct AAbstractQuest (@method AAbstractQuest.init)
-		* @param likeWarcraft If this value is true quest fail messages won't list all quest items and there will be a line break before all quest state messages.
+		* \param useQuestLog If this value is true \ref quest objects will be created and assigned automatically to each instance of \ref AQuest.
+		* \param likeWarcraft If this value is true quest fail messages won't list all quest items and there will be a line break before all quest state messages.
+		* \param textListItem Text which is displayed in quest item list. Gets the quest item's modified title as formatting argument (%s).
+		* \sa AAbstractQuest.init
 		*/
 		public static method init0 takes boolean useQuestLog, boolean likeWarcraft, string updateSoundPath, string textQuestNew, string textQuestCompleted, string textQuestFailed, string textQuestUpdate, string textListItem returns nothing
 			// static construction members

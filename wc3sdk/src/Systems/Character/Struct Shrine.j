@@ -70,6 +70,10 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 			set user = null
 		endmethod
 
+		public stub method onEnter takes ACharacter character returns nothing
+			call this.enableForCharacter(character, true)
+		endmethod
+
 		private method createDiscoverRegion takes nothing returns nothing
 			set this.m_discoverRegion = CreateRegion()
 			call RegionAddRect(this.m_discoverRegion, this.m_discoverRect)
@@ -97,7 +101,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 			local unit triggerUnit = GetTriggerUnit()
 			local player owner = GetOwningPlayer(triggerUnit)
 			local thistype this = AHashTable.global().handleInteger(triggeringTrigger, "this")
-			call this.enableForCharacter(ACharacter.playerCharacter(owner), true)
+			call this.onEnter(ACharacter.playerCharacter(owner))
 			set triggeringTrigger = null
 			set triggerUnit = null
 			set owner = null

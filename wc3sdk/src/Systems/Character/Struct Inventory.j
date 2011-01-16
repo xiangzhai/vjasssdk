@@ -1388,6 +1388,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 				set index = thistype.itemIndex(usedItem)
 				// if an item is used by decreasing its number of charges (not to 0!) we have to decrease our number, too
 				call this.m_rucksackItemData[index].setCharges(this.m_rucksackItemData[index].charges() - 1)
+				call TriggerSleepAction(0.0) // Event isn't fired otherwise!!!
 				call this.refreshRucksackItemCharges(index)
 				// use == drop
 				/// Drop action is called when last charge is used!!!

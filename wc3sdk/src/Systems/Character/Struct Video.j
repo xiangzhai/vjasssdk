@@ -34,28 +34,36 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call this.restore()
 		endmethod
 
-		public static method create takes unit oldUnit returns thistype
-			local thistype this = thistype.allocate()
-			//local player newOwner = Player(PLAYER_NEUTRAL_PASSIVE) // set passive owner so unit won't attack or be attacked
-			//start members
-			call ShowUnit(oldUnit, false)
-			set this.m_unit = oldUnit
-			//members
-			set this.m_actor = CopyUnit(oldUnit, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit), bj_UNIT_STATE_METHOD_MAXIMUM)
+		public method refresh takes nothing returns nothing
+			if (this.m_actor != null) then
+				call RemoveUnit(this.m_actor)
+				set this.m_actor = null
+			endif
+			set this.m_actor = CopyUnit(this.unit(), GetUnitX(this.unit()), GetUnitY(this.unit()), GetUnitFacing(this.unit()), bj_UNIT_STATE_METHOD_MAXIMUM)
 			//call SetUnitOwner(this.m_actor, newOwner, false)
 			call ShowUnit(this.m_actor, true)
 			call PauseUnit(this.m_actor, false)
 			call SelectUnit(this.m_actor, false)
 			call SetUnitInvulnerable(this.m_actor, true)
-			call IssueImmediateOrder(this.m_actor, "stop") //cancel orders.
+			call IssueImmediateOrder(this.m_actor, "stop") // cancel orders.
+		endmethod
+
+		public static method create takes unit oldUnit returns thistype
+			local thistype this = thistype.allocate()
+			//local player newOwner = Player(PLAYER_NEUTRAL_PASSIVE) // set passive owner so unit won't attack or be attacked
+			// construction members
+			call ShowUnit(oldUnit, false)
+			set this.m_unit = oldUnit
+			// members
+			call this.refresh()
 			//set newOwner = null
 			return this
 		endmethod
 
 		public method onDestroy takes nothing returns nothing
-			//start members
+			// construction members
 			set this.m_unit = null
-			//members
+			// members
 			if (this.m_actor != null) then
 				call RemoveUnit(this.m_actor)
 				set this.m_actor = null
@@ -300,7 +308,12 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call ClearSelection()
 			call ACharacter.setAllMovable(false)
 			call ACharacter.showAll(false)
+			debug call Print("Before pausing all units.")
 			call PauseAllUnits(true)
+			debug call Print("After pausing all units.")
+			if (thistype.m_actor != 0) then
+				call thistype.m_actor.refresh()
+			endif
 			call SetCameraBoundsToRect(bj_mapInitialPlayableArea) // for all players
 			set playersAll = GetPlayersAll()
 			call CinematicModeExBJ(true, playersAll, 0.0)
@@ -338,14 +351,14 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 				set thistype.m_actor = 0
 			endif
 			call ACharacter.showAll(true)
+			debug call Print("Before pausing all units.")
 			call PauseAllUnits(false)
+			debug call Print("After pausing all units.")
 			call this.onStopAction.evaluate()
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call SetTimeOfDay(thistype.m_timeOfDay)
 			call TriggerSleepAction(thistype.m_waitTime)
-			debug call Print("Before restoring")
 			call thistype.restorePlayerData()
-			debug call Print("After restoring")
 			set thistype.m_runningVideo = 0
 			set thistype.m_skipped = false
 			set thistype.m_skippingPlayers = 0

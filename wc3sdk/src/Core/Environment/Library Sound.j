@@ -31,7 +31,7 @@ library ALibraryCoreEnvironmentSound
 	* @param x z coordinate.
 	*/
 	function PlaySoundFileAt takes string filePath, real x, real y, real z returns nothing
-		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
+		local sound whichSound = CreateSound(filePath, false, true, true, 12700, 12700, "") // has to be 3d
 		call SetSoundPosition(whichSound, x, y, z)
 		call StartSound(whichSound)
 		call KillSoundWhenDone(whichSound)
@@ -39,7 +39,7 @@ library ALibraryCoreEnvironmentSound
 	endfunction
 
 	function PlaySoundFileOnUnit takes string filePath, unit whichUnit returns nothing
-		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
+		local sound whichSound = CreateSound(filePath, false, true, true, 12700, 12700, "") // has to be 3d
 		call AttachSoundToUnit(whichSound, whichUnit)
 		call StartSound(whichSound)
 		call KillSoundWhenDone(whichSound)
@@ -61,7 +61,7 @@ library ALibraryCoreEnvironmentSound
 	endfunction
 
 	function PlaySoundFileAtForPlayer takes player whichPlayer, string filePath, real x, real y, real z returns nothing
-		local sound whichSound = CreateSound(filePath, false, false, true, 12700, 12700, "")
+		local sound whichSound = CreateSound(filePath, false, true, true, 12700, 12700, "") // has to be 3d
 		call SetSoundPosition(whichSound, x, y, z)
 		call PlaySoundForPlayer(whichPlayer, whichSound)
 		call KillSoundWhenDone(whichSound)

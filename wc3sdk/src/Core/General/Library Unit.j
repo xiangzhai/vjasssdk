@@ -271,23 +271,23 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralHashTable, ALibraryCo
 
 	/**
 	* Doesn't pause or unpause already paused units.
-	* Doesn't try to unpause new created units.
+	* Doesn't try to unpause newly created units.
 	* Doesn't use global variable.
 	* Saves a key on each unit to identify paused unit.
 	* Key is removed automatically when unit is removed from game.
-	* @see PauseAllUnitsBJ
-	* @author Tamino Dauth
+	* \sa PauseAllUnitsBJ
+	* \author Tamino Dauth
 	*/
 	function PauseAllUnits takes boolean pause returns nothing
 		local integer i
 		local player whichPlayer
 		local group whichGroup
 		local AGroup unitGroup
+		local unit whichUnit
 		set whichGroup = CreateGroup()
 		set unitGroup = AGroup.create.evaluate() // can't require struct AGroup, requirement cycle
 		set i = 0
 		loop
-			exitwhen (i == bj_MAX_PLAYER_SLOTS)
 			set whichPlayer = Player(i)
 			// If this is a computer slot, pause/resume the AI.
 			if (GetPlayerController(whichPlayer) == MAP_CONTROL_COMPUTER) then
@@ -295,21 +295,25 @@ library ALibraryCoreGeneralUnit requires AStructCoreGeneralHashTable, ALibraryCo
 			endif
 			// Enumerate and unpause every unit owned by the player.
 			call GroupEnumUnitsOfPlayer(whichGroup, whichPlayer, null)
-			call unitGroup.addGroup.evaluate(whichGroup, false, true)
+			set whichPlayer = null
+			call unitGroup.addGroup.evaluate(whichGroup, false, true) // clears group
 			set i = i + 1
+			exitwhen (i == bj_MAX_PLAYER_SLOTS)
 		endloop
 		call DestroyGroup(whichGroup)
 		set whichGroup = null
 		set i = 0
 		loop
 			exitwhen (i == unitGroup.units.evaluate().size.evaluate())
-			if (pause and not IsUnitPaused(unitGroup.units.evaluate()[i])) then
-				call PauseUnit(unitGroup.units.evaluate()[i], true)
-				call AHashTable.global().setHandleBoolean(unitGroup.units.evaluate()[i], "PauseAllUnits:IsPaused", true)
-			elseif (not pause and AHashTable.global().hasHandleBoolean(unitGroup.units.evaluate()[i], "PauseAllUnits:IsPaused")) then
-				call PauseUnit(unitGroup.units.evaluate()[i], false)
-				call AHashTable.global().removeHandleBoolean(unitGroup.units.evaluate()[i], "PauseAllUnits:IsPaused")
+			set whichUnit = unitGroup.units.evaluate().at.evaluate(i)
+			if (pause and not IsUnitPaused(whichUnit)) then
+				call PauseUnit(whichUnit, true)
+				call AHashTable.global().setHandleBoolean(whichUnit, "PauseAllUnits:IsPaused", true)
+			elseif (not pause and AHashTable.global().hasHandleBoolean(whichUnit, "PauseAllUnits:IsPaused")) then
+				call PauseUnit(whichUnit, false)
+				call AHashTable.global().removeHandleBoolean(whichUnit, "PauseAllUnits:IsPaused")
 			endif
+			set whichUnit = null
 			set i = i + 1
 		endloop
 		call unitGroup.destroy.evaluate()
