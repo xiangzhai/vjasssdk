@@ -1,3 +1,6 @@
+2010-10-10 Tamino Dauth <tamino@cdauth.de>
+* Fixed gui URL requesters (directory), also for release 0.3.
+
 2009-12-19 Tamino Dauth <tamino@cdauth.de>
 * Revised Jass++ language definition, and compiler implementation documents.
 
@@ -23,7 +26,7 @@
 
 2009-12-10 Tamino Dauth <tamino@cdauth.de>
 * Revised file "doc/Definition der Jass++-Syntax".
-  
+
 2009-12-09 Tamino Dauth <tamino@cdauth.de>
 * Revised file "src/vjass.y".
 * Revised file "doc/Definition der Jass++-Syntax".
@@ -38,7 +41,7 @@
 * Changed classes File and Vjassdoc and added static method Vjassdoc::supportsLanguage.
 
 2009-12-05 Tamino Dauth <tamino@cdauth.de>
-* Improved Bison and Flex file. 
+* Improved Bison and Flex file.
 
 2009-12-04 Tamino Dauth <tamino@cdauth.de>
 * Restructured the whole program, revised many classes and functions.

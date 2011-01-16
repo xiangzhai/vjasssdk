@@ -163,7 +163,11 @@
         </widget>
        </item>
        <item>
-        <widget class="KUrlRequester" name="outputDirectoryUrlRequester"/>
+        <widget class="KUrlRequester" name="outputDirectoryUrlRequester">
+         <property name="mode">
+          <set>KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -177,7 +181,11 @@
         </widget>
        </item>
        <item>
-        <widget class="KUrlRequester" name="compilationDirectoryUrlRequester"/>
+        <widget class="KUrlRequester" name="compilationDirectoryUrlRequester">
+         <property name="mode">
+          <set>KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -191,7 +199,11 @@
         </widget>
        </item>
        <item>
-        <widget class="KUrlRequester" name="databaseDirectoryUrlRequester"/>
+        <widget class="KUrlRequester" name="databaseDirectoryUrlRequester">
+         <property name="mode">
+          <set>KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
