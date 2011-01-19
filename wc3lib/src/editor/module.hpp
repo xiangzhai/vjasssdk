@@ -35,6 +35,8 @@ namespace editor
 */
 class Module : public QWidget
 {
+	Q_OBJECT
+
 	public:
 		Module(class Editor *editor);
 		virtual ~Module();
@@ -55,6 +57,9 @@ class Module : public QWidget
 
 		void readSettings();
 		void writeSettings();
+
+	protected slots:
+		virtual void triggered(QAction *action);
 
 	private:
 		class Editor *m_editor;

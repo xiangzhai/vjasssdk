@@ -27,6 +27,7 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kmenu.h>
+#include <kmenubar.h>
 #include <kaction.h>
 
 #include "modeleditor.hpp"
@@ -95,6 +96,26 @@ void ModelEditor::showSettings()
 
 	this->m_settingsDialog.show();
 	*/
+}
+
+void ModelEditor::centerView()
+{
+	this->modelView()->centerView();
+}
+
+void ModelEditor::setPolygonModePoints()
+{
+	this->modelView()->setPolygonModePoints();
+}
+
+void ModelEditor::setPolygonModeWireframe()
+{
+	this->modelView()->setPolygonModeWireframe();
+}
+
+void ModelEditor::setPolygonModeSolid()
+{
+	this->modelView()->setPolygonModeSolid();
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -202,6 +223,27 @@ void ModelEditor::createEditActions(class KMenu *menu)
 
 void ModelEditor::createMenus(class KMenuBar *menuBar)
 {
+	KMenu *viewMenu = new KMenu(i18n("View"), this);
+	menuBar->addMenu(viewMenu);
+
+	// test actions for one single view port/camera
+
+	KAction *action = new KAction(KIcon(":/actions/centerview.png"), i18n("Center View"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(centerView()));
+	viewMenu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/polygonmodepoints.png"), i18n("Polygon Mode Points"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(setPolygonModePoints()));
+	viewMenu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/polygonmodewireframe.png"), i18n("Polygon Mode Wireframe"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(setPolygonModeWireframe()));
+	viewMenu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/polygonmodesolid.png"), i18n("Polygon Mode Solid"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(setPolygonModeSolid()));
+	viewMenu->addAction(action);
+
 	qDebug() << "Menus";
 }
 
@@ -220,7 +262,6 @@ class SettingsInterface* ModelEditor::settings()
 	return new ModelEditorSettings(this);
 }
 
-//#include "modeleditor.moc"
 #include "moc_modeleditor.cpp"
 
 }

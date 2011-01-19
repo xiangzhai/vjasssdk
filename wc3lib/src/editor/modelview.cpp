@@ -38,7 +38,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false)
+ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false)
 {
 	// setup a renderer
 	const Ogre::RenderSystemList &renderers = this->m_root->getAvailableRenderers();
@@ -57,6 +57,57 @@ ModelView::~ModelView()
 {
 	//if (this->m_frameListener)
 		//delete this->m_frameListener;
+}
+
+void ModelView::centerView()
+{
+	this->m_camera->setPosition(Ogre::Vector3(0, 0, 0));
+	this->m_camera->lookAt(Ogre::Vector3(0, 0, 0));
+	this->m_camera->setNearClipDistance(1.0);
+	this->m_camera->setFarClipDistance(50000);
+	this->m_camera->setAspectRatio(static_cast<Ogre::Real>(this->m_viewPort->getActualWidth()) / static_cast<Ogre::Real>(this->m_viewPort->getActualHeight()));
+	this->render();
+}
+
+void ModelView::setPolygonModePoints()
+{
+	this->m_camera->setPolygonMode(Ogre::PM_POINTS);
+	this->render();
+}
+
+void ModelView::setPolygonModeWireframe()
+{
+	this->m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
+	this->render();
+}
+
+void ModelView::setPolygonModeSolid()
+{
+	this->m_camera->setPolygonMode(Ogre::PM_SOLID);
+	this->render();
+}
+
+void ModelView::requestTeamColorLoad()
+{
+	/// \todo Load all team color textures one time for the whole model view. If it has already been loaded do nothing.
+}
+
+void ModelView::requestTeamGlowLoad()
+{
+	/// \todo Load all team glow textures one time for the whole model view. If it has already been loaded do nothing.
+}
+
+void ModelView::render()
+{
+	this->m_root->_fireFrameStarted();
+
+	if (this->m_renderWindow)
+		this->m_renderWindow->update();
+	else
+		initRenderWindow();
+
+	this->m_root->_fireFrameRenderingQueued();
+	this->m_root->_fireFrameEnded();
 }
 
 /// @todo Window initialization is too early? Wrong window id -> exception!!!
@@ -88,15 +139,7 @@ void ModelView::paintEvent(QPaintEvent *event)
 {
 	qDebug() << "Render";
 
-	this->m_root->_fireFrameStarted();
-
-	if (this->m_renderWindow)
-		this->m_renderWindow->update();
-	else
-		initRenderWindow();
-
-	this->m_root->_fireFrameRenderingQueued();
-	this->m_root->_fireFrameEnded();
+	this->render();
 
 	QWidget::paintEvent(event);
 }
@@ -144,37 +187,79 @@ void ModelView::wheelEvent(QWheelEvent *event)
 		qDebug() << "Moving camera to: (" << this->m_camera->getPosition().x << "|" << this->m_camera->getPosition().y << "|" << this->m_camera->getPosition().z << ")";
 	}
 
+	this->render();
 	event->accept();
 }
 
 /// @todo USE VIEWPORT ELEMENT FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void ModelView::mouseMoveEvent(QMouseEvent *event)
 {
-	/// @todo If right mouse button is being pressed
-	if (true)
+	QWidget::mouseMoveEvent(event);
+
+	if (this->m_enableMouseMovement)
 	{
 		// moves camera along to x- and y-axis
+		qDebug() << "Moving camera";
 		this->moveCamera(Ogre::Vector3(event->x(), event->y(), 0));
 		event->accept();
 	}
-	/// @todo If middle mouse button is being pressed
-	else if (true)
+	else if (this->m_enableMouseRotation)
 	{
 		// rotates camera around its current position
-		//this->m_camera->rotate();
+		//this->m_camera->roll();
+		qDebug() << "Rotating camera";
 		event->accept();
 	}
 }
 
 void ModelView::mousePressEvent(QMouseEvent *event)
 {
-	/// @todo When right button is being pressed mouse movement is possible
-	/// @todo When left button is being pressed selection is possible (in editor only, not in view)
-	/// @todo When middle button is being pressed camera rotation is possible
+	QWidget::mousePressEvent(event);
+
+	switch (event->button())
+	{
+		// When right button is being pressed mouse movement is possible.
+		case Qt::RightButton:
+			this->m_enableMouseMovement = true;
+			event->accept();
+
+			break;
+
+		// When left button is being pressed selection is possible (in editor only, not in view).
+		//case Qt::LeftButton:
+
+		// When middle button is being pressed camera rotation is possible.
+		case Qt::MidButton:
+			this->m_enableMouseRotation = true;
+			event->accept();
+
+			break;
+	}
 }
 
 void ModelView::mouseReleaseEvent(QMouseEvent *event)
 {
+	mouseReleaseEvent(event);
+
+	switch (event->button())
+	{
+		// When right button is being pressed mouse movement is possible.
+		case Qt::RightButton:
+			this->m_enableMouseMovement = false;
+			event->accept();
+
+			break;
+
+		// When left button is being pressed selection is possible (in editor only, not in view).
+		//case Qt::LeftButton:
+
+		// When middle button is being pressed camera rotation is possible.
+		case Qt::MidButton:
+			this->m_enableMouseRotation = false;
+			event->accept();
+
+			break;
+	}
 }
 
 void ModelView::initRenderWindow()
@@ -257,26 +342,23 @@ OLD!
 	this->m_sceneManager = this->m_root->createSceneManager(this->m_sceneType);
 	this->m_sceneManager->setAmbientLight(Ogre::ColourValue(1, 1, 1));
 	this->m_camera = this->m_sceneManager->createCamera("Widget_Cam");
-	this->m_camera->setPosition(Ogre::Vector3(0, 0, 0));
-	this->m_camera->lookAt(Ogre::Vector3(0, 0, 0));
-	this->m_camera->setNearClipDistance(1.0);
-	this->m_camera->setFarClipDistance(50000);
 	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
 	this->m_viewPort->setBackgroundColour(Ogre::ColourValue(0.8, 0.8, 1));
-	this->m_camera->setAspectRatio(Ogre::Real(this->m_viewPort->getActualWidth()) / Ogre::Real(this->m_viewPort->getActualHeight()));
 	Ogre::Light *light = this->m_sceneManager->createLight("Light1");
 	light->setType(Ogre::Light::LT_POINT);
 	light->setPosition(Ogre::Vector3(250, 150, 250));
 	light->setDiffuseColour(Ogre::ColourValue::White);
 	light->setSpecularColour(Ogre::ColourValue::White);
 
+	this->centerView();
+
 	// default graphics settings
 	// VSync
 	// Resolution
 	/// @todo Should be configurable for the whole editor (using singleton)
-	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
-	Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
-	Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(2);
+	//Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
+	//Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_ANISOTROPIC);
+	//Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(2);
 
 	// if this function is called background becomes blue but program hangs up
 	// we use custom rendering calls
@@ -290,16 +372,25 @@ void ModelView::moveCamera(const Ogre::Vector3 &direction, const Ogre::Vector3 &
 
 	this->m_camera->setDirection(direction);
 	this->m_camera->moveRelative(delta);
+	this->render();
 }
 
 void ModelView::moveCamera(const Ogre::Vector3 &delta)
 {
+	if (!this->m_camera)
+		return;
+
 	this->m_camera->moveRelative(delta);
+	this->render();
 }
 
 void ModelView::rotateCamera(const Ogre::Radian &angle)
 {
+	if (!this->m_camera)
+		return;
+
 	this->m_camera->rotate(this->m_camera->getPosition(), angle);
+	this->render();
 }
 
 }

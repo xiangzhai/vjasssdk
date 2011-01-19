@@ -56,6 +56,7 @@ void Module::setupUi()
 
 	KMenu *menu = new KMenu(tr("File"), this);
 	this->menuBar()->addMenu(menu);
+	connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(triggered(QAction*)));
 
 	// use actions from editor
 	menu->addAction(this->editor()->actionCollection()->action("newmap"));
@@ -128,6 +129,16 @@ void Module::writeSettings()
 	settings->write(configGroup);
 	delete settings;
 }
+
+void Module::triggered(QAction *action)
+{
+	if (action == this->editor()->actionCollection()->action("closemodule"))
+	{
+		this->close();
+	}
+}
+
+#include "moc_module.cpp"
 
 }
 

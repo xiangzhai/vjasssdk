@@ -51,6 +51,11 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 	public slots:
 		void openFile();
 		void showSettings();
+		// test actions for one single view port/camera
+		void centerView();
+		void setPolygonModePoints();
+		void setPolygonModeWireframe();
+		void setPolygonModeSolid();
 
 	protected:
 		friend class ModelEditorSettings;

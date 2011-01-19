@@ -473,7 +473,6 @@ Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
 
 Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
 {
-	Ogre::Image *image = 0;
 	mdlx::long32 id = 0;
 
 	BOOST_FOREACH(const class mdlx::Texture *tex, this->m_mdlx->textures()->textures())
@@ -485,67 +484,126 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 	}
 
 	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create((boost::format("Texture%1%") % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	KUrl url;
 
+	// use given texture path
 	if (texture.replaceableId() == mdlx::None)
 	{
-		// if image could not be loaded continue with empty texture
-		try
+		url = this->modelView()->editor()->findFile(KUrl(texture.texturePath()));
+
+		// if no editor resource has been found file directory will be tried
+		if (!url.isValid())
 		{
-			KUrl url = this->modelView()->editor()->findFile(KUrl(texture.texturePath()));
-
-			// if no editor resource has been found file directory will be tried
-			if (!url.isValid())
-			{
-				url = this->url().directory();
-				url.addPath(texture.texturePath());
-			}
-
-			image = blpToOgre(url);
-		}
-		catch (class Exception &exception)
-		{
-			KMessageBox::error(0, i18n("Texture loading error:\n%1", exception.what().c_str()));
-		}
-
-		if (image != 0)
-		{
-			tex->loadImage(*image);
-
-			/// @todo Apply texture properties:
-			/*
-			enum Wrapping
-			{
-				WrapWidth = 1,
-				WrapHeight = 2,
-				Both = 3
-			};
-			*/
-			// enum ReplaceableId replaceableId() const;
-			// Use m_teamColor and m_teamGlowColor for color values!
-			/*
-			enum ReplaceableId
-			{
-				None = 0,
-				TeamColor = 1,
-				TeamGlow = 2,
-				Cliff = 11,
-				LordaeronTree = 31,
-				AshenvaleTree = 32,
-				BarrensTree = 33,
-				NorthrendTree = 34,
-				MushroomTree = 35
-			};
-			*/
-
-			delete image;
-			image = 0;
+			url = this->url().directory();
+			KMessageBox::information(this->modelView(), i18n("No valid texture resource has been found. Trying URL directory \"%1\".", url.toLocalFile()));
+			url.addPath(texture.texturePath());
 		}
 	}
 	// replace with replaceable id
-	/// @todo Load corresponding replacebale textures (from MPQ archives)
 	else
 	{
+		url = "ReplaceableTextures";
 
+		switch (texture.replaceableId())
+		{
+			case mdlx::TeamColor:
+				//url.addPath(
+				//ReplaceableTextures\\TeamColor\\TeamColor00.blp etc
+				this->modelView()->requestTeamColorLoad();
+
+				break;
+
+			case mdlx::TeamGlow:
+				//ReplaceableTextures\\TeamGlow\\TeamGlow00.blp etc
+
+				this->modelView()->requestTeamGlowLoad();
+
+				break;
+
+			case mdlx::Cliff:
+				url.addPath("Cliff/Cliff0.blp");
+
+				break;
+
+			case mdlx::LordaeronTree:
+				url.addPath("LordaeronTree/LordaeronSummerTree.blp");
+
+				break;
+
+			case mdlx::AshenvaleTree:
+				url.addPath("AshenvaleTree/AshenTree.blp");
+
+				break;
+
+			case mdlx::BarrensTree:
+				url.addPath("BarrensTree/BarrensTree.blp");
+
+				break;
+
+			case mdlx::NorthrendTree:
+				url.addPath("NorthrendTree/NorthTree.blp");
+
+				break;
+
+			case mdlx::MushroomTree:
+				url.addPath("Mushroom/MushroomTree.blp");
+
+				break;
+		}
+		// enum ReplaceableId replaceableId() const;
+		// Use m_teamColor and m_teamGlowColor for color values!
+		/*
+		enum ReplaceableId
+		{
+			None = 0,
+			TeamColor = 1,
+			TeamGlow = 2,
+			Cliff = 11,
+			LordaeronTree = 31,
+			AshenvaleTree = 32,
+			BarrensTree = 33,
+			NorthrendTree = 34,
+			MushroomTree = 35
+		};
+		*/
+	}
+
+	Ogre::Image *image = 0;
+
+	try
+	{
+		image = blpToOgre(url);
+	}
+	catch (class Exception &exception)
+	{
+		KMessageBox::error(this->modelView(), i18n("Texture loading error:\n%1", exception.what().c_str()));
+	}
+
+	if (image != 0)
+	{
+		tex->loadImage(*image);
+
+		/// \todo Apply texture properties:
+		switch (texture.wrapping())
+		{
+			case mdlx::Texture::WrapWidth:
+				KMessageBox::error(this->modelView(), i18n("Unsupported texture wrapping type:\nWrapWidth."));
+
+				break;
+
+			case mdlx::Texture::WrapHeight:
+				KMessageBox::error(this->modelView(), i18n("Unsupported texture wrapping type:\nWrapHeight."));
+
+				break;
+
+			case mdlx::Texture::Both:
+				KMessageBox::error(this->modelView(), i18n("Unsupported texture wrapping type:\nBoth."));
+
+				break;
+		}
+
+		delete image;
+		image = 0;
 	}
 
 	return tex;
@@ -736,6 +794,8 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	{
 		if ((*pTypeIterator)->type() == mdlx::PrimitiveType::Triangles)
 		{
+			qDebug() << (*pSizeIterator)->value() << " triangles.";
+
 			for (mdlx::long32 i = 0; i < (*pSizeIterator)->value(); i += 3)
 			{
 				Ogre::uint32 indices[3];
@@ -754,9 +814,11 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		}
 		else
 		{
-			/// @todo build other primitives (other than triangles)
+			KMessageBox::error(this->modelView(), i18n("Unsupported primitive type:\n%1", (*pTypeIterator)->type()));
+
+			/// \todo build other primitives (other than triangles)
 			for (mdlx::long32 i = 0; i < (*pSizeIterator)->value(); ++i)
-				++pVertexIterator; /// @todo triangles have 3 vertices, how much?
+				++pVertexIterator; /// \todo triangles have 3 vertices, how much?
 		}
 
 		++pTypeIterator;
@@ -766,7 +828,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	object->end();
 
 	// set bounds
-	/// @todo Set Bounding radius
+	/// \todo Set Bounding radius (hit test?)
 	//object->setBoundingSphereRadius(geoset->boundsRadius());
 	object->setBoundingBox(Ogre::AxisAlignedBox(
 		geoset.minimumExtent().x,

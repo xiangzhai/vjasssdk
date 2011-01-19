@@ -24,6 +24,8 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <ktoolbar.h>
+#include <kmenu.h>
+#include <kaction.h>
 
 #include "textureeditor.hpp"
 #include "blpiohandler.hpp"
@@ -36,8 +38,8 @@ namespace editor
 
 TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
 {
-	Module::setupUi();
 	Ui::TextureEditor::setupUi(this);
+	Module::setupUi();
 
 	topLayout()->addLayout(gridLayout_2);
 }
@@ -105,8 +107,58 @@ void TextureEditor::openFile()
 	qDebug() << "Label size is " << this->m_imageLabel->width() << " | " << this->m_imageLabel->height();
 }
 
+void TextureEditor::saveFile()
+{
+	if (this->m_imageLabel->pixmap() == 0 || this->m_imageLabel->pixmap()->isNull())
+	{
+		KMessageBox::error(this, i18n("No open image file."));
+
+		return;
+	}
+
+	KUrl url = KFileDialog::getSaveUrl(this->m_recentUrl, i18n("*.blp|BLP textures\n*.png|PNG images"), this);
+
+	if (url.isEmpty())
+		return;
+
+	if (!url.isLocalFile())
+	{
+		KMessageBox::error(this, i18n("Unable to save file \"%1\".", url.toLocalFile()));
+
+		return;
+	}
+
+	QFile file(url.toLocalFile());
+	file.open(QIODevice::WriteOnly);
+
+	QImage image(this->m_imageLabel->pixmap()->toImage());
+
+	if (!image.save(&file)) /// \todo Guess correct format by file extension?
+	{
+		KMessageBox::error(this, i18n("Unable to save image to file \"%1\".", url.toLocalFile()));
+
+		return;
+	}
+}
+
 void TextureEditor::createFileActions(class KMenu *menu)
 {
+	class KAction *action;
+
+	action = new KAction(KIcon(":/actions/opentexture.png"), i18n("Open texture"), this);
+	action->setShortcut(KShortcut(i18n("Ctrl+O")));
+	connect(action, SIGNAL(triggered()), this, SLOT(openFile()));
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/savetexture.png"), i18n("Save texture"), this);
+	action->setShortcut(KShortcut(i18n("Ctrl+S")));
+	connect(action, SIGNAL(triggered()), this, SLOT(saveFile()));
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/settings.png"), i18n("Settings"), this);
+	//action->setShortcut(KShortcut(i18n("Ctrl+O")));
+	connect(action, SIGNAL(triggered()), this, SLOT(settings()));
+	menu->addAction(action);
 }
 
 void TextureEditor::createEditActions(class KMenu *menu)
@@ -130,6 +182,8 @@ class SettingsInterface* TextureEditor::settings()
 	/// @todo FIXME
 	return 0;
 }
+
+#include "moc_textureeditor.cpp"
 
 }
 

@@ -39,19 +39,26 @@ namespace editor
 * MDLX files can be converted into OGRE entities by creating an OgreMdlx instance which manages an OGRE mesh and sub mesh instance.
 * @todo Since each model view widget uses its own OGRE root object there should be a possibility to assign plugins.cfg file path.
 * @link http://qt-apps.org/content/show.php/QtOgre+Framework?content=92912, http://www.ogre3d.org/tikiwiki/QtOgre
-* @see Mdlx, OgreMdlx
+* \sa Mdlx, OgreMdlx
 */
 class ModelView : public QWidget
 {
 	public:
 		/**
-		* @param ogreSceneType OGRE scene type which will be set for the scene manager of the widget. Should be changed for terrain (ST_EXTERIOR_FAR, ST_EXTERIOR_REAL_FAR).
-		* @param ogreParameters OGRE window parameters.
+		* \param ogreSceneType OGRE scene type which will be set for the scene manager of the widget. Should be changed for terrain (ST_EXTERIOR_FAR, ST_EXTERIOR_REAL_FAR).
+		* \param ogreParameters OGRE window parameters.
 		*/
 		ModelView(class Editor *editor, QWidget *parent = 0, Qt::WFlags f = 0, Ogre::SceneType ogreSceneType = Ogre::ST_EXTERIOR_CLOSE, const Ogre::NameValuePairList *ogreParameters = 0);
 		virtual ~ModelView();
 
 		//virtual void show();
+		// test actions for one single view port/camera
+		void centerView();
+		void setPolygonModePoints();
+		void setPolygonModeWireframe();
+		void setPolygonModeSolid();
+		void requestTeamColorLoad();
+		void requestTeamGlowLoad();
 
 		class Editor* editor() const;
 		Ogre::Root* root() const;
@@ -62,6 +69,11 @@ class ModelView : public QWidget
 
 	protected:
 		friend class Settings;
+
+		/**
+		* As there is no continuous rendering loop (\ref Ogre::Root::startRendering) this element function has to be called each time the rendering should be refreshed.
+		*/
+		virtual void render();
 
 		//virtual void paintEvent(QPaintEvent* event);
 		virtual void showEvent(QShowEvent *event);
@@ -106,6 +118,8 @@ class ModelView : public QWidget
 
 		// event values
 		bool m_changeFarClip;
+		bool m_enableMouseMovement;
+		bool m_enableMouseRotation;
 };
 
 inline class Editor* ModelView::editor() const

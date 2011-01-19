@@ -34,13 +34,14 @@ namespace editor
 
 class TextureEditor : public Module, protected Ui::TextureEditor
 {
-	//Q_OBJECT
+	Q_OBJECT
 
 	public:
 		TextureEditor(class Editor *editor);
 
-	//public slots:
+	public slots:
 		void openFile();
+		void saveFile();
 
 	protected:
 		virtual void createFileActions(class KMenu *menu);

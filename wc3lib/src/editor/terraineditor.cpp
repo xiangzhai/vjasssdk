@@ -76,6 +76,8 @@ class SettingsInterface* TerrainEditor::settings()
 	return 0;
 }
 
+#include "moc_terraineditor.cpp"
+
 }
 
 }

@@ -245,7 +245,6 @@ void Editor::showMpqEditor()
 void Editor::showModelEditor()
 {
 	this->modelEditor()->show();
-	this->modelEditor()->openFile(); // TODO test
 }
 
 void Editor::showTextureEditor()

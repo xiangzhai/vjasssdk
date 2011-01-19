@@ -37,6 +37,8 @@ namespace editor
 */
 class TerrainEditor : public Module
 {
+	Q_OBJECT
+
 	public:
 		TerrainEditor(class Editor *editor, Qt::WFlags f = 0);
 		virtual ~TerrainEditor();
