@@ -102,6 +102,54 @@ library ALibraryCoreInterfaceMisc initializer init requires ALibraryCoreStringCo
 		return modifiedPlayerName
 	endfunction
 
+	/**
+	* Returns RGB value of player color \p playerColor.
+	* \sa StringToPlayerColor, PlayerColorToString, GetPlayerColorRed, GetPlayerColorGreen, GetPlayerColorBlue
+	*/
+	function GetPlayerColorValue takes playercolor playerColor returns integer
+		if (playerColor == PLAYER_COLOR_RED) then
+			return 0xFF0000
+		elseif (playerColor == PLAYER_COLOR_BLUE) then
+			return 0x0000FF
+		elseif (playerColor == PLAYER_COLOR_CYAN) then
+			return 0x1CB619
+		elseif (playerColor == PLAYER_COLOR_PURPLE) then
+			return 0x800080
+		elseif (playerColor == PLAYER_COLOR_YELLOW) then
+			return 0xFFFF00
+		elseif (playerColor == PLAYER_COLOR_ORANGE) then
+			return 0xFF8000
+		elseif (playerColor == PLAYER_COLOR_GREEN) then
+			return 0x00FF00
+		elseif (playerColor == PLAYER_COLOR_PINK) then
+			return 0xFF80C0
+		elseif (playerColor == PLAYER_COLOR_LIGHT_GRAY) then
+			return 0xC0C0C0
+		elseif (playerColor == PLAYER_COLOR_LIGHT_BLUE) then
+			return 0x0080FF
+		elseif (playerColor == PLAYER_COLOR_AQUA) then
+			return 0x106246
+		elseif (playerColor == PLAYER_COLOR_BROWN) then
+			return 0x804000
+		endif
+		return 0
+	endfunction
+
+	/// \todo Check if it works!
+	function GetPlayerColorRed takes playercolor playerColor returns integer
+		return GetPlayerColorValue(playerColor) / 0xFFFF
+	endfunction
+
+	/// \todo Check if it works!
+	function GetPlayerColorGreen takes playercolor playerColor returns integer
+		return (GetPlayerColorValue(playerColor) - GetPlayerColorRed(playerColor) * 0xFFFF) / 0xFF
+	endfunction
+
+	/// \todo Check if it works!
+	function GetPlayerColorBlue takes playercolor playerColor returns integer
+		return (GetPlayerColorValue(playerColor) - GetPlayerColorRed(playerColor) * 0xFFFF - GetPlayerColorGreen(playerColor) * 0xFF)
+	endfunction
+
 	function GetBar takes real value, real maxValue, integer length, string colour returns string
 		local integer i
 		local integer colouredPart

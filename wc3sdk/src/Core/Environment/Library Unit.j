@@ -3,30 +3,30 @@
 library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal, AStructCoreGeneralHashTable
 
 	/**
-	* Adds or removes the move ability to unit @param usedUnit.
-	* @author Tamino Dauth
-	* @param usedUnit The unit which the ability is added to.
-	* @param movable If this value is true the ability will be added to unit @param usedUnit, otherwise it will be removed.
+	* Adds or removes the move ability to unit \p whichUnit.
+	* \author Tamino Dauth
+	* \param whichUnit Unit which the ability is added to.
+	* \param movable If this value is true the ability will be added to unit \p whichUnit, otherwise it will be removed.
 	*/
-	function MakeUnitMovable takes unit usedUnit, boolean movable returns nothing
+	function MakeUnitMovable takes unit whichUnit, boolean movable returns nothing
 		if (movable) then
-			call UnitAddAbility(usedUnit, 'Amov')
+			call UnitAddAbility(whichUnit, 'Amov')
 		else
-			call UnitRemoveAbility(usedUnit, 'Amov')
+			call UnitRemoveAbility(whichUnit, 'Amov')
 		endif
 	endfunction
 
 	/**
-	* Adds or removes the attack ability to unit @param usedUnit.
+	* Adds or removes the attack ability to unit \p whichUnit.
 	* @author Tamino Dauth
-	* @param usedUnit The unit which the ability is added to.
-	* @param attackable If this value is true the ability will be added to unit @param usedUnit, otherwise it will be removed.
+	* \param whichUnit Unit which the ability is added to.
+	* \param attackable If this value is true the ability will be added to unit \p whichUnit, otherwise it will be removed.
 	*/
-	function MakeUnitAttackable takes unit usedUnit, boolean attackable returns nothing
+	function MakeUnitAttackable takes unit whichUnit, boolean attackable returns nothing
 		if (attackable) then
-			call UnitAddAbility(usedUnit, 'Aatk')
+			call UnitAddAbility(whichUnit, 'Aatk')
 		else
-			call UnitRemoveAbility(usedUnit, 'Aatk')
+			call UnitRemoveAbility(whichUnit, 'Aatk')
 		endif
 	endfunction
 
@@ -38,9 +38,9 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal, AStructCoreG
 	endfunction
 
 	/**
-	* @todo Function does not support all alliance states (only bj_ALLIANCE_NEUTRAL, bj_ALLIANCE_ALLIED and bj_ALLIANCE_UNALLIED).
-	* @author Tamino Dauth
-	* @return Returns the alliance state of the two unit's owners.
+	* \todo Function does not support all alliance states (only \ref bj_ALLIANCE_NEUTRAL, \ref bj_ALLIANCE_ALLIED and \ref bj_ALLIANCE_UNALLIED).
+	* \author Tamino Dauth
+	* \return Returns the alliance state of the two unit's owners.
 	*/
 	function GetUnitAllianceStateToUnit takes unit usedUnit, unit otherUnit returns integer
 		local player usedUnitOwner = GetOwningPlayer(usedUnit)
@@ -61,9 +61,7 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal, AStructCoreG
 	endfunction
 
 	/**
-	* @author Anitarf
-	* @author Tamino Dauth (removed leak)
-	* @source http://www.wc3c.net/
+	* \author Anitarf
 	*/
 	function IsUnitSpellResistant takes unit u returns boolean
 		local player owner = GetOwningPlayer(u)
@@ -72,8 +70,7 @@ library ALibraryCoreEnvironmentUnit requires ALibraryCoreMathsReal, AStructCoreG
 		return result
 	endfunction
 
-	/// @author Anitarf
-	/// @source http://www.wc3c.net/
+	/// \author Anitarf
 	function IsUnitSpellImmune takes unit u returns boolean
 		return IsUnitType(u, UNIT_TYPE_MAGIC_IMMUNE)
 	endfunction

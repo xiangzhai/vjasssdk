@@ -1,3 +1,13 @@
+2011-01-29 Tamino Dauth <tamino@cdauth.eu>
+* Improved API documentation.
+* AInventory: Added null check for player messages.
+* AInventory: Page items should be readded correctly now when being dropped by player.
+* AShrine: Added null check for player message.
+* AVote: Uses AFormat now.
+
+2011-01-24 Tamino Dauth <tamino@cdauth.eu>
+* Added functions GetPlayerColorValue, GetPlayerColorRed, GetPlayerColorGreen and GetPlayerColorBlue.
+
 2011-01-15 Tamino Dauth <tamino@cdauth.eu>
 * AShrine: Added stub method "onEnter".
 * AVideo: Character actor is refreshed now if it does exist.

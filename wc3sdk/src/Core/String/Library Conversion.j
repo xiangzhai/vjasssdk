@@ -21,7 +21,11 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		return ""
 	endfunction
 
-	/// Converts string @param colorString to a player color.
+	/**
+	* Converts hexadecimal RGB string \p colorString to its matching player color.
+	* If \p colorString is invalid it returns null.
+	* \sa PlayerColorToString, GetPlayerColorValue, GetPlayerColorRed, GetPlayerColorGreen, GetPlayerColorBlue
+	*/
 	function StringToPlayerColor takes string colorString returns playercolor
 		if (colorString == "ff0000") then
 			return PLAYER_COLOR_RED
@@ -51,7 +55,11 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 		return null
 	endfunction
 
-	/// Converts player color @param playerColor to a string.
+	/**
+	* Converts player color \p playerColor to its matching string in hexadecimal RGB form.
+	* If \p playerColor is invalid it returns "ffffff".
+	* \sa StringToPlayerColor, GetPlayerColorValue, GetPlayerColorRed, GetPlayerColorGreen, GetPlayerColorBlue
+	*/
 	function PlayerColorToString takes playercolor playerColor returns string
 		if (playerColor == PLAYER_COLOR_RED) then
 			return "ff0000"

@@ -193,8 +193,8 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 	endfunction
 
 	/**
-	* @author Tamino Dauth
-	* @see SetUnitPositionLocFacingBJ
+	* \author Tamino Dauth
+	* \sa SetUnitPositionLocFacingBJ
 	*/
 	function SetUnitPositionRectFacing takes unit whichUnit, rect whichRect, real facing returns nothing
 		call SetUnitPositionRect(whichUnit, whichRect)
@@ -211,16 +211,19 @@ library ALibraryCoreMathsUnit requires ALibraryCoreGeneralUnit, ALibraryCoreMath
 	endfunction
 
 	/**
-	* @author Tamino Dauth
-	* @see IssuePointOrder
+	* Issues unit \p whichUnit order \p order at center of rect \p whichRect.
+	* \return Returns true if order was issued successfully.
+	* \author Tamino Dauth
+	* \sa IssuePointOrder, IssueRectOrderById
 	*/
 	function IssueRectOrder takes unit whichUnit, string order, rect whichRect returns boolean
 		return IssuePointOrder(whichUnit, order, GetRectCenterX(whichRect), GetRectCenterY(whichRect))
 	endfunction
 
 	/**
-	* @author Tamino Dauth
-	* @see IssuePointOrderById
+	* \copydoc IssueRectOrder
+	* \author Tamino Dauth
+	* \sa IssuePointOrderById, IssueRectOrder
 	*/
 	function IssueRectOrderById takes unit whichUnit, integer order, rect whichRect returns boolean
 		return IssuePointOrderById(whichUnit, order, GetRectCenterX(whichRect), GetRectCenterY(whichRect))

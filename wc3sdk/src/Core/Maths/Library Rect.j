@@ -1,27 +1,27 @@
 library ALibraryCoreMathsRect
 
 	/**
-	* Similar to GetRectCenterX.
+	* Similar to \ref GetRectCenterX.
 	* Allows easier implementation of generic text macros for rect data type.
-	* @author Tamino Dauth
-	* @see GetRectCenterX
+	* \author Tamino Dauth
+	* \sa GetRectCenterX, GetRectY, GetRectCenterY, GetRectCenter
 	*/
 	function GetRectX takes rect whichRect returns real
 		return GetRectCenterX(whichRect)
 	endfunction
 
 	/**
-	* Similar to GetRectCenterY.
+	* Similar to \ref GetRectCenterY.
 	* Allows easier implementation of generic text macros for rect data type.
-	* @author Tamino Dauth
-	* @see GetRectCenterY
+	* \author Tamino Dauth
+	* \sa GetRectCenterY, GetRectY, GetRectCenterY, GetRectCenter
 	*/
 	function GetRectY takes rect whichRect returns real
 		return GetRectCenterY(whichRect)
 	endfunction
 
 	/**
-	* @return Returns the rect where rect @param rect0 and @param rect1 cross each other. If both rects do not cross anywhere function will return null.
+	* \return Returns the rect where rect \p rect0 and \p rect1 cross each other. If both rects do not cross anywhere function will return null.
 	*/
 	function GetRectsBorderRect takes rect rect0, rect rect1 returns rect
 		local real x0 = RMaxBJ(GetRectMinX(rect0), GetRectMinX(rect1))
@@ -35,14 +35,14 @@ library ALibraryCoreMathsRect
 	endfunction
 
 	/**
-	* @return Returns a rect at point with coordinates @param x and @param y and with width @param width and height @param height.
-	* @see RectFromCenterSizeBJ
+	* \return Returns a rect at point with coordinates \p x and \p y and with width \p width and height \p height.
+	* \sa RectFromCenterSizeBJ
 	*/
 	function RectFromPointSize takes real x, real y, real width, real height returns rect
 		return Rect((x - width * 0.5), (y - height * 0.5), (x + width * 0.5), (y + height * 0.5))
 	endfunction
 
-	function SetRectByCoordinates takes rect usedRect, real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
+	function SetRectByCoordinates takes rect whichRect, real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
 		local real minX = 0.0
 		local real maxX = 0.0
 		local real minY = 0.0
@@ -88,7 +88,7 @@ library ALibraryCoreMathsRect
 			set minY = y4
 		endif
 
-		call SetRect(usedRect, minX, minY, maxX, maxY)
+		call SetRect(whichRect, minX, minY, maxX, maxY)
 	endfunction
 
 	function GetGroupInRectByCoordinates takes real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns group

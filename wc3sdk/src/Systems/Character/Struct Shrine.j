@@ -64,7 +64,7 @@ library AStructSystemsCharacterShrine requires optional ALibraryCoreDebugMisc, A
 			if (thistype.m_soundPath != null) then
 				call PlaySoundFileForPlayer(user, thistype.m_soundPath)
 			endif
-			if (showMessage) then
+			if (showMessage and thistype.m_textMessage != null) then
 				call character.displayMessage(ACharacter.messageTypeInfo, thistype.m_textMessage)
 			endif
 			set user = null

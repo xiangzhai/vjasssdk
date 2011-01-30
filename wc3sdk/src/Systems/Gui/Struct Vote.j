@@ -1,4 +1,4 @@
-library AStructSystemsGuiVote requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, AStructSystemsGuiGui
+library AStructSystemsGuiVote requires optional ALibraryCoreDebugMisc, AStructCoreGeneralHashTable, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, AStructCoreStringFormat, AStructSystemsGuiGui
 
 	private struct AVoteChoice
 		private string m_message
@@ -190,7 +190,7 @@ library AStructSystemsGuiVote requires optional ALibraryCoreDebugMisc, AStructCo
 			loop
 				exitwhen (i == this.m_players.size())
 				if (AVotePlayer(this.m_players[i]).player() != whichPlayer) then
-					call DisplayTimedTextToPlayer(whichPlayer, 0.0, 0.0, thistype.m_messageDuration, IntegerArg(StringArg(StringArg(thistype.m_voteMessage, GetPlayerName(whichPlayer)), AVoteChoice(this.m_choices[choice]).message()), AVoteChoice(this.m_choices[choice]).votes()))
+					call DisplayTimedTextToPlayer(whichPlayer, 0.0, 0.0, thistype.m_messageDuration, Format(thistype.m_voteMessage).s(GetPlayerName(whichPlayer)).s(AVoteChoice(this.m_choices[choice]).message()).i(AVoteChoice(this.m_choices[choice]).votes()).result())
 				endif
 				if (AVotePlayer(this.m_players[i]).choice() == -1) then
 					set result = -1
@@ -205,7 +205,7 @@ library AStructSystemsGuiVote requires optional ALibraryCoreDebugMisc, AStructCo
 			loop
 				exitwhen (i == this.m_players.size())
 				call AHashTable.global().removeHandleInteger(AVotePlayer(this.m_players[i]).player(), "AVote")
-				call DisplayTimedTextToPlayer(AVotePlayer(this.m_players[i]).player(), 0.0, 0.0, thistype.m_messageDuration, IntegerArg(StringArg(thistype.m_resultMessage, AVoteChoice(this.m_choices[result]).message()), AVoteChoice(this.m_choices[result]).votes()))
+				call DisplayTimedTextToPlayer(AVotePlayer(this.m_players[i]).player(), 0.0, 0.0, thistype.m_messageDuration, Format(thistype.m_resultMessage).s(AVoteChoice(this.m_choices[result]).message()).i(AVoteChoice(this.m_choices[result]).votes()).result())
 				set i = i + 1
 			endloop
 			call this.onResult()
@@ -342,6 +342,10 @@ library AStructSystemsGuiVote requires optional ALibraryCoreDebugMisc, AStructCo
 			//! runtextmacro A_DESTROY("this.m_choices", "AVoteChoice")
 		endmethod
 
+		/**
+		* \param voteMessage Arguments are: player name (string), choice name (string) and choice votes (integer).
+		* \param resultMessage Arguments are:  choice name (string) and choice votes (integer).
+		*/
 		public static method init takes real messageDuration, string voteMessage, string resultMessage returns nothing
 			// static construction members
 			set thistype.m_messageDuration = messageDuration

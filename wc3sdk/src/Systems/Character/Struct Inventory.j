@@ -876,7 +876,9 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			endif
 
 			if (not thistype.m_allowPickingUpFromOthers and itemPlayer != this.character().player() and IsPlayerPlayingUser(itemPlayer)) then
-				call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textOwnedByOther)
+				if (thistype.m_textOwnedByOther != null) then
+					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textOwnedByOther)
+				endif
 				set itemPlayer = null
 				return
 			endif
@@ -893,7 +895,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 						endif
 						set itemName = GetItemName(usedItem)
 						call this.setEquipmentItemByItem(equipmentType, usedItem, not this.m_rucksackIsEnabled)
-						if (showEquipMessage) then
+						if (showEquipMessage and thistype.m_textEquipItem != null) then
 							call this.character().displayMessage(ACharacter.messageTypeInfo, Format(thistype.m_textEquipItem).s(itemName).result())
 						endif
 						set characterUnit = null
@@ -906,7 +908,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			// move to rucksack
 			if (not dontMoveToRucksack) then
 				call this.addItemToRucksack.evaluate(usedItem, true, true) //if item type is 0 it will be placed in rucksack, too
-			else
+			elseif (thistype.m_textUnableToEquipItem != null) then
 				call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textUnableToEquipItem)
 			endif
 			set characterUnit = null
@@ -934,7 +936,9 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			set characterUnit = null
 
 			if (not thistype.m_allowPickingUpFromOthers and itemPlayer != this.character().player() and IsPlayerPlayingUser(itemPlayer)) then
-				call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textOwnedByOther)
+				if (thistype.m_textOwnedByOther != null) then
+					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textOwnedByOther)
+				endif
 				set itemPlayer = null
 				return
 			endif
@@ -946,7 +950,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 				if (this.m_rucksackItemData[i] == 0 or  this.m_rucksackItemData[i].itemTypeId() == GetItemTypeId(usedItem)) then
 					set itemName = GetItemName(usedItem)
 					call this.setRucksackItemByItem(i, usedItem, this.m_rucksackIsEnabled and this.itemRucksackPage(i) == this.m_rucksackPage)
-					if (showAddMessage) then
+					if (showAddMessage and thistype.m_textAddItemToRucksack != null) then
 						call this.character().displayMessage(ACharacter.messageTypeInfo, Format(thistype.m_textAddItemToRucksack).s(itemName).result())
 					endif
 					return
@@ -957,7 +961,7 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			// equip
 			if (not dontMoveToEquipment) then
 				call this.equipItem(usedItem, true, false, true)
-			else
+			elseif (thistype.m_textUnableToAddRucksackItem != null) then
 				call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textUnableToAddRucksackItem)
 			endif
 		endmethod
@@ -1067,7 +1071,9 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 				if (i == oldIndex) then
 					//call RemoveItem(slotItem) //do not disable drop triggers, item is dropped
 					call this.showRucksackItem(oldIndex)
-					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textUnableToMoveRucksackItem)
+					if (thistype.m_textUnableToMoveRucksackItem != null) then
+						call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textUnableToMoveRucksackItem)
+					endif
 					exitwhen (true)
 				// found stack place
 				elseif (this.m_rucksackItemData[i].itemTypeId() == this.m_rucksackItemData[oldIndex].itemTypeId()) then
@@ -1206,10 +1212,14 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 				//debug call this.print("Rucksack is enabled.")
 				if (GetItemTypeId(usedItem) == thistype.m_leftArrowItemType and newSlot != thistype.maxRucksackItemsPerPage) then
 					call this.resetItemSlots(newSlot, thistype.maxRucksackItemsPerPage)
-					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textMovePageItem)
+					if (thistype.m_textMovePageItem != null) then
+						call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textMovePageItem)
+					endif
 				elseif (GetItemTypeId(usedItem) == thistype.m_rightArrowItemType and newSlot != thistype.maxRucksackItemsPerPage + 1) then
 					call this.resetItemSlots(newSlot, thistype.maxRucksackItemsPerPage + 1)
-					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textMovePageItem)
+					if (thistype.m_textMovePageItem != null) then
+						call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textMovePageItem)
+					endif
 				//move item previous - player drops an item on the next page item
 				elseif (GetItemTypeId(usedItem) != thistype.m_leftArrowItemType and newSlot == thistype.maxRucksackItemsPerPage) then
 					call this.moveRucksackItemToPage(usedItem, false)
@@ -1297,26 +1307,28 @@ library AStructSystemsCharacterInventory requires AStructCoreGeneralHashTable, A
 			if (this.m_rucksackIsEnabled) then
 				// page items
 				if (GetItemTypeId(usedItem) == thistype.m_leftArrowItemType) then
-					/// @todo Item is created on character's position, too.
+					call TriggerSleepAction(0.0) // wait until removal
 					call RemoveItem(usedItem)
 					set usedItem = null
-					call TriggerSleepAction(0.0) // wait until removal
 					call DisableTrigger(this.m_pickupTrigger)
 					call thistype.unitAddItemToSlotById(triggerUnit, thistype.m_leftArrowItemType, thistype.maxRucksackItemsPerPage)
 					call EnableTrigger(this.m_pickupTrigger)
-					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textDropPageItem)
+					if (thistype.m_textDropPageItem != null) then
+						call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textDropPageItem)
+					endif
 				elseif (GetItemTypeId(usedItem) == thistype.m_rightArrowItemType) then
-					/// @todo Item is created on character's position, too.
+					call TriggerSleepAction(0.0) // wait until removal
 					call RemoveItem(usedItem)
 					set usedItem = null
-					call TriggerSleepAction(0.0) // wait until removal
 					call DisableTrigger(this.m_pickupTrigger)
 					call thistype.unitAddItemToSlotById(triggerUnit, thistype.m_rightArrowItemType, thistype.maxRucksackItemsPerPage + 1)
 					call EnableTrigger(this.m_pickupTrigger)
 					set usedItem = UnitItemInSlot(triggerUnit, thistype.maxRucksackItemsPerPage + 1)
 					call SetItemCharges(usedItem, this.m_rucksackPage + 1)
 					set usedItem = null
-					call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textDropPageItem)
+					if (thistype.m_textDropPageItem != null) then
+						call this.character().displayMessage(ACharacter.messageTypeError, thistype.m_textDropPageItem)
+					endif
 				// destack and drop
 				elseif (this.m_rucksackItemData[index].charges() > 1) then
 					if (GetItemType(usedItem) == ITEM_TYPE_CHARGED) then
