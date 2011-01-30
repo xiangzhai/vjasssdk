@@ -38,7 +38,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false)
+ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false), m_rotateSpeed(0.01), m_moveSpeed(0.01), m_scrollSpeed(0.80)
 {
 	// setup a renderer
 	const Ogre::RenderSystemList &renderers = this->m_root->getAvailableRenderers();
@@ -87,18 +87,9 @@ void ModelView::setPolygonModeSolid()
 	this->render();
 }
 
-void ModelView::requestTeamColorLoad()
-{
-	/// \todo Load all team color textures one time for the whole model view. If it has already been loaded do nothing.
-}
-
-void ModelView::requestTeamGlowLoad()
-{
-	/// \todo Load all team glow textures one time for the whole model view. If it has already been loaded do nothing.
-}
-
 void ModelView::render()
 {
+	qDebug() << "Render";
 	this->m_root->_fireFrameStarted();
 
 	if (this->m_renderWindow)
@@ -108,6 +99,8 @@ void ModelView::render()
 
 	this->m_root->_fireFrameRenderingQueued();
 	this->m_root->_fireFrameEnded();
+
+	emit onRendered();
 }
 
 /// @todo Window initialization is too early? Wrong window id -> exception!!!
@@ -137,8 +130,6 @@ void ModelView::resizeEvent(QResizeEvent *event)
 
 void ModelView::paintEvent(QPaintEvent *event)
 {
-	qDebug() << "Render";
-
 	this->render();
 
 	QWidget::paintEvent(event);
@@ -155,6 +146,7 @@ void ModelView::keyPressEvent(QKeyEvent *event)
 	}
 
 	event->accept();
+	QWidget::keyPressEvent(event);
 }
 
 void ModelView::keyReleaseEvent(QKeyEvent *event)
@@ -168,39 +160,71 @@ void ModelView::keyReleaseEvent(QKeyEvent *event)
 	}
 
 	event->accept();
+	QWidget::keyReleaseEvent(event);
 }
 
+/// \todo Check scene bounds
 void ModelView::wheelEvent(QWheelEvent *event)
 {
-	//QGLWidget::wheelEvent(event);
-
 	// Ctrl is pressed, change far clip distance
 	if (this->m_changeFarClip)
 	{
-		this->m_camera->setFarClipDistance(this->m_camera->getFarClipDistance() + event->delta());
+		Ogre::Real farClipDistance = this->m_camera->getFarClipDistance() + event->delta() * m_scrollSpeed;
+
+		// enable infinite far clip distance if we can
+		if (farClipDistance <= 0)
+		{
+			if (this->m_root->getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_INFINITE_FAR_PLANE))
+				farClipDistance = 0;
+			else
+				farClipDistance = 1;
+		}
+
+		this->m_camera->setFarClipDistance(this->m_camera->getFarClipDistance() + event->delta() * m_scrollSpeed);
 		qDebug() << "Changing far clip distance to: " << this->m_camera->getFarClipDistance();
 	}
 	// move camera
 	else
 	{
-		this->moveCamera(Ogre::Vector3(event->x(), event->y(), this->m_camera->getDirection().z), Ogre::Vector3(event->delta()));
-		qDebug() << "Moving camera to: (" << this->m_camera->getPosition().x << "|" << this->m_camera->getPosition().y << "|" << this->m_camera->getPosition().z << ")";
+		//Ogre::Vector3 normal = this->m_camera->getDirection().normalisedCopy(); // new window axis
+		Ogre::Real x;
+		Ogre::Real y;
+		// this->m_camera->getOrientationMode() crashes
+		this->m_viewPort->pointOrientedToScreen(event->x(), event->y(), 0, x, y);
+
+		this->m_camera->setDirection(Ogre::Vector3(x, y, this->m_camera->getDirection().z));
+		//this->m_camera->setDirection(Ogre::Vector3(event->x(), event->y(), this->m_camera->getDirection().z));
+		this->m_camera->moveRelative(Ogre::Vector3(0, 0, -event->delta() * m_scrollSpeed));
+		qDebug() << "Scroll camera with delta: " << event->delta() * m_scrollSpeed;
+		//this->moveCamera(Ogre::Vector3(event->x(), event->y(), this->m_camera->getDirection().z), Ogre::Vector3(event->delta()));
+		//qDebug() << "Moving camera to: (" << this->m_camera->getPosition().x << "|" << this->m_camera->getPosition().y << "|" << this->m_camera->getPosition().z << ")";
 	}
 
 	this->render();
 	event->accept();
+
+	QWidget::wheelEvent(event);
 }
 
 /// @todo USE VIEWPORT ELEMENT FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void ModelView::mouseMoveEvent(QMouseEvent *event)
 {
-	QWidget::mouseMoveEvent(event);
-
 	if (this->m_enableMouseMovement)
 	{
 		// moves camera along to x- and y-axis
 		qDebug() << "Moving camera";
-		this->moveCamera(Ogre::Vector3(event->x(), event->y(), 0));
+		//this->moveCamera(Ogre::Vector3(event->x(), event->y(), 0));
+		/*
+		Ogre::Vector2 result;
+		this->m_viewPort->pointOrientedToScreen(Ogre::Vector2((Ogre::Real)event->x(), (Ogre::Real)event->y()),
+		Ogre::OR_DEGREE_0,
+		result);
+		*/
+		//if (this->m_camera->getOrientationMode() == Ogre::OrientationMode::OR_PORTRAIT
+		/// \todo Get old x and y as relation
+		this->m_camera->moveRelative(Ogre::Vector3(event->x() * m_moveSpeed, event->y() * m_moveSpeed, 0));
+		this->render();
+
 		event->accept();
 	}
 	else if (this->m_enableMouseRotation)
@@ -208,14 +232,21 @@ void ModelView::mouseMoveEvent(QMouseEvent *event)
 		// rotates camera around its current position
 		//this->m_camera->roll();
 		qDebug() << "Rotating camera";
+		qDebug() << "X: " << event->x() << "| Y: " << event->y();
+		qDebug() << "Yaw: " << Ogre::Degree(-event->x() * m_rotateSpeed).valueDegrees();
+		qDebug() << "Pitch: " << Ogre::Degree(-event->y() * m_rotateSpeed).valueDegrees();
+		this->m_camera->yaw(Ogre::Degree(-event->x() * m_rotateSpeed));
+		this->m_camera->pitch(Ogre::Degree(-event->y() * m_rotateSpeed));
+		//this->m_camera->roll(Ogre::Degree(-event->x() * m_rotateSpeed));
+		this->render();
 		event->accept();
 	}
+
+	QWidget::mouseMoveEvent(event);
 }
 
 void ModelView::mousePressEvent(QMouseEvent *event)
 {
-	QWidget::mousePressEvent(event);
-
 	switch (event->button())
 	{
 		// When right button is being pressed mouse movement is possible.
@@ -235,12 +266,12 @@ void ModelView::mousePressEvent(QMouseEvent *event)
 
 			break;
 	}
+
+	QWidget::mousePressEvent(event);
 }
 
 void ModelView::mouseReleaseEvent(QMouseEvent *event)
 {
-	mouseReleaseEvent(event);
-
 	switch (event->button())
 	{
 		// When right button is being pressed mouse movement is possible.
@@ -260,6 +291,8 @@ void ModelView::mouseReleaseEvent(QMouseEvent *event)
 
 			break;
 	}
+
+	QWidget::mouseReleaseEvent(event);
 }
 
 void ModelView::initRenderWindow()
@@ -392,6 +425,8 @@ void ModelView::rotateCamera(const Ogre::Radian &angle)
 	this->m_camera->rotate(this->m_camera->getPosition(), angle);
 	this->render();
 }
+
+#include "moc_modelview.cpp"
 
 }
 

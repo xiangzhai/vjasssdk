@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QtCore/QSettings>
+#include <QtCore>
 
 #include <kmenu.h>
 #include <kaction.h>
@@ -47,6 +47,7 @@
 #include "../mpq/mpq.hpp"
 #include "../mpq/mpqfile.hpp"
 #include "settings.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -74,6 +75,12 @@ const KAboutData& Editor::wc3libAboutData()
 
 Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_actionCollection(new KActionCollection(this)), m_terrainEditor(0), m_triggerEditor(0), m_soundEditor(0), m_objectEditor(0), m_campaignEditor(0), m_aiEditor(0), m_objectManager(0), m_importManager(0), m_mpqEditor(0), m_modelEditor(0), m_textureEditor(0), m_newMapDialog(0)
 {
+	for (int i = 0; i < OgreMdlx::MaxTeamColors; ++i)
+		this->m_teamColorImages[(enum OgreMdlx::TeamColor)i] = 0;
+
+	for (int i = 0; i < OgreMdlx::MaxTeamColors; ++i)
+		this->m_teamGlowImages[(enum OgreMdlx::TeamColor)i] = 0;
+
 	class KAction *action = new KAction(KIcon(":/actions/newmap.png"), i18n("New map ..."), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+N")));
 	connect(action, SIGNAL(triggered()), this, SLOT(newMap()));
@@ -195,6 +202,62 @@ Editor::~Editor()
 {
 	this->writeSettings();
 	// do not delete allocated sub widgets (parent system of Qt already considers)
+}
+
+Ogre::Image* Editor::blpToOgre(const KUrl &url, const QString &format) const throw (class Exception)
+{
+	qDebug() << "New URL " << findFile(url).toLocalFile();
+	QFile file(findFile(url).toLocalFile());
+
+	if (!file.open(QIODevice::ReadOnly))
+		throw Exception(boost::format(_("Unable to open texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
+
+	QImage qImage;
+
+	if (!qImage.load(&file, 0))
+		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
+
+	file.close();
+	QByteArray ba;
+	QBuffer buffer(&ba);
+	buffer.open(QIODevice::WriteOnly);
+	qImage.save(&buffer, format.toAscii().data());
+
+	// TEST (writing buffer on disk)
+	/*
+	KUrl fileUrl = KFileDialog::getSaveUrl(KUrl(""), i18n("*.png|PNG"));
+
+	if (!fileUrl.isEmpty() && fileUrl.isLocalFile())
+	{
+		QFile newFile(fileUrl.toLocalFile());
+		newFile.open(QIODevice::WriteOnly);
+		newFile.write(ba.data(), ba.size());
+		newFile.close();
+
+		KMessageBox::information(0, i18n("Hat geklappt!"));
+	}
+	*/
+	// END TEST
+	// bis hierher klappt alles, die PNG-Bilder sehen korrekt aus, wenn sie auf die Festplatte geschrieben werden
+
+	// load for OGRE
+	//void *memory[ba.size()];
+	//memcpy(memory, (const void*)(ba), ba.size());
+	Ogre::DataStreamPtr dsPtr(new Ogre::MemoryDataStream(static_cast<void*>(ba.data()), ba.size()));
+	//ba.clear();
+	//dsPtr.bind(dynamic_cast<Ogre::DataStream*>(ms));
+	Ogre::Image *image = new Ogre::Image();
+
+	try
+	{
+		image->load(dsPtr);
+	}
+	catch (Ogre::Exception &exception)
+	{
+		throw Exception(boost::format(_("Unable to open texture image \"%1%\".\nOGRE error: \"%2%\"")) % url.toLocalFile().toAscii().data() % exception.what());
+	}
+
+	return image;
 }
 
 void Editor::showTerrainEditor()

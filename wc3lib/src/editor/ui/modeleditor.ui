@@ -6,23 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>955</width>
-    <height>1070</height>
+    <width>784</width>
+    <height>489</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Model Editor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" rowspan="2">
-    <widget class="QWidget" name="m_modelViewWidget" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>400</width>
-       <height>800</height>
-      </size>
-     </property>
-    </widget>
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="m_horizontalLayout">
+     <item>
+      <widget class="QTreeView" name="m_treeView">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

@@ -18,9 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#if !defined(EDITOR)
-#error Compile definition EDITOR has to be activated to use the editor module.
-#endif
 #ifndef WC3LIB_EDITOR_HPP
 #define WC3LIB_EDITOR_HPP
 

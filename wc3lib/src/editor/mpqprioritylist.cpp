@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <QtCore>
+
 #include "mpqprioritylist.hpp"
 
 namespace wc3lib
@@ -76,7 +78,10 @@ KUrl MpqPriorityList::findFile(const KUrl &url) const
 KUrl MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale locale) const
 {
 	if (!url.isValid() || !url.isLocalFile()) /// @todo Support non-local files (mpq: protocol).
-		return KUrl("");
+	{
+		qDebug() << "Isn't valid or no local file";
+		return url;
+	}
 
 	base validEntries(sortedValids());
 
@@ -122,7 +127,7 @@ KUrl MpqPriorityList::findFile(const KUrl &url, mpq::MpqFile::Locale locale) con
 
 	// no matching entry has been left
 	if (urlEntries.empty())
-		return KUrl("");
+		return url;
 
 
 	return urlEntries.begin()->first; // return first entry because it must have the highest priority since entries has been sorted before

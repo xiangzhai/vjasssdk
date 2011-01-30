@@ -45,16 +45,39 @@ using namespace mdlx;
 * It maintains a single mesh instance in a scene which contains all converted data of the original
 * MDLX model.
 * Geosets are implemented as sub meshes.
-* @todo This class should be moved to wc3lib module "editor".
+* Each MDLX instance can have its own team color and glow which is required for proper unit displays and model testings.
 * @todo Use inherited event functions of frame listener to apply animation track data (each model instance should have its own time marker for sequences).
 */
 class OgreMdlx  : public Resource, public Ogre::FrameListener
 {
 	public:
+		enum TeamColor
+		{
+			Red,
+			Blue,
+			Teal,
+			Purple,
+			Yellow,
+			Orange,
+			Green,
+			Pink,
+			Gray,
+			LightBlue,
+			DarkGreen,
+			Brown,
+			Black,
+			MaxTeamColors
+		};
+
 		OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView);
 
 		const class Mdlx* mdlx() const;
 		class ModelView* modelView() const;
+
+		void setTeamColor(enum TeamColor teamColor);
+		enum TeamColor teamColor() const;
+		void setTeamGlow(enum TeamColor teamGlow);
+		enum TeamColor teamGlow() const;
 
 		/**
 		* Loads and analyses all data of corresponding MDLX model and refreshes displayed OGRE mesh.
@@ -94,8 +117,10 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 
 		class GlobalSequence *m_globalSequence; /// Current global sequence which is played.
 
-		QColor m_teamColor;
-		QColor m_teamGlowColor;
+		enum TeamColor m_teamColor;
+		enum TeamColor m_teamGlow;
+		std::list<Ogre::TexturePtr> m_teamColorTextures;
+		std::list<Ogre::TexturePtr> m_teamGlowTextures;
 };
 
 inline const class Mdlx* OgreMdlx::mdlx() const
@@ -106,6 +131,16 @@ inline const class Mdlx* OgreMdlx::mdlx() const
 inline class ModelView* OgreMdlx::modelView() const
 {
 	return this->m_modelView;
+}
+
+inline enum OgreMdlx::TeamColor OgreMdlx::teamColor() const
+{
+	return this->m_teamColor;
+}
+
+inline enum OgreMdlx::TeamColor OgreMdlx::teamGlow() const
+{
+	return this->m_teamGlow;
 }
 
 }

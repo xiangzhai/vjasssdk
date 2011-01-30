@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2010 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,14 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_EDITOR_MODELEDITOR_HPP
-#define WC3LIB_EDITOR_MODELEDITOR_HPP
+#ifndef WC3LIB_EDITOR_RENDERSTATSWIDGET_HPP
+#define WC3LIB_EDITOR_RENDERSTATSWIDGET_HPP
 
-#include <kurl.h>
+#include <QWidget>
 
-#include "module.hpp"
-#include "ui/ui_modeleditor.h"
-#include "ogremdlx.hpp"
+#include "ui/ui_renderstatswidget.h"
 
 namespace wc3lib
 {
@@ -34,57 +32,32 @@ namespace editor
 {
 
 /**
-* We have model SLK entries listet at the tree view.
-* @todo Should use a customized version of model view for selection and editing models.
+* Simple widget which is related to a specific \ref ModelView instance.
+* Shows some render statistics of its model view's current render target.
+* Is updated automatically each time the model view renders a frame.
 */
-class ModelEditor : public Module, protected Ui::ModelEditor
+class RenderStatsWidget : public QWidget, protected Ui::RenderStatsWidget
 {
 	Q_OBJECT
 
 	public:
-		ModelEditor(class Editor *editor);
-		virtual ~ModelEditor();
-
-		virtual void show();
+		RenderStatsWidget(class ModelView *modelView, QWidget *parent = 0);
 
 		class ModelView* modelView() const;
 
 	public slots:
-		void openFile();
-		void showSettings();
-		// test actions for one single view port/camera
-		void centerView();
-		void setPolygonModePoints();
-		void setPolygonModeWireframe();
-		void setPolygonModeSolid();
-		void showStats();
+		void update();
 
 	protected:
-		friend class ModelEditorSettings;
-
-		virtual void createFileActions(class KMenu *menu);
-		virtual void createEditActions(class KMenu *menu);
-		virtual void createMenus(class KMenuBar *menuBar);
-		virtual void createWindowsActions(class KMenu *menu);
-		virtual void createToolButtons(class KToolBar *toolBar);
-		virtual class SettingsInterface* settings();
-
-		// load file events
-		virtual void dragEnterEvent(QDragEnterEvent *event);
-		virtual void dropEvent(QDropEvent *event);
-
-		bool openUrl(const KUrl &url);
-
 		class ModelView *m_modelView;
-		class ModelEditorSettingsDialog *m_settingsDialog;
-		KUrl m_recentUrl;
-		std::list<class OgreMdlx*> m_models;
 };
 
-inline class ModelView* ModelEditor::modelView() const
+
+inline class ModelView* RenderStatsWidget::modelView() const
 {
-	return this->m_modelView;
+	return m_modelView;
 }
+
 
 }
 

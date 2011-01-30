@@ -57,12 +57,12 @@ All other lines can be ignored, they contain comments and format information. Af
 with Excel or its Open Office equivalent. If you want to read up on the advanced tokens, get the official specs at http://www.wotsit.org/download.asp?f=sylk
 */
 
-std::streamsize Slk::read(std::istream &istream) throw (class Exception)
+std::streamsize Slk::read(std::basic_istream<map::byte> &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Slk::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize Slk::write(std::basic_ostream<map::byte> &ostream) const throw (class Exception)
 {
 	return 0;
 }

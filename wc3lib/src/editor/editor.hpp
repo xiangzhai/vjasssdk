@@ -43,6 +43,7 @@
 #include "modeleditor.hpp"
 #include "textureeditor.hpp"
 #include "newmapdialog.hpp"
+#include "ogremdlx.hpp"
 
 namespace wc3lib
 {
@@ -96,6 +97,9 @@ class Editor : public KMainWindow, public MpqPriorityList
 		static const KAboutData& aboutData();
 		static const KAboutData& wc3libAboutData();
 
+		static KUrl teamColorUrl(enum OgreMdlx::TeamColor teamColor);
+		static KUrl teamGlowUrl(enum OgreMdlx::TeamColor teamGlow);
+
 		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
 		virtual ~Editor();
 
@@ -121,6 +125,24 @@ class Editor : public KMainWindow, public MpqPriorityList
 		bool removeResource(class Resource *resource);
 		bool removeResource(const KUrl &url);
 		const std::map<KUrl, class Resource*>& resources() const;
+
+		/**
+		* \todo Use KUrl and IO slaves (MPQ protocol)
+		* Opens an external image file with the given URL \p url and reads it by using Qt which allows you to read BLP files as well and converts it into an OGRE image.
+		* \param url URL of the image (can be modified by MPQ priority list internally).
+		* \param format Has to be one of Qt's AND OGRE supported image formats.
+		* \return Returns
+		* \note OGRE has to be compiled and linked with FreeImage (PNG support).
+		*/
+		Ogre::Image* blpToOgre(const KUrl &url, const QString &format = "PNG") const throw (class Exception);
+		/**
+		* Once requested, the image is kept in memory until it's refreshed manually.
+		*/
+		const Ogre::Image& teamColorImage(enum OgreMdlx::TeamColor teamColor) const;
+		/**
+		* Once requested, the image is kept in memory until it's refreshed manually.
+		*/
+		const Ogre::Image& teamGlowImage(enum OgreMdlx::TeamColor teamGlow) const;
 
 	public slots:
 		void newMap();
@@ -173,7 +195,33 @@ class Editor : public KMainWindow, public MpqPriorityList
 		class NewMapDialog *m_newMapDialog;
 
 		std::map<KUrl, class Resource*> m_resources;
+
+		// team color and glow images
+		mutable std::map<enum OgreMdlx::TeamColor, Ogre::Image*> m_teamColorImages;
+		mutable std::map<enum OgreMdlx::TeamColor, Ogre::Image*> m_teamGlowImages;
 };
+
+inline KUrl Editor::teamColorUrl(enum OgreMdlx::TeamColor teamColor)
+{
+	QString number("%1");
+	number.arg((int)teamColor);
+
+	if (number.size() == 1)
+		number.prepend('0');
+
+	return KUrl("ReplaceableTextures/TeamColor/TeamColor" + number + ".blp");
+}
+
+inline KUrl Editor::teamGlowUrl(enum OgreMdlx::TeamColor teamGlow)
+{
+	QString number("%1");
+	number.arg((int)teamGlow);
+
+	if (number.size() == 1)
+		number.prepend('0');
+
+	return KUrl("ReplaceableTextures/TeamGlow/TeamGlow" + number + ".blp");
+}
 
 template<class T>
 T* Editor::module(T* const &module) const
@@ -277,6 +325,22 @@ inline bool Editor::removeResource(const KUrl &url)
 inline const std::map<KUrl, class Resource*>& Editor::resources() const
 {
 	return this->m_resources;
+}
+
+inline const Ogre::Image& Editor::teamColorImage(enum OgreMdlx::TeamColor teamColor) const
+{
+	if (this->m_teamColorImages[teamColor] == 0)
+		this->m_teamColorImages[teamColor] = this->blpToOgre(teamColorUrl(teamColor));
+
+	return *this->m_teamColorImages[teamColor];
+}
+
+inline const Ogre::Image& Editor::teamGlowImage(enum OgreMdlx::TeamColor teamGlow) const
+{
+	if (this->m_teamGlowImages[teamGlow] == 0)
+		this->m_teamGlowImages[teamGlow] = this->blpToOgre(teamGlowUrl(teamGlow));
+
+	return *this->m_teamGlowImages[teamGlow];
 }
 
 }

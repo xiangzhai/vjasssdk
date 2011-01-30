@@ -1,3 +1,6 @@
+2011-01-26 Tamino Dauth <tamino@cdauth.eu>
+* slk: Add derived classes such as SlkDestructableMetaDataColumn (derived from SlkColumn).
+
 2011-01-08 Tamino Dauth <tamino@cdauth.eu>
 * SFmpqapi: Fix broken Linux support (warning: "__declspec" redefined and char* strdup(const char*)’ throws different exceptions).
 * SFmpqapi: Add support for static compilation (there are already some source and header files especially for static libraries).

@@ -45,15 +45,31 @@ namespace wc3lib
 namespace editor
 {
 
-OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView) : Resource(url, Resource::Model), m_mdlx(&mdlx), m_modelView(modelView), m_sceneNode(modelView->sceneManager()->getRootSceneNode()->createChildSceneNode(mdlx.model()->name()))
+OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView) : Resource(url, Resource::Model), m_mdlx(&mdlx), m_modelView(modelView), m_sceneNode(modelView->sceneManager()->getRootSceneNode()->createChildSceneNode(mdlx.model()->name())), m_teamColor(Red), m_teamGlow(Red)
 {
+}
+
+void OgreMdlx::setTeamColor(enum OgreMdlx::TeamColor teamColor)
+{
+	this->m_teamColor = teamColor;
+
+	BOOST_FOREACH(Ogre::TexturePtr tex, this->m_teamColorTextures)
+		tex->loadImage(this->modelView()->editor()->teamColorImage(this->teamColor()));
+}
+
+void OgreMdlx::setTeamGlow(enum OgreMdlx::TeamColor teamGlow)
+{
+	this->m_teamGlow = teamGlow;
+
+	BOOST_FOREACH(Ogre::TexturePtr tex, this->m_teamGlowTextures)
+		tex->loadImage(this->modelView()->editor()->teamColorImage(this->teamGlow()));
 }
 
 void OgreMdlx::refresh() throw (class Exception, class Ogre::Exception)
 {
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME); // TEST
 
-	this->modelView()->camera()->setAutoTracking(true, this->m_sceneNode); // camera follows ogre mdlx automatically
+	//this->modelView()->camera()->setAutoTracking(true, this->m_sceneNode); // camera follows ogre mdlx automatically
 
 	// create textures
 	BOOST_FOREACH(const mdlx::Texture *texture, this->m_mdlx->textures()->textures())
@@ -406,71 +422,6 @@ Ogre::Node* OgreMdlx::createNode(const class Node &node)
 	return result;
 }
 
-namespace
-{
-
-/// @todo Use KUrl and IO slaves (MPQ protocol)
-/**
-* Opens external image file with the given URL and reads it by using Qt which allows you to read BLP files, too and converts it into an OGRE image.
-* @note OGRE has to be compiled and linked with FreeImage (PNG support).
-*/
-Ogre::Image* blpToOgre(const KUrl &url) throw (class Exception)
-{
-	QFile file(url.toLocalFile());
-
-	if (!file.open(QIODevice::ReadOnly))
-		throw Exception(boost::format(_("Unable to open texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
-
-	QImage qImage;
-
-	if (!qImage.load(&file, 0))
-		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
-
-	file.close();
-	QByteArray ba;
-	QBuffer buffer(&ba);
-	buffer.open(QIODevice::WriteOnly);
-	qImage.save(&buffer, "PNG");
-
-	// TEST (writing buffer on disk)
-	/*
-	KUrl fileUrl = KFileDialog::getSaveUrl(KUrl(""), i18n("*.png|PNG"));
-
-	if (!fileUrl.isEmpty() && fileUrl.isLocalFile())
-	{
-		QFile newFile(fileUrl.toLocalFile());
-		newFile.open(QIODevice::WriteOnly);
-		newFile.write(ba.data(), ba.size());
-		newFile.close();
-
-		KMessageBox::information(0, i18n("Hat geklappt!"));
-	}
-	*/
-	// END TEST
-	// bis hierher klappt alles, die PNG-Bilder sehen korrekt aus, wenn sie auf die Festplatte geschrieben werden
-
-	// load for OGRE
-	//void *memory[ba.size()];
-	//memcpy(memory, (const void*)(ba), ba.size());
-	Ogre::DataStreamPtr dsPtr(new Ogre::MemoryDataStream(static_cast<void*>(ba.data()), ba.size()));
-	//ba.clear();
-	//dsPtr.bind(dynamic_cast<Ogre::DataStream*>(ms));
-	Ogre::Image *image = new Ogre::Image();
-
-	try
-	{
-		image->load(dsPtr);
-	}
-	catch (Ogre::Exception &exception)
-	{
-		throw Exception(boost::format(_("Unable to open texture image \"%1%\".\nOGRE error: \"%2%\"")) % url.toLocalFile().toAscii().data() % exception.what());
-	}
-
-	return image;
-}
-
-}
-
 Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
 {
 	mdlx::long32 id = 0;
@@ -492,12 +443,14 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		url = this->modelView()->editor()->findFile(KUrl(texture.texturePath()));
 
 		// if no editor resource has been found file directory will be tried
-		if (!url.isValid())
+		if (!url.isValid() || !QFile::exists(url.toLocalFile()))
 		{
 			url = this->url().directory();
-			KMessageBox::information(this->modelView(), i18n("No valid texture resource has been found. Trying URL directory \"%1\".", url.toLocalFile()));
+			KMessageBox::information(this->modelView(), i18n("No valid texture resource has been found. Trying directory URL \"%1\".", url.toLocalFile()));
 			url.addPath(texture.texturePath());
 		}
+		else
+			qDebug() << "Url is valid: " << url.toLocalFile();
 	}
 	// replace with replaceable id
 	else
@@ -509,16 +462,33 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 			case mdlx::TeamColor:
 				//url.addPath(
 				//ReplaceableTextures\\TeamColor\\TeamColor00.blp etc
-				this->modelView()->requestTeamColorLoad();
+				try
+				{
+					tex->loadImage(this->modelView()->editor()->teamColorImage(this->teamColor()));
+				}
+				catch (class Exception &exception)
+				{
+					KMessageBox::error(this->modelView(), i18n("Texture loading error:\n%1", exception.what().c_str()));
+				}
 
-				break;
+				this->m_teamColorTextures.push_back(tex);
+
+				return tex;
 
 			case mdlx::TeamGlow:
 				//ReplaceableTextures\\TeamGlow\\TeamGlow00.blp etc
+				try
+				{
+					tex->loadImage(this->modelView()->editor()->teamGlowImage(this->teamGlow()));
+				}
+				catch (class Exception &exception)
+				{
+					KMessageBox::error(this->modelView(), i18n("Texture loading error:\n%1", exception.what().c_str()));
+				}
 
-				this->modelView()->requestTeamGlowLoad();
+				this->m_teamGlowTextures.push_back(tex);
 
-				break;
+				return tex;
 
 			case mdlx::Cliff:
 				url.addPath("Cliff/Cliff0.blp");
@@ -550,29 +520,13 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 
 				break;
 		}
-		// enum ReplaceableId replaceableId() const;
-		// Use m_teamColor and m_teamGlowColor for color values!
-		/*
-		enum ReplaceableId
-		{
-			None = 0,
-			TeamColor = 1,
-			TeamGlow = 2,
-			Cliff = 11,
-			LordaeronTree = 31,
-			AshenvaleTree = 32,
-			BarrensTree = 33,
-			NorthrendTree = 34,
-			MushroomTree = 35
-		};
-		*/
 	}
 
 	Ogre::Image *image = 0;
 
 	try
 	{
-		image = blpToOgre(url);
+		image = this->modelView()->editor()->blpToOgre(url);
 	}
 	catch (class Exception &exception)
 	{
@@ -605,6 +559,25 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		delete image;
 		image = 0;
 	}
+
+	// TEST BLOCK
+	static bool test = false;
+
+	if (!test)
+	{
+		Ogre::Plane plane;
+		plane.normal = Ogre::Vector3::UNIT_Y;
+		plane.d = 0;
+
+		Ogre::MeshManager::getSingleton().createPlane("floor", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 450.0f, 450.0f, 10, 10, true, 1, 50.0f, 50.0f, Ogre::Vector3::UNIT_Z);
+		Ogre::Entity* planeEnt = this->m_modelView->sceneManager()->createEntity("plane", "floor");
+		planeEnt->setMaterialName("Material0");
+		planeEnt->setCastShadows(false);
+		this->m_modelView->sceneManager()->getRootSceneNode()->createChildSceneNode()->attachObject(planeEnt);
+		test = true;
+	}
+
+
 
 	return tex;
 }
@@ -644,6 +617,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		Ogre::Technique *technique = mat->createTechnique();
 		technique->removeAllPasses(); // there shouldn't be any default pass, anyway, we want to make sure
 		Ogre::Pass *pass = technique->createPass();
+		//pass->setFog (bool overrideScene, FogMode mode=FOG_NON
 		// TEST
 		Ogre::Material::TechniqueIterator iterator = mat->getTechniqueIterator();
 		int i = 0;
@@ -655,10 +629,10 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 
 		qDebug() << "We have " << i << " techniques.";
 
-		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState((boost::format("Texture%1%") % layer->textureId()).str().c_str());
+		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState((boost::format("Texture%1%") % layer->textureId()).str().c_str(), layer->coordinatesId());
+
 		//textureUnitState->setTextureFiltering();
 		//textureUnitState->setAlphaOperation(Ogre::LBX_MODULATE_X4);
-		textureUnitState->setTextureCoordSet(layer->coordinatesId());
 		//float32	alpha() const; TODO set alpha!
 		technique->setLightingEnabled(false); // default value
 
@@ -730,6 +704,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 
 Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) throw (class Exception)
 {
+	qDebug() << "Creating geoset";
 	mdlx::long32 id = 0;
 
 	BOOST_FOREACH(const class mdlx::Geoset *geo, this->m_mdlx->geosets()->geosets())

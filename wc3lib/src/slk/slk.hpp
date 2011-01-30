@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,11 +21,10 @@
 #ifndef WC3LIB_SLK_SLK_HPP
 #define WC3LIB_SLK_SLK_HPP
 
-#include <istream>
-#include <ostream>
-#include <list>
+#include <map>
 
-#include "../exception.hpp"
+#include "../format.hpp"
+#include "../map/platform.hpp"
 
 namespace wc3lib
 {
@@ -33,27 +32,32 @@ namespace wc3lib
 namespace slk
 {
 
-class SlkEntry;
-
 /**
+* Default model and texture meta data files:
+* <ul>
+* <li>"UI/DestructableMetaData.slk"</li>
+* <li>"UI/UnitMetaData.slk"</li>
+* </ul>
 * Default class for SLK files like CliffTypes.slk.
-* @todo Should use a Bison file which defines the possible syntax for these files.
+* "UI/SkinMetaData.slk" - model data
+* \todo Should use a Bison file which defines the possible syntax for these files.
 */
-class Slk
+class Slk : public Format<map::byte>
 {
 	public:
+		typedef map::int32 IndexType;
+
 		Slk();
 		virtual ~Slk();
 
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		std::streamsize read(std::basic_istream<map::byte> &istream) throw (class Exception);
+		std::streamsize write(std::basic_ostream<map::byte> &ostream) const throw (class Exception);
 
 	protected:
 		virtual class SlkEntry* slkEntry(std::size_t column) = 0;
 
-		std::size_t m_lines;
-		std::size_t m_columns;
-		std::list<class SlkEntry*> m_entries;
+		std::map<IndexType, class SlkColumn*> m_columns; // header columns
+		std::map<IndexType, class SlkRow*> m_rows; // row entries
 };
 
 }

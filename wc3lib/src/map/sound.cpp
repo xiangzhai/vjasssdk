@@ -18,15 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_SLK_HPP
-#define WC3LIB_SLK_HPP
+#include "sound.hpp"
 
-#error Slk module is not usable yet!
+namespace wc3lib
+{
 
-#include "slk/data.hpp"
-#include "slk/dataentry.hpp"
-#include "slk/datasubentry.hpp"
-#include "slk/slk.hpp"
-#include "slk/slkrow.hpp"
+namespace map
+{
+}
 
-#endif
+}

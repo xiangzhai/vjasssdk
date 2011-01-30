@@ -125,6 +125,7 @@ class MpqPriorityList : public std::list<MpqPriorityListEntry*>
 
 		/**
 		* Checks the whole priority list in the specified order for the given path.
+		* If no better URL has been found the original one is returned.
 		*/
 		KUrl findFile(const KUrl &url) const;
 		/**

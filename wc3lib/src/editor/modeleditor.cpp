@@ -37,6 +37,7 @@
 #include "resource.hpp"
 #include "modeleditorsettings.hpp"
 #include "modeleditorsettingsdialog.hpp"
+#include "renderstatswidget.hpp"
 
 namespace wc3lib
 {
@@ -48,15 +49,25 @@ ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
+	this->m_modelView->setMinimumSize(QSize(640, 480));
+	this->m_horizontalLayout->addWidget(this->m_modelView);
+	this->topLayout()->addLayout(this->m_horizontalLayout);
 	/*
 	QHBoxLayout *mainLayout = new QHBoxLayout(this);
 	mainLayout->addWidget(this->m_modelView);
 	this->m_modelViewWidget->setLayout(mainLayout);
 	*/
 	/// @todo Model view should be bigger than modules buttons
-	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(this->m_modelView);
-	this->topLayout()->addLayout(layout);
+	//QGridLayout *layout = new QGridLayout(this);
+	//layout->addWidget(this->m_modelView);
+	//this->topLayout()->addWidget(this->m_modelView);
+
+	QStandardItemModel *standardItemModel = new QStandardItemModel(this);
+	QModelIndex modelIndex;
+	standardItemModel->insertRows(0, 10, modelIndex);
+	standardItemModel->setData(modelIndex, tr("Standard-Modelle"), Qt::DisplayRole);
+	standardItemModel->setData(modelIndex, QIcon(), Qt::DecorationRole);
+	this->m_treeView->setModel(standardItemModel);
 }
 
 ModelEditor::~ModelEditor()
@@ -116,6 +127,13 @@ void ModelEditor::setPolygonModeWireframe()
 void ModelEditor::setPolygonModeSolid()
 {
 	this->modelView()->setPolygonModeSolid();
+}
+
+void ModelEditor::showStats()
+{
+	RenderStatsWidget *widget = new RenderStatsWidget(this->modelView(), this);
+	m_horizontalLayout->addWidget(widget);
+	widget->show();
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -186,6 +204,14 @@ bool ModelEditor::openUrl(const KUrl &url)
 		ogreModel->refresh();
 		qDebug() << "After refresh. Duration " << ct.elapsed() << "ms";
 	}
+	catch (Ogre::Exception &exception)
+	{
+		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
+		this->editor()->removeResource(ogreModel);
+		delete ogreModel;
+
+		return false;
+	}
 	catch (class std::exception &exception)
 	{
 		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
@@ -242,6 +268,10 @@ void ModelEditor::createMenus(class KMenuBar *menuBar)
 
 	action = new KAction(KIcon(":/actions/polygonmodesolid.png"), i18n("Polygon Mode Solid"), this);
 	connect(action, SIGNAL(triggered()), this, SLOT(setPolygonModeSolid()));
+	viewMenu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/showstats.png"), i18n("Show Stats"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(showStats()));
 	viewMenu->addAction(action);
 
 	qDebug() << "Menus";

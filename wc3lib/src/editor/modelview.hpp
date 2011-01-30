@@ -37,12 +37,17 @@ namespace editor
 * Therefore well known rendering engine OGRE is used in this class.
 * The rendering viewport should be scaled correctly automatically since Qt GUI events are implemented.
 * MDLX files can be converted into OGRE entities by creating an OgreMdlx instance which manages an OGRE mesh and sub mesh instance.
-* @todo Since each model view widget uses its own OGRE root object there should be a possibility to assign plugins.cfg file path.
-* @link http://qt-apps.org/content/show.php/QtOgre+Framework?content=92912, http://www.ogre3d.org/tikiwiki/QtOgre
+* \todo Since each model view widget uses its own OGRE root object there should be a possibility to assign plugins.cfg file path.
+* \link http://qt-apps.org/content/show.php/QtOgre+Framework?content=92912, http://www.ogre3d.org/tikiwiki/QtOgre
 * \sa Mdlx, OgreMdlx
 */
 class ModelView : public QWidget
 {
+	Q_OBJECT
+
+	signals:
+		void onRendered();
+
 	public:
 		/**
 		* \param ogreSceneType OGRE scene type which will be set for the scene manager of the widget. Should be changed for terrain (ST_EXTERIOR_FAR, ST_EXTERIOR_REAL_FAR).
@@ -57,8 +62,6 @@ class ModelView : public QWidget
 		void setPolygonModePoints();
 		void setPolygonModeWireframe();
 		void setPolygonModeSolid();
-		void requestTeamColorLoad();
-		void requestTeamGlowLoad();
 
 		class Editor* editor() const;
 		Ogre::Root* root() const;
@@ -120,6 +123,9 @@ class ModelView : public QWidget
 		bool m_changeFarClip;
 		bool m_enableMouseMovement;
 		bool m_enableMouseRotation;
+		float m_rotateSpeed; // speed for rotating with mouse
+		float m_moveSpeed; // speed for moving with mouse
+		float m_scrollSpeed; // speed for changing far clip and scrolling distance
 };
 
 inline class Editor* ModelView::editor() const
