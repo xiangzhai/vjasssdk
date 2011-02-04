@@ -41,7 +41,7 @@ Shadow::~Shadow()
 {
 }
 
-std::streamsize Shadow::read(std::istream &istream) throw (class Exception)
+std::streamsize Shadow::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 
@@ -61,7 +61,7 @@ std::streamsize Shadow::read(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Shadow::write(std::ostream &ostream) throw (class Exception)
+std::streamsize Shadow::write(std::basic_ostream<byte> &ostream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	typedef std::pair<class Key, enum Type> valueType;

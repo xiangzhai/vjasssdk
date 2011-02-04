@@ -1,3 +1,9 @@
+2011-02-04 Tamino Dauth <tamino@cdauth.eu>
+* map: Classes Campaign and W3M have to derive from class Playable.
+* map: All file-based classes should get virtual element functions called fileName and latestFileVersion.
+* map: Class W3M needs virtual protected element function which creates all elements such as map information etc. (for overwriting).
+* mdlx: see above, needs it as well.
+
 2011-01-26 Tamino Dauth <tamino@cdauth.eu>
 * slk: Add derived classes such as SlkDestructableMetaDataColumn (derived from SlkColumn).
 

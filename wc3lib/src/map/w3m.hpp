@@ -65,23 +65,6 @@ class ImportedFiles;
 class W3m : public Format<byte>
 {
 	public:
-		enum Flags
-		{
-			HideMinimap = 0x0001,  //: 1=hide minimap in preview screens
-			ModifyAllyPriorities = 0x0002, //: 1=modify ally priorities
-			MeleeMap = 0x0004, //: 1=melee map
-			LargePlayableMapSize = 0x0008, //: 1=playable map size was large and has never been reduced to medium
-			PartiallyVisible = 0x0010, //: 1=masked area are partially visible
-			FixedCustomForces = 0x0020, //: 1=fixed player setting for custom forces
-			CustomForeces = 0x0040, //: 1=use custom forces
-			CustomTechtree = 0x0080, //: 1=use custom techtree
-			CustomAbilities = 0x0100, //: 1=use custom abilities
-			CustomUpgrades = 0x0200, //: 1=use custom upgrades
-			OpenedMapPropertiesMenu = 0x0400, //: 1=map properties menu opened at least once since map creation
-			ShowWaterWavesOnCliffShores = 0x0800, //: 1=show water waves on cliff shores
-			ShowWaterWavesOnRollingShores = 0x1000 //: 1=show water waves on rolling shores
-		};
-
 		W3m();
 		virtual ~W3m();
 
@@ -89,7 +72,7 @@ class W3m : public Format<byte>
 		/**
 		* @param istream has to contain the map MPQ archive.
 		*/
-		virtual std::streamsize read(std::istream &istream) throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
 		/**
 		* @param headerStream Each map is a file with an MPQ archive and a header before. This stream should contain the map's header data.
 		* @param paths List which should contain all necessary file paths. Files will be deteced automatically by names.
@@ -128,22 +111,22 @@ class W3m : public Format<byte>
 		* </ul>
 		* @note You can use classes's static members called "fileName" to get the corresponding file name of the class's format.
 		*/
-		virtual std::streamsize read(std::istream &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception);
+		virtual std::streamsize read(std::basic_istream<byte> &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception);
 		/**
 		* Creates an MPQ archive with map header and all required files.
 		*/
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 		int32 width() const;
 		int32 height() const;
 
 	protected:
-		std::streamsize readHeader(std::istream &istream) throw (class Exception);
-		std::streamsize readSignature(std::istream &istream) throw (class Exception);
+		std::streamsize readHeader(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize readSignature(std::basic_istream<byte> &istream) throw (class Exception);
 		bool findPath(const std::list<boost::filesystem::path> paths, boost::filesystem::path &path, const std::string &fileName);
 
 		std::string m_name;
-		int32 m_flags;
+		enum MapFlags m_flags;
 		int32 m_maxPlayers;
 
 		class Environment *m_environment;

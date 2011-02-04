@@ -18,25 +18,23 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MAP_CAMPAIGN_HPP
-#define WC3LIB_MAP_CAMPAIGN_HPP
+#ifndef WC3LIB_MAP_PLAYABLE_HPP
+#define WC3LIB_MAP_PLAYABLE_HPP
 
-#include "platform.hpp"
-#include "playable.hpp"
+#include "../format.hpp"
 
 namespace wc3lib
 {
 
-namespace map
 {
 
-class Campaign : public Playable
+/**
+* Base of W3N and W3M.
+*/
+class Playable : public Format<byte>
 {
-	public:
-		Campaign();
-
 	protected:
-		/**
+		/*
 		war3campaign.w3u
 		war3campaign.w3t
 		war3campaign.w3a
@@ -44,9 +42,8 @@ class Campaign : public Playable
 		war3campaign.w3d
 		war3campaign.w3q
 		war3campaign.w3f
-		war3campaign.imp
-		war3campaignImported\*.*
 		*/
+		class ImportedFiles *m_importedFiles;
 };
 
 }

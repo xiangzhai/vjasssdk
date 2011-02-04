@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -135,6 +135,14 @@ struct Rgb
 	uint8_t blue;
 };
 
+struct Rgba
+{
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+	uint8_t alpha;
+};
+
 class Position : public std::pair<int32, int32>
 {
 	public:
@@ -142,6 +150,23 @@ class Position : public std::pair<int32, int32>
 		Position(int32 x, int32 y) { this->first = x; this->first = y; };
 		int32 x() const { return this->first; };
 		int32 y() const { return this->second; };
+};
+
+enum MapFlags
+{
+	HideMinimapInPreviewScreens = 0x0001,
+	ModifyAllyPriorities = 0x0002,
+	MeleeMap = 0x0004,
+	PlayableMapSizeWasLargeAndHasNeverBeenReducedToMedium = 0x0008,
+	MaskedAreaArePartiallyVisible = 0x0010,
+	FixedPlayerSettingForCustomForces = 0x0020,
+	UseCustomForces = 0x0040,
+	UseCustomTechtree = 0x0080,
+	UseCustomAbilities = 0x0100,
+	UseCustomUpgrades = 0x0200,
+	MapPropertiesMenuOpenedAtLeastOnceSinceMapCreation = 0x0400,
+	ShowWaterWavesOnCliffShores = 0x0800,
+	ShowWaterWavesOnRollingShores = 0x1000
 };
 
 }

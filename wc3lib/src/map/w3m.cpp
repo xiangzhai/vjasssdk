@@ -63,7 +63,7 @@ std::streamsize W3m::read(class mpq::Mpq *mpq) throw (class Exception)
 	return 0;
 }
 
-std::streamsize W3m::read(std::istream &istream) throw (class Exception)
+std::streamsize W3m::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size = this->readHeader(istream);
 /*
@@ -95,7 +95,7 @@ std::streamsize W3m::read(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize W3m::read(std::istream &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception)
+std::streamsize W3m::read(std::basic_istream<byte> &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception)
 {
 	std::streamsize result = this->readHeader(headerStream);
 	boost::filesystem::path path;
@@ -109,12 +109,12 @@ std::streamsize W3m::read(std::istream &headerStream, const std::list<boost::fil
 	return result;
 }
 
-std::streamsize W3m::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize W3m::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize W3m::readHeader(std::istream &istream) throw (class Exception)
+std::streamsize W3m::readHeader(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	struct Header header;
@@ -129,7 +129,7 @@ std::streamsize W3m::readHeader(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize W3m::readSignature(std::istream &istream) throw (class Exception)
+std::streamsize W3m::readSignature(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize result = 0;
 	this->m_hasSignature = false;

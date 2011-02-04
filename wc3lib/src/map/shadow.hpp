@@ -21,13 +21,11 @@
 #ifndef WC3LIB_MAP_SHADOW_HPP
 #define WC3LIB_MAP_SHADOW_HPP
 
-#include <istream>
-#include <ostream>
 #include <map>
 #include <valarray>
 
 #include "platform.hpp"
-#include "../exception.hpp"
+#include "../format.hpp"
 #include "tilepoint.hpp"
 
 namespace wc3lib
@@ -45,7 +43,7 @@ class W3m;
 * @note You should refresh the shadow map if you change map size!
 * @see Tilepoint, Environment
 */
-class Shadow
+class Shadow : public Format<byte>
 {
 	public:
 		class Key : public std::valarray<int32>
@@ -73,8 +71,8 @@ class Shadow
 		Shadow(class W3m *w3m);
 		~Shadow();
 
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize write(std::basic_ostream<byte> &ostream) throw (class Exception);
 
 		enum Type type(const class Key &key) const;
 		/**
