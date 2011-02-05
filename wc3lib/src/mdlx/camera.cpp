@@ -26,6 +26,7 @@
 #include "camerarotationlengths.hpp"
 #include "cameratargettranslations.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -55,42 +56,47 @@ void Camera::writeMdl(std::ostream &ostream) const throw (class Exception)
 std::streamsize Camera::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::streamsize bytes = istream.gcount();
-	istream.read(this->m_name, sizeof(this->m_name));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_positionX), sizeof(this->m_positionX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_positionY), sizeof(this->m_positionY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_positionZ), sizeof(this->m_positionZ));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_fieldOfView), sizeof(this->m_fieldOfView));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_farClip), sizeof(this->m_farClip));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_nearClip), sizeof(this->m_nearClip));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_targetX), sizeof(this->m_targetX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_targetY), sizeof(this->m_targetY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_targetZ), sizeof(this->m_targetZ));
-	bytes += istream.gcount();
+	std::streamsize bytes = 0;
+	wc3lib::read(istream, nbytesi, bytes);
+	wc3lib::read(istream, this->m_name, bytes);
+	wc3lib::read(istream, this->m_position, bytes);
+	wc3lib::read(istream, this->m_fieldOfView, bytes);
+	wc3lib::read(istream, this->m_farClip, bytes);
+	wc3lib::read(istream, this->m_nearClip, bytes);
+	wc3lib::read(istream, this->m_target, bytes);
 	bytes += this->m_translations->readMdx(istream);
 	bytes += this->m_rotationLengths->readMdx(istream);
 	bytes += this->m_targetTranslations->readMdx(istream);
 	//(BKCT) ?????????????????????????????????????????????????????????????????
-	
-	if (bytes != nbytesi)	
+
+	if (bytes != nbytesi)
 		throw Exception(boost::str(boost::format(_("Camera: File byte count is not equal to real byte count.\nFile byte count: %1%.\nReal byte count: %2%.\n")) % nbytesi % bytes));
-	
+
 	return bytes;
 }
 
 std::streamsize Camera::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streampos position = ostream.tellp();
+	ostream.seekp(sizeof(long32), std::ios_base::cur);
+	std::streamsize bytes = 0;
+	wc3lib::write(ostream, this->m_name, bytes);
+	wc3lib::write(ostream, this->m_position, bytes);
+	wc3lib::write(ostream, this->m_fieldOfView, bytes);
+	wc3lib::write(ostream, this->m_farClip, bytes);
+	wc3lib::write(ostream, this->m_nearClip, bytes);
+	wc3lib::write(ostream, this->m_target, bytes);
+	bytes += this->m_translations->writeMdx(ostream);
+	bytes += this->m_rotationLengths->writeMdx(ostream);
+	bytes += this->m_targetTranslations->writeMdx(ostream);
+	//(BKCT) ?????????????????????????????????????????????????????????????????
+	std::streampos newPosition = ostream.tellp();
+	ostream.seekp(position);
+	long32 nbytesi = bytes + sizeof(long32);
+	wc3lib::write(ostream, nbytesi, bytes);
+	ostream.seekp(newPosition);
+
+	return bytes;
 }
 
 }

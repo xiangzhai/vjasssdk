@@ -20,6 +20,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/foreach.hpp>
 
 #include <QtGui>
 
@@ -45,7 +46,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_settingsDialog(0), m_recentUrl("")
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0)
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -84,19 +85,90 @@ void ModelEditor::show()
 
 void ModelEditor::openFile()
 {
-	KUrl url = KFileDialog::getOpenUrl(this->m_recentUrl, i18n("*.mdl|Blizzard Model (*.mdl)\n*.mdx|Compressed Blizzard Model (*.mdx)\n*|All files (*)"), this);
+	KUrl::List urls = KFileDialog::getOpenUrls(this->m_recentUrl, i18n("*.mdl|Blizzard Model (*.mdl)\n*.mdx|Compressed Blizzard Model (*.mdx)\n*|All files (*)"), this);
+
+	if (urls.isEmpty())
+		return;
+
+	foreach (KUrl url, urls)
+	{
+		if (!url.isLocalFile())
+		{
+			KMessageBox::error(this, i18n("Unable to open file \"%1\".", url.toLocalFile()));
+
+			continue;
+		}
+
+		this->openUrl(url);
+	}
+}
+
+void ModelEditor::saveFile()
+{
+	if (this->m_models.empty())
+	{
+		KMessageBox::error(this, i18n("There is no model to export."));
+
+		return;
+	}
+
+	KUrl url = KFileDialog::getSaveUrl(this->m_recentUrl, i18n("*.mdl|Blizzard Model (*.mdl)\n*.mdx|Compressed Blizzard Model (*.mdx)\n*|All files (*)"), this);
 
 	if (url.isEmpty())
 		return;
 
 	if (!url.isLocalFile())
 	{
-		KMessageBox::error(this, i18n("Unable to open file \"%1\".", url.toLocalFile()));
+		KMessageBox::error(this, i18n("Unable to save file \"%1\".", url.toLocalFile()));
 
 		return;
 	}
 
-	this->openUrl(url);
+	// export MDLX file
+	if (boost::filesystem::path(url.toEncoded()).extension() == ".mdx" || boost::filesystem::path(url.toEncoded()).extension() == ".mdl")
+	{
+		std::ios_base::openmode openmode = std::ios_base::out;
+		bool isMdx;
+		qDebug() << "Extension is " << QString(boost::filesystem::path(url.toEncoded()).extension().c_str());
+		qDebug() << "Encoded URL " << url.path().toAscii();
+
+		if (boost::filesystem::path(url.toEncoded()).extension() == ".mdx")
+		{
+			qDebug() << "Is MDLX";
+			isMdx = true;
+			openmode |= std::ios_base::binary;
+		}
+		else
+			isMdx = false;
+
+		std::ofstream ofstream(url.path().toAscii(), openmode);
+
+		try
+		{
+			std::streamsize size;
+
+			if (isMdx)
+				size = this->m_models.front()->mdlx()->writeMdx(ofstream);
+			else
+				size = this->m_models.front()->mdlx()->writeMdl(ofstream);
+
+			KMessageBox::information(this, i18n("Wrote %1 file \"%2\" successfully.\nSize: %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
+		}
+		catch (class Exception &exception)
+		{
+			KMessageBox::error(this, i18n("Unable to write %1 file \"%2\".\nException \"%3\".", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), exception.what().c_str()));
+		}
+	}
+	// export by using OGRE
+	else
+	{
+		/*
+		TODO Implement!
+		Ogre::Scene
+		Ogre::MeshSerializer *ser = new Ogre::MeshSerializer();
+		ser->exportMesh(this->m_models.front()->);
+		*/
+	}
 }
 
 void ModelEditor::showSettings()
@@ -131,9 +203,19 @@ void ModelEditor::setPolygonModeSolid()
 
 void ModelEditor::showStats()
 {
-	RenderStatsWidget *widget = new RenderStatsWidget(this->modelView(), this);
-	m_horizontalLayout->addWidget(widget);
-	widget->show();
+	if (this->m_renderStatsWidget == 0)
+	{
+		this->m_renderStatsWidget = new RenderStatsWidget(this->modelView(), this);
+		m_horizontalLayout->addWidget(this->m_renderStatsWidget);
+	}
+
+
+	this->m_renderStatsWidget->setVisible(!this->m_renderStatsWidget->isVisible());
+}
+
+void ModelEditor::viewCamera(QAction *action)
+{
+	this->m_modelView->setCamera(this->m_cameraActions[action]);
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -223,8 +305,25 @@ bool ModelEditor::openUrl(const KUrl &url)
 
 	this->m_models.push_back(ogreModel);
 	this->m_modelView->root()->addFrameListener(ogreModel);
+	addCameraActions(*ogreModel);
 
 	return true;
+}
+
+void ModelEditor::addCameraActions(const OgreMdlx &ogreMdlx)
+{
+	if (this->m_viewMenu != 0)
+	{
+		typedef std::pair<const mdlx::Camera*, Ogre::Camera*> IteratorType;
+
+		BOOST_FOREACH(IteratorType iterator, ogreMdlx.cameras())
+		{
+			KAction *action = new KAction(KIcon(":/actions/viewcamera.png"), i18n("Camera: %1", iterator.first->name()), this);
+			connect(action, SIGNAL(triggered(QAction*)), this, SLOT(viewCamera(QAction*)));
+			this->m_viewMenu->addAction(action);
+			this->m_cameraActions[action] = iterator.second;
+		}
+	}
 }
 
 void ModelEditor::createFileActions(class KMenu *menu)
@@ -234,6 +333,11 @@ void ModelEditor::createFileActions(class KMenu *menu)
 	action = new KAction(KIcon(":/actions/openmodel.png"), i18n("Open model"), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+O")));
 	connect(action, SIGNAL(triggered()), this, SLOT(openFile()));
+	menu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/savemoel.png"), i18n("Save model"), this);
+	action->setShortcut(KShortcut(i18n("Ctrl+S")));
+	connect(action, SIGNAL(triggered()), this, SLOT(saveFile()));
 	menu->addAction(action);
 
 	action = new KAction(KIcon(":/actions/settings.png"), i18n("Settings"), this);
@@ -250,6 +354,7 @@ void ModelEditor::createEditActions(class KMenu *menu)
 void ModelEditor::createMenus(class KMenuBar *menuBar)
 {
 	KMenu *viewMenu = new KMenu(i18n("View"), this);
+	this->m_viewMenu = viewMenu;
 	menuBar->addMenu(viewMenu);
 
 	// test actions for one single view port/camera

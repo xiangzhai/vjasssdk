@@ -72,7 +72,7 @@ class Shadow : public Format<byte>
 		~Shadow();
 
 		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) throw (class Exception);
+		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 		enum Type type(const class Key &key) const;
 		/**

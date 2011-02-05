@@ -1,3 +1,9 @@
+2010-02-05 Tamino Dauth <tamio@cdauth.eu>
+* mdlx: Improved class Camera (added write support etc.).
+* editor: Added camera creation support.
+* editor: Revised scene object names.
+* editor: Fixed test plane creation.
+
 2010-02-04 Tamino Dauth <tamio@cdauth.eu>
 * map: Added classes ImportedFiles, Playable and CampaignInfo.
 

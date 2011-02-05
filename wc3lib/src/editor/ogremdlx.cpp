@@ -83,6 +83,10 @@ void OgreMdlx::refresh() throw (class Exception, class Ogre::Exception)
 	BOOST_FOREACH(const mdlx::Geoset *geoset, this->m_mdlx->geosets()->geosets())
 		this->m_geosets[geoset] = this->createGeoset(*geoset);
 
+	// create cameras
+	BOOST_FOREACH(const mdlx::Camera *camera, this->m_mdlx->cameras()->cameras())
+		this->m_cameras[camera] = this->createCamera(*camera);
+
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL); // TEST
 	// get new objects
 	/*
@@ -422,6 +426,11 @@ Ogre::Node* OgreMdlx::createNode(const class Node &node)
 	return result;
 }
 
+QString OgreMdlx::namePrefix() const
+{
+	return this->m_mdlx->model()->name();
+}
+
 Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
 {
 	mdlx::long32 id = 0;
@@ -434,7 +443,8 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		++id;
 	}
 
-	Ogre::TexturePtr tex = Ogre::TextureManager::getSingleton().create((boost::format("Texture%1%") % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	Ogre::TexturePtr tex =
+	this->m_modelView->root()->getTextureManager()->create((boost::format("%1%.Texture%2%") % namePrefix().toAscii().data() % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	KUrl url;
 
 	// use given texture path
@@ -560,25 +570,6 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		image = 0;
 	}
 
-	// TEST BLOCK
-	static bool test = false;
-
-	if (!test)
-	{
-		Ogre::Plane plane;
-		plane.normal = Ogre::Vector3::UNIT_Y;
-		plane.d = 0;
-
-		Ogre::MeshManager::getSingleton().createPlane("floor", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 450.0f, 450.0f, 10, 10, true, 1, 50.0f, 50.0f, Ogre::Vector3::UNIT_Z);
-		Ogre::Entity* planeEnt = this->m_modelView->sceneManager()->createEntity("plane", "floor");
-		planeEnt->setMaterialName("Material0");
-		planeEnt->setCastShadows(false);
-		this->m_modelView->sceneManager()->getRootSceneNode()->createChildSceneNode()->attachObject(planeEnt);
-		test = true;
-	}
-
-
-
 	return tex;
 }
 
@@ -594,8 +585,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		++id;
 	}
 
-	Ogre::MaterialPtr mat =
-	Ogre::MaterialManager::getSingleton().create((boost::format("Material%1%") % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
+	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create((boost::format("%1%.Material%2%") % namePrefix().toAscii().data() % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
 
 	// properties
 	/*
@@ -629,7 +619,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 
 		qDebug() << "We have " << i << " techniques.";
 
-		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState((boost::format("Texture%1%") % layer->textureId()).str().c_str(), layer->coordinatesId());
+		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState((boost::format("%1%.Texture%2%") % namePrefix().toAscii().data() % layer->textureId()).str().c_str(), layer->coordinatesId());
 
 		//textureUnitState->setTextureFiltering();
 		//textureUnitState->setAlphaOperation(Ogre::LBX_MODULATE_X4);
@@ -699,6 +689,23 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		*/
 	}
 
+	// TEST BLOCK
+	static bool test = false;
+
+	if (!test)
+	{
+		qDebug() << "Creating plane!!!!!!!!!!!!!!!!!!!!!!!";
+		Ogre::Plane plane;
+		plane.normal = Ogre::Vector3::UNIT_Y;
+		plane.d = 0;
+		this->m_modelView->root()->getMeshManager()->createPlane("floor", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 450.0f, 450.0f, 10, 10, true, 1, 50.0f, 50.0f, Ogre::Vector3::UNIT_Z);
+		Ogre::Entity* planeEnt = this->m_modelView->sceneManager()->createEntity("plane", "floor");
+		planeEnt->setMaterialName(boost::str(boost::format("%1%.Material0") % namePrefix().toAscii().data()).c_str());
+		planeEnt->setCastShadows(false);
+		this->m_sceneNode->attachObject(planeEnt);
+		test = true;
+	}
+
 	return mat;
 }
 
@@ -715,7 +722,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		++id;
 	}
 
-	Ogre::ManualObject *object = this->modelView()->sceneManager()->createManualObject((boost::format("Geoset%1%") % id).str().c_str());
+	Ogre::ManualObject *object = this->modelView()->sceneManager()->createManualObject((boost::format("%1%.Geoset%2%") % namePrefix().toAscii().data() % id).str().c_str());
 	qDebug() << "Creating geoset";
 
 	// get material
@@ -746,6 +753,9 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 
 	while (vertexIterator != geoset.vertices()->vertices().end())
 	{
+		//qDebug() << "Adding vertex (" << (*vertexIterator)->vertexData().x << "|" << (*vertexIterator)->vertexData().y << "|" << (*vertexIterator)->vertexData().z << ")";
+		//qDebug() << "Adding normal (" << (*normalIterator)->vertexData().x << "|" << (*normalIterator)->vertexData().y << "|" << (*normalIterator)->vertexData().z << ")";
+		//qDebug() << "Adding texture coordinates (" << (*textureVertexIterator)->x() << "|" << (*textureVertexIterator)->y() << ")";
 		object->position((*vertexIterator)->vertexData().x, (*vertexIterator)->vertexData().y, (*vertexIterator)->vertexData().z);
 		object->normal((*normalIterator)->vertexData().x, (*normalIterator)->vertexData().y, (*normalIterator)->vertexData().z);
 		object->textureCoord((*textureVertexIterator)->x(), (*textureVertexIterator)->y());
@@ -783,6 +793,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 					++pVertexIterator;
 				}
 
+				//qDebug() << "Building triangle with vertex indices (" << indices[0] << "|" << indices[1] << "|" << indices[2] << ")";
 				object->triangle(indices[0], indices[1], indices[2]);
 				//qDebug() << "Building triangle";
 			}
@@ -818,6 +829,22 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	this->m_sceneNode->attachObject(object);
 
 	return object;
+}
+
+Ogre::Camera* OgreMdlx::createCamera(const class Camera &camera) throw (class Exception)
+{
+	Ogre::Camera *ogreCamera = this->modelView()->sceneManager()->createCamera((boost::format("%1%.Camera.%2%") % namePrefix().toAscii().data() % camera.name()).str().c_str());
+
+	ogreCamera->setPosition(Ogre::Vector3(camera.position().x, camera.position().y, camera.position().z));
+	ogreCamera->setFOVy(Ogre::Radian(camera.fieldOfView()));
+	ogreCamera->setFarClipDistance(camera.farClip());
+	ogreCamera->setNearClipDistance(camera.nearClip());
+	ogreCamera->setDirection(Ogre::Vector3(camera.target().x, camera.target().y, camera.target().z));
+
+	this->m_sceneNode->attachObject(ogreCamera);
+
+
+	return ogreCamera;
 }
 
 std::map<const class Node*, Ogre::Node*> OgreMdlx::setupInheritance(const std::list<const class Node*> &initialNodes)

@@ -23,6 +23,8 @@
 
 #include <kurl.h>
 
+#include <Ogre.h>
+
 #include "module.hpp"
 #include "ui/ui_modeleditor.h"
 #include "ogremdlx.hpp"
@@ -51,6 +53,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 	public slots:
 		void openFile();
+		void saveFile();
 		void showSettings();
 		// test actions for one single view port/camera
 		void centerView();
@@ -58,6 +61,9 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		void setPolygonModeWireframe();
 		void setPolygonModeSolid();
 		void showStats();
+
+	protected slots:
+		void viewCamera(QAction*);
 
 	protected:
 		friend class ModelEditorSettings;
@@ -75,10 +81,16 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 		bool openUrl(const KUrl &url);
 
+		void addCameraActions(const OgreMdlx &ogreMdlx);
+
 		class ModelView *m_modelView;
 		class ModelEditorSettingsDialog *m_settingsDialog;
 		KUrl m_recentUrl;
 		std::list<class OgreMdlx*> m_models;
+		std::map<QAction*, Ogre::Camera*> m_cameraActions;
+
+		class KMenu *m_viewMenu;
+		class RenderStatsWidget *m_renderStatsWidget;
 };
 
 inline class ModelView* ModelEditor::modelView() const

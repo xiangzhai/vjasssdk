@@ -26,6 +26,7 @@
 namespace wc3lib
 {
 
+namespace map
 {
 
 /**

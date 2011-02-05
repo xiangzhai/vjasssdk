@@ -38,7 +38,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false), m_rotateSpeed(0.01), m_moveSpeed(0.01), m_scrollSpeed(0.80)
+ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false), m_rotateSpeed(0.01), m_moveSpeed(0.01), m_scrollSpeed(0.80), m_yawValue(0.0), m_pitchValue(0.0)
 {
 	// setup a renderer
 	const Ogre::RenderSystemList &renderers = this->m_root->getAvailableRenderers();
@@ -190,9 +190,9 @@ void ModelView::wheelEvent(QWheelEvent *event)
 		Ogre::Real x;
 		Ogre::Real y;
 		// this->m_camera->getOrientationMode() crashes
-		this->m_viewPort->pointOrientedToScreen(event->x(), event->y(), 0, x, y);
+		//this->m_viewPort->pointOrientedToScreen(event->x(), event->y(), 0, x, y);
 
-		this->m_camera->setDirection(Ogre::Vector3(x, y, this->m_camera->getDirection().z));
+		//this->m_camera->setDirection(Ogre::Vector3(x, y, this->m_camera->getDirection().z));
 		//this->m_camera->setDirection(Ogre::Vector3(event->x(), event->y(), this->m_camera->getDirection().z));
 		this->m_camera->moveRelative(Ogre::Vector3(0, 0, -event->delta() * m_scrollSpeed));
 		qDebug() << "Scroll camera with delta: " << event->delta() * m_scrollSpeed;
@@ -235,8 +235,18 @@ void ModelView::mouseMoveEvent(QMouseEvent *event)
 		qDebug() << "X: " << event->x() << "| Y: " << event->y();
 		qDebug() << "Yaw: " << Ogre::Degree(-event->x() * m_rotateSpeed).valueDegrees();
 		qDebug() << "Pitch: " << Ogre::Degree(-event->y() * m_rotateSpeed).valueDegrees();
+		/*
 		this->m_camera->yaw(Ogre::Degree(-event->x() * m_rotateSpeed));
 		this->m_camera->pitch(Ogre::Degree(-event->y() * m_rotateSpeed));
+		*/
+		Ogre::Real radius = this->m_camera->getPosition().length();
+		this->m_camera->setPosition(0.0, 0.0, 0.0);
+		this->m_camera->setOrientation(Ogre::Quaternion::IDENTITY);
+		this->m_yawValue -= event->x() * m_rotateSpeed;
+		this->m_pitchValue -= event->y() * m_rotateSpeed;
+		this->m_camera->yaw(Ogre::Degree(-this->m_yawValue));
+		this->m_camera->pitch(Ogre::Degree(-this->m_pitchValue));
+		this->m_camera->moveRelative(Ogre::Vector3(0.0,0.0,radius));
 		//this->m_camera->roll(Ogre::Degree(-event->x() * m_rotateSpeed));
 		this->render();
 		event->accept();

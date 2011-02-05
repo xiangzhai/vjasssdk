@@ -120,7 +120,7 @@ std::streamsize W3m::readHeader(std::basic_istream<byte> &istream) throw (class 
 	struct Header header;
 	wc3lib::read(istream, header, size);
 	this->m_name = header.name;
-	this->m_flags = header.flags;
+	this->m_flags = MapFlags(header.flags);
 	this->m_maxPlayers = header.maxPlayers;
 	std::size_t byteCount = 512 - istream.gcount(); // followed by 00 bytes until the 512 bytes of the header are filled.
 	istream.ignore(byteCount);

@@ -74,6 +74,8 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 		const class Mdlx* mdlx() const;
 		class ModelView* modelView() const;
 
+		const std::map<const class Camera*, Ogre::Camera*> cameras() const;
+
 		void setTeamColor(enum TeamColor teamColor);
 		enum TeamColor teamColor() const;
 		void setTeamGlow(enum TeamColor teamGlow);
@@ -89,12 +91,16 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 	protected:
 		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
 
+		QString namePrefix() const;
+
 		Ogre::TexturePtr createTexture(const class Texture &texture) throw (class Exception);
 		Ogre::MaterialPtr createMaterial(const class Material &material) throw (class Exception);
 		/**
 		* Creates manual object for specified geoset.
 		*/
 		Ogre::ManualObject* createGeoset(const class Geoset &geoset) throw (class Exception);
+
+		Ogre::Camera* createCamera(const class Camera &camera) throw (class Exception);
 
 		Ogre::Node* createNode(const class Node &node);
 
@@ -111,6 +117,7 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 		std::map<const class Texture*, Ogre::TexturePtr> m_textures;
 		std::map<const class Material*, Ogre::MaterialPtr> m_materials;
 		std::map<const class Geoset*, Ogre::ManualObject* > m_geosets;
+		std::map<const class Camera*, Ogre::Camera*> m_cameras;
 
 		std::map<const class Node*, Ogre::Node*> m_nodes;
 		std::map<const class Bone*, Ogre::Bone*> m_bones;
@@ -131,6 +138,11 @@ inline const class Mdlx* OgreMdlx::mdlx() const
 inline class ModelView* OgreMdlx::modelView() const
 {
 	return this->m_modelView;
+}
+
+inline const std::map<const class Camera*, Ogre::Camera*> OgreMdlx::cameras() const
+{
+	return this->m_cameras;
 }
 
 inline enum OgreMdlx::TeamColor OgreMdlx::teamColor() const

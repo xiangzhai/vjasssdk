@@ -67,6 +67,7 @@ class ModelView : public QWidget
 		Ogre::Root* root() const;
 		Ogre::RenderWindow* renderWindow() const;
 		Ogre::SceneManager* sceneManager() const;
+		void setCamera(Ogre::Camera *camera);
 		Ogre::Camera* camera() const;
 		Ogre::Viewport* viewPort() const;
 
@@ -126,6 +127,9 @@ class ModelView : public QWidget
 		float m_rotateSpeed; // speed for rotating with mouse
 		float m_moveSpeed; // speed for moving with mouse
 		float m_scrollSpeed; // speed for changing far clip and scrolling distance
+
+		Ogre::Real m_yawValue;
+		Ogre::Real m_pitchValue;
 };
 
 inline class Editor* ModelView::editor() const
@@ -146,6 +150,13 @@ inline Ogre::RenderWindow* ModelView::renderWindow() const
 inline Ogre::SceneManager* ModelView::sceneManager() const
 {
 	return this->m_sceneManager;
+}
+
+inline void ModelView::setCamera(Ogre::Camera *camera)
+{
+	this->m_camera = camera;
+	this->m_viewPort->setCamera(camera);
+	this->render();
 }
 
 inline Ogre::Camera* ModelView::camera() const

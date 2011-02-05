@@ -33,30 +33,21 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Cameras;
-class CameraTranslations;
-class CameraRotationLengths;
-class CameraTargetTranslations;
-
 // not a child of class Object!
 class Camera
 {
 	public:
 		Camera(class Cameras *cameras);
 		virtual ~Camera();
-		
+
 		class Cameras* cameras() const;
-		
+
 		const ascii* name() const;
-		float32 positionX() const;
-		float32 positionY() const;
-		float32 positionZ() const;
+		const struct VertexData& position() const;
 		float32 fieldOfView() const;
 		float32 farClip() const;
 		float32 nearClip() const;
-		float32	targetX() const;
-		float32 targetY() const;
-		float32 targetZ() const;
+		const struct VertexData& target() const;
 		class CameraTranslations* translations() const;
 		class CameraRotationLengths* rotationLengths() const;
 		class CameraTargetTranslations* targetTranslations() const;
@@ -70,11 +61,11 @@ class Camera
 		class Cameras *m_cameras;
 		//long nbytesi;
 		ascii m_name[0x50]; //(0x50)
-		float32 m_positionX, m_positionY, m_positionZ;
+		struct VertexData m_position;
 		float32 m_fieldOfView;
 		float32 m_farClip;
 		float32 m_nearClip;
-		float32	m_targetX, m_targetY, m_targetZ;
+		struct VertexData m_target;
 		class CameraTranslations *m_translations; //(KCTR)
 		class CameraRotationLengths *m_rotationLengths; //(KCRL)
 		class CameraTargetTranslations *m_targetTranslations; //(KTTR)
@@ -91,19 +82,9 @@ inline const ascii* Camera::name() const
 	return this->m_name;
 }
 
-inline float32 Camera::positionX() const
+inline const struct VertexData& Camera::position() const
 {
-	return this->m_positionX;
-}
-
-inline float32 Camera::positionY() const
-{
-	return this->m_positionY;
-}
-
-inline float32 Camera::positionZ() const
-{
-	return this->m_positionZ;
+	return this->m_position;
 }
 
 inline float32 Camera::fieldOfView() const
@@ -121,19 +102,9 @@ inline float32 Camera::nearClip() const
 	return this->m_nearClip;
 }
 
-inline float32 Camera::targetX() const
+inline const struct VertexData& Camera::target() const
 {
-	return this->m_targetX;
-}
-
-inline float32 Camera::targetY() const
-{
-	return this->m_targetY;
-}
-
-inline float32 Camera::targetZ() const
-{
-	return this->m_targetZ;
+	return this->m_target;
 }
 
 inline class CameraTranslations* Camera::translations() const
