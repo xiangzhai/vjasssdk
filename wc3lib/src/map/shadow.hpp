@@ -74,6 +74,8 @@ class Shadow : public Format<byte>
 		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
 		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
+		virtual const char* fileName() const;
+
 		enum Type type(const class Key &key) const;
 		/**
 		* Just for one single layer point.
@@ -89,7 +91,6 @@ class Shadow : public Format<byte>
 		bool tilepointContainsShadow(const class Tilepoint &tilepoint) const;
 
 		static const int32 shadowPointsPerTileset;
-		static const char* fileName;
 
 	protected:
 		class W3m *m_w3m;

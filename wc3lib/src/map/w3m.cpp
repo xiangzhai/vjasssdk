@@ -100,7 +100,7 @@ std::streamsize W3m::read(std::basic_istream<byte> &headerStream, const std::lis
 	std::streamsize result = this->readHeader(headerStream);
 	boost::filesystem::path path;
 
-	if (findPath(paths, path, Shadow::fileName))
+	if (findPath(paths, path, "war3map.shd"))
 	{
 		boost::filesystem::ifstream ifstream(path, std::ios_base::binary | std::ios_base::in);
 		this->m_shadow->read(ifstream);
@@ -152,7 +152,7 @@ std::streamsize W3m::readSignature(std::basic_istream<byte> &istream) throw (cla
 	return result;
 }
 
-bool W3m::findPath(const std::list<boost::filesystem::path> paths, boost::filesystem::path &path, const std::string &fileName)
+bool W3m::findPath(const std::list<boost::filesystem::path> &paths, boost::filesystem::path &path, const std::string &fileName)
 {
 	BOOST_FOREACH(const boost::filesystem::path iteratorPath, paths)
 	{

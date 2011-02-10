@@ -38,20 +38,30 @@ namespace map
 class Cameras : public Format<byte>
 {
 	public:
-		static const int32 version;
-		static const string fileName;
-
 		Cameras(class W3m *w3m);
 		~Cameras();
 
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 
+		virtual const char* fileName() const;
+		virtual int32 latestFileVersion() const;
+
 	protected:
 		class W3m *m_w3m;
 		int32 m_version;
 		std::list<class Camera*> m_cameras;
 };
+
+inline const char* Cameras::fileName() const
+{
+	return "war3map.w3c";
+}
+
+inline int32 Cameras::latestFileVersion() const
+{
+	return 0;
+}
 
 }
 

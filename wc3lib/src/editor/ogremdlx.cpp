@@ -45,7 +45,7 @@ namespace wc3lib
 namespace editor
 {
 
-OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView) : Resource(url, Resource::Model), m_mdlx(&mdlx), m_modelView(modelView), m_sceneNode(modelView->sceneManager()->getRootSceneNode()->createChildSceneNode(mdlx.model()->name())), m_teamColor(Red), m_teamGlow(Red)
+OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView) : Resource(url, Resource::Model), m_mdlx(&mdlx), m_modelView(modelView), m_sceneNode(0), m_teamColor(Red), m_teamGlow(Red)
 {
 }
 
@@ -68,6 +68,7 @@ void OgreMdlx::setTeamGlow(enum OgreMdlx::TeamColor teamGlow)
 void OgreMdlx::refresh() throw (class Exception, class Ogre::Exception)
 {
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME); // TEST
+	this->m_sceneNode = this->m_modelView->sceneManager()->getRootSceneNode()->createChildSceneNode(m_mdlx->model()->name());
 
 	//this->modelView()->camera()->setAutoTracking(true, this->m_sceneNode); // camera follows ogre mdlx automatically
 

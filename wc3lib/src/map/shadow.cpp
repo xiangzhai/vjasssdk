@@ -31,7 +31,6 @@ namespace map
 {
 
 const int32 Shadow::shadowPointsPerTileset = 16;
-const char* Shadow::fileName = "war3map.shd";
 
 Shadow::Shadow(class W3m *w3m) : m_w3m(w3m)
 {
@@ -74,6 +73,11 @@ std::streamsize Shadow::write(std::basic_ostream<byte> &ostream) const throw (cl
 	}
 
 	return size;
+}
+
+const char* Shadow::fileName() const
+{
+	return "war3map.shd";
 }
 
 }

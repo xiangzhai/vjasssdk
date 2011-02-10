@@ -128,6 +128,8 @@ class ModelView : public QWidget
 		float m_moveSpeed; // speed for moving with mouse
 		float m_scrollSpeed; // speed for changing far clip and scrolling distance
 
+		QPoint m_mousePoint;
+		bool m_mouseUse;
 		Ogre::Real m_yawValue;
 		Ogre::Real m_pitchValue;
 };

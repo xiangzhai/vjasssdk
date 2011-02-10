@@ -38,7 +38,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false), m_rotateSpeed(0.01), m_moveSpeed(0.01), m_scrollSpeed(0.80), m_yawValue(0.0), m_pitchValue(0.0)
+ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false), m_rotateSpeed(0.01), m_moveSpeed(1.0), m_scrollSpeed(0.80), m_yawValue(0.0), m_pitchValue(0.0), m_mouseUse(false)
 {
 	// setup a renderer
 	const Ogre::RenderSystemList &renderers = this->m_root->getAvailableRenderers();
@@ -221,11 +221,26 @@ void ModelView::mouseMoveEvent(QMouseEvent *event)
 		result);
 		*/
 		//if (this->m_camera->getOrientationMode() == Ogre::OrientationMode::OR_PORTRAIT
-		/// \todo Get old x and y as relation
-		this->m_camera->moveRelative(Ogre::Vector3(event->x() * m_moveSpeed, event->y() * m_moveSpeed, 0));
-		this->render();
-
-		event->accept();
+		//QPoint p = this->mapFromGlobal(QCursor::pos());
+		/// \todo When m_mouseUse is true when it starts it will lead to wrong movements (use always the first new movement to store old position, we need a delta value!!!).
+		if (m_mouseUse)
+		{
+			QPoint p(event->x(), event->y());
+			p -= m_mousePoint;
+			qDebug() << "Movement";
+			qDebug() << "(" << p.x() << "|" << p.y() << ")";
+			qDebug() << "(" << event->x() << "|" << event->y() << ")";
+			this->m_camera->moveRelative(Ogre::Vector3(p.x() * m_moveSpeed, p.y() * m_moveSpeed, 0));
+			this->render();
+			m_mouseUse = false;
+			event->accept();
+		}
+		else
+		{
+			m_mousePoint = this->mapFromGlobal(QCursor::pos());
+			m_mouseUse = true;
+			event->ignore();
+		}
 	}
 	else if (this->m_enableMouseRotation)
 	{
@@ -259,6 +274,31 @@ void ModelView::mousePressEvent(QMouseEvent *event)
 {
 	switch (event->button())
 	{
+		// selection
+		// Only uses bounding boxes which should also be used by Warcraft (see http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Raycasting+to+the+polygon+level).
+		case Qt::LeftButton:
+		{
+			Ogre::Ray mouseRay = this->m_camera->getCameraToViewportRay(event->x() / float(this->width()), event->y() / float(this->height()));
+			Ogre::RaySceneQuery *raySceneQuery = this->m_sceneManager->createRayQuery(mouseRay);
+			raySceneQuery->setRay(mouseRay);
+			raySceneQuery->setSortByDistance(true);
+			Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
+
+			foreach(const Ogre::RaySceneQueryResultEntry &entry, result)
+			{
+				if (entry.movable)
+					entry.movable->setVisible(!entry.movable->getVisible());
+			}
+
+			delete raySceneQuery;
+			raySceneQuery = 0;
+
+			this->render();
+			event->accept();
+
+			break;
+		}
+
 		// When right button is being pressed mouse movement is possible.
 		case Qt::RightButton:
 			this->m_enableMouseMovement = true;

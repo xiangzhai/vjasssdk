@@ -31,9 +31,6 @@ namespace wc3lib
 namespace map
 {
 
-const int32 Cameras::version = 0;
-const string Cameras::fileName = "war3map.w3c";
-
 Cameras::Cameras(class W3m *w3m) : m_w3m(w3m)
 {
 
@@ -50,8 +47,8 @@ std::streamsize Cameras::read(std::istream &istream) throw (class Exception)
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_version, size);
 
-	if (this->m_version != Cameras::version)
-		throw Exception(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
+	if (this->m_version != latestFileVersion())
+		throw Exception(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % latestFileVersion());
 
 	int32 number;
 	wc3lib::read(istream, number, size);
@@ -68,8 +65,8 @@ std::streamsize Cameras::read(std::istream &istream) throw (class Exception)
 
 std::streamsize Cameras::write(std::ostream &ostream) const throw (class Exception)
 {
-	if (this->m_version != Cameras::version)
-		throw Exception(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Cameras::version);
+	if (this->m_version != latestFileVersion())
+		throw Exception(boost::format(_("Cameras: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % latestFileVersion());
 
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_version, size);

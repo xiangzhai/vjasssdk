@@ -98,17 +98,45 @@ bool BlpIOHandler::read(QImage *image)
 	if (blpImage.flags() == blp::Blp::Alpha)
 		std::cout << "Image has alpha channel" << std::endl;
 
-	*image = QImage(mipMap->width(), mipMap->height(), blpImage.flags() == blp::Blp::Alpha ? QImage::Format_ARGB32 : QImage::Format_RGB32);
+	QImage::Format format;
 
-	typedef std::pair<const blp::Blp::MipMap::Coordinates&, const class blp::Blp::MipMap::Color&> MapType;
+	if (blpImage.compression() == blp::Blp::Paletted)
+		format = QImage::Format_Indexed8;
+	else if (blpImage.flags() == blp::Blp::Alpha)
+		format = QImage::Format_ARGB32;
+	else
+		format = QImage::Format_RGB32;
+
+	*image = QImage(mipMap->width(), mipMap->height(), format);
 	std::cout << "Color map size " << mipMap->colors().size() << std::endl;
 
 	foreach (blp::Blp::MipMap::MapEntryType mapEntry, mipMap->colors())
 	{
 		const blp::Blp::MipMap::Coordinates &coordinates = mapEntry.first;
-		const struct blp::Blp::MipMap::Color &color = mapEntry.second;
+		const class blp::Blp::MipMap::Color &color = mapEntry.second;
 		QRgb pixelColor = colorToRgba(color.rgba());
-		image->setPixel(coordinates.first, coordinates.second, pixelColor);
+
+		if (blpImage.compression() != blp::Blp::Paletted)
+		{
+
+			image->setPixel(coordinates.first, coordinates.second, pixelColor);
+		}
+		else
+		{
+			/// \todo Improve palette generation performance (only possible by saving palette in BLP instance).
+			int index = 0;
+
+			for (; index < image->colorCount(); ++index)
+			{
+				if (image->color(index) == pixelColor)
+					break;
+			}
+
+			if (index == image->colorCount())
+				image->setColor(image->colorCount(), pixelColor);
+
+			image->setPixel(coordinates.first, coordinates.second, index);
+		}
 	}
 
 	return true;
@@ -131,7 +159,10 @@ bool BlpIOHandler::write(const QImage &image)
 	class blp::Blp blpImage;
 
 	if (image.format() == QImage::Format_Indexed8)
+	{
+		qDebug() << "Is paletted";
 		blpImage.setCompression(blp::Blp::Paletted);
+	}
 	else
 		blpImage.setCompression(blp::Blp::Jpeg);
 
@@ -151,7 +182,7 @@ bool BlpIOHandler::write(const QImage &image)
 	*/
 
 	// create mip map
-	/// @todo Fill palette if paletted!!!!!!
+	// palette is filled automatically by Blp::write
 	class blp::Blp::MipMap *mipMap = blpImage.addInitialMipMap(image.width(), image.height());
 
 	for (int width = 0; width < image.size().width(); ++width)

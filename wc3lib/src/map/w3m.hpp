@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -123,7 +123,7 @@ class W3m : public Format<byte>
 	protected:
 		std::streamsize readHeader(std::basic_istream<byte> &istream) throw (class Exception);
 		std::streamsize readSignature(std::basic_istream<byte> &istream) throw (class Exception);
-		bool findPath(const std::list<boost::filesystem::path> paths, boost::filesystem::path &path, const std::string &fileName);
+		bool findPath(const std::list<boost::filesystem::path> &paths, boost::filesystem::path &path, const std::string &fileName);
 
 		std::string m_name;
 		enum MapFlags m_flags;
