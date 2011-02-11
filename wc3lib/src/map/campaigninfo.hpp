@@ -21,6 +21,11 @@
 #ifndef WC3LIB_MAP_CAMPAIGNINFO_HPP
 #define WC3LIB_MAP_CAMPAIGNINFO_HPP
 
+#include <list>
+
+#include "../format.hpp"
+#include "platform.hpp"
+
 namespace wc3lib
 {
 
@@ -69,11 +74,12 @@ class CampaignInfo : public Format<byte>
 		};
 
 		CampaignInfo(class Campaign *campaign);
+		~CampaignInfo();
 		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
 		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
-		static const int32 currentFileVersion = 1;
-		static const string fileName = "war3campaign.w3f";
+		virtual int32 latestFileVersion() const;
+		virtual const char* fileName() const;
 
 	protected:
 		class Campaign *m_campaign;
@@ -100,6 +106,16 @@ class CampaignInfo : public Format<byte>
 		std::list<class MapTitle*> m_mapTitles;
 		std::list<class Map*> m_maps;
 };
+
+inline int32 CampaignInfo::latestFileVersion() const
+{
+	return 1;
+}
+
+inline const char* CampaignInfo::fileName() const
+{
+	return "war3campaign.w3f";
+}
 
 }
 

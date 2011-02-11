@@ -21,6 +21,8 @@
 #ifndef WC3LIB_MAP_CUSTOMUNITS_HPP
 #define WC3LIB_MAP_CUSTOMUNITS_HPP
 
+#include <list>
+
 #include "../format.hpp"
 #include "platform.hpp"
 
@@ -37,25 +39,6 @@ namespace map
 class CustomUnits : public Format<byte>
 {
 	public:
-		class Unit : public Format<byte>
-		{
-			public:
-				Unit();
-				~Unit();
-
-				std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
-
-				bool isOriginal() { return m_customId == 0; };
-
-			protected:
-				virtual Modification* createModification() const;
-
-				id m_originalId;
-				id m_customId;
-				std::list<class Modification*> m_modifications;
-		};
-
 		class Modification : public Format<byte>
 		{
 			public:
@@ -101,8 +84,27 @@ class CustomUnits : public Format<byte>
 				{
 					int32 Integer;
 					float32 Real;
-					string String;
+					//string String;
 				} m_value;
+		};
+
+		class Unit : public Format<byte>
+		{
+			public:
+				Unit();
+				~Unit();
+
+				std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+
+				bool isOriginal() { return m_customId == 0; };
+
+			protected:
+				virtual class Modification* createModification() const;
+
+				id m_originalId;
+				id m_customId;
+				std::list<class Modification*> m_modifications;
 		};
 
 		CustomUnits();

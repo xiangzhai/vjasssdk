@@ -630,6 +630,8 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		switch (layer->filterMode())
 		{
 			case mdlx::Layer::Transparent:
+				textureUnitState->setIsAlpha(true);
+
 				break;
 
 			case mdlx::Layer::Blend:
@@ -699,7 +701,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		Ogre::Plane plane;
 		plane.normal = Ogre::Vector3::UNIT_Y;
 		plane.d = 0;
-		this->m_modelView->root()->getMeshManager()->createPlane("floor", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 450.0f, 450.0f, 10, 10, true, 1, 50.0f, 50.0f, Ogre::Vector3::UNIT_Z);
+		this->m_modelView->root()->getMeshManager()->createPlane("floor", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 256.0f, 256.0f, 10, 10, true, 1, 50.0f, 50.0f, Ogre::Vector3::UNIT_Z);
 		Ogre::Entity* planeEnt = this->m_modelView->sceneManager()->createEntity("plane", "floor");
 		planeEnt->setMaterialName(boost::str(boost::format("%1%.Material0") % namePrefix().toAscii().data()).c_str());
 		planeEnt->setCastShadows(false);
@@ -724,6 +726,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	}
 
 	Ogre::ManualObject *object = this->modelView()->sceneManager()->createManualObject((boost::format("%1%.Geoset%2%") % namePrefix().toAscii().data() % id).str().c_str());
+	//object->setKeepDeclarationOrder(true);
 	qDebug() << "Creating geoset";
 
 	// get material

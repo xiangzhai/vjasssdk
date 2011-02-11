@@ -460,6 +460,7 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 					wc3lib::read(istream, index, readSize);
 					size += readSize;
 					mipMapSize -= boost::numeric_cast<dword>(readSize);
+					/*
 					byte alpha = 0;
 
 					if (this->m_flags == Blp::Alpha)
@@ -469,8 +470,25 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 						size += readSize;
 						mipMapSize -= readSize;
 					}
+					*/
 
-					mipMap->setColor(width, height, palette[index], alpha, index);
+					mipMap->setColor(width, height, palette[index], 0, index);
+				}
+			}
+
+			if (this->m_flags == Blp::Alpha)
+			{
+				for (dword height = 0; height < mipMap->height(); ++height)
+				{
+					for (dword width = 0; width < mipMap->width(); ++width)
+					{
+						byte alpha;
+						std::streamsize readSize = 0;
+						wc3lib::read(istream, alpha, readSize);
+						size += readSize;
+						mipMapSize -= boost::numeric_cast<dword>(readSize);
+						mipMap->setColorAlpha(width, height, alpha);
+					}
 				}
 			}
 
@@ -597,7 +615,21 @@ std::streamsize Blp::write(std::basic_ostream<byte> &ostream) const throw (class
 					byte index = mipMap->colorAt(width, height).paletteIndex();
 					wc3lib::write(ostream, index, size);
 
+					/*
 					if (this->m_flags == Blp::Alpha)
+					{
+						byte alpha = mipMap->colorAt(width, height).alpha();
+						wc3lib::write(ostream, alpha, size);
+					}
+					*/
+				}
+			}
+
+			if (this->m_flags == Blp::Alpha)
+			{
+				for (dword height = 0; height < mipMap->height(); ++height)
+				{
+					for (dword width = 0; width < mipMap->width(); ++width)
 					{
 						byte alpha = mipMap->colorAt(width, height).alpha();
 						wc3lib::write(ostream, alpha, size);

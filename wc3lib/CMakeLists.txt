@@ -173,11 +173,11 @@ if (FLAG_EDITOR_USE)
 	link_directories(${KDE4_LIB_DIR})
 	# TODO Use cmake module to find and do not use local version if possible (or in debug mode only - version 1.7.2)
 	find_library(OGRE REQUIRED)
-	include_directories(lib/extern/OGRE/ogre_src_v1-7-2/OgreMain/include/ lib/extern/OGRE/ogre_src_v1-7-2/include/)
+	include_directories(lib/extern/OGRE/ogre_src_v1-7-2/OgreMain/include/ lib/extern/OGRE/ogre_src_v1-7-2/include/ lib/extern/OGRE/ogre_src_v1-7-2/Components/Terrain/include/)
 	link_directories(lib/extern/OGRE/ogre_src_v1-7-2/lib)
 	#include_directories(/usr/include/OGRE)
 	#link_directories(/usr/lib/OGRE)
-	set(OGRE_LIBRARIES OgreMain) #  OgrePaging
+	set(OGRE_LIBRARIES OgreMain OgreTerrain) #  OgrePaging
 endif ()
 
 # TODO: is only required when using -DJPEG and -DSTATIC

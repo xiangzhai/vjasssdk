@@ -1,3 +1,8 @@
+2011-02-11 Tamino Dauth <tamio@cdauth.eu>
+* blp: Fixed alpha channel reading of paletted compression.
+* map: Revised and improved various reading functions.
+* editor: Added initial dependencies for class TerrainEditor (OGRE terrain support).
+
 2011-02-10 Tamino Dauth <tamio@cdauth.eu>
 * map: Added classes CustomUnits, CustomObjects and CustomObjectsCollection.
 * Sound: Added read and write support.

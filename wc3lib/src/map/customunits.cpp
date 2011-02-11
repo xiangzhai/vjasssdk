@@ -70,7 +70,7 @@ std::streamsize CustomUnits::Unit::write(std::basic_ostream<byte> &ostream) cons
 	return size;
 }
 
-Modification* CustomUnits::Unit::createModification() const
+CustomUnits::Modification* CustomUnits::Unit::createModification() const
 {
 	return new Modification();
 }
@@ -85,7 +85,7 @@ CustomUnits::Modification::~Modification()
 
 std::streamsize CustomUnits::Modification::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
-	std::streamsize size = readData();
+	std::streamsize size = readData(istream);
 	int32 end;
 	wc3lib::read(istream, end, size); // usually 0
 
@@ -94,7 +94,7 @@ std::streamsize CustomUnits::Modification::read(std::basic_istream<byte> &istrea
 
 std::streamsize CustomUnits::Modification::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
-	std::streamsize size = writeData();
+	std::streamsize size = writeData(ostream);
 	int32 end = 0;
 	wc3lib::write(ostream, end, size);
 
@@ -105,7 +105,9 @@ std::streamsize CustomUnits::Modification::readData(std::basic_istream<byte> &is
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_id, size);
-	wc3lib::read<int>(istream, this->m_type, size);
+	int32 type;
+	wc3lib::read(istream, type, size);
+	this->m_type = static_cast<enum Type>(type);
 
 	switch (this->m_type)
 	{
@@ -208,12 +210,12 @@ std::streamsize CustomUnits::write(std::basic_ostream<byte> &ostream) const thro
 	wc3lib::write<int32>(ostream, this->m_customTable.size(), size);
 
 	BOOST_FOREACH(Unit *unit, this->m_customTable)
-		size += unit->read(ostream);
+		size += unit->write(ostream);
 
 	return size;
 }
 
-Unit* CustomUnits::createUnit() const
+CustomUnits::Unit* CustomUnits::createUnit() const
 {
 	return new Unit();
 }

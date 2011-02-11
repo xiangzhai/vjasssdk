@@ -98,13 +98,15 @@ class Blp : public Format<byte>
 						~Color();
 
 						class MipMap* mipMap() const;
+						void setRgba(color rgba);
 						color rgba() const;
+						void setAlpha(byte alpha);
 						byte alpha() const;
+						void setPaletteIndex(byte paletteIndex);
 						byte paletteIndex() const;
 
 					protected:
 						friend class MipMap;
-
 
 						Color(class MipMap *mipMap, color rgba, byte alpha, byte paletteIndex);
 
@@ -129,6 +131,7 @@ class Blp : public Format<byte>
 				dword height() const;
 
 				void setColor(dword width, dword height, color rgba, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
+				void setColorAlpha(dword width, dword height, byte alpha) throw (class Exception);
 				const std::map<Coordinates, class Color>& colors() const;
 				const class Color& colorAt(dword width, dword height) const;
 
@@ -245,14 +248,29 @@ inline class Blp::MipMap* Blp::MipMap::Color::mipMap() const
 	return this->m_mipMap;
 }
 
+inline void Blp::MipMap::Color::setRgba(color rgba)
+{
+	this->m_rgba = rgba;
+}
+
 inline color Blp::MipMap::Color::rgba() const
 {
 	return this->m_rgba;
 }
 
+inline void Blp::MipMap::Color::setAlpha(byte alpha)
+{
+	this->m_alpha = alpha;
+}
+
 inline byte Blp::MipMap::Color::alpha() const
 {
 	return this->m_alpha;
+}
+
+inline void Blp::MipMap::Color::setPaletteIndex(byte paletteIndex)
+{
+	this->m_paletteIndex = paletteIndex;
 }
 
 inline byte Blp::MipMap::Color::paletteIndex() const
@@ -279,6 +297,17 @@ inline void Blp::MipMap::setColor(dword width, dword height, color rgba, byte al
 		std::cout << "Warning: Color at " << width << " | " << height << " does already exist." << std::endl;
 
 	this->m_colors[std::make_pair(width, height)] = Color(this, rgba, alpha, paletteIndex);
+}
+
+inline void Blp::MipMap::setColorAlpha(dword width, dword height, byte alpha) throw (class Exception)
+{
+	if (width >= this->m_width || height >= this->m_height)
+		throw Exception(boost::str(boost::format(_("Mip map: Invalid indices (width %1%, height %2%).")) % width % height));
+
+	if (this->m_colors.find(std::make_pair(width, height)) == this->m_colors.end())
+		throw Exception(boost::format(_("Warning: Color at %1% | %2% does not exist.")) % width % height);
+
+	this->m_colors[std::make_pair(width, height)].setAlpha(alpha);
 }
 
 inline const std::map<Blp::MipMap::Coordinates, class Blp::MipMap::Color>& Blp::MipMap::colors() const

@@ -31,6 +31,13 @@ namespace wc3lib
 namespace map
 {
 
+const string ImportedFiles::mapPrefix = "war3mapImported";
+const string ImportedFiles::campaignPrefix = "war3campaignImported";
+
+ImportedFiles::Path::Path()
+{
+}
+
 std::streamsize ImportedFiles::Path::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
@@ -40,10 +47,10 @@ std::streamsize ImportedFiles::Path::read(std::basic_istream<byte> &istream) thr
 	if (hasPrefix == 5 || hasPrefix == 8)
 		this->m_hasPrefix = true;
 	else if (hasPrefix == 10 || hasPrefix == 13)
-		this->m_hasPrefix = false
+		this->m_hasPrefix = false;
 	else
 	{
-		this->m_hasPrefix = false
+		this->m_hasPrefix = false;
 
 		std::cerr << boost::format(_("Imported files: Invalid path byte %1%.")) % hasPrefix << std::endl;
 	}

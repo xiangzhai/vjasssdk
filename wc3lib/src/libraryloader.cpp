@@ -56,8 +56,7 @@ class LibraryLoader::Handle* LibraryLoader::loadLibrary(const boost::filesystem:
 #elif defined WINDOWS
 	libraryName.append(".dll");
 #endif
-	boost::filesystem::path newPath(path.directory_string() + libraryName);
-
+	boost::filesystem::path newPath(path.root_path() / libraryName); /// \todo If exists the absolute directory path and the library name!
 	HandleType handle = 0;
 
 #ifdef MAC

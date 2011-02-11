@@ -25,6 +25,7 @@
 
 #include "environment.hpp"
 #include "tilepoint.hpp"
+#include "../utilities.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -33,42 +34,36 @@ namespace wc3lib
 namespace map
 {
 
-const int32 Environment::version = 11;
-const char* Environment::fileName = "war3map.w3e";
 const int32 Environment::maxTilesets = 16;
 
 Environment::Environment(class W3m *w3m) : m_w3m(w3m)
 {
 }
 
-std::streamsize Environment::read(std::istream &istream) throw (class Exception)
+std::streamsize Environment::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
-	char8 fileId[4];
-	istream.read(fileId, sizeof(fileId));
-	std::streamsize bytes = istream.gcount();
+	int32 id;
+	std::streamsize size = 0;
+	wc3lib::read(istream, id, size);
 
-	if (memcmp(fileId, "W3E!", sizeof(fileId)) != 0)
-		throw Exception(boost::str(boost::format(_("Environment: Expected \"W3E!\" identifier. Got unknown \"%1%\".")) % fileId));
+	if (id != fileId())
+		throw Exception(boost::str(boost::format(_("Environment: Expected \"%1%\" identifier. Got unknown \"%2%\".")) % fileId() % id));
 
-	istream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
-	bytes += istream.gcount();
+	wc3lib::read(istream, this->m_version, size);
 
-	if (this->m_version != Environment::version)
-		std::cout << boost::str(boost::format(_("Environment: Expected version %1%. Got unknown %2%.")) % Environment::version % this->m_version) << std::endl;
+	if (this->m_version != latestFileVersion())
+		std::cout << boost::str(boost::format(_("Environment: Expected version %1%. Got unknown %2%.")) % latestFileVersion() % this->m_version) << std::endl;
 
 	char8 mainTileset;
-	istream.get(mainTileset);
-	bytes += istream.gcount();
+	wc3lib::read(istream, mainTileset, size);
 	this->m_mainTileset = Environment::convertCharToMainTileset(mainTileset);
 
 	int32 customTilesetsFlag;
-	istream.read(reinterpret_cast<char*>(&customTilesetsFlag), sizeof (customTilesetsFlag));
-	bytes += istream.gcount();
+	wc3lib::read(istream, customTilesetsFlag, size);
 	this->m_customized = customTilesetsFlag;
 
 	int32 groundTilesetsNumber;
-	istream.read(reinterpret_cast<char*>(&groundTilesetsNumber), sizeof(groundTilesetsNumber));
-	bytes += istream.gcount();
+	wc3lib::read(istream, groundTilesetsNumber, size);
 
 	if (groundTilesetsNumber > Environment::maxTilesets)
 		throw Exception(boost::str(boost::format(_("Environment: Ground tilesets are limited to %1% however %2% are used.")) % Environment::maxTilesets % groundTilesetsNumber));
@@ -76,14 +71,12 @@ std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 	for (std::size_t i = 0; i < groundTilesetsNumber; ++i)
 	{
 		int32 groundTilesetId;
-		istream.read(reinterpret_cast<char*>(&groundTilesetId), sizeof(groundTilesetId));
-		bytes += istream.gcount();
+		wc3lib::read(istream, groundTilesetId, size);
 		this->m_groundTilesetsIds.push_back(groundTilesetId);
 	}
 
 	int32 cliffTilesetsNumber;
-	istream.read(reinterpret_cast<char*>(&cliffTilesetsNumber), sizeof(cliffTilesetsNumber));
-	bytes += istream.gcount();
+	wc3lib::read(istream, cliffTilesetsNumber, size);
 
 	if (cliffTilesetsNumber > Environment::maxTilesets)
 		throw Exception(boost::str(boost::format(_("Environment: Cliff tilesets are limited to %1% however %2% are used.")) % Environment::maxTilesets % cliffTilesetsNumber));
@@ -91,19 +84,14 @@ std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 	for (std::size_t i = 0; i < cliffTilesetsNumber; ++i)
 	{
 		int32 cliffTilesetId;
-		istream.read(reinterpret_cast<char*>(&cliffTilesetId), sizeof(cliffTilesetId));
-		bytes += istream.gcount();
+		wc3lib::read(istream, cliffTilesetId, size);
 		this->m_cliffTilesetsIds.push_back(cliffTilesetId);
 	}
 
-	istream.read(reinterpret_cast<char*>(&this->m_maxX), sizeof(this->m_maxX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_maxY), sizeof(this->m_maxY));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_centerOffsetX), sizeof(this->m_centerOffsetX));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_centerOffsetY), sizeof(this->m_centerOffsetY));
-	bytes += istream.gcount();
+	wc3lib::read(istream, this->m_maxX, size);
+	wc3lib::read(istream, this->m_maxY, size);
+	wc3lib::read(istream, this->m_centerOffsetX, size);
+	wc3lib::read(istream, this->m_centerOffsetY, size);
 
 	// The first tilepoint defined in the file stands for the lower left corner of the map when looking from the top, then it goes line by line (horizontal).
 	for (int32 y = 0; y < this->m_maxY; ++y)
@@ -112,15 +100,15 @@ std::streamsize Environment::read(std::istream &istream) throw (class Exception)
 		{
 			class Tilepoint *tilepoint = new Tilepoint(this);
 			tilepoint->m_position = std::make_pair(x, y);
-			bytes += tilepoint->read(istream);
+			size += tilepoint->read(istream);
 			this->m_tilepoints[tilepoint->m_position] = tilepoint;
 		}
 	}
 
-	return bytes;
+	return size;
 }
 
-std::streamsize Environment::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize Environment::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	return 0;
 }

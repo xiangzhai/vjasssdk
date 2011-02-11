@@ -28,9 +28,17 @@ namespace wc3lib
 namespace map
 {
 
-Modification* CustomObjects::Unit::createModification() const
+CustomObjects::Object::Object(CustomObjects::Type type) : m_type(type)
+{
+}
+
+CustomUnits::Modification* CustomObjects::Object::createModification() const
 {
 	return new CustomObjects::Modification(this->type());
+}
+
+CustomObjects::Modification::Modification(CustomObjects::Type type) : m_type(type)
+{
 }
 
 std::streamsize CustomObjects::Modification::read(std::basic_istream<byte> &istream) throw (class Exception)
@@ -65,7 +73,7 @@ std::streamsize CustomObjects::Modification::write(std::basic_ostream<byte> &ost
 	return size;
 }
 
-CustomObjects::CustomObjects(Type type) : m_type(type)
+CustomObjects::CustomObjects(CustomObjects::Type type) : m_type(type)
 {
 }
 
@@ -76,33 +84,33 @@ const char* CustomObjects::fileName() const
 	switch (this->type())
 	{
 		case Units:
-			return name.append("w3u");
+			return name.append("w3u").c_str();
 
 		case Items:
-			return name.append("w3t");
+			return name.append("w3t").c_str();
 
 		case Destructables:
-			return name.append("w3b");
+			return name.append("w3b").c_str();
 
 		case Doodads:
-			return name.append("w3d");
+			return name.append("w3d").c_str();
 
 		case Abilities:
-			return name.append("w3a");
+			return name.append("w3a").c_str();
 
 		case Buffs:
-			return name.append("w3h");
+			return name.append("w3h").c_str();
 
 		case Upgrades:
-			return name.append("w3q");
+			return name.append("w3q").c_str();
 	}
 
-	return name;
+	return name.c_str();
 }
 
-Unit* CustomObjects::createUnit() const
+CustomUnits::Unit* CustomObjects::createUnit() const
 {
-	return new CustomObjects::Unit(this->type());
+	return new CustomObjects::Object(this->type());
 }
 
 }

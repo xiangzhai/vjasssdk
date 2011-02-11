@@ -31,7 +31,12 @@ namespace wc3lib
 namespace editor
 {
 
-TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), m_modelView(new ModelView(editor, this, f))
+void TerrainEditor::loadEnvironment(const map::Environment &environment)
+{
+	this->m_terrainGroup->loadAllTerrains(true);
+}
+
+TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor), m_modelView(new ModelView(editor, this, f)), m_terrainGlobals(new Ogre::TerrainGlobalOptions()), m_terrainGroup(0)
 {
 	setWindowTitle(i18n("Terrain Editor"));
 	QHBoxLayout *mainLayout = new QHBoxLayout;
@@ -41,13 +46,28 @@ TerrainEditor::TerrainEditor(class Editor *editor, Qt::WFlags f) : Module(editor
 
 TerrainEditor::~TerrainEditor()
 {
-	delete this->m_modelView;
+	delete m_terrainGlobals;
 }
 
 void TerrainEditor::show()
 {
 	Module::show();
 	this->m_modelView->show();
+
+	if (m_terrainGroup != 0)
+	{
+		m_terrainGroup = new Ogre::TerrainGroup(modelView()->sceneManager(), Ogre::Terrain::ALIGN_X_Y, 513, 12000.0f);
+		m_terrainGroup->setOrigin(Ogre::Vector3::ZERO);
+		/*
+		m_terrainGroup->setMaxPixelError(8);
+		// testing composite map
+		m_terrainGroup->setCompositeMapDistance(3000);
+		// Important to set these so that the terrain knows what to use for derived (non-realtime) data
+		m_terrainGroup->setLightMapDirection(modelView()->sceneManager()->light()->getDerivedDirection());
+		m_terrainGroup->setCompositeMapAmbient(modelView()->sceneManager()->getAmbientLight());
+		m_terrainGroup->setCompositeMapDiffuse(modelView()->sceneManager()->light()->getDiffuseColour());
+		*/
+	}
 }
 
 void TerrainEditor::createFileActions(class KMenu *menu)

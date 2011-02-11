@@ -23,6 +23,7 @@
 
 #include <list>
 
+#include "platform.hpp"
 #include "../format.hpp"
 
 namespace wc3lib
@@ -59,10 +60,11 @@ class ImportedFiles : public Format<byte>
 		virtual int32 latestFileVersion() const;
 		virtual const char* fileName() const;
 
-		const std::list<class Path*> paths() const;
+		int32 version() const;
+		const std::list<class Path*>& paths() const;
 
-		static const string mapPrefix = "war3mapImported";
-		static const string campaignPrefix = "war3campaignImported";
+		static const string mapPrefix;
+		static const string campaignPrefix;
 
 	protected:
 		int32 m_version;
@@ -94,7 +96,7 @@ inline int32 ImportedFiles::version() const
 	return this->m_version;
 }
 
-inline const std::list<class Path*> ImportedFiles::paths() const
+inline const std::list<class ImportedFiles::Path*>& ImportedFiles::paths() const
 {
 	return this->m_paths;
 }

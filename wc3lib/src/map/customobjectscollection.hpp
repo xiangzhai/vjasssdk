@@ -1,0 +1,166 @@
+/***************************************************************************
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef WC3LIB_MAP_CUSTOMOBJECTSCOLLECTION_HPP
+#define WC3LIB_MAP_CUSTOMOBJECTSCOLLECTION_HPP
+
+#include "../format.hpp"
+#include "platform.hpp"
+
+namespace wc3lib
+{
+
+namespace map
+{
+
+/**
+* Collection of various customized object tables.
+* Usually used to export all custom map objects.
+* \sa CustomObjects
+*/
+class CustomObjectsCollection : public Format<byte>
+{
+	public:
+		CustomObjectsCollection();
+		~CustomObjectsCollection();
+
+		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+
+		virtual int32 latestFileVersion() const;
+		virtual const char* fileExtension() const;
+
+		int32 version() const;
+		bool hasUnits() const;
+		class CustomObjects* units() const;
+		bool hasItems() const;
+		class CustomObjects* items() const;
+		bool hasDestructables() const;
+		class CustomObjects* destructables() const;
+		bool hasDoodads() const;
+		class CustomObjects* doodads() const;
+		bool hasAbilities() const;
+		class CustomObjects* abilities() const;
+		bool hasBuffs() const;
+		class CustomObjects* buffs() const;
+		bool hasUpgrades() const;
+		class CustomObjects* upgrades() const;
+
+	protected:
+		int32 m_version;
+		class CustomObjects *m_units;
+		class CustomObjects *m_items;
+		class CustomObjects *m_destructables;
+		class CustomObjects *m_doodads;
+		class CustomObjects *m_abilities;
+		class CustomObjects *m_buffs;
+		class CustomObjects *m_upgrades;
+};
+
+inline int32 CustomObjectsCollection::latestFileVersion() const
+{
+	return 1;
+}
+
+inline const char* CustomObjectsCollection::fileExtension() const
+{
+	return "w3o";
+}
+
+inline int32 CustomObjectsCollection::version() const
+{
+	return this->m_version;
+}
+
+inline bool CustomObjectsCollection::hasUnits() const
+{
+	return this->m_units != 0;
+}
+
+inline class CustomObjects* CustomObjectsCollection::units() const
+{
+	return this->m_units;
+}
+
+inline bool CustomObjectsCollection::hasItems() const
+{
+	return this->m_items != 0;
+}
+
+inline class CustomObjects* CustomObjectsCollection::items() const
+{
+	return this->m_items;
+}
+
+inline bool CustomObjectsCollection::hasDestructables() const
+{
+	return this->m_destructables != 0;
+}
+
+inline class CustomObjects* CustomObjectsCollection::destructables() const
+{
+	return this->m_destructables;
+}
+
+inline bool CustomObjectsCollection::hasDoodads() const
+{
+	return this->m_doodads != 0;
+}
+
+inline class CustomObjects* CustomObjectsCollection::doodads() const
+{
+	return this->m_doodads;
+}
+
+inline bool CustomObjectsCollection::hasAbilities() const
+{
+	return this->m_abilities != 0;
+}
+
+inline class CustomObjects* CustomObjectsCollection::abilities() const
+{
+	return this->m_abilities;
+}
+
+inline bool CustomObjectsCollection::hasBuffs() const
+{
+	return this->m_buffs != 0;
+}
+
+inline class CustomObjects* CustomObjectsCollection::buffs() const
+{
+	return this->m_buffs;
+}
+
+inline bool CustomObjectsCollection::hasUpgrades() const
+{
+	return this->m_upgrades != 0;
+}
+
+inline class CustomObjects* CustomObjectsCollection::upgrades() const
+{
+	return this->m_upgrades;
+}
+
+}
+
+}
+
+#endif

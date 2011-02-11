@@ -18,7 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
 #include "campaigninfo.hpp"
+#include "../utilities.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -33,7 +37,9 @@ CampaignInfo::MapTitle::MapTitle() : m_isVisibleFromTheBeginning(false)
 std::streamsize CampaignInfo::MapTitle::read(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
-	wc3lib::read<int32>(istream, this->m_isVisibleFromTheBeginning, size);
+	int32 visible;
+	wc3lib::read(istream, visible, size);
+	this->m_isVisibleFromTheBeginning = visible;
 	readString(istream, this->m_chapterTitle, size);
 	readString(istream, this->m_mapTitle, size);
 	readString(istream, this->m_path, size);
@@ -44,7 +50,7 @@ std::streamsize CampaignInfo::MapTitle::read(std::basic_istream<byte> &istream) 
 std::streamsize CampaignInfo::MapTitle::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
-	write<int32>(ostream, this->m_isVisibleFromTheBeginning, size);
+	wc3lib::write<int32>(ostream, this->m_isVisibleFromTheBeginning, size);
 	writeString(ostream, this->m_chapterTitle, size);
 	writeString(ostream, this->m_mapTitle, size);
 	writeString(ostream, this->m_path, size);
@@ -80,10 +86,10 @@ CampaignInfo::CampaignInfo(class Campaign *campaign) : m_campaign(campaign)
 
 CampaignInfo::~CampaignInfo()
 {
-	BOOST_FOREACH(class MapTitle *mapTitle, this->m_mapTitles);
+	BOOST_FOREACH(MapTitle *mapTitle, this->m_mapTitles)
 		delete mapTitle;
 
-	BOOST_FOREACH(class Map *map, this->m_maps);
+	BOOST_FOREACH(Map *map, this->m_maps)
 		delete map;
 }
 
@@ -97,7 +103,7 @@ std::streamsize CampaignInfo::read(std::basic_istream<byte> &istream) throw (cla
 	readString(istream, this->m_difficulty, size);
 	readString(istream, this->m_author, size);
 	readString(istream, this->m_description, size);
-	in32 flag;
+	int32 flag;
 	wc3lib::read(istream, flag, size);
 
 	switch (flag)
@@ -137,7 +143,9 @@ std::streamsize CampaignInfo::read(std::basic_istream<byte> &istream) throw (cla
 	wc3lib::read(istream, this->m_fogEndZHeight, size);
 	wc3lib::read(istream, this->m_fogDensity, size);
 	wc3lib::read(istream, this->m_fogColor, size);
-	wc3lib::read<int32>(istream, this->m_race, size);
+	int32 race;
+	wc3lib::read<int32>(istream, race, size);
+	this->m_race = static_cast<enum Race>(race);
 
 	int32 mapTitles;
 	wc3lib::read(istream, mapTitles, size);

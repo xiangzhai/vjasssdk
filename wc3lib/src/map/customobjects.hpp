@@ -30,7 +30,8 @@ namespace map
 {
 
 /**
-* Warcraft 3 The Frozen Throne allows you to customize every possible object data using Warcraft 3's unit data format wit hsome minor changes.
+* Warcraft 3 The Frozen Throne allows you to customize every possible object data using Warcraft 3's unit data format with some minor changes.
+* Corresponding type of data is stored dynamically (\ref CustomObjects::Type).
 */
 class CustomObjects : public CustomUnits
 {
@@ -49,20 +50,20 @@ class CustomObjects : public CustomUnits
 		class Object : public CustomUnits::Unit
 		{
 			public:
-				Object(Type type);
-				Type type() const;
+				Object(CustomObjects::Type type);
+				CustomObjects::Type type() const;
 
 			protected:
-				virtual Modification* createModification() const;
+				virtual CustomUnits::Modification* createModification() const;
 
-				Type m_type;
+				CustomObjects::Type m_type;
 		};
 
 		class Modification : public CustomUnits::Modification
 		{
 			public:
-				Modification(Type type);
-				Type type() const;
+				Modification(CustomObjects::Type type);
+				CustomObjects::Type type() const;
 				/**
 				* Only read for doodads, abilities and upgrades. Doodads use this as variation number.
 				*/
@@ -77,7 +78,7 @@ class CustomObjects : public CustomUnits
 				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 			protected:
-				Type m_type;
+				CustomObjects::Type m_type;
 				int32 m_level; // level/variation
 				int32 m_data; // A, 1 = B, 2 = C, 3 = D, 4 = F, 5 = G, 6 = H
 		};
@@ -85,18 +86,20 @@ class CustomObjects : public CustomUnits
 		CustomObjects(Type type);
 		Type type() const;
 
+		virtual const char* fileName() const;
+
 	protected:
 		virtual Unit* createUnit() const;
 
 		Type m_type;
 };
 
-inline Type CustomObjects::Object::type() const
+inline CustomObjects::Type CustomObjects::Object::type() const
 {
 	return this->m_type;
 }
 
-inline Type CustomObjects::Modification::type() const
+inline CustomObjects::Type CustomObjects::Modification::type() const
 {
 	return this->m_type;
 }
@@ -111,7 +114,7 @@ inline int32 CustomObjects::Modification::data() const
 	return this->m_data;
 }
 
-inline Type CustomObjects::type() const
+inline CustomObjects::Type CustomObjects::type() const
 {
 	return this->m_type;
 }
