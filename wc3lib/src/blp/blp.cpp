@@ -258,10 +258,13 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 		class MipMap *mipMap = new MipMap(this, this->mipMapWidth(i), this->mipMapHeight(i));
 		mipMaps[mipMap] = mipMapData[i];
 
-		if (this->m_flags != Blp::Alpha && mipMapData[i]->size != mipMap->width() * mipMap->height())
-			std::cerr << boost::format(_("Size %1% is not equal to %2%.")) %  mipMapData[i]->size % (mipMap->width() * mipMap->height()) << std::endl;
-		else if (this->m_flags == Blp::Alpha && mipMapData[i]->size != mipMap->width() * mipMap->height() * 2)
-			std::cerr << boost::format(_("Size %1% is not equal to %2%.")) %  mipMapData[i]->size % (mipMap->width() * mipMap->height()) << std::endl;
+		if (this->m_compression == Blp::Paletted)
+		{
+			if (this->m_flags == Blp::NoAlpha && mipMapData[i]->size != mipMap->width() * mipMap->height() * sizeof(byte))
+				std::cerr << boost::format(_("Size %1% is not equal to %2%.")) %  mipMapData[i]->size % (mipMap->width() * mipMap->height() * sizeof(color)) << std::endl;
+			else if (this->m_flags == Blp::Alpha && mipMapData[i]->size != mipMap->width() * mipMap->height() * 2 * sizeof(byte))
+				std::cerr << boost::format(_("Size %1% is not equal to %2%.")) %  mipMapData[i]->size % (mipMap->width() * mipMap->height() * 2 * sizeof(color)) << std::endl;
+		}
 
 		this->m_mipMaps.push_back(mipMap);
 	}
@@ -319,6 +322,9 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 				throw exception;
 			}
 
+			if (BITS_IN_JSAMPLE > sizeof(byte) * 8)
+				throw Exception(boost::format(_("Too many bits in one single sample (one single pixel color channel): %1%. BLP/wc3lib allows maximum sample size of %2%.")) % BITS_IN_JSAMPLE % (sizeof(byte) * 8));
+
 			dword jpegHeaderSize;
 			wc3lib::read(istream, jpegHeaderSize, size);
 
@@ -359,7 +365,6 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 				try
 				{
 					std::cout << boost::format(_("Using header of library \"jpeglib\" version %1%.")) % JPEG_LIB_VERSION << std::endl;
-
 					JSAMPARRAY scanlines = 0; // will be filled later
 
 					struct jpeg_decompress_struct cinfo;
@@ -382,21 +387,24 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 							throw Exception(jpegError(jpeg_std_error, _("Could not start decompress. Error: %1%.")));
 
 						if (mipMap->width() != cinfo.image_width)
-							std::cerr << boost::format(_("Warnung: Image width (%1%) is not equal to mip map width (%2%).")) % cinfo.image_width % mipMap->width() << std::endl;
+							std::cerr << boost::format(_("Warning: Image width (%1%) is not equal to mip map width (%2%).")) % cinfo.image_width % mipMap->width() << std::endl;
 
 						if (mipMap->height() != cinfo.image_height)
-							std::cerr << boost::format(_("Warnung: Image height (%1%) is not equal to mip map height (%2%).")) % cinfo.image_height % mipMap->height() << std::endl;
+							std::cerr << boost::format(_("Warning: Image height (%1%) is not equal to mip map height (%2%).")) % cinfo.image_height % mipMap->height() << std::endl;
+
+						if (cinfo.out_color_space != JCS_RGB)
+							std::cerr << boost::format(_("Warning: Image color space (%1%) is not equal to RGB (%2%).")) % cinfo.out_color_space % JCS_RGB << std::endl;
 
 						std::cout << "JPEG image has width " << cinfo.image_width << " and height " << cinfo.image_height << std::endl;
 						std::cout << "JPEG image has scaled width " << cinfo.output_width << " and scaled height " << cinfo.output_height << std::endl;
 						std::cout << "Color map has size " << cinfo.actual_number_of_colors << std::endl;
 
-						// JSAMPLEs per row in output buffer
-						JDIMENSION scanlinesSize = cinfo.output_width * cinfo.output_components;
-						scanlines = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, scanlinesSize, 1); /// @todo Memory should be allocated before but we don't have size?!
-						//scanlines = new JSAMPROW[scanlinesSize];
-						std::size_t i = 0;
-						std::cout << "Number of scanlines " << scanlinesSize << std::endl;
+						/// \todo Get as much required scanlines as possible (highest divident) to increase speed. Actually it could be equal to the MIP maps height which will lead to reading the whole MIP map with one single \ref jpeg_read_scanlines call
+						static const JDIMENSION requiredScanlines = 1; // increase this value to read more scanlines in one step
+						JDIMENSION scanlineSize = cinfo.output_width * cinfo.output_components; // JSAMPLEs per row in output buffer
+						scanlines = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, scanlineSize, requiredScanlines);
+						std::cout << "Required scanlines " << requiredScanlines << std::endl;
+						std::cout << "Size of scanline " << scanlineSize << " (width * components)" << std::endl;
 						std::cout << "we do have " << cinfo.output_components << " components/color channels." << std::endl;
 
 						// per scanline
@@ -405,36 +413,37 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 							//std::cout << "Output scanline is " << cinfo.output_scanline << " and buffer size is " << scanlinesSize << " and height is " <<  cinfo.output_height << std::endl;
 
 							//scanlines[cinfo.output_scanline] = new JSAMPLE[cinfo.output_height];
-							JDIMENSION dimension = jpeg_read_scanlines(&cinfo, scanlines, 1); // scanlinesSize
+							JDIMENSION width = 0;
+							JDIMENSION height = cinfo.output_scanline; // cinfo.output_scanline is increased by one after calling jpeg_read_scanlines
+							JDIMENSION dimension = jpeg_read_scanlines(&cinfo, scanlines, requiredScanlines); // scanlinesSize
+							//std::cout << "Read " << dimension << " scanlines" << std::endl;
 
-							if (dimension == 0)
-								std::cerr << _("Warning: Number of scanned lines is 0.") << std::endl;
+							if (dimension != requiredScanlines)
+								std::cerr << boost::format(_("Warning: Number of scanned lines is not equal to %1%. It is %2%.")) % requiredScanlines % dimension << std::endl;
 
-							int width = 0;
-							int height = cinfo.output_scanline - 1; // cinfo.output_scanline is increased by one after calling jpeg_read_scanlines
-
-							/// @todo Check if we got the right values!
-							for (int component = 0; component < scanlinesSize; component += cinfo.output_components)
+							for (JDIMENSION scanline = 0; scanline < dimension; ++scanline, ++height)
 							{
-								// store as ARGB (BLP)
-								color argb = (scanlines[0][component] << 2) & (scanlines[0][component + 1] << 1) & (scanlines[0][component + 2]);
-
-								byte alpha = 0;
-
-								if (cinfo.output_components == 4) // we do have an alpha channel
+								// cinfo.output_components should be 3 if RGB and 4 if RGBA
+								for (int component = 0; component < scanlineSize; component += cinfo.output_components)
 								{
-									alpha = scanlines[0][component + 3];
-									argb &= alpha << 3;
-								}
+									// store as ARGB (BLP)
+									// TODO why is component 0 blue, component 1 green and component 2 red?
+									color argb = ((color)scanlines[scanline][component]) + ((color)scanlines[scanline][component + 1] << 8) + ((color)scanlines[scanline][component + 2] << 16);
 
-								mipMap->setColor(width, height, argb, alpha);
-								width++;
+									if (cinfo.output_components == 4) // we do have an alpha channel
+										argb += ((color)(0xFF - scanlines[scanline][component + 3]) << 24);
+									//std::cout << "ARGB " << std::ios::hex << argb << std::endl;
+
+									mipMap->setColor(width, height, argb, 0); /// \todo Get alpha?!
+									width++;
+								}
 							}
+
+							//std::cout << "read " << i << " blas" << std::endl;
 
 
 							//put_scanline_someplace(scanlines[0], scanlinesSize);
-							std::cout << "I is " << i << " and read lines " << dimension << std::endl;
-							++i;
+							//std::cout << "I is " << i << " and read lines " << dimension << std::endl;
 						}
 					}
 					catch (...)

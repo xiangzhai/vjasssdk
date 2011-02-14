@@ -43,7 +43,7 @@ namespace
 */
 inline blp::color rgbaToColor(QRgb rgba)
 {
-	return (blp::color)(qAlpha(rgba)) << 32 + (rgba & 0x00FFFFFF);
+	return (blp::color)(qAlpha(rgba)) << 24 + (rgba & 0x00FFFFFF);
 }
 
 /**

@@ -1,7 +1,12 @@
+2011-02-15 Tamino Dauth <tamio@cdauth.eu>
+* blp: Fixed JPEG compression color reading.
+* editor: Fixed color conversation function (from QRgb to blp::color).
+
 2011-02-14 Tamino Dauth <tamio@cdauth.eu>
 * blp: Added initial BLP2 support.
 * blp: Improved read and write functionality of BLP images.
 * Blp: Added element function "palette"
+* blp: Added support for reading multiple scanlines when decompressing JPEG.
 
 2011-02-11 Tamino Dauth <tamio@cdauth.eu>
 * blp: Fixed alpha channel reading of paletted compression.
