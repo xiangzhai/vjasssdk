@@ -1,3 +1,6 @@
+2011-02-14 Tamino Dauth <tamino@cdauth.eu>
+* blp: Fix JFIF colors (maybe because of wrong header data -> color type?).
+
 2011-02-04 Tamino Dauth <tamino@cdauth.eu>
 * map: Classes Campaign and W3M have to derive from class Playable.
 * map: All file-based classes should get virtual element functions called fileName and latestFileVersion.
@@ -52,7 +55,7 @@
 * editor: Fix module widget tool bar and menu bar creation.
 
 2010-10-12 Tamino Dauth <tamino@cdauth.eu>
-* blp: colors are stored as ARGB (paletted compression)?
+* FIXED: blp: colors are stored as ARGB (paletted compression)?
 
 2010-10-03 Tamino Dauth <tamino@cdauth.eu>
 * DONE: mdlx: PrimitiveVertices -> GroupMdxBlock.
@@ -295,7 +298,7 @@
 * Too much mip map data is read (end of file)?
 
 2009-11-23 Tamino Dauth <tamino@cdauth.eu>
-* BLP2 uses another specification or BaerWeiss.blp is BlpUncompressed2, fix BlpUncompressed1 and BlpUncompressed2 diffences recognition.
+* FIXED: BLP2 uses another specification or BaerWeiss.blp is BlpUncompressed2, fix BlpUncompressed1 and BlpUncompressed2 diffences recognition.
 
 2009-11-17 Tamino Dauth <tamino@cdauth.eu>
 * DEPRECATED (since they're using file paths): Use Boost libraries image classes to read and write images with the BLP library.

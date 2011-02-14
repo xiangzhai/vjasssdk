@@ -42,6 +42,14 @@ void MpqEditor::closeMpqArchive()
 {
 }
 
+void MpqEditor::optimizeMpqArchive()
+{
+}
+
+void MpqEditor::optimizeAllMpqArchives()
+{
+}
+
 void MpqEditor::addFiles()
 {
 }
@@ -51,6 +59,30 @@ void MpqEditor::extractFiles()
 }
 
 void MpqEditor::removeFiles()
+{
+}
+
+void MpqEditor::optimizeFiles()
+{
+}
+
+void MpqEditor::createDirectory()
+{
+}
+
+void MpqEditor::openWar3()
+{
+}
+
+void MpqEditor::openWar3X()
+{
+}
+
+void MpqEditor::openWar3Patch()
+{
+}
+
+void MpqEditor::openWar3XLocal()
 {
 }
 

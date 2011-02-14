@@ -38,11 +38,17 @@ namespace editor
 namespace
 {
 
+/**
+* \return Returns BLP ARGB color.
+*/
 inline blp::color rgbaToColor(QRgb rgba)
 {
 	return (blp::color)(qAlpha(rgba)) << 32 + (rgba & 0x00FFFFFF);
 }
 
+/**
+* \return Returns Qt RGBA color.
+*/
 inline QRgb colorToRgba(blp::color c)
 {
 	return qRgba(blp::red(c), blp::green(c), blp::blue(c), blp::alpha(c));
@@ -114,7 +120,7 @@ bool BlpIOHandler::read(QImage *image)
 	{
 		const blp::Blp::MipMap::Coordinates &coordinates = mapEntry.first;
 		const class blp::Blp::MipMap::Color &color = mapEntry.second;
-		QRgb pixelColor = colorToRgba(color.rgba());
+		QRgb pixelColor = colorToRgba(color.argb());
 
 		if (blpImage.compression() != blp::Blp::Paletted)
 		{
@@ -196,8 +202,8 @@ bool BlpIOHandler::write(const QImage &image)
 			if (blpImage.compression() == blp::Blp::Paletted)
 				index = image.pixelIndex(width, height); // index has to be set because paletted compression can also be used
 
-			blp::color rgba = rgbaToColor(rgb);
-			mipMap->setColor(width, height, rgba, qAlpha(rgb), index);
+			blp::color argb = rgbaToColor(rgb);
+			mipMap->setColor(width, height, argb, qAlpha(rgb), index);
 		}
 	}
 

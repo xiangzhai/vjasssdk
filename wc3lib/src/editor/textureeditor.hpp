@@ -43,6 +43,13 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 		void openFile();
 		void saveFile();
 
+		void makeActive();
+		void makePassive();
+		void makeAutocast();
+
+		void makeInfocardNormal();
+		void makeInfoardLevel();
+
 	protected:
 		virtual void createFileActions(class KMenu *menu);
 		virtual void createEditActions(class KMenu *menu);

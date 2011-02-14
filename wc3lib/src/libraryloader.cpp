@@ -47,7 +47,7 @@ namespace wc3lib
 
 class LibraryLoader::Handle* LibraryLoader::loadLibrary(const boost::filesystem::path &path) throw (class Exception)
 {
-	std::string libraryName = path.filename().c_str();
+	std::string libraryName = path.filename();
 
 #ifdef MAC
 	libraryName.append(".dylib");
@@ -66,15 +66,18 @@ class LibraryLoader::Handle* LibraryLoader::loadLibrary(const boost::filesystem:
 #elif defined (WINDOWS)
 	handle = LoadLibraryEx(newPath.string().c_str(), NULL, LOAD_WITH_ALTERED_SEARCH_PATH );
 #endif
-	std::string errorMessage;
+
+	if (handle == NULL)
+	{
+		std::string errorMessage;
 
 #ifdef UNIX
-	errorMessage.append(dlerror());
+		errorMessage = dlerror();
 /// @todo Support other system errors
 #endif
 
-	if (handle == NULL)
 		throw Exception(boost::format(_("Error while loading shared object \"%1%\": %2%")) % newPath.string() % errorMessage);
+	}
 
 	class Handle *result = new Handle;
 	result->handle = handle;

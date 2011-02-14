@@ -101,6 +101,7 @@ void TextureEditor::openFile()
 		return;
 	}
 
+	/// \todo Image format (e. g. Format_Indexed8 is not stored) which leads to another format when saving image somewhere.
 	this->m_imageLabel->setPixmap(QPixmap::fromImage(image));
 	this->m_imageLabel->resize(this->m_imageLabel->pixmap()->size());
 	qDebug() << "Set pixmap to label ";
@@ -139,6 +140,26 @@ void TextureEditor::saveFile()
 
 		return;
 	}
+}
+
+void TextureEditor::makeActive()
+{
+}
+
+void TextureEditor::makePassive()
+{
+}
+
+void TextureEditor::makeAutocast()
+{
+}
+
+void TextureEditor::makeInfocardNormal()
+{
+}
+
+void TextureEditor::makeInfoardLevel()
+{
 }
 
 void TextureEditor::createFileActions(class KMenu *menu)

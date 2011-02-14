@@ -24,7 +24,7 @@ kde4_add_library(wc3libeditor SHARED ${wc3lib_EDITOR_SRC})
 target_link_libraries(wc3libeditor ${wc3lib_CORE_LIBRARIES} ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES} ${OGRE_LIBRARIES} ${QT_LIBRARIES} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 
 # install
-install(TARGETS qblp DESTINATION lib/qt4/plugins/imageformats)
+install(TARGETS qblp DESTINATION ${QT_PLUGINS_DIR}/imageformats)
 install(TARGETS wc3libeditor DESTINATION lib/wc3lib/)
 install(FILES ${wc3lib_EDITOR_H} PUBLIC_HEADER DESTINATION include/wc3lib/editor)
 install(FILES editor.kcfg DESTINATION ${KCFG_INSTALL_DIR})

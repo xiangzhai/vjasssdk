@@ -47,14 +47,13 @@ typedef uint16_t word;
 typedef uint32_t dword;
 typedef float float32;
 /**
-* @brief RGBA color stored in order ARGB withd one byte per channel.
+* @brief RGBA color stored in order ARGB with one byte per channel.
 */
 typedef uint32_t color;
 
 struct BlpHeader
 {
-	dword identifier;
-	dword compression, mipMapsNumber, sizeX, sizeY, pictureType, pictureSubType;
+	dword compression, flags, width, height, pictureType, pictureSubType;
 	dword mipMapOffset[16], mipMapSize[16];
 };
 
@@ -65,13 +64,15 @@ struct BlpJpegHeader : public BlpHeader
 
 struct Blp2Header
 {
-	char identifier[4];
-	int type;
-	char flags[4];
-	int width;
-	int height;
-	int mipMapOffsets[16];
-	int mipMapLengths[16];
+	byte type;
+	byte encoding;
+	byte alphaDepth;
+	byte alphaEncoding;
+	byte hasMips;
+	dword width, height; //height+7
+	dword mipMapOffset[16];
+	dword mipMapSize[16];
+	color palette[256];
 };
 
 inline byte red(color c)

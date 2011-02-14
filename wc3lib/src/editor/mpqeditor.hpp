@@ -38,6 +38,13 @@ class Mpq;
 namespace editor
 {
 
+/**
+* File-based MPQ editor which uses wc3lib's MPQ protocol plug-in (\ref MpqArchive) for MPQ
+* file handling.
+* Moreover it allows you to easily open Warcraft'3 default MPQ archives.
+* MPQ archive list includes them, too and additionally all MPQ archives from editor's MPQ priority list (\ref MpqPriorityList) plus all opened maps and campaigns in editor.
+* \sa MpqArchive, MpqPriorityList
+*/
 class MpqEditor : public Module
 {
 	Q_OBJECT
@@ -49,10 +56,32 @@ class MpqEditor : public Module
 		void newMpqArchive();
 		void openMpqArchive();
 		void closeMpqArchive();
+		void optimizeMpqArchive();
+		void optimizeAllMpqArchives();
 
 		void addFiles();
+		/**
+		* Extracts all selected files (including directories) into a given target which is defined by user via file dialog.
+		*/
 		void extractFiles(); // selected files
+		/**
+		* Removes all selected files (including directories) from the given MPQ archive if possible (archive may be opened in read-only mode).
+		*/
 		void removeFiles();
+		/**
+		* Optimizes all selected files (including directories) which means that their compression and other flags will be defined trying to get the best compression results.
+		* \note If archive is open in read-only mode this can not be used on any of its files.
+		*/
+		void optimizeFiles();
+		/**
+		* Creates a new directory with a user-defined name in the MPQ archive.
+		*/
+		void createDirectory();
+
+		void openWar3();
+		void openWar3X();
+		void openWar3Patch();
+		void openWar3XLocal();
 
 	protected:
 		virtual void createFileActions(class KMenu *menu);

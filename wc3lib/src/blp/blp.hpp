@@ -65,11 +65,14 @@ namespace blp
 * #include <iostream>
 * #include <boost/filesystem/fstream.hpp>
 * #include <boost/foreach.hpp>
+* #include <wc3lib/blp.hpp>
 * ...
-* std::ifstream ifstream("test.blp", std::ifstream::binary);
-* class Blp blp;
+* using namespace wc3lib::blp;
+* std::ifstream ifstream("test.blp", std::ifstream::binary | std::ifstream::in);
+* Blp blp;
 * blp.read(istream);
 * std::cout << "We have " << blp.mipMaps().size() << " mip maps here." << std::endl;
+*
 * BOOST_FOREACH(const class Blp::MipMap *mipMap, blp.mipMaps())
 	* std::cout << "This mip map has height " << mipMap->height() << " and width " << mipMap->width() << std::endl;
 * @endcode
@@ -98,8 +101,8 @@ class Blp : public Format<byte>
 						~Color();
 
 						class MipMap* mipMap() const;
-						void setRgba(color rgba);
-						color rgba() const;
+						void setArgb(color argb);
+						color argb() const;
 						void setAlpha(byte alpha);
 						byte alpha() const;
 						void setPaletteIndex(byte paletteIndex);
@@ -108,10 +111,10 @@ class Blp : public Format<byte>
 					protected:
 						friend class MipMap;
 
-						Color(class MipMap *mipMap, color rgba, byte alpha, byte paletteIndex);
+						Color(class MipMap *mipMap, color argb, byte alpha, byte paletteIndex);
 
 						class MipMap *m_mipMap;
-						color m_rgba;
+						color m_argb;
 						byte m_alpha;
 						byte m_paletteIndex; // only used for paletted compression
 				};
@@ -130,7 +133,7 @@ class Blp : public Format<byte>
 				dword width() const;
 				dword height() const;
 
-				void setColor(dword width, dword height, color rgba, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
+				void setColor(dword width, dword height, color argb, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
 				void setColorAlpha(dword width, dword height, byte alpha) throw (class Exception);
 				const std::map<Coordinates, class Color>& colors() const;
 				const class Color& colorAt(dword width, dword height) const;
@@ -165,12 +168,16 @@ class Blp : public Format<byte>
 		enum Compression
 		{
 			Jpeg = 0, /// JFIF!
-			Paletted = 1
+			Paletted = 1,
+			Uncompressed = 2, // BLP2
+			DirectXCompression = 3 // BLP2
 		};
 
 		enum Flags
 		{
 			NoAlpha = 0,
+			Alpha1Bit = 1, // BLP2
+			Alpha4Bit = 4,  // BLP2 (DXT3 only)
 			Alpha = 8
 		};
 
@@ -225,6 +232,11 @@ class Blp : public Format<byte>
 		*/
 		bool generateMipMaps(class MipMap *initialMipMap, std::size_t number = Blp::maxMipMaps);
 
+		/**
+		* \return Returns newly allocated color palette with size \ref Blp::compressedPaletteSize.
+		*/
+		color* palette() const;
+
 	protected:
 		dword mipMapWidth(std::size_t index) const;
 		dword mipMapHeight(std::size_t index) const;
@@ -248,14 +260,14 @@ inline class Blp::MipMap* Blp::MipMap::Color::mipMap() const
 	return this->m_mipMap;
 }
 
-inline void Blp::MipMap::Color::setRgba(color rgba)
+inline void Blp::MipMap::Color::setArgb(color argb)
 {
-	this->m_rgba = rgba;
+	this->m_argb = argb;
 }
 
-inline color Blp::MipMap::Color::rgba() const
+inline color Blp::MipMap::Color::argb() const
 {
-	return this->m_rgba;
+	return this->m_argb;
 }
 
 inline void Blp::MipMap::Color::setAlpha(byte alpha)
@@ -288,7 +300,7 @@ inline dword Blp::MipMap::height() const
 	return this->m_height;
 }
 
-inline void Blp::MipMap::setColor(dword width, dword height, color rgba, byte alpha, byte paletteIndex) throw (class Exception)
+inline void Blp::MipMap::setColor(dword width, dword height, color argb, byte alpha, byte paletteIndex) throw (class Exception)
 {
 	if (width >= this->m_width || height >= this->m_height)
 		throw Exception(boost::str(boost::format(_("Mip map: Invalid indices (width %1%, height %2%).")) % width % height));
@@ -296,7 +308,7 @@ inline void Blp::MipMap::setColor(dword width, dword height, color rgba, byte al
 	if (this->m_colors.find(std::make_pair(width, height)) != this->m_colors.end())
 		std::cout << "Warning: Color at " << width << " | " << height << " does already exist." << std::endl;
 
-	this->m_colors[std::make_pair(width, height)] = Color(this, rgba, alpha, paletteIndex);
+	this->m_colors[std::make_pair(width, height)] = Color(this, argb, alpha, paletteIndex);
 }
 
 inline void Blp::MipMap::setColorAlpha(dword width, dword height, byte alpha) throw (class Exception)
