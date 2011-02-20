@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_MDLXSCALING_HPP
 #define WC3LIB_MDLX_MDLXSCALING_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlxanimatedproperty.hpp"
+#include "mdlxscalings.hpp"
 
 namespace wc3lib
 {
@@ -33,43 +30,31 @@ namespace wc3lib
 namespace mdlx
 {
 
-class MdlxScaling
+class MdlxScaling : public MdlxAnimatedProperty
 {
 	public:
 		MdlxScaling(class MdlxScalings *scalings);
 		virtual ~MdlxScaling();
+		
+		class MdlxScalings* scalings() const;
 
-		std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-
-		long32 frame() const;
-		const struct VertexData& vertexData() const;
-		const struct InterpolationData& interpolationData() const;
-
-	protected:
-		class MdlxScalings *m_scalings;
-		long32 m_frame;
-		struct VertexData m_vertexData;
-		//if (LineType > 1) {
-		struct InterpolationData m_interpolationData;
-		//}
+		struct VertexData vertexData() const;
+		struct InterpolationData interpolationData() const;
 };
 
-inline long32 MdlxScaling::frame() const
+inline class MdlxScalings* MdlxScaling::scalings() const
 {
-	return this->m_frame;
+	return dynamic_cast<class MdlxScalings*>(this->properties());
 }
 
-inline const struct VertexData& MdlxScaling::vertexData() const
+inline struct VertexData MdlxScaling::vertexData() const
 {
-	return this->m_vertexData;
+	return VertexData(values());
 }
 
-inline const struct InterpolationData& MdlxScaling::interpolationData() const
+inline struct InterpolationData MdlxScaling::interpolationData() const
 {
-	return this->m_interpolationData;
+	return InterpolationData(inTan(), outTan());
 }
 
 }

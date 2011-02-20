@@ -18,11 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "mdlxrotations.hpp"
 #include "mdlxrotation.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -30,65 +27,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdlxRotations::MdlxRotations(class Mdlx *mdlx) : MdxBlock("KGRT"), m_mdlx(mdlx)
+MdlxRotations::MdlxRotations(class Mdlx *mdlx) : MdlxAnimatedProperties(mdlx, "KGRT", "Rotation")
 {
 }
 
 MdlxRotations::~MdlxRotations()
 {
-	BOOST_FOREACH(class MdlxRotation *rotation, this->m_rotations)
-		delete rotation;
 }
 
-std::streamsize MdlxRotations::readMdl(std::istream &istream) throw (class Exception)
+
+class MdlxAnimatedProperty* MdlxRotations::createAnimatedProperty()
 {
-	return 0;
-}
-
-std::streamsize MdlxRotations::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize MdlxRotations::readMdx(std::istream &istream) throw (class Exception)
-{
-	std::streamsize size = MdxBlock::readMdx(istream);
-
-	// is optional!
-	if (size == 0)
-		return 0;
-
-	long32 number;
-	wc3lib::read(istream, number, size);
-	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_lineType), size);
-	wc3lib::read(istream, this->m_globalSequenceId, size);
-
-	for ( ; number > 0; --number)
-	{
-		class MdlxRotation *rotation = new MdlxRotation(this);
-		size += rotation->readMdx(istream);
-		this->m_rotations.push_back(rotation);
-	}
-
-	return size;
-}
-
-std::streamsize MdlxRotations::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	std::streamsize size = MdxBlock::writeMdx(ostream);
-
-	// is optional!
-	if (size == 0)
-		return 0;
-
-	wc3lib::write(ostream, static_cast<long32>(this->m_rotations.size()), size);
-	wc3lib::write(ostream, static_cast<long32>(this->m_lineType), size);
-	wc3lib::write(ostream, this->m_globalSequenceId, size);
-
-	BOOST_FOREACH(const class MdlxRotation *rotation, this->m_rotations)
-		size += rotation->writeMdx(ostream);
-
-	return size;
+	return new MdlxRotation(this);
 }
 
 }

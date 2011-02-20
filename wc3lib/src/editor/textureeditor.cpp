@@ -26,6 +26,8 @@
 #include <ktoolbar.h>
 #include <kmenu.h>
 #include <kaction.h>
+#include <kmenubar.h>
+#include <kstandardaction.h>
 
 #include "textureeditor.hpp"
 #include "blpiohandler.hpp"
@@ -36,12 +38,17 @@ namespace wc3lib
 namespace editor
 {
 
-TextureEditor::TextureEditor(class Editor *editor) : Module(editor)
+TextureEditor::TextureEditor(class Editor *editor) : Module(editor), m_image(new QImage()), m_factor(1.0)
 {
 	Ui::TextureEditor::setupUi(this);
 	Module::setupUi();
 
 	topLayout()->addLayout(gridLayout_2);
+}
+
+TextureEditor::~TextureEditor()
+{
+	delete this->m_image;
 }
 
 void TextureEditor::openFile()
@@ -83,18 +90,16 @@ void TextureEditor::openFile()
 	}
 	*/
 
-	QImage image;
-
-	if (!image.load(&file, 0))//(!handler.read(&image))
+	if (!this->m_image->load(&file, 0))//(!handler.read(&image))
 	{
 		KMessageBox::error(this, i18n("Unable to read BLP image from file \"%1\".", url.toLocalFile()));
 
 		return;
 	}
 
-	qDebug() << "Size is " << image.width() << " | " << image.height();
+	qDebug() << "Size is " << this->m_image->width() << " | " << this->m_image->height();
 
-	if (image.isNull())
+	if (this->m_image->isNull())
 	{
 		KMessageBox::error(this, i18n("Unable to read file \"%1\".", url.toLocalFile()));
 
@@ -102,7 +107,7 @@ void TextureEditor::openFile()
 	}
 
 	/// \todo Image format (e. g. Format_Indexed8 is not stored) which leads to another format when saving image somewhere.
-	this->m_imageLabel->setPixmap(QPixmap::fromImage(image));
+	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image));
 	this->m_imageLabel->resize(this->m_imageLabel->pixmap()->size());
 	qDebug() << "Set pixmap to label ";
 	qDebug() << "Label size is " << this->m_imageLabel->width() << " | " << this->m_imageLabel->height();
@@ -110,7 +115,7 @@ void TextureEditor::openFile()
 
 void TextureEditor::saveFile()
 {
-	if (this->m_imageLabel->pixmap() == 0 || this->m_imageLabel->pixmap()->isNull())
+	if (this->m_image->isNull())
 	{
 		KMessageBox::error(this, i18n("No open image file."));
 
@@ -132,14 +137,20 @@ void TextureEditor::saveFile()
 	QFile file(url.toLocalFile());
 	file.open(QIODevice::WriteOnly);
 
-	QImage image(this->m_imageLabel->pixmap()->toImage());
-
-	if (!image.save(&file)) /// \todo Guess correct format by file extension?
+	if (!this->m_image->save(&file)) /// \todo Guess correct format by file extension?
 	{
 		KMessageBox::error(this, i18n("Unable to save image to file \"%1\".", url.toLocalFile()));
 
 		return;
 	}
+}
+
+void TextureEditor::showSettings()
+{
+}
+
+void TextureEditor::editColorPalette()
+{
 }
 
 void TextureEditor::makeActive()
@@ -162,6 +173,41 @@ void TextureEditor::makeInfoardLevel()
 {
 }
 
+void TextureEditor::showAlphaChannel()
+{
+	this->m_imageLabel->setPixmap(this->m_imageLabel->pixmap()->mask());
+}
+
+void TextureEditor::showTransparency()
+{
+}
+
+void TextureEditor::actualSize()
+{
+	this->m_factor = 1.0;
+	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image));
+}
+
+void TextureEditor::zoomToFit()
+{
+}
+
+void TextureEditor::zoomIn()
+{
+	this->m_factor += 0.50;
+	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image)->scaled(this->m_image->size() * this->m_factor));
+}
+
+void TextureEditor::zoomOut()
+{
+	this->m_factor -= 0.50;
+	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image)->scaled(this->m_image->size() * this->m_factor));
+}
+
+void TextureEditor::massConverter()
+{
+}
+
 void TextureEditor::createFileActions(class KMenu *menu)
 {
 	class KAction *action;
@@ -178,16 +224,48 @@ void TextureEditor::createFileActions(class KMenu *menu)
 
 	action = new KAction(KIcon(":/actions/settings.png"), i18n("Settings"), this);
 	//action->setShortcut(KShortcut(i18n("Ctrl+O")));
-	connect(action, SIGNAL(triggered()), this, SLOT(settings()));
+	connect(action, SIGNAL(triggered()), this, SLOT(showSettings()));
 	menu->addAction(action);
 }
 
 void TextureEditor::createEditActions(class KMenu *menu)
 {
+	KAction *action = new KAction(KIcon(":/actions/editcolorpalette.png"), i18n("Edit color palette"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(editColorPalette()));
+	menu->addAction(action);
 }
 
 void TextureEditor::createMenus(class KMenuBar *menuBar)
 {
+	KMenu *viewMenu = new KMenu(i18n("View"), this);
+	//this->m_viewMenu = viewMenu;
+	menuBar->addMenu(viewMenu);
+
+	KAction *action = new KAction(KIcon(":/actions/showalphachannel.png"), i18n("Show alpha channel"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(showAlphaChannel()));
+	viewMenu->addAction(action);
+
+	action = new KAction(KIcon(":/actions/showtransparency.png"), i18n("Show transparency"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(showTransparency()));
+	viewMenu->addAction(action);
+
+	viewMenu->addAction(KStandardAction::actualSize(this, SLOT(actualSize()), this));
+
+	action = new KAction(KIcon(":/actions/zoomtofit.png"), i18n("Zoom to fit"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(zoomToFit()));
+	viewMenu->addAction(action);
+
+	viewMenu->addAction(KStandardAction::zoomIn(this, SLOT(zoomIn()), this));
+	viewMenu->addAction(KStandardAction::zoomOut(this, SLOT(zoomOut()), this));
+
+	KMenu *toolsMenu = new KMenu(i18n("Tools"), this);
+	//this->m_toolsMenu = toolsMenu;
+	menuBar->addMenu(toolsMenu);
+
+	// TODO add check buttons to mass converter widget which allow you to a) convert and b) generate info cards etc. and c) to remove old files.
+	action = new KAction(KIcon(":/actions/massconverter.png"), i18n("Mass converter"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(massConverter()));
+	toolsMenu->addAction(action);
 }
 
 void TextureEditor::createWindowsActions(class KMenu *menu)

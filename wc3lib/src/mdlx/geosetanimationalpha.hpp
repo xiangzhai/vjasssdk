@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
-#define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
+#ifndef WC3LIB_MDLX_GEOSETANIMATIONALPHA_HPP
+#define WC3LIB_MDLX_GEOSETANIMATIONALPHA_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "geosetanimationalphas.hpp"
 
 namespace wc3lib
@@ -30,22 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimationAlphas;
-
-class GeosetAnimationAlpha : public MdxAlpha
+class GeosetAnimationAlpha : public MdlxAlpha
 {
 	public:
 		GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas);
 		
-		class GeosetAnimationAlphas* geosetAnimationAlphas() const;
-		
-		virtual void readMdl(std::fstream &fstream) throw (class Exception);
-		virtual void writeMdl(std::fstream &fstream) throw (class Exception);
+		class GeosetAnimationAlphas* alphas() const;
 };
 
-inline class GeosetAnimationAlphas* GeosetAnimationAlpha::geosetAnimationAlphas() const
+inline class GeosetAnimationAlphas* GeosetAnimationAlpha::alphas() const
 {
-	return dynamic_cast<class GeosetAnimationAlphas*>(this->m_alphas);
+	return dynamic_cast<class GeosetAnimationAlphas*>(this->mdlxAlphas());
 }
 
 }

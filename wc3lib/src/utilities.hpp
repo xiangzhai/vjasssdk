@@ -28,6 +28,7 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/cast.hpp>
+#include <boost/lexical_cast.hpp> 
 
 #include "exception.hpp"
 #include "internationalisation.hpp"
@@ -147,6 +148,55 @@ inline std::basic_istream<_CharT>& readString(std::basic_istream<_CharT> &istrea
 	readCString(istream, cString, sizeCounter, size);
 	value = cString; // uses const cString and copies content
 	delete[] cString;
+
+	return istream;
+}
+
+/**
+ *  Parses next token (tokens are separated by characters in \p delimiters) in input stream \p istream and writes it into \p value.
+ * \return Returns reference to input stream \p istream.
+ * \sa read, readCString, readString
+ */
+template<typename T, typename _CharT>
+inline std::basic_istream<_CharT>& parse(std::basic_istream<_CharT> &istream, T &value, std::streamsize &sizeCounter, const std::basic_string<_CharT> delimiters = " \t\n\r")
+{
+	std::streampos position;
+	_CharT character;
+	
+	// skip white-spaces
+	do
+	{
+		position = istream.tellg();
+		wc3lib::read(istream, character, sizeCounter);
+	}
+	while (delimiters.find(character) != std::string::npos);
+	
+	istream.seekg(position);
+
+	// get length of non-whitespace string
+	position = istream.tellg();
+	std::size_t length = 0;
+
+	do
+	{
+		istream.get(character);
+		
+		if (delimiters.find(character) == std::string::npos)
+			++length;
+		else
+			break;
+	}
+	while (true);
+
+	istream.seekg(position);
+
+	std::basic_string<_CharT> stringValue;
+	readString(istream, stringValue, sizeCounter, length);
+	
+	// convert string into requested type
+	//std::basic_ostringstream<_CharT> ostringstream(stringValue);
+	//ostringstream >> value;
+	value = boost::lexical_cast<T>(stringValue);
 
 	return istream;
 }

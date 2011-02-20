@@ -30,16 +30,6 @@ GeosetAnimationColor::GeosetAnimationColor(class GeosetAnimationColors *geosetAn
 {
 }
 
-std::streamsize GeosetAnimationColor::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize GeosetAnimationColor::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
 }
 
 }

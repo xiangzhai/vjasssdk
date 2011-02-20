@@ -18,11 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "mdlxscalings.hpp"
 #include "mdlxscaling.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -30,76 +27,19 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdlxScalings::MdlxScalings(class Mdlx *mdlx) : MdxBlock("KGSC", true), m_mdlx(mdlx)
+MdlxScalings::MdlxScalings(class Mdlx *mdlx) : MdlxAnimatedProperties(mdlx, "KGSC", "Scaling")
 {
 }
 
 MdlxScalings::~MdlxScalings()
 {
-	BOOST_FOREACH(class MdlxScaling *scaling, this->m_scalings)
-		delete scaling;
 }
 
-std::streamsize MdlxScalings::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize MdlxScalings::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize MdlxScalings::readMdx(std::istream &istream) throw (class Exception)
-{
-	std::streamsize size = MdxBlock::readMdx(istream);
-
-	// is optional!
-	if (size == 0)
-		return 0;
-
-	long32 number;
-	wc3lib::read(istream, number, size);
-	std::cout << "Number of scalings " << number << std::endl;
-	long32 lineType;
-	wc3lib::read(istream, lineType, size);
-	this->m_lineType = static_cast<enum LineType>(lineType);
-	wc3lib::read(istream, this->m_globalSequenceId, size);
-
-	for ( ; number > 0; --number)
-	{
-		class MdlxScaling *scaling = this->createNewMember();
-		size += scaling->readMdx(istream);
-		this->m_scalings.push_back(scaling);
-	}
-
-	return size;
-}
-
-std::streamsize MdlxScalings::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	std::streamsize size = MdxBlock::writeMdx(ostream);
-
-	// is optional!
-	if (size == 0)
-		return 0;
-
-	long32 number = this->m_scalings.size();
-	wc3lib::write(ostream, number, size);
-	wc3lib::write(ostream, static_cast<long32>(this->m_lineType), size);
-	wc3lib::write(ostream, this->m_globalSequenceId, size);
-
-	BOOST_FOREACH(const class MdlxScaling *scaling, this->m_scalings)
-		size += scaling->writeMdx(ostream);
-
-	return size;
-}
-
-MdlxScalings::MdlxScalings(class Mdlx *mdlx, byte blockName[4], bool optional) : MdxBlock(blockName, optional), m_mdlx(mdlx)
+MdlxScalings::MdlxScalings(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxIdentifierSize]) : MdlxAnimatedProperties(mdlx, mdxIdentifier, "Scaling")
 {
 }
 
-class MdlxScaling* MdlxScalings::createNewMember()
+class MdlxAnimatedProperty* MdlxScalings::createAnimatedProperty()
 {
 	return new MdlxScaling(this);
 }

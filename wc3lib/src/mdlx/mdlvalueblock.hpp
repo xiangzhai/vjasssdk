@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
-#define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
+#ifndef WC3LIB_MDLX_MDLVALUEBLOCK_HPP
+#define WC3LIB_MDLX_MDLVALUEBLOCK_HPP
 
-#include "mdlxscaling.hpp"
-#include "geosetanimationcolors.hpp"
+#include "mdlblock.hpp"
 
 namespace wc3lib
 {
@@ -30,17 +29,41 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimationColor : public MdlxScaling
+/**
+ * MDL value blocks are usually used for animated data:
+ * \code
+ Tag <long_count> {
+	<DontInterp|Linear|Hermite|Bezier>,
+		GlobalSeqId <long>,
+		<long_frame>: <VALUES>,
+			InTan <VALUES>,
+			OutTan <VALUES>,
+		...
+	}
+ * \endcode
+ */
+template<typename T>
+class MdlValueBlock : public MdlBlock
 {
 	public:
-		GeosetAnimationColor(class GeosetAnimationColors *geosetAnimationColors);
+		typedef T ValueType;
+		
+		MdlValueBlock(const string mdlIdentifier, bool optional = true);
+		virtual ~MdlValueBlock();
+		
+		ValueType value() const;
 
-		class GeosetAnimationColors* colors() const;
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		
+	protected:
+		ValueType m_value;
 };
 
-inline class GeosetAnimationColors* GeosetAnimationColor::colors() const
+template<typename T>
+inline T MdlValueBlock<T>::value() const
 {
-	return dynamic_cast<class GeosetAnimationColors*>(this->mdlxScaliings());
+	return m_value;
 }
 
 }

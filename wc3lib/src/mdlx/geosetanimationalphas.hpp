@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,31 +21,27 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONALPHAS_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONALPHAS_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
 
 namespace mdlx
 {
-	
-class GeosetAnimation;
-class GeosetAnimationAlphas;
 
-//KGAO
-class GeosetAnimationAlphas : public MdxAlphas
+/// KGAO
+class GeosetAnimationAlphas : public MdlxAlphas
 {
 	public:
 		GeosetAnimationAlphas(class GeosetAnimation *geosetAnimation);
 		virtual ~GeosetAnimationAlphas();
 
 		class GeosetAnimation* geosetAnimation() const;
-		const std::list<class GeosetAnimationAlpha*>& geosetAnimationAlphas() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		const std::list<class GeosetAnimationAlpha*>& alphas() const;
 
 	protected:
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
+		
 		class GeosetAnimation *m_geosetAnimation;
 };
 
@@ -54,9 +50,9 @@ inline class GeosetAnimation* GeosetAnimationAlphas::geosetAnimation() const
 	return this->m_geosetAnimation;
 }
 
-inline const std::list<class GeosetAnimationAlpha*>& GeosetAnimationAlphas::geosetAnimationAlphas() const
+inline const std::list<class GeosetAnimationAlpha*>& GeosetAnimationAlphas::alphas() const
 {
-	return reinterpret_cast<const std::list<class GeosetAnimationAlpha*>&>(*&this->m_alphas);
+	return reinterpret_cast<const std::list<class GeosetAnimationAlpha*>&>(*&this->mdlxAlphas());
 }
 
 }

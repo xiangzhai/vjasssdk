@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,14 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDXALPHA_HPP
-#define WC3LIB_MDXALPHA_HPP
+#ifndef WC3LIB_MDLX_MDLBLOCK_HPP
+#define WC3LIB_MDLX_MDLBLOCK_HPP
 
-#include <istream>
-#include <ostream>
-
+#include "../format.hpp"
 #include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -33,24 +30,43 @@ namespace wc3lib
 namespace mdlx
 {
 
-class MdxAlpha
+/**
+ * MDL blocks start with their identifier followed by a bracked indicating the block's scope.
+ * \sa MdlValueBlock
+ */
+class MdlBlock : public Format<byte>
 {
 	public:
-		MdxAlpha(class MdxAlphas *alphas);
-		virtual ~MdxAlpha();
+		MdlBlock(const string mdlIdentifier, bool optional = true);
+		virtual ~MdlBlock();
 
-		std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		const string& mdlIdentifier() const;
+		bool optional() const;
+		bool exists() const;
+
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class MdxAlphas *m_alphas;
-		long32 m_frame;
-		float32 m_state;
-		//if (LineType > 1) {
-		float32 m_inTan;
-		float32 m_outTan;
-		//}
+		const string m_mdlIdentifier;
+		const bool m_optional;
+		bool m_exists;
 };
+
+inline const string& MdlBlock::mdlIdentifier() const
+{
+	return this->m_mdlIdentifier;
+}
+
+inline bool MdlBlock::optional() const
+{
+	return this->m_optional;
+}
+
+inline bool MdlBlock::exists() const
+{
+	return this->m_exists;
+}
 
 }
 

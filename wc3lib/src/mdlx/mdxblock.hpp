@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,10 +21,8 @@
 #ifndef WC3LIB_MDLX_MDXBLOCK_HPP
 #define WC3LIB_MDLX_MDXBLOCK_HPP
 
-#include <iostream>
-
+#include "../format.hpp"
 #include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -32,39 +30,39 @@ namespace wc3lib
 namespace mdlx
 {
 
-class MdxBlock
+class MdxBlock : public Format<byte>
 {
 	public:
-		static const std::size_t blockNameSize = 4;
+		static const std::size_t mdxIdentifierSize = 4;
 
-		MdxBlock(const byte blockName[blockNameSize], bool optional = true);
+		MdxBlock(const byte mdxIdentifier[mdxIdentifierSize], bool optional = true);
 		virtual ~MdxBlock();
 
 		/**
-		* @return Returns the block name with size MdxBlock::blockNameSize.
+		* @return Returns the block name with size \ref MdxBlock::blockNameSize.
 		*/
-		const byte* blockName() const;
+		const byte* mdxIdentifier() const;
 		/**
 		* Some MDX blocks such as translations, scalings and rotations are optional and do only appear if they're not inherited by parent object.
 		* @return Returns true if the MDX block is optional which means it doesn't appear in output stream.
 		*/
 		bool optional() const;
 		bool exists() const;
+		
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
-		virtual std::streamsize readMdx(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::basic_ostream<byte> &ostream) const throw (class Exception);
-
-		bool moveToBlockName(std::basic_iostream<byte> &iostream);
+		bool moveToMdxIdentifier(istream &istream);
 
 	protected:
-		byte m_blockName[blockNameSize]; /// @todo byte or ascii?
-		bool m_optional;
+		const byte m_mdxIdentifier[mdxIdentifierSize]; /// @todo byte or ascii?
+		const bool m_optional;
 		bool m_exists;
 };
 
-inline const byte* MdxBlock::blockName() const
+inline const byte* MdxBlock::mdxIdentifier() const
 {
-	return this->m_blockName;
+	return this->m_mdxIdentifier;
 }
 
 inline bool MdxBlock::optional() const

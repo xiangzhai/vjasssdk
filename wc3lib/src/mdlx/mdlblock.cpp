@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,9 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "geosetanimationcolors.hpp"
-#include "geosetanimation.hpp"
-#include "geosetanimationcolor.hpp"
+#include <iostream>
+
+#include <boost/format.hpp>
+
+#include "mdlblock.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -28,13 +31,44 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimationColors::GeosetAnimationColors(class GeosetAnimation *geosetAnimation) : MdlxScalings(geosetAnimation->geosetAnimations()->mdlx(), "KGAC"), m_geosetAnimation(geosetAnimation)
+MdlBlock::MdlBlock(const string &mdlIdentifier, bool optional) : m_mdlIdentifier(mdlIdentifier), m_optional(optional), m_exists(false)
 {
 }
 
-class MdlxAnimatedProperty* GeosetAnimationColors::createAnimatedProperty()
+std::streamsize MdlBlock::readMdl(istream &istream) throw (class Exception)
 {
-	return new GeosetAnimationColor(this);
+	std::streamsize size = 0;
+	std::streampos position = istream.tellg();
+	string identifier;
+	parse(stream, identifier, size);
+	
+	if (identifier != mdlIdentifier())
+	{
+		if (optional())
+		{
+			istream.seekg(position);
+			std::cout << boost::format(_("Block %1% is optional and doesn't exist.\nIt is not equal to identifier \"%2%\".")) % this->mdlIdentifier() % identifier << std::endl;
+			
+			return 0;
+		}
+		else
+			throw Exception(boost::str(boost::format(_("Unexptected identifier \"%s\". Missing \"%s\" block name.")) % identifier % this->mdlIdentifier()));
+	}
+	
+	std::cout << boost::format(_("Block: %1%")) % this->mdlIdentifier() << std::endl;
+
+	return size;
+}
+
+std::streamsize MdlBlock::writeMdl(ostream &ostream) const throw (class Exception)
+{
+	if (!this->exists())
+		return 0;
+	
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->mdlIdentifer().c_str()[0], size, this->mdlIdentifer().length());
+	
+	return size;
 }
 
 }

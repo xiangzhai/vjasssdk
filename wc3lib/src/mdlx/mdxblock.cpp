@@ -24,6 +24,7 @@
 #include <boost/format.hpp>
 
 #include "mdxblock.hpp"
+#include "../utilities.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -32,13 +33,9 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdxBlock::MdxBlock(const byte blockName[MdxBlock::blockNameSize], bool optional) : m_optional(optional), m_exists(false)
+MdxBlock::MdxBlock(const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], bool optional) : m_optional(optional), m_exists(false)
 {
-	memcpy(this->m_blockName, blockName, sizeof(blockName));
-	/*
-	for (unsigned int i = 0; i < sizeof(this->m_blockName); ++i)
-		this->m_blockName[i] = blockName[i];
-	*/
+	memcpy(this->m_mdxIdentifier, mdxIdentifier, sizeof(mdxIdentifier));
 }
 
 MdxBlock::~MdxBlock()
@@ -46,53 +43,52 @@ MdxBlock::~MdxBlock()
 }
 
 /// @todo Consider optional like in Python script.
-std::streamsize MdxBlock::readMdx(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize MdxBlock::readMdx(istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = 0;
-	byte identifier[sizeof(this->m_blockName)];
-	std::basic_istream<byte>::pos_type position = istream.tellg();
-	istream.read(identifier, sizeof(identifier));
-	bytes += istream.gcount();
+	std::streamsize size = 0;
+	byte identifier[sizeof(mdxIdentifier())];
+	istream::pos_type position = istream.tellg();
+	wc3lib::read(istream, identifier[0], size, sizeof(identifier));
 
-	if (memcmp(identifier, this->m_blockName, sizeof(this->m_blockName)) != 0)
+	if (memcmp(identifier, mdxIdentifier(), sizeof(mdxIdentifier())) != 0)
 	{
-		if (this->m_optional)
+		if (this->optional())
 		{
 			istream.seekg(position);
-			std::cout << boost::format(_("Block %1% is optional and doesn't exist.\nIt is not equal to identifier \"%2%\".")) % this->m_blockName % identifier << std::endl;
+			std::cout << boost::format(_("Block %1% is optional and doesn't exist.\nIt is not equal to identifier \"%2%\".")) % mdxIdentifier() % identifier << std::endl;
 
 			return 0;
 		}
 		else
-			throw Exception(boost::str(boost::format(_("Unexptected identifier \"%s\". Missing \"%s\" block name.")) % identifier % this->m_blockName));
+			throw Exception(boost::str(boost::format(_("Unexptected identifier \"%s\". Missing \"%s\" block name.")) % identifier % mdxIdentifier()));
 	}
 
 	this->m_exists = true;
-	std::cout << boost::format(_("Block: %1%")) % this->m_blockName << std::endl;
+	std::cout << boost::format(_("Block: %1%")) % mdxIdentifier() << std::endl;
 
 	return bytes;
 }
 
-std::streamsize MdxBlock::writeMdx(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize MdxBlock::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	if (!this->m_exists)
+	if (!this->exists())
 		return 0;
 
-	ostream.write(this->m_blockName, sizeof(this->m_blockName));
+	std::streamsize size = 0;
+	wc3lib::write(ostream, mdxIdentifier()[0], size, MdxBlock::mdxIdentifierSize);
 
-	return sizeof(this->m_blockName);
-
+	return size;
 }
 
-bool MdxBlock::moveToBlockName(std::basic_iostream<byte> &iostream)
+bool MdxBlock::moveToBlockName(istream &istream)
 {
-	byte readBlockName[4];
+	byte readBlockName[MdxBlock::mdxIdentifierSize];
 
-	while (iostream)
+	while (istream)
 	{
-		iostream.read(readBlockName, sizeof(readBlockName));
+		istream.read(readBlockName, sizeof(readBlockName));
 
-		if (memcmp(readBlockName, this->m_blockName, sizeof(this->m_blockName)) == 0)
+		if (memcmp(readBlockName, mdxIdentifier(), sizeof(mdxIdentifier())) == 0)
 			return true;
 	}
 

@@ -34,16 +34,12 @@ class TextureAnimationScalings : public MdlxScalings
 {
 	public:
 		TextureAnimationScalings(class TextureAnimation *textureAnimation);
-		virtual ~TextureAnimationScalings();
 
 		class TextureAnimation* textureAnimation() const;
 		const std::list<class TextureAnimationScaling*>& scalings() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-
 	protected:
-		virtual class MdlxScaling* createNewMember();
+		virtual class MdlxAnimatedProperty* createAnimatedProperty() const;
 
 		class TextureAnimation *m_textureAnimation;
 };
@@ -55,7 +51,7 @@ inline class TextureAnimation* TextureAnimationScalings::textureAnimation() cons
 
 inline const std::list<class TextureAnimationScaling*>& TextureAnimationScalings::scalings() const
 {
-	return reinterpret_cast<const std::list<class TextureAnimationScaling*>&>(this->m_scalings);
+	return reinterpret_cast<const std::list<class TextureAnimationScaling*>&>(this->mdlxScalings());
 }
 
 }

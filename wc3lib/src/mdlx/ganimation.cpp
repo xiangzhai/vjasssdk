@@ -35,12 +35,12 @@ Ganimation::~Ganimation()
 }
 
 /// @todo Implement.
-std::streamsize Ganimation::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Ganimation::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Ganimation::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Ganimation::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	ostream
 	<< "Anim {\n"
@@ -51,12 +51,12 @@ std::streamsize Ganimation::writeMdl(std::ostream &ostream) const throw (class E
 	return 0;
 }
 
-std::streamsize Ganimation::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Ganimation::readMdx(istream &istream) throw (class Exception)
 {
 	return Bounds::readMdx(istream);
 }
 
-std::streamsize Ganimation::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Ganimation::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	return Bounds::writeMdx(ostream);
 }

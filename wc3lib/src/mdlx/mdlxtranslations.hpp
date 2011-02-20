@@ -42,7 +42,7 @@ class MdlxTranslations : public MdlxScalings
 		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
-		virtual class MdlxScaling* createNewMember();
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
 };
 
 inline const std::list<class MdlxTranslation*>& MdlxTranslations::mdlxTranslations() const

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
-#define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
+#include <boost/lexical_cast.hpp>
 
-#include "mdlxscaling.hpp"
-#include "geosetanimationcolors.hpp"
+#include "mdlvalueblock.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -30,21 +29,38 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimationColor : public MdlxScaling
+MdlValueBlock::MdlValueBlock(const string &mdlIdentifier, bool optional) : MdlBlock(mdlIdentifier, optional)
 {
-	public:
-		GeosetAnimationColor(class GeosetAnimationColors *geosetAnimationColors);
+}
 
-		class GeosetAnimationColors* colors() const;
-};
-
-inline class GeosetAnimationColors* GeosetAnimationColor::colors() const
+std::streamsize MdlValueBlock::readMdl(istream &istream) throw (class Exception)
 {
-	return dynamic_cast<class GeosetAnimationColors*>(this->mdlxScaliings());
+	std::streamsize size = MdlBlock::readMdl(istream);
+	
+	if (size == 0)
+		return 0;
+	
+	string identifier;
+	parse(stream, identifier, size);
+	
+	this->m_value = boost::lexical_cast<ValueType>(identifier);
+
+	return size;
+}
+
+std::streamsize MdlValueBlock::writeMdl(ostream &ostream) const throw (class Exception)
+{
+	std::streamsize size = MdlBlock::writeMdl(ostream);
+	
+	if (size == 0)
+		return 0;
+	
+	string identifier(boost::str(boost::format(" %1% ") % value()));
+	size += wc3lib::write(ostream, identifier.c_str()[0], size, identifier.length());
+	
+	return size;
 }
 
 }
 
 }
-
-#endif

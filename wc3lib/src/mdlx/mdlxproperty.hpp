@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
-#define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
+#ifndef WC3LIB_MDLX_MDLXPROPERTY_HPP
+#define WC3LIB_MDLX_MDLXPROPERTY_HPP
 
-#include "mdlxscaling.hpp"
-#include "geosetanimationcolors.hpp"
+#include "../format.hpp"
+#include "platform.hpp"
 
 namespace wc3lib
 {
@@ -30,18 +30,24 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimationColor : public MdlxScaling
+class MdlxProperty : public Format<byte>
 {
 	public:
-		GeosetAnimationColor(class GeosetAnimationColors *geosetAnimationColors);
-
-		class GeosetAnimationColors* colors() const;
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception) = 0;
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception) = 0;
+		
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception) = 0;
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception) = 0;
+		
+		/**
+		 * \brief Default read and write format is MDX.
+		 */
+		virtual inline std::streamsize read(istream &istream) throw (class Exception) { return readMdx(istream); };
+		/**
+		 * \copybrief MdlxProperty::read
+		 */
+		virtual inline std::streamsize write(ostream &ostream) const throw (class Exception) { return writeMdx(ostream); };
 };
-
-inline class GeosetAnimationColors* GeosetAnimationColor::colors() const
-{
-	return dynamic_cast<class GeosetAnimationColors*>(this->mdlxScaliings());
-}
 
 }
 

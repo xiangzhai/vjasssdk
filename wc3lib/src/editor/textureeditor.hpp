@@ -42,13 +42,23 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 	public slots:
 		void openFile();
 		void saveFile();
+		void showSettings();
 
+		void editColorPalette();
 		void makeActive();
 		void makePassive();
 		void makeAutocast();
-
 		void makeInfocardNormal();
 		void makeInfoardLevel();
+
+		void showAlphaChannel();
+		void showTransparency();
+		void actualSize();
+		void zoomToFit();
+		void zoomIn();
+		void zoomOut();
+
+		void massConverter();
 
 	protected:
 		virtual void createFileActions(class KMenu *menu);
@@ -58,6 +68,8 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 		virtual void createToolButtons(class KToolBar *toolBar);
 		virtual class SettingsInterface* settings();
 
+		QImage *m_image;
+		qreal m_factor;
 		KUrl m_recentUrl;
 };
 

@@ -33,19 +33,7 @@ TextureAnimationScalings::TextureAnimationScalings(class TextureAnimation *textu
 {
 }
 
-TextureAnimationScalings::~TextureAnimationScalings()
-{
-}
-
-std::streamsize TextureAnimationScalings::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-std::streamsize TextureAnimationScalings::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-}
-
-class MdlxScaling* TextureAnimationScalings::createNewMember()
+class MdlxAnimatedProperty* TextureAnimationScalings::createAnimatedProperty()
 {
 	return new TextureAnimationScaling(this);
 }

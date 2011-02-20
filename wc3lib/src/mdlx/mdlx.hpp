@@ -25,6 +25,7 @@
 #include <map>
 
 #include "mdxblock.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -33,11 +34,17 @@ namespace mdlx
 {
 
 /**
-* long/float size: 32-bit
-* @todo OBJ == ?!
-* @todo KATV == float?!
-*/
-class Mdlx : public MdxBlock
+ * Provides access to one single MDX/MDL model which can be read from any input stream.
+ * Since MDLX is a node-based format you can access various properties by their node ids (\ref long32 integers).
+ * Use \ref Mdlx::nodePivotPoint to get a node's pivot point which is required for its correct position.
+ * Nodes are stored in a map (\ref std::map) which allows you to access them as fast as possible since default maps are sorted.
+ * \note All properties are allocated on object's construction (not only if required during reading process).
+ * 
+ * long/float size: 32-bit
+ * @todo OBJ == ?!
+ * @todo KATV == float?!
+ */
+class Mdlx : public MdxBlock, public MdlxProperty
 {
 	public:
 		Mdlx();
@@ -68,6 +75,7 @@ class Mdlx : public MdxBlock
 		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		
 		std::streamsize readBlend(const std::string &filePath) throw (class Exception);
 		std::streamsize readBlend(std::istream &istream) throw (class Exception);
 		std::streamsize writeBlend(std::ostream &ostream) const throw (class Exception);

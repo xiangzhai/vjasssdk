@@ -24,6 +24,7 @@
 #include "geosetanimationalphas.hpp"
 #include "geosetanimationcolors.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimation::GeosetAnimation(class GeosetAnimations *geosetAnimations) : m_geosetAnimations(geosetAnimations), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alphas(new GeosetAnimationAlphas(this)),  m_colors(new GeosetAnimationColors(this))
+GeosetAnimation::GeosetAnimation(class GeosetAnimations *geosetAnimations) : MdlBlock("GeosetAnim", true), m_geosetAnimations(geosetAnimations), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alphas(new GeosetAnimationAlphas(this)),  m_colors(new GeosetAnimationColors(this))
 {
 }
 
@@ -41,48 +42,68 @@ GeosetAnimation::~GeosetAnimation()
 	delete this->m_colors;
 }
 
-std::streamsize GeosetAnimation::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize GeosetAnimation::readMdl(istream &istream) throw (class Exception)
 {
-	return 0;
+	std::streamsize size = MdlBlock::readMdl(istream);
+	
+	if (size == 0)
+		return 0;
+	
+	/// \todo Finish!
+	return size;
 }
 
-std::streamsize GeosetAnimation::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize GeosetAnimation::writeMdl(ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streamsize size = 0;
+	
+	if (colorAnimation() == DropShadow || colorAnimation() == Both)
+		writeMdlProperty(ostream, "DropShadow", size);
+	
+	if (this->alphas()->geosetAnimationAlphas().empty())
+		writeMdlStaticValueProperty(ostream, "Alpha", staticAlpha(), size);
+	else
+		size += this->alphas()->writeMdl(ostream);
+	
+	if (colorAnimation() == Color || colorAnimation() == Both)
+	{
+		if (this->colors()->geosetAnimationColors().empty())
+			writeMdlStaticVectorProperty(ostream, "Color", colorBlue(), colorGreen(), colorRed(), size);
+		else
+			size += this->colors()->writeMdl(ostream);
+	}
+	
+	writeMdlValueProperty(ostream, "GeosetId", geosetId(), size);
+	
+	return size;
 }
 
 std::streamsize GeosetAnimation::readMdx(std::istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::streamsize bytes = istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_staticAlpha), sizeof(this->m_staticAlpha));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_colorAnimation), sizeof(this->m_colorAnimation));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_colorRed), sizeof(this->m_colorRed));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_colorGreen), sizeof(this->m_colorGreen));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_colorBlue), sizeof(this->m_colorBlue));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_geosetId), sizeof(this->m_geosetId));
-	bytes += istream.gcount();
+	std::streamsize size = 0;
+	wc3lib::read(istream, nbytesi, size);
+	wc3lib::read(istream, this->m_staticAlpha, size);
+	long32 colorAnimation;
+	wc3lib::read(istream, colorAnimation, size);
+	this->m_colorAnimation = static_cast<enum ColorAnimation>(colorAnimation);
+	wc3lib::read(istream, this->m_colorRed, size);
+	wc3lib::read(istream, this->m_colorGreen, size);
+	wc3lib::read(istream, this->m_colorBlue, size);
+	wc3lib::read(istream, this->m_geosetId, size);
 
 	std::cout << "Static alpha is " << this->m_staticAlpha << std::endl;
 
-	if (this->m_staticAlpha == 1.0)
-	{
-		bytes += this->m_alphas->readMdx(istream);
-	}
+	if (this->staticAlpha() == 1.0)
+		size += this->m_alphas->readMdx(istream);
 
-	bytes += this->m_colors->readMdx(istream); /// @todo Seems to be optional, file Krieger.mdx doesn't have this block.
+	size += this->m_colors->readMdx(istream); /// @todo Seems to be optional, file Krieger.mdx doesn't have this block.
 	std::cout << "After colors" << std::endl;
 
-	if (nbytesi != bytes)
-		throw Exception(boost::str(boost::format(_("Geoset animation: File byte count isn't equal to real byte count:\nFile byte count %1%.\nReal byte count %2%.\n")) % nbytesi % bytes));
+	if (nbytesi != size)
+		throw Exception(boost::str(boost::format(_("Geoset animation: File byte count isn't equal to real byte count:\nFile byte count %1%.\nReal byte count %2%.\n")) % nbytesi % size));
 
-	return bytes;
+	return size;
 }
 
 std::streamsize GeosetAnimation::writeMdx(std::ostream &ostream) const throw (class Exception)

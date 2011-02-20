@@ -428,10 +428,10 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 								{
 									// store as ARGB (BLP)
 									// TODO why is component 0 blue, component 1 green and component 2 red?
-									color argb = ((color)scanlines[scanline][component]) + ((color)scanlines[scanline][component + 1] << 8) + ((color)scanlines[scanline][component + 2] << 16);
+									color argb = ((color)scanlines[scanline][component]) | ((color)scanlines[scanline][component + 1] << 8) | ((color)scanlines[scanline][component + 2] << 16);
 
 									if (cinfo.output_components == 4) // we do have an alpha channel
-										argb += ((color)(0xFF - scanlines[scanline][component + 3]) << 24);
+										argb |= ((color)(0xFF - scanlines[scanline][component + 3]) << 24);
 									//std::cout << "ARGB " << std::ios::hex << argb << std::endl;
 
 									mipMap->setColor(width, height, argb, 0); /// \todo Get alpha?!

@@ -35,17 +35,7 @@ MdlxTranslations::~MdlxTranslations()
 {
 }
 
-std::streamsize MdlxTranslations::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize MdlxTranslations::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
-class MdlxScaling* MdlxTranslations::createNewMember()
+class MdlxAnimatedProperty* MdlxTranslations::createAnimatedProperty()
 {
 	return new MdlxTranslation(this);
 }

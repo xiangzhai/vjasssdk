@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLORS_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONCOLORS_HPP
 
-#include <list>
-
 #include "mdlxscalings.hpp"
 
 namespace wc3lib
@@ -39,12 +37,11 @@ class GeosetAnimationColors : public MdlxScalings
 		virtual ~GeosetAnimationColors();
 
 		class GeosetAnimation* geosetAnimation() const;
-		const std::list<class GeosetAnimationColor*>& geosetAnimationColors() const;
-
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
+		const std::list<class GeosetAnimationColor*>& colors() const;
 
 	protected:
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
+		
 		class GeosetAnimation *m_geosetAnimation;
 };
 
@@ -53,9 +50,9 @@ inline class GeosetAnimation* GeosetAnimationColors::geosetAnimation() const
 	return this->m_geosetAnimation;
 }
 
-inline const std::list<class GeosetAnimationColor*>& GeosetAnimationColors::geosetAnimationColors() const
+inline const std::list<class GeosetAnimationColor*>& GeosetAnimationColors::colors() const
 {
-	return reinterpret_cast<const std::list<class GeosetAnimationColor*>&>(*&this->m_scalings);
+	return reinterpret_cast<const std::list<class GeosetAnimationColor*>&>(*&this->mdlxScalings());
 }
 
 }

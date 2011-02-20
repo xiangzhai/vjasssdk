@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
-#define WC3LIB_MDLX_GEOSETANIMATIONCOLOR_HPP
+#ifndef WC3LIB_MDLX_MDLXALPHA_HPP
+#define WC3LIB_MDLX_MDLXALPHA_HPP
 
-#include "mdlxscaling.hpp"
-#include "geosetanimationcolors.hpp"
+#include "mdlxanimatedproperty.hpp"
 
 namespace wc3lib
 {
@@ -30,17 +29,45 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimationColor : public MdlxScaling
+class MdlxAlpha : public MdlxAnimatedProperty
 {
 	public:
-		GeosetAnimationColor(class GeosetAnimationColors *geosetAnimationColors);
+		MdlxAlpha(class MdlxAlphas *alphas);
+		virtual ~MdlxAlpha();
+		
+		class MdlxAlphas* mdlxAlphas() const;
+		float32 alpha() const;
+		float32 inTanAlpha() const;
+		float32 outTanAlpha() const;
 
-		class GeosetAnimationColors* colors() const;
+	protected:
+		class MdxAlphas *m_alphas;
+		long32 m_frame;
+		float32 m_state;
+		//if (LineType > 1) {
+		float32 m_inTan;
+		float32 m_outTan;
+		//}
 };
 
-inline class GeosetAnimationColors* GeosetAnimationColor::colors() const
+inline class MdlxAlphas* MdlxAlpha::mdlxAlphas() const
 {
-	return dynamic_cast<class GeosetAnimationColors*>(this->mdlxScaliings());
+	return dynamic_cast<class MdlxAlphas*>(properties());
+}
+
+inline float32 MdlxAlpha::alpha() const
+{
+	return values()[0];
+}
+
+inline float32 MdlxAlpha::inTanAlpha() const
+{
+	return inTan()[0];
+}
+
+inline float32 MdlxAlpha::outTanAlpha() const
+{
+	return outTan()[0];
 }
 
 }

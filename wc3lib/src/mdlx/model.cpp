@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -48,12 +48,57 @@ Model::~Model()
 {
 }
 
-std::streamsize Model::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Model::readMdl(std::basic_istream<byte> &istream) throw (class Exception)
 {
+	string value;
+	std::streamsize size = 0;
+	parse(istream, value, size);
+	
+	if (value == "Model")
+	{
+		parse(istream, value, size);
+		this->m_name = value.c_str();
+	}
+	else if (value == "NumGeosets")
+	{
+	}
+	else if (value == "NumGeosetAnims")
+	{
+	}
+	else if (value == "NumHelpers")
+	{
+	}
+	else if (value == "NumLights")
+	{
+	}
+	else if (value == "NumBones")
+	{
+	}
+	else if (value == "NumAttachments")
+	{
+	}
+	/*
+	NumGeosets <long>,
+	NumGeosetAnims <long>,
+	NumHelpers <long>,
+	NumLights <long>,
+	NumBones <long>,
+	NumAttachments <long>,
+	NumParticleEmitters <long>,
+	NumParticleEmitters2 <long>,
+	NumRibbonEmitters <long>,
+	NumEvents <long>,
+	BlendTime <long>,
+	MinimumExtent { <float_x>, <float_y>, <float_z> },
+	MaximumExtent { <float_x>, <float_y>, <float_z> },
+	BoundsRadius <float>,
+	*/
+	
+	
 	return 0;
 }
 
-std::streamsize Model::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Model::writeMdl(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	ostream << "Model \"" << this->m_name << "\" {\n";
 
@@ -97,7 +142,7 @@ std::streamsize Model::writeMdl(std::ostream &ostream) const throw (class Except
 	return 0;
 }
 
-std::streamsize Model::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Model::readMdx(std::basic_istream<byte> &istream) throw (class Exception)
 {
 	std::streamsize size = MdxBlock::readMdx(istream);
 	long32 nbytes = 0;
@@ -110,7 +155,7 @@ std::streamsize Model::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Model::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Model::writeMdx(std::basic_ostream<byte> &ostream) const throw (class Exception)
 {
 	std::streamsize size = MdxBlock::writeMdx(ostream);
 	std::streampos position;

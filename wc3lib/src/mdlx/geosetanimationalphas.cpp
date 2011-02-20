@@ -20,7 +20,8 @@
 
 #include "geosetanimationalphas.hpp"
 #include "geosetanimationalpha.hpp"
-#include "../internationalisation.hpp"
+#include "geosetanimation.hpp"
+#include "geosetanimations.hpp"
 
 namespace wc3lib
 {
@@ -28,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimationAlphas::GeosetAnimationAlphas(class GeosetAnimation *geosetAnimation) : MdxAlphas("KGAO"), m_geosetAnimation(geosetAnimation)
+GeosetAnimationAlphas::GeosetAnimationAlphas(class GeosetAnimation *geosetAnimation) : MdlxAlphas(geosetAnimation->geosetAnimations()->mdlx(), "KGAO"), m_geosetAnimation(geosetAnimation)
 {
 }
 
@@ -36,12 +37,9 @@ GeosetAnimationAlphas::~GeosetAnimationAlphas()
 {
 }
 
-void GeosetAnimationAlphas::readMdl(std::istream &istream) throw (class Exception)
+class MdlxAnimatedProperty* GeosetAnimationAlphas::createAnimatedProperty()
 {
-}
-
-void GeosetAnimationAlphas::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
+	return new GeosetAnimationAlpha(this);
 }
 
 }

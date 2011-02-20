@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,10 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_GANIMATION_HPP
-#define WC3LIB_MDLX_GANIMATION_HPP
+#ifndef WC3LIB_MDLX_MDLXANIMATEDPROPERTIES_HPP
+#define WC3LIB_MDLX_MDLXANIMATEDPROPERTIES_HPP
 
-#include "bounds.hpp"
+#include <list>
+
+#include "mdlxproperty.hpp"
+#include "mdxblock.hpp"
+#include "mdlvalueblock.hpp"
 
 namespace wc3lib
 {
@@ -29,13 +33,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Ganimation : public Bounds
+class MdlxAnimatedProperties : public MdlxProperty, public virtual MdxBlock, public virtual MdlValueBlock<long32>
 {
 	public:
-		Ganimation(class Geoset *geoset);
-		virtual ~Ganimation();
+		MdlxAnimatedProperties(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], const string &mdlIdentifier, bool optional = true);
+		virtual ~MdlxAnimatedProperties();
 
-		class Geoset* geoset() const;
+		class Mdlx* mdlx() const;
+		enum LineType lineType() const;
+		long32 globalSequenceId() const;
+		bool hasGlobalSequence() const;
+		const std::list<class MdlxAnimatedProperty*>& properties() const;
 
 		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
@@ -43,12 +51,37 @@ class Ganimation : public Bounds
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Geoset *m_geoset;
+		virtual class MdlxAnimatedProperty* createAnimatedProperty() = 0;
+		
+		class Mdlx *m_mdlx;
+		enum LineType m_lineType; //(0:don't interp;1:linear;2:hermite;3:bezier)
+		long32 m_globalSequenceId; // 0xFFFFFFFF if none
+		std::list<class MdlxAnimatedProperty*> m_properties;
 };
 
-inline class Geoset* Ganimation::geoset() const
+inline class Mdlx* MdlxAnimatedProperties::mdlx() const
 {
-	return this->m_geoset;
+	return this->m_mdlx;
+}
+
+inline enum LineType MdlxAnimatedProperties::lineType() const
+{
+	return this->m_lineType;
+}
+
+inline long32 MdlxAnimatedProperties::globalSequenceId() const
+{
+	return this->m_globalSequenceId;
+}
+
+inline bool MdlxAnimatedProperties::hasGlobalSequence() const
+{
+	return this->m_globalSequenceId != 0xFFFFFFFF;
+}
+
+inline const std::list<class MdlxAnimatedProperty*>& MdlxAnimatedProperties::properties() const
+{
+	return this->m_properties;
 }
 
 }
@@ -56,3 +89,4 @@ inline class Geoset* Ganimation::geoset() const
 }
 
 #endif
+

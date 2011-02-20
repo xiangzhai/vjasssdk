@@ -1,3 +1,14 @@
+2011-02-20 Tamino Dauth <tamio@cdauth.eu>
+* mdlx: Added various MDL write functions.
+* mdlx: Added classes MdlBlock, MdlValueBlock, MdlxAnimatedProperties and MdlxAnimatedProperty.
+* mdlx: Added new constructors for data structures (e. g. VertexData).
+* mdlx: Renamed classes MdxAlpha and MdxAlphas to MdlxAlpha and MdlxAlphas.
+
+2011-02-16 Tamino Dauth <tamio@cdauth.eu>
+* core: Added function parse.
+* mdlx: Added abstract class MdlxProperty.
+* mdlx: Added functions parseMdlNamedScope and parseMdlProperty.
+
 2011-02-15 Tamino Dauth <tamio@cdauth.eu>
 * blp: Fixed JPEG compression color reading.
 * editor: Fixed color conversation function (from QRgb to blp::color).

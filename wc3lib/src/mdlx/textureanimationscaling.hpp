@@ -40,7 +40,7 @@ class TextureAnimationScaling : public MdlxScaling
 
 inline class TextureAnimationScalings* TextureAnimationScaling::scalings() const
 {
-	return dynamic_cast<class TextureAnimationScalings*>(this->m_scalings);
+	return dynamic_cast<class TextureAnimationScalings*>(this->properties());
 }
 
 }

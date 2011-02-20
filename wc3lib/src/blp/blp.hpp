@@ -86,7 +86,7 @@ class Blp : public Format<byte>
 		* Imagine each mip map as single image containing several pixels with various colors (and alpha values).
 		* Mip map colors are stored in a map hashed by their coordinates for fast access.
 		* Palette index is also stored for providing paletted compression support when writing the BLP/mip map into output stream.
-		* BLP supports RGBA colors.
+		* BLP supports ARGB colors.
 		*/
 		class MipMap
 		{

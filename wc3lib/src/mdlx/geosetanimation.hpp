@@ -21,10 +21,7 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATION_HPP
 #define WC3LIB_MDLX_GEOSETANIMATION_HPP
 
-#include <iostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlblock.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimation
+class GeosetAnimation : public MdlxProperty, public MdlBlock
 {
 	public:
 		enum ColorAnimation
@@ -48,7 +45,7 @@ class GeosetAnimation
 
 		class GeosetAnimations* geosetAnimations() const;
 		float32 staticAlpha() const;
-		long32 colorAnimation() const;
+		enum ColorAnimation colorAnimation() const;
 		float32 colorRed() const;
 		float32 colorGreen() const;
 		float32 colorBlue() const;
@@ -56,15 +53,15 @@ class GeosetAnimation
 		class GeosetAnimationAlphas* alphas() const;
 		class GeosetAnimationColors* colors() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		class GeosetAnimations *m_geosetAnimations;
 		float32 m_staticAlpha; //(1.0:use KGAO)
-		long32 m_colorAnimation; //(0:none;1:DropShadow;2:Color;3:Both)
+		enum ColorAnimation m_colorAnimation; //(0:none;1:DropShadow;2:Color;3:Both)
 		float32 m_colorRed, m_colorGreen, m_colorBlue; //(default:1)
 		long32 m_geosetId;
 		class GeosetAnimationAlphas *m_alphas; //(KGAO)
@@ -81,7 +78,7 @@ inline float32 GeosetAnimation::staticAlpha() const
 	return this->m_staticAlpha;
 }
 
-inline long32 GeosetAnimation::colorAnimation() const
+inline enum GeosetAnimation::ColorAnimation GeosetAnimation::colorAnimation() const
 {
 	return this->m_colorAnimation;
 }

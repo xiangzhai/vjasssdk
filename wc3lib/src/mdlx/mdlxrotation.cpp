@@ -20,7 +20,6 @@
 
 #include "mdlxrotation.hpp"
 #include "mdlxrotations.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -28,46 +27,12 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdlxRotation::MdlxRotation(class MdlxRotations *rotations) : m_rotations(rotations)
+MdlxRotation::MdlxRotation(class MdlxRotations *rotations) : MdlxAnimatedProperty(rotations, 4)
 {
 }
 
 MdlxRotation::~MdlxRotation()
 {
-}
-
-std::streamsize MdlxRotation::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize MdlxRotation::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize MdlxRotation::readMdx(std::istream &istream) throw (class Exception)
-{
-	std::streamsize size = 0;
-	wc3lib::read(istream, this->m_frame, size);
-	wc3lib::read(istream, this->m_quaternionData, size);
-
-	if (this->m_rotations->lineType() > Linear)
-		wc3lib::read(istream, this->m_interpolationData, size);
-
-	return size;
-}
-
-std::streamsize MdlxRotation::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	std::streamsize size = 0;
-	wc3lib::write(ostream, this->m_frame, size);
-	wc3lib::write(ostream, this->m_quaternionData, size);
-
-	if (this->m_rotations->lineType() > Linear)
-		wc3lib::write(ostream, this->m_interpolationData, size);
-
-	return size;
 }
 
 }

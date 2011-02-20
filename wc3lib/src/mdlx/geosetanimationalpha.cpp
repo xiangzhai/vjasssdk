@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,15 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimationAlpha::GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas) : MdxAlpha(geosetAnimationAlphas)
-{
-}
-
-void GeosetAnimationAlpha::readMdl(std::fstream &fstream) throw (class Exception)
-{
-}
-
-void GeosetAnimationAlpha::writeMdl(std::fstream &fstream) throw (class Exception)
+GeosetAnimationAlpha::GeosetAnimationAlpha(class GeosetAnimationAlphas *geosetAnimationAlphas) : MdlxAlpha(geosetAnimationAlphas)
 {
 }
 

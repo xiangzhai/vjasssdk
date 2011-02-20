@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,7 @@
 
 #include "mdxblock.hpp"
 #include "bounds.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -30,10 +31,8 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-
 /// MODL
-class Model : public MdxBlock, public Bounds
+class Model : public MdxBlock, public Bounds, public MdlxProperty
 {
 	public:
 		Model(class Mdlx *mdlx);
@@ -44,10 +43,10 @@ class Model : public MdxBlock, public Bounds
 		const ascii* animationFileName() const;
 		long32 blendTime() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
