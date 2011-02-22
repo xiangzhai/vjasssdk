@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +23,7 @@
 
 #include <list>
 
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +32,7 @@ namespace mdlx
 {
 
 /// HELP
-class Helpers : public MdxBlock
+class Helpers : public GroupMdxBlock
 {
 	public:
 		Helpers(class Mdlx *mdlx);
@@ -41,14 +41,13 @@ class Helpers : public MdxBlock
 		class Mdlx* mdlx() const;
 		const std::list<class Helper*>& helpers() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class Helper*> m_helpers;
 };
 
 inline class Mdlx* Helpers::mdlx() const
@@ -58,7 +57,7 @@ inline class Mdlx* Helpers::mdlx() const
 
 inline const std::list<class Helper*>& Helpers::helpers() const
 {
-	return this->m_helpers;
+	return dynamic_cast<const std::list<class Helper*>&>(this->m_members);
 }
 
 }

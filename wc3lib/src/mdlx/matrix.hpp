@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MDLX_MATRIX_HPP
 #define WC3LIB_MDLX_MATRIX_HPP
 
-#include <list>
-
 #include "groupmdxblockmember.hpp"
 #include "matrices.hpp"
 
@@ -41,10 +39,10 @@ class Matrix : public GroupMdxBlockMember
 		class Matrices* matrices() const;
 		long32 data() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		long32 m_data;

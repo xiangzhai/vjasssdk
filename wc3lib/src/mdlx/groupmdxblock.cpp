@@ -40,7 +40,7 @@ GroupMdxBlock::~GroupMdxBlock()
 		delete groupMdxBlockMember;
 }
 
-std::streamsize GroupMdxBlock::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GroupMdxBlock::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = MdxBlock::readMdx(istream);
 
@@ -60,7 +60,7 @@ std::streamsize GroupMdxBlock::readMdx(std::istream &istream) throw (class Excep
 	return size;
 }
 
-std::streamsize GroupMdxBlock::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize GroupMdxBlock::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	if (!this->exists())
 		return 0;

@@ -1,3 +1,6 @@
+2011-02-22 Tamino Dauth <tamio@cdauth.eu>
+* mdlx: Revised classes.
+
 2011-02-20 Tamino Dauth <tamio@cdauth.eu>
 * mdlx: Added various MDL write functions.
 * mdlx: Added classes MdlBlock, MdlValueBlock, MdlxAnimatedProperties and MdlxAnimatedProperty.

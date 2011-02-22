@@ -44,8 +44,8 @@ class Light : public Object
 
 		class Lights* lights() const;
 		long32 type() const;
-		float32 attStart() const;
-		float32 attEnd() const;
+		float32 attenuationStart() const;
+		float32 attenuationEnd() const;
 		float32 colorRed() const;
 		float32 colorGreen() const;
 		float32 colorBlue() const;
@@ -60,17 +60,17 @@ class Light : public Object
 		class AmbientColors* ambientColors() const;
 		class AmbientIntensities* ambientIntensities() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Lights *m_lights;
 		//long nbytesi;
 		//OBJ
 		long32 m_type; //(0:Omnidirectional;1:Directional;2:Ambient)
-		float32 m_attStart, m_attEnd;
+		float32 m_attenuationStart, m_attenuationEnd;
 		float32 m_colorRed, m_colorGreen, m_colorBlue;
 		float32 m_intensity;
 		float32 m_ambColorRed, m_ambColorGreen, m_ambColorBlue;
@@ -92,14 +92,14 @@ inline long32 Light::type() const
 	return this->m_type;
 }
 
-inline float32 Light::attStart() const
+inline float32 Light::attenuationtart() const
 {
-	return this->m_attStart;
+	return this->m_attenuationStart;
 }
 
-inline float32 Light::attEnd() const
+inline float32 Light::attenuationEnd() const
 {
-	return this->m_attEnd;
+	return this->m_attenuationEnd;
 }
 
 inline float32 Light::colorRed() const

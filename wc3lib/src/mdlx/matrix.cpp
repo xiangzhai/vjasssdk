@@ -35,15 +35,15 @@ Matrix::~Matrix()
 {
 }
 
-void Matrix::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Matrix::readMdl(istream &istream) throw (class Exception)
 {
 }
 
-void Matrix::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Matrix::writeMdl(ostream &ostream) const throw (class Exception)
 {
 }
 
-std::streamsize Matrix::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Matrix::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_data, size);
@@ -51,7 +51,7 @@ std::streamsize Matrix::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Matrix::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Matrix::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_data, size);

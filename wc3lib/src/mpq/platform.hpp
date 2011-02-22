@@ -21,6 +21,9 @@
 #ifndef WC3LIB_MPQ_PLATFORM_HPP
 #define WC3LIB_MPQ_PLATFORM_HPP
 
+#include <istream>
+#include <ostream>
+
 #include <boost/cstdint.hpp>
 
 namespace wc3lib
@@ -38,6 +41,9 @@ typedef int64_t int64;
 typedef uint64_t uint64; // used for large offsets
 
 typedef int32 CRC32;
+
+typedef std::basic_istream<byte> istream;
+typedef std::basic_ostream<byte> ostream;
 
 /// Windows-like file time. Redefined for compatibility.
 struct FILETIME

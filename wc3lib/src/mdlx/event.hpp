@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
 #ifndef WC3LIB_MDLX_EVENT_HPP
 #define WC3LIB_MDLX_EVENT_HPP
 
-#include <list>
-
 #include "object.hpp"
+#include "groupmdxblockmember.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Event : public Object
+class Event : public Object, public GroupMdxBlockMember
 {
 	public:
 		Event(class Events *events);
@@ -41,13 +40,12 @@ class Event : public Object
 		class EventTracks* tracks() const;
 		const std::list<long32>& frames() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Events *m_events;
 		//OBJ
 		//ascii *bla; //ASCII "KEVT" // Actually a separate object
 		//long32 ntrks; // usually (1)
@@ -58,7 +56,7 @@ class Event : public Object
 
 inline class Events* Event::events() const
 {
-	return this->m_events;
+	return dynamic_cast<class Events*>(this->m_parent);
 }
 
 inline class EventTracks* Event::tracks() const

@@ -23,8 +23,6 @@
 
 #include <cmath>
 
-#include <istream>
-#include <ostream>
 #include <list>
 #include <map>
 #include <string>
@@ -83,15 +81,14 @@ namespace mpq
 * to files contained by the MPQ archive.
 * Use Mpq::addFile to add a new file which will return 0 (if an error occurs) or the new MpqFile
 * instance which refers to the newly created file.
-
 */
 class Mpq
 {
 	public:
 		enum Format
 		{
-			Mpq1, // original format
-			Mpq2 // Burning Crusade, large files
+			Mpq1, /// Original format (Starcraft, Warcraft 3, Warcraft 3 The Frozen Throne, World of Warcraft)
+			Mpq2 /// Burning Crusade, large files (size can be larger than 2^32 - 2^64)
 		};
 
 		enum ExtendedAttributes
@@ -110,24 +107,24 @@ class Mpq
 		~Mpq();
 
 		std::streamsize create(const boost::filesystem::path &path, bool overwriteExisting = false, std::streampos startPosition = 0, enum Format format = Mpq1, enum ExtendedAttributes extendedAttributes = None, int32 sectorSize = 4096, bool hasStrongDigitalSignature = false, bool containsListfileFile = false, bool containsSignatureFile = false) throw (class Exception);
-		std::streamsize open(const boost::filesystem::path &path, std::istream *listfileIstream = 0) throw (class Exception);
+		std::streamsize open(const boost::filesystem::path &path, istream *listfileIstream = 0) throw (class Exception);
 		void close();
 
 		/**
 		* @param listfilefileIstream If you want to preselect your custom listfile file, use this value (entries will be appended to the already contained listfile file if it does exist).
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize readMpq(std::istream &istream, std::istream *listfileIstream = 0) throw (class Exception);
+		std::streamsize readMpq(istream &istream, istream *listfileIstream = 0) throw (class Exception);
 		/**
 		* Writes the whole MPQ archive into output stream @param ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
 		* If you change some data of the opened MPQ archive it's written directly into the corresponding file (the whole archive is not loaded into memory!).
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize writeMpq(std::ostream &ostream) const throw (class Exception);
+		std::streamsize writeMpq(ostream &ostream) const throw (class Exception);
 
-		std::streamsize openTar(const boost::filesystem::path &path, std::istream *listfileIstream = 0) throw (class Exception);
-		std::streamsize readTar(std::istream &istream) throw (class Exception);
-		std::streamsize writeTar(std::ostream &ostream) const throw (class Exception);
+		std::streamsize openTar(const boost::filesystem::path &path, istream *listfileIstream = 0) throw (class Exception);
+		std::streamsize readTar(istream &istream) throw (class Exception);
+		std::streamsize writeTar(ostream &ostream) const throw (class Exception);
 
 		bool check() const;
 		bool fix() const;
@@ -365,25 +362,25 @@ class Mpq
 };
 
 /// @todo Implement.
-inline bool Mpq::hasStrongDigitalSignature(std::istream &istream)
+inline bool Mpq::hasStrongDigitalSignature(istream &istream)
 {
 	return false;
 }
 
 /// @todo Implement.
-inline std::streamsize Mpq::strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception)
+inline std::streamsize Mpq::strongDigitalSignature(istream &istream, char signature[256]) throw (class Exception)
 {
 	return 0;
 }
 
-inline std::ostream& operator<<(std::ostream &ostream, const class Mpq &mpq) throw (class Exception)
+inline std::ostream& operator<<(ostream &ostream, const class Mpq &mpq) throw (class Exception)
 {
 	mpq.writeMpq(ostream);
 
 	return ostream;
 }
 
-inline std::istream& operator>>(std::istream &istream, class Mpq &mpq) throw (class Exception)
+inline std::istream& operator>>(istream &istream, class Mpq &mpq) throw (class Exception)
 {
 	mpq.readMpq(istream);
 

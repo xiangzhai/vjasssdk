@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "mdlxanimatedproperty.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {

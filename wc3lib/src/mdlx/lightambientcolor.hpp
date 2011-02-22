@@ -40,7 +40,7 @@ class LightAmbientColor : public MdlxScaling
 
 inline class LightAmbientColors* LightAmbientColor::colors() const
 {
-	return dynamic_cast<class LightAmbientColors*>(this->m_scalings);
+	return dynamic_cast<class LightAmbientColors*>(this->mdlxScalings());
 }
 
 }

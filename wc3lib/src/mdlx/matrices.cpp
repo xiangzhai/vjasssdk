@@ -35,12 +35,14 @@ Matrices::~Matrices()
 {
 }
 
-void Matrices::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Matrices::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Matrices::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Matrices::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 class GroupMdxBlockMember* Matrices::createNewMember()

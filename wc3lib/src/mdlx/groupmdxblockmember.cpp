@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,20 +28,6 @@ namespace mdlx
 
 GroupMdxBlockMember::GroupMdxBlockMember(class GroupMdxBlock *parent) : m_parent(parent)
 {
-}
-
-GroupMdxBlockMember::~GroupMdxBlockMember()
-{
-}
-
-std::streamsize GroupMdxBlockMember::readMdx(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize GroupMdxBlockMember::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
 }
 
 }

@@ -35,17 +35,17 @@ Vertex::~Vertex()
 {
 }
 
-std::streamsize Vertex::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Vertex::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Vertex::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Vertex::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Vertex::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Vertex::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_vertexData, size);
@@ -53,7 +53,7 @@ std::streamsize Vertex::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Vertex::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Vertex::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_vertexData, size);

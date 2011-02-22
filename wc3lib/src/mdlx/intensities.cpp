@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,8 @@
 
 #include "intensities.hpp"
 #include "intensity.hpp"
+#include "light.hpp"
+#include "lights.hpp"
 
 namespace wc3lib
 {
@@ -27,23 +29,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-Intensities::Intensities(class Light *light) : MdxAlphas("KLAI"), m_light(light)
+Intensities::Intensities(class Light *light) : MdlxAlphas(light->lights()->mdlx(), "KLAI"), m_light(light)
 {
 }
 
-Intensities::~Intensities()
-{
-}
-
-void Intensities::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Intensities::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-}
-
-class MdxAlpha* Intensities::createNewMember()
+class MdlxAnimatedProperty* Intensities::createAnimatedProperty()
 {
 	return new Intensity(this);
 }

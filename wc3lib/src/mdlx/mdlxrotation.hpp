@@ -35,13 +35,13 @@ class MdlxRotation : public MdlxAnimatedProperty
 		MdlxRotation(class MdlxRotations *rotations);
 		virtual ~MdlxRotation();
 
-		class MdlxRotations* rotations() const;
+		class MdlxRotations* mdlxRotations() const;
 		
 		struct QuaternionData quaternionData() const;
 		struct InterpolationRotationData interpolationData() const;
 };
 
-inline class MdlxRotations* MdlxRotation::rotations() const
+inline class MdlxRotations* MdlxRotation::mdlxRotations() const
 {
 	return dynamic_cast<class MdlxRotations*>(this->properties());
 }

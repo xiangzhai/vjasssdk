@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include "lightambientcolors.hpp"
 #include "ambientcolors.hpp"
 #include "ambientintensities.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -45,56 +46,69 @@ Light::~Light()
 	delete this->m_ambientIntensities;
 }
 
-std::streamsize Light::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Light::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Light::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Light::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Light::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Light::readMdx(istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::streamsize bytes = istream.gcount();
-	bytes += Object::readMdx(istream);
-	istream.read(reinterpret_cast<char*>(&this->m_type), sizeof(this->m_type));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_attStart), sizeof(this->m_attStart));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_attEnd), sizeof(this->m_attEnd));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_colorRed), sizeof(this->m_colorRed));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_colorGreen), sizeof(this->m_colorGreen));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_colorBlue), sizeof(this->m_colorBlue));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_intensity), sizeof(this->m_intensity));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_ambColorRed), sizeof(this->m_ambColorRed));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_ambColorGreen), sizeof(this->m_ambColorGreen));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_ambColorBlue), sizeof(this->m_ambColorBlue));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_ambIntensity), sizeof(this->m_ambIntensity));
-	bytes += istream.gcount();
-	bytes += this->m_intensities->readMdx(istream);
-	bytes += this->m_visibilities->readMdx(istream);
-	bytes += this->m_colors->readMdx(istream);
-	bytes += this->m_ambientColors->readMdx(istream);
-	bytes += this->m_ambientIntensities->readMdx(istream);
+	std::streamsize size = 0;
+	wc3lib::read(istream, nbytesi, size);
+	size += Object::readMdx(istream);
+	wc3lib::read(istream, this->m_type, size);
+	wc3lib::read(istream, this->m_attenuationStart, size);
+	wc3lib::read(istream, this->m_attenuationEnd, size);
+	wc3lib::read(istream, this->m_colorRed, size);
+	wc3lib::read(istream, this->m_colorGreen, size);
+	wc3lib::read(istream, this->m_colorBlue, size);
+	wc3lib::read(istream, this->m_intensity, size);
+	wc3lib::read(istream, this->m_ambColorRed, size);
+	wc3lib::read(istream, this->m_ambColorGreen, size);
+	wc3lib::read(istream, this->m_ambColorBlue, size);
+	wc3lib::read(istream, this->m_ambIntensity, size);
+	size += this->m_intensities->readMdx(istream);
+	size += this->m_visibilities->readMdx(istream);
+	size += this->m_colors->readMdx(istream);
+	size += this->m_ambientColors->readMdx(istream);
+	size += this->m_ambientIntensities->readMdx(istream);
 
-	return bytes;
+	return size;
 }
 
 std::streamsize Light::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
+	std::streamsize size = 0;
+	size += Object::writeMdx(ostream);
+	wc3lib::write(ostream, this->type(), size);
+	wc3lib::write(ostream, this->attenuationStart(), size);
+	wc3lib::write(ostream, this->attenuationEnd(), size);
+	wc3lib::write(ostream, this->colorRed(), size);
+	wc3lib::write(ostream, this->colorGreen(), size);
+	wc3lib::write(ostream, this->colorBlue(), size);
+	wc3lib::write(ostream, this->intensity(), size);
+	wc3lib::write(ostream, this->ambColorRed(), size);
+	wc3lib::write(ostream, this->ambColorGreen(), size);
+	wc3lib::write(ostream, this->ambColorBlue(), size);
+	wc3lib::write(ostream, this->ambIntensity(), size);
+	size += this->m_intensities->writeMdx(ostream);
+	size += this->m_visibilities->writeMdx(ostream);
+	size += this->m_colors->writeMdx(ostream);
+	size += this->m_ambientColors->writeMdx(ostream);
+	size += this->m_ambientIntensities->writeMdx(ostream);
+	
+	writeByteCount(ostream, static_cast<long32&>(size), position, size, true);
+
+	return size;
 }
 
 }

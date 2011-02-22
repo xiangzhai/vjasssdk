@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,20 +21,14 @@
 #ifndef WC3LIB_MPQ_SECTOR_HPP
 #define WC3LIB_MPQ_SECTOR_HPP
 
-#include <istream>
-#include <ostream>
-
 #include "platform.hpp"
 #include "../exception.hpp"
 
 namespace wc3lib
 {
-	
+
 namespace mpq
 {
-	
-class Mpq;
-class MpqFile;
 
 class Sector
 {
@@ -44,11 +38,11 @@ class Sector
 		/**
 		* Reads new sector data from input stream @param istream and writes it into the MPQ archive.
 		*/
-		std::streamsize readData(std::istream &istream) throw (class Exception);
+		std::streamsize readData(istream &istream) throw (class Exception);
 		/**
 		* Writes sector data into output stream	@param ostream.
 		*/
-		std::streamsize writeData(std::ostream &ostream) const throw (class Exception);
+		std::streamsize writeData(ostream &ostream) const throw (class Exception);
 		
 	protected:
 		friend class Mpq;

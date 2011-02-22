@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MPQ_MPQFILEOSTREAM_HPP
 #define WC3LIB_MPQ_MPQFILEOSTREAM_HPP
 
-#include <ostream>
+#include "platform.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +32,7 @@ namespace mpq
 /**
 * @brief Advanced stream which can be used to stream MPQ files by their single sectors.
 */
-class MpqFileOstream : public std::ostream
+class MpqFileOstream : public ostream
 {
 	public:
 		MpqFileOstream();

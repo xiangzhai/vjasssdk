@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MPQ_HASH_HPP
 #define WC3LIB_MPQ_HASH_HPP
 
-#include <istream>
-
 #include <boost/filesystem.hpp>
 
 #include "platform.hpp"
@@ -33,17 +31,13 @@ namespace wc3lib
 	
 namespace mpq
 {
-	
-class Mpq;
-class MpqFile;
-class Block;
 
 class Hash
 {
 	public:
 		Hash(class Mpq *mpq);
 		
-		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize read(istream &istream) throw (class Exception);
 		void clear();
 		
 		//bool isHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;

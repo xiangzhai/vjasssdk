@@ -35,12 +35,12 @@ Vertices::~Vertices()
 {
 }
 
-std::streamsize Vertices::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Vertices::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Vertices::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Vertices::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

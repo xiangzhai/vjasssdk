@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_LIGHTAMBIENTVISIBILITIES_HPP
 #define WC3LIB_MDLX_LIGHTAMBIENTVISIBILITIES_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -30,7 +30,7 @@ namespace mdlx
 {
 
 /// KLAV
-class LightAmbientVisibilities : public MdxAlphas
+class LightAmbientVisibilities : public MdlxAlphas
 {
 	public:
 		LightAmbientVisibilities(class Light *light);
@@ -39,11 +39,8 @@ class LightAmbientVisibilities : public MdxAlphas
 		class Light* light() const;
 		const std::list<class LightAmbientVisibility*>& visibilities() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-
 	protected:
-		virtual class MdxAlpha* createNewMember();
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
 
 		class Light *m_light;
 };
@@ -55,7 +52,7 @@ inline class Light* LightAmbientVisibilities::light() const
 
 inline const std::list<class LightAmbientVisibility*>& LightAmbientVisibilities::visibilities() const
 {
-	return reinterpret_cast<const std::list<class LightAmbientVisibility*>&>(this->m_alphas);
+	return *reinterpret_cast<const std::list<class LightAmbientVisibility*>&>(&this->mdlxAlphas());
 }
 
 }

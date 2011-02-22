@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
 #define WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
 
-#include <istream>
-#include <ostream>
+#include "mdlxproperty.hpp"
 
-#include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -33,14 +30,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GroupMdxBlockMember
+class GroupMdxBlockMember : public MdlxProperty
 {
 	public:
 		GroupMdxBlockMember(class GroupMdxBlock *parent);
 		virtual ~GroupMdxBlockMember();
-
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class GroupMdxBlock *m_parent;

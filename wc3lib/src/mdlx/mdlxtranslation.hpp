@@ -36,12 +36,12 @@ class MdlxTranslation : public MdlxScaling
 	public:
 		MdlxTranslation(class MdlxTranslations *translations);
 
-		class MdlxTranslations* translations() const;
+		class MdlxTranslations* mdlxTranslations() const;
 };
 
-inline class MdlxTranslations* MdlxTranslation::translations() const
+inline class MdlxTranslations* MdlxTranslation::mdlxTranslations() const
 {
-	return dynamic_cast<class MdlxTranslations*>(this->m_scalings);
+	return dynamic_cast<class MdlxTranslations*>(this->mdlxScalings());
 }
 
 }

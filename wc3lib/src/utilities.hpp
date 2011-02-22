@@ -314,6 +314,16 @@ inline std::basic_ostream<_CharT>& skipByteCount(std::basic_ostream<_CharT> &ost
 	return ostream;
 }
 
+/**
+ * Formats size \p size to string with proper binary size unit.
+ * Supported units are:
+ * <ul>
+ * <li>Gi</li>
+ * <li>Mi</li>
+ * <li>Ki</li>
+ * <li>B</li>
+ * </ul>
+ */
 template<typename T>
 std::string sizeStringBinary(T size)
 {
@@ -366,6 +376,16 @@ std::string sizeStringBinary(T size)
 	return sstream.str();
 }
 
+/**
+ * Formats size \p size to string with proper decimal size unit.
+ * Supported units are:
+ * <ul>
+ * <li>G</li>
+ * <li>M</li>
+ * <li>k</li>
+ * <li>B</li>
+ * </ul>
+ */
 template<typename T>
 std::string sizeStringDecimal(T size)
 {

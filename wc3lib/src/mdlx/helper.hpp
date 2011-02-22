@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_HELPER_HPP
 
 #include "object.hpp"
+#include "groupmdxblockmember.hpp"
 
 namespace wc3lib
 {
@@ -29,22 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Helpers;
-
-class Helper : public Object
+class Helper : public Object, public GroupMdxBlockMember
 {
 	public:
 		Helper(class Helpers *helpers);
 		
 		class Helpers* helpers() const;
-	
-	private:
-		class Helpers *m_helpers;
 };
 
 inline class Helpers* Helper::helpers() const
 {
-	return this->m_helpers;
+	return dynamic_cast<class Helpers*>(this->m_parent);
 }
 
 }

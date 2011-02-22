@@ -18,6 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <boost/foreach.hpp>
+
+#include "mdlxanimatedproperties.hpp"
+#include "../utilities.hpp"
+
 namespace wc3lib
 {
 

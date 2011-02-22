@@ -128,7 +128,7 @@ std::streamsize Mpq::create(const boost::filesystem::path &path, bool overwriteE
 	}
 }
 
-std::streamsize Mpq::open(const boost::filesystem::path &path, std::istream *listfileIstream) throw (class Exception)
+std::streamsize Mpq::open(const boost::filesystem::path &path, istream *listfileIstream) throw (class Exception)
 {
 	this->close();
 
@@ -178,7 +178,7 @@ void Mpq::close()
 	this->clear();
 }
 
-std::streamsize Mpq::readMpq(std::istream &istream, std::istream *listfileIstream) throw (class Exception)
+std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (class Exception)
 {
 	// find header structure by using file key
 	byte identifier[4];
@@ -386,17 +386,17 @@ std::streamsize Mpq::writeMpq(std::ostream &ostream) const throw (class Exceptio
 	return 0;
 }
 
-std::streamsize Mpq::openTar(const boost::filesystem::path &path, std::istream *listfileIstream) throw (class Exception)
+std::streamsize Mpq::openTar(const boost::filesystem::path &path, istream *listfileIstream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Mpq::readTar(std::istream &istream) throw (class Exception)
+std::streamsize Mpq::readTar(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Mpq::writeTar(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mpq::writeTar(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
@@ -441,7 +441,7 @@ const class MpqFile* Mpq::findFile(const class MpqFile &mpqFile) const
 	return this->findFile(mpqFile.path(), mpqFile.locale(), mpqFile.platform());
 }
 
-class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream, bool overwriteExisting, int32 reservedSpace) throw (class Exception)
+class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const istream *istream, bool overwriteExisting, int32 reservedSpace) throw (class Exception)
 {
 	class MpqFile *mpqFile = const_cast<class MpqFile*>(this->findFile(path, locale, platform));
 
@@ -760,7 +760,7 @@ class MpqFile* Mpq::refreshSignatureFile()
 	return 0;
 }
 
-std::size_t Mpq::readListfilePathEntries(std::istream &istream)
+std::size_t Mpq::readListfilePathEntries(istream &istream)
 {
 	// read list file file and create path entries
 	std::size_t count = 0;

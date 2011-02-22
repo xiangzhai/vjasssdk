@@ -33,21 +33,7 @@ LightAmbientColors::LightAmbientColors(class Light *light) : MdlxScalings(light-
 {
 }
 
-LightAmbientColors::~LightAmbientColors()
-{
-}
-
-std::streamsize LightAmbientColors::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize LightAmbientColors::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
-class MdlxScaling* LightAmbientColors::createNewMember()
+class MdlxAnimatedProperty* LightAmbientColors::createAnimatedProperty()
 {
 	return new LightAmbientColor(this);
 }

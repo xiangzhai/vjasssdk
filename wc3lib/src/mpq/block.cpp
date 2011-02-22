@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,7 @@
 #include "block.hpp"
 #include "mpq.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -50,13 +51,13 @@ Block::Block(class Mpq *mpq) : m_mpq(mpq), m_blockOffset(0), m_extendedBlockOffs
 {
 }
 
-std::streamsize Block::read(std::istream &istream) throw (class Exception)
+std::streamsize Block::read(istream &istream) throw (class Exception)
 {
 	struct BlockTableEntry entry;
-	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
-	std::streamsize bytes = istream.gcount();
+	std::streamsize size = 0;
+	wc3lib::read(istream, entry, size);
 
-	if (bytes != sizeof(entry))
+	if (size != sizeof(entry))
 		throw Exception(_("Error while reading block table entry."));
 
 	this->m_blockOffset = entry.blockOffset;
@@ -64,19 +65,20 @@ std::streamsize Block::read(std::istream &istream) throw (class Exception)
 	this->m_fileSize = entry.fileSize;
 	this->m_flags = static_cast<enum Block::Flags>(entry.flags);
 
-	return bytes;
+	return size;
 }
 
-std::streamsize Block::write(std::ostream &ostream) throw (class Exception)
+std::streamsize Block::write(ostream &ostream) throw (class Exception)
 {
 	struct BlockTableEntry entry;
 	entry.blockOffset = this->m_blockOffset;
 	entry.blockSize = this->m_blockSize;
 	entry.fileSize = this->m_fileSize;
 	entry.flags = static_cast<int32>(this->m_flags);
-	ostream.write(reinterpret_cast<char*>(&entry), sizeof(entry));
+	std::streamsize size = 0;
+	wc3lib::write(ostream, entry, size);
 	
-	return sizeof(entry);
+	return size;
 }
 
 uint32 Block::fileKey(const boost::filesystem::path &path) const

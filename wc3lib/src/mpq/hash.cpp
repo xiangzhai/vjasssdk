@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,7 @@
 #include "mpqfile.hpp"
 #include "block.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -39,13 +40,13 @@ Hash::Hash(class Mpq *mpq) : m_mpq(mpq), m_mpqFile(0), m_filePathHashA(0), m_fil
 {
 }
 
-std::streamsize Hash::read(std::istream &istream) throw (class Exception)
+std::streamsize Hash::read(istream &istream) throw (class Exception)
 {
 	struct HashTableEntry entry;
-	istream.read(reinterpret_cast<char*>(&entry), sizeof(entry));
-	std::streamsize bytes = istream.gcount();
+	std::streamsize size = 0;
+	wc3lib::read(istream, entry, size);
 	
-	if (bytes != sizeof(entry))
+	if (size != sizeof(entry))
 		throw Exception(_("Error while reading hash table entry."));
 	
 	this->m_filePathHashA = entry.filePathHashA;
@@ -77,7 +78,7 @@ std::streamsize Hash::read(std::istream &istream) throw (class Exception)
 		//exit(0);
 	}
 	
-	return bytes;
+	return size;
 }
 
 /// @todo Clear or write file hash and block data!

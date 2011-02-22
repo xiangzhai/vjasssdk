@@ -29,24 +29,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Light;
-class LightAmbientColor;
-
 /// KLAC
 class LightAmbientColors : public MdlxScalings
 {
 	public:
 		LightAmbientColors(class Light *light);
-		virtual ~LightAmbientColors();
 
 		class Light* light() const;
 		const std::list<class LightAmbientColor*>& colors() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-
 	protected:
-		virtual class MdlxScaling* createNewMember();
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
 
 		class Light *m_light;
 };
@@ -58,7 +51,7 @@ inline class Light* LightAmbientColors::light() const
 
 inline const std::list<class LightAmbientColor*>& LightAmbientColors::colors() const
 {
-	return reinterpret_cast<const std::list<class LightAmbientColor*>&>(*&this->m_scalings);
+	return *reinterpret_cast<const std::list<class LightAmbientColor*>&>(&this->mdlxScalings());
 }
 
 }

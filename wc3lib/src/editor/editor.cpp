@@ -48,6 +48,7 @@
 #include "../mpq/mpqfile.hpp"
 #include "settings.hpp"
 #include "../internationalisation.hpp"
+#include "../blp.hpp"
 
 namespace wc3lib
 {

@@ -20,6 +20,8 @@
 
 #include "lightambientvisibilities.hpp"
 #include "lightambientvisibility.hpp"
+#include "light.hpp"
+#include "lights.hpp"
 
 namespace wc3lib
 {
@@ -27,23 +29,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-LightAmbientVisibilities::LightAmbientVisibilities(class Light *light) : MdxAlphas("KLAV"), m_light(light)
+LightAmbientVisibilities::LightAmbientVisibilities(class Light *light) : MdlxAlphas(light->lights()->mdlx(), "KLAV"), m_light(light)
 {
 }
 
-LightAmbientVisibilities::~LightAmbientVisibilities()
-{
-}
-
-void LightAmbientVisibilities::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void LightAmbientVisibilities::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-}
-
-class MdxAlpha* LightAmbientVisibilities::createNewMember()
+class MdlxAnimatedProperty* LightAmbientVisibilities::createAnimatedProperty()
 {
 	return new LightAmbientVisibility(this);
 }

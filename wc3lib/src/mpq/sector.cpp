@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,8 +19,6 @@
  ***************************************************************************/
 
 #include <iostream> // debug
-
-#include <fstream>
 
 #include <boost/format.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -45,12 +43,12 @@ Sector::Sector(class MpqFile *mpqFile) : m_mpqFile(mpqFile), m_sectorIndex(0), m
 {
 }
 
-std::streamsize Sector::readData(std::istream &istream) throw (class Exception)
+std::streamsize Sector::readData(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Sector::writeData(std::ostream &ostream) const throw (class Exception)
+std::streamsize Sector::writeData(ostream &ostream) const throw (class Exception)
 {
 	boost::filesystem::ifstream ifstream(this->m_mpqFile->mpq()->path(), std::ios_base::in | std::ios_base::binary);
 

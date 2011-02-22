@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@ namespace wc3lib
 namespace mpq
 {
 
-std::streamsize MpqFile::readData(std::istream &istream) throw (class Exception)
+std::streamsize MpqFile::readData(istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = 0;
 
@@ -46,14 +46,14 @@ std::streamsize MpqFile::readData(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-std::streamsize MpqFile::appendData(std::istream &istream) throw (class Exception)
+std::streamsize MpqFile::appendData(istream &istream) throw (class Exception)
 {
 	throw Exception(_("MpqFile: appendData is not implemented yet!"));
 
 	return 0;
 }
 
-std::streamsize MpqFile::writeData(std::ostream &ostream) const throw (class Exception)
+std::streamsize MpqFile::writeData(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize bytes = 0;
 
@@ -77,7 +77,7 @@ MpqFile::~MpqFile()
 		delete sector;
 }
 
-std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
+std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = 0;
 
@@ -216,7 +216,7 @@ std::streamsize MpqFile::read(std::istream &istream) throw (class Exception)
 }
 
 
-std::streamsize MpqFile::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize MpqFile::write(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +23,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include <istream>
 #include <ctime>
 
 #include "platform.hpp"
@@ -55,8 +54,8 @@ class Block
 
 		Block(class Mpq *mpq);
 
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) throw (class Exception);
+		std::streamsize read(istream &istream) throw (class Exception);
+		std::streamsize write(ostream &ostream) throw (class Exception);
 
 		/**
 		* @todo Check size, flags and required properties.

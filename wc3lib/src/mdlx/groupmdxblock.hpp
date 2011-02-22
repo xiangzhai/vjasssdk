@@ -44,8 +44,8 @@ class GroupMdxBlock : public MdxBlock
 		GroupMdxBlock(byte blockName[4], bool optional = true);
 		~GroupMdxBlock();
 
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		/**

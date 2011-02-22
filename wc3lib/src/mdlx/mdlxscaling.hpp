@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,13 +36,13 @@ class MdlxScaling : public MdlxAnimatedProperty
 		MdlxScaling(class MdlxScalings *scalings);
 		virtual ~MdlxScaling();
 		
-		class MdlxScalings* scalings() const;
+		class MdlxScalings* mdlxScalings() const;
 
 		struct VertexData vertexData() const;
 		struct InterpolationData interpolationData() const;
 };
 
-inline class MdlxScalings* MdlxScaling::scalings() const
+inline class MdlxScalings* MdlxScaling::mdlxScalings() const
 {
 	return dynamic_cast<class MdlxScalings*>(this->properties());
 }

@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MDLX_MATRICES_HPP
 #define WC3LIB_MDLX_MATRICES_HPP
 
-#include <list>
-
 #include "groupmdxblock.hpp"
 
 namespace wc3lib
@@ -41,8 +39,8 @@ class Matrices : public GroupMdxBlock
 		class Geoset* geoset() const;
 		const std::list<class Matrix*>& matrices() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

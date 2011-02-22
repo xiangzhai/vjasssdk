@@ -131,10 +131,12 @@ class Editor : public KMainWindow, public MpqPriorityList
 		* Opens an external image file with the given URL \p url and reads it by using Qt which allows you to read BLP files as well and converts it into an OGRE image.
 		* \param url URL of the image (can be modified by MPQ priority list internally).
 		* \param format Has to be one of Qt's AND OGRE supported image formats.
-		* \return Returns
+		* \return Returns newly allocated converted image object (you have to take care of its deletion).
 		* \note OGRE has to be compiled and linked with FreeImage (PNG support).
+		* \sa Editor::blpToTexture
 		*/
 		Ogre::Image* blpToOgre(const KUrl &url, const QString &format = "PNG") const throw (class Exception);
+		
 		/**
 		* Once requested, the image is kept in memory until it's refreshed manually.
 		*/

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Event::Event(class Events *events) : Object(events->mdlx()), m_events(events), m_tracks(new EventTracks(this))
+Event::Event(class Events *events) : Object(events->mdlx()), GroupMdxBlockMember(events), m_tracks(new EventTracks(this))
 {
 }
 
@@ -38,17 +38,17 @@ Event::~Event()
 	delete this->m_tracks;
 }
 
-std::streamsize Event::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Event::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Event::writeMdl(std::ostream &ostream) const throw (Exception)
+std::streamsize Event::writeMdl(ostream &ostream) const throw (Exception)
 {
 	return 0;
 }
 
-std::streamsize Event::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Event::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = Object::readMdx(istream);
 	size += this->m_tracks->readMdx(istream);
@@ -56,7 +56,7 @@ std::streamsize Event::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Event::writeMdx(std::ostream &ostream) const throw (Exception)
+std::streamsize Event::writeMdx(ostream &ostream) const throw (Exception)
 {
 	std::streamsize size = Object::writeMdx(ostream);
 	size += this->m_tracks->writeMdx(ostream);

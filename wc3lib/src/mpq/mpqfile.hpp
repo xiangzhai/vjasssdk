@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MPQ_MPQFILE_HPP
 #define WC3LIB_MPQ_MPQFILE_HPP
 
-#include <istream>
-#include <ostream>
 #include <list>
 #include <sstream>
 
@@ -38,9 +36,6 @@ namespace wc3lib
 
 namespace mpq
 {
-
-class Mpq;
-class Sector;
 
 /**
 * @brief Abstract class for mpq file access. Combines hash and block table data of file.
@@ -74,13 +69,13 @@ class MpqFile
 			Default
 		};
 
-		std::streamsize readData(std::istream &istream) throw (class Exception);
+		std::streamsize readData(istream &istream) throw (class Exception);
 		/**
 		* Reads data from stream @param istream and appends it to the already existing file data.
 		* @return Returns the number of read bytes.
 		*/
-		std::streamsize appendData(std::istream &istream) throw (class Exception);
-		std::streamsize writeData(std::ostream &ostream) const throw (class Exception);
+		std::streamsize appendData(istream &istream) throw (class Exception);
+		std::streamsize writeData(ostream &ostream) const throw (class Exception);
 
 		// hash attributes
 		enum Locale locale() const;
@@ -148,11 +143,11 @@ class MpqFile
 		/**
 		* Reads the file sector meta data.
 		*/
-		std::streamsize read(std::istream &istream) throw (class Exception);
+		std::streamsize read(istream &istream) throw (class Exception);
 		/**
 		* Writes the file sector meta data.
 		*/
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		std::streamsize write(ostream &ostream) const throw (class Exception);
 
 		/**
 		* Remove file (clears file hash and block data which frees the file's used space).
@@ -289,7 +284,7 @@ inline enum MpqFile::Platform MpqFile::intToPlatform(int8 value)
 /**
 * Appends data from input stream @param istream to file @param mpqFile.
 */
-inline std::istream& operator>>(std::istream &istream, class MpqFile &mpqFile) throw (class Exception)
+inline istream& operator>>(istream &istream, class MpqFile &mpqFile) throw (class Exception)
 {
 	mpqFile.appendData(istream);
 
@@ -299,7 +294,7 @@ inline std::istream& operator>>(std::istream &istream, class MpqFile &mpqFile) t
 /**
 * Writes data of the file @param mpqFile into output stream @param ostream.
 */
-inline std::ostream& operator<<(std::ostream &ostream, const class MpqFile &mpqFile) throw (class Exception)
+inline ostream& operator<<(ostream &ostream, const class MpqFile &mpqFile) throw (class Exception)
 {
 	mpqFile.writeData(ostream);
 

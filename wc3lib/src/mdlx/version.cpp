@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -93,9 +93,11 @@ void Version::readMdl(std::istream &istream) throw (class Exception)
 
 	if (!gotVersion)
 		throw Exception(_("Version: Missing format version number."));
+	
+	return 0;
 }
 
-void Version::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Version::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	ostream <<
 	"// Current FormatVersion is 800\n"
@@ -103,37 +105,35 @@ void Version::writeMdl(std::ostream &ostream) const throw (class Exception)
 	"\tFormatVersion " << this->m_version << ",\n"
 	"}\n"
 	;
+	
+	return 0;
 }
 
-std::streamsize Version::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Version::readMdx(istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
+	std::streamsize size = MdxBlock::readMdx(istream);
 	long32 nbytes;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
+	wc3lib::read(istream, nbytes, size);
 
 	if (nbytes != sizeof(this->m_version))
 		throw Exception(boost::format(_("Versions with more than %1% bytes are not supported. Read version has %1% bytes.")) % sizeof(this->m_version) % nbytes);
 
-	istream.read(reinterpret_cast<char*>(&this->m_version), sizeof(this->m_version));
-	bytes += istream.gcount();
+	wc3lib::read(istream, this->m_version, size);
 
 	if (this->m_version != Version::currentVersion)
 		std::cerr << boost::format(_("Warning: Version %1% is probably not supported. Current version is %2$.")) % this->m_version % Version::currentVersion << std::endl;
 
-	return bytes;
+	return size;
 }
 
-std::streamsize Version::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Version::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
+	std::streamsize size = MdxBlock::writeMdx(ostream);
 	long32 nbytes = sizeof(this->m_version);
-	ostream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
-	bytes += sizeof(nbytes);
-	ostream.write(reinterpret_cast<const char*>(&this->m_version), sizeof(this->m_version));
-	bytes += sizeof(this->m_version);
+	wc3lib::write(ostream, nbytes, size);
+	wc3lib::write(ostream, this->m_version, size);
 
-	return bytes;
+	return size;
 }
 
 }

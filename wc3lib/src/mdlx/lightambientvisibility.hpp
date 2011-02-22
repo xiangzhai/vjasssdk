@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_LIGHTAMBIENTVISIBILITY_HPP
 #define WC3LIB_MDLX_LIGHTAMBIENTVISIBILITY_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "lightambientvisibilities.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class LightAmbientVisibility : public MdxAlpha
+class LightAmbientVisibility : public MdlxAlpha
 {
 	public:
 		LightAmbientVisibility(class LightAmbientVisibilities *visibilities);
@@ -40,7 +40,7 @@ class LightAmbientVisibility : public MdxAlpha
 
 inline class LightAmbientVisibilities* LightAmbientVisibility::visibilities() const
 {
-	return dynamic_cast<class LightAmbientVisibilities*>(this->m_alphas);
+	return dynamic_cast<class LightAmbientVisibilities*>(this->mdlxAlphas());
 }
 
 }
