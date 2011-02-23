@@ -21,6 +21,7 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATION_HPP
 #define WC3LIB_MDLX_GEOSETANIMATION_HPP
 
+#include "mdlxproperty.hpp"
 #include "mdlblock.hpp"
 
 namespace wc3lib

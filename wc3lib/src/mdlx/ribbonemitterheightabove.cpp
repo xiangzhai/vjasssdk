@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,19 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitterHeightAbove::RibbonEmitterHeightAbove(class RibbonEmitterHeightsAbove *heights) : MdxAlpha(heights)
-{
-}
-
-RibbonEmitterHeightAbove::~RibbonEmitterHeightAbove()
-{
-}
-
-void RibbonEmitterHeightAbove::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void RibbonEmitterHeightAbove::writeMdl(std::ostream &ostream) const throw (class Exception)
+RibbonEmitterHeightAbove::RibbonEmitterHeightAbove(class RibbonEmitterHeightsAbove *heights) : MdlxAlpha(heights)
 {
 }
 

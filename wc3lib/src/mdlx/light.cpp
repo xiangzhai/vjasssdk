@@ -106,7 +106,7 @@ std::streamsize Light::writeMdx(std::ostream &ostream) const throw (class Except
 	size += this->m_ambientColors->writeMdx(ostream);
 	size += this->m_ambientIntensities->writeMdx(ostream);
 	
-	writeByteCount(ostream, static_cast<long32&>(size), position, size, true);
+	writeByteCount(ostream, static_cast<long32>(size), position, size, true);
 
 	return size;
 }

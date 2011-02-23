@@ -40,7 +40,7 @@ class TextureAnimationRotation : public MdlxScaling
 
 inline class TextureAnimationRotations* TextureAnimationRotation::rotations() const
 {
-	return dynamic_cast<class TextureAnimationRotations*>(this->m_scalings);
+	return dynamic_cast<class TextureAnimationRotations*>(this->mdlxScalings());
 }
 
 }

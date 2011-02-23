@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,11 +21,8 @@
 #ifndef WC3LIB_MDLX_PIVOTPOINT_HPP
 #define WC3LIB_MDLX_PIVOTPOINT_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "groupmdxblockmember.hpp"
+#include "pivotpoints.hpp"
 
 namespace wc3lib
 {
@@ -33,47 +30,32 @@ namespace wc3lib
 namespace mdlx
 {
 
-class PivotPoints;
-
-class PivotPoint
+class PivotPoint : public GroupMdxBlockMember
 {
 	public:
 		PivotPoint(class PivotPoints *pivotPoints);
 		virtual ~PivotPoint();
 
 		class PivotPoints* pivotPoints() const;
-		float32 x() const;
-		float32 y() const;
-		float32 z() const;
+		const struct VertexData& vertexData() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class PivotPoints *m_pivotPoints;
-		float32 m_x, m_y, m_z;
+		struct VertexData m_vertexData;
 };
 
 inline class PivotPoints* PivotPoint::pivotPoints() const
 {
-	return this->m_pivotPoints;
+	return dynamic_cast<class PivotPoints*>(this->m_parent);
 }
 
-inline float32 PivotPoint::x() const
+inline const struct VertexData& PivotPoint::vertexData() const
 {
-	return this->m_x;
-}
-
-inline float32 PivotPoint::y() const
-{
-	return this->m_y;
-}
-
-inline float32 PivotPoint::z() const
-{
-	return this->m_z;
+	return this->m_vertexData;
 }
 
 }

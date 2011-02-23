@@ -34,16 +34,21 @@ namespace mdlx
 /**
 * Some MDX blocks are structured like:
 * byte[4]	MDX block name
-* long32	group members count
+* long32	group members count / long32 group members bytes;
 * ...		group members list
 * This class provides a simple abstraction layer for those MDX block classes.
 */
 class GroupMdxBlock : public MdxBlock
 {
 	public:
-		GroupMdxBlock(byte blockName[4], bool optional = true);
+		GroupMdxBlock(byte blockName[4], bool usesCounter = true, bool optional = true);
 		~GroupMdxBlock();
 
+		/**
+		 * \return Returns true if members are stored by number of them. Otherwise their size in bytes is stored.
+		 */
+		bool usesCounter() const;
+		
 		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
@@ -54,6 +59,7 @@ class GroupMdxBlock : public MdxBlock
 		*/
 		virtual class GroupMdxBlockMember* createNewMember();
 
+		bool m_usesCounter;
 		/**
 		* Provides access to all read members for child class.
 		*/

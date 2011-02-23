@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERHEIGHTSABOVE_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERHEIGHTSABOVE_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -30,19 +30,17 @@ namespace mdlx
 {
 
 /// KRHA
-class RibbonEmitterHeightsAbove : public MdxAlphas
+class RibbonEmitterHeightsAbove : public MdlxAlphas
 {
 	public:
 		RibbonEmitterHeightsAbove(class RibbonEmitter *ribbonEmitter);
-		virtual ~RibbonEmitterHeightsAbove();
 
 		class RibbonEmitter* ribbonEmitter() const;
 		const std::list<class RibbonEmitterHeightAbove*>& heights() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-
 	protected:
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
+		
 		class RibbonEmitter *m_ribbonEmitter;
 };
 
@@ -53,7 +51,7 @@ inline class RibbonEmitter* RibbonEmitterHeightsAbove::ribbonEmitter() const
 
 inline const std::list<class RibbonEmitterHeightAbove*>& RibbonEmitterHeightsAbove::heights() const
 {
-	return reinterpret_cast<const std::list<class RibbonEmitterHeightAbove*>&>(this->m_alphas);
+	return reinterpret_cast<const std::list<class RibbonEmitterHeightAbove*>&>(this->mdlxAlphas());
 }
 
 }

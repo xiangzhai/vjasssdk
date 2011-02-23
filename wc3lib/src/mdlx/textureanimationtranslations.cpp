@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,20 +31,6 @@ namespace mdlx
 
 TextureAnimationTranslations::TextureAnimationTranslations(class TextureAnimation *textureAnimation) : MdlxScalings(textureAnimation->textureAnimations()->mdlx(), "KTAT"), m_textureAnimation(textureAnimation)
 {
-}
-
-TextureAnimationTranslations::~TextureAnimationTranslations()
-{
-}
-
-std::streamsize TextureAnimationTranslations::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize TextureAnimationTranslations::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
 }
 
 class MdlxScaling* TextureAnimationTranslations::createNewMember()

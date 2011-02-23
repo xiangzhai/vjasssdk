@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "pivotpoint.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -26,37 +27,34 @@ namespace wc3lib
 namespace mdlx
 {
 
-PivotPoint::PivotPoint(class PivotPoints *pivotPoints) : m_pivotPoints(pivotPoints)
+PivotPoint::PivotPoint(class PivotPoints *pivotPoints) : GroupMdxBlockMember(pivotPoints)
 {
 }
 
-PivotPoint::~PivotPoint()
-{
-}
-
-void PivotPoint::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void PivotPoint::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-}
-
-std::streamsize PivotPoint::readMdx(std::istream &istream) throw (class Exception)
-{
-	istream.read(reinterpret_cast<char*>(&this->m_x), sizeof(this->m_x));
-	std::streamsize bytes = istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_y), sizeof(this->m_y));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_z), sizeof(this->m_z));
-	bytes += istream.gcount();
-	
-	return bytes;
-}
-
-std::streamsize PivotPoint::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize PivotPoint::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
+}
+
+std::streamsize PivotPoint::writeMdl(ostream &ostream) const throw (class Exception)
+{
+	return 0;
+}
+
+std::streamsize PivotPoint::readMdx(istream &istream) throw (class Exception)
+{
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_vertexData, size);
+	
+	return size;
+}
+
+std::streamsize PivotPoint::writeMdx(ostream &ostream) const throw (class Exception)
+{
+	std::streamsize size = 0;
+	wc3lib::write(ostream, vertexData(), size);
+	
+	return size;
 }
 
 }

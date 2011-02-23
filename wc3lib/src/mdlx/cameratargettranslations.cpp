@@ -33,7 +33,7 @@ CameraTargetTranslations::CameraTargetTranslations(class Camera *camera) : MdlxS
 {
 }
 
-class MdlxScaling* CameraTargetTranslations::createNewMember()
+class MdlxAnimatedProperty* CameraTargetTranslations::createAnimatedProperty()
 {
 	return new CameraTargetTranslation(this);
 }

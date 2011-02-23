@@ -57,7 +57,7 @@ inline class Mdlx* Helpers::mdlx() const
 
 inline const std::list<class Helper*>& Helpers::helpers() const
 {
-	return dynamic_cast<const std::list<class Helper*>&>(this->m_members);
+	return reinterpret_cast<const std::list<class Helper*>&>(this->m_members);
 }
 
 }

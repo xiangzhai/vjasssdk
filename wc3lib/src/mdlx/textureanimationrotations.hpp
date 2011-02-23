@@ -55,7 +55,7 @@ inline class TextureAnimation* TextureAnimationRotations::textureAnimation() con
 
 inline const std::list<class TextureAnimationRotation*>& TextureAnimationRotations::rotations() const
 {
-	return reinterpret_cast<const std::list<class TextureAnimationRotation*>&>(this->m_scalings);
+	return *reinterpret_cast<const std::list<class TextureAnimationRotation*>*>(&this->mdlxScalings());
 }
 
 }

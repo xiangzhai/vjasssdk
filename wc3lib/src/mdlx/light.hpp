@@ -92,7 +92,7 @@ inline long32 Light::type() const
 	return this->m_type;
 }
 
-inline float32 Light::attenuationtart() const
+inline float32 Light::attenuationStart() const
 {
 	return this->m_attenuationStart;
 }

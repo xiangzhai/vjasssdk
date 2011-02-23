@@ -23,6 +23,7 @@
 
 #include "object.hpp"
 #include "groupmdxblockmember.hpp"
+#include "helpers.hpp"
 
 namespace wc3lib
 {
@@ -30,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Helper : public Object, public GroupMdxBlockMember
+class Helper : public GroupMdxBlockMember, public Object
 {
 	public:
 		Helper(class Helpers *helpers);

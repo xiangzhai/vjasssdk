@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,10 +21,9 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER_HPP
 
-#include <istream>
-#include <ostream>
-
 #include "node.hpp"
+#include "groupmdxblockmember.hpp"
+#include "particleemitters.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter : public Node
+class ParticleEmitter : public Node, public GroupMdxBlockMember
 {
 	public:
 		ParticleEmitter(class ParticleEmitters *particleEmitters);
@@ -49,13 +48,12 @@ class ParticleEmitter : public Node
 		float32 initVelocity() const;
 		class ParticleEmitterVisibilities* visibilities() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class ParticleEmitters *m_particleEmitters;
 		//long32 nbytesi;
 		//long32 nbytesikg; // inclusive bytecount including KGXXs
 		float32 m_emissionRate;
@@ -71,7 +69,7 @@ class ParticleEmitter : public Node
 
 inline class ParticleEmitters* ParticleEmitter::particleEmitters() const
 {
-	return this->m_particleEmitters;
+	return dynamic_cast<class ParticleEmitters*>(this->m_parent);
 }
 
 inline float32 ParticleEmitter::emissionRate() const

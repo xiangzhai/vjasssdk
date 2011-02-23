@@ -21,12 +21,9 @@
 #ifndef WC3LIB_MDLX_TEXTURE_HPP
 #define WC3LIB_MDLX_TEXTURE_HPP
 
-#include <istream>
-#include <ostream>
 #include <cstring>
 
-#include "../exception.hpp"
-#include "platform.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -56,10 +53,10 @@ class Texture
 		long32 unknown0() const;
 		enum Wrapping wrapping() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Textures *m_textures;

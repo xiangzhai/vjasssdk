@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERHEIGHTABOVE_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERHEIGHTABOVE_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "ribbonemitterheightsabove.hpp"
 
 namespace wc3lib
@@ -30,21 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class RibbonEmitterHeightAbove : public MdxAlpha
+class RibbonEmitterHeightAbove : public MdlxAlpha
 {
 	public:
 		RibbonEmitterHeightAbove(class RibbonEmitterHeightsAbove *heights);
-		virtual ~RibbonEmitterHeightAbove();
 
 		class RibbonEmitterHeightsAbove* heights() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class RibbonEmitterHeightsAbove* RibbonEmitterHeightAbove::heights() const
 {
-	return dynamic_cast<class RibbonEmitterHeightsAbove*>(this->m_alphas);
+	return dynamic_cast<class RibbonEmitterHeightsAbove*>(this->mdlxAlphas());
 }
 
 }

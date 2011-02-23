@@ -23,6 +23,7 @@
 
 #include "object.hpp"
 #include "groupmdxblockmember.hpp"
+#include "events.hpp"
 
 namespace wc3lib
 {

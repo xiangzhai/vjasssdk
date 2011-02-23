@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cstdio>
-
 #include "materialalpha.hpp"
 
 namespace wc3lib
@@ -28,19 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-MaterialAlpha::MaterialAlpha(class MaterialAlphas *alphas) : MdxAlpha(alphas)
-{
-}
-
-MaterialAlpha::~MaterialAlpha()
-{
-}
-
-void MaterialAlpha::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void MaterialAlpha::writeMdl(std::ostream &ostream) const throw (class Exception)
+MaterialAlpha::MaterialAlpha(class MaterialAlphas *alphas) : MdlxAlpha(alphas)
 {
 }
 

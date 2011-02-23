@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "mdlxanimatedproperty.hpp"
+#include "mdlxanimatedproperties.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -86,10 +87,10 @@ std::streamsize MdlxAnimatedProperty::writeMdx(ostream &ostream) const throw (cl
 	if (properties()->lineType() > Linear)
 	{
 		for (std::size_t i = 0; i < valuesCount(); ++i)
-			wc3lib::read(istream, inTan()[i], size);
+			wc3lib::write(ostream, inTan()[i], size);
 
 		for (std::size_t i = 0; i < valuesCount(); ++i)
-			wc3lib::read(istream, outTan()[i], size);
+			wc3lib::write(ostream, outTan()[i], size);
 	}
 	
 	return size;

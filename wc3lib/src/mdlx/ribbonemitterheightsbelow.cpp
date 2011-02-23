@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include "ribbonemitterheightsbelow.hpp"
+#include "ribbonemitter.hpp"
+#include "ribbonemitters.hpp"
+#include "ribbonemitterheightbelow.hpp"
 
 namespace wc3lib
 {
@@ -26,20 +29,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitterHeightsBelow::RibbonEmitterHeightsBelow(class RibbonEmitter *ribbonEmitter) : MdxAlphas("KRHB"), m_ribbonEmitter(ribbonEmitter)
+RibbonEmitterHeightsBelow::RibbonEmitterHeightsBelow(class RibbonEmitter *ribbonEmitter) : MdlxAlphas(ribbonEmitter->ribbonEmitters()->mdlx(), "KRHB"), m_ribbonEmitter(ribbonEmitter)
 {
 }
 
-RibbonEmitterHeightsBelow::~RibbonEmitterHeightsBelow()
+class MdlxAnimatedProperty* RibbonEmitterHeightsBelow::createAnimatedProperty()
 {
-}
-
-void RibbonEmitterHeightsBelow::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void RibbonEmitterHeightsBelow::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
+	return new RibbonEmitterHeightBelow(this);
 }
 
 }

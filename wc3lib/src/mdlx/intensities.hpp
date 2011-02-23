@@ -51,7 +51,7 @@ inline class Light* Intensities::light() const
 
 inline const std::list<class Intensity*>& Intensities::intensities() const
 {
-	return *reinterpret_cast<const std::list<class Intensity*>&>(&this->mdlxAlphas());
+	return reinterpret_cast<const std::list<class Intensity*>&>(this->mdlxAlphas());
 }
 
 }

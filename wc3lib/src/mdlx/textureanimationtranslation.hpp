@@ -34,17 +34,13 @@ class TextureAnimationTranslation : public MdlxScaling
 {
 	public:
 		TextureAnimationTranslation(class TextureAnimationTranslations *translations);
-		virtual ~TextureAnimationTranslation();
 
 		class TextureAnimationTranslations* translations() const;
-
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class TextureAnimationTranslations* TextureAnimationTranslation::translations() const
 {
-	return dynamic_cast<class TextureAnimationTranslations*>(this->m_scalings);
+	return dynamic_cast<class TextureAnimationTranslations*>(this->mdlxScalings());
 }
 
 }

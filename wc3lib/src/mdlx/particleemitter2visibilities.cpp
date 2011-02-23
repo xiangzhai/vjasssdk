@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "particleemitter2visibilities.hpp"
+#include "particleemitter2.hpp"
+#include "particleemitter2s.hpp"
 #include "particleemitter2visibility.hpp"
 
 namespace wc3lib
@@ -27,23 +29,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2Visibilities::ParticleEmitter2Visibilities(class ParticleEmitter2 *particleEmitter) : MdxAlphas("KP2V"), m_particleEmitter(particleEmitter)
+ParticleEmitter2Visibilities::ParticleEmitter2Visibilities(class ParticleEmitter2 *particleEmitter) : MdlxAlphas(particleEmitter->particleEmitters()->mdlx(), "KP2V"), m_particleEmitter(particleEmitter)
 {
 }
 
-ParticleEmitter2Visibilities::~ParticleEmitter2Visibilities()
-{
-}
-
-void ParticleEmitter2Visibilities::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void ParticleEmitter2Visibilities::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-}
-
-class MdxAlpha* ParticleEmitter2Visibilities::createNewMember()
+class MdlxAnimatedProperty* ParticleEmitter2Visibilities::createAnimatedProperty()
 {
 	return new ParticleEmitter2Visibility(this);
 }

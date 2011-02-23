@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include "camerarotationlengths.hpp"
+#include "camerarotationlength.hpp"
+#include "camera.hpp"
+#include "cameras.hpp"
 
 namespace wc3lib
 {
@@ -26,8 +29,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-CameraRotationLengths::CameraRotationLengths(class Camera *camera) : MdxAlphas("KCRL"), m_camera(camera)
+CameraRotationLengths::CameraRotationLengths(class Camera *camera) : MdlxAlphas(camera->cameras()->mdlx(), "KCRL"), m_camera(camera)
 {
+}
+
+class MdlxAnimatedProperty* CameraRotationLengths::createAnimatedProperty()
+{
+	return new CameraRotationLength(this);
 }
 
 }

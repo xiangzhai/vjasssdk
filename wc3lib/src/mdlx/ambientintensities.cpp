@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "ambientintensities.hpp"
+#include "light.hpp"
+#include "lights.hpp"
 #include "ambientintensity.hpp"
 
 namespace wc3lib
@@ -27,23 +29,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-AmbientIntensities::AmbientIntensities(class Light *light) : MdxAlphas("KLBI"), m_light(light)
+AmbientIntensities::AmbientIntensities(class Light *light) : MdlxAlphas(light->lights()->mdlx(), "KLBI"), m_light(light)
 {
 }
 
-AmbientIntensities::~AmbientIntensities()
-{
-}
-
-void AmbientIntensities::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void AmbientIntensities::writeMdl(std::ostream &ostream) throw (class Exception)
-{
-}
-
-class MdxAlpha* AmbientIntensities::createNewMember()
+class MdlxAnimatedProperty* AmbientIntensities::createAnimatedProperty()
 {
 	return new AmbientIntensity(this);
 }

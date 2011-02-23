@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "particleemitter2widths.hpp"
+#include "particleemitter2.hpp"
+#include "particleemitter2s.hpp"
 #include "particleemitter2width.hpp"
 
 namespace wc3lib
@@ -27,23 +29,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2Widths::ParticleEmitter2Widths(class ParticleEmitter2 *particleEmitter) : MdxAlphas("KP2W"), m_particleEmitter(particleEmitter)
+ParticleEmitter2Widths::ParticleEmitter2Widths(class ParticleEmitter2 *particleEmitter) : MdlxAlphas(particleEmitter->particleEmitters()->mdlx(), "KP2W"), m_particleEmitter(particleEmitter)
 {
 }
 
-ParticleEmitter2Widths::~ParticleEmitter2Widths()
-{
-}
-
-void ParticleEmitter2Widths::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void ParticleEmitter2Widths::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-}
-
-class MdxAlpha* ParticleEmitter2Widths::createNewMember()
+class MdlxAlpha* ParticleEmitter2Widths::createNewMember()
 {
 	return new ParticleEmitter2Width(this);
 }

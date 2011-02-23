@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_MATERIALALPHAS_HPP
 #define WC3LIB_MDLX_MATERIALALPHAS_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -29,22 +29,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Layer;
-class MaterialAlpha;
-
 /// (KMTA)
-class MaterialAlphas : public MdxAlphas
+class MaterialAlphas : public MdlxAlphas
 {
 	public:
 		MaterialAlphas(class Layer *layer);
-		virtual ~MaterialAlphas();
 
 		class Layer* layer() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-
 	protected:
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
+		
 		class Layer *m_layer;
 };
 

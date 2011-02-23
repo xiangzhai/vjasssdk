@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,10 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
-#include <iostream>
-
-#include <boost/format.hpp>
 
 #include "texture.hpp"
 #include "textures.hpp"
@@ -41,15 +37,17 @@ Texture::~Texture()
 {
 }
 
-void Texture::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Texture::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void Texture::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Texture::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-std::streamsize Texture::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Texture::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_replaceableId), size);
@@ -60,7 +58,7 @@ std::streamsize Texture::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Texture::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Texture::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_replaceableId), size);

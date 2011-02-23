@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTERS_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTERS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,27 +29,22 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class ParticleEmitter;
-
 /// PREM
-class ParticleEmitters : public MdxBlock
+class ParticleEmitters : public GroupMdxBlock
 {
 	public:
 		ParticleEmitters(class Mdlx *mdlx);
-		virtual ~ParticleEmitters();
 
 		class Mdlx* mdlx() const;
 		const std::list<class ParticleEmitter*>& particleEmitters() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class ParticleEmitter*> m_particleEmitters;
 };
 
 inline class Mdlx* ParticleEmitters::mdlx() const
@@ -61,7 +54,7 @@ inline class Mdlx* ParticleEmitters::mdlx() const
 
 inline const std::list<class ParticleEmitter*>& ParticleEmitters::particleEmitters() const
 {
-	return reinterpret_cast<const std::list<class ParticleEmitter*>&>(*&this->m_particleEmitters);
+	return *reinterpret_cast<const std::list<class ParticleEmitter*>*>(&this->m_members);
 }
 
 }

@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_MDLXALPHA_HPP
 
 #include "mdlxanimatedproperty.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {

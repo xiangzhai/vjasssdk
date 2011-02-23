@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2VISIBILITY_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2VISIBILITY_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "particleemitter2visibilities.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter2Visibility : public MdxAlpha
+class ParticleEmitter2Visibility : public MdlxAlpha
 {
 	public:
 		ParticleEmitter2Visibility(class ParticleEmitter2Visibilities *visibilities);
@@ -40,7 +40,7 @@ class ParticleEmitter2Visibility : public MdxAlpha
 
 inline class ParticleEmitter2Visibilities* ParticleEmitter2Visibility::visibilities() const
 {
-	return dynamic_cast<class ParticleEmitter2Visibilities*>(this->m_alphas);
+	return dynamic_cast<class ParticleEmitter2Visibilities*>(this->mdlxAlphas());
 }
 
 }

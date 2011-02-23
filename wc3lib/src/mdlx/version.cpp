@@ -46,7 +46,7 @@ Version::~Version()
 {
 }
 
-void Version::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Version::readMdl(istream &istream) throw (class Exception)
 {
 	std::string line;
 	bool gotVersion = false;

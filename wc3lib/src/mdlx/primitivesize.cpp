@@ -35,15 +35,17 @@ PrimitiveSize::~PrimitiveSize()
 {
 }
 
-void PrimitiveSize::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveSize::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void PrimitiveSize::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize PrimitiveSize::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-std::streamsize PrimitiveSize::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveSize::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_value, size);
@@ -51,10 +53,10 @@ std::streamsize PrimitiveSize::readMdx(std::istream &istream) throw (class Excep
 	return size;
 }
 
-std::streamsize PrimitiveSize::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize PrimitiveSize::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
-	wc3lib::write(ostream, this->m_value, size);
+	wc3lib::write(ostream, value(), size);
 
 	return size;
 }

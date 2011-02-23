@@ -55,7 +55,7 @@ inline class Mdlx* Events::mdlx() const
 
 inline const std::list<class Event*>& Events::events() const
 {
-	return *dynamic_cast<const std::list<class Event*>*>(&this->m_members);
+	return reinterpret_cast<const std::list<class Event*>&>(this->m_members);
 }
 
 }

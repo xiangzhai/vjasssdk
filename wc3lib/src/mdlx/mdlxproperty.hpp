@@ -30,6 +30,11 @@ namespace wc3lib
 namespace mdlx
 {
 
+/**
+ * Abstract class for all MDLX format properties.
+ * All properties require MDL and MDX read and write functions.
+ * Default read and write functions and stream operators (\ref MdlxProperty::read and \ref MdlxProperty::write) use MDX format (not MDL!).
+ */
 class MdlxProperty : public Format<byte>
 {
 	public:

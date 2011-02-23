@@ -52,7 +52,7 @@ inline class Light* LightAmbientVisibilities::light() const
 
 inline const std::list<class LightAmbientVisibility*>& LightAmbientVisibilities::visibilities() const
 {
-	return *reinterpret_cast<const std::list<class LightAmbientVisibility*>&>(&this->mdlxAlphas());
+	return *reinterpret_cast<const std::list<class LightAmbientVisibility*>*>(&this->mdlxAlphas());
 }
 
 }

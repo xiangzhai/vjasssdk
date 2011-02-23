@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTERVISIBILITIES_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTERVISIBILITIES_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -29,24 +29,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter;
-class ParticleEmitterVisibility;
-
 /// tag KPEV
-class ParticleEmitterVisibilities : public MdxAlphas
+class ParticleEmitterVisibilities : public MdlxAlphas
 {
 	public:
 		ParticleEmitterVisibilities(class ParticleEmitter *particleEmitter);
-		virtual ~ParticleEmitterVisibilities();
 
 		class ParticleEmitter* particleEmitter() const;
 		const std::list<class ParticleEmitterVisibility*>& visibilities() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-
 	protected:
-		virtual class MdxAlpha* createNewMember();
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
 
 		class ParticleEmitter *m_particleEmitter;
 };
@@ -58,7 +51,7 @@ inline class ParticleEmitter* ParticleEmitterVisibilities::particleEmitter() con
 
 inline const std::list<class ParticleEmitterVisibility*>& ParticleEmitterVisibilities::visibilities() const
 {
-	return reinterpret_cast<const std::list<class ParticleEmitterVisibility*>&>(this->m_alphas);
+	return reinterpret_cast<const std::list<class ParticleEmitterVisibility*>&>(this->mdlxAlphas());
 }
 
 }

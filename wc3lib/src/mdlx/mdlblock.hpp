@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_MDLBLOCK_HPP
 #define WC3LIB_MDLX_MDLBLOCK_HPP
 
-#include "../format.hpp"
+#include "../exception.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -32,12 +32,12 @@ namespace mdlx
 
 /**
  * MDL blocks start with their identifier followed by a bracked indicating the block's scope.
- * \sa MdlValueBlock
+ * \sa MdxBlock, MdlValueBlock
  */
-class MdlBlock : public Format<byte>
+class MdlBlock
 {
 	public:
-		MdlBlock(const string mdlIdentifier, bool optional = true);
+		MdlBlock(const string &mdlIdentifier, bool optional = true);
 		virtual ~MdlBlock();
 
 		const string& mdlIdentifier() const;

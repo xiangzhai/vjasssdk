@@ -19,6 +19,10 @@
  ***************************************************************************/
 
 #include "materialalphas.hpp"
+#include "layer.hpp"
+#include "layers.hpp"
+#include "material.hpp"
+#include "materials.hpp"
 #include "materialalpha.hpp"
 
 namespace wc3lib
@@ -27,22 +31,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-MaterialAlphas::MaterialAlphas(class Layer *layer) : MdxAlphas("KMTA"), m_layer(layer)
+MaterialAlphas::MaterialAlphas(class Layer *layer) : MdlxAlphas(layer->layers()->material()->materials()->mdlx(), "KMTA"), m_layer(layer)
 {
 }
 
-MaterialAlphas::~MaterialAlphas()
+class MdlxAnimatedProperty* MaterialAlphas::createAnimatedProperty()
 {
-}
-
-std::streamsize MaterialAlphas::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize MaterialAlphas::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
+	return new MaterialAlpha(this);
 }
 
 }

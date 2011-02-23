@@ -40,7 +40,7 @@ class CameraTargetTranslation : public MdlxScaling
 
 inline class CameraTargetTranslations* CameraTargetTranslation::translations() const
 {
-	return dynamic_cast<class CameraTargetTranslations*>(this->m_scalings);
+	return dynamic_cast<class CameraTargetTranslations*>(this->mdlxScalings());
 }
 
 }

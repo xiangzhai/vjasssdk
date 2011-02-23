@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "particleemitter.hpp"
-#include "particleemitters.hpp"
 #include "mdlxtranslations.hpp"
 #include "mdlxrotations.hpp"
 #include "mdlxscalings.hpp"
@@ -32,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter::ParticleEmitter(class ParticleEmitters *particleEmitters) : Node(particleEmitters->mdlx()), m_particleEmitters(particleEmitters), m_visibilities(new ParticleEmitterVisibilities(this))
+ParticleEmitter::ParticleEmitter(class ParticleEmitters *particleEmitters) : Node(particleEmitters->mdlx()), GroupMdxBlockMember(particleEmitters), m_visibilities(new ParticleEmitterVisibilities(this))
 {
 }
 
@@ -41,17 +40,17 @@ ParticleEmitter::~ParticleEmitter()
 	delete this->m_visibilities;
 }
 
-std::streamsize ParticleEmitter::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize ParticleEmitter::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize ParticleEmitter::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize ParticleEmitter::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter::readMdx(istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
 	std::streamsize size = 0;
@@ -70,7 +69,7 @@ std::streamsize ParticleEmitter::readMdx(std::istream &istream) throw (class Exc
 	return size;
 }
 
-std::streamsize ParticleEmitter::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize ParticleEmitter::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	// skipping inclusive byte counts of particle emitter and node
 	std::streampos position0, position1;

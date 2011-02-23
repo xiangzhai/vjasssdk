@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "particleemitters.hpp"
 #include "particleemitter.hpp"
 
@@ -29,55 +27,23 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitters::ParticleEmitters(class Mdlx *mdlx) : MdxBlock("PREM"), m_mdlx(mdlx)
+ParticleEmitters::ParticleEmitters(class Mdlx *mdlx) : GroupMdxBlock("PREM", false), m_mdlx(mdlx)
 {
 }
 
-ParticleEmitters::~ParticleEmitters()
+std::streamsize ParticleEmitters::readMdl(istream &istream) throw (class Exception)
 {
-	BOOST_FOREACH(class ParticleEmitter *particleEmitter, this->m_particleEmitters)
-		delete particleEmitter;
+	return 0;
 }
 
-void ParticleEmitters::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitters::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-void ParticleEmitters::writeMdl(std::ostream &ostream) const throw (class Exception)
+class GroupMdxBlockMember* ParticleEmitters::createNewMember()
 {
-}
-
-std::streamsize ParticleEmitters::readMdx(std::istream &istream) throw (class Exception)
-{
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	
-	while (nbytes > 0)
-	{
-		class ParticleEmitter *particleEmitter = new ParticleEmitter(this);
-		long32 readBytes = particleEmitter->readMdx(istream);
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_particleEmitters.push_back(particleEmitter);
-	}
-	
-	return bytes;
-}
-
-std::streamsize ParticleEmitters::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	return bytes;
+	return new ParticleEmitter(this);
 }
 
 }

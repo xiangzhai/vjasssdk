@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,19 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 	
-AttachmentVisibility::AttachmentVisibility(class AttachmentVisibilities *visibilities) : MdxAlpha(visibilities)
-{
-}
-
-AttachmentVisibility::~AttachmentVisibility()
-{
-}
-
-void AttachmentVisibility::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void AttachmentVisibility::writeMdl(std::ostream &ostream) throw (class Exception)
+AttachmentVisibility::AttachmentVisibility(class AttachmentVisibilities *visibilities) : MdlxAlpha(visibilities)
 {
 }
 

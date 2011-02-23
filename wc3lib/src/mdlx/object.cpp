@@ -44,17 +44,17 @@ Object::~Object()
 	delete this->m_visibilities;
 }
 
-std::streamsize Object::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Object::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Object::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Object::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Object::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Object::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = Node::readMdx(istream);
 	size += this->m_visibilities->readMdx(istream);
@@ -62,7 +62,7 @@ std::streamsize Object::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Object::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Object::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = Node::writeMdx(ostream);
 	size += this->m_visibilities->writeMdx(ostream);

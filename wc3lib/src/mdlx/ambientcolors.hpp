@@ -55,7 +55,7 @@ inline class Light* AmbientColors::light() const
 
 inline const std::list<class AmbientColor*>& AmbientColors::colors() const
 {
-	return reinterpret_cast<const std::list<class AmbientColor*>&>(this->m_scalings);
+	return reinterpret_cast<const std::list<class AmbientColor*>&>(this->mdlxScalings());
 }
 
 }

@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
 #define WC3LIB_MDLX_CAMERAROTATIONLENGTHS_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CameraRotationLengths : public MdxAlphas
+class CameraRotationLengths : public MdlxAlphas
 {
 	public:
 		CameraRotationLengths(class Camera *camera);
@@ -38,6 +38,8 @@ class CameraRotationLengths : public MdxAlphas
 		const std::list<class CameraRotationLength*>& lengths() const;
 
 	private:
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
+		
 		class Camera *m_camera;
 
 };
@@ -49,7 +51,7 @@ inline class Camera* CameraRotationLengths::camera() const
 
 inline const std::list<class CameraRotationLength*>& CameraRotationLengths::lengths() const
 {
-	return reinterpret_cast<const std::list<class CameraRotationLength*>&>(this->m_alphas);
+	return reinterpret_cast<const std::list<class CameraRotationLength*>&>(this->mdlxAlphas());
 }
 
 }

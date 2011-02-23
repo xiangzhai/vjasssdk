@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,7 +24,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "globalsequence.hpp"
-#include "globalsequences.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -32,15 +32,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-GlobalSequence::GlobalSequence(class GlobalSequences *globalSequences) : m_globalSequences(globalSequences)
+GlobalSequence::GlobalSequence(class GlobalSequences *globalSequences) : GroupMdxBlockMember(globalSequences)
 {
 }
 
-GlobalSequence::~GlobalSequence()
-{
-}
-
-void GlobalSequence::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize GlobalSequence::readMdl(istream &istream) throw (class Exception)
 {
 	std::string line;
 	std::getline(istream, line);
@@ -61,25 +57,31 @@ void GlobalSequence::readMdl(std::istream &istream) throw (class Exception)
 	line.erase(line.length() - 1);
 	std::istringstream sstream(line);
 	sstream >> this->m_duration;
+	
+	return 0;
 }
 
-void GlobalSequence::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize GlobalSequence::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	ostream << "\tDuration " << this->duration() << ",\n";
+	
+	return 0;
 }
 
-std::streamsize GlobalSequence::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GlobalSequence::readMdx(istream &istream) throw (class Exception)
 {
-	istream.read(reinterpret_cast<char*>(&this->m_duration), sizeof(this->m_duration));
+	std::streamsize size = 0;
+	wc3lib::read(istream, this->m_duration, size);
 	
-	return istream.gcount();
+	return size;
 }
 
-std::streamsize GlobalSequence::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize GlobalSequence::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	ostream.write(reinterpret_cast<const char*>(&this->m_duration), sizeof(this->m_duration));
+	std::streamsize size = 0;
+	wc3lib::write(ostream, duration(), size);
 	
-	return sizeof(this->m_duration);
+	return size;
 }
 
 }

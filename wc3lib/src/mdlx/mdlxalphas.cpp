@@ -41,7 +41,7 @@ MdlxAlphas::MdlxAlphas(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxI
 
 class MdlxAnimatedProperty* MdlxAlphas::createAnimatedProperty()
 {
-	return MdlxAlpha(this);
+	return new MdlxAlpha(this);
 }
 
 }

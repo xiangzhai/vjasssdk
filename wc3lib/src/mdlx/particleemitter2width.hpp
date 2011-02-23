@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2WIDTH_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2WIDTH_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "particleemitter2widths.hpp"
 
 namespace wc3lib
@@ -29,24 +29,18 @@ namespace wc3lib
 	
 namespace mdlx
 {
-
-class ParticleEmitter2Widths;
 	
-class ParticleEmitter2Width : public MdxAlpha
+class ParticleEmitter2Width : public MdlxAlpha
 {
 	public:
 		ParticleEmitter2Width(class ParticleEmitter2Widths *widths);
-		virtual ~ParticleEmitter2Width();
 		
 		class ParticleEmitter2Widths* widths() const;
-		
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class ParticleEmitter2Widths* ParticleEmitter2Width::widths() const
 {
-	return dynamic_cast<class ParticleEmitter2Widths*>(this->m_alphas);
+	return dynamic_cast<class ParticleEmitter2Widths*>(this->mdlxAlphas());
 }
 
 }

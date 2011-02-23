@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_MATERIALALPHA_HPP
 #define WC3LIB_MDLX_MATERIALALPHA_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "materialalphas.hpp"
 
 namespace wc3lib
@@ -30,23 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class MaterialAlphas;
-
-class MaterialAlpha : public MdxAlpha
+class MaterialAlpha : public MdlxAlpha
 {
 	public:
 		MaterialAlpha(class MaterialAlphas *alphas);
-		virtual ~MaterialAlpha();
 
 		class MaterialAlphas* alphas() const;
-		
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class MaterialAlphas* MaterialAlpha::alphas() const
 {
-	return dynamic_cast<class MaterialAlphas*>(this->m_alphas);
+	return dynamic_cast<class MaterialAlphas*>(this->mdlxAlphas());
 }
 
 }

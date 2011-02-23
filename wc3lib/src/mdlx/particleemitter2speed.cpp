@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,19 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2Speed::ParticleEmitter2Speed(class ParticleEmitter2Speeds *speeds) : MdxAlpha(speeds)
-{
-}
-
-ParticleEmitter2Speed::~ParticleEmitter2Speed()
-{
-}
-		
-void ParticleEmitter2Speed::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void ParticleEmitter2Speed::writeMdl(std::ostream &ostream) const throw (class Exception)
+ParticleEmitter2Speed::ParticleEmitter2Speed(class ParticleEmitter2Speeds *speeds) : MdlxAlpha(speeds)
 {
 }
 

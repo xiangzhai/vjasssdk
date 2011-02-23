@@ -31,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-/// (KMTF), state of TextureId is long not float, therefore this class does not inherit MdxAlphas.
+/// (KMTF), state of TextureId is long not float, therefore this class does not inherit MdlxAlphas.
 class TextureIds : public MdxBlock
 {
 	public:

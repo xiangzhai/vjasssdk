@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_NORMAL_HPP
 
 #include "groupmdxblockmember.hpp"
+#include "normals.hpp"
 
 namespace wc3lib
 {
@@ -33,26 +34,23 @@ class Normal : public GroupMdxBlockMember
 {
 	public:
 		Normal(class Normals *normals);
-		virtual ~Normal();
 
-		//class Normals* normals() const;
+		class Normals* normals() const;
 		const struct VertexData& vertexData() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		struct VertexData m_vertexData;
 };
 
-/*
 inline class Normals* Normal::normals() const
 {
 	return dynamic_cast<class Normals*>(this->m_parent);
 }
-*/
 
 inline const struct VertexData& Normal::vertexData() const
 {

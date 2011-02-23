@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,18 +38,13 @@ class MdlxRotations : public MdlxAnimatedProperties
 		MdlxRotations(class Mdlx *mdlx);
 		virtual ~MdlxRotations();
 
-		const std::list<class MdlxRotation*>& rotations() const;
-
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		const std::list<class MdlxRotation*>& mdlxRotations() const;
 
 	protected:
 		virtual class MdlxAnimatedProperty* createAnimatedProperty();
 };
 
-inline const std::list<class MdlxRotation*>& MdlxRotations::rotations() const
+inline const std::list<class MdlxRotation*>& MdlxRotations::mdlxRotations() const
 {
 	return *reinterpret_cast<const std::list<class MdlxRotation*>*>(&this->m_properties);
 }

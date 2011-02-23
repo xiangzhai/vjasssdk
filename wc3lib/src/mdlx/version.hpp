@@ -39,8 +39,8 @@ class Version : public MdxBlock
 		class Mdlx* mdlx() const;
 		long32 version() const;
 
-		virtual void readMdl(istream &istream) throw (class Exception);
-		virtual void writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 

@@ -40,7 +40,7 @@ std::streamsize MdlBlock::readMdl(istream &istream) throw (class Exception)
 	std::streamsize size = 0;
 	std::streampos position = istream.tellg();
 	string identifier;
-	parse(stream, identifier, size);
+	parse(istream, identifier, size);
 	
 	if (identifier != mdlIdentifier())
 	{
@@ -66,7 +66,7 @@ std::streamsize MdlBlock::writeMdl(ostream &ostream) const throw (class Exceptio
 		return 0;
 	
 	std::streamsize size = 0;
-	wc3lib::write(ostream, this->mdlIdentifer().c_str()[0], size, this->mdlIdentifer().length());
+	wc3lib::write(ostream, this->mdlIdentifier().c_str()[0], size, this->mdlIdentifier().length());
 	
 	return size;
 }

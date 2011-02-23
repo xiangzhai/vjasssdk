@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,8 @@
  ***************************************************************************/
 
 #include "lengths.hpp"
+#include "particleemitter2.hpp"
+#include "particleemitter2s.hpp"
 
 namespace wc3lib
 {
@@ -26,19 +28,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Lengths::Lengths(class ParticleEmitter2 *particleEmitter) : MdxAlphas("KP2N"), m_particleEmitter(particleEmitter)
-{
-}
-
-Lengths::~Lengths()
-{
-}
-
-void Lengths::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Lengths::writeMdl(std::ostream &ostream) const throw (class Exception)
+Lengths::Lengths(class ParticleEmitter2 *particleEmitter) : MdlxAlphas(particleEmitter->particleEmitters()->mdlx(), "KP2N"), m_particleEmitter(particleEmitter)
 {
 }
 

@@ -21,11 +21,7 @@
 #ifndef WC3LIB_MDLX_NODE
 #define WC3LIB_MDLX_NODE
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -43,7 +39,7 @@ namespace mdlx
 * @note MDLX format brings its own dynamic type system by saving the type of each node in its structure. Use Node::type to get an node's type.
 * @note Inclusive byte count is only related to the note structure itself (excluding any further chunk data).
 */
-class Node
+class Node : public MdlxProperty
 {
 	public:
 		enum Type
@@ -96,12 +92,12 @@ class Node
 		bool inheritsRotation() const;
 		bool inheritsScaling() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
-		std::ostream& print(std::ostream &ostream) const;
+		ostream& print(ostream &ostream) const;
 
 	protected:
 		class Mdlx *m_mdlx;

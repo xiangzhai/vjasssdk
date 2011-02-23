@@ -44,7 +44,7 @@ class CameraTranslations : public MdlxScalings
 		const std::list<class CameraTranslation*>& translations() const;
 
 	protected:
-		virtual class MdlxScaling* createNewMember();
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
 
 		class Camera *m_camera;
 };
@@ -56,7 +56,7 @@ inline class Camera* CameraTranslations::camera() const
 
 inline const std::list<class CameraTranslation*>& CameraTranslations::translations() const
 {
-	return reinterpret_cast<const std::list<class CameraTranslation*>&>(*&this->m_scalings);
+	return reinterpret_cast<const std::list<class CameraTranslation*>&>(this->mdlxScalings());
 }
 
 }

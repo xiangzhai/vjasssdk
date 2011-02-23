@@ -21,16 +21,13 @@
 #ifndef WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
 #define WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
 
-#include "mdlxproperty.hpp"
-
-
 namespace wc3lib
 {
 
 namespace mdlx
 {
 
-class GroupMdxBlockMember : public MdlxProperty
+class GroupMdxBlockMember
 {
 	public:
 		GroupMdxBlockMember(class GroupMdxBlock *parent);

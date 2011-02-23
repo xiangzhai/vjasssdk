@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERHEIGHTSBELOW_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERHEIGHTSBELOW_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -30,19 +30,17 @@ namespace mdlx
 {
 
 /// KRHB
-class RibbonEmitterHeightsBelow : public MdxAlphas
+class RibbonEmitterHeightsBelow : public MdlxAlphas
 {
 	public:
 		RibbonEmitterHeightsBelow(class RibbonEmitter *ribbonEmitter);
-		virtual ~RibbonEmitterHeightsBelow();
 
 		class RibbonEmitter* ribbonEmitter() const;
 		const std::list<class RibbonEmitterHeightBelow*>& heights() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream)const  throw (class Exception);
-
 	protected:
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
+		
 		class RibbonEmitter *m_ribbonEmitter;
 };
 
@@ -53,7 +51,7 @@ inline class RibbonEmitter* RibbonEmitterHeightsBelow::ribbonEmitter() const
 
 inline const std::list<class RibbonEmitterHeightBelow*>& RibbonEmitterHeightsBelow::heights() const
 {
-	return reinterpret_cast<const std::list<class RibbonEmitterHeightBelow*>&>(this->m_alphas);
+	return reinterpret_cast<const std::list<class RibbonEmitterHeightBelow*>&>(this->mdlxAlphas());
 }
 
 }

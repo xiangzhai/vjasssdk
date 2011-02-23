@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,7 @@
 #include <list>
 
 #include "mdxblock.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +33,7 @@ namespace mdlx
 {
 
 /// GEOA
-class GeosetAnimations : public MdxBlock
+class GeosetAnimations : public MdxBlock, public MdlxProperty
 {
 	public:
 		GeosetAnimations(class Mdlx *mdlx);
@@ -41,10 +42,10 @@ class GeosetAnimations : public MdxBlock
 		class Mdlx* mdlx() const;
 		const std::list<class GeosetAnimation*>& geosetAnimations() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;

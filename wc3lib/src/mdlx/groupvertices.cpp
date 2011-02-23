@@ -35,12 +35,14 @@ GroupVertices::~GroupVertices()
 {
 }
 
-void GroupVertices::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize GroupVertices::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void GroupVertices::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize GroupVertices::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 class GroupMdxBlockMember* GroupVertices::createNewMember()

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_AMBIENTINTENSITY_HPP
 #define WC3LIB_MDLX_AMBIENTINTENSITY_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "ambientintensities.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class AmbientIntensity : public MdxAlpha
+class AmbientIntensity : public MdlxAlpha
 {
 	public:
 		AmbientIntensity(class AmbientIntensities *intesities);
@@ -40,7 +40,7 @@ class AmbientIntensity : public MdxAlpha
 
 inline class AmbientIntensities* AmbientIntensity::intensities() const
 {
-	return dynamic_cast<class AmbientIntensities*>(this->m_alphas);
+	return dynamic_cast<class AmbientIntensities*>(this->mdlxAlphas());
 }
 
 }

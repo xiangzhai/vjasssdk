@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,9 +20,11 @@
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <boost/cast.hpp>
 
 #include "geosetanimations.hpp"
 #include "geosetanimation.hpp"
+#include "../utilities.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -41,24 +43,25 @@ GeosetAnimations::~GeosetAnimations()
 		delete geosetAnimation;
 }
 
-void GeosetAnimations::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize GeosetAnimations::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void GeosetAnimations::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize GeosetAnimations::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-std::streamsize GeosetAnimations::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GeosetAnimations::readMdx(istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
+	std::streamsize size = MdxBlock::readMdx(istream);
 	
-	if (bytes == 0)
+	if (size == 0)
 		return 0;
 	
 	long32 nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
+	wc3lib::read(istream, nbytes, size);
 	
 	if (nbytes <= 0)
 		throw Exception(boost::str(boost::format( _("Geoset animations: Byte count error, %1% bytes.\n")) % nbytes));
@@ -66,23 +69,33 @@ std::streamsize GeosetAnimations::readMdx(std::istream &istream) throw (class Ex
 	while (nbytes > 0)
 	{
 		class GeosetAnimation *geosetAnimation = new GeosetAnimation(this);
-		long32 readBytes = geosetAnimation->readMdx(istream);
-		bytes += readBytes;
-		nbytes -= readBytes;
+		std::streamsize readBytes = geosetAnimation->readMdx(istream);
+		size += readBytes;
+		nbytes -= boost::numeric_cast<long32>(readBytes);
 		this->m_geosetAnimations.push_back(geosetAnimation);
 	}
 	
 	std::cout << "After all geoset animations with count " << this->m_geosetAnimations.size() << std::endl;
 	
-	return bytes;
+	return size;
 }
 
-std::streamsize GeosetAnimations::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize GeosetAnimations::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	if (MdxBlock::writeMdx(ostream) == 0)
+	std::streamsize size = MdxBlock::writeMdx(ostream);
+	
+	if (size == 0)
 		return 0;
 	
-	return 0;
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
+	BOOST_FOREACH(const class GeosetAnimation *geosetAnimation, geosetAnimations())
+		size += geosetAnimation->writeMdx(ostream);
+	
+	writeByteCount(ostream, static_cast<long32&>(size), position, size);
+	
+	return size;
 }
 
 }

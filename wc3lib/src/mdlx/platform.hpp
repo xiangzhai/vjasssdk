@@ -407,9 +407,9 @@ ostream& writeMdlVectorProperty(ostream &ostream, const string &identifier, cons
 	string value(boost::str(boost::format("%1% %2%") % identifier % (values.size() == 1 ? "" : "{ ")));
 	std::size_t i = 0;
 	
-	BOOST_FOREACH(const T &value, values)
+	BOOST_FOREACH(const T &v, values)
 	{
-		value = boost::str(boost::format("%1%%2%") % value % (i == values.size() - 1 ? ' ' : ", "));
+		value = boost::str(boost::format("%1%%2%") % v % (i == values.size() - 1 ? " " : ", "));
 		++i;
 	}
 	

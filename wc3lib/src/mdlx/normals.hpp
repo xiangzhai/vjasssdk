@@ -22,8 +22,6 @@
 #define WC3LIB_MDLX_NORMALS_HPP
 
 #include "groupmdxblock.hpp"
-#include "groupmdxblockmember.hpp"
-#include "normal.hpp"
 
 namespace wc3lib
 {
@@ -41,8 +39,8 @@ class Normals : public GroupMdxBlock
 		class Geoset* geoset() const;
 		const std::list<class Normal*>& normals() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

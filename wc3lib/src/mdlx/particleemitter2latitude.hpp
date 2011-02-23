@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2LATITUDE_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2LATITUDE_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "particleemitter2latitudes.hpp"
 
 namespace wc3lib
@@ -30,23 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter2Latitudes;
-	
-class ParticleEmitter2Latitude : public MdxAlpha
+class ParticleEmitter2Latitude : public MdlxAlpha
 {
 	public:
 		ParticleEmitter2Latitude(class ParticleEmitter2Latitudes *latitudes);
-		virtual ~ParticleEmitter2Latitude();
 		
 		class ParticleEmitter2Latitudes* latitudes() const;
-		
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 };
 
 inline class ParticleEmitter2Latitudes* ParticleEmitter2Latitude::latitudes() const
 {
-	return dynamic_cast<class ParticleEmitter2Latitudes*>(this->m_alphas);
+	return dynamic_cast<class ParticleEmitter2Latitudes*>(this->mdlxAlphas());
 }
 
 }

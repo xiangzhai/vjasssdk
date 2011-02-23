@@ -35,12 +35,14 @@ PrimitiveVertex::~PrimitiveVertex()
 {
 }
 
-void PrimitiveVertex::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize PrimitiveVertex::readMdl(std::istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void PrimitiveVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize PrimitiveVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
 std::streamsize PrimitiveVertex::readMdx(std::istream &istream) throw (class Exception)

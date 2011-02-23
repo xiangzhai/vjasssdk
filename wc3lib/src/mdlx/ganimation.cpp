@@ -30,10 +30,6 @@ Ganimation::Ganimation(class Geoset *geoset) : m_geoset(geoset)
 {
 }
 
-Ganimation::~Ganimation()
-{
-}
-
 /// @todo Implement.
 std::streamsize Ganimation::readMdl(istream &istream) throw (class Exception)
 {
@@ -49,16 +45,6 @@ std::streamsize Ganimation::writeMdl(ostream &ostream) const throw (class Except
 	ostream << "}";
 
 	return 0;
-}
-
-std::streamsize Ganimation::readMdx(istream &istream) throw (class Exception)
-{
-	return Bounds::readMdx(istream);
-}
-
-std::streamsize Ganimation::writeMdx(ostream &ostream) const throw (class Exception)
-{
-	return Bounds::writeMdx(ostream);
 }
 
 }

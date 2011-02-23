@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,19 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-AttachmentVisibilities::AttachmentVisibilities(class Mdlx *mdlx) : MdxAlphas("KATV"), m_mdlx(mdlx)
-{
-}
-
-AttachmentVisibilities::~AttachmentVisibilities()
-{
-}
-
-void AttachmentVisibilities::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void AttachmentVisibilities::writeMdl(std::ostream &ostream) throw (class Exception)
+AttachmentVisibilities::AttachmentVisibilities(class Mdlx *mdlx) : MdlxAlphas(mdlx, "KATV")
 {
 }
 

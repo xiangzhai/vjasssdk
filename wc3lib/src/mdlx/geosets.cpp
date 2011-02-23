@@ -45,17 +45,17 @@ Geosets::~Geosets()
 		delete geoset;
 }
 
-std::streamsize Geosets::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Geosets::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Geosets::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Geosets::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Geosets::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Geosets::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = MdxBlock::readMdx(istream);
 
@@ -96,9 +96,23 @@ std::streamsize Geosets::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Geosets::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Geosets::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streamsize size = MdxBlock::writeMdx(ostream);
+
+	if (size == 0)
+		return 0;
+
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+
+	BOOST_FOREACH(const class Geoset *geoset, geosets())
+		size += geoset->writeMdx(ostream);
+
+	
+	writeByteCount(ostream, static_cast<long32&>(size), position, size);
+	
+	return size;
 }
 
 }

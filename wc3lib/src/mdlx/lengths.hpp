@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_LENGTHS_HPP
 #define WC3LIB_MDLX_LENGTHS_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -30,7 +30,7 @@ namespace mdlx
 {
 
 /// KP2N same as KMTA;
-class Lengths : public MdxAlphas
+class Lengths : public MdlxAlphas
 {
 	public:
 		Lengths(class ParticleEmitter2 *particleEmitter);
@@ -38,9 +38,6 @@ class Lengths : public MdxAlphas
 
 		class ParticleEmitter2* particleEmitter() const;
 		const std::list<class Length*>& lengths() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		class ParticleEmitter2 *m_particleEmitter;
@@ -53,7 +50,7 @@ inline class ParticleEmitter2* Lengths::particleEmitter() const
 
 inline const std::list<class Length*>& Lengths::lengths() const
 {
-	return reinterpret_cast<const std::list<class Length*>&>(this->m_alphas);
+	return reinterpret_cast<const std::list<class Length*>&>(this->mdlxAlphas());
 }
 
 }

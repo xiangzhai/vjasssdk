@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class MdlxAnimatedProperties : public MdlxProperty, public virtual MdxBlock, public virtual MdlValueBlock<long32>
+class MdlxAnimatedProperties : public MdlxProperty, public MdxBlock, public MdlValueBlock<long32>
 {
 	public:
 		MdlxAnimatedProperties(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], const string &mdlIdentifier, bool optional = true);

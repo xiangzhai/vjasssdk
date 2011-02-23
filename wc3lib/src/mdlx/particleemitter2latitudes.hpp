@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2LATITUDES_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2LATITUDES_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -29,19 +29,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter2;
-
 /// MDX block name KP2L (like KMTA).
-class ParticleEmitter2Latitudes : public MdxAlphas
+class ParticleEmitter2Latitudes : public MdlxAlphas
 {
 	public:
 		ParticleEmitter2Latitudes(class ParticleEmitter2 *particleEmitter);
-		virtual ~ParticleEmitter2Latitudes();
 		
 		class ParticleEmitter2* particleEmitter() const;
-		
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
 		
 	private:
 		class ParticleEmitter2 *m_particleEmitter;

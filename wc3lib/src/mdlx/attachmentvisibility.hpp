@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_ATTACHMENTVISIBILITY_HPP
 #define WC3LIB_MDLX_ATTACHMENTVISIBILITY_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "attachmentvisibilities.hpp"
 
 namespace wc3lib
@@ -30,21 +30,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class AttachmentVisibility : public MdxAlpha
+class AttachmentVisibility : public MdlxAlpha
 {
 	public:
 		AttachmentVisibility(class AttachmentVisibilities *visibilities);
-		virtual ~AttachmentVisibility();
 
 		class AttachmentVisibilities* visibilities() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 };
 
 inline class AttachmentVisibilities* AttachmentVisibility::visibilities() const
 {
-	return dynamic_cast<class AttachmentVisibilities*>(this->m_alphas);
+	return dynamic_cast<class AttachmentVisibilities*>(this->mdlxAlphas());
 }
 
 }

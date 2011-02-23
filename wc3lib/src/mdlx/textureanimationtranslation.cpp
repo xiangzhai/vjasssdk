@@ -30,20 +30,6 @@ TextureAnimationTranslation::TextureAnimationTranslation(class TextureAnimationT
 {
 }
 
-TextureAnimationTranslation::~TextureAnimationTranslation()
-{
-}
-
-std::streamsize TextureAnimationTranslation::readMdl(std::istream &istream) throw (class Exception)
-{
-	return 0;
-}
-
-std::streamsize TextureAnimationTranslation::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-	return 0;
-}
-
 }
 
 }

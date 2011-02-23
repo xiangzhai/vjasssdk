@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_EMISSIONRATES_HPP
 #define WC3LIB_MDLX_EMISSIONRATES_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -30,31 +30,20 @@ namespace mdlx
 {
 
 /// KP2E same as KMTA (MdxAlphas)
-class EmissionRates : public MdxAlphas
+class EmissionRates : public MdlxAlphas
 {
 	public:
 		EmissionRates(class Mdlx *mdlx);
-		virtual ~EmissionRates();
-
-		class Mdlx* mdlx() const;
 
 		const std::list<class EmissionRate*>& emissionRates() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;
 };
 
-inline class Mdlx* EmissionRates::mdlx() const
-{
-	return this->m_mdlx;
-}
-
 inline const std::list<class EmissionRate*>& EmissionRates::emissionRates() const
 {
-	return reinterpret_cast<const std::list<class EmissionRate*>&>(*&this->m_alphas);
+	return reinterpret_cast<const std::list<class EmissionRate*>&>(this->mdlxAlphas());
 }
 
 }

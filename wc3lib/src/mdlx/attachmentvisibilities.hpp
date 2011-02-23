@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_ATTACHMENTVISIBILITIES_HPP
 #define WC3LIB_MDLX_ATTACHMENTVISIBILITIES_HPP
 
-#include "mdxalphas.hpp"
+#include "mdlxalphas.hpp"
 
 namespace wc3lib
 {
@@ -29,34 +29,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class AttachmentVisibility;
-
-//KATV, like KMTA (Alphas ), used by OBJ and ATCH
-class AttachmentVisibilities : public MdxAlphas
+/// KATV, like KMTA (Alphas ), used by OBJ and ATCH
+class AttachmentVisibilities : public MdlxAlphas
 {
 	public:
 		AttachmentVisibilities(class Mdlx *mdlx);
-		virtual ~AttachmentVisibilities();
 
-		class Mdlx* mdlx() const;
 		const std::list<class AttachmentVisibility*>& visibilities() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) throw (class Exception);
-
-	protected:
-		class Mdlx *m_mdlx;
 };
-
-inline class Mdlx* AttachmentVisibilities::mdlx() const
-{
-	return this->m_mdlx;
-}
 
 inline const std::list<class AttachmentVisibility*>& AttachmentVisibilities::visibilities() const
 {
-	return reinterpret_cast<const std::list<class AttachmentVisibility*>&>(*&this->m_alphas);
+	return reinterpret_cast<const std::list<class AttachmentVisibility*>&>(this->mdlxAlphas());
 }
 
 }

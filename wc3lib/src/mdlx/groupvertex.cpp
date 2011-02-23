@@ -35,15 +35,17 @@ GroupVertex::~GroupVertex()
 {
 }
 
-void GroupVertex::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize GroupVertex::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void GroupVertex::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize GroupVertex::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-std::streamsize GroupVertex::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GroupVertex::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_data, size);
@@ -51,7 +53,7 @@ std::streamsize GroupVertex::readMdx(std::istream &istream) throw (class Excepti
 	return size;
 }
 
-std::streamsize GroupVertex::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize GroupVertex::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_data, size);

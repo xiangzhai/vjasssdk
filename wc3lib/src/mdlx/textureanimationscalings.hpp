@@ -39,7 +39,7 @@ class TextureAnimationScalings : public MdlxScalings
 		const std::list<class TextureAnimationScaling*>& scalings() const;
 
 	protected:
-		virtual class MdlxAnimatedProperty* createAnimatedProperty() const;
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
 
 		class TextureAnimation *m_textureAnimation;
 };

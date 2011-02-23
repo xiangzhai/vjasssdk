@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,13 +34,9 @@ class TextureAnimationTranslations : public MdlxScalings
 {
 	public:
 		TextureAnimationTranslations(class TextureAnimation *textureAnimation);
-		virtual ~TextureAnimationTranslations();
 
 		class TextureAnimation* textureAnimation() const;
 		const std::list<class TextureAnimationTranslation*>& translations() const;
-
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class MdlxScaling* createNewMember();
@@ -55,7 +51,7 @@ inline class TextureAnimation* TextureAnimationTranslations::textureAnimation() 
 
 inline const std::list<class TextureAnimationTranslation*>& TextureAnimationTranslations::translations() const
 {
-	return reinterpret_cast<const std::list<class TextureAnimationTranslation*>&>(this->m_scalings);
+	return reinterpret_cast<const std::list<class TextureAnimationTranslation*>&>(this->mdlxScalings());
 }
 
 }

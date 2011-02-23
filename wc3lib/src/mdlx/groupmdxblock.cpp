@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GroupMdxBlock::GroupMdxBlock(byte blockName[4], bool optional) : MdxBlock(blockName, optional)
+GroupMdxBlock::GroupMdxBlock(byte blockName[4], bool usesCounter, bool optional) : MdxBlock(blockName, optional), m_usesCounter(usesCounter)
 {
 }
 
@@ -47,14 +47,31 @@ std::streamsize GroupMdxBlock::readMdx(istream &istream) throw (class Exception)
 	if (size == 0)
 		return 0;
 
-	long32 groupCount = 0;
-	wc3lib::read(istream, groupCount, size);
-
-	for ( ; groupCount > 0; --groupCount)
+	if (usesCounter())
 	{
-		class GroupMdxBlockMember *member = this->createNewMember();
-		size += member->readMdx(istream);
-		this->m_members.push_back(member);
+		long32 groupCount = 0;
+		wc3lib::read(istream, groupCount, size);
+
+		for ( ; groupCount > 0; --groupCount)
+		{
+			class GroupMdxBlockMember *member = this->createNewMember();
+			size += member->readMdx(istream);
+			this->m_members.push_back(member);
+		}
+	}
+	else
+	{
+		long32 nbytes;
+		wc3lib::read(istream, nbytes, size);
+	
+		while (nbytes > 0)
+		{
+			class GroupMdxBlockMember *member = this->createNewMember();
+			std::streamsize readSize = member->readMdx(istream);
+			this->m_members.push_back(member);
+			nbytes -= boost::numeric_cast<long32>(readSize);
+			size += readSize;
+		}
 	}
 
 	return size;
@@ -67,12 +84,29 @@ std::streamsize GroupMdxBlock::writeMdx(ostream &ostream) const throw (class Exc
 
 	std::streamsize size = MdxBlock::writeMdx(ostream);
 
-	long32 groupCount = this->m_members.size();
-	wc3lib::write(ostream, groupCount, size);
+	if (usesCounter())
+	{
+		long32 groupCount = this->m_members.size();
+		wc3lib::write(ostream, groupCount, size);
 
-	BOOST_FOREACH(const class GroupMdxBlockMember *groupMdxBlockMember, this->m_members)
-		size += groupMdxBlockMember->writeMdx(ostream);
-
+		BOOST_FOREACH(const class GroupMdxBlockMember *groupMdxBlockMember, this->m_members)
+			size += groupMdxBlockMember->writeMdx(ostream);
+	}
+	else
+	{
+		std::streampos position;
+		skipByteCount<long32>(ostream, position);
+		std::streamsize writtenSize = 0;
+		
+		BOOST_FOREACH(const class GroupMdxBlockMember *groupMdxBlockMember, this->m_members)
+		{
+			writtenSize += groupMdxBlockMember->writeMdx(ostream);
+			size += writtenSize;
+		}
+			
+		writeByteCount(ostream, static_cast<long32&>(writtenSize), position, size);
+	}
+	
 	return size;
 }
 

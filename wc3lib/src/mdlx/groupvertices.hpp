@@ -39,8 +39,8 @@ class GroupVertices : public GroupMdxBlock
 		class Geoset* geoset() const;
 		const std::list<class GroupVertex*>& groupVertices() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

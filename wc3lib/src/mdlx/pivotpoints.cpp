@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,53 +27,23 @@ namespace wc3lib
 namespace mdlx
 {
 
-PivotPoints::PivotPoints(class Mdlx *mdlx) : MdxBlock("PIVT"), m_mdlx(mdlx)
+PivotPoints::PivotPoints(class Mdlx *mdlx) : GroupMdxBlock("PIVT"), m_mdlx(mdlx)
 {
 }
 
-PivotPoints::~PivotPoints()
+std::streamsize PivotPoints::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void PivotPoints::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize PivotPoints::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-void PivotPoints::writeMdl(std::ostream &ostream) const throw (class Exception)
+class GroupMdxBlockMember* PivotPoints::createNewMember()
 {
-}
-
-std::streamsize PivotPoints::readMdx(std::istream &istream) throw (class Exception)
-{
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	std::streamsize nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	
-	while (nbytes > 0)
-	{
-		class PivotPoint *pivotPoint = new PivotPoint(this);
-		long32 readBytes = pivotPoint->readMdx(istream);
-		bytes += readBytes;
-		nbytes -= readBytes;
-		this->m_pivotPoints.push_back(pivotPoint);
-	}
-	
-	return bytes;
-}
-
-std::streamsize PivotPoints::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
-	if (!this->exists())
-		return 0;
-	
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	return bytes;
+	return new PivotPoint(this);
 }
 
 }

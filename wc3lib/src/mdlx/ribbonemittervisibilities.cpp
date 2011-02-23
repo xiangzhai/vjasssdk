@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include "ribbonemittervisibilities.hpp"
+#include "ribbonemitter.hpp"
+#include "ribbonemitters.hpp"
+#include "ribbonemittervisibility.hpp"
 
 namespace wc3lib
 {
@@ -26,20 +29,13 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitterVisibilities::RibbonEmitterVisibilities(class RibbonEmitter *ribbonEmitter) : MdxAlphas("KRVS"), m_ribbonEmitter(ribbonEmitter)
+RibbonEmitterVisibilities::RibbonEmitterVisibilities(class RibbonEmitter *ribbonEmitter) : MdlxAlphas(ribbonEmitter->ribbonEmitters()->mdlx(), "KRVS"), m_ribbonEmitter(ribbonEmitter)
 {
 }
 
-RibbonEmitterVisibilities::~RibbonEmitterVisibilities()
+class MdlxAnimatedProperty* RibbonEmitterVisibilities::createAnimatedProperty()
 {
-}
-
-void RibbonEmitterVisibilities::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void RibbonEmitterVisibilities::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
+	return new RibbonEmitterVisibility(this);
 }
 
 }

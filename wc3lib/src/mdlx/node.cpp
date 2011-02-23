@@ -42,17 +42,17 @@ Node::~Node()
 	delete this->m_scalings;
 }
 
-std::streamsize Node::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Node::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Node::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Node::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Node::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Node::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	long32 nbytesi;
@@ -76,7 +76,7 @@ std::streamsize Node::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Node::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Node::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streampos position;
 	skipByteCount<long32>(ostream, position);
@@ -100,7 +100,7 @@ std::streamsize Node::writeMdx(std::ostream &ostream) const throw (class Excepti
 	return size;
 }
 
-std::ostream& Node::print(std::ostream &ostream) const
+std::ostream& Node::print(ostream &ostream) const
 {
 	ostream << "Node: "
 	<< "Name: " << this->name() << std::endl

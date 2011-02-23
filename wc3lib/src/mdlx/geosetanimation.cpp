@@ -60,15 +60,22 @@ std::streamsize GeosetAnimation::writeMdl(ostream &ostream) const throw (class E
 	if (colorAnimation() == DropShadow || colorAnimation() == Both)
 		writeMdlProperty(ostream, "DropShadow", size);
 	
-	if (this->alphas()->geosetAnimationAlphas().empty())
+	if (this->alphas()->alphas().empty())
 		writeMdlStaticValueProperty(ostream, "Alpha", staticAlpha(), size);
 	else
 		size += this->alphas()->writeMdl(ostream);
 	
 	if (colorAnimation() == Color || colorAnimation() == Both)
 	{
-		if (this->colors()->geosetAnimationColors().empty())
-			writeMdlStaticVectorProperty(ostream, "Color", colorBlue(), colorGreen(), colorRed(), size);
+		if (this->colors()->colors().empty())
+		{
+			std::vector<float32> color(3, 0.0);
+			color[0] = colorBlue();
+			color[1] = colorGreen();
+			color[2] = colorRed();
+			
+			writeMdlStaticVectorProperty(ostream, "Color", color, size);
+		}
 		else
 			size += this->colors()->writeMdl(ostream);
 	}

@@ -32,21 +32,17 @@ Normal::Normal(class Normals *normals) : GroupMdxBlockMember(normals)
 {
 }
 
-Normal::~Normal()
-{
-}
-
-std::streamsize Normal::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Normal::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Normal::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Normal::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Normal::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Normal::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_vertexData, size);
@@ -54,10 +50,10 @@ std::streamsize Normal::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Normal::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Normal::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
-	wc3lib::write(ostream, this->m_vertexData, size);
+	wc3lib::write(ostream, vertexData(), size);
 
 	return size;
 }

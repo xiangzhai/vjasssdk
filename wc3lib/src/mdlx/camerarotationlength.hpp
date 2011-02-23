@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_CAMERAROTATIONLENGTH_HPP
 #define WC3LIB_MDLX_CAMERAROTATIONLENGTH_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "camerarotationlengths.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CameraRotationLength : public MdxAlpha
+class CameraRotationLength : public MdlxAlpha
 {
 	public:
 		CameraRotationLength(class CameraRotationLengths *lengths);
@@ -41,7 +41,7 @@ class CameraRotationLength : public MdxAlpha
 
 inline class CameraRotationLengths* CameraRotationLength::lengths() const
 {
-	return dynamic_cast<class CameraRotationLengths*>(this->m_alphas);
+	return dynamic_cast<class CameraRotationLengths*>(this->mdlxAlphas());
 }
 
 }

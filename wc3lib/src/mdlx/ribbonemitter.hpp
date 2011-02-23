@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,11 +21,7 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTER_HPP
 #define WC3LIB_MDLX_RIBBONEMITTER_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "node.hpp"
 
 namespace wc3lib
 {
@@ -33,7 +29,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class RibbonEmitter
+class RibbonEmitter : public Node
 {
 	public:
 		RibbonEmitter(class RibbonEmitters *ribbonEmitters);
@@ -41,19 +37,15 @@ class RibbonEmitter
 
 		class RibbonEmitters* ribbonEmitters() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		class RibbonEmitters *m_ribbonEmitters;
 		//long nbytesi;
 		//long nbytesikg; // inclusive bytecount including KGXXs
-		ascii m_name[0x50]; //(0x50 bytes)
-		long32 m_objectId;
-		long32 m_parent; //(0xFFFFFFFF if none)
-		long32 m_flags; //(0x00400000)
 		class MdlxTranslations *m_translations; //(KGTR)
 		class MdlxRotations *m_rotations; //(KGRT)
 		class MdlxScalings *m_scalings; //(KGSC)

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "normals.hpp"
+#include "normal.hpp"
 
 namespace wc3lib
 {
@@ -34,12 +35,12 @@ Normals::~Normals()
 {
 }
 
-std::streamsize Normals::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Normals::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Normals::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Normals::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

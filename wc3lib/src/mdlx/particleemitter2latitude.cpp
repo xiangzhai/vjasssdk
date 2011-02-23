@@ -26,19 +26,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2Latitude::ParticleEmitter2Latitude(class ParticleEmitter2Latitudes *latitudes) : MdxAlpha(latitudes)
-{
-}
-
-ParticleEmitter2Latitude::~ParticleEmitter2Latitude()
-{
-}
-		
-void ParticleEmitter2Latitude::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void ParticleEmitter2Latitude::writeMdl(std::ostream &ostream) const throw (class Exception)
+ParticleEmitter2Latitude::ParticleEmitter2Latitude(class ParticleEmitter2Latitudes *latitudes) : MdlxAlpha(latitudes)
 {
 }
 

@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_MDXBLOCK_HPP
 #define WC3LIB_MDLX_MDXBLOCK_HPP
 
-#include "../format.hpp"
+#include "../exception.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class MdxBlock : public Format<byte>
+class MdxBlock
 {
 	public:
 		static const std::size_t mdxIdentifierSize = 4;
