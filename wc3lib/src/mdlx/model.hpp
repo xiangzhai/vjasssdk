@@ -43,10 +43,10 @@ class Model : public MdxBlock, public Bounds, public MdlxProperty
 		const ascii* animationFileName() const;
 		long32 blendTime() const;
 
-		virtual std::streamsize readMdl(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::basic_ostream<byte> &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Mdlx *m_mdlx;

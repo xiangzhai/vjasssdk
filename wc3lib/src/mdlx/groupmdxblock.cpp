@@ -104,17 +104,10 @@ std::streamsize GroupMdxBlock::writeMdx(ostream &ostream) const throw (class Exc
 			size += writtenSize;
 		}
 			
-		writeByteCount(ostream, static_cast<long32&>(writtenSize), position, size);
+		writeByteCount(ostream, static_cast<long32>(writtenSize), position, size);
 	}
 	
 	return size;
-}
-
-class GroupMdxBlockMember* GroupMdxBlock::createNewMember()
-{
-	class GroupMdxBlockMember *member = new GroupMdxBlockMember(this);
-
-	return member;
 }
 
 }

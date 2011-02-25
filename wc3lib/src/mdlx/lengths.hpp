@@ -34,7 +34,6 @@ class Lengths : public MdlxAlphas
 {
 	public:
 		Lengths(class ParticleEmitter2 *particleEmitter);
-		virtual ~Lengths();
 
 		class ParticleEmitter2* particleEmitter() const;
 		const std::list<class Length*>& lengths() const;

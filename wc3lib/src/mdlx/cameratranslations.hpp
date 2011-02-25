@@ -37,7 +37,6 @@ class CameraTranslations : public MdlxScalings
 {
 	public:
 		CameraTranslations(class Camera *camera);
-		virtual ~CameraTranslations();
 
 		class Camera* camera() const;
 

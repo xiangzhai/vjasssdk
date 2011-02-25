@@ -21,6 +21,7 @@
 #include <boost/foreach.hpp>
 
 #include "mdlxanimatedproperties.hpp"
+#include "mdlxanimatedproperty.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -28,14 +29,14 @@ namespace wc3lib
 
 namespace mdlx
 {
-	
-MdlxAnimatedProperties::MdlxAnimatedProperties(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], const string &mdlIdentifier, bool optional) : MdxBlock(mdxIdentifier, optional), MdlBlock(mdlIdentifier, optional), m_mdlx(mdlx)
+
+MdlxAnimatedProperties::MdlxAnimatedProperties(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], const string &mdlIdentifier, bool optional) : MdxBlock(mdxIdentifier, optional), MdlValueBlock<long32>(mdlIdentifier, optional), m_mdlx(mdlx)
 {
 }
 
 MdlxAnimatedProperties::~MdlxAnimatedProperties()
 {
-	BOOST_FOREACH(class MdlxAnimatedPropertiy *property, this->m_properties)
+	BOOST_FOREACH(class MdlxAnimatedProperty *property, this->m_properties)
 		delete property;
 }
 
@@ -48,7 +49,7 @@ std::streamsize MdlxAnimatedProperties::readMdl(istream &istream) throw (class E
 std::streamsize MdlxAnimatedProperties::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	// Tag <long_count> {
-	std::streamsize size = MdlValueBlock::writeMdl(ostream);
+	std::streamsize size = MdlValueBlock<long32>::writeMdl(ostream);
 	
 	switch (lineType())
 	{
@@ -84,7 +85,7 @@ std::streamsize MdlxAnimatedProperties::writeMdl(ostream &ostream) const throw (
 	return size;
 }
 
-std::streamsize MdlxAnimatedProperties::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize MdlxAnimatedProperties::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = MdxBlock::readMdx(istream);
 
@@ -99,7 +100,7 @@ std::streamsize MdlxAnimatedProperties::readMdx(std::istream &istream) throw (cl
 
 	for ( ; number > 0; --number)
 	{
-		class MdlxAnimatedPropertiy *property = createAnimatedProperty();
+		class MdlxAnimatedProperty *property = createAnimatedProperty();
 		size += property->readMdx(istream);
 		this->m_properties.push_back(property);
 	}
@@ -107,7 +108,7 @@ std::streamsize MdlxAnimatedProperties::readMdx(std::istream &istream) throw (cl
 	return size;
 }
 
-std::streamsize MdlxAnimatedProperties::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize MdlxAnimatedProperties::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = MdxBlock::writeMdx(ostream);
 
@@ -119,7 +120,7 @@ std::streamsize MdlxAnimatedProperties::writeMdx(std::ostream &ostream) const th
 	wc3lib::write(ostream, static_cast<long32>(this->m_lineType), size);
 	wc3lib::write(ostream, this->m_globalSequenceId, size);
 
-	BOOST_FOREACH(const class MdlxAnimatedPropertiy *property, this->properties())
+	BOOST_FOREACH(const class MdlxAnimatedProperty *property, this->properties())
 		size += property->writeMdx(ostream);
 
 	return size;

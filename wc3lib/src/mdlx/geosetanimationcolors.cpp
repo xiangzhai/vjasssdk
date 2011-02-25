@@ -20,6 +20,7 @@
 
 #include "geosetanimationcolors.hpp"
 #include "geosetanimation.hpp"
+#include "geosetanimations.hpp"
 #include "geosetanimationcolor.hpp"
 
 namespace wc3lib

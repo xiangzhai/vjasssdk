@@ -752,6 +752,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	// build vertices
 	std::list<class mdlx::Vertex*>::const_iterator vertexIterator = geoset.vertices()->vertices().begin();
 	std::list<class mdlx::Normal*>::const_iterator normalIterator = geoset.normals()->normals().begin();
+	//std::list<class mdlx::TexturePatch*>::const_iterator texturePatchIterator = geoset.texturePatches()->texturePatches().begin();
 	std::list<class mdlx::TextureVertex*>::const_iterator textureVertexIterator = geoset.textureVertices()->textureVertices().begin();
 	Ogre::uint32 index = 0;
 
@@ -799,6 +800,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 
 				//qDebug() << "Building triangle with vertex indices (" << indices[0] << "|" << indices[1] << "|" << indices[2] << ")";
 				object->triangle(indices[0], indices[1], indices[2]);
+				object->
 				//qDebug() << "Building triangle";
 			}
 		}

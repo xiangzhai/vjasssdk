@@ -34,7 +34,6 @@ class LightAmbientVisibilities : public MdlxAlphas
 {
 	public:
 		LightAmbientVisibilities(class Light *light);
-		virtual ~LightAmbientVisibilities();
 
 		class Light* light() const;
 		const std::list<class LightAmbientVisibility*>& visibilities() const;

@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "emissionrates.hpp"
+#include "emissionrate.hpp"
 
 namespace wc3lib
 {
@@ -28,6 +29,11 @@ namespace mdlx
 
 EmissionRates::EmissionRates(class Mdlx *mdlx) : MdlxAlphas(mdlx, "KP2E")
 {
+}
+
+class MdlxAnimatedProperty* EmissionRates::createAnimatedProperty()
+{
+	return new EmissionRate(this);
 }
 
 }

@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <cstring>
+
 #include <boost/format.hpp>
 
 #include "model.hpp"
@@ -48,7 +50,7 @@ Model::~Model()
 {
 }
 
-std::streamsize Model::readMdl(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Model::readMdl(istream &istream) throw (class Exception)
 {
 	string value;
 	std::streamsize size = 0;
@@ -57,7 +59,7 @@ std::streamsize Model::readMdl(std::basic_istream<byte> &istream) throw (class E
 	if (value == "Model")
 	{
 		parse(istream, value, size);
-		this->m_name = value.c_str();
+		strcpy(this->m_name, value.c_str());
 	}
 	else if (value == "NumGeosets")
 	{
@@ -98,7 +100,7 @@ std::streamsize Model::readMdl(std::basic_istream<byte> &istream) throw (class E
 	return 0;
 }
 
-std::streamsize Model::writeMdl(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Model::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	ostream << "Model \"" << this->m_name << "\" {\n";
 
@@ -142,7 +144,7 @@ std::streamsize Model::writeMdl(std::basic_ostream<byte> &ostream) const throw (
 	return 0;
 }
 
-std::streamsize Model::readMdx(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Model::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = MdxBlock::readMdx(istream);
 	long32 nbytes = 0;
@@ -155,7 +157,7 @@ std::streamsize Model::readMdx(std::basic_istream<byte> &istream) throw (class E
 	return size;
 }
 
-std::streamsize Model::writeMdx(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Model::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = MdxBlock::writeMdx(ostream);
 	std::streampos position;

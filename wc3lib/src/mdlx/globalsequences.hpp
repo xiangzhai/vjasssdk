@@ -34,15 +34,12 @@ class GlobalSequences : public GroupMdxBlock
 {
 	public:
 		GlobalSequences(class Mdlx *mdlx);
-		virtual ~GlobalSequences();
 
 		class Mdlx* mdlx() const;
 		const std::list<class GlobalSequence*>& globalSequences() const;
 
 		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

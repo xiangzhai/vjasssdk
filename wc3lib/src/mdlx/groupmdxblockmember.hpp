@@ -21,6 +21,9 @@
 #ifndef WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
 #define WC3LIB_MDLX_GROUPMDXBLOCKMEMBER_HPP
 
+#include "../exception.hpp"
+#include "platform.hpp"
+
 namespace wc3lib
 {
 
@@ -32,6 +35,9 @@ class GroupMdxBlockMember
 	public:
 		GroupMdxBlockMember(class GroupMdxBlock *parent);
 		virtual ~GroupMdxBlockMember();
+		
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception) = 0;
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception) = 0;
 
 	protected:
 		class GroupMdxBlock *m_parent;

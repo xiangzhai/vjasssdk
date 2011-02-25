@@ -34,7 +34,6 @@ class PivotPoint : public GroupMdxBlockMember
 {
 	public:
 		PivotPoint(class PivotPoints *pivotPoints);
-		virtual ~PivotPoint();
 
 		class PivotPoints* pivotPoints() const;
 		const struct VertexData& vertexData() const;

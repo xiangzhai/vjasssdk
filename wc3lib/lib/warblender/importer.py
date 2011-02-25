@@ -83,7 +83,7 @@ class Importer(Converter):
 				return obj
 
 		return None
-
+	
 	def loadObjectPivotPointLocation(wbObjectId, blObject):
 		wbPivt = self.model.PIVT.pivpts[wbObjectId]
 		blObject.loc = [ wbPivt.x, wbPivt.y, wbPivt.z ]
@@ -131,8 +131,10 @@ class Importer(Converter):
 			obj
 
 	def linkObject(self, datablock, name):
+		print "Name: %sObject" % name
 		obj = self.scene.objects.new(datablock) # name + 'Object'
-		#object.link(datablock)
+		obj.setName("%sObject" % name)
+		obj.link(datablock)
 		#self.scene.link(object)
 		self.group.objects.link(obj)
 
@@ -184,7 +186,7 @@ class Importer(Converter):
 		self.textures = []
 		for texnr in range(self.model.TEXS.ntexs):
 			bTexture = Blender.Texture.New(self.textureName(texnr))
-			self.linkObject(bTexture, self.textureName(texnr))
+			#self.linkObject(bTexture, self.textureName(texnr))
 			bTexture.setType('Image')
 			bTexture.setImageFlags('InterPol', 'UseAlpha', 'MipMap')
 			texturefile = self.model.TEXS.textures[texnr].TexturePath;
@@ -211,7 +213,7 @@ class Importer(Converter):
 		self.materials = []
 		for matnr in range(self.model.MTLS.nmtls):
 			mat = Blender.Material.New(self.materialName(matnr))
-			self.linkObject(mat, self.materialName(matnr))
+			#self.linkObject(mat, self.materialName(matnr))
 			mat.setRGBCol(self.teamcolour)
 			mat.setMode('Shadeless', 'ZTransp')
 			setTexFace = 1
@@ -347,14 +349,15 @@ class Importer(Converter):
 
 		#bones = {}
 		wbBoneHeads = [[] for x in self.model.bones]
+		print "We have %i MDX bones" % len(self.model.BONE.bones)
 		# create the bones and set the bone head
-		for index in boneOrder:
-			wbBone = self.model.BONE.bones[index]
+		for bone_id in boneOrder:
+			wbBone = self.model.BONE.bones[bone_id]
 			wbPivt = self.model.PIVT.pivpts[wbBone.OBJ.ObjectID]
 			wbBoneKey = wbBone.OBJ.Name
 
 			if wbBone.OBJ.Parent != 0xFFFFFFFF:
-				wbBoneChildren[wbBone.OBJ.Parent].append(index)
+				wbBoneChildren[wbBone.OBJ.Parent].append(bone_id)
 			#else:
 				#parentTail = [0, 0, 0]
 
@@ -377,29 +380,29 @@ class Importer(Converter):
 			sys.stderr.write("Adding Blender bone '" + wbBoneKey + "\n")
 
 		# set the bone tails
-		for index in boneOrder:
-			wbBone = self.model.BONE.bones[index]
+		for bone_id in boneOrder:
+			wbBone = self.model.BONE.bones[bone_id]
 			wbBoneKey = wbBone.OBJ.Name
 
-			if len(wbBoneChildren[index])>0:
+			if len(wbBoneChildren[bone_id]) > 0:
 				# average the heads of all children
 				avg = [0.0, 0.0, 0.0]
 
-				for childIndex in wbBoneChildren[index]:
+				for childIndex in wbBoneChildren[bone_id]:
 					childKey = self.model.BONE.bones[childIndex].OBJ.Name
 					avg = map(add, avg, self.armature.bones[childKey].head)
 
-				avg = [x/len(wbBoneChildren[index]) for x in avg]
+				avg = [x/len(wbBoneChildren[bone_id]) for x in avg]
 				self.armature.bones[wbBoneKey].tail = Blender.Mathutils.Vector([avg[0], avg[1], avg[2]])
-			elif len(wbBoneVertices[index]) > 0:
+			elif len(wbBoneVertices[bone_id]) > 0:
 				# average all the points belonging to this bone and
 				# tail = mirror of head through this middle point
 				avg = [0.0, 0.0, 0.0]
 
-				for vert in wbBoneVertices[index]:
+				for vert in wbBoneVertices[bone_id]:
 					avg = map(add, avg, vert)
 
-				avg = [x/len(wbBoneVertices[index]) for x in avg]
+				avg = [x/len(wbBoneVertices[bone_id]) for x in avg]
 				self.armature.bones[wbBoneKey].tail = Blender.Mathutils.Vector([avg[0], avg[1], avg[2]])
 
 
@@ -409,10 +412,21 @@ class Importer(Converter):
 
 	def boneInsert(self, boneIndex, boneOrder):
 		#sys.stderr.write("boneIndex: %s\n" % str(boneIndex))
-		parentID = self.model.bones[boneIndex].Parent
+		parentID = self.model.BONE.bones[boneIndex].OBJ.Parent
 		#sys.stderr.write("parentID: %s\n" % str(parentID))
-		if parentID != -1 and parentID not in boneOrder:
-			self.boneInsert(parentID, boneOrder)
+		# get index
+		
+		if parentID != -1:
+			parentIndex = -1
+			
+			for i in range(len(self.model.BONE.bones)):
+				if parentID == self.model.BONE.bones[i].OBJ.ObjectID:
+					parentIndex = i
+					break;
+					
+			if parentIndex != -1 and parentIndex not in boneOrder:
+				self.boneInsert(parentIndex, boneOrder)
+		
 		boneOrder.append(boneIndex)
 
 	def loadSequences(self):
@@ -453,14 +467,17 @@ class Importer(Converter):
 		else:
 			Xpo = 'Cyclic'
 
-		index = len(self.armature.bones)
-		blBone = self.armature.bones[index] # add new
+		#index = len(self.armature.bones)  # add new?
+		blBone = self.armature.bones[wbBone.Name]
 
 		translation = wbBone.KGTR.present and wbBone.KGTR.keyFrames.has_key(startTime) and wbBone.KGTR.keyFrames.has_key(endTime)
 		rotation = wbBone.KGRT.present and wbBone.KGRT.keyFrames.has_key(startTime) and wbBone.KGRT.keyFrames.has_key(endTime)
 		scaling = wbBone.KGSC.present and wbBone.KGSC.keyFrames.has_key(startTime) and wbBone.KGSC.keyFrames.has_key(endTime)
 
-		self.armature.bones[index].setPose([], blAct)
+		for name in blAct.getChannelNames():
+			print "Channel %s" % name
+
+		#self.armature.bones[wbBone.Name].setPose([], blAct)
 		ipo = blAct.getChannelIpo(wbBone.Name)
 
 		# FIXME we probably still have to set the ones that are not specified to some
@@ -646,7 +663,7 @@ class Importer(Converter):
 		for premnr in range(self.model.PREM.nprems):
 			wbParticle = self.model.PREM.particleemitters[premnr]
 			blParticle = Blender.Particle.New(self.particleName(premnr))
-			object = self.linkObject(blParticle, self.particleName(premnr))
+			#object = self.linkObject(blParticle, self.particleName(premnr))
 
 			# TODO: Does not contain an OBJ instance has its own values!
 			blParticle.setName(wbParticle.Name)

@@ -31,6 +31,16 @@ Helper::Helper(class Helpers *helpers) : Object(helpers->mdlx()), GroupMdxBlockM
 {
 }
 
+std::streamsize Helper::readMdx(istream &istream) throw (class Exception)
+{
+	return Object::readMdx(istream);
+}
+
+std::streamsize Helper::writeMdx(ostream &ostream) const throw (class Exception)
+{
+	return Object::writeMdx(ostream);
+}
+
 }
 
 }

@@ -34,7 +34,6 @@ class GeosetAnimationColors : public MdlxScalings
 {
 	public:
 		GeosetAnimationColors(class GeosetAnimation *geosetAnimation);
-		virtual ~GeosetAnimationColors();
 
 		class GeosetAnimation* geosetAnimation() const;
 		const std::list<class GeosetAnimationColor*>& colors() const;

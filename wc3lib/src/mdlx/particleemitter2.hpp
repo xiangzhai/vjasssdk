@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 
-#include <istream>
-#include <ostream>
 #include <list>
 
 #include "node.hpp"

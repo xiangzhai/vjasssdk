@@ -34,7 +34,6 @@ class GlobalSequence : public GroupMdxBlockMember
 {
 	public:
 		GlobalSequence(class GlobalSequences *globalSequences);
-		virtual ~GlobalSequence();
 
 		class GlobalSequences* globalSequences() const;
 		long32 duration() const;

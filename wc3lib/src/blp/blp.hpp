@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,8 +27,6 @@
 #include <utility>
 #include <list>
 
-#include <iostream> // DEBUG
-
 #include <boost/format.hpp>
 
 #include "platform.hpp"
@@ -46,7 +44,7 @@ namespace blp
 * @brief Provides access to the BLP format.
 * BLP is Blizzard Entertainment's texture format.
 * There are two different format specifications: BLP1 and BLP2.
-* Besides there is a BLP0 format which isn't really different from BLP1.
+* Besides there is the BLP0 format which isn't different from BLP1.
 * BLP0 and BLP1 are used in games Warcraft 3 and Warcraft 3 The Frozen Throne.
 * BLP2 is used in World of Warcraft.
 * BLP0 and BLP1 images can have two different compression modes:
@@ -65,16 +63,23 @@ namespace blp
 * #include <iostream>
 * #include <boost/filesystem/fstream.hpp>
 * #include <boost/foreach.hpp>
+* #include <boost/format.hpp>
 * #include <wc3lib/blp.hpp>
 * ...
 * using namespace wc3lib::blp;
 * std::ifstream ifstream("test.blp", std::ifstream::binary | std::ifstream::in);
-* Blp blp;
-* blp.read(istream);
-* std::cout << "We have " << blp.mipMaps().size() << " mip maps here." << std::endl;
+* Blp blp = new Blp();
+* blp->read(istream);
+* std::cout << boost::format("We have %1% MIP maps here.") % blp->mipMaps().size() << std::endl;
 *
-* BOOST_FOREACH(const class Blp::MipMap *mipMap, blp.mipMaps())
-	* std::cout << "This mip map has height " << mipMap->height() << " and width " << mipMap->width() << std::endl;
+* BOOST_FOREACH(const class Blp::MipMap *mipMap, blp->mipMaps())
+* 	std::cout << boost::format("This mip map has height %1% and width %2%.") % mipMap->height() % mipMap->width() << std::endl;
+* {
+* 	BOOST_FOREACH(const Blp::MipMap::MapEntryType &colorEntry, mipMap->colors())
+* 		std::cout << boost::format("Color %1% at position (%2%|%3%)") % colorEntry.second % colorEntry.first.first % colorEntry.first.second << std::endl;
+* }
+* 
+* delete blp;
 * @endcode
 * @section Conversion
 * If you want to convert BLP images into other formats (e. g. JPEG or PNG) you can either write your own converter or use wc3lib's BLP Qt plugin.
@@ -94,7 +99,15 @@ class Blp : public Format<byte>
 				class Color
 				{
 					public:
+						/**
+						 * Compares color with color \p other.
+						 * \return Returns true if ARGB and alpha values are equal. Otherwise it returns false.
+						 */
 						bool operator==(const class Color &other) const;
+						/**
+						 * Compares color with color \p other.
+						 * \return Returns true if ARGB or alpha values are not equal. Otherwise it returns false.
+						 */
 						bool operator!=(const class Color &other) const;
 
 						Color();
@@ -105,7 +118,14 @@ class Blp : public Format<byte>
 						color argb() const;
 						void setAlpha(byte alpha);
 						byte alpha() const;
+						/**
+						 * Sets palette index to value \p paletteIndex.
+						 * \copydoc Color::paletteIndex()
+						 */
 						void setPaletteIndex(byte paletteIndex);
+						/**
+						 * \ref Color::paletteIndex() is an optional value for paletted compression (\ref Blp::Compression::Paletted) which refers two the colors color value in palette.
+						 */
 						byte paletteIndex() const;
 
 					protected:
@@ -133,8 +153,16 @@ class Blp : public Format<byte>
 				dword width() const;
 				dword height() const;
 
+				/**
+				 * Assigns MIP map color \p argb at position (\p width | \p height) with alpha \p alpha and palette index \p paletteIndex.
+				 * \note Throws an exception if position is out of range.
+				 */
 				void setColor(dword width, dword height, color argb, byte alpha = 0, byte paletteIndex = 0) throw (class Exception);
 				void setColorAlpha(dword width, dword height, byte alpha) throw (class Exception);
+				/**
+				 * Colors are stored as map where the key is the corresponding coordinates of the color and the value is the color itself.
+				 * Using \ref MipMap::MapEntryType helps you to iterate colors easily.
+				 */
 				const std::map<Coordinates, class Color>& colors() const;
 				const class Color& colorAt(dword width, dword height) const;
 
@@ -207,7 +235,6 @@ class Blp : public Format<byte>
 		dword pictureType() const;
 		void setPictureSubType(dword pictureSubType);
 		dword pictureSubType() const;
-		void addMipMap(class MipMap *mipMap);
 		const std::list<class MipMap*>& mipMaps() const;
 
 		/**
@@ -215,26 +242,26 @@ class Blp : public Format<byte>
 		*/
 		void clean();
 		/**
-		* @return Read bytes. Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
-		*/
+		 * Reads BLP texture from input stream \p istream and detects its format and necessary data automatically.
+		 * Throws an exception of type \ref Exception if any error occured.
+		 * \return Read bytes. Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
+		 */
 		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
 		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
 
 		/**
-		* Clears all mip maps and adds initial mip map.
-		*/
-		class MipMap* addInitialMipMap(dword width, dword height);
+		 * Assigns exactly \p number MIP maps to the BLP image.
+		 * \param number Has to be at least 1 and less than \ref Blp::maxMipMaps.
+		 * \param regenerate If this value is false function only compares current MIP map number to \p number and if they are not equal it generates or removes necessary or unnecessary MIP maps. Otherwise it clears all MIP maps and truly regenerates them.
+		 * \return Returns number of truly newly created MIP maps (negative if some has been removed and 0 if it remains like it was before).
+		 * \sa Blp::mipMaps()
+		 */
+		int generateMipMaps(std::size_t number = Blp::maxMipMaps, bool regenerate = false) throw (class Exception);
 
 		/**
-		* Adds mip map @param initialMipMap to mip map list and generates number - 1 new mip maps which are added to mip map list, too.
-		* Note that the intial mip map has to have the same width and height as the BLP file.
-		* @return Returns true if mip map generation was successfully otherwise it returns false.
-		*/
-		bool generateMipMaps(class MipMap *initialMipMap, std::size_t number = Blp::maxMipMaps);
-
-		/**
-		* \return Returns newly allocated color palette with size \ref Blp::compressedPaletteSize.
-		*/
+		 * \note You have to take care of the returned palettes memory release.
+		 * \return Returns newly allocated color palette with size \ref Blp::compressedPaletteSize.
+		 */
 		color* palette() const;
 
 	protected:
@@ -305,8 +332,8 @@ inline void Blp::MipMap::setColor(dword width, dword height, color argb, byte al
 	if (width >= this->m_width || height >= this->m_height)
 		throw Exception(boost::str(boost::format(_("Mip map: Invalid indices (width %1%, height %2%).")) % width % height));
 
-	if (this->m_colors.find(std::make_pair(width, height)) != this->m_colors.end())
-		std::cout << "Warning: Color at " << width << " | " << height << " does already exist." << std::endl;
+	//if (this->m_colors.find(std::make_pair(width, height)) != this->m_colors.end())
+		//std::cout << "Warning: Color at " << width << " | " << height << " does already exist." << std::endl;
 
 	this->m_colors[std::make_pair(width, height)] = Color(this, argb, alpha, paletteIndex);
 }
@@ -390,11 +417,6 @@ inline void Blp::setPictureSubType(dword pictureSubType)
 inline dword Blp::pictureSubType() const
 {
 	return this->m_pictureSubType;
-}
-
-inline void Blp::addMipMap(class MipMap *mipMap)
-{
-	this->m_mipMaps.push_back(mipMap);
 }
 
 inline const std::list<class Blp::MipMap*>& Blp::mipMaps() const

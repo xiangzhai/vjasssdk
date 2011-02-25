@@ -36,6 +36,9 @@ class Helper : public GroupMdxBlockMember, public Object
 	public:
 		Helper(class Helpers *helpers);
 		
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
+		
 		class Helpers* helpers() const;
 };
 

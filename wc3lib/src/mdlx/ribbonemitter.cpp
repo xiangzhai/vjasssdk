@@ -34,7 +34,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : m_ribbonEmitters(ribbonEmitters), m_translations(new MdlxTranslations(ribbonEmitters->mdlx())), m_rotations(new MdlxRotations(ribbonEmitters->mdlx())), m_scalings(new MdlxScalings(ribbonEmitters->mdlx())), m_visibilities(new RibbonEmitterVisibilities(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
+RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : Node(ribbonEmitters->mdlx()), m_ribbonEmitters(ribbonEmitters), m_translations(new MdlxTranslations(ribbonEmitters->mdlx())), m_rotations(new MdlxRotations(ribbonEmitters->mdlx())), m_scalings(new MdlxScalings(ribbonEmitters->mdlx())), m_visibilities(new RibbonEmitterVisibilities(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
 {
 }
 
@@ -123,8 +123,10 @@ std::streamsize RibbonEmitter::writeMdx(ostream &ostream) const throw (class Exc
 	size += this->m_heightsAbove->writeMdx(ostream);
 	size += this->m_heightsBelow->writeMdx(ostream);
 
-	writeByteCount(ostream, size - ikgSize, nbytesiPosition, true);
-	writeByteCount(ostream, size, nbytesikgPosition, true);
+	const long32 nbytesi = size - ikgSize + sizeof(long32); // add size of nbytesikg
+	const long32 nbytesikg = size;
+	writeByteCount(ostream, nbytesi, nbytesiPosition, size, true);
+	writeByteCount(ostream, nbytesikg, nbytesikgPosition, size, true);
 	
 	return size;
 }

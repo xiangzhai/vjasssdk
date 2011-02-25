@@ -93,7 +93,7 @@ std::streamsize GeosetAnimations::writeMdx(ostream &ostream) const throw (class 
 	BOOST_FOREACH(const class GeosetAnimation *geosetAnimation, geosetAnimations())
 		size += geosetAnimation->writeMdx(ostream);
 	
-	writeByteCount(ostream, static_cast<long32&>(size), position, size);
+	writeByteCount(ostream, static_cast<long32>(size), position, size);
 	
 	return size;
 }

@@ -30,6 +30,10 @@ GroupMdxBlockMember::GroupMdxBlockMember(class GroupMdxBlock *parent) : m_parent
 {
 }
 
+GroupMdxBlockMember::~GroupMdxBlockMember()
+{
+}
+
 }
 
 }

@@ -34,7 +34,6 @@ class PivotPoints : public GroupMdxBlock
 {
 	public:
 		PivotPoints(class Mdlx *mdlx);
-		virtual ~PivotPoints();
 
 		class Mdlx* mdlx() const;
 		const std::list<class PivotPoint*>& pivotPoints() const;

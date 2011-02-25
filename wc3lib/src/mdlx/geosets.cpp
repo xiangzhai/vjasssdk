@@ -110,7 +110,7 @@ std::streamsize Geosets::writeMdx(ostream &ostream) const throw (class Exception
 		size += geoset->writeMdx(ostream);
 
 	
-	writeByteCount(ostream, static_cast<long32&>(size), position, size);
+	writeByteCount(ostream, static_cast<long32>(size), position, size);
 	
 	return size;
 }

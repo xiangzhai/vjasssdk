@@ -35,7 +35,7 @@ namespace mdlx
 
 MdxBlock::MdxBlock(const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], bool optional) : m_optional(optional), m_exists(false)
 {
-	memcpy(this->m_mdxIdentifier, mdxIdentifier, sizeof(mdxIdentifier));
+	memcpy(reinterpret_cast<void*>(const_cast<byte*>(this->m_mdxIdentifier)), reinterpret_cast<const void*>(mdxIdentifier), sizeof(mdxIdentifier));
 }
 
 MdxBlock::~MdxBlock()
@@ -66,7 +66,7 @@ std::streamsize MdxBlock::readMdx(istream &istream) throw (class Exception)
 	this->m_exists = true;
 	std::cout << boost::format(_("Block: %1%")) % mdxIdentifier() << std::endl;
 
-	return bytes;
+	return size;
 }
 
 std::streamsize MdxBlock::writeMdx(ostream &ostream) const throw (class Exception)
@@ -80,7 +80,7 @@ std::streamsize MdxBlock::writeMdx(ostream &ostream) const throw (class Exceptio
 	return size;
 }
 
-bool MdxBlock::moveToBlockName(istream &istream)
+bool MdxBlock::moveToMdxIdentifier(istream &istream) const
 {
 	byte readBlockName[MdxBlock::mdxIdentifierSize];
 

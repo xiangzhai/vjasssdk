@@ -35,6 +35,10 @@ MdlBlock::MdlBlock(const string &mdlIdentifier, bool optional) : m_mdlIdentifier
 {
 }
 
+MdlBlock::~MdlBlock()
+{
+}
+
 std::streamsize MdlBlock::readMdl(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;

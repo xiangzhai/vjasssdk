@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MDLX_EMISSIONRATE_HPP
 #define WC3LIB_MDLX_EMISSIONRATE_HPP
 
-#include "mdxalpha.hpp"
+#include "mdlxalpha.hpp"
 #include "emissionrates.hpp"
 
 namespace wc3lib
@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class EmissionRate : public MdxAlpha
+class EmissionRate : public MdlxAlpha
 {
 	public:
 		EmissionRate(class EmissionRates *emissionRates);
@@ -40,7 +40,7 @@ class EmissionRate : public MdxAlpha
 
 inline class EmissionRates* EmissionRate::emissionRates() const
 {
-	return dynamic_cast<class EmissionRates*>(this->m_alphas);
+	return dynamic_cast<class EmissionRates*>(this->mdlxAlphas());
 
 }
 

@@ -48,7 +48,7 @@ class MdlValueBlock : public MdlBlock
 	public:
 		typedef T ValueType;
 		
-		MdlValueBlock(const string mdlIdentifier, bool optional = true);
+		MdlValueBlock(const string &mdlIdentifier, bool optional = true);
 		virtual ~MdlValueBlock();
 		
 		ValueType value() const;

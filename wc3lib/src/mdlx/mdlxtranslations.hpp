@@ -34,12 +34,8 @@ class MdlxTranslations : public MdlxScalings
 {
 	public:
 		MdlxTranslations(class Mdlx *mdlx);
-		virtual ~MdlxTranslations();
 
 		const std::list<class MdlxTranslation*>& mdlxTranslations() const;
-
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class MdlxAnimatedProperty* createAnimatedProperty();

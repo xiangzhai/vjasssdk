@@ -34,7 +34,6 @@ class Events : public GroupMdxBlock
 {
 	public:
 		Events(class Mdlx *mdlx);
-		virtual ~Events();
 
 		class Mdlx* mdlx() const;
 		const std::list<class Event*>& events() const;

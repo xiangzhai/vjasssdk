@@ -8,6 +8,7 @@ Tooltip: "Import a model file from Blizzard's Warcraft III"
 """
 
 import Blender
+from os import *
 from warblender.mdx import mdx
 from warblender.importer import Importer
 
@@ -38,17 +39,22 @@ except:
 
 # Read each line contained in file and interpret as file path (trying to open it).
 if file != None:
+	print "opening file " % cfgFilePath
 	loadAnyFile = False
 
 	while (True):
 		line = file.readline()
 		line = line.strip()
+		path = os.path(line)
+		print "testing path %s" % path
 
-		if line:
+		if os.path.isfile(path):
+			print "path %s exists" % path
 			loadAnyFile = True
-			loadMDX(line)
+			loadMDX(path)
 		else:
-			break
+			print "path %s does not exist" % path
+			Blender.Draw.Text("Warning: Autload config file entry \"%s\" does is no valid file path." % path)
 
 	# Did not load any file.
 	if not loadAnyFile:

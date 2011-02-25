@@ -779,42 +779,50 @@ std::streamsize Blp::write(std::basic_ostream<byte> &ostream) const throw (class
 	return size;
 }
 
-class Blp::MipMap* Blp::addInitialMipMap(dword width, dword height)
+int Blp::generateMipMaps(std::size_t number, bool regenerate) throw (class Exception)
 {
-	BOOST_FOREACH(class MipMap *mipMap, this->m_mipMaps)
-		delete mipMap;
-
-	this->m_mipMaps.clear();
-	class MipMap *result = new MipMap(this, width, height);
-	this->m_mipMaps.push_back(result);
-
-	return result;
-}
-
-bool Blp::generateMipMaps(class MipMap *initialMipMap, std::size_t number)
-{
-	if (initialMipMap->width() != this->m_width || initialMipMap->height() != this->m_height)
-		return false;
-
-	this->m_mipMaps.push_back(initialMipMap);
+	number = std::max<std::size_t>(number, 1);
 	number = std::min<std::size_t>(number, Blp::maxMipMaps);
-	dword width = this->m_width;
-	dword height = this->m_height;
-	//std::list<byte> indexList = initialMipMap->m_indexList;
-	//std::list<byte> alphaList = initialMipMap->m_alphaList;
-
-	for (std::size_t i = 1; i < number; ++i)
+	
+	if (number < mipMaps().size())
 	{
-		width /= 2;
-		height /= 2;
-		class MipMap *mipMap = new MipMap(this, width, height);
-		/// @todo Generate new scaled index and alpha list.
+		const int result = number - mipMaps().size();
+		std::size_t i = mipMaps().size() - number;
+		
+		do
+		{
+			delete m_mipMaps.back();
+			m_mipMaps.erase(--m_mipMaps.end());
+			--i;
+		}
+		while (i > 0);
+		
+		return result;
+	}
+	else if (number > mipMaps().size())
+	{
+		dword width = mipMaps().front()->width();
+		dword height = mipMaps().front()->height();
+		//std::list<byte> indexList = initialMipMap->m_indexList;
+		//std::list<byte> alphaList = initialMipMap->m_alphaList;
+		const int result = number - mipMaps().size();
+
+		for (std::size_t i = mipMaps().size(); i < number; ++i)
+		{
+			
+			class MipMap *mipMap = new MipMap(this, width, height);
+			/// @todo Generate new scaled index and alpha list.
 
 
-		this->m_mipMaps.push_back(mipMap);
+			this->m_mipMaps.push_back(mipMap);
+			width /= 2;
+			height /= 2;
+		}
+		
+		return result;
 	}
 
-	return true;
+	return 0;
 }
 
 color* Blp::palette() const

@@ -52,11 +52,11 @@ class MdxBlock
 		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
-		bool moveToMdxIdentifier(istream &istream);
+		bool moveToMdxIdentifier(istream &istream) const;
 
 	protected:
-		const byte m_mdxIdentifier[mdxIdentifierSize]; /// @todo byte or ascii?
-		const bool m_optional;
+		byte m_mdxIdentifier[mdxIdentifierSize]; /// @todo byte or ascii?
+		bool m_optional;
 		bool m_exists;
 };
 

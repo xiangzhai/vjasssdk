@@ -57,7 +57,7 @@ class GroupMdxBlock : public MdxBlock
 		* This method should be overwritten in child class.
 		* @return Returns a new allocated group member which will be added to list.
 		*/
-		virtual class GroupMdxBlockMember* createNewMember();
+		virtual class GroupMdxBlockMember* createNewMember() = 0;
 
 		bool m_usesCounter;
 		/**
@@ -65,6 +65,11 @@ class GroupMdxBlock : public MdxBlock
 		*/
 		std::list<class GroupMdxBlockMember*> m_members;
 };
+
+inline bool GroupMdxBlock::usesCounter() const
+{
+	return m_usesCounter;
+}
 
 }
 

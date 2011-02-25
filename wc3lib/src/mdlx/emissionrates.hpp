@@ -38,6 +38,8 @@ class EmissionRates : public MdlxAlphas
 		const std::list<class EmissionRate*>& emissionRates() const;
 
 	protected:
+		virtual class MdlxAnimatedProperty* createAnimatedProperty();
+		
 		class Mdlx *m_mdlx;
 };
 

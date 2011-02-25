@@ -29,11 +29,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdlValueBlock::MdlValueBlock(const string &mdlIdentifier, bool optional) : MdlBlock(mdlIdentifier, optional)
+template<typename T>
+MdlValueBlock<T>::MdlValueBlock(const string &mdlIdentifier, bool optional) : MdlBlock(mdlIdentifier, optional)
 {
 }
 
-std::streamsize MdlValueBlock::readMdl(istream &istream) throw (class Exception)
+template<typename T>
+MdlValueBlock<T>::~MdlValueBlock()
+{
+}
+
+template<typename T>
+std::streamsize MdlValueBlock<T>::readMdl(istream &istream) throw (class Exception)
 {
 	std::streamsize size = MdlBlock::readMdl(istream);
 	
@@ -41,14 +48,15 @@ std::streamsize MdlValueBlock::readMdl(istream &istream) throw (class Exception)
 		return 0;
 	
 	string identifier;
-	parse(stream, identifier, size);
+	parse(istream, identifier, size);
 	
 	this->m_value = boost::lexical_cast<ValueType>(identifier);
 
 	return size;
 }
 
-std::streamsize MdlValueBlock::writeMdl(ostream &ostream) const throw (class Exception)
+template<typename T>
+std::streamsize MdlValueBlock<T>::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = MdlBlock::writeMdl(ostream);
 	
