@@ -1,4 +1,39 @@
 File				Authors			Source
+ATCSmashShot.blp		NFWar			http://www.hiveworkshop.com/
+BTNSmashShot.blp		NFWar			http://www.hiveworkshop.com/
+DISATCSmashShot.blp		NFWar			http://www.hiveworkshop.com/
+DISBTNSmashShot.blp		NFWar			http://www.hiveworkshop.com/
+DISPASSmashShot.blp		NFWar			http://www.hiveworkshop.com/
+PASSmashShot.blp		NFWar			http://www.hiveworkshop.com/
+
+ATCShooter.blp			kola			http://www.hiveworkshop.com/
+ATTShooter.blp			kola			http://www.hiveworkshop.com/
+BTNShooter.blp			kola			http://www.hiveworkshop.com/
+DISATCShooter.blp		kola			http://www.hiveworkshop.com/
+DISBTNShooter.blp		kola			http://www.hiveworkshop.com/
+DISPASShooter.blp		kola			http://www.hiveworkshop.com/
+PASShooter.blp			kola			http://www.hiveworkshop.com/
+
+ATCPoisonedArrows.blp		lelyanra		http://www.hiveworkshop.com/
+BTNPoisonedArrows.blp		lelyanra		http://www.hiveworkshop.com/
+DISATCPoisonedArrows.blp	lelyanra		http://www.hiveworkshop.com/
+DISBTNPoisonedArrows.blp	lelyanra		http://www.hiveworkshop.com/
+
+ATCAncestorPact.blp		chilla_killa		http://www.hiveworkshop.com/
+ATTAncestorPact.blp		chilla_killa		http://www.hiveworkshop.com/
+BTNAncestorPact.blp		chilla_killa		http://www.hiveworkshop.com/
+DISATCAncestorPact.blp		chilla_killa		http://www.hiveworkshop.com/
+DISBTNAncestorPact.blp		chilla_killa		http://www.hiveworkshop.com/
+DISPASAncestorPact.blp		chilla_killa		http://www.hiveworkshop.com/
+PASAncestorPact.blp		chilla_killa		http://www.hiveworkshop.com/
+BTNViolentDeath.blp		HappyCockroach		http://www.hiveworkshop.com/
+DISBTNViolentDeath.blp		HappyCockroach		http://www.hiveworkshop.com/
+DISPASViolentDeath.blp		HappyCockroach		http://www.hiveworkshop.com/
+PASViolentDeath.blp		HappyCockroach		http://www.hiveworkshop.com/
+BTNDeathHerald.blp		wuddle			http://www.hiveworkshop.com/
+DISBTNDeathHerald.blp		wuddle			http://www.hiveworkshop.com/
+DISPASDeathHerald.blp		wuddle			http://www.hiveworkshop.com/
+PASDeathHerald.blp		wuddle			http://www.hiveworkshop.com/
 BTNExorcizeEvil.blp		Palaslayer		http://www.hiveworkshop.com/
 DISBTNExorcizeEvil.blp		Palaslayer		http://www.hiveworkshop.com/
 DISPASExorcizeEvil.blp		Palaslayer		http://www.hiveworkshop.com/
