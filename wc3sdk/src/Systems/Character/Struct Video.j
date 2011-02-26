@@ -630,10 +630,10 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	endfunction
 
 	/**
-	* Waits @param seconds seconds in video.
-	* Note that this function is like @function PolledWait since it has to be synchronos.
-	* @return Returns true if video was skipped
-	* @see PolledWait
+	* Waits \p seconds synchronized seconds. Cancels if video was skipped during this time.
+	* Note that this function is like \ref PolledWait since it has to be synchronos.
+	* \return Returns true if video was skipped during the wait phase. Otherwise it returns false (if wait time has expired normally).
+	* \see PolledWait
 	*/
 	function wait takes real seconds returns boolean
 		local timer whichTimer = CreateTimer()
@@ -657,18 +657,19 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	endfunction
 
 	/**
-	* @see waitForCondition
+	* Condition function interface for video conditions which can be checked during wait phase.
+	* \sa waitForCondition
 	*/
 	function interface AVideoCondition takes AVideo video returns boolean
 
 	/**
-	* Advanced video wait function.
-	* Checks every x seconds for condition. If video is being skipped during this time it returns true.
+	* Advanced conditional video wait function.
+	* Checks every \p interval synchronized seconds for condition \p condition. If video is being skipped during this time it returns true.
 	* Otherwise it returns false when condition is true.
-	* @param interval Interval in seconds in which the condition will be checked.
-	* @param condition Condition which will be checked. Use AVideoCondition to create and pass a correct function.
-	* @return Returns true if the video had been skipped before the condition became true. Otherwise it returns false when the condition becomes true.
-	* @see AVideoCondition
+	* \param interval Interval in synchronized seconds in which the condition will be checked.
+	* \param condition Condition which will be checked. Use \ref AVideoCondition to create and pass a correct function.
+	* \return Returns true if the video had been skipped before condition became true. Otherwise it returns false when condition becomes true.
+	* \sa AVideoCondition
 	*/
 	function waitForCondition takes real interval, AVideoCondition condition returns boolean
 		loop

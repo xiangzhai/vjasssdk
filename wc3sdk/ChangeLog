@@ -1,3 +1,7 @@
+2011-02-26 Tamino Dauth <tamino@cdauth.eu>
+* Environment: Added player-only spell effect creation functions.
+* Revised German translation of trigger strings.
+
 2011-01-29 Tamino Dauth <tamino@cdauth.eu>
 * Improved API documentation.
 * AInventory: Added null check for player messages.
