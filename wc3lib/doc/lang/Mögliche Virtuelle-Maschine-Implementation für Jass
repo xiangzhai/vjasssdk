@@ -134,6 +134,14 @@ Camera API:
 
 Sound API:
 
+globals
+	integer UNIT_SOUND_WHAT_n = X
+	integer UNIT_SOUND_YES_n = X
+	integer UNIT_SOUND_YES_ATTACK_n = X
+	integer UNIT_SOUND_PISSED_n = X
+endglobals
+* native CreateUnitSound takes unit whichUnit, integer t returns sound
+
 Effects API:
 
 Terrain API:
