@@ -1,4 +1,6 @@
 File						Authors					Source
+Archangel.mdx					expresso				http://www.hiveworkshop.com/
+Archangel_Portrait.mdx				expresso				http://www.hiveworkshop.com/
 HumanFemaleBlacksmith.mdx			Blizzard Entertainment			Die Macht des Feuers
 HumanFemaleCaster.mdx				Blizzard Entertainment			Die Macht des Feuers
 HumanFemaleFarmer.mdx				Blizzard Entertainment			Die Macht des Feuers
