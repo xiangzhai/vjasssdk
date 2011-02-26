@@ -123,16 +123,16 @@ TriggerRegisterTimerExpireEventBJHint="Ein Zeitgeber läuft ab wenn er 0 erreich
 
 
 // Unit events
-TriggerRegisterUnitEvent="Specific Unit Event"
-TriggerRegisterUnitEvent=~Unit," ",~Event
+TriggerRegisterUnitEvent="Spezielles Einheitenereignis"
+TriggerRegisterUnitEvent=~Einheit," ",~Ereignis
 TriggerRegisterUnitEventHint=
 
 TriggerRegisterPlayerUnitEventSimple="Player-Owned Unit Event"
 TriggerRegisterPlayerUnitEventSimple="A unit owned by ",~Player," ",~Event
 TriggerRegisterPlayerUnitEventSimpleHint=
 
-TriggerRegisterAnyUnitEventBJ="Generic Unit Event"
-TriggerRegisterAnyUnitEventBJ="A unit ",~Event
+TriggerRegisterAnyUnitEventBJ="Allgemeines Einheitenereignis"
+TriggerRegisterAnyUnitEventBJ="Eine Einheit ",~Ereignis
 TriggerRegisterAnyUnitEventBJHint=
 
 TriggerRegisterEnterRectSimple="Einheit betritt Region"
@@ -362,14 +362,14 @@ ForLoopVarMultiple="Für jede (Ganzzahl ",~Variable,") von ",~Start," bis ",~End
 ForLoopVarMultipleHint="Fügen Sie Aktionen zu dieser Funktion in der Hauptanzeige hinzu. Voraussetzung ist, dass der Endwert größer als der Startwert ist."
 
 // Specially handled by the editor
-ForLoopA="For Each Integer A, Do Action"
-ForLoopA="For each (Integer A) from ",~Start," to ",~End,", do ",~Action
-ForLoopAHint="The end value is assumed to be larger than the start value."
+ForLoopA="Für jede Ganzzahl A, führe Aktion aus"
+ForLoopA="Für jede (Ganzzahl A) von ",~Start," bis ",~Ende,", führe ",~Aktion," aus"
+ForLoopAHint="Der Endwert sollte größer als der Startwert sein."
 
 // Specially handled by the editor
-ForLoopB="For Each Integer B, Do Action"
-ForLoopB="For each (Integer B) from ",~Start," to ",~End,", do ",~Action
-ForLoopBHint="The end value is assumed to be larger than the start value."
+ForLoopB="Für jede Ganzzahl B, führe Aktion aus"
+ForLoopB="Für jede (Ganzzahl B) von ",~Start," bis ",~Ende,", führe ",~Aktion," aus"
+ForLoopBHint="Der Endwert sollte größer als der Startwert sein."
 
 // Specially handled by the editor
 ForLoopVar="For Each Integer Variable, Do Action"
@@ -378,9 +378,9 @@ ForLoopVarHint="The end value is assumed to be larger than the start value."
 
 
 // AI actions
-StartMeleeAI="Start Melee AI Script"
-StartMeleeAI="Start melee AI script for ",~Player,": ",~Script
-StartMeleeAIHint="This should only only be used for computer-controlled player slots.  When using this action, it is advised that you enable the 'Fixed Player Settings' force property."
+StartMeleeAI="Starte Nahkampf-KI-Skript"
+StartMeleeAI="Starte Nahkampf-KI-Skript für ",~Spieler,": ",~Skript
+StartMeleeAIHint="Dies sollte auf jeden Fall nur für computergesteuerte Spieler-Slots verwendet werden.  Wenn Sie diese Aktion verwenden, wird ihnen geraten, dass Sie die 'Feste Spielereinstellungen'-Streitmachteigenschaft aktivieren.."
 
 StartCampaignAI="Start Campaign AI Script"
 StartCampaignAI="Start campaign AI script for ",~Player,": ",~Script
@@ -1390,18 +1390,18 @@ UnitUseItemDestructable="Use Item On A Destructible"
 UnitUseItemDestructable="Order ",~Hero," to use ",~Item," on ",~Destructible
 UnitUseItemDestructableHint=
 
-UnitUseItem="Use Item"
-UnitUseItem="Order ",~Hero," to use ",~Item
+UnitUseItem="Verwende Gegenstand"
+UnitUseItem="Befehle ",~Held," ",~Item," zu verwenden"
 UnitUseItemHint=
 
 
 // Item actions
-CreateItemLoc="Create"
-CreateItemLoc="Create ",~Item," at ",~Point
+CreateItemLoc="Erzeuge"
+CreateItemLoc="Erzeuge ",~Gegenstand," an ",~Punkt
 CreateItemLocHint=
 
-RemoveItem="Remove"
-RemoveItem="Remove ",~Item
+RemoveItem="Entferne"
+RemoveItem="Entferne ",~Gegenstand
 RemoveItemHint=
 
 SetItemVisibleBJ="Show/Hide Item"
@@ -1503,8 +1503,8 @@ DestroyLeaderboardBJ="Destroy"
 DestroyLeaderboardBJ="Destroy ",~Leaderboard
 DestroyLeaderboardBJHint=
 
-LeaderboardSortItemsBJ="Sort"
-LeaderboardSortItemsBJ="Sort ",~Leaderboard," by ",~Field," in ",~Ascending/Descending," order"
+LeaderboardSortItemsBJ="Sortiere"
+LeaderboardSortItemsBJ="Sortiere ",~Bestenliste," nach ",~Feld," in ",~aufsteigender/absteigender," Reihenfolge"
 LeaderboardSortItemsBJHint=
 
 LeaderboardDisplayBJ="Show/Hide"
@@ -1527,16 +1527,16 @@ LeaderboardSetStyleBJ="Change Style"
 LeaderboardSetStyleBJ="Change the display style for ",~Leaderboard," to ",~Show/Hide," the title, ",~Show/Hide," labels, ",~Show/Hide," values, and ",~Show/Hide," icons"
 LeaderboardSetStyleBJHint=
 
-LeaderboardAddItemBJ="Add Player"
-LeaderboardAddItemBJ="Add ",~Player," to ",~Leaderboard," with label ",~Label," and value ",~Value
+LeaderboardAddItemBJ="Füge Spieler hinzu"
+LeaderboardAddItemBJ="Füge ",~Spieler," zu ",~Bestenliste," mit Kennung ",~Kennung," und Wert ",~Wert," hinzu"
 LeaderboardAddItemBJHint=
 
-LeaderboardRemovePlayerItemBJ="Remove Player"
-LeaderboardRemovePlayerItemBJ="Remove ",~Player," from ",~Leaderboard
+LeaderboardRemovePlayerItemBJ="Entferne Spieler"
+LeaderboardRemovePlayerItemBJ="Entferne ",~Spieler," von ",~Bestenliste
 LeaderboardRemovePlayerItemBJHint=
 
-LeaderboardSetPlayerItemLabelBJ="Change Player Label"
-LeaderboardSetPlayerItemLabelBJ="Change the label for ",~Player," in ",~Leaderboard," to ",~Label
+LeaderboardSetPlayerItemLabelBJ="Ändere Spielerkennung"
+LeaderboardSetPlayerItemLabelBJ="Ändere die Kennung für ",~Spieler," in ",~Bestenliste," zu ",~Kennung
 LeaderboardSetPlayerItemLabelBJHint=
 
 LeaderboardSetPlayerItemLabelColorBJ="Change Player Label Color"
@@ -3085,20 +3085,20 @@ CountLivingPlayerUnitsOfTypeId="Count Living Units Owned By Player"
 CountLivingPlayerUnitsOfTypeId="Number of living ",~Unit-Type," units owned by ",~Player
 CountLivingPlayerUnitsOfTypeIdHint=
 
-GetUnitFoodUsed="Supply Used By Unit"
-GetUnitFoodUsed="Supply used by ",~Unit
+GetUnitFoodUsed="Verbrauchtes Essen einer Einheit"
+GetUnitFoodUsed="Verbrauchtes Essen von ",~Einheit
 GetUnitFoodUsedHint=
 
-GetUnitFoodMade="Supply Provided By Unit"
-GetUnitFoodMade="Supply provided by ",~Unit
+GetUnitFoodMade="Geliefertes Essen einer Einheit"
+GetUnitFoodMade="Geliefertes Essen von ",~Einheit
 GetUnitFoodMadeHint=
 
-GetFoodUsed="Supply Used By Unit-Type"
-GetFoodUsed="Supply used by ",~Unit-Type
+GetFoodUsed="Verbrauchtes Essen eines Einheitentyps"
+GetFoodUsed="Verbrauchtes Essen von ",~Einheitentyp
 GetFoodUsedHint=
 
-GetFoodMade="Supply Provided By Unit-Type"
-GetFoodMade="Supply provided by ",~Unit-Type
+GetFoodMade="Geliefertes Essen eines Einheitentyps"
+GetFoodMade="Geliefertes Essen von ",~Einheitentyp
 GetFoodMadeHint=
 
 GetUnitPointValue="Point-Value Of Unit"
@@ -3109,20 +3109,20 @@ GetUnitPointValueByType="Point-Value Of Unit-Type"
 GetUnitPointValueByType="Point-value of ",~Unit-Type
 GetUnitPointValueByTypeHint=
 
-GetUnitUserData="Custom Value Of Unit"
-GetUnitUserData="Custom value of ",~Unit
-GetUnitUserDataHint="Use 'Unit - Set Custom Value' to set the custom value of a unit."
+GetUnitUserData="Eigener Wert einer Einheit"
+GetUnitUserData="Eigener Wert von ",~Einheit
+GetUnitUserDataHint="Verwenden Sie 'Einheit - Setze eigenen Wert', um den eigenen Wert einer Einheit festzulegen."
 
-GetUnitLevel="Level Of Unit"
-GetUnitLevel="Level of ",~Unit
-GetUnitLevelHint="This may be used for heroes and regular units."
+GetUnitLevel="Stufe einer Einheit"
+GetUnitLevel="Stufe von ",~Einheit
+GetUnitLevelHint="Dies kann für Helden und reguläre Einheiten verwendet werden."
 
-GetUnitAbilityLevelSwapped="Level Of Ability For Unit"
-GetUnitAbilityLevelSwapped="Level of ",~Ability," for ",~Unit
-GetUnitAbilityLevelSwappedHint="If the unit does not have the ability, the result will be zero."
+GetUnitAbilityLevelSwapped="Stufe einer Fähigkeit für eine Einheit"
+GetUnitAbilityLevelSwapped="Stufe von ",~Fähigkeit," für ",~Einheit
+GetUnitAbilityLevelSwappedHint="Falls die Einheit die Fähigkeit nicht besitzt, ist das Ergebnis null."
 
-UnitInventoryCount="Count Items Carried"
-UnitInventoryCount="Number of items carried by ",~Unit
+UnitInventoryCount="Zähle getragene Gegenstände"
+UnitInventoryCount="Anzahl der von ",~Einheit," getragenen Gegenstände"
 UnitInventoryCountHint=
 
 UnitInventorySizeBJ="Größe des Inventars"
@@ -3133,12 +3133,12 @@ UnitCountBuffsExBJ="Count Buffs By Type"
 UnitCountBuffsExBJ="Number of ",~Buff Type," buffs considered ",~Buff Resist," on ",~Unit," (",~Include/Exclude," expiration timers, ",~Include/Exclude," auras)"
 UnitCountBuffsExBJHint=
 
-GetTriggerEvalCount="Trigger Evaluation Count"
-GetTriggerEvalCount="Evaluation count of ",~Trigger
+GetTriggerEvalCount="Auslöser-Auswertungsanzahl"
+GetTriggerEvalCount="Auswertungsanzahl von ",~Auslöser
 GetTriggerEvalCountHint=
 
-GetTriggerExecCount="Trigger Execution Count"
-GetTriggerExecCount="Execution count of ",~Trigger
+GetTriggerExecCount="Auslöser-Ausführungsanzahl"
+GetTriggerExecCount="Ausführungsanzahl von ",~Auslöser
 GetTriggerExecCountHint=
 
 QueuedTriggerCountBJ="Count Triggers In Trigger Queue"
@@ -3147,117 +3147,117 @@ QueuedTriggerCountBJHint="Use 'Trigger - Add To Trigger Queue' and 'Trigger - Re
 
 
 // returns real
-OperatorReal="Arithmetic"
-OperatorReal=~Value," ",~Operator," ",~Value
+OperatorReal="Arithmetik"
+OperatorReal=~Wert," ",~Operator," ",~Wert
 OperatorRealHint=
 
-GetLocationX="X Of Point"
-GetLocationX="X of ",~Point
+GetLocationX="X eines Punkts"
+GetLocationX="X von ",~Punkt
 GetLocationXHint=
 
-GetLocationY="Y Of Point"
-GetLocationY="Y of ",~Point
+GetLocationY="Y eines Punkts"
+GetLocationY="Y von ",~Punkt
 GetLocationYHint=
 
-CameraSetupGetFieldSwap="Camera Field Of Camera Object"
-CameraSetupGetFieldSwap=~Camera Field," of ",~Camera Object
+CameraSetupGetFieldSwap="Kamerafeld eines Kameraobjekts"
+CameraSetupGetFieldSwap=~Kamerafeld," von ",~Kameraobjekt
 CameraSetupGetFieldSwapHint=
 
-GetCameraField="Camera Field Of Current Camera"
-GetCameraField=~Camera Field," of the current camera view"
+GetCameraField="Kamerafeld der derzeitigen Kamera"
+GetCameraField=~Kamerafeld," der derzeitigen Kameraansicht"
 GetCameraFieldHint=
 
-GetCameraTargetPositionX="Target X Of Current Camera"
-GetCameraTargetPositionX="Target X of current camera view"
+GetCameraTargetPositionX="Ziel-X der derzeitigen Kamera"
+GetCameraTargetPositionX="Ziel-X der derzeitigen Kameraansicht"
 GetCameraTargetPositionXHint=
 
-GetCameraTargetPositionY="Target Y Of Current Camera"
-GetCameraTargetPositionY="Target Y of current camera view"
+GetCameraTargetPositionY="Ziel-Y der derzeitigen Kamera"
+GetCameraTargetPositionY="Ziel-Y der derzeitigen Kameraansicht"
 GetCameraTargetPositionYHint=
 
-GetCameraTargetPositionZ="Target Z Of Current Camera"
-GetCameraTargetPositionZ="Target Z of current camera view"
+GetCameraTargetPositionZ="Ziel-Z der derzeitigen Kamera"
+GetCameraTargetPositionZ="Ziel-Z der derzeitigen Kameraansicht"
 GetCameraTargetPositionZHint=
 
-GetCameraEyePositionX="Source X Of Current Camera"
-GetCameraEyePositionX="Source X of current camera view"
+GetCameraEyePositionX="Quell-X der derzeitigen Kamera"
+GetCameraEyePositionX="Quell-X der derzeitigen Kameraansicht"
 GetCameraEyePositionXHint=
 
-GetCameraEyePositionY="Source Y Of Current Camera"
-GetCameraEyePositionY="Source Y of current camera view"
+GetCameraEyePositionY="Quell-Y der derzeitigen Kamera"
+GetCameraEyePositionY="Quell-Y der derzeitigen Kameraansicht"
 GetCameraEyePositionYHint=
 
-GetCameraEyePositionZ="Source Z Of Current Camera"
-GetCameraEyePositionZ="Source Z of current camera view"
+GetCameraEyePositionZ="Quell-Z der derzeitigen Kamera"
+GetCameraEyePositionZ="Quell-Z der derzeitigen Kameraansicht"
 GetCameraEyePositionZHint=
 
-GetLastTransmissionDurationBJ="Last Transmission Length"
-GetLastTransmissionDurationBJ="Length of last transmission"
-GetLastTransmissionDurationBJHint="This is the length, in seconds, of the last used 'Cinematic - Transmission' action."
+GetLastTransmissionDurationBJ="Letzte Übertragungslänge"
+GetLastTransmissionDurationBJ="Länge der letzten Übertragung"
+GetLastTransmissionDurationBJHint="Dies ist die Länge, in Sekunden, der letzten 'Filmisch - Übertragung'-Aktion."
 
-I2R="Convert Integer To Real"
-I2R="Real(",~Integer,")"
+I2R="Wandle Ganzzahl in Reelle um"
+I2R="Reell(",~Ganzzahl,")"
 I2RHint=
 
-S2R="Convert String To Real"
-S2R="Real(",~String,")"
+S2R="Wandle Zeichenkette in Reelle um"
+S2R="Reell(",~Zeichenkette,")"
 S2RHint=
 
-Deg2Rad="Convert Degrees To Radians"
-Deg2Rad="Radians(",~Degrees,")"
+Deg2Rad="Wandle Grad in Bogenmaße um"
+Deg2Rad="Bogenmaße(",~Grad,")"
 Deg2RadHint=
 
-Rad2Deg="Convert Radians To Degrees"
-Rad2Deg="Degrees(",~Radians,")"
+Rad2Deg="Wandle Bogenmaße in Grad um"
+Rad2Deg="Grad(",~Bogenmaße,")"
 Rad2DegHint=
 
-TimerGetElapsed="Elapsed Time"
-TimerGetElapsed="Elapsed time for ",~Timer
+TimerGetElapsed="Vergangene Zeit"
+TimerGetElapsed="Vergangene Zeit für ",~Zeitgeber
 TimerGetElapsedHint=
 
-TimerGetRemaining="Remaining Time"
-TimerGetRemaining="Remaining time for ",~Timer
+TimerGetRemaining="Verbleibende Zeit"
+TimerGetRemaining="Verbleibende Zeit für ",~Zeitgeber
 TimerGetRemainingHint=
 
-TimerGetTimeout="Initial Time"
-TimerGetTimeout="Initial time for ",~Timer
+TimerGetTimeout="Anfangszeit"
+TimerGetTimeout="Anfangszeit für ",~Zeitgeber
 TimerGetTimeoutHint=
 
-GetDestructableLife="Life"
-GetDestructableLife="Current life of ",~Destructible
-GetDestructableLifeHint="Destructibles lose life when attacked or harvested.  Like units, destructibles die when their life reaches 0."
+GetDestructableLife="Leben"
+GetDestructableLife="Derzeitiges Leben von ",~Zerstörbarem
+GetDestructableLifeHint="Zerstörbare verlieren Leben, wenn sie angegriffen oder geerntet werden.  Wie Einheiten, sterben Zerstörbare wenn ihr Leben 0 erreicht."
 
-GetDestructableMaxLife="Max Life"
-GetDestructableMaxLife="Max life of ",~Destructible
-GetDestructableMaxLifeHint="Destructibles lose life when attacked or harvested.  Like units, destructibles die when their life reaches 0."
+GetDestructableMaxLife="Maximales Leben"
+GetDestructableMaxLife="Maximales Leben von ",~Zerstörbarem
+GetDestructableMaxLifeHint="Zerstörbare verlieren Leben, wenn sie angegriffen oder geerntet werden.  Wie Einheiten, sterben Zerstörbare wenn ihr Leben 0 erreicht."
 
-GetDestructableOccluderHeight="Occlusion Height"
-GetDestructableOccluderHeight="Occlusion height of ",~Destructible
+GetDestructableOccluderHeight="Verstopfungshöhe"
+GetDestructableOccluderHeight="Verstopfungshöhe von ",~Zerstörbarem
 GetDestructableOccluderHeightHint=
 
-GetEventDamage="Damage Taken"
-GetEventDamage="Damage taken"
-GetEventDamageHint="When responding to a 'Takes Damage' unit event, this refers to the amount of damage being taken."
+GetEventDamage="Erlittener Schaden"
+GetEventDamage="Erlittener Schaden"
+GetEventDamageHint="Wenn auf ein 'Erleidet Schaden'-Einheitenereignis reagiert wird, verweist dies auf die Menge des erlittenen Schadens."
 
-GetTournamentFinishSoonTimeRemaining="Tournament Time Remaining"
-GetTournamentFinishSoonTimeRemaining="Tournament time remaining"
-GetTournamentFinishSoonTimeRemainingHint="When responding to a 'Game must end soon' tournament event, this returns the amount of time remaining, in real-time seconds."
+GetTournamentFinishSoonTimeRemaining="Verbleibende Turnierzeit"
+GetTournamentFinishSoonTimeRemaining="Verbleibende Turnierzeit"
+GetTournamentFinishSoonTimeRemainingHint="Wenn auf ein 'Spiel muss bald enden'-Turnierereignis reagiert wird, liefert dies den Betrag der verbleibenden Zeit, in Echtzeitsekunden."
 
-GetTimeOfDay="Time Of Day"
-GetTimeOfDay="In-game time of day"
-GetTimeOfDayHint="This is in game time, not real time."
+GetTimeOfDay="Tageszeit"
+GetTimeOfDay="Spielinterne Tageszeit"
+GetTimeOfDayHint="Dies ist die spielinterne Zeit, nicht die echte Zeit."
 
-GetTimeOfDayScalePercentBJ="Time Of Day Speed"
-GetTimeOfDayScalePercentBJ="Current time of day speed"
-GetTimeOfDayScalePercentBJHint="This returns the time of day speed as a percentage of the default time of day speed."
+GetTimeOfDayScalePercentBJ="Tageszeitgeschwindigkeit"
+GetTimeOfDayScalePercentBJ="Derzeitige Tageszeitgeschwindigkeit"
+GetTimeOfDayScalePercentBJHint="Dies liefert die Tageszeitgeschwindigkeit als Prozentsatz der normalen Tageszeitgeschwindigkeit."
 
-GetStoredRealBJ="Load Real Value"
-GetStoredRealBJ="Load ",~Label," of ",~Category," from ",~Game Cache
-GetStoredRealBJHint="If the label is not found, this function returns 0."
+GetStoredRealBJ="Lade Reellwert"
+GetStoredRealBJ="Lade ",~Kennung," von ",~Kategorie," aus ",~Spiel-Cache
+GetStoredRealBJHint="Falls die Kennung nicht gefunden wird, liefert diese Funktion 0."
 
-LoadIntegerBJ="Load Integer Value (hashtable)"
-LoadIntegerBJ="Load ",~Value," of ",~Value," from ",~Hashtable
-LoadIntegerBJHint="If the label is not found, this function returns 0."
+LoadIntegerBJ="Lade Ganzzahlwert (Hash-Tabelle)"
+LoadIntegerBJ="Lade ",~Wert," von ",~Wert," aus ",~Hash-Tabelle
+LoadIntegerBJHint="Falls die Kennung nicht gefunden wird, liefert diese Funktion 0."
 
 LoadRealBJ="Load Real Value (hashtable)"
 LoadRealBJ="Load ",~Value," of ",~Value," from ",~Hashtable
@@ -3443,189 +3443,189 @@ LoadFogModifierHandleBJ="Load Fogmodifier Handle"
 LoadFogModifierHandleBJ="Load ",~Value," of ",~Value," in ",~Hashtable
 LoadFogModifierHandleBJHint="If the label is not found, this function returns NULL."
 
-GetItemLifeBJ="Item Life"
-GetItemLifeBJ="Current life of ",~Item
+GetItemLifeBJ="Gegenstandsleben"
+GetItemLifeBJ="Derzeitiges Leben von ",~Gegenstand
 GetItemLifeBJHint=
 
-GetLightningColorRBJ="Red Color of Lightning"
-GetLightningColorRBJ="Red color of ",~Lightning
-GetLightningColorRBJHint="This returns a value between 0 and 1.  Use 'Lightning - Set Lightning Effect Color' to change the color of a Lightning Effect."
+GetLightningColorRBJ="Roter Farbton eines Blitzes"
+GetLightningColorRBJ="Roter Farbton von ",~Blitz
+GetLightningColorRBJHint="Dies liefert einen Wert zwischen 0 und 1.  Verwenden Sie 'Blitz - Setze Blitzeffektfarbe', um die Farbe eines Blitzeffekts zu verändern."
 
-GetLightningColorGBJ="Green Color of Lightning"
-GetLightningColorGBJ="Green color of ",~Lightning
-GetLightningColorGBJHint="This returns a value between 0 and 1.  Use 'Lightning - Set Lightning Effect Color' to change the color of a Lightning Effect."
+GetLightningColorGBJ="Grüner Farbton eines Blitzes"
+GetLightningColorGBJ="Grüner Farbton von ",~Blitz
+GetLightningColorGBJHint="Dies liefert einen Wert zwischen 0 und 1.  Verwenden Sie 'Blitz - Setze Blitzeffektfarbe', um die Farbe eines Blitzeffekts zu verändern."
 
-GetLightningColorBBJ="Blue Color of Lightning"
-GetLightningColorBBJ="Blue color of ",~Lightning
-GetLightningColorBBJHint="This returns a value between 0 and 1.  Use 'Lightning - Set Lightning Effect Color' to change the color of a Lightning Effect."
+GetLightningColorBBJ="Blauer Farbton eines Blitzes"
+GetLightningColorBBJ="Blauer Farbton von ",~Blitz
+GetLightningColorBBJHint="Dies liefert einen Wert zwischen 0 und 1.  Verwenden Sie 'Blitz - Setze Blitzeffektfarbe', um die Farbe eines Blitzeffekts zu verändern."
 
-GetLightningColorABJ="Alpha Value of Lightning"
-GetLightningColorABJ="Alpha value of ",~Lightning
-GetLightningColorABJHint="This returns a value between 0 and 1.  A value of 0 corresponds to a completely invisible lightning effect.  Use 'Lightning - Set Lightning Effect Color' to change the alpha value of a Lightning Effect."
+GetLightningColorABJ="Alphawert eines Blitzes"
+GetLightningColorABJ="Alphawert von ",~Blitz
+GetLightningColorABJHint="Dies liefert einen Wert zwischen 0 und 1.  Ein Wert von 0 entspricht einem vollständig unsichtbaren Blitzeffekt.  Verwenden Sie 'Blitz - Setze Blitzeffektfarbe', um den Alphawert eines Blitzeffekts zu verändern."
 
-GetRandomReal="Random Number"
-GetRandomReal="Random real number between ",~Minimum," and ",~Maximum
+GetRandomReal="Zufällige Zahl"
+GetRandomReal="Zufällige reelle Zahl zwischen ",~Minimum," und ",~Maximum
 GetRandomRealHint=
 
-GetRandomDirectionDeg="Random Angle"
-GetRandomDirectionDeg="Random angle"
-GetRandomDirectionDegHint="This is a random real number in the range of 0 to 360, for use as an angle or a unit facing."
+GetRandomDirectionDeg="Zufälliger Winkel"
+GetRandomDirectionDeg="Zufälliger Winkel"
+GetRandomDirectionDegHint="Dies ist eine zufällige reelle Zahl im Bereich von 0 bis 360, für die Verwendung als ein Winkel oder eine Einheitenausrichtung."
 
-GetRandomPercentageBJ="Random Percentage"
-GetRandomPercentageBJ="Random percentage"
-GetRandomPercentageBJHint="This is a random real number in the range of 0 to 100, for use as a percentage."
+GetRandomPercentageBJ="Zufälliger Prozentsatz"
+GetRandomPercentageBJ="Zufälliger Prozentsatz"
+GetRandomPercentageBJHint="Dies ist eine zufällige reelle Zahl im Bereich von 0 bis 100, für die Verwendung als Prozentsatz."
 
-DistanceBetweenPoints="Distance Between Points"
-DistanceBetweenPoints="Distance between ",~Point," and ",~Point
-DistanceBetweenPointsHint="Returns the Euclidean distance between two points, ignoring height."
+DistanceBetweenPoints="Entfernung zwischen Punkten"
+DistanceBetweenPoints="Entfernung zwischen ",~Punkt," und ",~Punkt
+DistanceBetweenPointsHint="Liefert die euklidische Entfernung zwischen zwei Punkten, ungeachtet der Höhe."
 
-AngleBetweenPoints="Angle Between Points"
-AngleBetweenPoints="Angle from ",~Point," to ",~Point
-AngleBetweenPointsHint="Returns the angle of a line from one point to another."
+AngleBetweenPoints="Winkel zwischen Punkten"
+AngleBetweenPoints="Winkel von ",~Punkt," zu ",~Punkt
+AngleBetweenPointsHint="Liefert den Winkel einer Strecke eines Punktes zu einem anderen."
 
 RMinBJ="Min"
-RMinBJ="Min(",~Value 1,", ",~Value 2,")"
+RMinBJ="Min(",~Wert 1,", ",~Wert 2,")"
 RMinBJHint=
 
 RMaxBJ="Max"
-RMaxBJ="Max(",~Value 1,", ",~Value 2,")"
+RMaxBJ="Max(",~Wert 1,", ",~Wert 2,")"
 RMaxBJHint=
 
 RAbsBJ="Abs"
-RAbsBJ="Abs(",~Value,")"
-RAbsBJHint="Calculates the absolute value of a number."
+RAbsBJ="Abs(",~Wert,")"
+RAbsBJHint="Berechnet den absoluten Wert einer Zahl."
 
 RSignBJ="Sign"
-RSignBJ="Sign(",~Value,")"
-RSignBJHint="Calculates the sign of a number.  The sign of a negative number is -1.  The sign of a nonnegative number is 1."
+RSignBJ="Sign(",~Wert,")"
+RSignBJHint="Berechnet das Vorzeichen einer Zahl.  Das Vorzeichen einer negativen Zahl ist -1.  Das Vorzeichen einer positiven Zahl ist 1."
 
 ModuloReal="Modulo"
 ModuloReal=~Dividend," mod ",~Divisor
-ModuloRealHint="Calculates the remainder of a division.  Example: 9.0 mod 2.5 = 1.5."
+ModuloRealHint="Berechnet den Rest einer Division.  Beispiel: 9,0 mod 2,5 = 1,5."
 
-Pow="Power"
-Pow="Power(",~Value,", ",~Power,")"
+Pow="Potenz"
+Pow="Potenz(",~Wert,", ",~Potenz,")"
 PowHint=
 
-SquareRoot="Square Root"
-SquareRoot="Square root(",~Value,")"
+SquareRoot="Quadratwurzel"
+SquareRoot="Quadratwurzel(",~Wert,")"
 SquareRootHint=
 
-SinBJ="Sine"
-SinBJ="Sin(",~Angle,")"
-SinBJHint="The angle specified is expected to be in degrees."
+SinBJ="Sinus"
+SinBJ="Sin(",~Winkel,")"
+SinBJHint="Der festgelegte Winkel wird in Grad erwartet."
 
-CosBJ="Cosine"
-CosBJ="Cos(",~Angle,")"
-CosBJHint="The angle specified is expected to be in degrees."
+CosBJ="Kosinus"
+CosBJ="Cos(",~Winkel,")"
+CosBJHint="Der festgelegte Winkel wird in Grad erwartet."
 
-TanBJ="Tangent"
-TanBJ="Tan(",~Angle,")"
-TanBJHint="The angle specified is expected to be in degrees."
+TanBJ="Tangens"
+TanBJ="Tan(",~Winkel,")"
+TanBJHint="Der festgelegte Winkel wird in Grad erwartet."
 
-AsinBJ="Arcsine"
-AsinBJ="Asin(",~Value,")"
-AsinBJHint="The angle returned is in degrees."
+AsinBJ="Arkussinus"
+AsinBJ="Asin(",~Wert,")"
+AsinBJHint="Der gelieferte Winkel ist in Grad."
 
-AcosBJ="Arccosine"
-AcosBJ="Acos(",~Value,")"
-AcosBJHint="The angle returned is in degrees."
+AcosBJ="Arkuskosinus"
+AcosBJ="Acos(",~Wert,")"
+AcosBJHint="Der gelieferte Winkel ist in Grad."
 
-AtanBJ="Arctangent (From Angle)"
-AtanBJ="Atan(",~Value,")"
-AtanBJHint="The angle returned is in degrees."
+AtanBJ="Arkustangens (vom Winkel)"
+AtanBJ="Atan(",~Wert,")"
+AtanBJHint="Der gelieferte Winkel ist in Grad."
 
-Atan2BJ="Arctangent (From Deltas)"
+Atan2BJ="Arkustangens (von den Deltas)"
 Atan2BJ="Atan2(",~Y,", ",~X,")"
-Atan2BJHint="The angle returned is in degrees."
+Atan2BJHint="Der gelieferte Winkel ist in Grad."
 
-GetPlayerHandicapXPBJ="Experience Rate"
-GetPlayerHandicapXPBJ=~Player," experience rate"
-GetPlayerHandicapXPBJHint="Experience rates are specified as percentages, with 100% being normal."
+GetPlayerHandicapXPBJ="Erfahrungsrate"
+GetPlayerHandicapXPBJ=~Spieler,"-Erfahrungsrate"
+GetPlayerHandicapXPBJHint="Erfahrungsraten werden als Prozentsätze festgelegt, mit 100% als Standardwert."
 
 GetPlayerHandicapBJ="Handicap"
-GetPlayerHandicapBJ=~Player," handicap"
-GetPlayerHandicapBJHint="Handicap values are specified as percentages, with 100% being normal."
+GetPlayerHandicapBJ=~Spieler,"-Handicap"
+GetPlayerHandicapBJHint="Handicap-Werte werden als Prozentsätze festgelegt, mit 100% als Standardwert."
 
-GetRectCenterX="Center X Of Region"
-GetRectCenterX="Center X of ",~Region
+GetRectCenterX="Mitte-X einer Region"
+GetRectCenterX="Mitte-X von ",~Region
 GetRectCenterXHint=
 
-GetRectCenterY="Center Y Of Region"
-GetRectCenterY="Center Y of ",~Region
+GetRectCenterY="Mitte-Y einer Region"
+GetRectCenterY="Mitte-Y von ",~Region
 GetRectCenterYHint=
 
-GetRectMinX="Min X Of Region"
-GetRectMinX="Min X of ",~Region
+GetRectMinX="Min-X einer Region"
+GetRectMinX="Min-X von ",~Region
 GetRectMinXHint=
 
-GetRectMinY="Min Y Of Region"
-GetRectMinY="Min Y of ",~Region
+GetRectMinY="Min-Y einer Region"
+GetRectMinY="Min-Y von ",~Region
 GetRectMinYHint=
 
-GetRectMaxX="Max X Of Region"
-GetRectMaxX="Max X of ",~Region
+GetRectMaxX="Max-X einer Region"
+GetRectMaxX="Max-X von ",~Region
 GetRectMaxXHint=
 
-GetRectMaxY="Max Y Of Region"
-GetRectMaxY="Max Y of ",~Region
+GetRectMaxY="Max-Y einer Region"
+GetRectMaxY="Max-Y von ",~Region
 GetRectMaxYHint=
 
-GetRectWidthBJ="Width Of Region"
-GetRectWidthBJ="Width of ",~Region
+GetRectWidthBJ="Breite einer Region"
+GetRectWidthBJ="Breite von ",~Region
 GetRectWidthBJHint=
 
-GetRectHeightBJ="Height Of Region"
-GetRectHeightBJ="Height of ",~Region
+GetRectHeightBJ="Höhe einer Region"
+GetRectHeightBJ="Höhe einer ",~Region
 GetRectHeightBJHint=
 
-GetSoundDurationBJ="Sound Length"
-GetSoundDurationBJ="Length of ",~Sound
-GetSoundDurationBJHint="This returns the duration of a sound, in seconds."
+GetSoundDurationBJ="Geräuschlänge"
+GetSoundDurationBJ="Länge von ",~Geräusch
+GetSoundDurationBJHint="Dies liefert die Länge eines Geräusches, in Sekunden."
 
-GetSoundFileDurationBJ="Music Length"
-GetSoundFileDurationBJ="Length of ",~Music
-GetSoundFileDurationBJHint="This returns the duration of a music score, in seconds."
+GetSoundFileDurationBJ="Musiklänge"
+GetSoundFileDurationBJ="Länge von ",~Musik
+GetSoundFileDurationBJHint="Dies liefert die Länge einer Filmmusik, in Sekunden."
 
-GetUnitStateSwap="Property"
-GetUnitStateSwap=~Property," of ",~Unit
+GetUnitStateSwap="Eigenschaft"
+GetUnitStateSwap=~Eigenschaft," von ",~Einheit
 GetUnitStateSwapHint=
 
-GetUnitLifePercent="Percentage Life"
-GetUnitLifePercent="Percentage life of ",~Unit
+GetUnitLifePercent="Prozentuales Leben"
+GetUnitLifePercent="Prozentuales Leben von ",~Einheit
 GetUnitLifePercentHint=
 
-GetUnitManaPercent="Percentage Mana"
-GetUnitManaPercent="Percentage mana of ",~Unit
+GetUnitManaPercent="Prozentuales Mana"
+GetUnitManaPercent="Prozentuales Mana von ",~Einheit
 GetUnitManaPercentHint=
 
-GetUnitFacing="Facing Angle"
-GetUnitFacing="Facing of ",~Unit
-GetUnitFacingHint="The angle returned is in degrees, with 0 facing east."
+GetUnitFacing="Ausrichtungswinkel"
+GetUnitFacing="Ausrichtung von ",~Einheit
+GetUnitFacingHint="Der gelieferte Winkel ist in Grad, mit 0 als Ausrichtung nach Osten."
 
-GetUnitMoveSpeed="Movement Speed (Current)"
-GetUnitMoveSpeed="Current movement speed of ",~Unit
-GetUnitMoveSpeedHint="Movement speeds commonly range from 150 to 300."
+GetUnitMoveSpeed="Bewegungstempo (derzeitiges)"
+GetUnitMoveSpeed="Derzeitiges Bewegungstempo von ",~Einheit
+GetUnitMoveSpeedHint="Für gewöhnlich reichen Bewegungstempos von 150 bis 300."
 
-GetUnitDefaultMoveSpeed="Movement Speed (Default)"
-GetUnitDefaultMoveSpeed="Default movement speed of ",~Unit
-GetUnitDefaultMoveSpeedHint="Movement speeds commonly range from 150 to 300."
+GetUnitDefaultMoveSpeed="Bewegungstempo (standardmäßiges)"
+GetUnitDefaultMoveSpeed="Standardmäßiges Bewegungstempo von ",~Einheit
+GetUnitDefaultMoveSpeedHint="Für gewöhnlich reichen Bewegungstempos von 150 bis 300."
 
-GetUnitAcquireRange="Acquisition Range (Current)"
-GetUnitAcquireRange="Current acquisition range of ",~Unit
+GetUnitAcquireRange="Zielerfassungs-Reichweite (derzeitige)"
+GetUnitAcquireRange="Derzeitige Zielerfassungs-Reichweite von ",~Einheit
 GetUnitAcquireRangeHint=
 
-GetUnitDefaultAcquireRange="Acquisition Range (Default)"
-GetUnitDefaultAcquireRange="Default acquisition range of ",~Unit
+GetUnitDefaultAcquireRange="Zielerfassungs-Reichweite (standardmäßige)"
+GetUnitDefaultAcquireRange="Standardmäßige Zielerfassungs-Reichweite of ",~Unit
 GetUnitDefaultAcquireRangeHint=
 
-GetUnitTurnSpeed="Turn Speed (Current)"
-GetUnitTurnSpeed="Current turn speed of ",~Unit
-GetUnitTurnSpeedHint="A unit's turn speed determines how quickly the unit changes direction.  Turn speed values are expected to be between 0 and 1, with smaller numbers indicating slower turning rates."
+GetUnitTurnSpeed="Drehgeschwindigkeit (derzeitige)"
+GetUnitTurnSpeed="Derzeitige Drehgeschwindigkeit von ",~Einheit
+GetUnitTurnSpeedHint="Die Drehgeschwindigkeit einer Einheit entscheidet, wie schnell die Einheit ihre Richtung wechselt.  Drehgeschwindigkeitswerte müssen zwischen 0 und 1 sein, mit kleineren Zahlen für langsamere Drehraten."
 
-GetUnitDefaultTurnSpeed="Turn Speed (Default)"
-GetUnitDefaultTurnSpeed="Default turn speed of ",~Unit
-GetUnitDefaultTurnSpeedHint="A unit's turn speed determines how quickly the unit changes direction.  Turn speed values are expected to be between 0 and 1, with smaller numbers indicating slower turning rates."
+GetUnitDefaultTurnSpeed="Drehgeschwindigkeit (standardmäßige)"
+GetUnitDefaultTurnSpeed="Standardmäßige Drehgeschwindigkeit von ",~Einheit
+GetUnitDefaultTurnSpeedHint="Die Drehgeschwindigkeit einer Einheit entscheidet, wie schnell die Einheit ihre Richtung wechselt.  Drehgeschwindigkeitswerte müssen zwischen 0 und 1 sein, mit kleineren Zahlen für langsamere Drehraten."
 
 GetUnitPropWindowBJ="Prop Window Angle (Current)"
 GetUnitPropWindowBJ="Current prop window angle of ",~Unit
@@ -3635,59 +3635,59 @@ GetUnitDefaultPropWindowBJ="Prop Window Angle (Default)"
 GetUnitDefaultPropWindowBJ="Default prop window angle of ",~Unit
 GetUnitDefaultPropWindowBJHint=
 
-GetUnitFlyHeight="Flying Height (Current)"
-GetUnitFlyHeight="Current flying height of ",~Unit
-GetUnitFlyHeightHint="Only flying units use flying heights."
+GetUnitFlyHeight="Flughöhe (derzeitige)"
+GetUnitFlyHeight="Derzeitige Flughöhe von ",~Einheit
+GetUnitFlyHeightHint="Nur fliegende Einheiten verwenden Flughöhen."
 
-GetUnitDefaultFlyHeight="Flying Height (Default)
-GetUnitDefaultFlyHeight="Default flying height of ",~Unit
+GetUnitDefaultFlyHeight="Flughöhe (standardmäßige)
+GetUnitDefaultFlyHeight="Standardmäßige Flughöhe von ",~Einheit
 GetUnitDefaultFlyHeightHint=
 
 
 // returns string
-OperatorString="Concatenate Strings"
-OperatorString=~String 1," + ",~String 2
+OperatorString="Verkettete Zeichenketten"
+OperatorString=~Zeichenkette 1," + ",~Zeichenkette 2
 OperatorStringHint=
 
-SubStringBJ="Substring"
-SubStringBJ="Substring(",~String,", ",~Start,", ",~End,")"
-SubStringBJHint="Example:  Substring(''Grunts stink'', 2, 4) = ''run''."
+SubStringBJ="Teilzeichenkette"
+SubStringBJ="Teilzeichenkette(",~Zeichenkette,", ",~Anfang,", ",~Ende,")"
+SubStringBJHint="Beispiel:  Teilzeichenkette(''Grunzer stinken'', 2, 4) = ''run''."
 
-GetHandleIdBJ="Get Handle ID"
-GetHandleIdBJ="Key ",~Handle
-GetHandleIdBJHint="Creates a key from a handle for use in the hashtable."
+GetHandleIdBJ="Erhalte Handle-ID"
+GetHandleIdBJ="Schlüssel ",~Handle
+GetHandleIdBJHint="Erzeugt einen Schlüssel eines Handles für die Verwendung in der Hash-Tabelle."
 
-StringHashBJ="Get String ID"
-StringHashBJ="Key ",~String
-StringHashBJHint="Creates a key from a string for use in the hashtable."
+StringHashBJ="Erhalte Zeichenketten-ID"
+StringHashBJ="Schlüssel ",~Zeichenkette
+StringHashBJHint="Erzeugt einen Schlüssel einer Zeichenkette für die Verwendung in der Hash-Tabelle."
 
-I2S="Convert Integer To String"
-I2S="String(",~Integer,")"
+I2S="Wandle Ganzzahl in Zeichenkette um"
+I2S="Zeichenkette(",~Ganzzahl,")"
 I2SHint=
 
-R2S="Convert Real To String"
-R2S="String(",~Real,")"
+R2S="Wandle Reelle in Zeichenkette um"
+R2S="Zeichenkette(",~Reelle,")"
 R2SHint=
 
-R2SW="Convert Real To Formatted String"
-R2SW="String(",~Real,", ",~Width,", ",~Precision,")"
-R2SWHint="Examples:  String(1.234, 7, 2) = ''   1.23''.  String(1.234, 2, 5) = ''1.23400''."
+R2SW="Wandle Reele in formatierte Zeichenkette um"
+R2SW="Zeichenkette(",~Reelle,", ",~Breite,", ",~Genauigkeit,")"
+R2SWHint="Beispiele:  Zeichenkette(1.234, 7, 2) = ''   1.23''.  Zeichenkette(1.234, 2, 5) = ''1.23400''."
 
-OrderId2StringBJ="Convert Order To String"
-OrderId2StringBJ="String(",~Order,")"
-OrderId2StringBJHint="Example order strings:  ''harvest'', ''move'', ''smart'', ''attack''."
+OrderId2StringBJ="Wandle Befehl in Zeichenkette um"
+OrderId2StringBJ="Zeichenkette(",~Befehl,")"
+OrderId2StringBJHint="Beispiel-Befehlszeichenketten:  ''harvest'', ''move'', ''smart'', ''attack''."
 
-UnitId2StringBJ="Convert Unit-Type To String"
-UnitId2StringBJ="String(",~Unit-Type,")"
+UnitId2StringBJ="Wandle Einheitentyp in Zeichenkette um"
+UnitId2StringBJ="Zeichenkette(",~Einheitentyp,")"
 UnitId2StringBJHint=
 
-StringIdentity="Convert Externalized String"
-StringIdentity="Externalized string(",~String,")"
-StringIdentityHint="Use this to make sure the given string will be externalized in the map string file (war3map.wts)."
+StringIdentity="Wandle ausgelagerte Zeichenkette um"
+StringIdentity="Ausgelagerte Zeichenkette(",~Zeichenkette,")"
+StringIdentityHint="Verwenden Sie dies, um sicherzustellen, dass die angegebene Zeichenkette in die Kartenzeichenkettendatei ausgelagert wird (war3map.wts)."
 
-StringCase="Convert String Case"
-StringCase="String(",~String,") as ",~Lower/Upper Case
-StringCaseHint="All letters in the string will be changed to the selected case."
+StringCase="Wandle Zeichenketten-Groß- und kleinschreibung um"
+StringCase="Zeichenkette(",~Zeichenkette,") als ",~Klein-/Großschreibung
+StringCaseHint="Alle Buchstaben in der Zeichenkette werden in die gewählte Schreibung geändert."
 
 GetDestructableName="Zerstörbares-Name"
 GetDestructableName="Name des ",~Zerstörbaren
@@ -3705,8 +3705,8 @@ GetSaveBasicFilename="Saved-Game Filename"
 GetSaveBasicFilename="Saved-game filename"
 GetSaveBasicFilenameHint="When responding to a 'Game - Game Save' event, this refers to the name of the file being saved."
 
-GetAbilityName="Ability Name"
-GetAbilityName="Name of ",~Ability
+GetAbilityName="Fähigkeitenname"
+GetAbilityName="Name von ",~Fähigkeit
 GetAbilityNameHint=
 
 GetAbilityEffectBJ="Ability Effect Art Path"
@@ -3721,50 +3721,50 @@ GetStoredStringBJ="Load String Value"
 GetStoredStringBJ="Load ",~Label," of ",~Category," from ",~Game Cache
 GetStoredStringBJHint="If the label is not found, this function returns an empty string."
 
-GetHeroProperName="Hero Proper Name"
-GetHeroProperName="Proper name of ",~Hero
-GetHeroProperNameHint="Calling this on a hero will return his actual name (e.g. 'Granis Darkhammer' for a Paladin)."
+GetHeroProperName="Heldeneigenname"
+GetHeroProperName="Eigenname von ",~Held
+GetHeroProperNameHint="Wird dies für einen Helden aufgerufen, wird sein eigentliche Name zurückgegeben (z. B. 'Granis Darkhammer' für einen Paladin)."
 
-GetItemName="Item Name"
-GetItemName="Name of ",~Item
+GetItemName="Gegenstandsname"
+GetItemName="Name von ",~Gegenstand
 GetItemNameHint=
 
 MultiboardGetTitleText="Multiboard Title"
 MultiboardGetTitleText="Title of ",~Multiboard
 MultiboardGetTitleTextHint=
 
-GetPlayerName="Player Name"
-GetPlayerName="Name of ",~Player
+GetPlayerName="Spielername"
+GetPlayerName="Name von ",~Spieler
 GetPlayerNameHint=
 
-GetTriggerName="Trigger Name"
-GetTriggerName="Name of the current trigger"
-GetTriggerNameHint="Returns the name, as entered in the editor, of the trigger which contains this function."
+GetTriggerName="Auslösername"
+GetTriggerName="Name des derzeitigen Auslösers"
+GetTriggerNameHint="Liefert den, wie im Editor eingegebenen Namen des Auslösers, der diese Funktion enthält."
 
-GetUnitName="Unit Name"
-GetUnitName="Name of ",~Unit
-GetUnitNameHint="This returns the internal name of a unit, not the proper name of units or Heroes."
+GetUnitName="Einheitenname"
+GetUnitName="Name von ",~Einheit
+GetUnitNameHint="Dies liefert den internen Namen einer Einheit, nicht den Eigennamevon Einheiten oder Helden."
 
 
 // returns location
-GetRectCenter="Center Of Region"
-GetRectCenter="Center of ",~Region
+GetRectCenter="Mitte einer Region"
+GetRectCenter="Mitte von ",~Region
 GetRectCenterHint=
 
-GetRandomLocInRect="Random Point In Region"
-GetRandomLocInRect="Random point in ",~Region
+GetRandomLocInRect="Zufälliger Punkt in einer Region"
+GetRandomLocInRect="Zufälliger Punkt in ",~Region
 GetRandomLocInRectHint=
 
-OffsetLocation="Point With Offset"
-OffsetLocation=~Point," offset by (",~X,", ",~Y,")"
-OffsetLocationHint="The offset values are (X, Y)."
+OffsetLocation="Punkt mit Abstand"
+OffsetLocation=~Punkt," verschoben um (",~X,", ",~Y,")"
+OffsetLocationHint="Die Abstandswerte sind (X, Y)."
 
-PolarProjectionBJ="Point With Polar Offset"
-PolarProjectionBJ=~Point," offset by ",~Distance," towards ",~Angle," degrees"
+PolarProjectionBJ="Punkt mit polarem Abstand"
+PolarProjectionBJ=~Punkt," verschoben um ",~Entfernung," in Richtung ",~Winkel," Grad"
 PolarProjectionBJHint=
 
-CameraSetupGetDestPositionLoc="Target Of Camera Object"
-CameraSetupGetDestPositionLoc="Target of ",~Camera Object
+CameraSetupGetDestPositionLoc="Ziel eines Kameraobjekts"
+CameraSetupGetDestPositionLoc="Ziel von ",~Kameraobjekt
 CameraSetupGetDestPositionLocHint=
 
 GetCameraTargetPositionLoc="Target Of Current Camera"
