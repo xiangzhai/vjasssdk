@@ -1,5 +1,11 @@
 library AStructCoreGeneralForce requires AStructCoreGeneralVector
 
+	/**
+	* Some kind of wrapper structure for native JASS type \ref force.
+	* Simplifies member access by providing an instance of \ref APlayerVector which holds all force members.
+	* Additionally it provides various methods which provide same functionality as native and BJ functions.
+	* \sa AGroup
+	*/
 	struct AForce
 		// members
 		private APlayerVector m_players
@@ -12,6 +18,9 @@ library AStructCoreGeneralForce requires AStructCoreGeneralVector
 
 		// methods
 
+		/**
+		* Fills force \p whichForce with all belonging players.
+		*/
 		public method fillForce takes force whichForce returns nothing
 			local integer i = 0
 			loop
@@ -23,7 +32,7 @@ library AStructCoreGeneralForce requires AStructCoreGeneralVector
 
 		/**
 		* Creates a new Warcraft-3-like force from the force.
-		* @return Returns a newly created force.
+		* \return Returns a newly created force.
 		*/
 		public method force takes nothing returns force
 			local force whichForce = CreateForce()
@@ -252,6 +261,7 @@ library AStructCoreGeneralForce requires AStructCoreGeneralVector
 		endmethod
 
 		/**
+		* \return Returns true if all belonging players have race preference \p preference.
 		* @see IsPlayerRacePrefSet
 		*/
 		public method hasRacePreferenceSet takes racepreference preference returns boolean

@@ -1,7 +1,7 @@
 library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
 
 	/**
-	* Provides access to a three-dimensional vector.
+	* Provides access to three-dimensional vector.
 	* Three-dimensional vectors are often used in 3d graphics to define positions or speed.
 	* They can simplify calculations.
 	*/
@@ -66,8 +66,8 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		// methods
 
 		/**
-		* Multiplies all values with the value of @param factor.
-		* If @param factor is smaller than 1 and bigger or equal to 0 the vector will shorten otherwise it will lengthen.
+		* Multiplies all values with the value of \p factor.
+		* If \p factor is smaller than 1 and bigger or equal to 0 the vector will shorten otherwise it will lengthen.
 		*/
 		public method scale takes real factor returns nothing
 			set this.m_x = this.m_x * factor
@@ -84,14 +84,14 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Similar to @method AVector3.setLength.
+		* Similar to \ref AVector3.setLength.
 		*/
 		public method setNorm takes real norm returns nothing
 			call this.setLength(norm)
 		endmethod
 
 		/**
-		* Similar to @method AVector3.length.
+		* Similar to \ref AVector3.length.
 		*/
 		public method norm takes nothing returns real
 			return this.length()
@@ -123,7 +123,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Multiplies each value from vector @param vector and returns the sum of all results.
+		* Multiplies each value from vector \p vector and returns the sum of all results.
 		* Doesn't change any vector data!
 		* If the result is 0 there would be a right angle if you put both vectors together.
 		* If the result is bigger than 0 there would be an acute angle if you put both vectors together.
@@ -134,15 +134,15 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Similar to @method AVector3.multiply.
+		* Similar to \ref AVector3.multiply.
 		*/
 		public method scalarProduct takes thistype vector returns real
 			return this.multiply(vector)
 		endmethod
 
 		/**
-		* Adds scaled vector @param vector which is scaled by value @param factor.
-		* Note that vector @param vector won't be changed!
+		* Adds scaled vector \p vector which is scaled by value \p factor.
+		* Note that vector \p vector won't be changed!
 		* @author peq
 		*/
 		public method addScaled takes thistype vector, real factor returns nothing
@@ -152,7 +152,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Projects vector on vector @param vector.
+		* Projects vector on vector \p vector.
 		* Doesn't change the length.
 		*/
 		public method project takes thistype vector returns nothing
@@ -163,7 +163,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Rotates a vector through @param angle.
+		* Rotates a vector through \p angle.
 		* Only x and y will be changed. Rotation on z axis is not possible yet.
 		*/
 		public method rotate takes real angle returns nothing
@@ -174,8 +174,8 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Sets vector's values to terrain point with x value @param x and y value @param y.
-		* Z value is calculated automatically by using function @function GetTerrainZ.
+		* Sets vector's values to terrain point with x value \p x and y value \p y.
+		* Z value is calculated automatically by using function \ref GetTerrainZ.
 		* @author Tamino Dauth
 		*/
 		public method terrainPoint takes real x, real y returns nothing
@@ -215,7 +215,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 
 		public static method create takes real x, real y, real z returns thistype
 			local thistype this = thistype.allocate()
-			//dynamic members
+			// dynamic members
 			set this.m_x = x
 			set this.m_y = y
 			set this.m_z = z
@@ -244,7 +244,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* @return Returns sum of the two vectors @param vector0 and @param vector1 in a new vector instance.
+		* \return Returns sum of the two vectors \p vector0 and \p vector1 in a new vector instance.
 		*/
 		public static method sum takes thistype vector0, thistype vector1 returns thistype
 			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
@@ -253,7 +253,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* @return Returns difference of the two vectors @param vector0 and @param vector1 in a new vector instance.
+		* @return Returns difference of the two vectors \p vector0 and \p vector1 in a new vector instance.
 		*/
 		public static method difference takes thistype vector0, thistype vector1 returns thistype
 			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
@@ -262,9 +262,9 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* @return Returns scalar product of the two vectors @param vector0 and @param vector1.
+		* @return Returns scalar product of the two vectors \p vector0 and \p vector1.
 		* @author Tamino Dauth
-		* @state untested
+		* \todo untested
 		*/
 		public static method multiplication takes thistype vector0, thistype vector1 returns real
 			return vector0.multiply(vector1)
@@ -278,7 +278,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* @return Returns projection of the two vectors @param vector0 and @vector1 in a new vector instance.
+		* @return Returns projection of the two vectors \p vector0 and \p vector1 in a new vector instance.
 		* @author Tamino Dauth
 		* @todo untested
 		*/

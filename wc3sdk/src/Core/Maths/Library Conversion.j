@@ -43,7 +43,7 @@ library ALibraryCoreMathsConversion requires optional ALibraryCoreDebugMisc, ALi
 	endfunction
 	
 	/// @author Vexorian
-	/// @source http://www.wc3c.net/showthread.php?t=101407
+	/// \link http://www.wc3c.net/showthread.php?t=101407
 	function I2Roman takes integer n returns string
 		local string r=""
 		if n > 3999 or n < 1 then

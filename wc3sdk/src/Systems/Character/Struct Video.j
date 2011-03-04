@@ -161,7 +161,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		// static construction members
 		private static integer m_divident
 		private static real m_filterDuration
-		private static real m_waitInterval
 		private static string m_textPlayerSkips
 		private static string m_textSkip
 		// static members
@@ -481,12 +480,11 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		/// @param divident This value represents the divident which is used for comparing the number of skipping players with the number of requested skipping players for skipping the video.
-		public static method init takes integer divident, real filterDuration, real waitInterval, string textPlayerSkips, string textSkip returns nothing
+		public static method init takes integer divident, real filterDuration, string textPlayerSkips, string textSkip returns nothing
 			local integer i
 			// static construction members
 			set thistype.m_divident = divident
 			set thistype.m_filterDuration = filterDuration
-			set thistype.m_waitInterval = waitInterval
 			set thistype.m_textPlayerSkips = textPlayerSkips
 			set thistype.m_textSkip = textSkip
 			// static members
@@ -537,12 +535,6 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endloop
 
 			call thistype.destroySkipTrigger()
-		endmethod
-
-		// static construction members
-
-		public static method waitInterval takes nothing returns real
-			return thistype.m_waitInterval
 		endmethod
 
 		// static members
@@ -618,7 +610,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	 endstruct
 
 	/**
-	* Waits until no video is running anymore.
+	* Waits (synchronized) until no video is running anymore.
 	* @param interval Check interval.
 	*/
 	function waitForVideo takes real interval returns nothing
@@ -628,32 +620,19 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call PolledWait(interval) // synchron waiting, important for multiplayer games
 		endloop
 	endfunction
+	
+	private function WaitCondition takes nothing returns boolean
+		return AVideo.skipped()
+	endfunction
 
 	/**
-	* Waits \p seconds synchronized seconds. Cancels if video was skipped during this time.
+	* Waits \p seconds game-time seconds. Cancels if video is skipped during this time.
 	* Note that this function is like \ref PolledWait since it has to be synchronos.
 	* \return Returns true if video was skipped during the wait phase. Otherwise it returns false (if wait time has expired normally).
 	* \see PolledWait
 	*/
 	function wait takes real seconds returns boolean
-		local timer whichTimer = CreateTimer()
-		call TimerStart(whichTimer, seconds, false, null)
-		set seconds = TimerGetRemaining(whichTimer)
-		loop
-			set seconds = seconds - AVideo.waitInterval()
-			exitwhen (seconds <= 0.0)
-			if (AVideo.skipped()) then
-				call PauseTimer(whichTimer)
-				call DestroyTimer(whichTimer)
-				set whichTimer = null
-				return true
-			endif
-			call TriggerSleepAction(AVideo.waitInterval())
-		endloop
-		call PauseTimer(whichTimer)
-		call DestroyTimer(whichTimer)
-		set whichTimer = null
-		return false
+		return WaitCheckingCondition(seconds, function WaitCondition, 0)
 	endfunction
 
 	/**
@@ -664,9 +643,9 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 	/**
 	* Advanced conditional video wait function.
-	* Checks every \p interval synchronized seconds for condition \p condition. If video is being skipped during this time it returns true.
+	* Checks every \p interval seconds for condition \p condition. If video is being skipped during this time it returns true.
 	* Otherwise it returns false when condition is true.
-	* \param interval Interval in synchronized seconds in which the condition will be checked.
+	* \param interval Interval in seconds in which the condition will be checked.
 	* \param condition Condition which will be checked. Use \ref AVideoCondition to create and pass a correct function.
 	* \return Returns true if the video had been skipped before condition became true. Otherwise it returns false when condition becomes true.
 	* \sa AVideoCondition
@@ -674,9 +653,10 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 	function waitForCondition takes real interval, AVideoCondition condition returns boolean
 		loop
 			exitwhen (condition.evaluate(AVideo.runningVideo()))
-			if (wait(interval)) then
+			if (WaitCondition()) then
 				return true
 			endif
+			call TriggerSleepAction(interval)
 		endloop
 		return false
 	endfunction

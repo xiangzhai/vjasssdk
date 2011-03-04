@@ -1,4 +1,4 @@
-library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
+library ALibraryCoreStringConversion requires AStructCoreStringFormat, ALibraryCoreStringMisc
 
 	/**
 	* Converts an ASCII char to an integer.
@@ -27,6 +27,7 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	* \sa PlayerColorToString, GetPlayerColorValue, GetPlayerColorRed, GetPlayerColorGreen, GetPlayerColorBlue
 	*/
 	function StringToPlayerColor takes string colorString returns playercolor
+		set colorString = StringCase(colorString, false)
 		if (colorString == "ff0000") then
 			return PLAYER_COLOR_RED
 		elseif (colorString == "0000ff") then
@@ -164,21 +165,24 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 	endfunction
 
 	/**
-	* Inserts line break escape sequence characters into string whichString by separating it into sub strings of length maxLineLength.
+	* Inserts line break escape sequence characters ('\n') into string \p whichString by separating it into sub strings of maximum length \p maxLineLength.
 	* Useful for displaying text paragraphs (such as dialog messages).
-	* @return Returns whichString separated into sub strings of length maxLineLength ending with '|n' character.
+	* \param whichString String which is separated into sub strings ending with a line break character.
+	* \param maxLineLength Maximum allowed length of one sub string line.
+	* \return Returns \p whichString separated into sub strings of maximum length \p maxLineLength ending with '\n' character.
 	* @todo bugged?
 	*/
 	function InsertLineBreaks takes string whichString, integer maxLineLength returns string
 		local integer i
-		local string result = ""
+		local string result
 		if (StringLength(whichString) <= maxLineLength) then
 			return whichString
 		endif
+		set result = ""
 		set i = maxLineLength
 		loop
 			exitwhen (i > StringLength(whichString))
-			set result = result + SubString(whichString, i - maxLineLength, i) + "|n"
+			set result = result + SubString(whichString, i - maxLineLength, i) + "\n"
 			set i = i + maxLineLength
 		endloop
 
@@ -188,37 +192,43 @@ library ALibraryCoreStringConversion requires ALibraryCoreStringMisc
 
 		return result
 	endfunction
-
+	
 	/**
 	* Converts specific number of seconds into a string with minutes and hours.
 	* Examples:
+	* 45 seconds - 45
 	* 120 seconds - 02:00
 	* 7200 seconds - 02:00:00
 	*/
 	function GetTimeString takes integer seconds returns string
 		local integer minutes = seconds / 60
 		local integer hours = minutes / 60
-		local string secondsString
-		local string minutesString
-		local string hoursString
+		local string result
+		local string formatString
 		set seconds = ModuloInteger(seconds, 60)
 		set minutes = ModuloInteger(minutes, 60)
 		if (seconds >= 10) then
-			set secondsString = I2S(seconds)
+			set result = I2S(seconds)
 		else
-			set secondsString = IntegerArg.evaluate(tr("0%i"), seconds)
+			set result = Format(tr("0%1%")).i(seconds).result()
 		endif
-		if (minutes >= 10) then
-			set minutesString = I2S(minutes)
-		else
-			set minutesString = IntegerArg.evaluate(tr("0%i"), minutes)
+		if (minutes > 0 or hours > 0) then
+			if (minutes >= 10) then
+				set formatString = I2S(minutes)
+			else
+				set formatString = Format(tr("0%1%")).i(minutes).result()
+			endif
+			call Format(tr("%1%:%2%")).s(formatString).s(result).result()
 		endif
-		if (hours >= 10) then
-			set hoursString = I2S(hours)
-		else
-			set hoursString = IntegerArg.evaluate(tr("0%i"), hours)
+		if (hours > 0) then
+			if (hours >= 10) then
+				set formatString = I2S(hours)
+			else
+				set formatString = Format(tr("0%1%")).i(hours).result()
+			endif
+			call Format(tr("%1%:%2%")).s(formatString).s(result).result()
 		endif
-		return StringArg.evaluate(StringArg.evaluate(StringArg.evaluate(tr("%s:%s:%s"), hoursString), minutesString), secondsString)
+		return result
 	endfunction
 
 	/**

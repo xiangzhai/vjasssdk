@@ -1,7 +1,7 @@
 library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreGeneralUnit
 
 	/**
-	* This struct is kind of wrapper for data type group. Since group does not allow
+	* This struct is kind of wrapper for data type \ref group. Since \ref group does not allow
 	* direct accesses to internally stored units it's very annoying to get any group member
 	* which is not the first one.
 	* You'll always have to iterate the whole group, remove the first member and copying it into
@@ -11,9 +11,10 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 	* you will either have to attach data anywhere or have to use a global variable.
 	* Instead of using filter functions this struct allows you direct access to a vector
 	* which contains all units.
-	* Additionally it provides various addGroup methods which do use the GroupEnum functions from Jass.
-	* Methods like AGroup.removeUnitsOfPlayer or removeAlliesOfUnit are very useful for spell functions.
-	* The only disadvantage of this struct is that it is a little bit slower than using native type group (especially when adding other groups e. g. by using AGroup.addUnitsOfType).
+	* Additionally it provides various \ref AGroup#addGroup methods which do use the \ref GroupEnum functions from JASS.
+	* Methods like \ref AGroup#removeUnitsOfPlayer or \ref AGroup#removeAlliesOfUnit are very useful for spell functions.
+	* The only disadvantage of this struct its decreased performance compared to native type \ref group (especially when adding other groups e. g. by using \ref AGroup#addUnitsOfType).
+	* \sa AForce
 	*/
 	struct AGroup
 		// members

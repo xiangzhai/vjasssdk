@@ -90,12 +90,12 @@ library AStructCoreStringFormat requires ALibraryCoreStringMisc, optional ALibra
 		//! runtextmacro AFormatMethod("localizedString", "string", "l", "GetLocalizedString(value)", "")
 		//! runtextmacro AFormatMethod("k", "string", "k", "I2S(GetLocalizedHotkey(value))", "")
 		//! runtextmacro AFormatMethod("localizedHotkey", "string", "k", "I2S(GetLocalizedHotkey(value))", "")
-		//! runtextmacro AFormatMethod("e", "integer", "e", "GetExternalString(value)", "")
-		//! runtextmacro AFormatMethod("externalString", "integer", "e", "GetExternalString(value)", "")
+		//! runtextmacro AFormatMethod("e", "integer", "e", "GetExternalString.evaluate(value)", "")
+		//! runtextmacro AFormatMethod("externalString", "integer", "e", "GetExternalString.evaluate(value)", "")
 		/// Use seconds as parameter!
-		//! runtextmacro AFormatMethod("t", "integer", "t", "GetTimeString(value)", "")
+		//! runtextmacro AFormatMethod("t", "integer", "t", "GetTimeString.evaluate(value)", "")
 		/// Use seconds as parameter!
-		//! runtextmacro AFormatMethod("time", "integer", "t", "GetTimeString(value)", "")
+		//! runtextmacro AFormatMethod("time", "integer", "t", "GetTimeString.evaluate(value)", "")
 
 		/**
 		* @return Returns the formatted string result and destroys the instance.

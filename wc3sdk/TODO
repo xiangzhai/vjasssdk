@@ -166,8 +166,8 @@ is shown in rucksack only.
 * DONE: Water files in directory "Doodads..." of archive "Ambient" should be moved into "Models/Ambient.." and added for "Die Macht des Feuers" separately.
 
 2009-11-20 Tamino Dauth <tamino@cdauth.eu>
-* Files "archives/Creatures/Models/Creatures/Humans/Samureiausbilder.mdx" and "archives/Creatures/Models/Creatures/Humans/Samureiausbilder_Portrait.mdx" miss file "Textures/HeroMusashMiyamoto".
-* Files "archives/Creatures/Models/Creatures/Humans/GepanzerterSamurai.mdx" misses file "Textures/Creatures/Humans/GepanzerterSamurai/Harquebus.blp".
+* FIXED: Files "archives/Creatures/Models/Creatures/Humans/Samureiausbilder.mdx" and "archives/Creatures/Models/Creatures/Humans/Samureiausbilder_Portrait.mdx" miss file "Textures/HeroMusashMiyamoto".
+* FIXED: Files "archives/Creatures/Models/Creatures/Humans/GepanzerterSamurai.mdx" misses file "Textures/Creatures/Humans/GepanzerterSamurai/Harquebus.blp".
 
 2009-11-09 Tamino Dauth <tamino@cdauth.eu>
 * Einheiten bei Charakterklassenauswahl richten (Anzeige pro Spieler).
@@ -209,7 +209,7 @@ die Beendungsfunktion aufgerufen (falls vorhanden). Außerdem wird nach dem inzw
 * Add documentation files.
 
 2009-09-02 Tamino Dauth <tamino@cdauth.eu>
-* Add computer controller and shared control support to character system.
+* DONE: Add computer controller and shared control support to character system.
 
 2009-08-24 Tamino Dauth <tamino@cdauth.eu>
 * FIXED: If you move an item to next page second time, next page item is moved sometimes?!
@@ -307,7 +307,7 @@ Notes:
 * The save bug (Undefined type nothinng) was caused by the fpscommon.j.
 * Man muss jedes Mal MultiboardGetItem erneut aufrufen, dann etwas ändern (Es gehen auch mehrere Dinge) und dann MultiboardReleaseItem aufrufen.
 * The TriggerSleepAction function does not work in executions. That's the reason for some bugs in ATalk and AVideo.
-* Der Video wurde automatisch übersprungen, da die Bedingung dem Auslöser nicht hinzugefügt wurde.
+* Das Video wurde automatisch übersprungen, da die Bedingung dem Auslöser nicht hinzugefügt wurde.
 * %s or something similar could crash Warcraft if you placed it in the custom script section.
 * Methods are often called by TriggerEvaluate:
 Methods are different to normal functions in that they can be called from any place (except global declarations)

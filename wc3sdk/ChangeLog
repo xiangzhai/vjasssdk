@@ -1,3 +1,14 @@
+2011-03-04 Tamino Dauth <tamino@cdauth.eu>
+* Added function "WaitCheckingCondition" which uses polled wait method.
+* AVideo: Dropped initialization member "waitInterval".
+* AVideo: Function "wait" is using newly added function "WaitCheckingCondition" now.
+* Revised German translation of trigger strings.
+
+2011-03-02 Tamino Dauth <tamino@cdauth.eu>
+* Fixed behaviour of function "GetTimeString".
+* Function "StringToPlayerColor" is not case sensitive anymore.
+* Improved API documentation.
+
 2011-02-26 Tamino Dauth <tamino@cdauth.eu>
 * Environment: Added player-only spell effect creation functions.
 * Revised German translation of trigger strings.

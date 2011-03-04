@@ -11,7 +11,7 @@ library ALibraryCoreMathsReal
 
 	/**
 	* @author WaterKnight
-	* @return Gibt das von base nächstgelegene Vielfache von interval zurück. Also praktisch ein allgemeines Runden. Ist @param interval 0, so gibt die Funktion 0 zurück.
+	* @return Gibt das von base nächstgelegene Vielfache von interval zurück. Also praktisch ein allgemeines Runden. Ist \p interval 0, so gibt die Funktion 0 zurück.
 	* Sollte der Abstand gleich sein, hat das Ergebnis mit dem kleineren Betrag Vorrang. RoundToGetDifference ist für RoundTo gedacht, deswegen habe ich eine Sicherheitsmanahme, die eine Nulldivision verhindern würde, ausgelassen, da diese schon bei RoundTo stattfindet.
 	*/
 	function RoundTo takes real base, real interval returns real
