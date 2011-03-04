@@ -37,8 +37,8 @@ TriggerRegisterDialogEventBJHint=
 
 
 // Game events
-TriggerRegisterGameStateEventTimeOfDay="Uhrzeit"
-TriggerRegisterGameStateEventTimeOfDay="Die spielinterne Uhrzeit wird ",~Operation," ",~Zeit
+TriggerRegisterGameStateEventTimeOfDay="Tageszeit"
+TriggerRegisterGameStateEventTimeOfDay="Die spielinterne Tageszeit wird ",~Operation," ",~Zeit
 TriggerRegisterGameStateEventTimeOfDayHint="Ein Spieltag geht 24 Stunden lang. Sechs Uhr morgens ist 6.00 und sechs Uhr abends ist 18.00."
 
 TriggerRegisterVariableEvent="Wert einer Real-Variablen"
@@ -53,12 +53,12 @@ TriggerRegisterGameSavedEventBJ="Spielspeicherung"
 TriggerRegisterGameSavedEventBJ="Das Spiel stets kurz davor gespeichert zu werden"
 TriggerRegisterGameSavedEventBJHint="This fires immediately before the game is saved."
 
-TriggerRegisterShowSkillEventBJ="Hero Abilities Button Clicked"
-TriggerRegisterShowSkillEventBJ="The 'Hero Abilities' button is clicked"
-TriggerRegisterShowSkillEventBJHint="This event should only be used in single-player maps."
+TriggerRegisterShowSkillEventBJ="Helden-Fähigkeiten-Button angeklickt"
+TriggerRegisterShowSkillEventBJ="Der 'Helden-Fähigkeiten'-Button wird angeklickt"
+TriggerRegisterShowSkillEventBJHint="Dieses Ereignis sollte nur in Einzelspielerkarten verwendet werden."
 
-TriggerRegisterBuildSubmenuEventBJ="Baue-Gebäude-Button wird ausgewählt"
-TriggerRegisterBuildSubmenuEventBJ="Der 'Baue Gebäude'-Button wird ausgewählt"
+TriggerRegisterBuildSubmenuEventBJ="Gebäude-errichten-Button angeklickt"
+TriggerRegisterBuildSubmenuEventBJ="Der 'Gebäude errichten'-Button wird angeklickt"
 TriggerRegisterBuildSubmenuEventBJHint="Dieses Ereignis sollte nur in Einzelspielerkarten verwendet werden."
 
 TriggerRegisterGameEvent="Turnier-Ereignis"
@@ -71,13 +71,13 @@ TriggerRegisterPlayerChatEvent="Chat-Nachricht"
 TriggerRegisterPlayerChatEvent=~Spieler," gibt eine Chat-Nachricht, welche den ",~Text," als ",~Übereinstimmungstyp," enthält, ein"
 TriggerRegisterPlayerChatEventHint="Verwenden Sie 'Ereignis-Reaktion - Eingegebene/übereinstimmende Chat-Nachricht' um auf die Chat-Nachricht zu verweisen, die eingeben wurde/übereinstimmte.  Verwenden Sie 'Ereignis-Reaktion - Auslösender Spieler', um auf den Spieler zu verweisen, welcher die Nachricht eingegeben hat."
 
-TriggerRegisterPlayerEventEndCinematic="Cinematic Skipped"
-TriggerRegisterPlayerEventEndCinematic=~Player," skips a cinematic sequence"
-TriggerRegisterPlayerEventEndCinematicHint="This event occurs whenever the player presses the 'Escape' key (regardless of whether or not they are viewing a cinematic)."
+TriggerRegisterPlayerEventEndCinematic="Filmüberspringung"
+TriggerRegisterPlayerEventEndCinematic=~Spieler," überspringt eine Filmsequenz"
+TriggerRegisterPlayerEventEndCinematicHint="Dieses Ereignis tritt immer dann ein, wenn ein Spieler die 'Escape'-Taste drückt (ungeachtet ob sie gerade oder ob sie gerade nicht einen Film sehen)."
 
 TriggerRegisterPlayerSelectionEventBJ="Auswahl-Ereignis"
 TriggerRegisterPlayerSelectionEventBJ=~Spieler," ",~wählt aus/wählt ab," eine Einheit"
-TriggerRegisterPlayerSelectionEventBJHint="Verwenden Sie 'Ereignisreaktion - Auslösungseinheit', um auf die Einheit, welche aus- oder abgewählt wird, zu verweisen."
+TriggerRegisterPlayerSelectionEventBJHint="Verwenden Sie 'Ereignisreaktion - Auslösende Einheit', um auf die Einheit, welche aus- oder abgewählt wird, zu verweisen."
 
 TriggerRegisterPlayerKeyEventBJ="Tastatur-Ereignis"
 TriggerRegisterPlayerKeyEventBJ=~Spieler," ",~drückt/lässt ," die ",~Taste," los"
@@ -127,8 +127,8 @@ TriggerRegisterUnitEvent="Spezielles Einheitenereignis"
 TriggerRegisterUnitEvent=~Einheit," ",~Ereignis
 TriggerRegisterUnitEventHint=
 
-TriggerRegisterPlayerUnitEventSimple="Player-Owned Unit Event"
-TriggerRegisterPlayerUnitEventSimple="A unit owned by ",~Player," ",~Event
+TriggerRegisterPlayerUnitEventSimple="Spielereigene-Einheit-Ereignis"
+TriggerRegisterPlayerUnitEventSimple="Eine Einheit im Besitz von ",~Spieler," ",~Ereignis
 TriggerRegisterPlayerUnitEventSimpleHint=
 
 TriggerRegisterAnyUnitEventBJ="Allgemeines Einheitenereignis"
@@ -143,9 +143,9 @@ TriggerRegisterLeaveRectSimple="Einheit verlässt Region"
 TriggerRegisterLeaveRectSimple="Eine Einheit verlässt ",~Region
 TriggerRegisterLeaveRectSimpleHint="Verwenden Sie 'Ereignisreaktion - Verlassende Einheit', um auf die Einheit zu verweisen, die die Region verlässt."
 
-TriggerRegisterUnitInRangeSimple="Unit Within Range"
-TriggerRegisterUnitInRangeSimple="A unit comes within ",~Range," of ",~Unit
-TriggerRegisterUnitInRangeSimpleHint="Use 'Event Response - Triggering Unit' to refer to the unit that is entering within range."
+TriggerRegisterUnitInRangeSimple="Einheit innerhalb Reichweite"
+TriggerRegisterUnitInRangeSimple="Eine Einheit kommt innerhalb von ",~Reichweite," von ",~Einheit
+TriggerRegisterUnitInRangeSimpleHint="Verwenden Sie 'Ereignisreaktion - Auslösende Einheit', um auf die innerhalb der Reichweite betrende Einheit zu verweisen."
 
 TriggerRegisterUnitLifeEvent="Leben"
 TriggerRegisterUnitLifeEvent=~Einheit,"s Leben wird ",~Operation," ",~Wert
@@ -183,68 +183,68 @@ OperatorCompareButton="Dialog-Button-Vergleich"
 OperatorCompareButton=~Wert," ",~Operator," ",~Wert
 OperatorCompareButtonHint=
 
-OperatorCompareGameDifficulty="Game Difficulty Comparison"
-OperatorCompareGameDifficulty=~Value," ",~Operator," ",~Value
+OperatorCompareGameDifficulty="Spielschwierigkeitsvergleich"
+OperatorCompareGameDifficulty=~Wert," ",~Operator," ",~Wert
 OperatorCompareGameDifficultyHint=
 
-OperatorCompareGameSpeed="Game Speed Comparison"
-OperatorCompareGameSpeed=~Value," ",~Operator," ",~Value
+OperatorCompareGameSpeed="Spielgeschwindigkeitsvergleich"
+OperatorCompareGameSpeed=~Wert," ",~Operator," ",~Wert
 OperatorCompareGameSpeedHint=
 
-OperatorCompareHeroSkill="Hero Skill Comparison"
-OperatorCompareHeroSkill=~Value," ",~Operator," ",~Value
+OperatorCompareHeroSkill="Heldenfähigkeitsvergleich"
+OperatorCompareHeroSkill=~Wert," ",~Operator," ",~Wert
 OperatorCompareHeroSkillHint=
 
-OperatorCompareInteger="Integer Comparison"
-OperatorCompareInteger=~Value," ",~Operator," ",~Value
+OperatorCompareInteger="Ganzzahlvergleich"
+OperatorCompareInteger=~Wert," ",~Operator," ",~Wert
 OperatorCompareIntegerHint=
 
-OperatorCompareItem="Item Comparison"
-OperatorCompareItem=~Value," ",~Operator," ",~Value
+OperatorCompareItem="Gegenstandsvergleich"
+OperatorCompareItem=~Wert," ",~Operator," ",~Wert
 OperatorCompareItemHint=
 
-OperatorCompareItemType="Item-Class Comparison"
-OperatorCompareItemType=~Value," ",~Operator," ",~Value
+OperatorCompareItemType="Gegenstandsklassenvergleich"
+OperatorCompareItemType=~Wert," ",~Operator," ",~Wert
 OperatorCompareItemTypeHint=
 
-OperatorCompareItemCode="Item-Type Comparison"
-OperatorCompareItemCode=~Value," ",~Operator," ",~Value
+OperatorCompareItemCode="Gegenstandstypvergleich"
+OperatorCompareItemCode=~Wert," ",~Operator," ",~Wert
 OperatorCompareItemCodeHint=
 
-OperatorCompareMeleeDifficulty="Melee AI Comparison"
-OperatorCompareMeleeDifficulty=~Value," ",~Operator," ",~Value
+OperatorCompareMeleeDifficulty="Nahkampf-KI-Vergleich"
+OperatorCompareMeleeDifficulty=~Wert," ",~Operator," ",~Wert
 OperatorCompareMeleeDifficultyHint=
 
-OperatorCompareOrderCode="Order Comparison"
-OperatorCompareOrderCode=~Value," ",~Operator," ",~Value
+OperatorCompareOrderCode="Befehlsvergleich"
+OperatorCompareOrderCode=~Wert," ",~Operator," ",~Wert
 OperatorCompareOrderCodeHint=
 
-OperatorComparePlayer="Player Comparison"
-OperatorComparePlayer=~Value," ",~Operator," ",~Value
+OperatorComparePlayer="Spielervergleich"
+OperatorComparePlayer=~Wert," ",~Operator," ",~Wert
 OperatorComparePlayerHint=
 
-OperatorComparePlayerColor="Player Color Comparison"
-OperatorComparePlayerColor=~Value," ",~Operator," ",~Value
+OperatorComparePlayerColor="Spielerfarbevergleich"
+OperatorComparePlayerColor=~Wert," ",~Operator," ",~Wert
 OperatorComparePlayerColorHint=
 
 OperatorComparePlayerControl="Player Controller Comparison"
-OperatorComparePlayerControl=~Value," ",~Operator," ",~Value
+OperatorComparePlayerControl=~Wert," ",~Operator," ",~Wert
 OperatorComparePlayerControlHint=
 
-OperatorComparePlayerSlotStatus="Player Slot Status Comparison"
-OperatorComparePlayerSlotStatus=~Value," ",~Operator," ",~Value
+OperatorComparePlayerSlotStatus="Spieler-Slot-Status-Vergleich"
+OperatorComparePlayerSlotStatus=~Wert," ",~Operator," ",~Wert
 OperatorComparePlayerSlotStatusHint=
 
 //OperatorComparePoint="Point Comparison"
 //OperatorComparePoint=~Value," ",~Operator," ",~Value
 //OperatorComparePointHint=
 
-OperatorCompareRace="Race Comparison"
-OperatorCompareRace=~Value," ",~Operator," ",~Value
+OperatorCompareRace="Volk-Vergleich"
+OperatorCompareRace=~Wert," ",~Operator," ",~Wert
 OperatorCompareRaceHint=
 
-OperatorCompareReal="Real Comparison"
-OperatorCompareReal=~Value," ",~Operator," ",~Value
+OperatorCompareReal="Reelle-Vergleich"
+OperatorCompareReal=~Wert," ",~Operator," ",~Wert
 OperatorCompareRealHint=
 
 //OperatorCompareRegion="Region Comparison"
@@ -255,24 +255,24 @@ OperatorCompareString="Zeichenkettenvergleich"
 OperatorCompareString=~Wert," ",~Operator," ",~Wert
 OperatorCompareStringHint="Damit zwei Zeichenketten gleich sind, müssen sie die gleiche Länge und den gleichen Inhalt haben."
 
-OperatorCompareTechCode="Tech-Type Comparison"
-OperatorCompareTechCode=~Value," ",~Operator," ",~Value
+OperatorCompareTechCode="Ausbautypvergleich"
+OperatorCompareTechCode=~Wert," ",~Operator," ",~Wert
 OperatorCompareTechCodeHint=
 
-OperatorCompareTrigger="Trigger Comparison"
-OperatorCompareTrigger=~Value," ",~Operator," ",~Value
+OperatorCompareTrigger="Auslöservergleich"
+OperatorCompareTrigger=~Wert," ",~Operator," ",~Wert
 OperatorCompareTriggerHint=
 
-OperatorCompareUnit="Unit Comparison"
-OperatorCompareUnit=~Value," ",~Operator," ",~Value
+OperatorCompareUnit="Einheitenvergleich"
+OperatorCompareUnit=~Wert," ",~Operator," ",~Wert
 OperatorCompareUnitHint=
 
-OperatorCompareUnitCode="Unit-Type Comparison"
-OperatorCompareUnitCode=~Value," ",~Operator," ",~Value
+OperatorCompareUnitCode="Einheitentypvergleich"
+OperatorCompareUnitCode=~Wert," ",~Operator," ",~Wert
 OperatorCompareUnitCodeHint=
 
-OperatorCompareTerrainType="Terrain Type Comparison"
-OperatorCompareTerrainType=~Value," ",~Operator," ",~Value
+OperatorCompareTerrainType="Geländetypvergleich"
+OperatorCompareTerrainType=~Wert," ",~Operator," ",~Wert
 OperatorCompareTerrainTypeHint=
 
 GetBooleanAnd="Und"
@@ -325,13 +325,13 @@ WaitForSoundBJHint="Diese Aktion wartet nur falls das Geräusch gerade abgespiel
 
 
 // Specially handled by the editor
-SetVariable="Setze Variable"
+SetVariable="Variable setzen"
 SetVariable="Setze ",~Variable," = ",~Wert
 SetVariableHint=
 
 
 // Specially handled by the editor
-ReturnAction="Überspringe verbleibende Aktionen"
+ReturnAction="Verbleibende Aktionen überspringen"
 ReturnAction="Überspringe verbleibende Aktionen"
 ReturnActionHint="Dies verursacht, dass alle verbleibenden Aktionen im Auslöser übersprungen werden."
 
@@ -347,48 +347,48 @@ IfThenElse="Falls ",~Bedingung," dann führe aus ",~Aktion," ansonsten führe au
 IfThenElseHint=
 
 // Specially handled by the editor
-ForLoopAMultiple="Für jede Ganzzahl A, führe mehrere Aktionen aus"
+ForLoopAMultiple="Mehrere Aktionen für jede Ganzzahl A ausführen"
 ForLoopAMultiple="Für jede (Ganzzahl A) von ",~Start," bis ",~Ende,", führe aus (Aktionen)"
 ForLoopAMultipleHint="Fügen Sie Aktionen zu dieser Funktion in der Hauptanzeige hinzu. Voraussetzung ist, dass der Endwert größer als der Startwert ist."
 
 // Specially handled by the editor
-ForLoopBMultiple="Für jede Ganzzahl B, führe mehrere Aktionen aus"
+ForLoopBMultiple="Mehrere Aktionen für jede Ganzzahl B ausführen"
 ForLoopBMultiple="Für jede (Ganzzahl B) von ",~Start," bis ",~Ende,", führe aus (Aktionen)"
 ForLoopBMultipleHint="Fügen Sie Aktionen zu dieser Funktion in der Hauptanzeige hinzu. Voraussetzung ist, dass der Endwert größer als der Startwert ist."
 
 // Specially handled by the editor
-ForLoopVarMultiple="Für jede Ganzzahlvariable, führe mehrere Aktionen aus"
-ForLoopVarMultiple="Für jede (Ganzzahl ",~Variable,") von ",~Start," bis ",~Ende,", führe aus (Aktionen)"
+ForLoopVarMultiple="Mehrere Aktionen für jede Ganzzahlvariable ausführen"
+ForLoopVarMultiple="Für jede (Ganzzahl-",~Variable,") von ",~Start," bis ",~Ende,", führe aus (Aktionen)"
 ForLoopVarMultipleHint="Fügen Sie Aktionen zu dieser Funktion in der Hauptanzeige hinzu. Voraussetzung ist, dass der Endwert größer als der Startwert ist."
 
 // Specially handled by the editor
-ForLoopA="Für jede Ganzzahl A, führe Aktion aus"
+ForLoopA="Aktion für jede Ganzzahl A ausführen"
 ForLoopA="Für jede (Ganzzahl A) von ",~Start," bis ",~Ende,", führe ",~Aktion," aus"
 ForLoopAHint="Der Endwert sollte größer als der Startwert sein."
 
 // Specially handled by the editor
-ForLoopB="Für jede Ganzzahl B, führe Aktion aus"
+ForLoopB="Aktion für jede Ganzzahl B ausführen"
 ForLoopB="Für jede (Ganzzahl B) von ",~Start," bis ",~Ende,", führe ",~Aktion," aus"
 ForLoopBHint="Der Endwert sollte größer als der Startwert sein."
 
 // Specially handled by the editor
-ForLoopVar="For Each Integer Variable, Do Action"
-ForLoopVar="For each (Integer ",~Variable,") from ",~Start," to ",~End,", do ",~Action
-ForLoopVarHint="The end value is assumed to be larger than the start value."
+ForLoopVar="Für jede Ganzzahlvariable Aktion ausführen"
+ForLoopVar="Für jede (Ganzzahl-",~Variable," von ",~Start," bis ",~Ende,", führe ",~Aktion," aus"
+ForLoopVarHint="Der Endwert sollte größer als der Startwert sein."
 
 
 // AI actions
-StartMeleeAI="Starte Nahkampf-KI-Skript"
+StartMeleeAI="Nahkampf-KI-Skript starten"
 StartMeleeAI="Starte Nahkampf-KI-Skript für ",~Spieler,": ",~Skript
-StartMeleeAIHint="Dies sollte auf jeden Fall nur für computergesteuerte Spieler-Slots verwendet werden.  Wenn Sie diese Aktion verwenden, wird ihnen geraten, dass Sie die 'Feste Spielereinstellungen'-Streitmachteigenschaft aktivieren.."
+StartMeleeAIHint="Dies sollte auf jeden Fall nur für computergesteuerte Spieler-Slots verwendet werden.  Wenn Sie diese Aktion verwenden, wird ihnen geraten, dass Sie die 'Feste Spielereinstellungen'-Streitmachteigenschaft aktivieren."
 
-StartCampaignAI="Start Campaign AI Script"
-StartCampaignAI="Start campaign AI script for ",~Player,": ",~Script
-StartCampaignAIHint="This should only only be used for computer-controlled player slots.  When using this action, it is advised that you enable the 'Fixed Player Settings' force property."
+StartCampaignAI="Kampagnen-KI-Skript starten"
+StartCampaignAI="Starte Kampagnen-KI-Skript für ",~Spieler,": ",~Skript
+StartCampaignAIHint="Dies sollte auf jeden Fall nur für computergesteuerte Spieler-Slots verwendet werden.  Wenn Sie diese Aktion verwenden, wird ihnen geraten, dass Sie die 'Feste Spielereinstellungen'-Streitmachteigenschaft aktivieren."
 
-CommandAI="Send AI Command"
-CommandAI="Send ",~Player," the AI Command (",~Command,", ",~Data,")"
-CommandAIHint="This action is for internal use in AI scripts."
+CommandAI="KI-Befehl senden"
+CommandAI="Sende ",~Spieler," den KI-Befehl (",~Befehl,", ",~Daten,")"
+CommandAIHint="Diese Aktion existiert für die interne Verwendung in KI-Skripts."
 
 RemoveGuardPosition="Ignore Unit Guard Position"
 RemoveGuardPosition="Ignore ",~Unit,"'s guard position"
@@ -402,24 +402,24 @@ RecycleGuardPosition="Recycle Unit Guard Position"
 RecycleGuardPosition="Recycle ",~Unit,"'s guard position"
 RecycleGuardPositionHint="This action requests that the AI recycle the guard position that once belonged to the specified unit."
 
-LockGuardPosition="Lock Guard Position"
-LockGuardPosition="Lock guard position of ",~Unit
-LockGuardPositionHint="This action prevents the AI from changing the guard position of a unit."
+LockGuardPosition="Wachpostenposition sperren"
+LockGuardPosition="Sperre Wachpostenposition von ",~Einheit
+LockGuardPositionHint="Diese Aktion verhindert, dass die KI die Wachposten einer Einheit ändert."
 
 // Animation actions
-SetUnitAnimation="Play Unit Animation"
-SetUnitAnimation="Play ",~Unit,"'s ",~Animation Name," animation"
-SetUnitAnimationHint="Use 'Reset Unit Animation' to revert to a unit's normal animation."
+SetUnitAnimation="Einheitenanimation abspielen"
+SetUnitAnimation="Spiele ",~Einheit,"s ",~Animationsname,"-Animation ab"
+SetUnitAnimationHint="Verwenden Sie 'Einheitenanimation zurücksetzen' um zu einer normalen Animation der Einheit zurückzukehren."
 
-SetUnitAnimationWithRarity="Play Unit Animation (Specify Rarity)"
-SetUnitAnimationWithRarity="Play ",~Unit,"'s ",~Animation Name," animation, using only ",~Rarity," animations"
-SetUnitAnimationWithRarityHint="This animation will repeat until reset with 'Reset Unit Animation'."
+SetUnitAnimationWithRarity="Spiele Einheitenanimation (bestimme Seltenheit)"
+SetUnitAnimationWithRarity="Spiele ",~Einheit,"s ",~Animationsname,"-Animation, verwende nur ",~Seltenheit," Animationen"
+SetUnitAnimationWithRarityHint=" Diese Animation wird solange wiederholt, bis sie mit 'Einheitenanimation zurücksetzen' zurückgesetzt wird."
 
-QueueUnitAnimationBJ="Queue Unit Animation"
-QueueUnitAnimationBJ="Queue ",~Unit,"'s ",~Animation Name," animation"
+QueueUnitAnimationBJ="Einheitenanimation einreihen"
+QueueUnitAnimationBJ="Reihe ",~Einheit,"s ",~Animationsname,"-Animation ein"
 QueueUnitAnimationBJHint=
 
-ResetUnitAnimation="Setze Einheitenanimation zurück"
+ResetUnitAnimation="Einheitenanimation zurücksetzen"
 ResetUnitAnimation="Setze ",~Einheit,"s Animation zurück"
 ResetUnitAnimationHint="Setzt die Animation der Einheit zu dem was auch immer sie tut zurück."
 
@@ -443,9 +443,9 @@ SetUnitVertexColorBJ="Change Unit Vertex Coloring"
 SetUnitVertexColorBJ="Change ",~Unit,"'s vertex coloring to (",~Red,"%, ",~Green,"%, ",~Blue,"%) with ",~Transparency,"% transparency"
 SetUnitVertexColorBJHint="The color values are (Red, Green, Blue).  Most units default to 100% red, green, and blue, with 0% transparency.  A 100% transparent unit is completely invisible."
 
-SetUnitTimeScalePercent="Change Unit Animation Speed"
-SetUnitTimeScalePercent="Change ",~Unit,"'s animation speed to ",~Percent,"% of its original speed"
-SetUnitTimeScalePercentHint="To revert a unit's animation speed to default, set its animation speed to 100%."
+SetUnitTimeScalePercent="Ändere Einheitenanimationsgeschwindigkeit"
+SetUnitTimeScalePercent="Ändere ",~Einheit,"s Animationsgeschwindigkeit zu ",~Prozent,"% ihrer ursprünglichen Geschwindigkeit"
+SetUnitTimeScalePercentHint="Um die Animationsgeschwindigkeit einer Einheit auf den Standardwert zurückzusetzen, müssen Sie ihre Animationsgeschwindigkeit auf 100% setzen."
 
 SetUnitTurnSpeedBJ="Change Unit Turn Speed"
 SetUnitTurnSpeedBJ="Change ",~Unit," turn speed to ",~Value
@@ -463,8 +463,8 @@ SetUnitPropWindowBJ="Change Unit Prop Window Angle"
 SetUnitPropWindowBJ="Change ",~Unit," prop window angle to ",~Angle
 SetUnitPropWindowBJHint=
 
-SetDestructableAnimationBJ="Play Destructible Animation"
-SetDestructableAnimationBJ="Play ",~Destructible,"'s ",~Animation Name," animation"
+SetDestructableAnimationBJ="Spiele Zerstörbares-Animation"
+SetDestructableAnimationBJ="Spiele ",~Zerstörbares,"s ",~Animationsname," Animation"
 SetDestructableAnimationBJHint=
 
 QueueDestructableAnimationBJ="Queue Destructible Animation"
@@ -485,61 +485,61 @@ SetDoodadAnimationBJHint="Special animation names: 'show', 'hide', 'soundon', 's
 
 
 // Camera actions
-CameraSetupApplyForPlayer="Apply Camera Object (Timed)"
-CameraSetupApplyForPlayer="",~Apply Method," ",~Camera Object," for ",~Player," over ",~Time," seconds"
+CameraSetupApplyForPlayer="Kameraobjekt übernehmen (zeitgesteuert)"
+CameraSetupApplyForPlayer="",~Übernahmemethode," ",~Kameraobjekt," für ",~Spieler," in ",~Zeit," Sekunden"
 CameraSetupApplyForPlayerHint=
 
-PanCameraToTimedLocForPlayer="Pan Camera (Timed)"
-PanCameraToTimedLocForPlayer="Pan camera for ",~Player," to ",~Point," over ",~Time," seconds"
+PanCameraToTimedLocForPlayer="Kamera schwenken (zeitgesteuert)"
+PanCameraToTimedLocForPlayer="Schwenke Kamera für ",~Spieler," nach ",~Punkt," innerhalb in ",~Zeit," Sekunden"
 PanCameraToTimedLocForPlayerHint=
 
-PanCameraToTimedLocWithZForPlayer="Pan Camera With Interpolated Height (Timed)"
-PanCameraToTimedLocWithZForPlayer="Pan camera for ",~Player," to ",~Point," with height ",~Z," above the terrain over ",~Time," seconds"
-PanCameraToTimedLocWithZForPlayerHint="The camera will not drop below the terrain height during its camera path."
+PanCameraToTimedLocWithZForPlayer="Kamera mit interpolierter Höhe schwenken (zeitgesteuert)"
+PanCameraToTimedLocWithZForPlayer="Schwenke Kamera für ",~Spieler," nach ",~Punkt," mit der Höhe ",~Z," über dem Gelände in ",~Zeit," Sekunden"
+PanCameraToTimedLocWithZForPlayerHint="Die Kamera wird während ihres Kamerawegs nicht unter die Geländehöhe absinken."
 
-SmartCameraPanBJ="Pan Camera As Necessary (Timed)"
-SmartCameraPanBJ="Pan camera as necessary for ",~Player," to ",~Point," over ",~Time," seconds"
-SmartCameraPanBJHint="If the camera is very far from the destination, it will snap instead of pan.  If the camera is very close to the destination, the pan request will be skipped."
+SmartCameraPanBJ="Kamera wie nötig schwenken (zeitgesteuert)"
+SmartCameraPanBJ="Schwenke Kamera wie nötig für ",~Spieler," nach ",~Punkt," in ",~Zeit," Sekunden"
+SmartCameraPanBJHint="Falls die Kamera sehr weit vom Ziel entfernt ist, wird sie knipsen (snap?!) anstatt zu schwenken.  Falls die Kamera sehr nah am Ziel ist, wird die Schwenkanfrage übersprungen."
 
-SetCameraFieldForPlayer="Set Camera Field (Timed)"
-SetCameraFieldForPlayer="Set ",~Player,"'s camera ",~Field," to ",~Value," over ",~Time," seconds"
+SetCameraFieldForPlayer="Kamerafeld festlegen (zeitgesteuert)"
+SetCameraFieldForPlayer="Lege ",~Spieler,"s Kamer-",~Feld," auf ",~Wert," in ",~Zeit," Sekunden fest"
 SetCameraFieldForPlayerHint=
 
-RotateCameraAroundLocBJ="Rotate Camera Around Point"
-RotateCameraAroundLocBJ="Rotate camera ",~Angle," degrees around ",~Point," for ",~Player," over ",~Time," seconds"
+RotateCameraAroundLocBJ="Kamera um Punkt drehen"
+RotateCameraAroundLocBJ="Drehe Kamera ",~Winkel," Grad um ",~Punkt," für ",~Spieler," in ",~Zeit," Sekunden"
 RotateCameraAroundLocBJHint=
 
-SetCameraTargetControllerNoZForPlayer="Lock Camera Target To Unit"
-SetCameraTargetControllerNoZForPlayer="Lock camera target for ",~Player," to ",~Unit,", offset by (",~X,", ",~Y,") using ",~Rotation Source
-SetCameraTargetControllerNoZForPlayerHint="The camera target is offset by (X, Y) from the center of the unit's feet."
+SetCameraTargetControllerNoZForPlayer="Kameraziel auf Einheit einstellen"
+SetCameraTargetControllerNoZForPlayer="Stelle Kameraziel für ",~Spieler," auf ",~Einheit," ein, ausgeglichen durch (",~X,", ",~Y,") mit ",~Drehungsquelle
+SetCameraTargetControllerNoZForPlayerHint="Das Kameraziel wird durch (X, Y) von der Mitte der Einheitenfüße ausgeglichen."
 
-SetCameraOrientControllerForPlayerBJ="Lock Camera Orientation To Unit"
-SetCameraOrientControllerForPlayerBJ="Lock camera orientation for ",~Player," to ",~Unit,", offset by (",~X,", ",~Y,")"
+SetCameraOrientControllerForPlayerBJ="Kameraorientierung auf Einheit einstellen"
+SetCameraOrientControllerForPlayerBJ="Stelle Kameraorientierung für ",~Spieler," auf ",~Einheit," ein, ausgeglichen durch (",~X,", ",~Y,")"
 SetCameraOrientControllerForPlayerBJHint=
 
-SetCinematicCameraForPlayer="Play Cinematic Camera"
-SetCinematicCameraForPlayer="Run camera for ",~Player," through ",~Camera File," cinematic camera"
+SetCinematicCameraForPlayer="Filmkamera abspielen"
+SetCinematicCameraForPlayer="Lasse Kamera für ",~Spieler," durch ",~Kameradatei,"-Filmkamera laufen"
 SetCinematicCameraForPlayerHint=
 
-StopCameraForPlayerBJ="Stoppe Kamera"
+StopCameraForPlayerBJ="Kamera stoppen"
 StopCameraForPlayerBJ="Stoppe Kamera für ",~Spieler
 StopCameraForPlayerBJHint=
 
-ResetToGameCameraForPlayer="Setze Spielkamera zurück"
+ResetToGameCameraForPlayer="Spielkamera zurücksetzen"
 ResetToGameCameraForPlayer="Setze Kamera für ",~Spieler," zur Standardspielansicht innerhalb von ",~Zeit," Sekunden zurück"
 ResetToGameCameraForPlayerHint=
 
-CameraSetSmoothingFactorBJ="Change Camera Smoothing Factor"
-CameraSetSmoothingFactorBJ="Change camera smoothing factor to ",~Factor
+CameraSetSmoothingFactorBJ="Kameraglättungsfaktor ändern"
+CameraSetSmoothingFactorBJ="Ändere Kameraglättungsfaktor zu ",~Faktor
 CameraSetSmoothingFactorBJHint=
 
-CameraResetSmoothingFactorBJ="Reset Camera Smoothing Factor"
-CameraResetSmoothingFactorBJ="Reset camera smoothing factor"
+CameraResetSmoothingFactorBJ="Kameraglättungsfaktor zurücksetzen"
+CameraResetSmoothingFactorBJ="Setze Kameraglättungsfaktor zurück"
 CameraResetSmoothingFactorBJHint=
 
-CameraSetSourceNoiseForPlayer="Sway Camera Source"
-CameraSetSourceNoiseForPlayer="Sway the camera source for ",~Player," with magnitude ",~Magnitude," and velocity ",~Velocity
-CameraSetSourceNoiseForPlayerHint="This constantly sways the camera source until it is reset with 'Camera - Reset Game Camera' or 'Camera - Stop Swaying Camera'."
+CameraSetSourceNoiseForPlayer="Kameraquelle schaukeln"
+CameraSetSourceNoiseForPlayer="Schaukle Kameraquelle für ",~Spieler," mit der Stärke ",~Stärke," und der Geschwindigkeit ",~Geschwindigkeit
+CameraSetSourceNoiseForPlayerHint=" Dies schaukelt die Kameraquelle durchgehend bis sie mit 'Kamera - Setze Spielkamera zurück' oder 'Kamera - Stoppe Schaukeln der Kamera' zurückgesetzt wird."
 
 CameraSetTargetNoiseForPlayer="Sway Camera Target"
 CameraSetTargetNoiseForPlayer="Sway the camera target for ",~Player," with magnitude ",~Magnitude," and velocity ",~Velocity
@@ -567,13 +567,13 @@ SetCameraQuickPositionLocForPlayerHint="A spacebar-point is a location that the 
 
 
 // Cinematic actions
-TransmissionFromUnitWithNameBJ="Transmission From Unit"
-TransmissionFromUnitWithNameBJ="Send transmission to ",~Player Group," from ",~Unit," named ",~Name,": Play ",~Sound," and display ",~Message,".  Modify duration: ",~Method," ",~Time," seconds and ",~Wait/Don't Wait
-TransmissionFromUnitWithNameBJHint="The duration of 'No sound' is 5 seconds."
+TransmissionFromUnitWithNameBJ="Übertragung von Einheit"
+TransmissionFromUnitWithNameBJ="Sende Übertragung an ",~Spielergruppe," von ",~Einheit," benannt ",~Name,": Spiele ",~Geräusch," und zeige ",~Nachricht," an.  Modifiziere Dauer: ",~Methode," ",~Zeit," Sekunden und ",~Warten/Nicht warten
+TransmissionFromUnitWithNameBJHint="Die Dauer von 'Kein Geräusch' beträgt 5 Sekunden."
 
-TransmissionFromUnitTypeWithNameBJ="Transmission From Unit-Type"
-TransmissionFromUnitTypeWithNameBJ="Send transmission to ",~Player Group," from a ",~Player," ",~Unit-Type," named ",~Name," at ",~Point,": Play ",~Sound," and display ",~Message,".  Modify duration: ",~Method," ",~Time," seconds and ",~Wait/Don't Wait
-TransmissionFromUnitTypeWithNameBJHint="The duration of 'No sound' is 5 seconds."
+TransmissionFromUnitTypeWithNameBJ="Übertragung von Einheitentyp"
+TransmissionFromUnitTypeWithNameBJ="Sende Übertragung an ",~Spielergruppe," von einer ",~Spieler,"-",~Einheitentyp,"-Einheit benannt ",~Name," an ",~Punkt,": Spiele ",~Geräusch," und zeige ",~Nachricht," an.  Modifiziere Dauer: ",~Methode," ",~Zeit," Sekunden und ",~Warten/Nicht warten
+TransmissionFromUnitTypeWithNameBJHint="Die Dauer von 'Kein Geräusch' beträgt 5 Sekunden."
 
 ForceCinematicSubtitlesBJ="Subtitle Display Override"
 ForceCinematicSubtitlesBJ="Turn subtitle display override ",~On/Off
@@ -583,8 +583,8 @@ CinematicModeBJ="Filmmodus"
 CinematicModeBJ="Schalte Filmmodus ",~Ein/Aus," für ",~Spielergruppe
 CinematicModeBJHint=
 
-CinematicModeExBJ="Cinematic Mode (Timed)"
-CinematicModeExBJ="Turn cinematic mode ",~On/Off," for ",~Player Group," over ",~Time," seconds"
+CinematicModeExBJ="Filmmodus (zeitgestuert)"
+CinematicModeExBJ="Schalte Filmmodus ",~ein/aus," für ",~Spielergruppe," in ",~Zeit," Sekunden"
 CinematicModeExBJHint=
 
 CinematicFadeBJ="Fade Filter"
@@ -631,11 +631,11 @@ ShowInterfaceForceOn="Letterbox Mode Off"
 ShowInterfaceForceOn="Turn off letterbox mode (show interface) for ",~Player Group,": fade in over ",~Duration," seconds"
 ShowInterfaceForceOnHint="Puts the camera into normal (non-letterbox) mode, displaying the game interface."
 
-SetUserControlForceOff="Deaktivere Benutzerkontrolle"
+SetUserControlForceOff="Benutzerkontrolle deaktivieren"
 SetUserControlForceOff="Deaktiviere Benutzerkontrolle für  ",~Spielergruppe
 SetUserControlForceOffHint=
 
-SetUserControlForceOn="Aktiviere Benutzerkontrolle"
+SetUserControlForceOn="Benutzerkontrolle aktivieren"
 SetUserControlForceOn="Aktiviere Benutzerkontrolle für ",~Spielergruppe
 SetUserControlForceOnHint=
 
@@ -649,12 +649,12 @@ EnableWorldFogBoundaryBJHint=
 
 
 // Countdown Timer actions
-StartTimerBJ="Starte Zeitgeber"
+StartTimerBJ="Zeitgeber starten"
 StartTimerBJ="Starte ",~Zeitgeber," als einen ",~Einmaligen/Wiederholenden," Zeitgeber, der in ",~Time," Sekunden ablaufen wird"
 StartTimerBJHint=
 
-PauseTimerBJ="Pause Timer"
-PauseTimerBJ=~Pause/Resume," ",~Timer
+PauseTimerBJ="Zeitgeber pausieren"
+PauseTimerBJ=~Pausiere/Setze fort," ",~Zeitgeber
 PauseTimerBJHint=
 
 CreateTimerDialogBJ="Create Timer Window"
@@ -699,20 +699,20 @@ CreateDeadDestructableLocBJ="Create (Dead)"
 CreateDeadDestructableLocBJ="Create a dead ",~Destructible-Type," at ",~Point," facing ",~Direction," with scale ",~Scale," and variation ",~Variation
 CreateDeadDestructableLocBJHint="The facing angle is expected in degrees, with 0 being east and 90 being north.  Use 'Last Created Destructible' to refer to this destructible."
 
-KillDestructable="Kill"
-KillDestructable="Kill ",~Destructible
+KillDestructable="Zerstören"
+KillDestructable="Zerstöre ",~Zerstörbares
 KillDestructableHint=
 
-RemoveDestructable="Remove"
-RemoveDestructable="Remove ",~Destructible
+RemoveDestructable="Entfernen"
+RemoveDestructable="Entferne ",~Zerstörbares
 RemoveDestructableHint=
 
-DestructableRestoreLife="Resurrect"
-DestructableRestoreLife="Resurrect ",~Destructible," with ",~Value," life and ",~Show/Hide," birth animation"
+DestructableRestoreLife="Wieder aufleben lassen"
+DestructableRestoreLife="Lasse ",~Zerstörbares," mit ",~Wert," Leben und ",~Zeigen/Verbergen," Entstehungsanimation wieder aufleben"
 DestructableRestoreLifeHint=
 
-ShowDestructableBJ="Show/Hide"
-ShowDestructableBJ=~Show/Hide," ",~Destructible
+ShowDestructableBJ="Zeigen/verbergen"
+ShowDestructableBJ=~Zeigen/Verbergen," ",~Destructible
 ShowDestructableBJHint="Hidden destructibles are not displayed, but still affect pathing and visibility."
 
 SetDestructableLifePercentBJ="Set Life (To Percentage)"
@@ -835,8 +835,8 @@ SetWaterBaseColorBJ="Set Water Tinting Color"
 SetWaterBaseColorBJ="Change water tinting color to (",~Red,"%, ",~Green,"%, ",~Blue,"%) with ",~Transparency,"% transparency"
 SetWaterBaseColorBJHint="The color values are (Red, Green, Blue).  100% transparent water is completely invisible."
 
-SetSkyModel="Set Sky"
-SetSkyModel="Set sky to ",~Sky
+SetSkyModel="Lege Himmel fest"
+SetSkyModel="Lege den Himmel auf ",~Himmel," fest"
 SetSkyModelHint=
 
 SetTerrainFogExBJ="Set Fog"
@@ -922,12 +922,12 @@ DisplayTimedTextToForce="Text Message (Explicitly Timed)"
 DisplayTimedTextToForce="Display to ",~Player Group," for ",~Time," seconds the text: ",~Text
 DisplayTimedTextToForceHint=
 
-PauseGameOn="Pause Game"
-PauseGameOn="Pause the game"
+PauseGameOn="Spiel pausieren"
+PauseGameOn="Pausiere das Spiel"
 PauseGameOnHint=
 
-PauseGameOff="Unpause Game"
-PauseGameOff="Unpause the game"
+PauseGameOff="Spiel fortsetzen"
+PauseGameOff="Setze das Spiel fort"
 PauseGameOffHint=
 
 SetGameSpeed="Set Game Speed"
@@ -946,13 +946,13 @@ SetMapFlag="Set Map Flag"
 SetMapFlag="Set ",~Map Flag," to ",~On/Off
 SetMapFlagHint=
 
-SetTimeOfDay="Set Time Of Day"
-SetTimeOfDay="Set the time of day to ",~Time
-SetTimeOfDayHint="A game day is 24 hours long.  Six a.m. is 6.00, and six p.m. is 18.00."
+SetTimeOfDay="Tageszeit festlegen"
+SetTimeOfDay="Lege die Tageszeit auf ",~Zeit," fest"
+SetTimeOfDayHint="Ein Spieltag dauert 24 Stunden.  Sechs Uhr morgens ist 6.00 und sechs Uhr abends ist 18.00."
 
-SetTimeOfDayScalePercentBJ="Set Time Of Day Speed"
-SetTimeOfDayScalePercentBJ="Set time of day speed to ",~Percent,"% of the default speed"
-SetTimeOfDayScalePercentBJHint="Use 100% to revert the speed to normal."
+SetTimeOfDayScalePercentBJ="Tageszeitgeschwindigkeit festlegen"
+SetTimeOfDayScalePercentBJ="Lege Tageszeitgeschwindigkeit auf ",~Prozent,"% der normalen Geschwindigkeit fest"
+SetTimeOfDayScalePercentBJHint="Verwenden Sie 100%, um die Geschwindigkeit auf den Standardwert zurückzusetzen."
 
 UseTimeOfDayBJ="Turn Day/Night Cycle On/Off"
 UseTimeOfDayBJ="Turn the day/night cycle ",~On/Off
@@ -970,16 +970,16 @@ SetNextLevelBJ="Set Next Level"
 SetNextLevelBJ="Set the next level to ",~Level
 SetNextLevelBJHint="This sets a level to be started after the current game ends."
 
-CustomVictoryBJ="Victory"
-CustomVictoryBJ="Victory ",~Player," (",~Show/Skip," dialogs, ",~Show/Skip," scores)"
+CustomVictoryBJ="Sieg"
+CustomVictoryBJ="Sieg ",~Spieler," (",~Zeige/Überspringe," Dialoge, ",~Zeige/Überspringe," Punkte)"
 CustomVictoryBJHint=
 
-CustomDefeatBJ="Defeat"
-CustomDefeatBJ="Defeat ",~Player," with the message: ",~Message
+CustomDefeatBJ="Niederlage"
+CustomDefeatBJ="Niederlage ",~Spieler," mit der Nachricht: ",~Nachricht
 CustomDefeatBJHint=
 
-LoadGameBJ="Load Game"
-LoadGameBJ="Load ",~Filename," (",~Show/Skip," scores)"
+LoadGameBJ="Spiel laden"
+LoadGameBJ="Lade ",~Dateiname," (",~Zeige/Überspringe," Punkte)"
 LoadGameBJHint=
 
 SaveAndLoadGameBJ="Save Game And Load Game"
@@ -1010,8 +1010,8 @@ SetMissionAvailableBJ="Enable/Disable Mission"
 SetMissionAvailableBJ=~Enable/Disable," ",~Mission
 SetMissionAvailableBJHint=
 
-SetCampaignAvailableBJ="Enable/Disable Campaign"
-SetCampaignAvailableBJ=~Enable/Disable," the ",~Campaign
+SetCampaignAvailableBJ="Aktiviere/Deaktiviere Kampagne"
+SetCampaignAvailableBJ=~Aktiviere/Deaktiviere," die ",~Kampagne
 SetCampaignAvailableBJHint=
 
 SetCinematicAvailableBJ="Enable/Disable Cinematic"
@@ -1346,8 +1346,8 @@ SetPlayerHandicapXPBJ="Set Experience Rate"
 SetPlayerHandicapXPBJ="Make ",~Player," Heroes gain ",~Percent,"% experience from future kills"
 SetPlayerHandicapXPBJHint=
 
-ReviveHeroLoc="Revive (Instantly)"
-ReviveHeroLoc="Instantly revive ",~Hero," at ",~Point,", ",~Show/Hide," revival graphics"
+ReviveHeroLoc="Belebe wieder (sofort)"
+ReviveHeroLoc="Belebe ",~Held," an ",~Punkt," sofort wieder, ",~Zeige/Verberge," Wiederbelebungsgrafik"
 ReviveHeroLocHint="This revives a dead Hero at a spot on the map, even if the player has no altar.  You can also revive a Hero by issuing a 'Revive' order to an appropriate altar, targeting the hero you wish to revive."
 
 ModifyHeroStat="Modify Hero Attribute"
@@ -1362,8 +1362,8 @@ SetReservedLocalHeroButtons="Reserve Hero Buttons"
 SetReservedLocalHeroButtons="Reserve ",~Number," Hero buttons for the local player"
 SetReservedLocalHeroButtonsHint="Button slots reserved by this action are not used by Heroes controlled via shared unit control."
 
-UnitAddItemSwapped="Give Item To Hero"
-UnitAddItemSwapped="Give ",~Item," to ",~Hero
+UnitAddItemSwapped="Gebe Gegenstand einem Helden"
+UnitAddItemSwapped="Gebe ",~Gegenstand," ",~Held
 UnitAddItemSwappedHint=
 
 UnitAddItemByIdSwapped="Create Item For Hero"
@@ -1390,43 +1390,43 @@ UnitUseItemDestructable="Use Item On A Destructible"
 UnitUseItemDestructable="Order ",~Hero," to use ",~Item," on ",~Destructible
 UnitUseItemDestructableHint=
 
-UnitUseItem="Verwende Gegenstand"
+UnitUseItem="Gegenstand verwenden"
 UnitUseItem="Befehle ",~Held," ",~Item," zu verwenden"
 UnitUseItemHint=
 
 
 // Item actions
-CreateItemLoc="Erzeuge"
+CreateItemLoc="Erzeugen"
 CreateItemLoc="Erzeuge ",~Gegenstand," an ",~Punkt
 CreateItemLocHint=
 
-RemoveItem="Entferne"
+RemoveItem="Entfernen"
 RemoveItem="Entferne ",~Gegenstand
 RemoveItemHint=
 
-SetItemVisibleBJ="Show/Hide Item"
-SetItemVisibleBJ=~Show/Hide," ",~Item
+SetItemVisibleBJ="Gegenstand zeigen/verbergen"
+SetItemVisibleBJ=~Zeigen/Verbergen," ",~Gegenstand
 SetItemVisibleBJHint="This hides items on the ground.  It does not affect items held by units."
 
-SetItemPositionLoc="Move (Instantly)"
-SetItemPositionLoc="Move ",~Item," to ",~Point
+SetItemPositionLoc="Verschieben (sofort)"
+SetItemPositionLoc="Verschiebe ",~Gegenstand," nach ",~Punkt
 SetItemPositionLocHint=
 
-SetItemLifeBJ="Set Life"
-SetItemLifeBJ="Set life of ",~Item," to ",~Value
+SetItemLifeBJ="Leben festlegen"
+SetItemLifeBJ="Lege Leben von ",~Gegenstand," auf ",~Wert," fest"
 SetItemLifeBJHint=
 
-SetItemCharges="Set Charges Remaining"
-SetItemCharges="Set charges remaining in ",~Item," to ",~Charges
-SetItemChargesHint="Use a value of zero to give the item unlimited charges."
+SetItemCharges="Verbleibende Aufladungen festlegen"
+SetItemCharges="Lege verbleibende Aufladungen von ",~Gegenstand," auf ",~Aufladungen," fest"
+SetItemChargesHint="Verwenden Sie einen Wert von null, um dem Gegenstand unbegrenzte Aufladungen zu geben."
 
-SetItemInvulnerableBJ="Make Invulnerable/Vulnerable"
-SetItemInvulnerableBJ="Make ",~Item," ",~Invulnerable/Vulnerable
+SetItemInvulnerableBJ="Unverwundbar/verwundbar machen"
+SetItemInvulnerableBJ="Mache ",~Gegenstand," ",~verwundbar/unverwundbar
 SetItemInvulnerableBJHint=
 
-SetItemPawnable="Make Pawnable"
-SetItemPawnable="Make ",~Item," ",~Pawnable/Unpawnable
-SetItemPawnableHint="A pawnable item can be sold at item vendors."
+SetItemPawnable="Verpfändbar machen"
+SetItemPawnable="Mache ",~Gegenstand," ",~verpfändbar/unverpfändbar
+SetItemPawnableHint="Ein verpfändbarer Gegenstand kann an Gegenstandsverkäufern verkauft werden."
 
 SetItemDroppableBJ="Make Undroppable"
 SetItemDroppableBJ="Make ",~Item," ",~Droppable/Undroppable
@@ -1527,15 +1527,15 @@ LeaderboardSetStyleBJ="Change Style"
 LeaderboardSetStyleBJ="Change the display style for ",~Leaderboard," to ",~Show/Hide," the title, ",~Show/Hide," labels, ",~Show/Hide," values, and ",~Show/Hide," icons"
 LeaderboardSetStyleBJHint=
 
-LeaderboardAddItemBJ="Füge Spieler hinzu"
+LeaderboardAddItemBJ="Spieler hinzufügen"
 LeaderboardAddItemBJ="Füge ",~Spieler," zu ",~Bestenliste," mit Kennung ",~Kennung," und Wert ",~Wert," hinzu"
 LeaderboardAddItemBJHint=
 
-LeaderboardRemovePlayerItemBJ="Entferne Spieler"
+LeaderboardRemovePlayerItemBJ="Spieler entfernen"
 LeaderboardRemovePlayerItemBJ="Entferne ",~Spieler," von ",~Bestenliste
 LeaderboardRemovePlayerItemBJHint=
 
-LeaderboardSetPlayerItemLabelBJ="Ändere Spielerkennung"
+LeaderboardSetPlayerItemLabelBJ="Spielerkennung ändern"
 LeaderboardSetPlayerItemLabelBJ="Ändere die Kennung für ",~Spieler," in ",~Bestenliste," zu ",~Kennung
 LeaderboardSetPlayerItemLabelBJHint=
 
@@ -1579,16 +1579,16 @@ MeleeStartingVisibility="Use Melee Time Of Day"
 MeleeStartingVisibility="Use melee time of day (for all players)"
 MeleeStartingVisibilityHint=
 
-MeleeStartingHeroLimit="Hero Limits"
-MeleeStartingHeroLimit="Limit Heroes to 1 per Hero-type (for all players)"
+MeleeStartingHeroLimit="Heldenbeschränkungen"
+MeleeStartingHeroLimit="Beschränke Helden pro Heldentyp auf 1 (für alle Spieler)"
 MeleeStartingHeroLimitHint=
 
-MeleeGrantHeroItems="Hero Starting Items"
-MeleeGrantHeroItems="Give trained Heroes a Scroll of Town Portal (for all players)"
+MeleeGrantHeroItems="Helden-Startgegenstände"
+MeleeGrantHeroItems="Gebe ausgebildeten Helden eine Rolle des Stadtportals (für alle Spieler)"
 MeleeGrantHeroItemsHint=
 
-MeleeStartingResources="Set Starting Resources"
-MeleeStartingResources="Set starting resources (for all players)"
+MeleeStartingResources="Start-Rohstoffe festlegen"
+MeleeStartingResources="Lege Start-Rohstoffe fest (für alle Spieler)"
 MeleeStartingResourcesHint=
 
 MeleeClearExcessUnits="Remove Excess Units"
@@ -2115,13 +2115,13 @@ DestroyEffectBJHint=
 
 
 // Trigger actions
-DisableTrigger="Turn Off"
-DisableTrigger="Turn off ",~Trigger
-DisableTriggerHint="Does not interrupt existing executions of the trigger, but prevents future executions."
+DisableTrigger="Ausschalten"
+DisableTrigger="Schalte ",~Trigger," aus"
+DisableTriggerHint="Unterbricht die laufenden Ausführungen des Auslösers nicht, verhindert aber zukünftige Ausführungen."
 
-EnableTrigger="Turn On"
-EnableTrigger="Turn on ",~Trigger
-EnableTriggerHint="Allows the trigger to be executed."
+EnableTrigger="Einschalten"
+EnableTrigger="Schalte ",~Trigger," ein"
+EnableTriggerHint="Erlaubt es dem Auslöser, ausgeführt zu werden."
 
 ConditionalTriggerExecute="Run (Checking Conditions)"
 ConditionalTriggerExecute="Run ",~Trigger," (checking conditions)"
@@ -2147,8 +2147,8 @@ QueuedTriggerClearInactiveBJ="Clear Trigger Queue Of Pending Triggers"
 QueuedTriggerClearInactiveBJ="Clear all pending triggers from the trigger queue"
 QueuedTriggerClearInactiveBJHint="This will remove all pending triggers from the trigger queue.  If a trigger is currently running in the queue, it will not be removed."
 
-AddTriggerEvent="Add New Event"
-AddTriggerEvent="Add to ",~Trigger," the event ",~Event
+AddTriggerEvent="Ereignis hinzufügen"
+AddTriggerEvent="Füge zu ",~Auslöser," das ",~Ereignis," hinzu"
 AddTriggerEventHint=
 
 
@@ -2169,31 +2169,31 @@ CreatePermanentCorpseLocBJ="Create Permanent Corpse"
 CreatePermanentCorpseLocBJ="Create a permanent ",~Style," ",~Unit," corpse for ",~Player," at ",~Point," facing ",~Direction," degrees"
 CreatePermanentCorpseLocBJHint="Fleshy corpses will often appear skeletal for the first 8 seconds of their existence."
 
-KillUnit="Kill"
-KillUnit="Kill ",~Unit
+KillUnit="Töten"
+KillUnit="Töte ",~Einheit
 KillUnitHint=
 
-RemoveUnit="Remove"
-RemoveUnit="Remove ",~Unit," from the game"
-RemoveUnitHint="Leaves no corpse.  If used on a Hero, that Hero cannot be resurrected."
+RemoveUnit="Entfernen"
+RemoveUnit="Entferne ",~Einheit," aus dem Spiel"
+RemoveUnitHint="Hinterlässt keine Leiche.  Falls auf einen Helden angewandt, kann dieser Held nicht wiederbelebt werden."
 
-ExplodeUnitBJ="Explode"
-ExplodeUnitBJ="Explode ",~Unit
+ExplodeUnitBJ="Explodieren lassen"
+ExplodeUnitBJ="Lasse ",~Einheit," explodieren"
 ExplodeUnitBJHint=
 
-ReplaceUnitBJ="Replace"
-ReplaceUnitBJ="Replace ",~Unit," with a ",~Unit-Type," using ",~Property Usage," life and mana"
-ReplaceUnitBJHint="Use 'Last Replaced Unit' to refer to the replacement unit.  Note that any variables referring to the old unit will need to be updated.  Replacing a Haunted Gold Mine will usually yield a normal Gold Mine in addition to the replacement unit."
+ReplaceUnitBJ="Ersetzen"
+ReplaceUnitBJ="Ersetze ",~Einheit," durch eine ",~Einheitentyp,"-Einheit mit ",~Eigenschaftenverwendung," Leben und Mana"
+ReplaceUnitBJHint="Verwenden Sie 'Zuletzt ersetzte Einheit', um auf die Ersetzungseinheit zu verweisen.  Berücksichtigen Sie, dass alle Variablen, die auf die alte Einheit verweisen, aktualisiert werden müssen.  Eine verhexte Goldmine zu ersetzen, erzeugt normalerweise zusätzlich zur Ersetzungseinheit eine normale Goldmine."
 
-ShowUnitHide="Hide"
-ShowUnitHide="Hide ",~Unit
-ShowUnitHideHint="Use the 'Unhide Unit' action to show a unit.  Hidden units do not show up in 'Units In Region' queries."
+ShowUnitHide="Verbergen"
+ShowUnitHide="Verberge ",~Einheit
+ShowUnitHideHint="Verwenden Sie die 'Mache Einheit sichtbar'-Aktion, um eine Einheit zu zeigen.  Verborgene Einheiten tauchen in 'Einheiten in Region'-Abfragen nicht auf."
 
-ShowUnitShow="Unhide"
-ShowUnitShow="Unhide ",~Unit
-ShowUnitShowHint="Use the 'Hide Unit' action to hide a unit.  Hidden units do not show up in 'Units In Region' queries."
+ShowUnitShow="Sichtbar machen"
+ShowUnitShow="Mache ",~Einheit," sichtbar"
+ShowUnitShowHint="Verwenden Sie die 'Verberge Einheit'-Aktion, um eine Einheit zu verbergen.  Verborgene Einheiten tauchen in 'Einheiten in Region'-Abfragen nicht auf."
 
-SetUnitColor="Change Color"
+SetUnitColor="Farbe ändern"
 SetUnitColor="Change color of ",~Unit," to ",~Color
 SetUnitColorHint="Changing a unit's color does not change the unit's ownership."
 
@@ -2835,8 +2835,8 @@ IsUnitLoadedBJ="Einheit wird gerade transportiert"
 IsUnitLoadedBJ=~Einheit," wird gerade transportiert"
 IsUnitLoadedBJHint=
 
-IsUnitInTransportBJ="Unit Is In Transport"
-IsUnitInTransportBJ=~Unit," is loaded into ",~Transport
+IsUnitInTransportBJ="Einheit ist in Transporter"
+IsUnitInTransportBJ=~Einheit," wurde in ",~Transporter," geladen"
 IsUnitInTransportBJHint=
 
 IsUnitSelected="Unit Selected By Player"
@@ -3025,15 +3025,15 @@ ModuloInteger="Modulo"
 ModuloInteger=~Dividend," mod ",~Divisor
 ModuloIntegerHint="Calculates the remainder of a division.  Example: 12 mod 5 = 2."
 
-MultiboardGetRowCount="Row Count"
-MultiboardGetRowCount="Number of rows in ",~Multiboard
+MultiboardGetRowCount="Reihenanzahl"
+MultiboardGetRowCount="Anzahl der Reihen in ",~Multiboard
 MultiboardGetRowCountHint=
 
-MultiboardGetColumnCount="Column Count"
-MultiboardGetColumnCount="Number of columns in ",~Multiboard
+MultiboardGetColumnCount="Spaltenanzahl"
+MultiboardGetColumnCount="Anzahl der Spalten in ",~Multiboard
 MultiboardGetColumnCountHint=
 
-GetResourceAmount="Gold Remaining"
+GetResourceAmount="Verbleibendes Gold"
 GetResourceAmount="Resource quantity contained in ",~Gold Mine
 GetResourceAmountHint="This is for use with Gold Mines."
 
@@ -3653,39 +3653,39 @@ SubStringBJ="Teilzeichenkette"
 SubStringBJ="Teilzeichenkette(",~Zeichenkette,", ",~Anfang,", ",~Ende,")"
 SubStringBJHint="Beispiel:  Teilzeichenkette(''Grunzer stinken'', 2, 4) = ''run''."
 
-GetHandleIdBJ="Erhalte Handle-ID"
+GetHandleIdBJ="Handle-ID erhalten"
 GetHandleIdBJ="Schlüssel ",~Handle
 GetHandleIdBJHint="Erzeugt einen Schlüssel eines Handles für die Verwendung in der Hash-Tabelle."
 
-StringHashBJ="Erhalte Zeichenketten-ID"
+StringHashBJ="Zeichenketten-ID erhalten"
 StringHashBJ="Schlüssel ",~Zeichenkette
 StringHashBJHint="Erzeugt einen Schlüssel einer Zeichenkette für die Verwendung in der Hash-Tabelle."
 
-I2S="Wandle Ganzzahl in Zeichenkette um"
+I2S="Ganzzahl in Zeichenkette umwandeln"
 I2S="Zeichenkette(",~Ganzzahl,")"
 I2SHint=
 
-R2S="Wandle Reelle in Zeichenkette um"
+R2S="Reelle in Zeichenkette umwandeln"
 R2S="Zeichenkette(",~Reelle,")"
 R2SHint=
 
-R2SW="Wandle Reele in formatierte Zeichenkette um"
+R2SW="Reele in formatierte Zeichenkette umwandeln"
 R2SW="Zeichenkette(",~Reelle,", ",~Breite,", ",~Genauigkeit,")"
 R2SWHint="Beispiele:  Zeichenkette(1.234, 7, 2) = ''   1.23''.  Zeichenkette(1.234, 2, 5) = ''1.23400''."
 
-OrderId2StringBJ="Wandle Befehl in Zeichenkette um"
+OrderId2StringBJ="Befehl in Zeichenkette umwandeln"
 OrderId2StringBJ="Zeichenkette(",~Befehl,")"
 OrderId2StringBJHint="Beispiel-Befehlszeichenketten:  ''harvest'', ''move'', ''smart'', ''attack''."
 
-UnitId2StringBJ="Wandle Einheitentyp in Zeichenkette um"
+UnitId2StringBJ="Einheitentyp in Zeichenkette umwandeln"
 UnitId2StringBJ="Zeichenkette(",~Einheitentyp,")"
 UnitId2StringBJHint=
 
-StringIdentity="Wandle ausgelagerte Zeichenkette um"
+StringIdentity="Ausgelagerte Zeichenkette umwandeln"
 StringIdentity="Ausgelagerte Zeichenkette(",~Zeichenkette,")"
 StringIdentityHint="Verwenden Sie dies, um sicherzustellen, dass die angegebene Zeichenkette in die Kartenzeichenkettendatei ausgelagert wird (war3map.wts)."
 
-StringCase="Wandle Zeichenketten-Groß- und kleinschreibung um"
+StringCase="Zeichenketten-Groß- und kleinschreibung umwandeln"
 StringCase="Zeichenkette(",~Zeichenkette,") als ",~Klein-/Großschreibung
 StringCaseHint="Alle Buchstaben in der Zeichenkette werden in die gewählte Schreibung geändert."
 
@@ -3825,15 +3825,15 @@ GetPlayableMapRect="Playable Map Area"
 GetPlayableMapRect="Playable map area"
 GetPlayableMapRectHint="This is the area to which units are restricted.  This area typically extends just beyond the camera bounds."
 
-GetEntireMapRect="Entire Map"
-GetEntireMapRect="Entire map"
-GetEntireMapRectHint="This is the entire map, including areas which cannot normally be reached by units."
+GetEntireMapRect="Gesamte Karte"
+GetEntireMapRect="Gesamte Karte"
+GetEntireMapRectHint="Dies ist die gesamte Karte, einschließlich der Gebiete, die normalerweise nicht von Einheiten erreicht werden können."
 
-OffsetRectBJ="Region With Offset
-OffsetRectBJ=~Region," offset by (",~X,", ",~Y,")"
-OffsetRectBJHint="The offset values are (X, Y)."
+OffsetRectBJ="Region mit Abstand"
+OffsetRectBJ=~Region," verschoben um (",~X,", ",~Y,")"
+OffsetRectBJHint="Die Abstandswerte sind (X, Y)."
 
-RectFromCenterSizeBJ="Convert Point With Size To Region"
+RectFromCenterSizeBJ="Punkt mit Größe zu Region umwandeln"
 RectFromCenterSizeBJ="Region centered at ",~Point," with size (",~Width,", ",~Height,")"
 RectFromCenterSizeBJHint="The size values are (Width, Height)."
 
@@ -3847,9 +3847,9 @@ RectFromLocHint="Choose two points to define a rectangular region on the map."
 
 
 // returns unit
-GetLastCreatedUnit="Last Created Unit"
-GetLastCreatedUnit="Last created unit"
-GetLastCreatedUnitHint="This is the last unit created via a 'Unit - Create' trigger action."
+GetLastCreatedUnit="Zuletzt erzeugte Einheit"
+GetLastCreatedUnit="Zuletzt erzeugte Einheit"
+GetLastCreatedUnitHint="Dies ist die zuletzt über eine 'Einheit - Erzeugen'-Auslöseraktion erzeugte Einheit."
 
 GetLastRestoredUnitBJ="Last Restored Unit"
 GetLastRestoredUnitBJ="Last restored unit"
@@ -3871,8 +3871,8 @@ GetFilterUnit="Übereinstimmende Einheit"
 GetFilterUnit="Übereinstimmende Einheit"
 GetFilterUnitHint="Use this to refer to the unit being considered for 'Units Matching Condition' functions."
 
-GroupPickRandomUnit="Random Unit From Unit Group"
-GroupPickRandomUnit="Random unit from ",~Unit Group
+GroupPickRandomUnit="Zufällige Einheit aus Einheitengruppe"
+GroupPickRandomUnit="Zufällige Einheit aus ",~Einheitengruppe
 GroupPickRandomUnitHint=
 
 GetAttackedUnitBJ="Angegriffene Einheit"
@@ -3903,17 +3903,17 @@ GetConstructingStructure="Constructing Structure"
 GetConstructingStructure="Constructing structure"
 GetConstructingStructureHint="When responding to a 'Begins Construction' unit event, this refers to the unit whose construction has begun."
 
-GetEventDamageSource="Damage Source"
-GetEventDamageSource="Damage source"
-GetEventDamageSourceHint="When responding to a 'Takes Damage' unit event, this refers to the source of damage being dealt."
+GetEventDamageSource="Schadensquelle"
+GetEventDamageSource="Schadensquelle"
+GetEventDamageSourceHint="Wenn auf ein 'Erleidet Schaden'-Einheitenereignis reagiert wird, verweist dies auf die Quelle des verursachten Schadens."
 
-GetDecayingUnit="Decaying Unit"
-GetDecayingUnit="Decaying unit"
-GetDecayingUnitHint="When responding to a 'Decays' unit event, this refers to the unit that is decaying."
+GetDecayingUnit="Verwesende Einheit"
+GetDecayingUnit="Verwesende Einheit"
+GetDecayingUnitHint="Wenn auf ein 'Verwest'-Einheitenereignis reagiert wird, verweist dies auf die Einheit, die gerade verwest."
 
-GetDyingUnit="Dying Unit"
-GetDyingUnit="Dying unit"
-GetDyingUnitHint="When responding to a 'Dies' unit event, this refers to the unit that is dying."
+GetDyingUnit="Sterbende Einheit"
+GetDyingUnit="Sterbende Einheit"
+GetDyingUnitHint="Wenn auf ein 'Stirbt'-Einheitenereignis reagiert wird, verweist dies auf die Einheit, die gerade stirbt."
 
 GetEnteringUnit="Entering Unit"
 GetEnteringUnit="Entering unit"
@@ -3943,17 +3943,17 @@ GetLoadedUnitBJ="Loading Unit"
 GetLoadedUnitBJ="Loading unit"
 GetLoadedUnitBJHint="When responding to an 'Is Loaded Into A Transport' unit event, this refers to the unit that is being loaded."
 
-GetOrderedUnit="Ordered Unit"
-GetOrderedUnit="Ordered unit"
-GetOrderedUnitHint="When responding to an 'Is Issued An Order' unit event, this refers to the unit receiving the order."
+GetOrderedUnit="Befehligte Einheit"
+GetOrderedUnit="Befehligte Einheit"
+GetOrderedUnitHint="Wenn auf ein 'Erhält einen Befehl erteilt'-Einheitenereigniss reagiert wird, verweist dies auf die Einheit, die den Befehl erhält."
 
 GetChangingUnit="Ownership-Changed Unit"
 GetChangingUnit="Ownership-changed unit"
 GetChangingUnitHint="When responding to a 'Changes Owner' unit event, this refers to the unit whose ownership has changed."
 
-GetResearchingUnit="Researching Unit"
-GetResearchingUnit="Researching unit"
-GetResearchingUnitHint="When responding to 'Begins/Cancels/Finishes Research' unit events, this refers to the unit doing the research."
+GetResearchingUnit="Forschende Einheit"
+GetResearchingUnit="Forschende Einheit"
+GetResearchingUnitHint="Wenn auf 'Beginnt/Bricht ab/Schließt ab Ausbaustufe'-Einheitenereignisse reagiert wird, verweist dies auf die Einheit, welche die Ausbaustufe gerade erforscht."
 
 GetRevivableUnit="Revivable Hero"
 GetRevivableUnit="Revivable Hero"
@@ -3991,67 +3991,67 @@ GetEventTargetUnit="Targeted Unit"
 GetEventTargetUnit="Targeted unit"
 GetEventTargetUnitHint="When responding to an 'Acquires A Target' unit event, this refers to the target being acquired."
 
-GetTrainedUnit="Trained Unit"
-GetTrainedUnit="Trained unit"
-GetTrainedUnitHint="When responding to a 'Finishes Training A Unit' unit event, this refers to the unit that was trained."
+GetTrainedUnit="Ausgebildete Einheit"
+GetTrainedUnit="Ausgebildete Einheit"
+GetTrainedUnitHint="Wenn auf ein 'Beendet Ausbildung einer Einheit'-Einheitenereignis reagiert wird, verweist dies auf die Einheit, die ausgebildet wurde."
 
-GetTransportUnitBJ="Transporting Unit"
-GetTransportUnitBJ="Transporting unit"
-GetTransportUnitBJHint="When responding to an 'Is Loaded Into A Transport' unit event, this refers to the transport that loaded the unit."
+GetTransportUnitBJ="Transportierende Einheit"
+GetTransportUnitBJ="Transportierende Einheit"
+GetTransportUnitBJHint="Wenn auf ein 'Wird in einen Transporter geladen'-Einheitenereignis reagiert wird, verweist dies auf den Transporter, der die Einheit geladen hat."
 
-GetTriggerUnit="Triggering Unit"
-GetTriggerUnit="Triggering unit"
+GetTriggerUnit="Auslösende Einheit"
+GetTriggerUnit="Auslösende Einheit"
 GetTriggerUnitHint=
 
-GetUnitRallyUnit="Rally-Point As Unit"
-GetUnitRallyUnit="Rally-Point of ",~Unit," as a unit"
-GetUnitRallyUnitHint="If the unit does not have a rally-point set to a unit, this will return 'No unit'."
+GetUnitRallyUnit="Sammelpunkt als Einheit"
+GetUnitRallyUnit="Sammelpunkt von ",~Einheit," als eine Einheit"
+GetUnitRallyUnitHint="Falls die Einheit keinen Sammelpunkt auf einer Einheit hat, gibt dies 'Keine Einheit' zurück."
 
 
 // returns unitcode
-GetUnitTypeId="Unit-Type Of Unit"
-GetUnitTypeId="Unit-type of ",~Unit
+GetUnitTypeId="Einheitentyp einer Einheit"
+GetUnitTypeId="Einheitentyp von ",~Einheit
 GetUnitTypeIdHint=
 
-ChooseRandomCreepBJ="Random Creep Unit-Type"
-ChooseRandomCreepBJ="Random level ",~Level," creep unit-type"
-ChooseRandomCreepBJHint="Use -1 for any level."
+ChooseRandomCreepBJ="Zufälliger Unhold-Einheitentyp"
+ChooseRandomCreepBJ="Zufälliger Stufe-",~Stufe,"-Unhold-Einheitentyp"
+ChooseRandomCreepBJHint="Verwenden Sie -1 für eine beliebige Stufe."
 
-ChooseRandomNPBuildingBJ="Random Neutral Building Unit-Type"
-ChooseRandomNPBuildingBJ="Random neutral building unit-type"
+ChooseRandomNPBuildingBJ="Zufälliger Neutrales-Gebäude-Einheitentyp"
+ChooseRandomNPBuildingBJ="Zufälliger Neutrales-Gebäude-Einheitentyp"
 ChooseRandomNPBuildingBJHint=
 
 String2UnitIdBJ="Convert String To Unit-Type"
 String2UnitIdBJ="Unit-type(",~String,")"
 String2UnitIdBJHint=
 
-GetTrainedUnitType="Trained Unit-Type"
-GetTrainedUnitType="Trained unit-type"
-GetTrainedUnitTypeHint="When responding to 'Begins/Cancels/Finishes Training A Unit' unit events, this refers to the unit-type of the unit that is being trained."
+GetTrainedUnitType="Ausgebildeter Einheitentyp"
+GetTrainedUnitType="Ausgebildeter Einheitentyp"
+GetTrainedUnitTypeHint="Wenn auf 'Beginnt/Bricht ab/Beendet eine Einheit auszubilden'-Einheitentereignisse reagiert wird, verweist dies auf den Einheitentyp der Einheit, die gerade ausgebildet wird."
 
 
 // returns ordercode
-String2OrderIdBJ="Convert String To Order"
-String2OrderIdBJ="Order(",~String,")"
-String2OrderIdBJHint="Example order strings:  ''harvest'', ''move'', ''smart'', ''attack''."
+String2OrderIdBJ="Zeichenkette in Befehl umwandeln"
+String2OrderIdBJ="Befehl(",~Zeichenkette,")"
+String2OrderIdBJHint="Beispielbefehlszeichenketten:  ''harvest'', ''move'', ''smart'', ''attack''."
 
-UnitId2OrderIdBJ="Convert Unit-Type To Order"
-UnitId2OrderIdBJ="Order(",~Unit-Type,")"
+UnitId2OrderIdBJ="Einheitentyp in Befehl umwandeln"
+UnitId2OrderIdBJ="Befehl(",~Einheitentyp,")"
 UnitId2OrderIdBJHint=
 
-GetIssuedOrderIdBJ="Issued Order"
-GetIssuedOrderIdBJ="Issued order"
-GetIssuedOrderIdBJHint="When responding to 'Is Issued An Order' unit events, this refers to the order being issued."
+GetIssuedOrderIdBJ="Erteilter Befehl"
+GetIssuedOrderIdBJ="Erteilter Befehl"
+GetIssuedOrderIdBJHint="Wenn auf 'Bekommt einen Befehl erteilt'-Einheitenereignisse reagiert wird, verweist dies auf den Befehl der gerade erteilt wird."
 
-GetUnitCurrentOrder="Current Order Of Unit"
-GetUnitCurrentOrder="Current order of ",~Unit
+GetUnitCurrentOrder="Derzeitiger Befehl einer Einheit"
+GetUnitCurrentOrder="Derzeitiger Befehl von ",~Einheit
 GetUnitCurrentOrderHint=
 
 
 // returns destructable
-GetLastCreatedDestructable="Last Created Destructible"
-GetLastCreatedDestructable="Last created destructible"
-GetLastCreatedDestructableHint="This is the last destructible created via a 'Destructible - Create' trigger action."
+GetLastCreatedDestructable="Zuletzt erzeugtes Zerstörbares"
+GetLastCreatedDestructable="Zuletzt erzeugtes Zerstörbares"
+GetLastCreatedDestructableHint="Dies ist das zuletzt erzeugte Zerstörbare This is the last destructible created via a 'Destructible - Create' trigger action."
 
 RandomDestructableInRectSimpleBJ="Random Destructible In Region"
 RandomDestructableInRectSimpleBJ="Random destructible in ",~Region
@@ -4069,13 +4069,13 @@ GetFilterDestructable="Übereinstimmendes Zerstörbares"
 GetFilterDestructable="Übereinstimmendes Zerstörbares"
 GetFilterDestructableHint="Use this to refer to the destructible being considered for the 'Random Destructible' functions."
 
-GetDyingDestructable="Dying Destructible"
-GetDyingDestructable="Dying destructible"
-GetDyingDestructableHint="When responding to a 'Destructible Dies' event, this refers to the destructible that is dying."
+GetDyingDestructable="Sterbendes Zerstörbares"
+GetDyingDestructable="Sterbendes Zerstörbares"
+GetDyingDestructableHint="Wenn auf ein 'Zerstörbares stirbt'-Ereignis reagiert wird, verweist dies auf das Zerstörbare, das gerade stirbt."
 
-GetOrderTargetDestructable="Target Destructible Of Issued Order"
-GetOrderTargetDestructable="Target destructible of issued order"
-GetOrderTargetDestructableHint="When responding to an 'Is Issued An Order Targeting An Object' unit event with a destructible target, this refers to the target of the order."
+GetOrderTargetDestructable="Ziel-Zerstörbares des erteilten Befehls"
+GetOrderTargetDestructable="Ziel-Zerstörbares des erteilten Befehl"
+GetOrderTargetDestructableHint="Wenn auf ein 'Bekommt einen Objekt anvisierenden Befehl erteilt'-Einheitenereignis mit einem zerstörbaren Ziel, verweist dies auf das Ziel des Befehls."
 
 GetSpellTargetDestructable="Target Destructible Of Ability Being Cast"
 GetSpellTargetDestructable="Target destructible of ability being cast"
@@ -4093,16 +4093,16 @@ GetDestructableTypeIdHint=
 
 
 // returns item
-GetLastCreatedItem="Last Created Item"
-GetLastCreatedItem="Last created item"
-GetLastCreatedItemHint="This is the last item created via an 'Item - Create' or 'Hero - Create Item For Hero' trigger action."
+GetLastCreatedItem="Zuletzt erzeugter Gegenstand"
+GetLastCreatedItem="Zuletzt erzeugter Gegenstand"
+GetLastCreatedItemHint="Dies ist der zuletzt über eine 'Gegenstand - Erzeugen'- oder 'Held - Erzeuge Gegenstand für Held'-Auslöseraktion erzeugte Gegenstand."
 
-GetLastRemovedItem="Last Dropped Item"
-GetLastRemovedItem="Last dropped item"
-GetLastRemovedItemHint="This is the last item dropped via a 'Hero - Drop Item' trigger action."
+GetLastRemovedItem="Zuletzt fallen gelassener Gegenstand"
+GetLastRemovedItem="Zuletzt fallen gelassener Gegenstand"
+GetLastRemovedItemHint="Dies ist der zuletzt über eine 'Held - Lasse Gegenstand fallen'-Auslöseraktion fallen gelassene Gegenstand."
 
-RandomItemInRectSimpleBJ="Random Item In Region"
-RandomItemInRectSimpleBJ="Random item in ",~Region
+RandomItemInRectSimpleBJ="Zufälliger Gegenstand in Region"
+RandomItemInRectSimpleBJ="Zufälliger Gegenstand in ",~Region
 RandomItemInRectSimpleBJHint=
 
 RandomItemInRectBJ="Random Item In Region Matching Condition"
@@ -4239,8 +4239,8 @@ GetUnitsInRectMatching="Units In Region Matching Condition"
 GetUnitsInRectMatching="Units in ",~Region," matching ",~Condition
 GetUnitsInRectMatchingHint="Use 'Matching Unit' to refer to the unit on whom the comparison is being performed."
 
-GetUnitsInRangeOfLocAll="Units In Range"
-GetUnitsInRangeOfLocAll="Units within ",~Radius," of ",~Point
+GetUnitsInRangeOfLocAll="Einheiten in Reichweite"
+GetUnitsInRangeOfLocAll="Einheiten innerhalb ",~Radius," von ",~Punkt
 GetUnitsInRangeOfLocAllHint=
 
 GetUnitsInRangeOfLocMatching="Units In Range Matching Condition"
@@ -4259,54 +4259,54 @@ GetUnitsOfPlayerMatching="Units Owned By Player Matching Condition"
 GetUnitsOfPlayerMatching="Units owned by ",~Player," matching ",~Condition
 GetUnitsOfPlayerMatchingHint="Use 'Matching Unit' to refer to the unit on whom the comparison is being performed."
 
-GetUnitsOfTypeIdAll="Units Of Type"
-GetUnitsOfTypeIdAll="Units of type ",~Unit-Type
+GetUnitsOfTypeIdAll="Einheiten eines Typs"
+GetUnitsOfTypeIdAll="Einheiten des Typs ",~Einheitentyp
 GetUnitsOfTypeIdAllHint=
 
-GetUnitsSelectedAll="Units Selected"
-GetUnitsSelectedAll="Units currently selected by ",~Player
-GetUnitsSelectedAllHint="This should not be used in trigger conditions."
+GetUnitsSelectedAll="Ausgewählte Einheiten"
+GetUnitsSelectedAll="Derzeitig ausgewählte Einheiten von ",~Spieler
+GetUnitsSelectedAllHint="Dies sollte nicht in Auslöserbedingungen verwendet werden."
 
 
 // returns force
-GetPlayersAll="All Players"
-GetPlayersAll="All players"
-GetPlayersAllHint="Includes unused and neutral players."
+GetPlayersAll="Alle Spieler"
+GetPlayersAll="Alle Spieler"
+GetPlayersAllHint="Schließt nicht verwendete und neutrale Spieler mit ein."
 
-GetPlayersByMapControl="All Players Of Control"
-GetPlayersByMapControl="All players controlled by a ",~Control Type," player"
+GetPlayersByMapControl="Alle Spieler einer Kontrolle"
+GetPlayersByMapControl="Alle von einem ",~Kontrolltyp,"-Spieler kontrollierten Spieler"
 GetPlayersByMapControlHint=
 
 GetPlayersMatching="All Players Matching Condition"
 GetPlayersMatching="All players matching ",~Condition
 GetPlayersMatchingHint="Use 'Matching Player' to refer to the player on whom the comparison is being performed.  This includes unused and neutral players."
 
-GetPlayersAllies="Allies Of Player"
-GetPlayersAllies="All allies of ",~Player
-GetPlayersAlliesHint="All allies of the specified player, including him/herself."
+GetPlayersAllies="Verbündete eines Spielers"
+GetPlayersAllies="Alle Verbündeten von ",~Spieler
+GetPlayersAlliesHint="Alle Verbündeten des angegebenen Spielers, einschließlich ihm/ihr selbst."
 
-GetPlayersEnemies="Enemies Of Player"
-GetPlayersEnemies="All enemies of ",~Player
-GetPlayersEnemiesHint="All enemies of the specified player."
+GetPlayersEnemies="Feinde eines Spielers"
+GetPlayersEnemies="Alle Feinde von ",~Spieler
+GetPlayersEnemiesHint="Alle Feinde des angegebenen Spielers."
 
-GetForceOfPlayer="Convert Player To Player Group"
-GetForceOfPlayer="Player group(",~Player,")"
+GetForceOfPlayer="Wandle Spieler zu Spielergruppe um"
+GetForceOfPlayer="Spielergruppe(",~Spieler,")"
 GetForceOfPlayerHint=
 
 
 // returns race
-GetPlayerRace="Race Of Player"
-GetPlayerRace="Race of ",~Player
+GetPlayerRace="Volk eines Spielers"
+GetPlayerRace="Volk von ",~Spieler
 GetPlayerRaceHint=
 
-GetUnitRace="Race Of Unit"
-GetUnitRace="Race of ",~Unit
+GetUnitRace="Volk einer Einheit"
+GetUnitRace="Volk von ",~Einheit
 GetUnitRaceHint=
 
 
 // returns camerasetup
-GetCurrentCameraSetup="Current Camera"
-GetCurrentCameraSetup="Current camera"
+GetCurrentCameraSetup="Derzeitige Kamera"
+GetCurrentCameraSetup="Derzeitige Kamera"
 GetCurrentCameraSetupHint=
 
 
@@ -4317,14 +4317,14 @@ GetLastCreatedFogModifierHint="This is the last visibility modifier created via 
 
 
 // returns trigger
-GetTriggeringTrigger="This Trigger"
-GetTriggeringTrigger="This trigger"
+GetTriggeringTrigger="Dieser Auslöser"
+GetTriggeringTrigger="Dieser Auslöser"
 GetTriggeringTriggerHint=
 
 
 // returns gamedifficulty
-GetGameDifficulty="Difficulty Level"
-GetGameDifficulty="Difficulty level"
+GetGameDifficulty="Schwierigkeitsstufe"
+GetGameDifficulty="Schwierigkeitsstufe"
 GetGameDifficultyHint=
 
 
@@ -4335,8 +4335,8 @@ GetAIDifficultyHint=
 
 
 // returns gamespeed
-GetGameSpeed="Current Game Speed"
-GetGameSpeed="Current game speed"
+GetGameSpeed="Derzeitige Spielgeschwindigkeit"
+GetGameSpeed="Derzeitige Spielgeschwindigkeit"
 GetGameSpeedHint=
 
 
@@ -4347,14 +4347,14 @@ GetPlayerControllerHint=
 
 
 // returns playercolor
-GetPlayerColor="Color Of Player"
-GetPlayerColor="Color of ",~Player
+GetPlayerColor="Farbe eines Spielers"
+GetPlayerColor="Farbe von ",~Spieler
 GetPlayerColorHint=
 
 
 // returns playerslotstate
-GetPlayerSlotState="Player Slot Status"
-GetPlayerSlotState=~Player," slot status"
+GetPlayerSlotState="Spieler-Slot-Status"
+GetPlayerSlotState=~Spieler,"-Slot-Status"
 GetPlayerSlotStateHint=
 
 
@@ -4365,14 +4365,14 @@ GetLastCreatedEffectBJHint=
 
 
 // returns lightning
-GetLastCreatedLightningBJ="Last Created Lightning Effect"
-GetLastCreatedLightningBJ="Last created lightning effect"
+GetLastCreatedLightningBJ="Zuletzt erzeugter Blitzeffekt"
+GetLastCreatedLightningBJ="Zuletzt erzeugter Blitzeffekt"
 GetLastCreatedLightningBJHint=
 
 
 // returns image
-GetLastCreatedImage="Last Created Image"
-GetLastCreatedImage="Last created image"
+GetLastCreatedImage="Zuletzt erzeugtes Bild"
+GetLastCreatedImage="Zuletzt erzeugtes Bild"
 GetLastCreatedImageHint=
 
 
@@ -4383,8 +4383,8 @@ GetLastCreatedUbersplatHint=
 
 
 // returns weathereffect
-GetLastCreatedWeatherEffect="Last Created Weather Effect"
-GetLastCreatedWeatherEffect="Last created weather effect"
+GetLastCreatedWeatherEffect="Zuletzt erzeugter Wettereffekt"
+GetLastCreatedWeatherEffect="Zuletzt erzeugter Wettereffekt"
 GetLastCreatedWeatherEffectHint="This is the last weather effect created via an 'Environment - Create Weather Effect' trigger action."
 
 
@@ -4395,27 +4395,27 @@ GetLastCreatedTerrainDeformationHint="This is the last terrain deformation creat
 
 
 // returns terraintype
-GetTerrainTypeBJ="Terrain Type"
-GetTerrainTypeBJ="Terrain type at ",~Location
+GetTerrainTypeBJ="Geländetyp"
+GetTerrainTypeBJ="Geländetyp an ",~Position
 GetTerrainTypeBJHint=
 
 
 // returns sound
-GetLastPlayedSound="Last Played Sound"
-GetLastPlayedSound="Last played sound"
-GetLastPlayedSoundHint="This is the last sound played via a 'Sound - Play Sound' or 'Cinematic - Transmission' trigger action."
+GetLastPlayedSound="Zuletzt abgespieltes Geräusch"
+GetLastPlayedSound="Zuletzt abgespieltes Geräusch"
+GetLastPlayedSoundHint="Dies ist das zuletzt über eine 'Geräusch - Geräusch abspielen'- oder 'Filmisch - Übertragung'-Auslöseraktion abgespielte Geräusch."
 
 
 // returns music
-GetLastPlayedMusic="Last Played Music"
-GetLastPlayedMusic="Last played music"
-GetLastPlayedMusicHint="This is the last music played via a 'Sound - Play Music' trigger action."
+GetLastPlayedMusic="Zuletzt abgespielte Musik"
+GetLastPlayedMusic="Zuletzt abgespielte Musik"
+GetLastPlayedMusicHint="Dies ist die zuletzt über eine 'Geräusch - Musik abspielen'-Auslöseraktion abgespielte Musik."
 
 
 // returns quest
-GetLastCreatedQuestBJ="Last Created Quest"
-GetLastCreatedQuestBJ="Last created quest"
-GetLastCreatedQuestBJHint="This is the last quest created via a 'Quest - Create Quest' trigger action."
+GetLastCreatedQuestBJ="Zuletzt erstelltes Quest"
+GetLastCreatedQuestBJ="Zuletzt erstelltes Quest"
+GetLastCreatedQuestBJHint="Dies ist das zuletzt über die 'Quest - Quest erstellen'-Auslöseraktion erstellte Quest."
 
 
 // returns questitem
@@ -4447,19 +4447,19 @@ GetClickedButtonBJHint="When responding to a 'Dialog - Button Clicked' event, th
 
 
 // returns leaderboard
-GetLastCreatedLeaderboard="Last Created Leaderboard"
-GetLastCreatedLeaderboard="Last created leaderboard"
-GetLastCreatedLeaderboardHint="This is the last leaderboard created via a 'Leaderboard - Create Leaderboard' trigger action."
+GetLastCreatedLeaderboard="Zuletzt erzeugte Bestenliste"
+GetLastCreatedLeaderboard="Zuletzt erzeugte Bestenliste"
+GetLastCreatedLeaderboardHint="Dies ist die zuletzt über eine 'Bestenliste - Erzeuge Bestenliste'-Auslöseraktion erzeugte Bestenliste."
 
-PlayerGetLeaderboardBJ="Leaderboard Of Player"
-PlayerGetLeaderboardBJ="Leaderboard of ",~Player
-PlayerGetLeaderboardBJHint="Each player can have at most one leaderboard."
+PlayerGetLeaderboardBJ="Bestenliste eines Spielers"
+PlayerGetLeaderboardBJ="Bestenliste von ",~Spieler
+PlayerGetLeaderboardBJHint="Jeder Spieler kann höchstens eine Bestenliste haben."
 
 
 // returns multiboard
-GetLastCreatedMultiboard="Last Created Multiboard"
-GetLastCreatedMultiboard="Last created multiboard"
-GetLastCreatedMultiboardHint="This is the last multiboard created via a 'Multiboard - Create Multiboard' trigger action."
+GetLastCreatedMultiboard="Zuletzt erzeugtes Multiboard"
+GetLastCreatedMultiboard="Zuletzt erzeugtes Multiboard"
+GetLastCreatedMultiboardHint="Dies ist das zuletzt über eine 'Multiboard - Erzeuge Multiboard'-Auslöseraktion erzeugte Multiboard."
 
 
 // returns timer
@@ -4467,9 +4467,9 @@ GetLastCreatedTimerBJ="Last Started Timer"
 GetLastCreatedTimerBJ="Last started timer"
 GetLastCreatedTimerBJHint="This is the last timer started via a 'Countdown Timer - Start Timer' trigger action."
 
-GetExpiredTimer="Expiring Timer"
-GetExpiredTimer="Expiring timer"
-GetExpiredTimerHint="When responding to a 'Time - Timer Expires' event, this refers to the timer that is expiring."
+GetExpiredTimer="Ablaufender Zeitgeber"
+GetExpiredTimer="Ablaufender Zeitgeber"
+GetExpiredTimerHint="Wenn auf ein 'Zeit - Zeitgeber läuft ab'-Ereignis reagiert wird, verweist dies auf den Zeigeber, der gerade abläuft."
 
 
 // returns timerdialog
@@ -4503,22 +4503,22 @@ FindString="Position in ",~Zeichenkette," der gesuchten ",~anderen Zeichenkette,
 FindStringHint="Liefert die Position einer Zeichenkette in einer anderen. Befindet sich die Zeichenkette nicht in der anderen, so liefert die Funktion -1 (ungültige Position)."
 
 // returns string
-ReplaceSubString="Ersetze Teilzeichenkette"
+ReplaceSubString="Teilzeichenkette ersetzen"
 ReplaceSubString="Ersetze in ",~Zeichenkette," an ",~Stelle," den Inhalt durch ",~andere Zeichenkette,"."
 ReplaceSubStringHint="Ersetzt einen Teil einer Zeichenkette durch eine andere. Die gelieferte Zeichenkette kann dadurch länger werden als die ursprüngliche."
 
 // returns string
-ReplaceString="Ersetze Zeichenkette"
+ReplaceString="Zeichenkette ersetzen"
 ReplaceString="Ersetze in ",~Zeichenkette," Teil ",~enthaltene Zeichenkette," durch ",~andere Zeichenkette,"."
 ReplaceStringHint="Ersetzt eine in einer Zeichenkette enthaltene Zeichenkette durch eine andere. Die Zeichenketten müssen nicht gleich lang sein. In diesem Fall werden keine anderen Zeichen, die nicht zur ersetzten Zeichenkette gehören überschrieben. Die gelieferte Zeichenkette wird lediglich um zusätzliche Zeichen erweitert oder um fehlende verkürzt."
 
 // returns string
-RemoveSubString="Entferne Teilzeichenkette"
+RemoveSubString="Teilzeichenkette entfernen"
 RemoveSubString="Entferne aus ",~Zeichenkette," an ",~Position," eine Zeichenkette mit ",~n," Zeichen."
 RemoveSubStringHint="Entfernt den Teil einer Zeichenkette und liefert die daraus resultierende Zeichenkette."
 
 // returns string
-RemoveString="Entferne Zeichenkette"
+RemoveString="Zeichenkette entfernen"
 RemoveString="Entferne aus ",~Zeichenkette," den Inhalt von ",~anderer Zeichenkette,"."
 RemoveStringHint="Entfernt aus einer Zeichenkette eine andere. Ist diese nicht enthalten, wird die ursprüngliche Zeichenkette zurückgegeben."
 
@@ -4552,30 +4552,30 @@ AUnitGetBonus="Bonus von ",~Einheit," des Typs ",~Typ,"."
 AUnitGetBonusHint="Liefert den Bonus einer Einheit."
 
 // returns boolean
-AUnitSetBonus="Setzung eines Bonus einer Einheit"
-AUnitSetBonus="Setzt den Bonus von ",~Einheit," des Typs ",~Typ," auf den Wert ",~Wert,"."
-AUnitGetBonusHint="Setzt den Bonus einer Einheit auf einen bestimmten Wert."
+AUnitSetBonus="Einheitenbonus festlegen"
+AUnitSetBonus="Legt den Bonus von ",~Einheit," des Typs ",~Typ," auf den Wert ",~Wert," fest."
+AUnitGetBonusHint="Legt den Bonus einer Einheit auf einen bestimmten Wert fest."
 
 // returns boolean
-AUnitClearBonus="Entfernung eines Bonus einer Einheit"
+AUnitClearBonus="Einheitenbonus entfernen"
 AUnitClearBonus="Entfernt den Bonus von ",~Einheit," des Typs ",~Typ,"."
 AUnitClearBonusHint="Entfernt den Bonus einer Einheit."
 
 // returns boolean
-AUnitAddBonus="Hinzufügung eines Bonus bei einer Einheit"
+AUnitAddBonus="Einheitenbonus hinzufügen"
 AUnitAddBonus="Gibt ",~Einheit," einen Bonus des Typs ",~Typ," von ",~Wert,"."
 AUnitAddBonus="Gibt einer Einheit einen Bonus."
 
 // returns boolean
-AUnitRemoveBonus="Entfernung eines Bonus einer Einheit"
+AUnitRemoveBonus="Einheitenbonus entfernen"
 AUnitRemoveBonus="Entfernt von ",~Einheit," einen Bonus des Typs ",~Typ," von ",~Wert,"."
 AUnitRemoveBonusHint="Entfernt einen Bonus von einer Einheit."
 
-sc__ASpawnPoint_create="Erschaffe Erzeugungspunkt"
+sc__ASpawnPoint_create="Erzeugungspunkt erschaffen"
 sc__ASpawnPoint_create="Erschaffe einen Erzeugungspunkt am Punkt (",~X,"|",~Y,") mit dem Radius ",~Radius,"."
 sc__ASpawnPoint_createHint="Erschafft einen Erzeugungspunkt an einem bestimmten Punkt, mit einem festgelegten Radius. An diesem Punkt können innerhalb des festgelegten Radius Kreaturen in regelmäßigen Zeitintervallen erzeugt werden."
 
-sc__ARoutine_create="Erzeuge Tagesablauf"
+sc__ARoutine_create="Tagesablauf erzeugen"
 sc__ARoutine_create="Erzeuge einen Tagesablauf, welcher einen ",~Zielpunkt," eine ",~Schleifenaktion," und die ",~Startaktion,", ",~Endaktion," und ",~Zielaktion," verwendet."
 sc__ARoutine_createHint="Erzeugt einen Tagesablauf mit einem bestimmten Zielpunkt und diversen Aktionen."
 
@@ -4587,12 +4587,12 @@ sc__ARoutine_createHint="Erzeugt einen Tagesablauf mit einem bestimmten Zielpunk
 
 // --- Boolean
 
-TownThreatened="Town Is Under Attack"
-TownThreatened="Town is under attack"
+TownThreatened="Stadt wird angegriffen"
+TownThreatened="Stadt wird angegriffen"
 TownThreatenedHint=""
 
-TownHasMine="Town Has Mine"
-TownHasMine="Town #",~Town," has an active gold mine"
+TownHasMine="Stadt hat Mine"
+TownHasMine="Stadt #",~Stadt," hat eine aktive Goldmine"
 
 TownHasHall="Town Has Hall"
 TownHasHall="Town #",~Town," has a town hall building"
@@ -4718,5 +4718,5 @@ CurrentAttackWave="Current Attack Wave"
 CurrentAttackWave="Current attack wave"
 CurrentAttackWaveHint="Attack waves are defined in the attack wave list in the Attacking tab."
 
-MeleeDifficulty="Melee Difficulty Level"
-MeleeDifficulty="Melee difficulty level"
+MeleeDifficulty="Nahkampfschwierigkeitsstufe"
+MeleeDifficulty="Nahkampfschwierigkeitsstufe"
