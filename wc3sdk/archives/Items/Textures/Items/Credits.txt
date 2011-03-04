@@ -1,4 +1,5 @@
 File			Authors		Source
+SwordOfDarknessFire4x2.blp	Thrikodius	http://www.hiveworkshop.com/
 Axt.blp			Rondo		http://www.rondo.eu.tp/
 Breitschild.blp		Sardor		DMdF team
 RicmansSchild.blp	Sardor		DMdF team

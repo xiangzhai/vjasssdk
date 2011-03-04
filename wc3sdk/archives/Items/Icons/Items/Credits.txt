@@ -1,4 +1,18 @@
 File						Authors			Source
+ATCSwordOfDarknessOn.blp			67chrome		http://www.hiveworkshop.com/
+BTNSwordOfDarkness.blp				67chrome		http://www.hiveworkshop.com/
+DISATCSwordOfDarknessOn.blp			67chrome		http://www.hiveworkshop.com/
+DISBTNSwordOfDarkness.blp			67chrome		http://www.hiveworkshop.com/
+DISPASSwordOfDarkness.blp			67chrome		http://www.hiveworkshop.com/
+PASSwordOfDarkness.blp				67chrome		http://www.hiveworkshop.com/
+
+BTNAntlers.blp 				 	Stanakin Skywalker	http://www.hiveworkshop.com/
+DISBTNAntlers.blp				Stanakin Skywalker	http://www.hiveworkshop.com/
+DISPASAntlers.blp				Stanakin Skywalker	http://www.hiveworkshop.com/
+PASAntlers.blp					Stanakin Skywalker	http://www.hiveworkshop.com/
+UPGUPGAntlers.blp				Stanakin Skywalker	http://www.hiveworkshop.com/
+
+
 BTNBoletus.tga					Crazyrussian		http://www.wc3c.net/
 DISBTNBoletus.tga				Crazyrussian		http://www.wc3c.net/
 BTNFlameMixture.tga				Crazyrussian		http://www.wc3c.net/

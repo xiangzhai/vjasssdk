@@ -1,5 +1,6 @@
 File				Authors		Source
-WoodenBow			Kitabatake	http://www.hiveworkshop.com/
+SwordOfDarkness.mdx		Thrikodius	http://www.hiveworkshop.com/
+WoodenBow.mdx			Kitabatake	http://www.hiveworkshop.com/
 LeatherPlate.mdx		Kitabatake	http://www.hiveworkshop.com/
 BoneBow.mdx			Gottfrei	http://www.hiveworkshop.com/
 KnightsArmour.mdx		Kitabatake	http://www.hiveworkshop.com/
