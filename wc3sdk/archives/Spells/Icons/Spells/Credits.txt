@@ -1,4 +1,21 @@
 File				Authors			Source
+ATCCrowFormOn.blp		Dan van Ohllus		http://www.hiveworkshop.com/
+BTNCrowForm.blp			Dan van Ohllus		http://www.hiveworkshop.com/
+DISBTNCrowForm.blp		Dan van Ohllus		http://www.hiveworkshop.com/
+PASCrowForm.blp			Dan van Ohllus		http://www.hiveworkshop.com/
+UPGinfocard-CrowForm-upgrade.blp	Dan van Ohllus	http://www.hiveworkshop.com/
+ATTinfocard-CrowForm.blp	Dan van Ohllus		http://www.hiveworkshop.com/
+DISATCCrowFormOn.blp		Dan van Ohllus		http://www.hiveworkshop.com/
+DISPASCrowForm.blp		Dan van Ohllus		http://www.hiveworkshop.com/
+SSCscorescreen-CrowForm.blp	Dan van Ohllus		http://www.hiveworkshop.com/
+
+ATCBearForm.blp			lelyanra		http://www.hiveworkshop.com/
+BTNBearForm.blp			lelyanra		http://www.hiveworkshop.com/
+DISATCBearForm.blp		lelyanra		http://www.hiveworkshop.com/
+DISBearForm.blp			lelyanra		http://www.hiveworkshop.com/
+DISBTNBearForm.blp		lelyanra		http://www.hiveworkshop.com/
+PASBearForm.blp			lelyanra		http://www.hiveworkshop.com/
+
 ATCSmashShot.blp		NFWar			http://www.hiveworkshop.com/
 BTNSmashShot.blp		NFWar			http://www.hiveworkshop.com/
 DISATCSmashShot.blp		NFWar			http://www.hiveworkshop.com/
