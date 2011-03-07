@@ -1,3 +1,11 @@
+2011-03-07 Tamino Dauth <tamino@cdauth.eu>
+* Added hook for debug message of bug of function "ShowInterface".
+* ARoutineData: Fixed method "isInTime" (case end time smaller than start time).
+
+2011-03-06 Tamino Dauth <tamino@cdauth.eu>
+* Added function GetDistanceBetweenPointsWithoutZ.
+* Added handle functions GetDistanceBetween$TYPENAME$sWithoutZ.
+
 2011-03-04 Tamino Dauth <tamino@cdauth.eu>
 * Added function "WaitCheckingCondition" which uses polled wait method.
 * AVideo: Dropped initialization member "waitInterval".

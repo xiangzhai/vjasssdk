@@ -71,7 +71,7 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 
 		public method isInTime takes nothing returns boolean
 			if (this.m_endTimeOfDay < this.m_startTimeOfDay) then // next day
-				return GetFloatGameState(GAME_STATE_TIME_OF_DAY) >= this.m_startTimeOfDay or GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.m_startTimeOfDay
+				return GetFloatGameState(GAME_STATE_TIME_OF_DAY) >= this.m_startTimeOfDay or GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.m_endTimeOfDay
 			endif
 			return GetFloatGameState(GAME_STATE_TIME_OF_DAY) >= this.m_startTimeOfDay and GetFloatGameState(GAME_STATE_TIME_OF_DAY) <= this.m_endTimeOfDay
 		endmethod
@@ -473,7 +473,9 @@ library AStructSystemsWorldRoutine requires optional ALibraryCoreDebugMisc, AStr
 		endmethod
 
 		public stub method onTarget takes ARoutineData routineData returns nothing
+			debug call this.print("OnTarget")
 			if (this.targetAction() != 0) then
+				debug call this.print("OnTarget has target action, calling with execute")
 				call this.targetAction().execute(routineData)
 			endif
 		endmethod

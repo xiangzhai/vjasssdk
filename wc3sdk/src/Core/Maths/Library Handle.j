@@ -4,10 +4,14 @@ library ALibraryCoreMathsHandle requires ALibraryCoreMathsPoint, ALibraryCoreMat
 		function Get$TYPENAME$Z takes $TYPE$ $TYPENAME$ returns real
 			return GetTerrainZ(Get$TYPENAME$X($TYPENAME$), Get$TYPENAME$Y($TYPENAME$))
 		endfunction
+		
+		function GetDistanceBetween$TYPENAME$sWithoutZ takes $TYPE$ $TYPENAME$0, $TYPE$ $TYPENAME$1 returns real
+			return GetDistanceBetweenPointsWithoutZ(Get$TYPENAME$X($TYPENAME$0), Get$TYPENAME$Y($TYPENAME$0), Get$TYPENAME$X($TYPENAME$1), Get$TYPENAME$Y($TYPENAME$1))
+		endfunction
 
 		/// Returns the distance between two $TYPENAME$s.
 		/// Da es die Natives "Get$TYPENAME$X" und "Get$TYPENAME$Y" gibt, dürfte es schneller sein als erst Locations der $TYPENAME$s zu erzeugen und diese zu vergleichen.
-		/// Achtung: Beim Ignorieren des Z-Wertes "z0" und "z1" 0 bergeben.
+		/// Achtung: Beim Ignorieren des Z-Wertes "z0" und "z1" den Wert 0 geben.
 		function GetDistanceBetween$TYPENAME$s takes $TYPE$ $TYPENAME$0, $TYPE$ $TYPENAME$1, real z0, real z1 returns real
 			return GetDistanceBetweenPoints(Get$TYPENAME$X($TYPENAME$0), Get$TYPENAME$Y($TYPENAME$0), z0, Get$TYPENAME$X($TYPENAME$1), Get$TYPENAME$Y($TYPENAME$1), z1)
 		endfunction

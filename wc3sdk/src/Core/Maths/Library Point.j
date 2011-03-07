@@ -43,10 +43,22 @@ library ALibraryCoreMathsPoint
 
 		return -(A * x + B * y + D) / C
 	endfunction
+	
+	/**
+	* Doesn't use z-values.
+	* \return Returns the distance between two points.
+	* \sa GetDistanceBetweenPoints
+	*/
+	function GetDistanceBetweenPointsWithoutZ takes real x0, real y0, real x1, real y1 returns real
+		local real distanceX = (x1 - x0)
+		local real distanceY = (y1 - y0)
+		return SquareRoot((distanceX * distanceX) + (distanceY * distanceY))
+	endfunction
 
 	/**
-	* Uses z values, too.
-	* @return Returns the distance between two points.
+	* Uses z-values.
+	* \return Returns the distance between two points.
+	* \sa GetDistanceBetweenPointsWithoutZ
 	*/
 	function GetDistanceBetweenPoints takes real x0, real y0, real z0, real x1, real y1, real z1 returns real
 		local real distanceX = (x1 - x0)

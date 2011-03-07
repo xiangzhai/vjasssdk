@@ -295,7 +295,7 @@ OrMultipleHint="Fügen Sie Bedingungen zu dieser Funktion in der Hauptanzeige hi
 //***************************************************************************
 [TriggerActionStrings]
 
-DoNothing="Tue nichts"
+DoNothing="Nichts tun"
 DoNothing="Tue nichts"
 DoNothingHint=
 
@@ -307,19 +307,19 @@ CustomScriptCode="Eigenes Skript"
 CustomScriptCode="Eigenes Skript:   ",~Skript-Code
 CustomScriptCodeHint="Geben Sie eine Zeile des Skript-Codes ein.  Beispiel: 'call my_func(udg_my_var)'"
 
-TriggerSleepAction="Warte"
+TriggerSleepAction="Warten"
 TriggerSleepAction="Warte ",~Zeit," Sekunden"
 TriggerSleepActionHint="Die Dauer dieses Wartens wird in Echtzeitsekunden angegeben."
 
-PolledWait="Wait (Spielzeit)"
+PolledWait="Warten (Spielzeit)"
 PolledWait="Warte ",~Zeit," Spielzeitsekunden"
 PolledWaitHint="Die Dauer dieses Wartens wird in Spielzeitsekunden angegeben. Dies ist ein 'polled' Warten, weshalb es geringfügig länger als benötigt dauern kann."
 
-WaitForCondition="Warte auf Bedingung"
+WaitForCondition="Auf Bedingung warten"
 WaitForCondition="Warte bis ",~Bedingung,", überprüfe alle ",~Intervall," Sekunden"
 WaitForConditionHint=
 
-WaitForSoundBJ="Warte auf Geräusch"
+WaitForSoundBJ="Auf Geräusch warten"
 WaitForSoundBJ="Warte auf ",~Geräusch," ist vor ",~Zeit," Sekunden abgespielt worden"
 WaitForSoundBJHint="Diese Aktion wartet nur falls das Geräusch gerade abgespielt wird.  Falls das Geräusch noch nicht gestartet wurde oder bereits fertig ist, tut diese Aktion nichts."
 
@@ -1675,29 +1675,29 @@ MultiboardSetItemIconBJHint=
 
 
 // Neutral Building actions
-AddResourceAmountBJ="Add Gold To Gold Mine"
-AddResourceAmountBJ="Add ",~Quantity," gold to ",~Gold Mine
-AddResourceAmountBJHint="Use a negative number to subtract."
+AddResourceAmountBJ="Gold zur Goldmine hinzufügen"
+AddResourceAmountBJ="Füge ",~Menge," Gold zu ",~Goldmine," hinzu"
+AddResourceAmountBJHint="Verwenden Sie einen negativen Wert, um den Wert abzuziehen."
 
-SetResourceAmount="Set Resources Of Gold Mine"
-SetResourceAmount="Set ",~Gold Mine," to ",~Quantity," gold"
+SetResourceAmount="Rohstoffe einer Goldmine festlegen"
+SetResourceAmount="Lege für ",~Goldmine," ",~Menge," Gold fest"
 SetResourceAmountHint=
 
 BlightGoldMineForPlayer="Haunt Gold Mine (Instantly)"
 BlightGoldMineForPlayer="Haunt ",~Gold Mine," for ",~Player
 BlightGoldMineForPlayerHint="This replaces the Gold Mine with a Haunted Gold Mine of equal resources."
 
-WaygateActivateBJ="Enable/Disable Way Gate"
-WaygateActivateBJ=~Enable/Disable," ",~Way Gate
+WaygateActivateBJ="Portal aktivieren/deaktivieren"
+WaygateActivateBJ=~Aktiviere/Deaktiviere," ",~Portal
 WaygateActivateBJHint=
 
-WaygateSetDestinationLocBJ="Set Way Gate Destination"
-WaygateSetDestinationLocBJ="Set ",~Way Gate," destination to ",~Target
+WaygateSetDestinationLocBJ="Portalziel festlegen"
+WaygateSetDestinationLocBJ="Lege ",~Portal,"-Ziel nach ",~Ziel
 WaygateSetDestinationLocBJHint=
 
-SetAltMinimapIcon="Change Special Minimap Icon"
-SetAltMinimapIcon="Change the special minimap icon to ",~Image
-SetAltMinimapIconHint="The image used for this action must be exactly 16x16 pixels in size."
+SetAltMinimapIcon="Minikarten-Extrasymbol ändern"
+SetAltMinimapIcon="Ändere Minikarten-Extrasymbol zu ",~Bild
+SetAltMinimapIconHint="Das für diese Aktion verwendete Bild muss eine exakte Größe von 16x16 Pixeln haben."
 
 UnitSetUsesAltIconBJ="Turn Special Minimap Icon On/Off"
 UnitSetUsesAltIconBJ="Turn special minimap icon ",~On/Off," for ",~Unit
@@ -1753,8 +1753,8 @@ SetAllUnitTypeSlotsHint="This affects all buildings that have the 'Sell Units' a
 
 
 // Player actions
-SetPlayerState="Set Property"
-SetPlayerState="Set ",~Player," ",~Property," to ",~Value
+SetPlayerState="Eigenschaft festlegen"
+SetPlayerState="Lege ",~Spieler," ",~Eigenschaft," auf ",~Wert," fest"
 SetPlayerStateHint=
 
 AdjustPlayerStateBJ="Add Property"
@@ -1915,9 +1915,9 @@ FlashQuestDialogButtonBJHint=
 
 
 // Region actions
-MoveRectToLoc="Move"
-MoveRectToLoc="Center ",~Region," on ",~Point
-MoveRectToLocHint="This has no effect unless the specified region is a variable."
+MoveRectToLoc="Verschieben"
+MoveRectToLoc="Zentriere ",~Region," auf ",~Punkt
+MoveRectToLocHint="Dies hat keine Auswirkungen, außer die angegebene Region ist eine Variable."
 
 
 // Selection actions
@@ -1941,31 +1941,31 @@ SelectUnitRemoveForPlayer="Remove Unit From Selection For Player"
 SelectUnitRemoveForPlayer="Remove ",~Unit," from selection for ",~Player
 SelectUnitRemoveForPlayerHint="Forces a player to deselect the given unit, retaining the rest of the current selection."
 
-ClearSelection="Clear"
-ClearSelection="Clear selection"
-ClearSelectionHint="Deselect all units."
+ClearSelection="Leeren"
+ClearSelection="Leere Auswahl"
+ClearSelectionHint="Alle Einheiten abwählen."
 
-SelectGroupBJ="Select Unit Group"
-SelectGroupBJ="Select ",~Unit Group
-SelectGroupBJHint="Deselects all units and selects up to 12 units of the unit group."
+SelectGroupBJ="Einheitengruppe auswählen"
+SelectGroupBJ="Wähle ",~Einheitengruppe," aus"
+SelectGroupBJHint="Wählt alle Einheiten ab und wählt bis zu 12 Einheiten der Einheitengruppe aus."
 
-SelectUnitSingle="Select Unit"
-SelectUnitSingle="Select ",~Unit
-SelectUnitSingleHint="Deselects all units and selects only the given unit."
+SelectUnitSingle="Einheit auswählen"
+SelectUnitSingle="Wähle ",~Einheit," aus"
+SelectUnitSingleHint="Wählt alle Einheiten ab und wählt nur die angegebene Einheit aus."
 
-SelectUnitAdd="Add Unit"
-SelectUnitAdd="Add ",~Unit," to selection"
-SelectUnitAddHint="Selects the given unit in addition to whatever is already selected."
+SelectUnitAdd="Füge Einheit hinzu"
+SelectUnitAdd="Füge ",~Einheit," zur Auswahl hinzu"
+SelectUnitAddHint="Wählt die angegebene Einheit zusätzlich zu was auch immer bereits ausgewählt ist aus."
 
-SelectUnitRemove="Remove Unit"
-SelectUnitRemove="Remove ",~Unit," from selection"
-SelectUnitRemoveHint="Deselects the given unit, retaining the rest of the current selection."
+SelectUnitRemove="Einheit entfernen"
+SelectUnitRemove="Entferne ",~Einheit," aus Auswahl"
+SelectUnitRemoveHint="Wählt die angegebene Einheit ab, behält den Rest der derzeitigen Auswahl bei."
 
 
 // Sound actions
-PlaySoundBJ="Play Sound"
-PlaySoundBJ="Play ",~Sound
-PlaySoundBJHint="Sounds cannot be played at map initialization.  Use the Sound Editor to create sound variables.  Note that a 3D sound must be positioned to be played."
+PlaySoundBJ="Geräusch abspielen"
+PlaySoundBJ="Spiele ",~Geräusch," ab"
+PlaySoundBJHint="Geräusche können nicht während der Karteninitialisierung abgespielt werden.  Verwenden Sie den Sound-Editor, um Geräusch-Variable zu erzeugen.  Beachten Sie, dass ein 3D-Geräusch positioniert werden muss, um abgespielt werden zu können."
 
 PlaySoundAtPointBJ="Play Sound At Point"
 PlaySoundAtPointBJ="Play ",~3D Sound," at ",~Volume,"% volume, located at ",~Point," with Z offset ",~Z
@@ -2071,8 +2071,8 @@ ResumeMusicBJ="Resume Music"
 ResumeMusicBJ="Resume music"
 ResumeMusicBJHint=
 
-SetMusicVolumeBJ="Set Music Volume"
-SetMusicVolumeBJ="Set music volume to ",~Volume,"%"
+SetMusicVolumeBJ="Musiklautstärke festlegen"
+SetMusicVolumeBJ="Lege Musiklautstärke auf ",~Lautstärke,"% fest"
 SetMusicVolumeBJHint=
 
 SetMusicOffsetBJ="Skip To Music Offset"
@@ -2165,9 +2165,9 @@ CreateCorpseLocBJ="Create Corpse"
 CreateCorpseLocBJ="Create a ",~Unit," corpse for ",~Player," at ",~Point
 CreateCorpseLocBJHint="Not all units have corpse forms.  Use 'Last Created Unit' to refer to this unit."
 
-CreatePermanentCorpseLocBJ="Create Permanent Corpse"
-CreatePermanentCorpseLocBJ="Create a permanent ",~Style," ",~Unit," corpse for ",~Player," at ",~Point," facing ",~Direction," degrees"
-CreatePermanentCorpseLocBJHint="Fleshy corpses will often appear skeletal for the first 8 seconds of their existence."
+CreatePermanentCorpseLocBJ="Dauerhafte Leiche erzeugen"
+CreatePermanentCorpseLocBJ="Erzeuge eine dauerhafte ",~Stil," ",~Einheit,"-Leiche für ",~Spieler," an ",~Punkt," ausgerichtet mit ",~Richtung," Grad"
+CreatePermanentCorpseLocBJHint="Fleischige Leichen erscheinen oft für die ersten 8 Sekunden ihrer Existenz knochig."
 
 KillUnit="Töten"
 KillUnit="Töte ",~Einheit
@@ -2197,8 +2197,8 @@ SetUnitColor="Farbe ändern"
 SetUnitColor="Change color of ",~Unit," to ",~Color
 SetUnitColorHint="Changing a unit's color does not change the unit's ownership."
 
-SetUnitOwner="Change Owner"
-SetUnitOwner="Change ownership of ",~Unit," to ",~Player," and ",~Change/Retain Color
+SetUnitOwner="Besitzer ändern"
+SetUnitOwner="Ändere Besitz von ",~Einheit," zu ",~Spieler," und ",~Ändere/Behalte Farbe bei
 SetUnitOwnerHint=
 
 UnitShareVisionBJ="Shared Vision"
@@ -2273,9 +2273,9 @@ UnitSuspendDecayBJ="Suspend Corpse Decay"
 UnitSuspendDecayBJ=~Suspend/Resume," corpse decay for ",~Unit
 UnitSuspendDecayBJHint="This only works on corpses, and only after the corpses' death animations have finished."
 
-UnitResetCooldown="Reset Ability Cooldowns"
-UnitResetCooldown="Reset ability cooldowns for ",~Unit
-UnitResetCooldownHint="This makes all of the unit's abilities available for use again almost immediately."
+UnitResetCooldown="Fähigkeitenabklingzeiten zurücksetzen"
+UnitResetCooldown="Setze Fähigkeitenabklingzeiten für ",~Einheit," zurück"
+UnitResetCooldownHint="Dies macht alle Fähigkeiten der Einheit beinahe sofort für eine weitere Verwendung verfügbar."
 
 UnitSetConstructionProgress="Set Building Construction Progress"
 UnitSetConstructionProgress="Set ",~Building," construction progress to ",~Progress,"%"
@@ -2293,9 +2293,9 @@ UnitSetCanSleepBJ="Make Unit Sleep At Night"
 UnitSetCanSleepBJ="Make ",~Unit," ",~Sleep/Remain Awake," when unprovoked at night"
 UnitSetCanSleepBJHint="Units owned by players 1 through 12 never sleep."
 
-UnitWakeUpBJ="Wake Up"
-UnitWakeUpBJ="Wake up ",~Unit
-UnitWakeUpBJHint="This affects nocturnal sleep, not magical sleep."
+UnitWakeUpBJ="Aufwecken"
+UnitWakeUpBJ="Wecke ",~Einheit," auf"
+UnitWakeUpBJHint="Dies wirkt sich auf den nächtlichen, nicht den magischen Schlaf aus."
 
 UnitGenerateAlarms="Turn Alarm Generation On/Off"
 UnitGenerateAlarms="Turn alarm generation for ",~Unit," ",~On/Off
@@ -2353,8 +2353,8 @@ SetUnitUserData="Set Custom Value"
 SetUnitUserData="Set the custom value of ",~Unit," to ",~Index
 SetUnitUserDataHint="Custom values are only used in triggers, and can be used to store any integer value."
 
-UnitRemoveBuffsBJ="Remove Buffs"
-UnitRemoveBuffsBJ="Remove ",~Buff Type," buffs from ",~Unit
+UnitRemoveBuffsBJ="Zauberverstärker entfernen"
+UnitRemoveBuffsBJ="Entferne ",~Zauberverstärkertyp,"-Zauberverstärker von ",~Einheit
 UnitRemoveBuffsBJHint=
 
 UnitRemoveBuffsExBJ="Remove Buffs By Type"
@@ -2365,21 +2365,21 @@ UnitRemoveBuffBJ="Remove Specific Buff"
 UnitRemoveBuffBJ="Remove ",~Buff," buff from ",~Unit
 UnitRemoveBuffBJHint=
 
-UnitAddAbilityBJ="Add Ability"
-UnitAddAbilityBJ="Add ",~Ability," to ",~Unit
+UnitAddAbilityBJ="Fähigkeit hinzufügen"
+UnitAddAbilityBJ="Füge ",~Fähigkeit," zu ",~Einheit," hinzu"
 UnitAddAbilityBJHint=
 
-UnitRemoveAbilityBJ="Remove Ability"
-UnitRemoveAbilityBJ="Remove ",~Ability," from ",~Unit
-UnitRemoveAbilityBJHint="In most cases, removing an ability in this manner is permanent."
+UnitRemoveAbilityBJ="Entferne Fähigkeit"
+UnitRemoveAbilityBJ="Entferne ",~Fähigkeit," von ",~Einheit
+UnitRemoveAbilityBJHint="In den meisten Fällen ist das Entfernen einer Fähigkeit auf diese Weise dauerhaft."
 
-UnitAddTypeBJ="Add Classification"
-UnitAddTypeBJ="Add classification of ",~Classification," to ",~Unit
-UnitAddTypeBJHint="The info panel for a selected unit won't update until the unit is re-selected."
+UnitAddTypeBJ="Klassifikation hinzufügen"
+UnitAddTypeBJ="Füge Klassifikation von ",~Klassifikation," zu ",~Einheit," hinzu"
+UnitAddTypeBJHint="Die Info-Leiste der ausgewählten Einheit wird nicht aktualisiert, bis die Einheit neu ausgewählt wurde."
 
-UnitRemoveTypeBJ="Remove Classification"
-UnitRemoveTypeBJ="Remove classification of ",~Classification," from ",~Unit
-UnitRemoveTypeBJHint="The info panel for a selected unit won't update until the unit is re-selected."
+UnitRemoveTypeBJ="Klassifikation entfernen"
+UnitRemoveTypeBJ="Entferne Klassifikation von ",~Klassifikation," von ",~Einheit
+UnitRemoveTypeBJHint="Die Info-Leiste der ausgewählten Einheit wird nicht aktualisiert, bis die Einheit neu ausgewählt wurde."
 
 IssueTargetOrder="Issue Order Targeting A Unit"
 IssueTargetOrder="Order ",~Unit," to ",~Order," ",~Unit
@@ -2454,25 +2454,25 @@ ForGroup="Pick Every Unit In Unit Group And Do Action"
 ForGroup="Pick every unit in ",~Unit Group," and do ",~Action
 ForGroupHint="Use 'Picked Unit' to refer each unit as it is picked.  This works for every unit in the group, including dead units.  Wait actions should not be used within this function."
 
-GroupAddUnitSimple="Add Unit"
-GroupAddUnitSimple="Add ",~Unit," to ",~Unit Group
-GroupAddUnitSimpleHint="This adds a unit to a Unit Group variable.  This does not affect the unit itself."
+GroupAddUnitSimple="Einheit hinzufügen"
+GroupAddUnitSimple="Füge ",~Einheit," zu ",~Einheitengruppe," hinzu"
+GroupAddUnitSimpleHint="Dies fügt eine Einheit zu einer Einheitengruppe-Variablen hinzu..  Dies wirkt sich nicht auf die Einheit selbst aus."
 
-GroupAddGroup="Add Unit Group"
-GroupAddGroup="Add all units of ",~Unit Group," to ",~Unit Group
-GroupAddGroupHint="This adds all units of a unit group to a Unit Group variable.  This does not affect the units themselves."
+GroupAddGroup="Einheitenguppe hinzufügen"
+GroupAddGroup="Füge alle Einheiten von ",~Einheitengruppe," zu ",~Einheitengruppe," hinzu"
+GroupAddGroupHint="Dies fügt alle Einheiten einer Einheitengruppe zu einer Einheitengruppe-Variable hinzu.  Dies wirkt sich nicht auf die Einheiten selbst aus."
 
-GroupRemoveUnitSimple="Remove Unit"
-GroupRemoveUnitSimple="Remove ",~Unit," from ",~Unit Group
-GroupRemoveUnitSimpleHint="This removes a unit from a Unit Group variable.  This does not affect the unit itself."
+GroupRemoveUnitSimple="Einheit entfernen"
+GroupRemoveUnitSimple="Entferne ",~Einheit," aus ",~Einheitengruppe
+GroupRemoveUnitSimpleHint="Dies entfernt eine Einheit von einer Einheitengruppe-Variablen.  Dies wirkt sich nicht auf die Einheit selbst aus."
 
-GroupRemoveGroup="Remove Unit Group"
-GroupRemoveGroup="Remove all units of ",~Unit Group," from ",~Unit Group
-GroupRemoveGroupHint="This removes all units of a unit group from a Unit Group variable.  This does not affect the units themselves."
+GroupRemoveGroup="Entferne Einheitengruppe"
+GroupRemoveGroup="Entferne alle Einheiten von ",~Einheitengruppe," aus ",~Einheitengruppe
+GroupRemoveGroupHint="Dies entfernt alle Einheiten einer Einheitengruppe aus einer Einheitengruppe-Variablen.  Dies wirkt sich nicht auf die Einheiten selbst aus."
 
-GroupClear="Clear"
-GroupClear="Remove all units from ",~Unit Group
-GroupClearHint="This removes all units from a Unit Group variable.  This does not affect the units themselves."
+GroupClear="Leeren"
+GroupClear="Entfernt alle Einheiten aus ",~Einheitengruppe
+GroupClearHint="Dies entfernt alle Einheiten aus einer Einheitengruppe-Variablen.  Dies wirkt sich nicht auf die Einheiten selbst aus."
 
 GroupTargetOrder="Issue Order Targeting A Unit"
 GroupTargetOrder="Order ",~Unit Group," to ",~Order," ",~Unit
@@ -2500,70 +2500,70 @@ GroupTrainOrderByIdBJHint="This action can also be used to order a unit to upgra
 
 
 // Ubersplat actions
-CreateUbersplatBJ="Create"
-CreateUbersplatBJ="Create ubersplat at ",~Location," of type ",~Type," with color (",~Red,"%, ",~Green,"%, ",~Blue,"%) and ",~Transparency,"% transparency (",~Enable/Disable," paused state, ",~Enble/Disable," skipping birth time)"
-CreateUbersplatBJHint="The color values are (Red, Green, Blue).  A 100% transparent color is completely invisible.  Use 'Ubersplat - Change Render Always State' to toggle display of this ubersplat.  By default, ubersplats are not rendered."
+CreateUbersplatBJ="Erzeugen"
+CreateUbersplatBJ="Erzeuge Ubersplat an ",~Punkt," des Typs ",~Typ," mit Farbe (",~Rot,"%, ",~Grün,"%, ",~Blau,"%) und ",~Transparenz,"% Transparenz (",~Aktiviere/Deaktiviere," pausierten Zustand, ",~Aktiviere/Deaktiviere," Erzeugungszeit überspringen)"
+CreateUbersplatBJHint="Die Farbwerte sind (Rot, grün, blau).  Eine 100% transparente Farbe ist vollständig unsichtbar.  Verwenden Sie 'Ubersplat - Immer-Rendern-Zustand ändern', um die Anzeige dieses Ubersplats zu kippen.  Standardmäßig werden Ubersplats nicht gerendert."
 
 DestroyUbersplat="Zerstöre"
 DestroyUbersplat="Zerstöre ",~Ubersplat
 DestroyUbersplatHint=
 
-ResetUbersplat="Setze zurück"
+ResetUbersplat="Zurücksetzen"
 ResetUbersplat="Setze ",~Ubersplat," zurück"
 ResetUbersplatHint=
 
-FinishUbersplat="Beende"
+FinishUbersplat="Beenden"
 FinishUbersplat="Beende ",~Ubersplat
 FinishUbersplatHint=
 
-ShowUbersplatBJ="Zeige an/verberge"
+ShowUbersplatBJ="Anzeigen/verbergen"
 ShowUbersplatBJ=~Zeige an/verberge," ",~Ubersplat
 ShowUbersplatBJHint=
 
-SetUbersplatRender="Ändere Render-Status"
-SetUbersplatRender="Ändere ",~Ubersplat,": ",~Aktiviere/deaktiviere," Render-Status"
+SetUbersplatRender="Render-Zustand ändern"
+SetUbersplatRender="Ändere ",~Ubersplat,": ",~Aktiviere/deaktiviere," Render-Zustand"
 SetUbersplatRenderHint=
 
-SetUbersplatRenderAlways="Ändere Immer-Rendern-Status"
-SetUbersplatRenderAlways="Ändere ",~Ubersplat,": ",~Aktiviere/deaktiviere," Immer-Rendern-Status"
+SetUbersplatRenderAlways="Immer-Rendern-Zustand ändern"
+SetUbersplatRenderAlways="Ändere ",~Ubersplat,": ",~Aktiviere/deaktiviere," Immer-Rendern-Zustand"
 SetUbersplatRenderAlwaysHint=
 
 
 // Visibility actions
-FogEnableOn="Aktiviere Nebel des Krieges"
+FogEnableOn="Nebel des Krieges aktivieren"
 FogEnableOn="Aktiviere Nebel des Krieges"
 FogEnableOnHint=
 
-FogEnableOff="Deaktiviere Nebel des Krieges"
+FogEnableOff="Nebel des Krieges deaktivieren"
 FogEnableOff="Deaktiviere Nebel des Krieges"
 FogEnableOffHint=
 
-FogMaskEnableOn="Aktivere schwarze Maske"
+FogMaskEnableOn="Schwarze Maske aktivieren"
 FogMaskEnableOn="Aktiviere schwarze Maske"
 FogMaskEnableOnHint=
 
-FogMaskEnableOff="Deaktiviere schwarze Maske"
+FogMaskEnableOff="Schwarze Maske deaktivieren"
 FogMaskEnableOff="Deaktiviere schwarze Maske"
 FogMaskEnableOffHint=
 
-CreateFogModifierRectBJ="Create Visibility Modifier Region"
+CreateFogModifierRectBJ="Sichtbarkeitsmodifikatorregion erzeugen"
 CreateFogModifierRectBJ="Create an initially ",~Enabled/Disabled," visibility modifier for ",~Player," emitting ",~Visibility State," across ",~Region
 CreateFogModifierRectBJHint=
 
-CreateFogModifierRadiusLocBJ="Create Visibility Modifier Circle"
+CreateFogModifierRadiusLocBJ="Sichtbarkeitsmodifikatorkreis erzeugen"
 CreateFogModifierRadiusLocBJ="Create an initially ",~Enabled/Disabled," visibility modifier for ",~Player," emitting ",~Visibility State," from ",~Point," to a radius of ",~Radius
 CreateFogModifierRadiusLocBJHint=
 
-FogModifierStart="Enable Visibility Modifier"
-FogModifierStart="Enable ",~Visibility Modifier
+FogModifierStart="Sichtbarkeitsmodifikator aktivieren"
+FogModifierStart="Aktiviere ",~Sichtbarkeitsmodifikator
 FogModifierStartHint=
 
-FogModifierStop="Disable Visibility Modifier"
-FogModifierStop="Disable ",~Visibility Modifier
+FogModifierStop="Sichtbarkeitsmodifikator deaktivieren"
+FogModifierStop="Deaktiviere ",~Sichtbarkeitsmodifikator
 FogModifierStopHint=
 
-DestroyFogModifier="Destroy Visibility Modifier"
-DestroyFogModifier="Destroy ",~Visibility Modifier
+DestroyFogModifier="Sichtbarkeitsmodifikator zerstören"
+DestroyFogModifier="Zerstöre ",~Sichtbarkeitsmodifikator
 DestroyFogModifierHint=
 
 // ASL
@@ -3963,21 +3963,21 @@ GetRevivingUnit="Reviving Hero"
 GetRevivingUnit="Reviving Hero"
 GetRevivingUnitHint="When responding to 'Begins/Cancels/Finishes Reviving' unit events, this refers to the unit being revived."
 
-GetSellingUnit="Selling Unit"
-GetSellingUnit="Selling unit"
-GetSellingUnitHint="When responding to 'Sells A Unit', 'Sells An Item', or 'Pawns An Item' unit events, this refers to the unit doing the selling."
+GetSellingUnit="Verkaufende Einheit"
+GetSellingUnit="Verkaufende Einheit"
+GetSellingUnitHint="Wenn auf ein 'Verkauft eine Einheit'-, 'Verkauft einen Gegenstand'- oder 'Verpfändet einen Gegenstand'-Einheitenereignis reagiert wird, verweist dies auf die Einheit, die den Verkauf gerade abwickelt."
 
-GetSoldUnit="Sold Unit"
-GetSoldUnit="Sold unit"
-GetSoldUnitHint="When responding to a 'Sells A Unit' unit event, this refers to the unit being sold."
+GetSoldUnit="Verkaufte Einheit"
+GetSoldUnit="Verkaufte Einheit"
+GetSoldUnitHint="Wenn auf ein 'Verkauft eine Einheit'-Einheitenereignis reagiert wird, verweist dies auf die Einheit, die gerade verkauft wird."
 
-GetSummonedUnit="Summoned Unit"
-GetSummonedUnit="Summoned unit"
-GetSummonedUnitHint="When responding to a 'Spawns A Summoned Unit' unit event, this refers to the unit being summoned."
+GetSummonedUnit="Beschworene Einheit"
+GetSummonedUnit="Beschworene Einheit"
+GetSummonedUnitHint="Wenn auf ein 'Erzeugt eine beschworene Einheit'-Einheitenereignis reagiert wird, verweist dies auf die Einheit, die gerade beschworen wird."
 
-GetSummoningUnit="Summoning Unit"
-GetSummoningUnit="Summoning unit"
-GetSummoningUnitHint="When responding to a 'Spawns A Summoned Unit' unit event, this refers to the unit spawning the summoned unit."
+GetSummoningUnit="Beschwörende Einheit"
+GetSummoningUnit="Beschwörende Einheit"
+GetSummoningUnitHint="Wenn auf ein 'Erzeugt eine beschworene Einheit'-Einheitenereignis reagiert wird, verweist dies auf die Einheit, die gerade die beschworene Einheit erzeugt."
 
 GetOrderTargetUnit="Target Unit Of Issued Order"
 GetOrderTargetUnit="Target unit of issued order"
@@ -4197,13 +4197,13 @@ GetItemPlayer="Besitzer des Gegenstands"
 GetItemPlayer="Besitzer des ",~Gegenstands
 GetItemPlayerHint=
 
-ForcePickRandomPlayer="Random Player From Player Group"
-ForcePickRandomPlayer="Random player from ",~Player Group
+ForcePickRandomPlayer="Zufälliger Spieler einer Spielergruppe"
+ForcePickRandomPlayer="Zufälliger Spieler aus ",~Spielergruppe
 ForcePickRandomPlayerHint=
 
-ConvertedPlayer="Convert Player Index To Player"
-ConvertedPlayer="Player(",~Player Index,")"
-ConvertedPlayerHint="Player indexes range from 1 to 16."
+ConvertedPlayer="Spielerindex zu Spieler umwandeln"
+ConvertedPlayer="Spieler(",~Spielerindex,")"
+ConvertedPlayerHint="Spielerindizes reichen von 1 bis 16."
 
 GetChangingUnitPrevOwner="Vorheriger Besitzer"
 GetChangingUnitPrevOwner="Vorheriger Besitzer"
@@ -4213,8 +4213,8 @@ GetTriggerPlayer="Auslösender Spieler"
 GetTriggerPlayer="Auslösender Spieler"
 GetTriggerPlayerHint=
 
-LeaderboardGetIndexedPlayerBJ="Player In Position"
-LeaderboardGetIndexedPlayerBJ="Player in position ",~Position," of ",~Leaderboard
+LeaderboardGetIndexedPlayerBJ="Spieler auf Platz"
+LeaderboardGetIndexedPlayerBJ="Spieler auf Platz ",~Platz," von ",~Bestenliste
 LeaderboardGetIndexedPlayerBJHint=
 
 
@@ -4223,8 +4223,8 @@ GetLastCreatedGroup="Zuletzt erstellte Einheitengruppe"
 GetLastCreatedGroup="Zuletzt erstellte Einheitengruppe"
 GetLastCreatedGroupHint="This is the last set of units created via a 'Unit - Create' trigger action."
 
-GetRandomSubGroup="Random N Units From Unit Group"
-GetRandomSubGroup="Random ",~Count," units from ",~Unit Group
+GetRandomSubGroup="Zufällige N Einheiten einer Einheitengruppe"
+GetRandomSubGroup="Zufällige ",~Anzahl," Einheiten von ",~Einheitengruppe
 GetRandomSubGroupHint=
 
 GetUnitsInRectAll="Einheiten in Region"
@@ -4247,12 +4247,12 @@ GetUnitsInRangeOfLocMatching="Units In Range Matching Condition"
 GetUnitsInRangeOfLocMatching="Units within ",~Radius," of ",~Point," matching ",~Condition
 GetUnitsInRangeOfLocMatchingHint="Use 'Matching Unit' to refer to the unit on whom the comparison is being performed."
 
-GetUnitsOfPlayerAll="Units Owned By Player"
-GetUnitsOfPlayerAll="Units owned by ",~Player
+GetUnitsOfPlayerAll="Einheiten im Besitz eines Spielers"
+GetUnitsOfPlayerAll="Einheiten im Besitz von ",~Spieler
 GetUnitsOfPlayerAllHint=
 
-GetUnitsOfPlayerAndTypeId="Units Owned By Player Of Type"
-GetUnitsOfPlayerAndTypeId="Units owned by ",~Player," of type ",~Unit-Type
+GetUnitsOfPlayerAndTypeId="Einheiten im Besitz eines Spielers eines Typs"
+GetUnitsOfPlayerAndTypeId="Einheiten im Besitz von ",~Spieler," des Typs ",~Einheitentyp
 GetUnitsOfPlayerAndTypeIdHint=
 
 GetUnitsOfPlayerMatching="Units Owned By Player Matching Condition"
@@ -4329,8 +4329,8 @@ GetGameDifficultyHint=
 
 
 // returns aidifficulty
-GetAIDifficulty="Melee AI Of Player"
-GetAIDifficulty="Melee AI of ",~Player
+GetAIDifficulty="Nahkampf-KI eines Spielers"
+GetAIDifficulty="Nahkampf-KI von ",~Spieler
 GetAIDifficultyHint=
 
 
@@ -4463,9 +4463,9 @@ GetLastCreatedMultiboardHint="Dies ist das zuletzt über eine 'Multiboard - Erze
 
 
 // returns timer
-GetLastCreatedTimerBJ="Last Started Timer"
-GetLastCreatedTimerBJ="Last started timer"
-GetLastCreatedTimerBJHint="This is the last timer started via a 'Countdown Timer - Start Timer' trigger action."
+GetLastCreatedTimerBJ="Zuletzt gestarteter Zeitgeber"
+GetLastCreatedTimerBJ="Zuletzt gestarteter Zeitgebe"
+GetLastCreatedTimerBJHint="Dies ist der zuletzt über eine 'Countdown-Timer - Zeitgeber starten'-Auslöseraktion gestartete Zeitgeber."
 
 GetExpiredTimer="Ablaufender Zeitgeber"
 GetExpiredTimer="Ablaufender Zeitgeber"
@@ -4702,9 +4702,9 @@ CheckLastCommandData="Last Command Data"
 CheckLastCommandData="Last command data sent, ",~Option," the command"
 CheckLastCommandDataHint="Commands can be sent from map triggers via the 'AI - Send AI Command' action."
 
-CaptainGroupSize="Attack Group Size"
-CaptainGroupSize="Attack group size"
-CaptainGroupSizeHint="The current number of units in the attack group."
+CaptainGroupSize="Angriffsgruppengröße"
+CaptainGroupSize="Angriffsgruppengröße"
+CaptainGroupSizeHint="Die derzeitige Anzahl der Einheiten in der Angriffsgruppe."
 
 CaptainReadinessHP="Attack Group Health Level"
 CaptainReadinessHP="Attack group health level"

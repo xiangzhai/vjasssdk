@@ -113,7 +113,9 @@ library AStructSystemsCharacterSpell requires optional ALibraryCoreDebugMisc, AS
 		endmethod
 
 		public stub method onCastAction takes nothing returns nothing
+			debug call Print("Spell: onCastAction")
 			if (this.m_castAction != 0) then
+				debug call Print("Running action (is not zero).")
 				call this.m_castAction.execute(this)
 			endif
 		endmethod

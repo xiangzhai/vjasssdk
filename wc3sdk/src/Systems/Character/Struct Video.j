@@ -315,7 +315,8 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			endif
 			call SetCameraBoundsToRect(bj_mapInitialPlayableArea) // for all players
 			set playersAll = GetPlayersAll()
-			call CinematicModeExBJ(true, playersAll, 0.0)
+			call CinematicModeBJ(true, playersAll) // Never use with value 0.0, unit portraits won't work anymore -> m_waitTime should be bigger than or equal to bj_CINEMODE_INTERFACEFADE
+			//call CinematicModeExBJ(true, playersAll, 0.0)
 			set playersAll = null
 			set thistype.m_runningVideo = this
 			call this.onInitAction.evaluate()
@@ -338,7 +339,8 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, thistype.m_waitTime, "ReplaceableTextures\\CameraMasks\\Black_mask.blp", 100.00, 100.00, 100.00, 0.0)
 			call TriggerSleepAction(thistype.m_waitTime)
 			set playersAll = GetPlayersAll()
-			call CinematicModeExBJ(false, playersAll, 0.0)
+			call CinematicModeBJ(false, playersAll) // Never use with value 0.0, unit portraits won't work anymore -> m_waitTime should be bigger than or equal to bj_CINEMODE_INTERFACEFADE
+			//call CinematicModeExBJ(true, playersAll, 0.0)
 			set playersAll = null
 			if (ATalk.initialized() and ATalk.disableEffectsInCinematicMode()) then
 				call ATalk.showAllEffects()
@@ -489,6 +491,9 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			set thistype.m_textSkip = textSkip
 			// static members
 			set thistype.m_waitTime = filterDuration / 2
+			debug if (thistype.m_waitTime < bj_CINEMODE_INTERFACEFADE) then
+				debug call thistype.staticPrint("Wait time should be equal to or bigger than bj_CINEMODE_INTERFACEFADE (" + R2S(bj_CINEMODE_INTERFACEFADE) + " but it has value " + R2S(thistype.m_waitTime) + ".")
+			debug endif
 			set thistype.m_playedSound = null
 			set thistype.m_runningVideo = 0
 			set thistype.m_skipped = false
