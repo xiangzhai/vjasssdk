@@ -1,6 +1,12 @@
 library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AStructCoreGeneralVector, ALibraryCoreGeneralPlayer, ALibraryCoreGeneralUnit, ALibraryCoreInterfaceCinematic, AStructCoreInterfacePlayerSelection, ALibraryCoreInterfaceMisc, ALibraryCoreStringConversion, AStructSystemsCharacterCharacter, AStructSystemsCharacterTalk
 
-	private struct AActorData
+	private interface AActorInterface
+		public method restore takes nothing returns nothing
+		public method restoreOnActorsLocation takes nothing returns nothing
+		public method actor takes nothing returns unit
+	endinterface
+
+	private struct AActorData extends AActorInterface
 		// construction members
 		private unit m_unit
 		// members
@@ -63,6 +69,88 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 		public method onDestroy takes nothing returns nothing
 			// construction members
 			set this.m_unit = null
+			// members
+			if (this.m_actor != null) then
+				call RemoveUnit(this.m_actor)
+				set this.m_actor = null
+			endif
+		endmethod
+	endstruct
+	
+	private struct AUnitTypeActorData extends AActorInterface
+		// construction members
+		private player m_owner
+		private integer m_unitTypeId
+		private real m_x
+		private real m_y
+		private real m_face
+		// members
+		private unit m_actor
+		
+		// construction members
+		
+		public method owner takes nothing returns player
+			return this.m_owner
+		endmethod
+		
+		public method unitTypeId takes nothing returns integer
+			return this.m_unitTypeId
+		endmethod
+		
+		public method x takes nothing returns real
+			return this.m_x
+		endmethod
+		
+		public method y takes nothing returns real
+			return this.m_y
+		endmethod
+		
+		public method face takes nothing returns real
+			return this.m_face
+		endmethod
+
+		// members
+
+		public method actor takes nothing returns unit
+			return this.m_actor
+		endmethod
+
+		// methods
+
+		public method restore takes nothing returns nothing
+			call RemoveUnit(this.m_actor)
+			set this.m_actor = null
+		endmethod
+		
+		public method restoreOnActorsLocation takes nothing returns nothing
+			call this.restore()
+		endmethod
+
+		public method refresh takes nothing returns nothing
+			if (this.m_actor != null) then
+				call RemoveUnit(this.actor())
+				set this.m_actor = null
+			endif
+			set this.m_actor = CreateUnit(this.owner(), this.unitTypeId(), this.x(), this.y(), this.face())
+			call SetUnitInvulnerable(this.m_actor, true)
+		endmethod
+
+		public static method create takes player owner, integer unitTypeId, real x, real y, real face returns thistype
+			local thistype this = thistype.allocate()
+			// construction members
+			set this.m_owner = owner
+			set this.m_unitTypeId = unitTypeId
+			set this.m_x = x
+			set this.m_y = y
+			set this.m_face = face
+			// members
+			call this.refresh()
+			return this
+		endmethod
+
+		public method onDestroy takes nothing returns nothing
+			// construction members
+			set this.m_owner = null
 			// members
 			if (this.m_actor != null) then
 				call RemoveUnit(this.m_actor)
@@ -573,6 +661,20 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 			call thistype.m_actorData.pushBack(data)
 			return thistype.m_actorData.backIndex()
 		endmethod
+		
+		public static method createUnitActor takes player owner, integer unitTypeId, real x, real y, real face returns integer
+			local AUnitTypeActorData data = AUnitTypeActorData.create(owner, unitTypeId, x, y, face)
+			call thistype.m_actorData.pushBack(data)
+			return thistype.m_actorData.backIndex()
+		endmethod
+		
+		public static method createUnitActorAtLocation takes player owner, integer unitTypeId, location whichLocation, real face returns integer
+			return thistype.createUnitActor(owner, unitTypeId, GetLocationX(whichLocation), GetLocationY(whichLocation), face)
+		endmethod
+		
+		public static method createUnitActorAtRect takes player owner, integer unitTypeId, rect whichRect, real face returns integer
+			return thistype.createUnitActor(owner, unitTypeId, GetRectCenterX(whichRect), GetRectCenterY(whichRect), face)
+		endmethod
 
 		public static method unitActor takes integer index returns unit
 			return AActorData(thistype.m_actorData[index]).actor()
@@ -606,6 +708,7 @@ library AStructSystemsCharacterVideo requires optional ALibraryCoreDebugMisc, AS
 
 		public static method setActorsMoveSpeed takes real moveSpeed returns nothing
 			local integer i = 0
+			call SetUnitMoveSpeed(thistype.actor(), moveSpeed)
 			loop
 				exitwhen (i == thistype.m_actorData.size())
 				call SetUnitMoveSpeed(AActorData(thistype.m_actorData[i]).actor(), moveSpeed)

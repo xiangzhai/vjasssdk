@@ -1,9 +1,11 @@
-library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
+library AStructCoreMathsVector3 requires optional ALibraryCoreDebugMisc, ALibraryCoreMathsHandle, ALibraryCoreMathsPoint
 
 	/**
 	* Provides access to three-dimensional vector.
 	* Three-dimensional vectors are often used in 3d graphics to define positions or speed.
 	* They can simplify calculations.
+	* Mainly influenced by Anitarf's system (\link http://www.wc3c.net/showthread.php?t=87027).
+	* \note This system has not been tested extensively!
 	*/
 	struct AVector3
 		// dynamic members
@@ -11,6 +13,8 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		private real m_y
 		private real m_z
 
+		//! runtextmacro A_STRUCT_DEBUG("\"AVector3\"")
+		
 		// dynamic members
 
 		public method setX takes real x returns nothing
@@ -80,7 +84,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		public method setLength takes real length returns nothing
-			call this.scale((length / this.length()))
+			call this.scale(length / this.length())
 		endmethod
 
 		/**
@@ -89,7 +93,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		public method setNorm takes real norm returns nothing
 			call this.setLength(norm)
 		endmethod
-
+		
 		/**
 		* Similar to \ref AVector3.length.
 		*/
@@ -111,35 +115,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_y = this.m_y + vector.m_y
 			set this.m_z = this.m_z + vector.m_z
 		endmethod
-
-
-		/// Subtracts all data from vector @param vector.
-		/// Das Ergebnis ist ein Vektor, der von der Spitze des Vektors "vector" zur Spitze des Vektors "this" verläuft.
-		/// Achtung: Der Vektor verläuft immer vom 2. Wert zum 1. Wert der Subtraktion.
-		public method subtract takes thistype vector returns nothing
-			set this.m_x = this.m_x - vector.m_x
-			set this.m_y = this.m_y - vector.m_y
-			set this.m_z = this.m_z - vector.m_z
-		endmethod
-
-		/**
-		* Multiplies each value from vector \p vector and returns the sum of all results.
-		* Doesn't change any vector data!
-		* If the result is 0 there would be a right angle if you put both vectors together.
-		* If the result is bigger than 0 there would be an acute angle if you put both vectors together.
-		* If the result is smaller than 0 there would be an obtuse angle if you put both vectors together.
-		*/
-		public method multiply takes thistype vector returns real
-			return ((this.m_x * vector.m_x) + (this.m_y * vector.m_y) + (this.m_z * vector.m_z))
-		endmethod
-
-		/**
-		* Similar to \ref AVector3.multiply.
-		*/
-		public method scalarProduct takes thistype vector returns real
-			return this.multiply(vector)
-		endmethod
-
+		
 		/**
 		* Adds scaled vector \p vector which is scaled by value \p factor.
 		* Note that vector \p vector won't be changed!
@@ -151,12 +127,83 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_z = this.m_z + vector.m_z * factor
 		endmethod
 
+
+		/// Subtracts all data from vector @param vector.
+		/// Das Ergebnis ist ein Vektor, der von der Spitze des Vektors "vector" zur Spitze des Vektors "this" verläuft.
+		/// Achtung: Der Vektor verläuft immer vom 2. Wert zum 1. Wert der Subtraktion.
+		public method subtract takes thistype vector returns nothing
+			set this.m_x = this.m_x - vector.m_x
+			set this.m_y = this.m_y - vector.m_y
+			set this.m_z = this.m_z - vector.m_z
+		endmethod
+		
+		/**
+		* Substracts scaled vector \p vector which is scaled by value \p factor.
+		* Note that vector \p vector won't be changed!
+		*/
+		public method substractScaled takes thistype vector, real factor returns nothing
+			set this.m_x = this.m_x - vector.m_x * factor
+			set this.m_y = this.m_y - vector.m_y * factor
+			set this.m_z = this.m_z - vector.m_z * factor
+		endmethod
+
+		/**
+		* Multiplies each value from vector \p vector and returns the sum of all results.
+		* Doesn't change any vector data!
+		* If the result is 0 there would be a right angle if you put both vectors together.
+		* If the result is bigger than 0 there would be an acute angle if you put both vectors together.
+		* If the result is smaller than 0 there would be an obtuse angle if you put both vectors together.
+		* \sa thistype.dot, thistype.multiplication
+		*/
+		public method multiply takes thistype vector returns real
+			return ((this.m_x * vector.m_x) + (this.m_y * vector.m_y) + (this.m_z * vector.m_z))
+		endmethod
+
+		/**
+		* Similar to \ref thistype.multiply.
+		* \sa thistype.dotProduct
+		*/
+		public method dot takes thistype vector returns real
+			return thistype.dotProduct(this, vector)
+		endmethod
+
+		/**
+		* \sa thistype.crossProduct
+		*/
+		public method cross takes thistype vector returns thistype
+			return thistype.crossProduct(this, vector)
+		endmethod
+
+		public method distance takes thistype vector returns real
+			local thistype temp = thistype.createCopy(vector)
+			local real result
+			call temp.subtract(vector)
+			set result = temp.length()
+			call temp.destroy()
+			return result
+		endmethod
+		
+		/**
+		* Normalizes given vector.
+		* Normal of vector should be orthogonal.
+		*/
+		public method normalize takes nothing returns nothing
+			local real length = this.length()
+			debug if (length == 0) then
+				debug call this.printMethodError("normalize", "0 vector.")
+				debug return
+			debug endif
+			set this.m_x = this.m_x / length
+			set this.m_y = this.m_y / length
+			set this.m_z = this.m_z / length
+		endmethod
+		
 		/**
 		* Projects vector on vector \p vector.
 		* Doesn't change the length.
 		*/
 		public method project takes thistype vector returns nothing
-			local real factor = this.length() / vector.length()
+			local real factor = this.multiply(vector) / vector.length()
 			set this.m_x = vector.m_x * factor
 			set this.m_y = vector.m_y * factor
 			set this.m_z = vector.m_z * factor
@@ -172,6 +219,19 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			set this.m_x = length * Cos(beta)
 			set this.m_y = length * Sin(beta)
 		endmethod
+		
+		/**
+		* \return Result is returned in degrees.
+		* \author Anitarf
+		*/
+		public method angle takes thistype vector returns real
+			local real length = this.length() * vector.length()
+			debug if length == 0 then
+				debug call this.printMethodError("angle", "0 vector.")
+				debug return 0.0
+			debug endif
+			return Acos(this.dot(vector) / length) * bj_RADTODEG
+		endmethod
 
 		/**
 		* Sets vector's values to terrain point with x value \p x and y value \p y.
@@ -185,32 +245,18 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* Gets the normal vector of the terrain at given coordinates. @param sampleRadius defines
+		* Gets the normal vector of the terrain at given coordinates. \p sampleRadius defines
 		* how far apart the reference points will be, if they are further apart, the result will
 		* be an impression of smoother terrain; normaly the value should be between 0 and 128.
-		* @todo Not tested yet.
+		* \author Anitarf
 		*/
 		public method terrainNormal takes real x, real y, real sampleRadius returns nothing
-			local real array z
-			local thistype vectorX = thistype.create.evaluate(0.0, 0.0, 0.0)
-			local thistype vectorY = thistype.create.evaluate(0.0, 0.0, 0.0)
-			//Z
-			set z[0] = GetTerrainZ((x - sampleRadius), y)
-			set z[1] = GetTerrainZ((x + sampleRadius), y)
-			set z[2] = GetTerrainZ((y - sampleRadius), y)
-			set z[3] = GetTerrainZ((y + sampleRadius), y)
-			//Vector X
-			set vectorX.m_x = (2.0 * sampleRadius)
-			//set VectorX.Y = 0.00
-			set vectorX.m_z =  (z[1] - z[0])
-			//Vector Y
-			//set VectorY.X = 0.00
-			set vectorY.m_y = (2.0 * sampleRadius)
-			set vectorY.m_z =  (z[3] - z[2])
-			call vectorX.add(vectorY)
-			call thistype.destroy(vectorY)
-			call this.copy(vectorX)
-			call thistype.destroy(vectorX)
+			local real zx = GetTerrainZ(x - sampleRadius, y) - GetTerrainZ(x + sampleRadius, y)
+			local real zy = GetTerrainZ(x, y - sampleRadius) - GetTerrainZ(x, y + sampleRadius)
+			set sampleRadius= 2 * sampleRadius
+			set this.m_x = zx * sampleRadius
+			set this.m_y = zy * sampleRadius
+			set this.m_z = Pow(sampleRadius, 2.0)
 		endmethod
 
 		public static method create takes real x, real y, real z returns thistype
@@ -222,9 +268,16 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 
 			return this
 		endmethod
+		
+		public static method createCopy takes thistype vector returns thistype
+			local thistype this = thistype.allocate()
+			call this.copy(vector)
+
+			return this
+		endmethod
 
 		/**
-		* @see AVector3.terrainNormal
+		* @see thistype.terrainPoint
 		* @author Tamino Dauth
 		*/
 		public static method createOnTerrain takes real x, real y returns thistype
@@ -234,7 +287,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		endmethod
 
 		/**
-		* @see AVector3.terrainNormal
+		* @see thistype.terrainNormal
 		* @author Tamino Dauth
 		*/
 		public static method createOnTerrainNormal takes real x, real y, real sampleRadius returns thistype
@@ -247,7 +300,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		* \return Returns sum of the two vectors \p vector0 and \p vector1 in a new vector instance.
 		*/
 		public static method sum takes thistype vector0, thistype vector1 returns thistype
-			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
+			local thistype result = thistype.createCopy(vector0)
 			call result.add(vector1)
 			return result
 		endmethod
@@ -256,7 +309,7 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 		* @return Returns difference of the two vectors \p vector0 and \p vector1 in a new vector instance.
 		*/
 		public static method difference takes thistype vector0, thistype vector1 returns thistype
-			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
+			local thistype result = thistype.createCopy(vector0)
 			call result.subtract(vector1)
 			return result
 		endmethod
@@ -270,20 +323,21 @@ library AStructCoreMathsVector3 requires ALibraryCoreMathsHandle, ALibraryCoreMa
 			return vector0.multiply(vector1)
 		endmethod
 
-		/**
-		* @see AVector3.multiplication
-		*/
-		public static method scalarProduct2 takes thistype vector0, thistype vector1 returns real
+		public static method dotProduct takes thistype vector0, thistype vector1 returns real
 			return thistype.multiplication(vector0, vector1)
 		endmethod
 
+		public static method crossProduct takes thistype vector0, thistype vector1 returns thistype
+			return thistype.create(vector0.m_y * vector1.m_z - vector0.m_z * vector1.m_y, vector0.m_z * vector1.m_x - vector0.m_x * vector1.m_z, vector0.m_x * vector1.m_y - vector0.m_y * vector1.m_x)
+		endmethod
+		
 		/**
 		* @return Returns projection of the two vectors \p vector0 and \p vector1 in a new vector instance.
 		* @author Tamino Dauth
 		* @todo untested
 		*/
-		public method projection takes thistype vector0, thistype vector1 returns thistype
-			local thistype result = thistype.create(vector0.m_x, vector0.m_y, vector0.m_z)
+		public static method projection takes thistype vector0, thistype vector1 returns thistype
+			local thistype result = thistype.createCopy(vector0)
 			call result.project(vector1)
 			return result
 		endmethod

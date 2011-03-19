@@ -133,7 +133,7 @@ library AStructSystemsCharacterAbstractQuest requires optional ALibraryCoreDebug
 		endmethod
 
 		/// @todo Should be protected
-		public method distributeRewards takes nothing returns nothing
+		public stub method distributeRewards takes nothing returns nothing
 			local integer i
 			if (this.m_character != 0) then
 				if (this.m_reward[thistype.rewardLevel] != 0) then

@@ -579,7 +579,28 @@ endif
 
 			/// copyBackward
 			/// copyN
-			/// countIf
+			
+			public method countIfNumber takes integer position, integer number, $NAME$UnaryPredicate unaryPredicate returns integer
+				local integer i = position
+				local integer exitValue = position + number
+				local integer result = 0
+				debug if (not this.debugCheckPositionAndNumber.evaluate(position, number)) then
+					debug return 0
+				debug endif
+				loop
+					exitwhen (i == exitValue)
+					if (unaryPredicate.evaluate(this.m_element[i])) then
+						set result = result + 1
+					endif
+					set i = i + 1
+				endloop
+				return result
+			endmethod
+			
+			public method countIf takes $NAME$UnaryPredicate unaryPredicate returns integer
+				return this.countIfNumber(0, this.m_size, unaryPredicate)
+			endmethod
+			
 			/// equal
 			/// equalIf
 			/// fill

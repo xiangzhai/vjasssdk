@@ -1,10 +1,23 @@
+2011-03-19 Tamino Dauth <tamino@cdauth.eu>
+* A_VECTOR: Added method "countIfNumber".
+* ASpawnPoint: Added method "firstUnitOfType".
+
+2011-03-11 Tamino Dauth <tamino@cdauth.eu>
+* Vector3: Revised.
+* AAbstractQuest: Method "distributeRewards" is stub now.
+* A_VECTOR: Added method "countIf".
+* AGroup: Added method "countUnitsOfType".
+* ASpawnPoint: Added methods "countUnits", "countUnitsIf" and "countUnitsOfType".
+* AVideo: Fixed method "setActorsMoveSpeed" (includes character now).
+* AVideo: Added methods "createUnitActor", "createUnitActorAtLocation" and "createUnitActorAtRect" -> support for unit type based actors.
+
 2011-03-07 Tamino Dauth <tamino@cdauth.eu>
 * Added hook for debug message of bug of function "ShowInterface".
 * ARoutineData: Fixed method "isInTime" (case end time smaller than start time).
 
 2011-03-06 Tamino Dauth <tamino@cdauth.eu>
-* Added function GetDistanceBetweenPointsWithoutZ.
-* Added handle functions GetDistanceBetween$TYPENAME$sWithoutZ.
+* Added function "GetDistanceBetweenPointsWithoutZ".
+* Added handle functions "GetDistanceBetween$TYPENAME$sWithoutZ".
 
 2011-03-04 Tamino Dauth <tamino@cdauth.eu>
 * Added function "WaitCheckingCondition" which uses polled wait method.

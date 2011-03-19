@@ -214,6 +214,34 @@ library AStructSystemsWorldSpawnPoint requires AInterfaceSystemsWorldSpawnPointI
 		public method clearUnits takes nothing returns nothing
 			call this.m_group.units().clear()
 		endmethod
+		
+		/**
+		* Counts only alive units.
+		* Dying units are removed.
+		*/
+		public method countUnits takes nothing returns integer
+			return this.m_group.units().size()
+		endmethod
+		
+		public method countUnitsIf takes AUnitVectorUnaryPredicate unaryPredicate returns integer
+			return this.m_group.units().countIf(unaryPredicate)
+		endmethod
+		
+		public method countUnitsOfType takes integer unitTypeId returns integer
+			return this.m_group.countUnitsOfType(unitTypeId)
+		endmethod
+		
+		public method firstUnitOfType takes integer unitTypeId returns unit
+			local integer i = 0
+			loop
+				exitwhen (i == this.m_group.units().size())
+				if (GetUnitTypeId(this.m_group.units()[i]) == unitTypeId) then
+					return this.m_group.units()[i]
+				endif
+				set i = i + 1
+			endloop
+			return null
+		endmethod
 
 		/**
 		* Note that after unit @param whichUnit has died there will be spawned a new RANDOM unit from unit pool.

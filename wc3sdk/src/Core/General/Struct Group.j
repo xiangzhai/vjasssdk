@@ -404,6 +404,19 @@ library AStructCoreGeneralGroup requires AStructCoreGeneralVector, ALibraryCoreG
 				call this.selectOnly()
 			endif
 		endmethod
+		
+		public method countUnitsOfType takes integer unitTypeId returns integer
+			local integer i = 0
+			local integer result = 0
+			loop
+				exitwhen (i == this.m_units.size())
+				if (GetUnitTypeId(this.m_units[i]) == unitTypeId) then
+					set result = result + 1
+				endif
+				set i = i + 1
+			endloop
+			return result
+		endmethod
 
 		public static method create takes nothing returns thistype
 			local thistype this = thistype.allocate()
