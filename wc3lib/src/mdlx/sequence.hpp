@@ -22,6 +22,8 @@
 #define WC3LIB_MDLX_SEQUENCE_HPP
 
 #include "bounds.hpp"
+#include "groupmdxblockmember.hpp"
+#include "sequences.hpp"
 
 namespace wc3lib
 {
@@ -29,15 +31,17 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Sequence : public Bounds
+class Sequence : public Bounds, public GroupMdxBlockMember
 {
 	public:
+		static const std::size_t nameSize = 0x50;
+		
 		Sequence(class Sequences *sequences);
-		virtual ~Sequence();
 
 		class Sequences* sequences() const;
 		/**
 		* Comments: All text after the "-" and still inside the quotes is ignored.
+		* \return Returns name of sequence with constant length of \ref nameSize.
 		*/
 		const ascii* name() const;
 		long32 intervalStart() const;
@@ -47,17 +51,13 @@ class Sequence : public Bounds
 		float32 rarity() const;
 		long32 unknown0() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		/**
-		* @return Returns read byte count.
-		*/
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Sequences *m_sequences;
-		ascii m_name[0x50]; //(0x50 bytes)
+		ascii m_name[nameSize]; //(0x50 bytes)
 		long32 m_intervalStart, m_intervalEnd;
 		float32 m_moveSpeed;
 		long32 m_noLooping; //(0:loop; 1:no loop)
@@ -68,7 +68,7 @@ class Sequence : public Bounds
 
 inline class Sequences* Sequence::sequences() const
 {
-	return this->m_sequences;
+	return dynamic_cast<class Sequences*>(this->m_parent);
 }
 
 inline const ascii* Sequence::name() const

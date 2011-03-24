@@ -29,6 +29,13 @@
 #include <boost/cstdint.hpp>
 #include <boost/cast.hpp>
 #include <boost/lexical_cast.hpp> 
+#include <boost/thread.hpp>
+/*
+#ifdef UNIX
+#include <unistd.h>
+#include <sched.h>
+#endif
+*/
 
 #include "exception.hpp"
 #include "internationalisation.hpp"
@@ -462,6 +469,41 @@ inline bool expectInput()
 
 	return false;
 }
+/*    
+inline void setThreadPriority(boost::thread &thread, int priority) throw (class Exception)
+{
+#ifdef UNIX
+	int retcode;
+	int policy;
+
+	pthread_t threadId = (pthread_t)thread.native_handle();
+
+	struct sched_param param;
+
+	if ((retcode = pthread_getschedparam(threadId, &policy, &param)) != 0)
+		throw Exception(boost::format(_("Exception: Error code %1%.")) % retcode);
+
+	std::cout << "INHERITED: ";
+	std::cout << "policy=" << ((policy == SCHED_FIFO)  ? "SCHED_FIFO" :
+                               (policy == SCHED_RR)    ? "SCHED_RR" :
+                               (policy == SCHED_OTHER) ? "SCHED_OTHER" :
+                                                         "???")
+              << ", priority=" << param.sched_priority << std::endl;
+
+
+	//policy = SCHED_FIFO;
+	param.sched_priority = priority;
+
+	if ((retcode = pthread_setschedparam(threadId, policy, &param)) != 0)
+		throw Exception(boost::format(_("Exception: Error code %1%.")) % retcode);
+#elifdef WIN32
+	HANDLE thread = (HANDLE)thread.native_handle();
+	SetThreadPriority(thread, priority);
+#endif
+	
+	//if ((retcode = pthread_getschedparam(threadID, &policy, &param
+}
+*/
 
 }
 

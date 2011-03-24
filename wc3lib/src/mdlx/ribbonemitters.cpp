@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,54 +27,34 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitters::RibbonEmitters(class Mdlx *mdlx) : MdxBlock("RIBB"), m_mdlx(mdlx)
+RibbonEmitters::RibbonEmitters(class Mdlx *mdlx) : GroupMdxBlock("RIBB", false), m_mdlx(mdlx)
 {
 }
 
-RibbonEmitters::~RibbonEmitters()
+std::streamsize RibbonEmitters::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void RibbonEmitters::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize RibbonEmitters::writeMdl(ostream &ostream) const throw (class Exception)
 {
-}
-
-void RibbonEmitters::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
+	return 0;
 }
 
 
 std::streamsize RibbonEmitters::readMdx(std::istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	
-	while (nbytes > 0)
-	{
-		class RibbonEmitter *ribbonEmitter = new RibbonEmitter(this);
-		long32 readBytes = ribbonEmitter->readMdx(istream);
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_ribbonEmitters.push_back(ribbonEmitter);
-	}
-	
-	return bytes;
+	return GroupMdxBlock::readMdx(istream);
 }
 
 std::streamsize RibbonEmitters::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	return bytes;
+	return GroupMdxBlock::writeMdx(ostream);
+}
+
+class GroupMdxBlockMember* RibbonEmitters::createNewMember()
+{
+	return new RibbonEmitter(this);
 }
 
 }

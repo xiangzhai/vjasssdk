@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,9 +25,9 @@
 #include <boost/format.hpp>
 
 #include "attachment.hpp"
-#include "attachments.hpp"
 #include "attachmentvisibilities.hpp"
 #include "../internationalisation.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -35,7 +35,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachment::Attachment(class Attachments *attachments) : Object(attachments->mdlx()), m_attachments(attachments), m_visibilities(new AttachmentVisibilities(attachments->mdlx()))
+Attachment::Attachment(class Attachments *attachments) : GroupMdxBlockMember(attachments), Object(attachments->mdlx()), m_visibilities(new AttachmentVisibilities(attachments->mdlx()))
 {
 }
 
@@ -44,7 +44,7 @@ Attachment::~Attachment()
 	delete this->m_visibilities;
 }
 
-std::streamsize Attachment::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Attachment::readMdl(istream &istream) throw (class Exception)
 {
 	/*
 	std::string line;
@@ -83,8 +83,10 @@ std::streamsize Attachment::readMdl(std::istream &istream) throw (class Exceptio
 	return 0;
 }
 
-std::streamsize Attachment::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Attachment::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	std::streamsize size = 0;
+	size += Object::writeMdl(ostream);
 	// Observe properties of an Object.
 	// Path only appears if its length is greater than 0.
 	// Maximum size is 256 characters (0x100 bytes)
@@ -134,33 +136,44 @@ std::streamsize Attachment::writeMdl(std::ostream &ostream) const throw (class E
 	//fstream << "\tVisibility " << this->visibilities()->value() << '\n';
 	ostream << "}\n";
 	*/
-	return 0;
+	return size;
 }
 
 
-std::streamsize Attachment::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Attachment::readMdx(istream &istream) throw (class Exception)
 {
 	long32 nbytesi = 0;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::streamsize bytes = istream.gcount();
-	bytes += Object::readMdx(istream);
-	istream.read(reinterpret_cast<char*>(&this->m_path), sizeof(this->m_path));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_attachmentId), sizeof(this->m_attachmentId));
-	bytes += istream.gcount();
-	bytes += this->m_visibilities->readMdx(istream);
+	std::streamsize size = 0;
+	wc3lib::read(istream, nbytesi, size);
+	std::cout << "Attachments " << this->attachments()->attachments().size() << std::endl;
+	size += Object::readMdx(istream);
+	wc3lib::read(istream, this->m_path, size);
+	wc3lib::read(istream, this->m_unknown0, size);
+	wc3lib::read(istream, this->m_attachmentId, size);
+	size += this->m_visibilities->readMdx(istream);
 
-	if (bytes != nbytesi)
-		throw Exception(boost::str(boost::format(_("Attachment: File byte count is not equal to real byte count.\nFile byte count: %1%.\nReal byte count: %2%.\n")) % nbytesi % bytes));
+	if (size != nbytesi)
+		throw Exception(boost::str(boost::format(_("Attachment: File byte count is not equal to real byte count.\nFile byte count: %1%.\nReal byte count: %2%.\n")) % nbytesi % size));
 
-	return bytes;
+	return size;
 }
 
-std::streamsize Attachment::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Attachment::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streampos position;
+	skipByteCount<mdlx::ostream>(ostream, position);
+
+	std::streamsize size = 0;
+	size += Object::writeMdx(ostream);
+	wc3lib::write(ostream, this->m_path, size);
+	wc3lib::write(ostream, this->m_unknown0, size);
+	wc3lib::write(ostream, this->m_attachmentId, size);
+	size += this->m_visibilities->writeMdx(ostream);
+	
+	long32 nbytesi = size;
+	writeByteCount(ostream, nbytesi, position, size, true);
+	
+	return size;
 }
 
 }

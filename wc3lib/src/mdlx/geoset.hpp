@@ -24,6 +24,8 @@
 #include <list>
 
 #include "bounds.hpp"
+#include "groupmdxblockmember.hpp"
+#include "geosets.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset : public Bounds
+class Geoset : public Bounds, public GroupMdxBlockMember
 {
 	public:
 		enum Selectable
@@ -44,7 +46,6 @@ class Geoset : public Bounds
 		virtual ~Geoset();
 
 		class Geosets* geosets() const;
-		long32 includingByteCount() const;
 		class Vertices* vertices() const;
 		class Normals* normals() const;
 		class PrimitiveTypes* primitiveTypes() const;
@@ -60,14 +61,12 @@ class Geoset : public Bounds
 		class TexturePatches* texturePatches() const;
 		class TextureVertices* textureVertices() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Geosets *m_geosets;
-		long32 m_includingByteCount; // only valid after reading
 		class Vertices *m_vertices; //VRTX
 		class Normals *m_normals; //NRMS
 		class PrimitiveTypes *m_primitveTypes; //PTYP
@@ -88,12 +87,7 @@ class Geoset : public Bounds
 
 inline class Geosets* Geoset::geosets() const
 {
-	return this->m_geosets;
-}
-
-inline long32 Geoset::includingByteCount() const
-{
-	return this->m_includingByteCount;
+	return dynamic_cast<class Geosets*>(this->m_parent);
 }
 
 inline class Vertices* Geoset::vertices() const

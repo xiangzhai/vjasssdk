@@ -432,17 +432,39 @@ QString OgreMdlx::namePrefix() const
 	return this->m_mdlx->model()->name();
 }
 
-Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
+mdlx::long32 OgreMdlx::mdlxId(const mdlx::GroupMdxBlockMember &member, const mdlx::GroupMdxBlock &block) const
 {
 	mdlx::long32 id = 0;
+	block.members();
+	qDebug() << "Win!";
+	block.members().begin();
+	qDebug() << "Win!2";
+	block.members().end();
+	qDebug() << "Win!3";
+	block.members().front();
+	qDebug() << "Win!4";
+	block.members().back();
+	qDebug() << "Win!5";
+	//qDebug() << "Members size " << block.members().size();
+	mdlx::Texture *texture = 0;
+	mdlx::GroupMdxBlockMember *blockMember = 0;
+	qDebug() << "Size of texture: " << sizeof(texture) << " and size of member: " << sizeof(blockMember);
 
-	BOOST_FOREACH(const class mdlx::Texture *tex, this->m_mdlx->textures()->textures())
+	BOOST_FOREACH(const mdlx::GroupMdxBlockMember *mem, block.members())
 	{
-		if (tex == &texture)
+		qDebug() << "id " << id;
+		if (mem == &member)
 			break;
 
 		++id;
 	}
+	
+	return id;
+}
+
+Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
+{
+	mdlx::long32 id = mdlxId(texture, *texture.textures());
 
 	Ogre::TexturePtr tex =
 	this->m_modelView->root()->getTextureManager()->create((boost::format("%1%.Texture%2%") % namePrefix().toAscii().data() % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
@@ -456,8 +478,9 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 		// if no editor resource has been found file directory will be tried
 		if (!url.isValid() || !QFile::exists(url.toLocalFile()))
 		{
-			url = this->url().directory();
-			KMessageBox::information(this->modelView(), i18n("No valid texture resource has been found. Trying directory URL \"%1\".", url.toLocalFile()));
+			KUrl newUrl = this->url().directory();
+			KMessageBox::information(this->modelView(), i18n("No valid texture resource has been found at \"%1\". Trying directory URL \"%2\".", url.toLocalFile(), newUrl.toLocalFile()));
+			url = newUrl;
 			url.addPath(texture.texturePath());
 		}
 		else
@@ -576,15 +599,7 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 
 Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material) throw (class Exception)
 {
-	mdlx::long32 id = 0;
-
-	BOOST_FOREACH(const class mdlx::Material *mat, this->m_mdlx->materials()->materials())
-	{
-		if (mat == &material)
-			break;
-
-		++id;
-	}
+	mdlx::long32 id = mdlxId(material, *material.materials());
 
 	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create((boost::format("%1%.Material%2%") % namePrefix().toAscii().data() % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
 
@@ -600,6 +615,11 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 	// use Ogre::Technique?
 
 	//return 0;
+	qDebug() << "Test 1";
+	material.layers();
+	qDebug() << "Test 2";
+	material.layers()->layers();
+	qDebug() << "Layers address " << &material.layers()->layers();
 	qDebug() << "Layer count " << material.layers()->layers().size();
 	mat->removeAllTechniques(); // there's always one default technique
 
@@ -619,6 +639,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		}
 
 		qDebug() << "We have " << i << " techniques.";
+		// TEST END
 
 		Ogre::TextureUnitState *textureUnitState = pass->createTextureUnitState((boost::format("%1%.Texture%2%") % namePrefix().toAscii().data() % layer->textureId()).str().c_str(), layer->coordinatesId());
 
@@ -708,6 +729,8 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		this->m_sceneNode->attachObject(planeEnt);
 		test = true;
 	}
+	
+	// END TEST
 
 	return mat;
 }
@@ -715,21 +738,13 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) throw (class Exception)
 {
 	qDebug() << "Creating geoset";
-	mdlx::long32 id = 0;
-
-	BOOST_FOREACH(const class mdlx::Geoset *geo, this->m_mdlx->geosets()->geosets())
-	{
-		if (geo == &geoset)
-			break;
-
-		++id;
-	}
+	mdlx::long32 id = mdlxId(geoset, *geoset.geosets());
 
 	Ogre::ManualObject *object = this->modelView()->sceneManager()->createManualObject((boost::format("%1%.Geoset%2%") % namePrefix().toAscii().data() % id).str().c_str());
 	//object->setKeepDeclarationOrder(true);
 	qDebug() << "Creating geoset";
 
-	// get material
+	// get corresponding material by id
 	const class mdlx::Material *material = 0;
 	mdlx::long32 materialId = 0;
 
@@ -800,7 +815,6 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 
 				//qDebug() << "Building triangle with vertex indices (" << indices[0] << "|" << indices[1] << "|" << indices[2] << ")";
 				object->triangle(indices[0], indices[1], indices[2]);
-				object->
 				//qDebug() << "Building triangle";
 			}
 		}
@@ -848,7 +862,6 @@ Ogre::Camera* OgreMdlx::createCamera(const class Camera &camera) throw (class Ex
 	ogreCamera->setDirection(Ogre::Vector3(camera.target().x, camera.target().y, camera.target().z));
 
 	this->m_sceneNode->attachObject(ogreCamera);
-
 
 	return ogreCamera;
 }

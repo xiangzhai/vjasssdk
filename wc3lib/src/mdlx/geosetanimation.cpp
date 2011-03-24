@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GeosetAnimation::GeosetAnimation(class GeosetAnimations *geosetAnimations) : MdlBlock("GeosetAnim", true), m_geosetAnimations(geosetAnimations), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alphas(new GeosetAnimationAlphas(this)),  m_colors(new GeosetAnimationColors(this))
+GeosetAnimation::GeosetAnimation(class GeosetAnimations *geosetAnimations) : GroupMdxBlockMember(geosetAnimations), MdlBlock("GeosetAnim", true), m_staticAlpha(0.0), m_colorAnimation(GeosetAnimation::None), m_colorRed(0.0), m_colorGreen(0.0), m_colorBlue(0.0), m_geosetId(0),  m_alphas(new GeosetAnimationAlphas(this)),  m_colors(new GeosetAnimationColors(this))
 {
 }
 
@@ -85,7 +85,7 @@ std::streamsize GeosetAnimation::writeMdl(ostream &ostream) const throw (class E
 	return size;
 }
 
-std::streamsize GeosetAnimation::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize GeosetAnimation::readMdx(istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
 	std::streamsize size = 0;
@@ -113,9 +113,28 @@ std::streamsize GeosetAnimation::readMdx(std::istream &istream) throw (class Exc
 	return size;
 }
 
-std::streamsize GeosetAnimation::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize GeosetAnimation::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	return 0;
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
+	std::streamsize size = 0;
+	wc3lib::write(ostream, this->staticAlpha(), size);
+	wc3lib::write(ostream, this->colorAnimation(), size);
+	wc3lib::write(ostream, this->colorRed(), size);
+	wc3lib::write(ostream, this->colorGreen(), size);
+	wc3lib::write(ostream, this->colorBlue(), size);
+	wc3lib::write(ostream, this->geosetId(), size);
+
+	if (this->staticAlpha() == 1.0)
+		size += this->m_alphas->writeMdx(ostream);
+
+	size += this->m_colors->writeMdx(ostream);
+
+	long32 nbytesi = size;
+	writeByteCount(ostream, nbytesi, position, size, true);
+	
+	return size;
 }
 
 }

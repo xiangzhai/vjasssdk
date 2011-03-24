@@ -195,13 +195,13 @@ void TextureEditor::zoomToFit()
 void TextureEditor::zoomIn()
 {
 	this->m_factor += 0.50;
-	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image)->scaled(this->m_image->size() * this->m_factor));
+	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image).scaled(this->m_image->size() * this->m_factor));
 }
 
 void TextureEditor::zoomOut()
 {
 	this->m_factor -= 0.50;
-	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image)->scaled(this->m_image->size() * this->m_factor));
+	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image).scaled(this->m_image->size() * this->m_factor));
 }
 
 void TextureEditor::massConverter()

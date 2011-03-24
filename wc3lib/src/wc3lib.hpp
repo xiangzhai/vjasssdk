@@ -70,6 +70,15 @@
 *
 * \section applications Applications module
 * Since this module only provides some useful applications there is neither any namespace to use nor any header file to include.
+* Currently there are following applications available:
+* <ul>
+* <li>converter - console-based converting tool for all supported formats</li>
+* <li>editor - improved World Editor emulation</li>
+* <li>jassc - JASS parser and compiler for JASS-based dialects (vJass, Zinc, CJass, JASS++)</li>
+* <li>jasstrans - internationalisation tool which parses and stores strings from JASS code files</li>
+* <li>mpq - console-based MPQ archive extractor and creator tool</li>
+* <li>tilesetter - deprecated console-based tilesetting program</li>
+* </ul>
 *
 * \namespace wc3lib
 * All code elements of the wc3lib belong to this namespace!
@@ -77,17 +86,18 @@
 /// @todo Add all include files!
 
 #include "exception.hpp"
+#include "format.hpp"
 #include "internationalisation.hpp"
 #include "libraryloader.hpp"
 #include "utilities.hpp"
 
 #include "blp.hpp"
+#include "map.hpp"
+#include "mdlx.hpp"
+#include "mpq.hpp"
 
 #ifdef EDITOR
 #include "editor.hpp"
 #endif
-#include "mdlx.hpp"
-
-#include "mpq.hpp"
 
 #endif

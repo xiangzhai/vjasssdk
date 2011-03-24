@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,9 @@
 #define WC3LIB_MDLX_COLLISIONSHAPE_HPP
 
 #include "object.hpp"
+#include "groupmdxblockmember.hpp"
+#include "../internationalisation.hpp"
+#include "collisionshapes.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CollisionShape : public Object
+class CollisionShape : public Object, public GroupMdxBlockMember
 {
 	public:
 		enum Shape
@@ -39,32 +42,32 @@ class CollisionShape : public Object
 		};
 
 		CollisionShape(class CollisionShapes *collisionShapes);
-		virtual ~CollisionShape();
 
 		class CollisionShapes* collisionShapes() const;
 		enum Shape shape() const;
 		const struct VertexData& vertexData() const;
-		const struct VertexData& vertexData2() const;
-		float32 boundsRadius() const;
+		/// Only usable if shape is a box. Otherwise, it throws an exception.
+		const struct VertexData& boxVertexData() const throw (class Exception);
+		/// Only usable if shape is a sphere. Otherwise, it throws an exception.
+		float32 boundsRadius() const throw (class Exception);
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class CollisionShapes *m_collisionShapes;
 		enum Shape m_shape; //(0:box;2:sphere)
 		struct VertexData m_vertexData;
 		//if (Shape == 0)
-		struct VertexData m_vertexData2;
+		struct VertexData m_boxVertexData;
 		//else
 		float32 m_boundsRadius;
 };
 
 inline class CollisionShapes* CollisionShape::collisionShapes() const
 {
-	return this->m_collisionShapes;
+	return dynamic_cast<class CollisionShapes*>(this->m_parent);
 }
 
 inline enum CollisionShape::Shape CollisionShape::shape() const
@@ -77,13 +80,19 @@ inline const struct VertexData& CollisionShape::vertexData() const
 	return this->m_vertexData;
 }
 
-inline const struct VertexData& CollisionShape::vertexData2() const
+inline const struct VertexData& CollisionShape::boxVertexData() const throw (class Exception)
 {
-	return this->m_vertexData2;
+	if (shape() != Box)
+		throw Exception(_("Collision shape is not a box."));
+	
+	return this->m_boxVertexData;
 }
 
-inline float32 CollisionShape::boundsRadius() const
+inline float32 CollisionShape::boundsRadius() const throw (class Exception)
 {
+	if (shape() != Sphere)
+		throw Exception(_("Collision shape is not a sphere."));
+	
 	return this->m_boundsRadius;
 }
 

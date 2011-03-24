@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <iostream> // debug
+
 #include <boost/foreach.hpp>
 
 #include "groupmdxblock.hpp"
@@ -30,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-GroupMdxBlock::GroupMdxBlock(byte blockName[4], bool usesCounter, bool optional) : MdxBlock(blockName, optional), m_usesCounter(usesCounter)
+GroupMdxBlock::GroupMdxBlock(byte blockName[4], bool usesCounter, bool optional) : MdxBlock(blockName, optional), m_usesCounter(usesCounter)//, m_members()
 {
 }
 
@@ -61,19 +63,23 @@ std::streamsize GroupMdxBlock::readMdx(istream &istream) throw (class Exception)
 	}
 	else
 	{
-		long32 nbytes;
+		long32 nbytes = 0;
 		wc3lib::read(istream, nbytes, size);
 	
 		while (nbytes > 0)
 		{
 			class GroupMdxBlockMember *member = this->createNewMember();
-			std::streamsize readSize = member->readMdx(istream);
+			const std::streamsize readSize = member->readMdx(istream);
 			this->m_members.push_back(member);
 			nbytes -= boost::numeric_cast<long32>(readSize);
 			size += readSize;
 		}
 	}
-
+	
+	std::cout << "Group MDX block. Read " << m_members.size() << " members." << std::endl;
+	std::cout << "TEST 2" << members().size() << std::endl;
+	
+	
 	return size;
 }
 

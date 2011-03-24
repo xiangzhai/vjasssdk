@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,8 +24,10 @@
 #include <list>
 #include <map>
 
-#include "mdxblock.hpp"
+#include <boost/filesystem.hpp>
+
 #include "mdlxproperty.hpp"
+#include "mdxblock.hpp"
 
 namespace wc3lib
 {
@@ -44,7 +46,7 @@ namespace mdlx
  * @todo OBJ == ?!
  * @todo KATV == float?!
  */
-class Mdlx : public MdxBlock, public MdlxProperty
+class Mdlx : public MdlxProperty, public MdxBlock
 {
 	public:
 		Mdlx();
@@ -71,17 +73,17 @@ class Mdlx : public MdxBlock, public MdlxProperty
 		class Events* events() const;
 		class CollisionShapes* collisionShapes() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 		
-		std::streamsize readBlend(const std::string &filePath) throw (class Exception);
-		std::streamsize readBlend(std::istream &istream) throw (class Exception);
-		std::streamsize writeBlend(std::ostream &ostream) const throw (class Exception);
-		std::streamsize read3ds(std::istream &istream) throw (class Exception);
-		std::streamsize write3ds(std::ostream &ostream) const throw (class Exception);
-
+		std::streamsize readBlend(const boost::filesystem::path &filePath) throw (class Exception);
+		std::streamsize readBlend(istream &istream) throw (class Exception);
+		std::streamsize writeBlend(ostream &ostream) const throw (class Exception);
+		std::streamsize read3ds(istream &istream) throw (class Exception);
+		std::streamsize write3ds(ostream &ostream) const throw (class Exception);
+		
 		/**
 		* @param number If this value is 0 all matching paths will be changed.
 		* @return Returns the number of changed texture paths.

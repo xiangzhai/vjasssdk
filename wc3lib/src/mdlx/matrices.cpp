@@ -45,6 +45,16 @@ std::streamsize Matrices::writeMdl(ostream &ostream) const throw (class Exceptio
 	return 0;
 }
 
+std::streamsize Matrices::readMdx(istream &istream) throw (class Exception)
+{
+	return GroupMdxBlock::readMdx(istream);
+}
+
+std::streamsize Matrices::writeMdx(ostream &ostream) const throw (class Exception)
+{
+	return GroupMdxBlock::writeMdx(ostream);
+}
+
 class GroupMdxBlockMember* Matrices::createNewMember()
 {
 	return new Matrix(this);

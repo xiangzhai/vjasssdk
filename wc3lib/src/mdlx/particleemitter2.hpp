@@ -21,9 +21,9 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2_HPP
 
-#include <list>
-
 #include "node.hpp"
+#include "groupmdxblockmember.hpp"
+#include "particleemitter2s.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class ParticleEmitter2 : public Node
+class ParticleEmitter2 : public Node, public GroupMdxBlockMember
 {
 	public:
 		enum FilterMode
@@ -97,13 +97,12 @@ class ParticleEmitter2 : public Node
 		class Lengths* numbers() const;
 		class ParticleEmitter2Widths* widths() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class ParticleEmitter2s *m_particleEmitters;
 		//long32 nbytesi;
 		//long32 nbytesikg; // inclusive bytecount including KGXXs
 		float32 m_speed;
@@ -141,7 +140,7 @@ class ParticleEmitter2 : public Node
 
 inline class ParticleEmitter2s* ParticleEmitter2::particleEmitters() const
 {
-	return this->m_particleEmitters;
+	return dynamic_cast<class ParticleEmitter2s*>(this->m_parent);
 }
 
 inline float32 ParticleEmitter2::speed() const

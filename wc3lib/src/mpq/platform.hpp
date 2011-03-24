@@ -23,8 +23,11 @@
 
 #include <istream>
 #include <ostream>
+#include <string>
+#include <sstream>
 
 #include <boost/cstdint.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 namespace wc3lib
 {
@@ -44,6 +47,12 @@ typedef int32 CRC32;
 
 typedef std::basic_istream<byte> istream;
 typedef std::basic_ostream<byte> ostream;
+typedef boost::filesystem::basic_ifstream<byte> ifstream;
+typedef boost::filesystem::basic_ofstream<byte> ofstream;
+typedef std::basic_string<byte> string;
+typedef std::basic_stringstream<byte> stringstream;
+typedef std::basic_istringstream<byte> istringstream;
+typedef std::basic_ostringstream<byte> ostringstream;
 
 /// Windows-like file time. Redefined for compatibility.
 struct FILETIME

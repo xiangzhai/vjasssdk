@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef WC3LIB_MDLX_MDLVALUEBLOCK_CPP
+#define WC3LIB_MDLX_MDLVALUEBLOCK_CPP
+
 #include <boost/lexical_cast.hpp>
 
 #include "mdlvalueblock.hpp"
@@ -30,7 +33,7 @@ namespace mdlx
 {
 
 template<typename T>
-MdlValueBlock<T>::MdlValueBlock(const string &mdlIdentifier, bool optional) : MdlBlock(mdlIdentifier, optional)
+MdlValueBlock<T>::MdlValueBlock(const string &mdlIdentifier, T value, bool optional) : MdlBlock(mdlIdentifier, optional), m_value(value)
 {
 }
 
@@ -64,7 +67,7 @@ std::streamsize MdlValueBlock<T>::writeMdl(ostream &ostream) const throw (class 
 		return 0;
 	
 	string identifier(boost::str(boost::format(" %1% ") % value()));
-	size += wc3lib::write(ostream, identifier.c_str()[0], size, identifier.length());
+	wc3lib::write(ostream, identifier.c_str()[0], size, identifier.length());
 	
 	return size;
 }
@@ -72,3 +75,5 @@ std::streamsize MdlValueBlock<T>::writeMdl(ostream &ostream) const throw (class 
 }
 
 }
+
+#endif

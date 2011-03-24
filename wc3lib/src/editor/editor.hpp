@@ -97,7 +97,15 @@ class Editor : public KMainWindow, public MpqPriorityList
 		static const KAboutData& aboutData();
 		static const KAboutData& wc3libAboutData();
 
+		/**
+		 * Required by textures which use replaceable id \ref mdlx::ReplaceableId::TeamColor.
+		 * \sa mdlx::ReplaceableId, mdlx::Texture
+		 */
 		static KUrl teamColorUrl(enum OgreMdlx::TeamColor teamColor);
+		/**
+		 * Required by textures which use replaceable id \ref mdlx::ReplaceableId::TeamGlow.
+		 * \sa mdlx::ReplaceableId, mdlx::Texture
+		 */
 		static KUrl teamGlowUrl(enum OgreMdlx::TeamColor teamGlow);
 
 		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
@@ -205,9 +213,8 @@ class Editor : public KMainWindow, public MpqPriorityList
 
 inline KUrl Editor::teamColorUrl(enum OgreMdlx::TeamColor teamColor)
 {
-	QString number("%1");
-	number.arg((int)teamColor);
-
+	QString number = QString::number((int)teamColor);
+	
 	if (number.size() == 1)
 		number.prepend('0');
 
@@ -216,8 +223,7 @@ inline KUrl Editor::teamColorUrl(enum OgreMdlx::TeamColor teamColor)
 
 inline KUrl Editor::teamGlowUrl(enum OgreMdlx::TeamColor teamGlow)
 {
-	QString number("%1");
-	number.arg((int)teamGlow);
+	QString number = QString::number((int)teamGlow);
 
 	if (number.size() == 1)
 		number.prepend('0');

@@ -23,7 +23,6 @@
 
 #include "mdxblock.hpp"
 #include "bounds.hpp"
-#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -32,7 +31,7 @@ namespace mdlx
 {
 
 /// MODL
-class Model : public MdxBlock, public Bounds, public MdlxProperty
+class Model : public MdxBlock, public Bounds
 {
 	public:
 		Model(class Mdlx *mdlx);

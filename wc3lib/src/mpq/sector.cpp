@@ -21,7 +21,7 @@
 #include <iostream> // debug
 
 #include <boost/format.hpp>
-#include <boost/filesystem/fstream.hpp>
+#include <boost/cast.hpp>
 //#include <boost/iostreams/filtering_streambuf.hpp>
 //#include <boost/iostreams/copy.hpp>
 //#include <boost/iostreams/filter/bzip2.hpp>
@@ -50,12 +50,12 @@ std::streamsize Sector::readData(istream &istream) throw (class Exception)
 
 std::streamsize Sector::writeData(ostream &ostream) const throw (class Exception)
 {
-	boost::filesystem::ifstream ifstream(this->m_mpqFile->mpq()->path(), std::ios_base::in | std::ios_base::binary);
+	ifstream ifstream(this->m_mpqFile->mpq()->path(), std::ios_base::in | std::ios_base::binary);
 
 	if (!ifstream)
 		throw Exception(boost::str(boost::format(_("Sector: Unable to open file \"%1%\".")) % this->m_mpqFile->mpq()->path().string()));
 
-	std::streampos position = int32(this->m_mpqFile->mpq()->startPosition()) + this->m_sectorOffset;
+	std::streampos position = this->m_mpqFile->mpq()->startPosition() + boost::numeric_cast<std::streampos>(this->m_sectorOffset);
 
 	if (this->m_mpqFile->mpq()->format() == Mpq::Mpq1)
 		position += this->m_mpqFile->hash()->block()->blockOffset();
@@ -83,7 +83,7 @@ std::streamsize Sector::writeData(ostream &ostream) const throw (class Exception
 
 	try
 	{
-		ifstream.read((char*)data, dataSize);
+		ifstream.read((byte*)data, dataSize);
 		bytes = ifstream.gcount();
 
 		/*
@@ -180,7 +180,7 @@ std::streamsize Sector::writeData(ostream &ostream) const throw (class Exception
 
 		//filteringStreamBuffer.push(ifstream);
 		//boost::iostreams::copy(filteringStreamBuffer, ostream);
-		ostream.write((const char*)(data), dataSize);
+		ostream.write((const byte*)(data), dataSize);
 	}
 	catch (class Exception &exception)
 	{
@@ -191,7 +191,7 @@ std::streamsize Sector::writeData(ostream &ostream) const throw (class Exception
 
 	delete[] data;
 
-	exit(0);
+	exit(0); // FIXME Test
 
 	return bytes;
 }
@@ -203,7 +203,7 @@ void Sector::setCompression(byte value)
 
 uint32 Sector::sectorKey() const
 {
-	return this->m_mpqFile->fileKey() + uint32(this->m_sectorIndex);
+	return boost::numeric_cast<uint32>(this->m_mpqFile->fileKey() + this->m_sectorIndex);
 }
 
 }

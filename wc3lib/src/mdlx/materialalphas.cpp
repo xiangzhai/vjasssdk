@@ -33,6 +33,11 @@ namespace mdlx
 
 MaterialAlphas::MaterialAlphas(class Layer *layer) : MdlxAlphas(layer->layers()->material()->materials()->mdlx(), "KMTA"), m_layer(layer)
 {
+	assert(layer);
+	assert(layer->layers());
+	assert(layer->layers()->material());
+	assert(layer->layers()->material()->materials());
+	assert(layer->layers()->material()->materials()->mdlx());
 }
 
 class MdlxAnimatedProperty* MaterialAlphas::createAnimatedProperty()

@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "texture.hpp"
-#include "textures.hpp"
 #include "../internationalisation.hpp"
 #include "../utilities.hpp"
 
@@ -29,11 +28,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Texture::Texture(class Textures *textures) : m_textures(textures)
-{
-}
-
-Texture::~Texture()
+Texture::Texture(class Textures *textures) : GroupMdxBlockMember(textures)
 {
 }
 

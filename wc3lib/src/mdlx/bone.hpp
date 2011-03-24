@@ -22,6 +22,8 @@
 #define WC3LIB_MDLX_BONE_HPP
 
 #include "object.hpp"
+#include "groupmdxblockmember.hpp"
+#include "bones.hpp"
 
 namespace wc3lib
 {
@@ -33,30 +35,28 @@ namespace mdlx
 * Use two different bones for unit models: "bone_head" and "bone_chest". These two bones will also be used by Warcraft when lock body-part facing action is called.
 * Use bone called "bone_turret" if you want a part of your model is rotated only when targeting another unit.
 */
-class Bone : public Object
+class Bone : public Object, public GroupMdxBlockMember
 {
 	public:
 		Bone(class Bones *bones);
-		virtual ~Bone();
 
 		class Bones* bones() const;
 		long32 geosetId() const;
 		long32 geosetAnimationId() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Bones *m_bones;
 		long32 m_geosetId;
 		long32 m_geosetAnimationId;
 };
 
 inline class Bones* Bone::bones() const
 {
-	return this->m_bones;
+	return dynamic_cast<class Bones*>(this->m_parent);
 }
 
 inline long32 Bone::geosetId() const

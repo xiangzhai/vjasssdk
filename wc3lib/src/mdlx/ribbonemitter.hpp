@@ -22,6 +22,8 @@
 #define WC3LIB_MDLX_RIBBONEMITTER_HPP
 
 #include "node.hpp"
+#include "groupmdxblockmember.hpp"
+#include "ribbonemitters.hpp"
 
 namespace wc3lib
 {
@@ -29,13 +31,32 @@ namespace wc3lib
 namespace mdlx
 {
 
-class RibbonEmitter : public Node
+class RibbonEmitter : public Node, public GroupMdxBlockMember
 {
 	public:
 		RibbonEmitter(class RibbonEmitters *ribbonEmitters);
 		virtual ~RibbonEmitter();
 
 		class RibbonEmitters* ribbonEmitters() const;
+		class MdlxTranslations* translations() const;
+		class MdlxRotations* rotations() const;
+		class MdlxScalings* scalings() const;
+		float32 heightAboveValue() const;
+		float32 heightBelowValue() const;
+		float32 alpha() const;
+		float32 colorRed() const;
+		float32 colorGreen() const;
+		float32 colorBlue() const;
+		float32 lifeSpan() const;
+		long32 unknown0() const;
+		long32 emissionRate() const;
+		long32 rows() const;
+		long32 columns() const;
+		long32 materialId() const;
+		float32 gravity() const;
+		class RibbonEmitterVisibilities* visibilities() const;
+		class RibbonEmitterHeightsAbove* heightsAbove() const;
+		class RibbonEmitterHeightsBelow* heightsBelow() const;
 
 		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
@@ -43,7 +64,6 @@ class RibbonEmitter : public Node
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class RibbonEmitters *m_ribbonEmitters;
 		//long nbytesi;
 		//long nbytesikg; // inclusive bytecount including KGXXs
 		class MdlxTranslations *m_translations; //(KGTR)
@@ -67,7 +87,102 @@ class RibbonEmitter : public Node
 
 inline class RibbonEmitters* RibbonEmitter::ribbonEmitters() const
 {
-	return this->m_ribbonEmitters;
+	return dynamic_cast<class RibbonEmitters*>(this->m_parent);
+}
+
+inline class MdlxTranslations* RibbonEmitter::translations() const
+{
+	return m_translations;
+}
+
+inline class MdlxRotations* RibbonEmitter::rotations() const
+{
+	return m_rotations;
+}
+
+inline class MdlxScalings* RibbonEmitter::scalings() const
+{
+	return m_scalings;
+}
+
+inline float32 RibbonEmitter::heightAboveValue() const
+{
+	return m_heightAboveValue;
+}
+
+inline float32 RibbonEmitter::heightBelowValue() const
+{
+	return m_heightBelowValue;
+}
+
+inline float32 RibbonEmitter::alpha() const
+{
+	return m_alpha;
+}
+
+inline float32 RibbonEmitter::colorRed() const
+{
+	return m_colorRed;
+}
+
+inline float32 RibbonEmitter::colorGreen() const
+{
+	return m_colorGreen;
+}
+
+inline float32 RibbonEmitter::colorBlue() const
+{
+	return m_colorBlue;
+}
+
+inline float32 RibbonEmitter::lifeSpan() const
+{
+	return m_lifeSpan;
+}
+
+inline long32 RibbonEmitter::unknown0() const
+{
+	return m_unknown0;
+}
+
+inline long32 RibbonEmitter::emissionRate() const
+{
+	return m_emissionRate;
+}
+
+inline long32 RibbonEmitter::rows() const
+{
+	return m_rows;
+}
+
+inline long32 RibbonEmitter::columns() const
+{
+	return m_columns;
+}
+
+inline long32 RibbonEmitter::materialId() const
+{
+	return m_materialId;
+}
+
+inline float32 RibbonEmitter::gravity() const
+{
+	return m_gravity;
+}
+
+inline class RibbonEmitterVisibilities* RibbonEmitter::visibilities() const
+{
+	return m_visibilities;
+}
+
+inline class RibbonEmitterHeightsAbove* RibbonEmitter::heightsAbove() const
+{
+	return m_heightsAbove;
+}
+
+inline class RibbonEmitterHeightsBelow* RibbonEmitter::heightsBelow() const
+{
+	return m_heightsBelow;
 }
 
 }

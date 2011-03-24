@@ -141,7 +141,7 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 		for (std::size_t i = 0; i < sectors; ++i)
 		{
 			int32 offset;
-			istream.read(reinterpret_cast<char*>(&offset), sizeof(offset));
+			istream.read(reinterpret_cast<byte*>(&offset), sizeof(offset));
 			std::cout << "Offset: " << offset << std::endl;
 			bytes += istream.gcount();
 
@@ -164,7 +164,7 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 		}
 
 		int32 size;
-		istream.read(reinterpret_cast<char*>(&size), sizeof(size));
+		istream.read(reinterpret_cast<byte*>(&size), sizeof(size));
 		std::cout << "Real file size: " << size << std::endl;
 		bytes += istream.gcount();
 
@@ -189,7 +189,7 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 		if (this->isCompressed())
 		{
 			byte compression;
-			istream.read(reinterpret_cast<char*>(&compression), sizeof(compression));
+			istream.read(reinterpret_cast<byte*>(&compression), sizeof(compression));
 			bytes += istream.gcount();
 
 			// as well, this byte is encrypted with the sector data, if applicable.
@@ -258,7 +258,7 @@ bool MpqFile::move(const boost::filesystem::path &newPath, bool overwriteExistin
 
 class MpqFile& MpqFile::operator<<(const class MpqFile &mpqFile) throw (class Exception)
 {
-	std::stringstream sstream;
+	stringstream sstream;
 	mpqFile.writeData(sstream);
 	this->appendData(sstream);
 
@@ -274,7 +274,7 @@ class MpqFile& MpqFile::operator>>(class Mpq &mpq) throw (class Exception)
 
 class MpqFile& MpqFile::operator>>(class MpqFile &mpqFile) throw (class Exception)
 {
-	std::stringstream sstream;
+	stringstream sstream;
 	this->writeData(sstream);
 	mpqFile.appendData(sstream);
 

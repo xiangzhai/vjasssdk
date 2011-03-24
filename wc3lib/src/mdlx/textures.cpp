@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,13 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "textures.hpp"
 #include "texture.hpp"
-#include "../internationalisation.hpp"
-
-#include <iostream> //debug
 
 namespace wc3lib
 {
@@ -32,62 +27,33 @@ namespace wc3lib
 namespace mdlx
 {
 
-Textures::Textures(class Mdlx *mdlx) : MdxBlock("TEXS"), m_mdlx(mdlx)
+Textures::Textures(class Mdlx *mdlx) : GroupMdxBlock("TEXS", false), m_mdlx(mdlx)
 {
 }
 
-Textures::~Textures()
+std::streamsize Textures::readMdl(istream &istream) throw (class Exception)
 {
-	BOOST_FOREACH(class Texture *texture, this->m_textures)
-		delete texture;
+	return 0;
 }
 
-void Textures::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Textures::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-void Textures::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Textures::readMdx(istream &istream) throw (class Exception)
 {
+	return GroupMdxBlock::readMdx(istream);
 }
 
-std::streamsize Textures::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Textures::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::cout << "TEXTURES" << std::endl;
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32	nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	std::cout << "Texture bytes: " << nbytes << std::endl;
-	
-	while (nbytes > 0)
-	{
-		class Texture *texture = new Texture(this);
-		long32 readBytes = texture->readMdx(istream);
-		std::cout << "Read texture with " << readBytes << " bytes." << std::endl;
-		
-		if (readBytes == 0)
-			throw Exception(_("Textures: 0 byte texture."));
-		
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_textures.push_back(texture);
-	}
-	
-	return bytes;
+	return GroupMdxBlock::writeMdx(ostream);
 }
 
-std::streamsize Textures::writeMdx(std::ostream &ostream) const throw (class Exception)
+class GroupMdxBlockMember* Textures::createNewMember()
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	return bytes;
+	return new Texture(this);
 }
 
 }

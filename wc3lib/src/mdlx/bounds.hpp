@@ -18,14 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_BOUNDS_HPP
-#define WC3LIB_BOUNDS_HPP
+#ifndef WC3LIB_MDLX_BOUNDS_HPP
+#define WC3LIB_MDLX_BOUNDS_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -36,16 +32,16 @@ namespace mdlx
 /**
 * Should be inherited by classes Model, Sequence, Geoset and Ganimation.
 */
-class Bounds
+class Bounds : public MdlxProperty
 {
 	public:
 		Bounds();
 		virtual ~Bounds();
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 		void setBoundsRadius(float32 boundsRadius);
 		float32 boundsRadius() const;

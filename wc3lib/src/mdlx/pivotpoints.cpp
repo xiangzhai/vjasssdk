@@ -27,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-PivotPoints::PivotPoints(class Mdlx *mdlx) : GroupMdxBlock("PIVT"), m_mdlx(mdlx)
+PivotPoints::PivotPoints(class Mdlx *mdlx) : GroupMdxBlock("PIVT", false), m_mdlx(mdlx)
 {
 }
 

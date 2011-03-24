@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2010 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -255,8 +255,8 @@ int main(int argc, char *argv[])
 
 			if (mpqFile == 0)
 				std::cerr << _("Error while searching for file.") << std::endl;
-			else
-				std::cout << "Flags: " << std::hex << mpqFile->hash()->block()->flags() << std::dec << "\nFile data: " << *mpqFile << std::endl;
+			//else
+			//	std::cout << "Flags: " << std::hex << mpqFile->hash()->block()->flags() << std::dec << "\nFile data: " << *mpqFile << std::endl;
 
 			std::size_t invalidFiles = 0;
 			enum Block::Flags flags = Block::None;

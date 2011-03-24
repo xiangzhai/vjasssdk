@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,10 +21,10 @@
 #include <boost/format.hpp>
 
 #include "textureanimation.hpp"
-#include "textureanimations.hpp"
 #include "textureanimationtranslations.hpp"
 #include "textureanimationrotations.hpp"
 #include "textureanimationscalings.hpp"
+#include "../utilities.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-TextureAnimation::TextureAnimation(class TextureAnimations *textureAnimations) : m_textureAnimations(textureAnimations), m_translations(new TextureAnimationTranslations(this)), m_rotations(new TextureAnimationRotations(this)), m_scalings(new TextureAnimationScalings(this))
+TextureAnimation::TextureAnimation(class TextureAnimations *textureAnimations) : GroupMdxBlockMember(textureAnimations), m_translations(new TextureAnimationTranslations(this)), m_rotations(new TextureAnimationRotations(this)), m_scalings(new TextureAnimationScalings(this))
 {
 }
 
@@ -44,11 +44,12 @@ TextureAnimation::~TextureAnimation()
 	delete this->m_scalings;
 }
 
-void TextureAnimation::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize TextureAnimation::readMdl(istream &istream) throw (class Exception)
 {
+	return 0;
 }
 
-void TextureAnimation::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize TextureAnimation::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	/*
 	fstream << "\tTVertexAnim {\n";
@@ -75,27 +76,39 @@ void TextureAnimation::writeMdl(std::ostream &ostream) const throw (class Except
 
 	fstream << "\t}\n";
 	*/
-}
-
-
-std::streamsize TextureAnimation::readMdx(std::istream &istream) throw (class Exception)
-{
-	long32 nbytesi = 0;
-	istream.read(reinterpret_cast<char*>(&nbytesi), sizeof(nbytesi));
-	std::streamsize bytes = istream.gcount();
-	bytes += this->m_translations->readMdx(istream);
-	bytes += this->m_rotations->readMdx(istream);
-	bytes += this->m_scalings->readMdx(istream);
 	
-	if (nbytesi != bytes)
-		throw Exception(boost::str(boost::format(_("Texture Animation: Error, file byte count and real byte count aren't equal.\nFile byte count: %1% bytes.\nReal byte count: %2%.")) % nbytesi % bytes));
-	
-	return bytes;
-}
-
-std::streamsize TextureAnimation::writeMdx(std::ostream &ostream) const throw (class Exception)
-{
 	return 0;
+}
+
+
+std::streamsize TextureAnimation::readMdx(istream &istream) throw (class Exception)
+{
+	std::streamsize size = 0;
+	long32 nbytesi = 0;
+	wc3lib::read(istream, nbytesi, size);
+	size += this->m_translations->readMdx(istream);
+	size += this->m_rotations->readMdx(istream);
+	size += this->m_scalings->readMdx(istream);
+	
+	if (nbytesi != size)
+		throw Exception(boost::str(boost::format(_("Texture Animation: Error, file byte count and real byte count aren't equal.\nFile byte count: %1% bytes.\nReal byte count: %2%.")) % nbytesi % size));
+	
+	return size;
+}
+
+std::streamsize TextureAnimation::writeMdx(ostream &ostream) const throw (class Exception)
+{
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
+	std::streamsize size = this->m_translations->writeMdx(ostream);
+	size += this->m_rotations->writeMdx(ostream);
+	size += this->m_scalings->writeMdx(ostream);
+	
+	long32 nbytesi = size;
+	writeByteCount(ostream, nbytesi, position, size, true);
+	
+	return size;
 }
 
 }

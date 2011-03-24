@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,9 @@
 #define WC3LIB_MDLX_GEOSETANIMATION_HPP
 
 #include "mdlxproperty.hpp"
+#include "groupmdxblockmember.hpp"
 #include "mdlblock.hpp"
+#include "geosetanimations.hpp"
 
 namespace wc3lib
 {
@@ -30,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class GeosetAnimation : public MdlxProperty, public MdlBlock
+class GeosetAnimation : public MdlxProperty, public GroupMdxBlockMember, public MdlBlock
 {
 	public:
 		enum ColorAnimation
@@ -60,7 +62,6 @@ class GeosetAnimation : public MdlxProperty, public MdlBlock
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class GeosetAnimations *m_geosetAnimations;
 		float32 m_staticAlpha; //(1.0:use KGAO)
 		enum ColorAnimation m_colorAnimation; //(0:none;1:DropShadow;2:Color;3:Both)
 		float32 m_colorRed, m_colorGreen, m_colorBlue; //(default:1)
@@ -71,7 +72,7 @@ class GeosetAnimation : public MdlxProperty, public MdlBlock
 
 inline class GeosetAnimations* GeosetAnimation::geosetAnimations() const
 {
-	return this->m_geosetAnimations;
+	return dynamic_cast<class GeosetAnimations*>(this->m_parent);
 }
 
 inline float32 GeosetAnimation::staticAlpha() const

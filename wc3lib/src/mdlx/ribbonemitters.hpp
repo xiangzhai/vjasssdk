@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
 #ifndef WC3LIB_MDLX_RIBBONEMITTERS_HPP
 #define WC3LIB_MDLX_RIBBONEMITTERS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "mdlxproperty.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,27 +30,24 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Mdlx;
-class RibbonEmitter;
-
-/// RIBB
-class RibbonEmitters : public MdxBlock
+/// MDX tag "RIBB".
+class RibbonEmitters : public MdlxProperty, public GroupMdxBlock
 {
 	public:
 		RibbonEmitters(class Mdlx *mdlx);
-		virtual ~RibbonEmitters();
 
 		class Mdlx* mdlx() const;
 		const std::list<class RibbonEmitter*>& ribbonEmitters() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class RibbonEmitter*> m_ribbonEmitters;
 };
 
 inline class Mdlx* RibbonEmitters::mdlx() const
@@ -61,7 +57,7 @@ inline class Mdlx* RibbonEmitters::mdlx() const
 
 inline const std::list<class RibbonEmitter*>& RibbonEmitters::ribbonEmitters() const
 {
-	return this->m_ribbonEmitters;
+	return *reinterpret_cast<const std::list<class RibbonEmitter*>*>(&this->m_members);
 }
 
 }

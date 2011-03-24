@@ -21,7 +21,6 @@
 #include <boost/format.hpp>
 
 #include "layer.hpp"
-#include "layers.hpp"
 #include "materialalphas.hpp"
 #include "textureids.hpp"
 #include "../utilities.hpp"
@@ -32,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Layer::Layer(class Layers *layers) : m_layers(layers), m_alphas(new MaterialAlphas(this)), m_textureIds(new TextureIds(this))
+Layer::Layer(class Layers *layers) : m_alphas(new MaterialAlphas(this)), m_textureIds(new TextureIds(this)), GroupMdxBlockMember(layers)
 {
 }
 
@@ -42,23 +41,23 @@ Layer::~Layer()
 	delete this->m_textureIds;
 }
 
-std::streamsize Layer::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Layer::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Layer::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Layer::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Layer::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Layer::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	long32 nbytesi;
 	wc3lib::read(istream, nbytesi, size);
-	wc3lib::read(istream, *reinterpret_cast<enum FilterMode*>(&this->m_filterMode), size);
-	wc3lib::read(istream, *reinterpret_cast<enum Shading*>(&this->m_shading), size);
+	wc3lib::read<long32>(istream, *reinterpret_cast<long32*>(&this->m_filterMode), size);
+	wc3lib::read<long32>(istream, *reinterpret_cast<long32*>(&this->m_shading), size);
 	wc3lib::read(istream, this->m_textureId, size);
 	wc3lib::read(istream, this->m_tvertexAnimationId, size);
 	wc3lib::read(istream, this->m_coordinatesId, size);
@@ -69,25 +68,23 @@ std::streamsize Layer::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Layer::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Layer::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streampos position = ostream.tellp();
-	ostream.seekp(sizeof(long32), std::ios_base::cur);
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
 	std::streamsize size = 0;
-	wc3lib::write(ostream, *reinterpret_cast<const enum FilterMode*>(&this->m_filterMode), size);
-	wc3lib::write(ostream, *reinterpret_cast<const enum Shading*>(&this->m_shading), size);
-	wc3lib::write(ostream, this->m_textureId, size);
-	wc3lib::write(ostream, this->m_tvertexAnimationId, size);
-	wc3lib::write(ostream, this->m_coordinatesId, size);
-	wc3lib::write(ostream, this->m_alpha, size);
-	size += this->m_alphas->writeMdx(ostream);
-	size += this->m_textureIds->writeMdx(ostream);
+	wc3lib::write(ostream, static_cast<long32>(this->filterMode()), size);
+	wc3lib::write(ostream, static_cast<long32>(this->shading()), size);
+	wc3lib::write(ostream, this->textureId(), size);
+	wc3lib::write(ostream, this->tvertexAnimationId(), size);
+	wc3lib::write(ostream, this->coordinatesId(), size);
+	wc3lib::write(ostream, this->alpha(), size);
+	size += this->alphas()->writeMdx(ostream);
+	size += this->textureIds()->writeMdx(ostream);
 
-	// jump back and write including byte count
-	std::streampos currentPosition = ostream.tellp();
-	ostream.seekp(position);
-	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&size), size);
-	ostream.seekp(currentPosition);
+	long32 nbytesi = size;
+	writeByteCount(ostream, nbytesi, position, size, true);
 
 	return size;
 }

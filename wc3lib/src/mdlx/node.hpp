@@ -67,11 +67,16 @@ class Node : public MdlxProperty
 			ModelSpace = 524288,
 			XYQuad = 1048576
 		};
+		
+		static const std::size_t nameSize = 0x50;
 
 		Node(class Mdlx *mdlx);
 		virtual ~Node();
 
-		void setName(const ascii name[0x50]);
+		void setName(const ascii name[nameSize]);
+		/**
+		 * \return Returns name with constant length of \ref nameSize.
+		 */
 		const ascii* name() const;
 		long32 id() const;
 		long32 parentId() const;
@@ -101,7 +106,7 @@ class Node : public MdlxProperty
 
 	protected:
 		class Mdlx *m_mdlx;
-		ascii m_name[0x50];
+		ascii m_name[nameSize];
 		long32 m_id;
 		long32 m_parentId;
 		enum Type m_type;
@@ -111,7 +116,7 @@ class Node : public MdlxProperty
 };
 
 
-inline void Node::setName(const ascii name[0x50])
+inline void Node::setName(const ascii name[Node::nameSize])
 {
 	memcpy(this->m_name, name, sizeof(name));
 }

@@ -21,9 +21,8 @@
 #ifndef WC3LIB_MDLX_MATERIALS_HPP
 #define WC3LIB_MDLX_MATERIALS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "mdlxproperty.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -32,23 +31,23 @@ namespace mdlx
 {
 
 /// MTLS
-class Materials : public MdxBlock
+class Materials : public MdlxProperty, public GroupMdxBlock
 {
 	public:
 		Materials(class Mdlx *mdlx);
-		virtual ~Materials();
 
 		class Mdlx* mdlx() const;
 		const std::list<class Material*>& materials() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class Material*> m_materials;
 };
 
 inline class Mdlx* Materials::mdlx() const
@@ -58,7 +57,7 @@ inline class Mdlx* Materials::mdlx() const
 
 inline const std::list<class Material*>& Materials::materials() const
 {
-	return this->m_materials;
+	return *reinterpret_cast<const std::list<class Material*>*>(&this->m_members);
 }
 
 }

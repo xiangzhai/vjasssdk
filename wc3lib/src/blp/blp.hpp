@@ -57,7 +57,9 @@ namespace blp
 * If an image is 32x8 the mipmap chain must be 32x8, 16x4, 8x2, 4x1, 2x1, 1x1.
 * Sizes not of powers of 2 seems to work fine too, the same rules for mipmaps
 * still applies. Ex: 24x17, 12x8 (rounded down), 6x4, 3x2, 1x1 (rounded down).
-*
+* \note JFIF compression and decompression is realized by using library "jpeg" which is loaded dynamically (at runtime) by using class \ref LibraryLoader. Unfortunatelly some properties (structures for instance) cannot be loaded from shared object/DLL and therefore are compiled statically into wc3lib. Please make sure that you're having installed a compatible version of library "jpeg".
+* 
+* 
 * Little loading example:
 * @code
 * #include <iostream>
@@ -81,7 +83,7 @@ namespace blp
 * 
 * delete blp;
 * @endcode
-* @section Conversion
+* \section Conversion
 * If you want to convert BLP images into other formats (e. g. JPEG or PNG) you can either write your own converter or use wc3lib's BLP Qt plugin.
 */
 class Blp : public Format<byte>
@@ -178,14 +180,6 @@ class Blp : public Format<byte>
 				std::map<Coordinates, class Color> m_colors; //[mip map width * mip map height];
 		};
 
-		enum Format
-		{
-			BlpFormat,
-			JpegFormat,
-			TgaFormat,
-			PngFormat
-		};
-
 		enum Version
 		{
 			Blp0, /// Reign of Chaos
@@ -223,6 +217,8 @@ class Blp : public Format<byte>
 		Blp();
 		~Blp();
 
+		void setVersion(enum Version version);
+		enum Version version() const;
 		void setCompression(enum Compression compression);
 		enum Compression compression() const;
 		void setFlags(enum Flags flags);
@@ -236,15 +232,19 @@ class Blp : public Format<byte>
 		void setPictureSubType(dword pictureSubType);
 		dword pictureSubType() const;
 		const std::list<class MipMap*>& mipMaps() const;
+		std::list<class MipMap*>& mipMaps();
 
 		/**
-		* Cleans all BLP data.
+		* Cleans all BLP data (deletes MIP maps and resets properties).
 		*/
 		void clean();
 		/**
 		 * Reads BLP texture from input stream \p istream and detects its format and necessary data automatically.
-		 * Throws an exception of type \ref Exception if any error occured.
-		 * \return Read bytes. Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
+		 * Throws an exception of type \ref Exception if any error occured during read process.
+		 * \note JFIF decompression is implemented by using exactly one thread for each MIP map. First buffer is filled with required compressed MIP map data from stream and after that a thread is started which decompresses the buffer's data.
+		 * \todo Add multithreading support for MIP maps of paletted compression (JPEG is already implemented).
+		 * \param istream Input stream which is read from.
+		 * \return Size of read bytes (\ref byte). Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
 		 */
 		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
 		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
@@ -359,6 +359,16 @@ inline const class Blp::MipMap::Color& Blp::MipMap::colorAt(dword width, dword h
 	return const_cast<const class Blp::MipMap::Color&>(const_cast<class MipMap*>(this)->m_colors[std::make_pair(width, height)]);
 }
 
+inline void Blp::setVersion(enum Version version)
+{
+	this->m_version = version;
+}
+
+inline enum Blp::Version Blp::version() const
+{
+	return this->m_version;
+}
+
 inline void Blp::setCompression(enum Blp::Compression compression)
 {
 	this->m_compression = compression;
@@ -420,6 +430,11 @@ inline dword Blp::pictureSubType() const
 }
 
 inline const std::list<class Blp::MipMap*>& Blp::mipMaps() const
+{
+	return this->m_mipMaps;
+}
+
+inline std::list<class Blp::MipMap*>& Blp::mipMaps()
 {
 	return this->m_mipMaps;
 }

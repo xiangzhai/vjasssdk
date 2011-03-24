@@ -48,7 +48,8 @@ class MdlValueBlock : public MdlBlock
 	public:
 		typedef T ValueType;
 		
-		MdlValueBlock(const string &mdlIdentifier, bool optional = true);
+		/// \param value Initial null value.
+		MdlValueBlock(const string &mdlIdentifier, T value, bool optional = true);
 		virtual ~MdlValueBlock();
 		
 		ValueType value() const;
@@ -69,5 +70,7 @@ inline T MdlValueBlock<T>::value() const
 }
 
 }
+
+#include "mdlvalueblock.cpp"
 
 #endif

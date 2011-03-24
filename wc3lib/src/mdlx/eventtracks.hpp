@@ -21,8 +21,7 @@
 #ifndef WC3LIB_MDLX_EVENTTRACKS_HPP
 #define WC3LIB_MDLX_EVENTTRACKS_HPP
 
-#include <list>
-
+#include "mdlxproperty.hpp"
 #include "mdxblock.hpp"
 
 namespace wc3lib
@@ -32,7 +31,7 @@ namespace mdlx
 {
 
 /// KEVT
-class EventTracks : public MdxBlock
+class EventTracks : public MdlxProperty, public MdxBlock
 {
 	public:
 		EventTracks(class Event *event);
@@ -42,10 +41,10 @@ class EventTracks : public MdxBlock
 		long32 globalSequenceId() const;
 		const std::list<class EventTrack*>& tracks() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		class Event *m_event;
@@ -65,7 +64,7 @@ inline long32 EventTracks::globalSequenceId() const
 
 inline const std::list<class EventTrack*>& EventTracks::tracks() const
 {
-	return this->m_tracks;
+	return  m_tracks;
 }
 
 }

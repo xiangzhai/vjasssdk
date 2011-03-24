@@ -18,14 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/cast.hpp>
-#include <boost/foreach.hpp>
-
 #include "layers.hpp"
 #include "layer.hpp"
-#include "material.hpp"
-#include "../internationalisation.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -33,60 +27,33 @@ namespace wc3lib
 namespace mdlx
 {
 
-Layers::Layers(class Material *material) : MdxBlock("LAYS"), m_material(material)
+Layers::Layers(class Material *material) : GroupMdxBlock("LAYS"), m_material(material)
 {
 }
 
-Layers::~Layers()
-{
-}
-
-std::streamsize Layers::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Layers::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Layers::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Layers::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-
-std::streamsize Layers::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Layers::readMdx(istream &istream) throw (class Exception)
 {
-	std::streamsize size = MdxBlock::readMdx(istream);
-
-	if (size == 0)
-		return 0;
-
-	long32 number = 0;
-	wc3lib::read(istream, number, size);
-
-	for ( ; number > 0; --number)
-	{
-		class Layer *layer = new Layer(this);
-		std::streamsize readSize = layer->readMdx(istream);
-
-		if (readSize == 0)
-			throw Exception(_("Layers: 0 byte layer."));
-
-		size += readSize;
-		this->m_layers.push_back(layer);
-	}
-
-	return size;
+	return GroupMdxBlock::readMdx(istream);
 }
 
-std::streamsize Layers::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Layers::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streamsize size = MdxBlock::writeMdx(ostream);
-	long32 number = boost::numeric_cast<long32>(this->m_layers.size());
-	wc3lib::write(ostream, number, size);
+	return GroupMdxBlock::writeMdx(ostream);
+}
 
-	BOOST_FOREACH(const class Layer *layer, this->m_layers)
-		size += layer->writeMdx(ostream);
-
-	return size;
+class GroupMdxBlockMember* Layers::createNewMember()
+{
+	return new Layer(this);
 }
 
 }

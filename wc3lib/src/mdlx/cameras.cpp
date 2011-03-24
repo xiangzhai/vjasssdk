@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "cameras.hpp"
 #include "camera.hpp"
 
@@ -29,55 +27,33 @@ namespace wc3lib
 namespace mdlx
 {
 
-Cameras::Cameras(class Mdlx *mdlx) : MdxBlock("CAMS"), m_mdlx(mdlx)
+Cameras::Cameras(class Mdlx *mdlx) : GroupMdxBlock("CAMS", false), m_mdlx(mdlx)
 {
 }
 
-Cameras::~Cameras()
+std::streamsize Cameras::readMdl(istream &istream) throw (class Exception)
 {
-	BOOST_FOREACH(class Camera *camera, this->m_cameras)
-		delete camera;
+	return 0;
 }
 
-void Cameras::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Cameras::writeMdl(ostream &ostream) const throw (class Exception)
 {
+	return 0;
 }
 
-void Cameras::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Cameras::readMdx(istream &istream) throw (class Exception)
 {
+	return GroupMdxBlock::readMdx(istream);
 }
 
-std::streamsize Cameras::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Cameras::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	
-	while (nbytes > 0)
-	{
-		class Camera *camera = new Camera(this);
-		long32 readBytes = camera->readMdx(istream);
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_cameras.push_back(camera);
-	}
-	
-	return bytes;
+	return GroupMdxBlock::writeMdx(ostream);
 }
 
-std::streamsize Cameras::writeMdx(std::ostream &ostream) const throw (class Exception)
+class GroupMdxBlockMember* Cameras::createNewMember()
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	return bytes;
+	return new Camera(this);
 }
 
 }

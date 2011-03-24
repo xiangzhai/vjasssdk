@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,11 +21,9 @@
 #ifndef WC3LIB_MDLX_TEXTUREANIMATION_HPP
 #define WC3LIB_MDLX_TEXTUREANIMATION_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlxproperty.hpp"
+#include "groupmdxblockmember.hpp"
+#include "textureanimations.hpp"
 
 namespace wc3lib
 {
@@ -33,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class TextureAnimation
+class TextureAnimation : public MdlxProperty, public GroupMdxBlockMember
 {
 	public:
 		TextureAnimation(class TextureAnimations *textureAnimations);
@@ -44,13 +42,12 @@ class TextureAnimation
 		class TextureAnimationRotations* rotations() const;
 		class TextureAnimationScalings* scalings() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class TextureAnimations *m_textureAnimations;
 		class TextureAnimationTranslations *m_translations; //(KTAT) // Might be optional
 		class TextureAnimationRotations *m_rotations; //(KTAR)
 		class TextureAnimationScalings *m_scalings; //(KTAS)
@@ -58,7 +55,7 @@ class TextureAnimation
 
 inline class TextureAnimations* TextureAnimation::textureAnimations() const
 {
-	return this->m_textureAnimations;
+	return dynamic_cast<class TextureAnimations*>(this->m_parent);
 }
 
 inline class TextureAnimationTranslations* TextureAnimation::translations() const

@@ -45,9 +45,10 @@ class GroupMdxBlock : public MdxBlock
 		~GroupMdxBlock();
 
 		/**
-		 * \return Returns true if members are stored by number of them. Otherwise their size in bytes is stored.
+		 * \return Returns true if members are stored by number of them. Otherwise their size in bytes is stored (exclusive byte count -> does not include its own size).
 		 */
 		bool usesCounter() const;
+		const std::list<class GroupMdxBlockMember*>& members() const;
 		
 		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
@@ -69,6 +70,11 @@ class GroupMdxBlock : public MdxBlock
 inline bool GroupMdxBlock::usesCounter() const
 {
 	return m_usesCounter;
+}
+
+inline const std::list<class GroupMdxBlockMember*>& GroupMdxBlock::members() const
+{
+	return m_members;
 }
 
 }

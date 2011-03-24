@@ -76,7 +76,7 @@ std::streamsize Mpq::create(const boost::filesystem::path &path, bool overwriteE
 	/// @todo Lock file.
 	try
 	{
-		boost::filesystem::ofstream ofstream(path, std::ios_base::binary);
+		ofstream ofstream(path, std::ios_base::binary);
 
 		if (!ofstream)
 			throw Exception(boost::str(boost::format(_("Unable to create file \"%1%\".")) % path.string()));
@@ -136,7 +136,7 @@ std::streamsize Mpq::open(const boost::filesystem::path &path, istream *listfile
 
 	try
 	{
-		boost::filesystem::ifstream ifstream(path, std::ios_base::binary);
+		ifstream ifstream(path, std::ios_base::binary);
 
 		if (!ifstream)
 			throw Exception(boost::str(boost::format(_("Unable to open file \"%1%\".")) % path.string()));
@@ -178,25 +178,25 @@ void Mpq::close()
 	this->clear();
 }
 
-std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (class Exception)
+std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (class Exception)
 {
 	// find header structure by using file key
 	byte identifier[4];
 
 	do
 	{
-		istream.read(reinterpret_cast<char*>(identifier), 4);
+		stream.read(identifier, 4);
 
-		if (istream.gcount() < 4)
+		if (stream.gcount() < 4)
 			throw Exception(boost::str(boost::format(_("Missing identifier \"%1%\".")) % Mpq::identifier));
 	}
 	while (memcmp(identifier, Mpq::identifier, 4) != 0);
 
-	istream.seekg(-4, std::ios::cur);
-	this->m_startPosition = istream.tellg();
+	stream.seekg(-4, std::ios::cur);
+	this->m_startPosition = stream.tellg();
 	struct Header header;
-	istream.read(reinterpret_cast<char*>(&header), sizeof(header));
-	std::streamsize bytes = istream.gcount();
+	stream.read(reinterpret_cast<byte*>(&header), sizeof(header));
+	std::streamsize bytes = stream.gcount();
 
 	if (bytes < sizeof(header))
 		throw Exception(_("Error while reading MPQ header."));
@@ -227,8 +227,8 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 
 	if (this->m_format == Mpq::Mpq2)
 	{
-		istream.read(reinterpret_cast<char*>(&extendedHeader), sizeof(extendedHeader));
-		bytes += istream.gcount();
+		stream.read(reinterpret_cast<byte*>(&extendedHeader), sizeof(extendedHeader));
+		bytes += stream.gcount();
 	}
 
 	int64 offset = header.blockTableOffset;
@@ -236,14 +236,14 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 	if (this->m_format == Mpq::Mpq2 && extendedHeader.blockTableOffsetHigh > 0)
 		offset += int64(extendedHeader.blockTableOffsetHigh) << 32;
 
-	istream.seekg(this->m_startPosition + offset);
+	stream.seekg(this->m_startPosition + offset);
 	std::size_t encryptedBytesSize = header.blockTableEntries * sizeof(struct BlockTableEntry);
-	char *encryptedBytes = new char[encryptedBytesSize];
-	istream.read(encryptedBytes, encryptedBytesSize);
+	byte *encryptedBytes = new byte[encryptedBytesSize];
+	stream.read(encryptedBytes, encryptedBytesSize);
 	uint32 hashValue = HashString(Mpq::cryptTable(), "(block table)", FileKey);
 	DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
-	std::stringstream sstream;
-	sstream.write(const_cast<const char*>(encryptedBytes), encryptedBytesSize);
+	std::basic_stringstream<byte> sstream;
+	sstream.write(const_cast<const byte*>(encryptedBytes), encryptedBytesSize);
 	delete[] encryptedBytes;
 	encryptedBytes = 0;
 
@@ -261,13 +261,13 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 	*/
 	if (this->m_format == Mpq::Mpq2)
 	{
-		istream.seekg(this->m_startPosition + extendedHeader.extendedBlockTableOffset);
+		stream.seekg(this->m_startPosition + extendedHeader.extendedBlockTableOffset);
 
 		BOOST_FOREACH(class Block *block, this->m_blocks)
 		{
 			struct ExtendedBlockTableEntry extendedBlockTableEntry;
-			istream.read(reinterpret_cast<char*>(&extendedBlockTableEntry), sizeof(extendedBlockTableEntry));
-			bytes += istream.gcount();
+			stream.read(reinterpret_cast<byte*>(&extendedBlockTableEntry), sizeof(extendedBlockTableEntry));
+			bytes += stream.gcount();
 			block->m_extendedBlockOffset = extendedBlockTableEntry.extendedBlockOffset;
 		}
 	}
@@ -278,14 +278,14 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 	if (this->m_format == Mpq::Mpq2 && extendedHeader.hashTableOffsetHigh > 0)
 		offset += int64(extendedHeader.hashTableOffsetHigh) << 32;
 
-	istream.seekg(offset);
+	stream.seekg(offset);
 	encryptedBytesSize = header.hashTableEntries * sizeof(struct HashTableEntry);
-	encryptedBytes = new char[encryptedBytesSize];
-	istream.read(encryptedBytes, encryptedBytesSize);
+	encryptedBytes = new byte[encryptedBytesSize];
+	stream.read(encryptedBytes, encryptedBytesSize);
 	hashValue = HashString(Mpq::cryptTable(), "(hash table)", FileKey);
 	DecryptData(Mpq::cryptTable(), reinterpret_cast<void*>(encryptedBytes), encryptedBytesSize, hashValue);
 	sstream.flush();
-	sstream.write(const_cast<const char*>(encryptedBytes), encryptedBytesSize);
+	sstream.write(const_cast<const byte*>(encryptedBytes), encryptedBytesSize);
 	delete[] encryptedBytes;
 	encryptedBytes = 0;
 
@@ -306,10 +306,10 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 			this->m_files.push_back(mpqFile);
 
 			// seek to file data beginning
-			istream.seekg(int32(this->m_startPosition) + mpqFile->m_hash->m_block->m_blockOffset);
+			stream.seekg(int32(this->m_startPosition) + mpqFile->m_hash->m_block->m_blockOffset);
 			/// @todo Decrypt and unimplode data?
 
-			bytes += mpqFile->read(istream);
+			bytes += mpqFile->read(stream);
 		}
 	}
 
@@ -321,7 +321,7 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 		{
 			std::cout << "CONTAINS LISTFILE FILE! (Block flags " << listfileFile->m_hash->m_block->flags() << ")" << std::endl;
 			// read listfile file and create path entries
-			std::stringstream sstream;
+			std::basic_stringstream<byte> sstream;
 			listfileFile->writeData(sstream);
 			std::cout << "Adding " << this->readListfilePathEntries(sstream) << " path entries" << std::endl; // (sstream " << sstream.str() << ")." << std::endl;
 		}
@@ -368,10 +368,10 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 	/// @todo Read "(signature)" file.
 	//The strong digital signature is stored immediately after the archive, in the containing file
 	/// @todo Read strong digital signature.
-	if (Mpq::hasStrongDigitalSignature(istream))
+	if (Mpq::hasStrongDigitalSignature(stream))
 	{
 		this->m_strongDigitalSignature = new char[256];
-		bytes += strongDigitalSignature(istream, this->m_strongDigitalSignature);
+		bytes += strongDigitalSignature(stream, this->m_strongDigitalSignature);
 	}
 	else
 		this->m_strongDigitalSignature = 0;
@@ -381,7 +381,7 @@ std::streamsize Mpq::readMpq(istream &istream, istream *listfileIstream) throw (
 }
 
 /// @todo Write with format this->m_format!
-std::streamsize Mpq::writeMpq(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mpq::writeMpq(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
@@ -529,7 +529,7 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 	// Add "(listfile)" file entry.
 	if (this->containsListfileFile())
 	{
-		std::stringstream sstream(path.string());
+		stringstream sstream(reinterpret_cast<const byte*>(path.string().c_str()));
 		this->listfileFile()->appendData(sstream);
 	}
 
@@ -560,7 +560,7 @@ class MpqFile* Mpq::addFile(const boost::filesystem::path &path, enum MpqFile::L
 
 class MpqFile* Mpq::addFile(const MpqFile &mpqFile, bool addData, bool overwriteExisting) throw (class Exception)
 {
-	std::stringstream sstream;
+	stringstream sstream;
 
 	if (addData)
 		mpqFile.writeData(sstream);
@@ -770,7 +770,7 @@ std::size_t Mpq::readListfilePathEntries(istream &istream)
 	char character;
 	bool newEntry = false;
 
-	while (istream.get(character))
+	while (istream.get(reinterpret_cast<byte&>(character)))
 	{
 		if (character == ';' || character == '\r' || character == '\n')
 		{

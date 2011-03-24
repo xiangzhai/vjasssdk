@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_GEOSETS_HPP
 #define WC3LIB_MDLX_GEOSETS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -32,33 +30,31 @@ namespace mdlx
 {
 
 /// GEOS
-class Geosets : public MdxBlock
+class Geosets : public GroupMdxBlock
 {
 	public:
 		Geosets(class Mdlx *mdlx);
-		virtual ~Geosets();
 
 		class Mdlx* mdlx() const;
 		const std::list<class Geoset*>& geosets() const;
 
 		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class Geoset*> m_geosets;
 };
+
+inline const std::list<class Geoset*>& Geosets::geosets() const
+{
+	return *reinterpret_cast<const std::list<class Geoset*>*>(&this->m_members);
+}
 
 inline class Mdlx* Geosets::mdlx() const
 {
 	return this->m_mdlx;
-}
-
-inline const std::list<class Geoset*>& Geosets::geosets() const
-{
-	return this->m_geosets;
 }
 
 }

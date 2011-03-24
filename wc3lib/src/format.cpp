@@ -18,9 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef WC3LIB_FORMAT_CPP
+#define WC3LIB_FORMAT_CPP
+
 #include "format.hpp"
 
 namespace wc3lib
 {
 
 }
+
+#endif

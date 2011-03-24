@@ -21,9 +21,8 @@
 #ifndef WC3LIB_MDLX_LAYERS_HPP
 #define WC3LIB_MDLX_LAYERS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "mdlxproperty.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,34 +30,35 @@ namespace wc3lib
 namespace mdlx
 {
 
-/// LAYS
-class Layers : public MdxBlock
+/// MDX tag "LAYS".
+class Layers : public MdlxProperty, public GroupMdxBlock
 {
 	public:
 		Layers(class Material *material);
-		virtual ~Layers();
 
 		class Material* material() const;
 		const std::list<class Layer*>& layers() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Material *m_material;
-		std::list<class Layer*> m_layers;
 };
+
+
+inline const std::list<class Layer*>& Layers::layers() const
+{
+	return *reinterpret_cast<const std::list<class Layer*>*>(&m_members);
+}
 
 inline class Material* Layers::material() const
 {
 	return this->m_material;
-}
-
-inline const std::list<class Layer*>& Layers::layers() const
-{
-	return this->m_layers;
 }
 
 }

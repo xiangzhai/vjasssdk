@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,13 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <iostream> //debug
-
-#include <boost/foreach.hpp>
-
 #include "sequences.hpp"
 #include "sequence.hpp"
-#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -32,81 +27,41 @@ namespace wc3lib
 namespace mdlx
 {
 
-Sequences::Sequences(class Mdlx *mdlx) : MdxBlock("SEQS"), m_mdlx(mdlx)
+Sequences::Sequences(class Mdlx *mdlx) : GroupMdxBlock("SEQS", false), m_mdlx(mdlx)
 {
 }
 
-Sequences::~Sequences()
+std::streamsize Sequences::readMdl(istream &istream) throw (class Exception)
 {
-	BOOST_FOREACH(class Sequence *sequence, this->m_sequences)
-		delete sequence;
+	return 0;
 }
 
-void Sequences::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Sequences::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Sequences::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	ostream
-	<< "Sequences " << this->m_sequences.size() << " {\n";
+	<< "Sequences " << this->sequences().size() << " {\n";
 
-	BOOST_FOREACH(class Sequence *sequence, this->m_sequences)
+	BOOST_FOREACH(const class Sequence *sequence, this->sequences())
 		sequence->writeMdl(ostream);
 
 	ostream << "}\n";
+	
+	return 0;
 }
 
-std::streamsize Sequences::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Sequences::readMdx(istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes = 0;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	std::cout << "Sequence bytes: " << nbytes << std::endl;
-	
-	while (nbytes > 0)
-	{
-		class Sequence *sequence = new Sequence(this);
-		long32 readBytes = sequence->readMdx(istream);
-		
-		if (readBytes == 0)
-			throw Exception(_("Sequences: 0 byte sequence."));
-		
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_sequences.push_back(sequence);
-	}
-	
-	return bytes;
+	return GroupMdxBlock::readMdx(istream);
 }
 
-std::streamsize Sequences::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Sequences::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = MdxBlock::writeMdx(ostream);
-	long32 nbytes = 0;
-	std::ostream::pos_type position = ostream.tellp();
-	
-	BOOST_FOREACH(const class Sequence *sequence, this->m_sequences)
-	{
-		long32 writtenBytes = sequence->writeMdx(ostream);
-		
-		if (writtenBytes == 0)
-			throw Exception(_("Sequences: 0 byte sequence."));
-		
-		nbytes += writtenBytes;
-		bytes += writtenBytes;
-	}
-	
-	ostream.seekp(position);
-	ostream.write(reinterpret_cast<const char*>(&nbytes), sizeof(nbytes));
-	bytes += sizeof(nbytes);
-	
-	return bytes;
+	return GroupMdxBlock::writeMdx(ostream);
+}
+
+class GroupMdxBlockMember* Sequences::createNewMember()
+{
+	return new Sequence(this);
 }
 
 }

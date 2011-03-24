@@ -1,3 +1,25 @@
+2011-03-24 Tamino Dauth <tamio@cdauth.eu>
+* editor: Fixed member functions "teamColorUrl" and "teamGlowUrl" of class Editor.
+
+2011-03-15 Tamino Dauth <tamio@cdauth.eu>
+* mdlx: Improved MDX read and write element functions of various classes.
+
+2011-03-13 Tamino Dauth <tamio@cdauth.eu>
+* mdlx: Improved MDX read and write element functions of various classes.
+
+2011-03-08 Tamino Dauth <tamio@cdauth.eu>
+* blp: Fixed Boost thread usage.
+
+2011-03-05 Tamino Dauth <tamio@cdauth.eu>
+* blp: Fixed boost::bind issue.
+* editor: Added class BlpCodec.
+
+2011-02-27 Tamino Dauth <tamio@cdauth.eu>
+* blp: Implemented multithreading support to JFIF compression read function.
+* blp: Dropped obsolete enum Format.
+* blp: Added member functions for member m_version.
+* blp: Improved documentation.
+
 2011-02-23 Tamino Dauth <tamio@cdauth.eu>
 * mdlx: Revised classes.
 

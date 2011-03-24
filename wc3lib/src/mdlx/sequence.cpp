@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "sequence.hpp"
-#include "sequences.hpp"
+#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -27,20 +27,16 @@ namespace wc3lib
 namespace mdlx
 {
 
-Sequence::Sequence(class Sequences *sequences) : m_sequences(sequences)
+Sequence::Sequence(class Sequences *sequences) : GroupMdxBlockMember(sequences)
 {
 }
 
-Sequence::~Sequence()
-{
-}
-
-std::streamsize Sequence::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Sequence::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Sequence::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Sequence::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	ostream
 	<< "Anim " << this->name() << " {\n"
@@ -63,48 +59,34 @@ std::streamsize Sequence::writeMdl(std::ostream &ostream) const throw (class Exc
 	return 0;
 }
 
-std::streamsize Sequence::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Sequence::readMdx(istream &istream) throw (class Exception)
 {
-	std::streamsize bytes = 0;
-	istream.read(this->m_name, sizeof(this->m_name));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_intervalEnd), sizeof(this->m_intervalEnd));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_moveSpeed), sizeof(this->m_moveSpeed));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_noLooping), sizeof(this->m_noLooping));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_rarity), sizeof(this->m_rarity));
-	bytes += istream.gcount();
-	istream.read(reinterpret_cast<char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += istream.gcount();
-	bytes += Bounds::readMdx(istream);
+	std::streamsize size = 0;
+	wc3lib::read(istream, m_name, size);
+	wc3lib::read(istream, m_intervalStart, size);
+	wc3lib::read(istream, m_intervalEnd, size);
+	wc3lib::read(istream, m_moveSpeed, size);
+	wc3lib::read(istream, m_noLooping, size);
+	wc3lib::read(istream, m_rarity, size);
+	wc3lib::read(istream, m_unknown0, size);
+	size += Bounds::readMdx(istream);
 
-	return bytes;
+	return size;
 }
 
 std::streamsize Sequence::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	std::streamsize bytes = 0;
-	ostream.write(this->m_name, sizeof(this->m_name));
-	bytes += sizeof(this->m_name);
-	ostream.write(reinterpret_cast<const char*>(&this->m_intervalStart), sizeof(this->m_intervalStart));
-	bytes += sizeof(this->m_intervalStart);
-	ostream.write(reinterpret_cast<const char*>(&this->m_intervalEnd), sizeof(this->m_intervalEnd));
-	bytes += sizeof(this->m_intervalEnd);
-	ostream.write(reinterpret_cast<const char*>(&this->m_moveSpeed), sizeof(this->m_moveSpeed));
-	bytes += sizeof(this->m_moveSpeed);
-	ostream.write(reinterpret_cast<const char*>(&this->m_noLooping), sizeof(this->m_noLooping));
-	bytes += sizeof(this->m_noLooping);
-	ostream.write(reinterpret_cast<const char*>(&this->m_rarity), sizeof(this->m_rarity));
-	bytes += sizeof(this->m_rarity);
-	ostream.write(reinterpret_cast<const char*>(&this->m_unknown0), sizeof(this->m_unknown0));
-	bytes += sizeof(this->m_unknown0);
-	bytes += Bounds::writeMdx(ostream);
+	std::streamsize size = 0;
+	wc3lib::write(ostream, m_name, size);
+	wc3lib::write(ostream, m_intervalStart, size);
+	wc3lib::write(ostream, m_intervalEnd, size);
+	wc3lib::write(ostream, m_moveSpeed, size);
+	wc3lib::write(ostream, m_noLooping, size);
+	wc3lib::write(ostream, m_rarity, size);
+	wc3lib::write(ostream, m_unknown0, size);
+	size += Bounds::writeMdx(ostream);
 
-	return bytes;
+	return size;
 }
 
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_COLLISIONSHAPES_HPP
 #define WC3LIB_MDLX_COLLISIONSHAPES_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,24 +29,22 @@ namespace wc3lib
 namespace mdlx
 {
 
-/// CLID
-class CollisionShapes : public MdxBlock
+/// Tag CLID.
+class CollisionShapes : public GroupMdxBlock
 {
 	public:
 		CollisionShapes(class Mdlx *mdlx);
-		virtual ~CollisionShapes();
 
 		class Mdlx* mdlx() const;
 		const std::list<class CollisionShape*>& collisionShapes() const;
-
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class CollisionShape*> m_collisionShapes;
 };
 
 inline class Mdlx* CollisionShapes::mdlx() const
@@ -58,7 +54,7 @@ inline class Mdlx* CollisionShapes::mdlx() const
 
 inline const std::list<class CollisionShape*>& CollisionShapes::collisionShapes() const
 {
-	return this->m_collisionShapes;
+	return *reinterpret_cast<const std::list<class CollisionShape*>*>(&this->m_members);
 }
 
 }

@@ -102,7 +102,7 @@ bool BlpIOHandler::read(QImage *image)
 	blp::Blp::MipMap *mipMap = blpImage.mipMaps().front(); // first mip map has original size
 
 	if (blpImage.flags() == blp::Blp::Alpha)
-		std::cout << "Image has alpha channel" << std::endl;
+		qDebug() << "Image has alpha channel";
 
 	QImage::Format format;
 
@@ -114,7 +114,7 @@ bool BlpIOHandler::read(QImage *image)
 		format = QImage::Format_RGB32;
 
 	*image = QImage(mipMap->width(), mipMap->height(), format);
-	std::cout << "Color map size " << mipMap->colors().size() << std::endl;
+	qDebug() << "Color map size " << mipMap->colors().size();
 
 	foreach (blp::Blp::MipMap::MapEntryType mapEntry, mipMap->colors())
 	{
@@ -189,7 +189,8 @@ bool BlpIOHandler::write(const QImage &image)
 
 	// create mip map
 	// palette is filled automatically by Blp::write
-	class blp::Blp::MipMap *mipMap = blpImage.addInitialMipMap(image.width(), image.height());
+	blpImage.generateMipMaps(1);
+	blp::Blp::MipMap *mipMap = blpImage.mipMaps().front();
 
 	for (int width = 0; width < image.size().width(); ++width)
 	{
@@ -207,7 +208,7 @@ bool BlpIOHandler::write(const QImage &image)
 		}
 	}
 
-	blpImage.generateMipMaps(mipMap);
+	blpImage.generateMipMaps(); // generate other MIP maps after setting up initial MIP map (image)
 	std::basic_ostringstream<blp::byte> ostream;
 
 	try

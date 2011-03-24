@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,6 @@
 #include <boost/foreach.hpp>
 
 #include "particleemitter2.hpp"
-#include "particleemitter2s.hpp"
 #include "mdlxtranslations.hpp"
 #include "mdlxrotations.hpp"
 #include "mdlxscalings.hpp"
@@ -41,7 +40,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-ParticleEmitter2::ParticleEmitter2(class ParticleEmitter2s *particleEmitters) : Node(particleEmitters->mdlx()), m_particleEmitters(particleEmitters), m_speeds(new ParticleEmitter2Speeds(this)), m_latitudes(new ParticleEmitter2Latitudes(this)), m_emissionRates(new EmissionRates(particleEmitters->mdlx())), m_visibilities(new ParticleEmitter2Visibilities(this)), m_numbers(new Lengths(this)), m_widths(new ParticleEmitter2Widths(this))
+ParticleEmitter2::ParticleEmitter2(class ParticleEmitter2s *particleEmitters) : Node(particleEmitters->mdlx()), GroupMdxBlockMember(particleEmitters), m_speeds(new ParticleEmitter2Speeds(this)), m_latitudes(new ParticleEmitter2Latitudes(this)), m_emissionRates(new EmissionRates(particleEmitters->mdlx())), m_visibilities(new ParticleEmitter2Visibilities(this)), m_numbers(new Lengths(this)), m_widths(new ParticleEmitter2Widths(this))
 {
 }
 
@@ -58,17 +57,17 @@ ParticleEmitter2::~ParticleEmitter2()
 	delete this->m_widths;
 }
 
-std::streamsize ParticleEmitter2::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter2::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize ParticleEmitter2::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize ParticleEmitter2::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize ParticleEmitter2::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize ParticleEmitter2::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	long32 nbytesi;
@@ -128,14 +127,63 @@ std::streamsize ParticleEmitter2::readMdx(std::istream &istream) throw (class Ex
 	return size;
 }
 
-std::streamsize ParticleEmitter2::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize ParticleEmitter2::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	/*
-	std::streampos position = istream.tellg();
-	istream.seekg(2 * sizeof(long32), std::ios_base::dasdsadsd); /// @todo Skip!, nbytesi and nbytesikg
-	*/
+	std::streampos position;
+	skipByteCount<mdlx::ostream>(ostream, position);
+	
+	std::streamsize size = Node::writeMdx(ostream);
+	wc3lib::write(ostream, this->m_speed, size);
+	wc3lib::write(ostream, this->m_variation, size);
+	wc3lib::write(ostream, this->m_latitidue, size);
+	wc3lib::write(ostream, this->m_gravity, size);
+	wc3lib::write(ostream, this->m_lifespan, size);
+	wc3lib::write(ostream, this->m_emissionRate, size);
+	wc3lib::write(ostream, this->m_length, size);
+	wc3lib::write(ostream, this->m_width, size);
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_filterMode), size);
+	wc3lib::write(ostream, this->m_rows, size);
+	wc3lib::write(ostream, this->m_columns, size);
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_flags), size);
+	wc3lib::write(ostream, this->m_tailLength, size);
+	wc3lib::write(ostream, this->m_time, size);
 
-	return 0;
+	BOOST_FOREACH(const class SegmentColor *segmentColor, this->segmentColors())
+		size += segmentColor->writeMdx(ostream);
+
+	wc3lib::write(ostream, this->m_alpha1, size);
+	wc3lib::write(ostream, this->m_alpha2, size);
+	wc3lib::write(ostream, this->m_alpha3, size);
+	wc3lib::write(ostream, this->m_scalingX, size);
+	wc3lib::write(ostream, this->m_scalingY, size);
+	wc3lib::write(ostream, this->m_scalingZ, size);
+	wc3lib::write(ostream, this->m_lifeSpanUvAnim1, size);
+	wc3lib::write(ostream, this->m_lifeSpanUvAnim2, size);
+	wc3lib::write(ostream, this->m_lifeSpanUvAnim3, size);
+	wc3lib::write(ostream, this->m_decayUvAnim1, size);
+	wc3lib::write(ostream, this->m_decayUvAnim2, size);
+	wc3lib::write(ostream, this->m_decayUvAnim3, size);
+	wc3lib::write(ostream, this->m_tailUvAnim1, size);
+	wc3lib::write(ostream, this->m_tailUvAnim2, size);
+	wc3lib::write(ostream, this->m_tailUvAnim3, size);
+	wc3lib::write(ostream, this->m_tailDecayUvAnim1, size);
+	wc3lib::write(ostream, this->m_tailDecayUvAnim2, size);
+	wc3lib::write(ostream, this->m_tailDecayUvAnim3, size);
+	wc3lib::write(ostream, this->m_textureId, size);
+	wc3lib::write(ostream, this->m_squirt, size);
+	wc3lib::write(ostream, this->m_priorityPlane, size);
+	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_replaceableId), size);
+	size += this->m_speeds->writeMdx(ostream);
+	size += this->m_latitudes->writeMdx(ostream);
+	size += this->m_emissionRates->writeMdx(ostream);
+	size += this->m_visibilities->writeMdx(ostream);
+	size += this->m_numbers->writeMdx(ostream);
+	size += this->m_widths->writeMdx(ostream);
+
+	long32 nbytesi = size;
+	writeByteCount(ostream, nbytesi, position, size, true);
+	
+	return size;
 }
 
 }

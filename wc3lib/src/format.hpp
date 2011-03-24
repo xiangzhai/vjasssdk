@@ -23,6 +23,7 @@
 
 #include <istream>
 #include <ostream>
+#include <sstream>
 
 #include "exception.hpp"
 
@@ -39,7 +40,23 @@ class Format
 		typedef std::basic_ostream<_CharT> OutputStream;
 
 		virtual std::streamsize read(InputStream &istream) throw (class Exception) = 0;
+		/// Reads input from another format object (\p other).
+		std::streamsize read(const Format &other) throw (class Exception)
+		{
+			std::basic_stringstream<CharType> sstream;
+			other.write(sstream);
+			
+			return read(sstream);
+		}
 		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception) = 0;
+		/// Writes output into another format object (\p other).
+		std::streamsize write(Format &other) const throw (class Exception)
+		{
+			std::basic_stringstream<CharType> sstream;
+			write(sstream);
+			
+			return other.read(sstream);
+		}
 
 		class Format& operator<<(InputStream &istream) throw (class Exception);
 		const class Format& operator>>(OutputStream &ostream) const throw (class Exception);
@@ -78,5 +95,7 @@ inline std::basic_ostream<_CharT>& operator<<(std::basic_ostream<_CharT> &ostrea
 }
 
 }
+
+#include "format.cpp"
 
 #endif

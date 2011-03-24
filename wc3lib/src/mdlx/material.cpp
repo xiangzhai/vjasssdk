@@ -21,7 +21,6 @@
 #include <boost/format.hpp>
 
 #include "material.hpp"
-#include "materials.hpp"
 #include "layers.hpp"
 #include "../internationalisation.hpp"
 #include "../utilities.hpp"
@@ -32,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Material::Material(class Materials *materials) : m_materials(materials), m_layers(new Layers(this))
+Material::Material(class Materials *materials) : m_layers(new Layers(this)), GroupMdxBlockMember(materials)
 {
 }
 
@@ -41,17 +40,17 @@ Material::~Material()
 	delete this->m_layers;
 }
 
-std::streamsize Material::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Material::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Material::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Material::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Material::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Material::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	long32 includingSize; // including size itself!
@@ -67,22 +66,18 @@ std::streamsize Material::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Material::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Material::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streampos position = ostream.tellp();
-	ostream.seekp(sizeof(long32), std::ios_base::cur);
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
 	std::streamsize size = 0;
-	wc3lib::write(ostream, this->m_priorityPlane, size);
-	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_renderMode), size);
+	wc3lib::write(ostream, this->priorityPlane(), size);
+	wc3lib::write(ostream, static_cast<const long32>(this->renderMode()), size);
 	size += this->m_layers->writeMdx(ostream);
 
-	// jump back and write byte count
-	std::streampos currentPosition = ostream.tellp();
-	ostream.seekp(position);
-	long32 byteCount = size + sizeof(size); // including size itself!
-	wc3lib::write(ostream, byteCount, size);
-	// jump forward
-	ostream.seekp(currentPosition);
+	long32 includingSize = size;
+	writeByteCount(ostream, includingSize, position, size, true);
 
 	return size;
 }

@@ -21,11 +21,9 @@
 #ifndef WC3LIB_MDLX_LAYER_HPP
 #define WC3LIB_MDLX_LAYER_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlxproperty.hpp"
+#include "groupmdxblockmember.hpp"
+#include "layers.hpp"
 
 namespace wc3lib
 {
@@ -33,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Layer
+class Layer : public MdlxProperty, public GroupMdxBlockMember
 {
 	public:
 		enum FilterMode
@@ -72,13 +70,12 @@ class Layer
 		class MaterialAlphas* alphas() const;
 		class TextureIds* textureIds() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Layers *m_layers;
 		enum FilterMode	m_filterMode;
 		enum Shading m_shading;
 		long32 m_textureId;
@@ -91,7 +88,7 @@ class Layer
 
 inline class Layers* Layer::layers() const
 {
-	return this->m_layers;
+	return dynamic_cast<class Layers*>(this->m_parent);
 }
 
 inline enum Layer::FilterMode Layer::filterMode() const

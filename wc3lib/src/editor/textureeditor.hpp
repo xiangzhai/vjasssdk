@@ -38,6 +38,7 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 
 	public:
 		TextureEditor(class Editor *editor);
+		virtual ~TextureEditor();
 
 	public slots:
 		void openFile();

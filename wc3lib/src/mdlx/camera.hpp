@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,11 +21,9 @@
 #ifndef WC3LIB_MDLX_CAMERA_HPP
 #define WC3LIB_MDLX_CAMERA_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlxproperty.hpp"
+#include "groupmdxblockmember.hpp"
+#include "cameras.hpp"
 
 namespace wc3lib
 {
@@ -34,7 +32,7 @@ namespace mdlx
 {
 
 // not a child of class Object!
-class Camera
+class Camera : public MdlxProperty, public GroupMdxBlockMember
 {
 	public:
 		Camera(class Cameras *cameras);
@@ -52,13 +50,12 @@ class Camera
 		class CameraRotationLengths* rotationLengths() const;
 		class CameraTargetTranslations* targetTranslations() const;
 
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Cameras *m_cameras;
 		//long nbytesi;
 		ascii m_name[0x50]; //(0x50)
 		struct VertexData m_position;
@@ -74,7 +71,7 @@ class Camera
 
 inline class Cameras* Camera::cameras() const
 {
-	return this->m_cameras;
+	return dynamic_cast<class Cameras*>(this->m_parent);
 }
 
 inline const ascii* Camera::name() const

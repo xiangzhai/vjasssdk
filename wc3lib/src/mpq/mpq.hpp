@@ -100,8 +100,8 @@ class Mpq
 		};
 
 		static const uint32* cryptTable();
-		static bool hasStrongDigitalSignature(std::istream &istream);
-		static std::streamsize strongDigitalSignature(std::istream &istream, char signature[256]) throw (class Exception);
+		static bool hasStrongDigitalSignature(istream &istream);
+		static std::streamsize strongDigitalSignature(istream &istream, char signature[256]) throw (class Exception);
 
 		Mpq();
 		~Mpq();
@@ -114,7 +114,7 @@ class Mpq
 		* @param listfilefileIstream If you want to preselect your custom listfile file, use this value (entries will be appended to the already contained listfile file if it does exist).
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize readMpq(istream &istream, istream *listfileIstream = 0) throw (class Exception);
+		std::streamsize readMpq(istream &i, istream *listfileIstream = 0) throw (class Exception);
 		/**
 		* Writes the whole MPQ archive into output stream @param ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
 		* If you change some data of the opened MPQ archive it's written directly into the corresponding file (the whole archive is not loaded into memory!).
@@ -187,7 +187,7 @@ class Mpq
 		* @param istream This input stream is used for reading the initial file data.
 		* @todo Replace reservedSpace by size of istream?
 		*/
-		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const std::istream *istream = 0, bool overwriteExisting = false, int32 reservedSpace = 0) throw (class Exception);
+		class MpqFile* addFile(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform, const istream *istream = 0, bool overwriteExisting = false, int32 reservedSpace = 0) throw (class Exception);
 		/**
 		* Path of MPQ file @param mpqFile should be set if you use this method.
 		* Does not add @param mpqFile. Only uses its meta data (beside you set @param addData to true)!
@@ -316,7 +316,7 @@ class Mpq
 		* Uses input stream @param istream for reading file path entries and refreshing them by getting their instances (using their hashes).
 		* @return Returns the number of added path entries.
 		*/
-		std::size_t readListfilePathEntries(std::istream &istream);
+		std::size_t readListfilePathEntries(istream &istream);
 		bool checkBlocks() const;
 		bool checkHashes() const;
 		/**
@@ -373,18 +373,18 @@ inline std::streamsize Mpq::strongDigitalSignature(istream &istream, char signat
 	return 0;
 }
 
-inline std::ostream& operator<<(ostream &ostream, const class Mpq &mpq) throw (class Exception)
+inline ostream& operator<<(ostream &stream, const class Mpq &mpq) throw (class Exception)
 {
-	mpq.writeMpq(ostream);
+	mpq.writeMpq(stream);
 
-	return ostream;
+	return stream;
 }
 
-inline std::istream& operator>>(istream &istream, class Mpq &mpq) throw (class Exception)
+inline istream& operator>>(istream &stream, class Mpq &mpq) throw (class Exception)
 {
-	mpq.readMpq(istream);
+	mpq.readMpq(stream);
 
-	return istream;
+	return stream;
 }
 
 inline bool operator>(const class Mpq &mpq1, const class Mpq &mpq2)
@@ -448,18 +448,18 @@ inline const class MpqFile* Mpq::createListfileFile() throw (class Exception)
 	if (this->containsListfileFile())
 		return this->listfileFile();
 
-	std::list<std::string> entries;
+	std::list<std::basic_string<byte> > entries;
 
 	BOOST_FOREACH(const class MpqFile *mpqFile, this->m_files)
 	{
 		if (!mpqFile->m_path.empty() && mpqFile->m_path.string() != "(attributes)") /// @todo Exclude directories and file (signature)?
-			entries.push_back(mpqFile->m_path.string());
+			entries.push_back(reinterpret_cast<const byte*>(mpqFile->m_path.string().c_str()));
 	}
 
 	entries.sort(); /// @todo Sort alphabetically?
-	std::stringstream sstream;
+	std::basic_stringstream<byte> sstream;
 
-	BOOST_FOREACH(std::string entry, entries)
+	BOOST_FOREACH(std::basic_string<byte> entry, entries)
 		sstream << entry << std::endl;
 
 	return this->addFile("(listfile)", MpqFile::Neutral, MpqFile::Default, &sstream);
@@ -484,25 +484,25 @@ inline const class MpqFile* Mpq::createAttributesFile() throw (class Exception)
 	struct ExtendedAttributesHeader extendedAttributesHeader;
 	extendedAttributesHeader.version = Mpq::extendedAttributesVersion;
 	extendedAttributesHeader.attributesPresent = this->extendedAttributes();
-	std::stringstream stream;
-	stream.write(reinterpret_cast<char*>(&extendedAttributesHeader), sizeof(extendedAttributesHeader));
+	stringstream stream;
+	stream.write(reinterpret_cast<byte*>(&extendedAttributesHeader), sizeof(extendedAttributesHeader));
 
 	if (this->extendedAttributes() & Mpq::FileCrc32s)
 	{
 		BOOST_FOREACH(const class Block *block, this->m_blocks)
-			stream.write(reinterpret_cast<const char*>(&block->m_crc32), sizeof(block->m_crc32));
+			stream.write(reinterpret_cast<const byte*>(&block->m_crc32), sizeof(block->m_crc32));
 	}
 
 	if (this->extendedAttributes() & Mpq::FileTimeStamps)
 	{
 		BOOST_FOREACH(const class Block *block, this->m_blocks)
-			stream.write(reinterpret_cast<const char*>(&block->m_fileTime), sizeof(block->m_fileTime));
+			stream.write(reinterpret_cast<const byte*>(&block->m_fileTime), sizeof(block->m_fileTime));
 	}
 
 	if (this->extendedAttributes() & Mpq::FileMd5s)
 	{
 		BOOST_FOREACH(const class Block *block, this->m_blocks)
-			stream.write(reinterpret_cast<const char*>(&block->m_md5), sizeof(block->m_md5));
+			stream.write(reinterpret_cast<const byte*>(&block->m_md5), sizeof(block->m_md5));
 	}
 
 	return this->addFile("(attributes)", MpqFile::Neutral, MpqFile::Default, &stream);

@@ -30,7 +30,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-MdlxAnimatedProperties::MdlxAnimatedProperties(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], const string &mdlIdentifier, bool optional) : MdxBlock(mdxIdentifier, optional), MdlValueBlock<long32>(mdlIdentifier, optional), m_mdlx(mdlx)
+MdlxAnimatedProperties::MdlxAnimatedProperties(class Mdlx *mdlx, const byte mdxIdentifier[MdxBlock::mdxIdentifierSize], const string &mdlIdentifier, bool optional) : MdxBlock(mdxIdentifier, optional), MdlValueBlock<ValueType>(mdlIdentifier, optional), m_mdlx(mdlx)
 {
 }
 
@@ -49,7 +49,7 @@ std::streamsize MdlxAnimatedProperties::readMdl(istream &istream) throw (class E
 std::streamsize MdlxAnimatedProperties::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	// Tag <long_count> {
-	std::streamsize size = MdlValueBlock<long32>::writeMdl(ostream);
+	std::streamsize size = MdlValueBlock<ValueType>::writeMdl(ostream);
 	
 	switch (lineType())
 	{

@@ -22,6 +22,8 @@
 #define WC3LIB_MDLX_LIGHT_HPP
 
 #include "object.hpp"
+#include "groupmdxblockmember.hpp"
+#include "lights.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Light : public Object
+class Light : public Object, public GroupMdxBlockMember
 {
 	public:
 		enum Type
@@ -43,7 +45,7 @@ class Light : public Object
 		virtual ~Light();
 
 		class Lights* lights() const;
-		long32 type() const;
+		enum Type type() const;
 		float32 attenuationStart() const;
 		float32 attenuationEnd() const;
 		float32 colorRed() const;
@@ -66,10 +68,9 @@ class Light : public Object
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Lights *m_lights;
 		//long nbytesi;
 		//OBJ
-		long32 m_type; //(0:Omnidirectional;1:Directional;2:Ambient)
+		enum Type m_type; //(0:Omnidirectional;1:Directional;2:Ambient)
 		float32 m_attenuationStart, m_attenuationEnd;
 		float32 m_colorRed, m_colorGreen, m_colorBlue;
 		float32 m_intensity;
@@ -84,10 +85,10 @@ class Light : public Object
 
 inline class Lights* Light::lights() const
 {
-	return this->m_lights;
+	return dynamic_cast<class Lights*>(this->m_parent);
 }
 
-inline long32 Light::type() const
+inline enum Light::Type Light::type() const
 {
 	return this->m_type;
 }

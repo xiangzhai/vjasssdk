@@ -21,11 +21,9 @@
 #ifndef WC3LIB_MDLX_MATERIAL_HPP
 #define WC3LIB_MDLX_MATERIAL_HPP
 
-#include <istream>
-#include <ostream>
-
-#include "platform.hpp"
-#include "../exception.hpp"
+#include "mdlxproperty.hpp"
+#include "groupmdxblockmember.hpp"
+#include "materials.hpp"
 
 namespace wc3lib
 {
@@ -33,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Material
+class Material : public MdlxProperty, public GroupMdxBlockMember
 {
 	public:
 		enum RenderMode
@@ -58,13 +56,12 @@ class Material
 		enum RenderMode renderMode() const;
 		class Layers* layers() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Materials *m_materials;
 		//long nbytesi;
 		long32 m_priorityPlane;
 		enum RenderMode m_renderMode;
@@ -73,7 +70,7 @@ class Material
 
 inline class Materials* Material::materials() const
 {
-	return this->m_materials;
+	return dynamic_cast<class Materials*>(this->m_parent);
 }
 
 inline float32 Material::priorityPlane() const

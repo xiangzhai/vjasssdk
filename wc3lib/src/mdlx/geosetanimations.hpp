@@ -21,10 +21,8 @@
 #ifndef WC3LIB_MDLX_GEOSETANIMATIONS_HPP
 #define WC3LIB_MDLX_GEOSETANIMATIONS_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
 #include "mdlxproperty.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -33,11 +31,10 @@ namespace mdlx
 {
 
 /// GEOA
-class GeosetAnimations : public MdxBlock, public MdlxProperty
+class GeosetAnimations : public MdlxProperty, public GroupMdxBlock
 {
 	public:
 		GeosetAnimations(class Mdlx *mdlx);
-		virtual ~GeosetAnimations();
 
 		class Mdlx* mdlx() const;
 		const std::list<class GeosetAnimation*>& geosetAnimations() const;
@@ -48,18 +45,20 @@ class GeosetAnimations : public MdxBlock, public MdlxProperty
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class GeosetAnimation*> m_geosetAnimations;
 };
+
+inline const std::list<class GeosetAnimation*>& GeosetAnimations::geosetAnimations() const
+{
+	return *reinterpret_cast<const std::list<class GeosetAnimation*>*>(&this->m_members);
+}
+
 
 inline class Mdlx* GeosetAnimations::mdlx() const
 {
 	return this->m_mdlx;
-}
-
-inline const std::list<class GeosetAnimation*>& GeosetAnimations::geosetAnimations() const
-{
-	return this->m_geosetAnimations;
 }
 
 }

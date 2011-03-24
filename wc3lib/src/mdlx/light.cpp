@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Light::Light(class Lights *lights) : Object(lights->mdlx()), m_lights(lights), m_intensities(new Intensities(this)), m_visibilities(new LightAmbientVisibilities(this)), m_colors(new LightAmbientColors(this)), m_ambientColors(new AmbientColors(this)), m_ambientIntensities(new AmbientIntensities(this))
+Light::Light(class Lights *lights) : Object(lights->mdlx()), GroupMdxBlockMember(lights), m_intensities(new Intensities(this)), m_visibilities(new LightAmbientVisibilities(this)), m_colors(new LightAmbientColors(this)), m_ambientColors(new AmbientColors(this)), m_ambientIntensities(new AmbientIntensities(this))
 {
 }
 
@@ -62,7 +62,7 @@ std::streamsize Light::readMdx(istream &istream) throw (class Exception)
 	std::streamsize size = 0;
 	wc3lib::read(istream, nbytesi, size);
 	size += Object::readMdx(istream);
-	wc3lib::read(istream, this->m_type, size);
+	wc3lib::read<long32>(istream, reinterpret_cast<long32&>(this->m_type), size);
 	wc3lib::read(istream, this->m_attenuationStart, size);
 	wc3lib::read(istream, this->m_attenuationEnd, size);
 	wc3lib::read(istream, this->m_colorRed, size);
@@ -78,6 +78,9 @@ std::streamsize Light::readMdx(istream &istream) throw (class Exception)
 	size += this->m_colors->readMdx(istream);
 	size += this->m_ambientColors->readMdx(istream);
 	size += this->m_ambientIntensities->readMdx(istream);
+	
+	if (nbytesi != size)
+		throw Exception(boost::format(_("Light: Expected byte count %1% is not equal to read size %2%.")) % nbytesi % size);
 
 	return size;
 }

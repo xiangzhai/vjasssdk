@@ -60,6 +60,8 @@ std::streamsize Node::readMdx(istream &istream) throw (class Exception)
 	wc3lib::read(istream, this->m_name, size);
 	wc3lib::read(istream, this->m_id, size);
 	// register!
+	//std::cout << "Name " << this->name() << std::endl;
+	//std::cout << "ID " << this->id() << std::endl;
 	this->m_mdlx->addNode(this->id(), this);
 	wc3lib::read(istream, this->m_parentId, size);
 	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_type), size);
@@ -72,6 +74,8 @@ std::streamsize Node::readMdx(istream &istream) throw (class Exception)
 
 	//if (!this->inheritsScaling())
 		size += this->m_scalings->readMdx(istream);
+		
+	//print(std::cout);
 
 	return size;
 }
@@ -102,7 +106,7 @@ std::streamsize Node::writeMdx(ostream &ostream) const throw (class Exception)
 
 std::ostream& Node::print(ostream &ostream) const
 {
-	ostream << "Node: "
+	ostream << "Node: " << std::endl
 	<< "Name: " << this->name() << std::endl
 	<< "ID: " << this->id() << std::endl
 	<< "Parent ID: " << this->parentId() << std::endl

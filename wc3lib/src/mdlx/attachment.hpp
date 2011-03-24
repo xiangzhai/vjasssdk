@@ -22,6 +22,8 @@
 #define WC3LIB_MDLX_ATTACHMENT_HPP
 
 #include "object.hpp"
+#include "groupmdxblockmember.hpp"
+#include "attachments.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Attachment : public Object
+class Attachment : public GroupMdxBlockMember, public Object
 {
 	public:
 		Attachment(class Attachments *attachments);
@@ -41,13 +43,12 @@ class Attachment : public Object
 		long32 attachmentId() const;
 		class AttachmentVisibilities* visibilities() const;
 
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Attachments *m_attachments;
 		ascii m_path[0x100];
 		long32 m_unknown0;
 		long32 m_attachmentId;
@@ -56,7 +57,7 @@ class Attachment : public Object
 
 inline class Attachments* Attachment::attachments() const
 {
-	return this->m_attachments;
+	return dynamic_cast<class Attachments*>(this->m_parent);
 }
 
 inline const ascii* Attachment::path() const

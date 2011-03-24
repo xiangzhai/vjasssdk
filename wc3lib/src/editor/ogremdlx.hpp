@@ -92,6 +92,11 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
 
 		QString namePrefix() const;
+		/**
+		 * Searches in member list of \p block for member \p member and returns its corresponding id.
+		 * Id is always its index in member list (starting with 0).
+		 */
+		mdlx::long32 mdlxId(const mdlx::GroupMdxBlockMember &member, const mdlx::GroupMdxBlock &block) const;
 
 		Ogre::TexturePtr createTexture(const class Texture &texture) throw (class Exception);
 		Ogre::MaterialPtr createMaterial(const class Material &material) throw (class Exception);
@@ -102,6 +107,11 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 
 		Ogre::Camera* createCamera(const class Camera &camera) throw (class Exception);
 
+		/**
+		 * Collision shapes are required for "hit tests".
+		 */
+		Ogre::ManualObject* createCollisionShape(const class CollisionShape &collisionShape) throw (class Exception);
+		
 		Ogre::Node* createNode(const class Node &node);
 
 		/**

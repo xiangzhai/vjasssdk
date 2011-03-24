@@ -24,6 +24,8 @@
 #include <cstring>
 
 #include "mdlxproperty.hpp"
+#include "groupmdxblockmember.hpp"
+#include "textures.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Texture
+class Texture : public MdlxProperty, public GroupMdxBlockMember
 {
 	public:
 		enum Wrapping
@@ -44,11 +46,13 @@ class Texture
 		static const std::size_t texturePathSize = 0x100;
 
 		Texture(class Textures *textures);
-		virtual ~Texture();
 
 		class Textures* textures() const;
 		enum ReplaceableId replaceableId() const;
 		void setTexturePath(const ascii texturePath[texturePathSize]);
+		/**
+		 * \return Returns ASCII texture path with length \ref texturePathSize.
+		 */
 		const ascii* texturePath() const;
 		long32 unknown0() const;
 		enum Wrapping wrapping() const;
@@ -59,7 +63,6 @@ class Texture
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		class Textures *m_textures;
 		enum ReplaceableId m_replaceableId;
 		ascii m_texturePath[texturePathSize]; //(0x100 bytes)
 		long32 m_unknown0; //(0)
@@ -68,7 +71,7 @@ class Texture
 
 inline class Textures* Texture::textures() const
 {
-	return this->m_textures;
+	return dynamic_cast<class Textures*>(this->m_parent);
 }
 
 inline enum ReplaceableId Texture::replaceableId() const

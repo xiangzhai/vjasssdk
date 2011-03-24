@@ -23,8 +23,6 @@
 #include <boost/tokenizer.hpp>
 
 #include "bone.hpp"
-#include "bones.hpp"
-#include "../exception.hpp"
 #include "../utilities.hpp"
 
 namespace wc3lib
@@ -33,15 +31,11 @@ namespace wc3lib
 namespace mdlx
 {
 
-Bone::Bone(class Bones *bones) : Object(bones->mdlx())
+Bone::Bone(class Bones *bones) : Object(bones->mdlx()), GroupMdxBlockMember(bones)
 {
 }
 
-Bone::~Bone()
-{
-}
-
-std::streamsize Bone::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Bone::readMdl(istream &istream) throw (class Exception)
 {
 	std::string line;
 	std::getline(istream, line);
@@ -52,13 +46,13 @@ std::streamsize Bone::readMdl(std::istream &istream) throw (class Exception)
 	return 0;
 }
 
-std::streamsize Bone::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Bone::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	/// @todo FIXME
 	return 0;
 }
 
-std::streamsize Bone::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Bone::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = Object::readMdx(istream);
 	wc3lib::read(istream, this->m_geosetId, size);
@@ -67,7 +61,7 @@ std::streamsize Bone::readMdx(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Bone::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Bone::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = Object::writeMdx(ostream);
 	wc3lib::write(ostream, this->m_geosetId, size);

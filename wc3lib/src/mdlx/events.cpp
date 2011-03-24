@@ -27,7 +27,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Events::Events(class Mdlx *mdlx) : GroupMdxBlock("EVTS"), m_mdlx(mdlx)
+Events::Events(class Mdlx *mdlx) : GroupMdxBlock("EVTS", false), m_mdlx(mdlx)
 {
 }
 

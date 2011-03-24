@@ -100,59 +100,59 @@ struct BlendFileBlock
 };
 #endif
 
-std::streamsize Mdlx::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Mdlx::readMdl(istream &istream) throw (class Exception)
 {
-	this->m_version->readMdl(istream);
-	this->m_model->readMdl(istream);
-	this->m_sequences->readMdl(istream);
-	this->m_globalSequences->readMdl(istream);
-	this->m_materials->readMdl(istream);
-	this->m_textures->readMdl(istream);
-	this->m_textureAnimations->readMdl(istream);
-	this->m_geosets->readMdl(istream);
-	this->m_geosetAnimations->readMdl(istream);
-	this->m_bones->readMdl(istream);
-	this->m_lights->readMdl(istream);
-	this->m_helpers->readMdl(istream);
-	this->m_attachments->readMdl(istream);
-	this->m_pivotPoints->readMdl(istream);
-	this->m_particleEmitters->readMdl(istream);
-	this->m_particleEmitter2s->readMdl(istream);
-	this->m_ribbonEmitters->readMdl(istream);
-	this->m_cameras->readMdl(istream);
-	this->m_events->readMdl(istream);
-	this->m_collisionShapes->readMdl(istream);
+	std::streamsize size = this->m_version->readMdl(istream);
+	size += this->m_model->readMdl(istream);
+	size += this->m_sequences->readMdl(istream);
+	size += this->m_globalSequences->readMdl(istream);
+	size += this->m_materials->readMdl(istream);
+	size += this->m_textures->readMdl(istream);
+	size += this->m_textureAnimations->readMdl(istream);
+	size += this->m_geosets->readMdl(istream);
+	size += this->m_geosetAnimations->readMdl(istream);
+	size += this->m_bones->readMdl(istream);
+	size += this->m_lights->readMdl(istream);
+	size += this->m_helpers->readMdl(istream);
+	size += this->m_attachments->readMdl(istream);
+	size += this->m_pivotPoints->readMdl(istream);
+	size += this->m_particleEmitters->readMdl(istream);
+	size += this->m_particleEmitter2s->readMdl(istream);
+	size += this->m_ribbonEmitters->readMdl(istream);
+	size += this->m_cameras->readMdl(istream);
+	size += this->m_events->readMdl(istream);
+	size += this->m_collisionShapes->readMdl(istream);
 
-	return 0;
+	return size;
 }
 
-std::streamsize Mdlx::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mdlx::writeMdl(ostream &ostream) const throw (class Exception)
 {
-	this->m_version->writeMdl(ostream);
-	this->m_model->writeMdl(ostream);
-	this->m_sequences->writeMdl(ostream);
-	this->m_globalSequences->writeMdl(ostream);
-	this->m_materials->writeMdl(ostream);
-	this->m_textures->writeMdl(ostream);
-	this->m_textureAnimations->writeMdl(ostream);
-	this->m_geosets->writeMdl(ostream);
-	this->m_geosetAnimations->writeMdl(ostream);
-	this->m_bones->writeMdl(ostream);
-	this->m_lights->writeMdl(ostream);
-	this->m_helpers->writeMdl(ostream);
-	this->m_attachments->writeMdl(ostream);
-	this->m_pivotPoints->writeMdl(ostream);
-	this->m_particleEmitters->writeMdl(ostream);
-	this->m_particleEmitter2s->writeMdl(ostream);
-	this->m_ribbonEmitters->writeMdl(ostream);
-	this->m_cameras->writeMdl(ostream);
-	this->m_events->writeMdl(ostream);
-	this->m_collisionShapes->writeMdl(ostream);
+	std::streamsize size = this->m_version->writeMdl(ostream);
+	size += this->m_model->writeMdl(ostream);
+	size += this->m_sequences->writeMdl(ostream);
+	size += this->m_globalSequences->writeMdl(ostream);
+	size += this->m_materials->writeMdl(ostream);
+	size += this->m_textures->writeMdl(ostream);
+	size += this->m_textureAnimations->writeMdl(ostream);
+	size += this->m_geosets->writeMdl(ostream);
+	size += this->m_geosetAnimations->writeMdl(ostream);
+	size += this->m_bones->writeMdl(ostream);
+	size += this->m_lights->writeMdl(ostream);
+	size += this->m_helpers->writeMdl(ostream);
+	size += this->m_attachments->writeMdl(ostream);
+	size += this->m_pivotPoints->writeMdl(ostream);
+	size += this->m_particleEmitters->writeMdl(ostream);
+	size += this->m_particleEmitter2s->writeMdl(ostream);
+	size += this->m_ribbonEmitters->writeMdl(ostream);
+	size += this->m_cameras->writeMdl(ostream);
+	size += this->m_events->writeMdl(ostream);
+	size += this->m_collisionShapes->writeMdl(ostream);
 
-	return 0;
+	return size;
 }
 
-std::streamsize Mdlx::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Mdlx::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::readMdx(istream);
 	bytes += this->m_version->readMdx(istream);
@@ -179,7 +179,7 @@ std::streamsize Mdlx::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-std::streamsize Mdlx::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mdlx::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize bytes = MdxBlock::writeMdx(ostream);
 	bytes += this->m_version->writeMdx(ostream);
@@ -293,7 +293,7 @@ static BLENDBLOCKCALLBACK_RETURN blendBlockIterator(BLENDBLOCKCALLBACK_ARGS)
 }
 */
 
-std::streamsize Mdlx::readBlend(const std::string &filePath) throw (class Exception)
+std::streamsize Mdlx::readBlend(const boost::filesystem::path &filePath) throw (class Exception)
 {
 	/*
 	MY_FILETYPE *file = MY_OPEN_FOR_READ(filePath.c_str());
@@ -353,22 +353,22 @@ std::streamsize Mdlx::readBlend(const std::string &filePath) throw (class Except
 	return 0;
 }
 
-std::streamsize Mdlx::readBlend(std::istream &istream) throw (class Exception)
+std::streamsize Mdlx::readBlend(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Mdlx::writeBlend(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mdlx::writeBlend(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Mdlx::read3ds(std::istream &istream) throw (class Exception)
+std::streamsize Mdlx::read3ds(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Mdlx::write3ds(std::ostream &ostream) const throw (class Exception)
+std::streamsize Mdlx::write3ds(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }

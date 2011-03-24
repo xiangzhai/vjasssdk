@@ -51,6 +51,7 @@ ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
 	this->m_modelView->setMinimumSize(QSize(640, 480));
+	this->setAcceptDrops(true); // enable drag & drop
 	this->m_horizontalLayout->addWidget(this->m_modelView);
 	this->topLayout()->addLayout(this->m_horizontalLayout);
 	/*

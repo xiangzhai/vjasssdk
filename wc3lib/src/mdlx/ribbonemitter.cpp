@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "ribbonemitter.hpp"
-#include "ribbonemitters.hpp"
 #include "mdlxtranslations.hpp"
 #include "mdlxrotations.hpp"
 #include "mdlxscalings.hpp"
@@ -34,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : Node(ribbonEmitters->mdlx()), m_ribbonEmitters(ribbonEmitters), m_translations(new MdlxTranslations(ribbonEmitters->mdlx())), m_rotations(new MdlxRotations(ribbonEmitters->mdlx())), m_scalings(new MdlxScalings(ribbonEmitters->mdlx())), m_visibilities(new RibbonEmitterVisibilities(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
+RibbonEmitter::RibbonEmitter(class RibbonEmitters *ribbonEmitters) : Node(ribbonEmitters->mdlx()), GroupMdxBlockMember(ribbonEmitters), m_translations(new MdlxTranslations(ribbonEmitters->mdlx())), m_rotations(new MdlxRotations(ribbonEmitters->mdlx())), m_scalings(new MdlxScalings(ribbonEmitters->mdlx())), m_visibilities(new RibbonEmitterVisibilities(this)), m_heightsAbove(new RibbonEmitterHeightsAbove(this)), m_heightsBelow(new RibbonEmitterHeightsBelow(this))
 {
 }
 

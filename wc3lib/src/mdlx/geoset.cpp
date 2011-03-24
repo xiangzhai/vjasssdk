@@ -44,7 +44,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Geoset::Geoset(class Geosets *geosets) : m_geosets(geosets), m_vertices(new Vertices(this)), m_normals(new Normals(this)),  m_primitveTypes(new PrimitiveTypes(this)), m_primitiveSizes(new PrimitiveSizes(this)),  m_primitiveVertices(new PrimitiveVertices(this)),  m_groupVertices(new GroupVertices(this)), m_matrixGroupCounts(new MatrixGroupCounts(this)),  m_matrices(new Matrices(this)), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_texturePatches(new TexturePatches(this)), m_textureVertices(new TextureVertices(this))
+Geoset::Geoset(class Geosets *geosets) : GroupMdxBlockMember(geosets), m_vertices(new Vertices(this)), m_normals(new Normals(this)),  m_primitveTypes(new PrimitiveTypes(this)), m_primitiveSizes(new PrimitiveSizes(this)),  m_primitiveVertices(new PrimitiveVertices(this)),  m_groupVertices(new GroupVertices(this)), m_matrixGroupCounts(new MatrixGroupCounts(this)),  m_matrices(new Matrices(this)), m_materialId(0),  m_selectionGroup(0),  m_selectable(Geoset::None), m_texturePatches(new TexturePatches(this)), m_textureVertices(new TextureVertices(this))
 {
 }
 
@@ -65,24 +65,21 @@ Geoset::~Geoset()
 	delete this->m_textureVertices;
 }
 
-std::streamsize Geoset::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Geoset::readMdl(istream &istream) throw (class Exception)
 {
 	throw Exception(_("Geoset::readMdl: Not implemented yet."));
 }
 
-std::streamsize Geoset::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Geoset::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	throw Exception(_("Geoset::writeMdl: Not implemented yet."));
 }
 
-std::streamsize Geoset::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Geoset::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
-	long32 includingByteCount; // Magos specification says including byte count!
-	wc3lib::read(istream, includingByteCount, size);
-
-	if (includingByteCount - sizeof(includingByteCount) <= 0)
-		throw Exception(boost::format(_("Geoset: To small including byte count (%1%).")) % includingByteCount);
+	long32 nbytesi; // Magos specification says including byte count!
+	wc3lib::read(istream, nbytesi, size);
 
 	size += this->m_vertices->readMdx(istream);
 	size += this->m_normals->readMdx(istream);
@@ -109,17 +106,42 @@ std::streamsize Geoset::readMdx(std::istream &istream) throw (class Exception)
 	size += this->m_texturePatches->readMdx(istream);
 	size += this->m_textureVertices->readMdx(istream);
 
-	if (includingByteCount != size)
-		throw Exception(boost::format(_("Geoset: Expected byte count %1% is not equal to read size %2%.")) % includingByteCount % size);
+	if (nbytesi != size)
+		throw Exception(boost::format(_("Geoset: Expected byte count %1% is not equal to read size %2%.")) % nbytesi % size);
 
 	return size;
 }
 
 std::streamsize Geoset::writeMdx(std::ostream &ostream) const throw (class Exception)
 {
-	throw Exception(_("Geoset::writeMdx: Not implemented yet."));
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
+	std::streamsize size = 0;
+	size += this->m_vertices->writeMdx(ostream);
+	size += this->m_normals->writeMdx(ostream);
+	size += this->m_primitveTypes->writeMdx(ostream);
+	size += this->m_primitiveSizes->writeMdx(ostream);
+	size += this->m_primitiveVertices->writeMdx(ostream);
+	size += this->m_groupVertices->writeMdx(ostream);
+	size += this->m_matrixGroupCounts->writeMdx(ostream);
+	size += this->m_matrices->writeMdx(ostream);
+	wc3lib::write(ostream, this->m_materialId, size);
+	wc3lib::write(ostream, this->m_selectionGroup, size);
+	wc3lib::write(ostream, this->m_selectable, size);
+	size += Bounds::writeMdx(ostream);
+	wc3lib::write(ostream, static_cast<const long32>(this->ganimations().size()), size);
 
-	return 0;
+	BOOST_FOREACH(const class Ganimation *ganimation, this->ganimations())
+		size += ganimation->writeMdx(ostream);
+	
+	size += this->m_texturePatches->writeMdx(ostream);
+	size += this->m_textureVertices->writeMdx(ostream);
+
+	long32 nbytesi = size; // Magos specification says including byte count!
+	writeByteCount(ostream, nbytesi, position, size, true);
+
+	return size;
 }
 
 }

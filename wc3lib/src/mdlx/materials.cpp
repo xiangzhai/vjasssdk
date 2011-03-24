@@ -18,13 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/cast.hpp>
-#include <boost/foreach.hpp>
-
 #include "materials.hpp"
 #include "material.hpp"
-#include "../internationalisation.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -32,65 +27,33 @@ namespace wc3lib
 namespace mdlx
 {
 
-Materials::Materials(class Mdlx *mdlx) : MdxBlock("MTLS", true), m_mdlx(mdlx)
+Materials::Materials(class Mdlx *mdlx) : GroupMdxBlock("MTLS", false, true), m_mdlx(mdlx)
 {
 }
 
-Materials::~Materials()
-{
-}
-
-std::streamsize Materials::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Materials::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Materials::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Materials::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize Materials::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Materials::readMdx(istream &istream) throw (class Exception)
 {
-	std::streamsize size = MdxBlock::readMdx(istream);
-
-	if (size == 0)
-		return 0;
-
-	long32 nbytes = 0; //nbytes
-	wc3lib::read(istream, nbytes, size);
-
-	while (nbytes > 0)
-	{
-		class Material *material = new Material(this);
-		std::streamsize readSize = material->readMdx(istream);
-
-		if (readSize == 0)
-			throw Exception(_("Materials: 0 byte material"));
-
-		nbytes -= boost::numeric_cast<long32>(readSize);
-		size += readSize;
-		this->m_materials.push_back(material);
-	}
-
-	return size;
+	return GroupMdxBlock::readMdx(istream);
 }
 
-std::streamsize Materials::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Materials::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streamsize size = MdxBlock::writeMdx(ostream);
-	std::streampos position = ostream.tellp();
-	ostream.seekp(sizeof(long32), std::ios_base::cur);
+	return GroupMdxBlock::writeMdx(ostream);
+}
 
-	BOOST_FOREACH(const class Material *material, this->m_materials)
-		size += material->writeMdx(ostream);
-
-	std::streampos currentPosition = ostream.tellp();
-	ostream.seekp(position);
-	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&size), size);
-	ostream.seekp(currentPosition);
-
-	return size;
+class GroupMdxBlockMember* Materials::createNewMember()
+{
+	return new Material(this);
 }
 
 }

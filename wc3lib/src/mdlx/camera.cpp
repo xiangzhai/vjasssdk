@@ -21,7 +21,6 @@
 #include <boost/format.hpp>
 
 #include "camera.hpp"
-#include "cameras.hpp"
 #include "cameratranslations.hpp"
 #include "camerarotationlengths.hpp"
 #include "cameratargettranslations.hpp"
@@ -34,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Camera::Camera(class Cameras *cameras) : m_cameras(cameras), m_translations(new CameraTranslations(this)), m_rotationLengths(new CameraRotationLengths(this)), m_targetTranslations(new CameraTargetTranslations(this))
+Camera::Camera(class Cameras *cameras) : GroupMdxBlockMember(cameras), m_translations(new CameraTranslations(this)), m_rotationLengths(new CameraRotationLengths(this)), m_targetTranslations(new CameraTargetTranslations(this))
 {
 }
 
@@ -45,15 +44,15 @@ Camera::~Camera()
 	delete this->m_targetTranslations;
 }
 
-void Camera::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize Camera::readMdl(istream &istream) throw (class Exception)
 {
 }
 
-void Camera::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize Camera::writeMdl(ostream &ostream) const throw (class Exception)
 {
 }
 
-std::streamsize Camera::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize Camera::readMdx(istream &istream) throw (class Exception)
 {
 	long32 nbytesi;
 	std::streamsize bytes = 0;
@@ -75,10 +74,11 @@ std::streamsize Camera::readMdx(std::istream &istream) throw (class Exception)
 	return bytes;
 }
 
-std::streamsize Camera::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Camera::writeMdx(ostream &ostream) const throw (class Exception)
 {
-	std::streampos position = ostream.tellp();
-	ostream.seekp(sizeof(long32), std::ios_base::cur);
+	std::streampos position;
+	skipByteCount<long32>(ostream, position);
+	
 	std::streamsize bytes = 0;
 	wc3lib::write(ostream, this->m_name, bytes);
 	wc3lib::write(ostream, this->m_position, bytes);
@@ -90,11 +90,9 @@ std::streamsize Camera::writeMdx(std::ostream &ostream) const throw (class Excep
 	bytes += this->m_rotationLengths->writeMdx(ostream);
 	bytes += this->m_targetTranslations->writeMdx(ostream);
 	//(BKCT) ?????????????????????????????????????????????????????????????????
-	std::streampos newPosition = ostream.tellp();
-	ostream.seekp(position);
-	long32 nbytesi = bytes + sizeof(long32);
-	wc3lib::write(ostream, nbytesi, bytes);
-	ostream.seekp(newPosition);
+	
+	long32 nbytesi = bytes;
+	writeByteCount(ostream, nbytesi, position, bytes, true);
 
 	return bytes;
 }

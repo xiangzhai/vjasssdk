@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
 #define WC3LIB_MDLX_PARTICLEEMITTER2S_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,24 +29,22 @@ namespace wc3lib
 namespace mdlx
 {
 
-/// PRE2
-class ParticleEmitter2s : public MdxBlock
+/// Tag PRE2.
+class ParticleEmitter2s : public GroupMdxBlock
 {
 	public:
 		ParticleEmitter2s(class Mdlx *mdlx);
-		virtual ~ParticleEmitter2s();
 
 		class Mdlx* mdlx() const;
 		const std::list<class ParticleEmitter2*>& particleEmitters() const;
-
-		virtual void readMdl(std::istream &istream) throw (class Exception);
-		virtual void writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
+		
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
 
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class ParticleEmitter2*> m_particleEmitters;
 };
 
 inline class Mdlx* ParticleEmitter2s::mdlx() const
@@ -58,7 +54,7 @@ inline class Mdlx* ParticleEmitter2s::mdlx() const
 
 inline const std::list<class ParticleEmitter2*>& ParticleEmitter2s::particleEmitters() const
 {
-	return this->m_particleEmitters;
+	return *reinterpret_cast<const std::list<class ParticleEmitter2*>*>(&this->m_members);
 }
 
 }

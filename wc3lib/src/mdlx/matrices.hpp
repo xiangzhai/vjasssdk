@@ -21,6 +21,7 @@
 #ifndef WC3LIB_MDLX_MATRICES_HPP
 #define WC3LIB_MDLX_MATRICES_HPP
 
+#include "mdlxproperty.hpp"
 #include "groupmdxblock.hpp"
 
 namespace wc3lib
@@ -30,7 +31,7 @@ namespace mdlx
 {
 
 /// tag MATS
-class Matrices : public GroupMdxBlock
+class Matrices : public MdlxProperty, public GroupMdxBlock
 {
 	public:
 		Matrices(class Geoset *geoset);
@@ -41,6 +42,8 @@ class Matrices : public GroupMdxBlock
 
 		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

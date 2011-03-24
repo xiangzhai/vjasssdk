@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <boost/foreach.hpp>
-
 #include "attachments.hpp"
 #include "attachment.hpp"
 
@@ -29,50 +27,23 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachments::Attachments(class Mdlx *mdlx) : MdxBlock("ATCH"), m_mdlx(mdlx)
+Attachments::Attachments(class Mdlx *mdlx) : GroupMdxBlock("ATCH", false), m_mdlx(mdlx)
 {
 }
 
-Attachments::~Attachments()
-{
-	BOOST_FOREACH(class Attachment *attachment, this->m_attachments)
-		delete attachment;
-}
-
-void Attachments::readMdl(std::istream &istream) throw (class Exception)
-{
-}
-
-void Attachments::writeMdl(std::ostream &ostream) const throw (class Exception)
-{
-}
-
-std::streamsize Attachments::readMdx(std::istream &istream) throw (class Exception)
-{
-	std::streamsize bytes = MdxBlock::readMdx(istream);
-	
-	if (bytes == 0)
-		return 0;
-	
-	long32 nbytes;
-	istream.read(reinterpret_cast<char*>(&nbytes), sizeof(nbytes));
-	bytes += istream.gcount();
-	
-	while (nbytes > 0)
-	{
-		class Attachment *attachment = new Attachment(this);
-		long32 readBytes = attachment->readMdx(istream);
-		nbytes -= readBytes;
-		bytes += readBytes;
-		this->m_attachments.push_back(attachment);
-	}
-	
-	return bytes;
-}
-
-std::streamsize Attachments::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize Attachments::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
+}
+
+std::streamsize Attachments::writeMdl(ostream &ostream) const throw (class Exception)
+{
+	return 0;
+}
+
+class GroupMdxBlockMember* Attachments::createNewMember()
+{
+	return new Attachment(this);
 }
 
 }

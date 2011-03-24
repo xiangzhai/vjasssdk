@@ -21,9 +21,7 @@
 #ifndef WC3LIB_MDLX_BONES_HPP
 #define WC3LIB_MDLX_BONES_HPP
 
-#include <list>
-
-#include "mdxblock.hpp"
+#include "groupmdxblock.hpp"
 
 namespace wc3lib
 {
@@ -31,24 +29,22 @@ namespace wc3lib
 namespace mdlx
 {
 
-/// BONE
-class Bones : public MdxBlock
+/// Tag BONE.
+class Bones : public GroupMdxBlock
 {
 	public:
 		Bones(class Mdlx *mdlx);
-		virtual ~Bones();
 
 		class Mdlx* mdlx() const;
 		const std::list<class Bone*>& bones() const;
-
-		virtual std::streamsize readMdl(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(std::ostream &ostream) const throw (class Exception);
-		virtual std::streamsize readMdx(std::istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdx(std::ostream &ostream) const throw (class Exception);
-
+		
+		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		
 	protected:
+		virtual class GroupMdxBlockMember* createNewMember();
+		
 		class Mdlx *m_mdlx;
-		std::list<class Bone*> m_bones;
 };
 
 inline class Mdlx* Bones::mdlx() const
@@ -58,7 +54,7 @@ inline class Mdlx* Bones::mdlx() const
 
 inline const std::list<class Bone*>& Bones::bones() const
 {
-	return this->m_bones;
+	return *reinterpret_cast<const std::list<class Bone*>*>(&this->m_members);
 }
 
 }

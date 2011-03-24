@@ -41,17 +41,17 @@ EventTracks::~EventTracks()
 		delete track;
 }
 
-std::streamsize EventTracks::readMdl(std::istream &istream) throw (class Exception)
+std::streamsize EventTracks::readMdl(istream &istream) throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize EventTracks::writeMdl(std::ostream &ostream) const throw (class Exception)
+std::streamsize EventTracks::writeMdl(ostream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize EventTracks::readMdx(std::istream &istream) throw (class Exception)
+std::streamsize EventTracks::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = MdxBlock::readMdx(istream);
 	long32 number;
@@ -68,7 +68,7 @@ std::streamsize EventTracks::readMdx(std::istream &istream) throw (class Excepti
 	return size;
 }
 
-std::streamsize EventTracks::writeMdx(std::ostream &ostream) const throw (class Exception)
+std::streamsize EventTracks::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = MdxBlock::writeMdx(ostream);
 	long32 number = boost::numeric_cast<long32>(this->m_tracks.size());
