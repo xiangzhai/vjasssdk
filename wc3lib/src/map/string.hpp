@@ -18,12 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MAP_STRING_H
-#define WC3LIB_MAP_STRING_H
+#ifndef WC3LIB_MAP_STRING_HPP
+#define WC3LIB_MAP_STRING_HPP
 
-#include <string>
 #include <functional>
-#include <sstream>
 #include <list>
 
 #include <boost/filesystem.hpp>
@@ -57,14 +55,14 @@ class String
 
 		static IdType id(const class String &string)
 		{
-			std::stringstream sstream(string.m_idString.substr(7));
+			stringstream sstream(string.m_idString.substr(7));
 			IdType result;
 			sstream >> result;
 
 			return result;
 		}
 
-		String(const std::string &idString, const std::string &defaultString, const std::string &valueString) : m_idString(idString), m_defaultString(defaultString), m_valueString(valueString), m_usageData(std::list<struct UsageData*>())
+		String(const string &idString, const string &defaultString, const string &valueString) : m_idString(idString), m_defaultString(defaultString), m_valueString(valueString), m_usageData(std::list<struct UsageData*>())
 		{
 		};
 
@@ -82,15 +80,15 @@ class String
 			this->m_usageData.push_back(usageData);
 		}
 
-		const std::string& idString() const
+		const string& idString() const
 		{
 			return this->m_idString;
 		};
-		const std::string& defaultString() const
+		const string& defaultString() const
 		{
 			return this->m_defaultString;
 		};
-		const std::string& valueString() const
+		const string& valueString() const
 		{
 			return this->m_valueString;
 		};
@@ -104,9 +102,9 @@ class String
 		}
 
 	protected:
-		std::string m_idString;
-		std::string m_defaultString;
-		std::string m_valueString;
+		string m_idString;
+		string m_defaultString;
+		string m_valueString;
 		std::list<struct UsageData*> m_usageData;
 };
 

@@ -23,8 +23,8 @@
 
 #include <cstring>
 
-#include "mdlxproperty.hpp"
 #include "groupmdxblockmember.hpp"
+#include "mdlxproperty.hpp"
 #include "textures.hpp"
 
 namespace wc3lib
@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Texture : public MdlxProperty, public GroupMdxBlockMember
+class Texture : public GroupMdxBlockMember, public MdlxProperty
 {
 	public:
 		enum Wrapping
@@ -71,7 +71,7 @@ class Texture : public MdlxProperty, public GroupMdxBlockMember
 
 inline class Textures* Texture::textures() const
 {
-	return dynamic_cast<class Textures*>(this->m_parent);
+	return boost::polymorphic_cast<class Textures*>(this->m_parent);
 }
 
 inline enum ReplaceableId Texture::replaceableId() const

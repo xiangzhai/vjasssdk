@@ -27,14 +27,14 @@ namespace wc3lib
 namespace map
 {
 
-TriggerFunctionParameter::TriggerFunctionParameter(class TriggerFunction *function) : m_function(function), m_type(TriggerFunctionParameter::Preset),  m_value(), m_unknown0(0), m_unknown1(0)
+TriggerFunctionParameter::TriggerFunctionParameter(class TriggerFunction *function) : m_function(function), m_type(TriggerFunctionParameter::Preset), m_value(), m_unknown0(0), m_unknown1(0)
 {
 }
 
 
-std::streamsize TriggerFunctionParameter::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize TriggerFunctionParameter::read(InputStream &istream) throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	int32 type;
 	wc3lib::read(istream, type, size);
 	this->m_type = static_cast<enum Type>(type);
@@ -46,9 +46,9 @@ std::streamsize TriggerFunctionParameter::read(std::basic_istream<byte> &istream
 }
 
 
-std::streamsize TriggerFunctionParameter::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize TriggerFunctionParameter::write(OutputStream &ostream) const throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	int32 type = static_cast<int32>(this->m_type);
 	wc3lib::write(ostream, type, size);
 	writeString(ostream, this->m_value, size);

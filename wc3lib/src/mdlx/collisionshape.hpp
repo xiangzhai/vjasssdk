@@ -67,7 +67,7 @@ class CollisionShape : public Object, public GroupMdxBlockMember
 
 inline class CollisionShapes* CollisionShape::collisionShapes() const
 {
-	return dynamic_cast<class CollisionShapes*>(this->m_parent);
+	return boost::polymorphic_cast<class CollisionShapes*>(this->parent());
 }
 
 inline enum CollisionShape::Shape CollisionShape::shape() const

@@ -31,11 +31,11 @@ namespace map
 {
 
 /// \todo Implement InfoX for expansion.
-class Info : public Format<byte>
+class Info : public Format
 {
 	public:
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		static const int32 currentFileVersion = 13;
 		static const string fileName = "war3map.i";

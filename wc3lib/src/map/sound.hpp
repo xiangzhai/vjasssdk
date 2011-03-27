@@ -21,7 +21,6 @@
 #ifndef WC3LIB_MAP_SOUND_HPP
 #define WC3LIB_MAP_SOUND_HPP
 
-#include "../format.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -30,7 +29,7 @@ namespace wc3lib
 namespace map
 {
 
-class Sound : public Format<byte>
+class Sound : public Format
 {
 	public:
 		enum EAX
@@ -72,8 +71,8 @@ class Sound : public Format<byte>
 			Fire = 14
 		};
 
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 	protected:
 		string m_name; // gg_snd_HumanGlueScreenLoop1

@@ -63,7 +63,7 @@ std::streamsize W3m::read(class mpq::Mpq *mpq) throw (class Exception)
 	return 0;
 }
 
-std::streamsize W3m::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize W3m::read(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = this->readHeader(istream);
 /*
@@ -95,7 +95,7 @@ std::streamsize W3m::read(std::basic_istream<byte> &istream) throw (class Except
 	return size;
 }
 
-std::streamsize W3m::read(std::basic_istream<byte> &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception)
+std::streamsize W3m::read(InputStream &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception)
 {
 	std::streamsize result = this->readHeader(headerStream);
 	boost::filesystem::path path;
@@ -109,12 +109,12 @@ std::streamsize W3m::read(std::basic_istream<byte> &headerStream, const std::lis
 	return result;
 }
 
-std::streamsize W3m::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize W3m::write(OutputStream &ostream) const throw (class Exception)
 {
 	return 0;
 }
 
-std::streamsize W3m::readHeader(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize W3m::readHeader(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	struct Header header;
@@ -129,7 +129,7 @@ std::streamsize W3m::readHeader(std::basic_istream<byte> &istream) throw (class 
 	return size;
 }
 
-std::streamsize W3m::readSignature(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize W3m::readSignature(InputStream &istream) throw (class Exception)
 {
 	std::streamsize result = 0;
 	this->m_hasSignature = false;
@@ -152,7 +152,7 @@ std::streamsize W3m::readSignature(std::basic_istream<byte> &istream) throw (cla
 	return result;
 }
 
-bool W3m::findPath(const std::list<boost::filesystem::path> &paths, boost::filesystem::path &path, const std::string &fileName)
+bool W3m::findPath(const std::list<boost::filesystem::path> &paths, boost::filesystem::path &path, const string &fileName)
 {
 	BOOST_FOREACH(const boost::filesystem::path iteratorPath, paths)
 	{

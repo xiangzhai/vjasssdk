@@ -75,7 +75,7 @@ std::streamsize Shadow::write(std::basic_ostream<byte> &ostream) const throw (cl
 	return size;
 }
 
-const char* Shadow::fileName() const
+const char8* Shadow::fileName() const
 {
 	return "war3map.shd";
 }

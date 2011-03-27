@@ -21,10 +21,7 @@
 #ifndef WC3LIB_MAP_TRIGGERCATEGORY_HPP
 #define WC3LIB_MAP_TRIGGERCATEGORY_HPP
 
-#include <string>
-
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -35,24 +32,24 @@ namespace map
 /**
 * @see TriggerCategoryEx
 */
-class TriggerCategory : public Format<byte>
+class TriggerCategory : public Format
 {
 	public:
 		TriggerCategory(class Triggers *triggers);
 
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		int32 index() const;
-		const std::string& name() const;
+		const string& name() const;
 
 	protected:
 		class Triggers *m_triggers;
 		int32 m_index;
-		std::string m_name;
+		string m_name;
 };
 
-inline const std::string& TriggerCategory::name() const
+inline const string& TriggerCategory::name() const
 {
 	return this->m_name;
 }

@@ -32,18 +32,18 @@ TriggerCategory::TriggerCategory(class Triggers *triggers) : m_triggers(triggers
 {
 }
 
-std::streamsize TriggerCategory::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize TriggerCategory::read(InputStream &istream) throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_index, size);
 	readString(istream, this->m_name, size);
 
 	return size;
 }
 
-std::streamsize TriggerCategory::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize TriggerCategory::write(OutputStream &ostream) const throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_index, size);
 	writeString(ostream, this->m_name, size);
 

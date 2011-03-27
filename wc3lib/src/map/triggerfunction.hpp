@@ -24,7 +24,6 @@
 #include <list>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -35,7 +34,7 @@ namespace map
 /**
 * @see TriggerFunctionEx
 */
-class TriggerFunction : public Format<byte>
+class TriggerFunction : public Format
 {
 	public:
 		enum Type
@@ -46,9 +45,10 @@ class TriggerFunction : public Format<byte>
 		};
 
 		TriggerFunction(class Trigger *trigger);
+		virtual ~TriggerFunction();
 
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 
 	protected:

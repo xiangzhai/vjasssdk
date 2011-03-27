@@ -34,20 +34,17 @@ namespace wc3lib
 namespace map
 {
 
-const int32 Triggers::version = 4;
-const string Triggers::fileName = "war3map.wtg";
-
 Triggers::Triggers(class W3m *w3m) : m_w3m(w3m)
 {
 }
 
-std::streamsize Triggers::read(std::istream &istream) throw (class Exception)
+std::streamsize Triggers::read(InputStream &istream) throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_version, size);
 
-	if (this->m_version != Triggers::version)
-		throw Exception(boost::format(_("Triggers: Version %1% is not supported (version %2% only).")) % this->m_version % Triggers::version);
+	if (this->m_version != latestFileVersion())
+		throw Exception(boost::format(_("Triggers: Version %1% is not supported (version %2% only).")) % this->m_version % latestFileVersion());
 
 	int32 number;
 	wc3lib::read(istream, number, size);
@@ -81,9 +78,9 @@ std::streamsize Triggers::read(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Triggers::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize Triggers::write(OutputStream &ostream) const throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_version, size);
 	int32 number = this->m_categories.size();
 	wc3lib::write(ostream, number, size);

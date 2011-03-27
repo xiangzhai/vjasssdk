@@ -26,16 +26,35 @@
 namespace wc3lib
 {
 
-namespace slk
-{
-
-class Data;
-
-}
-
 namespace editor
 {
 
+/**
+ * Supports usual tabbed object editors:
+ * <ul>
+ * <li>Unit Editor</li>
+ * <li>Doodad Editor</li>
+ * <li>Destructible Editor</li>
+ * <li>Item Editor</li>
+ * <li>Ability Editor</li>
+ * <li>Buff Editor</li>
+ * <li>Upgrade Editor</li>
+ * </ul>
+ * Additionally it supports newly added object editors (SLK-based):
+ * <ul>
+ * <li>Model Entry Editor</li>
+ * <li>Skin Editor</li>
+ * <li>Uberslpat Editor</li>
+ * <li>Slpat Editor</li>
+ * <li>Spawn Editor</li>
+ * <li>Lightning Effect Editor</li>
+ * <li>Cliff Type Editor</li>
+ * <li>Terrain Editor</li>
+ * <li>Water Editor</li>
+ * <li>Weather Editor</li>
+ * <li>Sound Entry Editor</li>
+ * </ul>
+ */
 class ObjectEditor : public Module
 {
 	public:
@@ -49,8 +68,6 @@ class ObjectEditor : public Module
 		virtual void createWindowsActions(class KMenu *menu);
 		virtual void createToolButtons(class KToolBar *toolBar);
 		virtual class SettingsInterface* settings();
-
-		class slk::Data *m_data;
 };
 
 }

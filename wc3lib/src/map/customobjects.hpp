@@ -40,7 +40,7 @@ class CustomObjects : public CustomUnits
 		{
 			Units,
 			Items,
-			Destructables,
+			Destructibles,
 			Doodads,
 			Abilities,
 			Buffs,
@@ -86,7 +86,7 @@ class CustomObjects : public CustomUnits
 		CustomObjects(Type type);
 		Type type() const;
 
-		virtual const char* fileName() const;
+		virtual const char8* fileName() const;
 
 	protected:
 		virtual Unit* createUnit() const;

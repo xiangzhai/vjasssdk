@@ -33,7 +33,7 @@ namespace map
 /**
 * @see TriggerFunctionParameterEx
 */
-class TriggerFunctionParameter : public Format<byte>
+class TriggerFunctionParameter : public Format
 {
 	public:
 		enum Type
@@ -45,8 +45,8 @@ class TriggerFunctionParameter : public Format<byte>
 
 		TriggerFunctionParameter(class TriggerFunction *function);
 
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 	protected:
 		class TriggerFunction *m_function;

@@ -41,7 +41,7 @@ CustomObjects::Modification::Modification(CustomObjects::Type type) : m_type(typ
 {
 }
 
-std::streamsize CustomObjects::Modification::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize CustomObjects::Modification::read(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = readData(istream);
 
@@ -57,7 +57,7 @@ std::streamsize CustomObjects::Modification::read(std::basic_istream<byte> &istr
 	return size;
 }
 
-std::streamsize CustomObjects::Modification::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize CustomObjects::Modification::write(OutputStream &ostream) const throw (class Exception)
 {
 	std::streamsize size = writeData(ostream);
 
@@ -77,9 +77,9 @@ CustomObjects::CustomObjects(CustomObjects::Type type) : m_type(type)
 {
 }
 
-const char* CustomObjects::fileName() const
+const char8* CustomObjects::fileName() const
 {
-	std::string name = "war3map.";
+	string name = "war3map.";
 
 	switch (this->type())
 	{
@@ -89,7 +89,7 @@ const char* CustomObjects::fileName() const
 		case Items:
 			return name.append("w3t").c_str();
 
-		case Destructables:
+		case Destructibles:
 			return name.append("w3b").c_str();
 
 		case Doodads:

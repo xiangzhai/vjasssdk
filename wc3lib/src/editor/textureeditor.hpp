@@ -22,6 +22,7 @@
 #define WC3LIB_EDITOR_TEXTUREEDITOR_HPP
 
 #include <kurl.h>
+#include <kaction.h>
 
 #include "module.hpp"
 #include "ui/ui_textureeditor.h"
@@ -32,6 +33,7 @@ namespace wc3lib
 namespace editor
 {
 
+/// \todo Needs item list from object editor (skin meta data).
 class TextureEditor : public Module, protected Ui::TextureEditor
 {
 	Q_OBJECT
@@ -39,6 +41,10 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 	public:
 		TextureEditor(class Editor *editor);
 		virtual ~TextureEditor();
+		
+		bool showsAlphaChannel() const;
+		bool showsTransparency() const;
+		qreal factor() const;
 
 	public slots:
 		void openFile();
@@ -62,6 +68,8 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 		void massConverter();
 
 	protected:
+		void refreshImage();
+		
 		virtual void createFileActions(class KMenu *menu);
 		virtual void createEditActions(class KMenu *menu);
 		virtual void createMenus(class KMenuBar *menuBar);
@@ -70,9 +78,29 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 		virtual class SettingsInterface* settings();
 
 		QImage *m_image;
+		bool m_showsAlphaChannel;
+		bool m_showsTransparency;
 		qreal m_factor;
 		KUrl m_recentUrl;
+		
+		KAction *m_showAlphaChannelAction;
+		KAction *m_showTransparencyAction;
 };
+
+inline bool TextureEditor::showsAlphaChannel() const
+{
+	return m_showsAlphaChannel;
+}
+
+inline bool TextureEditor::showsTransparency() const
+{
+	return m_showsTransparency;
+}
+
+inline qreal TextureEditor::factor() const
+{
+	return m_factor;
+}
 
 }
 

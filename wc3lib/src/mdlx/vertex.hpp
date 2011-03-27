@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_VERTEX_HPP
 
 #include "groupmdxblockmember.hpp"
+#include "mdlxproperty.hpp"
 #include "vertices.hpp"
 
 namespace wc3lib
@@ -30,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Vertex : public GroupMdxBlockMember
+class Vertex : public GroupMdxBlockMember, public MdlxProperty
 {
 	public:
 		Vertex(class Vertices *vertices);
@@ -50,7 +51,7 @@ class Vertex : public GroupMdxBlockMember
 
 inline class Vertices* Vertex::vertices() const
 {
-	return dynamic_cast<class Vertices*>(this->m_parent);
+	return boost::polymorphic_cast<class Vertices*>(this->parent());
 }
 
 inline const struct VertexData& Vertex::vertexData() const

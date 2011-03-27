@@ -35,23 +35,33 @@ namespace map
 /**
 * "war3map.w3r" file usually contains rects of map.
 */
-class Rects : public Format<byte>
+class Rects : public Format
 {
 	public:
 		typedef std::pair<int32, class Rect*> RectType;
 
-		static const int32 version;
-		static const string fileName;
-
 		Rects(class W3m *w3m);
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
+		
+		virtual const char8* fileName() const;
+		virtual int32 latestFileVersion() const;
 
 	protected:
 		class W3m *m_w3m;
 		int32 m_version;
 		std::map<int32, class Rect*> m_rects;
 };
+
+inline const char8* Rects::fileName() const
+{
+	return "war3map.w3r";
+}
+
+inline int32 Rects::latestFileVersion() const
+{
+	return 5;
+}
 
 }
 

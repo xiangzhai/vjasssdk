@@ -203,6 +203,10 @@ Editor::~Editor()
 {
 	this->writeSettings();
 	// do not delete allocated sub widgets (parent system of Qt already considers)
+	
+	// delete resources
+	BOOST_FOREACH(ResourceValueType value, this->m_resources)
+		delete value.second;
 }
 
 Ogre::Image* Editor::blpToOgre(const KUrl &url, const QString &format) const throw (class Exception)

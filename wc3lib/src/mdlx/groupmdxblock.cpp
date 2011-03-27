@@ -48,6 +48,8 @@ std::streamsize GroupMdxBlock::readMdx(istream &istream) throw (class Exception)
 
 	if (size == 0)
 		return 0;
+	
+	std::cout << "Test BLOCK member size: " << members().size() << std::endl;
 
 	if (usesCounter())
 	{
@@ -65,6 +67,7 @@ std::streamsize GroupMdxBlock::readMdx(istream &istream) throw (class Exception)
 	{
 		long32 nbytes = 0;
 		wc3lib::read(istream, nbytes, size);
+		std::cout << "NBytes of group: " << nbytes << std::endl;
 	
 		while (nbytes > 0)
 		{
@@ -73,6 +76,7 @@ std::streamsize GroupMdxBlock::readMdx(istream &istream) throw (class Exception)
 			this->m_members.push_back(member);
 			nbytes -= boost::numeric_cast<long32>(readSize);
 			size += readSize;
+			std::cout << "Read one member and remaining bytes are " << nbytes << std::endl;
 		}
 	}
 	

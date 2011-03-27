@@ -35,11 +35,16 @@ namespace mdlx
 class Camera : public MdlxProperty, public GroupMdxBlockMember
 {
 	public:
+		static const std::size_t nameSize = 0x50;
+		
 		Camera(class Cameras *cameras);
 		virtual ~Camera();
 
 		class Cameras* cameras() const;
 
+		/**
+		 * \return Returns name with length of \ref Camera::nameSize.
+		 */
 		const ascii* name() const;
 		const struct VertexData& position() const;
 		float32 fieldOfView() const;
@@ -57,7 +62,7 @@ class Camera : public MdlxProperty, public GroupMdxBlockMember
 
 	protected:
 		//long nbytesi;
-		ascii m_name[0x50]; //(0x50)
+		ascii m_name[nameSize]; //(0x50)
 		struct VertexData m_position;
 		float32 m_fieldOfView;
 		float32 m_farClip;
@@ -71,7 +76,7 @@ class Camera : public MdlxProperty, public GroupMdxBlockMember
 
 inline class Cameras* Camera::cameras() const
 {
-	return dynamic_cast<class Cameras*>(this->m_parent);
+	return boost::polymorphic_cast<class Cameras*>(this->parent());
 }
 
 inline const ascii* Camera::name() const

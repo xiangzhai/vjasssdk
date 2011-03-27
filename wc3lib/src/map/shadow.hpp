@@ -43,7 +43,7 @@ class W3m;
 * @note You should refresh the shadow map if you change map size!
 * @see Tilepoint, Environment
 */
-class Shadow : public Format<byte>
+class Shadow : public Format
 {
 	public:
 		class Key : public std::valarray<int32>
@@ -71,10 +71,10 @@ class Shadow : public Format<byte>
 		Shadow(class W3m *w3m);
 		~Shadow();
 
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
-		virtual const char* fileName() const;
+		virtual const char8* fileName() const;
 
 		enum Type type(const class Key &key) const;
 		/**

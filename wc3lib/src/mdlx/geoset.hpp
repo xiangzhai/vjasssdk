@@ -23,8 +23,8 @@
 
 #include <list>
 
-#include "bounds.hpp"
 #include "groupmdxblockmember.hpp"
+#include "bounds.hpp"
 #include "geosets.hpp"
 
 namespace wc3lib
@@ -33,7 +33,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Geoset : public Bounds, public GroupMdxBlockMember
+class Geoset : public GroupMdxBlockMember, public Bounds
 {
 	public:
 		enum Selectable
@@ -87,7 +87,7 @@ class Geoset : public Bounds, public GroupMdxBlockMember
 
 inline class Geosets* Geoset::geosets() const
 {
-	return dynamic_cast<class Geosets*>(this->m_parent);
+	return boost::polymorphic_cast<class Geosets*>(this->m_parent);
 }
 
 inline class Vertices* Geoset::vertices() const

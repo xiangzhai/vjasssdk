@@ -21,6 +21,8 @@
 #ifndef WC3LIB_EDITOR_MODELEDITOR_HPP
 #define WC3LIB_EDITOR_MODELEDITOR_HPP
 
+#include <boost/bimap.hpp>
+
 #include <kurl.h>
 
 #include <Ogre.h>
@@ -54,6 +56,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 	public slots:
 		void openFile();
 		void saveFile();
+		void closeAllFiles();
 		void showSettings();
 		// test actions for one single view port/camera
 		void centerView();
@@ -80,14 +83,17 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		virtual void dropEvent(QDropEvent *event);
 
 		bool openUrl(const KUrl &url);
+		void removeModel(OgreMdlx *ogreModel);
 
-		void addCameraActions(const OgreMdlx &ogreMdlx);
+		void addCameraActions(const OgreMdlx &ogreModel);
+		void removeCameraActions(const OgreMdlx &ogreModel);
 
 		class ModelView *m_modelView;
 		class ModelEditorSettingsDialog *m_settingsDialog;
 		KUrl m_recentUrl;
-		std::list<class OgreMdlx*> m_models;
-		std::map<QAction*, Ogre::Camera*> m_cameraActions;
+		typedef boost::bimap<class mdlx::Mdlx*, class OgreMdlx*> ModelsType;
+		ModelsType m_models;
+		boost::bimap<QAction*, Ogre::Camera*> m_cameraActions;
 
 		class KMenu *m_viewMenu;
 		class RenderStatsWidget *m_renderStatsWidget;

@@ -28,16 +28,36 @@ namespace wc3lib
 namespace map
 {
 
-CustomObjectsCollection::CustomObjectsCollection() : m_units(0), m_items(0), m_destructables(0), m_doodads(0), m_abilities(0), m_buffs(0), m_upgrades(0)
+CustomObjectsCollection::CustomObjectsCollection() : m_units(0), m_items(0), m_destructibles(0), m_doodads(0), m_abilities(0), m_buffs(0), m_upgrades(0)
 {
 }
 
 
 CustomObjectsCollection::~CustomObjectsCollection()
 {
+	if (hasUnits())
+		delete m_units;
+	
+	if (hasItems())
+		delete m_items;
+	
+	if (hasDestructibles())
+		delete m_destructibles;
+	
+	if (hasDoodads())
+		delete m_doodads;
+	
+	if (hasAbilities())
+		delete m_abilities;
+	
+	if (hasBuffs())
+		delete m_buffs;
+	
+	if (hasUpgrades())
+		delete m_upgrades;
 }
 
-std::streamsize CustomObjectsCollection::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize CustomObjectsCollection::read(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_version, size);
@@ -63,13 +83,13 @@ std::streamsize CustomObjectsCollection::read(std::basic_istream<byte> &istream)
 		size += this->m_items->read(istream);
 	}
 
-	int32 hasDestructables;
-	wc3lib::read(istream, hasDestructables, size);
+	int32 hasDestructibles;
+	wc3lib::read(istream, hasDestructibles, size);
 
-	if (hasDestructables)
+	if (hasDestructibles)
 	{
-		this->m_destructables = new CustomObjects(CustomObjects::Destructables);
-		size += this->m_destructables->read(istream);
+		this->m_destructibles = new CustomObjects(CustomObjects::Destructibles);
+		size += this->m_destructibles->read(istream);
 	}
 
 	int32 hasDoodads;
@@ -111,7 +131,7 @@ std::streamsize CustomObjectsCollection::read(std::basic_istream<byte> &istream)
 	return size;
 }
 
-std::streamsize CustomObjectsCollection::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize CustomObjectsCollection::write(OutputStream &ostream) const throw (class Exception)
 {
 	if (this->version() != latestFileVersion())
 		throw Exception(boost::format(_("W3O: Unknown version %1%, expected %2%.")) % this->version() % latestFileVersion());
@@ -125,8 +145,8 @@ std::streamsize CustomObjectsCollection::write(std::basic_ostream<byte> &ostream
 	if (hasItems())
 		size += this->items()->write(ostream);
 
-	if (hasDestructables())
-		size += this->destructables()->write(ostream);
+	if (hasDestructibles())
+		size += this->destructibles()->write(ostream);
 
 	if (hasDoodads())
 		size += this->doodads()->write(ostream);

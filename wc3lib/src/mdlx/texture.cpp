@@ -30,6 +30,10 @@ namespace mdlx
 
 Texture::Texture(class Textures *textures) : GroupMdxBlockMember(textures)
 {
+	std::cout << "Address of textures " << textures << std::endl;
+	std::cout << "Address of parent " << parent() << std::endl;
+	std::cout << "Address of parent textures " << Texture::textures() << std::endl;
+	//abort();
 }
 
 std::streamsize Texture::readMdl(istream &istream) throw (class Exception)
@@ -45,10 +49,10 @@ std::streamsize Texture::writeMdl(ostream &ostream) const throw (class Exception
 std::streamsize Texture::readMdx(istream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
-	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_replaceableId), size);
+	wc3lib::read(istream, reinterpret_cast<long32&>(this->m_replaceableId), size);
 	wc3lib::read(istream, this->m_texturePath, size);
 	wc3lib::read(istream, this->m_unknown0, size);
-	wc3lib::read(istream, *reinterpret_cast<long32*>(&this->m_wrapping), size);
+	wc3lib::read(istream, reinterpret_cast<long32&>(this->m_wrapping), size);
 
 	return size;
 }
@@ -56,10 +60,10 @@ std::streamsize Texture::readMdx(istream &istream) throw (class Exception)
 std::streamsize Texture::writeMdx(ostream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
-	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_replaceableId), size);
+	wc3lib::write(ostream, static_cast<const long32&>(this->m_replaceableId), size);
 	wc3lib::write(ostream, this->m_texturePath, size);
 	wc3lib::write(ostream, this->m_unknown0, size);
-	wc3lib::write(ostream, *reinterpret_cast<const long32*>(&this->m_wrapping), size);
+	wc3lib::write(ostream, static_cast<const long32&>(this->m_wrapping), size);
 
 	return size;
 }

@@ -31,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Material : public MdlxProperty, public GroupMdxBlockMember
+class Material : public GroupMdxBlockMember, public MdlxProperty
 {
 	public:
 		enum RenderMode
@@ -70,7 +70,7 @@ class Material : public MdlxProperty, public GroupMdxBlockMember
 
 inline class Materials* Material::materials() const
 {
-	return dynamic_cast<class Materials*>(this->m_parent);
+	return boost::polymorphic_cast<class Materials*>(this->parent());
 }
 
 inline float32 Material::priorityPlane() const

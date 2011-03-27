@@ -45,6 +45,16 @@ std::streamsize Vertices::writeMdl(ostream &ostream) const throw (class Exceptio
 	return 0;
 }
 
+std::streamsize Vertices::readMdx(istream &istream) throw (class Exception)
+{
+	return GroupMdxBlock::readMdx(istream);
+}
+
+std::streamsize Vertices::writeMdx(ostream &ostream) const throw (class Exception)
+{
+	return GroupMdxBlock::writeMdx(ostream);
+}
+
 class GroupMdxBlockMember* Vertices::createNewMember()
 {
 	return new Vertex(this);

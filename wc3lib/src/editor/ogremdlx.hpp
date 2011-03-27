@@ -68,8 +68,11 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 			Black,
 			MaxTeamColors
 		};
+		
+		typedef std::pair<const class Camera*, Ogre::Camera*> CameraPairType;
 
 		OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *modelView);
+		~OgreMdlx();
 
 		const class Mdlx* mdlx() const;
 		class ModelView* modelView() const;
@@ -96,7 +99,7 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 		 * Searches in member list of \p block for member \p member and returns its corresponding id.
 		 * Id is always its index in member list (starting with 0).
 		 */
-		mdlx::long32 mdlxId(const mdlx::GroupMdxBlockMember &member, const mdlx::GroupMdxBlock &block) const;
+		mdlx::long32 mdlxId(const mdlx::GroupMdxBlockMember &member, const mdlx::GroupMdxBlock *block) const;
 
 		Ogre::TexturePtr createTexture(const class Texture &texture) throw (class Exception);
 		Ogre::MaterialPtr createMaterial(const class Material &material) throw (class Exception);

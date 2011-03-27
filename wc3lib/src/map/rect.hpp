@@ -30,13 +30,13 @@ namespace wc3lib
 namespace map
 {
 
-class Rect : public Format<byte>
+class Rect : public Format
 {
 	public:
 		Rect(class Rects *rects);
 
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		float32 left() const;
 		float32 right() const;

@@ -37,7 +37,7 @@ namespace map
 /**
 * Class for FDF and WTS file formats.
 */
-class Strings : public Format<byte>
+class Strings : public Format
 {
 	public:
 		typedef std::map<std::size_t, class String*> StringList; // key is string id
@@ -74,16 +74,16 @@ class Strings : public Format<byte>
 		/**
 		* Reads WTS format.
 		*/
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
 		/**
 		* Writes WTS format.
 		*/
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
-		virtual std::streamsize readFdf(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize writeFdf(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize readFdf(InputStream &istream) throw (class Exception);
+		virtual std::streamsize writeFdf(OutputStream &ostream) const throw (class Exception);
 
-		virtual void list(std::basic_ostream<byte> &ostream) const;
+		virtual void list(OutputStream  &ostream) const;
 
 	protected:
 		boost::filesystem::path m_path;

@@ -31,9 +31,9 @@ Rect::Rect(class Rects *rects) : m_rects(rects)
 {
 }
 
-std::streamsize Rect::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Rect::read(InputStream &istream) throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_left, size);
 	wc3lib::read(istream, this->m_right, size);
 	wc3lib::read(istream, this->m_bottom, size);
@@ -47,9 +47,9 @@ std::streamsize Rect::read(std::basic_istream<byte> &istream) throw (class Excep
 	return size;
 }
 
-std::streamsize Rect::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Rect::write(OutputStream &ostream) const throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_left, size);
 	wc3lib::write(ostream, this->m_right, size);
 	wc3lib::write(ostream, this->m_bottom, size);

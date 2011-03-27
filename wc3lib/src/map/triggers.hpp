@@ -36,18 +36,18 @@ namespace map
 /**
 * @see TriggersEx
 */
-class Triggers : public Format<byte>
+class Triggers : public Format
 {
 	public:
 		typedef std::pair<int32, class TriggerCategory*> CategoryType;
 
-		static const int32 version;
-		static const string fileName;
-
 		Triggers(class W3m *w3m);
 
-		virtual std::streamsize read(std::istream &istream) throw (class Exception);
-		virtual std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
+		
+		virtual const char8* fileName() const;
+		virtual int32 latestFileVersion() const;
 
 	protected:
 		friend class Trigger;
@@ -61,6 +61,16 @@ class Triggers : public Format<byte>
 		std::list<class Variable*> m_variables;
 		std::list<class Trigger*> m_triggers;
 };
+
+inline const char8* Triggers::fileName() const
+{
+	return "war3map.wtg";
+}
+
+inline int32 Triggers::latestFileVersion() const
+{
+	return 4;
+}
 
 }
 

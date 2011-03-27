@@ -20,8 +20,6 @@
 
 #include "objecteditor.hpp"
 #include "editor.hpp"
-#include "../slk/data.hpp"
-#include "../mpq/mpqfile.hpp"
 
 namespace wc3lib
 {
@@ -29,7 +27,7 @@ namespace wc3lib
 namespace editor
 {
 
-ObjectEditor::ObjectEditor(class Editor *editor) : Module(editor), m_data(0)
+ObjectEditor::ObjectEditor(class Editor *editor) : Module(editor)
 {
 	/*
 	const class mpq::MpqFile *unitEditorDataFile = editor->loadMpqFile("UI/UnitEditorData.txt");
@@ -46,8 +44,6 @@ ObjectEditor::ObjectEditor(class Editor *editor) : Module(editor), m_data(0)
 
 ObjectEditor::~ObjectEditor()
 {
-	if (this->m_data != 0)
-		delete this->m_data;
 }
 
 void ObjectEditor::createFileActions(class KMenu *menu)

@@ -27,7 +27,6 @@
 #include <QtGui>
 
 #include "blpiohandler.hpp"
-#include "../blp/blp.hpp"
 
 namespace wc3lib
 {
@@ -93,6 +92,57 @@ bool BlpIOHandler::read(QImage *image)
 		return false;
 	}
 
+	if (!read(image, blpImage))
+		return false;
+
+	return true;
+}
+
+/// @todo Where should we get the options from?!
+bool BlpIOHandler::supportsOption(ImageOption option) const
+{
+	switch (option)
+	{
+		case QImageIOHandler::Size:
+			return false;
+	}
+
+	return false;
+}
+
+bool BlpIOHandler::write(const QImage &image)
+{
+	class blp::Blp blpImage;
+
+	if (!write(image, &blpImage))
+		return false;
+	
+	std::basic_ostringstream<blp::byte> ostream;
+
+	try
+	{
+		blpImage.write(ostream);
+	}
+	catch (class Exception &exception)
+	{
+		qDebug() << "BLP Output Exception: " << exception.what().c_str();
+
+		return false;
+	}
+
+	std::streamsize bufferSize = ostream.rdbuf()->in_avail();
+	char buffer[bufferSize];
+	ostream.rdbuf()->sgetn(reinterpret_cast<blp::byte*>(buffer), bufferSize);
+	this->device()->write(buffer, bufferSize);
+
+	/// @todo Recognize image IO handler options!
+
+	return true;
+}
+
+
+bool BlpIOHandler::read(QImage *image, const blp::Blp &blpImage)
+{
 	if (blpImage.mipMaps().empty()) // no mip maps
 		return false;
 
@@ -144,42 +194,28 @@ bool BlpIOHandler::read(QImage *image)
 			image->setPixel(coordinates.first, coordinates.second, index);
 		}
 	}
-
+	
 	return true;
 }
 
-/// @todo Where should we get the options from?!
-bool BlpIOHandler::supportsOption(ImageOption option) const
+bool BlpIOHandler::write(const QImage &image, blp::Blp *blpImage)
 {
-	switch (option)
-	{
-		case QImageIOHandler::Size:
-			return false;
-	}
-
-	return false;
-}
-
-bool BlpIOHandler::write(const QImage &image)
-{
-	class blp::Blp blpImage;
-
 	if (image.format() == QImage::Format_Indexed8)
 	{
 		qDebug() << "Is paletted";
-		blpImage.setCompression(blp::Blp::Paletted);
+		blpImage->setCompression(blp::Blp::Paletted);
 	}
 	else
-		blpImage.setCompression(blp::Blp::Jpeg);
+		blpImage->setCompression(blp::Blp::Jpeg);
 
 	if (image.hasAlphaChannel())
-		blpImage.setFlags(blp::Blp::Alpha);
+		blpImage->setFlags(blp::Blp::Alpha);
 	else
-		blpImage.setFlags(blp::Blp::NoAlpha);
+		blpImage->setFlags(blp::Blp::NoAlpha);
 
-	blpImage.setWidth(image.width());
-	blpImage.setHeight(image.height());
-	blpImage.setPictureType(0);
+	blpImage->setWidth(image.width());
+	blpImage->setHeight(image.height());
+	blpImage->setPictureType(0);
 	/*
 	if (image.hasAlphaChannel())
 		this->m_blp->setPictureType(3);
@@ -189,8 +225,8 @@ bool BlpIOHandler::write(const QImage &image)
 
 	// create mip map
 	// palette is filled automatically by Blp::write
-	blpImage.generateMipMaps(1);
-	blp::Blp::MipMap *mipMap = blpImage.mipMaps().front();
+	blpImage->generateMipMaps(1);
+	blp::Blp::MipMap *mipMap = blpImage->mipMaps().front();
 
 	for (int width = 0; width < image.size().width(); ++width)
 	{
@@ -200,7 +236,7 @@ bool BlpIOHandler::write(const QImage &image)
 			QRgb rgb = image.pixel(width, height);
 			int index = 0;
 
-			if (blpImage.compression() == blp::Blp::Paletted)
+			if (blpImage->compression() == blp::Blp::Paletted)
 				index = image.pixelIndex(width, height); // index has to be set because paletted compression can also be used
 
 			blp::color argb = rgbaToColor(rgb);
@@ -208,27 +244,8 @@ bool BlpIOHandler::write(const QImage &image)
 		}
 	}
 
-	blpImage.generateMipMaps(); // generate other MIP maps after setting up initial MIP map (image)
-	std::basic_ostringstream<blp::byte> ostream;
-
-	try
-	{
-		blpImage.write(ostream);
-	}
-	catch (class Exception &exception)
-	{
-		qDebug() << "BLP Output Exception: " << exception.what().c_str();
-
-		return false;
-	}
-
-	std::streamsize bufferSize = ostream.rdbuf()->in_avail();
-	char buffer[bufferSize];
-	ostream.rdbuf()->sgetn(reinterpret_cast<blp::byte*>(buffer), bufferSize);
-	this->device()->write(buffer, bufferSize);
-
-	/// @todo Recognize image IO handler options!
-
+	blpImage->generateMipMaps(); // generate other MIP maps after setting up initial MIP map (image)
+	
 	return true;
 }
 

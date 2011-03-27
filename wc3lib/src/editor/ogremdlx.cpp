@@ -49,6 +49,12 @@ OgreMdlx::OgreMdlx(const KUrl &url, const class Mdlx &mdlx, class ModelView *mod
 {
 }
 
+OgreMdlx::~OgreMdlx()
+{
+	if (m_sceneNode != 0)
+		delete m_sceneNode;
+}
+
 void OgreMdlx::setTeamColor(enum OgreMdlx::TeamColor teamColor)
 {
 	this->m_teamColor = teamColor;
@@ -67,25 +73,26 @@ void OgreMdlx::setTeamGlow(enum OgreMdlx::TeamColor teamGlow)
 
 void OgreMdlx::refresh() throw (class Exception, class Ogre::Exception)
 {
+	this->mdlx()->textures()->members().size(); // TEST
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME); // TEST
-	this->m_sceneNode = this->m_modelView->sceneManager()->getRootSceneNode()->createChildSceneNode(m_mdlx->model()->name());
+	this->m_sceneNode = this->m_modelView->sceneManager()->getRootSceneNode()->createChildSceneNode(mdlx()->model()->name());
 
 	//this->modelView()->camera()->setAutoTracking(true, this->m_sceneNode); // camera follows ogre mdlx automatically
 
 	// create textures
-	BOOST_FOREACH(const mdlx::Texture *texture, this->m_mdlx->textures()->textures())
+	BOOST_FOREACH(const mdlx::Texture *texture, this->mdlx()->textures()->textures())
 		this->m_textures[texture] = this->createTexture(*texture);
 
 	// create materials
-	BOOST_FOREACH(const mdlx::Material *material, this->m_mdlx->materials()->materials())
+	BOOST_FOREACH(const mdlx::Material *material, this->mdlx()->materials()->materials())
 		this->m_materials[material] = this->createMaterial(*material);
 
 	// create geosets
-	BOOST_FOREACH(const mdlx::Geoset *geoset, this->m_mdlx->geosets()->geosets())
+	BOOST_FOREACH(const mdlx::Geoset *geoset, this->mdlx()->geosets()->geosets())
 		this->m_geosets[geoset] = this->createGeoset(*geoset);
 
 	// create cameras
-	BOOST_FOREACH(const mdlx::Camera *camera, this->m_mdlx->cameras()->cameras())
+	BOOST_FOREACH(const mdlx::Camera *camera, this->mdlx()->cameras()->cameras())
 		this->m_cameras[camera] = this->createCamera(*camera);
 
 	Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_NORMAL); // TEST
@@ -432,25 +439,11 @@ QString OgreMdlx::namePrefix() const
 	return this->m_mdlx->model()->name();
 }
 
-mdlx::long32 OgreMdlx::mdlxId(const mdlx::GroupMdxBlockMember &member, const mdlx::GroupMdxBlock &block) const
+mdlx::long32 OgreMdlx::mdlxId(const mdlx::GroupMdxBlockMember &member, const mdlx::GroupMdxBlock *block) const
 {
 	mdlx::long32 id = 0;
-	block.members();
-	qDebug() << "Win!";
-	block.members().begin();
-	qDebug() << "Win!2";
-	block.members().end();
-	qDebug() << "Win!3";
-	block.members().front();
-	qDebug() << "Win!4";
-	block.members().back();
-	qDebug() << "Win!5";
-	//qDebug() << "Members size " << block.members().size();
-	mdlx::Texture *texture = 0;
-	mdlx::GroupMdxBlockMember *blockMember = 0;
-	qDebug() << "Size of texture: " << sizeof(texture) << " and size of member: " << sizeof(blockMember);
 
-	BOOST_FOREACH(const mdlx::GroupMdxBlockMember *mem, block.members())
+	BOOST_FOREACH(const mdlx::GroupMdxBlockMember *mem, block->members())
 	{
 		qDebug() << "id " << id;
 		if (mem == &member)
@@ -464,12 +457,17 @@ mdlx::long32 OgreMdlx::mdlxId(const mdlx::GroupMdxBlockMember &member, const mdl
 
 Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
 {
-	mdlx::long32 id = mdlxId(texture, *texture.textures());
+	//texture.parent()->members().size();
+	qDebug() << "First address " << this->mdlx()->textures() << " and second address " << texture.parent();
+	//abort();
+	mdlx::long32 id = mdlxId(texture, this->mdlx()->textures());
 
 	Ogre::TexturePtr tex =
 	this->m_modelView->root()->getTextureManager()->create((boost::format("%1%.Texture%2%") % namePrefix().toAscii().data() % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	KUrl url;
 
+	qDebug() << "Texture with path " << texture.texturePath() << " and replaceable id " << texture.replaceableId();
+	
 	// use given texture path
 	if (texture.replaceableId() == mdlx::None)
 	{
@@ -520,6 +518,7 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 					KMessageBox::error(this->modelView(), i18n("Texture loading error:\n%1", exception.what().c_str()));
 				}
 
+				qDebug() << "TEAM GLOW!!!";
 				this->m_teamGlowTextures.push_back(tex);
 
 				return tex;
@@ -599,7 +598,7 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 
 Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material) throw (class Exception)
 {
-	mdlx::long32 id = mdlxId(material, *material.materials());
+	mdlx::long32 id = mdlxId(material, material.parent());
 
 	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().create((boost::format("%1%.Material%2%") % namePrefix().toAscii().data() % id).str().c_str(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); // material->mdlx()->model()->name()
 
@@ -738,7 +737,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) throw (class Exception)
 {
 	qDebug() << "Creating geoset";
-	mdlx::long32 id = mdlxId(geoset, *geoset.geosets());
+	mdlx::long32 id = mdlxId(geoset, geoset.parent());
 
 	Ogre::ManualObject *object = this->modelView()->sceneManager()->createManualObject((boost::format("%1%.Geoset%2%") % namePrefix().toAscii().data() % id).str().c_str());
 	//object->setKeepDeclarationOrder(true);
@@ -836,7 +835,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	// set bounds
 	/// \todo Set Bounding radius (hit test?)
 	//object->setBoundingSphereRadius(geoset->boundsRadius());
-	object->setBoundingBox(Ogre::AxisAlignedBox(
+	/*object->setBoundingBox(Ogre::AxisAlignedBox(
 		geoset.minimumExtent().x,
 		geoset.minimumExtent().y,
 		geoset.minimumExtent().z,
@@ -844,7 +843,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		geoset.maximumExtent().y,
 		geoset.maximumExtent().z
 		)
-	);
+	);*/
 
 	this->m_sceneNode->attachObject(object);
 

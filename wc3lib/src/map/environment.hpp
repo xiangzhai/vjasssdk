@@ -34,7 +34,7 @@ namespace wc3lib
 namespace map
 {
 
-class Environment : public Format<byte>
+class Environment : public Format
 {
 	public:
 		static const int32 maxTilesets;
@@ -63,11 +63,11 @@ class Environment : public Format<byte>
 
 		Environment(class W3m *w3m);
 
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		virtual int32 fileId() const;
-		virtual const char* fileName() const;
+		virtual const char8* fileName() const;
 		virtual int32 latestFileVersion() const;
 
 		int32 mapWidth() const;
@@ -103,7 +103,7 @@ inline int32 Environment::fileId() const
 	return (int32)"W3E!";
 }
 
-inline const char* Environment::fileName() const
+inline const char8* Environment::fileName() const
 {
 	return "war3map.w3e";
 }

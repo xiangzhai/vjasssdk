@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_VERTICES_HPP
 
 #include "groupmdxblock.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -30,7 +31,7 @@ namespace mdlx
 {
 
 /// VRTX [Vertices]
-class Vertices : public GroupMdxBlock
+class Vertices : public GroupMdxBlock, public MdlxProperty
 {
 	public:
 		Vertices(class Geoset *geoset);
@@ -41,6 +42,8 @@ class Vertices : public GroupMdxBlock
 
 		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

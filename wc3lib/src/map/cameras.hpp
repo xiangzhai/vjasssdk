@@ -24,7 +24,6 @@
 #include <list>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -35,7 +34,7 @@ namespace map
 /**
 * "war3map.w3c" file of maps contains camera information.
 */
-class Cameras : public Format<byte>
+class Cameras : public Format
 {
 	public:
 		Cameras(class W3m *w3m);

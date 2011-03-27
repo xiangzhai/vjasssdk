@@ -38,7 +38,7 @@ namespace wc3lib
 namespace editor
 {
 
-TextureEditor::TextureEditor(class Editor *editor) : Module(editor), m_image(new QImage()), m_factor(1.0)
+TextureEditor::TextureEditor(class Editor *editor) : Module(editor), m_image(new QImage()), m_showsAlphaChannel(false), m_showsTransparency(false), m_factor(1.0)
 {
 	Ui::TextureEditor::setupUi(this);
 	Module::setupUi();
@@ -107,8 +107,7 @@ void TextureEditor::openFile()
 	}
 
 	/// \todo Image format (e. g. Format_Indexed8 is not stored) which leads to another format when saving image somewhere.
-	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image));
-	this->m_imageLabel->resize(this->m_imageLabel->pixmap()->size());
+	refreshImage();
 	qDebug() << "Set pixmap to label ";
 	qDebug() << "Label size is " << this->m_imageLabel->width() << " | " << this->m_imageLabel->height();
 }
@@ -175,37 +174,86 @@ void TextureEditor::makeInfoardLevel()
 
 void TextureEditor::showAlphaChannel()
 {
-	this->m_imageLabel->setPixmap(this->m_imageLabel->pixmap()->mask());
+	if (!this->m_image->hasAlphaChannel())
+	{
+		KMessageBox::error(this, i18n("Image doesn't have alpha channel."));
+		
+		return;
+	}
+		
+	if (showsAlphaChannel())
+	{
+		m_showAlphaChannelAction->setText(i18n("Show alpha channel"));
+		m_showsAlphaChannel = false;
+	}
+	else
+	{
+		m_showAlphaChannelAction->setText(i18n("Hide alpha channel"));
+		m_showsAlphaChannel = true;
+	}
+	
+	refreshImage();
 }
 
 void TextureEditor::showTransparency()
 {
+	/// \todo According to documentation checking for mask is an expensive operation.
+	
+	if (showsTransparency())
+	{
+		m_showTransparencyAction->setText(i18n("Show transparency"));
+		m_showsTransparency = false;
+	}
+	else
+	{
+		m_showTransparencyAction->setText(i18n("Hide transparency"));
+		m_showsTransparency = true;
+	}
+	
+	refreshImage();
 }
 
 void TextureEditor::actualSize()
 {
 	this->m_factor = 1.0;
-	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image));
+	refreshImage();
 }
 
 void TextureEditor::zoomToFit()
 {
+	refreshImage();
 }
 
 void TextureEditor::zoomIn()
 {
-	this->m_factor += 0.50;
-	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image).scaled(this->m_image->size() * this->m_factor));
+	this->m_factor += 0.20;
+	refreshImage();
 }
 
 void TextureEditor::zoomOut()
 {
-	this->m_factor -= 0.50;
-	this->m_imageLabel->setPixmap(QPixmap::fromImage(*this->m_image).scaled(this->m_image->size() * this->m_factor));
+	this->m_factor -= 0.20;
+	refreshImage();
 }
 
 void TextureEditor::massConverter()
 {
+}
+
+void TextureEditor::refreshImage()
+{
+	QPixmap newPixmap;
+	
+	if (!showsAlphaChannel())
+		newPixmap = QPixmap::fromImage(*this->m_image).scaled(this->m_image->size() * this->factor());
+	else
+		newPixmap = QPixmap::fromImage(this->m_image->createAlphaMask()).scaled(this->m_image->size() * this->factor());
+	
+	if (showsTransparency())
+		newPixmap.setMask(this->m_imageLabel->pixmap()->createMaskFromColor(Qt::transparent));
+	
+	this->m_imageLabel->setPixmap(newPixmap);
+	this->m_imageLabel->resize(this->m_imageLabel->pixmap()->size());
 }
 
 void TextureEditor::createFileActions(class KMenu *menu)
@@ -241,17 +289,17 @@ void TextureEditor::createMenus(class KMenuBar *menuBar)
 	//this->m_viewMenu = viewMenu;
 	menuBar->addMenu(viewMenu);
 
-	KAction *action = new KAction(KIcon(":/actions/showalphachannel.png"), i18n("Show alpha channel"), this);
-	connect(action, SIGNAL(triggered()), this, SLOT(showAlphaChannel()));
-	viewMenu->addAction(action);
+	m_showAlphaChannelAction = new KAction(KIcon(":/actions/showalphachannel.png"), i18n("Show alpha channel"), this);
+	connect(m_showAlphaChannelAction, SIGNAL(triggered()), this, SLOT(showAlphaChannel()));
+	viewMenu->addAction(m_showAlphaChannelAction);
 
-	action = new KAction(KIcon(":/actions/showtransparency.png"), i18n("Show transparency"), this);
-	connect(action, SIGNAL(triggered()), this, SLOT(showTransparency()));
-	viewMenu->addAction(action);
+	m_showTransparencyAction = new KAction(KIcon(":/actions/showtransparency.png"), i18n("Show transparency"), this);
+	connect(m_showTransparencyAction, SIGNAL(triggered()), this, SLOT(showTransparency()));
+	viewMenu->addAction(m_showTransparencyAction);
 
 	viewMenu->addAction(KStandardAction::actualSize(this, SLOT(actualSize()), this));
 
-	action = new KAction(KIcon(":/actions/zoomtofit.png"), i18n("Zoom to fit"), this);
+	KAction *action = new KAction(KIcon(":/actions/zoomtofit.png"), i18n("Zoom to fit"), this);
 	connect(action, SIGNAL(triggered()), this, SLOT(zoomToFit()));
 	viewMenu->addAction(action);
 

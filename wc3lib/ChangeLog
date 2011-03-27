@@ -1,3 +1,13 @@
+2011-03-27 Tamino Dauth <tamio@cdauth.eu>
+* editor: Improved texture editor actions.
+* editor: Class "BlpIOHandler" allows you to convert without device now.
+* editor: Class "ModelEditor" uses boost::multimap now.
+* map: Fixed and improved classes and added new typedefs.
+
+2011-03-26 Tamino Dauth <tamio@cdauth.eu>
+* mdlx: Added polymorphic casts.
+* mdlx: Class "MdxBlock" considers end of file now.
+
 2011-03-24 Tamino Dauth <tamio@cdauth.eu>
 * editor: Fixed member functions "teamColorUrl" and "teamGlowUrl" of class Editor.
 

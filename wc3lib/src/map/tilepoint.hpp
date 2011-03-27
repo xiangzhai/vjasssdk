@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,10 +21,6 @@
 #ifndef WC3LIB_MAP_TILEPOINT_HPP
 #define WC3LIB_MAP_TILEPOINT_HPP
 
-#include <istream>
-#include <ostream>
-#include <bitset>
-
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -33,10 +29,8 @@ namespace wc3lib
 
 namespace map
 {
-	
-class Environment;
 
-class Tilepoint
+class Tilepoint : public Format
 {
 	public:
 		enum Flags
@@ -50,8 +44,8 @@ class Tilepoint
 	
 		Tilepoint(class Environment *environment);
 		
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 		
 		const class Position& position() const;
 		int32 x() const;

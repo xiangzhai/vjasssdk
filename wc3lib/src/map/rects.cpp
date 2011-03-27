@@ -31,20 +31,17 @@ namespace wc3lib
 namespace map
 {
 
-const int32 Rects::version = 5;
-const string Rects::fileName = "war3map.w3r";
-
 Rects::Rects(class W3m *w3m) : m_w3m(w3m)
 {
 }
 
-std::streamsize Rects::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Rects::read(InputStream &istream) throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_version, size);
 
-	if (this->m_version != Rects::version)
-		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Rects::version);
+	if (this->m_version != latestFileVersion())
+		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % latestFileVersion());
 
 	int32 number;
 	wc3lib::read(istream, number, size);
@@ -59,12 +56,12 @@ std::streamsize Rects::read(std::basic_istream<byte> &istream) throw (class Exce
 	return size;
 }
 
-std::streamsize Rects::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Rects::write(OutputStream &ostream) const throw (class Exception)
 {
-	if (this->m_version != Rects::version)
-		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % Rects::version);
+	if (this->m_version != latestFileVersion())
+		throw Exception(boost::format(_("Rects: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % latestFileVersion());
 
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_version, size);
 	int32 number = this->m_rects.size();
 	wc3lib::write(ostream, number, size);

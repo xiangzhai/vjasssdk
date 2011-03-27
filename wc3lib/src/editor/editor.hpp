@@ -93,6 +93,7 @@ class Editor : public KMainWindow, public MpqPriorityList
 
 	public:
 		typedef Editor self;
+		typedef std::pair<KUrl, class Resource*> ResourceValueType;
 
 		static const KAboutData& aboutData();
 		static const KAboutData& wc3libAboutData();

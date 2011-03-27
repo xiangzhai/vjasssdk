@@ -44,7 +44,7 @@ class Helper : public GroupMdxBlockMember, public Object
 
 inline class Helpers* Helper::helpers() const
 {
-	return dynamic_cast<class Helpers*>(this->m_parent);
+	return boost::polymorphic_cast<class Helpers*>(this->parent());
 }
 
 }

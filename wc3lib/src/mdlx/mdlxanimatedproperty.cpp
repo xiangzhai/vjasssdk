@@ -64,6 +64,8 @@ std::streamsize MdlxAnimatedProperty::readMdx(istream &istream) throw (class Exc
 	for (std::size_t i = 0; i < valuesCount(); ++i)
 		wc3lib::read(istream, m_values[i], size);
 
+	std::cout << "Line type for property " << properties()->lineType() << std::endl;
+	
 	if (properties()->lineType() > Linear)
 	{
 		for (std::size_t i = 0; i < valuesCount(); ++i)

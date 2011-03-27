@@ -32,16 +32,16 @@ namespace wc3lib
 namespace map
 {
 
-class ImportedFiles : public Format<byte>
+class ImportedFiles : public Format
 {
 	public:
-		class Path : public Format<byte>
+		class Path : public Format
 		{
 			public:
 				Path();
 
-				virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-				virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+				virtual std::streamsize read(InputStream &istream) throw (class Exception);
+				virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 				bool hasPrefix() const;
 				const string& path() const;
@@ -54,11 +54,11 @@ class ImportedFiles : public Format<byte>
 		ImportedFiles();
 		~ImportedFiles();
 
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		virtual int32 latestFileVersion() const;
-		virtual const char* fileName() const;
+		virtual const char8* fileName() const;
 
 		int32 version() const;
 		const std::list<class Path*>& paths() const;
@@ -86,7 +86,7 @@ inline int32 ImportedFiles::latestFileVersion() const
 	return 1;
 }
 
-inline const char* ImportedFiles::fileName() const
+inline const char8* ImportedFiles::fileName() const
 {
 	return "war3map.imp";
 }

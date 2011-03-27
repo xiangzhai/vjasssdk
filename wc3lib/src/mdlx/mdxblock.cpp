@@ -45,6 +45,18 @@ MdxBlock::~MdxBlock()
 /// @todo Consider optional like in Python script.
 std::streamsize MdxBlock::readMdx(istream &istream) throw (class Exception)
 {
+	const std::streampos requiredPosition = istream.tellg() + (std::streampos)sizeof(mdxIdentifier());
+	const std::streampos end = endPosition(istream);
+	
+	// not enough space in stream
+	if (end < requiredPosition)
+	{
+		if (optional())
+			return 0;
+		else
+			throw Exception(boost::format(_("Input stream hasn't enough space. Missing %1% bytes.")) % (requiredPosition - end));
+	}
+	
 	std::streamsize size = 0;
 	byte identifier[sizeof(mdxIdentifier())];
 	istream::pos_type position = istream.tellg();

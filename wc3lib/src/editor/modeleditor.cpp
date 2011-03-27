@@ -74,6 +74,7 @@ ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new
 
 ModelEditor::~ModelEditor()
 {
+	closeAllFiles();
 }
 
 void ModelEditor::show()
@@ -149,9 +150,9 @@ void ModelEditor::saveFile()
 			std::streamsize size;
 
 			if (isMdx)
-				size = this->m_models.front()->mdlx()->writeMdx(ofstream);
+				size = this->m_models.left.begin()->second->mdlx()->writeMdx(ofstream);
 			else
-				size = this->m_models.front()->mdlx()->writeMdl(ofstream);
+				size = this->m_models.left.begin()->second->mdlx()->writeMdl(ofstream);
 
 			KMessageBox::information(this, i18n("Wrote %1 file \"%2\" successfully.\nSize: %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
 		}
@@ -170,6 +171,12 @@ void ModelEditor::saveFile()
 		ser->exportMesh(this->m_models.front()->);
 		*/
 	}
+}
+
+void ModelEditor::closeAllFiles()
+{
+	BOOST_FOREACH(ModelsType::left_value_type value, this->m_models.left)
+		removeModel(value.second);
 }
 
 void ModelEditor::showSettings()
@@ -216,7 +223,7 @@ void ModelEditor::showStats()
 
 void ModelEditor::viewCamera(QAction *action)
 {
-	this->m_modelView->setCamera(this->m_cameraActions[action]);
+	this->m_modelView->setCamera(this->m_cameraActions.left[action]);
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -242,8 +249,6 @@ bool ModelEditor::openUrl(const KUrl &url)
 {
 	std::ios_base::openmode openmode = std::ios_base::in;
 	bool isMdx;
-	qDebug() << "Extension is " << QString(boost::filesystem::path(url.toEncoded()).extension().c_str());
-	qDebug() << "Encoded URL " << url.path().toAscii();
 
 	if (boost::filesystem::path(url.toEncoded()).extension() == ".mdx")
 	{
@@ -255,17 +260,19 @@ bool ModelEditor::openUrl(const KUrl &url)
 		isMdx = false;
 
 	std::ifstream ifstream(url.path().toAscii(), openmode);
-	/// @todo Should be allocated on heap (has to be used permanently by OgreMdlx?).
-	class mdlx::Mdlx model;
+	
+	class mdlx::Mdlx *model = new mdlx::Mdlx();
 
 	try
 	{
 		std::streamsize size;
+		
 		if (isMdx)
-			size = model.readMdx(ifstream);
+			size = model->readMdx(ifstream);
 		else
-			size = model.readMdl(ifstream);
+			size = model->readMdl(ifstream);
 
+		model->textures()->textures().size(); // TEST
 		KMessageBox::information(this, i18n("Read %1 file \"%2\" successfully.\nSize: %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
 	}
 	catch (class Exception &exception)
@@ -276,7 +283,7 @@ bool ModelEditor::openUrl(const KUrl &url)
 	}
 
 	//const Ogre::Vector3 position(0.0, 0.0, 0.0);
-	OgreMdlx *ogreModel = new OgreMdlx(url, model, this->m_modelView);
+	OgreMdlx *ogreModel = new OgreMdlx(url, *model, this->m_modelView);
 	this->editor()->addResource(ogreModel); // add to get URL
 
 	try
@@ -292,6 +299,7 @@ bool ModelEditor::openUrl(const KUrl &url)
 		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
 		this->editor()->removeResource(ogreModel);
 		delete ogreModel;
+		delete model;
 
 		return false;
 	}
@@ -300,29 +308,48 @@ bool ModelEditor::openUrl(const KUrl &url)
 		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
 		this->editor()->removeResource(ogreModel);
 		delete ogreModel;
+		delete model;
 
 		return false;
 	}
 
-	this->m_models.push_back(ogreModel);
+	this->m_models.right[model] = ogreModel;
 	this->m_modelView->root()->addFrameListener(ogreModel);
 	addCameraActions(*ogreModel);
 
 	return true;
 }
 
-void ModelEditor::addCameraActions(const OgreMdlx &ogreMdlx)
+void ModelEditor::removeModel(OgreMdlx *ogreModel)
+{
+	this->m_modelView->root()->removeFrameListener(ogreModel);
+	removeCameraActions(*ogreModel);
+	delete ogreModel;
+	m_models.right.erase(ogreModel);
+}
+
+void ModelEditor::addCameraActions(const OgreMdlx &ogreModel)
 {
 	if (this->m_viewMenu != 0)
 	{
-		typedef std::pair<const mdlx::Camera*, Ogre::Camera*> IteratorType;
-
-		BOOST_FOREACH(IteratorType iterator, ogreMdlx.cameras())
+		BOOST_FOREACH(OgreMdlx::CameraPairType iterator, ogreModel.cameras())
 		{
 			KAction *action = new KAction(KIcon(":/actions/viewcamera.png"), i18n("Camera: %1", iterator.first->name()), this);
 			connect(action, SIGNAL(triggered(QAction*)), this, SLOT(viewCamera(QAction*)));
 			this->m_viewMenu->addAction(action);
-			this->m_cameraActions[action] = iterator.second;
+			this->m_cameraActions.left[action] = iterator.second;
+		}
+	}
+}
+
+void ModelEditor::removeCameraActions(const OgreMdlx &ogreModel)
+{
+	if (this->m_viewMenu != 0)
+	{
+		BOOST_FOREACH(OgreMdlx::CameraPairType camera, ogreModel.cameras())
+		{
+			delete m_cameraActions.right[camera.second];
+			m_cameraActions.right.erase(camera.second);
 		}
 	}
 }

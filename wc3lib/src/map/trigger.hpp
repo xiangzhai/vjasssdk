@@ -21,7 +21,6 @@
 #ifndef WC3LIB_MAP_TRIGGER_HPP
 #define WC3LIB_MAP_TRIGGER_HPP
 
-#include <string>
 #include <list>
 
 #include "platform.hpp"
@@ -37,18 +36,18 @@ namespace map
 * Definition of a Warcraft 3 trigger. For Warcraft 3 The Frozen Trigger use TriggerEx.
 * @see TriggerEx
 */
-class Trigger : public Format<byte>
+class Trigger : public Format
 {
 	public:
 		Trigger(class Triggers *triggers);
 
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 	protected:
 		class Triggers *m_triggers;
-		std::string m_name;
-		std::string m_description;
+		string m_name;
+		string m_description;
 		bool m_isEnabled;
 		bool m_isCustomText;
 		bool m_isInitiallyOn;

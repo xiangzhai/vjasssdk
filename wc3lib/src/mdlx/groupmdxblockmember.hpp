@@ -36,12 +36,19 @@ class GroupMdxBlockMember
 		GroupMdxBlockMember(class GroupMdxBlock *parent);
 		virtual ~GroupMdxBlockMember();
 		
+		class GroupMdxBlock* parent() const;
+		
 		virtual std::streamsize readMdx(istream &istream) throw (class Exception) = 0;
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception) = 0;
 
 	protected:
 		class GroupMdxBlock *m_parent;
 };
+
+inline class GroupMdxBlock* GroupMdxBlockMember::parent() const
+{
+	return this->m_parent;
+}
 
 }
 

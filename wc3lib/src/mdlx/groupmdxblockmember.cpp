@@ -28,6 +28,7 @@ namespace mdlx
 
 GroupMdxBlockMember::GroupMdxBlockMember(class GroupMdxBlock *parent) : m_parent(parent)
 {
+	std::cout << "PARENT address " << parent << std::endl;
 }
 
 GroupMdxBlockMember::~GroupMdxBlockMember()

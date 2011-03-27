@@ -21,10 +21,6 @@
 #ifndef WC3LIB_MAP_VARIABLE_HPP
 #define WC3LIB_MAP_VARIABLE_HPP
 
-#include <istream>
-#include <ostream>
-#include <string>
-
 #include "platform.hpp"
 #include "../exception.hpp"
 
@@ -37,21 +33,21 @@ namespace map
 /**
 * @see VariableEx
 */
-class Variable
+class Variable : public Format
 {
 	public:
 		Variable(class Triggers *triggers);
 
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::ostream &ostream) const throw (class Exception);
+		std::streamsize read(InputStream&istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 	protected:
-		std::string m_name;
-		std::string m_type;
+		string m_name;
+		string m_type;
 		int32 m_number;
 		bool m_isArray;
 		bool m_isInitialized;
-		std::string m_initialValue;
+		string m_initialValue;
 };
 
 }

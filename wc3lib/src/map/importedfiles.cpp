@@ -38,7 +38,7 @@ ImportedFiles::Path::Path()
 {
 }
 
-std::streamsize ImportedFiles::Path::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize ImportedFiles::Path::read(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	byte hasPrefix;
@@ -60,7 +60,7 @@ std::streamsize ImportedFiles::Path::read(std::basic_istream<byte> &istream) thr
 	return size;
 }
 
-std::streamsize ImportedFiles::Path::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize ImportedFiles::Path::write(OutputStream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 

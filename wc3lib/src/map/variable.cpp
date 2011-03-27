@@ -31,9 +31,9 @@ Variable::Variable(class Triggers *triggers) : m_name(), m_type(), m_number(0), 
 {
 }
 
-std::streamsize Variable::read(std::istream &istream) throw (class Exception)
+std::streamsize Variable::read(InputStream &istream) throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	readString(istream, this->m_name, size);
 	readString(istream, this->m_type, size);
 	wc3lib::read(istream, this->m_number, size);
@@ -48,9 +48,9 @@ std::streamsize Variable::read(std::istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Variable::write(std::ostream &ostream) const throw (class Exception)
+std::streamsize Variable::write(OutputStream &ostream) const throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	writeString(ostream, this->m_name, size);
 	writeString(ostream, this->m_type, size);
 	wc3lib::write(ostream, this->m_number, size);

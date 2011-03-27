@@ -61,7 +61,7 @@ typedef std::basic_ostream<byte> ostream;
 * Line type is stored as long32 in MDX files.
 * @see InterpolationData, InterpolationRotationData
 */
-enum LineType
+enum LineType //: long32 C++0x
 {
 	DontInterpolate = 0,
 	Linear = 1,
@@ -73,7 +73,7 @@ enum LineType
 * @todo Finish enum.
 * @see Texture, ParticleEmitter2
 */
-enum ReplaceableId
+enum ReplaceableId //: long32 C++0x
 {
 	None = 0,
 	TeamColor = 1,

@@ -47,22 +47,7 @@ class Blp;
 namespace map
 {
 
-class Shadow;
-class PathMap;
-class Trees;
-class Units;
-class Info;
-class Strings;
-class MenuMinimap;
-class CustomUnits;
-class Triggers;
-class Cameras;
-class Rects;
-class Sounds;
-class CustomTextTriggers;
-class ImportedFiles;
-
-class W3m : public Format<byte>
+class W3m : public Format
 {
 	public:
 		W3m();
@@ -72,7 +57,7 @@ class W3m : public Format<byte>
 		/**
 		* @param istream has to contain the map MPQ archive.
 		*/
-		virtual std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
 		/**
 		* @param headerStream Each map is a file with an MPQ archive and a header before. This stream should contain the map's header data.
 		* @param paths List which should contain all necessary file paths. Files will be deteced automatically by names.
@@ -111,21 +96,21 @@ class W3m : public Format<byte>
 		* </ul>
 		* @note You can use classes's static members called "fileName" to get the corresponding file name of the class's format.
 		*/
-		virtual std::streamsize read(std::basic_istream<byte> &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception);
+		virtual std::streamsize read(InputStream &headerStream, const std::list<boost::filesystem::path> &paths) throw (class Exception);
 		/**
 		* Creates an MPQ archive with map header and all required files.
 		*/
-		virtual std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		int32 width() const;
 		int32 height() const;
 
 	protected:
-		std::streamsize readHeader(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize readSignature(std::basic_istream<byte> &istream) throw (class Exception);
-		bool findPath(const std::list<boost::filesystem::path> &paths, boost::filesystem::path &path, const std::string &fileName);
+		std::streamsize readHeader(InputStream &istream) throw (class Exception);
+		std::streamsize readSignature(InputStream &istream) throw (class Exception);
+		bool findPath(const std::list<boost::filesystem::path> &paths, boost::filesystem::path &path, const string &fileName);
 
-		std::string m_name;
+		string m_name;
 		enum MapFlags m_flags;
 		int32 m_maxPlayers;
 

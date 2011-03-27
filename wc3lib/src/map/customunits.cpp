@@ -101,7 +101,7 @@ std::streamsize CustomUnits::Modification::write(std::basic_ostream<byte> &ostre
 	return size;
 }
 
-std::streamsize CustomUnits::Modification::readData(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize CustomUnits::Modification::readData(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_id, size);
@@ -122,12 +122,35 @@ std::streamsize CustomUnits::Modification::readData(std::basic_istream<byte> &is
 			break;
 
 		// TODO FINISH
+			/*
+			Unreal = 2,
+					String = 3,
+					Boolean = 4,
+					Character = 5,
+					UnitList = 6,
+					ItemList = 7,
+					RegenerationType = 8,
+					AttackType = 9,
+					WeaponType = 10,
+					TargetType = 11,
+					MoveType = 12,
+					DefenseType = 13,
+					PathingTexture = 14,
+					UpgradeList = 15,
+					StringList = 16,
+					AbilityList = 17,
+					HeroAbilityList = 18,
+					MissileArt = 19,
+					AttributeType = 20,
+					AttackBits = 21
+				};
+				*/
 	}
 
 	return size;
 }
 
-std::streamsize CustomUnits::Modification::writeData(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize CustomUnits::Modification::writeData(OutputStream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_id, size);
@@ -164,7 +187,7 @@ CustomUnits::~CustomUnits()
 		delete unit;
 }
 
-std::streamsize CustomUnits::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize CustomUnits::read(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 	wc3lib::read(istream, this->m_version, size);
@@ -195,7 +218,7 @@ std::streamsize CustomUnits::read(std::basic_istream<byte> &istream) throw (clas
 	return size;
 }
 
-std::streamsize CustomUnits::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize CustomUnits::write(OutputStream &ostream) const throw (class Exception)
 {
 	if (this->m_version != latestFileVersion())
 		throw Exception(boost::format(_("Custom Units: Unknown version \"%1%\", expected \"%2%\".")) % this->m_version % latestFileVersion());

@@ -32,14 +32,14 @@ namespace wc3lib
 namespace map
 {
 
-class Camera : public Format<byte>
+class Camera : public Format
 {
 	public:
 		Camera(class Cameras *cameras);
 		~Camera();
 
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		void setTargetX(float32 targetX);
 		float32 targetX() const;

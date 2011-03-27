@@ -35,14 +35,14 @@ namespace map
 * Usually used to export all custom map objects.
 * \sa CustomObjects
 */
-class CustomObjectsCollection : public Format<byte>
+class CustomObjectsCollection : public Format
 {
 	public:
 		CustomObjectsCollection();
 		~CustomObjectsCollection();
 
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		virtual int32 latestFileVersion() const;
 		virtual const char* fileExtension() const;
@@ -52,8 +52,8 @@ class CustomObjectsCollection : public Format<byte>
 		class CustomObjects* units() const;
 		bool hasItems() const;
 		class CustomObjects* items() const;
-		bool hasDestructables() const;
-		class CustomObjects* destructables() const;
+		bool hasDestructibles() const;
+		class CustomObjects* destructibles() const;
 		bool hasDoodads() const;
 		class CustomObjects* doodads() const;
 		bool hasAbilities() const;
@@ -67,7 +67,7 @@ class CustomObjectsCollection : public Format<byte>
 		int32 m_version;
 		class CustomObjects *m_units;
 		class CustomObjects *m_items;
-		class CustomObjects *m_destructables;
+		class CustomObjects *m_destructibles;
 		class CustomObjects *m_doodads;
 		class CustomObjects *m_abilities;
 		class CustomObjects *m_buffs;
@@ -109,14 +109,14 @@ inline class CustomObjects* CustomObjectsCollection::items() const
 	return this->m_items;
 }
 
-inline bool CustomObjectsCollection::hasDestructables() const
+inline bool CustomObjectsCollection::hasDestructibles() const
 {
-	return this->m_destructables != 0;
+	return this->m_destructibles != 0;
 }
 
-inline class CustomObjects* CustomObjectsCollection::destructables() const
+inline class CustomObjects* CustomObjectsCollection::destructibles() const
 {
-	return this->m_destructables;
+	return this->m_destructibles;
 }
 
 inline bool CustomObjectsCollection::hasDoodads() const

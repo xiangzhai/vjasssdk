@@ -23,6 +23,8 @@
 
 #include <QtGui/QImageIOHandler>
 
+#include "../blp/blp.hpp"
+
 namespace wc3lib
 {
 
@@ -31,6 +33,7 @@ namespace editor
 
 /**
 * Provides access to Blizzard's image format.
+* You do not necessarily have to use a device to read from. There are also member functions which do only use BLP objects.
 * @see BlpIOPlugin
 */
 class BlpIOHandler : public QImageIOHandler
@@ -40,14 +43,23 @@ class BlpIOHandler : public QImageIOHandler
 		virtual ~BlpIOHandler();
 		virtual bool canRead() const;
 		/**
-		* Assigns data from device to image.
+		* Assigns data from device to \p image.
 		*/
 		virtual bool read(QImage *image);
 		virtual bool supportsOption(ImageOption option) const;
 		/**
-		* Writes data from image to device.
+		* Writes data from \p image to device.
 		*/
 		virtual bool write(const QImage &image);
+		
+		/**
+		 * Assigns data from \p blp to \p image.
+		 */
+		virtual bool read(QImage *image, const blp::Blp &blpImage);
+		/**
+		 * Writes data from \p image to \p blpImage.
+		 */
+		virtual bool write(const QImage &image, blp::Blp *blpImage);
 };
 
 }

@@ -1,7 +1,20 @@
+2011-03-27 Tamino Dauth <tamino@cdauth.eu>
+* editor: Add class TextureView similar to ModelView with actions of texture editor using label as widget (only allows you to view one specific texture).
+* editor: Class TextureView should store BLP object if file is BLP to show single MIP maps.
+* mdlx: MdlxProperty has to be inherited as second class!!! (multiple inheritance issue)
+
+2011-03-26 Tamino Dauth <tamio@cdauth.eu>
+* Use boost::polymorphic_downcast (static - compile time) or boost::polymorphic_cast (runtime) instead of dynamic_cast on pointers (dynamic_cast only returns 0 and doesn't throw any exception)!
+* Multiple inheritance leads to different pointers (segmentation faults).
+* mdlx: Fix camera reading (camera translations).
+
+2011-03-25 Tamino Dauth <tamio@cdauth.eu>
+* mdlx: Converting Texture::textures() into GroupMdxBlock& leads to segmentation fault.
+
 2011-02-20 Tamino Dauth <tamio@cdauth.eu>
 * mdlx: Add class MdlxAnimateableProperty (which holds MdlxAnimatedProperty and or its static value by pointer and has boolean element function isStatic).
-* mdlx: Rename class GroupMdxBlock to MdlxGroup (add MDL support).
-* mdlx: Rename class GroupMdxBlockMember to MdlxGroupMember (add MDL support).
+* DEPRECATED: mdlx: Rename class GroupMdxBlock to MdlxGroup (add MDL support).
+* DEPRECATED: mdlx: Rename class GroupMdxBlockMember to MdlxGroupMember (add MDL support).
 * mdlx: Support static members of specification as animateable values (inherit from MdlxAnimateableProperty).
 Technically every variable prefixed by "static" should be possible to animate.
 However, for every instance where a static variable is not denoted animateable
@@ -32,7 +45,7 @@ by parenthesis, it is because there is no example in any Blizzard MDL.
 2010-12-26 Tamino Dauth <tamino@cdauth.eu>
 * editor: Use KConfig XT for configuration of everything.
 * editor: Add wc3lib library target which is a big compilation of sub libraries.
-* editor: moc files has to be included by the cpp files (as in the KDE source files).
+* DONE: editor: moc files has to be included by the cpp files (as in the KDE source files).
 
 2010-12-12 Tamino Dauth <tamino@cdauth.eu>
 * editor: Implement the new settings classes and add class SettingsWidget which allows you to configure everything required.

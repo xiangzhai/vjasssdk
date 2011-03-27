@@ -27,6 +27,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/array.hpp>
 
+#include "../format.hpp"
+
 namespace wc3lib
 {
 
@@ -106,6 +108,11 @@ typedef std::basic_string<char8> string;
 typedef std::basic_stringstream<char8> stringstream;
 typedef std::basic_ostringstream<char8> ostringstream;
 typedef std::basic_istringstream<char8> istringstream;
+
+typedef Format<byte> Format;
+
+typedef std::basic_istream<byte> istream;
+typedef std::basic_ostream<byte> ostream;
 
 /**
 * Flags

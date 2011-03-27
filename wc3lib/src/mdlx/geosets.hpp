@@ -22,6 +22,7 @@
 #define WC3LIB_MDLX_GEOSETS_HPP
 
 #include "groupmdxblock.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -30,7 +31,7 @@ namespace mdlx
 {
 
 /// GEOS
-class Geosets : public GroupMdxBlock
+class Geosets : public GroupMdxBlock, public MdlxProperty
 {
 	public:
 		Geosets(class Mdlx *mdlx);
@@ -40,6 +41,8 @@ class Geosets : public GroupMdxBlock
 
 		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
 		virtual std::streamsize writeMdl(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize readMdx(istream &istream) throw (class Exception);
+		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
 		virtual class GroupMdxBlockMember* createNewMember();

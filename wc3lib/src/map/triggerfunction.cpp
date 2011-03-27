@@ -34,9 +34,15 @@ TriggerFunction::TriggerFunction(class Trigger *trigger) : m_trigger(trigger), m
 {
 }
 
-std::streamsize TriggerFunction::read(std::basic_istream<byte> &istream) throw (class Exception)
+TriggerFunction::~TriggerFunction()
 {
-	std::streamsize size;
+	BOOST_FOREACH(class TriggerFunctionParameter *parameter, this->m_parameters)
+		delete parameter;
+}
+
+std::streamsize TriggerFunction::read(InputStream &istream) throw (class Exception)
+{
+	std::streamsize size = 0;
 	int32 type;
 	wc3lib::read(istream, type, size);
 	this->m_type = static_cast<enum Type>(type);
@@ -50,9 +56,9 @@ std::streamsize TriggerFunction::read(std::basic_istream<byte> &istream) throw (
 	return size;
 }
 
-std::streamsize TriggerFunction::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize TriggerFunction::write(OutputStream &ostream) const throw (class Exception)
 {
-	std::streamsize size;
+	std::streamsize size = 0;
 	wc3lib::write(ostream, static_cast<const int32&>(this->m_type), size);
 	writeString(ostream, this->m_name, size);
 	wc3lib::write(ostream, static_cast<const int32&>(this->m_isEnabled), size);

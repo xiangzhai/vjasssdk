@@ -32,7 +32,7 @@ namespace wc3lib
 namespace map
 {
 
-class CampaignInfo : public Format<byte>
+class CampaignInfo : public Format
 {
 	public:
 		enum DifficultyType
@@ -47,12 +47,12 @@ class CampaignInfo : public Format<byte>
 			Human = 0
 		};
 
-		class MapTitle : public Format<byte>
+		class MapTitle : public Format
 		{
 			public:
 				MapTitle();
-				std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+				virtual std::streamsize read(InputStream &istream) throw (class Exception);
+				virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 			protected:
 				bool m_isVisibleFromTheBeginning;
@@ -61,12 +61,12 @@ class CampaignInfo : public Format<byte>
 				string m_path; // path of the map in the campaign archive
 		};
 
-		class Map : public Format<byte>
+		class Map : public Format
 		{
 			public:
 				Map();
-				std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+				virtual std::streamsize read(InputStream &istream) throw (class Exception);
+				virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 			protected:
 				string m_unknown; // unknown (always empty, might also be a single character)
@@ -75,11 +75,11 @@ class CampaignInfo : public Format<byte>
 
 		CampaignInfo(class Campaign *campaign);
 		~CampaignInfo();
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		virtual int32 latestFileVersion() const;
-		virtual const char* fileName() const;
+		virtual const char8* fileName() const;
 
 	protected:
 		class Campaign *m_campaign;
@@ -112,7 +112,7 @@ inline int32 CampaignInfo::latestFileVersion() const
 	return 1;
 }
 
-inline const char* CampaignInfo::fileName() const
+inline const char8* CampaignInfo::fileName() const
 {
 	return "war3campaign.w3f";
 }

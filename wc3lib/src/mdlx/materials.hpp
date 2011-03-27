@@ -31,7 +31,7 @@ namespace mdlx
 {
 
 /// MTLS
-class Materials : public MdlxProperty, public GroupMdxBlock
+class Materials : public GroupMdxBlock, public MdlxProperty
 {
 	public:
 		Materials(class Mdlx *mdlx);

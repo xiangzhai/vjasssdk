@@ -40,7 +40,7 @@ Environment::Environment(class W3m *w3m) : m_w3m(w3m)
 {
 }
 
-std::streamsize Environment::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Environment::read(InputStream &istream) throw (class Exception)
 {
 	int32 id;
 	std::streamsize size = 0;
@@ -108,7 +108,7 @@ std::streamsize Environment::read(std::basic_istream<byte> &istream) throw (clas
 	return size;
 }
 
-std::streamsize Environment::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Environment::write(OutputStream &ostream) const throw (class Exception)
 {
 	return 0;
 }

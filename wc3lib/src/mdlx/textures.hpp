@@ -21,8 +21,8 @@
 #ifndef WC3LIB_MDLX_TEXTURES_HPP
 #define WC3LIB_MDLX_TEXTURES_HPP
 
-#include "mdlxproperty.hpp"
 #include "groupmdxblock.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +31,7 @@ namespace mdlx
 {
 
 /// TEXS // [Textures] (same as v800)
-class Textures : public MdlxProperty, public GroupMdxBlock
+class Textures : public GroupMdxBlock, public MdlxProperty
 {
 	public:
 		Textures(class Mdlx *mdlx);
@@ -57,7 +57,8 @@ inline class Mdlx* Textures::mdlx() const
 
 inline const std::list<class Texture*>& Textures::textures() const
 {
-	return *reinterpret_cast<const std::list<class Texture*>*>(&this->members());
+	return reinterpret_cast<const std::list<class Texture*>&>(members());
+	//return *reinterpret_cast<const std::list<class Texture*>*>(&this->members());
 }
 
 }

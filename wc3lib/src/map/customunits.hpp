@@ -36,10 +36,10 @@ namespace map
 * Warcraft 3 only allows you to customize unit data.
 * Later, in Frozen Throne Blizzard introduced general object data modification (\ref CustomObjects).
 */
-class CustomUnits : public Format<byte>
+class CustomUnits : public Format
 {
 	public:
-		class Modification : public Format<byte>
+		class Modification : public Format
 		{
 			public:
 				enum Type
@@ -71,31 +71,51 @@ class CustomUnits : public Format<byte>
 				Modification();
 				~Modification();
 
-				std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+				std::streamsize read(InputStream &istream) throw (class Exception);
+				std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 			protected:
-				std::streamsize readData(std::basic_istream<byte> &istream) throw (class Exception);
-				std::streamsize writeData(std::basic_ostream<byte> &ostream) const throw (class Exception);
+				std::streamsize readData(InputStream &istream) throw (class Exception);
+				std::streamsize writeData(OutputStream &ostream) const throw (class Exception);
 
 				id m_id; // from "Units\UnitMetaData.slk"
 				enum Type m_type;
+				/// \todo Check data types, not specified by documentaton!
 				union
 				{
 					int32 Integer;
-					float32 Real;
-					//string String;
+					float32 Real; // float (single precision)
+					float32 Unreal; // Unreal (0 <= val <= 1) float (single Precision)
+					char8* String; // string (null terminated)
+					bool Boolean;
+					char8 Character;
+					char8* UnitList;
+					char8* ItemList;
+					char8* RegenerationType;
+					char8* AttackType;
+					char8* WeaponType;
+					char8* TargetType;
+					char8* MoveType;
+					char8* DefenseType;
+					char8* PathingTexture;
+					char8* UpgradeList;
+					char8* StringList;
+					char8* AbilityList;
+					char8* HeroAbilityList;
+					char8* MissileArt;
+					char8* AttributeType;
+					char8* AttackBits;
 				} m_value;
 		};
 
-		class Unit : public Format<byte>
+		class Unit : public Format
 		{
 			public:
 				Unit();
 				~Unit();
 
-				std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+				std::streamsize read(InputStream &istream) throw (class Exception);
+				std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 				bool isOriginal() { return m_customId == 0; };
 
@@ -110,10 +130,10 @@ class CustomUnits : public Format<byte>
 		CustomUnits();
 		~CustomUnits();
 
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(InputStream &istream) throw (class Exception);
+		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
-		virtual const char* fileName() const;
+		virtual const char8* fileName() const;
 		virtual int32 latestFileVersion() const;
 
 	protected:
