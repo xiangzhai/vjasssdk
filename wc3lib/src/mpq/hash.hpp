@@ -44,18 +44,24 @@ class Hash
 		//bool isHash(int32 nameHashA, int32 nameHashB, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;
 		bool isHash(int32 nameHashA, int32 nameHashB, int16 locale, int16 platform) const;
 
+		/**
+		 * Updates both hash values to new file path \p path.
+		 * \todo Might be protected and only be used by class \ref MpqFile. Use \ref MpqFile::move for changing file path.
+		 * \sa Hash::filePathHashA, Hash::filePathHashB
+		 */
 		void changePath(const boost::filesystem::path &path);
 
 		bool check() const;
 		/**
-		* 
-		*/
+		 * \return Returns true if the hash table entry has been deleted.
+		 * \sa Hash::empty
+		 */
 		bool deleted() const;
 		/**
-		* Hash table entries are empty if they do not link to any block table entry.
-		* Note that a hash table entry can not be empty when it's deleted.
-		* @return Returns true if the hash table entry has been deleted.
-		* @see Hash.deleted
+		 * Hash table entries are empty if they do not link to any block table entry.
+		 * Consider that a hash table entry can not be empty when it's been deleted.
+		 * \return Returns true if the hash table entry has never been used.
+		 * \sa Hash::deleted
 		*/
 		bool empty() const;
 		

@@ -30,6 +30,7 @@
 #include "../exception.hpp"
 #include "block.hpp"
 #include "hash.hpp"
+#include "sector.hpp"
 
 namespace wc3lib
 {
@@ -69,12 +70,28 @@ class MpqFile
 			Default
 		};
 
-		std::streamsize readData(istream &istream) throw (class Exception);
 		/**
-		* Reads data from stream @param istream and appends it to the already existing file data.
-		* @return Returns the number of read bytes.
-		*/
+		 * Removes all data from file.
+		 * Clears corresponding block file size.
+		 * Deletes all corresponding data sectors.
+		 */
+		void removeData() throw (class Exception);
+		/**
+		 * Reads data from input stream \p istream and hence overwrites old file data.
+		 * \p compression Compression which is used for all added sectors.
+		 * \return Returns size of read data.
+		 * \throws Exception Usually thrown when there is not enough space in file's corresponding block.
+		 */
+		std::streamsize readData(istream &istream, Sector::Compression compression = Sector::Uncompressed) throw (class Exception);
+		/**
+		 * Reads data from stream \p istream and appends it to the already existing file data.
+		 * \return Returns the number of read bytes.
+		 */
 		std::streamsize appendData(istream &istream) throw (class Exception);
+		/**
+		 * Writes uncompressed file data into output stream \p ostream.
+		 * \return Returns size of written data.
+		 */
 		std::streamsize writeData(ostream &ostream) const throw (class Exception);
 
 		// hash attributes
@@ -113,16 +130,16 @@ class MpqFile
 		const std::list<class Sector*>& sectors() const;
 
 		/**
-		* Appends data of file @param mpqFile.
+		* Appends data of file \p mpqFile.
 		*/
 		class MpqFile& operator<<(const class MpqFile &mpqFile) throw (class Exception);
 		/**
-		* Adds a copy of the file to MPQ archive @param mpq.
+		* Adds a copy of the file to MPQ archive \p mpq.
 		* @note Does not overwrite existing files.
 		*/
 		class MpqFile& operator>>(class Mpq &mpq) throw (class Exception);
 		/**
-		* Appends data of the file to file @param mpqFile.
+		* Appends data of the file to file \p mpqFile.
 		*/
 		class MpqFile& operator>>(class MpqFile &mpqFile) throw (class Exception);
 
@@ -141,11 +158,11 @@ class MpqFile
 		~MpqFile();
 
 		/**
-		* Reads the file sector meta data.
+		* Reads the file sectors' meta data.
 		*/
 		std::streamsize read(istream &istream) throw (class Exception);
 		/**
-		* Writes the file sector meta data.
+		* Writes the file sectors' meta data.
 		*/
 		std::streamsize write(ostream &ostream) const throw (class Exception);
 
@@ -158,6 +175,8 @@ class MpqFile
 		*/
 		bool rename(const std::string &newName, bool overwriteExisting = false) throw (class Exception);
 		bool move(const boost::filesystem::path &newPath, bool overwriteExisting = false) throw (class Exception);
+		
+		bool hasSectorOffsetTable() const;
 
 		class Mpq *m_mpq;
 		class Hash *m_hash;
@@ -279,6 +298,11 @@ inline int8 MpqFile::platformToInt(enum MpqFile::Platform platform)
 inline enum MpqFile::Platform MpqFile::intToPlatform(int8 value)
 {
 	return MpqFile::Platform(value);
+}
+
+inline bool MpqFile::hasSectorOffsetTable() const
+{
+	return !(this->block()->flags() & Block::IsSingleUnit) && ((this->block()->flags() & Block::IsCompressed) || (this->block()->flags() & Block::IsImploded));
 }
 
 /**

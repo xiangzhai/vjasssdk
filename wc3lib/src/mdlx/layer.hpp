@@ -21,8 +21,8 @@
 #ifndef WC3LIB_MDLX_LAYER_HPP
 #define WC3LIB_MDLX_LAYER_HPP
 
-#include "mdlxproperty.hpp"
 #include "groupmdxblockmember.hpp"
+#include "mdlxproperty.hpp"
 #include "layers.hpp"
 
 namespace wc3lib
@@ -31,7 +31,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Layer : public MdlxProperty, public GroupMdxBlockMember
+class Layer : public GroupMdxBlockMember, public MdlxProperty
 {
 	public:
 		enum FilterMode
@@ -81,14 +81,14 @@ class Layer : public MdlxProperty, public GroupMdxBlockMember
 		long32 m_textureId;
 		long32 m_tvertexAnimationId; // 0xFFFFFFFF if none
 		long32 m_coordinatesId;
-		float32	m_alpha; //(0(transparent)->1(opaque))
+		float32 m_alpha; //(0(transparent)->1(opaque))
 		class MaterialAlphas *m_alphas; //(KMTA)
 		class TextureIds *m_textureIds; //(KMTF) // state is long not float
 };
 
 inline class Layers* Layer::layers() const
 {
-	return dynamic_cast<class Layers*>(this->m_parent);
+	return boost::polymorphic_cast<class Layers*>(this->parent());
 }
 
 inline enum Layer::FilterMode Layer::filterMode() const

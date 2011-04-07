@@ -479,7 +479,7 @@ Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) thr
 			KUrl newUrl = this->url().directory();
 			KMessageBox::information(this->modelView(), i18n("No valid texture resource has been found at \"%1\". Trying directory URL \"%2\".", url.toLocalFile(), newUrl.toLocalFile()));
 			url = newUrl;
-			url.addPath(texture.texturePath());
+			url.addPath(KUrl(texture.texturePath()).toLocalFile());
 		}
 		else
 			qDebug() << "Url is valid: " << url.toLocalFile();
@@ -863,6 +863,11 @@ Ogre::Camera* OgreMdlx::createCamera(const class Camera &camera) throw (class Ex
 	this->m_sceneNode->attachObject(ogreCamera);
 
 	return ogreCamera;
+}
+
+Ogre::ManualObject* OgreMdlx::createCollisionShape(const class CollisionShape &collisionShape) throw (class Exception)
+{
+	
 }
 
 std::map<const class Node*, Ogre::Node*> OgreMdlx::setupInheritance(const std::list<const class Node*> &initialNodes)

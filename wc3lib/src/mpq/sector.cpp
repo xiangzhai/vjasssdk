@@ -45,6 +45,12 @@ Sector::Sector(class MpqFile *mpqFile) : m_mpqFile(mpqFile), m_sectorIndex(0), m
 
 std::streamsize Sector::readData(istream &istream) throw (class Exception)
 {
+	/// \todo Change sector size!!!
+	return 0;
+}
+
+std::streamsize Sector::readData(const byte *buffer, const std::size_t bufferSize) throw  (class Exception)
+{
 	return 0;
 }
 

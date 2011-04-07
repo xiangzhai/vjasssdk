@@ -31,13 +31,18 @@ namespace wc3lib
 namespace mdlx
 {
 
-class Attachment : public GroupMdxBlockMember, public Object
+class Attachment : public Object, public GroupMdxBlockMember
 {
 	public:
+		static const std::size_t pathSize = 0x100;
+		
 		Attachment(class Attachments *attachments);
 		virtual ~Attachment();
 
 		class Attachments* attachments() const;
+		/**
+		 * \return Returns path with length of \ref pathSize.
+		 */
 		const ascii* path() const;
 		long32 unknown0() const;
 		long32 attachmentId() const;
@@ -49,7 +54,7 @@ class Attachment : public GroupMdxBlockMember, public Object
 		virtual std::streamsize writeMdx(ostream &ostream) const throw (class Exception);
 
 	protected:
-		ascii m_path[0x100];
+		ascii m_path[pathSize];
 		long32 m_unknown0;
 		long32 m_attachmentId;
 		class AttachmentVisibilities *m_visibilities; //(KATV)

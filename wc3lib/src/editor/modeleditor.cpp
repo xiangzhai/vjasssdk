@@ -46,7 +46,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0)
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0), m_hitTest(true)
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -175,7 +175,7 @@ void ModelEditor::saveFile()
 
 void ModelEditor::closeAllFiles()
 {
-	BOOST_FOREACH(ModelsType::left_value_type value, this->m_models.left)
+	BOOST_FOREACH(Models::left_reference value, this->m_models.left)
 		removeModel(value.second);
 }
 
@@ -223,7 +223,7 @@ void ModelEditor::showStats()
 
 void ModelEditor::viewCamera(QAction *action)
 {
-	this->m_modelView->setCamera(this->m_cameraActions.left[action]);
+	this->m_modelView->setCamera(this->m_cameraActions.left.at(action));
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -242,6 +242,59 @@ void ModelEditor::dropEvent(QDropEvent *event)
 			this->openUrl(url);
 
 		event->accept();
+	}
+}
+
+void ModelEditor::mousePressEvent(QMouseEvent *event)
+{
+	/*
+	if (event->button() == Qt::LeftButton && this->m_modelView->rect().contains(event->globalX(), event->globalY()))
+	{
+		if (hitTest())
+		{
+			/// \todo Easier query only with collision shapes!!!
+			QPoint point(event->globalX() - this->modelView()->x(), event->globalY() - this->modelView()->y());
+			Ogre::Ray mouseRay =  this->modelView()->camera()->getCameraToViewportRay(point.x() / float(this->modelView()->width()), point.y() / float(this->modelView()->height()));
+			Ogre::RaySceneQuery *raySceneQuery = this->modelView()->sceneManager()->createRayQuery(mouseRay);
+			raySceneQuery->setRay(mouseRay);
+			raySceneQuery->setSortByDistance(true);
+			Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
+
+			foreach(const Ogre::RaySceneQueryResultEntry &entry, result)
+			{
+				if (entry.movable)
+				{
+					foreach (ModelsType::left_value_type value, m_models)
+					{
+						if (value.second->
+					}
+					entry.movable->setVisible(!entry.movable->getVisible());
+				}
+			}
+
+			delete raySceneQuery;
+			raySceneQuery = 0;
+			
+			event->ignore(); // prevent model view from evaluating event
+		}
+		else
+		{
+			event->accept(); // model view can evaluate event
+		}
+	}
+	*/
+	
+}
+
+void ModelEditor::actionEvent(QActionEvent *event)
+{
+	CameraActions::left_iterator iterator = this->m_cameraActions.left.find(event->action());
+	qDebug() << "Action event with " << event->action()->text();
+	
+	if (iterator != m_cameraActions.left.end())
+	{
+		qDebug() << "is camera action";
+		viewCamera(event->action());
 	}
 }
 
@@ -294,15 +347,6 @@ bool ModelEditor::openUrl(const KUrl &url)
 		ogreModel->refresh();
 		qDebug() << "After refresh. Duration " << ct.elapsed() << "ms";
 	}
-	catch (Ogre::Exception &exception)
-	{
-		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
-		this->editor()->removeResource(ogreModel);
-		delete ogreModel;
-		delete model;
-
-		return false;
-	}
 	catch (class std::exception &exception)
 	{
 		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
@@ -313,7 +357,7 @@ bool ModelEditor::openUrl(const KUrl &url)
 		return false;
 	}
 
-	this->m_models.right[model] = ogreModel;
+	this->m_models.left.insert(Models::left_value_type(model, ogreModel));
 	this->m_modelView->root()->addFrameListener(ogreModel);
 	addCameraActions(*ogreModel);
 
@@ -322,22 +366,27 @@ bool ModelEditor::openUrl(const KUrl &url)
 
 void ModelEditor::removeModel(OgreMdlx *ogreModel)
 {
-	this->m_modelView->root()->removeFrameListener(ogreModel);
-	removeCameraActions(*ogreModel);
-	delete ogreModel;
-	m_models.right.erase(ogreModel);
+	Models::right_iterator iterator = m_models.right.find(ogreModel);
+	
+	if (iterator != m_models.right.end())
+	{
+		this->m_modelView->root()->removeFrameListener(ogreModel);
+		removeCameraActions(*ogreModel);
+		delete ogreModel;
+		m_models.right.erase(iterator);
+	}
 }
 
 void ModelEditor::addCameraActions(const OgreMdlx &ogreModel)
 {
 	if (this->m_viewMenu != 0)
 	{
-		BOOST_FOREACH(OgreMdlx::CameraPairType iterator, ogreModel.cameras())
+		BOOST_FOREACH(OgreMdlx::Cameras::const_reference iterator, ogreModel.cameras())
 		{
 			KAction *action = new KAction(KIcon(":/actions/viewcamera.png"), i18n("Camera: %1", iterator.first->name()), this);
-			connect(action, SIGNAL(triggered(QAction*)), this, SLOT(viewCamera(QAction*)));
+			connect(action, SIGNAL(triggered()), this, SLOT(viewCamera(action)));
 			this->m_viewMenu->addAction(action);
-			this->m_cameraActions.left[action] = iterator.second;
+			this->m_cameraActions.left.insert(CameraActions::left_value_type(action, iterator.second));
 		}
 	}
 }
@@ -346,10 +395,15 @@ void ModelEditor::removeCameraActions(const OgreMdlx &ogreModel)
 {
 	if (this->m_viewMenu != 0)
 	{
-		BOOST_FOREACH(OgreMdlx::CameraPairType camera, ogreModel.cameras())
+		BOOST_FOREACH(OgreMdlx::Cameras::const_reference camera, ogreModel.cameras())
 		{
-			delete m_cameraActions.right[camera.second];
-			m_cameraActions.right.erase(camera.second);
+			CameraActions::right_iterator iterator = m_cameraActions.right.find(camera.second);
+			
+			if (iterator != m_cameraActions.right.end())
+			{
+				delete iterator->second;
+				m_cameraActions.right.erase(iterator);
+			}
 		}
 	}
 }

@@ -29,8 +29,6 @@ namespace wc3lib
 namespace editor
 {
 
-class TerrainEditor;
-
 class Brush
 {
 	public:

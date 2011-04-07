@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,45 +18,41 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_AMBIENTCOLORS_HPP
-#define WC3LIB_MDLX_AMBIENTCOLORS_HPP
+#ifndef WC3LIB_EDITOR_BLPCODEC_HPP
+#define WC3LIB_EDITOR_BLPCODEC_HPP
 
-#include "mdlxscalings.hpp"
+#include <Ogre.h>
+#include <OgreImageCodec.h>
 
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
 
-/// KLBC
-class AmbientColors : public MdlxScalings
+/**
+ * \todo Add BLP support.
+ */
+class BlpCodec : public Ogre::ImageCodec
 {
 	public:
-		AmbientColors(class Light *light);
-		virtual ~AmbientColors();
-
-		class Light* light() const;
-		const std::list<class AmbientColor*>& colors() const;
-
-		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(ostream &ostream) throw (class Exception);
-
-	protected:
-		virtual class MdlxScaling* createNewMember();
-
-		class Light *m_light;
+		virtual ~BlpCodec();
+		Ogre::String getDataType() const;
+			// Returns the type of the data that supported by this codec as a String.
+			
+		virtual Ogre::DataStreamPtr code(Ogre::MemoryDataStreamPtr &input, CodecDataPtr &pData) const;
+			//Codes the data in the input stream and saves the result in the output stream.
+		virtual void codeToFile(Ogre::MemoryDataStreamPtr &input, const Ogre::String &outFileName, CodecDataPtr &pData) const;
+			//Codes the data in the input chunk and saves the result in the output filename provided.
+		virtual DecodeResult decode( Ogre::DataStreamPtr &input) const;
+			// Codes the data from the input chunk into the output chunk.
+		virtual Ogre::String getType () const;
+			//Returns the type of the codec as a String.
+		virtual bool magicNumberMatch(const char *magicNumberPtr, size_t maxbytes) const;
+			// Returns whether a magic number header matches this codec.
+		virtual Ogre::String magicNumberToFileExt(const char *magicNumberPtr, size_t maxbytes) const;
+			// Maps a magic number header to a file extension, if this codec recognises it. 
 };
-
-inline class Light* AmbientColors::light() const
-{
-	return this->m_light;
-}
-
-inline const std::list<class AmbientColor*>& AmbientColors::colors() const
-{
-	return reinterpret_cast<const std::list<class AmbientColor*>&>(this->mdlxScalings());
-}
 
 }
 

@@ -22,6 +22,7 @@
 #define WC3LIB_EDITOR_MODELEDITOR_HPP
 
 #include <boost/bimap.hpp>
+#include <boost/bimap/set_of.hpp>
 
 #include <kurl.h>
 
@@ -46,12 +47,19 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 	Q_OBJECT
 
 	public:
+		typedef boost::bimap<class mdlx::Mdlx*, class OgreMdlx*> Models;
+		typedef boost::bimap<QAction*, Ogre::Camera*> CameraActions;
+		
 		ModelEditor(class Editor *editor);
 		virtual ~ModelEditor();
 
 		virtual void show();
 
 		class ModelView* modelView() const;
+		const Models& models() const;
+		const CameraActions& cameraACtions() const;
+		void setHitTest(bool hitTest);
+		bool hitTest() const;
 
 	public slots:
 		void openFile();
@@ -81,6 +89,11 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		// load file events
 		virtual void dragEnterEvent(QDragEnterEvent *event);
 		virtual void dropEvent(QDropEvent *event);
+		
+		/// Implements "hit test" based selection. \sa ModelEditor::hitTest.
+		virtual void mousePressEvent(QMouseEvent *event);
+		
+		virtual void actionEvent(QActionEvent *event);
 
 		bool openUrl(const KUrl &url);
 		void removeModel(OgreMdlx *ogreModel);
@@ -91,17 +104,38 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		class ModelView *m_modelView;
 		class ModelEditorSettingsDialog *m_settingsDialog;
 		KUrl m_recentUrl;
-		typedef boost::bimap<class mdlx::Mdlx*, class OgreMdlx*> ModelsType;
-		ModelsType m_models;
-		boost::bimap<QAction*, Ogre::Camera*> m_cameraActions;
+		Models m_models;
+		CameraActions m_cameraActions;
 
 		class KMenu *m_viewMenu;
 		class RenderStatsWidget *m_renderStatsWidget;
+		
+		bool m_hitTest;
 };
 
 inline class ModelView* ModelEditor::modelView() const
 {
 	return this->m_modelView;
+}
+
+inline const ModelEditor::Models& ModelEditor::models() const
+{
+	return m_models;
+}
+
+inline const ModelEditor::CameraActions& ModelEditor::cameraACtions() const
+{
+	return m_cameraActions;
+}
+
+inline void ModelEditor::setHitTest(bool hitTest)
+{
+	this->m_hitTest = hitTest;
+}
+
+inline bool ModelEditor::hitTest() const
+{
+	return this->m_hitTest;
 }
 
 }

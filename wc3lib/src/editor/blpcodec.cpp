@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,48 +18,5 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MDLX_AMBIENTCOLORS_HPP
-#define WC3LIB_MDLX_AMBIENTCOLORS_HPP
+#include "blpcodec.hpp"
 
-#include "mdlxscalings.hpp"
-
-namespace wc3lib
-{
-
-namespace mdlx
-{
-
-/// KLBC
-class AmbientColors : public MdlxScalings
-{
-	public:
-		AmbientColors(class Light *light);
-		virtual ~AmbientColors();
-
-		class Light* light() const;
-		const std::list<class AmbientColor*>& colors() const;
-
-		virtual std::streamsize readMdl(istream &istream) throw (class Exception);
-		virtual std::streamsize writeMdl(ostream &ostream) throw (class Exception);
-
-	protected:
-		virtual class MdlxScaling* createNewMember();
-
-		class Light *m_light;
-};
-
-inline class Light* AmbientColors::light() const
-{
-	return this->m_light;
-}
-
-inline const std::list<class AmbientColor*>& AmbientColors::colors() const
-{
-	return reinterpret_cast<const std::list<class AmbientColor*>&>(this->mdlxScalings());
-}
-
-}
-
-}
-
-#endif

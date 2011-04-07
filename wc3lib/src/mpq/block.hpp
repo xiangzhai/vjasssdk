@@ -66,10 +66,15 @@ class Block
 		uint64 largeOffset() const;
 		
 		class Mpq* mpq() const;
+		void setBlockOffset(int32 blockOffset);
 		int32 blockOffset() const;
+		void setExtendedBlockOffset(int32 extendedBlockOffset);
 		int16 extendedBlockOffset() const;
+		void setBlockSize(int32 blockSize);
 		int32 blockSize() const;
+		void setFileSize(int32 fileSize);
 		int32 fileSize() const;
+		void setFlags(enum Flags flags);
 		enum Flags flags() const;
 		// extended attributes
 		CRC32 crc32() const;
@@ -118,9 +123,19 @@ inline class Mpq* Block::mpq() const
 	return this->m_mpq;
 }
 
+inline void Block::setBlockOffset(int32 blockOffset)
+{
+	this->m_blockOffset = blockOffset;
+}
+
 inline int32 Block::blockOffset() const
 {
 	return this->m_blockOffset;
+}
+
+inline void Block::setExtendedBlockOffset(int32 extendedBlockOffset)
+{
+	this->m_extendedBlockOffset = extendedBlockOffset;
 }
 
 inline int16 Block::extendedBlockOffset() const
@@ -128,14 +143,29 @@ inline int16 Block::extendedBlockOffset() const
 	return this->m_extendedBlockOffset;
 }
 
+inline void Block::setBlockSize(int32 blockSize)
+{
+	this->m_blockSize = blockSize;
+}
+
 inline int32 Block::blockSize() const
 {
 	return this->m_blockSize;
 }
 
+inline void Block::setFileSize(int32 fileSize)
+{
+	this->m_fileSize = fileSize;
+}
+
 inline int32 Block::fileSize() const
 {
 	return this->m_fileSize;
+}
+
+inline void Block::setFlags(enum Flags flags)
+{
+	this->m_flags = flags;
 }
 
 inline enum Block::Flags Block::flags() const

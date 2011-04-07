@@ -23,6 +23,7 @@
 
 #include <kurl.h>
 #include <kaction.h>
+#include <kparts/part.h>
 
 #include "module.hpp"
 #include "ui/ui_textureeditor.h"
@@ -33,7 +34,11 @@ namespace wc3lib
 namespace editor
 {
 
-/// \todo Needs item list from object editor (skin meta data).
+/**
+ * Allows you to open, view, modify and store skins/textures.
+ * \todo If available it should use gvpart (KPart from gwenview), otherwise use label with custom actions.
+ * \todo Needs item list from object editor (skin meta data, splat meta data and ubersplat meta data).
+*/
 class TextureEditor : public Module, protected Ui::TextureEditor
 {
 	Q_OBJECT
@@ -85,6 +90,8 @@ class TextureEditor : public Module, protected Ui::TextureEditor
 		
 		KAction *m_showAlphaChannelAction;
 		KAction *m_showTransparencyAction;
+		
+		KParts::ReadWritePart *m_part;
 };
 
 inline bool TextureEditor::showsAlphaChannel() const

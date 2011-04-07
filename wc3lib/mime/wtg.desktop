@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=MimeType
+MimeType=interface/wtg
+Icon=wtg
+Patterns=*.wtg;
+DefaultApp=wtg
+Comment=Warcraft 3 Trigger File
+Comment[de]=Warcraft-3-Auslöserdatei

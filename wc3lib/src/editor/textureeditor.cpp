@@ -28,6 +28,7 @@
 #include <kaction.h>
 #include <kmenubar.h>
 #include <kstandardaction.h>
+#include <kservice.h>
 
 #include "textureeditor.hpp"
 #include "blpiohandler.hpp"
@@ -38,12 +39,37 @@ namespace wc3lib
 namespace editor
 {
 
-TextureEditor::TextureEditor(class Editor *editor) : Module(editor), m_image(new QImage()), m_showsAlphaChannel(false), m_showsTransparency(false), m_factor(1.0)
+TextureEditor::TextureEditor(class Editor *editor) : Module(editor), m_image(new QImage()), m_showsAlphaChannel(false), m_showsTransparency(false), m_factor(1.0), m_part(0)
 {
 	Ui::TextureEditor::setupUi(this);
 	Module::setupUi();
 
 	topLayout()->addLayout(gridLayout_2);
+	
+	KService::Ptr service = KService::serviceByDesktopPath("gvpart.desktop");
+ 
+	if (service)
+	{
+		m_part = service->createInstance<KParts::ReadWritePart>(0);
+ 
+		if (m_part)
+		{
+			// tell the KParts::MainWindow that this is indeed
+			// the main widget
+			gridLayout_2->addWidget(m_part->widget());
+			
+			//setupGUI(ToolBar | Keys | StatusBar | Save);
+ 
+			// and integrate the part's GUI with the shell's
+			//createGUI(m_part);
+		}
+	}
+	else
+	{
+		// if we couldn't find our Part, we exit since the Shell by
+		// itself can't do anything useful
+		KMessageBox::error(this, i18n("Service \"gvpart.desktop\" not found."));
+	}
 }
 
 TextureEditor::~TextureEditor()

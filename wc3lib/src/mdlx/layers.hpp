@@ -21,8 +21,8 @@
 #ifndef WC3LIB_MDLX_LAYERS_HPP
 #define WC3LIB_MDLX_LAYERS_HPP
 
-#include "mdlxproperty.hpp"
 #include "groupmdxblock.hpp"
+#include "mdlxproperty.hpp"
 
 namespace wc3lib
 {
@@ -31,7 +31,7 @@ namespace mdlx
 {
 
 /// MDX tag "LAYS".
-class Layers : public MdlxProperty, public GroupMdxBlock
+class Layers : public GroupMdxBlock, public MdlxProperty
 {
 	public:
 		Layers(class Material *material);

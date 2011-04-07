@@ -1,5 +1,8 @@
+2011-04-07 Tamino Dauth <tamino@cdauth.eu>
+* Project work related stuff (school): Fix camera view of Model Editor, fix texture resource path (replace \ character by / on Unix systems -> should happen automatically when using QUrl or KUrl?!), fix texture wrapping on model, implement camera rotation around selected point (not only origin - (0|0|0)), implement MDX writing for all required types, try MDL reading!!!
+
 2011-03-27 Tamino Dauth <tamino@cdauth.eu>
-* editor: Add class TextureView similar to ModelView with actions of texture editor using label as widget (only allows you to view one specific texture).
+* editor: Add class TextureView similar to ModelView with actions of texture editor using KPart gwenview as widget (only allows you to view one specific texture) which besides stores corresponding BLP information and MIP maps.
 * editor: Class TextureView should store BLP object if file is BLP to show single MIP maps.
 * mdlx: MdlxProperty has to be inherited as second class!!! (multiple inheritance issue)
 

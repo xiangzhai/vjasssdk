@@ -41,22 +41,29 @@ namespace editor
 ModelView::ModelView(class Editor *editor, QWidget *parent, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : QWidget(parent, f), m_editor(editor), m_sceneType(ogreSceneType), m_parameters(ogreParameters), m_root(new Ogre::Root()), m_renderWindow(0), m_sceneManager(0), m_camera(0), m_viewPort(0), m_changeFarClip(false), m_enableMouseMovement(false), m_enableMouseRotation(false), m_rotateSpeed(1.0), m_moveSpeed(2.0), m_scrollSpeed(0.80), m_yawValue(0.0), m_pitchValue(0.0)
 {
 	// setup a renderer
-	const Ogre::RenderSystemList &renderers = this->m_root->getAvailableRenderers();
-	assert(!renderers.empty()); // we need at least one renderer to do anything useful
-	Ogre::RenderSystem *renderSystem = renderers.front();
-	assert(renderSystem); // user might pass back a null renderer, which would be bad!
-	// configuration is setup automatically by ogre.cfg file
-	renderSystem->setConfigOption("Full Screen", "No");
-	this->m_root->setRenderSystem(renderSystem);
-	// initialize without creating window
-	this->m_root->saveConfig();
-	this->m_root->initialise(false); // don't create a window
+	if (!this->m_root->isInitialised())
+	{
+		const Ogre::RenderSystemList &renderers = this->m_root->getAvailableRenderers();
+		assert(!renderers.empty()); // we need at least one renderer to do anything useful
+		Ogre::RenderSystem *renderSystem = renderers.front();
+		assert(renderSystem); // user might pass back a null renderer, which would be bad!
+		// configuration is setup automatically by ogre.cfg file
+		renderSystem->setConfigOption("Full Screen", "No");
+		this->m_root->setRenderSystem(renderSystem);
+		// initialize without creating window
+		this->m_root->saveConfig();
+		this->m_root->initialise(false); // don't create a window
+	}
+	else if (this->m_root->getRenderSystem()->getConfigOptions()["Full Screen"].currentValue == "Yes")
+		KMessageBox::information(this, i18n("Full screen is enabled."));
 }
 
 ModelView::~ModelView()
 {
 	//if (this->m_frameListener)
 		//delete this->m_frameListener;
+	delete this->m_renderWindow;
+	delete this->m_sceneManager; // destroys all entities automatically?
 }
 
 void ModelView::centerView()

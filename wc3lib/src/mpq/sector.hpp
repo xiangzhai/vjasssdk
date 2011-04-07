@@ -30,24 +30,12 @@ namespace wc3lib
 namespace mpq
 {
 
+/**
+ * Actually there is no read and write member functions since Sectors are created by \ref MpqFile instances when data is being read or written.
+ */
 class Sector
 {
 	public:
-		Sector(class MpqFile *mpqFile);
-		
-		/**
-		* Reads new sector data from input stream @param istream and writes it into the MPQ archive.
-		*/
-		std::streamsize readData(istream &istream) throw (class Exception);
-		/**
-		* Writes sector data into output stream	@param ostream.
-		*/
-		std::streamsize writeData(ostream &ostream) const throw (class Exception);
-		
-	protected:
-		friend class Mpq;
-		friend class MpqFile;
-		
 		enum Compression
 		{
 			Uncompressed = 0,
@@ -58,6 +46,26 @@ class Sector
 			Imploded = 0x08, // Imploded (see PKWare Data Compression Library)
 			Bzip2Compressed = 0x10 // BZip2 compressed (see BZip2)
 		};
+		
+		Sector(class MpqFile *mpqFile);
+		
+		/**
+		 * Reads new sector data from input stream \p istream and writes it into the MPQ archive.
+		 * Effectively changes sector's size!
+		 * \return Returns size of read data.
+		 */
+		std::streamsize readData(istream &istream) throw (class Exception);
+		/// This version is required by class \ref MpqFile for reading sector data.
+		std::streamsize readData(const byte *buffer, const std::size_t bufferSize) throw (class Exception);
+		/**
+		 * Writes sector data into output stream \p ostream.
+		 * \return Returns size of written data.
+		 */
+		std::streamsize writeData(ostream &ostream) const throw (class Exception);
+		
+	protected:
+		friend class Mpq;
+		friend class MpqFile;
 		
 		void setCompression(byte value);
 		uint32 sectorKey() const;

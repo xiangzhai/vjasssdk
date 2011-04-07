@@ -23,12 +23,10 @@
 #include <boost/foreach.hpp>
 
 #include "mpqfile.hpp"
-#include "block.hpp"
-#include "hash.hpp"
 #include "mpq.hpp"
-#include "sector.hpp"
 #include "../internationalisation.hpp"
 #include "algorithm.hpp" //debug
+#include "utilities.hpp"
 
 namespace wc3lib
 {
@@ -36,12 +34,68 @@ namespace wc3lib
 namespace mpq
 {
 
-std::streamsize MpqFile::readData(istream &istream) throw (class Exception)
+void MpqFile::removeData() throw (class Exception)
 {
-	std::streamsize bytes = 0;
-
+	this->block()->setFileSize(0);
+	
 	BOOST_FOREACH(class Sector *sector, this->m_sectors)
-		bytes += sector->readData(istream);
+		delete sector;
+		
+	/// \todo Clear corresponding sector table in MPQ file?
+}
+	
+std::streamsize MpqFile::readData(istream &istream, Sector::Compression compression) throw (class Exception)
+{
+	removeData();
+	
+	std::streamsize bytes = 0;
+	int16 sectorSize = 0;
+	
+	if (!hasSectorOffsetTable())
+	{
+		if (this->block()->flags() & Block::IsSingleUnit)
+		{
+			class Sector *sector = new Sector(this);
+			this->m_sectors.push_back(sector);
+			sector->m_compression = compression;
+			sector->m_sectorIndex = 0;
+			sector->m_sectorOffset = 0;
+			bytes = sector->readData(istream);
+		}
+		else
+		{
+			int32 sectorIndex = 0;
+			int32 sectorOffset = 0;
+			
+			// split into equal sized (sometimes except last one) sectors
+			while (!eof(istream))
+			{
+				// if last one it may be smaller than MPQ's sector size
+				int16 e = endPosition(istream)- istream.tellg();
+				int16 sectorSize = e >= this->m_mpq->sectorSize() ? this->m_mpq->sectorSize() : e;
+				byte *buffer = new byte[sectorSize];
+				std::streamsize sizeCounter = 0;
+				wc3lib::read(istream, buffer[0], sizeCounter, sectorSize);
+				
+				class Sector *sector = new Sector(this);
+				this->m_sectors.push_back(sector);
+				sector->m_compression = compression;
+				sector->m_sectorIndex = sectorIndex;
+				sector->m_sectorOffset = sectorOffset;
+				bytes += sector->readData(buffer, sectorSize);
+				
+				delete[] buffer;
+				++sectorIndex;
+				sectorOffset += sectorSize;
+			}
+		}
+	}
+	// compressed
+	else
+	{
+		/// \todo AHH!
+	}
+	
 
 	return bytes;
 }
@@ -83,32 +137,24 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 
 	// This table is not present if this information can be calculated.
 	// If the file is not compressed/imploded, then the size and offset of all sectors is known, based on the archive's SectorSizeShift. If the file is stored as a single unit compressed/imploded, then the SectorOffsetTable is omitted, as the single file "sector" corresponds to BlockSize and FileSize, as mentioned previously.
-	if  ((this->block()->flags() & Block::IsSingleUnit) || (!(this->block()->flags() & Block::IsCompressed) && !(this->block()->flags() & Block::IsImploded)) || this->block()->flags() & 0x00030000) /// @todo test
+	if  (!hasSectorOffsetTable() || this->block()->flags() & 0x00030000) /// @todo test
 	{
 		std::cout << "Correct flags: " << std::hex << this->m_hash->m_block->flags() << std::dec << std::endl;
 		//std::cout << "File is not imploded/compressed or it's a single unit " << std::endl;
-		int32 sectors = 0;
-		int16 sectorSize = this->m_mpq->sectorSize();
-
+		
+		const int16 sectorSize = (this->block()->flags() & Block::IsSingleUnit) ? this->block()->fileSize() : this->m_mpq->sectorSize();
 		// If the file is stored as a single unit (indicated in the file's Flags), there is effectively only a single sector, which contains the entire file data.
-		if (this->m_hash->block()->flags() & Block::IsSingleUnit)
-			sectors = 1;
-		else
-			sectors = this->m_hash->block()->blockSize() / sectorSize;
+		const int32 sectors = (this->m_hash->block()->flags() & Block::IsSingleUnit) ? 1 : this->m_hash->block()->blockSize() / sectorSize;
 
 		int32 newOffset = 0;
-		int32 lastSize = this->m_hash->block()->blockSize() % sectorSize;
+		// not necessary for single units
+		const int32 lastSize = this->m_hash->block()->blockSize() % sectorSize;
 
 		for (std::size_t i = 0; i < sectors; ++i)
 		{
 			class Sector *sector = new Sector(this);
 			sector->m_sectorOffset = newOffset;
-
-			if (this->m_hash->block()->flags() & Block::IsSingleUnit)
-				sector->m_sectorSize = this->m_hash->block()->fileSize(); /// @todo blockSize or fileSize?
-			else
-				sector->m_sectorSize = sectorSize;
-
+			sector->m_sectorSize = sectorSize;
 			this->m_sectors.push_back(sector);
 
 			newOffset += sector->m_sectorSize;
@@ -130,25 +176,34 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 	// sector offset table
 	else
 	{
+		// sector number calculation from StormLib
+		// hf->nBlocks  = (hf->pBlock->dwFSize + ha->dwBlockSize - 1) / ha->dwBlockSize;
+		
+		const int32 sectors = (this->block()->fileSize() + this->mpq()->sectorSize() - 1) / this->mpq()->sectorSize();
+		
+		// StormLib specific implementation (extra data)?!
+		//dwToRead = (hf->nBlocks+1) * sizeof(DWORD);
+		//if(hf->pBlock->dwFlags & MPQ_FILE_HAS_EXTRA)
+			//dwToRead += sizeof(DWORD);
+		
 		//std::cout << "Starting required debug messages:" << std::endl;
-		int32 sectors = 1;
 		//int32 sectors = this->m_hash->block()->fileSize() / this->m_mpq->sectorSize(); /// @todo How to get this value?
 		//std::cout << "Sectors " << sectors << " and flags " << std::hex << this->m_hash->block()->flags() << std::dec << std::endl;
 		//std::cout << "Block offset: " << this->m_hash->block()->blockOffset() << ", Block size: " << this->m_hash->block()->blockSize() << std::endl;
 		//std::cout << "Get position: " << istream.tellg() << std::endl;
-		std::cout << "File size: " << this->m_hash->block()->fileSize() << std::endl;
+		std::cout << "File size: " << this->m_hash->block()->fileSize() << " and number of sectors to read " << sectors << std::endl;
 
 		for (std::size_t i = 0; i < sectors; ++i)
 		{
 			int32 offset;
-			istream.read(reinterpret_cast<byte*>(&offset), sizeof(offset));
+			wc3lib::read(istream, offset, bytes);
 			std::cout << "Offset: " << offset << std::endl;
-			bytes += istream.gcount();
 
-
+			// TEST
 			if (offset >= this->m_hash->m_block->fileSize() || offset <= 0)
 			{
 				std::cerr << "Invalid offset: " << offset << " with flags: " << std::hex << this->m_hash->m_block->flags() << std::dec << std::endl;
+				
 				return bytes;
 			}
 
@@ -156,20 +211,26 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 			sector->m_sectorOffset = offset;
 			this->m_sectors.push_back(sector);
 
+			/*
+			DEPRECATED
 			if (i == 0) // sector table ends before first sector offset
 			{
 				sectors = sector->m_sectorOffset / sizeof(sector->m_sectorOffset) - 1;
 				std::cout << "Calculating sectors: " << sectors << std::endl;
 			}
+			*/
 		}
 
-		int32 size;
-		istream.read(reinterpret_cast<byte*>(&size), sizeof(size));
-		std::cout << "Real file size: " << size << std::endl;
-		bytes += istream.gcount();
+		//int32 size;
+		//wc3lib::read(istream, size, bytes);
+		//std::cout << "Real file size: " << size << std::endl;
 
+		// TODO Is there really a last size entry in section offset table?!
 		// The last entry contains the file size, making it possible to easily calculate the size of any given sector.
+		
 		// calculate sector size, not required but maybe useful at some point
+		int32 size = this->block()->fileSize();
+		
 		BOOST_REVERSE_FOREACH(class Sector *sector, this->m_sectors)
 		{
 			sector->m_sectorSize = size - sector->m_sectorOffset;
@@ -178,7 +239,7 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 		}
 	}
 
-	// Set sector indices since they're required for sector en- and decryption.
+	// Set sector indices since they're required for sector en- and decryption and compression flags.
 	int32 index = 0;
 
 	BOOST_FOREACH(class Sector *sector, this->m_sectors)
@@ -189,8 +250,7 @@ std::streamsize MpqFile::read(istream &istream) throw (class Exception)
 		if (this->isCompressed())
 		{
 			byte compression;
-			istream.read(reinterpret_cast<byte*>(&compression), sizeof(compression));
-			bytes += istream.gcount();
+			wc3lib::read(istream, compression, bytes);
 
 			// as well, this byte is encrypted with the sector data, if applicable.
 			if (this->isEncrypted())
@@ -225,7 +285,7 @@ void MpqFile::remove() throw (class Exception)
 {
 	this->m_hash->clear();
 
-	/// @todo Clear file content?
+	/// @todo Clear file content -> usually unnecessary?
 	//BOOST_FOREACH(class Sector *sector, this->m_sectors)
 		//bytes += sector->clear();
 }

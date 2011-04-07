@@ -35,7 +35,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-Attachment::Attachment(class Attachments *attachments) : GroupMdxBlockMember(attachments), Object(attachments->mdlx()), m_visibilities(new AttachmentVisibilities(attachments->mdlx()))
+Attachment::Attachment(class Attachments *attachments) : Object(attachments->mdlx()), GroupMdxBlockMember(attachments), m_visibilities(new AttachmentVisibilities(attachments->mdlx()))
 {
 }
 

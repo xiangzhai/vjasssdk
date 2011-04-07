@@ -1,3 +1,13 @@
+2011-04-07 Tamino Dauth <tamino@cdauth.eu>
+* StormLib: "open" of Linux port uses permissions now if file is created.
+* mpq: Added member function MpqFile::hasSectorOffsetTable.
+* mpq: Added member function MpqFile::removeData.
+* mpq: Improved member function MpqFile::readData.
+* mpq: MpqFile::read uses sector offset table calculation from StormLib now.
+
+2011-04-03 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fixed bimap implementation of class "ModelEditor".
+
 2011-03-27 Tamino Dauth <tamio@cdauth.eu>
 * editor: Improved texture editor actions.
 * editor: Class "BlpIOHandler" allows you to convert without device now.
@@ -274,8 +284,8 @@
 * Improved JASS++ parser files.
 
 2010-06-05 Tamino Dauth <tamino@cdauth.eu>
-* Revised Jass++ specification.
-* Revised Jass++ compiler implementation suggestion.
+* Revised JASS++ specification.
+* Revised JASS++ compiler implementation suggestion.
 * cmake function WC3LIB_SET_COMPILE_FLAG is called WC3LIB_GET_COMPILE_FLAG now.
 * Added cmake function WC3LIB_ENABLE_COMPILE_FLAG.
 * Improved GCC options setup.
@@ -289,15 +299,15 @@
 * Revised classes map::Environment, map::Tilepoint, map::Shadow and map::Pathmap.
 * Added struct map::Rgb and class map::Position.
 * Added UI for camera palette to editor module.
-* Revised Jass++ specification - added load and ai blocks and improved conversion description and enum specification.
+* Revised JASS++ specification - added load and ai blocks and improved conversion description and enum specification.
 
 2010-06-02 Tamino Dauth <tamino@cdauth.eu>
 * Added classes map::Camera, map::Cameras, map::Rect and map::Rects.
 * Added utility functions readCString, readString, writeCString and writeString.
 
 2010-06-01 Tamino Dauth <tamino@cdauth.eu>
-* Dropped unnecessary operator "length" of language Jass++.
-* Added "container types" definition to Jass++ specification.
+* Dropped unnecessary operator "length" of language JASS++.
+* Added "container types" definition to JASS++ specification.
 * Added list of native "container types".
 
 2010-05-28 Tamino Dauth <tamino@cdauth.eu>
@@ -307,7 +317,7 @@
 * Revised nearly all mdlx classes (revised read/write functions).
 
 2010-05-23 Tamino Dauth <tamino@cdauth.eu>
-* Improved Jass++ specification.
+* Improved JASS++ specification.
 
 2010-05-16 Tamino Dauth <tamino@cdauth.eu>
 * Improved runtime library loading support.
@@ -335,11 +345,11 @@
 * Added some editor related todo tasks.
 
 2010-05-01 Tamino Dauth <tamino@cdauth.de>
-* Revised Jass++ definition.
+* Revised JASS++ definition.
 
 2010-04-30 Tamino Dauth <tamino@cdauth.de>
 * Added compressPklib and decompressPklib functions and imploded sectors support.
-* Added section "G?ltigkeitsbereichverwendung" to Jass++ definition.
+* Added section "G?ltigkeitsbereichverwendung" to JASS++ definition.
 * Added Doxygen settings file.
 * Revised cmake files.
 
@@ -348,10 +358,10 @@
 * Improved file reading and added debug mode for flag 0x00030000 which seems to be a flag for skipping the sector table.
 
 2010-04-24 Tamino Dauth <tamino@cdauth.de>
-* Revised Jass++ definition.
+* Revised JASS++ definition.
 
 2010-04-17 Tamino Dauth <tamino@cdauth.de>
-* Added function types to Jass++ definition.
+* Added function types to JASS++ definition.
 * Added ZLib inflation support for MPQ file sections.
 * Added option --benchmark to application mpq.
 * Added option --formats to application converter.
@@ -378,7 +388,7 @@
 
 2010-04-04 Tamino Dauth <tamino@cdauth.de>
 * Added various methods overloadings to class mpq::Mpq and various methods wrappers to class mpq::MpqFile.
-* Revised Jass++ documentation.
+* Revised JASS++ documentation.
 
 2010-04-03 Tamino Dauth <tamino@cdauth.de>
 * Improved MPQ library functionaliy.
@@ -415,7 +425,7 @@
 
 2010-02-14 Tamino Dauth <tamino@cdauth.de>
 * Added cmake macro WC3LIB_ENABLE_EXCEPTIONS.
-* Revised Jass++ specification.
+* Revised JASS++ specification.
 
 2010-02-13 Tamino Dauth <tamino@cdauth.de>
 * Improved class map::Pathmap.
@@ -423,7 +433,7 @@
 2010-02-12 Tamino Dauth <tamino@cdauth.de>
 * Added various operators to class mpq::Mpq.
 * Added directory "src/app/examples".
-* Revised Jass++ specification.
+* Revised JASS++ specification.
 
 2010-02-06 Tamino Dauth <tamino@cdauth.de>
 * Seperated classes mpq::Hash, mpq::Block and mpq::Sector.
@@ -431,17 +441,17 @@
 2010-02-04 Tamino Dauth <tamino@cdauth.de>
 * Improved application tilesetter.
 * Tried some cmake exception handling definitions.
-* Revised Jass++ definition.
+* Revised JASS++ definition.
 
 2010-02-01 Tamino Dauth <tamino@cdauth.de>
-* Revised Jass++ definition.
+* Revised JASS++ definition.
 
 2010-01-28 Tamino Dauth <tamino@cdauth.de>
 * Revised various cmake files.
 * Improved MPQ library.
 
 2010-01-26 Tamino Dauth <tamino@cdauth.de>
-* Improved Jass language code files.
+* Improved JASS language code files.
 * Improved and added several methods to class mpq::Mpq.
 * Improved warblender scripts.
 
@@ -483,7 +493,7 @@
 * Revised lang module.
 
 2009-12-31 Tamino Dauth <tamino@cdauth.de>
-* Revised new Jass natives list.
+* Revised new JASS natives list.
 * Added option --readonly and w3e support to application "converter".
 * Improved classes map::Environment, map::Tilepoint, map::W3m and map::Shadow.
 
@@ -493,7 +503,7 @@
 2009-12-19 Tamino Dauth <tamino@cdauth.de>
 * Added folder "src/lang" with sub project for scripting languages (replacing vjassdoc project).
 * Renamed folder "src/test" to "src/apps" for all applications.
-* Added file "src/apps/jassc.cpp" for Jass compiler application.
+* Added file "src/apps/jassc.cpp" for JASS compiler application.
 
 2009-12-18 Tamino Dauth <tamino@cdauth.de>
 * Improved class blp::Blp::MipMap.

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=MimeType
+MimeType=text/wts
+Icon=wts
+Patterns=*.wts;
+DefaultApp=kwrite
+Comment=Warcraft 3 String File
+Comment[de]=Warcraft-3-Zeichenkettendatei

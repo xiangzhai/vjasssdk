@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@ namespace editor
 * Dialog which is displayed when creating a new map in editor.
 * Allows you to select size, main tileset, filling tile, initial cliff and water level and if there is a randomized height level of map.
 */
-class NewMapDialog : public KDialog, public Ui::NewMapDialog
+class NewMapDialog : public KDialog, protected Ui::NewMapDialog
 {
 	public:
 		NewMapDialog(class QWidget *parent);

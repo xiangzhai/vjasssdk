@@ -21,8 +21,6 @@
 #ifndef WC3LIB_MDLX_HELPERS_HPP
 #define WC3LIB_MDLX_HELPERS_HPP
 
-#include <list>
-
 #include "groupmdxblock.hpp"
 
 namespace wc3lib
