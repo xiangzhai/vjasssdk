@@ -21,8 +21,8 @@
 #ifndef WC3LIB_MDLX_COLLISIONSHAPE_HPP
 #define WC3LIB_MDLX_COLLISIONSHAPE_HPP
 
-#include "object.hpp"
 #include "groupmdxblockmember.hpp"
+#include "object.hpp"
 #include "../internationalisation.hpp"
 #include "collisionshapes.hpp"
 
@@ -32,7 +32,7 @@ namespace wc3lib
 namespace mdlx
 {
 
-class CollisionShape : public Object, public GroupMdxBlockMember
+class CollisionShape : public GroupMdxBlockMember, public Object
 {
 	public:
 		enum Shape

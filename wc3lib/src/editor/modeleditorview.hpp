@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <kapplication.h>
+#ifndef WC3LIB_EDITOR_MODELEDITORVIEW_HPP
+#define WC3LIB_EDITOR_MODELEDITORVIEW_HPP
 
-#include "modeleditorsettings.hpp"
-#include "modeleditor.hpp"
-#include "modeleditorview.hpp"
+#include "modelview.hpp"
 
 namespace wc3lib
 {
@@ -30,28 +29,31 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditorSettings::ModelEditorSettings(class ModelEditor *modelEditor) : ModelViewSettings(modelEditor->modelView()), m_modelEditor(modelEditor)
+/**
+ * Customized version of \ref ModelView which implements "hit test" and other things required by \ref ModelEditor.
+ */
+class ModelEditorView : public ModelView
 {
-}
+	public:
+		ModelEditorView(class ModelEditor *modelEditor, Qt::WFlags f = 0, Ogre::SceneType ogreSceneType = Ogre::ST_EXTERIOR_CLOSE, const Ogre::NameValuePairList *ogreParameters = 0);
+		virtual ~ModelEditorView();
+		
+		class ModelEditor* modelEditor() const;
+		
+	protected:
+		/// Implements "hit test" based selection. \sa ModelEditor::hitTest.
+		virtual void mousePressEvent(QMouseEvent *event);
+		
+		class ModelEditor *m_modelEditor;
+};
 
-void ModelEditorSettings::read(const KConfigGroup &group)
+inline class ModelEditor* ModelEditorView::modelEditor() const
 {
-	ModelViewSettings::read(group);
-	this->modelEditor()->m_recentUrl = group.readEntry("FilePath", "");
-	/// @todo Read some preview settings which are not related to OGRE rather than to Warcraft 3 (fog, environment lighting, time of day)
-}
-
-void ModelEditorSettings::write(KConfigGroup &group) const
-{
-	ModelViewSettings::write(group);
-	group.writeEntry("FilePath", this->modelEditor()->m_recentUrl);
-}
-
-QString ModelEditorSettings::groupName() const
-{
-	return "ModelEditor";
+	return m_modelEditor;
 }
 
 }
 
 }
+
+#endif

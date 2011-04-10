@@ -215,18 +215,18 @@ Ogre::Image* Editor::blpToOgre(const KUrl &url, const QString &format) const thr
 	QFile file(findFile(url).toLocalFile());
 
 	if (!file.open(QIODevice::ReadOnly))
-		throw Exception(boost::format(_("Unable to open texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
+		throw Exception(boost::format(_("Unable to open texture image \"%1%\".")) % url.toLocalFile().toUtf8().constData());
 
 	QImage qImage;
 
 	if (!qImage.load(&file, 0))
-		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % url.toLocalFile().toAscii().data());
+		throw Exception(boost::format(_("Unable to load texture image \"%1%\".")) % url.toLocalFile().toUtf8().constData());
 
 	file.close();
 	QByteArray ba;
 	QBuffer buffer(&ba);
 	buffer.open(QIODevice::WriteOnly);
-	qImage.save(&buffer, format.toAscii().data());
+	qImage.save(&buffer, format.toUtf8().constData());
 
 	// TEST (writing buffer on disk)
 	/*
@@ -259,7 +259,7 @@ Ogre::Image* Editor::blpToOgre(const KUrl &url, const QString &format) const thr
 	}
 	catch (Ogre::Exception &exception)
 	{
-		throw Exception(boost::format(_("Unable to open texture image \"%1%\".\nOGRE error: \"%2%\"")) % url.toLocalFile().toAscii().data() % exception.what());
+		throw Exception(boost::format(_("Unable to open texture image \"%1%\".\nOGRE error: \"%2%\"")) % url.toLocalFile().toUtf8().constData() % exception.what());
 	}
 
 	return image;

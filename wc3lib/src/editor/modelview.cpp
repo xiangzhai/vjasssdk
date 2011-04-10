@@ -68,10 +68,18 @@ ModelView::~ModelView()
 
 void ModelView::centerView()
 {
-	this->m_camera->setPosition(Ogre::Vector3(0, 0, 0));
-	this->m_camera->lookAt(Ogre::Vector3(0, 0, 0));
-	this->m_camera->setNearClipDistance(1.0);
-	this->m_camera->setFarClipDistance(50000);
+	/*
+	From OGRE source of OgreFrustum.cpp
+	mFOVy(Radian(Math::PI/4.0f)), 
+        mFarDist(100000.0f), 
+        mNearDist(100.0f), 
+        */
+	this->m_camera->setPosition(Ogre::Vector3::ZERO);
+	this->m_camera->setFOVy(Ogre::Radian(Ogre::Math::PI/4.0f));
+	//this->m_camera->lookAt(Ogre::Vector3(0, 0, 0));
+	this->m_camera->setDirection(Ogre::Vector3::ZERO);
+	this->m_camera->setNearClipDistance(100.0f);
+	this->m_camera->setFarClipDistance(100000.0f);
 	this->m_camera->setAspectRatio(static_cast<Ogre::Real>(this->m_viewPort->getActualWidth()) / static_cast<Ogre::Real>(this->m_viewPort->getActualHeight()));
 	this->render();
 }
@@ -211,7 +219,7 @@ void ModelView::mouseMoveEvent(QMouseEvent *event)
 		// moves camera along to x- and y-axis
 		QPoint p(event->x(), event->y());
 		p -= this->m_mousePoint;
-		this->m_camera->moveRelative(Ogre::Vector3(p.x() * m_moveSpeed, -p.y() * m_moveSpeed, 0));
+		this->m_camera->moveRelative(Ogre::Vector3(-p.x() * m_moveSpeed, p.y() * m_moveSpeed, 0));
 		this->render();
 		// refresh mouse point
 		this->m_mousePoint = QPoint(event->x(), event->y());
@@ -231,16 +239,20 @@ void ModelView::mouseMoveEvent(QMouseEvent *event)
 		*/
 		QPoint p(event->x(), event->y());
 		p -= this->m_mousePoint;
+		
+		//Ogre::Ray ray = this->m_camera->getCameraToViewportRay(p.x(), p.y());
+		//ray.
+		
 		Ogre::Real radius = this->m_camera->getPosition().length();
 		this->m_camera->setPosition(this->m_camera->getDirection());
-		//this->m_camera->setPosition(0.0, 0.0, 0.0);
+		this->m_camera->setPosition(0.0, 0.0, 0.0);
 		this->m_camera->setOrientation(Ogre::Quaternion::IDENTITY);
 		this->m_yawValue -= p.x() * m_rotateSpeed;
 		this->m_pitchValue -= p.y() * m_rotateSpeed;
 		this->m_camera->yaw(Ogre::Degree(this->m_yawValue)); // -
 		this->m_camera->pitch(Ogre::Degree(this->m_pitchValue)); // -
 		this->m_camera->moveRelative(Ogre::Vector3(0.0,0.0,radius));
-		//this->m_camera->roll(Ogre::Degree(-event->x() * m_rotateSpeed));
+		this->m_camera->roll(Ogre::Degree(-event->x() * m_rotateSpeed));
 		this->render();
 		// refresh mouse point
 		this->m_mousePoint = QPoint(event->x(), event->y());

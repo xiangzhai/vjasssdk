@@ -30,9 +30,10 @@
 #include <kmenu.h>
 #include <kmenubar.h>
 #include <kaction.h>
+#include <kcolordialog.h>
 
 #include "modeleditor.hpp"
-#include "modelview.hpp"
+#include "modeleditorview.hpp"
 #include "editor.hpp"
 #include "../utilities.hpp"
 #include "resource.hpp"
@@ -46,7 +47,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelView(editor, this, 0)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0), m_hitTest(true)
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelEditorView(this)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0), m_hitTest(true)
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -126,50 +127,13 @@ void ModelEditor::saveFile()
 		return;
 	}
 
-	// export MDLX file
-	if (boost::filesystem::path(url.toEncoded()).extension() == ".mdx" || boost::filesystem::path(url.toEncoded()).extension() == ".mdl")
+	try
 	{
-		std::ios_base::openmode openmode = std::ios_base::out;
-		bool isMdx;
-		qDebug() << "Extension is " << QString(boost::filesystem::path(url.toEncoded()).extension().c_str());
-		qDebug() << "Encoded URL " << url.path().toAscii();
-
-		if (boost::filesystem::path(url.toEncoded()).extension() == ".mdx")
-		{
-			qDebug() << "Is MDLX";
-			isMdx = true;
-			openmode |= std::ios_base::binary;
-		}
-		else
-			isMdx = false;
-
-		std::ofstream ofstream(url.path().toAscii(), openmode);
-
-		try
-		{
-			std::streamsize size;
-
-			if (isMdx)
-				size = this->m_models.left.begin()->second->mdlx()->writeMdx(ofstream);
-			else
-				size = this->m_models.left.begin()->second->mdlx()->writeMdl(ofstream);
-
-			KMessageBox::information(this, i18n("Wrote %1 file \"%2\" successfully.\nSize: %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
-		}
-		catch (class Exception &exception)
-		{
-			KMessageBox::error(this, i18n("Unable to write %1 file \"%2\".\nException \"%3\".", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), exception.what().c_str()));
-		}
+		this->m_models.left.begin()->second->saveAs(url);
 	}
-	// export by using OGRE
-	else
+	catch (Exception exception)
 	{
-		/*
-		TODO Implement!
-		Ogre::Scene
-		Ogre::MeshSerializer *ser = new Ogre::MeshSerializer();
-		ser->exportMesh(this->m_models.front()->);
-		*/
+		KMessageBox::error(this, i18n("Unable to write file \"%1\".\nException \"%2\".", url.toLocalFile(), exception.what().c_str()));
 	}
 }
 
@@ -221,9 +185,27 @@ void ModelEditor::showStats()
 	this->m_renderStatsWidget->setVisible(!this->m_renderStatsWidget->isVisible());
 }
 
-void ModelEditor::viewCamera(QAction *action)
+void ModelEditor::changeTeamColor()
 {
-	this->m_modelView->setCamera(this->m_cameraActions.left.at(action));
+	QColor color;
+	
+	if (KColorDialog::getColor(color, OgreMdlx::teamColor(this->m_models.left.begin()->second->teamColor()), this) == KColorDialog::Ok)
+		this->m_models.left.begin()->second->setTeamColor(OgreMdlx::teamColor(color));
+}
+
+void ModelEditor::changeTeamGlow()
+{
+	QColor color;
+	
+	if (KColorDialog::getColor(color, OgreMdlx::teamColor(this->m_models.left.begin()->second->teamGlow()), this) == KColorDialog::Ok)
+		this->m_models.left.begin()->second->setTeamGlow(OgreMdlx::teamColor(color));
+}
+
+void ModelEditor::viewCamera()
+{
+	QAction *action = boost::polymorphic_cast<QAction*>(QObject::sender());
+	//this->m_modelView->setCamera(this->m_cameraActions.left.at(action));
+	OgreMdlx::updateCamera(*this->m_cameraActions.left.at(action), this->m_modelView->camera()); // updates current camera to camera's position
 }
 
 void ModelEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -245,59 +227,6 @@ void ModelEditor::dropEvent(QDropEvent *event)
 	}
 }
 
-void ModelEditor::mousePressEvent(QMouseEvent *event)
-{
-	/*
-	if (event->button() == Qt::LeftButton && this->m_modelView->rect().contains(event->globalX(), event->globalY()))
-	{
-		if (hitTest())
-		{
-			/// \todo Easier query only with collision shapes!!!
-			QPoint point(event->globalX() - this->modelView()->x(), event->globalY() - this->modelView()->y());
-			Ogre::Ray mouseRay =  this->modelView()->camera()->getCameraToViewportRay(point.x() / float(this->modelView()->width()), point.y() / float(this->modelView()->height()));
-			Ogre::RaySceneQuery *raySceneQuery = this->modelView()->sceneManager()->createRayQuery(mouseRay);
-			raySceneQuery->setRay(mouseRay);
-			raySceneQuery->setSortByDistance(true);
-			Ogre::RaySceneQueryResult &result = raySceneQuery->execute();
-
-			foreach(const Ogre::RaySceneQueryResultEntry &entry, result)
-			{
-				if (entry.movable)
-				{
-					foreach (ModelsType::left_value_type value, m_models)
-					{
-						if (value.second->
-					}
-					entry.movable->setVisible(!entry.movable->getVisible());
-				}
-			}
-
-			delete raySceneQuery;
-			raySceneQuery = 0;
-			
-			event->ignore(); // prevent model view from evaluating event
-		}
-		else
-		{
-			event->accept(); // model view can evaluate event
-		}
-	}
-	*/
-	
-}
-
-void ModelEditor::actionEvent(QActionEvent *event)
-{
-	CameraActions::left_iterator iterator = this->m_cameraActions.left.find(event->action());
-	qDebug() << "Action event with " << event->action()->text();
-	
-	if (iterator != m_cameraActions.left.end())
-	{
-		qDebug() << "is camera action";
-		viewCamera(event->action());
-	}
-}
-
 bool ModelEditor::openUrl(const KUrl &url)
 {
 	std::ios_base::openmode openmode = std::ios_base::in;
@@ -312,7 +241,7 @@ bool ModelEditor::openUrl(const KUrl &url)
 	else
 		isMdx = false;
 
-	std::ifstream ifstream(url.path().toAscii(), openmode);
+	boost::filesystem::basic_ifstream<mdlx::byte> ifstream(url.path().toUtf8().constData(), openmode);
 	
 	class mdlx::Mdlx *model = new mdlx::Mdlx();
 
@@ -384,9 +313,9 @@ void ModelEditor::addCameraActions(const OgreMdlx &ogreModel)
 		BOOST_FOREACH(OgreMdlx::Cameras::const_reference iterator, ogreModel.cameras())
 		{
 			KAction *action = new KAction(KIcon(":/actions/viewcamera.png"), i18n("Camera: %1", iterator.first->name()), this);
-			connect(action, SIGNAL(triggered()), this, SLOT(viewCamera(action)));
+			connect(action, SIGNAL(triggered()), this, SLOT(viewCamera()));
 			this->m_viewMenu->addAction(action);
-			this->m_cameraActions.left.insert(CameraActions::left_value_type(action, iterator.second));
+			this->m_cameraActions.left.insert(CameraActions::left_value_type(action, iterator.first));
 		}
 	}
 }
@@ -397,11 +326,11 @@ void ModelEditor::removeCameraActions(const OgreMdlx &ogreModel)
 	{
 		BOOST_FOREACH(OgreMdlx::Cameras::const_reference camera, ogreModel.cameras())
 		{
-			CameraActions::right_iterator iterator = m_cameraActions.right.find(camera.second);
+			CameraActions::right_iterator iterator = m_cameraActions.right.find(camera.first);
 			
 			if (iterator != m_cameraActions.right.end())
 			{
-				delete iterator->second;
+				delete iterator->second; // delete action
 				m_cameraActions.right.erase(iterator);
 			}
 		}
@@ -459,6 +388,14 @@ void ModelEditor::createMenus(class KMenuBar *menuBar)
 
 	action = new KAction(KIcon(":/actions/showstats.png"), i18n("Show Stats"), this);
 	connect(action, SIGNAL(triggered()), this, SLOT(showStats()));
+	viewMenu->addAction(action);
+	
+	action = new KAction(KIcon(":/actions/changeteamcolor.png"), i18n("Change team color"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(changeTeamColor()));
+	viewMenu->addAction(action);
+	
+	action = new KAction(KIcon(":/actions/changeteamglow.png"), i18n("Change team glow"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(changeTeamGlow()));
 	viewMenu->addAction(action);
 
 	qDebug() << "Menus";

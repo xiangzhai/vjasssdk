@@ -48,14 +48,14 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 	public:
 		typedef boost::bimap<class mdlx::Mdlx*, class OgreMdlx*> Models;
-		typedef boost::bimap<QAction*, Ogre::Camera*> CameraActions;
+		typedef boost::bimap<QAction*, const mdlx::Camera*> CameraActions;
 		
 		ModelEditor(class Editor *editor);
 		virtual ~ModelEditor();
 
 		virtual void show();
 
-		class ModelView* modelView() const;
+		class ModelEditorView* modelView() const;
 		const Models& models() const;
 		const CameraActions& cameraACtions() const;
 		void setHitTest(bool hitTest);
@@ -72,9 +72,11 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		void setPolygonModeWireframe();
 		void setPolygonModeSolid();
 		void showStats();
+		void changeTeamColor();
+		void changeTeamGlow();
 
 	protected slots:
-		void viewCamera(QAction*);
+		void viewCamera();
 
 	protected:
 		friend class ModelEditorSettings;
@@ -89,11 +91,6 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		// load file events
 		virtual void dragEnterEvent(QDragEnterEvent *event);
 		virtual void dropEvent(QDropEvent *event);
-		
-		/// Implements "hit test" based selection. \sa ModelEditor::hitTest.
-		virtual void mousePressEvent(QMouseEvent *event);
-		
-		virtual void actionEvent(QActionEvent *event);
 
 		bool openUrl(const KUrl &url);
 		void removeModel(OgreMdlx *ogreModel);
@@ -101,7 +98,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		void addCameraActions(const OgreMdlx &ogreModel);
 		void removeCameraActions(const OgreMdlx &ogreModel);
 
-		class ModelView *m_modelView;
+		class ModelEditorView *m_modelView;
 		class ModelEditorSettingsDialog *m_settingsDialog;
 		KUrl m_recentUrl;
 		Models m_models;
@@ -113,7 +110,7 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		bool m_hitTest;
 };
 
-inline class ModelView* ModelEditor::modelView() const
+inline class ModelEditorView* ModelEditor::modelView() const
 {
 	return this->m_modelView;
 }

@@ -1,3 +1,15 @@
+2011-04-10 Tamino Dauth <tamino@cdauth.eu>
+* editor: Revised mouse movement control.
+* editor: Revised camera view actions.
+* editor: Added implicit cast operators for MDLX<->OGRE types.
+* editor: Implemented collision shape support.
+* editor: Added new class ModelEditorView.
+
+2011-04-09 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fixed some UTF-8 string casts.
+* editor: Added team color/QColor cast functions to class OgreMdlx.
+* editor: Added team color and glow actions to model editor.
+
 2011-04-07 Tamino Dauth <tamino@cdauth.eu>
 * StormLib: "open" of Linux port uses permissions now if file is created.
 * mpq: Added member function MpqFile::hasSectorOffsetTable.

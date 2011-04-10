@@ -50,7 +50,7 @@ TextureEditor::TextureEditor(class Editor *editor) : Module(editor), m_image(new
  
 	if (service)
 	{
-		m_part = service->createInstance<KParts::ReadWritePart>(0);
+		m_part = service->createInstance<KParts::ReadWritePart>(this);
  
 		if (m_part)
 		{
