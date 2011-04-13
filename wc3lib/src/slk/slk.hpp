@@ -21,10 +21,10 @@
 #ifndef WC3LIB_SLK_SLK_HPP
 #define WC3LIB_SLK_SLK_HPP
 
-#include <map>
-
 #include "../format.hpp"
 #include "../map/platform.hpp"
+#include "slkitemkey.hpp"
+#include "slkitems.hpp"
 
 namespace wc3lib
 {
@@ -41,24 +41,51 @@ namespace slk
 * Default class for SLK files like CliffTypes.slk.
 * "UI/SkinMetaData.slk" - model data
 * \todo Should use a Bison file which defines the possible syntax for these files.
+* 
+* Eine SLK-Datei besteht aus einer Reihe von vordefinierten Spalten. Jede Spalte hat einen bestimmten zugehörigen Datentyp. Dieser wird in der ersten Zeile des Dokuments definiert.
+* Die Datensätze existieren in Form von Zeilen.
 */
-class Slk : public Format<map::byte>
+class Slk : public Format
 {
 	public:
-		typedef map::int32 IndexType;
-
 		Slk();
 		virtual ~Slk();
 
-		std::streamsize read(std::basic_istream<map::byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<map::byte> &ostream) const throw (class Exception);
+		virtual std::streamsize read(istream &istream) throw (class Exception);
+		virtual std::streamsize write(ostream &ostream) const throw (class Exception);
+		
+		const class SlkColumns& columns() const;
+		const class SlkRows& rows() const;
+		const class SlkItems& items() const;
+		
+		const class SlkItems items(const class SlkColumn *column) const;
+		const class SlkItems items(const class SlkRow *row) const;
+		
+		const class SlkItem* item(const SlkItemKey &key) const;
+		const class SlkColumn* itemColumn(const SlkItem *item) const;
+		const class SlkRow* itemRow(const SlkItem *item) const;
+		const ItemKey& itemKey(const SlkItem *item) const;
 
 	protected:
-		virtual class SlkEntry* slkEntry(std::size_t column) = 0;
-
-		std::map<IndexType, class SlkColumn*> m_columns; // header columns
-		std::map<IndexType, class SlkRow*> m_rows; // row entries
+		class SlkColumns *m_columns; // header columns
+		class SlkRows *m_rows; // row entries
+		class SlkItems *m_items; // all items
 };
+
+inline const class SlkColumns& Slk::columns() const
+{
+	return *m_columns;
+}
+
+inline const class SlkRows& Slk::rows() const
+{
+	return *m_rows;
+}
+
+inline const class SlkItems& Slk::items() const
+{
+	return *m_items;
+}
 
 }
 

@@ -12,6 +12,7 @@ function (WC3LIB_GET_H resultName)
 	set(${resultName} ${result} PARENT_SCOPE)
 endfunction ()
 
+# TODO Exclude moc_* files
 function (WC3LIB_GET_SRC resultName)
 	file(GLOB list *.cpp)
 	list(APPEND result ${list})

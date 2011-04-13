@@ -63,6 +63,8 @@ TextureEditor::TextureEditor(class Editor *editor) : Module(editor), m_image(new
 			// and integrate the part's GUI with the shell's
 			//createGUI(m_part);
 		}
+		else
+			qDebug() << "Was not able to create gwenview part!";
 	}
 	else
 	{

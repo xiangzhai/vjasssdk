@@ -873,7 +873,10 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	//std::list<class mdlx::TexturePatch*>::const_iterator texturePatchIterator = geoset.texturePatches()->texturePatches().begin();
 	std::list<class mdlx::TextureVertex*>::const_iterator textureVertexIterator = geoset.textureVertices()->textureVertices().begin();
 	Ogre::uint32 index = 0;
-
+	//qDebug() << "TVertices " << geoset.textureVertices()->textureVertices().size() << "{";
+	//qDebug() << "Normals " << geoset.normals()->normals().size() << "(";
+	//qDebug() << "Vertices " << geoset.vertices()->vertices().size() << "(";
+	
 	while (vertexIterator != geoset.vertices()->vertices().end())
 	{
 		//qDebug() << "Adding vertex (" << (*vertexIterator)->vertexData().x << "|" << (*vertexIterator)->vertexData().y << "|" << (*vertexIterator)->vertexData().z << ")";
@@ -884,6 +887,11 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		object->textureCoord((*textureVertexIterator)->x(), (*textureVertexIterator)->y());
 		object->colour(1.0 - this->modelView()->viewPort()->getBackgroundColour().r, 1.0 - this->modelView()->viewPort()->getBackgroundColour().g, 1.0 - this->modelView()->viewPort()->getBackgroundColour().b, 1.0 - this->modelView()->viewPort()->getBackgroundColour().a);
 		object->index(index);
+		
+		//qDebug() << "{ " << (*textureVertexIterator)->x() << ", " << (*textureVertexIterator)->y() << " },";
+		//qDebug() << "{ " << (*normalIterator)->vertexData().x << ", " << (*normalIterator)->vertexData().y << ", " << (*normalIterator)->vertexData().z << " },";
+		//qDebug() << "{ " << (*vertexIterator)->vertexData().x << ", " << (*vertexIterator)->vertexData().y << ", " << (*vertexIterator)->vertexData().z << " },";
+		qDebug() << "Index " << index;
 
 		++vertexIterator;
 		++normalIterator;
@@ -901,11 +909,17 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	std::list<class mdlx::PrimitiveSize*>::const_iterator pSizeIterator = geoset.primitiveSizes()->primitiveSizes().begin();
 	std::list<class mdlx::PrimitiveVertex*>::const_iterator pVertexIterator = geoset.primitiveVertices()->primitiveVertices().begin();
 
+	qDebug() << "Number of primitives " << geoset.primitiveSizes()->primitiveSizes().size();
+	qDebug() << "Number of primitive types " << geoset.primitiveTypes()->primitiveTypes().size();
+	qDebug() << "Faces " << geoset.primitiveSizes()->primitiveSizes().size() << " " << geoset.primitiveVertices()->primitiveVertices().size() << "{\nTriangles {";
+	QString result("{ ");
+	
 	while (pTypeIterator != geoset.primitiveTypes()->primitiveTypes().end())
 	{
 		if ((*pTypeIterator)->type() == mdlx::PrimitiveType::Triangles)
 		{
-			qDebug() << (*pSizeIterator)->value() << " triangles.";
+			
+			//qDebug() << (*pSizeIterator)->value() << " triangles.";
 
 			for (mdlx::long32 i = 0; i < (*pSizeIterator)->value(); i += 3)
 			{
@@ -919,7 +933,8 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 					++pVertexIterator;
 				}
 
-				qDebug() << "Building triangle with vertex indices (" << indices[0] << "|" << indices[1] << "|" << indices[2] << ")";
+				result += QString("%1, %2, %3, ").arg(indices[0]).arg(indices[1]).arg(indices[2]);
+				//qDebug() << "Building triangle with vertex indices (" << indices[0] << "|" << indices[1] << "|" << indices[2] << ")";
 				object->triangle(indices[0], indices[1], indices[2]);
 				//qDebug() << "Building triangle";
 			}
@@ -937,6 +952,8 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		++pSizeIterator;
 	}
 
+	result += "}\n}";
+	qDebug() << result.toUtf8().constData();
 	object->end();
 
 	// set bounds

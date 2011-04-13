@@ -47,7 +47,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelEditorView(this)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0), m_hitTest(true)
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelEditorView(this)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0)
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();

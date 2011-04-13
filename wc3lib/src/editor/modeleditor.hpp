@@ -58,8 +58,6 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		class ModelEditorView* modelView() const;
 		const Models& models() const;
 		const CameraActions& cameraACtions() const;
-		void setHitTest(bool hitTest);
-		bool hitTest() const;
 
 	public slots:
 		void openFile();
@@ -106,8 +104,6 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 		class KMenu *m_viewMenu;
 		class RenderStatsWidget *m_renderStatsWidget;
-		
-		bool m_hitTest;
 };
 
 inline class ModelEditorView* ModelEditor::modelView() const
@@ -123,16 +119,6 @@ inline const ModelEditor::Models& ModelEditor::models() const
 inline const ModelEditor::CameraActions& ModelEditor::cameraACtions() const
 {
 	return m_cameraActions;
-}
-
-inline void ModelEditor::setHitTest(bool hitTest)
-{
-	this->m_hitTest = hitTest;
-}
-
-inline bool ModelEditor::hitTest() const
-{
-	return this->m_hitTest;
 }
 
 }

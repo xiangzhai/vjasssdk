@@ -32,17 +32,33 @@ namespace wc3lib
 namespace slk
 {
 
-class SlkRow : public Format<map::byte>
+class SlkRow : public Format
 {
 	public:
-		SlkRow(Slk::IndexType row);
-
-		std::streamsize read(std::basic_istream<map::byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<map::byte> &ostream) const throw (class Exception);
+		struct Predicate : std::binary_function<const SlkItemKey&, const SlkRow*, bool>
+		{
+			bool operator()(const SlkItemKey &key, const SlkRow *row)
+			{
+				return key.row() == row;
+			}
+		};
+		
+		const class SlkRows* rows() const
+		{
+			return m_rows;
+		}
+		
+		const class SlkItems items() const
+		{
+			return this->rows()->items(this);
+		}
+		
+		
 
 	protected:
+		class SlkRows *m_rows;
 		Slk::IndexType m_row;
-		std::map<class SlkColumn*, class SlkValue*> m_values;
+		map::id m_id;
 };
 
 }

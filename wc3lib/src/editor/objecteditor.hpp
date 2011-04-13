@@ -53,6 +53,7 @@ namespace editor
  * <li>Water Editor</li>
  * <li>Weather Editor</li>
  * <li>Sound Entry Editor</li>
+ * <li>Misc Editor - formerly known as "edit gameplay constants"</li>
  * </ul>
  */
 class ObjectEditor : public Module

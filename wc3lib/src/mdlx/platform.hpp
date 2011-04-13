@@ -92,6 +92,7 @@ struct VertexData
 	VertexData(float32 x, float32 y, float32 z) : x(x), y(y), z(z)
 	{
 	}
+	
 	VertexData(const std::vector<float32> &values) : x(values[0]), y(values[1]), z(values[2])
 	{
 	}
@@ -111,8 +112,26 @@ struct VertexData
 
 struct QuaternionData
 {
+	QuaternionData() : a(0), b(0), c(0), d(0) { }
+	
+	QuaternionData(float32 a, float32 b, float32 c, float32 d) : a(a), b(b), c(c), d(d)
+	{
+	}
+	
 	QuaternionData(const std::vector<float32> &values) : a(values[0]), b(values[1]), c(values[2]), d(values[3])
 	{
+	}
+	
+	float32 operator[](uint8_t index) const
+	{
+		if (index == 0)
+			return a;
+		else if (index == 1)
+			return b;
+		else if (index == 2)
+			return c;
+
+		return d;
 	}
 	
 	float32 a, b, c, d;

@@ -29,7 +29,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditorView::ModelEditorView(class ModelEditor *modelEditor, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : ModelView(modelEditor->editor(), modelEditor, f, ogreSceneType, ogreParameters)
+ModelEditorView::ModelEditorView(class ModelEditor *modelEditor, Qt::WFlags f, Ogre::SceneType ogreSceneType, const Ogre::NameValuePairList *ogreParameters) : ModelView(modelEditor->editor(), modelEditor, f, ogreSceneType, ogreParameters), m_hitTest(true)
 {
 }
 
@@ -39,7 +39,7 @@ ModelEditorView::~ModelEditorView()
 
 void ModelEditorView::mousePressEvent(QMouseEvent *event)
 {
-	if (modelEditor()->hitTest())
+	if (hitTest() && event->button() == Qt::LeftButton)
 	{
 		//QPoint point(event->globalX() - this->modelView()->x(), event->globalY() - this->modelView()->y());
 		QPoint point(event->x(), event->y());

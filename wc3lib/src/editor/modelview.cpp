@@ -252,7 +252,7 @@ void ModelView::mouseMoveEvent(QMouseEvent *event)
 		this->m_camera->yaw(Ogre::Degree(this->m_yawValue)); // -
 		this->m_camera->pitch(Ogre::Degree(this->m_pitchValue)); // -
 		this->m_camera->moveRelative(Ogre::Vector3(0.0,0.0,radius));
-		this->m_camera->roll(Ogre::Degree(-event->x() * m_rotateSpeed));
+		//this->m_camera->roll(Ogre::Degree(-event->x() * m_rotateSpeed));
 		this->render();
 		// refresh mouse point
 		this->m_mousePoint = QPoint(event->x(), event->y());

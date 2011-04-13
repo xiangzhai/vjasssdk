@@ -254,7 +254,15 @@ int main(int argc, char *argv[])
 			const MpqFile *mpqFile = const_cast<const Mpq*>(&mpq)->findFile("Detector.js", MpqFile::Neutral, MpqFile::Default);
 
 			if (mpqFile == 0)
+			{
 				std::cerr << _("Error while searching for file.") << std::endl;
+			}
+			else
+			{
+				std::basic_stringstream<mpq::byte> testBuffer;
+				std::cout << "Found file \"Detector.js\" and wrote " << mpqFile->writeData(testBuffer) << "bytes:" << std::endl;
+				std::cout << testBuffer;
+			}
 			//else
 			//	std::cout << "Flags: " << std::hex << mpqFile->hash()->block()->flags() << std::dec << "\nFile data: " << *mpqFile << std::endl;
 

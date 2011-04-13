@@ -34,11 +34,20 @@ namespace mdlx
 class Model : public MdxBlock, public Bounds
 {
 	public:
+		static const std::size_t nameSize = 80;
+		static const std::size_t animationFileNameSize = 260;
+		
 		Model(class Mdlx *mdlx);
 		virtual ~Model();
 
 		class Mdlx* mdlx() const;
+		/**
+		 * \return Returns name with size of \ref nameSize.
+		 */
 		const ascii* name() const;
+		/**
+		 * \returns Returns animation file name with size of \ref animationFileNameSize.
+		 */
 		const ascii* animationFileName() const;
 		long32 blendTime() const;
 
@@ -50,8 +59,8 @@ class Model : public MdxBlock, public Bounds
 	protected:
 		class Mdlx *m_mdlx;
 		//long nbytes;
-		ascii m_name[80];
-		ascii m_animationFileName[260];
+		ascii m_name[nameSize];
+		ascii m_animationFileName[animationFileNameSize];
 		long32 m_blendTime;
 };
 

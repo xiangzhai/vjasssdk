@@ -39,17 +39,30 @@ class ModelEditorView : public ModelView
 		virtual ~ModelEditorView();
 		
 		class ModelEditor* modelEditor() const;
+		void setHitTest(bool hitTest);
+		bool hitTest() const;
 		
 	protected:
 		/// Implements "hit test" based selection. \sa ModelEditor::hitTest.
 		virtual void mousePressEvent(QMouseEvent *event);
 		
 		class ModelEditor *m_modelEditor;
+		bool m_hitTest;
 };
 
 inline class ModelEditor* ModelEditorView::modelEditor() const
 {
 	return m_modelEditor;
+}
+
+inline void ModelEditorView::setHitTest(bool hitTest)
+{
+	this->m_hitTest = hitTest;
+}
+
+inline bool ModelEditorView::hitTest() const
+{
+	return this->m_hitTest;
 }
 
 }

@@ -1,3 +1,8 @@
+2011-04-12 Tamino Dauth <tamino@cdauth.eu>
+* editor: OgreMdlx -> write output of all vertices, normals and faces as they're written in MDL format to compare if everything is equal/correct.
+* slk: Drop this module since it's an format by Microsoft (well-known).
+* map: Add primitive data classes for abilities, splat data, unit data etc. which can be filled by reading SLK files etc. All of them should inherit some base class since they all do have an unique id.
+
 2011-04-07 Tamino Dauth <tamino@cdauth.eu>
 * Project work related stuff (school): Fix camera view of Model Editor, fix texture resource path (replace \ character by / on Unix systems -> should happen automatically when using QUrl or KUrl?!), fix texture wrapping on model, implement camera rotation around selected point (not only origin - (0|0|0)), implement MDX writing for all required types, try MDL reading!!!
 
@@ -12,7 +17,7 @@
 * mdlx: Fix camera reading (camera translations).
 
 2011-03-25 Tamino Dauth <tamio@cdauth.eu>
-* mdlx: Converting Texture::textures() into GroupMdxBlock& leads to segmentation fault.
+* FIXED: mdlx: Converting Texture::textures() into GroupMdxBlock& leads to segmentation fault.
 
 2011-02-20 Tamino Dauth <tamio@cdauth.eu>
 * mdlx: Add class MdlxAnimateableProperty (which holds MdlxAnimatedProperty and or its static value by pointer and has boolean element function isStatic).
@@ -36,7 +41,7 @@ by parenthesis, it is because there is no example in any Blizzard MDL.
 * mdlx: see above, needs it as well.
 
 2011-01-26 Tamino Dauth <tamino@cdauth.eu>
-* slk: Add derived classes such as SlkDestructableMetaDataColumn (derived from SlkColumn).
+* slk: Add derived classes such as SlkDestructibleMetaDataColumn (derived from SlkColumn).
 
 2011-01-08 Tamino Dauth <tamino@cdauth.eu>
 * SFmpqapi: Fix broken Linux support (warning: "__declspec" redefined and char* strdup(const char*)’ throws different exceptions).
