@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,50 +18,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MAP_TRIGGERCATEGORY_HPP
-#define WC3LIB_MAP_TRIGGERCATEGORY_HPP
-
-#include "platform.hpp"
+#include "objecteditortab.hpp"
 
 namespace wc3lib
 {
 
-namespace map
+namespace editor
 {
 
-/**
- * \todo Add derived class TriggerCategoryX.
- * \sa TriggerCategoryX
- */
-class TriggerCategory : public Format
+void ObjectEditorTab::showEvent(QShowEvent *event)
 {
-	public:
-		TriggerCategory(class Triggers *triggers);
-
-		virtual std::streamsize read(InputStream &istream) throw (class Exception);
-		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
-
-		int32 index() const;
-		const string& name() const;
-
-	protected:
-		class Triggers *m_triggers;
-		int32 m_index;
-		string m_name;
-};
-
-inline const string& TriggerCategory::name() const
-{
-	return this->m_name;
+	if (treeWidget() == 0)
+		m_treeWidget = createTreeWidget();
+	
+	if (tableWidget() == 0)
+		m_tableWidget = createTableWidget();
 }
 
-inline int32 TriggerCategory::index() const
-{
-	return this->m_index;
-}
+#include "moc_objecteditortab.cpp"
 
 }
 
 }
-
-#endif

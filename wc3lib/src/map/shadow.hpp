@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,7 +25,6 @@
 #include <valarray>
 
 #include "platform.hpp"
-#include "../format.hpp"
 #include "tilepoint.hpp"
 
 namespace wc3lib
@@ -33,8 +32,6 @@ namespace wc3lib
 
 namespace map
 {
-
-class W3m;
 
 /**
 * "war3map.shd" is usally the map's shadow map file.
@@ -133,6 +130,11 @@ inline bool Shadow::Key::operator<(const Key &other) const
 inline bool Shadow::Key::operator==(const Key &other) const
 {
 	return this->x() == other.x() && this->y() == other.y() && this->point() == other.point();
+}
+
+inline const char8* Shadow::fileName() const
+{
+	return "war3map.shd";
 }
 
 inline enum Shadow::Type Shadow::type(const Shadow::Key &key) const

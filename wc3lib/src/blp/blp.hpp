@@ -86,7 +86,7 @@ namespace blp
 * \section Conversion
 * If you want to convert BLP images into other formats (e. g. JPEG or PNG) you can either write your own converter or use wc3lib's BLP Qt plugin.
 */
-class Blp : public Format<byte>
+class Blp : public Format
 {
 	public:
 		/**
@@ -180,7 +180,7 @@ class Blp : public Format<byte>
 				std::map<Coordinates, class Color> m_colors; //[mip map width * mip map height];
 		};
 
-		enum Version
+		enum Format
 		{
 			Blp0, /// Reign of Chaos
 			Blp1, /// Warcraft The Frozen Throne
@@ -217,8 +217,8 @@ class Blp : public Format<byte>
 		Blp();
 		~Blp();
 
-		void setVersion(enum Version version);
-		enum Version version() const;
+		void setFormat(enum Format format);
+		enum Format format() const;
 		void setCompression(enum Compression compression);
 		enum Compression compression() const;
 		void setFlags(enum Flags flags);
@@ -246,8 +246,9 @@ class Blp : public Format<byte>
 		 * \param istream Input stream which is read from.
 		 * \return Size of read bytes (\ref byte). Note that this value can be smaller than the BLP file since it seems that there are unnecessary 0 bytes in some BLP files.
 		 */
-		std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-		std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
+		virtual uint32_t version() const;
 
 		/**
 		 * Assigns exactly \p number MIP maps to the BLP image.
@@ -269,7 +270,7 @@ class Blp : public Format<byte>
 		dword mipMapHeight(std::size_t index) const;
 
 		// header
-		enum Version m_version;
+		enum Format m_format;
 		enum Compression m_compression;		//0 - Uses JPEG compression
 						//1 - Uses palettes (uncompressed)
 		enum Flags m_flags;			//#8 - Uses alpha channel (?)
@@ -359,14 +360,14 @@ inline const class Blp::MipMap::Color& Blp::MipMap::colorAt(dword width, dword h
 	return const_cast<const class Blp::MipMap::Color&>(const_cast<class MipMap*>(this)->m_colors[std::make_pair(width, height)]);
 }
 
-inline void Blp::setVersion(enum Version version)
+inline void Blp::setFormat(enum Format format)
 {
-	this->m_version = version;
+	this->m_format = format;
 }
 
-inline enum Blp::Version Blp::version() const
+inline enum Blp::Format Blp::format() const
 {
-	return this->m_version;
+	return this->m_format;
 }
 
 inline void Blp::setCompression(enum Blp::Compression compression)

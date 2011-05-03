@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,8 @@
 #ifndef WC3LIB_MAP_ITEMSET_HPP
 #define WC3LIB_MAP_ITEMSET_HPP
 
+#include "platform.hpp"
+
 namespace wc3lib
 {
 
@@ -29,10 +31,10 @@ namespace map
 
 class Itemset
 {
-	private:
-		int m_itemNumber;
-		char *m_itemId[4];
-		int *m_chance;
+	protected:
+		int32 m_itemNumber;
+		id m_itemId[4];
+		int32 m_chance;
 };
 
 }

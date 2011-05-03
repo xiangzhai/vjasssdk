@@ -30,7 +30,7 @@
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "../utilities.hpp"
+#include "../core.hpp"
 
 namespace wc3lib
 {
@@ -53,6 +53,12 @@ typedef char byte;
 typedef std::basic_string<ascii> string; /// Required for MDL format.
 typedef std::basic_istream<byte> istream;
 typedef std::basic_ostream<byte> ostream;
+
+class Format : public wc3lib::Format<byte>
+{
+	public:
+		virtual uint32_t version() const { return 800; }
+};
 
 /**
 * MDLX format supports interpolation for scalings, translations and rotations.

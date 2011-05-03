@@ -24,13 +24,13 @@
 
 #include <QtGui>
 
-#include <kfiledialog.h>
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <kmenu.h>
-#include <kmenubar.h>
-#include <kaction.h>
-#include <kcolordialog.h>
+#include <KFileDialog>
+#include <KMessageBox>
+#include <KLocale>
+#include <KMenu>
+#include <KMenuBar>
+#include <KAction>
+#include <KColorDialog>
 
 #include "modeleditor.hpp"
 #include "modeleditorview.hpp"
@@ -47,7 +47,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelEditorView(this)), m_settingsDialog(0), m_recentUrl(""), m_viewMenu(0), m_renderStatsWidget(0)
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelEditorView(this)), m_settingsDialog(0), m_recentUrl(""), m_models(), m_viewMenu(0), m_renderStatsWidget(0), m_showStatsAction(0), m_showCollisionShapesAction(0)
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -75,6 +75,7 @@ ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new
 
 ModelEditor::~ModelEditor()
 {
+	hideCollisionShapes();
 	closeAllFiles();
 }
 
@@ -84,6 +85,16 @@ void ModelEditor::show()
 	this->m_modelView->show();
 	/// @todo FIXME: Either create model view data in constructor or get the right position for this function call.
 	//readSettings(); // read settings when model view is being shown since its render window is also being created at that moment
+}
+
+void ModelEditor::hideCollisionShapes()
+{
+	this->m_showCollisionShapesAction->setText(i18n("Show Collision SFhapes"));
+	
+	BOOST_FOREACH(CollisionShapeNodes::left_value_type value, m_collisionShapeNodes.left)
+		delete value.second; // destroy node
+	
+	m_collisionShapeNodes.left.clear();
 }
 
 void ModelEditor::openFile()
@@ -108,14 +119,14 @@ void ModelEditor::openFile()
 
 void ModelEditor::saveFile()
 {
-	if (this->m_models.empty())
+	if (this->m_models.left.empty())
 	{
 		KMessageBox::error(this, i18n("There is no model to export."));
 
 		return;
 	}
 
-	KUrl url = KFileDialog::getSaveUrl(this->m_recentUrl, i18n("*.mdl|Blizzard Model (*.mdl)\n*.mdx|Compressed Blizzard Model (*.mdx)\n*|All files (*)"), this);
+	KUrl url = KFileDialog::getSaveUrl(this->m_recentUrl, i18n("*.mdl|Blizzard Model (*.mdl)\n*.mdx|Compressed Blizzard Model (*.mdx)\n*.mesh|OGRE mesh (*.mesh)\n*|All files (*)"), this);
 
 	if (url.isEmpty())
 		return;
@@ -180,9 +191,135 @@ void ModelEditor::showStats()
 		this->m_renderStatsWidget = new RenderStatsWidget(this->modelView(), this);
 		m_horizontalLayout->addWidget(this->m_renderStatsWidget);
 	}
+	
+	if (this->m_renderStatsWidget->isVisible())
+		m_showStatsAction->setText(i18n("Show Stats"));
+	else
+		m_showStatsAction->setText(i18n("Hide Stats"));
 
 
 	this->m_renderStatsWidget->setVisible(!this->m_renderStatsWidget->isVisible());
+}
+/*
+namespace
+{
+
+Ogre::ManualObject* createSphere(const std::string &strName, const float r, const int nRings = 16, const int nSegments = 16)
+{
+	using namespace Ogre;
+	ManualObject * manual = new Ogre::ManualObject(strName);
+	manual->begin("BaseWhiteNoLighting", RenderOperation::OT_TRIANGLE_LIST);
+		
+	float fDeltaRingAngle = (Math::PI / nRings);
+	float fDeltaSegAngle = (2 * Math::PI / nSegments);
+	unsigned short wVerticeIndex = 0 ;
+
+	// Generate the group of rings for the sphere
+	for( int ring = 0; ring <= nRings; ring++ ) {
+		float r0 = r * sinf (ring * fDeltaRingAngle);
+		float y0 = r * cosf (ring * fDeltaRingAngle);
+
+		// Generate the group of segments for the current ring
+		for(int seg = 0; seg <= nSegments; seg++) {
+		float x0 = r0 * sinf(seg * fDeltaSegAngle);
+		float z0 = r0 * cosf(seg * fDeltaSegAngle);
+
+		// Add one vertex to the strip which makes up the sphere
+		manual->position( x0, y0, z0);
+		manual->normal(Vector3(x0, y0, z0).normalisedCopy());
+		manual->textureCoord((float) seg / (float) nSegments, (float) ring / (float) nRings);
+
+		if (ring != nRings) {
+			// each vertex (except the last) has six indicies pointing to it
+			manual->index(wVerticeIndex + nSegments + 1);
+			manual->index(wVerticeIndex);               
+			manual->index(wVerticeIndex + nSegments);
+			manual->index(wVerticeIndex + nSegments + 1);
+			manual->index(wVerticeIndex + 1);
+			manual->index(wVerticeIndex);
+			wVerticeIndex ++;
+			}
+		}; // end for seg
+	} // end for ring
+	manual->end();
+	MeshPtr mesh = manual->convertToMesh(name);
+	mesh->_setBounds( AxisAlignedBox( Vector3(-r, -r, -r), Vector3(r, r, r) ), false );
+
+	mesh->_setBoundingSphereRadius(r);
+	unsigned short src, dest;
+	
+	if (!mesh->suggestTangentVectorBuildParams(VES_TANGENT, src, dest))
+	{
+		mesh->buildTangentVectors(VES_TANGENT, src, dest);
+	}
+	
+	return manual;
+}
+
+	
+}
+*/
+
+void ModelEditor::showCollisionShapes()
+{
+	if (collisionShapeNodes().left.empty())
+	{
+		this->m_showCollisionShapesAction->setText(i18n("Hide Collision Shapes"));
+		qDebug() << "Showing collision shapes";
+		
+		BOOST_FOREACH(Models::left_const_reference value, m_models.left)
+		{
+			std::size_t i = 0;
+			
+			BOOST_FOREACH(OgreMdlx::CollisionShapes::const_reference collisionShape, value.second->collisionShapes())
+			{
+				std::string name = boost::str(boost::format("%1%.CollisionShape%2%") % value.second->namePrefix().toUtf8().constData() % i);
+				Ogre::SceneNode *sceneNode = modelView()->sceneManager()->createSceneNode(name.c_str());
+				qDebug() << "Showing shape of type " << collisionShape.second->shape;
+				
+				switch (collisionShape.second->shape)
+				{
+					case mdlx::CollisionShape::Box:
+					{
+						Ogre::ManualObject *manualObject = new Ogre::ManualObject(name.c_str());
+						manualObject->setBoundingBox(*collisionShape.second->box);
+						
+						sceneNode->attachObject(manualObject);
+						sceneNode->showBoundingBox(true);
+						
+						break;
+					}
+					
+					/// \todo Create sphere
+					case mdlx::CollisionShape::Sphere:
+					{
+						//Ogre::ManualObject *manualObject = new Ogre::ManualObject(name.c_str());
+						//Ogre::MeshPtr mesh = manualObject->convertToMesh(name.c_str());
+						//mesh->_setBoundingSphereRadius(collisionShape.second->sphere->getRadius());
+						
+						//Ogre::ManualObject *manualObject = createSphere(name, collisionShape.second->sphere->getRadius());
+						//manualObject->se
+						//manualObject->_s
+						
+						
+						Ogre::Entity *entity = modelView()->sceneManager()->createEntity(name.c_str(), Ogre::SceneManager::PT_SPHERE);
+						
+						sceneNode->attachObject(entity);
+						sceneNode->setPosition(collisionShape.second->sphere->getCenter());
+						sceneNode->setScale(Ogre::Vector3(collisionShape.second->sphere->getRadius())); // Radius, in theory.
+						
+						break;
+					}
+				}
+				
+				m_collisionShapeNodes.left.insert(CollisionShapeNodes::left_value_type(collisionShape.second, sceneNode));
+				
+				++i;
+			}
+		}
+	}
+	else
+		hideCollisionShapes();
 }
 
 void ModelEditor::changeTeamColor()
@@ -247,19 +384,16 @@ bool ModelEditor::openUrl(const KUrl &url)
 
 	try
 	{
-		std::streamsize size;
+		std::streamsize size = isMdx ? size = model->readMdx(ifstream) : size = model->readMdl(ifstream);
 		
-		if (isMdx)
-			size = model->readMdx(ifstream);
-		else
-			size = model->readMdl(ifstream);
-
-		model->textures()->textures().size(); // TEST
+		//model->textures()->textures().size(); // TEST
 		KMessageBox::information(this, i18n("Read %1 file \"%2\" successfully.\nSize: %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
 	}
 	catch (class Exception &exception)
 	{
 		KMessageBox::error(this, i18n("Unable to read %1 file \"%2\".\nException \"%3\".", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), exception.what().c_str()));
+		
+		delete model;
 
 		return false;
 	}
@@ -279,8 +413,8 @@ bool ModelEditor::openUrl(const KUrl &url)
 	catch (class std::exception &exception)
 	{
 		KMessageBox::error(this, i18n("Error during model refresh:\n%1", exception.what()));
-		this->editor()->removeResource(ogreModel);
-		delete ogreModel;
+		this->editor()->removeResource(ogreModel); // ogreModel is deleted automatically
+		
 		delete model;
 
 		return false;
@@ -301,7 +435,8 @@ void ModelEditor::removeModel(OgreMdlx *ogreModel)
 	{
 		this->m_modelView->root()->removeFrameListener(ogreModel);
 		removeCameraActions(*ogreModel);
-		delete ogreModel;
+		this->editor()->removeResource(ogreModel); // delete ogreModel
+		delete iterator->second; // delete corresponding MDLX model
 		m_models.right.erase(iterator);
 	}
 }
@@ -346,9 +481,14 @@ void ModelEditor::createFileActions(class KMenu *menu)
 	connect(action, SIGNAL(triggered()), this, SLOT(openFile()));
 	menu->addAction(action);
 
-	action = new KAction(KIcon(":/actions/savemoel.png"), i18n("Save model"), this);
+	action = new KAction(KIcon(":/actions/savemodel.png"), i18n("Save model"), this);
 	action->setShortcut(KShortcut(i18n("Ctrl+S")));
 	connect(action, SIGNAL(triggered()), this, SLOT(saveFile()));
+	menu->addAction(action);
+	
+	action = new KAction(KIcon(":/actions/closeallmodels.png"), i18n("Close all models"), this);
+	//action->setShortcut(KShortcut(i18n("
+	connect(action, SIGNAL(triggered()), this, SLOT(closeAllFiles()));
 	menu->addAction(action);
 
 	action = new KAction(KIcon(":/actions/settings.png"), i18n("Settings"), this);
@@ -389,6 +529,12 @@ void ModelEditor::createMenus(class KMenuBar *menuBar)
 	action = new KAction(KIcon(":/actions/showstats.png"), i18n("Show Stats"), this);
 	connect(action, SIGNAL(triggered()), this, SLOT(showStats()));
 	viewMenu->addAction(action);
+	m_showStatsAction = action;
+	
+	action = new KAction(KIcon(":/actions/showcollisionshapes.png"), i18n("Show Collision Shapes"), this);
+	connect(action, SIGNAL(triggered()), this, SLOT(showCollisionShapes()));
+	viewMenu->addAction(action);
+	m_showCollisionShapesAction = action;
 	
 	action = new KAction(KIcon(":/actions/changeteamcolor.png"), i18n("Change team color"), this);
 	connect(action, SIGNAL(triggered()), this, SLOT(changeTeamColor()));

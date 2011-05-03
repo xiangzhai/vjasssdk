@@ -29,6 +29,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include "../core.hpp"
+
 namespace wc3lib
 {
 
@@ -53,6 +55,7 @@ typedef std::basic_string<byte> string;
 typedef std::basic_stringstream<byte> stringstream;
 typedef std::basic_istringstream<byte> istringstream;
 typedef std::basic_ostringstream<byte> ostringstream;
+typedef Format<byte> Format;
 
 /// Windows-like file time. Redefined for compatibility.
 struct FILETIME
@@ -120,13 +123,13 @@ struct WeakDigitalSignature
 {
 	int32 unknown0;
 	int32 unknown1;
+	int8 signature[64]; // int512 Signature : The digital signature. Like all other numbers in the MoPaQ format, this is stored in little-endian order. The structure of this, when decrypted, follows the RSASSA-PKCS1-v1_5 specification; this format is rather icky to work with (I wrote a program to verify this signature using nothing but an MD5 function and huge integer functions; it wasn't pleasant), and best left to an encryption library such as Cryto++.
 };
 
 struct StrongDigitalSignature
 {
-	char magic[4];
-	char signature[256];
-//	int2048 signature; //int2048, little-endian format
+	char magic[4]; // Indicates the presence of a digital signature. Must be "NGIS" ("SIGN" backwards).
+	int8 signature[256]; // int2048 Signature : The digital signature, stored in little-endian format.
 };
 
 }

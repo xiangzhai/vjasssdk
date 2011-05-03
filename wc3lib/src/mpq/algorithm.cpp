@@ -307,14 +307,14 @@ int decompressWaveStereo(unsigned char* const &inBuffer, int inBufferLength, uns
 	return outBufferLength;
 }
 
-std::streamsize deflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception)
+std::streamsize deflateStream(istream &istream, ostream &ostream) throw (class Exception)
 {
 	throw Exception(_("deflateStream: ZLib compression is not supported yet!"));
 
 	return 0;
 }
 
-std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception)
+std::streamsize inflateStream(istream &istream, ostream &ostream) throw (class Exception)
 {
 	z_stream stream;
 	stream.zalloc = Z_NULL;
@@ -332,8 +332,8 @@ std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) thro
 
 	do
 	{
-		unsigned char inputBuffer[bufferSize];
-		istream.read((char*)inputBuffer, bufferSize);
+		byte inputBuffer[bufferSize];
+		istream.read(inputBuffer, bufferSize);
 		stream.avail_in = istream.gcount();
 
 		if (!istream)
@@ -346,14 +346,14 @@ std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) thro
 		if (stream.avail_in == 0)
 			break;
 
-		stream.next_in = inputBuffer;
+		stream.next_in = reinterpret_cast<Bytef*>(inputBuffer);
 
 		/* run inflate() on input until output buffer not full */
 		do
 		{
-			unsigned char outputBuffer[bufferSize];
+			byte outputBuffer[bufferSize];
 			stream.avail_out = bufferSize;
-			stream.next_out = outputBuffer;
+			stream.next_out = reinterpret_cast<Bytef*>(outputBuffer);
 
 			state = inflate(&stream, Z_NO_FLUSH);
 
@@ -373,7 +373,7 @@ std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) thro
 			}
 
 			unsigned int have = bufferSize - stream.avail_out;
-			ostream.write((char*)outputBuffer, have);
+			ostream.write(outputBuffer, have);
 
 			if (!ostream)
 			{

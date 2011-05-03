@@ -39,9 +39,8 @@ namespace editor
 {
 
 /**
-* We have model SLK entries listet at the tree view.
-* @todo Should use a customized version of model view for selection and editing models.
-*/
+ * We have model SLK entries listet at the tree view.
+ */
 class ModelEditor : public Module, protected Ui::ModelEditor
 {
 	Q_OBJECT
@@ -49,15 +48,19 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 	public:
 		typedef boost::bimap<class mdlx::Mdlx*, class OgreMdlx*> Models;
 		typedef boost::bimap<QAction*, const mdlx::Camera*> CameraActions;
+		typedef boost::bimap<const OgreMdlx::CollisionShape*, Ogre::SceneNode*> CollisionShapeNodes;
 		
 		ModelEditor(class Editor *editor);
 		virtual ~ModelEditor();
 
 		virtual void show();
+		
+		void hideCollisionShapes();
 
 		class ModelEditorView* modelView() const;
 		const Models& models() const;
-		const CameraActions& cameraACtions() const;
+		const CameraActions& cameraActions() const;
+		const CollisionShapeNodes& collisionShapeNodes() const;
 
 	public slots:
 		void openFile();
@@ -70,6 +73,11 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		void setPolygonModeWireframe();
 		void setPolygonModeSolid();
 		void showStats();
+		/**
+		 * Shows or hides collision shape nodes.
+		 * \sa collisionShapeNodes()
+		 */
+		void showCollisionShapes();
 		void changeTeamColor();
 		void changeTeamGlow();
 
@@ -101,9 +109,13 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		KUrl m_recentUrl;
 		Models m_models;
 		CameraActions m_cameraActions;
+		CollisionShapeNodes m_collisionShapeNodes;
 
 		class KMenu *m_viewMenu;
 		class RenderStatsWidget *m_renderStatsWidget;
+		
+		class KAction *m_showStatsAction;
+		class KAction *m_showCollisionShapesAction;
 };
 
 inline class ModelEditorView* ModelEditor::modelView() const
@@ -116,9 +128,14 @@ inline const ModelEditor::Models& ModelEditor::models() const
 	return m_models;
 }
 
-inline const ModelEditor::CameraActions& ModelEditor::cameraACtions() const
+inline const ModelEditor::CameraActions& ModelEditor::cameraActions() const
 {
 	return m_cameraActions;
+}
+
+inline const ModelEditor::CollisionShapeNodes& ModelEditor::collisionShapeNodes() const
+{
+	return m_collisionShapeNodes;
 }
 
 }

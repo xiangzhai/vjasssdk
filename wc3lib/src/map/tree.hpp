@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,12 +21,15 @@
 #ifndef WC3LIB_MAP_TREE_HPP
 #define WC3LIB_MAP_TREE_HPP
 
+#include "platform.hpp"
+
 namespace wc3lib
 {
 
 namespace map
 {
 
+/// \todo Add read and write member functions, add TFT version -> TreeX.
 class Tree
 {
 	public:
@@ -36,24 +39,28 @@ class Tree
 			Visibile = 1,
 			Normal = 2
 		};
+		
+		bool operator<(const Tree &other) const { return this->m_id < other.m_id; }
+		
+		//id id() const { return m_id; }
 
-	private:
-		char m_treeId[4];
-		int variation;
-		float x;
-		float y;
-		float z;
-		float angle;
-		float scaleX;
-		float scaleY;
-		float scaleZ;
-		char flags;
-		char life;
+	protected:
+		id m_treeId;
+		int32 m_variation;
+		float m_x;
+		float m_y;
+		float m_z;
+		float m_angle;
+		float m_scaleX;
+		float m_scaleY;
+		float m_scaleZ;
+		byte m_flags;
+		byte m_life;
 		//tft
-		int randomItemTable;
-		int itemSetsNumber;
+		//int randomItemTable;
+		//int itemSetsNumber;
 		//endtft
-		int id;
+		int32 m_id;
 };
 
 }

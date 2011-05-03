@@ -12,16 +12,16 @@ endif ()
 target_link_libraries(wc3libcore ${GETTEXT_LIBRARIES} ${Boost_LIBRARIES})
 
 add_subdirectory(blp)
-add_subdirectory(lang)
+#add_subdirectory(lang)
 add_subdirectory(mdlx)
 add_subdirectory(mpq)
 #add_subdirectory(slk)
-add_subdirectory(vm)
+#add_subdirectory(vm)
 add_subdirectory(map)
 
 # libraries without editor
-set(wc3lib_CORE_LIBRARIES wc3libcore wc3libblp wc3liblang wc3libmdlx wc3libmpq wc3libvm wc3libmap)
-#wc3libslk
+set(wc3lib_CORE_LIBRARIES wc3libcore wc3libblp wc3libmdlx wc3libmpq wc3libmap)
+#wc3libslk, wc3libvm, wc3liblang
 
 if (FLAG_EDITOR_USE)
 	add_subdirectory(editor) # last one
@@ -29,7 +29,8 @@ endif ()
 
 # all available libraries
 set(wc3lib_LIBRARIES ${wc3lib_CORE_LIBRARIES})
-set(wc3lib_SRC ${wc3lib_CORE_SRC} ${wc3lib_BLP_SRC} ${wc3lib_LANG_SRC} ${wc3lib_MDLX_SRC} ${wc3lib_MPQ_SRC} ${wc3lib_SLK_SRC} ${wc3lib_VM_SRC} ${wc3lib_MAP_SRC})
+set(wc3lib_SRC ${wc3lib_CORE_SRC} ${wc3lib_BLP_SRC} ${wc3lib_MDLX_SRC} ${wc3lib_MPQ_SRC} ${wc3lib_MAP_SRC})
+# ${wc3lib_LANG_SRC}, ${wc3lib_SLK_SRC}, ${wc3lib_VM_SRC}
 if (FLAG_EDITOR_USE)
 	set(wc3lib_LIBRARIES ${wc3lib_LIBRARIES} wc3libeditor)
 	set(wc3lib_SRC ${wc3lib_SRC} ${wc3lib_EDITOR_SRC})

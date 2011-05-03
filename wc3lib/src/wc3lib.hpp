@@ -21,7 +21,7 @@
 #ifndef WC3LIB_WC3LIB_HPP
 #define WC3LIB_WC3LIB_HPP
 
-#if !defined(LINUX) && !defined(MAC) && !defined(WINDOWS)
+#if !defined(UNIX) && !defined(WINDOWS)
 #error Undefined platform.
 #endif
 
@@ -59,6 +59,7 @@
 * Include file \ref "map.hpp" and use namespace \ref map to use this module.
 *
 * \section slk SLK module
+* \deprecated This library is deprecated and will be integrated in modul editor.
 * The SLK format is a very basical, human-readable table format which is used by Blizzard's game Warcraft 3 to store many meta datas (e. g. unit type and sound data).
 * This module provides some classes to read, write and modify SLK files.
 * Include file \ref "slk.hpp" and use namespace \ref slk to use this module.
@@ -85,11 +86,7 @@
 */
 /// @todo Add all include files!
 
-#include "exception.hpp"
-#include "format.hpp"
-#include "internationalisation.hpp"
-#include "libraryloader.hpp"
-#include "utilities.hpp"
+#include "core.hpp"
 
 #include "blp.hpp"
 #include "map.hpp"

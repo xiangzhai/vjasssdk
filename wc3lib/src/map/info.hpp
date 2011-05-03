@@ -21,7 +21,6 @@
 #ifndef WC3LIB_MAP_INFO_HPP
 #define WC3LIB_MAP_INFO_HPP
 
-#include "../format.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -36,9 +35,12 @@ class Info : public Format
 	public:
 		std::streamsize read(InputStream &istream) throw (class Exception);
 		std::streamsize write(OutputStream &ostream) const throw (class Exception);
+		
+		virtual int32 latestFileVersion() const;
+		virtual const char8* fileName() const;
 
-		static const int32 currentFileVersion = 13;
-		static const string fileName = "war3map.i";
+		virtual int32 version() const;
+		
 	protected:
 		int32 m_version;
 		int32 m_mapVersion; // number of saves (map version)
@@ -67,6 +69,21 @@ class Info : public Format
 		std::list<class TechAvailability*> m_techAvailabilities;
 		std::list<class RandomUnitTable*> m_randomUnitTables;
 };
+
+inline int32 Info::latestFileVersion() const
+{
+	return 13;
+}
+
+inline const char8* Info::fileName() const
+{
+	return "war3map.i";
+}
+
+inline int32 Info::version() const
+{
+	return m_version;
+}
 
 }
 

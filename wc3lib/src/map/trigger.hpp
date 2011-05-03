@@ -24,7 +24,6 @@
 #include <list>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -33,9 +32,10 @@ namespace map
 {
 
 /**
-* Definition of a Warcraft 3 trigger. For Warcraft 3 The Frozen Trigger use TriggerEx.
-* @see TriggerEx
-*/
+ * Definition of a Warcraft 3 trigger. For Warcraft 3 The Frozen Trigger use TriggerEx.
+ * \todo Add derived class TriggerX.
+ * \sa TriggerX
+ */
 class Trigger : public Format
 {
 	public:

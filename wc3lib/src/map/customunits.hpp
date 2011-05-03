@@ -23,7 +23,6 @@
 
 #include <list>
 
-#include "../format.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -42,32 +41,6 @@ class CustomUnits : public Format
 		class Modification : public Format
 		{
 			public:
-				enum Type
-				{
-					Integer = 0,
-					Real = 1,
-					Unreal = 2,
-					String = 3,
-					Boolean = 4,
-					Character = 5,
-					UnitList = 6,
-					ItemList = 7,
-					RegenerationType = 8,
-					AttackType = 9,
-					WeaponType = 10,
-					TargetType = 11,
-					MoveType = 12,
-					DefenseType = 13,
-					PathingTexture = 14,
-					UpgradeList = 15,
-					StringList = 16,
-					AbilityList = 17,
-					HeroAbilityList = 18,
-					MissileArt = 19,
-					AttributeType = 20,
-					AttackBits = 21
-				};
-
 				Modification();
 				~Modification();
 
@@ -79,33 +52,7 @@ class CustomUnits : public Format
 				std::streamsize writeData(OutputStream &ostream) const throw (class Exception);
 
 				id m_id; // from "Units\UnitMetaData.slk"
-				enum Type m_type;
-				/// \todo Check data types, not specified by documentaton!
-				union
-				{
-					int32 Integer;
-					float32 Real; // float (single precision)
-					float32 Unreal; // Unreal (0 <= val <= 1) float (single Precision)
-					char8* String; // string (null terminated)
-					bool Boolean;
-					char8 Character;
-					char8* UnitList;
-					char8* ItemList;
-					char8* RegenerationType;
-					char8* AttackType;
-					char8* WeaponType;
-					char8* TargetType;
-					char8* MoveType;
-					char8* DefenseType;
-					char8* PathingTexture;
-					char8* UpgradeList;
-					char8* StringList;
-					char8* AbilityList;
-					char8* HeroAbilityList;
-					char8* MissileArt;
-					char8* AttributeType;
-					char8* AttackBits;
-				} m_value;
+				struct Value m_value;
 		};
 
 		class Unit : public Format
@@ -135,6 +82,8 @@ class CustomUnits : public Format
 
 		virtual const char8* fileName() const;
 		virtual int32 latestFileVersion() const;
+		
+		virtual int32 version() const { return m_version; }
 
 	protected:
 		virtual Unit* createUnit() const;
@@ -144,7 +93,7 @@ class CustomUnits : public Format
 		std::list<class Unit*> m_customTable;
 };
 
-inline const char* CustomUnits::fileName() const
+inline const char8* CustomUnits::fileName() const
 {
 	return "war3map.w3u";
 }

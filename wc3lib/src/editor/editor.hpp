@@ -23,11 +23,16 @@
 
 #include <map>
 
-#include <kmainwindow.h>
-#include <kaboutdata.h>
-#include <kurl.h>
-
 #include <boost/filesystem.hpp>
+
+#include <QDebug> // debug
+
+#include <KMainWindow>
+#include <KAboutData>
+#include <KUrl>
+//#include <KMessageBox>
+
+#include <Ogre.h>
 
 #include "mpqprioritylist.hpp"
 #include "resource.hpp"
@@ -44,17 +49,10 @@
 #include "textureeditor.hpp"
 #include "newmapdialog.hpp"
 #include "ogremdlx.hpp"
+#include "../mpq.hpp"
 
 namespace wc3lib
 {
-
-namespace mpq
-{
-
-class Mpq;
-class MpqFile;
-
-}
 
 namespace editor
 {
@@ -111,6 +109,8 @@ class Editor : public KMainWindow, public MpqPriorityList
 
 		Editor(QWidget *parent = 0, Qt::WindowFlags f = Qt::Window);
 		virtual ~Editor();
+		
+		Ogre::Root* root() const;
 
 		class KActionCollection* actionCollection() const;
 		class TerrainEditor* terrainEditor() const;
@@ -127,10 +127,14 @@ class Editor : public KMainWindow, public MpqPriorityList
 		class NewMapDialog* newMapDialog() const;
 
 		/**
-		* All added resources will also be added to MPQ priority list automaticially.
-		* Therefore there shouldn't occur any problems when you open an external MDL file and need its textures which are contained by the same directory.
-		*/
+		 * All added resources will also be added to MPQ priority list automaticially.
+		 * Therefore there shouldn't occur any problems when you open an external MDL file and need its textures which are contained by the same directory.
+		 */
 		void addResource(class Resource *resource);
+		/**
+		 * Removes resource from editor.
+		 * \note Deletes resource \p resource.
+		 */
 		bool removeResource(class Resource *resource);
 		bool removeResource(const KUrl &url);
 		const std::map<KUrl, class Resource*>& resources() const;
@@ -155,6 +159,22 @@ class Editor : public KMainWindow, public MpqPriorityList
 		*/
 		const Ogre::Image& teamGlowImage(enum OgreMdlx::TeamColor teamGlow) const;
 
+		
+		/**
+		 * Returns localized string under key \p key in group \p group.
+		 * Call tr("WESTRING_APPNAME", "WorldEditStrings", mpq::MpqFile::German) to get the text "WARCRAFT III - Welt-Editor" from file "UI/WorldEditStrings.txt" of MPQ archive "War3xlocal.mpq" (Frozen Throne), for instance.
+		 * Localized keyed and grouped strings are found under following paths of current MPQ with the highest priority and corresponding locale \p locale:
+		 * <ul>
+		 * <li>UI/CampaignStrings.txt</li>
+		 * <li>UI/TipStrings.txt</li>
+		 * <li>UI/TriggerStrings.txt</li>
+		 * <li>UI/WorldEditGameStrings.txt</li>
+		 * <li>UI/TriggerStrings.txt</li>
+		 * <li>UI/WorldEditStrings.txt</li>
+		 * </ul>
+		 */
+		QString tr(const QString &key, const QString &group = "", mpq::MpqFile::Locale locale = mpq::MpqFile::Neutral) const;
+		
 	public slots:
 		void newMap();
 		void openMap(const KUrl &url);
@@ -191,6 +211,8 @@ class Editor : public KMainWindow, public MpqPriorityList
 		static KAboutData m_aboutData;
 		static KAboutData m_wc3libAboutData;
 
+		Ogre::Root *m_root;
+		
 		class KActionCollection *m_actionCollection;
 		class TerrainEditor *m_terrainEditor;
 		class TriggerEditor *m_triggerEditor;
@@ -239,6 +261,30 @@ T* Editor::module(T* const &module) const
 		const_cast<T*&>(module) = new T(const_cast<self*>(this));
 
 	return module;
+}
+
+inline Ogre::Root* Editor::root() const
+{
+	// setup a renderer
+	if (m_root == 0)
+	{
+		const_cast<class Editor*>(this)->m_root = new Ogre::Root();
+		
+		const Ogre::RenderSystemList &renderers = m_root->getAvailableRenderers();
+		assert(!renderers.empty()); // we need at least one renderer to do anything useful
+		Ogre::RenderSystem *renderSystem = renderers.front();
+		assert(renderSystem); // user might pass back a null renderer, which would be bad!
+		// configuration is setup automatically by ogre.cfg file
+		renderSystem->setConfigOption("Full Screen", "No");
+		m_root->setRenderSystem(renderSystem);
+		// initialize without creating window
+		m_root->saveConfig();
+		m_root->initialise(false); // don't create a window
+	}
+	//else if (m_root->getRenderSystem()->getConfigOptions()["Full Screen"].currentValue == "Yes")
+		//KMessageBox::information(this, i18n("Full screen is enabled."));
+	
+	return m_root;
 }
 
 inline class KActionCollection* Editor::actionCollection() const
@@ -310,12 +356,13 @@ inline void Editor::addResource(class Resource *resource)
 {
 	this->m_resources.insert(std::make_pair(resource->url(), resource));
 	this->addEntry(resource->url());
+	qDebug() << "Added resource " << resource->url();
 }
 
 
 inline bool Editor::removeResource(class Resource *resource)
 {
-	this->removeResource(resource->url());
+	this->removeResource(resource->url()); // resource is deleted here
 }
 
 inline bool Editor::removeResource(const KUrl &url)
@@ -326,7 +373,9 @@ inline bool Editor::removeResource(const KUrl &url)
 		return false;
 
 	this->m_resources.erase(iterator);
+	delete iterator->second;
 	this->removeEntry(url);
+	qDebug() << "Removed resource " << url.path();
 
 	return true;
 }

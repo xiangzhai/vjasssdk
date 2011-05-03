@@ -22,7 +22,6 @@
 #define WC3LIB_MAP_TRIGGERFUNCTIONPARAMETER_HPP
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -31,8 +30,9 @@ namespace map
 {
 
 /**
-* @see TriggerFunctionParameterEx
-*/
+ * \todo Add derived class TriggerFunctionParamterX.
+ * \sa TriggerFunctionParameterX
+ */
 class TriggerFunctionParameter : public Format
 {
 	public:

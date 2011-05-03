@@ -32,8 +32,9 @@ namespace map
 {
 
 /**
-* @see TriggerFunctionEx
-*/
+ * \todo Add derived class TriggerFunctionX.
+ * \sa TriggerFunctionEx
+ */
 class TriggerFunction : public Format
 {
 	public:

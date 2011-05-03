@@ -134,7 +134,7 @@ Blp::~Blp()
 
 void Blp::clean()
 {
-	this->m_version = Blp::Blp0;
+	this->m_format = Blp::Blp0;
 	this->m_compression = Blp::Paletted;
 	this->m_flags = Blp::NoAlpha;
 	this->m_width = 0;
@@ -447,7 +447,7 @@ struct MipMapHeaderData
 
 }
 
-std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 {
 	this->clean();
 	// header
@@ -456,17 +456,17 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 	wc3lib::read(istream, identifier, size);
 
 	if (memcmp(reinterpret_cast<const void*>(&identifier), Blp::identifier0, sizeof(Blp::identifier0)) == 0)
-		this->m_version = Blp::Blp0;
+		this->m_format = Blp::Blp0;
 	else if (memcmp(reinterpret_cast<const void*>(&identifier), Blp::identifier1, sizeof(Blp::identifier1)) == 0)
-		this->m_version = Blp::Blp1;
+		this->m_format = Blp::Blp1;
 	else if (memcmp(reinterpret_cast<const void*>(&identifier), Blp::identifier2, sizeof(Blp::identifier2)) == 0)
-		this->m_version = Blp::Blp2;
+		this->m_format = Blp::Blp2;
 	else
 		throw Exception(boost::str(boost::format(_("Error while reading BLP file. Missing BLP identifier, got \"%1%\".")) % reinterpret_cast<const char*>(&identifier)));
 
 	std::vector<struct MipMapHeaderData*> mipMapData(Blp::maxMipMaps, 0);
 
-	if (this->m_version == Blp::Blp1 || this->m_version == Blp::Blp2)
+	if (this->m_format == Blp::Blp1 || this->m_format == Blp::Blp2)
 	{
 		struct BlpHeader header;
 		wc3lib::read(istream, header, size);
@@ -486,7 +486,7 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 		}
 	}
 	// BLP2
-	else if (this->m_version == Blp::Blp2)
+	else if (this->format() == Blp::Blp2)
 	{
 		struct Blp2Header header;
 		wc3lib::read(istream, header, size);
@@ -1016,16 +1016,16 @@ std::streamsize Blp::read(std::basic_istream<byte> &istream) throw (class Except
 	still applies. Ex: 24x17, 12x8 (rounded down), 6x4, 3x2, 1x1 (rounded down).
 	*/
 	if (this->m_mipMaps.size() > 1 && (this->m_mipMaps.back()->width() != 1 || this->m_mipMaps.back()->height() != 1))
-		throw Exception(_("Last MIP map has not a size of 1x1."));
+		throw Exception(boost::format(_("Last MIP map has not a size of 1x1 (%1%x%2%).")) % this->m_mipMaps.back()->width() % this->m_mipMaps.back()->height());
 
 	return size;
 }
 
-std::streamsize Blp::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Blp::write(OutputStream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 
-	switch (this->m_version)
+	switch (this->format())
 	{
 		case Blp::Blp0:
 			wc3lib::write(ostream, Blp::identifier0, size);
@@ -1045,7 +1045,7 @@ std::streamsize Blp::write(std::basic_ostream<byte> &ostream) const throw (class
 
 	dword startOffset = 0;
 
-	if (this->m_version == Blp::Blp1 || this->m_version == Blp::Blp2)
+	if (this->format() == Blp::Blp1 || this->format() == Blp::Blp2)
 	{
 		struct BlpHeader header;
 		header.compression = static_cast<dword>(this->compression());
@@ -1066,7 +1066,7 @@ std::streamsize Blp::write(std::basic_ostream<byte> &ostream) const throw (class
 		startOffset = (dword)ostream.tellp() - sizeof(dword) * Blp::maxMipMaps * 2; // offset where mip map header data starts, required by later mip map writing operations
 	}
 	// BLP2
-	else if (this->m_version == Blp::Blp2)
+	else if (this->format() == Blp::Blp2)
 	{
 		struct Blp2Header header;
 
@@ -1195,6 +1195,23 @@ std::streamsize Blp::write(std::basic_ostream<byte> &ostream) const throw (class
 		throw Exception(boost::str(boost::format(_("Unknown compression mode: %1%.")) % this->m_compression));
 
 	return size;
+}
+
+uint32_t Blp::version() const
+{
+	switch (format())
+	{
+		case Blp0:
+			return reinterpret_cast<const uint32_t&>(Blp::identifier0[0]);
+			
+		case Blp1:
+			return reinterpret_cast<const uint32_t&>(Blp::identifier1[0]);
+			
+		case Blp2:
+			return reinterpret_cast<const uint32_t&>(Blp::identifier2[0]);
+	}
+	
+	return 0;
 }
 
 int Blp::generateMipMaps(std::size_t number, bool regenerate) throw (class Exception)

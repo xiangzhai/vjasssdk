@@ -24,7 +24,6 @@
 #include "triggers.hpp"
 #include "triggerfunction.hpp"
 #include "triggercategory.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {

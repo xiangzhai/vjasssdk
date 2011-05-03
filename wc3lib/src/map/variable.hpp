@@ -22,7 +22,6 @@
 #define WC3LIB_MAP_VARIABLE_HPP
 
 #include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
@@ -31,14 +30,15 @@ namespace map
 {
 
 /**
-* @see VariableEx
-*/
+ * \todo Add derived class VariableX.
+ * \sa VariableX
+ */
 class Variable : public Format
 {
 	public:
 		Variable(class Triggers *triggers);
 
-		std::streamsize read(InputStream&istream) throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
 		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 	protected:

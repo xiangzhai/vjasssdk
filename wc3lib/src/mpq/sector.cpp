@@ -141,15 +141,15 @@ std::streamsize Sector::writeData(ostream &ostream) const throw (class Exception
 			if (this->m_compression & Sector::Deflated) // Deflated (see ZLib)
 			{
 				std::cout << "Decompress zlib. with data size " << dataSize << std::endl;
-				std::stringstream sstreamOut;
-				sstreamOut.write(reinterpret_cast<const char*>(data), dataSize);
-				std::stringstream sstreamIn;
+				stringstream sstreamOut;
+				sstreamOut.write(reinterpret_cast<const byte*>(data), dataSize);
+				stringstream sstreamIn;
 				std::streamsize size = inflateStream(sstreamOut, sstreamIn);
 				bytes += size;
 				delete[] data;
 				data = new byte[size];
 				dataSize = size;
-				sstreamIn.read(reinterpret_cast<char*>(data), dataSize);
+				sstreamIn.read(reinterpret_cast<byte*>(data), dataSize);
 			}
 
 			if (this->m_compression & Sector::Huffman) // Huffman encoded

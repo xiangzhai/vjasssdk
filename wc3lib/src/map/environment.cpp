@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,8 +25,6 @@
 
 #include "environment.hpp"
 #include "tilepoint.hpp"
-#include "../utilities.hpp"
-#include "../internationalisation.hpp"
 
 namespace wc3lib
 {

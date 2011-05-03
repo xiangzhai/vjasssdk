@@ -25,7 +25,6 @@
 #include <list>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -34,8 +33,9 @@ namespace map
 {
 
 /**
-* @see TriggersEx
-*/
+ * \todo Add derived class TriggersX.
+ * \sa TriggersX
+ */
 class Triggers : public Format
 {
 	public:
@@ -46,8 +46,11 @@ class Triggers : public Format
 		virtual std::streamsize read(InputStream &istream) throw (class Exception);
 		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
 		
+		virtual int32 fileId() const;
 		virtual const char8* fileName() const;
 		virtual int32 latestFileVersion() const;
+		
+		virtual int32 version() const;
 
 	protected:
 		friend class Trigger;
@@ -62,6 +65,11 @@ class Triggers : public Format
 		std::list<class Trigger*> m_triggers;
 };
 
+inline int32 Triggers::fileId() const
+{
+	return (int32)"WTG!";
+}
+
 inline const char8* Triggers::fileName() const
 {
 	return "war3map.wtg";
@@ -70,6 +78,11 @@ inline const char8* Triggers::fileName() const
 inline int32 Triggers::latestFileVersion() const
 {
 	return 4;
+}
+
+inline int32 Triggers::version() const
+{
+	return m_version;
 }
 
 }

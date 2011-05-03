@@ -26,7 +26,6 @@
 #include <boost/filesystem.hpp>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {

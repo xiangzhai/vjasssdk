@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,8 +29,6 @@
 #include "mpq/mpq.hpp"
 #include "mpq/mpqfile.hpp"
 #include "blp/blp.hpp"
-#include "../internationalisation.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -40,8 +38,8 @@ namespace map
 
 struct Header
 {
-	char8 fileId[4]; //: file ID (should be "HM3W")
-	int32 unknown; //: unknown
+	id fileId; //: file ID (should be "HM3W")
+	int32 unknown; //: unknown TODO version?
 	char8 *name; //: map name
 	int32 flags; //: map flags (these are exactly the same as the ones in the W3I file)
 	int32 maxPlayers; //: max number of players
@@ -119,6 +117,11 @@ std::streamsize W3m::readHeader(InputStream &istream) throw (class Exception)
 	std::streamsize size = 0;
 	struct Header header;
 	wc3lib::read(istream, header, size);
+	id requiredFileId = fileId();
+	
+	if (memcmp(&header.fileId, &requiredFileId, sizeof(header.fileId)) != 0)
+		throw Exception(boost::format(_("W3m: Unknown file id \"%1%\". Expected \"%2%\".")) % header.fileId % fileId());
+	
 	this->m_name = header.name;
 	this->m_flags = MapFlags(header.flags);
 	this->m_maxPlayers = header.maxPlayers;

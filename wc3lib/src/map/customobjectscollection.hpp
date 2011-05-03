@@ -21,7 +21,6 @@
 #ifndef WC3LIB_MAP_CUSTOMOBJECTSCOLLECTION_HPP
 #define WC3LIB_MAP_CUSTOMOBJECTSCOLLECTION_HPP
 
-#include "../format.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -45,9 +44,9 @@ class CustomObjectsCollection : public Format
 		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 		virtual int32 latestFileVersion() const;
-		virtual const char* fileExtension() const;
+		virtual const char8* fileExtension() const;
 
-		int32 version() const;
+		virtual int32 version() const;
 		bool hasUnits() const;
 		class CustomObjects* units() const;
 		bool hasItems() const;
@@ -79,7 +78,7 @@ inline int32 CustomObjectsCollection::latestFileVersion() const
 	return 1;
 }
 
-inline const char* CustomObjectsCollection::fileExtension() const
+inline const char8* CustomObjectsCollection::fileExtension() const
 {
 	return "w3o";
 }

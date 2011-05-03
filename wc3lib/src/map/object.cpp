@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,50 +18,5 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MAP_TRIGGERCATEGORY_HPP
-#define WC3LIB_MAP_TRIGGERCATEGORY_HPP
+#include "object.hpp"
 
-#include "platform.hpp"
-
-namespace wc3lib
-{
-
-namespace map
-{
-
-/**
- * \todo Add derived class TriggerCategoryX.
- * \sa TriggerCategoryX
- */
-class TriggerCategory : public Format
-{
-	public:
-		TriggerCategory(class Triggers *triggers);
-
-		virtual std::streamsize read(InputStream &istream) throw (class Exception);
-		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
-
-		int32 index() const;
-		const string& name() const;
-
-	protected:
-		class Triggers *m_triggers;
-		int32 m_index;
-		string m_name;
-};
-
-inline const string& TriggerCategory::name() const
-{
-	return this->m_name;
-}
-
-inline int32 TriggerCategory::index() const
-{
-	return this->m_index;
-}
-
-}
-
-}
-
-#endif

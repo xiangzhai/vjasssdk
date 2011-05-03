@@ -21,7 +21,7 @@
 #ifndef WC3LIB_MAP_PLAYABLE_HPP
 #define WC3LIB_MAP_PLAYABLE_HPP
 
-#include "../format.hpp"
+#include "platform.hpp"
 
 namespace wc3lib
 {

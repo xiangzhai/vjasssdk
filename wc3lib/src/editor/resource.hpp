@@ -47,6 +47,10 @@ class Resource
 		Type type() const { return m_type; };
 
 	protected:
+		friend class Editor;
+		
+		virtual ~Resource() { };
+		
 		KUrl m_url;
 		Type m_type;
 };

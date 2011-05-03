@@ -25,7 +25,6 @@
 
 #include "environment.hpp"
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -101,6 +100,9 @@ class W3m : public Format
 		* Creates an MPQ archive with map header and all required files.
 		*/
 		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
+		
+		virtual int32 fileId() const;
+		virtual int32 latestFileVersion() const;
 
 		int32 width() const;
 		int32 height() const;
@@ -142,6 +144,16 @@ w3x
 		char8 m_authentification[256];
 
 };
+
+inline int32 W3m::fileId() const
+{
+	return (int32)"HM3W";
+}
+
+inline int32 W3m::latestFileVersion() const
+{
+	return 0;
+}
 
 inline int32 W3m::width() const
 {

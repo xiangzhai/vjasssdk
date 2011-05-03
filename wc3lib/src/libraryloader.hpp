@@ -40,7 +40,7 @@ class LibraryLoader
 	public:
 		typedef LibraryLoader self;
 
-#if defined (LINUX) || defined (MAC)
+#if defined (UNIX)
 		typedef void* HandleType;
 #elif defined WINDOWS
 		typedef hInstance HandleType;

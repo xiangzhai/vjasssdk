@@ -20,7 +20,6 @@
 
 #include "customobjectscollection.hpp"
 #include "customobjects.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {

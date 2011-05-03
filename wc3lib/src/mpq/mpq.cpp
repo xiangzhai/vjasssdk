@@ -29,6 +29,7 @@
 #include "algorithm.hpp"
 #include "mpq.hpp"
 #include "sector.hpp"
+#include "../utilities.hpp"
 #include "../internationalisation.hpp"
 
 namespace wc3lib
@@ -95,7 +96,7 @@ std::streamsize Mpq::create(const boost::filesystem::path &path, bool overwriteE
 
 		try
 		{
-			streamSize = this->writeMpq(ofstream);
+			streamSize = this->write(ofstream);
 
 			/// @todo FIXME, set stream size!!!
 			if (hasStrongDigitalSignature)
@@ -147,7 +148,7 @@ std::streamsize Mpq::open(const boost::filesystem::path &path, istream *listfile
 
 		try
 		{
-			streamSize = this->readMpq(ifstream, listfileIstream);
+			streamSize = this->read(ifstream, listfileIstream);
 		}
 		catch (class Exception &exception)
 		{
@@ -178,28 +179,25 @@ void Mpq::close()
 	this->clear();
 }
 
-std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (class Exception)
+std::streamsize Mpq::read(InputStream &stream, InputStream *listfileIstream) throw (class Exception)
 {
 	// find header structure by using file key
 	byte identifier[4];
+	std::streamsize size = 0;
 
 	do
 	{
-		stream.read(identifier, 4);
+		wc3lib::read(stream, identifier, size, 4);
 
-		if (stream.gcount() < 4)
-			throw Exception(boost::str(boost::format(_("Missing identifier \"%1%\".")) % Mpq::identifier));
+		if (size < 4)
+			throw Exception(boost::str(boost::format(_("Missing identifier \"%1%\" (read count %2%).")) % Mpq::identifier % stream.gcount()));
 	}
 	while (memcmp(identifier, Mpq::identifier, 4) != 0);
 
 	stream.seekg(-4, std::ios::cur);
 	this->m_startPosition = stream.tellg();
 	struct Header header;
-	stream.read(reinterpret_cast<byte*>(&header), sizeof(header));
-	std::streamsize bytes = stream.gcount();
-
-	if (bytes < sizeof(header))
-		throw Exception(_("Error while reading MPQ header."));
+	wc3lib::read(stream, header, size);
 
 	if (memcmp(header.magic, Mpq::identifier, sizeof(Mpq::identifier)))
 		throw Exception(boost::str(boost::format(_("Missing MPQ identifier \"%1%\".")) % Mpq::identifier));
@@ -226,10 +224,7 @@ std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (c
 	struct ExtendedHeader extendedHeader;
 
 	if (this->m_format == Mpq::Mpq2)
-	{
-		stream.read(reinterpret_cast<byte*>(&extendedHeader), sizeof(extendedHeader));
-		bytes += stream.gcount();
-	}
+		wc3lib::read(stream, extendedHeader, size);
 
 	int64 offset = header.blockTableOffset;
 
@@ -250,7 +245,7 @@ std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (c
 	for (std::size_t i = 0; i < header.blockTableEntries; ++i)
 	{
 		class Block *block = new Block(this);
-		bytes += block->read(sstream);
+		size += block->read(sstream);
 		this->m_blocks.push_back(block);
 		this->m_blockMap[this->m_blocks.size() - 1] = block;
 	}
@@ -267,7 +262,7 @@ std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (c
 		{
 			struct ExtendedBlockTableEntry extendedBlockTableEntry;
 			stream.read(reinterpret_cast<byte*>(&extendedBlockTableEntry), sizeof(extendedBlockTableEntry));
-			bytes += stream.gcount();
+			size += stream.gcount();
 			block->m_extendedBlockOffset = extendedBlockTableEntry.extendedBlockOffset;
 		}
 	}
@@ -292,7 +287,7 @@ std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (c
 	for (std::size_t i = 0; i < header.hashTableEntries; ++i)
 	{
 		class Hash *hash = new Hash(this);
-		bytes += hash->read(sstream);
+		size += hash->read(sstream);
 		this->m_hashes.push_back(hash);
 	}
 
@@ -309,7 +304,7 @@ std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (c
 			stream.seekg(int32(this->m_startPosition) + mpqFile->m_hash->m_block->m_blockOffset);
 			/// @todo Decrypt and unimplode data?
 
-			bytes += mpqFile->read(stream);
+			size += mpqFile->read(stream);
 		}
 	}
 
@@ -349,19 +344,19 @@ std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (c
 	if (this->m_extendedAttributes & Mpq::FileCrc32s)
 	{
 		BOOST_FOREACH(class Block *block, this->m_blocks)
-			bytes += istream.read(reinterpret_cast<char*>(&block->m_crc32), sizeof(block->m_crc32));
+			size += istream.read(reinterpret_cast<char*>(&block->m_crc32), sizeof(block->m_crc32));
 	}
 
 	if (this->m_extendedAttributes & Mpq::FileTimeStamps)
 	{
 		BOOST_FOREACH(class Block *block, this->m_blocks)
-			bytes += istream.read(reinterpret_cast<char*>(&block->m_fileTime), sizeof(block->m_fileTime));
+			size += istream.read(reinterpret_cast<char*>(&block->m_fileTime), sizeof(block->m_fileTime));
 	}
 
 	if (this->m_extendedAttributes & Mpq::FileMd5s)
 	{
 		BOOST_FOREACH(class Block *block, this->m_blocks)
-			bytes += istream.read(reinterpret_cast<char*>(&block->m_md5), sizeof(block->m_md5));
+			size += istream.read(reinterpret_cast<char*>(&block->m_md5), sizeof(block->m_md5));
 	}
 	*/
 
@@ -371,18 +366,32 @@ std::streamsize Mpq::readMpq(istream &stream, istream *listfileIstream) throw (c
 	if (Mpq::hasStrongDigitalSignature(stream))
 	{
 		this->m_strongDigitalSignature = new char[256];
-		bytes += strongDigitalSignature(stream, this->m_strongDigitalSignature);
+		size += strongDigitalSignature(stream, this->m_strongDigitalSignature);
 	}
 	else
 		this->m_strongDigitalSignature = 0;
 
-	return bytes;
+	return size;
 
 }
 
 /// @todo Write with format this->m_format!
-std::streamsize Mpq::writeMpq(ostream &ostream) const throw (class Exception)
+std::streamsize Mpq::write(OutputStream &ostream) const throw (class Exception)
 {
+	return 0;
+}
+
+uint32_t Mpq::version() const
+{
+	switch (format())
+	{
+		case Mpq1:
+			return formatVersion1Identifier;
+			
+		case Mpq2:
+			return formatVersion2Identifier;
+	}
+	
 	return 0;
 }
 

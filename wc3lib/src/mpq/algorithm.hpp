@@ -78,11 +78,11 @@ int decompressWaveMono(unsigned char* const &inBuffer, int inBufferLength, unsig
 int compressWaveStereo(short* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength, int compressionLevel) throw (class Exception);
 int decompressWaveStereo(unsigned char* const &inBuffer, int inBufferLength, unsigned char *&outBuffer, int &outBufferLength) throw (class Exception);
 
-std::streamsize deflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception);
+std::streamsize deflateStream(istream &istream, ostream &ostream) throw (class Exception);
 /**
 * @return Returns written bytes.
 */
-std::streamsize inflateStream(std::istream &istream, std::ostream &ostream) throw (class Exception);
+std::streamsize inflateStream(istream &istream, ostream &ostream) throw (class Exception);
 
 }
 

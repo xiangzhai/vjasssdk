@@ -30,13 +30,11 @@
 
 namespace wc3lib
 {
-	
+
 namespace mpq
 {
-	
-class Mpq;
 
-class Block
+class Block : public Format
 {
 	public:
 		enum Flags
@@ -55,7 +53,8 @@ class Block
 		Block(class Mpq *mpq);
 
 		std::streamsize read(istream &istream) throw (class Exception);
-		std::streamsize write(ostream &ostream) throw (class Exception);
+		std::streamsize write(ostream &ostream) const throw (class Exception);
+		virtual uint32_t version() const { return 0; }
 
 		/**
 		* @todo Check size, flags and required properties.

@@ -52,7 +52,7 @@ class Mdlx : public MdlxProperty, public MdxBlock
 		Mdlx();
 		virtual ~Mdlx();
 
-		class Version* version() const;
+		class Version* vers() const;
 		class Model* model() const;
 		class Sequences* sequences() const;
 		class GlobalSequences* globalSequences() const;
@@ -141,7 +141,7 @@ class Mdlx : public MdlxProperty, public MdxBlock
 		std::map<long32, class Node*> m_nodes;
 };
 
-inline class Version* Mdlx::version() const
+inline class Version* Mdlx::vers() const
 {
 	return this->m_version;
 }

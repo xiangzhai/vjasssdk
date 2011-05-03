@@ -23,6 +23,8 @@
 
 #include "map/environment.hpp"
 #include "map/itemset.hpp"
+#include "map/metadata.hpp"
+#include "map/object.hpp"
 #include "map/pathmap.hpp"
 #include "map/platform.hpp"
 #include "map/shadow.hpp"

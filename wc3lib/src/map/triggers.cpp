@@ -21,8 +21,6 @@
 #include <boost/foreach.hpp>
 
 #include "triggers.hpp"
-#include "../utilities.hpp"
-#include "../internationalisation.hpp"
 #include "w3m.hpp"
 #include "triggercategory.hpp"
 #include "variable.hpp"
@@ -41,6 +39,13 @@ Triggers::Triggers(class W3m *w3m) : m_w3m(w3m)
 std::streamsize Triggers::read(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
+	id requiredId = fileId();
+	id fileId;
+	wc3lib::read(istream, fileId, size);
+	
+	if (memcmp(&fileId, &requiredId, sizeof(fileId)) != 0)
+		throw Exception(boost::format(_("Triggers: Unknown file id \"%1%\". Expected \"%2%\".")) % fileId % this->fileId());
+	
 	wc3lib::read(istream, this->m_version, size);
 
 	if (this->m_version != latestFileVersion())
@@ -81,6 +86,7 @@ std::streamsize Triggers::read(InputStream &istream) throw (class Exception)
 std::streamsize Triggers::write(OutputStream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
+	wc3lib::write(ostream, fileId(), size);
 	wc3lib::write(ostream, this->m_version, size);
 	int32 number = this->m_categories.size();
 	wc3lib::write(ostream, number, size);

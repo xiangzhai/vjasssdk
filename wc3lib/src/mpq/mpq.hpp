@@ -82,7 +82,7 @@ namespace mpq
 * Use Mpq::addFile to add a new file which will return 0 (if an error occurs) or the new MpqFile
 * instance which refers to the newly created file.
 */
-class Mpq
+class Mpq : public Format
 {
 	public:
 		enum Format
@@ -114,13 +114,18 @@ class Mpq
 		* @param listfilefileIstream If you want to preselect your custom listfile file, use this value (entries will be appended to the already contained listfile file if it does exist).
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize readMpq(istream &i, istream *listfileIstream = 0) throw (class Exception);
+		virtual std::streamsize read(InputStream &stream, InputStream *listfileIstream) throw (class Exception);
+		virtual std::streamsize read(InputStream &stream) throw (class Exception)
+		{
+			return read(stream, 0);
+		}
 		/**
-		* Writes the whole MPQ archive into output stream @param ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
+		* Writes the whole MPQ archive into output stream \p ostream. Note that you don't have to call this function each time you want to save your changed data of the opened MPQ archive.
 		* If you change some data of the opened MPQ archive it's written directly into the corresponding file (the whole archive is not loaded into memory!).
 		* @return Returns MPQ's size in bytes.
 		*/
-		std::streamsize writeMpq(ostream &ostream) const throw (class Exception);
+		virtual std::streamsize write(OutputStream &stream) const throw (class Exception);
+		virtual uint32_t version() const;
 
 		std::streamsize openTar(const boost::filesystem::path &path, istream *listfileIstream = 0) throw (class Exception);
 		std::streamsize readTar(istream &istream) throw (class Exception);
@@ -375,14 +380,14 @@ inline std::streamsize Mpq::strongDigitalSignature(istream &istream, char signat
 
 inline ostream& operator<<(ostream &stream, const class Mpq &mpq) throw (class Exception)
 {
-	mpq.writeMpq(stream);
+	mpq.write(stream);
 
 	return stream;
 }
 
 inline istream& operator>>(istream &stream, class Mpq &mpq) throw (class Exception)
 {
-	mpq.readMpq(stream);
+	mpq.read(stream);
 
 	return stream;
 }

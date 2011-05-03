@@ -23,11 +23,13 @@
 
 #include <string>
 #include <sstream>
+#include <list>
 
 #include <boost/cstdint.hpp>
 #include <boost/array.hpp>
+#include <boost/variant.hpp>
 
-#include "../format.hpp"
+#include "../core.hpp"
 
 namespace wc3lib
 {
@@ -44,11 +46,11 @@ typedef char byte;
 * Size: 4 bytes
 * Example: 1234 decimal = [00 00 04 D2]h will be stored in this order: [D2 04 00 00]h
 */
-typedef int32_t int32;
+typedef uint32_t int32;
 
 /// Versions (file versions) are usually being saved as int32 values.
 //typedef int32 version;
-typedef int32_t id;
+typedef uint32_t id;
 
 /**
 * Short Integers
@@ -109,7 +111,12 @@ typedef std::basic_stringstream<char8> stringstream;
 typedef std::basic_ostringstream<char8> ostringstream;
 typedef std::basic_istringstream<char8> istringstream;
 
-typedef Format<byte> Format;
+class Format : public wc3lib::Format<byte>
+{
+	public:
+		/// Usually only some formats have a customized version (e. g. map shadow - "war3map.shd")
+		virtual int32 version() const { return 0; }
+};
 
 typedef std::basic_istream<byte> istream;
 typedef std::basic_ostream<byte> ostream;
@@ -128,6 +135,475 @@ typedef int32_t flag;
 * Sometimes, an integer and one or several flags can share bytes. This is the case in the W3E file format: the water level and 2 flags are using the same group of 4 bytes. How? the 2 highest bit are used for the flags, the rest is reserved for the water level (the value range is just smaller). Sometimes a byte can contain two or more different data.
 *
 */
+
+typedef std::list<string> List;
+typedef boost::variant<
+int32,
+float32,
+string,
+bool,
+char8,
+List
+> ValueBase;
+
+/**
+ * Template type for variant types for the same value.
+ * Required for custom objects.
+ * Each modification of a custom object requires a speific type which indicates value's size as well.
+ * \sa CustomUnits::Modification, CustomObjects::Modification
+ */
+struct Value : public ValueBase
+{
+	public:
+		enum Type
+		{
+			Integer = 0,
+			Real = 1,
+			Unreal = 2,
+			String = 3,
+			Boolean = 4,
+			Character = 5,
+			UnitList = 6,
+			ItemList = 7,
+			RegenerationType = 8,
+			AttackType = 9,
+			WeaponType = 10,
+			TargetType = 11,
+			MoveType = 12,
+			DefenseType = 13,
+			PathingTexture = 14,
+			UpgradeList = 15,
+			StringList = 16,
+			AbilityList = 17,
+			HeroAbilityList = 18,
+			MissileArt = 19,
+			AttributeType = 20,
+			AttackBits = 21
+		};
+		
+		Value() : ValueBase(int32(0)), m_type(Integer)
+		{
+		}
+		
+		Value(Type type) : ValueBase(), m_type(type)
+		{
+		}
+		
+		Value(int32 value) : ValueBase(value), m_type(Integer)
+		{
+		}
+		
+		Value(float32 value) : ValueBase(value), m_type(Real)
+		{
+		}
+		
+		Value(string value) : ValueBase(value), m_type(String)
+		{
+		}
+		
+		Value(bool value) : ValueBase(value), m_type(Boolean)
+		{
+		}
+		
+		Value(char8 value) : ValueBase(value), m_type(Character)
+		{
+		}
+		
+		Value(List value) : ValueBase(value), m_type(StringList)
+		{
+		}
+		
+		enum Type type() const
+		{
+			return m_type;
+		}
+		
+		int32& toInteger() throw (class boost::bad_get)
+		{
+			if (type() != Integer)
+				throw boost::bad_get();
+			
+			return boost::get<int32&>(*this);
+		}
+		
+		int32 toInteger() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toInteger();
+		}
+		
+		float32& toReal() throw (class boost::bad_get)
+		{
+			if (type() != Real)
+				throw boost::bad_get();
+			
+			return boost::get<float32&>(*this);
+		}
+		
+		float32 toReal() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toReal();
+		}
+		
+		float32& toUnreal() throw (class boost::bad_get)
+		{
+			if (type() != Real)
+				throw boost::bad_get();
+			
+			return boost::get<float32&>(*this);
+		}
+		
+		float32 toUnreal() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toUnreal();
+		}
+		
+		string& toString() throw (class boost::bad_get)
+		{
+			if (type() != String)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toString() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toString();
+		}
+		
+		bool& toBoolean() throw (class boost::bad_get)
+		{
+			if (type() != Boolean)
+				throw boost::bad_get();
+			
+			return boost::get<bool&>(*this);
+		}
+		
+		bool toBoolean() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toBoolean();
+		}
+		
+		char8& toCharacter() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<char8&>(*this);
+		}
+		
+		char8 toCharacter() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toCharacter();
+		}
+		
+		List& toList() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<List&>(*this);
+		}
+		
+		const List& toList() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toList();
+		}
+		
+		List& toUnitList() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<List&>(*this);
+		}
+		
+		const List& toUnitList() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toUnitList();
+		}
+		
+		List& toItemList() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<List&>(*this);
+		}
+		
+		const List& toItemList() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toItemList();
+		}
+		
+		
+		string& toRegenerationType() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toRegenerationType() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toRegenerationType();
+		}
+		
+		string& toAttackType() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toAttackType() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toAttackType();
+		}
+		
+		string& toWeaponType() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toWeaponType() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toWeaponType();
+		}
+		
+		string& toTargetType() throw (class boost::bad_get)
+		{
+			if (type() != Character)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toTargetType() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toTargetType();
+		}
+		
+		string& toMoveType() throw (class boost::bad_get)
+		{
+			if (type() != MoveType)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toMoveType() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toMoveType();
+		}
+		
+		string& toDefenseType() throw (class boost::bad_get)
+		{
+			if (type() != DefenseType)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toDefenseType() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toDefenseType();
+		}
+		
+		string& toPathingTexture() throw (class boost::bad_get)
+		{
+			if (type() != PathingTexture)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toPathingTexture() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toPathingTexture();
+		}
+		
+		List& toUpgradeList() throw (class boost::bad_get)
+		{
+			if (type() != UpgradeList)
+				throw boost::bad_get();
+			
+			return boost::get<List&>(*this);
+		}
+		
+		const List& toUpgradeList() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toUpgradeList();
+		}
+		
+		List& toStringList() throw (class boost::bad_get)
+		{
+			if (type() != StringList)
+				throw boost::bad_get();
+			
+			return boost::get<List&>(*this);
+		}
+		
+		const List& toStringList() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toStringList();
+		}
+		
+		List& toAbilityList() throw (class boost::bad_get)
+		{
+			if (type() != AbilityList)
+				throw boost::bad_get();
+			
+			return boost::get<List&>(*this);
+		}
+		
+		const List& toAbilityList() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toAbilityList();
+		}
+		
+		List& toHeroAbilityList() throw (class boost::bad_get)
+		{
+			if (type() != HeroAbilityList)
+				throw boost::bad_get();
+			
+			return boost::get<List&>(*this);
+		}
+		
+		const List& toHeroAbilityList() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toHeroAbilityList();
+		}
+		
+		string& toMissileArt() throw (class boost::bad_get)
+		{
+			if (type() != MissileArt)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toMissileArt() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toMissileArt();
+		}
+		
+		string& toAttributeType() throw (class boost::bad_get)
+		{
+			if (type() != AttributeType)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toAttributeType() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toAttributeType();
+		}
+		
+		string& toAttackBits() throw (class boost::bad_get)
+		{
+			if (type() != AttackBits)
+				throw boost::bad_get();
+			
+			return boost::get<string&>(*this);
+		}
+		
+		const string& toAttackBits() const throw (class boost::bad_get)
+		{
+			return const_cast<class Value*>(this)->toAttackBits();
+		}
+		
+		/// Less than operator required for ordered containers.
+		bool operator<(const Value &value) const
+		{
+			return type() < value.type();
+		}
+		
+		bool operator==(const Value &value) const
+		{
+			if (type() == value.type())
+			{
+				switch (type())
+				{
+					case Integer:
+						return this->toInteger() == value.toInteger();
+					
+					case Real:
+						return this->toReal() == value.toReal();
+						
+					case Unreal:
+						return this->toUnreal() == value.toUnreal();
+						
+					case String:
+						return this->toString() == value.toString();
+						
+					case Boolean:
+						return this->toBoolean() == value.toBoolean();
+						
+					case Character:
+						return this->toCharacter() == value.toCharacter();
+						
+					case UnitList:
+						return this->toUnitList() == value.toUnitList();
+						
+					case ItemList:
+						return this->toItemList() == value.toItemList();
+						
+					case RegenerationType:
+						return this->toRegenerationType() == value.toRegenerationType();
+						
+					case AttackType:
+						return this->toAttackType() == value.toAttackType();
+						
+					case WeaponType:
+						return this->toWeaponType() == value.toWeaponType();
+						
+					case TargetType:
+						return this->toTargetType() == value.toTargetType();
+						
+					case MoveType:
+						return this->toMoveType() == value.toMoveType();
+						
+					case DefenseType:
+						return this->toDefenseType() == value.toDefenseType();
+						
+					case PathingTexture:
+						return this->toPathingTexture() == value.toPathingTexture();
+						
+					case UpgradeList:
+						return this->toUpgradeList() == value.toUpgradeList();
+						
+					case StringList:
+						return this->toStringList() == value.toStringList();
+						
+					case AbilityList:
+						return this->toAbilityList() == value.toAbilityList();
+						
+					case HeroAbilityList:
+						return this->toHeroAbilityList() == value.toHeroAbilityList();
+						
+					case MissileArt:
+						return this->toMissileArt() == value.toMissileArt();
+						
+					case AttributeType:
+						return this->toAttributeType() == value.toAttributeType();
+						
+					case AttackBits:
+						return this->toAttackBits() == value.toAttackBits();
+				}
+			}
+			
+			return false;
+		}
+		
+	protected:
+		enum Type m_type;
+};
 
 /**
 * Structures:

@@ -74,12 +74,12 @@ const KAboutData& Editor::wc3libAboutData()
 	return Editor::m_wc3libAboutData;
 }
 
-Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_actionCollection(new KActionCollection(this)), m_terrainEditor(0), m_triggerEditor(0), m_soundEditor(0), m_objectEditor(0), m_campaignEditor(0), m_aiEditor(0), m_objectManager(0), m_importManager(0), m_mpqEditor(0), m_modelEditor(0), m_textureEditor(0), m_newMapDialog(0)
+Editor::Editor(QWidget *parent, Qt::WindowFlags f) : KMainWindow(parent, f), m_root(0), m_actionCollection(new KActionCollection(this)), m_terrainEditor(0), m_triggerEditor(0), m_soundEditor(0), m_objectEditor(0), m_campaignEditor(0), m_aiEditor(0), m_objectManager(0), m_importManager(0), m_mpqEditor(0), m_modelEditor(0), m_textureEditor(0), m_newMapDialog(0)
 {
-	for (int i = 0; i < OgreMdlx::MaxTeamColors; ++i)
+	for (short i = 0; i < OgreMdlx::MaxTeamColors; ++i)
 		this->m_teamColorImages[(enum OgreMdlx::TeamColor)i] = 0;
 
-	for (int i = 0; i < OgreMdlx::MaxTeamColors; ++i)
+	for (short i = 0; i < OgreMdlx::MaxTeamColors; ++i)
 		this->m_teamGlowImages[(enum OgreMdlx::TeamColor)i] = 0;
 
 	class KAction *action = new KAction(KIcon(":/actions/newmap.png"), i18n("New map ..."), this);
@@ -204,9 +204,17 @@ Editor::~Editor()
 	this->writeSettings();
 	// do not delete allocated sub widgets (parent system of Qt already considers)
 	
+	
+	if (m_root != 0)
+		delete m_root;
+
 	// delete resources
 	BOOST_FOREACH(ResourceValueType value, this->m_resources)
+	{
+		qDebug() << "Cleaning up resource " << value.first;
+		
 		delete value.second;
+	}
 }
 
 Ogre::Image* Editor::blpToOgre(const KUrl &url, const QString &format) const throw (class Exception)

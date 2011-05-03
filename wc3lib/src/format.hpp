@@ -25,7 +25,18 @@
 #include <ostream>
 #include <sstream>
 
+#include <boost/serialization/serialization.hpp>
+/*
+#include <boost/archive/basic_archive.hpp>
+#include <boost/archive/basic_binary_iarchive.hpp>
+#include <boost/archive/basic_binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+*/
+#include <boost/cstdint.hpp>
+
 #include "exception.hpp"
+#include "utilities.hpp"
 
 namespace wc3lib
 {
@@ -57,9 +68,59 @@ class Format
 			
 			return other.read(sstream);
 		}
+		
+		friend class boost::serialization::access;
+		
+		// When the class Archive corresponds to an output archive, the
+		// & operator is defined similar to <<.  Likewise, when the class Archive
+		// is a type of input archive the & operator is defined similar to >>.
+		template<class _ArchiveT>
+		void save(_ArchiveT &ar, const unsigned int version)
+		{
+			OutputStream stream;
+			this >> stream;
+			const std::size_t bufferSize = wc3lib::endPosition(stream) + 1;
+			_CharT *buffer = new _CharT[bufferSize];
+			stream.rdbuf()->sgetn(buffer, bufferSize);
+			ar.save_binary(static_cast<const void*>(buffer), bufferSize);
+			delete[] buffer;
+			//boost::archive::basic_binary_oarchive<_ArchiveT>
+			//boost::basic_a
+			//boost::archive::basic_binary_oarchive::
+		}
+		
+		template<class _ArchiveT>
+		void load(_ArchiveT &ar, const unsigned int version)
+		{
+			/*
+			 * TODO how to get stream of archive \p ar.
+			 * Read from archive stream into object by using << operator.
+			boost::archive::binary_iarchive::
+			OutputStream stream;
+			this >> stream;
+			const std::size_t bufferSize = wc3lib::endPosition(stream) + 1;
+			_CharT *buffer = new _CharT[bufferSize];
+			stream.rdbuf()->sgetn(buffer, bufferSize);
+			ar.save_binary(static_cast<const void*>(buffer), bufferSize);
+			delete[] buffer;
+			*/
+		}
+		
+		template<class _ArchiveT>
+		void save(_ArchiveT &ar) { save(ar, version()); }
+		template<class _ArchiveT>
+		void load(_ArchiveT &ar) { load(ar, version()); }
+		
+		BOOST_SERIALIZATION_SPLIT_MEMBER()
+
 
 		class Format& operator<<(InputStream &istream) throw (class Exception);
 		const class Format& operator>>(OutputStream &ostream) const throw (class Exception);
+		
+		/**
+		 * Version is required for Boost-like serialization. Most of Warcraft 3's formats do also have a version number.
+		 */
+		virtual uint32_t version() const = 0;
 };
 
 template<typename _CharT>

@@ -1,7 +1,25 @@
+2011-05-03 Tamino Dauth <tamino@cdauth.eu>
+* editor: Create entities of OgreMdlx instances (http://www.ogre3d.org/tikiwiki/ManualObject).
+
+2011-04-27 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fix memory access violation bug when editor is closed (some resource is deleted which had already been).
+
+2011-04-26 Tamino Dauth <tamino@cdauth.eu>
+* map: Add all meta data classes deriving from class MetaData.
+* map: Add all data class deriving from class Data.
+
+2011-04-18 Tamino Dauth <tamino@cdauth.eu>
+* DONE: core: Class format needs Boost serialization properties, general version number with data type of Warcraft 3 (uint32_t) for classes like map::Environment -> virtual member function.
+* DONE: mpq: Classes have to derive from Format.
+
 2011-04-12 Tamino Dauth <tamino@cdauth.eu>
-* editor: OgreMdlx -> write output of all vertices, normals and faces as they're written in MDL format to compare if everything is equal/correct.
+* DONE: editor: OgreMdlx -> write output of all vertices, normals and faces as they're written in MDL format to compare if everything is equal/correct.
 * slk: Drop this module since it's an format by Microsoft (well-known).
-* map: Add primitive data classes for abilities, splat data, unit data etc. which can be filled by reading SLK files etc. All of them should inherit some base class since they all do have an unique id.
+* map: Add primitive data classes for abilities, splat data, unit data etc. which can be filled by reading SLK files etc. All of them should inherit some base class since they all do have an unique id. Class list: map::WeatherEffect, map::Unit, map::Ability, map::Buff.
+* editor: We need a new extern SLK library to load all map data types objects.
+* editor: Finish class MpqArchive which inherits from KArchive. It has to be usable with some kind of file browser. Add custom dialog (entries/buttons) for file properties.
+* mpq (high complexity): Add abstract class Job for all file, hash and block entry related operations which can be queued and run by the "sync" member function of class mpq::Mpq.
+* mpq: All classes need mutices (mutex) which have to be locked by their corresponding instance if instance is being changed. Operation queue should consider these mutices and discard impossible operations (e. g. file has to be renamed but has already been deleted before)!
 
 2011-04-07 Tamino Dauth <tamino@cdauth.eu>
 * Project work related stuff (school): Fix camera view of Model Editor, fix texture resource path (replace \ character by / on Unix systems -> should happen automatically when using QUrl or KUrl?!), fix texture wrapping on model, implement camera rotation around selected point (not only origin - (0|0|0)), implement MDX writing for all required types, try MDL reading!!!

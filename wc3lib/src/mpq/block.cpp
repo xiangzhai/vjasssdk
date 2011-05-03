@@ -68,7 +68,7 @@ std::streamsize Block::read(istream &istream) throw (class Exception)
 	return size;
 }
 
-std::streamsize Block::write(ostream &ostream) throw (class Exception)
+std::streamsize Block::write(ostream &ostream) const throw (class Exception)
 {
 	struct BlockTableEntry entry;
 	entry.blockOffset = this->m_blockOffset;

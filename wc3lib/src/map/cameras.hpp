@@ -43,8 +43,10 @@ class Cameras : public Format
 		std::streamsize read(std::istream &istream) throw (class Exception);
 		std::streamsize write(std::ostream &ostream) const throw (class Exception);
 
-		virtual const char* fileName() const;
+		virtual const char8* fileName() const;
 		virtual int32 latestFileVersion() const;
+		
+		virtual int32 version() const { return m_version; }
 
 	protected:
 		class W3m *m_w3m;
@@ -52,7 +54,7 @@ class Cameras : public Format
 		std::list<class Camera*> m_cameras;
 };
 
-inline const char* Cameras::fileName() const
+inline const char8* Cameras::fileName() const
 {
 	return "war3map.w3c";
 }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,46 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef WC3LIB_MAP_TRIGGERCATEGORY_HPP
-#define WC3LIB_MAP_TRIGGERCATEGORY_HPP
+#ifndef WC3LIB_EDITOR_INTEGERDIALOG_HPP
+#define WC3LIB_EDITOR_INTEGERDIALOG_HPP
 
-#include "platform.hpp"
+#include <kdialog.h>
+
+#include "ui/ui_integerdialog.h"
 
 namespace wc3lib
 {
 
-namespace map
+namespace editor
 {
 
-/**
- * \todo Add derived class TriggerCategoryX.
- * \sa TriggerCategoryX
- */
-class TriggerCategory : public Format
+class ObjectIntegerDialog : public KDialog, protected Ui::IntegerDialog
 {
 	public:
-		TriggerCategory(class Triggers *triggers);
-
-		virtual std::streamsize read(InputStream &istream) throw (class Exception);
-		virtual std::streamsize write(OutputStream &ostream) const throw (class Exception);
-
-		int32 index() const;
-		const string& name() const;
-
-	protected:
-		class Triggers *m_triggers;
-		int32 m_index;
-		string m_name;
+		ObjectIntegerDialog(QWidget *parent = 0);
+		
+		class KIntSpinBox* intSpinBox() const;
 };
 
-inline const string& TriggerCategory::name() const
-{
-	return this->m_name;
-}
 
-inline int32 TriggerCategory::index() const
+inline class KIntSpinBox* ObjectIntegerDialog::intSpinBox() const
 {
-	return this->m_index;
+	return m_intSpinBox;
 }
 
 }

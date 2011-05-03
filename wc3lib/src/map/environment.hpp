@@ -23,10 +23,8 @@
 
 #include <list>
 #include <map>
-#include <string>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -74,15 +72,20 @@ class Environment : public Format
 		int32 mapHeight() const;
 
 		const class Tilepoint* tilepoint(const class Position &position) const;
+		
+		virtual int32 version() const { return m_version; }
+		enum MainTileset mainTileset() const { return m_mainTileset; }
+		bool customized() const { return m_customized; }
+		/// \todo Add get and set member functions!
 
 		/**
 		* @return Returns a newly allocated C string which you'll have to free.
 		*/
 		static char8* tilesetIdToCString(int32 tilesetId);
-		static std::string tilesetIdToString(int32 tilesetId);
+		static string tilesetIdToString(int32 tilesetId);
 
 	protected:
-		static enum MainTileset convertCharToMainTileset(char value) throw (class Exception);
+		static enum MainTileset convertCharToMainTileset(char8 value) throw (class Exception);
 
 		class W3m *m_w3m;
 		int32 m_version;
@@ -142,10 +145,10 @@ inline char8* Environment::tilesetIdToCString(int32 tilesetId)
 	return output;
 }
 
-inline std::string Environment::tilesetIdToString(int32 tilesetId)
+inline string Environment::tilesetIdToString(int32 tilesetId)
 {
 	char8 *cString = Environment::tilesetIdToCString(tilesetId);
-	std::string value(cString);
+	string value(cString);
 	delete[] cString;
 
 	return value;

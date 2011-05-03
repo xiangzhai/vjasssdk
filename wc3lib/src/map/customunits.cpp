@@ -107,17 +107,16 @@ std::streamsize CustomUnits::Modification::readData(InputStream &istream) throw 
 	wc3lib::read(istream, this->m_id, size);
 	int32 type;
 	wc3lib::read(istream, type, size);
-	this->m_type = static_cast<enum Type>(type);
 
-	switch (this->m_type)
+	switch (static_cast<enum Value::Type>(type))
 	{
-		case Integer:
-			wc3lib::read(istream, this->m_value.Integer, size);
+		case Value::Integer:
+			wc3lib::read(istream, this->m_value.toInteger(), size);
 
 			break;
 
-		case Real:
-			wc3lib::read(istream, this->m_value.Real, size);
+		case Value::Real:
+			wc3lib::read(istream, this->m_value.toReal(), size);
 
 			break;
 
@@ -154,17 +153,17 @@ std::streamsize CustomUnits::Modification::writeData(OutputStream &ostream) cons
 {
 	std::streamsize size = 0;
 	wc3lib::write(ostream, this->m_id, size);
-	wc3lib::write<int>(ostream, this->m_type, size);
+	wc3lib::write<int32>(ostream, this->m_value.type(), size);
 
-	switch (this->m_type)
+	switch (this->m_value.type())
 	{
-		case Integer:
-			wc3lib::write(ostream, this->m_value.Integer, size);
+		case Value::Integer:
+			wc3lib::write(ostream, this->m_value.toInteger(), size);
 
 			break;
 
-		case Real:
-			wc3lib::write(ostream, this->m_value.Real, size);
+		case Value::Real:
+			wc3lib::write(ostream, this->m_value.toReal(), size);
 
 			break;
 

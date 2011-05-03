@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,22 +21,17 @@
 #ifndef WC3LIB_MAP_PATHMAP_HPP
 #define WC3LIB_MAP_PATHMAP_HPP
 
-#include <istream>
-#include <ostream>
 #include <map>
 
 #include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {
 
 namespace map
 {
-	
-class W3m;
 
-class Pathmap
+class Pathmap : public Format
 {
 	public:
 		enum Type
@@ -52,27 +47,44 @@ class Pathmap
 		Pathmap(class W3m *w3m);
 		~Pathmap();
 		
-		std::streamsize read(std::istream &istream) throw (class Exception);
-		std::streamsize write(std::istream &istream) throw (class Exception);
+		std::streamsize read(InputStream &istream) throw (class Exception);
+		std::streamsize write(OutputStream &ostream) const throw (class Exception);
 		
-		int32 fileVersion() const;
+		virtual int32 fileId() const;
+		virtual const char8* fileName() const;
+		virtual int32 latestFileVersion() const;
+		
+		virtual int32 version() const;
 		int32 width() const;
 		int32 height() const;
 		enum Type type(const class Position &position) const throw (class Exception);
-		
-		static const char8 identifier[4];
 
 	protected:
 		class W3m *m_w3m;
-		int32 m_fileVersion;
+		int32 m_version;
 		int32 m_width;
 		int32 m_height;
 		std::map<class Position, enum Type> m_data;
 };
 
-inline int32 Pathmap::fileVersion() const
+inline int32 Pathmap::fileId() const
 {
-	return this->m_fileVersion;
+	return (int32)"MP3W";
+}
+
+inline const char8* Pathmap::fileName() const
+{
+	return "war3map.wpm";
+}
+
+inline int32 Pathmap::latestFileVersion() const
+{
+	return 0;
+}
+
+inline int32 Pathmap::version() const
+{
+	return this->m_version;
 }
 
 inline int32 Pathmap::width() const

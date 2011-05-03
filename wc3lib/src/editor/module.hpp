@@ -41,7 +41,12 @@ class Module : public QWidget
 		Module(class Editor *editor);
 		virtual ~Module();
 		class Editor* editor() const;
+		class KMenu* fileMenu() const;
+		class KMenu* editMenu() const;
+		class ModuleMenu* moduleMenu() const; 
 		class KMenuBar* menuBar() const;
+		class KMenu* windowsMenu() const;
+		class KToolBar* toolBar() const;
 
 	protected:
 		virtual void setupUi();
@@ -63,7 +68,12 @@ class Module : public QWidget
 
 	private:
 		class Editor *m_editor;
+		class KMenu *m_fileMenu;
+		class KMenu *m_editMenu;
+		class ModuleMenu *m_moduleMenu;
 		class KMenuBar *m_menuBar;
+		class KMenu *m_windowsMenu;
+		class KToolBar *m_toolBar;
 
 		class QVBoxLayout *m_topLayout;
 };
@@ -71,6 +81,36 @@ class Module : public QWidget
 inline class Editor* Module::editor() const
 {
 	return this->m_editor;
+}
+
+inline class KMenu* Module::fileMenu() const
+{
+	return m_fileMenu;
+}
+
+inline class KMenu* Module::editMenu() const
+{
+	return m_editMenu;
+}
+
+inline class ModuleMenu* Module::moduleMenu() const
+{
+	return m_moduleMenu;
+}
+
+inline class KMenuBar* Module::menuBar() const
+{
+	return m_menuBar;
+}
+
+inline class KMenu* Module::windowsMenu() const
+{
+	return m_windowsMenu;
+}
+
+inline class KToolBar* Module::toolBar() const
+{
+	return m_toolBar;
 }
 
 inline class QVBoxLayout* Module::topLayout() const

@@ -28,10 +28,10 @@
 #include <QtCore>
 #include <QtGui>
 
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <kurl.h>
-#include <kfiledialog.h> /// TEST
+#include <KMessageBox>
+#include <KLocale>
+#include <KUrl>
+#include <KFileDialog> /// TEST
 
 #include <OgreCodec.h>
 
@@ -443,10 +443,34 @@ void OgreMdlx::saveAs(const KUrl &url) throw (class Exception)
 
 		KMessageBox::information(0, i18n("Wrote %1 file \"%2\" successfully.\nSize: %3.", isMdx ? i18n("MDX") : i18n("MDL"), url.toLocalFile(), sizeStringBinary(size).c_str()));
 	}
+	else if (extension == "mesh")
+	{
+		Ogre::MeshSerializer *serializer = new Ogre::MeshSerializer();
+	
+		BOOST_FOREACH(Geosets::const_reference value, m_geosets)
+		{
+			Ogre::ManualObject *manualObject = value.second;
+			std::ostringstream sstream;
+			sstream << manualObject->getName();
+			sstream << "Mesh";
+			const Ogre::MeshPtr mesh = manualObject->convertToMesh(sstream.str());
+			
+			const QFileInfo info(url.toLocalFile().toUtf8());
+			KUrl geosetUrl(info.absoluteDir().absolutePath());
+			QString fileName(info.baseName() + sstream.str().c_str());
+			fileName += '.' + info.completeSuffix();
+			geosetUrl.addPath(fileName);
+			qDebug() << "Geoset URL: " << geosetUrl.toLocalFile();
+			serializer->exportMesh(mesh.getPointer(), geosetUrl.toLocalFile().toUtf8().constData());
+		}
+		
+		delete serializer;
+	}
 	else
 		throw Exception(boost::format(_("Format \"%1%\" is not supported.")) % extension.toUtf8().constData());
 		
-		
+	
+	
 	/*
 	TODO
 	typedef std::pair<const mdlx::Geoset*, Ogre::ManualObject*> EntryType;
@@ -813,6 +837,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 	}
 
 	// TEST BLOCK
+	/*
 	static bool test = false;
 
 	if (!test)
@@ -828,7 +853,7 @@ Ogre::MaterialPtr OgreMdlx::createMaterial(const class mdlx::Material &material)
 		this->m_sceneNode->attachObject(planeEnt);
 		test = true;
 	}
-	
+	*/
 	// END TEST
 
 	return mat;
@@ -864,13 +889,10 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 	// increase processor performance
 	object->estimateVertexCount(geoset.vertices()->vertices().size());
 	object->estimateIndexCount(geoset.vertices()->vertices().size());
-	object->begin(this->m_materials[material]->getName(), Ogre::RenderOperation::OT_TRIANGLE_LIST); // get material
-	//class mdlx::TexturePatch *patch;
-	//patch->
+	object->begin(this->m_materials[material]->getName(), Ogre::RenderOperation::OT_TRIANGLE_LIST);
 	// build vertices
 	std::list<class mdlx::Vertex*>::const_iterator vertexIterator = geoset.vertices()->vertices().begin();
 	std::list<class mdlx::Normal*>::const_iterator normalIterator = geoset.normals()->normals().begin();
-	//std::list<class mdlx::TexturePatch*>::const_iterator texturePatchIterator = geoset.texturePatches()->texturePatches().begin();
 	std::list<class mdlx::TextureVertex*>::const_iterator textureVertexIterator = geoset.textureVertices()->textureVertices().begin();
 	Ogre::uint32 index = 0;
 	//qDebug() << "TVertices " << geoset.textureVertices()->textureVertices().size() << "{";
@@ -886,7 +908,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		object->normal((*normalIterator)->vertexData().x, (*normalIterator)->vertexData().y, (*normalIterator)->vertexData().z);
 		object->textureCoord((*textureVertexIterator)->x(), (*textureVertexIterator)->y());
 		object->colour(1.0 - this->modelView()->viewPort()->getBackgroundColour().r, 1.0 - this->modelView()->viewPort()->getBackgroundColour().g, 1.0 - this->modelView()->viewPort()->getBackgroundColour().b, 1.0 - this->modelView()->viewPort()->getBackgroundColour().a);
-		object->index(index);
+		//object->index(index);
 		
 		//qDebug() << "{ " << (*textureVertexIterator)->x() << ", " << (*textureVertexIterator)->y() << " },";
 		//qDebug() << "{ " << (*normalIterator)->vertexData().x << ", " << (*normalIterator)->vertexData().y << ", " << (*normalIterator)->vertexData().z << " },";

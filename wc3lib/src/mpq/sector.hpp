@@ -36,7 +36,7 @@ namespace mpq
 class Sector
 {
 	public:
-		enum Compression
+		enum Compression /// TODO : byte
 		{
 			Uncompressed = 0,
 			ImaAdpcmMono = 0x40, // IMA ADPCM mono

@@ -23,6 +23,8 @@
 
 #include <boost/cstdint.hpp>
 
+#include "../core.hpp"
+
 namespace wc3lib
 {
 
@@ -50,6 +52,7 @@ typedef float float32;
 * @brief RGBA color stored in order ARGB with one byte per channel.
 */
 typedef uint32_t color;
+typedef Format<byte> Format;
 
 struct BlpHeader
 {

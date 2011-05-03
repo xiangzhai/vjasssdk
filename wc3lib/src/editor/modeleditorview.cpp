@@ -22,6 +22,7 @@
 
 #include "modeleditorview.hpp"
 #include "modeleditor.hpp"
+#include "../core.hpp"
 
 namespace wc3lib
 {
@@ -39,12 +40,13 @@ ModelEditorView::~ModelEditorView()
 
 void ModelEditorView::mousePressEvent(QMouseEvent *event)
 {
-	if (hitTest() && event->button() == Qt::LeftButton)
+	if (renderWindow() != 0 && hitTest() && event->button() == Qt::LeftButton)
 	{
 		//QPoint point(event->globalX() - this->modelView()->x(), event->globalY() - this->modelView()->y());
 		QPoint point(event->x(), event->y());
+		
 		qDebug() << "Selection event in model editor trying \"hit test\"!\nCoordinates are (" << point.x() << "|" << point.y() << ")";
-		Ogre::Ray mouseRay =  this->camera()->getCameraToViewportRay(point.x() / float(this->width()), point.y() / float(this->height()));
+		Ogre::Ray mouseRay = this->camera()->getCameraToViewportRay(point.x() / float(this->width()), point.y() / float(this->height()));
 		// map of selections results sorted by selection distance
 		typedef std::map<Ogre::Real, class OgreMdlx*> Results;
 		Results results;
@@ -60,13 +62,13 @@ void ModelEditorView::mousePressEvent(QMouseEvent *event)
 			if (entry.movable)
 			{
 		*/
-		
-		foreach (ModelEditor::Models::left_const_reference value, modelEditor()->models().left)
+		modelEditor()->models().left.empty(); // TEST
+		BOOST_FOREACH(ModelEditor::Models::left_const_reference value, modelEditor()->models().left)
 		{
 			OgreMdlx *ogreMdlx = value.second;
 			bool selected = false;
 			
-			foreach (OgreMdlx::CollisionShapes::value_type collisionShapeValue, ogreMdlx->collisionShapes())
+			BOOST_FOREACH(OgreMdlx::CollisionShapes::value_type collisionShapeValue, ogreMdlx->collisionShapes())
 			{
 				OgreMdlx::CollisionShape *collisionShape = collisionShapeValue.second;
 				std::pair<bool, Ogre::Real> result;
@@ -93,7 +95,7 @@ void ModelEditorView::mousePressEvent(QMouseEvent *event)
 		
 		qDebug() << "Here are all results sorted by distance:";
 		
-		foreach (Results::const_reference value, results)
+		BOOST_FOREACH(Results::const_reference value, results)
 			qDebug() << "Name \"" << value.second->mdlx()->model()->name() << "\", distance " << value.first;
 				/*
 				entry.movable->setVisible(!entry.movable->getVisible());

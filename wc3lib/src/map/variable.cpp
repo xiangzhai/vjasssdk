@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "variable.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {

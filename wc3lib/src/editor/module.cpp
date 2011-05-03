@@ -44,74 +44,69 @@ Module::~Module()
 {
 }
 
-KMenuBar* Module::menuBar() const
-{
-	return this->m_menuBar;
-}
-
 void Module::setupUi()
 {
 	this->m_menuBar = new KMenuBar(this);
 	m_topLayout->addWidget(this->m_menuBar);
 
-	KMenu *menu = new KMenu(tr("File"), this);
-	this->menuBar()->addMenu(menu);
-	connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(triggered(QAction*)));
+	this->m_fileMenu = new KMenu(tr("File"), this);
+	this->menuBar()->addMenu(this->m_fileMenu);
+	connect(this->m_fileMenu, SIGNAL(triggered(QAction *)), this, SLOT(triggered(QAction*)));
 
 	// use actions from editor
-	menu->addAction(this->editor()->actionCollection()->action("newmap"));
-	menu->addAction(this->editor()->actionCollection()->action("openmap"));
-	menu->addAction(this->editor()->actionCollection()->action("closemap"));
-	menu->addSeparator();
-	menu->addAction(this->editor()->actionCollection()->action("savemap"));
-	menu->addAction(this->editor()->actionCollection()->action("savemapas"));
-	menu->addAction(this->editor()->actionCollection()->action("savemapshadows"));
-	menu->addSeparator();
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("newmap"));
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("openmap"));
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("closemap"));
+	this->m_fileMenu->addSeparator();
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("savemap"));
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("savemapas"));
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("savemapshadows"));
+	this->m_fileMenu->addSeparator();
 
 	// create user-defined actions in file menu
-	this->createFileActions(menu);
+	this->createFileActions(this->m_fileMenu);
 
 	// use actions from editor
-	menu->addSeparator();
-	menu->addAction(this->editor()->actionCollection()->action("testmap"));
-	menu->addSeparator();
-	menu->addAction(this->editor()->actionCollection()->action("closemodule"));
+	this->m_fileMenu->addSeparator();
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("testmap"));
+	this->m_fileMenu->addSeparator();
+	this->m_fileMenu->addAction(this->editor()->actionCollection()->action("closemodule"));
 
-	menu = new KMenu(tr("Edit"), this);
-	this->menuBar()->addMenu(menu);
+	this->m_editMenu = new KMenu(tr("Edit"), this);
+	this->menuBar()->addMenu(this->m_editMenu);
 
 	// create user-defined actions in edit menu
-	this->createEditActions(menu);
+	this->createEditActions(this->m_editMenu);
 
 	// module menu
-	class ModuleMenu *moduleMenu = new ModuleMenu(this, this->editor());
-	this->menuBar()->addMenu(moduleMenu);
+	this->m_moduleMenu = new ModuleMenu(this, this->editor());
+	this->menuBar()->addMenu(this->m_moduleMenu);
 
 	// create user-defined menus
 	this->createMenus(this->menuBar());
 
-	menu = new KMenu(tr("Windows"), this);
-	this->menuBar()->addMenu(menu);
+	this->m_windowsMenu = new KMenu(tr("Windows"), this);
+	this->menuBar()->addMenu(windowsMenu());
 
 	// create user-defined actions in windows menu
-	this->createWindowsActions(menu);
+	this->createWindowsActions(windowsMenu());
 
 	// tool bar
-	KToolBar *toolBar = new KToolBar(this);
-	m_topLayout->addWidget(toolBar);
-	toolBar->addSeparator();
+	this->m_toolBar = new KToolBar(this);
+	m_topLayout->addWidget(toolBar());
+	toolBar()->addSeparator();
 
 	// user defined tool buttons
-	this->createToolButtons(toolBar);
+	this->createToolButtons(toolBar());
 
-	toolBar->addSeparator();
+	toolBar()->addSeparator();
 
 	// modules tool buttons
-	foreach (QAction *action, moduleMenu->actions())
-		toolBar->addAction(action);
+	foreach (QAction *action, moduleMenu()->actions())
+		toolBar()->addAction(action);
 
 	// test map tool button
-	toolBar->addAction(this->editor()->actionCollection()->action("testmap"));
+	toolBar()->addAction(this->editor()->actionCollection()->action("testmap"));
 }
 
 void Module::readSettings()

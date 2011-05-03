@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
+#include <KApplication>
+#include <KAboutData>
+#include <KCmdLineArgs>
+#include <KLocale>
 
 #include "../editor/editor.hpp"
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
 	class KApplication app;
 
-	class Editor editor;
+	class Editor editor ;
 	editor.show();
 	/*
 	/// @todo Allow parsing multiple files as arguments.

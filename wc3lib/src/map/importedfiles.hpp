@@ -24,7 +24,6 @@
 #include <list>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -60,7 +59,8 @@ class ImportedFiles : public Format
 		virtual int32 latestFileVersion() const;
 		virtual const char8* fileName() const;
 
-		int32 version() const;
+		virtual int32 version() const;
+		std::list<class Path*>& paths();
 		const std::list<class Path*>& paths() const;
 
 		static const string mapPrefix;
@@ -94,6 +94,11 @@ inline const char8* ImportedFiles::fileName() const
 inline int32 ImportedFiles::version() const
 {
 	return this->m_version;
+}
+
+inline std::list<class ImportedFiles::Path*>& ImportedFiles::paths()
+{
+	return this->m_paths;
 }
 
 inline const std::list<class ImportedFiles::Path*>& ImportedFiles::paths() const

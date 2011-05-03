@@ -46,19 +46,7 @@ class CustomObjects : public CustomUnits
 			Buffs,
 			Upgrades
 		};
-
-		class Object : public CustomUnits::Unit
-		{
-			public:
-				Object(CustomObjects::Type type);
-				CustomObjects::Type type() const;
-
-			protected:
-				virtual CustomUnits::Modification* createModification() const;
-
-				CustomObjects::Type m_type;
-		};
-
+		
 		class Modification : public CustomUnits::Modification
 		{
 			public:
@@ -74,13 +62,25 @@ class CustomObjects : public CustomUnits
 				*/
 				int32 data() const;
 
-				std::streamsize read(std::basic_istream<byte> &istream) throw (class Exception);
-				std::streamsize write(std::basic_ostream<byte> &ostream) const throw (class Exception);
+				std::streamsize read(InputStream &istream) throw (class Exception);
+				std::streamsize write(OutputStream &ostream) const throw (class Exception);
 
 			protected:
 				CustomObjects::Type m_type;
 				int32 m_level; // level/variation
 				int32 m_data; // A, 1 = B, 2 = C, 3 = D, 4 = F, 5 = G, 6 = H
+		};
+
+		class Object : public CustomUnits::Unit
+		{
+			public:
+				Object(CustomObjects::Type type);
+				CustomObjects::Type type() const;
+
+			protected:
+				virtual CustomUnits::Modification* createModification() const;
+
+				CustomObjects::Type m_type;
 		};
 
 		CustomObjects(Type type);

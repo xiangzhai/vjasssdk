@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,6 @@
 
 #include "shadow.hpp"
 #include "w3m.hpp"
-#include "../utilities.hpp"
 
 namespace wc3lib
 {
@@ -40,7 +39,7 @@ Shadow::~Shadow()
 {
 }
 
-std::streamsize Shadow::read(std::basic_istream<byte> &istream) throw (class Exception)
+std::streamsize Shadow::read(InputStream &istream) throw (class Exception)
 {
 	std::streamsize size = 0;
 
@@ -60,7 +59,7 @@ std::streamsize Shadow::read(std::basic_istream<byte> &istream) throw (class Exc
 	return size;
 }
 
-std::streamsize Shadow::write(std::basic_ostream<byte> &ostream) const throw (class Exception)
+std::streamsize Shadow::write(OutputStream &ostream) const throw (class Exception)
 {
 	std::streamsize size = 0;
 	typedef std::pair<class Key, enum Type> valueType;
@@ -73,11 +72,6 @@ std::streamsize Shadow::write(std::basic_ostream<byte> &ostream) const throw (cl
 	}
 
 	return size;
-}
-
-const char8* Shadow::fileName() const
-{
-	return "war3map.shd";
 }
 
 }

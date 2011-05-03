@@ -69,8 +69,13 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 			MaxTeamColors
 		};
 		
+		typedef std::map<const class mdlx::Geoset*, Ogre::ManualObject*> Geosets;
 		typedef std::map<const class mdlx::Camera*, Ogre::Camera*> Cameras;
 		
+		/**
+		 * This structure is required for model's collision shapes which either can be boxes or spheres.
+		 * One instance should be created per collision shape of the corresponding \ref mdlx::Mdlx instance.
+		 */
 		struct CollisionShape
 		{
 			CollisionShape() : box(0), shape(mdlx::CollisionShape::Box)
@@ -85,14 +90,30 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 					delete sphere;
 			}
 			
-			union { Ogre::AxisAlignedBox *box; Ogre::Sphere *sphere;  };
+			union
+			{
+				Ogre::AxisAlignedBox *box;
+				Ogre::Sphere *sphere;
+			};
+			
 			mdlx::CollisionShape::Shape shape;
 		};
 		
 		typedef std::map<const class mdlx::CollisionShape*, struct CollisionShape*> CollisionShapes;
 		
-		
-		static QColor teamColor(enum TeamColor teamColor);
+		/**
+		 * Converts team color enumeration value into Qt RGB color.
+		 * \param teamColor Team color which is converted.
+		 * \return Returns corresponding Qt RGB color.
+		 * \sa teamColor(const QColor&)
+		 */
+		static QColor teamColor(const enum TeamColor &teamColor);
+		/**
+		 * Converts Qt RGB color into team color enumeration value.
+		 * \param color Qt RGB color which is converted.
+		 * \return Returns corresponding team color enumeration value.
+		 * \sa teamColor(const enum TeamColor&)
+		 */
 		static enum TeamColor teamColor(const QColor &color);
 		/**
 		 * Changes camera's \p ogreCamera to settings of camera \p camera.
@@ -101,7 +122,7 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 		static void updateCamera(const class mdlx::Camera &camera, Ogre::Camera *ogreCamera);
 
 		OgreMdlx(const KUrl &url, const class mdlx::Mdlx &mdlx, class ModelView *modelView);
-		~OgreMdlx();
+		virtual ~OgreMdlx();
 
 		const class mdlx::Mdlx* mdlx() const;
 		class ModelView* modelView() const;
@@ -131,11 +152,12 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 		 * \throw Exception Is thrown when file could not be stored in \p url.
 		 */
 		void saveAs(const KUrl &url) throw (class Exception);
+		
+		QString namePrefix() const;
 
 	protected:
 		typedef std::pair<const class Node*, Ogre::Node*> NodePairType;
 
-		QString namePrefix() const;
 		/**
 		 * Searches in member list of \p block for member \p member and returns its corresponding id.
 		 * Id is always its index in member list (starting with 0).
@@ -179,7 +201,7 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 
 		std::map<const class mdlx::Texture*, Ogre::TexturePtr> m_textures;
 		std::map<const class mdlx::Material*, Ogre::MaterialPtr> m_materials;
-		std::map<const class mdlx::Geoset*, Ogre::ManualObject* > m_geosets;
+		Geosets m_geosets;
 		Cameras m_cameras;
 		CollisionShapes m_collisionShapes;
 
@@ -195,7 +217,7 @@ class OgreMdlx  : public Resource, public Ogre::FrameListener
 		std::list<Ogre::TexturePtr> m_teamGlowTextures;
 };
 
-inline QColor OgreMdlx::teamColor(enum TeamColor teamColor)
+inline QColor OgreMdlx::teamColor(const enum TeamColor &teamColor)
 {
 	switch (teamColor)
 	{

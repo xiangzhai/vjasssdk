@@ -24,7 +24,6 @@
 #include <map>
 
 #include "platform.hpp"
-#include "../format.hpp"
 
 namespace wc3lib
 {
@@ -46,6 +45,8 @@ class Rects : public Format
 		
 		virtual const char8* fileName() const;
 		virtual int32 latestFileVersion() const;
+		
+		virtual int32 version() const { return m_version; }
 
 	protected:
 		class W3m *m_w3m;

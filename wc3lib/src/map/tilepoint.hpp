@@ -22,7 +22,6 @@
 #define WC3LIB_MAP_TILEPOINT_HPP
 
 #include "platform.hpp"
-#include "../exception.hpp"
 
 namespace wc3lib
 {

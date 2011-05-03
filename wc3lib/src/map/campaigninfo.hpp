@@ -23,7 +23,6 @@
 
 #include <list>
 
-#include "../format.hpp"
 #include "platform.hpp"
 
 namespace wc3lib
@@ -80,6 +79,8 @@ class CampaignInfo : public Format
 
 		virtual int32 latestFileVersion() const;
 		virtual const char8* fileName() const;
+		
+		virtual int32 version() const { return m_version; }
 
 	protected:
 		class Campaign *m_campaign;

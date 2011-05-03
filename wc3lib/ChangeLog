@@ -1,3 +1,40 @@
+2011-05-03 Tamino Dauth <tamino@cdauth.eu>
+* editor: Fixed collision shape namings of class ModelEditor.
+* editor: Added "close all models" action to class ModelEditor.
+* blp: Revised exception message.
+* editor: Fixed faces creation of class OgreMdlx (http://www.ogre3d.org/forums/viewtopic.php?f=2&t=64556).
+
+2011-04-30 Tamino Dauth <tamino@cdauth.eu>
+* editor: Implemented collison shape display functionality in class ModelEditor.
+
+2011-04-29 Tamino Dauth <tamino@cdauth.eu>
+* editor: Render window created by class ModelView uses unique identifier now.
+* editor: Class Editor uses central Root instance now.
+
+2011-04-27 Tamino Dauth <tamino@cdauth.eu>
+* map: Completed changes introduced with new classes Value, MetaData and Data.
+* editor: Completed changes introduced with new object editor classes.
+* editor: Removing resources deletes them now automatically.
+
+2011-04-24 Tamino Dauth <tamino@cdauth.eu>
+* editor: Added many object editor classes.
+* map: Revised class Value (deriving from boost::variant).
+
+2011-04-23 Tamino Dauth <tamino@cdauth.eu>
+* map: Added class Value for variants (custom objects).
+* map: Added meta data and data classes.
+
+2011-04-20 Tamino Dauth <tamino@cdauth.eu>
+* map: Classes derive from custom Format class now and implement virtual version member function.
+
+2011-04-19 Tamino Dauth <tamino@cdauth.eu>
+* mpq: Improved various functions.
+* mpq: Classes derive from custom Format class now and implement virtual version member function.
+
+2011-04-18 Tamino Dauth <tamino@cdauth.eu>
+* core: Added Boost serialization support.
+* core: Added files "core.hpp" and "i18n.hpp".
+
 2011-04-10 Tamino Dauth <tamino@cdauth.eu>
 * editor: Revised mouse movement control.
 * editor: Revised camera view actions.

@@ -25,6 +25,7 @@
 
 #include "platform.hpp"
 #include "../exception.hpp"
+#include "../internationalisation.hpp"
 
 namespace wc3lib
 {
@@ -32,12 +33,15 @@ namespace wc3lib
 namespace mpq
 {
 
-class Hash
+class Hash : public Format
 {
 	public:
 		Hash(class Mpq *mpq);
 		
 		std::streamsize read(istream &istream) throw (class Exception);
+		std::streamsize write(ostream &ostream) const throw (class Exception) { throw Exception(_("Do not use write member function of class Hash.")); }
+		virtual uint32_t version() const { return 0; }
+		
 		void clear();
 		
 		//bool isHash(const boost::filesystem::path &path, enum MpqFile::Locale locale, enum MpqFile::Platform platform) const;

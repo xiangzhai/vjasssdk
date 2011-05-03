@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2009 by Tamino Dauth                                    *
- *   tamino@cdauth.de                                                      *
+ *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,34 +21,56 @@
 #ifndef WC3LIB_MAP_TREES_HPP
 #define WC3LIB_MAP_TREES_HPP
 
+#include <boost/bimap.hpp>
+
+#include "platform.hpp"
+
 namespace wc3lib
 {
 
 namespace map
 {
 
-class Tree;
-
+/// \todo Add read and write member functions, add TFT version -> TreesX.
 class Trees
 {
 	public:
 		struct Header
 		{
-			char fileId[4];
-			int fileVersion;
-			int subversion;
-			int treeNumber;
+			id fileId;
+			int32 version;
+			int32 subversion;
+			int32 treeNumber;
 		};
 
 		struct Header2
 		{
-			int formatVersion;
-			int specialNumber;
+			int32 formatVersion;
+			int32 specialNumber;
 		};
+		
+		virtual int32 fileId() const;
+		virtual const char8* fileName() const;
+		virtual int32 latestFileVersion() const;
 
-	private:
-		std::list<class Tree> m_trees;
+	protected:
+		boost::bimap<id, class Tree> m_trees;
 };
+
+inline int32 Trees::fileId() const
+{
+	return (int32)"W3do";
+}
+
+inline const char8* Trees::fileName() const
+{
+	return "war3map.doo";
+}
+
+inline int32 Trees::latestFileVersion() const
+{
+	return 7;
+}
 
 }
 
