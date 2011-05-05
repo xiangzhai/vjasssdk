@@ -93,7 +93,7 @@ void ModelEditorView::mousePressEvent(QMouseEvent *event)
 				qDebug() << "SELECTED MODEL " << ogreMdlx->mdlx()->model()->name();
 		}
 		
-		qDebug() << "Here are all results sorted by distance:";
+		qDebug() << "Here are all selection results sorted by distance:";
 		
 		BOOST_FOREACH(Results::const_reference value, results)
 			qDebug() << "Name \"" << value.second->mdlx()->model()->name() << "\", distance " << value.first;

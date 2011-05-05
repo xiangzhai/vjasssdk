@@ -1,3 +1,8 @@
+2011-05-05 Tamino Dauth <tamino@cdauth.eu>
+* editor: Added class TeamColorDialog.
+* editor: Added team color and glow selection functionality to class ModelEditor.
+* editor: Fixed some error and exception behaviour when loading textures etc.
+
 2011-05-03 Tamino Dauth <tamino@cdauth.eu>
 * editor: Fixed collision shape namings of class ModelEditor.
 * editor: Added "close all models" action to class ModelEditor.

@@ -24,7 +24,9 @@
 #include <boost/bimap.hpp>
 #include <boost/bimap/set_of.hpp>
 
-#include <kurl.h>
+#include <QDebug>
+
+#include <KUrl>
 
 #include <Ogre.h>
 
@@ -61,6 +63,11 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 		const Models& models() const;
 		const CameraActions& cameraActions() const;
 		const CollisionShapeNodes& collisionShapeNodes() const;
+		
+		void setTeamColor(OgreMdlx::TeamColor teamColor);
+		OgreMdlx::TeamColor teamColor() const;
+		void setTeamGlow(OgreMdlx::TeamColor teamGlow);
+		OgreMdlx::TeamColor teamGlow() const;
 
 	public slots:
 		void openFile();
@@ -113,9 +120,14 @@ class ModelEditor : public Module, protected Ui::ModelEditor
 
 		class KMenu *m_viewMenu;
 		class RenderStatsWidget *m_renderStatsWidget;
+		class TeamColorDialog *m_teamColorDialog;
+		class TeamColorDialog *m_teamGlowDialog;
 		
 		class KAction *m_showStatsAction;
 		class KAction *m_showCollisionShapesAction;
+		
+		OgreMdlx::TeamColor m_teamColor;
+		OgreMdlx::TeamColor m_teamGlow;
 };
 
 inline class ModelEditorView* ModelEditor::modelView() const
@@ -136,6 +148,34 @@ inline const ModelEditor::CameraActions& ModelEditor::cameraActions() const
 inline const ModelEditor::CollisionShapeNodes& ModelEditor::collisionShapeNodes() const
 {
 	return m_collisionShapeNodes;
+}
+
+inline void ModelEditor::setTeamColor(OgreMdlx::TeamColor teamColor)
+{
+	m_teamColor = teamColor;
+	qDebug() << "Changing team color to " << teamColor;
+	
+	BOOST_FOREACH(Models::left_reference value, this->m_models.left)
+		value.second->setTeamColor(this->teamColor());
+}
+
+inline OgreMdlx::TeamColor ModelEditor::teamColor() const
+{
+	return m_teamColor;
+}
+
+inline void ModelEditor::setTeamGlow(OgreMdlx::TeamColor teamGlow)
+{
+	m_teamGlow = teamGlow;
+	qDebug() << "Changing team glow to " << teamGlow;
+	
+	BOOST_FOREACH(Models::left_reference value, this->m_models.left)
+		value.second->setTeamGlow(this->teamGlow());
+}
+
+inline OgreMdlx::TeamColor ModelEditor::teamGlow() const
+{
+	return m_teamGlow;
 }
 
 }

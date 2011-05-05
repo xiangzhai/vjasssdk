@@ -157,7 +157,7 @@ std::size_t requiredMipMaps(std::size_t width, std::size_t height)
 	std::size_t mips = 0;
 	std::size_t value = std::min<int>(width, height);
 
-	while (value > 0)
+	while (value > 0 && mips < Blp::maxMipMaps)
 	{
 		value /= 2;
 		++mips;
@@ -322,11 +322,11 @@ void readMipMapJpeg(class Blp::MipMap *mipMap, unsigned char data[], const std::
 	assert(mutex);
 	assert(state);
 	
-	std::cout << "Condition address " << condition << std::endl;
-	std::cout << "Mutex address " << mutex << std::endl;
-	std::cout << "State address " << state << std::endl;
+	//std::cout << "Condition address " << condition << std::endl;
+	//std::cout << "Mutex address " << mutex << std::endl;
+	//std::cout << "State address " << state << std::endl;
 	// all mipmaps use the same header, jpeg header has been allocated before and is copied into each mip map buffer.
-	std::cout << boost::format(_("Using header of library \"jpeglib\" version %1%.")) % JPEG_LIB_VERSION << std::endl;
+	//std::cout << boost::format(_("Using header of library \"jpeglib\" version %1%.")) % JPEG_LIB_VERSION << std::endl;
 	JSAMPARRAY scanlines = 0; // will be filled later
 
 	struct jpeg_decompress_struct cinfo;
@@ -338,13 +338,13 @@ void readMipMapJpeg(class Blp::MipMap *mipMap, unsigned char data[], const std::
 	try
 	{
 		loader.jpeg_mem_src(&cinfo, data, dataSize);
-		std::cout << "Buffer size is " << dataSize << std::endl;
+		//std::cout << "Buffer size is " << dataSize << std::endl;
 		//jpeg_mem_dest(cinfo, &buffer, &bufferSize);
 
 		if (loader.jpeg_read_header(&cinfo, true) != JPEG_HEADER_OK)
 			throw Exception(jpegError(loader.jpeg_std_error, _("Did not find header. Error: %1%.")));
 		
-		std::cout << "After reading header ... " << std::endl;
+		//std::cout << "After reading header ... " << std::endl;
 
 		if (!loader.jpeg_start_decompress(&cinfo))
 			throw Exception(jpegError(loader.jpeg_std_error, _("Could not start decompress. Error: %1%.")));
@@ -358,17 +358,17 @@ void readMipMapJpeg(class Blp::MipMap *mipMap, unsigned char data[], const std::
 		if (cinfo.out_color_space != JCS_RGB)
 			std::cerr << boost::format(_("Warning: Image color space (%1%) is not equal to RGB (%2%).")) % cinfo.out_color_space % JCS_RGB << std::endl;
 
-		std::cout << "JPEG image has width " << cinfo.image_width << " and height " << cinfo.image_height << std::endl;
-		std::cout << "JPEG image has scaled width " << cinfo.output_width << " and scaled height " << cinfo.output_height << std::endl;
-		std::cout << "Color map has size " << cinfo.actual_number_of_colors << std::endl;
+		//std::cout << "JPEG image has width " << cinfo.image_width << " and height " << cinfo.image_height << std::endl;
+		//std::cout << "JPEG image has scaled width " << cinfo.output_width << " and scaled height " << cinfo.output_height << std::endl;
+		//std::cout << "Color map has size " << cinfo.actual_number_of_colors << std::endl;
 
 		/// \todo Get as much required scanlines as possible (highest divident) to increase speed. Actually it could be equal to the MIP maps height which will lead to reading the whole MIP map with one single \ref jpeg_read_scanlines call
 		static const JDIMENSION requiredScanlines = 1; // increase this value to read more scanlines in one step
 		JDIMENSION scanlineSize = cinfo.output_width * cinfo.output_components; // JSAMPLEs per row in output buffer
 		scanlines = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, scanlineSize, requiredScanlines);
-		std::cout << "Required scanlines " << requiredScanlines << std::endl;
-		std::cout << "Size of scanline " << scanlineSize << " (width * components)" << std::endl;
-		std::cout << "we do have " << cinfo.output_components << " components/color channels." << std::endl;
+		//std::cout << "Required scanlines " << requiredScanlines << std::endl;
+		//std::cout << "Size of scanline " << scanlineSize << " (width * components)" << std::endl;
+		//std::cout << "we do have " << cinfo.output_components << " components/color channels." << std::endl;
 
 		// per scanline
 		while (cinfo.output_scanline < cinfo.output_height)
@@ -391,6 +391,8 @@ void readMipMapJpeg(class Blp::MipMap *mipMap, unsigned char data[], const std::
 				{
 					// store as ARGB (BLP)
 					// TODO why is component 0 blue, component 1 green and component 2 red?
+					// Red and Blue colors are swapped.
+					// http://www.wc3c.net/showpost.php?p=1046264&postcount=2
 					color argb = ((color)scanlines[scanline][component]) | ((color)scanlines[scanline][component + 1] << 8) | ((color)scanlines[scanline][component + 2] << 16);
 
 					if (cinfo.output_components == 4) // we do have an alpha channel
@@ -429,7 +431,7 @@ void readMipMapJpeg(class Blp::MipMap *mipMap, unsigned char data[], const std::
 
 	loader.jpeg_destroy_decompress(&cinfo);
 	updateState(*condition, *mutex, *state, Ready);
-	std::cout << "Finished decompress of MIP map and updated state." << std::endl;
+	//std::cout << "Finished decompress of MIP map and updated state." << std::endl;
 	
 	//boost::this_thread::yield(); /// \todo detach thread
 	boost::thread().detach(); // detach current thread
@@ -531,7 +533,7 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 	if (mipMapsCount == 0)
 		throw Exception(_("Detected 0 MIP maps (too little)."));
 	
-	std::cout << "Required mip maps are " << mipMapsCount << " with width " << this->m_width << " and height " << this->m_height << std::endl; // TEST
+	//std::cout << "Required mip maps are " << mipMapsCount << " with width " << this->m_width << " and height " << this->m_height << std::endl; // TEST
 
 	std::map<class MipMap*, struct MipMapHeaderData*> mipMaps;
 	typedef std::pair<class MipMap*, struct MipMapHeaderData*> KeyType;
@@ -558,12 +560,12 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 	{
 		if (this->m_compression == Blp::Jpeg)
 		{
-			std::cout << "Detected JPEG compression mode." << std::endl;
+			//std::cout << "Detected JPEG compression mode." << std::endl;
 			
 			struct JpegLoader loader;
 			loader.load();
 			
-			std::cout << "Loaded shared object." << std::endl;
+			//std::cout << "Loaded shared object." << std::endl;
 			
 			if (BITS_IN_JSAMPLE > sizeof(byte) * 8)
 				throw Exception(boost::format(_("Too many bits in one single sample (one single pixel color channel): %1%. BLP/wc3lib allows maximum sample size of %2%.")) % BITS_IN_JSAMPLE % (sizeof(byte) * 8));
@@ -580,10 +582,10 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 			try
 			{
 				boost::timer operationTimer; // TEST
-				std::cout << "JPEG header size " << jpegHeaderSize << std::endl;
+				//std::cout << "JPEG header size " << jpegHeaderSize << std::endl;
 				wc3lib::read(istream, *jpegHeader, size, jpegHeaderSize);
-				std::cout << "JPEG header size " << jpegHeaderSize << std::endl;
-				std::cout << "-- Reading MIP maps --" << std::endl;
+				//std::cout << "JPEG header size " << jpegHeaderSize << std::endl;
+				//std::cout << "-- Reading MIP maps --" << std::endl;
 				
 				/**
 				 * For each MIP map a thread is added to thread group.
@@ -603,13 +605,13 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 					dword mipMapOffset = mipMaps[mipMap]->offset;
 					dword mipMapSize = mipMaps[mipMap]->size;
 					// all mipmaps use the same header, jpeg header has been allocated before and is copied into each mip map buffer.
-					std::cout << "JPEG header size " << jpegHeaderSize << std::endl;
-					std::cout << "MIP Map size " << boost::numeric_cast<std::size_t>(mipMapSize) << std::endl;
+					//std::cout << "JPEG header size " << jpegHeaderSize << std::endl;
+					//std::cout << "MIP Map size " << boost::numeric_cast<std::size_t>(mipMapSize) << std::endl;
 					std::size_t bufferSize = jpegHeaderSize + boost::numeric_cast<std::size_t>(mipMapSize);
-					std::cout << "Buffer size (header + MIP map) " << bufferSize << std::endl;
+					//std::cout << "Buffer size (header + MIP map) " << bufferSize << std::endl;
 					unsigned char *buffer = new unsigned char[bufferSize]; // buffer has to be deleted by JPEG decompressor
 					memcpy(reinterpret_cast<void*>(buffer), reinterpret_cast<const void*>(jpegHeader), jpegHeaderSize); // copy header data
-					std::cout << "Copied JPEG header into buffer " << std::endl;
+					//std::cout << "Copied JPEG header into buffer " << std::endl;
 
 					// moving to offset, skipping null bytes
 					std::streampos position = istream.tellg();
@@ -915,12 +917,12 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 		}
 		else if (this->m_compression == Blp::Paletted)
 		{
-			std::cout << "Detected paletted compression." << std::endl;
+			//std::cout << "Detected paletted compression." << std::endl;
 
-			if (this->m_flags == Blp::Alpha)
-				std::cout << "With alphas!" << std::endl;
-			else
-				std::cout << "Without alphas!" << std::endl;
+			//if (this->m_flags == Blp::Alpha)
+			//	std::cout << "With alphas!" << std::endl;
+			//else
+			//	std::cout << "Without alphas!" << std::endl;
 
 			std::vector<color> palette(Blp::compressedPaletteSize); // uncompressed 1 and 2 only use 256 different colors.
 
@@ -984,10 +986,10 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 				if (mipMapSize != 0)
 				{
 					istream.seekg(mipMapSize, std::ios_base::cur);
-					std::cout << "Skipping " << mipMapSize << " unnecessary bytes." << std::endl;
+					//std::cout << "Skipping " << mipMapSize << " unnecessary bytes." << std::endl;
 				}
 
-				std::cout << "Mip map colors map size " << mipMap->m_colors.size() << std::endl;
+				//std::cout << "Mip map colors map size " << mipMap->m_colors.size() << std::endl;
 			}
 		}
 		else
@@ -1006,7 +1008,7 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 	BOOST_FOREACH(KeyType iterator, mipMaps)
 		delete iterator.second;
 
-	std::cout << "Read " << size << " bytes." << std::endl;
+	//std::cout << "Read " << size << " bytes." << std::endl;
 
 	// check mip maps
 	/*
@@ -1016,7 +1018,7 @@ std::streamsize Blp::read(InputStream &istream) throw (class Exception)
 	still applies. Ex: 24x17, 12x8 (rounded down), 6x4, 3x2, 1x1 (rounded down).
 	*/
 	if (this->m_mipMaps.size() > 1 && (this->m_mipMaps.back()->width() != 1 || this->m_mipMaps.back()->height() != 1))
-		throw Exception(boost::format(_("Last MIP map has not a size of 1x1 (%1%x%2%).")) % this->m_mipMaps.back()->width() % this->m_mipMaps.back()->height());
+		std::cerr << boost::format(_("Last MIP map has not a size of 1x1 (%1%x%2%).")) % this->m_mipMaps.back()->width() % this->m_mipMaps.back()->height();
 
 	return size;
 }

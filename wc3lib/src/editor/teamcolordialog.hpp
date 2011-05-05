@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,23 +18,41 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "groupmdxblockmember.hpp"
+#ifndef WC3LIB_EDITOR_TEAMCOLORDIALOG_HPP
+#define WC3LIB_EDITOR_TEAMCOLORDIALOG_HPP
+
+#include <QDialog>
+
+#include "ui/ui_teamcolordialog.h"
+#include "ogremdlx.hpp"
 
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
 
-GroupMdxBlockMember::GroupMdxBlockMember(class GroupMdxBlock *parent) : m_parent(parent)
+class TeamColorDialog : public QDialog, protected Ui::TeamColorDialog
 {
-	//std::cout << "PARENT address " << parent << std::endl;
-}
+	public:
+		TeamColorDialog(QWidget *parent = 0, Qt::WFlags flags = 0);
+		
+		void setTeamColor(OgreMdlx::TeamColor teamColor);
+		OgreMdlx::TeamColor teamColor() const;
+};
 
-GroupMdxBlockMember::~GroupMdxBlockMember()
+inline void TeamColorDialog::setTeamColor(OgreMdlx::TeamColor teamColor)
 {
+	this->m_colorComboBox->setCurrentIndex((int)teamColor);
+}
+
+inline OgreMdlx::TeamColor TeamColorDialog::teamColor() const
+{
+	return OgreMdlx::teamColor(this->m_colorComboBox->color());
 }
 
 }
 
 }
+
+#endif // TEAMCOLORDIALOG_HPP

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Tamino Dauth                                    *
+ *   Copyright (C) 2011 by Tamino Dauth                                    *
  *   tamino@cdauth.eu                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,23 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "groupmdxblockmember.hpp"
+#include <QtGui>
+
+#include "teamcolordialog.hpp"
 
 namespace wc3lib
 {
 
-namespace mdlx
+namespace editor
 {
 
-GroupMdxBlockMember::GroupMdxBlockMember(class GroupMdxBlock *parent) : m_parent(parent)
+TeamColorDialog::TeamColorDialog(QWidget *parent, Qt::WFlags flags) : QDialog(parent, flags)
 {
-	//std::cout << "PARENT address " << parent << std::endl;
+	setupUi(this);
+	
+	QList<QColor> colors;
+	
+	for (OgreMdlx::TeamColor teamColor = OgreMdlx::Red; teamColor < OgreMdlx::MaxTeamColors; teamColor = (OgreMdlx::TeamColor)((int)teamColor + 1))
+		colors << OgreMdlx::teamColor(teamColor);
+	
+	this->m_colorComboBox->clear();
+	this->m_colorComboBox->setColors(colors);
+	//connect(this->m_colorComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateColor(int)));
 }
 
-GroupMdxBlockMember::~GroupMdxBlockMember()
-{
 }
 
 }
 
-}

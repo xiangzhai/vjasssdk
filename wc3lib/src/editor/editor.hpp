@@ -153,11 +153,11 @@ class Editor : public KMainWindow, public MpqPriorityList
 		/**
 		* Once requested, the image is kept in memory until it's refreshed manually.
 		*/
-		const Ogre::Image& teamColorImage(enum OgreMdlx::TeamColor teamColor) const;
+		const Ogre::Image& teamColorImage(enum OgreMdlx::TeamColor teamColor) const throw (class Exception);
 		/**
 		* Once requested, the image is kept in memory until it's refreshed manually.
 		*/
-		const Ogre::Image& teamGlowImage(enum OgreMdlx::TeamColor teamGlow) const;
+		const Ogre::Image& teamGlowImage(enum OgreMdlx::TeamColor teamGlow) const throw (class Exception);
 
 		
 		/**
@@ -372,10 +372,10 @@ inline bool Editor::removeResource(const KUrl &url)
 	if (iterator == this->m_resources.end())
 		return false;
 
+	qDebug() << "Removed resource " << url.path();
 	this->m_resources.erase(iterator);
 	delete iterator->second;
 	this->removeEntry(url);
-	qDebug() << "Removed resource " << url.path();
 
 	return true;
 }
@@ -385,7 +385,7 @@ inline const std::map<KUrl, class Resource*>& Editor::resources() const
 	return this->m_resources;
 }
 
-inline const Ogre::Image& Editor::teamColorImage(enum OgreMdlx::TeamColor teamColor) const
+inline const Ogre::Image& Editor::teamColorImage(enum OgreMdlx::TeamColor teamColor) const throw (class Exception)
 {
 	if (this->m_teamColorImages[teamColor] == 0)
 		this->m_teamColorImages[teamColor] = this->blpToOgre(teamColorUrl(teamColor));
@@ -393,7 +393,7 @@ inline const Ogre::Image& Editor::teamColorImage(enum OgreMdlx::TeamColor teamCo
 	return *this->m_teamColorImages[teamColor];
 }
 
-inline const Ogre::Image& Editor::teamGlowImage(enum OgreMdlx::TeamColor teamGlow) const
+inline const Ogre::Image& Editor::teamGlowImage(enum OgreMdlx::TeamColor teamGlow) const throw (class Exception)
 {
 	if (this->m_teamGlowImages[teamGlow] == 0)
 		this->m_teamGlowImages[teamGlow] = this->blpToOgre(teamGlowUrl(teamGlow));

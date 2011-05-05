@@ -40,6 +40,7 @@
 #include "modeleditorsettings.hpp"
 #include "modeleditorsettingsdialog.hpp"
 #include "renderstatswidget.hpp"
+#include "teamcolordialog.hpp"
 
 namespace wc3lib
 {
@@ -47,7 +48,7 @@ namespace wc3lib
 namespace editor
 {
 
-ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelEditorView(this)), m_settingsDialog(0), m_recentUrl(""), m_models(), m_viewMenu(0), m_renderStatsWidget(0), m_showStatsAction(0), m_showCollisionShapesAction(0)
+ModelEditor::ModelEditor(class Editor *editor) : Module(editor), m_modelView(new ModelEditorView(this)), m_settingsDialog(0), m_recentUrl(""), m_models(), m_viewMenu(0), m_renderStatsWidget(0), m_showStatsAction(0), m_teamColorDialog(0), m_teamGlowDialog(0), m_showCollisionShapesAction(0), m_teamColor(OgreMdlx::Red), m_teamGlow(OgreMdlx::Red)
 {
 	Ui::ModelEditor::setupUi(this);
 	Module::setupUi();
@@ -286,6 +287,7 @@ void ModelEditor::showCollisionShapes()
 						
 						sceneNode->attachObject(manualObject);
 						sceneNode->showBoundingBox(true);
+						qDebug() << "Bounding box";
 						
 						break;
 					}
@@ -307,6 +309,7 @@ void ModelEditor::showCollisionShapes()
 						sceneNode->attachObject(entity);
 						sceneNode->setPosition(collisionShape.second->sphere->getCenter());
 						sceneNode->setScale(Ogre::Vector3(collisionShape.second->sphere->getRadius())); // Radius, in theory.
+						qDebug() << "Bounding sphere";
 						
 						break;
 					}
@@ -324,18 +327,42 @@ void ModelEditor::showCollisionShapes()
 
 void ModelEditor::changeTeamColor()
 {
+	if (m_teamColorDialog == 0)
+		m_teamColorDialog = new TeamColorDialog(this);
+	
+	m_teamColorDialog->setTeamColor(teamColor());
+	
+	//m_teamColorDialog->show();
+	
+	if (m_teamColorDialog->exec() == TeamColorDialog::Accepted)
+		setTeamColor(m_teamColorDialog->teamColor());
+	
+	/*
 	QColor color;
 	
 	if (KColorDialog::getColor(color, OgreMdlx::teamColor(this->m_models.left.begin()->second->teamColor()), this) == KColorDialog::Ok)
 		this->m_models.left.begin()->second->setTeamColor(OgreMdlx::teamColor(color));
+	*/
 }
 
 void ModelEditor::changeTeamGlow()
 {
+	if (m_teamGlowDialog == 0)
+		m_teamGlowDialog = new TeamColorDialog(this);
+	
+	m_teamGlowDialog->setTeamColor(teamGlow());
+	
+	//m_teamGlowDialog->show();
+	
+	if (m_teamGlowDialog->exec() == TeamColorDialog::Accepted)
+		setTeamGlow(m_teamColorDialog->teamColor());
+	
+	/*
 	QColor color;
 	
 	if (KColorDialog::getColor(color, OgreMdlx::teamColor(this->m_models.left.begin()->second->teamGlow()), this) == KColorDialog::Ok)
 		this->m_models.left.begin()->second->setTeamGlow(OgreMdlx::teamColor(color));
+	*/
 }
 
 void ModelEditor::viewCamera()
@@ -423,6 +450,8 @@ bool ModelEditor::openUrl(const KUrl &url)
 	this->m_models.left.insert(Models::left_value_type(model, ogreModel));
 	this->m_modelView->root()->addFrameListener(ogreModel);
 	addCameraActions(*ogreModel);
+	ogreModel->setTeamColor(teamColor());
+	ogreModel->setTeamGlow(teamGlow());
 
 	return true;
 }

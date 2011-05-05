@@ -62,7 +62,10 @@ OgreMdlx::OgreMdlx(const KUrl &url, const class mdlx::Mdlx &mdlx, class ModelVie
 OgreMdlx::~OgreMdlx()
 {
 	if (m_sceneNode != 0)
+	{
+		this->m_sceneNode->detachAllObjects();
 		delete m_sceneNode;
+	}
 	
 	BOOST_FOREACH(CollisionShapes::reference value, m_collisionShapes)
 		delete value.second;
@@ -73,7 +76,16 @@ void OgreMdlx::setTeamColor(enum OgreMdlx::TeamColor teamColor)
 	this->m_teamColor = teamColor;
 
 	BOOST_FOREACH(Ogre::TexturePtr tex, this->m_teamColorTextures)
-		tex->loadImage(this->modelView()->editor()->teamColorImage(this->teamColor()));
+	{
+		try
+		{
+			tex->loadImage(this->modelView()->editor()->teamColorImage(this->teamColor()));
+		}
+		catch (class Exception &exception)
+		{
+			KMessageBox::error(this->modelView(), i18n("Texture loading error:\n%1", exception.what().c_str()));
+		}
+	}
 }
 
 void OgreMdlx::setTeamGlow(enum OgreMdlx::TeamColor teamGlow)
@@ -81,7 +93,16 @@ void OgreMdlx::setTeamGlow(enum OgreMdlx::TeamColor teamGlow)
 	this->m_teamGlow = teamGlow;
 
 	BOOST_FOREACH(Ogre::TexturePtr tex, this->m_teamGlowTextures)
-		tex->loadImage(this->modelView()->editor()->teamColorImage(this->teamGlow()));
+	{
+		try
+		{
+			tex->loadImage(this->modelView()->editor()->teamGlowImage(this->teamGlow()));
+		}
+		catch (class Exception &exception)
+		{
+			KMessageBox::error(this->modelView(), i18n("Texture loading error:\n%1", exception.what().c_str()));
+		}
+	}
 }
 
 void OgreMdlx::refresh() throw (class Exception, class Ogre::Exception)
@@ -559,7 +580,7 @@ bool OgreMdlx::useDirectoryUrl(KUrl &url, bool showMessage) const
 Ogre::TexturePtr OgreMdlx::createTexture(const class mdlx::Texture &texture) throw (class Exception)
 {
 	//texture.parent()->members().size();
-	qDebug() << "First address " << this->mdlx()->textures() << " and second address " << texture.parent();
+	//qDebug() << "First address " << this->mdlx()->textures() << " and second address " << texture.parent();
 	//abort();
 	mdlx::long32 id = mdlxId(texture, this->mdlx()->textures());
 
@@ -907,7 +928,7 @@ Ogre::ManualObject* OgreMdlx::createGeoset(const class mdlx::Geoset &geoset) thr
 		object->position((*vertexIterator)->vertexData().x, (*vertexIterator)->vertexData().y, (*vertexIterator)->vertexData().z);
 		object->normal((*normalIterator)->vertexData().x, (*normalIterator)->vertexData().y, (*normalIterator)->vertexData().z);
 		object->textureCoord((*textureVertexIterator)->x(), (*textureVertexIterator)->y());
-		object->colour(1.0 - this->modelView()->viewPort()->getBackgroundColour().r, 1.0 - this->modelView()->viewPort()->getBackgroundColour().g, 1.0 - this->modelView()->viewPort()->getBackgroundColour().b, 1.0 - this->modelView()->viewPort()->getBackgroundColour().a);
+		//object->colour(1.0 - this->modelView()->viewPort()->getBackgroundColour().r, 1.0 - this->modelView()->viewPort()->getBackgroundColour().g, 1.0 - this->modelView()->viewPort()->getBackgroundColour().b, 1.0 - this->modelView()->viewPort()->getBackgroundColour().a);
 		//object->index(index);
 		
 		//qDebug() << "{ " << (*textureVertexIterator)->x() << ", " << (*textureVertexIterator)->y() << " },";

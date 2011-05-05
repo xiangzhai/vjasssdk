@@ -203,7 +203,6 @@ void ModelView::wheelEvent(QWheelEvent *event)
 	QWidget::wheelEvent(event);
 }
 
-/// @todo USE VIEWPORT MEMBER FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void ModelView::mouseMoveEvent(QMouseEvent *event)
 {
 	if (renderWindow() != 0)
@@ -224,7 +223,8 @@ void ModelView::mouseMoveEvent(QMouseEvent *event)
 				event->accept();
 			}
 		}
-		else if (this->m_enableMouseRotation)
+		
+		if (this->m_enableMouseRotation)
 		{
 			// rotates camera around its current position
 			//this->m_camera->roll();
@@ -435,11 +435,13 @@ OLD!
 	this->m_camera = this->m_sceneManager->createCamera("Widget_Cam");
 	this->m_viewPort = this->m_renderWindow->addViewport(this->m_camera);
 	this->m_viewPort->setBackgroundColour(Ogre::ColourValue(0.8, 0.8, 1));
+	/*
 	Ogre::Light *light = this->m_sceneManager->createLight("Light1");
 	light->setType(Ogre::Light::LT_POINT);
 	light->setPosition(Ogre::Vector3(250, 150, 250));
 	light->setDiffuseColour(Ogre::ColourValue::White);
 	light->setSpecularColour(Ogre::ColourValue::White);
+	*/
 
 	this->centerView();
 

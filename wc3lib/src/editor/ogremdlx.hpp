@@ -26,7 +26,7 @@
 
 #include <boost/cast.hpp>
 
-#include <kurl.h>
+#include <KUrl>
 
 #include <Ogre.h>
 
@@ -228,30 +228,40 @@ inline QColor OgreMdlx::teamColor(const enum TeamColor &teamColor)
 			return QColor(Qt::blue);
 			
 		case Teal:
+			return QColor(0x1CB619);
+			
 		case Purple:
-			return QColor(); // FIXME
+			return QColor(0x800080);
 			
 		case Yellow:
 			return QColor(Qt::yellow);
 			
 		case Orange:
-			return QColor(); // FIXME
+			return QColor(0xFF8000);
 			
 		case Green:
 			return QColor(Qt::green);
 			
 		case Pink:
+			return QColor(0xFF80C0);
+			
 		case Gray:
+			return QColor(0xC0C0C0);
+			
 		case LightBlue:
+			return QColor(0x0080FF);
+			
 		case DarkGreen:
+			return QColor(0x106246);
+			
 		case Brown:
-			return QColor(); // FIXME
+			return QColor(0x804000);
 			
 		case Black:
 			return QColor(Qt::black);
 	}
 	
-	return QColor(Qt::white);
+	return QColor(Qt::red);
 }
 
 inline enum OgreMdlx::TeamColor OgreMdlx::teamColor(const QColor &color)
@@ -260,20 +270,26 @@ inline enum OgreMdlx::TeamColor OgreMdlx::teamColor(const QColor &color)
 		return Red;
 	else if (color == Qt::blue)
 		return Blue;
-	//case Teal:
-	//case Purple:
+	else if (color == 0x1CB619)
+		return Teal;
+	else if (color == 0x800080)
+		return Purple;
 	else if (color == Qt::yellow)
 		return Yellow;
-	//case Orange:
+	else if (color == 0xFF8000)
+		return Orange;
 	else if (color == Qt::green)
 		return Green;
-	/*
-	case Pink:
-	case Gray:
-	case LightBlue:
-	case DarkGreen:
-	case Brown:
-	*/
+	else if (color == 0xFF80C0)
+		return Pink;
+	else if (color == 0xC0C0C0)
+		return Gray;
+	else if (color == 0x0080FF)
+		return LightBlue;
+	else if (color == 0x106246)
+		return DarkGreen;
+	else if (color == 0x804000)
+		return Brown;
 	else if (color == Qt::black)
 		return Black;
 	
