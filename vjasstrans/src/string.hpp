@@ -36,7 +36,7 @@ class String
 	public:
 		struct UsageData
 		{
-			boost::filesystem::path &filePath;
+			boost::filesystem::path filePath;
 			std::size_t line;
 		};
 
@@ -57,7 +57,7 @@ class String
 			return result;
 		}
 
-		String(const std::string &idString, const std::string &defaultString, const std::string &valueString) : m_filePath(filePath), m_line(line), m_idString(idString), m_defaultString(defaultString), m_valueString(valueString), m_usageData(std::list<struct UsageData*>())
+		String(const std::string &idString, const std::string &defaultString, const std::string &valueString) : m_idString(idString), m_defaultString(defaultString), m_valueString(valueString), m_usageData(std::list<struct UsageData*>())
 		{
 		};
 
@@ -67,7 +67,7 @@ class String
 				delete usageData;
 		}
 
-		void addUsage(const boost::filesystem::path &path, std::size_t line)
+		void addUsage(const boost::filesystem::path path, std::size_t line)
 		{
 			struct UsageData *usageData = new UsageData;
 			usageData->filePath = path;
@@ -75,14 +75,6 @@ class String
 			this->m_usageData.push_back(usageData);
 		}
 
-		boost::filesystem::path filePath() const
-		{
-			return this->m_filePath;
-		};
-		std::size_t line() const
-		{
-			return this->m_line;
-		};
 		std::string idString() const
 		{
 			return this->m_idString;
@@ -101,7 +93,7 @@ class String
 		};
 		const std::list<struct UsageData*>& usageData() const
 		{
-			return this->m_usgeData;
+			return this->m_usageData;
 		}
 
 	private:

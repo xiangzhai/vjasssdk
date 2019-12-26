@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
 	
 	BOOST_FOREACH(boost::filesystem::path path, filePaths)
 	{
-		std::string extension(path.extension());
+		std::string extension(path.extension().string());
 		boost::algorithm::to_lower(extension);
 
 		if (extension == ".fdf")
@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
 
 	BOOST_FOREACH(boost::filesystem::path path, filePaths)
 	{
-		std::string extension(path.extension());
+		std::string extension(path.extension().string());
 		boost::algorithm::to_lower(extension);
 
 		if (extension != ".j" && extension != ".ai")
