@@ -102,12 +102,12 @@ class MetaData : public Object
 	
 	protected:
 		string m_field;
-		enum Slk::enum_t m_slk;
-		enum Section::enum_t m_section;
+		enum Slk m_slk;
+		enum Section m_section;
 		int32 m_index;
 		string m_displayName;
 		enum Value::Type m_type;
-		enum ImportType::enum_t m_importType;
+		enum ImportType m_importType;
 		bool m_stringExt;
 		bool m_caseSensitive;
 		bool m_canBeEmpty;
@@ -117,7 +117,7 @@ class MetaData : public Object
 		int32 m_version;
 		bool m_inBeta;
 		int32 m_changeFlags;
-		enum Category::enum_t m_category;
+		enum Category m_category;
 };
 
 /**
@@ -128,7 +128,7 @@ class MiscMetaData : public MetaData
 	protected:
 		bool m_sort;
 		enum Value::Type m_type;
-		enum ImportType::enum_t m_importType;
+		enum ImportType m_importType;
 		bool m_stringExt;
 		bool m_caseSensitive;
 		bool m_canBeEmpty;
@@ -138,7 +138,7 @@ class MiscMetaData : public MetaData
 		int32 m_version;
 		bool m_inBeta;
 		int32 m_changeFlags;
-		enum Category::enum_t m_category;
+		enum Category m_category;
 };
 
 /**
@@ -148,15 +148,15 @@ class AbilityMetaData : public MetaData
 {
 	protected:
 		string m_field;
-		enum Slk::enum_t m_slk;
+		enum Slk m_slk;
 		int32 m_index;
 		bool m_repeat;
-		enum Category::enum_t m_category;
+		enum Category m_category;
 		string m_displayName;
 		string m_sort;
 		enum Value::Type m_type;
 		string m_changeFlags;
-		enum ImportType::enum_t m_importType;
+		enum ImportType m_importType;
 		bool m_stringExt;
 		bool m_caseSensitive;
 		bool m_canBeEmpty;
@@ -170,7 +170,7 @@ class AbilityMetaData : public MetaData
 		bool m_useSpecific;
 		bool m_notSpecific;
 		int32 m_version;
-		enum Section::enum_t m_section;
+		enum Section m_section;
 };
 
 class Data : public Object, public boost::bimap<class MetaData*, class Value> // one pointer per column entry

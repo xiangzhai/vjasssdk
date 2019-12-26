@@ -111,7 +111,7 @@ class Format
 		template<class _ArchiveT>
 		void load(_ArchiveT &ar) { load(ar, version()); }
 		
-		BOOST_SERIALIZATION_SPLIT_MEMBER()
+		BOOST_SERIALIZATION_SPLIT_MEMBER();
 
 
 		class Format& operator<<(InputStream &istream) throw (class Exception);

@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
 			{
 				std::basic_stringstream<mpq::byte> testBuffer;
 				std::cout << "Found file \"Detector.js\" and wrote " << mpqFile->writeData(testBuffer) << "bytes:" << std::endl;
-				std::cout << testBuffer;
+				//std::cout << testBuffer;
 			}
 			//else
 			//	std::cout << "Flags: " << std::hex << mpqFile->hash()->block()->flags() << std::dec << "\nFile data: " << *mpqFile << std::endl;

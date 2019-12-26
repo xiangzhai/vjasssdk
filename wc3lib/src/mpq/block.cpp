@@ -35,7 +35,7 @@ uint32 Block::fileKey(const boost::filesystem::path &path, const BlockTableEntry
 	static const uint32 BLOCK_OFFSET_ADJUSTED_KEY = 0x00020000L;
 	
 	// Find the file name part of the path
-	const std::string lpszFileName = path.filename();
+	const std::string lpszFileName = path.filename().string();
 		
 	// Hash the name to get the base key
 	uint32 nFileKey = HashString(Mpq::cryptTable(), lpszFileName.c_str(), FileKey);

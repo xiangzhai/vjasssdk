@@ -3,7 +3,7 @@ WC3LIB_ENABLE_EXCEPTIONS()
 WC3LIB_GET_H(wc3lib_LIB_PKLIB_H)
 WC3LIB_GET_SRC(wc3lib_LIB_PKLIB_SRC)
 
-add_library(pklib SHARED ${wc3lib_LIB_PKLIB_SRC} ${Boost_LIBRARIES})
+add_library(pklib SHARED ${wc3lib_LIB_PKLIB_SRC})
 
 # install
 

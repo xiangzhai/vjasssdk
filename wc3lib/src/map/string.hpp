@@ -42,7 +42,7 @@ class String
 
 		struct UsageData
 		{
-			boost::filesystem::path &filePath;
+			boost::filesystem::path filePath;
 			std::size_t line;
 		};
 
@@ -73,7 +73,7 @@ class String
 				delete usageData;
 		}
 
-		void addUsage(const boost::filesystem::path &path, std::size_t line)
+		void addUsage(const boost::filesystem::path path, std::size_t line)
 		{
 			struct UsageData *usageData = new UsageData;
 			usageData->filePath = path;

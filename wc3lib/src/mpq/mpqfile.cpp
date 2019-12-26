@@ -292,7 +292,7 @@ void MpqFile::remove() throw (class Exception)
 
 bool MpqFile::rename(const std::string &newName, bool overwriteExisting) throw (class Exception)
 {
-	return this->move(std::string(this->m_path.directory_string()).append(newName), overwriteExisting);
+	return this->move(std::string(this->m_path.string()).append(newName), overwriteExisting);
 }
 
 bool MpqFile::move(const boost::filesystem::path &newPath, bool overwriteExisting) throw (class Exception)

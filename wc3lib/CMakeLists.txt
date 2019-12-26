@@ -181,14 +181,11 @@ if (FLAG_EDITOR_USE)
 	set(OGRE_LIBRARIES OgreMain OgreTerrain) #  OgrePaging
 endif ()
 
-# TODO: is only required when using -DJPEG and -DSTATIC
-#find_library(OPENJPEG_LIBS openjpeg) # todo Use custom cmake module to find openjpeg.
-
 link_directories(${Boost_LIBRARY_DIRS})
 include_directories(${GETTEXT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${Ogre_INCLUDE_DIR})
 
 # Reset flags, Qt and KDE do set them to CRAP!
-set(CMAKE_CXX_FLAGS "")
+set(CMAKE_CXX_FLAGS "-std=c++11 -fpermissive -Wno-narrowing")
 set(CMAKE_C_FLAGS "")
 WC3LIB_COMPILER_SETUP()
 
@@ -200,12 +197,6 @@ add_definitions(-DLOCALE_DIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\")
 
 include_directories(src lib)
 
-#add_subdirectory(doc)
-#add_subdirectory(ui)
 add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(doc)
-#add_subdirectory(icons)
-
-#include(CPack)
-
