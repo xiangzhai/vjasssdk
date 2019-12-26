@@ -9,6 +9,6 @@ set (mpqeditor_SRCS
 
 kde4_add_executable(mpqeditor ${mpqeditor_SRCS})
 
-target_link_libraries(mpqeditor ${CMAKE_CURRENT_SOURCE_DIR}/StormLib/libStorm.so ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
+target_link_libraries(mpqeditor -lStormLib ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS})
 
 install(TARGETS mpqeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
